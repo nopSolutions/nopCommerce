@@ -8,5 +8,7 @@
     </div>
     <div class="footer-poweredby">
         Powered by <a href="http://www.nopcommerce.com/">nopCommerce</a>
+        <%--Would you like to remove the "Powered by nopCommerce" link in the bottom of the footer? 
+        Find more info here http://www.nopcommerce.com/copyrightremoval.aspx--%>
     </div>
 </div>
