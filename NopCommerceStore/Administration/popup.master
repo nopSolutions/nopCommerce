@@ -1,0 +1,29 @@
+<%@ Master Language="C#" AutoEventWireup="true" Inherits="NopSolutions.NopCommerce.Web.Administration.popupMaster"
+    CodeBehind="popup.master.cs" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>NopCommerce Web Administration</title>
+</head>
+<body>
+    <form id="form1" runat="server">
+    <ajaxToolkit:ToolkitScriptManager runat="server" ID="sm" CompositeScript-ScriptMode="Release" EnableScriptGlobalization="false"
+        EnableScriptLocalization="false" ScriptMode="Release" />
+    <div class="master-wrapper-page">
+        <div class="master-wrapper-content">
+            <div class="content">
+                <asp:Panel runat="server" ID="pnlMessage" EnableViewState="false" Visible="false">
+                    <asp:Literal runat="server" ID="lMessage" EnableViewState="false" />
+                    <asp:Literal runat="server" ID="lMessageComplete" EnableViewState="false" />
+                </asp:Panel>
+                <div class="cph">
+                    <asp:ContentPlaceHolder ID="cph1" runat="server">
+                    </asp:ContentPlaceHolder>
+                </div>
+            </div>
+        </div>
+    </div>
+    </form>
+</body>
+</html>

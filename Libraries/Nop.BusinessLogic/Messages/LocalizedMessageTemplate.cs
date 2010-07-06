@@ -1,0 +1,114 @@
+//------------------------------------------------------------------------------
+// The contents of this file are subject to the nopCommerce Public License Version 1.0 ("License"); you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at  http://www.nopCommerce.com/License.aspx. 
+// 
+// Software distributed under the License is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. 
+// See the License for the specific language governing rights and limitations under the License.
+// 
+// The Original Code is nopCommerce.
+// The Initial Developer of the Original Code is NopSolutions.
+// All Rights Reserved.
+// 
+// Contributor(s): _______. 
+//------------------------------------------------------------------------------
+
+using System;
+using System.Collections.Generic;
+using System.Text;
+using NopSolutions.NopCommerce.BusinessLogic.Directory;
+
+
+namespace NopSolutions.NopCommerce.BusinessLogic.Messages
+{
+    /// <summary>
+    /// Represents a localized message template
+    /// </summary>
+    public partial class LocalizedMessageTemplate : BaseEntity
+    {
+        #region Ctor
+        /// <summary>
+        /// Creates a new instance of the LocalizedMessageTemplate class
+        /// </summary>
+        public LocalizedMessageTemplate()
+        {
+        }
+        #endregion
+
+        #region Properties
+        /// <summary>
+        /// Gets or sets the localized message template identifier
+        /// </summary>
+        public int MessageTemplateLocalizedId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the message template identifier
+        /// </summary>
+        public int MessageTemplateId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the language identifier
+        /// </summary>
+        public int LanguageId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the BCC Email addresses
+        /// </summary>
+        public string BccEmailAddresses { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the subject
+        /// </summary>
+        public string Subject { get; set; }
+
+        /// <summary>
+        /// Gets or sets the body
+        /// </summary>
+        public string Body { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the template is active
+        /// </summary>
+        public bool IsActive { get; set; }
+        #endregion
+
+        #region Custom Properties
+
+        /// <summary>
+        /// Gets the language
+        /// </summary>
+        public Language Language
+        {
+            get
+            {
+                return LanguageManager.GetLanguageById(this.LanguageId);
+            }
+        }
+
+        /// <summary>
+        /// Gets the message template
+        /// </summary>
+        public MessageTemplate MessageTemplate
+        {
+            get
+            {
+                return MessageManager.GetMessageTemplateById(this.MessageTemplateId);
+            }
+        }
+        #endregion
+
+        #region Navigation Properties
+
+        /// <summary>
+        /// Gets the message template
+        /// </summary>
+        public virtual MessageTemplate NpMessageTemplate { get; set; }
+
+        #endregion
+    }
+
+}

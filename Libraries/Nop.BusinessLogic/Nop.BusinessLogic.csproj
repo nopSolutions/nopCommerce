@@ -1,0 +1,490 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{EDF31192-A159-48DA-A737-9935A8A5BC18}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>NopSolutions.NopCommerce.BusinessLogic</RootNamespace>
+    <AssemblyName>Nop.BusinessLogic</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <PublishUrl>http://localhost/Nop.BusinessLogic/</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Web</InstallFrom>
+    <UpdateEnabled>true</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>true</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\Nop.BusinessLogic.xml</DocumentationFile>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Ionic.Zip, Version=1.9.1.2, Culture=neutral, PublicKeyToken=edbe51ad942a3f5c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Dependencies\Ionic.Zip.dll</HintPath>
+    </Reference>
+    <Reference Include="MigraDoc.DocumentObjectModel, Version=1.31.3066.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Dependencies\MigraDoc.DocumentObjectModel.dll</HintPath>
+    </Reference>
+    <Reference Include="MigraDoc.Rendering, Version=1.31.3066.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Dependencies\MigraDoc.Rendering.dll</HintPath>
+    </Reference>
+    <Reference Include="MigraDoc.RtfRendering, Version=1.31.3066.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Dependencies\MigraDoc.RtfRendering.dll</HintPath>
+    </Reference>
+    <Reference Include="PdfSharp, Version=1.31.1789.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Dependencies\PdfSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="PdfSharp.Charting, Version=1.31.1789.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Dependencies\PdfSharp.Charting.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Runtime.Serialization">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Security" />
+    <Reference Include="System.ServiceModel">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Web.Extensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Audit\ActivityLog.cs" />
+    <Compile Include="Audit\ActivityLogType.cs" />
+    <Compile Include="Audit\SearchTermReportLine.cs" />
+    <Compile Include="Audit\LogType.cs" />
+    <Compile Include="Audit\CustomerActivityManager.cs" />
+    <Compile Include="Audit\Extensions.cs" />
+    <Compile Include="Caching\NopRequestCache.cs" />
+    <Compile Include="Caching\NopStaticCache.cs" />
+    <Compile Include="Categories\CategoryLocalized.cs" />
+    <Compile Include="Categories\Extensions.cs" />
+    <Compile Include="Content\Forums\ForumSubscription.cs" />
+    <Compile Include="Content\Forums\ForumTopicTypeEnum.cs" />
+    <Compile Include="Content\Forums\PrivateMessage.cs" />
+    <Compile Include="Content\Forums\ForumManager.cs" />
+    <Compile Include="Content\Forums\ForumGroup.cs" />
+    <Compile Include="Content\Forums\ForumPost.cs" />
+    <Compile Include="Content\Forums\ForumTopic.cs" />
+    <Compile Include="Content\Forums\Forum.cs" />
+    <Compile Include="Content\Polls\PollVotingRecord.cs" />
+    <Compile Include="Customer\CustomerEventArgs.cs" />
+    <Compile Include="Directory\ExchangeRates\McExchangeRateProvider.cs" />
+    <Compile Include="Directory\ExchangeRates\EcbExchangeRateProvider.cs" />
+    <Compile Include="Directory\ExchangeRates\IExchangeRateProvider.cs" />
+    <Compile Include="Directory\ExchangeRates\ExchangeRate.cs" />
+    <Compile Include="EventContext.cs" />
+    <Compile Include="Customer\CustomerReportByLanguageLine.cs" />
+    <Compile Include="Customer\CustomerReportByAttributeKeyLine.cs" />
+    <Compile Include="Customer\CustomerBestReportLine.cs" />
+    <Compile Include="Customer\CustomerRegistrationTypeEnum.cs" />
+    <Compile Include="Customer\DeleteExpiredCustomerSessionsTask.cs" />
+    <Compile Include="Caching\ClearCacheTask.cs" />
+    <Compile Include="Customer\Extensions.cs" />
+    <Compile Include="Data\AspNetObjectContextManager.cs" />
+    <Compile Include="Data\AspNetObjectContextDisposalModule.cs" />
+    <Compile Include="Data\Extensions.cs" />
+    <Compile Include="Data\UnitOfWorkScope.cs" />
+    <Compile Include="Data\ObjectContextHelper.cs" />
+    <Compile Include="Data\StaticObjectContextManager.cs" />
+    <Compile Include="Data\ScopedObjectContextManager.cs" />
+    <Compile Include="Data\ObjectContextScope.cs" />
+    <Compile Include="Data\ObjectContextManager.cs" />
+    <Compile Include="Data\NopObjectContext.cs" />
+    <Compile Include="ExportImport\ExcelHelper.cs" />
+    <Compile Include="ExportImport\ExcelHelperReadTableMode.cs" />
+    <Compile Include="Installation\NopSqlDataHelper.cs" />
+    <Compile Include="Localization\NopResourceExpressionBuilder.cs" />
+    <Compile Include="Maintenance\BackupFile.cs" />
+    <Compile Include="Maintenance\BackupFileCollection.cs" />
+    <Compile Include="Maintenance\MaintenanceManager.cs" />
+    <Compile Include="Maintenance\DatabaseMaintanceTask.cs" />
+    <Compile Include="Manufacturers\Extensions.cs" />
+    <Compile Include="Manufacturers\ManufacturerLocalized.cs" />
+    <Compile Include="Messages\NewsLetterSubscription.cs" />
+    <Compile Include="Messages\SMSManager.cs" />
+    <Compile Include="Orders\BestSellersReportLine.cs" />
+    <Compile Include="Orders\AppliedGiftCard.cs" />
+    <Compile Include="Orders\OrderEventArgs.cs" />
+    <Compile Include="Orders\OrderProductVariantReportLine.cs" />
+    <Compile Include="Orders\OrderIncompleteReportLine.cs" />
+    <Compile Include="Orders\RewardPointsHistory.cs" />
+    <Compile Include="Orders\OrderAverageReportLineSummary.cs" />
+    <Compile Include="Orders\GiftCard.cs" />
+    <Compile Include="Orders\GiftCardUsageHistory.cs" />
+    <Compile Include="Orders\GiftCardHelper.cs" />
+    <Compile Include="Orders\RecurringPayment.cs" />
+    <Compile Include="Orders\RecurringPaymentHistory.cs" />
+    <Compile Include="Orders\DeleteExpiredShoppingCartsTask.cs" />
+    <Compile Include="Orders\OrderAverageReportLine.cs" />
+    <Compile Include="Payment\CancelPaymentResult.cs" />
+    <Compile Include="Payment\PaymentMethodTypeEnum.cs" />
+    <Compile Include="Payment\RecurringPaymentTypeEnum.cs" />
+    <Compile Include="Products\Attributes\CheckoutAttribute.cs" />
+    <Compile Include="Products\Attributes\CheckoutAttributeLocalized.cs" />
+    <Compile Include="Products\Attributes\CheckoutAttributeManager.cs" />
+    <Compile Include="Products\Attributes\CheckoutAttributeValue.cs" />
+    <Compile Include="Products\Attributes\CheckoutAttributeValueLocalized.cs" />
+    <Compile Include="Products\Attributes\CheckoutAttributeHelper.cs" />
+    <Compile Include="Products\ProductVariantEventArgs.cs" />
+    <Compile Include="Products\ProductEventArgs.cs" />
+    <Compile Include="Products\ProductRating.cs" />
+    <Compile Include="Products\ProductReviewHelpfulness.cs" />
+    <Compile Include="Products\Extensions.cs" />
+    <Compile Include="Products\ShoppingCartType.cs" />
+    <Compile Include="Products\LowStockActivity.cs" />
+    <Compile Include="Products\ProductTag.cs" />
+    <Compile Include="Products\ProductSortingEnum.cs" />
+    <Compile Include="Products\CustomerRoleProductPrice.cs" />
+    <Compile Include="Products\Attributes\ProductVariantAttributeValueLocalized.cs" />
+    <Compile Include="Products\Attributes\ProductAttributeLocalized.cs" />
+    <Compile Include="Products\Attributes\ProductVariantAttributeCombination.cs" />
+    <Compile Include="Products\Attributes\ProductAttributeHelper.cs" />
+    <Compile Include="Products\ProductVariantLocalized.cs" />
+    <Compile Include="Products\ProductLocalized.cs" />
+    <Compile Include="Products\ManageInventoryMethodEnum.cs" />
+    <Compile Include="Products\RecurringProductCyclePeriodEnum.cs" />
+    <Compile Include="Products\DownloadActivationTypeEnum.cs" />
+    <Compile Include="Products\Specs\SpecificationAttributeOptionLocalized.cs" />
+    <Compile Include="Products\Specs\SpecificationAttributeLocalized.cs" />
+    <Compile Include="Products\Specs\SpecificationAttributeOption.cs" />
+    <Compile Include="Products\Specs\SpecificationAttributeOptionFilter.cs" />
+    <Compile Include="Profile\CustomerNameFormatEnum.cs" />
+    <Compile Include="Content\Topics\LocalizedTopic.cs" />
+    <Compile Include="Content\Topics\TopicManager.cs" />
+    <Compile Include="Content\Topics\Topic.cs" />
+    <Compile Include="Media\PictureTypeEnum.cs" />
+    <Compile Include="Products\TierPrice.cs" />
+    <Compile Include="Products\PriceListExportModeEnum.cs" />
+    <Compile Include="Products\PriceListExportTypeEnum.cs" />
+    <Compile Include="Products\PriceAdjustmentTypeEnum.cs" />
+    <Compile Include="Products\Pricelist.cs" />
+    <Compile Include="ExportImport\PricelistHandler.cs" />
+    <Compile Include="Products\ProductVariantPricelist.cs" />
+    <Compile Include="Messages\LocalizedMessageTemplate.cs" />
+    <Compile Include="Messages\QueuedEmail.cs" />
+    <Compile Include="Messages\SendQueuedMessagesTask.cs" />
+    <Compile Include="Content\Blog\BlogPost.cs" />
+    <Compile Include="Content\Blog\BlogComment.cs" />
+    <Compile Include="Orders\OrderStatus.cs" />
+    <Compile Include="Orders\OrderStatusEnum.cs" />
+    <Compile Include="Orders\OrderNote.cs" />
+    <Compile Include="Payment\PaymentStatusManager.cs" />
+    <Compile Include="Payment\PaymentStatus.cs" />
+    <Compile Include="Products\Attributes\AttributeControlTypeEnum.cs" />
+    <Compile Include="Products\PriceRange.cs" />
+    <Compile Include="Products\PriceHelper.cs" />
+    <Compile Include="Profile\DateTimeHelper.cs" />
+    <Compile Include="Promo\Campaigns\Campaign.cs" />
+    <Compile Include="Promo\Discounts\DiscountLimitation.cs" />
+    <Compile Include="Promo\Discounts\DiscountLimitationEnum.cs" />
+    <Compile Include="Promo\Discounts\DiscountUsageHistory.cs" />
+    <Compile Include="Promo\Discounts\DiscountRequirement.cs" />
+    <Compile Include="Promo\Discounts\DiscountRequirementEnum.cs" />
+    <Compile Include="Promo\Discounts\DiscountType.cs" />
+    <Compile Include="Promo\Discounts\Extensions.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="QuickBooks\EntityTypeEnum.cs" />
+    <Compile Include="QuickBooks\QBConnector.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="QuickBooks\QBEditionEnum.cs" />
+    <Compile Include="QuickBooks\QBEntity.cs" />
+    <Compile Include="QuickBooks\QBXMLHelper.cs" />
+    <Compile Include="QuickBooks\QBManager.cs" />
+    <Compile Include="QuickBooks\SynStateEnum.cs" />
+    <Compile Include="Security\BannedIpAddress.cs" />
+    <Compile Include="Security\ACL.cs" />
+    <Compile Include="Security\CustomerAction.cs" />
+    <Compile Include="Security\ACLManager.cs" />
+    <Compile Include="Security\IpBlacklistManager.cs" />
+    <Compile Include="Security\BannedIpNetwork.cs" />
+    <Compile Include="SEO\Sitemaps\BaseSitemapGenerator.cs" />
+    <Compile Include="SEO\Sitemaps\SitemapGenerator.cs" />
+    <Compile Include="SEO\Sitemaps\UpdateFrequency.cs" />
+    <Compile Include="Shipping\ShippingRateComputationMethodTypeEnum.cs" />
+    <Compile Include="Shipping\ShippingStatus.cs" />
+    <Compile Include="Shipping\ShippingStatusEnum.cs" />
+    <Compile Include="Shipping\ShippingStatusManager.cs" />
+    <Compile Include="Tasks\ITask.cs" />
+    <Compile Include="Tasks\Task.cs" />
+    <Compile Include="Tasks\TaskManager.cs" />
+    <Compile Include="Tasks\TaskThread.cs" />
+    <Compile Include="Tax\CalculateTaxRequest.cs" />
+    <Compile Include="Tax\Extensions.cs" />
+    <Compile Include="Tax\TaxBasedOnEnum.cs" />
+    <Compile Include="Tax\TaxDisplayTypeEnum.cs" />
+    <Compile Include="Tax\TaxProvider.cs" />
+    <Compile Include="Products\Attributes\ProductVariantAttributeValue.cs" />
+    <Compile Include="Products\Attributes\ProductVariantAttribute.cs" />
+    <Compile Include="Products\Attributes\ProductAttribute.cs" />
+    <Compile Include="Measures\MeasureWeight.cs" />
+    <Compile Include="Measures\MeasureDimension.cs" />
+    <Compile Include="Shipping\ShippingByWeightAndCountry.cs" />
+    <Compile Include="Products\Specs\ProductSpecificationAttribute.cs" />
+    <Compile Include="Products\Specs\SpecificationAttribute.cs" />
+    <Compile Include="Customer\CustomerRole.cs" />
+    <Compile Include="Audit\SearchLog.cs" />
+    <Compile Include="Content\Polls\PollAnswer.cs" />
+    <Compile Include="Content\Polls\Poll.cs" />
+    <Compile Include="Shipping\ShippingByWeight.cs" />
+    <Compile Include="Shipping\ShippingByTotal.cs" />
+    <Compile Include="Products\ProductReview.cs" />
+    <Compile Include="Media\Download.cs" />
+    <Compile Include="Messages\MessageTemplate.cs" />
+    <Compile Include="Products\RelatedProduct.cs" />
+    <Compile Include="Manufacturers\ProductManufacturer.cs" />
+    <Compile Include="Categories\ProductCategory.cs" />
+    <Compile Include="Products\ProductPicture.cs" />
+    <Compile Include="Media\Picture.cs" />
+    <Compile Include="Promo\Discounts\DiscountTypeEnum.cs" />
+    <Compile Include="Products\LowStockActivityEnum.cs" />
+    <Compile Include="Orders\ShoppingCartTypeEnum.cs" />
+    <Compile Include="Content\Blog\BlogManager.cs" />
+    <Compile Include="Promo\Campaigns\CampaignManager.cs" />
+    <Compile Include="Tax\TaxProviderManager.cs" />
+    <Compile Include="Products\Attributes\ProductAttributeManager.cs" />
+    <Compile Include="Measures\MeasureManager.cs" />
+    <Compile Include="Shipping\ShippingByWeightAndCountryManager.cs" />
+    <Compile Include="Products\Specs\SpecificationAttributeManager.cs" />
+    <Compile Include="Audit\SearchLogManager.cs" />
+    <Compile Include="Content\Polls\PollManager.cs" />
+    <Compile Include="Shipping\ShippingByWeightManager.cs" />
+    <Compile Include="Shipping\ShippingByTotalManager.cs" />
+    <Compile Include="Media\DownloadManager.cs" />
+    <Compile Include="Messages\MessageManager.cs" />
+    <Compile Include="Media\PictureManager.cs" />
+    <Compile Include="Payment\PaymentManager.cs" />
+    <Compile Include="ExportImport\ImportManager.cs" />
+    <Compile Include="ExportImport\ExportManager.cs" />
+    <Compile Include="Linq\ExtensionMethods.cs" />
+    <Compile Include="Shipping\ShipmentPackage.cs" />
+    <Compile Include="Shipping\ShippingOption.cs" />
+    <Compile Include="Shipping\ShippingManager.cs" />
+    <Compile Include="Customer\Address.cs" />
+    <Compile Include="Localization\LocaleStringResource.cs" />
+    <Compile Include="Promo\Affiliates\Affiliate.cs" />
+    <Compile Include="BaseEntity.cs" />
+    <Compile Include="Categories\Category.cs" />
+    <Compile Include="Templates\CategoryTemplate.cs" />
+    <Compile Include="Directory\Country.cs" />
+    <Compile Include="Payment\CreditCardType.cs" />
+    <Compile Include="Directory\Currency.cs" />
+    <Compile Include="Customer\Customer.cs" />
+    <Compile Include="Customer\CustomerAttribute.cs" />
+    <Compile Include="Customer\CustomerSession.cs" />
+    <Compile Include="Promo\Discounts\Discount.cs" />
+    <Compile Include="Directory\Language.cs" />
+    <Compile Include="Audit\Log.cs" />
+    <Compile Include="Manufacturers\Manufacturer.cs" />
+    <Compile Include="Templates\ManufacturerTemplate.cs" />
+    <Compile Include="Content\News\News.cs" />
+    <Compile Include="Content\News\NewsComment.cs" />
+    <Compile Include="Orders\Order.cs" />
+    <Compile Include="Orders\OrderProductVariant.cs" />
+    <Compile Include="Payment\PaymentMethod.cs" />
+    <Compile Include="Products\Product.cs" />
+    <Compile Include="Templates\ProductTemplate.cs" />
+    <Compile Include="Products\ProductType.cs" />
+    <Compile Include="Products\ProductVariant.cs" />
+    <Compile Include="Configuration\Settings\Setting.cs" />
+    <Compile Include="Shipping\ShippingMethod.cs" />
+    <Compile Include="Shipping\ShippingRateComputationMethod.cs" />
+    <Compile Include="Orders\ShoppingCartItem.cs" />
+    <Compile Include="Orders\ShoppingCart.cs" />
+    <Compile Include="Directory\StateProvince.cs" />
+    <Compile Include="Tax\TaxRate.cs" />
+    <Compile Include="Tax\TaxCategory.cs" />
+    <Compile Include="Utils\SiteHelper.cs" />
+    <Compile Include="Utils\PDFHelper.cs" />
+    <Compile Include="Utils\Html\EditorTypeEnum.cs" />
+    <Compile Include="Utils\KeepAliveTask.cs" />
+    <Compile Include="Warehouses\Warehouse.cs" />
+    <Compile Include="Audit\LogTypeEnum.cs" />
+    <Compile Include="Promo\Affiliates\AffiliateManager.cs" />
+    <Compile Include="Categories\CategoryManager.cs" />
+    <Compile Include="Templates\TemplateManager.cs" />
+    <Compile Include="Localization\LocaleStringResourceManager.cs" />
+    <Compile Include="Directory\CountryManager.cs" />
+    <Compile Include="Payment\CreditCardTypeManager.cs" />
+    <Compile Include="Directory\CurrencyManager.cs" />
+    <Compile Include="Customer\CustomerManager.cs" />
+    <Compile Include="Promo\Discounts\DiscountManager.cs" />
+    <Compile Include="Directory\LanguageManager.cs" />
+    <Compile Include="Audit\LogManager.cs" />
+    <Compile Include="Manufacturers\ManufacturerManager.cs" />
+    <Compile Include="Content\News\NewsManager.cs" />
+    <Compile Include="Orders\OrderManager.cs" />
+    <Compile Include="Payment\PaymentMethodManager.cs" />
+    <Compile Include="Products\ProductManager.cs" />
+    <Compile Include="Configuration\Settings\SettingManager.cs" />
+    <Compile Include="Shipping\ShippingMethodManager.cs" />
+    <Compile Include="Shipping\ShippingRateComputationMethodManager.cs" />
+    <Compile Include="Orders\ShoppingCartManager.cs" />
+    <Compile Include="Directory\StateProvinceManager.cs" />
+    <Compile Include="Tax\TaxRateManager.cs" />
+    <Compile Include="Tax\TaxCategoryManager.cs" />
+    <Compile Include="Warehouses\WarehouseManager.cs" />
+    <Compile Include="Configuration\NopConfig.cs" />
+    <Compile Include="Localization\LocalizationManager.cs" />
+    <Compile Include="NopContext.cs" />
+    <Compile Include="Payment\IPaymentMethod.cs" />
+    <Compile Include="Payment\ProcessPaymentResult.cs" />
+    <Compile Include="Payment\PaymentInfo.cs" />
+    <Compile Include="Payment\PaymentStatusEnum.cs" />
+    <Compile Include="Profile\StoreMembershipProvider.cs" />
+    <Compile Include="Profile\StoreRoleProvider.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Shipping\IShippingRateComputationMethod.cs" />
+    <Compile Include="Tax\ITaxProvider.cs" />
+    <Compile Include="Tax\TaxManager.cs" />
+    <Compile Include="Installation\InstallerHelper.cs" />
+    <Compile Include="Security\SecurityHelper.cs" />
+    <Compile Include="SEO\SEOHelper.cs" />
+    <Compile Include="Web References\Clickatell\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Nop.Common\Nop.Common.csproj">
+      <Project>{A598DC05-2E62-4114-AC3E-A6E58E085AFF}</Project>
+      <Name>Nop.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WebReferences Include="Web References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WebReferenceUrl Include="http://api.clickatell.com/soap/webservice_vs.php%3fwsdl">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\Clickatell\</RelPath>
+      <UpdateFromURL>http://api.clickatell.com/soap/webservice_vs.php%3fwsdl</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>Nop_BusinessLogic_Clickatell_PushServerWS</CachedSettingsPropName>
+    </WebReferenceUrl>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
+    <EntityDeploy Include="Data\NopModel.edmx" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Web References\Clickatell\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Web References\Clickatell\webservice_vs.wsdl" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+</Project>

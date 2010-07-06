@@ -1,0 +1,15 @@
+﻿<asp:GridView runat="server" CssClass="tablestyle" >
+	<AlternatingRowStyle CssClass="altrowstyle" />
+    <HeaderStyle CssClass="headerstyle" />
+    <RowStyle CssClass="rowstyle" />  
+    <PagerStyle CssClass="PagerStyle" />
+</asp:GridView>
+
+<nopCommerce:NopDataPagerGridView runat="server" CssClass="tablestyle">
+	<AlternatingRowStyle CssClass="altrowstyle" />
+    <HeaderStyle CssClass="headerstyle" />
+    <RowStyle CssClass="rowstyle" />  
+    <PagerStyle CssClass="PagerStyle" />
+</nopCommerce:NopDataPagerGridView>
+
+<ajaxtoolkit:tabcontainer runat="server" CssClass="grey"/>

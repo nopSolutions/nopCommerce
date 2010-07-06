@@ -1,0 +1,179 @@
+﻿
+body
+{
+	margin: 0px;
+	padding: 0px;
+	height: 100%;
+}
+
+.container-main
+{
+	background-image: url(images/bodybg.gif);
+	background-repeat: repeat-x;
+	background-color: #f4f4f4;
+	text-align: center;
+	padding-top: 50px;
+}
+
+.container-footer
+{
+	margin: auto;
+	width: 700px;
+}
+
+.container-error
+{
+	padding-top: 10px;
+	margin: auto;
+	width: 629px;
+	text-align: center;
+	font-family: Arial;
+	font-size: 12px;
+}
+
+.error-label
+{
+	color: #ff0000;
+	display: block;
+	padding-bottom: 10px;
+	text-align: left;
+}
+
+.wizard-step
+{
+	margin: auto;
+	width: 600px;
+	height: 340px;
+	text-align: left;
+	padding: 10px 10px 10px 10px;
+}
+
+.wizard-step td
+{
+	height: 20px;
+	margin: 0px;
+	padding: 0px;
+}
+
+
+.header-text
+{
+	font-size: 18px;
+	color: #ff5a00;
+	text-align: center;
+	padding-bottom: 10px;
+}
+
+.header-img
+{
+	margin: 20px 0px 10px 0px;
+}
+
+
+.content
+{
+	padding-top: 10px;
+	margin: auto;
+	width: 629px;
+	text-align: center;
+	font-family: Arial;
+	font-size: 12px;
+}
+
+.textbox
+{
+	width: 150px;
+}
+
+.title
+{
+	font-weight: bold;
+}
+
+
+.log
+{
+	width: 600px;
+	height: 90px;
+	margin: 0px auto;
+}
+
+.container-installer
+{
+	margin: auto;
+}
+
+.container-installer .top .left
+{
+	width: 22px;
+	height: 22px;
+	background-image: url(images/topleft.gif);
+	background-position: left top;
+	background-repeat: no-repeat;
+}
+.container-installer .top .center
+{
+	width: 699px;
+	height: 22px;
+	background-image: url(images/top.gif);
+	background-repeat: no-repeat;
+	background-position: top;
+}
+.container-installer .top .right
+{
+	width: 22px;
+	height: 22px;
+	background-image: url(images/topright.gif);
+	background-position: left top;
+	background-repeat: no-repeat;
+}
+
+.container-installer .Middle .left
+{
+	width: 22px;
+	height: 516px;
+	background-image: url(images/left.gif);
+	background-position: left top;
+	background-repeat: no-repeat;
+}
+.container-installer .Middle .center
+{
+	background-image: url(images/bg.gif);
+	background-repeat: repeat-y;
+	background-position: top;
+	text-align: center;
+	vertical-align: top;
+}
+.container-installer .Middle .right
+{
+	width: 22px;
+	height: 516px;
+	background-image: url(images/right.gif);
+	background-repeat: no-repeat;
+	background-position: left top;
+}
+
+.container-installer .Bottom .left
+{
+	width: 22px;
+	height: 22px;
+	background-image: url(images/bottomleft.gif);
+	background-position: left bottom;
+	background-repeat: no-repeat;
+}
+.container-installer .Bottom .center
+{
+	width: 699px;
+	height: 22px;
+	background-image: url(images/bottom.gif);
+	background-repeat: no-repeat;
+	background-position: top;
+}
+.container-installer .Bottom .right
+{
+	width: 22px;
+	height: 22px;
+	background-image: url(images/bottomright.gif);
+	background-position: left bottom;
+	background-repeat: no-repeat;
+}

@@ -1,0 +1,77 @@
+<%@ Master Language="C#" AutoEventWireup="true" Inherits="NopSolutions.NopCommerce.Web.Administration.mainMaster"
+    CodeBehind="main.master.cs" %>
+
+<%@ Register TagPrefix="nopCommerce" TagName="AdminLanguageSelector" Src="Modules/AdminLanguageSelector.ascx" %>
+<%@ Register TagPrefix="nopCommerce" TagName="Menu" Src="Modules/MenuControl.ascx" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>NopCommerce Web Administration</title>
+</head>
+<body>
+    <form id="form1" runat="server">
+    <ajaxToolkit:ToolkitScriptManager runat="server" ID="sm1" EnableScriptGlobalization="true" EnableScriptLocalization="true"
+        ScriptMode="Release" CompositeScript-ScriptMode="Release" />
+    <div class="master-wrapper-page">
+        <div class="master-wrapper-content">
+            <div class="header">
+                <div class="logo">
+                </div>
+                <div class="languageselector">
+                    <nopCommerce:AdminLanguageSelector runat="server" ID="ctrlAdminLanguageSelector" />
+                </div>
+                <div class="links">
+                    <a href="<%=CommonHelper.GetStoreLocation()%>">Public Store</a> <span class="separator">
+                        |</span>
+                    <asp:LinkButton runat="server" ID="lbClearCache" CausesValidation="false" OnClick="lbClearCache_Click"
+                        Text="Clear Cache" />
+                </div>
+                <div class="login-info">
+                    <asp:LoginView ID="topLoginView" runat="server">
+                        <LoggedInTemplate>
+                            Logged in as:
+                            <%=Page.User.Identity.Name %>, <a href="<%=Page.ResolveUrl("~/administration/logout.aspx")%>">
+                                logout?</a>
+                        </LoggedInTemplate>
+                    </asp:LoginView>
+                </div>
+                <div class="version">
+                    <asp:Label runat="server" ID="lblHeader" />
+                </div>
+            </div>
+            <div class="clear">
+            </div>
+            <div class="header-menu">
+                <nopCommerce:Menu runat="server" ID="ctrlMenu" SiteMapProviderName="NopAdminXmlSiteMapProvider" />
+            </div>
+            <div class="status-bar">
+                <div class="help">
+                    <%=DateTimeHelper.ConvertToUserTime(DateTime.UtcNow).ToString("f")%>
+                    <asp:HyperLink runat="server" ID="lnkHelp" />
+                </div>
+                <div class="breadcrumb">
+                    <asp:SiteMapPath ID="smp" runat="server" RenderCurrentNodeAsLink="true" PathSeparatorStyle-Font-Bold="true">
+                        <NodeTemplate>
+                            <a href='<%# Eval("url") %>' title='<%# GetLocaleResourceString(Container.SiteMapNode["nopResourceDescription"]) %>'>
+                                <%# GetLocaleResourceString(Container.SiteMapNode["nopResourceTitle"])%></a>
+                        </NodeTemplate>
+                    </asp:SiteMapPath>
+                </div>
+            </div>
+            <div class="clear">
+            </div>
+            <div class="content">
+                <asp:Panel runat="server" ID="pnlMessage" EnableViewState="false" Visible="false">
+                    <asp:Literal runat="server" ID="lMessage" EnableViewState="false" />
+                    <asp:Literal runat="server" ID="lMessageComplete" EnableViewState="false" />
+                </asp:Panel>
+                <div class="cph">
+                    <asp:ContentPlaceHolder ID="cph1" runat="server">
+                    </asp:ContentPlaceHolder>
+                </div>
+            </div>
+        </div>
+    </div>
+    </form>
+</body>
+</html>

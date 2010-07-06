@@ -1,0 +1,51 @@
+﻿------------------------------------------------------------------
+COPYRIGHT STATEMENT
+The contents of this software are subject to the nopCommerce Public License Version 1.0 ("License"); you may not use this file except in compliance with the License.
+You may obtain a copy of the License at  http://www.nopCommerce.com/License.aspx. 
+ 
+Software distributed under the License is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. 
+See the License for the specific language governing rights and limitations under the License.
+
+
+
+
+
+
+------------------------------------------------------------------
+INCLUDED COMPONENT SUB-LICENSES
+
+____________________________________________________________________
+jQuery
+
+We use jQuery project under the terms of the MIT License
+____________________________________________________________________
+AjaxControl Tookit
+
+We use AjaxControl Tookit project under the terms of the Microsoft Public License (Ms-PL)
+____________________________________________________________________
+Enterprise Library
+
+We use Enterprise Library project under the terms of the Microsoft Public License (Ms-PL)
+____________________________________________________________________
+ASP.NET RSS Toolkit
+
+We use ASP.NET RSS Toolkit project under the terms of the Microsoft Public License (Ms-PL)
+____________________________________________________________________
+Ionic.Zip
+
+We use Ionic.Zip project under the terms of the Microsoft Public License (Ms-PL)
+____________________________________________________________________
+PdfSharp and MigraDoc
+
+We use PdfSharp and MigraDoc projects under the terms of the MIT License
+
+
+
+
+
+
+
+
+
+
+

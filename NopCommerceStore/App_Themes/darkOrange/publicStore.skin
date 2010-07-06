@@ -1,0 +1,33 @@
+﻿<%--
+Default skin template. The following skins are provided as examples only.
+
+1. Named control skin. The SkinId should be uniquely defined because
+   duplicate SkinId's per control type are not allowed in the same theme.
+
+<asp:GridView runat="server" SkinId="gridviewSkin" BackColor="White" >
+   <AlternatingRowStyle BackColor="Blue" />
+</asp:GridView>
+
+2. Default skin. The SkinId is not defined. Only one default 
+   control skin per control type is allowed in the same theme.
+
+<asp:Image runat="server" ImageUrl="~/images/image1.jpg" />
+--%>
+
+<asp:TextBox runat="server" CssClass="textBox" />
+
+<asp:TextBox runat="server" SkinID="SearchText" CssClass="searchtext" />
+<asp:TextBox runat="server" SkinID="SearchBoxText" CssClass="searchboxtext" />
+<asp:TextBox runat="server" SkinID="NewsAddCommentTitleText" CssClass="newsaddcommenttitletext" />
+<asp:TextBox runat="server" SkinID="NewsAddCommentCommentText" CssClass="newsaddcommentcommenttext" />
+<asp:TextBox runat="server" SkinID="BlogAddCommentCommentText" CssClass="blogaddcommentcommenttext" />
+<asp:TextBox runat="server" SkinID="AccountSignatureText" CssClass="accountsignaturetext" />
+<asp:TextBox runat="server" SkinID="NumericTextBoxText" CssClass="numerictextboxtext" />
+<asp:TextBox runat="server" SkinID="ShoppingCartQuantityText" CssClass="shoppingcartquantitytext" />
+<asp:TextBox runat="server" SkinID="WishListQuantityText" CssClass="wishlistquantitytext" />
+<asp:TextBox runat="server" SkinID="ContactUsEnquiryText" Height="150px" Width="500px"/>
+<asp:TextBox runat="server" SkinID="ForumTopicTitleText" CssClass="forumtopictitletext"/>
+<asp:TextBox runat="server" SkinID="PMSubjectText" CssClass="privatemessagesubjecttext"/>
+<asp:TextBox runat="server" SkinID="ForumSearchText" CssClass="forumsearchtext"/>
+<asp:TextBox runat="server" SkinID="ForumSearchBoxText" CssClass="forumsearchboxtext"/>
+<asp:TextBox runat="server" SkinID="BBEditorText" CssClass="bbeditortext"/>

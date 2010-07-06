@@ -1,0 +1,102 @@
+//------------------------------------------------------------------------------
+// The contents of this file are subject to the nopCommerce Public License Version 1.0 ("License"); you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at  http://www.nopCommerce.com/License.aspx. 
+// 
+// Software distributed under the License is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. 
+// See the License for the specific language governing rights and limitations under the License.
+// 
+// The Original Code is nopCommerce.
+// The Initial Developer of the Original Code is NopSolutions.
+// All Rights Reserved.
+// 
+// Contributor(s): _______. 
+//------------------------------------------------------------------------------
+
+using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Text;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using NopSolutions.NopCommerce.BusinessLogic;
+using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
+using NopSolutions.NopCommerce.BusinessLogic.Directory;
+using NopSolutions.NopCommerce.BusinessLogic.Localization;
+using NopSolutions.NopCommerce.BusinessLogic.Products;
+using NopSolutions.NopCommerce.BusinessLogic.SEO;
+using NopSolutions.NopCommerce.Common.Utils;
+
+namespace NopSolutions.NopCommerce.Web.Modules
+{
+    public partial class ProductsByTagControl : BaseNopUserControl
+    {
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            if (!Page.IsPostBack)
+            {
+                BindData();
+            }
+
+        }
+
+        protected void BindData()
+        {
+            var productTag = ProductManager.GetProductTagById(this.ProductTagId);
+            if (productTag == null)
+            {
+                string url = CommonHelper.GetStoreLocation();
+                Response.Redirect(url);
+            }
+
+            lTitle.Text = string.Format(GetLocaleResourceString("ProductTags.Title", Server.HtmlEncode(productTag.Name)));
+
+            //page size
+            int totalRecords = 0;
+            int pageSize = 6;
+
+            var productCollection = ProductManager.GetAllProducts(0, 0, 
+                productTag.ProductTagId, false, null, null,
+                string.Empty, false, pageSize, this.CurrentPageIndex,
+                null, ProductSortingEnum.Position, out totalRecords);
+
+            if (productCollection.Count > 0)
+            {
+                this.productsPager.PageSize = pageSize;
+                this.productsPager.TotalRecords = totalRecords;
+                this.productsPager.PageIndex = this.CurrentPageIndex;
+
+                this.dlProducts.DataSource = productCollection;
+                this.dlProducts.DataBind();
+            }
+            else
+            {
+                this.dlProducts.Visible = false;
+            }
+        }
+
+        public int CurrentPageIndex
+        {
+            get
+            {
+                int _pageIndex = CommonHelper.QueryStringInt(productsPager.QueryStringProperty);
+                _pageIndex--;
+                if (_pageIndex < 0)
+                    _pageIndex = 0;
+                return _pageIndex;
+            }
+        }
+
+        public int ProductTagId
+        {
+            get
+            {
+                return CommonHelper.QueryStringInt("tagid");
+            }
+        }
+    }
+}

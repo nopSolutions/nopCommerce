@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DiscoveryClientResultsFile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Results>
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.ContractReference" url="https://www.paypalobjects.com/wsdl/PayPalSvc.wsdl" filename="PayPalSvc.wsdl" />
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.SchemaReference" url="https://www.paypalobjects.com/wsdl/eBLBaseComponents.xsd" filename="eBLBaseComponents.xsd" />
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.SchemaReference" url="https://www.paypalobjects.com/wsdl/EnhancedDataTypes.xsd" filename="EnhancedDataTypes.xsd" />
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.SchemaReference" url="https://www.paypalobjects.com/wsdl/CoreComponentTypes.xsd" filename="CoreComponentTypes.xsd" />
+  </Results>
+</DiscoveryClientResultsFile>

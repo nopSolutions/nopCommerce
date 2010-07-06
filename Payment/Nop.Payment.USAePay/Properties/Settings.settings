@@ -1,0 +1,9 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="NopSolutions.NopCommerce.Payment.Methods.USAePay.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="Nop_Payment_USAePay_services_usaepayService" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">https://sandbox.usaepay.com/soap/gate/3213EA2A</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

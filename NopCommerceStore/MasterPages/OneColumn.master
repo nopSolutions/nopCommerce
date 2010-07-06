@@ -1,0 +1,10 @@
+﻿<%@ Master Language="C#" MasterPageFile="~/MasterPages/Root.master" AutoEventWireup="true" CodeBehind="OneColumn.master.cs" Inherits="NopSolutions.NopCommerce.Web.MasterPages.OneColumn" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="cph1" runat="server">
+    <div class="master-wrapper-center-1">
+        <div class="master-wrapper-cph-1">
+            <asp:ContentPlaceHolder ID="cph1" runat="server">
+            </asp:ContentPlaceHolder>
+        </div>
+    </div>
+</asp:Content>

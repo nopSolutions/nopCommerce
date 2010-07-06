@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Diese Datei wird automatisch vom XML-Schema-Designer generiert. Sie enthält Layoutinformationen für Komponenten auf der Designeroberfläche.-->
+<XSDDesignerLayout Style="LeftRight" layoutVersion="2" viewPortLeft="201" viewPortTop="4259" zoom="100">
+    <urlrewritingnet_XmlElement left="106" top="-476" width="6800" height="5583" selected="0" zOrder="1" index="0" expanded="1">
+        <_x0028_group1_x0029__XmlChoice left="7540" top="-2730" width="5292" height="3466" selected="0" zOrder="2" index="0" expanded="1">
+            <providers_XmlElement left="13466" top="-2730" width="5292" height="3466" selected="0" zOrder="5" index="0" expanded="1">
+                <clear_XmlElement left="19392" top="-5381" width="5292" height="953" selected="0" zOrder="32" index="0" expanded="0" />
+                <remove_XmlElement left="19392" top="-4053" width="5292" height="3466" selected="0" zOrder="34" index="1" expanded="0" />
+                <add_XmlElement left="19392" top="-79" width="5292" height="3466" selected="0" zOrder="8" index="2" expanded="0" />
+            </providers_XmlElement>
+        </_x0028_group1_x0029__XmlChoice>
+        <_x0028_group2_x0029__XmlChoice left="7540" top="3895" width="5292" height="3466" selected="0" zOrder="11" index="1" expanded="1">
+            <rewrites_XmlElement left="13466" top="3895" width="5292" height="3466" selected="0" zOrder="14" index="0" expanded="1">
+                <add_XmlElement left="19392" top="3895" width="5292" height="3466" selected="0" zOrder="17" index="0" expanded="0" />
+            </rewrites_XmlElement>
+        </_x0028_group2_x0029__XmlChoice>
+    </urlrewritingnet_XmlElement>
+    <bool_XmlSimpleType left="158" top="7435" width="6297" height="3466" selected="0" zOrder="20" index="1" expanded="1" />
+    <RegexOptions_XmlSimpleType left="-53" top="11774" width="8440" height="7170" selected="0" zOrder="22" index="2" expanded="1" />
+    <RewriteUrlParameter_XmlSimpleType left="10002" top="12833" width="8149" height="3466" selected="0" zOrder="24" index="3" expanded="1" />
+    <RedirectOption_XmlSimpleType left="19918" top="15536" width="5292" height="2937" selected="0" zOrder="26" index="4" expanded="1" />
+    <RedirectMode_XmlSimpleType left="19600" top="11413" width="5292" height="2937" selected="0" zOrder="28" index="5" expanded="1" />
+    <RewriteOption_XmlSimpleType left="8758" top="8467" width="7990" height="3466" selected="0" zOrder="30" index="6" expanded="1" />
+    <providerCollection_XmlComplexType left="1317" top="23557" width="5292" height="3466" selected="0" zOrder="36" index="7" expanded="1">
+        <clear_XmlElement left="7243" top="20906" width="5292" height="820" selected="0" zOrder="37" index="0" expanded="1">
+            <_x0028_clear_x0029__XmlSimpleType left="13169" top="19583" width="5292" height="3466" selected="0" zOrder="40" index="0" expanded="1" />
+        </clear_XmlElement>
+        <remove_XmlElement left="7243" top="22234" width="5292" height="3466" selected="0" zOrder="43" index="1" expanded="1" />
+        <add_XmlElement left="7243" top="26208" width="5292" height="3466" selected="0" zOrder="45" index="2" expanded="1" />
+    </providerCollection_XmlComplexType>
+    <rewriteCollection_XmlComplexType left="13435" top="24865" width="5292" height="3466" selected="0" zOrder="47" index="8" expanded="1">
+        <add_XmlElement left="19361" top="24865" width="5292" height="3466" selected="0" zOrder="48" index="0" expanded="1" />
+    </rewriteCollection_XmlComplexType>
+</XSDDesignerLayout>

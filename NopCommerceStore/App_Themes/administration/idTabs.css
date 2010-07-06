@@ -1,0 +1,59 @@
+﻿/* Style for Usual tabs */
+.tabcontainer-usual {
+  background:#181818;
+  color:#111;
+  /*padding:15px 20px;*/
+  /*width:500px;*/
+  border:1px solid #222;
+  margin:8px auto;
+}
+
+.tabcontainer-usual ul.idTabs
+{
+	margin-left:-40px;
+	margin-top:-1px;
+}
+
+.tabcontainer-usual li.idTab 
+{
+	list-style:none; 
+    float:left;   
+    /*border:solid 1px black;*/
+	      
+}
+
+.tabcontainer-usual ul.idTabs a {
+  display:block;
+  padding:6px 10px;
+  text-decoration:none!important;
+  margin:1px;
+  margin-left:0;
+  /*font:10px Verdana;*/
+  color:#FFF;
+  background:#444;
+}
+
+.tabcontainer-usual ul.idTabs a:hover {
+  color:#FFF;
+  background:#111;
+  }
+  
+.tabcontainer-usual ul.idTabs a.selected {
+  margin-bottom:0;
+  color:#000;
+  background:snow;
+  border-bottom:1px solid snow;
+  cursor:default;
+  }
+  
+.tabcontainer-usual div.tab {
+  padding:10px 10px 8px 10px;
+  *padding-top:3px;
+  *margin-top:-15px;
+  clear:left;
+  background:snow;
+  /*font:10pt Georgia;*/
+}
+
+
+

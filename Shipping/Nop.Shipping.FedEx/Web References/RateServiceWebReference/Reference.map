@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DiscoveryClientResultsFile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Results>
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.ContractReference" url="file:///D:/Work/Own/Shipping modules/FedEx/RateService_v7_cs/cs/RateWebServiceClient/Web References/RateServiceWebReference/RateServiceDefinitions.wsdl" filename="RateServiceDefinitions.wsdl" />
+  </Results>
+</DiscoveryClientResultsFile>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:ns="urn:ebay:apis:EnhancedDataTypes" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="urn:ebay:apis:EnhancedDataTypes" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:complexType name="EnhancedCheckoutDataType" />
+  <xs:complexType name="EnhancedPaymentDataType" />
+  <xs:complexType name="EnhancedItemDataType" />
+  <xs:complexType name="EnhancedPaymentInfoType" />
+</xs:schema>

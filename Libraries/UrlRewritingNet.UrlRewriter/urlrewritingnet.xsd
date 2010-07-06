@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema targetNamespace="http://www.urlrewriting.net/schemas/config/2006/07" xmlns="http://www.urlrewriting.net/schemas/config/2006/07" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="urlrewritingnet">
+    <xs:complexType>
+      <xs:sequence maxOccurs="1">
+        <xs:choice maxOccurs="1" minOccurs="0">
+          <xs:element name="providers" type="providerCollection" />
+        </xs:choice>
+        <xs:choice maxOccurs="1" minOccurs="1">
+          <xs:element name="rewrites" type="rewriteCollection" />
+        </xs:choice>
+      </xs:sequence>
+      <xs:attribute name="rewriteOnlyVirtualUrls" type="bool" use="optional" default="true" />
+      <xs:attribute name="contextItemsPrefix" type="xs:string" use="optional" default="" />
+      <xs:attribute name="configSource" type="xs:string" use="optional" default="" />
+      <xs:attribute name="defaultProvider" type="xs:string" default="RegEx" />
+      <xs:attribute name="defaultPage" type="xs:string" use="optional" />
+    </xs:complexType>
+  </xs:element>
+  <xs:simpleType name="bool">
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="true" />
+      <xs:enumeration value="false" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="RegexOptions">
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="None" />
+      <xs:enumeration value="IgnoreCase" />
+      <xs:enumeration value="Multiline" />
+      <xs:enumeration value="ExplicitCapture" />
+      <xs:enumeration value="Compiled" />
+      <xs:enumeration value="Singleline" />
+      <xs:enumeration value="IgnorePatternWhitespace" />
+      <xs:enumeration value="RightToLeft" />
+      <xs:enumeration value="ECMAScript" />
+      <xs:enumeration value="CultureInvariant" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="RewriteUrlParameter">
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="ExcludeFromClientQueryString" />
+      <xs:enumeration value="StoreInContextItems" />
+      <xs:enumeration value="None" />
+      <xs:enumeration value="IncludeQueryStringForRewrite" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="RedirectOption">
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="Application" />
+      <xs:enumeration value="Domain" />
+      <xs:enumeration value="None" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="RedirectMode">
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="Permanent" />
+      <xs:enumeration value="Temporary" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="RewriteOption">
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="Application" />
+      <xs:enumeration value="Domain" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="providerCollection">
+    <xs:choice>
+      <xs:element name="clear" maxOccurs="1" minOccurs="0">
+        <xs:simpleType>
+          <xs:restriction base="xs:string" />
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="remove" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+          </xs:sequence>
+          <xs:attribute name="name" type="xs:string" use="required" />
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="add" minOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+          </xs:sequence>
+          <xs:attribute name="name" type="xs:string" use="required" />
+          <xs:attribute name="type" type="xs:string" use="required" />
+        </xs:complexType>
+      </xs:element>
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="rewriteCollection">
+    <xs:choice minOccurs="1" maxOccurs="unbounded">
+      <xs:element name="add" minOccurs="1">
+        <xs:complexType>
+          <xs:attribute name="name" type="xs:string" use="required" />
+          <xs:attribute name="virtualUrl" type="xs:string" use="optional" />
+          <xs:attribute name="destinationUrl" type="xs:string" use="required" />
+          <xs:attribute name="redirect" type="RedirectOption" use="optional" default="None" />
+          <xs:attribute name="redirectMode" type="RedirectMode" use="optional" default="Temporary" />
+          <xs:attribute name="ignoreCase" type="bool" use="optional" default="false" />
+          <xs:attribute name="rewriteUrlParameter" type="RewriteUrlParameter" use="optional" default="ExcludeFromClientQueryString" />
+          <xs:attribute name="regexOptions" type="RegexOptions" use="optional" default="None" />
+          <xs:attribute name="provider" type="xs:string" />
+          <xs:attribute name="rewrite" type="RewriteOption" />
+        </xs:complexType>
+      </xs:element>
+    </xs:choice>
+  </xs:complexType>
+</xs:schema>

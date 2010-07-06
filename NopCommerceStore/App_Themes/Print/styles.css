@@ -1,0 +1,85 @@
+﻿body, h1, h2, h3, h4, h5, h6, address, blockquote, dd, dl, hr, form, input
+{
+    margin: 0;
+    padding: 0;
+}
+
+body
+{
+	font-family: arial, verdana, helvetica, sans-serif;
+	font-size: 12px;
+	background: #FFF;
+	color: #000000;
+	margin: 10px 10px 10px 10px;
+}
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*
+
+	ORDER DETAILS
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+.order-details
+{
+	margin-bottom: 15px;
+	padding: 0px;
+}
+
+.order-details .title
+{
+	padding: 10px 10px 5px 0px;
+	font-weight: bold;
+	text-transform: uppercase;
+	clear: both;
+}
+
+.order-details .info
+{
+	border: 1px solid #d7d7d7;
+	padding: 10px;
+}
+
+.order-details .section-title
+{
+	padding: 10px 10px 5px 0px;
+	font-weight: bold;
+	clear: both;
+}
+
+.order-details .order-overview
+{
+	text-align: left;
+	padding-bottom: 10px;
+}
+.order-details .shipping-box
+{
+	text-align: left;
+	padding: 10px;
+	border: 1px solid #d7d7d7;
+	height: auto;
+}
+
+.order-details .billing-box
+{
+	text-align: left;
+	padding: 10px;
+	border: 1px solid #d7d7d7;
+	height: auto;
+}
+
+.order-details .products-box, .order-details .ordernotes-box
+{
+	text-align: left;
+	padding: 10px;
+	border: 1px solid #d7d7d7;
+	height: auto;
+}
+
+.order-details .checkout-attributes
+{
+	text-align: right;
+	vertical-align: middle;
+	padding: 10px;
+	height: auto;
+}
+

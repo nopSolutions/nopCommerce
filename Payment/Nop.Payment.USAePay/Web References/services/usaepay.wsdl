@@ -1,0 +1,2133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:typens="urn:usaepay" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.xmlsoap.org/wsdl/" name="usaepay" targetNamespace="urn:usaepay" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:usaepay">
+      <xsd:complexType name="ueSecurityToken">
+        <xsd:all>
+          <xsd:element name="ClientIP" type="xsd:string" />
+          <xsd:element name="PinHash" type="typens:ueHash" />
+          <xsd:element name="SourceKey" type="xsd:string" />
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="CustomerObject">
+        <xsd:all>
+          <xsd:element name="Amount" type="xsd:double" />
+          <xsd:element name="BillingAddress" type="typens:Address" />
+          <xsd:element name="CustNum" type="xsd:string" />
+          <xsd:element name="CustomData" type="xsd:string" />
+          <xsd:element name="CustomFields" type="typens:FieldValueArray" />
+          <xsd:element name="CustomerID" type="xsd:string" />
+          <xsd:element minOccurs="0" name="Created" type="xsd:string" />
+          <xsd:element name="Description" type="xsd:string" />
+          <xsd:element name="Enabled" type="xsd:boolean" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="Failures" type="xsd:int" />
+          <xsd:element minOccurs="0" name="Modified" type="xsd:string" />
+          <xsd:element name="Next" type="xsd:string" />
+          <xsd:element name="Notes" type="xsd:string" />
+          <xsd:element name="NumLeft" type="xsd:integer" />
+          <xsd:element name="OrderID" type="xsd:string" />
+          <xsd:element name="PaymentMethods" type="typens:PaymentMethodArray" />
+          <xsd:element name="ReceiptNote" type="xsd:string" />
+          <xsd:element name="Schedule" type="xsd:string" />
+          <xsd:element name="SendReceipt" type="xsd:boolean" />
+          <xsd:element name="Source" type="xsd:string" />
+          <xsd:element name="Tax" type="xsd:double" />
+          <xsd:element name="User" type="xsd:string" />
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="PaymentMethod">
+        <xsd:all>
+          <xsd:element minOccurs="0" name="CheckData" type="typens:CheckData" />
+          <xsd:element minOccurs="0" name="CreditCardData" type="typens:CreditCardData" />
+          <xsd:element name="Expires" type="xsd:string" />
+          <xsd:element minOccurs="0" name="MethodID" type="xsd:integer" />
+          <xsd:element name="MethodName" type="xsd:string" />
+          <xsd:element name="SecondarySort" type="xsd:integer" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="Created" type="xsd:dateTime" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="Modified" type="xsd:dateTime" />
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="MerchantApplicationObject">
+        <xsd:all>
+          <xsd:element name="AltEmail" type="xsd:string" />
+          <xsd:element name="billing_Account" type="xsd:string" />
+          <xsd:element name="billing_Bank" type="xsd:string" />
+          <xsd:element name="billing_Routing" type="xsd:string" />
+          <xsd:element name="City" type="xsd:string" />
+          <xsd:element name="Company" type="xsd:string" />
+          <xsd:element name="Contact" type="xsd:string" />
+          <xsd:element name="Country" type="xsd:string" />
+          <xsd:element name="Email" type="xsd:string" />
+          <xsd:element name="Fax" type="xsd:string" />
+          <xsd:element name="fdms_MerchantID" type="xsd:string" />
+          <xsd:element name="fdms_MerchNum" type="xsd:string" />
+          <xsd:element name="fdms_TerminalID" type="xsd:string" />
+          <xsd:element name="Industry" type="xsd:string" />
+          <xsd:element name="MobilePhone" type="xsd:string" />
+          <xsd:element name="paytech_Client" type="xsd:string" />
+          <xsd:element name="paytech_MerchID" type="xsd:string" />
+          <xsd:element name="paytech_TermID" type="xsd:string" />
+          <xsd:element name="Phone" type="xsd:string" />
+          <xsd:element name="Platform" type="xsd:string" />
+          <xsd:element name="ResellerEmail" type="xsd:string" />
+          <xsd:element name="State" type="xsd:string" />
+          <xsd:element name="Street" type="xsd:string" />
+          <xsd:element name="Street2" type="xsd:string" />
+          <xsd:element name="Url" type="xsd:string" />
+          <xsd:element name="vc_MEN" type="xsd:string" />
+          <xsd:element name="vc_MID" type="xsd:string" />
+          <xsd:element name="vc_MPA" type="xsd:string" />
+          <xsd:element name="vc_Password" type="xsd:string" />
+          <xsd:element name="vital_Agent" type="xsd:string" />
+          <xsd:element name="vital_Bin" type="xsd:string" />
+          <xsd:element name="vital_Chain" type="xsd:string" />
+          <xsd:element name="vital_CityCode" type="xsd:string" />
+          <xsd:element name="vital_Mcc" type="xsd:string" />
+          <xsd:element name="vital_MerchCity" type="xsd:string" />
+          <xsd:element name="vital_MerchName" type="xsd:string" />
+          <xsd:element name="vital_MerchState" type="xsd:string" />
+          <xsd:element name="vital_Sid" type="xsd:string" />
+          <xsd:element name="vital_Tid" type="xsd:string" />
+          <xsd:element name="Zip" type="xsd:string" />
+          <xsd:element name="Username" type="xsd:string" />
+          <xsd:element name="CallInPassword" type="xsd:string" />
+          <xsd:element name="SetupFee" type="xsd:string" />
+          <xsd:element name="DiscountRate" type="xsd:string" />
+          <xsd:element name="PerTranFee" type="xsd:string" />
+          <xsd:element name="AnnualSecFee" type="xsd:string" />
+          <xsd:element name="GatewayPackage" type="xsd:string" />
+          <xsd:element name="SourceKeyName" type="xsd:string" />
+          <xsd:element name="PIN" type="xsd:string" />
+          <xsd:element name="EmailOnActivation" type="xsd:string" />
+          <xsd:element name="EmailInstructions" type="xsd:string" />
+          <xsd:element name="CheckProcessor" type="xsd:string" />
+          <xsd:element name="DirectPayPlatform" type="xsd:string" />
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="doubleArray">
+        <xsd:complexContent mixed="false">
+          <xsd:restriction base="soapenc:Array">
+            <xsd:attribute wsdl:arrayType="xsd:double[]" ref="soapenc:arrayType" />
+          </xsd:restriction>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="CurrencyConversionArray">
+        <xsd:complexContent mixed="false">
+          <xsd:restriction base="soapenc:Array">
+            <xsd:attribute wsdl:arrayType="typens:CurrencyConversion[]" ref="soapenc:arrayType" />
+          </xsd:restriction>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="TransactionResponse">
+        <xsd:all>
+          <xsd:element name="AcsUrl" type="xsd:string" />
+          <xsd:element name="AuthCode" type="xsd:string" />
+          <xsd:element name="AvsResult" type="xsd:string" />
+          <xsd:element name="AvsResultCode" type="xsd:string" />
+          <xsd:element name="BatchNum" type="xsd:integer" />
+          <xsd:element name="BatchRefNum" type="xsd:integer" />
+          <xsd:element name="CardCodeResult" type="xsd:string" />
+          <xsd:element name="CardCodeResultCode" type="xsd:string" />
+          <xsd:element name="ConversionRate" type="xsd:double" />
+          <xsd:element name="ConvertedAmount" type="xsd:double" />
+          <xsd:element name="ConvertedAmountCurrency" type="xsd:string" />
+          <xsd:element name="CustNum" type="xsd:integer" />
+          <xsd:element name="Error" type="xsd:string" />
+          <xsd:element name="ErrorCode" type="xsd:integer" />
+          <xsd:element name="isDuplicate" type="xsd:boolean" />
+          <xsd:element name="Payload" type="xsd:string" />
+          <xsd:element name="RefNum" type="xsd:integer" />
+          <xsd:element name="Result" type="xsd:string" />
+          <xsd:element name="ResultCode" type="xsd:string" />
+          <xsd:element name="Status" type="xsd:string" />
+          <xsd:element name="StatusCode" type="xsd:string" />
+          <xsd:element name="VpasResultCode" type="xsd:string" />
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="stringArray">
+        <xsd:complexContent mixed="false">
+          <xsd:restriction base="soapenc:Array">
+            <xsd:attribute wsdl:arrayType="xsd:string[]" ref="soapenc:arrayType" />
+          </xsd:restriction>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="BatchUploadStatus">
+        <xsd:all>
+          <xsd:element name="Approved" type="xsd:integer" />
+          <xsd:element name="UploadRefNum" type="xsd:integer" />
+          <xsd:element name="Declined" type="xsd:integer" />
+          <xsd:element name="Errors" type="xsd:integer" />
+          <xsd:element name="Finished" type="xsd:string" />
+          <xsd:element name="Remaining" type="xsd:integer" />
+          <xsd:element name="Started" type="xsd:string" />
+          <xsd:element name="Status" type="xsd:string" />
+          <xsd:element name="Transactions" type="xsd:integer" />
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="CurrencyConversion">
+        <xsd:all>
+          <xsd:element name="Amount" type="xsd:double" />
+          <xsd:element name="Currency" type="xsd:integer" />
+          <xsd:element name="FromAmount" type="xsd:double" />
+          <xsd:element name="FromCurrency" type="xsd:integer" />
+          <xsd:element name="Rate" type="xsd:double" />
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="AccountDetails">
+        <xsd:all>
+          <xsd:element name="CardholderAuthentication" type="xsd:string" />
+          <xsd:element name="CheckPlatform" type="xsd:string" />
+          <xsd:element name="CreditCardPlatform" type="xsd:string" />
+          <xsd:element name="DebitCardSupport" type="xsd:boolean" />
+          <xsd:element name="DirectPayPlatform" type="xsd:string" />
+          <xsd:element name="Industry" type="xsd:string" />
+          <xsd:element name="SupportedCurrencies" type="typens:CurrencyObjectArray" />
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="CurrencyObjectArray">
+        <xsd:complexContent mixed="false">
+          <xsd:restriction base="soapenc:Array">
+            <xsd:attribute wsdl:arrayType="typens:CurrencyObject[]" ref="soapenc:arrayType" />
+          </xsd:restriction>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="BatchStatus">
+        <xsd:all>
+          <xsd:element name="BatchRefNum" type="xsd:integer" />
+          <xsd:element name="Closed" type="xsd:string" />
+          <xsd:element name="CreditsAmount" type="xsd:double" />
+          <xsd:element name="CreditsCount" type="xsd:integer" />
+          <xsd:element name="NetAmount" type="xsd:double" />
+          <xsd:element name="Opened" type="xsd:string" />
+          <xsd:element name="SalesAmount" type="xsd:double" />
+          <xsd:element name="SalesCount" type="xsd:integer" />
+          <xsd:element name="Scheduled" type="xsd:string" />
+          <xsd:element name="Sequence" type="xsd:integer" />
+          <xsd:element name="Status" type="xsd:string" />
+          <xsd:element name="TransactionCount" type="xsd:integer" />
+          <xsd:element name="VoidsAmount" type="xsd:double" />
+          <xsd:element name="VoidsCount" type="xsd:integer" />
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="Bank">
+        <xsd:all>
+          <xsd:element name="Code" type="xsd:string" />
+          <xsd:element name="Name" type="xsd:string" />
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="BankArray">
+        <xsd:complexContent mixed="false">
+          <xsd:restriction base="soapenc:Array">
+            <xsd:attribute wsdl:arrayType="typens:Bank[]" ref="soapenc:arrayType" />
+          </xsd:restriction>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="TransactionObjectArray">
+        <xsd:complexContent mixed="false">
+          <xsd:restriction base="soapenc:Array">
+            <xsd:attribute wsdl:arrayType="typens:TransactionObject[]" ref="soapenc:arrayType" />
+          </xsd:restriction>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="TransactionSearchResult">
+        <xsd:all>
+          <xsd:element name="AuthOnlyAmount" type="xsd:float" />
+          <xsd:element name="AuthOnlyCount" type="xsd:integer" />
+          <xsd:element name="CreditsAmount" type="xsd:float" />
+          <xsd:element name="CreditsCount" type="xsd:integer" />
+          <xsd:element name="DeclinesAmount" type="xsd:float" />
+          <xsd:element name="DeclinesCount" type="xsd:integer" />
+          <xsd:element name="ErrorsAmount" type="xsd:float" />
+          <xsd:element name="ErrorsCount" type="xsd:integer" />
+          <xsd:element name="Limit" type="xsd:integer" />
+          <xsd:element name="SalesAmount" type="xsd:float" />
+          <xsd:element name="SalesCount" type="xsd:integer" />
+          <xsd:element name="StartIndex" type="xsd:integer" />
+          <xsd:element name="Transactions" type="typens:TransactionObjectArray" />
+          <xsd:element name="TransactionsMatched" type="xsd:integer" />
+          <xsd:element name="TransactionsReturned" type="xsd:integer" />
+          <xsd:element name="VoidsAmount" type="xsd:float" />
+          <xsd:element name="VoidsCount" type="xsd:integer" />
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="MerchantObject">
+        <xsd:all>
+          <xsd:element name="City" type="xsd:string" />
+          <xsd:element name="Company" type="xsd:string" />
+          <xsd:element name="Contact" type="xsd:string" />
+          <xsd:element name="Country" type="xsd:string" />
+          <xsd:element name="Email" type="xsd:string" />
+          <xsd:element name="Fax" type="xsd:string" />
+          <xsd:element name="MerchID" type="xsd:integer" />
+          <xsd:element name="Phone" type="xsd:string" />
+          <xsd:element name="State" type="xsd:string" />
+          <xsd:element name="Street" type="xsd:string" />
+          <xsd:element name="Street2" type="xsd:string" />
+          <xsd:element name="Zip" type="xsd:string" />
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="MerchantSummaryObject">
+        <xsd:all>
+          <xsd:element name="CheckRefundsAmount" type="xsd:double" />
+          <xsd:element name="CheckRefundsCount" type="xsd:integer" />
+          <xsd:element name="CheckSalesAmount" type="xsd:double" />
+          <xsd:element name="CheckSalesCount" type="xsd:integer" />
+          <xsd:element name="CreditsAmount" type="xsd:double" />
+          <xsd:element name="CreditsCount" type="xsd:integer" />
+          <xsd:element name="DeclinesAmount" type="xsd:double" />
+          <xsd:element name="DeclinesCount" type="xsd:integer" />
+          <xsd:element name="MerchantID" type="xsd:integer" />
+          <xsd:element name="MerchantName" type="xsd:string" />
+          <xsd:element name="SalesAmount" type="xsd:double" />
+          <xsd:element name="SalesCount" type="xsd:integer" />
+          <xsd:element name="VoidsAmount" type="xsd:double" />
+          <xsd:element name="VoidsCount" type="xsd:integer" />
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="TransactionObject">
+        <xsd:all>
+          <xsd:element name="AccountHolder" type="xsd:string" />
+          <xsd:element name="BillingAddress" type="typens:Address" />
+          <xsd:element name="CheckData" type="typens:CheckData" />
+          <xsd:element name="CheckTrace" type="typens:CheckTrace" />
+          <xsd:element name="ClientIP" type="xsd:string" />
+          <xsd:element name="CreditCardData" type="typens:CreditCardData" />
+          <xsd:element name="CustomerID" type="xsd:string" />
+          <xsd:element name="CustomFields" type="typens:FieldValueArray" />
+          <xsd:element name="DateTime" type="xsd:string" />
+          <xsd:element name="Details" type="typens:TransactionDetail" />
+          <xsd:element name="Response" type="typens:TransactionResponse" />
+          <xsd:element name="ServerIP" type="xsd:string" />
+          <xsd:element name="ShippingAddress" type="typens:Address" />
+          <xsd:element name="Source" type="xsd:string" />
+          <xsd:element name="Status" type="xsd:string" />
+          <xsd:element name="TransactionType" type="xsd:string" />
+          <xsd:element name="User" type="xsd:string" />
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="FieldValueArray">
+        <xsd:complexContent mixed="false">
+          <xsd:restriction base="soapenc:Array">
+            <xsd:attribute wsdl:arrayType="typens:FieldValue[]" ref="soapenc:arrayType" />
+          </xsd:restriction>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="TransactionRequestObject">
+        <xsd:all>
+          <xsd:element minOccurs="0" name="AccountHolder" type="xsd:string" />
+          <xsd:element minOccurs="0" name="AuthCode" type="xsd:string" />
+          <xsd:element minOccurs="0" name="BillingAddress" type="typens:Address" />
+          <xsd:element minOccurs="0" name="CheckData" type="typens:CheckData" />
+          <xsd:element minOccurs="0" name="ClientIP" type="xsd:string" />
+          <xsd:element minOccurs="0" name="Command" type="xsd:string" />
+          <xsd:element minOccurs="0" name="CreditCardData" type="typens:CreditCardData" />
+          <xsd:element minOccurs="0" name="CustomerID" type="xsd:string" />
+          <xsd:element minOccurs="0" name="CustReceipt" type="xsd:boolean" />
+          <xsd:element name="Details" type="typens:TransactionDetail" />
+          <xsd:element minOccurs="0" name="IgnoreDuplicate" type="xsd:boolean" />
+          <xsd:element minOccurs="0" name="RecurringBilling" type="typens:RecurringBilling" />
+          <xsd:element minOccurs="0" name="RefNum" type="xsd:string" />
+          <xsd:element minOccurs="0" name="ShippingAddress" type="typens:Address" />
+          <xsd:element minOccurs="0" name="Software" type="xsd:string" />
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="TransactionDetail">
+        <xsd:all>
+          <xsd:element minOccurs="0" name="Amount" type="xsd:double" />
+          <xsd:element minOccurs="0" name="Clerk" type="xsd:string" />
+          <xsd:element minOccurs="0" name="Currency" type="xsd:integer" />
+          <xsd:element minOccurs="0" name="Description" type="xsd:string" />
+          <xsd:element minOccurs="0" name="Comments" type="xsd:string" />
+          <xsd:element minOccurs="0" name="Discount" type="xsd:double" />
+          <xsd:element minOccurs="0" name="Invoice" type="xsd:string" />
+          <xsd:element minOccurs="0" name="NonTax" type="xsd:boolean" />
+          <xsd:element minOccurs="0" name="OrderID" type="xsd:string" />
+          <xsd:element minOccurs="0" name="PONum" type="xsd:string" />
+          <xsd:element minOccurs="0" name="Shipping" type="xsd:double" />
+          <xsd:element minOccurs="0" name="Subtotal" type="xsd:double" />
+          <xsd:element minOccurs="0" name="Table" type="xsd:string" />
+          <xsd:element minOccurs="0" name="Tax" type="xsd:double" />
+          <xsd:element minOccurs="0" name="Terminal" type="xsd:string" />
+          <xsd:element minOccurs="0" name="Tip" type="xsd:double" />
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="CustomerTransactionDetail">
+        <xsd:all>
+          <xsd:element minOccurs="0" name="Amount" type="xsd:double" />
+          <xsd:element minOccurs="0" name="Clerk" type="xsd:string" />
+          <xsd:element minOccurs="0" name="Currency" type="xsd:integer" />
+          <xsd:element minOccurs="0" name="Description" type="xsd:string" />
+          <xsd:element minOccurs="0" name="Comments" type="xsd:string" />
+          <xsd:element minOccurs="0" name="Discount" type="xsd:double" />
+          <xsd:element minOccurs="0" name="Invoice" type="xsd:string" />
+          <xsd:element minOccurs="0" name="NonTax" type="xsd:boolean" />
+          <xsd:element minOccurs="0" name="OrderID" type="xsd:string" />
+          <xsd:element minOccurs="0" name="PONum" type="xsd:string" />
+          <xsd:element minOccurs="0" name="Shipping" type="xsd:double" />
+          <xsd:element minOccurs="0" name="Subtotal" type="xsd:double" />
+          <xsd:element minOccurs="0" name="Table" type="xsd:string" />
+          <xsd:element minOccurs="0" name="Tax" type="xsd:double" />
+          <xsd:element minOccurs="0" name="Terminal" type="xsd:string" />
+          <xsd:element minOccurs="0" name="Tip" type="xsd:double" />
+          <xsd:element minOccurs="0" name="isRecurring" type="xsd:boolean" />
+          <xsd:element minOccurs="0" name="CVV" type="xsd:string" />
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="BatchSearchResult">
+        <xsd:all>
+          <xsd:element name="Batches" type="typens:BatchStatusArray" />
+          <xsd:element name="BatchesMatched" type="xsd:integer" />
+          <xsd:element name="BatchesReturned" type="xsd:integer" />
+          <xsd:element name="Limit" type="xsd:integer" />
+          <xsd:element name="StartIndex" type="xsd:integer" />
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="CustomerSearchResult">
+        <xsd:all>
+          <xsd:element name="Customers" type="typens:CustomerObjectArray" />
+          <xsd:element name="CustomersMatched" type="xsd:integer" />
+          <xsd:element name="CustomersReturned" type="xsd:integer" />
+          <xsd:element name="Limit" type="xsd:integer" />
+          <xsd:element name="StartIndex" type="xsd:integer" />
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="MerchantSearchResult">
+        <xsd:all>
+          <xsd:element name="Limit" type="xsd:integer" />
+          <xsd:element name="Merchants" type="typens:MerchantObjectArray" />
+          <xsd:element name="MerchantsMatched" type="xsd:integer" />
+          <xsd:element name="MerchantsReturned" type="xsd:integer" />
+          <xsd:element name="StartIndex" type="xsd:integer" />
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="ueHash">
+        <xsd:all>
+          <xsd:element name="HashValue" type="xsd:string" />
+          <xsd:element name="Seed" type="xsd:string" />
+          <xsd:element name="Type" type="xsd:string" />
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="Address">
+        <xsd:all>
+          <xsd:element minOccurs="0" name="City" type="xsd:string" />
+          <xsd:element minOccurs="0" name="Company" type="xsd:string" />
+          <xsd:element minOccurs="0" name="Country" type="xsd:string" />
+          <xsd:element minOccurs="0" name="Email" type="xsd:string" />
+          <xsd:element minOccurs="0" name="Fax" type="xsd:string" />
+          <xsd:element minOccurs="0" name="FirstName" type="xsd:string" />
+          <xsd:element minOccurs="0" name="LastName" type="xsd:string" />
+          <xsd:element minOccurs="0" name="Phone" type="xsd:string" />
+          <xsd:element minOccurs="0" name="State" type="xsd:string" />
+          <xsd:element minOccurs="0" name="Street" type="xsd:string" />
+          <xsd:element minOccurs="0" name="Street2" type="xsd:string" />
+          <xsd:element minOccurs="0" name="Zip" type="xsd:string" />
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="PaymentMethodArray">
+        <xsd:complexContent mixed="false">
+          <xsd:restriction base="soapenc:Array">
+            <xsd:attribute wsdl:arrayType="typens:PaymentMethod[]" ref="soapenc:arrayType" />
+          </xsd:restriction>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="CheckData">
+        <xsd:all>
+          <xsd:element name="Account" type="xsd:string" />
+          <xsd:element minOccurs="0" name="AccountType" type="xsd:string" />
+          <xsd:element minOccurs="0" name="CheckNumber" type="xsd:integer" />
+          <xsd:element minOccurs="0" name="DriversLicense" type="xsd:string" />
+          <xsd:element minOccurs="0" name="DriversLicenseState" type="xsd:string" />
+          <xsd:element minOccurs="0" name="RecordType" type="xsd:string" />
+          <xsd:element name="Routing" type="xsd:string" />
+          <xsd:element minOccurs="0" name="SSN" type="xsd:string" />
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="CreditCardData">
+        <xsd:all>
+          <xsd:element minOccurs="0" name="AvsStreet" type="xsd:string" />
+          <xsd:element minOccurs="0" name="AvsZip" type="xsd:string" />
+          <xsd:element minOccurs="0" name="CardCode" type="xsd:string" />
+          <xsd:element minOccurs="0" name="CardExpiration" type="xsd:string" />
+          <xsd:element minOccurs="0" name="CardNumber" type="xsd:string" />
+          <xsd:element minOccurs="0" name="CardPresent" type="xsd:boolean" />
+          <xsd:element minOccurs="0" name="CardType" type="xsd:string" />
+          <xsd:element minOccurs="0" name="CAVV" type="xsd:string" />
+          <xsd:element minOccurs="0" name="DUKPT" type="xsd:string" />
+          <xsd:element minOccurs="0" name="ECI" type="xsd:integer" />
+          <xsd:element minOccurs="0" name="InternalCardAuth" type="xsd:boolean" />
+          <xsd:element minOccurs="0" name="MagStripe" type="xsd:string" />
+          <xsd:element minOccurs="0" name="MagSupport" type="xsd:string" />
+          <xsd:element minOccurs="0" name="Pares" type="xsd:string" />
+          <xsd:element minOccurs="0" name="Signature" type="xsd:string" />
+          <xsd:element minOccurs="0" name="TermType" type="xsd:string" />
+          <xsd:element minOccurs="0" name="XID" type="xsd:string" />
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="CurrencyObject">
+        <xsd:all>
+          <xsd:element name="Currency" type="xsd:string" />
+          <xsd:element name="DecimalPlaces" type="xsd:integer" />
+          <xsd:element name="NumericCode" type="xsd:integer" />
+          <xsd:element name="Rate" type="xsd:double" />
+          <xsd:element name="TextCode" type="xsd:string" />
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="CheckTrace">
+        <xsd:all>
+          <xsd:element minOccurs="0" name="BankNote" type="xsd:string" />
+          <xsd:element minOccurs="0" name="Effective" type="xsd:string" />
+          <xsd:element minOccurs="0" name="Processed" type="xsd:string" />
+          <xsd:element minOccurs="0" name="Returned" type="xsd:string" />
+          <xsd:element minOccurs="0" name="Settled" type="xsd:string" />
+          <xsd:element minOccurs="0" name="TrackingNum" type="xsd:string" />
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="FieldValue">
+        <xsd:all>
+          <xsd:element name="Field" type="xsd:string" />
+          <xsd:element name="Value" type="xsd:string" />
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="RecurringBilling">
+        <xsd:all>
+          <xsd:element name="Amount" type="xsd:double" />
+          <xsd:element name="Enabled" type="xsd:boolean" />
+          <xsd:element minOccurs="0" name="Expire" type="xsd:string" />
+          <xsd:element name="Next" type="xsd:string" />
+          <xsd:element name="NumLeft" type="xsd:integer" />
+          <xsd:element name="Schedule" type="xsd:string" />
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="BatchStatusArray">
+        <xsd:complexContent mixed="false">
+          <xsd:restriction base="soapenc:Array">
+            <xsd:attribute wsdl:arrayType="typens:BatchStatus[]" ref="soapenc:arrayType" />
+          </xsd:restriction>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="CustomerObjectArray">
+        <xsd:complexContent mixed="false">
+          <xsd:restriction base="soapenc:Array">
+            <xsd:attribute wsdl:arrayType="typens:CustomerObject[]" ref="soapenc:arrayType" />
+          </xsd:restriction>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="MerchantObjectArray">
+        <xsd:complexContent mixed="false">
+          <xsd:restriction base="soapenc:Array">
+            <xsd:attribute wsdl:arrayType="typens:MerchantObject[]" ref="soapenc:arrayType" />
+          </xsd:restriction>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="SearchParam">
+        <xsd:all>
+          <xsd:element name="Field" type="xsd:string" />
+          <xsd:element name="Type" type="xsd:string" />
+          <xsd:element name="Value" type="xsd:string" />
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="SearchParamArray">
+        <xsd:complexContent mixed="false">
+          <xsd:restriction base="soapenc:Array">
+            <xsd:attribute wsdl:arrayType="typens:SearchParam[]" ref="soapenc:arrayType" />
+          </xsd:restriction>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="NewElement" type="xsd:string" />
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="addCustomer">
+    <wsdl:part name="Token" type="typens:ueSecurityToken" />
+    <wsdl:part name="CustomerData" type="typens:CustomerObject" />
+  </wsdl:message>
+  <wsdl:message name="addCustomerResponse">
+    <wsdl:part name="addCustomerReturn" type="xsd:integer" />
+  </wsdl:message>
+  <wsdl:message name="addCustomerPaymentMethod">
+    <wsdl:part name="Token" type="typens:ueSecurityToken" />
+    <wsdl:part name="CustNum" type="xsd:integer" />
+    <wsdl:part name="PaymentMethod" type="typens:PaymentMethod" />
+    <wsdl:part name="MakeDefault" type="xsd:boolean" />
+    <wsdl:part name="Verify" type="xsd:boolean" />
+  </wsdl:message>
+  <wsdl:message name="addCustomerPaymentMethodResponse">
+    <wsdl:part name="addCustomerPaymentMethodReturn" type="xsd:integer" />
+  </wsdl:message>
+  <wsdl:message name="addMerchantApplication">
+    <wsdl:part name="Token" type="typens:ueSecurityToken" />
+    <wsdl:part name="Application" type="typens:MerchantApplicationObject" />
+  </wsdl:message>
+  <wsdl:message name="addMerchantApplicationResponse">
+    <wsdl:part name="addMerchantApplicationReturn" type="xsd:integer" />
+  </wsdl:message>
+  <wsdl:message name="bulkCurrencyConversion">
+    <wsdl:part name="Token" type="typens:ueSecurityToken" />
+    <wsdl:part name="FromCurrency" type="xsd:string" />
+    <wsdl:part name="ToCurrency" type="xsd:string" />
+    <wsdl:part name="Amounts" type="typens:doubleArray" />
+  </wsdl:message>
+  <wsdl:message name="bulkCurrencyConversionResponse">
+    <wsdl:part name="bulkCurrencyConversionReturn" type="typens:CurrencyConversionArray" />
+  </wsdl:message>
+  <wsdl:message name="captureTransaction">
+    <wsdl:part name="Token" type="typens:ueSecurityToken" />
+    <wsdl:part name="RefNum" type="xsd:integer" />
+    <wsdl:part name="Amount" type="xsd:double" />
+  </wsdl:message>
+  <wsdl:message name="captureTransactionResponse">
+    <wsdl:part name="captureTransactionReturn" type="typens:TransactionResponse" />
+  </wsdl:message>
+  <wsdl:message name="closeBatch">
+    <wsdl:part name="Token" type="typens:ueSecurityToken" />
+    <wsdl:part name="BatchRefNum" type="xsd:integer" />
+  </wsdl:message>
+  <wsdl:message name="closeBatchResponse">
+    <wsdl:part name="closeBatchReturn" type="xsd:boolean" />
+  </wsdl:message>
+  <wsdl:message name="convertTranToCust">
+    <wsdl:part name="Token" type="typens:ueSecurityToken" />
+    <wsdl:part name="RefNum" type="xsd:integer" />
+    <wsdl:part name="UpdateData" type="typens:FieldValueArray" />
+  </wsdl:message>
+  <wsdl:message name="convertTranToCustResponse">
+    <wsdl:part name="convertTranToCustReturn" type="xsd:integer" />
+  </wsdl:message>
+  <wsdl:message name="copyCustomer">
+    <wsdl:part name="CopyFromToken" type="typens:ueSecurityToken" />
+    <wsdl:part name="CustNum" type="xsd:integer" />
+    <wsdl:part name="CopyToToken" type="typens:ueSecurityToken" />
+  </wsdl:message>
+  <wsdl:message name="copyCustomerResponse">
+    <wsdl:part name="copyCustomerReturn" type="xsd:integer" />
+  </wsdl:message>
+  <wsdl:message name="createBatchUpload">
+    <wsdl:part name="Token" type="typens:ueSecurityToken" />
+    <wsdl:part name="FileName" type="xsd:string" />
+    <wsdl:part name="AutoStart" type="xsd:boolean" />
+    <wsdl:part name="Format" type="xsd:string" />
+    <wsdl:part name="Encoding" type="xsd:string" />
+    <wsdl:part name="Fields" type="typens:stringArray" />
+    <wsdl:part name="Data" type="xsd:string" />
+    <wsdl:part name="OverrideDuplicates" type="xsd:boolean" />
+  </wsdl:message>
+  <wsdl:message name="createBatchUploadResponse">
+    <wsdl:part name="createBatchUploadReturn" type="typens:BatchUploadStatus" />
+  </wsdl:message>
+  <wsdl:message name="currencyConversion">
+    <wsdl:part name="Token" type="typens:ueSecurityToken" />
+    <wsdl:part name="FromCurrency" type="xsd:integer" />
+    <wsdl:part name="ToCurrency" type="xsd:integer" />
+    <wsdl:part name="Amount" type="xsd:double" />
+  </wsdl:message>
+  <wsdl:message name="currencyConversionResponse">
+    <wsdl:part name="currencyConversionReturn" type="typens:CurrencyConversion" />
+  </wsdl:message>
+  <wsdl:message name="deleteCustomer">
+    <wsdl:part name="Token" type="typens:ueSecurityToken" />
+    <wsdl:part name="CustNum" type="xsd:integer" />
+  </wsdl:message>
+  <wsdl:message name="deleteCustomerResponse">
+    <wsdl:part name="deleteCustomerReturn" type="xsd:boolean" />
+  </wsdl:message>
+  <wsdl:message name="deleteCustomerPaymentMethod">
+    <wsdl:part name="Token" type="typens:ueSecurityToken" />
+    <wsdl:part name="Custnum" type="xsd:integer" />
+    <wsdl:part name="PaymentMethodID" type="xsd:integer" />
+  </wsdl:message>
+  <wsdl:message name="deleteCustomerPaymentMethodResponse">
+    <wsdl:part name="deleteCustomerPaymentMethodReturn" type="xsd:boolean" />
+  </wsdl:message>
+  <wsdl:message name="deleteMerchant">
+    <wsdl:part name="Token" type="typens:ueSecurityToken" />
+    <wsdl:part name="MerchantID" type="xsd:integer" />
+    <wsdl:part name="Reason" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="deleteMerchantResponse">
+    <wsdl:part name="deleteMerchantReturn" type="xsd:boolean" />
+  </wsdl:message>
+  <wsdl:message name="disableCustomer">
+    <wsdl:part name="Token" type="typens:ueSecurityToken" />
+    <wsdl:part name="CustNum" type="xsd:integer" />
+  </wsdl:message>
+  <wsdl:message name="disableCustomerResponse">
+    <wsdl:part name="disableCustomerReturn" type="xsd:boolean" />
+  </wsdl:message>
+  <wsdl:message name="enableCustomer">
+    <wsdl:part name="Token" type="typens:ueSecurityToken" />
+    <wsdl:part name="CustNum" type="xsd:integer" />
+  </wsdl:message>
+  <wsdl:message name="enableCustomerResponse">
+    <wsdl:part name="enableCustomerReturn" type="xsd:boolean" />
+  </wsdl:message>
+  <wsdl:message name="getAccountDetails">
+    <wsdl:part name="Token" type="typens:ueSecurityToken" />
+  </wsdl:message>
+  <wsdl:message name="getAccountDetailsResponse">
+    <wsdl:part name="getAccountDetailsReturn" type="typens:AccountDetails" />
+  </wsdl:message>
+  <wsdl:message name="getBankList">
+    <wsdl:part name="Token" type="typens:ueSecurityToken" />
+  </wsdl:message>
+  <wsdl:message name="getBankListResponse">
+    <wsdl:part name="getBankListDetailsReturn" type="typens:BankArray" />
+  </wsdl:message>
+  <wsdl:message name="getBatchStatus">
+    <wsdl:part name="Token" type="typens:ueSecurityToken" />
+    <wsdl:part name="BatchRefNum" type="xsd:integer" />
+  </wsdl:message>
+  <wsdl:message name="getBatchStatusResponse">
+    <wsdl:part name="getBatchStatusReturn" type="typens:BatchStatus" />
+  </wsdl:message>
+  <wsdl:message name="getBatchTransactions">
+    <wsdl:part name="Token" type="typens:ueSecurityToken" />
+    <wsdl:part name="BatchRefNum" type="xsd:integer" />
+  </wsdl:message>
+  <wsdl:message name="getBatchTransactionsResponse">
+    <wsdl:part name="getBatchTransactionsReturn" type="typens:TransactionObjectArray" />
+  </wsdl:message>
+  <wsdl:message name="getBatchUploadStatus">
+    <wsdl:part name="Token" type="typens:ueSecurityToken" />
+    <wsdl:part name="UploadRefNum" type="xsd:integer" />
+  </wsdl:message>
+  <wsdl:message name="getBatchUploadStatusResponse">
+    <wsdl:part name="getBatchUploadStatusReturn" type="typens:BatchUploadStatus" />
+  </wsdl:message>
+  <wsdl:message name="getCustomer">
+    <wsdl:part name="Token" type="typens:ueSecurityToken" />
+    <wsdl:part name="CustNum" type="xsd:integer" />
+  </wsdl:message>
+  <wsdl:message name="getCustomerResponse">
+    <wsdl:part name="getCustomerReturn" type="typens:CustomerObject" />
+  </wsdl:message>
+  <wsdl:message name="getCustomerHistory">
+    <wsdl:part name="Token" type="typens:ueSecurityToken" />
+    <wsdl:part name="CustNum" type="xsd:integer" />
+  </wsdl:message>
+  <wsdl:message name="getCustomerHistoryResponse">
+    <wsdl:part name="getCustomerHistoryReturn" type="typens:TransactionSearchResult" />
+  </wsdl:message>
+  <wsdl:message name="getCustomerPaymentMethod">
+    <wsdl:part name="Token" type="typens:ueSecurityToken" />
+    <wsdl:part name="CustNum" type="xsd:integer" />
+    <wsdl:part name="MethodID" type="xsd:integer" />
+  </wsdl:message>
+  <wsdl:message name="getCustomerPaymentMethodResponse">
+    <wsdl:part name="getCustomerPaymentMethodReturn" type="typens:PaymentMethod" />
+  </wsdl:message>
+  <wsdl:message name="getCustomerPaymentMethods">
+    <wsdl:part name="Token" type="typens:ueSecurityToken" />
+    <wsdl:part name="CustNum" type="xsd:integer" />
+  </wsdl:message>
+  <wsdl:message name="getCustomerPaymentMethodsResponse">
+    <wsdl:part name="getCustomerPaymentMethodsReturn" type="typens:PaymentMethodArray" />
+  </wsdl:message>
+  <wsdl:message name="getMerchant">
+    <wsdl:part name="Token" type="typens:ueSecurityToken" />
+    <wsdl:part name="MerchantID" type="xsd:integer" />
+  </wsdl:message>
+  <wsdl:message name="getMerchantResponse">
+    <wsdl:part name="getMerchantReturn" type="typens:MerchantObject" />
+  </wsdl:message>
+  <wsdl:message name="getMerchantApplicationStatus">
+    <wsdl:part name="Token" type="typens:ueSecurityToken" />
+    <wsdl:part name="ApplicationID" type="xsd:integer" />
+  </wsdl:message>
+  <wsdl:message name="getMerchantApplicationStatusResponse">
+    <wsdl:part name="getMerchantApplicationStatusReturn" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="getMerchantSummary">
+    <wsdl:part name="Token" type="typens:ueSecurityToken" />
+    <wsdl:part name="MerchantID" type="xsd:integer" />
+    <wsdl:part name="Start" type="xsd:string" />
+    <wsdl:part name="End" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="getMerchantSummaryResponse">
+    <wsdl:part name="getMerchantSummaryReturn" type="typens:MerchantSummaryObject" />
+  </wsdl:message>
+  <wsdl:message name="getSupportedCurrencies">
+    <wsdl:part name="Token" type="typens:ueSecurityToken" />
+  </wsdl:message>
+  <wsdl:message name="getSupportedCurrenciesResponse">
+    <wsdl:part name="getSupportedCurrenciesReturn" type="typens:CurrencyObjectArray" />
+  </wsdl:message>
+  <wsdl:message name="getTransaction">
+    <wsdl:part name="Token" type="typens:ueSecurityToken" />
+    <wsdl:part name="RefNum" type="xsd:integer" />
+  </wsdl:message>
+  <wsdl:message name="getTransactionResponse">
+    <wsdl:part name="getTransactionReturn" type="typens:TransactionObject" />
+  </wsdl:message>
+  <wsdl:message name="getTransactionCustom">
+    <wsdl:part name="Token" type="typens:ueSecurityToken" />
+    <wsdl:part name="RefNum" type="xsd:integer" />
+    <wsdl:part name="Fields" type="typens:stringArray" />
+  </wsdl:message>
+  <wsdl:message name="getTransactionCustomResponse">
+    <wsdl:part name="getTransactionCustomReturn" type="typens:FieldValueArray" />
+  </wsdl:message>
+  <wsdl:message name="getTransactionReport">
+    <wsdl:part name="Token" type="typens:ueSecurityToken" />
+    <wsdl:part name="StartDate" type="xsd:string" />
+    <wsdl:part name="EndDate" type="xsd:string" />
+    <wsdl:part name="Report" type="xsd:string" />
+    <wsdl:part name="Format" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="getTransactionReportResponse">
+    <wsdl:part name="getTransactionReportReturn" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="getTransactionStatus">
+    <wsdl:part name="Token" type="typens:ueSecurityToken" />
+    <wsdl:part name="RefNum" type="xsd:integer" />
+  </wsdl:message>
+  <wsdl:message name="getTransactionStatusResponse">
+    <wsdl:part name="getTransactionStatusReturn" type="typens:TransactionResponse" />
+  </wsdl:message>
+  <wsdl:message name="moveCustomer">
+    <wsdl:part name="MoveFromToken" type="typens:ueSecurityToken" />
+    <wsdl:part name="CustNum" type="xsd:integer" />
+    <wsdl:part name="MoveToToken" type="typens:ueSecurityToken" />
+  </wsdl:message>
+  <wsdl:message name="moveCustomerResponse">
+    <wsdl:part name="moveCustomerReturn" type="xsd:integer" />
+  </wsdl:message>
+  <wsdl:message name="pauseBatchUpload">
+    <wsdl:part name="Token" type="typens:ueSecurityToken" />
+    <wsdl:part name="UploadRefNum" type="xsd:integer" />
+  </wsdl:message>
+  <wsdl:message name="pauseBatchUploadResponse">
+    <wsdl:part name="pauseBatchUploadReturn" type="xsd:boolean" />
+  </wsdl:message>
+  <wsdl:message name="postAuth">
+    <wsdl:part name="Token" type="typens:ueSecurityToken" />
+    <wsdl:part name="Params" type="typens:TransactionRequestObject" />
+  </wsdl:message>
+  <wsdl:message name="postAuthResponse">
+    <wsdl:part name="postAuthReturn" type="typens:TransactionResponse" />
+  </wsdl:message>
+  <wsdl:message name="quickUpdateCustomer">
+    <wsdl:part name="Token" type="typens:ueSecurityToken" />
+    <wsdl:part name="CustNum" type="xsd:integer" />
+    <wsdl:part name="UpdateData" type="typens:FieldValueArray" />
+  </wsdl:message>
+  <wsdl:message name="quickUpdateCustomerResponse">
+    <wsdl:part name="quickUpdateCustomerReturn" type="xsd:boolean" />
+  </wsdl:message>
+  <wsdl:message name="refundTransaction">
+    <wsdl:part name="Token" type="typens:ueSecurityToken" />
+    <wsdl:part name="RefNum" type="xsd:integer" />
+    <wsdl:part name="Amount" type="xsd:double" />
+  </wsdl:message>
+  <wsdl:message name="refundTransactionResponse">
+    <wsdl:part name="refundTransactionReturn" type="typens:TransactionResponse" />
+  </wsdl:message>
+  <wsdl:message name="runBatchUpload">
+    <wsdl:part name="Token" type="typens:ueSecurityToken" />
+    <wsdl:part name="UploadRefNum" type="xsd:integer" />
+  </wsdl:message>
+  <wsdl:message name="runBatchUploadResponse">
+    <wsdl:part name="runBatchUploadReturn" type="xsd:boolean" />
+  </wsdl:message>
+  <wsdl:message name="runCredit">
+    <wsdl:part name="Token" type="typens:ueSecurityToken" />
+    <wsdl:part name="Params" type="typens:TransactionRequestObject" />
+  </wsdl:message>
+  <wsdl:message name="runCreditResponse">
+    <wsdl:part name="runCreditReturn" type="typens:TransactionResponse" />
+  </wsdl:message>
+  <wsdl:message name="runCheckCredit">
+    <wsdl:part name="Token" type="typens:ueSecurityToken" />
+    <wsdl:part name="Params" type="typens:TransactionRequestObject" />
+  </wsdl:message>
+  <wsdl:message name="runCheckCreditResponse">
+    <wsdl:part name="runCheckCreditReturn" type="typens:TransactionResponse" />
+  </wsdl:message>
+  <wsdl:message name="runCustomerTransaction">
+    <wsdl:part name="Token" type="typens:ueSecurityToken" />
+    <wsdl:part name="CustNum" type="xsd:integer" />
+    <wsdl:part name="Details" type="typens:CustomerTransactionDetail" />
+    <wsdl:part name="Command" type="xsd:string" />
+    <wsdl:part name="PaymentMethodID" type="xsd:integer" />
+  </wsdl:message>
+  <wsdl:message name="runCustomerTransactionResponse">
+    <wsdl:part name="runCustomerTransactionReturn" type="typens:TransactionResponse" />
+  </wsdl:message>
+  <wsdl:message name="runQuickSale">
+    <wsdl:part name="Token" type="typens:ueSecurityToken" />
+    <wsdl:part name="RefNum" type="xsd:integer" />
+    <wsdl:part name="Details" type="typens:TransactionDetail" />
+    <wsdl:part name="AuthOnly" type="xsd:boolean" />
+  </wsdl:message>
+  <wsdl:message name="runQuickSaleResponse">
+    <wsdl:part name="runQuickSaleReturn" type="typens:TransactionResponse" />
+  </wsdl:message>
+  <wsdl:message name="runQuickCredit">
+    <wsdl:part name="Token" type="typens:ueSecurityToken" />
+    <wsdl:part name="RefNum" type="xsd:integer" />
+    <wsdl:part name="Details" type="typens:TransactionDetail" />
+  </wsdl:message>
+  <wsdl:message name="runQuickCreditResponse">
+    <wsdl:part name="runQuickCreditReturn" type="typens:TransactionResponse" />
+  </wsdl:message>
+  <wsdl:message name="runAuthOnly">
+    <wsdl:part name="Token" type="typens:ueSecurityToken" />
+    <wsdl:part name="Params" type="typens:TransactionRequestObject" />
+  </wsdl:message>
+  <wsdl:message name="runAuthOnlyResponse">
+    <wsdl:part name="runAuthOnlyReturn" type="typens:TransactionResponse" />
+  </wsdl:message>
+  <wsdl:message name="runSale">
+    <wsdl:part name="Token" type="typens:ueSecurityToken" />
+    <wsdl:part name="Params" type="typens:TransactionRequestObject" />
+  </wsdl:message>
+  <wsdl:message name="runSaleResponse">
+    <wsdl:part name="runSaleReturn" type="typens:TransactionResponse" />
+  </wsdl:message>
+  <wsdl:message name="runCheckSale">
+    <wsdl:part name="Token" type="typens:ueSecurityToken" />
+    <wsdl:part name="Params" type="typens:TransactionRequestObject" />
+  </wsdl:message>
+  <wsdl:message name="runCheckSaleResponse">
+    <wsdl:part name="runCheckSaleReturn" type="typens:TransactionResponse" />
+  </wsdl:message>
+  <wsdl:message name="runTransaction">
+    <wsdl:part name="Token" type="typens:ueSecurityToken" />
+    <wsdl:part name="Parameters" type="typens:TransactionRequestObject" />
+  </wsdl:message>
+  <wsdl:message name="runTransactionResponse">
+    <wsdl:part name="runTransactionReturn" type="typens:TransactionResponse" />
+  </wsdl:message>
+  <wsdl:message name="runTransactionAPI">
+    <wsdl:part name="Token" type="typens:ueSecurityToken" />
+    <wsdl:part name="Parameters" type="typens:FieldValueArray" />
+  </wsdl:message>
+  <wsdl:message name="runTransactionAPIResponse">
+    <wsdl:part name="runTransactionAPIReturn" type="typens:TransactionResponse" />
+  </wsdl:message>
+  <wsdl:message name="searchBatches">
+    <wsdl:part name="Token" type="typens:ueSecurityToken" />
+    <wsdl:part name="Search" type="typens:SearchParamArray" />
+    <wsdl:part name="MatchAll" type="xsd:boolean" />
+    <wsdl:part name="Start" type="xsd:integer" />
+    <wsdl:part name="Limit" type="xsd:integer" />
+    <wsdl:part name="Sort" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="searchBatchesResponse">
+    <wsdl:part name="searchBatchesReturn" type="typens:BatchSearchResult" />
+  </wsdl:message>
+  <wsdl:message name="searchBatchesCount">
+    <wsdl:part name="Token" type="typens:ueSecurityToken" />
+    <wsdl:part name="Search" type="typens:SearchParamArray" />
+    <wsdl:part name="MatchAll" type="xsd:boolean" />
+    <wsdl:part name="Start" type="xsd:integer" />
+    <wsdl:part name="Limit" type="xsd:integer" />
+    <wsdl:part name="Sort" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="searchBatchesCountResponse">
+    <wsdl:part name="searchBatchesCountReturn" type="typens:BatchSearchResult" />
+  </wsdl:message>
+  <wsdl:message name="searchCustomerID">
+    <wsdl:part name="Token" type="typens:ueSecurityToken" />
+    <wsdl:part name="CustID" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="searchCustomerIDResponse">
+    <wsdl:part name="searchCustomerIDReturn" type="xsd:integer" />
+  </wsdl:message>
+  <wsdl:message name="searchCustomers">
+    <wsdl:part name="Token" type="typens:ueSecurityToken" />
+    <wsdl:part name="Search" type="typens:SearchParamArray" />
+    <wsdl:part name="MatchAll" type="xsd:boolean" />
+    <wsdl:part name="Start" type="xsd:integer" />
+    <wsdl:part name="Limit" type="xsd:integer" />
+    <wsdl:part name="Sort" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="searchCustomersResponse">
+    <wsdl:part name="searchCustomersReturn" type="typens:CustomerSearchResult" />
+  </wsdl:message>
+  <wsdl:message name="searchCustomersCount">
+    <wsdl:part name="Token" type="typens:ueSecurityToken" />
+    <wsdl:part name="Search" type="typens:SearchParamArray" />
+    <wsdl:part name="MatchAll" type="xsd:boolean" />
+    <wsdl:part name="Start" type="xsd:integer" />
+    <wsdl:part name="Limit" type="xsd:integer" />
+    <wsdl:part name="Sort" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="searchCustomersCountResponse">
+    <wsdl:part name="searchCustomersCountReturn" type="typens:CustomerSearchResult" />
+  </wsdl:message>
+  <wsdl:message name="searchMerchants">
+    <wsdl:part name="Token" type="typens:ueSecurityToken" />
+    <wsdl:part name="Search" type="typens:SearchParamArray" />
+    <wsdl:part name="MatchAll" type="xsd:boolean" />
+    <wsdl:part name="Start" type="xsd:integer" />
+    <wsdl:part name="Limit" type="xsd:integer" />
+    <wsdl:part name="Sort" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="searchMerchantsResponse">
+    <wsdl:part name="searchMerchantsReturn" type="typens:MerchantSearchResult" />
+  </wsdl:message>
+  <wsdl:message name="searchMerchantsCount">
+    <wsdl:part name="Token" type="typens:ueSecurityToken" />
+    <wsdl:part name="Search" type="typens:SearchParamArray" />
+    <wsdl:part name="MatchAll" type="xsd:boolean" />
+    <wsdl:part name="Start" type="xsd:integer" />
+    <wsdl:part name="Limit" type="xsd:integer" />
+    <wsdl:part name="Sort" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="searchMerchantsCountResponse">
+    <wsdl:part name="searchMerchantsCountReturn" type="typens:MerchantSearchResult" />
+  </wsdl:message>
+  <wsdl:message name="searchMerchantsCustom">
+    <wsdl:part name="Token" type="typens:ueSecurityToken" />
+    <wsdl:part name="Search" type="typens:SearchParamArray" />
+    <wsdl:part name="MatchAll" type="xsd:boolean" />
+    <wsdl:part name="Start" type="xsd:integer" />
+    <wsdl:part name="Limit" type="xsd:integer" />
+    <wsdl:part name="FieldList" type="typens:stringArray" />
+    <wsdl:part name="Format" type="xsd:string" />
+    <wsdl:part name="Sort" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="searchMerchantsCustomResponse">
+    <wsdl:part name="searchMerchantsCustomReturn" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="searchTransactions">
+    <wsdl:part name="Token" type="typens:ueSecurityToken" />
+    <wsdl:part name="Search" type="typens:SearchParamArray" />
+    <wsdl:part name="MatchAll" type="xsd:boolean" />
+    <wsdl:part name="Start" type="xsd:integer" />
+    <wsdl:part name="Limit" type="xsd:integer" />
+    <wsdl:part name="Sort" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="searchTransactionsResponse">
+    <wsdl:part name="searchTransactionsReturn" type="typens:TransactionSearchResult" />
+  </wsdl:message>
+  <wsdl:message name="searchTransactionsCount">
+    <wsdl:part name="Token" type="typens:ueSecurityToken" />
+    <wsdl:part name="Search" type="typens:SearchParamArray" />
+    <wsdl:part name="MatchAll" type="xsd:boolean" />
+    <wsdl:part name="Start" type="xsd:integer" />
+    <wsdl:part name="Limit" type="xsd:integer" />
+    <wsdl:part name="Sort" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="searchTransactionsCountResponse">
+    <wsdl:part name="searchTransactionsCountReturn" type="typens:TransactionSearchResult" />
+  </wsdl:message>
+  <wsdl:message name="searchTransactionsCustom">
+    <wsdl:part name="Token" type="typens:ueSecurityToken" />
+    <wsdl:part name="Search" type="typens:SearchParamArray" />
+    <wsdl:part name="MatchAll" type="xsd:boolean" />
+    <wsdl:part name="Start" type="xsd:integer" />
+    <wsdl:part name="Limit" type="xsd:integer" />
+    <wsdl:part name="FieldList" type="typens:stringArray" />
+    <wsdl:part name="Format" type="xsd:string" />
+    <wsdl:part name="Sort" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="searchTransactionsCustomResponse">
+    <wsdl:part name="searchTransactionsCustomReturn" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="searchCustomersCustom">
+    <wsdl:part name="Token" type="typens:ueSecurityToken" />
+    <wsdl:part name="Search" type="typens:SearchParamArray" />
+    <wsdl:part name="MatchAll" type="xsd:boolean" />
+    <wsdl:part name="Start" type="xsd:integer" />
+    <wsdl:part name="Limit" type="xsd:integer" />
+    <wsdl:part name="FieldList" type="typens:stringArray" />
+    <wsdl:part name="Format" type="xsd:string" />
+    <wsdl:part name="Sort" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="searchCustomersCustomResponse">
+    <wsdl:part name="searchCustomersCustomReturn" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="updateCustomer">
+    <wsdl:part name="Token" type="typens:ueSecurityToken" />
+    <wsdl:part name="CustNum" type="xsd:integer" />
+    <wsdl:part name="CustomerData" type="typens:CustomerObject" />
+  </wsdl:message>
+  <wsdl:message name="updateCustomerResponse">
+    <wsdl:part name="updateCustomerReturn" type="xsd:boolean" />
+  </wsdl:message>
+  <wsdl:message name="updateCustomerPaymentMethod">
+    <wsdl:part name="Token" type="typens:ueSecurityToken" />
+    <wsdl:part name="PaymentMethod" type="typens:PaymentMethod" />
+    <wsdl:part name="Verify" type="xsd:boolean" />
+  </wsdl:message>
+  <wsdl:message name="updateCustomerPaymentMethodResponse">
+    <wsdl:part name="updateCustomerPaymentMethodReturn" type="xsd:boolean" />
+  </wsdl:message>
+  <wsdl:message name="updateMerchant">
+    <wsdl:part name="Token" type="typens:ueSecurityToken" />
+    <wsdl:part name="MerchantID" type="xsd:integer" />
+    <wsdl:part name="MerchantObject" type="typens:MerchantObject" />
+  </wsdl:message>
+  <wsdl:message name="updateMerchantResponse">
+    <wsdl:part name="updateMerchantReturn" type="xsd:boolean" />
+  </wsdl:message>
+  <wsdl:message name="voidTransaction">
+    <wsdl:part name="Token" type="typens:ueSecurityToken" />
+    <wsdl:part name="RefNum" type="xsd:integer" />
+  </wsdl:message>
+  <wsdl:message name="voidTransactionResponse">
+    <wsdl:part name="voidTransactionReturn" type="xsd:boolean" />
+  </wsdl:message>
+  <wsdl:message name="overrideTransaction">
+    <wsdl:part name="Token" type="typens:ueSecurityToken" />
+    <wsdl:part name="RefNum" type="xsd:integer" />
+    <wsdl:part name="Reason" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="overrideTransactionResponse">
+    <wsdl:part name="overrideTransactionReturn" type="xsd:boolean" />
+  </wsdl:message>
+  <wsdl:portType name="ueSoapServerPortType">
+    <documentation>
+			The USAePay Soap interface provides a collection of functions implementing
+a large portion of merchant and reseller functionality.
+		</documentation>
+    <wsdl:operation name="addCustomer">
+      <documentation>
+				Add a Stored Customer Record
+			</documentation>
+      <wsdl:input message="typens:addCustomer" />
+      <wsdl:output message="typens:addCustomerResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="addCustomerPaymentMethod">
+      <documentation>
+				Add Payment Method For a Customer
+			</documentation>
+      <wsdl:input message="typens:addCustomerPaymentMethod" />
+      <wsdl:output message="typens:addCustomerPaymentMethodResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="addMerchantApplication">
+      <documentation>
+				Add a new merchant application to the system
+			</documentation>
+      <wsdl:input message="typens:addMerchantApplication" />
+      <wsdl:output message="typens:addMerchantApplicationResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="bulkCurrencyConversion">
+      <documentation>
+				Convert multiple currency amounts in a single method call
+			</documentation>
+      <wsdl:input message="typens:bulkCurrencyConversion" />
+      <wsdl:output message="typens:bulkCurrencyConversionResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="captureTransaction">
+      <documentation>
+				Capture a queued transaction
+			</documentation>
+      <wsdl:input message="typens:captureTransaction" />
+      <wsdl:output message="typens:captureTransactionResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="closeBatch">
+      <documentation>
+				Close the batch specified by BatchRefNum
+			</documentation>
+      <wsdl:input message="typens:closeBatch" />
+      <wsdl:output message="typens:closeBatchResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="convertTranToCust">
+      <documentation>
+				Convert existing transaction into a stored customer.
+			</documentation>
+      <wsdl:input message="typens:convertTranToCust" />
+      <wsdl:output message="typens:convertTranToCustResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="copyCustomer">
+      <documentation>
+				Copy customer from one source key to another
+			</documentation>
+      <wsdl:input message="typens:copyCustomer" />
+      <wsdl:output message="typens:copyCustomerResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="createBatchUpload">
+      <documentation>
+				Post a new batch of transactions to the gateway for processing.
+			</documentation>
+      <wsdl:input message="typens:createBatchUpload" />
+      <wsdl:output message="typens:createBatchUploadResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="currencyConversion">
+      <documentation>
+				Lookup currency conversion rate for single dollar amount.
+			</documentation>
+      <wsdl:input message="typens:currencyConversion" />
+      <wsdl:output message="typens:currencyConversionResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="deleteCustomer">
+      <documentation>
+				Delete the customer specified by CustNum
+			</documentation>
+      <wsdl:input message="typens:deleteCustomer" />
+      <wsdl:output message="typens:deleteCustomerResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="deleteCustomerPaymentMethod">
+      <documentation>
+				Delete Payment Method
+			</documentation>
+      <wsdl:input message="typens:deleteCustomerPaymentMethod" />
+      <wsdl:output message="typens:deleteCustomerPaymentMethodResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="deleteMerchant">
+      <documentation>
+				Request deletion of merchant account.
+			</documentation>
+      <wsdl:input message="typens:deleteMerchant" />
+      <wsdl:output message="typens:deleteMerchantResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="disableCustomer">
+      <documentation>
+				Disable the recurring billing for the customer specified by CustNum
+			</documentation>
+      <wsdl:input message="typens:disableCustomer" />
+      <wsdl:output message="typens:disableCustomerResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="enableCustomer">
+      <documentation>
+				Enable recurring billing for the customer specified by CustNum
+			</documentation>
+      <wsdl:input message="typens:enableCustomer" />
+      <wsdl:output message="typens:enableCustomerResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="getAccountDetails">
+      <documentation>
+				Retrieves Information about Merchants account
+			</documentation>
+      <wsdl:input message="typens:getAccountDetails" />
+      <wsdl:output message="typens:getAccountDetailsResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="getBankList">
+      <documentation>
+				Retrieves list of banks and financial institutions available for direct payment
+			</documentation>
+      <wsdl:input message="typens:getBankList" />
+      <wsdl:output message="typens:getBankListResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="getBatchStatus">
+      <documentation>
+				Retrieve the status of the batch specified by BatchRefNum
+			</documentation>
+      <wsdl:input message="typens:getBatchStatus" />
+      <wsdl:output message="typens:getBatchStatusResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="getBatchTransactions">
+      <documentation>
+				Retrieve transactions in the batch specified by BatchRefNum
+			</documentation>
+      <wsdl:input message="typens:getBatchTransactions" />
+      <wsdl:output message="typens:getBatchTransactionsResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="getBatchUploadStatus">
+      <documentation>
+				Retrieve the status of the currently running batch.
+			</documentation>
+      <wsdl:input message="typens:getBatchUploadStatus" />
+      <wsdl:output message="typens:getBatchUploadStatusResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="getCustomer">
+      <documentation>
+				Retrieve the customer details for the given CustNum
+			</documentation>
+      <wsdl:input message="typens:getCustomer" />
+      <wsdl:output message="typens:getCustomerResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="getCustomerHistory">
+      <documentation>
+				Pull details of all transactions run for CustNum
+			</documentation>
+      <wsdl:input message="typens:getCustomerHistory" />
+      <wsdl:output message="typens:getCustomerHistoryResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="getMerchant">
+      <documentation>
+				Retreive Merchant Details
+			</documentation>
+      <wsdl:input message="typens:getMerchant" />
+      <wsdl:output message="typens:getMerchantResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="getCustomerPaymentMethod">
+      <documentation>
+				Retrieve a specific customer Payment Methods for the given CustNum/MethodID
+			</documentation>
+      <wsdl:input message="typens:getCustomerPaymentMethod" />
+      <wsdl:output message="typens:getCustomerPaymentMethodResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="getCustomerPaymentMethods">
+      <documentation>
+				Retrieve the customers Payment Methods for the given CustNum
+			</documentation>
+      <wsdl:input message="typens:getCustomerPaymentMethods" />
+      <wsdl:output message="typens:getCustomerPaymentMethodsResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="getMerchantApplicationStatus">
+      <documentation>
+				Retrieve the status of a pending merchant application
+			</documentation>
+      <wsdl:input message="typens:getMerchantApplicationStatus" />
+      <wsdl:output message="typens:getMerchantApplicationStatusResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="getMerchantSummary">
+      <documentation>
+				Retreive Summary of Merchant Activity for the specified time span.
+			</documentation>
+      <wsdl:input message="typens:getMerchantSummary" />
+      <wsdl:output message="typens:getMerchantSummaryResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="getSupportedCurrencies">
+      <documentation>
+				Retrieve Supported Currencies
+			</documentation>
+      <wsdl:input message="typens:getSupportedCurrencies" />
+      <wsdl:output message="typens:getSupportedCurrenciesResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="getTransaction">
+      <documentation>
+				Retreive all information for the transactions specified by RefNum
+			</documentation>
+      <wsdl:input message="typens:getTransaction" />
+      <wsdl:output message="typens:getTransactionResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="getTransactionCustom">
+      <documentation>
+				Get Specific Transaction Details
+			</documentation>
+      <wsdl:input message="typens:getTransactionCustom" />
+      <wsdl:output message="typens:getTransactionCustomResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="getTransactionReport">
+      <documentation>
+				Pull a transaction report
+			</documentation>
+      <wsdl:input message="typens:getTransactionReport" />
+      <wsdl:output message="typens:getTransactionReportResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="getTransactionStatus">
+      <documentation>
+				Retrieve the current status of transaction specified by RefNum
+			</documentation>
+      <wsdl:input message="typens:getTransactionStatus" />
+      <wsdl:output message="typens:getTransactionStatusResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="moveCustomer">
+      <documentation>
+				Move customer from one source key to another
+			</documentation>
+      <wsdl:input message="typens:moveCustomer" />
+      <wsdl:output message="typens:moveCustomerResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="pauseBatchUpload">
+      <documentation>
+				Pause a Batch Upload that is already running
+			</documentation>
+      <wsdl:input message="typens:pauseBatchUpload" />
+      <wsdl:output message="typens:pauseBatchUploadResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="postAuth">
+      <documentation>
+				Post an Offline Authorization
+			</documentation>
+      <wsdl:input message="typens:postAuth" />
+      <wsdl:output message="typens:postAuthResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="quickUpdateCustomer">
+      <documentation>
+				Update specified data for customer specified by CustNum
+			</documentation>
+      <wsdl:input message="typens:quickUpdateCustomer" />
+      <wsdl:output message="typens:quickUpdateCustomerResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="refundTransaction">
+      <documentation>
+				Refund part or all of a transaction
+			</documentation>
+      <wsdl:input message="typens:refundTransaction" />
+      <wsdl:output message="typens:refundTransactionResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="runBatchUpload">
+      <documentation>
+				Start a Paused Batch Upload
+			</documentation>
+      <wsdl:input message="typens:runBatchUpload" />
+      <wsdl:output message="typens:runBatchUploadResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="runCredit">
+      <documentation>
+				Run a Credit transaction
+			</documentation>
+      <wsdl:input message="typens:runCredit" />
+      <wsdl:output message="typens:runCreditResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="runCheckCredit">
+      <documentation>
+				Run a Check Credit transaction
+			</documentation>
+      <wsdl:input message="typens:runCheckCredit" />
+      <wsdl:output message="typens:runCheckCreditResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="runCustomerTransaction">
+      <documentation>
+				Run a sale for a customer stored in the customer database
+			</documentation>
+      <wsdl:input message="typens:runCustomerTransaction" />
+      <wsdl:output message="typens:runCustomerTransactionResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="runQuickSale">
+      <documentation>
+				Run a sale based on the credit card details of a previous transaction.
+			</documentation>
+      <wsdl:input message="typens:runQuickSale" />
+      <wsdl:output message="typens:runQuickSaleResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="runQuickCredit">
+      <documentation>
+				Run a credit based on the credit card details of a previous transaction.
+			</documentation>
+      <wsdl:input message="typens:runQuickCredit" />
+      <wsdl:output message="typens:runQuickCreditResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="runAuthOnly">
+      <documentation>
+				Run an AuthOnly Credit Card Sale
+			</documentation>
+      <wsdl:input message="typens:runAuthOnly" />
+      <wsdl:output message="typens:runAuthOnlyResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="runSale">
+      <documentation>
+				Run a Credit CardSale
+			</documentation>
+      <wsdl:input message="typens:runSale" />
+      <wsdl:output message="typens:runSaleResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="runCheckSale">
+      <documentation>
+				Run a Check Sale
+			</documentation>
+      <wsdl:input message="typens:runCheckSale" />
+      <wsdl:output message="typens:runCheckSaleResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="runTransaction">
+      <documentation>
+				Runs a Transaction using the USAePay Transaction API
+			</documentation>
+      <wsdl:input message="typens:runTransaction" />
+      <wsdl:output message="typens:runTransactionResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="runTransactionAPI">
+      <documentation>
+				Provides a Soap wrapper for the USAePay Transaction API
+			</documentation>
+      <wsdl:input message="typens:runTransactionAPI" />
+      <wsdl:output message="typens:runTransactionAPIResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="searchBatches">
+      <documentation>
+				Search Settled Batches
+			</documentation>
+      <wsdl:input message="typens:searchBatches" />
+      <wsdl:output message="typens:searchBatchesResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="searchBatchesCount">
+      <documentation>
+				Search Settled Batches, return counts only
+			</documentation>
+      <wsdl:input message="typens:searchBatchesCount" />
+      <wsdl:output message="typens:searchBatchesCountResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="searchCustomerID">
+      <documentation>
+				Find the customer refnum (CustNum) associated with the userdefined CustID
+			</documentation>
+      <wsdl:input message="typens:searchCustomerID" />
+      <wsdl:output message="typens:searchCustomerIDResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="searchCustomers">
+      <documentation>
+				Search customer database
+			</documentation>
+      <wsdl:input message="typens:searchCustomers" />
+      <wsdl:output message="typens:searchCustomersResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="searchCustomersCount">
+      <documentation>
+				Search customer database return only count of what was found
+			</documentation>
+      <wsdl:input message="typens:searchCustomersCount" />
+      <wsdl:output message="typens:searchCustomersCountResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="searchMerchants">
+      <documentation>
+				Search Active Merchants
+			</documentation>
+      <wsdl:input message="typens:searchMerchants" />
+      <wsdl:output message="typens:searchMerchantsResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="searchMerchantsCount">
+      <documentation>
+				Search Active Merchants, return counts only
+			</documentation>
+      <wsdl:input message="typens:searchMerchantsCount" />
+      <wsdl:output message="typens:searchMerchantsCountResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="searchMerchantsCustom">
+      <documentation>
+				Search Active Merchants and return custom response
+			</documentation>
+      <wsdl:input message="typens:searchMerchantsCustom" />
+      <wsdl:output message="typens:searchMerchantsCustomResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="searchTransactions">
+      <documentation>
+				Search transactions and return transaction records
+			</documentation>
+      <wsdl:input message="typens:searchTransactions" />
+      <wsdl:output message="typens:searchTransactionsResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="searchTransactionsCount">
+      <documentation>
+				Search transactions and return counts,  omit tran data
+			</documentation>
+      <wsdl:input message="typens:searchTransactionsCount" />
+      <wsdl:output message="typens:searchTransactionsCountResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="searchTransactionsCustom">
+      <documentation>
+				Search Transactions and return specified fields
+			</documentation>
+      <wsdl:input message="typens:searchTransactionsCustom" />
+      <wsdl:output message="typens:searchTransactionsCustomResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="searchCustomersCustom">
+      <documentation>
+				Search Customers and return specified fields
+			</documentation>
+      <wsdl:input message="typens:searchCustomersCustom" />
+      <wsdl:output message="typens:searchCustomersCustomResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="updateCustomer">
+      <documentation>
+				Replace all data for customer specified by CustNum
+			</documentation>
+      <wsdl:input message="typens:updateCustomer" />
+      <wsdl:output message="typens:updateCustomerResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="updateCustomerPaymentMethod">
+      <documentation>
+				Update a Customer Payment Method
+			</documentation>
+      <wsdl:input message="typens:updateCustomerPaymentMethod" />
+      <wsdl:output message="typens:updateCustomerPaymentMethodResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="updateMerchant">
+      <documentation>
+				Update Merchant Details
+			</documentation>
+      <wsdl:input message="typens:updateMerchant" />
+      <wsdl:output message="typens:updateMerchantResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="voidTransaction">
+      <documentation>
+				Void the transaction specified by RefNum
+			</documentation>
+      <wsdl:input message="typens:voidTransaction" />
+      <wsdl:output message="typens:voidTransactionResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="overrideTransaction">
+      <documentation>
+				Override the transaction specified by RefNum
+			</documentation>
+      <wsdl:input message="typens:overrideTransaction" />
+      <wsdl:output message="typens:overrideTransactionResponse" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="ueSoapServerBinding" type="typens:ueSoapServerPortType">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="rpc" />
+    <wsdl:operation name="addCustomer">
+      <soap:operation soapAction="urn:ueSoapServerAction" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="addCustomerPaymentMethod">
+      <soap:operation soapAction="urn:ueSoapServerAction" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="addMerchantApplication">
+      <soap:operation soapAction="urn:ueSoapServerAction" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="bulkCurrencyConversion">
+      <soap:operation soapAction="urn:ueSoapServerAction" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="captureTransaction">
+      <soap:operation soapAction="urn:ueSoapServerAction" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="closeBatch">
+      <soap:operation soapAction="urn:ueSoapServerAction" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="convertTranToCust">
+      <soap:operation soapAction="urn:ueSoapServerAction" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="copyCustomer">
+      <soap:operation soapAction="urn:ueSoapServerAction" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="createBatchUpload">
+      <soap:operation soapAction="urn:ueSoapServerAction" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="currencyConversion">
+      <soap:operation soapAction="urn:ueSoapServerAction" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteCustomer">
+      <soap:operation soapAction="urn:ueSoapServerAction" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteCustomerPaymentMethod">
+      <soap:operation soapAction="urn:ueSoapServerAction" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteMerchant">
+      <soap:operation soapAction="urn:ueSoapServerAction" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="disableCustomer">
+      <soap:operation soapAction="urn:ueSoapServerAction" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="enableCustomer">
+      <soap:operation soapAction="urn:ueSoapServerAction" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getAccountDetails">
+      <soap:operation soapAction="urn:ueSoapServerAction" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getBankList">
+      <soap:operation soapAction="urn:ueSoapServerAction" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getBatchStatus">
+      <soap:operation soapAction="urn:ueSoapServerAction" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getBatchTransactions">
+      <soap:operation soapAction="urn:ueSoapServerAction" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getBatchUploadStatus">
+      <soap:operation soapAction="urn:ueSoapServerAction" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getCustomer">
+      <soap:operation soapAction="urn:ueSoapServerAction" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getCustomerHistory">
+      <soap:operation soapAction="urn:ueSoapServerAction" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getCustomerPaymentMethod">
+      <soap:operation soapAction="urn:ueSoapServerAction" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getCustomerPaymentMethods">
+      <soap:operation soapAction="urn:ueSoapServerAction" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getMerchant">
+      <soap:operation soapAction="urn:ueSoapServerAction" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getMerchantApplicationStatus">
+      <soap:operation soapAction="urn:ueSoapServerAction" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getMerchantSummary">
+      <soap:operation soapAction="urn:ueSoapServerAction" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getSupportedCurrencies">
+      <soap:operation soapAction="urn:ueSoapServerAction" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getTransaction">
+      <soap:operation soapAction="urn:ueSoapServerAction" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getTransactionCustom">
+      <soap:operation soapAction="urn:ueSoapServerAction" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getTransactionReport">
+      <soap:operation soapAction="urn:ueSoapServerAction" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getTransactionStatus">
+      <soap:operation soapAction="urn:ueSoapServerAction" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="moveCustomer">
+      <soap:operation soapAction="urn:ueSoapServerAction" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="pauseBatchUpload">
+      <soap:operation soapAction="urn:ueSoapServerAction" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="postAuth">
+      <soap:operation soapAction="urn:ueSoapServerAction" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="quickUpdateCustomer">
+      <soap:operation soapAction="urn:ueSoapServerAction" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="refundTransaction">
+      <soap:operation soapAction="urn:ueSoapServerAction" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="runBatchUpload">
+      <soap:operation soapAction="urn:ueSoapServerAction" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="runCredit">
+      <soap:operation soapAction="urn:ueSoapServerAction" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="runCheckCredit">
+      <soap:operation soapAction="urn:ueSoapServerAction" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="runCustomerTransaction">
+      <soap:operation soapAction="urn:ueSoapServerAction" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="runQuickSale">
+      <soap:operation soapAction="urn:ueSoapServerAction" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="runQuickCredit">
+      <soap:operation soapAction="urn:ueSoapServerAction" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="runCheckSale">
+      <soap:operation soapAction="urn:ueSoapServerAction" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="runSale">
+      <soap:operation soapAction="urn:ueSoapServerAction" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="runAuthOnly">
+      <soap:operation soapAction="urn:ueSoapServerAction" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="runTransaction">
+      <soap:operation soapAction="urn:ueSoapServerAction" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="runTransactionAPI">
+      <soap:operation soapAction="urn:ueSoapServerAction" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="searchBatches">
+      <soap:operation soapAction="urn:ueSoapServerAction" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="searchBatchesCount">
+      <soap:operation soapAction="urn:ueSoapServerAction" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="searchCustomerID">
+      <soap:operation soapAction="urn:ueSoapServerAction" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="searchCustomers">
+      <soap:operation soapAction="urn:ueSoapServerAction" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="searchCustomersCount">
+      <soap:operation soapAction="urn:ueSoapServerAction" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="searchCustomersCustom">
+      <soap:operation soapAction="urn:ueSoapServerAction" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="searchMerchants">
+      <soap:operation soapAction="urn:ueSoapServerAction" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="searchMerchantsCount">
+      <soap:operation soapAction="urn:ueSoapServerAction" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="searchMerchantsCustom">
+      <soap:operation soapAction="urn:ueSoapServerAction" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="searchTransactions">
+      <soap:operation soapAction="urn:ueSoapServerAction" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="searchTransactionsCount">
+      <soap:operation soapAction="urn:ueSoapServerAction" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="searchTransactionsCustom">
+      <soap:operation soapAction="urn:ueSoapServerAction" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="updateCustomer">
+      <soap:operation soapAction="urn:ueSoapServerAction" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="updateCustomerPaymentMethod">
+      <soap:operation soapAction="urn:ueSoapServerAction" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="updateMerchant">
+      <soap:operation soapAction="urn:ueSoapServerAction" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="voidTransaction">
+      <soap:operation soapAction="urn:ueSoapServerAction" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="overrideTransaction">
+      <soap:operation soapAction="urn:ueSoapServerAction" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:usaepay" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="usaepayService">
+    <wsdl:port name="ueSoapServerPort" binding="typens:ueSoapServerBinding">
+      <soap:address location="https://sandbox.usaepay.com/soap/gate/3213EA2A" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
