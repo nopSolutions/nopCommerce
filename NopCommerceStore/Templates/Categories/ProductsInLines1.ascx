@@ -46,7 +46,6 @@
             <%=GetLocaleResourceString("Products.FeaturedProducts")%>
         </div>
         <div>
-            <a href="~/Templates/Categories/ProductsInGrid.ascx">~/Templates/Categories/ProductsInGrid.ascx</a>
             <asp:DataList ID="dlFeaturedProducts" runat="server" RepeatColumns="2" RepeatDirection="Horizontal"
                 RepeatLayout="Table" ItemStyle-CssClass="item-box">
                 <ItemTemplate>
