@@ -1461,9 +1461,9 @@
           <Property Name="UserTemplatePath" Type="nvarchar" Nullable="false" MaxLength="500" />
           <Property Name="ClassName" Type="nvarchar" Nullable="false" MaxLength="500" />
           <Property Name="SystemKeyword" Type="nvarchar" Nullable="false" MaxLength="500" />
+          <Property Name="HidePaymentInfoForZeroOrders" Type="bit" Nullable="false" />
           <Property Name="IsActive" Type="bit" Nullable="false" />
           <Property Name="DisplayOrder" Type="int" Nullable="false" />
-          <Property Name="HidePaymentInfoForZeroOrders" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Nop_PaymentMethod_RestrictedCountries">
           <Key>
@@ -1496,10 +1496,10 @@
           <Property Name="PollID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="LanguageID" Type="int" Nullable="false" />
           <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="400" />
+          <Property Name="SystemKeyword" Type="nvarchar" Nullable="false" MaxLength="400" />
           <Property Name="Published" Type="bit" Nullable="false" />
           <Property Name="ShowOnHomePage" Type="bit" Nullable="false" />
           <Property Name="DisplayOrder" Type="int" Nullable="false" />
-          <Property Name="SystemKeyword" Type="nvarchar" Nullable="false" MaxLength="400" />
           <Property Name="StartDate" Type="datetime" />
           <Property Name="EndDate" Type="datetime" />
         </EntityType>
@@ -2130,6 +2130,8 @@
           </Key>
           <Property Name="TopicID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="200" />
+          <Property Name="IsPasswordProtected" Type="bit" Nullable="false" />
+          <Property Name="Password" Type="nvarchar" Nullable="false" MaxLength="200" />
         </EntityType>
         <EntityType Name="Nop_TopicLocalized">
           <Key>
@@ -4967,6 +4969,8 @@
           <Property Type="Int32" Name="TopicId" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
           <Property Type="String" Name="Name" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="NpLocalizedTopics" Relationship="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_TopicLocalized_Nop_Topic" FromRole="Nop_Topic" ToRole="Nop_TopicLocalized" />
+          <Property Type="Boolean" Name="IsPasswordProtected" Nullable="false" />
+          <Property Type="String" Name="Password" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="LocalizedTopic">
           <Key>
@@ -7871,6 +7875,8 @@
           <EntitySetMapping Name="Topics">
             <EntityTypeMapping TypeName="NopSolutions.NopCommerce.BusinessLogic.Data.Topic">
               <MappingFragment StoreEntitySet="Nop_Topic">
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="IsPasswordProtected" ColumnName="IsPasswordProtected" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="TopicId" ColumnName="TopicID" />
               </MappingFragment>

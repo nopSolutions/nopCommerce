@@ -36,64 +36,114 @@ namespace NopSolutions.NopCommerce.Web.Modules
 {
     public partial class TopicPageControl : BaseNopUserControl
     {
+        private bool ValidatePassword()
+        {
+            bool passwordOK = true;
+            if (this.Topic != null)
+            {
+                if (this.Topic.IsPasswordProtected &&
+                    !this.Topic.Password.Equals(this.EnteredPassword))
+                {
+                    passwordOK = false;
+                }
+            }
+            return passwordOK;
+        }
+
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
+            
+            this.BindData();
 
-            if (this.Topic != null)
+            if (this.LocalizedTopic != null)
             {
                 //title
-                string title = this.Topic.MetaTitle;
+                string title = this.LocalizedTopic.MetaTitle;
                 if (String.IsNullOrEmpty(title))
-                    title = this.Topic.Title;
+                    title = this.LocalizedTopic.Title;
                 if (!string.IsNullOrEmpty(title))
                     SEOHelper.RenderTitle(this.Page, title, true);
 
                 //meta
-                SEOHelper.RenderMetaTag(this.Page, "description", this.Topic.MetaDescription, true);
-                SEOHelper.RenderMetaTag(this.Page, "keywords", this.Topic.MetaKeywords, true);
+                SEOHelper.RenderMetaTag(this.Page, "description", this.LocalizedTopic.MetaDescription, true);
+                SEOHelper.RenderMetaTag(this.Page, "keywords", this.LocalizedTopic.MetaKeywords, true);
             }
         }
 
-        protected override void OnInit(EventArgs e)
+        protected void btnPassword_OnClick(object sender, EventArgs e)
         {
+            this.EnteredPassword = txtPassword.Text;
+            bool passwordOK = ValidatePassword();
+            if (!passwordOK)
+            {
+                lError.Text = GetLocaleResourceString("TopicPage.WrongPassword");
+            }
             BindData();
-            base.OnInit(e);
         }
 
         private void BindData()
         {
-            if (this.Topic != null)
+            if (this.LocalizedTopic != null)
             {
-                if (!string.IsNullOrEmpty(this.Topic.Title))
+                bool passwordOK = ValidatePassword();
+                if (passwordOK)
                 {
-                    lTitle.Text = Server.HtmlEncode(this.Topic.Title);
+                    phPassword.Visible = false;
+                    lTitle.Visible = true;
+                    lBody.Visible = true;
+
+                    if (!string.IsNullOrEmpty(this.LocalizedTopic.Title))
+                    {
+                        lTitle.Text = Server.HtmlEncode(this.LocalizedTopic.Title);
+                    }
+                    else
+                    {
+                        lTitle.Visible = false;
+                    }
+                    if (!string.IsNullOrEmpty(this.LocalizedTopic.Body))
+                    {
+                        lBody.Text = this.LocalizedTopic.Body;
+                    }
+                    else
+                    {
+                        lBody.Visible = false;
+                    }
                 }
                 else
                 {
+                    phPassword.Visible = true;
                     lTitle.Visible = false;
-                }
-                if (!string.IsNullOrEmpty(this.Topic.Body))
-                {
-                    lBody.Text = this.Topic.Body;
-                }
-                else
-                {
                     lBody.Visible = false;
                 }
             }
             else
+            {
                 Response.Redirect(CommonHelper.GetStoreLocation());
+            }
         }
 
-        private LocalizedTopic topic = null;
-        public LocalizedTopic Topic
+        private LocalizedTopic localizedTopic = null;
+        public LocalizedTopic LocalizedTopic
+        {
+            get
+            {
+                if (localizedTopic == null)
+                {
+                    localizedTopic = TopicManager.GetLocalizedTopic(this.TopicId, NopContext.Current.WorkingLanguage.LanguageId);
+                }
+                return localizedTopic;
+            }
+        }
+
+        private Topic topic = null;
+        public Topic Topic
         {
             get
             {
                 if (topic == null)
                 {
-                    topic = TopicManager.GetLocalizedTopic(this.TopicId, NopContext.Current.WorkingLanguage.LanguageId);
+                    topic = TopicManager.GetTopicById(this.TopicId);
                 }
                 return topic;
             }
@@ -104,6 +154,22 @@ namespace NopSolutions.NopCommerce.Web.Modules
             get
             {
                 return CommonHelper.QueryStringInt("TopicId");
+            }
+        }
+        
+        public string EnteredPassword
+        {
+            get
+            {
+                object obj2 = this.ViewState["EnteredPassword"];
+                if (obj2 != null)
+                    return (string)obj2;
+                else
+                    return string.Empty;
+            }
+            set
+            {
+                this.ViewState["EnteredPassword"] = value;
             }
         }
     }

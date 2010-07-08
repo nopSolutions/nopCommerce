@@ -22,8 +22,9 @@ using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
-using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.Content.Topics;
+using NopSolutions.NopCommerce.BusinessLogic.SEO;
+using NopSolutions.NopCommerce.Common.Utils;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -34,6 +35,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             if (this.Topic != null)
             {
                 this.txtSystemName.Text = this.Topic.Name;
+                this.cbIsPasswordProtected.Checked = this.Topic.IsPasswordProtected;
+                this.txtPassword.Text = this.Topic.Password;
             }
 
             var languages = this.GetLocalizableLanguagesSupported();
@@ -52,6 +55,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             BindJQuery();
             BindJQueryIdTabs();
 
+            this.cbIsPasswordProtected.Attributes.Add("onclick", "togglePassword();");
+
             base.OnPreRender(e);
         }
 
@@ -65,37 +70,52 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected void rptrLanguageDivs_ItemDataBound(object sender, RepeaterItemEventArgs e)
         {
-            if (this.TopicId > 0)
+            if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
             {
-                if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+                var txtTitle = (TextBox)e.Item.FindControl("txtTitle");
+                var txtBody = (AjaxControlToolkit.HTMLEditor.Editor)e.Item.FindControl("txtBody");
+                var pnlUrl = (HtmlTableRow)e.Item.FindControl("pnlUrl");
+                var hlUrl = (HyperLink)e.Item.FindControl("hlUrl");
+
+                var lblLanguageId = (Label)e.Item.FindControl("lblLanguageId");
+
+                int languageId = int.Parse(lblLanguageId.Text);
+
+                if (this.TopicId > 0)
                 {
-                    var txtTitle = (TextBox)e.Item.FindControl("txtTitle");
-                    var txtBody = (AjaxControlToolkit.HTMLEditor.Editor)e.Item.FindControl("txtBody");
-                    var lblLanguageId = (Label)e.Item.FindControl("lblLanguageId");
-
-                    int languageId = int.Parse(lblLanguageId.Text);
-
                     var content = TopicManager.GetLocalizedTopic(this.Topic.Name, languageId);
                     if (content != null)
                     {
                         txtTitle.Text = content.Title;
                         txtBody.Content = content.Body;
+                        pnlUrl.Visible = true;
+                        string url = SEOHelper.GetTopicUrl(content.TopicId, content.Title);
+                        hlUrl.Text = url;
+                        hlUrl.NavigateUrl = url;
                     }
+                    else
+                    {
+                        pnlUrl.Visible = false;
+                    }
+                }
+                else
+                {
+                    pnlUrl.Visible = false;
                 }
             }
         }
 
         protected void rptrLanguageDivs_SEO_ItemDataBound(object sender, RepeaterItemEventArgs e)
         {
-            if (this.TopicId > 0)
+            if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
             {
-                if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
-                {
-                    var txtMetaKeywords = (TextBox)e.Item.FindControl("txtMetaKeywords");
-                    var txtMetaDescription = (TextBox)e.Item.FindControl("txtMetaDescription");
-                    var txtMetaTitle = (TextBox)e.Item.FindControl("txtMetaTitle");
-                    var lblLanguageId = (Label)e.Item.FindControl("lblLanguageId");
+                var txtMetaKeywords = (TextBox)e.Item.FindControl("txtMetaKeywords");
+                var txtMetaDescription = (TextBox)e.Item.FindControl("txtMetaDescription");
+                var txtMetaTitle = (TextBox)e.Item.FindControl("txtMetaTitle");
+                var lblLanguageId = (Label)e.Item.FindControl("lblLanguageId");
 
+                if (this.TopicId > 0)
+                {
                     int languageId = int.Parse(lblLanguageId.Text);
 
                     var content = TopicManager.GetLocalizedTopic(this.Topic.Name, languageId);
@@ -115,11 +135,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             Topic topic = TopicManager.GetTopicById(this.TopicId);
             if (topic != null)
             {
-                topic = TopicManager.UpdateTopic(topic.TopicId, txtSystemName.Text);
+                topic = TopicManager.UpdateTopic(topic.TopicId, txtSystemName.Text,
+                    cbIsPasswordProtected.Checked, txtPassword.Text.Trim());
             }
             else
             {
-                topic = TopicManager.InsertTopic(txtSystemName.Text);
+                topic = TopicManager.InsertTopic(txtSystemName.Text,
+                    cbIsPasswordProtected.Checked, txtPassword.Text.Trim());
             }
 
 

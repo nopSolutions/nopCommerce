@@ -40,6 +40,8 @@ namespace NopSolutions.NopCommerce.Web.Modules
         {
             base.OnLoad(e);
 
+            this.BindData();
+
             if (this.Topic != null)
             {
                 if (this.OverrideSEO)
@@ -56,12 +58,6 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     SEOHelper.RenderMetaTag(this.Page, "keywords", this.Topic.MetaKeywords, true);
                 }
             }
-        }
-
-        protected override void OnInit(EventArgs e)
-        {
-            BindData();
-            base.OnInit(e);
         }
 
         private void BindData()

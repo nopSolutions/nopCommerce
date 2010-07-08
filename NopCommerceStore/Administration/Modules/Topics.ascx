@@ -15,13 +15,20 @@
 </p>
 <asp:GridView ID="gvTopics" runat="server" AutoGenerateColumns="False" Width="100%">
     <Columns>
-        <asp:TemplateField HeaderText="<% $NopResources:Admin.Topics.Name %>" ItemStyle-Width="50%">
+        <asp:TemplateField HeaderText="<% $NopResources:Admin.Topics.Name %>" ItemStyle-Width="40%">
             <ItemTemplate>
                 <%#Eval("Name")%>
             </ItemTemplate>
         </asp:TemplateField>
+        <asp:TemplateField HeaderText="<% $NopResources:Admin.Topics.IsPasswordProtected %>" HeaderStyle-HorizontalAlign="Center"
+            ItemStyle-Width="20%" ItemStyle-HorizontalAlign="Center">
+            <ItemTemplate>
+                <nopCommerce:ImageCheckBox runat="server" ID="cbIsPasswordProtected" Checked='<%# Eval("IsPasswordProtected") %>'>
+                </nopCommerce:ImageCheckBox>
+            </ItemTemplate>
+        </asp:TemplateField>
         <asp:TemplateField HeaderText="<% $NopResources:Admin.Topics.EditInfo %>" HeaderStyle-HorizontalAlign="Center"
-            ItemStyle-Width="50%" ItemStyle-HorizontalAlign="Center">
+            ItemStyle-Width="40%" ItemStyle-HorizontalAlign="Center">
             <ItemTemplate>
                 <a href="TopicDetails.aspx?TopicID=<%#Eval("TopicId")%>">
                     <%#GetLocaleResourceString("Admin.Topics.EditInfo.Link")%></a>

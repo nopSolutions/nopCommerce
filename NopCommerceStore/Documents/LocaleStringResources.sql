@@ -29,8 +29,35 @@ set @resources='
   <LocaleResource Name="Admin.GlobalSettings.Other.HidNewsletterBox.Tooltip">
     <Value>Check if you want to hide the newsletter subscription box</Value>
   </LocaleResource>
-  <LocaleResource Name="">
-    <Value></Value>
+  <LocaleResource Name="Admin.Topics.IsPasswordProtected">
+    <Value>Password protected</Value>
+  </LocaleResource>
+  <LocaleResource Name="TopicPage.btnPassword.Text">
+    <Value>Enter</Value>
+  </LocaleResource>
+  <LocaleResource Name="TopicPage.WrongPassword">
+    <Value>Wrong password</Value>
+  </LocaleResource>
+  <LocaleResource Name="TopicPage.EnterPassword">
+    <Value>Please enter password to access this page:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.TopicInfo.IsPasswordProtected">
+    <Value>Is password protected:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.TopicInfo.IsPasswordProtected.Tooltip">
+    <Value>Check if this topic is password proceted</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.TopicInfo.Password">
+    <Value>Password:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.TopicInfo.Password.Tooltip">
+    <Value>The password to access the content of this topic</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.TopicInfo.Url">
+    <Value>URL:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.TopicInfo.Url.Tooltip">
+    <Value>The URL of this topic</Value>
   </LocaleResource>
 </Language>
 '

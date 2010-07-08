@@ -62,15 +62,21 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Topics
         /// Inserts a topic
         /// </summary>
         /// <param name="name">The name</param>
+        /// <param name="isPasswordProtected">The value indicating whether this topic is password proceted</param>
+        /// <param name="password">The password to access the content of this topic</param>
         /// <returns>Topic</returns>
-        public static Topic InsertTopic(string name)
+        public static Topic InsertTopic(string name, bool isPasswordProtected,
+            string password)
         {
             name = CommonHelper.EnsureMaximumLength(name, 200);
+            password = CommonHelper.EnsureMaximumLength(password, 200);
 
             var context = ObjectContextHelper.CurrentObjectContext;
 
             var topic = context.Topics.CreateObject();
             topic.Name = name;
+            topic.IsPasswordProtected = isPasswordProtected;
+            topic.Password = password;
 
             context.Topics.AddObject(topic);
             context.SaveChanges();
@@ -83,10 +89,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Topics
         /// </summary>
         /// <param name="topicId">The topic identifier</param>
         /// <param name="name">The name</param>
+        /// <param name="isPasswordProtected">The value indicating whether this topic is password proceted</param>
+        /// <param name="password">The password to access the content of this topic</param>
         /// <returns>Topic</returns>
-        public static Topic UpdateTopic(int topicId, string name)
+        public static Topic UpdateTopic(int topicId, string name, 
+            bool isPasswordProtected, string password)
         {
             name = CommonHelper.EnsureMaximumLength(name, 200);
+            password = CommonHelper.EnsureMaximumLength(password, 200);
 
             var topic = GetTopicById(topicId);
             if (topic == null)
@@ -97,6 +107,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Topics
                 context.Topics.Attach(topic);
 
             topic.Name = name;
+            topic.IsPasswordProtected = isPasswordProtected;
+            topic.Password = password;
             context.SaveChanges();
 
             return topic;

@@ -4,6 +4,20 @@
 <%@ Register TagPrefix="nopCommerce" TagName="SimpleTextBox" Src="SimpleTextBox.ascx" %>
 <%@ Register Assembly="NopCommerceStore" Namespace="NopSolutions.NopCommerce.Web.Controls"
     TagPrefix="nopCommerce" %>
+<script type="text/javascript">
+    $(document).ready(function () {
+        togglePassword();
+    });
+
+    function togglePassword() {
+        if (getE('<%=cbIsPasswordProtected.ClientID %>').checked) {
+            $('#pnlPassword').show();
+        }
+        else {
+            $('#pnlPassword').hide();
+        }
+    }
+</script>
 <ajaxToolkit:TabContainer runat="server" ID="TopicTabs" ActiveTabIndex="0">
     <ajaxToolkit:TabPanel runat="server" ID="pnlInfo" HeaderText="<% $NopResources:Admin.TopicLocalizedDetails.Info %>">
         <ContentTemplate>
@@ -16,6 +30,24 @@
                     <td class="adminData">
                         <nopCommerce:SimpleTextBox runat="server" ID="txtSystemName" CssClass="adminInput"
                             ErrorMessage="<% $NopResources:Admin.TopicInfo.SystemName.ErrorMessage %>"></nopCommerce:SimpleTextBox>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="adminTitle">
+                        <nopCommerce:ToolTipLabel runat="server" ID="lblIsPasswordProtected" Text="<% $NopResources:Admin.TopicInfo.IsPasswordProtected %>"
+                            ToolTip="<% $NopResources:Admin.TopicInfo.IsPasswordProtected.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
+                    </td>
+                    <td class="adminData">
+                        <asp:CheckBox ID="cbIsPasswordProtected" runat="server"></asp:CheckBox>
+                    </td>
+                </tr>
+                <tr id="pnlPassword">
+                    <td class="adminTitle">
+                        <nopCommerce:ToolTipLabel runat="server" ID="lblPassword" Text="<% $NopResources:Admin.TopicInfo.Password %>"
+                            ToolTip="<% $NopResources:Admin.TopicInfo.Password.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
+                    </td>
+                    <td class="adminData">
+                        <asp:TextBox runat="server" ID="txtPassword" CssClass="adminInput" />
                     </td>
                 </tr>
             </table>
@@ -53,6 +85,15 @@
                                     </td>
                                     <td class="adminData">
                                         <nopCommerce:NopHTMLEditor ID="txtBody" runat="server" Height="350" />
+                                    </td>
+                                </tr>
+                                <tr runat="server" id="pnlUrl">
+                                    <td class="adminTitle">
+                                        <nopCommerce:ToolTipLabel runat="server" ID="lblUrlTooltip" Text="<% $NopResources:Admin.TopicInfo.Url %>"
+                                            ToolTip="<% $NopResources:Admin.TopicInfo.Url.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
+                                    </td>
+                                    <td class="adminData">
+                                        <asp:HyperLink runat="server" ID="hlUrl" />
                                     </td>
                                 </tr>
                             </table>

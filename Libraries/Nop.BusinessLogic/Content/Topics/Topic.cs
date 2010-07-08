@@ -43,6 +43,16 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Topics
         /// Gets or sets the name
         /// </summary>
         public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value indicating whether this topic is password proceted
+        /// </summary>
+        public bool IsPasswordProtected { get; set; }
+
+        /// <summary>
+        /// Gets or sets the password to access the content of this topic
+        /// </summary>
+        public string Password { get; set; }
         #endregion
 
         #region Navigation Properties
