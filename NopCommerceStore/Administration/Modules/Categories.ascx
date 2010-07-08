@@ -16,7 +16,7 @@
     <asp:GridView ID="gvCategories" runat="server" AutoGenerateColumns="False" Width="100%"
     OnPageIndexChanging="gvCategories_PageIndexChanging" AllowPaging="true" PageSize="15">
         <Columns>
-            <asp:TemplateField HeaderText="<% $NopResources:Admin.Categories.Name %>" ItemStyle-Width="45%">
+            <asp:TemplateField HeaderText="<% $NopResources:Admin.Categories.Name %>" ItemStyle-Width="55%">
                 <ItemTemplate>
                     <%# GetCategoryFullName((Category)Container.DataItem)%>
                     <asp:HiddenField ID="hfCategoryId" runat="server" Value='<%# Eval("CategoryId") %>' />
