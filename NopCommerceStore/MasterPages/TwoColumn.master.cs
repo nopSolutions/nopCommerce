@@ -14,7 +14,7 @@ namespace NopSolutions.NopCommerce.Web.MasterPages
         {
             if (ctrlMiniShoppingCartBox != null)
                 ctrlMiniShoppingCartBox.Visible = SettingManager.GetSettingValueBoolean("Common.ShowMiniShoppingCart");
-            ctrlNewsLetterSubscriptionBoxControl.Visible = !SettingManager.GetSettingValueBoolean("Display.HidNewsletterBox");
+            ctrlNewsLetterSubscriptionBoxControl.Visible = !SettingManager.GetSettingValueBoolean("Display.HideNewsletterBox");
             base.OnPreRender(e);
         }
 

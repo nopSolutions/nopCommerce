@@ -1993,24 +1993,6 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         protected global::System.Web.UI.WebControls.CheckBox cbAllowNavigationOnlyRegisteredCustomers;
         
         /// <summary>
-        /// lblHidNewsletterBox control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblHidNewsletterBox;
-        
-        /// <summary>
-        /// cbHidNewsletterBox control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox cbHidNewsletterBox;
-        
-        /// <summary>
         /// lblHidePricesForNonRegistered control.
         /// </summary>
         /// <remarks>
@@ -2189,6 +2171,24 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox cbShowMiniShoppingCart;
+        
+        /// <summary>
+        /// lblHideNewsletterBox control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblHideNewsletterBox;
+        
+        /// <summary>
+        /// cbHideNewsletterBox control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbHideNewsletterBox;
         
         /// <summary>
         /// lblNotifyAboutNewProductReviews control.

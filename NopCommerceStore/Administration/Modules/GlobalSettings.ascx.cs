@@ -134,7 +134,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             cbUsernamesEnabled.Checked = CustomerManager.UsernamesEnabled;
             CommonHelper.SelectListItem(this.ddlRegistrationMethod, (int)CustomerManager.CustomerRegistrationType);
             cbAllowNavigationOnlyRegisteredCustomers.Checked = CustomerManager.AllowNavigationOnlyRegisteredCustomers;
-            cbHidNewsletterBox.Checked = SettingManager.GetSettingValueBoolean("Display.HidNewsletterBox");
+            cbHideNewsletterBox.Checked = SettingManager.GetSettingValueBoolean("Display.HideNewsletterBox");
             cbHidePricesForNonRegistered.Checked = SettingManager.GetSettingValueBoolean("Common.HidePricesForNonRegistered");
             cbEnableDynamicPriceUpdate.Checked = SettingManager.GetSettingValueBoolean("ProductAttribute.EnableDynamicPriceUpdate");
             cbAllowProductSorting.Checked = SettingManager.GetSettingValueBoolean("Common.AllowProductSorting");
@@ -392,7 +392,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     CustomerManager.UsernamesEnabled = cbUsernamesEnabled.Checked;
                     CustomerManager.CustomerRegistrationType = (CustomerRegistrationTypeEnum)Enum.ToObject(typeof(CustomerRegistrationTypeEnum), int.Parse(this.ddlRegistrationMethod.SelectedItem.Value));
                     CustomerManager.AllowNavigationOnlyRegisteredCustomers = cbAllowNavigationOnlyRegisteredCustomers.Checked;
-                    SettingManager.SetParam("Display.HidNewsletterBox", cbHidNewsletterBox.Checked.ToString());
+                    SettingManager.SetParam("Display.HideNewsletterBox", cbHideNewsletterBox.Checked.ToString());
                     SettingManager.SetParam("Common.HidePricesForNonRegistered", cbHidePricesForNonRegistered.Checked.ToString());
                     SettingManager.SetParam("ProductAttribute.EnableDynamicPriceUpdate", cbEnableDynamicPriceUpdate.Checked.ToString());
                     SettingManager.SetParam("Common.AllowProductSorting", cbAllowProductSorting.Checked.ToString());

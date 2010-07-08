@@ -948,18 +948,18 @@
                                 ToolTip="<% $NopResources:Admin.GlobalSettings.RewardPoints.PointsForPurchases.Tooltip %>" />
                         </td>
                         <td class="adminData">
-                            Each
+                            <%=GetLocaleResourceString("Admin.GlobalSettings.RewardPoints.EarningRewardPoints.Tooltip1")%>
                             <nopCommerce:DecimalTextBox runat="server" CssClass="adminInput" Width="50px" ID="txtRewardPointsForPurchases_Amount"
                                 RequiredErrorMessage="<% $NopResources:Admin.GlobalSettings.RewardPoints.PointsForPurchases_Amount.RequiredErrorMessage %>"
                                 MinimumValue="0" MaximumValue="999999" RangeErrorMessage="<% $NopResources:Admin.GlobalSettings.RewardPoints.PointsForPurchases_Amount.RangeErrorMessage %>">
                             </nopCommerce:DecimalTextBox>
                             <%=CurrencyManager.PrimaryStoreCurrency.CurrencyCode%>
-                            spent will earn
+                            <%=GetLocaleResourceString("Admin.GlobalSettings.RewardPoints.EarningRewardPoints.Tooltip2")%>
                             <nopCommerce:NumericTextBox runat="server" CssClass="adminInput" ID="txtRewardPointsForPurchases_Points"
                                 RequiredErrorMessage="<% $NopResources:Admin.GlobalSettings.RewardPoints.PointsForPurchases_Points.RequiredErrorMessage %>"
                                 MinimumValue="0" MaximumValue="999999" RangeErrorMessage="<% $NopResources:Admin.GlobalSettings.RewardPoints.PointsForPurchases_Points.RangeErrorMessage %>"
                                 Width="50px" />
-                            reward points.
+                            <%=GetLocaleResourceString("Admin.GlobalSettings.RewardPoints.EarningRewardPoints.Tooltip3")%>
                         </td>
                     </tr>
                     <tr>
@@ -1422,17 +1422,6 @@
                     </tr>
                     <tr>
                         <td class="adminTitle">
-                            <nopCommerce:ToolTipLabel runat="server" ID="lblHidNewsletterBox"
-                                Text="<% $NopResources:Admin.GlobalSettings.Other.HidNewsletterBox %>"
-                                ToolTip="<% $NopResources:Admin.GlobalSettings.Other.HidNewsletterBox.Tooltip %>"
-                                ToolTipImage="~/Administration/Common/ico-help.gif" />
-                        </td>
-                        <td class="adminData">
-                            <asp:CheckBox runat="server" ID="cbHidNewsletterBox"></asp:CheckBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="adminTitle">
                             <nopCommerce:ToolTipLabel runat="server" ID="lblHidePricesForNonRegistered" Text="<% $NopResources:Admin.GlobalSettings.Other.HidePricesForNonRegistered %>"
                                 ToolTip="<% $NopResources:Admin.GlobalSettings.Other.HidePricesForNonRegistered.Tooltip %>"
                                 ToolTipImage="~/Administration/Common/ico-help.gif" />
@@ -1534,6 +1523,17 @@
                         </td>
                         <td class="adminData">
                             <asp:CheckBox runat="server" ID="cbShowMiniShoppingCart"></asp:CheckBox>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ID="lblHideNewsletterBox"
+                                Text="<% $NopResources:Admin.GlobalSettings.Other.HideNewsletterBox %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Other.HideNewsletterBox.Tooltip %>"
+                                ToolTipImage="~/Administration/Common/ico-help.gif" />
+                        </td>
+                        <td class="adminData">
+                            <asp:CheckBox runat="server" ID="cbHideNewsletterBox"></asp:CheckBox>
                         </td>
                     </tr>
                     <tr>

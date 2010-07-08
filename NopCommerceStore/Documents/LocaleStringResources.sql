@@ -5,29 +5,32 @@ set @resources='
   <LocaleResource Name="Admin.Categories.DisplayOrder">
     <Value>Display Order</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Categories.DisplayOrder">
-    <Value>Display Order</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Categories.SaveButton.Text">
-    <Value>Save</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Categories.SaveButton.ToolTip">
-    <Value>Save changes</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Categories.DisplayOrder.RequiredErrorMessage">
-    <Value>Display order is not specified</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Categories.DisplayOrder.RangeErrorMessage">
-    <Value>Display order must be from -99999 to 99999</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Categories.ChangesSuccessfullySaved">
-    <Value>Categories have been successfully updated</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.GlobalSettings.Other.HidNewsletterBox">
+  <LocaleResource Name="Admin.GlobalSettings.Other.HideNewsletterBox">
     <Value>Hide newsletter box:</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.GlobalSettings.Other.HidNewsletterBox.Tooltip">
+  <LocaleResource Name="Admin.GlobalSettings.Other.HideNewsletterBox.Tooltip">
     <Value>Check if you want to hide the newsletter subscription box</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.PublicStore">
+    <Value>Public Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.LoggedInAs">
+    <Value>Logged in as:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Logout">
+    <Value>Logout?</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ClearCacheButton.Text">
+    <Value>Clear Cache</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.RewardPoints.EarningRewardPoints.Tooltip1">
+    <Value>Each</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.RewardPoints.EarningRewardPoints.Tooltip2">
+    <Value>spent will earn</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.RewardPoints.EarningRewardPoints.Tooltip3">
+    <Value>reward points.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Topics.IsPasswordProtected">
     <Value>Password protected</Value>

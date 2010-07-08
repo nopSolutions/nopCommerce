@@ -95,37 +95,6 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             return result;
         }
 
-        protected void SaveButton_Click(object sender, EventArgs e)
-        {
-            if (Page.IsValid)
-            {
-                try
-                {
-                    foreach (GridViewRow row in gvCategories.Rows)
-                    {
-                        var hfCategoryId = row.FindControl("hfCategoryId") as HiddenField;
-                        var txtDisplayOrder = row.FindControl("txtDisplayOrder") as NumericTextBox;
-                        var cbPublished = row.FindControl("cbPublished") as CheckBox;
-                        int categoryId = int.Parse(hfCategoryId.Value);
-                        Category category = CategoryManager.GetCategoryById(categoryId);
-
-                        if (category != null)
-                        {
-                            category = CategoryManager.UpdateCategory(category.CategoryId, category.Name, category.Description, category.TemplateId,
-                                 category.MetaKeywords, category.MetaDescription, category.MetaTitle, category.SEName, category.ParentCategoryId,
-                                category.PictureId, category.PageSize, category.PriceRanges, category.ShowOnHomePage, cbPublished.Checked, category.Deleted,
-                                txtDisplayOrder.Value, category.CreatedOn, DateTime.UtcNow);
-                        }
-                    }
-                    ShowMessage(GetLocaleResourceString("Admin.Categories.ChangesSuccessfullySaved"));
-                }
-                catch (Exception exc)
-                {
-                    ProcessException(exc);
-                }
-            }
-        }
-
         protected void btnExportXML_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)

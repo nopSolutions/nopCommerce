@@ -21,17 +21,17 @@
                     <nopCommerce:AdminLanguageSelector runat="server" ID="ctrlAdminLanguageSelector" />
                 </div>
                 <div class="links">
-                    <a href="<%=CommonHelper.GetStoreLocation()%>">Public Store</a> <span class="separator">
+                    <a href="<%=CommonHelper.GetStoreLocation()%>"><%= GetLocaleResourceString("Admin.PublicStore")%></a> <span class="separator">
                         |</span>
                     <asp:LinkButton runat="server" ID="lbClearCache" CausesValidation="false" OnClick="lbClearCache_Click"
-                        Text="Clear Cache" />
+                        Text="<% $NopResources:Admin.ClearCacheButton.Text %>" />
                 </div>
                 <div class="login-info">
                     <asp:LoginView ID="topLoginView" runat="server">
                         <LoggedInTemplate>
-                            Logged in as:
+                            <%= GetLocaleResourceString("Admin.LoggedInAs")%>
                             <%=Page.User.Identity.Name %>, <a href="<%=Page.ResolveUrl("~/administration/logout.aspx")%>">
-                                logout?</a>
+                                <%= GetLocaleResourceString("Admin.Logout")%></a>
                         </LoggedInTemplate>
                     </asp:LoginView>
                 </div>
