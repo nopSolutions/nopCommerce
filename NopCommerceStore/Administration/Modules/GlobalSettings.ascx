@@ -1422,6 +1422,17 @@
                     </tr>
                     <tr>
                         <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ID="lblHidNewsletterBox"
+                                Text="<% $NopResources:Admin.GlobalSettings.Other.HidNewsletterBox %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Other.HidNewsletterBox.Tooltip %>"
+                                ToolTipImage="~/Administration/Common/ico-help.gif" />
+                        </td>
+                        <td class="adminData">
+                            <asp:CheckBox runat="server" ID="cbHidNewsletterBox"></asp:CheckBox>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
                             <nopCommerce:ToolTipLabel runat="server" ID="lblHidePricesForNonRegistered" Text="<% $NopResources:Admin.GlobalSettings.Other.HidePricesForNonRegistered %>"
                                 ToolTip="<% $NopResources:Admin.GlobalSettings.Other.HidePricesForNonRegistered.Tooltip %>"
                                 ToolTipImage="~/Administration/Common/ico-help.gif" />

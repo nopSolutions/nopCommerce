@@ -35,7 +35,7 @@
             <nopCommerce:MiniShoppingCartBox ID="ctrlMiniShoppingCartBox" runat="server" />
             <div class="clear">
             </div>
-            <nopCommerce:NewsLetterSubscriptionBoxControl ID="NewsLetterSubscriptionBoxControl1"
+            <nopCommerce:NewsLetterSubscriptionBoxControl ID="ctrlNewsLetterSubscriptionBoxControl"
                 runat="server" />
             <div class="clear">
             </div>

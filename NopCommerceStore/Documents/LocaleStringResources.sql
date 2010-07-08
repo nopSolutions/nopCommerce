@@ -23,6 +23,12 @@ set @resources='
   <LocaleResource Name="Admin.Categories.ChangesSuccessfullySaved">
     <Value>Categories have been successfully updated</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.HidNewsletterBox">
+    <Value>Hide newsletter box:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.HidNewsletterBox.Tooltip">
+    <Value>Check if you want to hide the newsletter subscription box</Value>
+  </LocaleResource>
   <LocaleResource Name="">
     <Value></Value>
   </LocaleResource>

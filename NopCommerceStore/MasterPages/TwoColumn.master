@@ -26,7 +26,7 @@
             <nopCommerce:PopularTags ID="ctrlPopularTags" runat="server" />
             <div class="clear">
             </div>
-            <nopCommerce:NewsLetterSubscriptionBoxControl runat="server" />
+            <nopCommerce:NewsLetterSubscriptionBoxControl runat="server" ID="ctrlNewsLetterSubscriptionBoxControl" />
             <div class="clear">
             </div>
             <nopCommerce:RecentlyViewedProducts ID="ctrlRecentlyViewedProducts" runat="server" />
