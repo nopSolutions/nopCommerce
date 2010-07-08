@@ -7,18 +7,18 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace NopSolutions.NopCommerce.Web.Administration.Modules {
+namespace NopSolutions.NopCommerce.Web.Administration {
     
     
-    public partial class CampaignsControl {
+    public partial class Administration_NewsletterSubscribers {
         
         /// <summary>
-        /// gvCampaigns control.
+        /// ctrlNewsletterSubscribers control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView gvCampaigns;
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.NewsletterSubscribersControl ctrlNewsletterSubscribers;
     }
 }

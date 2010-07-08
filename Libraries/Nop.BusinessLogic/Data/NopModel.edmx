@@ -3978,6 +3978,7 @@
         <Function Name="Nop_LogClear" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="Nop_Maintenance_ReindexTables" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="Nop_NewsLetterSubscriptionLoadAll" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Email" Type="nvarchar" Mode="In" />
           <Parameter Name="ShowHidden" Type="bit" Mode="In" />
         </Function>
         <Function Name="Nop_NewsLoadAll" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
@@ -4736,7 +4737,8 @@
           <FunctionImport Name="Sp_LogClear" />
           <FunctionImport Name="Sp_Maintenance_ReindexTables" />
           <FunctionImport Name="Sp_NewsLetterSubscriptionLoadAll" EntitySet="NewsLetterSubscriptions" ReturnType="Collection(NopSolutions.NopCommerce.BusinessLogic.Data.NewsLetterSubscription)">
-          <Parameter Name="ShowHidden" Mode="In" Type="Boolean" />
+          <Parameter Name="Email" Mode="In" Type="String" />
+            <Parameter Name="ShowHidden" Mode="In" Type="Boolean" />
           </FunctionImport>
           <FunctionImport Name="Sp_NewsLoadAll" EntitySet="News" ReturnType="Collection(NopSolutions.NopCommerce.BusinessLogic.Data.News)">
             <Parameter Name="LanguageID" Mode="In" Type="Int32" />

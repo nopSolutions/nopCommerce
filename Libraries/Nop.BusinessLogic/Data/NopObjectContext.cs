@@ -2121,12 +2121,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
             base.ExecuteFunction("Sp_Maintenance_ReindexTables");
         }
 
-        public List<NewsLetterSubscription> Sp_NewsLetterSubscriptionLoadAll(bool showHidden)
+        public List<NewsLetterSubscription> Sp_NewsLetterSubscriptionLoadAll(string email, bool showHidden)
         {
+            ObjectParameter emailParameter = new ObjectParameter("Email", email);
             ObjectParameter showHiddenParameter = new ObjectParameter("ShowHidden", showHidden);
 
             var result = base.ExecuteFunction<NewsLetterSubscription>("Sp_NewsLetterSubscriptionLoadAll",
-                showHiddenParameter).ToList();
+                emailParameter, showHiddenParameter).ToList();
             return result;
         }
 

@@ -8,9 +8,6 @@
     <div class="options">
         <input type="button" onclick="location.href='CampaignAdd.aspx'" value="<%=GetLocaleResourceString("Admin.Campaigns.AddNewButton.Text")%>"
             id="btnAddNew" class="adminButtonBlue" title="<%=GetLocaleResourceString("Admin.Campaigns.AddNewButton.Tooltip")%>" />
-        <asp:Button runat="server" Text="<% $NopResources:Admin.Campaigns.ExportEmailsButton.Text %>"
-            CssClass="adminButtonBlue" ID="btnExportCVS" OnClick="btnExportCVS_Click" ValidationGroup="ExportXML"
-            ToolTip="<% $NopResources:Admin.Campaigns.ExportEmailsButton.Tooltip %>" />
     </div>
 </div>
 <asp:GridView ID="gvCampaigns" runat="server" AutoGenerateColumns="False" Width="100%">

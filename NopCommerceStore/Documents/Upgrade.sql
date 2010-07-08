@@ -22,4 +22,41 @@ BEGIN
 END
 GO
 
+IF EXISTS (
+		SELECT *
+		FROM dbo.sysobjects
+		WHERE id = OBJECT_ID(N'[dbo].[Nop_NewsLetterSubscriptionLoadAll]') AND OBJECTPROPERTY(id,N'IsProcedure') = 1)
+DROP PROCEDURE [dbo].[Nop_NewsLetterSubscriptionLoadAll]
+GO
+CREATE PROCEDURE [dbo].[Nop_NewsLetterSubscriptionLoadAll]
+(
+	@Email		nvarchar(200),
+	@ShowHidden bit = 0
+)
+AS
+BEGIN
+	
+	SET @Email = isnull(@Email, '')
+	SET @Email = '%' + rtrim(ltrim(@Email)) + '%'
 
+
+	SET NOCOUNT ON
+	SELECT 
+		nls.NewsLetterSubscriptionId,
+		nls.NewsLetterSubscriptionGuid,
+		nls.Email,
+		nls.Active,
+		nls.CreatedOn
+	FROM
+		[Nop_NewsLetterSubscription] nls
+	LEFT OUTER JOIN 
+		Nop_Customer c 
+	ON 
+		nls.Email=c.Email
+	WHERE 
+		(patindex(@Email, isnull(nls.Email, '')) > 0) AND
+		(nls.Active = 1 OR @ShowHidden = 1) AND 
+		(c.CustomerID IS NULL OR (c.Active = 1 AND c.Deleted = 0))
+	ORDER BY nls.Email
+END
+GO

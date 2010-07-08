@@ -62,6 +62,57 @@ set @resources='
   <LocaleResource Name="Admin.TopicInfo.Url.Tooltip">
     <Value>The URL of this topic</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.PromotionsHome.NewsletterSubscribers.TitleDescription">
+    <Value>Newsletter Subscribers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.PromotionsHome.NewsletterSubscribers.Title">
+    <Value>Newsletter Subscribers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.PromotionsHome.NewsletterSubscribers.Description">
+    <Value>Manage the newsletter subscribers here.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.NewsletterSubscribers.Title">
+    <Value>Newsletter Subscribers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.NewsletterSubscribers.SearchButton.Text">
+    <Value>Search</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.NewsletterSubscribers.DeleteButton.Text">
+    <Value>Delete selected</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.NewsletterSubscribers.Email">
+    <Value>Email:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.NewsletterSubscribers.Email.Tooltip">
+    <Value>Enter email to find or leave empty to load all subscribers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.NewsletterSubscribers.EmailColumn">
+    <Value>Email</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.NewsletterSubscribers.Active">
+    <Value>Active</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.NewsletterSubscribers.SubscribedOnColumn">
+    <Value>Subscribed on</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Sitemap.NewsletterSubscribersTitle">
+    <Value>Newsletter Subscribers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Sitemap.NewsletterSubscribersDescription">
+    <Value>Manage Newsletter Subscribers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Campaigns.ExportEmailsButton.Text">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Campaigns.ExportEmailsButton.Tooltip">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.NewsletterSubscribers.ExportEmailsButton.Text">
+    <Value>Export emails to CSV</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.NewsletterSubscribers.ExportEmailsButton.Tooltip">
+    <Value>Export emails subscribed to newsletters to a comma-separated value (CSV) file.</Value>
+  </LocaleResource>
 </Language>
 '
 

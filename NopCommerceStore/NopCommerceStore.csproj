@@ -378,6 +378,20 @@
     <Compile Include="Administration\BulkEditProducts.aspx.designer.cs">
       <DependentUpon>BulkEditProducts.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Administration\NewsletterSubscribers.aspx.cs">
+      <DependentUpon>NewsletterSubscribers.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Administration\NewsletterSubscribers.aspx.designer.cs">
+      <DependentUpon>NewsletterSubscribers.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Administration\Modules\NewsletterSubscribers.ascx.cs">
+      <DependentUpon>NewsletterSubscribers.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Administration\Modules\NewsletterSubscribers.ascx.designer.cs">
+      <DependentUpon>NewsletterSubscribers.ascx</DependentUpon>
+    </Compile>
     <Compile Include="Administration\Modules\ThirdPartyIntegration.ascx.cs">
       <DependentUpon>ThirdPartyIntegration.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -5573,6 +5587,8 @@
     <Content Include="Administration\CategoryTemplateAdd.aspx" />
     <Content Include="Administration\CategoryTemplateDetails.aspx" />
     <Content Include="Administration\CategoryTemplates.aspx" />
+    <Content Include="Administration\NewsletterSubscribers.aspx" />
+    <Content Include="Administration\Modules\NewsletterSubscribers.ascx" />
     <Content Include="Administration\Modules\ThirdPartyIntegration.ascx" />
     <Content Include="Administration\Payment\USAePayIntegrated\ConfigurePaymentMethod.ascx" />
     <Content Include="Administration\ThirdPartyIntegration.aspx" />

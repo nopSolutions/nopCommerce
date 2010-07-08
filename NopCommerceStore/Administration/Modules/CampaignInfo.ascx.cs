@@ -116,7 +116,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 try
                 {
                     Server.ScriptTimeout = 300;
-                    var subscriptions = MessageManager.GetAllNewsLetterSubscriptions(false);
+                    var subscriptions = MessageManager.GetAllNewsLetterSubscriptions(string.Empty, false);
                     int totalEmailsSent = CampaignManager.SendCampaign(this.CampaignId, subscriptions);
                     lblSendEmailResult.Text = string.Format(GetLocaleResourceString("Admin.CampaignInfo.EmailSentToCustomers"), totalEmailsSent);
                 }

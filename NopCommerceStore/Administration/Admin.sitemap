@@ -47,6 +47,7 @@
     <!-- Promotions -->
     <siteMapNode title="Promotions" url="~/administration/promotionshome.aspx" IconUrl="~/administration/common/ico-promotions.png" description="Promotions Home" nopResourceTitle="Admin.Sitemap.PromotionsHomeTitle" nopResourceDescription="Admin.Sitemap.PromotionsHomeDescription" >
       <siteMapNode title="Affiliates" url="~/administration/affiliates.aspx" description="Manage Affiliates" nopResourceTitle="Admin.Sitemap.AffiliatesTitle" nopResourceDescription="Admin.Sitemap.AffiliatesDescription" />
+      <siteMapNode title="Newsletter Subscribers" url="~/administration/newslettersubscribers.aspx" description="Manage Newsletter Subscribers" nopResourceTitle="Admin.Sitemap.NewsletterSubscribersTitle" nopResourceDescription="Admin.Sitemap.NewsletterSubscribersDescription" />
       <siteMapNode title="Campaigns" url="~/administration/campaigns.aspx" description="Manage Campaigns" nopResourceTitle="Admin.Sitemap.CampaignsTitle" nopResourceDescription="Admin.Sitemap.CampaignsDescription" />
       <siteMapNode title="Discounts" url="~/administration/discounts.aspx" description="Manage Discounts" nopResourceTitle="Admin.Sitemap.DiscountsTitle" nopResourceDescription="Admin.Sitemap.DiscountsDescription" />
       <siteMapNode title="Price Lists" url="~/administration/pricelist.aspx" description="Manage Price Lists" nopResourceTitle="Admin.Sitemap.PricelistTitle" nopResourceDescription="Admin.Sitemap.PricelistDescription" />

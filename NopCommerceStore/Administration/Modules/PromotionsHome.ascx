@@ -27,6 +27,17 @@
             </li>
             <li>
                 <div class="title">
+                    <a href="newslettersubscribers.aspx" title="<%=GetLocaleResourceString("Admin.PromotionsHome.NewsletterSubscribers.TitleDescription")%>">
+                        <%=GetLocaleResourceString("Admin.PromotionsHome.NewsletterSubscribers.Title")%></a>
+                </div>
+                <div class="description">
+                    <p>
+                        <%=GetLocaleResourceString("Admin.PromotionsHome.NewsletterSubscribers.Description")%>
+                    </p>
+                </div>
+            </li>
+            <li>
+                <div class="title">
                     <a href="campaigns.aspx" title="<%=GetLocaleResourceString("Admin.PromotionsHome.Campaigns.TitleDescription")%>">
                         <%=GetLocaleResourceString("Admin.PromotionsHome.Campaigns.Title")%></a>
                 </div>

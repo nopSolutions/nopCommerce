@@ -804,12 +804,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// <summary>
         /// Gets the newsletter subscription collection
         /// </summary>
+        /// <param name="email">E,ail to search or string.Empty to load all records</param>
         /// <param name="showHidden">A value indicating whether the not active subscriptions should be loaded</param>
         /// <returns>NewsLetterSubscription entity collection</returns>
-        public static List<NewsLetterSubscription> GetAllNewsLetterSubscriptions(bool showHidden)
+        public static List<NewsLetterSubscription> GetAllNewsLetterSubscriptions(string email, bool showHidden)
         {
             var context = ObjectContextHelper.CurrentObjectContext;
-            var newsletterSubscriptions = context.Sp_NewsLetterSubscriptionLoadAll(showHidden);
+            var newsletterSubscriptions = context.Sp_NewsLetterSubscriptionLoadAll(email, showHidden);
 
             return newsletterSubscriptions;
         }

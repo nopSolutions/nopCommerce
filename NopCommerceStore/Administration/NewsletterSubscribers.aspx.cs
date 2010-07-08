@@ -12,41 +12,31 @@
 // Contributor(s): _______. 
 //------------------------------------------------------------------------------
 
-
 using System;
 using System.Collections;
 using System.Configuration;
 using System.Data;
-using System.Text;
 using System.Web;
 using System.Web.Security;
 using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
+using NopSolutions.NopCommerce.BusinessLogic;
+using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.ExportImport;
-using NopSolutions.NopCommerce.BusinessLogic.Messages;
-using NopSolutions.NopCommerce.BusinessLogic.Promo.Campaigns;
-using NopSolutions.NopCommerce.Common;
+using NopSolutions.NopCommerce.BusinessLogic.Orders;
+using NopSolutions.NopCommerce.BusinessLogic.Payment;
+using NopSolutions.NopCommerce.BusinessLogic.Security;
 using NopSolutions.NopCommerce.Common.Utils;
 
-namespace NopSolutions.NopCommerce.Web.Administration.Modules
+namespace NopSolutions.NopCommerce.Web.Administration
 {
-    public partial class CampaignsControl : BaseNopAdministrationUserControl
+    public partial class Administration_NewsletterSubscribers : BaseNopAdministrationPage
     {
-        protected void Page_Load(object sender, EventArgs e)
+        protected override bool ValidatePageSecurity()
         {
-            if (!Page.IsPostBack)
-            {
-                BindData();
-            }
-        }
-
-        protected void BindData()
-        {
-            var campaignCollection = CampaignManager.GetAllCampaigns();
-            gvCampaigns.DataSource = campaignCollection;
-            gvCampaigns.DataBind();
+            return ACLManager.IsActionAllowed("ManageCampaigns");
         }
     }
 }
