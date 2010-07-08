@@ -48,6 +48,8 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected override void OnPreRender(EventArgs e)
         {
+            BindJQuery();
+
             if (gvSent.Rows.Count > 0)
             {
                 btnDeleteSelected.Visible = true;

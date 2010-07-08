@@ -1,6 +1,21 @@
 <%@ Control Language="C#" AutoEventWireup="true" Inherits="NopSolutions.NopCommerce.Web.Modules.PrivateMessagesSentItemsControl"
     CodeBehind="PrivateMessagesSentItems.ascx.cs" %>
 <div class="private-messages-box">
+
+
+<script type="text/javascript">
+
+    $(window).bind('load', function () {
+        var cbHeader = $(".cbHeaderPMSent input");
+        var cbRowItem = $(".cbRowItemPMSent input");
+        cbHeader.bind("click", function () {
+            cbRowItem.each(function () { this.checked = cbHeader[0].checked; })
+        });
+        cbRowItem.bind("click", function () { if ($(this).checked == false) cbHeader[0].checked = false; });
+    });
+    
+</script>
+
     <asp:GridView ID="gvSent" DataKeyNames="PrivateMessageId" runat="server" AllowPaging="True"
         AutoGenerateColumns="False" CellPadding="4" DataSourceID="odsSent" GridLines="None"
         PageSize="10" CssClass="pmgridtablestyle">
@@ -9,9 +24,12 @@
         <RowStyle CssClass="pmgridrowstyle" />
         <PagerStyle CssClass="pmgridpagerstyle" />
         <Columns>
-            <asp:TemplateField HeaderText="" ItemStyle-Width="5%">
+            <asp:TemplateField ItemStyle-Width="5%" ItemStyle-HorizontalAlign="Center">
+                <HeaderTemplate>
+                    <asp:CheckBox ID="cbSelectAll" runat="server" CssClass="cbHeaderPMSent" />
+                </HeaderTemplate>
                 <ItemTemplate>
-                    <asp:CheckBox ID="cbSelect" runat="server" />
+                    <asp:CheckBox ID="cbSelect" runat="server" CssClass="cbRowItemPMSent" />
                     <asp:HiddenField ID="hfPrivateMessageId" runat="server" Value='<%# Eval("PrivateMessageId") %>' />
                 </ItemTemplate>
             </asp:TemplateField>
