@@ -280,24 +280,34 @@ namespace NopSolutions.NopCommerce.Web.Modules
             if (String.IsNullOrEmpty(couponCode))
                 return;
 
-            bool isGiftCardValid = GiftCardHelper.IsGiftCardValid(couponCode);
-            if (isGiftCardValid)
+            var cart = ShoppingCartManager.GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
+            if (!cart.IsRecurring)
             {
-                pnlGiftCardWarnings.Visible = false;
-                lblGiftCardWarning.Visible = false;
+                bool isGiftCardValid = GiftCardHelper.IsGiftCardValid(couponCode);
+                if (isGiftCardValid)
+                {
+                    pnlGiftCardWarnings.Visible = false;
+                    lblGiftCardWarning.Visible = false;
 
-                string couponCodesXML = string.Empty;
-                if (NopContext.Current.User != null)
-                    couponCodesXML = NopContext.Current.User.GiftCardCouponCodes;
-                couponCodesXML = GiftCardHelper.AddCouponCode(couponCodesXML, couponCode);
-                CustomerManager.ApplyGiftCardCouponCode(couponCodesXML);
-                this.BindData();
+                    string couponCodesXML = string.Empty;
+                    if (NopContext.Current.User != null)
+                        couponCodesXML = NopContext.Current.User.GiftCardCouponCodes;
+                    couponCodesXML = GiftCardHelper.AddCouponCode(couponCodesXML, couponCode);
+                    CustomerManager.ApplyGiftCardCouponCode(couponCodesXML);
+                    this.BindData();
+                }
+                else
+                {
+                    pnlGiftCardWarnings.Visible = true;
+                    lblGiftCardWarning.Visible = true;
+                    lblGiftCardWarning.Text = GetLocaleResourceString("ShoppingCart.GiftCards.WrongGiftCard");
+                }
             }
             else
             {
                 pnlGiftCardWarnings.Visible = true;
                 lblGiftCardWarning.Visible = true;
-                lblGiftCardWarning.Text = GetLocaleResourceString("ShoppingCart.GiftCards.WrongGiftCard");
+                lblGiftCardWarning.Text = GetLocaleResourceString("ShoppingCart.GiftCards.DontWorkWithAutoshipProducts");
             }
         }
 

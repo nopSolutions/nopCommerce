@@ -113,6 +113,9 @@ set @resources='
   <LocaleResource Name="Admin.NewsletterSubscribers.ExportEmailsButton.Tooltip">
     <Value>Export emails subscribed to newsletters to a comma-separated value (CSV) file.</Value>
   </LocaleResource>
+  <LocaleResource Name="ShoppingCart.GiftCards.DontWorkWithAutoshipProducts">
+    <Value>You cannot use gift cards with auto-ship (recurring) items.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -173,5 +176,3 @@ DEALLOCATE cur_localeresource
 
 DROP TABLE #LocaleStringResourceTmp
 GO
-
-

@@ -356,25 +356,29 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
 
             //let's apply gift cards now (gift cards that can be used)
             appliedGiftCards = new List<AppliedGiftCard>();
-            var giftCards = GiftCardHelper.GetActiveGiftCards(customer);
-            foreach (var gc in giftCards)
+            if (!cart.IsRecurring)
             {
-                if (resultTemp > decimal.Zero)
+                //we don't apply gift cards for recurring products
+                var giftCards = GiftCardHelper.GetActiveGiftCards(customer);
+                foreach (var gc in giftCards)
                 {
-                    decimal remainingAmount = GiftCardHelper.GetGiftCardRemainingAmount(gc);
-                    decimal amountCanBeUsed = decimal.Zero;
-                    if (resultTemp > remainingAmount)
-                        amountCanBeUsed = remainingAmount;
-                    else
-                        amountCanBeUsed = resultTemp;
+                    if (resultTemp > decimal.Zero)
+                    {
+                        decimal remainingAmount = GiftCardHelper.GetGiftCardRemainingAmount(gc);
+                        decimal amountCanBeUsed = decimal.Zero;
+                        if (resultTemp > remainingAmount)
+                            amountCanBeUsed = remainingAmount;
+                        else
+                            amountCanBeUsed = resultTemp;
 
-                    //reduce subtotal
-                    resultTemp -= amountCanBeUsed;
+                        //reduce subtotal
+                        resultTemp -= amountCanBeUsed;
 
-                    AppliedGiftCard appliedGiftCard = new AppliedGiftCard();
-                    appliedGiftCard.GiftCardId = gc.GiftCardId;
-                    appliedGiftCard.AmountCanBeUsed = amountCanBeUsed;
-                    appliedGiftCards.Add(appliedGiftCard);
+                        AppliedGiftCard appliedGiftCard = new AppliedGiftCard();
+                        appliedGiftCard.GiftCardId = gc.GiftCardId;
+                        appliedGiftCard.AmountCanBeUsed = amountCanBeUsed;
+                        appliedGiftCards.Add(appliedGiftCard);
+                    }
                 }
             }
 
