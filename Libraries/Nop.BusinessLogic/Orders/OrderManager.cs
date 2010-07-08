@@ -3525,8 +3525,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                                         var gc = InsertGiftCard(opv.OrderProductVariantId, scUnitPriceExclTax,
                                             false, GiftCardHelper.GenerateGiftCardCode(),
                                             giftCardRecipientName, giftCardRecipientEmail,
-                                           giftCardSenderName, giftCardSenderEmail,
-                                           giftCardMessage, false, DateTime.UtcNow);
+                                            giftCardSenderName, giftCardSenderEmail,
+                                            giftCardMessage, false, DateTime.UtcNow);
                                     }
                                 }
 
@@ -3545,7 +3545,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                             var initialOrderProductVariants = initialOrder.OrderProductVariants;
                             foreach (var opv in initialOrderProductVariants)
                             {
-                                InsertOrderProductVariant(Guid.NewGuid(), order.OrderId,
+                                //save item
+                               var newOpv = InsertOrderProductVariant(Guid.NewGuid(), order.OrderId,
                                     opv.ProductVariantId, opv.UnitPriceInclTax, opv.UnitPriceExclTax,
                                     opv.PriceInclTax, opv.PriceExclTax,
                                     opv.UnitPriceInclTaxInCustomerCurrency, opv.UnitPriceExclTaxInCustomerCurrency,
@@ -3553,16 +3554,27 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                                     opv.AttributeDescription, opv.AttributesXml, opv.Quantity, opv.DiscountAmountInclTax,
                                     opv.DiscountAmountExclTax, 0, false, 0);
 
-                                //gift cards are not supported in recurring products
-                                //if (opv.ProductVariant.IsGiftCard)
-                                //{
-                                //    for (int i = 0; i < opv.Quantity; i++)
-                                //    {
-                                //        GiftCard gc = InsertGiftCard(opv.OrderProductVariantId, opv.UnitPriceExclTax,
-                                //            false, GiftCardHelper.GenerateGiftCardCode(), string.Empty, string.Empty,
-                                //            string.Empty, string.Empty, string.Empty, false, DateTime.UtcNow);
-                                //    }
-                                //}
+                                //gift cards
+                                if (opv.ProductVariant.IsGiftCard)
+                                {
+                                    string giftCardRecipientName = string.Empty;
+                                    string giftCardRecipientEmail = string.Empty;
+                                    string giftCardSenderName = string.Empty;
+                                    string giftCardSenderEmail = string.Empty;
+                                    string giftCardMessage = string.Empty;
+                                    ProductAttributeHelper.GetGiftCardAttribute(opv.AttributesXml,
+                                        out giftCardRecipientName, out giftCardRecipientEmail,
+                                        out giftCardSenderName, out giftCardSenderEmail, out giftCardMessage);
+
+                                    for (int i = 0; i < opv.Quantity; i++)
+                                    {
+                                        GiftCard gc = InsertGiftCard(newOpv.OrderProductVariantId, opv.UnitPriceExclTax,
+                                            false, GiftCardHelper.GenerateGiftCardCode(),
+                                            giftCardRecipientName, giftCardRecipientEmail,
+                                            giftCardSenderName, giftCardSenderEmail,
+                                            giftCardMessage, false, DateTime.UtcNow);
+                                    }
+                                }
 
                                 //inventory
                                 ProductManager.AdjustInventory(opv.ProductVariantId, true, opv.Quantity, opv.AttributesXml);
