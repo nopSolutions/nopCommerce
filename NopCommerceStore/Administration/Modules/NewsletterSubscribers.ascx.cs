@@ -129,6 +129,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 ProcessException(ex);
             }
         }
+        
+        protected override void OnPreRender(EventArgs e)
+        {
+            BindJQuery();
 
+            base.OnPreRender(e);
+        }
     }
 }
