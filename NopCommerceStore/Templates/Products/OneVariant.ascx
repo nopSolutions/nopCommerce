@@ -11,7 +11,7 @@
 <%@ Register TagPrefix="nopCommerce" TagName="SimpleTextBox" Src="~/Modules/SimpleTextBox.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="NumericTextBox" Src="~/Modules/NumericTextBox.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="ProductAttributes" Src="~/Modules/ProductAttributes.ascx" %>
-<%@ Register TagPrefix="nopCommerce" TagName="ProductPrice" Src="~/Modules/ProductPrice.ascx" %>
+<%@ Register TagPrefix="nopCommerce" TagName="ProductPrice1" Src="~/Modules/ProductPrice1.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="TierPrices" Src="~/Modules/TierPrices.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="ProductTags" Src="~/Modules/ProductTags.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="ProductShareButton" Src="~/Modules/ProductShareButton.ascx" %>
@@ -71,10 +71,10 @@
                 <nopCommerce:ProductRating ID="ctrlProductRating" runat="server" />
                 <br />
                 <div class="one-variant-price">
-                    <nopCommerce:ProductPrice ID="ctrlProductPrice2" runat="server" />
+                    <nopCommerce:ProductPrice1 ID="ctrlProductPrice" runat="server" />
                     <nopCommerce:NumericTextBox runat="server" ID="txtCustomerEnteredPrice" Value="1"
                         RequiredErrorMessage="<% $NopResources:Products.CustomerEnteredPrice.EnterPrice %>"
-                        MinimumValue="0" MaximumValue="999999" Width="100"></nopCommerce:NumericTextBox>
+                        MinimumValue="0" MaximumValue="999999" Width="100" />
                 </div>
                 <div class="add-info">
                     <nopCommerce:NumericTextBox runat="server" ID="txtQuantity" Value="1" RequiredErrorMessage="<% $NopResources:Products.EnterQuantity %>"
@@ -148,11 +148,6 @@
                             Width="300px"></asp:TextBox></dd>
                 </dl>
             </asp:Panel>
-           <%-- <div class="clear">
-            </div>
-            <div class="price" style="margin: 10px 0px 10px 0px; float: left;">
-                <nopCommerce:ProductPrice ID="ctrlProductPrice" runat="server" />
-            </div>--%>
             <div class="clear">
             </div>
             <div class="fulldescription">

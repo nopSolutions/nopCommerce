@@ -86,8 +86,7 @@ namespace NopSolutions.NopCommerce.Web.Templates.Products
 
             ctrlTierPrices.ProductVariantId = productVariant.ProductVariantId;
             ctrlProductAttributes.ProductVariantId = ProductVariant.ProductVariantId;
-            //ctrlProductPrice.ProductVariantId = productVariant.ProductVariantId;
-            ctrlProductPrice2.ProductVariantId = productVariant.ProductVariantId;
+            ctrlProductPrice.ProductVariantId = productVariant.ProductVariantId;
 
             //stock
             if(pnlStockAvailablity != null && lblStockAvailablity != null)

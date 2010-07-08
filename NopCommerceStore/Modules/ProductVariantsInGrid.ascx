@@ -3,7 +3,7 @@
 <%@ Register TagPrefix="nopCommerce" TagName="SimpleTextBox" Src="~/Modules/SimpleTextBox.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="NumericTextBox" Src="~/Modules/NumericTextBox.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="ProductAttributes" Src="~/Modules/ProductAttributes.ascx" %>
-<%@ Register TagPrefix="nopCommerce" TagName="ProductPrice" Src="~/Modules/ProductPrice.ascx" %>
+<%@ Register TagPrefix="nopCommerce" TagName="ProductPrice1" Src="~/Modules/ProductPrice1.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="TierPrices" Src="~/Modules/TierPrices.ascx" %>
 <%@ Reference Control="~/Modules/ProductAttributes.ascx" %>
 <%@ Reference Control="~/Modules/EmailTextBox.ascx" %>
@@ -82,8 +82,7 @@
                 <div class="clear">
                 </div>
                 <div class="price">
-                    <nopCommerce:ProductPrice ID="ctrlProductPrice" runat="server" ProductVariantID='<%#Eval("ProductVariantId") %>'>
-                    </nopCommerce:ProductPrice>
+                    <nopCommerce:ProductPrice1 ID="ctrlProductPrice" runat="server" ProductVariantID='<%#Eval("ProductVariantId") %>' />
                     <nopCommerce:NumericTextBox runat="server" ID="txtCustomerEnteredPrice" Value="1"
                         RequiredErrorMessage="<% $NopResources:Products.CustomerEnteredPrice.EnterPrice %>"
                         MinimumValue="0" MaximumValue="999999" Width="100"></nopCommerce:NumericTextBox>

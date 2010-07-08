@@ -86,74 +86,20 @@ namespace NopSolutions.NopCommerce.Web.Modules
                             (NopContext.Current.User != null &&
                             !NopContext.Current.User.IsGuest))
                         {
-                            if (productVariant.CustomerEntersPrice)
-                            {
-                                lblOldPrice.Visible = false;
-                                lblPrice.Visible = false;
-                            }
-                            else
-                            {
-                                decimal oldPriceBase = TaxManager.GetPrice(productVariant, productVariant.OldPrice);
-                                decimal finalPriceWithoutDiscountBase = TaxManager.GetPrice(productVariant, PriceHelper.GetFinalPrice(productVariant, false));
-
-                                decimal oldPrice = CurrencyManager.ConvertCurrency(oldPriceBase, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
-                                decimal finalPriceWithoutDiscount = CurrencyManager.ConvertCurrency(finalPriceWithoutDiscountBase, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
-
-                                if (finalPriceWithoutDiscountBase != oldPriceBase && oldPriceBase != decimal.Zero)
-                                {
-                                    lblOldPrice.Text = PriceHelper.FormatPrice(oldPrice);
-                                    lblPrice.Text = PriceHelper.FormatPrice(finalPriceWithoutDiscount);
-                                }
-                                else
-                                {
-                                    lblOldPrice.Visible = false;
-                                    lblPrice.Text = PriceHelper.FormatPrice(finalPriceWithoutDiscount);
-                                }
-                            }
+                            //nothing
                         }
                         else
                         {
-                            lblOldPrice.Visible = false;
-                            lblPrice.Visible = false;
                             btnAddToCart.Visible = false;
                         }
                     }
                     else
                     {
-                        var productVariant = product.MinimalPriceProductVariant;
-                        if (productVariant != null)
-                        {
-                            if (!SettingManager.GetSettingValueBoolean("Common.HidePricesForNonRegistered") ||
-                                (NopContext.Current.User != null &&
-                                !NopContext.Current.User.IsGuest))
-                            {
-                                if (productVariant.CustomerEntersPrice)
-                                {
-                                    lblOldPrice.Visible = false;
-                                    lblPrice.Visible = false;
-                                }
-                                else
-                                {
-                                    decimal fromPriceBase = TaxManager.GetPrice(productVariant, PriceHelper.GetFinalPrice(productVariant, false));
-                                    decimal fromPrice = CurrencyManager.ConvertCurrency(fromPriceBase, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
-                                    lblPrice.Text = String.Format(GetLocaleResourceString("Products.PriceRangeFromText"), PriceHelper.FormatPrice(fromPrice));
-                                }
-                            }
-                            else
-                            {
-                                lblOldPrice.Visible = false;
-                                lblPrice.Visible = false;
-                                btnAddToCart.Visible = false;
-                            }
-                        }
-
                         btnAddToCart.Visible = false;
                     }
                 }
                 else
                 {
-                    lblOldPrice.Visible = false;
-                    lblPrice.Visible = false;
                     btnAddToCart.Visible = false;
                 }
             }

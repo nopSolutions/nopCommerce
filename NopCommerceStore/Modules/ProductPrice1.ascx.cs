@@ -39,7 +39,7 @@ using System.Globalization;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
-    public partial class ProductPriceControl : BaseNopUserControl
+    public partial class ProductPrice1Control : BaseNopUserControl
     {
         protected void Page_Load(object sender, EventArgs e)
         {

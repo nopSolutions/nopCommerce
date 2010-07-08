@@ -85,13 +85,13 @@ namespace NopSolutions.NopCommerce.Web.Templates.Products {
         protected global::NopSolutions.NopCommerce.Web.Modules.ProductRatingControl ctrlProductRating;
         
         /// <summary>
-        /// ctrlProductPrice2 control.
+        /// ctrlProductPrice control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Modules.ProductPriceControl ctrlProductPrice2;
+        protected global::NopSolutions.NopCommerce.Web.Modules.ProductPrice1Control ctrlProductPrice;
         
         /// <summary>
         /// txtCustomerEnteredPrice control.
