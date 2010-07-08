@@ -2,6 +2,27 @@
 declare @resources xml
 set @resources='
 <Language LanguageID="7">
+  <LocaleResource Name="Admin.Categories.DisplayOrder">
+    <Value>Display Order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Categories.DisplayOrder">
+    <Value>Display Order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Categories.SaveButton.Text">
+    <Value>Save</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Categories.SaveButton.ToolTip">
+    <Value>Save changes</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Categories.DisplayOrder.RequiredErrorMessage">
+    <Value>Display order is not specified</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Categories.DisplayOrder.RangeErrorMessage">
+    <Value>Display order must be from -99999 to 99999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Categories.ChangesSuccessfullySaved">
+    <Value>Categories have been successfully updated</Value>
+  </LocaleResource>
   <LocaleResource Name="">
     <Value></Value>
   </LocaleResource>
