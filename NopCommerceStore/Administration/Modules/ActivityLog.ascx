@@ -98,4 +98,5 @@
             </ItemTemplate>
         </asp:TemplateField>
     </Columns>
+    <PagerSettings PageButtonCount="50" Position="TopAndBottom" />
 </asp:GridView>

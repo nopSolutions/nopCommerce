@@ -24,7 +24,8 @@
 </table>
 <br />
 <asp:GridView ID="gvLocaleStringResources" runat="server" AutoGenerateColumns="False"
-    Width="100%" OnPageIndexChanging="gvLocaleStringResources_PageIndexChanging" AllowPaging="true" PageSize="150">
+    Width="100%" OnPageIndexChanging="gvLocaleStringResources_PageIndexChanging"
+    AllowPaging="true" PageSize="150">
     <Columns>
         <asp:TemplateField HeaderText="<% $NopResources:Admin.LocaleStringResources.LanguageColumn %>"
             ItemStyle-Width="20%">
@@ -45,4 +46,5 @@
             </ItemTemplate>
         </asp:TemplateField>
     </Columns>
+    <PagerSettings PageButtonCount="50" Position="TopAndBottom" />
 </asp:GridView>

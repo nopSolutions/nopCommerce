@@ -114,6 +114,7 @@
             </ItemTemplate>
         </asp:TemplateField>
     </Columns>
+    <PagerSettings PageButtonCount="50" Position="TopAndBottom" />
 </asp:GridView>
 <ajaxToolkit:ConfirmButtonExtender ID="cbeImportXLS" runat="server" TargetControlID="btnImportXLS"
     DisplayModalPopupID="mpeImportXLS" />
