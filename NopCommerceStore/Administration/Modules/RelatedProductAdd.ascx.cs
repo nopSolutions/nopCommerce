@@ -93,7 +93,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 this.gvProducts.Visible = true;
                 this.btnSave.Visible = true;
                 this.lblNoProductsFound.Visible = false;
-                this.gvProducts.Columns[1].Visible = SettingManager.GetSettingValueBoolean("Display.ShowAdminProductImages");
+                this.gvProducts.Columns[2].Visible = SettingManager.GetSettingValueBoolean("Display.ShowAdminProductImages");
 
                 this.gvProducts.DataSource = products;
                 this.gvProducts.DataBind();
@@ -159,6 +159,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             gvProducts.PageIndex = e.NewPageIndex;
             BindGrid();
+        }
+
+        protected override void OnPreRender(EventArgs e)
+        {
+            BindJQuery();
+
+            base.OnPreRender(e);
         }
 
         private string BtnId

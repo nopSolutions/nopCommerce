@@ -94,7 +94,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 this.gvProducts.Visible = true;
                 this.btnSave.Visible = true;
                 this.lblNoProductsFound.Visible = false;
-                this.gvProducts.Columns[1].Visible = SettingManager.GetSettingValueBoolean("Display.ShowAdminProductImages");
+                this.gvProducts.Columns[2].Visible = SettingManager.GetSettingValueBoolean("Display.ShowAdminProductImages");
 
                 this.gvProducts.DataSource = products;
                 this.gvProducts.DataBind();
@@ -154,6 +154,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             }
 
             this.Page.ClientScript.RegisterStartupScript(typeof(ManufacturerProductAddControl), "closerefresh", "<script language=javascript>try {window.opener.document.forms[0]." + this.BtnId + ".click();}catch (e){} window.close();</script>");
+        }
+
+        protected override void OnPreRender(EventArgs e)
+        {
+            BindJQuery();
+
+            base.OnPreRender(e);
         }
 
         protected void gvProducts_PageIndexChanging(object sender, GridViewPageEventArgs e)

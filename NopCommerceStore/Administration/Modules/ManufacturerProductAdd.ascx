@@ -9,6 +9,7 @@
         <%=GetLocaleResourceString("Admin.AddManufacturerProduct.Title")%>
     </div>
 </div>
+
 <table width="100%">
     <tr>
         <td class="adminTitle">
@@ -50,15 +51,35 @@
 </table>
 <p>
 </p>
+<script type="text/javascript">
+
+    $(window).bind('load', function () {
+        var cbHeader = $(".cbHeader input");
+        var cbRowItem = $(".cbRowItem input");
+        cbHeader.bind("click", function () {
+            cbRowItem.each(function () { this.checked = cbHeader[0].checked; })
+        });
+        cbRowItem.bind("click", function () { if ($(this).checked == false) cbHeader[0].checked = false; });
+    });
+    
+</script>
 <asp:GridView ID="gvProducts" runat="server" AutoGenerateColumns="False" Width="100%"
     OnPageIndexChanging="gvProducts_PageIndexChanging" AllowPaging="true" PageSize="10">
     <Columns>
-        <asp:TemplateField HeaderText="<% $NopResources:Admin.AddManufacturerProduct.ProductColumn %>"
-            ItemStyle-Width="70%">
+        <asp:TemplateField ItemStyle-Width="10%" ItemStyle-HorizontalAlign="Center">
+            <HeaderTemplate>
+                <asp:CheckBox ID="cbSelectAll" runat="server" CssClass="cbHeader" />
+            </HeaderTemplate>
             <ItemTemplate>
-                <asp:CheckBox ID="cbProductInfo" runat="server" Text='<%# Server.HtmlEncode(Eval("Name").ToString()) %>'
-                    ToolTip="<% $NopResources:Admin.AddManufacturerProduct.ProductColumn.Tooltip %>" />
+                <asp:CheckBox ID="cbProductInfo" runat="server" CssClass="cbRowItem"
+                 ToolTip="<% $NopResources:Admin.AddManufacturerProduct.ProductColumn.Tooltip %>"  />
                 <asp:HiddenField ID="hfProductId" runat="server" Value='<%# Eval("ProductId") %>' />
+            </ItemTemplate>
+        </asp:TemplateField>
+        <asp:TemplateField HeaderText="<% $NopResources:Admin.AddManufacturerProduct.ProductColumn %>"
+            ItemStyle-Width="60%">
+            <ItemTemplate>
+                <%# Server.HtmlEncode(Eval("Name").ToString()) %>
             </ItemTemplate>
         </asp:TemplateField>
         <asp:TemplateField HeaderText="<% $NopResources:Admin.AddManufacturerProduct.Image %>">
