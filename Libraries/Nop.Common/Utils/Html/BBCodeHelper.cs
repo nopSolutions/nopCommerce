@@ -104,7 +104,8 @@ namespace NopSolutions.NopCommerce.Common.Utils.Html
 
             if(replaceQuote)
             {
-                text = regexQuote.Replace(text, "<b>$1 wrote:</b><p class=\"quote\">$2</p>");
+                while(regexQuote.IsMatch(text))
+                    text = regexQuote.Replace(text, "<b>$1 wrote:</b><p class=\"quote\">$2</p>");
             }
 
             return text;
@@ -117,7 +118,9 @@ namespace NopSolutions.NopCommerce.Common.Utils.Html
         /// <returns>string</returns>
         public static string RemoveQuotes(string str)
         {
-            return regexQuote.Replace(str, String.Empty);
+            str = Regex.Replace(str, @"\[quote=(.+?)\]", String.Empty, RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            str = Regex.Replace(str, @"\[/quote\]", String.Empty, RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            return str;
         }
         #endregion
     }
