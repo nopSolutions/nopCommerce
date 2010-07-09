@@ -31,6 +31,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
+using System.Web.UI.DataVisualization.Charting;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -40,6 +41,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             if (!Page.IsPostBack)
             {
+                chartOrders.Visible = false;
                 FillDropDowns();
             }
         }
@@ -102,10 +104,28 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             int paymentStatusId = int.Parse(ddlPaymentStatus.SelectedItem.Value);
             if (paymentStatusId > 0)
                 paymentStatus = (PaymentStatusEnum)Enum.ToObject(typeof(PaymentStatusEnum), paymentStatusId);
-
             int billingCountryID = int.Parse(ddlBillingCountry.SelectedItem.Value);
-            gvOrders.DataSource = OrderManager.OrderProductVariantReport(startDate, 
-                endDate, orderStatus, paymentStatus, billingCountryID);
+
+            var report = OrderManager.OrderProductVariantReport(startDate, endDate, orderStatus, paymentStatus, billingCountryID);
+            if (report.Count == 0)
+            {
+                chartOrders.Visible = false;
+            }
+            else
+            {
+                chartOrders.Visible = true;
+                foreach (OrderProductVariantReportLine repLine in report)
+                {
+                    var dp = new DataPoint();
+                    dp.YValues = new double[1] { (double)repLine.PriceExclTax };
+                    dp.LegendText = GetProductVariantName(repLine.ProductVariantId);
+                    dp.ToolTip = dp.LegendText;
+                    chartOrders.Series[0].Points.Add(dp);
+                }
+                chartOrders.DataBind();
+            }
+
+            gvOrders.DataSource = report;
             gvOrders.DataBind();
         }
 

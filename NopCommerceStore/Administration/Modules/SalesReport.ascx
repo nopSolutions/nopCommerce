@@ -1,4 +1,6 @@
 <%@ Control Language="C#" AutoEventWireup="true" Inherits="NopSolutions.NopCommerce.Web.Administration.Modules.SalesReportControl" CodeBehind="SalesReport.ascx.cs" %>
+<%@ Register Assembly="System.Web.DataVisualization, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35"
+    Namespace="System.Web.UI.DataVisualization.Charting" TagPrefix="asp" %>
 <%@ Register TagPrefix="nopCommerce" TagName="ToolTipLabel" Src="ToolTipLabelControl.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="DatePicker" Src="DatePicker.ascx" %>
 
@@ -85,3 +87,36 @@
         </asp:TemplateField>
     </Columns>
 </asp:GridView>
+<p>
+</p>
+<asp:Chart runat="server" ID="chartOrders" ImageStorageMode="UseHttpHandler">
+    <Series>
+        <asp:Series ChartArea="Default" Name="Orders" ChartType="Pie" Label="#PERCENT{P1}" Legend="Default" />
+    </Series>
+    <Legends>
+        <asp:Legend Name="Default" TitleFont="Microsoft Sans Serif, 8pt, style=Bold" BackColor="Transparent" IsEquallySpacedItems="True" Font="Trebuchet MS, 8pt, style=Bold" IsTextAutoFit="False" Alignment="Center" />
+    </Legends>
+	<ChartAreas>
+		<asp:ChartArea Name="Default" BorderColor="64, 64, 64, 64" BackSecondaryColor="Transparent" BackColor="Transparent" ShadowColor="Transparent" BackGradientStyle="TopBottom">
+			<axisy2>
+				<MajorGrid Enabled="False" />
+				<MajorTickMark Enabled="False" />
+			</axisy2>
+			<axisx2>
+				<MajorGrid Enabled="False" />
+				<MajorTickMark Enabled="False" />
+			</axisx2>
+			<area3dstyle PointGapDepth="900" Rotation="162" IsRightAngleAxes="False" WallWidth="25" IsClustered="False" />
+			<axisy LineColor="64, 64, 64, 64">
+				<LabelStyle Font="Trebuchet MS, 8.25pt, style=Bold" />
+				<MajorGrid LineColor="64, 64, 64, 64" Enabled="False" />
+				<MajorTickMark Enabled="False" />
+			</axisy>
+			<axisx LineColor="64, 64, 64, 64">
+				<LabelStyle Font="Trebuchet MS, 8.25pt, style=Bold" />
+				<MajorGrid LineColor="64, 64, 64, 64" Enabled="False" />
+				<MajorTickMark Enabled="False" />
+			</axisx>
+		</asp:ChartArea>
+    </ChartAreas>
+</asp:Chart>

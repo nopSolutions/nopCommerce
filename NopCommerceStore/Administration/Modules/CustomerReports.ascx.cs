@@ -33,6 +33,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.BusinessLogic.Shipping;
 using NopSolutions.NopCommerce.BusinessLogic.Utils;
 using NopSolutions.NopCommerce.Common.Utils;
+using System.Web.UI.DataVisualization.Charting;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -42,6 +43,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             if (!Page.IsPostBack)
             {
+                chartCustomersByOrderTotal.Visible = false;
+                chartCustomersByNumberOfOrder.Visible = false;
                 FillDropDowns();
                 BindGridByLanguage();
                 BindGridByGender();
@@ -179,31 +182,121 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected void BindGridByOrderTotal()
         {
-            this.gvByOrderTotal.DataSource = GetReportByOrderTotal();
+            var report = GetReportByOrderTotal();
+            if (report.Count == 0)
+            {
+                chartCustomersByOrderTotal.Visible = false;
+            }
+            else
+            {
+                chartCustomersByOrderTotal.Visible = true;
+                foreach (CustomerBestReportLine repLine in report)
+                {
+                    var dp = new DataPoint();
+                    dp.YValues = new double[1] { (double)repLine.OrderTotal };
+                    dp.LegendText = GetCustomerName(repLine.CustomerId);
+                    dp.ToolTip = dp.LegendText;
+                    chartCustomersByOrderTotal.Series[0].Points.Add(dp);
+                }
+                chartCustomersByOrderTotal.DataBind();
+            }
+            this.gvByOrderTotal.DataSource = report;
             this.gvByOrderTotal.DataBind();
         }
 
         protected void BindGridByNumberOfOrder()
         {
-            this.gvByNumberOfOrder.DataSource = GetReportByNumberOfOrder();
+            var report = GetReportByNumberOfOrder();
+            if (report.Count == 0)
+            {
+                chartCustomersByNumberOfOrder.Visible = false;
+            }
+            else
+            {
+                chartCustomersByNumberOfOrder.Visible = true;
+                foreach (CustomerBestReportLine repLine in report)
+                {
+                    var dp = new DataPoint();
+                    dp.YValues = new double[1] { repLine.OrderCount };
+                    dp.LegendText = GetCustomerName(repLine.CustomerId);
+                    dp.ToolTip = dp.LegendText;
+                    chartCustomersByNumberOfOrder.Series[0].Points.Add(dp);
+                }
+                chartCustomersByNumberOfOrder.DataBind();
+            }
+            this.gvByNumberOfOrder.DataSource = report;
             this.gvByNumberOfOrder.DataBind();
         }
 
         protected void BindGridByLanguage()
         {
-            this.gvByLanguage.DataSource = CustomerManager.GetCustomerReportByLanguage();
+            var report = CustomerManager.GetCustomerReportByLanguage();
+            if (report.Count == 0)
+            {
+                chartCustomersByLanguage.Visible = false;
+            }
+            else
+            {
+                chartCustomersByLanguage.Visible = true;
+                foreach (CustomerReportByLanguageLine repLine in report)
+                {
+                    var dp = new DataPoint();
+                    dp.YValues = new double[1] { repLine.CustomerCount };
+                    dp.LegendText = GetLanguageInfo(repLine.LanguageId);
+                    dp.ToolTip = dp.LegendText;
+                    chartCustomersByLanguage.Series[0].Points.Add(dp);
+                }
+                chartCustomersByLanguage.DataBind();
+            }
+            this.gvByLanguage.DataSource = report;
             this.gvByLanguage.DataBind();
         }
 
         protected void BindGridByGender()
         {
-            this.gvByGender.DataSource = CustomerManager.GetCustomerReportByAttributeKey("Gender");
+            var report = CustomerManager.GetCustomerReportByAttributeKey("Gender");
+            if (report.Count == 0)
+            {
+                chartCustomerByGender.Visible = false;
+            }
+            else
+            {
+                chartCustomerByGender.Visible = true;
+                foreach (CustomerReportByAttributeKeyLine repLine in report)
+                {
+                    var dp = new DataPoint();
+                    dp.YValues = new double[1] { repLine.CustomerCount };
+                    dp.LegendText = GetGenderInfo(repLine.AttributeKey);
+                    dp.ToolTip = dp.LegendText;
+                    chartCustomerByGender.Series[0].Points.Add(dp);
+                }
+                chartCustomerByGender.DataBind();
+            }
+            this.gvByGender.DataSource = report;
             this.gvByGender.DataBind();
         }
 
         protected void BindGridByCountry()
         {
-            this.gvByCountry.DataSource = CustomerManager.GetCustomerReportByAttributeKey("CountryId");
+            var report = CustomerManager.GetCustomerReportByAttributeKey("CountryId");
+            if (report.Count == 0)
+            {
+                chartCustomerByCountry.Visible = false;
+            }
+            else
+            {
+                chartCustomerByCountry.Visible = true;
+                foreach (CustomerReportByAttributeKeyLine repLine in report)
+                {
+                    var dp = new DataPoint();
+                    dp.YValues = new double[1] { repLine.CustomerCount };
+                    dp.LegendText = GetCountryInfo(repLine.AttributeKey);
+                    dp.ToolTip = dp.LegendText;
+                    chartCustomerByCountry.Series[0].Points.Add(dp);
+                }
+                chartCustomerByCountry.DataBind();
+            }
+            this.gvByCountry.DataSource = report;
             this.gvByCountry.DataBind();
         }
 
@@ -223,6 +316,24 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 }
             }
             return customerInfo;
+        }
+
+        protected string GetCustomerName(int customerId)
+        {
+            string customerName = string.Empty;
+            Customer customer = CustomerManager.GetCustomerById(customerId);
+            if (customer != null)
+            {
+                if (customer.IsGuest)
+                {
+                    customerName = GetLocaleResourceString("Admin.Common.CustomerGuest");
+                }
+                else
+                {
+                    customerName = Server.HtmlEncode(customer.FullName);
+                }
+            }
+            return customerName;
         }
 
         protected string GetLanguageInfo(int languageId)

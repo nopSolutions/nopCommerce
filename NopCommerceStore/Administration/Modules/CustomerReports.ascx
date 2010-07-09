@@ -1,5 +1,7 @@
 <%@ Control Language="C#" AutoEventWireup="true" Inherits="NopSolutions.NopCommerce.Web.Administration.Modules.CustomerReportsControl"
     CodeBehind="CustomerReports.ascx.cs" %>
+<%@ Register Assembly="System.Web.DataVisualization, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35"
+    Namespace="System.Web.UI.DataVisualization.Charting" TagPrefix="asp" %>
 <%@ Register TagPrefix="nopCommerce" TagName="ToolTipLabel" Src="ToolTipLabelControl.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="SimpleTextBox" Src="SimpleTextBox.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="DatePicker" Src="DatePicker.ascx" %>
@@ -102,6 +104,39 @@
                     </asp:TemplateField>
                 </Columns>
             </asp:GridView>
+            <p>
+            </p>
+            <asp:Chart runat="server" ID="chartCustomersByOrderTotal" ImageStorageMode="UseHttpHandler" EnableViewState="true">
+                <Series>
+                    <asp:Series ChartArea="Default" Name="CustomersByOrderTotal" ChartType="Pie" Label="#PERCENT{P1}" Legend="Default" />
+                </Series>
+                <Legends>
+                    <asp:Legend Name="Default"  TitleFont="Microsoft Sans Serif, 8pt, style=Bold" BackColor="Transparent" IsEquallySpacedItems="True" Font="Trebuchet MS, 8pt, style=Bold" IsTextAutoFit="False" />
+                </Legends>
+				<ChartAreas>
+					<asp:ChartArea Name="Default" BorderColor="64, 64, 64, 64" BackSecondaryColor="Transparent" BackColor="Transparent" ShadowColor="Transparent" BackGradientStyle="TopBottom">
+						<axisy2>
+							<MajorGrid Enabled="False" />
+							<MajorTickMark Enabled="False" />
+						</axisy2>
+						<axisx2>
+							<MajorGrid Enabled="False" />
+							<MajorTickMark Enabled="False" />
+						</axisx2>
+						<area3dstyle PointGapDepth="900" Rotation="162" IsRightAngleAxes="False" WallWidth="25" IsClustered="False" />
+						<axisy LineColor="64, 64, 64, 64">
+							<LabelStyle Font="Trebuchet MS, 8.25pt, style=Bold" />
+							<MajorGrid LineColor="64, 64, 64, 64" Enabled="False" />
+							<MajorTickMark Enabled="False" />
+						</axisy>
+						<axisx LineColor="64, 64, 64, 64">
+							<LabelStyle Font="Trebuchet MS, 8.25pt, style=Bold" />
+							<MajorGrid LineColor="64, 64, 64, 64" Enabled="False" />
+							<MajorTickMark Enabled="False" />
+						</axisx>
+				    </asp:ChartArea>
+                </ChartAreas>
+             </asp:Chart>
         </ContentTemplate>
     </ajaxToolkit:TabPanel>
     <ajaxToolkit:TabPanel runat="server" ID="pnlCustomerByNumberOfOrder" HeaderText="<% $NopResources:Admin.CustomerReports.ByNumberOfOrder.Title %>">
@@ -193,6 +228,43 @@
                     </asp:TemplateField>
                 </Columns>
             </asp:GridView>
+            <p>
+            </p>
+            <asp:Chart runat="server" ID="chartCustomersByNumberOfOrder" ImageStorageMode="UseHttpHandler" EnableViewState="true">
+                <Series>
+                    <asp:Series ChartArea="Default" Name="CustomersByNumberOfOrder" ChartType="Pie" Label="#PERCENT{P1}"
+                        Legend="Default" />
+                </Series>
+                <Legends>
+                    <asp:Legend Name="Default" TitleFont="Microsoft Sans Serif, 8pt, style=Bold" BackColor="Transparent"
+                        IsEquallySpacedItems="True" Font="Trebuchet MS, 8pt, style=Bold" IsTextAutoFit="False" />
+                </Legends>
+                <ChartAreas>
+                    <asp:ChartArea Name="Default" BorderColor="64, 64, 64, 64" BackSecondaryColor="Transparent"
+                        BackColor="Transparent" ShadowColor="Transparent" BackGradientStyle="TopBottom">
+                        <AxisY2>
+                            <MajorGrid Enabled="False" />
+                            <MajorTickMark Enabled="False" />
+                        </AxisY2>
+                        <AxisX2>
+                            <MajorGrid Enabled="False" />
+                            <MajorTickMark Enabled="False" />
+                        </AxisX2>
+                        <Area3DStyle PointGapDepth="900" Rotation="162" IsRightAngleAxes="False" WallWidth="25"
+                            IsClustered="False" />
+                        <AxisY LineColor="64, 64, 64, 64">
+                            <LabelStyle Font="Trebuchet MS, 8.25pt, style=Bold" />
+                            <MajorGrid LineColor="64, 64, 64, 64" Enabled="False" />
+                            <MajorTickMark Enabled="False" />
+                        </AxisY>
+                        <AxisX LineColor="64, 64, 64, 64">
+                            <LabelStyle Font="Trebuchet MS, 8.25pt, style=Bold" />
+                            <MajorGrid LineColor="64, 64, 64, 64" Enabled="False" />
+                            <MajorTickMark Enabled="False" />
+                        </AxisX>
+                    </asp:ChartArea>
+                </ChartAreas>
+            </asp:Chart>
         </ContentTemplate>        
     </ajaxToolkit:TabPanel>
     <ajaxToolkit:TabPanel runat="server" ID="pnlRegisteredCustomer" HeaderText="<% $NopResources:Admin.CustomerReports.RegisteredCustomers.Title %>">
@@ -220,7 +292,44 @@
                         </ItemTemplate>
                     </asp:TemplateField>
                 </Columns>
-            </asp:GridView>
+             </asp:GridView>
+             <p>
+             </p>
+            <asp:Chart runat="server" ID="chartCustomersByLanguage" ImageStorageMode="UseHttpHandler" EnableViewState="true">
+                <Series>
+                    <asp:Series ChartArea="Default" Name="CustomersByLanguage" ChartType="Pie" Label="#PERCENT{P1}"
+                        Legend="Default" />
+                </Series>
+                <Legends>
+                    <asp:Legend Name="Default" TitleFont="Microsoft Sans Serif, 8pt, style=Bold" BackColor="Transparent"
+                        IsEquallySpacedItems="True" Font="Trebuchet MS, 8pt, style=Bold" IsTextAutoFit="False" />
+                </Legends>
+                <ChartAreas>
+                    <asp:ChartArea Name="Default" BorderColor="64, 64, 64, 64" BackSecondaryColor="Transparent"
+                        BackColor="Transparent" ShadowColor="Transparent" BackGradientStyle="TopBottom">
+                        <AxisY2>
+                            <MajorGrid Enabled="False" />
+                            <MajorTickMark Enabled="False" />
+                        </AxisY2>
+                        <AxisX2>
+                            <MajorGrid Enabled="False" />
+                            <MajorTickMark Enabled="False" />
+                        </AxisX2>
+                        <Area3DStyle PointGapDepth="900" Rotation="162" IsRightAngleAxes="False" WallWidth="25"
+                            IsClustered="False" />
+                        <AxisY LineColor="64, 64, 64, 64">
+                            <LabelStyle Font="Trebuchet MS, 8.25pt, style=Bold" />
+                            <MajorGrid LineColor="64, 64, 64, 64" Enabled="False" />
+                            <MajorTickMark Enabled="False" />
+                        </AxisY>
+                        <AxisX LineColor="64, 64, 64, 64">
+                            <LabelStyle Font="Trebuchet MS, 8.25pt, style=Bold" />
+                            <MajorGrid LineColor="64, 64, 64, 64" Enabled="False" />
+                            <MajorTickMark Enabled="False" />
+                        </AxisX>
+                    </asp:ChartArea>
+                </ChartAreas>
+            </asp:Chart>
         </ContentTemplate>
     </ajaxToolkit:TabPanel>
     <ajaxToolkit:TabPanel runat="server" ID="pnlByGender" HeaderText="<% $NopResources:Admin.CustomerReports.ByGender.Title %>">
@@ -244,6 +353,43 @@
                     </asp:TemplateField>
                 </Columns>
             </asp:GridView>
+            <p>
+            </p>
+            <asp:Chart runat="server" ID="chartCustomerByGender" ImageStorageMode="UseHttpHandler" EnableViewState="true">
+                <Series>
+                    <asp:Series ChartArea="Default" Name="CustomerByGender" ChartType="Pie" Label="#PERCENT{P1}"
+                        Legend="Default" />
+                </Series>
+                <Legends>
+                    <asp:Legend Name="Default" TitleFont="Microsoft Sans Serif, 8pt, style=Bold" BackColor="Transparent"
+                        IsEquallySpacedItems="True" Font="Trebuchet MS, 8pt, style=Bold" IsTextAutoFit="False" />
+                </Legends>
+                <ChartAreas>
+                    <asp:ChartArea Name="Default" BorderColor="64, 64, 64, 64" BackSecondaryColor="Transparent"
+                        BackColor="Transparent" ShadowColor="Transparent" BackGradientStyle="TopBottom">
+                        <AxisY2>
+                            <MajorGrid Enabled="False" />
+                            <MajorTickMark Enabled="False" />
+                        </AxisY2>
+                        <AxisX2>
+                            <MajorGrid Enabled="False" />
+                            <MajorTickMark Enabled="False" />
+                        </AxisX2>
+                        <Area3DStyle PointGapDepth="900" Rotation="162" IsRightAngleAxes="False" WallWidth="25"
+                            IsClustered="False" />
+                        <AxisY LineColor="64, 64, 64, 64">
+                            <LabelStyle Font="Trebuchet MS, 8.25pt, style=Bold" />
+                            <MajorGrid LineColor="64, 64, 64, 64" Enabled="False" />
+                            <MajorTickMark Enabled="False" />
+                        </AxisY>
+                        <AxisX LineColor="64, 64, 64, 64">
+                            <LabelStyle Font="Trebuchet MS, 8.25pt, style=Bold" />
+                            <MajorGrid LineColor="64, 64, 64, 64" Enabled="False" />
+                            <MajorTickMark Enabled="False" />
+                        </AxisX>
+                    </asp:ChartArea>
+                </ChartAreas>
+            </asp:Chart>
         </ContentTemplate>
     </ajaxToolkit:TabPanel>
     <ajaxToolkit:TabPanel runat="server" ID="pnlByCountry" HeaderText="<% $NopResources:Admin.CustomerReports.ByCountry.Title %>">
@@ -267,6 +413,43 @@
                     </asp:TemplateField>
                 </Columns>
             </asp:GridView>
+            <p>
+            </p>
+            <asp:Chart runat="server" ID="chartCustomerByCountry" ImageStorageMode="UseHttpHandler" EnableViewState="true">
+                <Series>
+                    <asp:Series ChartArea="Default" Name="CustomerByCountry" ChartType="Pie" Label="#PERCENT{P1}"
+                        Legend="Default" />
+                </Series>
+                <Legends>
+                    <asp:Legend Name="Default" TitleFont="Microsoft Sans Serif, 8pt, style=Bold" BackColor="Transparent"
+                        IsEquallySpacedItems="True" Font="Trebuchet MS, 8pt, style=Bold" IsTextAutoFit="False" />
+                </Legends>
+                <ChartAreas>
+                    <asp:ChartArea Name="Default" BorderColor="64, 64, 64, 64" BackSecondaryColor="Transparent"
+                        BackColor="Transparent" ShadowColor="Transparent" BackGradientStyle="TopBottom">
+                        <AxisY2>
+                            <MajorGrid Enabled="False" />
+                            <MajorTickMark Enabled="False" />
+                        </AxisY2>
+                        <AxisX2>
+                            <MajorGrid Enabled="False" />
+                            <MajorTickMark Enabled="False" />
+                        </AxisX2>
+                        <Area3DStyle PointGapDepth="900" Rotation="162" IsRightAngleAxes="False" WallWidth="25"
+                            IsClustered="False" />
+                        <AxisY LineColor="64, 64, 64, 64">
+                            <LabelStyle Font="Trebuchet MS, 8.25pt, style=Bold" />
+                            <MajorGrid LineColor="64, 64, 64, 64" Enabled="False" />
+                            <MajorTickMark Enabled="False" />
+                        </AxisY>
+                        <AxisX LineColor="64, 64, 64, 64">
+                            <LabelStyle Font="Trebuchet MS, 8.25pt, style=Bold" />
+                            <MajorGrid LineColor="64, 64, 64, 64" Enabled="False" />
+                            <MajorTickMark Enabled="False" />
+                        </AxisX>
+                    </asp:ChartArea>
+                </ChartAreas>
+            </asp:Chart>
         </ContentTemplate>
     </ajaxToolkit:TabPanel>
 </ajaxToolkit:TabContainer>
