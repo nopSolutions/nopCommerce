@@ -103,6 +103,38 @@ namespace NopSolutions.NopCommerce.Web
                 string.Empty, PageSize, PageIndex, out totalRecords);
             return result;
         }
+
+        public static int GetCurrentUserForumSubscriptionsCount()
+        {
+            int totalRecords = 0;
+            GetCurrentUserForumSubscriptions(0, 1, out totalRecords);
+            return totalRecords;
+        }
+
+        [DataObjectMethod(DataObjectMethodType.Select)]
+        public static List<ForumSubscription> GetCurrentUserForumSubscriptions(int StartIndex, int PageSize)
+        {
+            int totalRecord = 0;
+            return GetCurrentUserForumSubscriptions(StartIndex, PageSize, out totalRecord);
+        }
+
+        public static List<ForumSubscription> GetCurrentUserForumSubscriptions(int StartIndex, int PageSize, out int totalRecords)
+        {
+            if (PageSize <= 0)
+                PageSize = 10;
+            if (PageSize == int.MaxValue)
+                PageSize = int.MaxValue - 1;
+
+            int PageIndex = StartIndex / PageSize;
+
+            totalRecords = 0;
+
+            if (NopContext.Current.User == null)
+                return new List<ForumSubscription>();
+
+            var result = ForumManager.GetAllSubscriptions(NopContext.Current.User.CustomerId, 0, 0, PageSize, StartIndex, out totalRecords);
+            return result;
+        }
         #endregion
     }
 }

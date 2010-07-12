@@ -75,6 +75,15 @@
     </tr>
     <tr>
         <td class="adminTitle">
+            <nopCommerce:ToolTipLabel runat="server" ID="lblCustomersAllowedToManageSubscriptions" Text="<% $NopResources:Admin.ForumsSettings.AllowToManageSubscriptions %>"
+                ToolTip="<% $NopResources:Admin.ForumsSettings.AllowToManageSubscriptions.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
+        </td>
+        <td class="adminData">
+            <asp:CheckBox ID="cbCustomersAllowedToManageSubscriptions" runat="server"></asp:CheckBox>
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
             <nopCommerce:ToolTipLabel runat="server" ID="lblTopicsPageSize" Text="<% $NopResources:Admin.ForumsSettings.TopicsPageSize %>"
                 ToolTip="<% $NopResources:Admin.ForumsSettings.TopicsPageSize.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
         </td>

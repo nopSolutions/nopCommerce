@@ -1670,6 +1670,21 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
                 SettingManager.SetParam("Forums.CustomersAllowedToEditPosts", value.ToString());
             }
         }
+        
+        /// <summary>
+        /// Gets or sets a value indicating whether customers are allowed to manage theirs subscriptions
+        /// </summary>
+        public static bool AllowCustomersToManageSubscriptions
+        {
+            get
+            {
+                return SettingManager.GetSettingValueBoolean("Forums.CustomersAllowedToManageSubscriptions");
+            }
+            set
+            {
+                SettingManager.SetParam("Forums.CustomersAllowedToManageSubscriptions", value.ToString());
+            }
+        }
 
         /// <summary>
         /// Gets or sets a value indicating whether the guests are allowed to create posts.

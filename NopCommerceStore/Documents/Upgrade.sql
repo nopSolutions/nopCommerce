@@ -61,6 +61,17 @@ BEGIN
 END
 GO
 
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[Nop_Setting]
+		WHERE [Name] = N'Forums.CustomersAllowedToManageSubscriptions')
+BEGIN
+	INSERT [dbo].[Nop_Setting] ([Name], [Value], [Description])
+	VALUES (N'Forums.CustomersAllowedToManageSubscriptions', N'False', N'')
+END
+GO
+GO
+
 
 IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[Nop_ProductVariant]') and NAME='DisplayStockQuantity')
 BEGIN

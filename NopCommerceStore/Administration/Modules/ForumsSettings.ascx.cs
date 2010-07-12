@@ -58,6 +58,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             cbGuestsAllowedToCreateTopics.Checked = ForumManager.AllowGuestsToCreateTopics;
             cbCustomersAllowedToEditPosts.Checked = ForumManager.AllowCustomersToEditPosts;
             cbCustomersAllowedToDeletePosts.Checked = ForumManager.AllowCustomersToDeletePosts;
+            cbCustomersAllowedToManageSubscriptions.Checked = ForumManager.AllowCustomersToManageSubscriptions;
             txtTopicsPageSize.Value = ForumManager.TopicsPageSize;
             txtPostsPageSize.Value = ForumManager.PostsPageSize;
             CommonHelper.SelectListItem(this.ddlForumEditor, (int)ForumManager.ForumEditor);
@@ -91,6 +92,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     ForumManager.AllowGuestsToCreateTopics = cbGuestsAllowedToCreateTopics.Checked;
                     ForumManager.AllowCustomersToEditPosts = cbCustomersAllowedToEditPosts.Checked;
                     ForumManager.AllowCustomersToDeletePosts = cbCustomersAllowedToDeletePosts.Checked;
+                    ForumManager.AllowCustomersToManageSubscriptions = cbCustomersAllowedToManageSubscriptions.Checked;
                     ForumManager.TopicsPageSize = txtTopicsPageSize.Value;
                     ForumManager.PostsPageSize = txtPostsPageSize.Value;
                     ForumManager.ForumEditor = (EditorTypeEnum)Enum.ToObject(typeof(EditorTypeEnum), int.Parse(this.ddlForumEditor.SelectedItem.Value));

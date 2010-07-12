@@ -379,6 +379,12 @@
     <Compile Include="Administration\BulkEditProducts.aspx.designer.cs">
       <DependentUpon>BulkEditProducts.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Administration\Modules\CustomerForumSubscriptions.ascx.cs">
+      <DependentUpon>CustomerForumSubscriptions.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Administration\Modules\CustomerForumSubscriptions.ascx.designer.cs">
+      <DependentUpon>CustomerForumSubscriptions.ascx</DependentUpon>
+    </Compile>
     <Compile Include="Administration\NewsletterSubscribers.aspx.cs">
       <DependentUpon>NewsletterSubscribers.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -3730,6 +3736,12 @@
     <Compile Include="Alipay_Return.aspx.designer.cs">
       <DependentUpon>Alipay_Return.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Modules\ForumSubscriptions.ascx.cs">
+      <DependentUpon>ForumSubscriptions.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\ForumSubscriptions.ascx.designer.cs">
+      <DependentUpon>ForumSubscriptions.ascx</DependentUpon>
+    </Compile>
     <Compile Include="Modules\GiftCardAttributes.ascx.cs">
       <DependentUpon>GiftCardAttributes.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -5595,6 +5607,7 @@
     <Content Include="Administration\CategoryTemplateAdd.aspx" />
     <Content Include="Administration\CategoryTemplateDetails.aspx" />
     <Content Include="Administration\CategoryTemplates.aspx" />
+    <Content Include="Administration\Modules\CustomerForumSubscriptions.ascx" />
     <Content Include="Administration\NewsletterSubscribers.aspx" />
     <Content Include="Administration\Modules\NewsletterSubscribers.ascx" />
     <Content Include="Administration\Modules\ThirdPartyIntegration.ascx" />
@@ -5857,6 +5870,7 @@
     <Content Include="Install\Scripts\nopCommerce_createData.sql" />
     <Content Include="Install\Scripts\nopCommerce_createDatabase.sql" />
     <Content Include="Install\Scripts\nopCommerce_createSampleData.sql" />
+    <Content Include="Modules\ForumSubscriptions.ascx" />
     <Content Include="Modules\GiftCardAttributes.ascx" />
     <Content Include="Modules\ProductPrice2.ascx" />
     <Content Include="QBConnector.asmx" />

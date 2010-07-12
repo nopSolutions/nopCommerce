@@ -30,6 +30,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.BusinessLogic.Promo.Affiliates;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.Audit;
+using NopSolutions.NopCommerce.BusinessLogic.Content.Forums;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -41,6 +42,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 this.SelectTab(this.CustomerTabs, this.TabId);
                 pnlCustomerAvatar.Visible = CustomerManager.AllowCustomersToUploadAvatars;
+                pnlCustomerForumSubscriptions.Visible = ForumManager.AllowCustomersToManageSubscriptions;
             }
         }
 
@@ -62,6 +64,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         ctrlCurrentShoppingCart.SaveInfo();
                         ctrlCurrentWishlist.SaveInfo();
                         ctrlCustomerRewardPoints.SaveInfo();
+                        ctrlCustomerForumSubscriptions.SaveInfo();
 
                         CustomerActivityManager.InsertActivity(
                             "EditCustomer",

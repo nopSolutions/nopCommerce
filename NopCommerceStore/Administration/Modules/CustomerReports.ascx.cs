@@ -190,6 +190,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             else
             {
                 chartCustomersByOrderTotal.Visible = true;
+                chartCustomersByOrderTotal.Series[0].Points.Clear();
                 foreach (CustomerBestReportLine repLine in report)
                 {
                     var dp = new DataPoint();
@@ -214,6 +215,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             else
             {
                 chartCustomersByNumberOfOrder.Visible = true;
+                chartCustomersByNumberOfOrder.Series[0].Points.Clear();
                 foreach (CustomerBestReportLine repLine in report)
                 {
                     var dp = new DataPoint();
@@ -238,6 +240,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             else
             {
                 chartCustomersByLanguage.Visible = true;
+                chartCustomersByLanguage.Series[0].Points.Clear();
                 foreach (CustomerReportByLanguageLine repLine in report)
                 {
                     var dp = new DataPoint();
@@ -262,6 +265,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             else
             {
                 chartCustomerByGender.Visible = true;
+                chartCustomerByGender.Series[0].Points.Clear();
                 foreach (CustomerReportByAttributeKeyLine repLine in report)
                 {
                     var dp = new DataPoint();
@@ -286,6 +290,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             else
             {
                 chartCustomerByCountry.Visible = true;
+                chartCustomerByCountry.Series[0].Points.Clear();
                 foreach (CustomerReportByAttributeKeyLine repLine in report)
                 {
                     var dp = new DataPoint();

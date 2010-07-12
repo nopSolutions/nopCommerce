@@ -89,7 +89,7 @@
 </asp:GridView>
 <p>
 </p>
-<asp:Chart runat="server" ID="chartOrders" ImageStorageMode="UseHttpHandler">
+<asp:Chart runat="server" ID="chartOrders" ImageStorageMode="UseHttpHandler" EnableViewState="true"  Width="600">
     <Series>
         <asp:Series ChartArea="Default" Name="Orders" ChartType="Pie" Label="#PERCENT{P1}" Legend="Default" />
     </Series>

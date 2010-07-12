@@ -12,6 +12,7 @@
 <%@ Register TagPrefix="nopCommerce" TagName="CustomerSendEmail" Src="CustomerSendEmail.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="CustomerSendPrivateMessage" Src="CustomerSendPrivateMessage.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="ConfirmationBox" Src="ConfirmationBox.ascx" %>
+<%@ Register TagPrefix="nopCommerce" TagName="CustomerForumSubscriptions" Src="CustomerForumSubscriptions.ascx" %>
 <div class="section-header">
     <div class="title">
         <img src="Common/ico-customers.png" alt="<%=GetLocaleResourceString("Admin.CustomerDetails.Title")%>" />
@@ -82,6 +83,11 @@
     <ajaxToolkit:TabPanel runat="server" ID="pnlCustomerSendPrivateMessage" HeaderText="<% $NopResources:Admin.CustomerDetails.CustomerSendPrivateMessage %>">
         <ContentTemplate>
             <nopCommerce:CustomerSendPrivateMessage runat="server" ID="ctrlCustomerSendPrivateMessage"></nopCommerce:CustomerSendPrivateMessage>
+        </ContentTemplate>
+    </ajaxToolkit:TabPanel>
+    <ajaxToolkit:TabPanel runat="server" ID="pnlCustomerForumSubscriptions" HeaderText="<% $NopResources:Admin.CustomerDetails.CustomerForumSubscriptions %>">
+        <ContentTemplate>
+            <nopCommerce:CustomerForumSubscriptions runat="server" ID="ctrlCustomerForumSubscriptions" />
         </ContentTemplate>
     </ajaxToolkit:TabPanel>
 </ajaxToolkit:TabContainer>

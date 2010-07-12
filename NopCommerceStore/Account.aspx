@@ -8,6 +8,7 @@
 <%@ Register TagPrefix="nopCommerce" TagName="CustomerAvatar" Src="~/Modules/CustomerAvatar.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="CustomerRewardPoints" Src="~/Modules/CustomerRewardPoints.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="CustomerDownloadableProducts" Src="~/Modules/CustomerDownloadableProducts.ascx" %>
+<%@ Register TagPrefix="nopCommerce" TagName="ForumSubscriptions" Src="~/Modules/ForumSubscriptions.ascx" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="cph1" runat="Server">
     <div class="account-page">
         <div class="page-title">
@@ -52,6 +53,11 @@
                 <ajaxToolkit:TabPanel runat="server" ID="pnlAvatar" HeaderText="<% $NopResources:Account.Avatar %>">
                     <ContentTemplate>
                         <nopCommerce:CustomerAvatar ID="ctrlCustomerAvatar" runat="server" />
+                    </ContentTemplate>
+                </ajaxToolkit:TabPanel>
+                <ajaxToolkit:TabPanel runat="server" ID="pnlForumSubscriptions" HeaderText="<% $NopResources:Account.ForumSubscriptions %>">
+                    <ContentTemplate>
+                        <nopCommerce:ForumSubscriptions ID="ctrForumSubscriptions" runat="server" />
                     </ContentTemplate>
                 </ajaxToolkit:TabPanel>
             </ajaxToolkit:TabContainer>

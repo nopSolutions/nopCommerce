@@ -113,6 +113,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             }
             else
             {
+                chartOrders.Series[0].Points.Clear();
                 chartOrders.Visible = true;
                 foreach (OrderProductVariantReportLine repLine in report)
                 {

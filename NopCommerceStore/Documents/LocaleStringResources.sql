@@ -116,6 +116,36 @@ set @resources='
   <LocaleResource Name="ShoppingCart.GiftCards.DontWorkWithAutoshipProducts">
     <Value>You cannot use gift cards with auto-ship (recurring) items.</Value>
   </LocaleResource>
+  <LocaleResource Name="ForumSubscriptions.InfoColumn">
+    <Value>Forum/Topic</Value>
+  </LocaleResource>
+  <LocaleResource Name="ForumSubscriptions.DeleteSelected">
+    <Value>Delete Selected</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.ForumSubscriptions">
+    <Value>Forum Subscriptions</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ForumsSettings.AllowToManageSubscriptions">
+    <Value>Allow customers manage forum subscriptions</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ForumsSettings.AllowToManageSubscriptions.Tooltip">
+    <Value>Check if you want allow customers manage forum subscriptions</Value>
+  </LocaleResource>
+  <LocaleResource Name="ForumSubscriptions.DeleteColumn">
+    <Value>Delete</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CustomerForumSubscriptions.InfoColumn">
+    <Value>Forum/Topic</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CustomerForumSubscriptions.DeleteColumn">
+    <Value>Delete</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CustomerDetails.CustomerForumSubscriptions">
+    <Value>Forum Subscriptions</Value>
+  </LocaleResource>
+  <LocaleResource Name="">
+    <Value></Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.BulkEditProducts.PriceColumn.RangeErrorMessage">
     <Value>The price must be from 0 to 100000000</Value>
   </LocaleResource>

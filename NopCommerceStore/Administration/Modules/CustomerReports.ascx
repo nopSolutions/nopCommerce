@@ -106,7 +106,7 @@
             </asp:GridView>
             <p>
             </p>
-            <asp:Chart runat="server" ID="chartCustomersByOrderTotal" ImageStorageMode="UseHttpHandler" EnableViewState="true">
+            <asp:Chart runat="server" ID="chartCustomersByOrderTotal" ImageStorageMode="UseHttpHandler" EnableViewState="true" Width="600">
                 <Series>
                     <asp:Series ChartArea="Default" Name="CustomersByOrderTotal" ChartType="Pie" Label="#PERCENT{P1}" Legend="Default" />
                 </Series>
@@ -230,7 +230,7 @@
             </asp:GridView>
             <p>
             </p>
-            <asp:Chart runat="server" ID="chartCustomersByNumberOfOrder" ImageStorageMode="UseHttpHandler" EnableViewState="true">
+            <asp:Chart runat="server" ID="chartCustomersByNumberOfOrder" ImageStorageMode="UseHttpHandler" EnableViewState="true" Width="600">
                 <Series>
                     <asp:Series ChartArea="Default" Name="CustomersByNumberOfOrder" ChartType="Pie" Label="#PERCENT{P1}"
                         Legend="Default" />
@@ -295,7 +295,7 @@
              </asp:GridView>
              <p>
              </p>
-            <asp:Chart runat="server" ID="chartCustomersByLanguage" ImageStorageMode="UseHttpHandler" EnableViewState="true">
+            <asp:Chart runat="server" ID="chartCustomersByLanguage" ImageStorageMode="UseHttpHandler" EnableViewState="true" Width="600">
                 <Series>
                     <asp:Series ChartArea="Default" Name="CustomersByLanguage" ChartType="Pie" Label="#PERCENT{P1}"
                         Legend="Default" />
@@ -355,7 +355,7 @@
             </asp:GridView>
             <p>
             </p>
-            <asp:Chart runat="server" ID="chartCustomerByGender" ImageStorageMode="UseHttpHandler" EnableViewState="true">
+            <asp:Chart runat="server" ID="chartCustomerByGender" ImageStorageMode="UseHttpHandler" EnableViewState="true"  Width="600">
                 <Series>
                     <asp:Series ChartArea="Default" Name="CustomerByGender" ChartType="Pie" Label="#PERCENT{P1}"
                         Legend="Default" />
@@ -415,7 +415,7 @@
             </asp:GridView>
             <p>
             </p>
-            <asp:Chart runat="server" ID="chartCustomerByCountry" ImageStorageMode="UseHttpHandler" EnableViewState="true">
+            <asp:Chart runat="server" ID="chartCustomerByCountry" ImageStorageMode="UseHttpHandler" EnableViewState="true" Width="600">
                 <Series>
                     <asp:Series ChartArea="Default" Name="CustomerByCountry" ChartType="Pie" Label="#PERCENT{P1}"
                         Legend="Default" />

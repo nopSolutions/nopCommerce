@@ -56,6 +56,7 @@ namespace NopSolutions.NopCommerce.Web
         {
             pnlAvatar.Visible = CustomerManager.AllowCustomersToUploadAvatars;
             pnlRewardPoints.Visible = OrderManager.RewardPointsEnabled;
+            pnlForumSubscriptions.Visible = ForumManager.AllowCustomersToManageSubscriptions;
         }
 
         public override PageSslProtectionEnum SslProtected
