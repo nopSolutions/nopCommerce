@@ -5,7 +5,7 @@
         <asp:GridView runat="server" ID="gvForumSubscriptions" DataKeyNames="ForumSubscriptionId" AllowPaging="True" AutoGenerateColumns="False"
             CellPadding="4" PageSize="10" CssClass="forum-subscriptions-grid" DataSourceID="odsForumSubscriptions" Width="100%">
             <Columns>
-                <asp:TemplateField HeaderText="<% $NopResources:ForumSubscriptions.DeleteColumn %>" ItemStyle-Width="10%" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                <asp:TemplateField ItemStyle-Width="10%" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
                     <ItemTemplate>
                         <asp:CheckBox ID="cbSelect" runat="server" />
                         <asp:HiddenField ID="hfForumSubscriptionId" runat="server" Value='<%# Eval("ForumSubscriptionId") %>' />
@@ -29,7 +29,6 @@
     <div class="clear">
     </div>
     <div class="button">
-        <br />
         <asp:Button runat="server" ID="btnDeleteSelected" Text="<% $NopResources:ForumSubscriptions.DeleteSelected %>"
             ValidationGroup="ForumSubscriptions" OnClick="btnDeleteSelected_Click" CssClass="deleteselectedfsbutton">
         </asp:Button>

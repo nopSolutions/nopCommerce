@@ -4258,14 +4258,15 @@ ul.languagelist li .selected
 	color: #555;
 }
 
-.forum-subscriptions-box .button
+.forum-subscriptions-box .forum-subscriptions
 {
-	margin-bottom: 5px;
-	margin-top: 5px;
 	text-align: left;
+	padding: 10px;
+	border: 1px solid rgb(232, 230, 210);
+	height: auto;
 }
 
-.forum-subscriptions-box .forum-subscriptions-grid
+.forum-subscriptions-box .forum-subscriptions .forum-subscriptions-grid
 {
 
 	font-family: arial;
@@ -4274,6 +4275,13 @@ ul.languagelist li .selected
 	background-color: #FFFFFF;
 	margin-left: 0px;
 	width: 100%;
+}
+
+.forum-subscriptions-box .button
+{
+	margin-bottom: 5px;
+	margin-top: 5px;
+	text-align: left;
 }
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*

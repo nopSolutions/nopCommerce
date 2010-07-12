@@ -126,13 +126,10 @@ set @resources='
     <Value>Forum Subscriptions</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ForumsSettings.AllowToManageSubscriptions">
-    <Value>Allow customers manage forum subscriptions:</Value>
+    <Value>Allow customers to manage forum subscriptions:</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ForumsSettings.AllowToManageSubscriptions.Tooltip">
-    <Value>Check if you want allow customers manage forum subscriptions</Value>
-  </LocaleResource>
-  <LocaleResource Name="ForumSubscriptions.DeleteColumn">
-    <Value>Delete</Value>
+    <Value>Check if you want allow customers to manage forum subscriptions</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.CustomerForumSubscriptions.InfoColumn">
     <Value>Forum/Topic</Value>

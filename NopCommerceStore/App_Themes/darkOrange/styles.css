@@ -4372,6 +4372,15 @@ ul.languagelist li .selected
 	color: #555;
 }
 
+.forum-subscriptions-box .forum-subscriptions
+{
+	padding: 10px 10px 5px 0px;
+	text-align: left;
+	padding: 10px;
+	border: 1px solid #d7d7d7;
+	height: auto;
+}
+
 .forum-subscriptions-box .button
 {
 	margin-bottom: 5px;
@@ -4379,7 +4388,7 @@ ul.languagelist li .selected
 	text-align: left;
 }
 
-.forum-subscriptions-box .forum-subscriptions-grid
+.forum-subscriptions-box .forum-subscriptions .forum-subscriptions-grid
 {
 	font-family: arial;
 	font-size: 11px;

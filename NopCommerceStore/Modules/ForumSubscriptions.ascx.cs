@@ -118,6 +118,8 @@ namespace NopSolutions.NopCommerce.Web.Modules
             {
                 try
                 {
+                    int rowCount = gvForumSubscriptions.Rows.Count;
+
                     foreach (GridViewRow row in gvForumSubscriptions.Rows)
                     {
                         var cbSelect = row.FindControl("cbSelect") as CheckBox;
@@ -129,9 +131,14 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
                             if (subscription != null && subscription.UserId == NopContext.Current.User.CustomerId)
                             {
+                                rowCount--;
                                 ForumManager.DeleteSubscription(forumSubscriptionId);
                             }
                         }
+                    }
+                    if (rowCount == 0 && gvForumSubscriptions.PageIndex > 0)
+                    {
+                        gvForumSubscriptions.PageIndex -= 1;
                     }
                     BindData();
                 }
