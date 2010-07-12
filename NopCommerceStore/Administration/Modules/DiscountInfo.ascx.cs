@@ -103,6 +103,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 CommonHelper.SelectListItem(this.ddlDiscountType, discount.DiscountTypeId);
                 CommonHelper.SelectListItem(this.ddlDiscountRequirement, discount.DiscountRequirementId);
+                this.txtRequirementSpentAmount.Value = discount.RequirementSpentAmount;
                 this.txtRestrictedProductVariants.Text = GenerateListOfRestrictedProductVariants(ProductManager.GetProductVariantsRestrictedByDiscountId(discount.DiscountId));
                 CommonHelper.SelectListItem(this.ddlDiscountLimitation, discount.DiscountLimitationId);
                 this.txtName.Text = discount.Name;
@@ -147,6 +148,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             DiscountRequirementEnum discountRequirement = (DiscountRequirementEnum)int.Parse(this.ddlDiscountRequirement.SelectedItem.Value);
             pnlCustomerRoles.Visible = discountRequirement == DiscountRequirementEnum.MustBeAssignedToCustomerRole;
             pnlRestrictedProductVariants.Visible = (discountRequirement == DiscountRequirementEnum.HadPurchasedAllOfTheseProductVariants ||discountRequirement == DiscountRequirementEnum.HadPurchasedOneOfTheseProductVariants );
+            pnlRequirementSpentAmount.Visible = (discountRequirement == DiscountRequirementEnum.HadSpentAmount);
         }
 
         private void SetDefaultValues()
@@ -188,6 +190,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 discount = DiscountManager.UpdateDiscount(discount.DiscountId,
                     discountType,
                     discountRequirement,
+                    txtRequirementSpentAmount.Value,
                     discountLimitation,
                     txtName.Text,
                     cbUsePercentage.Checked,
@@ -214,6 +217,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 discount = DiscountManager.InsertDiscount(discountType,
                     discountRequirement,
+                    txtRequirementSpentAmount.Value,
                     discountLimitation,
                     txtName.Text,
                     cbUsePercentage.Checked,

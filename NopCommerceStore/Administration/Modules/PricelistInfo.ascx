@@ -174,7 +174,7 @@
                     </td>
                     <td class="adminData">
                         <nopCommerce:DecimalTextBox ID="txtPriceAdjustment" runat="server" CssClass="adminInput"
-                            MinimumValue="0" MaximumValue="999999" Value="0" RequiredErrorMessage="<% $NopResources:Admin.PricelistInfo.PriceAdjustment.RequiredErrorMessage %>"
+                            MinimumValue="0" MaximumValue="100000000" Value="0" RequiredErrorMessage="<% $NopResources:Admin.PricelistInfo.PriceAdjustment.RequiredErrorMessage %>"
                             RangeErrorMessage="<% $NopResources:Admin.PricelistInfo.PriceAdjustment.RangeErrorMessage %>" />
                     </td>
                 </tr>
@@ -202,7 +202,7 @@
                     <asp:TemplateField HeaderText="<% $NopResources:Admin.PricelistInfo.ProductVariants.PriceAdjustment %>">
                         <ItemTemplate>
                             <nopCommerce:DecimalTextBox ID="txtPriceAdjustment" runat="server" CssClass="adminInput"
-                                Value="0" MinimumValue="0" MaximumValue="999999" RequiredErrorMessage="<% $NopResources:Admin.PricelistInfo.ProductVariants.PriceAdjustment.RequiredErrorMessage %>"
+                                Value="0" MinimumValue="0" MaximumValue="100000000" RequiredErrorMessage="<% $NopResources:Admin.PricelistInfo.ProductVariants.PriceAdjustment.RequiredErrorMessage %>"
                                 RangeErrorMessage="<% $NopResources:Admin.PricelistInfo.ProductVariants.PriceAdjustment.RangeErrorMessage %>" />
                         </ItemTemplate>
                     </asp:TemplateField>

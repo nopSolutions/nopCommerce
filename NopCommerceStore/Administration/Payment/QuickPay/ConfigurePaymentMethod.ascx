@@ -47,7 +47,7 @@
         </td>
         <td class="adminData">
             <nopCommerce:DecimalTextBox runat="server" ID="txtAdditionalFee" Value="0" RequiredErrorMessage="Additional fee is required"
-                MinimumValue="0" MaximumValue="999999" RangeErrorMessage="The value must be from 0 to 999999"
+                MinimumValue="0" MaximumValue="100000000" RangeErrorMessage="The value must be from 0 to 100,000,000"
                 CssClass="adminInput"></nopCommerce:DecimalTextBox>
         </td>
     </tr>

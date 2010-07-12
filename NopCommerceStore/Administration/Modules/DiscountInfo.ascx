@@ -69,6 +69,20 @@
                         <asp:TextBox ID="txtRestrictedProductVariants" runat="server" CssClass="adminInput"></asp:TextBox>
                     </td>
                 </tr>
+                <tr runat="server" id="pnlRequirementSpentAmount">
+                    <td class="adminTitle">
+                        <nopCommerce:ToolTipLabel runat="server" ID="lblRequirementSpentAmount" Text="<% $NopResources:Admin.DiscountInfo.RequirementSpentAmount %>"
+                            ToolTip="<% $NopResources:Admin.DiscountInfo.RequirementSpentAmount.Tooltip %>"
+                            ToolTipImage="~/Administration/Common/ico-help.gif" />
+                        [<%=CurrencyManager.PrimaryStoreCurrency.CurrencyCode%>]:
+                    </td>
+                    <td class="adminData">
+                        <nopCommerce:DecimalTextBox runat="server" CssClass="adminInput" ID="txtRequirementSpentAmount"
+                            Value="0" RequiredErrorMessage="<% $NopResources:Admin.DiscountInfo.RequirementSpentAmount.RequiredErrorMessage %>"
+                            MinimumValue="0" MaximumValue="100000000" RangeErrorMessage="<% $NopResources:Admin.DiscountInfo.RequirementSpentAmount.RangeErrorMessage %>">
+                        </nopCommerce:DecimalTextBox>
+                    </td>
+                </tr>
                 <tr>
                     <td class="adminTitle">
                         <nopCommerce:ToolTipLabel runat="server" ID="lblDiscountLimitation" Text="<% $NopResources:Admin.DiscountInfo.DiscountLimitation %>"
@@ -119,7 +133,7 @@
                     <td class="adminData">
                         <nopCommerce:DecimalTextBox runat="server" CssClass="adminInput" ID="txtDiscountAmount"
                             Value="0" RequiredErrorMessage="<% $NopResources:Admin.DiscountInfo.DiscountAmount.RequiredErrorMessage %>"
-                            MinimumValue="0" MaximumValue="999999" RangeErrorMessage="<% $NopResources:Admin.DiscountInfo.DiscountAmount.RangeErrorMessage %>">
+                            MinimumValue="0" MaximumValue="100000000" RangeErrorMessage="<% $NopResources:Admin.DiscountInfo.DiscountAmount.RangeErrorMessage %>">
                         </nopCommerce:DecimalTextBox>
                     </td>
                 </tr>

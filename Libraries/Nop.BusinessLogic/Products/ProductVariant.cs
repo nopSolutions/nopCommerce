@@ -198,6 +198,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         public bool DisplayStockAvailability { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether to display stock quantity
+        /// </summary>
+        public bool DisplayStockQuantity { get; set; }
+        
+        /// <summary>
         /// Gets or sets the minimum stock quantity
         /// </summary>
         public int MinStockQuantity { get; set; }

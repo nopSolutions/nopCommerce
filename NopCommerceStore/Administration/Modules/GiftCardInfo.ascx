@@ -35,7 +35,7 @@
                     <td class="adminData">
                         <nopCommerce:DecimalTextBox runat="server" CssClass="adminInput" ID="txtInitialValue"
                             Value="0" RequiredErrorMessage="<% $NopResources:Admin.GiftCardInfo.InitialValue.RequiredErrorMessage %>"
-                            MinimumValue="0" MaximumValue="999999" RangeErrorMessage="<% $NopResources:Admin.GiftCardInfo.InitialValue.RangeErrorMessage %>">
+                            MinimumValue="0" MaximumValue="100000000" RangeErrorMessage="<% $NopResources:Admin.GiftCardInfo.InitialValue.RangeErrorMessage %>">
                         </nopCommerce:DecimalTextBox>
                     </td>
                 </tr>

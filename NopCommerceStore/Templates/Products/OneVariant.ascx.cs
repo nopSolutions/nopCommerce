@@ -85,48 +85,21 @@ namespace NopSolutions.NopCommerce.Web.Templates.Products
             btnAddToWishlist.Visible = SettingManager.GetSettingValueBoolean("Common.EnableWishlist");
 
             ctrlTierPrices.ProductVariantId = productVariant.ProductVariantId;
-            ctrlProductAttributes.ProductVariantId = ProductVariant.ProductVariantId;
+            ctrlProductAttributes.ProductVariantId = productVariant.ProductVariantId;
+            ctrlGiftCardAttributes.ProductVariantId = productVariant.ProductVariantId;
             ctrlProductPrice.ProductVariantId = productVariant.ProductVariantId;
 
             //stock
-            if(pnlStockAvailablity != null && lblStockAvailablity != null)
+            string stockMessage = PriceHelper.FormatStockMessage(productVariant);
+            if (!String.IsNullOrEmpty(stockMessage))
             {
-                if(productVariant.ManageInventory == (int)ManageInventoryMethodEnum.ManageStock
-                        && productVariant.DisplayStockAvailability)
-                {
-                    if(productVariant.StockQuantity > 0 || productVariant.AllowOutOfStockOrders)
-                    {
-                        lblStockAvailablity.Text = string.Format(GetLocaleResourceString("Products.Availability"), GetLocaleResourceString("Products.InStock"));
-                    }
-                    else
-                    {
-                        lblStockAvailablity.Text = string.Format(GetLocaleResourceString("Products.Availability"), GetLocaleResourceString("Products.OutOfStock"));
-                    }
-                }
-                else
-                {
-                    pnlStockAvailablity.Visible = false;
-                }
+                lblStockAvailablity.Text = stockMessage;
             }
-
-            //gift cards
-            if(pnlGiftCardInfo != null)
+            else
             {
-                if(productVariant.IsGiftCard)
-                {
-                    pnlGiftCardInfo.Visible = true;
-                    if(NopContext.Current.User != null && !NopContext.Current.User.IsGuest)
-                    {
-                        txtSenderName.Text = NopContext.Current.User.FullName;
-                        txtSenderEmail.Text = NopContext.Current.User.Email;
-                    }
-                }
-                else
-                {
-                    pnlGiftCardInfo.Visible = false;
-                }
+                pnlStockAvailablity.Visible = false;
             }
-            
+                        
             //price entered by a customer
             if (productVariant.CustomerEntersPrice)
             {
@@ -252,11 +225,11 @@ namespace NopSolutions.NopCommerce.Web.Templates.Products
             //gift cards
             if(pv.IsGiftCard)
             {
-                string recipientName = txtRecipientName.Text;
-                string recipientEmail = txtRecipientEmail.Text;
-                string senderName = txtSenderName.Text;
-                string senderEmail = txtSenderEmail.Text;
-                string giftCardMessage = txtGiftCardMessage.Text;
+                string recipientName = ctrlGiftCardAttributes.RecipientName;
+                string recipientEmail = ctrlGiftCardAttributes.RecipientEmail;
+                string senderName = ctrlGiftCardAttributes.SenderName;
+                string senderEmail = ctrlGiftCardAttributes.SenderEmail;
+                string giftCardMessage = ctrlGiftCardAttributes.GiftCardMessage;
 
                 attributes = ProductAttributeHelper.AddGiftCardAttribute(attributes, recipientName, recipientEmail, senderName, senderEmail, giftCardMessage);
             }

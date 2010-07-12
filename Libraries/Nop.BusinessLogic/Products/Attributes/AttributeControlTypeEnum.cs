@@ -43,5 +43,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         /// Multiline textbox
         /// </summary>
         MultilineTextbox = 10,
+        /// <summary>
+        /// Datepicker
+        /// </summary>
+        Datepicker = 20,
     }
 }

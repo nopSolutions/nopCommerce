@@ -56,7 +56,7 @@
                             <ItemTemplate>
                                 <nopCommerce:DecimalTextBox runat="server" CssClass="adminInput" Width="50px" Value='<%# Eval("PriceAdjustment") %>'
                                     ID="txtPriceAdjustment" RequiredErrorMessage="<% $NopResources:Admin.CheckoutAttributeInfo.PriceAdjustment.RequiredErrorMessage %>"
-                                    MinimumValue="0" MaximumValue="999999" ValidationGroup="CheckoutAttributeValue"
+                                    MinimumValue="0" MaximumValue="100000000" ValidationGroup="CheckoutAttributeValue"
                                     RangeErrorMessage="<% $NopResources:Admin.CheckoutAttributeInfo.PriceAdjustment.RangeErrorMessage %>">
                                 </nopCommerce:DecimalTextBox>
                             </ItemTemplate>
@@ -188,7 +188,7 @@
             <td class="adminData">
                 <nopCommerce:DecimalTextBox runat="server" CssClass="adminInput" ID="txtNewPriceAdjustment"
                     Value="0" RequiredErrorMessage="<% $NopResources:Admin.CheckoutAttributeValues.New.PriceAdjustment.RequiredErrorMessage %>"
-                    MinimumValue="0" MaximumValue="999999" RangeErrorMessage="<% $NopResources:Admin.CheckoutAttributeValues.New.PriceAdjustment.RangeErrorMessage %>"
+                    MinimumValue="0" MaximumValue="100000000" RangeErrorMessage="<% $NopResources:Admin.CheckoutAttributeValues.New.PriceAdjustment.RangeErrorMessage %>"
                     ValidationGroup="NewCheckoutAttributeValue"></nopCommerce:DecimalTextBox>
             </td>
         </tr>

@@ -72,11 +72,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <summary>
         /// Gets or sets the customer IP
         /// </summary>
-        public string CustomerIP
-        {
-            get;
-            set;
-        }
+        public string CustomerIP { get; set; }
 
         /// <summary>
         /// Gets or sets the order subtotal (incl tax)

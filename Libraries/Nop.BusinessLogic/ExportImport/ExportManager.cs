@@ -493,6 +493,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                     xmlWriter.WriteElementString("ManageInventory", null, productVariant.ManageInventory.ToString());
                     xmlWriter.WriteElementString("StockQuantity", null, productVariant.StockQuantity.ToString());
                     xmlWriter.WriteElementString("DisplayStockAvailability", null, productVariant.DisplayStockAvailability.ToString());
+                    xmlWriter.WriteElementString("DisplayStockQuantity", null, productVariant.DisplayStockQuantity.ToString());
                     xmlWriter.WriteElementString("MinStockQuantity", null, productVariant.MinStockQuantity.ToString());
                     xmlWriter.WriteElementString("LowStockActivityId", null, productVariant.LowStockActivityId.ToString());
                     xmlWriter.WriteElementString("NotifyAdminForQuantityBelow", null, productVariant.NotifyAdminForQuantityBelow.ToString());
@@ -701,6 +702,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                 tableDefinition.Add("ManageInventory", "int");
                 tableDefinition.Add("StockQuantity", "int");
                 tableDefinition.Add("DisplayStockAvailability", "nvarchar(5)");
+                tableDefinition.Add("DisplayStockQuantity", "nvarchar(5)");
                 tableDefinition.Add("MinStockQuantity", "int");
                 tableDefinition.Add("LowStockActivityId", "int");
                 tableDefinition.Add("NotifyAdminForQuantityBelow", "int");
@@ -730,7 +732,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                     foreach (var pv in productVariants)
                     {
                         StringBuilder sb = new StringBuilder();
-                        sb.Append("INSERT INTO [Products] (Name, ShortDescription,FullDescription,ProductTypeId,TemplateId,ShowOnHomePage,MetaKeywords,MetaDescription,MetaTitle,AllowCustomerReviews,AllowCustomerRatings,Published,SKU,ManufacturerPartNumber,IsGiftCard,IsDownload,DownloadId,UnlimitedDownloads,MaxNumberOfDownloads,DownloadActivationType,HasSampleDownload,SampleDownloadId,HasUserAgreement,UserAgreementText,IsRecurring,CycleLength,CyclePeriod,TotalCycles,IsShipEnabled,IsFreeShipping,AdditionalShippingCharge,IsTaxExempt,TaxCategoryId,ManageInventory,StockQuantity,DisplayStockAvailability,MinStockQuantity,LowStockActivityId,NotifyAdminForQuantityBelow,AllowOutOfStockOrders,OrderMinimumQuantity,OrderMaximumQuantity,DisableBuyButton,Price,OldPrice,ProductCost,CustomerEntersPrice,MinimumCustomerEnteredPrice,MaximumCustomerEnteredPrice,Weight, Length, Width, Height, CreatedOn) VALUES (");
+                        sb.Append("INSERT INTO [Products] (Name, ShortDescription,FullDescription,ProductTypeId,TemplateId,ShowOnHomePage,MetaKeywords,MetaDescription,MetaTitle,AllowCustomerReviews,AllowCustomerRatings,Published,SKU,ManufacturerPartNumber,IsGiftCard,IsDownload,DownloadId,UnlimitedDownloads,MaxNumberOfDownloads,DownloadActivationType,HasSampleDownload,SampleDownloadId,HasUserAgreement,UserAgreementText,IsRecurring,CycleLength,CyclePeriod,TotalCycles,IsShipEnabled,IsFreeShipping,AdditionalShippingCharge,IsTaxExempt,TaxCategoryId,ManageInventory,StockQuantity,DisplayStockAvailability,DisplayStockQuantity,MinStockQuantity,LowStockActivityId,NotifyAdminForQuantityBelow,AllowOutOfStockOrders,OrderMinimumQuantity,OrderMaximumQuantity,DisableBuyButton,Price,OldPrice,ProductCost,CustomerEntersPrice,MinimumCustomerEnteredPrice,MaximumCustomerEnteredPrice,Weight, Length, Width, Height, CreatedOn) VALUES (");
                         string name = p.Name;
                         if (name.Length > maxStringLength)
                             name = name.Substring(0, maxStringLength);
@@ -794,6 +796,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                         sb.Append(pv.ManageInventory); sb.Append(",");
                         sb.Append(pv.StockQuantity); sb.Append(",");
                         sb.Append('"'); sb.Append(pv.DisplayStockAvailability); sb.Append("\",");
+                        sb.Append('"'); sb.Append(pv.DisplayStockQuantity); sb.Append("\",");
                         sb.Append(pv.MinStockQuantity); sb.Append(",");
                         sb.Append(pv.LowStockActivityId); sb.Append(",");
                         sb.Append(pv.NotifyAdminForQuantityBelow); sb.Append(",");

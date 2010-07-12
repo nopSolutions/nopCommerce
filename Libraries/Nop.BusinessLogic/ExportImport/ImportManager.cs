@@ -234,6 +234,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                     int ManageInventory = Convert.ToInt32(dr["ManageInventory"]);
                     int StockQuantity = Convert.ToInt32(dr["StockQuantity"]);
                     bool DisplayStockAvailability = Convert.ToBoolean(dr["DisplayStockAvailability"]);
+                    bool DisplayStockQuantity = Convert.ToBoolean(dr["DisplayStockQuantity"]);
                     int MinStockQuantity = Convert.ToInt32(dr["MinStockQuantity"]);
                     int LowStockActivityId = Convert.ToInt32(dr["LowStockActivityId"]);
                     int NotifyAdminForQuantityBelow = Convert.ToInt32(dr["NotifyAdminForQuantityBelow"]);
@@ -274,7 +275,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                             CycleLength, CyclePeriod, TotalCycles, IsShipEnabled,
                             IsFreeShipping, AdditionalShippingCharge, IsTaxExempt,
                             TaxCategoryId, ManageInventory, StockQuantity,
-                            DisplayStockAvailability, MinStockQuantity,
+                            DisplayStockAvailability, DisplayStockQuantity, MinStockQuantity,
                             (LowStockActivityEnum)LowStockActivityId, NotifyAdminForQuantityBelow,
                             AllowOutOfStockOrders, OrderMinimumQuantity,
                             OrderMaximumQuantity, productVariant.WarehouseId, DisableBuyButton,
@@ -298,7 +299,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                             UnlimitedDownloads, MaxNumberOfDownloads, null, (DownloadActivationTypeEnum)DownloadActivationType,
                             HasSampleDownload, SampleDownloadId, HasUserAgreement, UserAgreementText, IsRecurring, CycleLength, CyclePeriod, TotalCycles,
                             IsShipEnabled, IsFreeShipping, AdditionalShippingCharge, IsTaxExempt,
-                            TaxCategoryId, ManageInventory, StockQuantity, DisplayStockAvailability, MinStockQuantity,
+                            TaxCategoryId, ManageInventory, StockQuantity,
+                            DisplayStockAvailability, DisplayStockQuantity, MinStockQuantity,
                             (LowStockActivityEnum)LowStockActivityId, NotifyAdminForQuantityBelow,
                             AllowOutOfStockOrders, OrderMinimumQuantity,
                             OrderMaximumQuantity, 0, DisableBuyButton,

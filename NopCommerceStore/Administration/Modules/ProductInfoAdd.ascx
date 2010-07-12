@@ -135,6 +135,7 @@
         if (selectedManageInventoryMethodId == 0) {
             $('#pnlStockQuantity').hide();
             $('#pnlDisplayStockAvailability').hide();
+            $('#pnlDisplayStockQuantity').hide();
             $('#pnlMinStockQuantity').hide();
             $('#pnlLowStockActivity').hide();
             $('#pnlNotifyForQuantityBelow').hide();
@@ -143,6 +144,14 @@
         else if (selectedManageInventoryMethodId == 1) {
             $('#pnlStockQuantity').show();
             $('#pnlDisplayStockAvailability').show();
+            
+            if (getE('<%=cbDisplayStockAvailability.ClientID %>').checked) {
+                $('#pnlDisplayStockQuantity').show();
+            }
+            else {
+                $('#pnlDisplayStockQuantity').hide();
+            }
+
             $('#pnlMinStockQuantity').show();
             $('#pnlLowStockActivity').show();
             $('#pnlNotifyForQuantityBelow').show();
@@ -151,6 +160,7 @@
         else {
             $('#pnlStockQuantity').hide();
             $('#pnlDisplayStockAvailability').hide();
+            $('#pnlDisplayStockQuantity').hide();
             $('#pnlMinStockQuantity').hide();
             $('#pnlLowStockActivity').hide();
             $('#pnlNotifyForQuantityBelow').hide();
@@ -368,7 +378,7 @@
         <td class="adminData">
             <nopCommerce:DecimalTextBox runat="server" CssClass="adminInput" ID="txtPrice" Value="0"
                 RequiredErrorMessage="<% $NopResources:Admin.ProductInfo.Price.RequiredErrorMessage %>"
-                MinimumValue="0" MaximumValue="999999" RangeErrorMessage="<% $NopResources:Admin.ProductInfo.Price.RangeErrorMessage %>">
+                MinimumValue="0" MaximumValue="100000000" RangeErrorMessage="<% $NopResources:Admin.ProductInfo.Price.RangeErrorMessage %>">
             </nopCommerce:DecimalTextBox>
         </td>
     </tr>
@@ -381,7 +391,7 @@
         <td class="adminData">
             <nopCommerce:DecimalTextBox runat="server" CssClass="adminInput" ID="txtOldPrice"
                 Value="0" RequiredErrorMessage="<% $NopResources:Admin.ProductInfo.OldPrice.RequiredErrorMessage%>"
-                MinimumValue="0" MaximumValue="999999" RangeErrorMessage="<% $NopResources:Admin.ProductInfo.OldPrice.RangeErrorMessage %>">
+                MinimumValue="0" MaximumValue="100000000" RangeErrorMessage="<% $NopResources:Admin.ProductInfo.OldPrice.RangeErrorMessage %>">
             </nopCommerce:DecimalTextBox>
         </td>
     </tr>
@@ -394,7 +404,7 @@
         <td class="adminData">
             <nopCommerce:DecimalTextBox runat="server" CssClass="adminInput" ID="txtProductCost"
                 Value="0" RequiredErrorMessage="<% $NopResources:Admin.ProductInfo.ProductCost.RequiredErrorMessage %>"
-                MinimumValue="0" MaximumValue="999999" RangeErrorMessage="<% $NopResources:Admin.ProductInfo.ProductCost.RangeErrorMessage %>">
+                MinimumValue="0" MaximumValue="100000000" RangeErrorMessage="<% $NopResources:Admin.ProductInfo.ProductCost.RangeErrorMessage %>">
             </nopCommerce:DecimalTextBox>
         </td>
     </tr>
@@ -425,7 +435,7 @@
         <td class="adminData">
             <nopCommerce:NumericTextBox runat="server" CssClass="adminInput" ID="txtMinimumCustomerEnteredPrice"
                 Value="0" RequiredErrorMessage="<% $NopResources:Admin.ProductInfo.MinimumCustomerEnteredPrice.RequiredErrorMessage%>"
-                MinimumValue="0" MaximumValue="999999" RangeErrorMessage="<% $NopResources:Admin.ProductInfo.MinimumCustomerEnteredPrice.RangeErrorMessage %>">
+                MinimumValue="0" MaximumValue="100000000" RangeErrorMessage="<% $NopResources:Admin.ProductInfo.MinimumCustomerEnteredPrice.RangeErrorMessage %>">
             </nopCommerce:NumericTextBox>
         </td>
     </tr>
@@ -438,7 +448,7 @@
         <td class="adminData">
             <nopCommerce:NumericTextBox runat="server" CssClass="adminInput" ID="txtMaximumCustomerEnteredPrice"
                 Value="1000" RequiredErrorMessage="<% $NopResources:Admin.ProductInfo.MaximumCustomerEnteredPrice.RequiredErrorMessage%>"
-                MinimumValue="0" MaximumValue="999999" RangeErrorMessage="<% $NopResources:Admin.ProductInfo.MaximumCustomerEnteredPrice.RangeErrorMessage %>">
+                MinimumValue="0" MaximumValue="100000000" RangeErrorMessage="<% $NopResources:Admin.ProductInfo.MaximumCustomerEnteredPrice.RangeErrorMessage %>">
             </nopCommerce:NumericTextBox>
         </td>
     </tr>
@@ -701,7 +711,7 @@
         <td class="adminData">
             <nopCommerce:DecimalTextBox runat="server" CssClass="adminInput" ID="txtAdditionalShippingCharge"
                 Value="0" RequiredErrorMessage="<% $NopResources:Admin.ProductInfo.AdditionalShippingCharge.RequiredErrorMessage %>"
-                MinimumValue="0" MaximumValue="999999" RangeErrorMessage="<% $NopResources:Admin.ProductInfo.AdditionalShippingCharge.RangeErrorMessage %>">
+                MinimumValue="0" MaximumValue="100000000" RangeErrorMessage="<% $NopResources:Admin.ProductInfo.AdditionalShippingCharge.RangeErrorMessage %>">
             </nopCommerce:DecimalTextBox>
         </td>
     </tr>
@@ -822,6 +832,16 @@
         </td>
         <td class="adminData">
             <asp:CheckBox ID="cbDisplayStockAvailability" runat="server"></asp:CheckBox>
+        </td>
+    </tr>
+    <tr id="pnlDisplayStockQuantity">
+        <td class="adminTitle">
+            <nopCommerce:ToolTipLabel runat="server" ID="lblDisplayStockQuantity" Text="<% $NopResources:Admin.ProductInfo.DisplayStockQuantity %>"
+                ToolTip="<% $NopResources:Admin.ProductInfo.DisplayStockQuantity.Tooltip %>"
+                ToolTipImage="~/Administration/Common/ico-help.gif" />
+        </td>
+        <td class="adminData">
+            <asp:CheckBox ID="cbDisplayStockQuantity" runat="server"></asp:CheckBox>
         </td>
     </tr>
     <tr id="pnlMinStockQuantity">

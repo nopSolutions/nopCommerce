@@ -1,7 +1,6 @@
 <%@ Control Language="C#" AutoEventWireup="true" Inherits="NopSolutions.NopCommerce.Web.Modules.CustomerInfoControl"
     CodeBehind="CustomerInfo.ascx.cs" %>
 <%@ Register TagPrefix="nopCommerce" TagName="EmailTextBox" Src="~/Modules/EmailTextBox.ascx" %>
-<%@ Register TagPrefix="nopCommerce" TagName="DatePicker2" Src="~/Modules/DatePicker2.ascx" %>
 <div class="customer-info-box">
     <div class="message-error">
         <asp:Literal ID="ErrorMessage" runat="server" EnableViewState="False"></asp:Literal>
@@ -59,7 +58,8 @@
                         <%=GetLocaleResourceString("Account.DateOfBirth")%>:
                     </td>
                     <td class="item-value">
-                        <nopCommerce:DatePicker2 runat="server" ID="dtDateOfBirth" />
+                        <nopCommerce:NopDatePicker runat="server" ID="dtDateOfBirth" DayText="<% $NopResources:DatePicker2.Day %>"
+                            MonthText="<% $NopResources:DatePicker2.Month %>" YearText="<% $NopResources:DatePicker2.Year %>" />
                     </td>
                 </tr>
                 </asp:PlaceHolder>

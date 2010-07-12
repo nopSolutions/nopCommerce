@@ -91,7 +91,7 @@
             <ItemTemplate>
                 <nopCommerce:DecimalTextBox runat="server" CssClass="adminInput" Width="70px" Value='<%# Eval("Price") %>'
                     ID="txtPrice" RequiredErrorMessage="<% $NopResources:Admin.BulkEditProducts.PriceColumn.RequiredErrorMessage %>"
-                    MinimumValue="0" MaximumValue="999999" RangeErrorMessage="<% $NopResources:Admin.BulkEditProducts.PriceColumn.RangeErrorMessage %>">
+                    MinimumValue="0" MaximumValue="100000000" RangeErrorMessage="<% $NopResources:Admin.BulkEditProducts.PriceColumn.RangeErrorMessage %>">
                 </nopCommerce:DecimalTextBox>
                 [<%=CurrencyManager.PrimaryStoreCurrency.CurrencyCode%>]
             </ItemTemplate>
@@ -101,7 +101,7 @@
             <ItemTemplate>
                 <nopCommerce:DecimalTextBox runat="server" CssClass="adminInput" Width="70px" Value='<%# Eval("OldPrice") %>'
                     ID="txtOldPrice" RequiredErrorMessage="<% $NopResources:Admin.BulkEditProducts.OldPriceColumn.RequiredErrorMessage %>"
-                    MinimumValue="0" MaximumValue="999999" RangeErrorMessage="<% $NopResources:Admin.BulkEditProducts.OldPriceColumn.RangeErrorMessage %>">
+                    MinimumValue="0" MaximumValue="100000000" RangeErrorMessage="<% $NopResources:Admin.BulkEditProducts.OldPriceColumn.RangeErrorMessage %>">
                 </nopCommerce:DecimalTextBox>
                 [<%=CurrencyManager.PrimaryStoreCurrency.CurrencyCode%>]
             </ItemTemplate>

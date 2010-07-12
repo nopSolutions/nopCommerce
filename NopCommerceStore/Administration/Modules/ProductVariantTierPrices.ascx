@@ -30,7 +30,7 @@
                         <ItemTemplate>
                             <nopCommerce:DecimalTextBox runat="server" CssClass="adminInput" ID="txtPrice" Value='<%# Eval("Price") %>'
                                 RequiredErrorMessage="<% $NopResources:Admin.ProductVariantTierPrices.Price.RequiredErrorMessage %>"
-                                MinimumValue="0" MaximumValue="999999" RangeErrorMessage="<% $NopResources:Admin.ProductVariantTierPrices.Price.RangeErrorMessage %>"
+                                MinimumValue="0" MaximumValue="100000000" RangeErrorMessage="<% $NopResources:Admin.ProductVariantTierPrices.Price.RangeErrorMessage %>"
                                 ValidationGroup="TierPrice" Width="100px"></nopCommerce:DecimalTextBox>
                             [<%=CurrencyManager.PrimaryStoreCurrency.CurrencyCode%>]
                         </ItemTemplate>
@@ -81,7 +81,7 @@
                     <td class="adminData">
                         <nopCommerce:DecimalTextBox runat="server" CssClass="adminInput" ID="txtNewPrice"
                             Value="0" RequiredErrorMessage="<% $NopResources:Admin.ProductVariantTierPrices.New.Price.RequiredErrorMessage %>"
-                            MinimumValue="0" MaximumValue="999999" RangeErrorMessage="<% $NopResources:Admin.ProductVariantTierPrices.New.Price.RangeErrorMessage %>"
+                            MinimumValue="0" MaximumValue="100000000" RangeErrorMessage="<% $NopResources:Admin.ProductVariantTierPrices.New.Price.RangeErrorMessage %>"
                             ValidationGroup="NewTierPrice" Width="50px"></nopCommerce:DecimalTextBox>
                         [<%=CurrencyManager.PrimaryStoreCurrency.CurrencyCode%>]
                     </td>

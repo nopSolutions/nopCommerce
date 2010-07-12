@@ -25,7 +25,7 @@
                         <ItemTemplate>
                             <nopCommerce:DecimalTextBox runat="server" CssClass="adminInput" ID="txtPrice" Value='<%# Eval("Price") %>'
                                 RequiredErrorMessage="<% $NopResources:Admin.ProductPricesByCustomerRole.Price.RequiredErrorMessage %>"
-                                MinimumValue="0" MaximumValue="999999" RangeErrorMessage="<% $NopResources:Admin.ProductPricesByCustomerRole.Price.RangeErrorMessage %>"
+                                MinimumValue="0" MaximumValue="100000000" RangeErrorMessage="<% $NopResources:Admin.ProductPricesByCustomerRole.Price.RangeErrorMessage %>"
                                 ValidationGroup="CustomerRolePrice" Width="100px"></nopCommerce:DecimalTextBox>
                             [<%=CurrencyManager.PrimaryStoreCurrency.CurrencyCode%>]
                         </ItemTemplate>
@@ -72,7 +72,7 @@
                     <td class="adminData">
                         <nopCommerce:DecimalTextBox runat="server" CssClass="adminInput" ID="txtNewPrice"
                             Value="0" RequiredErrorMessage="<% $NopResources:Admin.ProductPricesByCustomerRole.New.Price.RequiredErrorMessage %>"
-                            MinimumValue="0" MaximumValue="999999" RangeErrorMessage="<% $NopResources:Admin.ProductPricesByCustomerRole.New.Price.RangeErrorMessage %>"
+                            MinimumValue="0" MaximumValue="100000000" RangeErrorMessage="<% $NopResources:Admin.ProductPricesByCustomerRole.New.Price.RangeErrorMessage %>"
                             ValidationGroup="NewCustomerRolePrice" Width="50px"></nopCommerce:DecimalTextBox>
                         [<%=CurrencyManager.PrimaryStoreCurrency.CurrencyCode%>]
                     </td>

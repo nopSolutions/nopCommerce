@@ -732,6 +732,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             return FormatShippingPrice(price, showCurrency, currency, language, priceIncludesTax);
         }
 
+
+
         /// <summary>
         /// Formats the payment method additional fee
         /// </summary>
@@ -809,6 +811,54 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             }
             return FormatPaymentMethodAdditionalFee(price, showCurrency, currency, 
                 language, priceIncludesTax);
+        }
+
+
+
+        /// <summary>
+        /// Formats the stock availability/quantity message
+        /// </summary>
+        /// <param name="productVariant">Product variant</param>
+        /// <returns>The stock message</returns>
+        public static string FormatStockMessage(ProductVariant productVariant)
+        {
+            if (productVariant == null)
+                throw new ArgumentNullException("productVariant");
+
+            string stockMessage = string.Empty;
+            if (productVariant.ManageInventory == (int)ManageInventoryMethodEnum.ManageStock
+                && productVariant.DisplayStockAvailability)
+            {
+                if (productVariant.StockQuantity > 0 || productVariant.AllowOutOfStockOrders)
+                {
+                    //product "in stock"
+                    if (productVariant.DisplayStockQuantity)
+                    {
+                        if (productVariant.StockQuantity > 0)
+                        {
+                            //display "in stock" with stock quantity
+                            stockMessage = string.Format(LocalizationManager.GetLocaleResourceString("Products.Availability"), string.Format(LocalizationManager.GetLocaleResourceString("Products.InStockWithQuantity"), productVariant.StockQuantity));
+                        }
+                        else
+                        {
+                            //display "in stock" without stock quantity
+                            stockMessage = string.Format(LocalizationManager.GetLocaleResourceString("Products.Availability"), LocalizationManager.GetLocaleResourceString("Products.InStock"));
+                        }
+                    }
+                    else
+                    {
+                        //display "in stock" without stock quantity
+                        stockMessage = string.Format(LocalizationManager.GetLocaleResourceString("Products.Availability"), LocalizationManager.GetLocaleResourceString("Products.InStock"));
+                    }
+                }
+                else
+                {
+                    //display "out of stock"
+                    stockMessage = string.Format(LocalizationManager.GetLocaleResourceString("Products.Availability"), LocalizationManager.GetLocaleResourceString("Products.OutOfStock"));
+                }
+            }
+
+            return stockMessage;
         }
 
         #endregion

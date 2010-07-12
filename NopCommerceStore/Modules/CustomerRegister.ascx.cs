@@ -30,6 +30,7 @@ using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Common.Xml;
+using NopSolutions.NopCommerce.Controls;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -224,7 +225,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             var ddlCountry = (DropDownList)CreateUserWizardStep1.ContentTemplateContainer.FindControl("ddlCountry");
             var ddlStateProvince = (DropDownList)CreateUserWizardStep1.ContentTemplateContainer.FindControl("ddlStateProvince");
             var cbNewsletter = (CheckBox)CreateUserWizardStep1.ContentTemplateContainer.FindControl("cbNewsletter");
-            var dtDateOfBirth = (DatePicker2Control)CreateUserWizardStep1.ContentTemplateContainer.FindControl("dtDateOfBirth");
+            var dtDateOfBirth = (NopDatePicker)CreateUserWizardStep1.ContentTemplateContainer.FindControl("dtDateOfBirth");
             
             Customer customer = null;
             if (CustomerManager.UsernamesEnabled)

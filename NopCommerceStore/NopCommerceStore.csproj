@@ -3730,6 +3730,13 @@
     <Compile Include="Alipay_Return.aspx.designer.cs">
       <DependentUpon>Alipay_Return.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Modules\GiftCardAttributes.ascx.cs">
+      <DependentUpon>GiftCardAttributes.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\GiftCardAttributes.ascx.designer.cs">
+      <DependentUpon>GiftCardAttributes.ascx</DependentUpon>
+    </Compile>
     <Compile Include="Modules\ProductPrice2.ascx.cs">
       <DependentUpon>ProductPrice2.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -3806,13 +3813,6 @@
     </Compile>
     <Compile Include="Modules\CustomerRewardPoints.ascx.designer.cs">
       <DependentUpon>CustomerRewardPoints.ascx</DependentUpon>
-    </Compile>
-    <Compile Include="Modules\DatePicker2.ascx.cs">
-      <DependentUpon>DatePicker2.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Modules\DatePicker2.ascx.designer.cs">
-      <DependentUpon>DatePicker2.ascx</DependentUpon>
     </Compile>
     <Compile Include="QuickPayCancel.aspx.cs">
       <DependentUpon>QuickPayCancel.aspx</DependentUpon>
@@ -5857,6 +5857,7 @@
     <Content Include="Install\Scripts\nopCommerce_createData.sql" />
     <Content Include="Install\Scripts\nopCommerce_createDatabase.sql" />
     <Content Include="Install\Scripts\nopCommerce_createSampleData.sql" />
+    <Content Include="Modules\GiftCardAttributes.ascx" />
     <Content Include="Modules\ProductPrice2.ascx" />
     <Content Include="QBConnector.asmx" />
     <Content Include="Scripts\slimbox2.js" />
@@ -6721,7 +6722,6 @@
     <Content Include="images\flags\zw.png" />
     <Content Include="Modules\CheckoutAttributes.ascx" />
     <Content Include="Modules\CustomerRewardPoints.ascx" />
-    <Content Include="Modules\DatePicker2.ascx" />
     <Content Include="QuickPayCancel.aspx" />
     <Content Include="QuickPayReturn.aspx" />
     <Content Include="Licenses.txt" />

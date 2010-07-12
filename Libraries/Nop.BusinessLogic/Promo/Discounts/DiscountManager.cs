@@ -1,4 +1,4 @@
-//------------------------------------------------------------------------------
+﻿//------------------------------------------------------------------------------
 // The contents of this file are subject to the nopCommerce Public License Version 1.0 ("License"); you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at  http://www.nopCommerce.com/License.aspx. 
 // 
@@ -118,7 +118,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
             if (discount != null)
             {
                 UpdateDiscount(discount.DiscountId, discount.DiscountType, 
-                    discount.DiscountRequirement, discount.DiscountLimitation,
+                    discount.DiscountRequirement, discount.RequirementSpentAmount,                    
+                    discount.DiscountLimitation,
                     discount.Name, discount.UsePercentage, discount.DiscountPercentage,
                     discount.DiscountAmount, discount.StartDate,
                     discount.EndDate, discount.RequiresCouponCode,
@@ -178,6 +179,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         /// </summary>
         /// <param name="discountType">The discount type</param>
         /// <param name="discountRequirement">The discount requirement</param>
+        /// <param name="requirementSpentAmount">The discount requirement - applies if customer has spent/purchased x.xx amount</param>
         /// <param name="discountLimitation">The discount limitation</param>
         /// <param name="name">The name</param>
         /// <param name="usePercentage">A value indicating whether to use percentage</param>
@@ -190,7 +192,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         /// <param name="deleted">A value indicating whether the entity has been deleted</param>
         /// <returns>Discount</returns>
         public static Discount InsertDiscount(DiscountTypeEnum discountType,
-            DiscountRequirementEnum discountRequirement,
+            DiscountRequirementEnum discountRequirement, decimal requirementSpentAmount,
             DiscountLimitationEnum discountLimitation, string name, bool usePercentage, 
             decimal discountPercentage, decimal discountAmount,
             DateTime startDate, DateTime endDate, bool requiresCouponCode, 
@@ -212,6 +214,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
             var discount = context.Discounts.CreateObject();
             discount.DiscountTypeId = (int)discountType;
             discount.DiscountRequirementId = (int)discountRequirement;
+            discount.RequirementSpentAmount = requirementSpentAmount;
             discount.DiscountLimitationId = (int)discountLimitation;
             discount.Name = name;
             discount.UsePercentage = usePercentage;
@@ -239,6 +242,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         /// <param name="discountId">Discount identifier</param>
         /// <param name="discountType">The discount type</param>
         /// <param name="discountRequirement">The discount requirement</param>
+        /// <param name="requirementSpentAmount">The discount requirement - applies if customer has spent/purchased x.xx amount</param>
         /// <param name="discountLimitation">The discount limitation</param>
         /// <param name="name">The name</param>
         /// <param name="usePercentage">A value indicating whether to use percentage</param>
@@ -251,8 +255,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         /// <param name="deleted">A value indicating whether the entity has been deleted</param>
         /// <returns>Discount</returns>
         public static Discount UpdateDiscount(int discountId, DiscountTypeEnum discountType,
-            DiscountRequirementEnum discountRequirement, DiscountLimitationEnum discountLimitation,
-            string name, bool usePercentage, decimal discountPercentage, decimal discountAmount,
+            DiscountRequirementEnum discountRequirement, decimal requirementSpentAmount, 
+            DiscountLimitationEnum discountLimitation, string name, bool usePercentage,
+            decimal discountPercentage, decimal discountAmount,
             DateTime startDate, DateTime endDate, bool requiresCouponCode, 
             string couponCode, bool deleted)
         {
@@ -277,6 +282,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
 
             discount.DiscountTypeId = (int)discountType;
             discount.DiscountRequirementId = (int)discountRequirement;
+            discount.RequirementSpentAmount = requirementSpentAmount;
             discount.DiscountLimitationId = (int)discountLimitation;
             discount.Name = name;
             discount.UsePercentage = usePercentage;

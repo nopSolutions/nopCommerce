@@ -1,4 +1,4 @@
-//------------------------------------------------------------------------------
+﻿//------------------------------------------------------------------------------
 // The contents of this file are subject to the nopCommerce Public License Version 1.0 ("License"); you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at  http://www.nopCommerce.com/License.aspx. 
 // 
@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using NopSolutions.NopCommerce.BusinessLogic.Categories;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
@@ -55,6 +56,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         /// </summary>
         public int DiscountRequirementId { get; set; }
 
+        /// <summary>
+        /// Gets or sets the the discount requirement - applies if customer has spent/purchased x.xx amount
+        /// </summary>
+        public decimal RequirementSpentAmount { get; set; }
+        
         /// <summary>
         /// Gets or sets the discount limitation identifier
         /// </summary>
@@ -248,6 +254,16 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
 
                             if (found)
                                 return true;
+                        }
+                    }
+                    break;
+                case DiscountRequirementEnum.HadSpentAmount:
+                    {
+                        if (customer != null)
+                        {
+                            var orders = customer.Orders.FindAll(o=>o.OrderStatus == OrderStatusEnum.Complete);
+                            decimal spentAmount = orders.Sum(o=>o.OrderTotal);
+                            return spentAmount > this.RequirementSpentAmount;
                         }
                     }
                     break;

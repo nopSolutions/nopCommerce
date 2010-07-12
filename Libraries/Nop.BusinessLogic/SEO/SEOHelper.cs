@@ -284,8 +284,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO
             {
                 seName = GetSEName(product.Name);
             }
-            string url = string.Format(SettingManager.GetSettingValue("SEO.Product.UrlRewriteFormat"), 
-                CommonHelper.GetStoreLocation(), product.ProductId, seName);
+            string url2 = SEOHelper.EnableUrlRewriting ? SettingManager.GetSettingValue("SEO.Product.UrlRewriteFormat") : "{0}Product.aspx?ProductID={1}";
+            string url = string.Format(url2, CommonHelper.GetStoreLocation(), product.ProductId, seName);
             return url.ToLowerInvariant();
         }
 
@@ -324,9 +324,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO
             if (String.IsNullOrEmpty(seName))
             {
                 seName = GetSEName(manufacturer.Name);
-            } 
-            string url = string.Format(SettingManager.GetSettingValue("SEO.Manufacturer.UrlRewriteFormat"), 
-                CommonHelper.GetStoreLocation(), manufacturer.ManufacturerId, seName);
+            }
+
+            string url2 = SEOHelper.EnableUrlRewriting ? SettingManager.GetSettingValue("SEO.Manufacturer.UrlRewriteFormat") : "{0}Manufacturer.aspx?ManufacturerID={1}";
+            string url = string.Format(url2, CommonHelper.GetStoreLocation(), manufacturer.ManufacturerId, seName);
             return url.ToLowerInvariant();
         }
 
@@ -355,7 +356,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO
             {
                 seName = GetSEName(category.Name);
             }
-            string url = string.Format(SettingManager.GetSettingValue("SEO.Category.UrlRewriteFormat"), CommonHelper.GetStoreLocation(), category.CategoryId, seName);
+            string url2 = SEOHelper.EnableUrlRewriting ? SettingManager.GetSettingValue("SEO.Category.UrlRewriteFormat") : "{0}Category.aspx?CategoryID={1}";
+            string url = string.Format(url2, CommonHelper.GetStoreLocation(), category.CategoryId, seName);
             return url.ToLowerInvariant();
         }
 
@@ -380,8 +382,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO
             if (blogPost == null)
                 throw new ArgumentNullException("blogPost"); 
             string seName = GetSEName(blogPost.BlogPostTitle);
-            string url = string.Format(SettingManager.GetSettingValue("SEO.Blog.UrlRewriteFormat"), 
-                CommonHelper.GetStoreLocation(), blogPost.BlogPostId, seName);
+            string url2 = SEOHelper.EnableUrlRewriting ? SettingManager.GetSettingValue("SEO.Blog.UrlRewriteFormat") : "{0}BlogPost.aspx?BlogPostID={1}";
+            string url = string.Format(url2, CommonHelper.GetStoreLocation(), blogPost.BlogPostId, seName);
             return url.ToLowerInvariant();
         }
 
@@ -404,10 +406,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO
         public static string GetNewsUrl(News news)
         {
             if (news == null)
-                throw new ArgumentNullException("news"); 
+                throw new ArgumentNullException("news");
             string seName = GetSEName(news.Title);
-            string url = string.Format(SettingManager.GetSettingValue("SEO.News.UrlRewriteFormat"), 
-                CommonHelper.GetStoreLocation(), news.NewsId, seName);
+            string url2 = SEOHelper.EnableUrlRewriting ? SettingManager.GetSettingValue("SEO.News.UrlRewriteFormat") : "{0}News.aspx?NewsId={1}";
+            string url = string.Format(url2, CommonHelper.GetStoreLocation(), news.NewsId, seName);
             return url.ToLowerInvariant();
         }
 
@@ -494,8 +496,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO
                 throw new ArgumentNullException("forumGroup");
             }
             string seName = GetSEName(forumGroup.Name);
-            string url = string.Format(SettingManager.GetSettingValue("SEO.ForumGroup.UrlRewriteFormat"), 
-                CommonHelper.GetStoreLocation(), forumGroup.ForumGroupId, seName);
+            string url2 = SEOHelper.EnableUrlRewriting ? SettingManager.GetSettingValue("SEO.ForumGroup.UrlRewriteFormat") : "{0}Boards/ForumGroup.aspx?ForumGroupId={1}";
+            string url = string.Format(url2, CommonHelper.GetStoreLocation(), forumGroup.ForumGroupId, seName);
             return url.ToLowerInvariant();
         }
 
@@ -522,8 +524,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO
                 throw new ArgumentNullException("Forum");
             }
             string seName = GetSEName(forum.Name);
-            string url = string.Format(SettingManager.GetSettingValue("SEO.Forum.UrlRewriteFormat"), 
-                CommonHelper.GetStoreLocation(), forum.ForumId, seName);
+            string url2 = SEOHelper.EnableUrlRewriting ? SettingManager.GetSettingValue("SEO.Forum.UrlRewriteFormat") : "{0}Boards/Forum.aspx?ForumId={1}";
+            string url = string.Format(url2, CommonHelper.GetStoreLocation(), forum.ForumId, seName);
             return url.ToLowerInvariant();
         }
 
@@ -631,11 +633,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO
                 throw new ArgumentNullException("forumTopic");
             }
             string seName = GetSEName(topic.Subject);
-            string url = string.Empty;
-            url = string.Format(SettingManager.GetSettingValue("SEO.ForumTopic.UrlRewriteFormat"), CommonHelper.GetStoreLocation(), topic.ForumTopicId, seName);
+            string url2 = SEOHelper.EnableUrlRewriting ? SettingManager.GetSettingValue("SEO.ForumTopic.UrlRewriteFormat") : "{0}Boards/Topic.aspx?TopicId={1}";
+            string url = string.Format(url2, CommonHelper.GetStoreLocation(), topic.ForumTopicId, seName);
             if(pageIndex.HasValue && pageIndex.Value > 1)
             {
-                url += string.Format("?{0}={1}", queryStringProperty, pageIndex.Value);
+                url = CommonHelper.ModifyQueryString(url, queryStringProperty + "=" + pageIndex.Value.ToString(), null);
             }
             if(postId.HasValue)
             {
@@ -719,8 +721,29 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO
         /// <returns>Topic page URL</returns>
         public static string GetTopicUrl(int topicId, string title)
         {
-            string url = string.Format(SettingManager.GetSettingValue("SEO.Topic.UrlRewriteFormat"), CommonHelper.GetStoreLocation(), topicId, GetSEName(title));
+            string url2 = SEOHelper.EnableUrlRewriting ? SettingManager.GetSettingValue("SEO.Topic.UrlRewriteFormat") : "{0}Topic.aspx?TopicId={1}";            
+            string url = string.Format(url2, CommonHelper.GetStoreLocation(), topicId, GetSEName(title));
             return url.ToLowerInvariant();
+        }
+
+        #endregion
+
+        #region Properties
+        
+        /// <summary>
+        /// Gets or sets a value indicating whether "Url Rewriting enabled" feature is enabled
+        /// </summary>
+        public static bool EnableUrlRewriting
+        {
+            get
+            {
+                bool enableUrlRewriting = SettingManager.GetSettingValueBoolean("SEO.EnableUrlRewriting", true);
+                return enableUrlRewriting;
+            }
+            set
+            {
+                SettingManager.SetParam("SEO.EnableUrlRewriting", value.ToString());
+            }
         }
 
         #endregion

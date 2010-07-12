@@ -7,72 +7,99 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace NopSolutions.NopCommerce.Web.Administration.Payment.USAePay {
+namespace NopSolutions.NopCommerce.Web.Modules {
     
     
-    public partial class EPaymentFormConfig {
+    public partial class GiftCardAttributesControl {
         
         /// <summary>
-        /// txtSourceKey control.
+        /// lblRecipientName control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtSourceKey;
+        protected global::System.Web.UI.WebControls.Label lblRecipientName;
         
         /// <summary>
-        /// cbUsePIN control.
+        /// txtRecipientName control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox cbUsePIN;
+        protected global::System.Web.UI.WebControls.TextBox txtRecipientName;
         
         /// <summary>
-        /// txtPIN control.
+        /// lblRecipientEmail control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtPIN;
+        protected global::System.Web.UI.WebControls.Label lblRecipientEmail;
         
         /// <summary>
-        /// txtGatewayUrl control.
+        /// txtRecipientEmail control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtGatewayUrl;
+        protected global::System.Web.UI.WebControls.TextBox txtRecipientEmail;
         
         /// <summary>
-        /// txtServiceUrl control.
+        /// lblSenderName control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtServiceUrl;
+        protected global::System.Web.UI.WebControls.Label lblSenderName;
         
         /// <summary>
-        /// cbAuthorizeOnly control.
+        /// txtSenderName control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox cbAuthorizeOnly;
+        protected global::System.Web.UI.WebControls.TextBox txtSenderName;
         
         /// <summary>
-        /// txtAdditionalFee control.
+        /// lblSenderEmail control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.DecimalTextBox txtAdditionalFee;
+        protected global::System.Web.UI.WebControls.Label lblSenderEmail;
+        
+        /// <summary>
+        /// txtSenderEmail control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtSenderEmail;
+        
+        /// <summary>
+        /// lblGiftCardMessage control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblGiftCardMessage;
+        
+        /// <summary>
+        /// txtGiftCardMessage control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtGiftCardMessage;
     }
 }

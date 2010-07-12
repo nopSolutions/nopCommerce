@@ -72,11 +72,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 var txtCustomerEnteredPrice = e.Item.FindControl("txtCustomerEnteredPrice") as NumericTextBox;
                 var productVariantId = e.Item.FindControl("ProductVariantId") as Label;
                 var ctrlProductAttributes = e.Item.FindControl("ctrlProductAttributes") as ProductAttributesControl;
-                var txtRecipientName = e.Item.FindControl("txtRecipientName") as TextBox;
-                var txtRecipientEmail = e.Item.FindControl("txtRecipientEmail") as TextBox;
-                var txtSenderName = e.Item.FindControl("txtSenderName") as TextBox;
-                var txtSenderEmail = e.Item.FindControl("txtSenderEmail") as TextBox;
-                var txtGiftCardMessage = e.Item.FindControl("txtGiftCardMessage") as TextBox;
+                var ctrlGiftCardAttributes = e.Item.FindControl("ctrlGiftCardAttributes") as GiftCardAttributesControl;                
                 var lblError = e.Item.FindControl("lblError") as Label;
 
                 var pv = ProductManager.GetProductVariantById(Convert.ToInt32(productVariantId.Text));
@@ -91,11 +87,11 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 //gift cards
                 if (pv.IsGiftCard)
                 {
-                    string recipientName = txtRecipientName.Text;
-                    string recipientEmail = txtRecipientEmail.Text;
-                    string senderName = txtSenderName.Text;
-                    string senderEmail = txtSenderEmail.Text;
-                    string giftCardMessage = txtGiftCardMessage.Text;
+                    string recipientName = ctrlGiftCardAttributes.RecipientName;
+                    string recipientEmail = ctrlGiftCardAttributes.RecipientEmail;
+                    string senderName = ctrlGiftCardAttributes.SenderName;
+                    string senderEmail = ctrlGiftCardAttributes.SenderEmail;
+                    string giftCardMessage = ctrlGiftCardAttributes.GiftCardMessage;
 
                     attributes = ProductAttributeHelper.AddGiftCardAttribute(attributes,
                         recipientName, recipientEmail, senderName, senderEmail, giftCardMessage);
@@ -187,9 +183,6 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 var iProductVariantPicture = e.Item.FindControl("iProductVariantPicture") as Image;
                 var pnlStockAvailablity = e.Item.FindControl("pnlStockAvailablity") as Panel;
                 var lblStockAvailablity = e.Item.FindControl("lblStockAvailablity") as Label;
-                var pnlGiftCardInfo = e.Item.FindControl("pnlGiftCardInfo") as Panel;
-                var txtSenderName = e.Item.FindControl("txtSenderName") as TextBox;
-                var txtSenderEmail = e.Item.FindControl("txtSenderEmail") as TextBox;
                 var txtCustomerEnteredPrice = e.Item.FindControl("txtCustomerEnteredPrice") as NumericTextBox;
                 var txtQuantity = e.Item.FindControl("txtQuantity") as NumericTextBox;
                 var btnAddToCart = e.Item.FindControl("btnAddToCart") as Button;
@@ -212,42 +205,17 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 //stock
                 if (pnlStockAvailablity != null && lblStockAvailablity != null)
                 {
-                    if (productVariant.ManageInventory == (int)ManageInventoryMethodEnum.ManageStock
-                        && productVariant.DisplayStockAvailability)
+                    string stockMessage = PriceHelper.FormatStockMessage(productVariant);
+                    if (!String.IsNullOrEmpty(stockMessage))
                     {
-                        if (productVariant.StockQuantity > 0 || productVariant.AllowOutOfStockOrders)
-                        {
-                            lblStockAvailablity.Text = string.Format(GetLocaleResourceString("Products.Availability"), GetLocaleResourceString("Products.InStock"));
-                        }
-                        else
-                        {
-                            lblStockAvailablity.Text = string.Format(GetLocaleResourceString("Products.Availability"), GetLocaleResourceString("Products.OutOfStock"));
-                        }
+                        lblStockAvailablity.Text = stockMessage;
                     }
                     else
                     {
                         pnlStockAvailablity.Visible = false;
                     }
                 }
-
-                //gift cards
-                if (pnlGiftCardInfo != null)
-                {
-                    if (productVariant.IsGiftCard)
-                    {
-                        pnlGiftCardInfo.Visible = true;
-                        if (NopContext.Current.User != null && !NopContext.Current.User.IsGuest)
-                        {
-                            txtSenderName.Text = NopContext.Current.User.FullName;
-                            txtSenderEmail.Text = NopContext.Current.User.Email;
-                        }
-                    }
-                    else
-                    {
-                        pnlGiftCardInfo.Visible = false;
-                    }
-                }
-
+                
                 //price entered by a customer
                 if (productVariant.CustomerEntersPrice)
                 {

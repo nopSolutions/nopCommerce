@@ -32,7 +32,7 @@
         <td class="adminData">
             <nopCommerce:DecimalTextBox runat="server" CssClass="adminInput" ID="txtFreeShippingOverX"
                 Value="0" RequiredErrorMessage="<% $NopResources:Admin.ShippingSettings.ValueOfX.RequiredErrorMessage %>"
-                MinimumValue="0" MaximumValue="999999" RangeErrorMessage="<% $NopResources:Admin.ShippingSettings.ValueOfX.RangeErrorMessage %>">
+                MinimumValue="0" MaximumValue="100000000" RangeErrorMessage="<% $NopResources:Admin.ShippingSettings.ValueOfX.RangeErrorMessage %>">
             </nopCommerce:DecimalTextBox>
         </td>
     </tr>

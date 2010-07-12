@@ -78,6 +78,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Captcha.cs" />
+    <Compile Include="NopDatePicker.cs" />
     <Compile Include="GlobalRadioButton.cs" />
     <Compile Include="ImageCheckBox.cs" />
     <Compile Include="NopDataPagerGridView.cs" />

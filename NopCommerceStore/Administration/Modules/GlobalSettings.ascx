@@ -19,7 +19,8 @@
 <div>
 
     <script type="text/javascript">
-        $(document).ready(function() {
+        $(document).ready(function () {
+            toggleUrlRewriting();
             toggleCustomersAllowedToUploadAvatars();
             toggleProductsAlsoPurchased();
             toggleRecentlyViewedProducts();
@@ -29,6 +30,15 @@
             toggleLiveChat();
             toggleGoogleAdsense();
         });
+
+        function toggleUrlRewriting() {
+            if (getE('<%=cbEnableUrlRewriting.ClientID %>').checked) {
+                $('#pnlUrlRewriting').show();
+            }
+            else {
+                $('#pnlUrlRewriting').hide();
+            }
+        }
 
         function toggleCustomersAllowedToUploadAvatars() {
             if (getE('<%=cbCustomersAllowedToUploadAvatars.ClientID %>').checked) {
@@ -296,11 +306,25 @@
                         </td>
                     </tr>
                 </table>
-                <p>
-                    <strong>
-                        <%=GetLocaleResourceString("Admin.GlobalSettings.SEODisplay.UrlRewriting")%></strong>
-                </p>
                 <table class="adminContent">
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ID="lblEnableUrlRewriting" Text="<% $NopResources:Admin.GlobalSettings.SEODisplay.EnableUrlRewriting %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.SEODisplay.EnableUrlRewriting.Tooltip %>"
+                                ToolTipImage="~/Administration/Common/ico-help.gif" />
+                        </td>
+                        <td class="adminData">
+                            <asp:CheckBox runat="server" ID="cbEnableUrlRewriting"></asp:CheckBox>
+                        </td>
+                    </tr>
+                </table>
+                <table class="adminContent" id="pnlUrlRewriting">
+                    <tr>
+                        <td class="adminTitle" colspan="2">
+                            <strong>
+                                <%=GetLocaleResourceString("Admin.GlobalSettings.SEODisplay.UrlRewriting")%></strong>
+                        </td>
+                    </tr>
                     <tr>
                         <td class="adminTitle">
                             <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
@@ -988,7 +1012,7 @@
                 </table>
             </ContentTemplate>
         </ajaxToolkit:TabPanel>
-       <ajaxToolkit:TabPanel runat="server" ID="pnlGiftCards" HeaderText="<% $NopResources:Admin.GlobalSettings.GiftCards.Title %>">
+        <ajaxToolkit:TabPanel runat="server" ID="pnlGiftCards" HeaderText="<% $NopResources:Admin.GlobalSettings.GiftCards.Title %>">
             <ContentTemplate>
                 <table class="adminContent">
                     <tr>

@@ -34,6 +34,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Products.Attributes;
 using NopSolutions.NopCommerce.BusinessLogic.Tax;
 using NopSolutions.NopCommerce.Common.Utils;
 using System.Globalization;
+using NopSolutions.NopCommerce.Controls;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -231,6 +232,16 @@ namespace NopSolutions.NopCommerce.Web.Modules
                                     divAttribute.Controls.Add(txtAttribute);
                                 }
                                 break;
+                            case AttributeControlTypeEnum.Datepicker:
+                                {
+                                    var datePicker = new NopDatePicker();
+                                    //changes these properties in order to change year range
+                                    datePicker.FirstYear = DateTime.Now.Year;
+                                    datePicker.LastYear = DateTime.Now.Year + 1;
+                                    datePicker.ID = controlId;
+                                    divAttribute.Controls.Add(datePicker);
+                                }
+                                break;
                             default:
                                 break;
                         }
@@ -351,6 +362,20 @@ namespace NopSolutions.NopCommerce.Web.Modules
                                 }
                             }
                             break;
+                        case AttributeControlTypeEnum.Datepicker:
+                            {
+                                var datePicker = phAttributes.FindControl(controlId) as NopDatePicker;
+                                if (datePicker != null)
+                                {
+                                    DateTime? selectedDate = datePicker.SelectedDate;
+                                    if (selectedDate.HasValue)
+                                    {
+                                        selectedAttributes = ProductAttributeHelper.AddProductAttribute(selectedAttributes,
+                                            attribute, selectedDate.Value.ToString("D"));
+                                    }
+                                }
+                            }
+                            break;
                         default:
                             break;
                     }
@@ -405,8 +430,6 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 return String.Format("price-val-for-dyn-upd-{0}", ProductVariantId);
             }
         }
-
-
 
         public bool HidePrices
         {

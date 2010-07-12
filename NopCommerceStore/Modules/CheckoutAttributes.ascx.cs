@@ -26,6 +26,7 @@ using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic;
+using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.BusinessLogic.Localization;
 using NopSolutions.NopCommerce.BusinessLogic.Orders;
@@ -34,7 +35,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Products.Attributes;
 using NopSolutions.NopCommerce.BusinessLogic.Shipping;
 using NopSolutions.NopCommerce.BusinessLogic.Tax;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
+using NopSolutions.NopCommerce.Controls;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -326,6 +327,16 @@ namespace NopSolutions.NopCommerce.Web.Modules
                                 divAttribute.Controls.Add(txtAttribute);
                             }
                             break;
+                        case AttributeControlTypeEnum.Datepicker:
+                            {
+                                var datePicker = new NopDatePicker();
+                                //changes these properties in order to change year range
+                                datePicker.FirstYear = DateTime.Now.Year;
+                                datePicker.LastYear = DateTime.Now.Year + 1;
+                                datePicker.ID = controlId;
+                                divAttribute.Controls.Add(datePicker);
+                            }
+                            break;
                         default:
                             break;
                     }
@@ -435,6 +446,20 @@ namespace NopSolutions.NopCommerce.Web.Modules
                                     {
                                         selectedAttributes = CheckoutAttributeHelper.AddCheckoutAttribute(selectedAttributes,
                                             attribute, enteredText);
+                                    }
+                                }
+                            }
+                            break;
+                        case AttributeControlTypeEnum.Datepicker:
+                            {
+                                var datePicker = phAttributes.FindControl(controlId) as NopDatePicker;
+                                if (datePicker != null)
+                                {
+                                    DateTime? selectedDate = datePicker.SelectedDate;
+                                    if (selectedDate.HasValue)
+                                    {
+                                        selectedAttributes = CheckoutAttributeHelper.AddCheckoutAttribute(selectedAttributes,
+                                            attribute, selectedDate.Value.ToString("D"));
                                     }
                                 }
                             }

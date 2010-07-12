@@ -1,4 +1,4 @@
-//------------------------------------------------------------------------------
+﻿//------------------------------------------------------------------------------
 // The contents of this file are subject to the nopCommerce Public License Version 1.0 ("License"); you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at  http://www.nopCommerce.com/License.aspx. 
 // 
@@ -39,5 +39,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         /// Customer had purchased one of these product variants
         /// </summary>
         HadPurchasedOneOfTheseProductVariants = 20,
+        /// <summary>
+        /// Customer had spent/purchased x.xx amount
+        /// </summary>
+        HadSpentAmount = 30,
     }
 }

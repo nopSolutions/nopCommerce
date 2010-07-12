@@ -127,6 +127,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
             this.ddlManageStock.Attributes.Add("onchange", "toggleManageStock();");
 
+            this.cbDisplayStockAvailability.Attributes.Add("onclick", "toggleManageStock();");
+
             base.OnPreRender(e);
         }
 
@@ -235,6 +237,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             int manageStock = Convert.ToInt32(ddlManageStock.SelectedValue);
             int stockQuantity = txtStockQuantity.Value;
             bool displayStockAvailability = cbDisplayStockAvailability.Checked;
+            bool displayStockQuantity = cbDisplayStockQuantity.Checked;
             int minStockQuantity = txtMinStockQuantity.Value;
             LowStockActivityEnum lowStockActivity = (LowStockActivityEnum)Enum.ToObject(typeof(LowStockActivityEnum), int.Parse(this.ddlLowStockActivity.SelectedItem.Value));
             int notifyForQuantityBelow = txtNotifyForQuantityBelow.Value;
@@ -277,7 +280,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                  hasUserAgreement, userAgreementText,
                  isRecurring, cycleLength, (int)cyclePeriod, totalCycles,
                  isShipEnabled, isFreeShipping, additionalShippingCharge, isTaxExempt,
-                 taxCategoryId, manageStock, stockQuantity, displayStockAvailability,
+                 taxCategoryId, manageStock, stockQuantity, 
+                 displayStockAvailability, displayStockQuantity,
                  minStockQuantity, lowStockActivity, notifyForQuantityBelow, allowOutOfStockOrders,
                  orderMinimumQuantity, orderMaximumQuantity, warehouseId, disableBuyButton,
                  price, oldPrice, productCost, customerEntersPrice,

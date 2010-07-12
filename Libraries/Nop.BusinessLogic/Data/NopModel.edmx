@@ -973,6 +973,7 @@
           <Property Name="DiscountID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="DiscountTypeID" Type="int" Nullable="false" />
           <Property Name="DiscountRequirementID" Type="int" Nullable="false" />
+          <Property Name="RequirementSpentAmount" Type="money" Nullable="false" />
           <Property Name="DiscountLimitationID" Type="int" Nullable="false" />
           <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="100" />
           <Property Name="UsePercentage" Type="bit" Nullable="false" />
@@ -1775,6 +1776,7 @@
           <Property Name="DisplayOrder" Type="int" Nullable="false" />
           <Property Name="CreatedOn" Type="datetime" Nullable="false" />
           <Property Name="UpdatedOn" Type="datetime" Nullable="false" />
+          <Property Name="DisplayStockQuantity" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Nop_ProductVariant_Discount_Mapping">
           <Key>
@@ -4737,7 +4739,7 @@
           <FunctionImport Name="Sp_LogClear" />
           <FunctionImport Name="Sp_Maintenance_ReindexTables" />
           <FunctionImport Name="Sp_NewsLetterSubscriptionLoadAll" EntitySet="NewsLetterSubscriptions" ReturnType="Collection(NopSolutions.NopCommerce.BusinessLogic.Data.NewsLetterSubscription)">
-          <Parameter Name="Email" Mode="In" Type="String" />
+            <Parameter Name="Email" Mode="In" Type="String" />
             <Parameter Name="ShowHidden" Mode="In" Type="Boolean" />
           </FunctionImport>
           <FunctionImport Name="Sp_NewsLoadAll" EntitySet="News" ReturnType="Collection(NopSolutions.NopCommerce.BusinessLogic.Data.News)">
@@ -6105,6 +6107,7 @@
           <Property Type="Int32" Name="DiscountId" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
           <Property Type="Int32" Name="DiscountTypeId" Nullable="false" />
           <Property Type="Int32" Name="DiscountRequirementId" Nullable="false" />
+          <Property Type="Decimal" Name="RequirementSpentAmount" Nullable="false" Precision="19" Scale="4" />
           <Property Type="Int32" Name="DiscountLimitationId" Nullable="false" />
           <Property Type="String" Name="Name" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Type="Boolean" Name="UsePercentage" Nullable="false" />
@@ -6331,6 +6334,7 @@
           <Property Type="Int32" Name="ManageInventory" Nullable="false" />
           <Property Type="Int32" Name="StockQuantity" Nullable="false" />
           <Property Type="Boolean" Name="DisplayStockAvailability" Nullable="false" />
+          <Property Type="Boolean" Name="DisplayStockQuantity" Nullable="false" />
           <Property Type="Int32" Name="MinStockQuantity" Nullable="false" />
           <Property Type="Int32" Name="LowStockActivityId" Nullable="false" />
           <Property Type="Int32" Name="NotifyAdminForQuantityBelow" Nullable="false" />
@@ -8758,6 +8762,7 @@
                 <ScalarProperty Name="UsePercentage" ColumnName="UsePercentage" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="DiscountLimitationId" ColumnName="DiscountLimitationID" />
+                <ScalarProperty Name="RequirementSpentAmount" ColumnName="RequirementSpentAmount" />
                 <ScalarProperty Name="DiscountRequirementId" ColumnName="DiscountRequirementID" />
                 <ScalarProperty Name="DiscountTypeId" ColumnName="DiscountTypeID" />
                 <ScalarProperty Name="DiscountId" ColumnName="DiscountID" />
@@ -8887,6 +8892,7 @@
                 <ScalarProperty Name="NotifyAdminForQuantityBelow" ColumnName="NotifyAdminForQuantityBelow" />
                 <ScalarProperty Name="LowStockActivityId" ColumnName="LowStockActivityID" />
                 <ScalarProperty Name="MinStockQuantity" ColumnName="MinStockQuantity" />
+                <ScalarProperty Name="DisplayStockQuantity" ColumnName="DisplayStockQuantity" />
                 <ScalarProperty Name="DisplayStockAvailability" ColumnName="DisplayStockAvailability" />
                 <ScalarProperty Name="StockQuantity" ColumnName="StockQuantity" />
                 <ScalarProperty Name="ManageInventory" ColumnName="ManageInventory" />
@@ -9710,7 +9716,7 @@
     </Options>
     <!-- Diagram content (shape and connector positions) -->
     <Diagrams>
-      <Diagram Name="NopModel" ZoomLevel="93">
+      <Diagram Name="NopModel" ZoomLevel="71">
         <EntityTypeShape EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Language" Width="3.125" PointX="23.625" PointY="11.25" Height="1.9210009765624996" IsExpanded="true" />
         <EntityTypeShape EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Country" Width="2" PointX="63.25" PointY="16.75" Height="3.0714322916666674" />
         <EntityTypeShape EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.StateProvince" Width="1.875" PointX="62.875" PointY="9.125" Height="1.9210009765624996" />

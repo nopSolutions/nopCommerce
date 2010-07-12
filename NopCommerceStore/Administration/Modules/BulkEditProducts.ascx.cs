@@ -162,7 +162,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                                 productVariant.IsShipEnabled, productVariant.IsFreeShipping, productVariant.AdditionalShippingCharge,
                                 productVariant.IsTaxExempt, productVariant.TaxCategoryId,
                                 productVariant.ManageInventory, productVariant.StockQuantity,
-                                productVariant.DisplayStockAvailability,
+                                productVariant.DisplayStockAvailability, productVariant.DisplayStockQuantity,
                                 productVariant.MinStockQuantity, productVariant.LowStockActivity,
                                 productVariant.NotifyAdminForQuantityBelow, productVariant.AllowOutOfStockOrders,
                                 productVariant.OrderMinimumQuantity, productVariant.OrderMaximumQuantity,

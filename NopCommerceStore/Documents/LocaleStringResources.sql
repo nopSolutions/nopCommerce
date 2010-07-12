@@ -116,6 +116,447 @@ set @resources='
   <LocaleResource Name="ShoppingCart.GiftCards.DontWorkWithAutoshipProducts">
     <Value>You cannot use gift cards with auto-ship (recurring) items.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.BulkEditProducts.PriceColumn.RangeErrorMessage">
+    <Value>The price must be from 0 to 100000000</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.BulkEditProducts.OldPriceColumn.RangeErrorMessage">
+    <Value>The old price must be from 0 to 100000000</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CheckoutAttributeInfo.PriceAdjustment.RangeErrorMessage">
+    <Value>The price must be from 0 to 100000000</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CheckoutAttributeValues.New.PriceAdjustment.RangeErrorMessage">
+    <Value>The price must be from 0 to 100000000</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.DiscountInfo.DiscountAmount.RangeErrorMessage">
+    <Value>The amount must be from 0 to 100000000</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GiftCardInfo.InitialValue.RangeErrorMessage">
+    <Value>The initial value must be from 0 to 100000000</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.PricelistInfo.PriceAdjustment.RangeErrorMessage">
+    <Value>The price must be from 0 to 100000000</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.PricelistInfo.ProductVariants.PriceAdjustment.RangeErrorMessage">
+    <Value>The price must be from 0 to 100000000</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductInfo.Price.RangeErrorMessage">
+    <Value>The price must be from 0 to 100000000</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductInfo.OldPrice.RangeErrorMessage">
+    <Value>The old price must be from 0 to 100000000</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductInfo.ProductCost.RangeErrorMessage">
+    <Value>The product cost must be from 0 to 100000000</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductInfo.MinimumCustomerEnteredPrice.RangeErrorMessage">
+    <Value>The price must be from 0 to 100000000</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductInfo.MaximumCustomerEnteredPrice.RangeErrorMessage">
+    <Value>The price must be from 0 to 100000000</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductInfo.AdditionalShippingCharge.RangeErrorMessage">
+    <Value>The additional shipping charge must be from 0 to 100000000</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductPricesByCustomerRole.Price.RangeErrorMessage">
+    <Value>The price must be from 0 to 100000000</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductPricesByCustomerRole.New.Price.RangeErrorMessage">
+    <Value>The price must be from 0 to 100000000</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductVariantAttributeValues.PriceAdjustment.RangeErrorMessage">
+    <Value>The price must be from 0 to 100000000</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductVariantAttributeValues.New.PriceAdjustment.RangeErrorMessage">
+    <Value>The price must be from 0 to 100000000</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductVariantInfo.Price.RangeErrorMessage">
+    <Value>The price must be from 0 to 100000000</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductVariantInfo.OldPrice.RangeErrorMessage">
+    <Value>The old price must be from 0 to 100000000</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductVariantInfo.ProductCost.RangeErrorMessage">
+    <Value>The product cost must be from 0 to 100000000</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductVariantInfo.MinimumCustomerEnteredPrice.RangeErrorMessage">
+    <Value>The price must be from 0 to 100000000</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductVariantInfo.MaximumCustomerEnteredPrice.RangeErrorMessage">
+    <Value>The price must be from 0 to 100000000</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductVariantInfo.AdditionalShippingCharge.RangeErrorMessage">
+    <Value>The additional shipping charge must be from 0 to 100000000</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductVariantTierPrices.Price.RangeErrorMessage">
+    <Value>The price must be from 0 to 100000000</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductVariantTierPrices.New.Price.RangeErrorMessage">
+    <Value>The price must be from 0 to 100000000</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ShippingSettings.ValueOfX.RangeErrorMessage">
+    <Value>The value must be from 0 to 100000000</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.QuantityRange">
+    <Value>The quantity must be from 1 to 9999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CategoryInfo.DisplayOrder.RangeErrorMessage">
+    <Value>The display order must be from -99999 to 99999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CategorySEO.PageSize.RangeErrorMessage">
+    <Value>The page size must be from 0 to 999999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CategoryProducts.DisplayOrder.RangeErrorMessage">
+    <Value>The display order must be from -99999 to 99999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductInfo.MaxNumberOfDownloads.RangeErrorMessage">
+    <Value>The value must be from 0 to 999999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductInfo.StockQuantity.RangeErrorMessage">
+    <Value>The stock quantity must be from -999999 to 999999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductInfo.MinStockQuantity.RangeErrorMessage">
+    <Value>The value must be from 0 to 999999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductInfo.NotifyForQuantityBelow.RangeErrorMessage">
+    <Value>The value must be from 1 to 999999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductInfo.OrderMinimumQuantity.RangeErrorMessage">
+    <Value>The value must be from 1 to 999999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductInfo.OrderMaximumQuantity.RangeErrorMessage">
+    <Value>The value must be from 1 to 999999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductInfo.Weight.RangeErrorMessage">
+    <Value>The weight must be from 0 to 999999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductInfo.Length.RangeErrorMessage">
+    <Value>The length must be from 0 to 999999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductInfo.Width.RangeErrorMessage">
+    <Value>The width must be from 0 to 999999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductInfo.Height.RangeErrorMessage">
+    <Value>The height must be from 0 to 999999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductCategory.DisplayOrder.RangeErrorMessage">
+    <Value>The display order must be from -99999 to 99999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductManufacturer.DisplayOrder.RangeErrorMessage">
+    <Value>The display order must be from -99999 to 99999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.RelatedProducts.DisplayOrder.RangeErrorMessage">
+    <Value>The display order must be from -99999 to 99999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductPictures.DisplayOrder.RangeErrorMessage">
+    <Value>The display order must be from -99999 to 99999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductPictures.New.DisplayOrder.RangeErrorMessage">
+    <Value>The display order must be from -99999 to 99999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductSpecifications.DisplayOrder.RangeErrorMessage">
+    <Value>The display order must be from -99999 to 99999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductSpecifications.New.DisplayOrder.RangeErrorMessage">
+    <Value>The display order must be from -99999 to 99999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductVariantInfo.StockQuantity.RangeErrorMessage">
+    <Value>The stock quantity must be from -999999 to 999999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductVariantInfo.MinStockQuantity.RangeErrorMessage">
+    <Value>The value must be from 0 to 999999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductVariantInfo.NotifyForQuantityBelow.RangeErrorMessage">
+    <Value>The value must be from 1 to 999999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductVariantInfo.OrderMinimumQuantity.RangeErrorMessage">
+    <Value>The value must be from 1 to 999999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductVariantInfo.OrderMaximumQuantity.RangeErrorMessage">
+    <Value>The value must be from 1 to 999999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductVariantInfo.Weight.RangeErrorMessage">
+    <Value>The weight must be from 0 to 999999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductVariantInfo.Length.RangeErrorMessage">
+    <Value>The length must be from 0 to 999999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductVariantInfo.Width.RangeErrorMessage">
+    <Value>The width must be from 0 to 999999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductVariantInfo.Height.RangeErrorMessage">
+    <Value>The height must be from 0 to 999999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductVariantInfo.DisplayOrder.RangeErrorMessage">
+    <Value>The display order must be from -99999 to 99999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductVariantTierPrices.Quantity.RangeErrorMessage">
+    <Value>The quantity must be from 0 to 99999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductVariantTierPrices.New.Quantity.RangeErrorMessage">
+    <Value>The quantity must be from 0 to 99999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductVariantAttributes.DisplayOrder.RangeErrorMessage">
+    <Value>The display order must be from -99999 to 99999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductVariantAttributes.New.DisplayOrder.RangeErrorMessage">
+    <Value>The display order must be from -99999 to 99999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductVariantAttributeValues.WeightAdjustment.RangeErrorMessage">
+    <Value>The weight adjustment must be from 0 to 999999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductVariantAttributeValues.DisplayOrder.RangeErrorMessage">
+    <Value>The display order must be from -99999 to 99999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductVariantAttributeValues.New.WeightAdjustment.RangeErrorMessage">
+    <Value>The weight adjustment must be from 0 to 999999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductVariantAttributeValues.New.DisplayOrder.RangeErrorMessage">
+    <Value>The display order must be from -99999 to 99999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SpecificationAttributeInfo.DisplayOrder.RangeErrorMessage">
+    <Value>The display order must be from -99999 to 99999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ManufacturerInfo.DisplayOrder.RangeErrorMessage">
+    <Value>The display order must be from -99999 to 99999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ManufacturerSEO.PageSize.RangeErrorMessage">
+    <Value>The page size must be from 0 to 999999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ManufacturerProducts.DisplayOrder.RangeErrorMessage">
+    <Value>The display order must be from -99999 to 99999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.PricelistInfo.CacheTime.RangeErrorMessage">
+    <Value>The cache time must be from 0 to 64000</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.PollInfo.DisplayOrder.RangeErrorMessage">
+    <Value>The display order must be from -99999 to 99999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.PollInfo.DisplayOrderColumn.RangeErrorMessage">
+    <Value>The display order must be from -99999 to 99999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.PollInfo.New.DisplayOrder.RangeErrorMessage">
+    <Value>The display order must be from -99999 to 99999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ForumsSettings.TopicsPageSize.RangeErrorMessage">
+    <Value>The page size must be from 0 to 999999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ForumsSettings.PostsPageSize.RangeErrorMessage">
+    <Value>The page size must be from 0 to 999999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ForumGroupInfo.DisplayOrder.RangeErrorMessage">
+    <Value>The display order must be from -99999 to 99999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ForumInfo.DisplayOrder.RangeErrorMessage">
+    <Value>The display order must be from -99999 to 99999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductTemplateInfo.DisplayOrder.RangeErrorMessage">
+    <Value>The display order must be from -99999 to 99999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CategoryTemplateInfo.DisplayOrder.RangeErrorMessage">
+    <Value>The display order must be from -99999 to 99999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ManufacturerTemplateInfo.DisplayOrder.RangeErrorMessage">
+    <Value>The display order must be from -99999 to 99999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Media.MaxImageSize.RangeErrorMessage">
+    <Value>The value must be from 0 to 999999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Media.ProductThumbSize.RangeErrorMessage">
+    <Value>The value must be from 0 to 999999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Media.ProductDetailSize.RangeErrorMessage">
+    <Value>The value must be from 0 to 999999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Media.ProductVariantSize.RangeErrorMessage">
+    <Value>The value must be from 0 to 999999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Media.CategoryThumbSize.RangeErrorMessage">
+    <Value>The value must be from 0 to 999999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Media.ManufacturerThumbSize.RangeErrorMessage">
+    <Value>The value must be from 0 to 999999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Media.CartThumbSize.RangeErrorMessage">
+    <Value>The value must be from 0 to 999999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.AlsoPurchasedNumber.RangeErrorMessage">
+    <Value>The value must be from 0 to 999999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CreditCardTypeInfo.DisplayOrder.RangeErrorMessage">
+    <Value>The display order must be from -99999 to 99999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.PaymentMethodInfo.DisplayOrder.RangeErrorMessage">
+    <Value>The display order must be from -99999 to 99999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.TaxProviderInfo.DisplayOrder.RangeErrorMessage">
+    <Value>The display order must be from -99999 to 99999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.TaxCategoryInfo.DisplayOrder.RangeErrorMessage">
+    <Value>The display order must be from -99999 to 99999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ShippingMethodInfo.DisplayOrder.RangeErrorMessage">
+    <Value>The display order must be from -99999 to 99999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ShippingRateComputationMethodInfo.DisplayOrder.RangeErrorMessage">
+    <Value>The display order must be from -99999 to 99999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CountryInfo.NumbericISOCode.RangeErrorMessage">
+    <Value>The numberic ISO code must be from 1 to 9999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CountryInfo.DisplayOrder.RangeErrorMessage">
+    <Value>The display order must be from -99999 to 99999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.StateProvinceInfo.DisplayOrder.RangeErrorMessage">
+    <Value>The display order must be from -99999 to 99999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.LanguageInfo.DisplayOrder.RangeErrorMessage">
+    <Value>The display order must be from -99999 to 99999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Currencies.LiveRates.Rate.RangeErrorMessage">
+    <Value>The rate must be from 0 to 99999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CurrencyInfo.Rate.RangeErrorMessage">
+    <Value>The rate must be from 0 to 999999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CurrencyInfo.DisplayOrder.RangeErrorMessage">
+    <Value>The display order must be from -99999 to 99999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.MessageQueue.MaxSendTries.RangeErrorMessage">
+    <Value>The value must be from 0 to 999999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.MessageQueueDetails.Priority.RangeErrorMessage">
+    <Value>The priority must be from 0 to 999999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.MessageQueueDetails.SendTries.RangeErrorMessage">
+    <Value>The value must be from 0 to 999999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.AddRelatedProduct.DisplayOrderColumn.RangeErrorMessage">
+    <Value>The display order must be from -99999 to 99999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.AddCategoryProduct.DisplayOrderColumn.RangeErrorMessage">
+    <Value>The display order must be from -99999 to 99999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.AddManufacturerProduct.DisplayOrderColumn.RangeErrorMessage">
+    <Value>The display order must be from -99999 to 99999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.MeasureDimensionInfo.Ratio.RangeErrorMessage">
+    <Value>The ratio must be from 0 to 999999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.MeasureDimensionInfo.DisplayOrder.RangeErrorMessage">
+    <Value>The display order must be from -99999 to 99999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.MeasureWeightInfo.Ratio.RangeErrorMessage">
+    <Value>The ratio must be from 0 to 999999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.MeasureWeightInfo.DisplayOrder.RangeErrorMessage">
+    <Value>The display order must be from -99999 to 99999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductInfo.CycleLength.RangeErrorMessage">
+    <Value>The cycle length must be from 1 to 999999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductInfo.TotalCycles.RangeErrorMessage">
+    <Value>The total cycles must be from 1 to 999999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductVariantInfo.CycleLength.RangeErrorMessage">
+    <Value>The cycle length must be from 1 to 999999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductVariantInfo.TotalCycles.RangeErrorMessage">
+    <Value>The total cycles must be from 1 to 999999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.RecurringPaymentInfo.CycleLength.RangeErrorMessage">
+    <Value>The cycle length must be from 1 to 999999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.RecurringPaymentInfo.TotalCycles.RangeErrorMessage">
+    <Value>The total cycles must be from 1 to 999999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.RecentlyViewedProductsNumber.RangeErrorMessage">
+    <Value>The value must be from 1 to 999999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.RecentlyAddedProductsNumber.RangeErrorMessage">
+    <Value>The value must be from 1 to 999999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.ShowBestsellersOnHomePageNumber.RangeErrorMessage">
+    <Value>The value must be from 1 to 999999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductVariantAttributes.Combinations.StockQuantity.RangeErrorMessage">
+    <Value>The stock quantity must be from -999999 to 999999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductVariantAttributes.CombinationsGrid.StockQuantity.RangeErrorMessage">
+    <Value>The stock quantity must be from -999999 to 999999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.BlogSettings.PostsPageSize.RangeErrorMessage">
+    <Value>The page size must be from 0 to 999999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CheckoutAttributeInfo.DisplayOrder.RangeErrorMessage">
+    <Value>The display order must be from -99999 to 99999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CheckoutAttributeValues.New.WeightAdjustment.RangeErrorMessage">
+    <Value>The weight adjustment must be from 0 to 999999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CheckoutAttributeValues.New.DisplayOrder.RangeErrorMessage">
+    <Value>The display order must be from -99999 to 99999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CheckoutAttributeInfo.WeightAdjustment.RangeErrorMessage">
+    <Value>The weight adjustment must be from 0 to 999999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.RewardPoints.PointsForRegistration.RangeErrorMessage">
+    <Value>The value must be from 0 to 999999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.RewardPoints.PointsForPurchases_Amount.RangeErrorMessage">
+    <Value>The value must be from 0 to 999999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.RewardPoints.PointsForPurchases_Points.RangeErrorMessage">
+    <Value>The value must be from 0 to 999999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CustomerRewardPoints.Add.Points.RangeErrorMessage">
+    <Value>The value must be from -999999 to 999999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SpecificationAttributeOptions.DisplayOrder.RangeErrorMessage">
+    <Value>The display order must be from -99999 to 99999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SpecificationAttributeOptions.New.DisplayOrder.RangeErrorMessage">
+    <Value>The display order must be from -99999 to 99999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductInfo.DisplayStockQuantity">
+    <Value>Display stock quantity:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductInfo.DisplayStockQuantity.Tooltip">
+    <Value>Check to display stock quantity. When enabled, customers will see stock quantity.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductVariantInfo.DisplayStockQuantity">
+    <Value>Display stock quantity:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductVariantInfo.DisplayStockQuantity.Tooltip">
+    <Value>Check to display stock quantity. When enabled, customers will see stock quantity.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductInfo.DisplayStockAvailability">
+    <Value>Display stock availability:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductVariantInfo.DisplayStockAvailability">
+    <Value>Display stock availability:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.InStockWithQuantity">
+    <Value>{0} in stock</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.SEODisplay.EnableUrlRewriting">
+    <Value>URL rewriting enabled:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.SEODisplay.EnableUrlRewriting.Tooltip">
+    <Value>Check to enable URL rewriting</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.DiscountInfo.RequirementSpentAmount">
+    <Value>Required spent amount:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.DiscountInfo.RequirementSpentAmount.Tooltip">
+    <Value>Discount will be applied if customer has spent/purchased x.xx amount.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.DiscountInfo.RequirementSpentAmount.RequiredErrorMessage">
+    <Value>Enter required spent amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.DiscountInfo.RequirementSpentAmount.RangeErrorMessage">
+    <Value>The value must be from 0 to 100000000</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -176,3 +617,4 @@ DEALLOCATE cur_localeresource
 
 DROP TABLE #LocaleStringResourceTmp
 GO
+

@@ -25,8 +25,8 @@
                                 ItemStyle-HorizontalAlign="Center">
                                 <ItemTemplate>
                                     <nopCommerce:DecimalTextBox runat="server" CssClass="adminInput" Width="50px" Value='<%# Eval("From") %>'
-                                        ID="txtFrom" RequiredErrorMessage="From is required" MinimumValue="0" MaximumValue="999999"
-                                        ValidationGroup="UpdateShippingByWeight" RangeErrorMessage="The value must be from 0 to 999999">
+                                        ID="txtFrom" RequiredErrorMessage="From is required" MinimumValue="0" MaximumValue="100000000"
+                                        ValidationGroup="UpdateShippingByWeight" RangeErrorMessage="The value must be from 0 to 100,000,000">
                                     </nopCommerce:DecimalTextBox>
                                 </ItemTemplate>
                             </asp:TemplateField>
@@ -34,8 +34,8 @@
                                 ItemStyle-HorizontalAlign="Center">
                                 <ItemTemplate>
                                     <nopCommerce:DecimalTextBox runat="server" CssClass="adminInput" Width="50px" Value='<%# Eval("To") %>'
-                                        ID="txtTo" RequiredErrorMessage="To is required" MinimumValue="0" MaximumValue="999999"
-                                        ValidationGroup="UpdateShippingByWeight" RangeErrorMessage="The value must be from 0 to 999999">
+                                        ID="txtTo" RequiredErrorMessage="To is required" MinimumValue="0" MaximumValue="100000000"
+                                        ValidationGroup="UpdateShippingByWeight" RangeErrorMessage="The value must be from 0 to 100,000,000">
                                     </nopCommerce:DecimalTextBox>
                                 </ItemTemplate>
                             </asp:TemplateField>
@@ -60,8 +60,8 @@
                                 <ItemTemplate>
                                     <nopCommerce:DecimalTextBox runat="server" CssClass="adminInput" Width="50px" Value='<%# Eval("ShippingChargeAmount") %>'
                                         ID="txtShippingChargeAmount" RequiredErrorMessage="Charge amount is required"
-                                        MinimumValue="0" MaximumValue="999999" ValidationGroup="UpdateShippingByWeight"
-                                        RangeErrorMessage="The value must be from 0 to 999999"></nopCommerce:DecimalTextBox>
+                                        MinimumValue="0" MaximumValue="100000000" ValidationGroup="UpdateShippingByWeight"
+                                        RangeErrorMessage="The value must be from 0 to 100,000,000"></nopCommerce:DecimalTextBox>
                                 </ItemTemplate>
                             </asp:TemplateField>
                             <asp:TemplateField HeaderText="Update" HeaderStyle-HorizontalAlign="Center" ItemStyle-Width="10%"
@@ -108,8 +108,8 @@
                 </td>
                 <td class="adminData">
                     <nopCommerce:DecimalTextBox runat="server" ID="txtFrom" Value="0" RequiredErrorMessage="From is required"
-                        MinimumValue="0" MaximumValue="999999" ValidationGroup="AddShippingByWeight"
-                        RangeErrorMessage="The value must be from 0 to 999999" CssClass="adminInput">
+                        MinimumValue="0" MaximumValue="100000000" ValidationGroup="AddShippingByWeight"
+                        RangeErrorMessage="The value must be from 0 to 100,000,000" CssClass="adminInput">
                     </nopCommerce:DecimalTextBox>
                 </td>
             </tr>
@@ -119,8 +119,8 @@
                 </td>
                 <td class="adminData">
                     <nopCommerce:DecimalTextBox runat="server" ID="txtTo" Value="0" RequiredErrorMessage="To is required"
-                        MinimumValue="0" MaximumValue="999999" ValidationGroup="AddShippingByWeight"
-                        RangeErrorMessage="The value must be from 0 to 999999" CssClass="adminInput">
+                        MinimumValue="0" MaximumValue="100000000" ValidationGroup="AddShippingByWeight"
+                        RangeErrorMessage="The value must be from 0 to 100,000,000" CssClass="adminInput">
                     </nopCommerce:DecimalTextBox>
                 </td>
             </tr>
@@ -153,8 +153,8 @@
                 </td>
                 <td class="adminData">
                     <nopCommerce:DecimalTextBox runat="server" ID="txtShippingChargeAmount" Value="0"
-                        RequiredErrorMessage="Charge amount is required" MinimumValue="0" MaximumValue="999999"
-                        ValidationGroup="AddShippingByWeight" RangeErrorMessage="The value must be from 0 to 999999"
+                        RequiredErrorMessage="Charge amount is required" MinimumValue="0" MaximumValue="100000000"
+                        ValidationGroup="AddShippingByWeight" RangeErrorMessage="The value must be from 0 to 100,000,000"
                         CssClass="adminInput"></nopCommerce:DecimalTextBox>
                 </td>
             </tr>
@@ -170,7 +170,8 @@
 <asp:UpdateProgress ID="up1" runat="server" AssociatedUpdatePanelID="upShip">
     <ProgressTemplate>
         <div class="progress">
-            <asp:Image ID="imgUpdateProgress" runat="server" ImageUrl="~/images/UpdateProgress.gif" AlternateText="update" />
+            <asp:Image ID="imgUpdateProgress" runat="server" ImageUrl="~/images/UpdateProgress.gif"
+                AlternateText="update" />
             <%=GetLocaleResourceString("Admin.Common.Wait...")%>
         </div>
     </ProgressTemplate>
