@@ -497,7 +497,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                     xmlWriter.WriteElementString("MinStockQuantity", null, productVariant.MinStockQuantity.ToString());
                     xmlWriter.WriteElementString("LowStockActivityId", null, productVariant.LowStockActivityId.ToString());
                     xmlWriter.WriteElementString("NotifyAdminForQuantityBelow", null, productVariant.NotifyAdminForQuantityBelow.ToString());
-                    xmlWriter.WriteElementString("AllowOutOfStockOrders", null, productVariant.AllowOutOfStockOrders.ToString());
+                    xmlWriter.WriteElementString("Backorders", null, productVariant.Backorders.ToString());
                     xmlWriter.WriteElementString("OrderMinimumQuantity", null, productVariant.OrderMinimumQuantity.ToString());
                     xmlWriter.WriteElementString("OrderMaximumQuantity", null, productVariant.OrderMaximumQuantity.ToString());
                     xmlWriter.WriteElementString("WarehouseId", null, productVariant.WarehouseId.ToString());
@@ -706,7 +706,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                 tableDefinition.Add("MinStockQuantity", "int");
                 tableDefinition.Add("LowStockActivityId", "int");
                 tableDefinition.Add("NotifyAdminForQuantityBelow", "int");
-                tableDefinition.Add("AllowOutOfStockOrders", "nvarchar(5)");
+                tableDefinition.Add("Backorders", "int");
                 tableDefinition.Add("OrderMinimumQuantity", "int");
                 tableDefinition.Add("OrderMaximumQuantity", "int");
                 tableDefinition.Add("DisableBuyButton", "nvarchar(5)");
@@ -732,7 +732,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                     foreach (var pv in productVariants)
                     {
                         StringBuilder sb = new StringBuilder();
-                        sb.Append("INSERT INTO [Products] (Name, ShortDescription,FullDescription,ProductTypeId,TemplateId,ShowOnHomePage,MetaKeywords,MetaDescription,MetaTitle,AllowCustomerReviews,AllowCustomerRatings,Published,SKU,ManufacturerPartNumber,IsGiftCard,IsDownload,DownloadId,UnlimitedDownloads,MaxNumberOfDownloads,DownloadActivationType,HasSampleDownload,SampleDownloadId,HasUserAgreement,UserAgreementText,IsRecurring,CycleLength,CyclePeriod,TotalCycles,IsShipEnabled,IsFreeShipping,AdditionalShippingCharge,IsTaxExempt,TaxCategoryId,ManageInventory,StockQuantity,DisplayStockAvailability,DisplayStockQuantity,MinStockQuantity,LowStockActivityId,NotifyAdminForQuantityBelow,AllowOutOfStockOrders,OrderMinimumQuantity,OrderMaximumQuantity,DisableBuyButton,Price,OldPrice,ProductCost,CustomerEntersPrice,MinimumCustomerEnteredPrice,MaximumCustomerEnteredPrice,Weight, Length, Width, Height, CreatedOn) VALUES (");
+                        sb.Append("INSERT INTO [Products] (Name, ShortDescription,FullDescription,ProductTypeId,TemplateId,ShowOnHomePage,MetaKeywords,MetaDescription,MetaTitle,AllowCustomerReviews,AllowCustomerRatings,Published,SKU,ManufacturerPartNumber,IsGiftCard,IsDownload,DownloadId,UnlimitedDownloads,MaxNumberOfDownloads,DownloadActivationType,HasSampleDownload,SampleDownloadId,HasUserAgreement,UserAgreementText,IsRecurring,CycleLength,CyclePeriod,TotalCycles,IsShipEnabled,IsFreeShipping,AdditionalShippingCharge,IsTaxExempt,TaxCategoryId,ManageInventory,StockQuantity,DisplayStockAvailability,DisplayStockQuantity,MinStockQuantity,LowStockActivityId,NotifyAdminForQuantityBelow,Backorders,OrderMinimumQuantity,OrderMaximumQuantity,DisableBuyButton,Price,OldPrice,ProductCost,CustomerEntersPrice,MinimumCustomerEnteredPrice,MaximumCustomerEnteredPrice,Weight, Length, Width, Height, CreatedOn) VALUES (");
                         string name = p.Name;
                         if (name.Length > maxStringLength)
                             name = name.Substring(0, maxStringLength);
@@ -800,7 +800,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                         sb.Append(pv.MinStockQuantity); sb.Append(",");
                         sb.Append(pv.LowStockActivityId); sb.Append(",");
                         sb.Append(pv.NotifyAdminForQuantityBelow); sb.Append(",");
-                        sb.Append('"'); sb.Append(pv.AllowOutOfStockOrders); sb.Append("\",");
+                        sb.Append('"'); sb.Append(pv.Backorders); sb.Append("\",");
                         sb.Append(pv.OrderMinimumQuantity); sb.Append(",");
                         sb.Append(pv.OrderMaximumQuantity); sb.Append(",");
                         sb.Append('"'); sb.Append(pv.DisableBuyButton); sb.Append("\",");

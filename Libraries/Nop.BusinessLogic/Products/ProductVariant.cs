@@ -220,7 +220,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         /// <summary>
         /// Gets or sets a value indicating whether to allow orders when out of stock
         /// </summary>
-        public bool AllowOutOfStockOrders { get; set; }
+        public int Backorders { get; set; }
 
         /// <summary>
         /// Gets or sets the order minimum quantity

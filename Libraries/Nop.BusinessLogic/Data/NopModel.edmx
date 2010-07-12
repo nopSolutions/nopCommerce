@@ -973,7 +973,6 @@
           <Property Name="DiscountID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="DiscountTypeID" Type="int" Nullable="false" />
           <Property Name="DiscountRequirementID" Type="int" Nullable="false" />
-          <Property Name="RequirementSpentAmount" Type="money" Nullable="false" />
           <Property Name="DiscountLimitationID" Type="int" Nullable="false" />
           <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="100" />
           <Property Name="UsePercentage" Type="bit" Nullable="false" />
@@ -984,6 +983,7 @@
           <Property Name="RequiresCouponCode" Type="bit" Nullable="false" />
           <Property Name="CouponCode" Type="nvarchar" Nullable="false" MaxLength="100" />
           <Property Name="Deleted" Type="bit" Nullable="false" />
+          <Property Name="RequirementSpentAmount" Type="money" Nullable="false" />
         </EntityType>
         <EntityType Name="Nop_DiscountLimitation">
           <Key>
@@ -1753,7 +1753,7 @@
           <Property Name="MinStockQuantity" Type="int" Nullable="false" />
           <Property Name="LowStockActivityID" Type="int" Nullable="false" />
           <Property Name="NotifyAdminForQuantityBelow" Type="int" Nullable="false" />
-          <Property Name="AllowOutOfStockOrders" Type="bit" Nullable="false" />
+          <Property Name="Backorders" Type="int" Nullable="false" />
           <Property Name="OrderMinimumQuantity" Type="int" Nullable="false" />
           <Property Name="OrderMaximumQuantity" Type="int" Nullable="false" />
           <Property Name="WarehouseID" Type="int" Nullable="false" />
@@ -6338,7 +6338,7 @@
           <Property Type="Int32" Name="MinStockQuantity" Nullable="false" />
           <Property Type="Int32" Name="LowStockActivityId" Nullable="false" />
           <Property Type="Int32" Name="NotifyAdminForQuantityBelow" Nullable="false" />
-          <Property Type="Boolean" Name="AllowOutOfStockOrders" Nullable="false" />
+          <Property Type="Int32" Name="Backorders" Nullable="false" />
           <Property Type="Int32" Name="OrderMinimumQuantity" Nullable="false" />
           <Property Type="Int32" Name="OrderMaximumQuantity" Nullable="false" />
           <Property Type="Int32" Name="WarehouseId" Nullable="false" />
@@ -8888,7 +8888,7 @@
                 <ScalarProperty Name="WarehouseId" ColumnName="WarehouseID" />
                 <ScalarProperty Name="OrderMaximumQuantity" ColumnName="OrderMaximumQuantity" />
                 <ScalarProperty Name="OrderMinimumQuantity" ColumnName="OrderMinimumQuantity" />
-                <ScalarProperty Name="AllowOutOfStockOrders" ColumnName="AllowOutOfStockOrders" />
+                <ScalarProperty Name="Backorders" ColumnName="Backorders" />
                 <ScalarProperty Name="NotifyAdminForQuantityBelow" ColumnName="NotifyAdminForQuantityBelow" />
                 <ScalarProperty Name="LowStockActivityId" ColumnName="LowStockActivityID" />
                 <ScalarProperty Name="MinStockQuantity" ColumnName="MinStockQuantity" />
@@ -9716,7 +9716,7 @@
     </Options>
     <!-- Diagram content (shape and connector positions) -->
     <Diagrams>
-      <Diagram Name="NopModel" ZoomLevel="71">
+      <Diagram Name="NopModel" ZoomLevel="70">
         <EntityTypeShape EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Language" Width="3.125" PointX="23.625" PointY="11.25" Height="1.9210009765624996" IsExpanded="true" />
         <EntityTypeShape EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Country" Width="2" PointX="63.25" PointY="16.75" Height="3.0714322916666674" />
         <EntityTypeShape EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.StateProvince" Width="1.875" PointX="62.875" PointY="9.125" Height="1.9210009765624996" />

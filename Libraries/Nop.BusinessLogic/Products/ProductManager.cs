@@ -1202,7 +1202,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                         productVariant.ManageInventory, productVariant.StockQuantity,
                         productVariant.DisplayStockAvailability, productVariant.DisplayStockQuantity, 
                         productVariant.MinStockQuantity, productVariant.LowStockActivity,
-                        productVariant.NotifyAdminForQuantityBelow, productVariant.AllowOutOfStockOrders,
+                        productVariant.NotifyAdminForQuantityBelow, productVariant.Backorders,
                         productVariant.OrderMinimumQuantity, productVariant.OrderMaximumQuantity,
                         productVariant.WarehouseId, productVariant.DisableBuyButton,
                         productVariant.Price, productVariant.OldPrice, 
@@ -1311,7 +1311,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                     productVariant.StockQuantity, productVariant.DisplayStockAvailability,
                     productVariant.DisplayStockQuantity, productVariant.MinStockQuantity,
                     productVariant.LowStockActivity, productVariant.NotifyAdminForQuantityBelow,
-                    productVariant.AllowOutOfStockOrders, productVariant.OrderMinimumQuantity,
+                    productVariant.Backorders, productVariant.OrderMinimumQuantity,
                     productVariant.OrderMaximumQuantity, productVariant.WarehouseId,
                     productVariant.DisableBuyButton, productVariant.Price,
                     productVariant.OldPrice, productVariant.ProductCost,
@@ -1365,7 +1365,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                     productVariant.StockQuantity, productVariant.DisplayStockAvailability,
                     productVariant.DisplayStockQuantity, productVariant.MinStockQuantity,
                     productVariant.LowStockActivity, productVariant.NotifyAdminForQuantityBelow,
-                    productVariant.AllowOutOfStockOrders, productVariant.OrderMinimumQuantity,
+                    productVariant.Backorders, productVariant.OrderMinimumQuantity,
                     productVariant.OrderMaximumQuantity, productVariant.WarehouseId,
                     productVariant.DisableBuyButton, productVariant.Price,
                     productVariant.OldPrice, productVariant.ProductCost,
@@ -1404,7 +1404,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                     productVariant.StockQuantity, productVariant.DisplayStockAvailability,
                     productVariant.DisplayStockQuantity, productVariant.MinStockQuantity,
                     productVariant.LowStockActivity, productVariant.NotifyAdminForQuantityBelow,
-                    productVariant.AllowOutOfStockOrders, productVariant.OrderMinimumQuantity,
+                    productVariant.Backorders, productVariant.OrderMinimumQuantity,
                     productVariant.OrderMaximumQuantity, productVariant.WarehouseId,
                     productVariant.DisableBuyButton, productVariant.Price, productVariant.OldPrice,
                     productVariant.ProductCost, productVariant.CustomerEntersPrice,
@@ -1537,7 +1537,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         /// <param name="minStockQuantity">The minimum stock quantity</param>
         /// <param name="lowStockActivity">The low stock activity</param>
         /// <param name="notifyAdminForQuantityBelow">The quantity when admin should be notified</param>
-        /// <param name="allowOutOfStockOrders">The value indicating whether to allow orders when out of stock</param>
+        /// <param name="backorders">The backorders mode</param>
         /// <param name="orderMinimumQuantity">The order minimum quantity</param>
         /// <param name="orderMaximumQuantity">The order maximum quantity</param>
         /// <param name="warehouseId">The warehouse identifier</param>
@@ -1574,7 +1574,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             decimal additionalShippingCharge, bool isTaxExempt, int taxCategoryId,
             int manageInventory, int stockQuantity, bool displayStockAvailability,
             bool displayStockQuantity, int minStockQuantity, LowStockActivityEnum lowStockActivity,
-            int notifyAdminForQuantityBelow, bool allowOutOfStockOrders,
+            int notifyAdminForQuantityBelow, int backorders,
             int orderMinimumQuantity, int orderMaximumQuantity,
             int warehouseId, bool disableBuyButton, decimal price,
             decimal oldPrice, decimal productCost, bool customerEntersPrice,
@@ -1628,7 +1628,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             productVariant.MinStockQuantity = minStockQuantity;
             productVariant.LowStockActivityId = (int)lowStockActivity;
             productVariant.NotifyAdminForQuantityBelow = notifyAdminForQuantityBelow;
-            productVariant.AllowOutOfStockOrders = allowOutOfStockOrders;
+            productVariant.Backorders = backorders;
             productVariant.OrderMinimumQuantity = orderMinimumQuantity;
             productVariant.OrderMaximumQuantity = orderMaximumQuantity;
             productVariant.WarehouseId = warehouseId;
@@ -1707,7 +1707,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         /// <param name="minStockQuantity">The minimum stock quantity</param>
         /// <param name="lowStockActivity">The low stock activity</param>
         /// <param name="notifyAdminForQuantityBelow">The quantity when admin should be notified</param>
-        /// <param name="allowOutOfStockOrders">The value indicating whether to allow orders when out of stock</param>
+        /// <param name="backorders">The backorders mode</param>
         /// <param name="orderMinimumQuantity">The order minimum quantity</param>
         /// <param name="orderMaximumQuantity">The order maximum quantity</param>
         /// <param name="warehouseId">The warehouse identifier</param>
@@ -1744,7 +1744,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             decimal additionalShippingCharge, bool isTaxExempt, int taxCategoryId,
             int manageInventory, int stockQuantity, bool displayStockAvailability,
             bool displayStockQuantity, int minStockQuantity, LowStockActivityEnum lowStockActivity,
-            int notifyAdminForQuantityBelow, bool allowOutOfStockOrders,
+            int notifyAdminForQuantityBelow, int backorders,
             int orderMinimumQuantity, int orderMaximumQuantity,
             int warehouseId, bool disableBuyButton, decimal price,
             decimal oldPrice, decimal productCost, bool customerEntersPrice,
@@ -1803,7 +1803,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             productVariant.MinStockQuantity = minStockQuantity;
             productVariant.LowStockActivityId = (int)lowStockActivity;
             productVariant.NotifyAdminForQuantityBelow = notifyAdminForQuantityBelow;
-            productVariant.AllowOutOfStockOrders = allowOutOfStockOrders;
+            productVariant.Backorders = backorders;
             productVariant.OrderMinimumQuantity = orderMinimumQuantity;
             productVariant.OrderMaximumQuantity = orderMaximumQuantity;
             productVariant.WarehouseId = warehouseId;
@@ -2084,7 +2084,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                     productVariant.ManageInventory, productVariant.StockQuantity,
                     productVariant.DisplayStockAvailability, productVariant.DisplayStockQuantity,
                     productVariant.MinStockQuantity, productVariant.LowStockActivity,
-                    productVariant.NotifyAdminForQuantityBelow, productVariant.AllowOutOfStockOrders,
+                    productVariant.NotifyAdminForQuantityBelow, productVariant.Backorders,
                     productVariant.OrderMinimumQuantity, productVariant.OrderMaximumQuantity,
                     productVariant.WarehouseId, productVariant.DisableBuyButton,
                     productVariant.Price, productVariant.OldPrice,
@@ -2167,7 +2167,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                              productVariant.ManageInventory, newStockQuantity,
                              productVariant.DisplayStockAvailability, productVariant.DisplayStockQuantity,
                              productVariant.MinStockQuantity, productVariant.LowStockActivity,
-                             productVariant.NotifyAdminForQuantityBelow, productVariant.AllowOutOfStockOrders,
+                             productVariant.NotifyAdminForQuantityBelow, productVariant.Backorders,
                              productVariant.OrderMinimumQuantity, productVariant.OrderMaximumQuantity,
                              productVariant.WarehouseId, newDisableBuyButton, productVariant.Price,
                              productVariant.OldPrice, productVariant.ProductCost, 

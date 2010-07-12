@@ -96,6 +96,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             }
 
             CommonHelper.FillDropDownWithEnum(this.ddlLowStockActivity, typeof(LowStockActivityEnum));
+            
         }
 
         protected void Page_Load(object sender, EventArgs e)
@@ -241,7 +242,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             int minStockQuantity = txtMinStockQuantity.Value;
             LowStockActivityEnum lowStockActivity = (LowStockActivityEnum)Enum.ToObject(typeof(LowStockActivityEnum), int.Parse(this.ddlLowStockActivity.SelectedItem.Value));
             int notifyForQuantityBelow = txtNotifyForQuantityBelow.Value;
-            bool allowOutOfStockOrders = cbAllowOutOfStockOrders.Checked;
+            int backorders = int.Parse(this.ddlBackorders.SelectedItem.Value);
             int orderMinimumQuantity = txtOrderMinimumQuantity.Value;
             int orderMaximumQuantity = txtOrderMaximumQuantity.Value;
             int warehouseId = int.Parse(this.ddlWarehouse.SelectedItem.Value);
@@ -282,7 +283,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                  isShipEnabled, isFreeShipping, additionalShippingCharge, isTaxExempt,
                  taxCategoryId, manageStock, stockQuantity, 
                  displayStockAvailability, displayStockQuantity,
-                 minStockQuantity, lowStockActivity, notifyForQuantityBelow, allowOutOfStockOrders,
+                 minStockQuantity, lowStockActivity, notifyForQuantityBelow, backorders,
                  orderMinimumQuantity, orderMaximumQuantity, warehouseId, disableBuyButton,
                  price, oldPrice, productCost, customerEntersPrice,
                  minimumCustomerEnteredPrice, maximumCustomerEnteredPrice,

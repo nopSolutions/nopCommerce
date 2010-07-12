@@ -685,7 +685,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                     break;
                 case ManageInventoryMethodEnum.ManageStock:
                     {
-                        if (!productVariant.AllowOutOfStockOrders)
+                        if ((BackordersModeEnum)productVariant.Backorders == BackordersModeEnum.NoBackorders)
                         {
                             if (productVariant.StockQuantity < quantity)
                             {

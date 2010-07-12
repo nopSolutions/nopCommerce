@@ -139,7 +139,7 @@
             $('#pnlMinStockQuantity').hide();
             $('#pnlLowStockActivity').hide();
             $('#pnlNotifyForQuantityBelow').hide();
-            $('#pnlAllowOutOfStockOrders').hide();
+            $('#pnlBackorders').hide();
         }
         else if (selectedManageInventoryMethodId == 1) {
             $('#pnlStockQuantity').show();
@@ -155,7 +155,7 @@
             $('#pnlMinStockQuantity').show();
             $('#pnlLowStockActivity').show();
             $('#pnlNotifyForQuantityBelow').show();
-            $('#pnlAllowOutOfStockOrders').show();
+            $('#pnlBackorders').show();
         }
         else {
             $('#pnlStockQuantity').hide();
@@ -164,7 +164,7 @@
             $('#pnlMinStockQuantity').hide();
             $('#pnlLowStockActivity').hide();
             $('#pnlNotifyForQuantityBelow').hide();
-            $('#pnlAllowOutOfStockOrders').hide();
+            $('#pnlBackorders').hide();
         }
     }
 </script>
@@ -880,14 +880,19 @@
             </nopCommerce:NumericTextBox>
         </td>
     </tr>
-    <tr id="pnlAllowOutOfStockOrders">
+    <tr id="pnlBackorders">
         <td class="adminTitle">
-            <nopCommerce:ToolTipLabel runat="server" ID="lblAllowOutOfStockOrders" Text="<% $NopResources:Admin.ProductInfo.AllowOutOfStockOrders %>"
-                ToolTip="<% $NopResources:Admin.ProductInfo.AllowOutOfStockOrders.Tooltip %>"
+            <nopCommerce:ToolTipLabel runat="server" ID="lblBackorders" Text="<% $NopResources:Admin.ProductInfo.Backorders %>"
+                ToolTip="<% $NopResources:Admin.ProductInfo.Backorders.Tooltip %>"
                 ToolTipImage="~/Administration/Common/ico-help.gif" />
         </td>
         <td class="adminData">
-            <asp:CheckBox ID="cbAllowOutOfStockOrders" runat="server"></asp:CheckBox>
+            <asp:DropDownList ID="ddlBackorders" CssClass="adminInput" runat="server">
+                <asp:ListItem Text="<% $NopResources:Admin.ProductBackorderMode.NoBackorders %>" Value="0"></asp:ListItem>
+                <asp:ListItem Text="<% $NopResources:Admin.ProductBackorderMode.AllowQtyBelow0 %>" Value="1"></asp:ListItem>
+                <asp:ListItem Text="<% $NopResources:Admin.ProductBackorderMode.AllowQtyBelow0AndNotifyCustomer %>"
+                    Value="2"></asp:ListItem>
+            </asp:DropDownList>
         </td>
     </tr>
     <tr>

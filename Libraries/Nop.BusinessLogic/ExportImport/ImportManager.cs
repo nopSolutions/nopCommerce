@@ -238,7 +238,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                     int MinStockQuantity = Convert.ToInt32(dr["MinStockQuantity"]);
                     int LowStockActivityId = Convert.ToInt32(dr["LowStockActivityId"]);
                     int NotifyAdminForQuantityBelow = Convert.ToInt32(dr["NotifyAdminForQuantityBelow"]);
-                    bool AllowOutOfStockOrders = Convert.ToBoolean(dr["AllowOutOfStockOrders"]);
+                    int Backorders = Convert.ToInt32(dr["Backorders"]);
                     int OrderMinimumQuantity = Convert.ToInt32(dr["OrderMinimumQuantity"]);
                     int OrderMaximumQuantity = Convert.ToInt32(dr["OrderMaximumQuantity"]);
                     bool DisableBuyButton = Convert.ToBoolean(dr["DisableBuyButton"]);
@@ -277,7 +277,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                             TaxCategoryId, ManageInventory, StockQuantity,
                             DisplayStockAvailability, DisplayStockQuantity, MinStockQuantity,
                             (LowStockActivityEnum)LowStockActivityId, NotifyAdminForQuantityBelow,
-                            AllowOutOfStockOrders, OrderMinimumQuantity,
+                            Backorders, OrderMinimumQuantity,
                             OrderMaximumQuantity, productVariant.WarehouseId, DisableBuyButton,
                             Price, OldPrice, ProductCost, CustomerEntersPrice, 
                             MinimumCustomerEnteredPrice, MaximumCustomerEnteredPrice,
@@ -302,7 +302,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                             TaxCategoryId, ManageInventory, StockQuantity,
                             DisplayStockAvailability, DisplayStockQuantity, MinStockQuantity,
                             (LowStockActivityEnum)LowStockActivityId, NotifyAdminForQuantityBelow,
-                            AllowOutOfStockOrders, OrderMinimumQuantity,
+                            Backorders, OrderMinimumQuantity,
                             OrderMaximumQuantity, 0, DisableBuyButton,
                             Price, OldPrice, ProductCost, CustomerEntersPrice,
                             MinimumCustomerEnteredPrice, MaximumCustomerEnteredPrice, 

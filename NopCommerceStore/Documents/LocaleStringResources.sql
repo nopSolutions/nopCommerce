@@ -587,6 +587,42 @@ set @resources='
   <LocaleResource Name="Admin.DiscountInfo.RequirementSpentAmount.RangeErrorMessage">
     <Value>The value must be from 0 to 100000000</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ProductInfo.AllowOutOfStockOrders">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductInfo.AllowOutOfStockOrders.Tooltip">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductInfo.Backorders">
+    <Value>Backorders:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductInfo.Backorders.Tooltip">
+    <Value>Select backorder mode.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductVariantInfo.AllowOutOfStockOrders">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductVariantInfo.AllowOutOfStockOrders.Tooltip">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductVariantInfo.Backorders">
+    <Value>Backorders:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductVariantInfo.Backorders.Tooltip">
+    <Value>Select backorder mode.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Backordering">
+    <Value>Out of Stock - on backorder and will be despatched once in stock.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductBackorderMode.NoBackorders">
+    <Value>No backorders</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductBackorderMode.AllowQtyBelow0">
+    <Value>Allow qty below 0</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductBackorderMode.AllowQtyBelow0AndNotifyCustomer">
+    <Value>Allow qty below 0 and notify customer</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -647,4 +683,5 @@ DEALLOCATE cur_localeresource
 
 DROP TABLE #LocaleStringResourceTmp
 GO
+
 

@@ -164,7 +164,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                                 productVariant.ManageInventory, productVariant.StockQuantity,
                                 productVariant.DisplayStockAvailability, productVariant.DisplayStockQuantity,
                                 productVariant.MinStockQuantity, productVariant.LowStockActivity,
-                                productVariant.NotifyAdminForQuantityBelow, productVariant.AllowOutOfStockOrders,
+                                productVariant.NotifyAdminForQuantityBelow, productVariant.Backorders,
                                 productVariant.OrderMinimumQuantity, productVariant.OrderMaximumQuantity,
                                 productVariant.WarehouseId, productVariant.DisableBuyButton,
                                 price, oldPrice,

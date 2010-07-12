@@ -155,7 +155,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 this.txtMinStockQuantity.Value = productVariant.MinStockQuantity;
                 CommonHelper.SelectListItem(this.ddlLowStockActivity, productVariant.LowStockActivityId);
                 this.txtNotifyForQuantityBelow.Value = productVariant.NotifyAdminForQuantityBelow;
-                this.cbAllowOutOfStockOrders.Checked = productVariant.AllowOutOfStockOrders;
+                CommonHelper.SelectListItem(this.ddlBackorders, productVariant.Backorders);
                 this.txtOrderMinimumQuantity.Value = productVariant.OrderMinimumQuantity;
                 this.txtOrderMaximumQuantity.Value = productVariant.OrderMaximumQuantity;
 
@@ -308,7 +308,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             int minStockQuantity = txtMinStockQuantity.Value;
             LowStockActivityEnum lowStockActivity = (LowStockActivityEnum)Enum.ToObject(typeof(LowStockActivityEnum), int.Parse(this.ddlLowStockActivity.SelectedItem.Value));
             int notifyForQuantityBelow = txtNotifyForQuantityBelow.Value;
-            bool allowOutOfStockOrders = cbAllowOutOfStockOrders.Checked;
+            int backorders = int.Parse(this.ddlBackorders.SelectedItem.Value);
             int orderMinimumQuantity = txtOrderMinimumQuantity.Value;
             int orderMaximumQuantity = txtOrderMaximumQuantity.Value;
             int warehouseId = int.Parse(this.ddlWarehouse.SelectedItem.Value);
@@ -450,7 +450,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     isTaxExempt, taxCategoryId, manageStock, stockQuantity, 
                     displayStockAvailability, displayStockQuantity,
                     minStockQuantity, lowStockActivity, notifyForQuantityBelow,
-                    allowOutOfStockOrders, orderMinimumQuantity, orderMaximumQuantity,
+                    backorders, orderMinimumQuantity, orderMaximumQuantity,
                     warehouseId, disableBuyButton, price,
                     oldPrice, productCost, customerEntersPrice,
                     minimumCustomerEnteredPrice, maximumCustomerEnteredPrice, 
@@ -536,7 +536,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                          isShipEnabled, isFreeShipping, additionalShippingCharge, isTaxExempt, taxCategoryId,
                          manageStock, stockQuantity, displayStockAvailability, displayStockQuantity,
                          minStockQuantity, lowStockActivity, notifyForQuantityBelow,
-                         allowOutOfStockOrders, orderMinimumQuantity, orderMaximumQuantity,
+                         backorders, orderMinimumQuantity, orderMaximumQuantity,
                          warehouseId, disableBuyButton, price, oldPrice, productCost,
                          customerEntersPrice, minimumCustomerEnteredPrice, maximumCustomerEnteredPrice, 
                          weight, length, width, height, productVariantPictureId,
