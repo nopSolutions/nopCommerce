@@ -129,7 +129,7 @@ set @resources='
     <Value>Allow customers to manage forum subscriptions:</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ForumsSettings.AllowToManageSubscriptions.Tooltip">
-    <Value>Check if you want allow customers to manage forum subscriptions</Value>
+    <Value>Check if you want to allow customers to manage forum subscriptions</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.CustomerForumSubscriptions.InfoColumn">
     <Value>Forum/Topic</Value>
@@ -625,6 +625,18 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.ForumsSettings.AllowGuestsToCreateTopics">
     <Value>Allow guests to create topics:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductInfo.GiftCardType">
+    <Value>Gift card type:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductInfo.GiftCardType.Tooltip">
+    <Value>Select gift card type. WARNING: not recommended to change in production environment.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductVariantInfo.GiftCardType">
+    <Value>Gift card type:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductVariantInfo.GiftCardType.Tooltip">
+    <Value>Select gift card type. WARNING: not recommended to change in production environment.</Value>
   </LocaleResource>
 </Language>
 '

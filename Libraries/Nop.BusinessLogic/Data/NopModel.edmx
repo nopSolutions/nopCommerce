@@ -1728,6 +1728,7 @@
           <Property Name="AdminComment" Type="nvarchar" Nullable="false" />
           <Property Name="ManufacturerPartNumber" Type="nvarchar" Nullable="false" MaxLength="100" />
           <Property Name="IsGiftCard" Type="bit" Nullable="false" />
+          <Property Name="GiftCardType" Type="int" Nullable="false" />
           <Property Name="IsDownload" Type="bit" Nullable="false" />
           <Property Name="DownloadID" Type="int" Nullable="false" />
           <Property Name="UnlimitedDownloads" Type="bit" Nullable="false" />
@@ -1753,7 +1754,6 @@
           <Property Name="MinStockQuantity" Type="int" Nullable="false" />
           <Property Name="LowStockActivityID" Type="int" Nullable="false" />
           <Property Name="NotifyAdminForQuantityBelow" Type="int" Nullable="false" />
-          <Property Name="Backorders" Type="int" Nullable="false" />
           <Property Name="OrderMinimumQuantity" Type="int" Nullable="false" />
           <Property Name="OrderMaximumQuantity" Type="int" Nullable="false" />
           <Property Name="WarehouseID" Type="int" Nullable="false" />
@@ -1777,6 +1777,7 @@
           <Property Name="CreatedOn" Type="datetime" Nullable="false" />
           <Property Name="UpdatedOn" Type="datetime" Nullable="false" />
           <Property Name="DisplayStockQuantity" Type="bit" Nullable="false" />
+          <Property Name="Backorders" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Nop_ProductVariant_Discount_Mapping">
           <Key>
@@ -6312,6 +6313,7 @@
           <Property Type="String" Name="AdminComment" Nullable="false" MaxLength="4000" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="ManufacturerPartNumber" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Type="Boolean" Name="IsGiftCard" Nullable="false" />
+          <Property Type="Int32" Name="GiftCardType" Nullable="false" />
           <Property Type="Boolean" Name="IsDownload" Nullable="false" />
           <Property Type="Int32" Name="DownloadId" Nullable="false" />
           <Property Type="Boolean" Name="UnlimitedDownloads" Nullable="false" />
@@ -8915,6 +8917,7 @@
                 <ScalarProperty Name="UnlimitedDownloads" ColumnName="UnlimitedDownloads" />
                 <ScalarProperty Name="DownloadId" ColumnName="DownloadID" />
                 <ScalarProperty Name="IsDownload" ColumnName="IsDownload" />
+                <ScalarProperty Name="GiftCardType" ColumnName="GiftCardType" />
                 <ScalarProperty Name="IsGiftCard" ColumnName="IsGiftCard" />
                 <ScalarProperty Name="ManufacturerPartNumber" ColumnName="ManufacturerPartNumber" />
                 <ScalarProperty Name="AdminComment" ColumnName="AdminComment" />

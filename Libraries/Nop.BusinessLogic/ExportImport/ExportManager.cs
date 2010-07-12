@@ -468,6 +468,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                     xmlWriter.WriteElementString("AdminComment", null, productVariant.AdminComment);
                     xmlWriter.WriteElementString("ManufacturerPartNumber", null, productVariant.ManufacturerPartNumber);
                     xmlWriter.WriteElementString("IsGiftCard", null, productVariant.IsGiftCard.ToString());
+                    xmlWriter.WriteElementString("GiftCardType", null, productVariant.GiftCardType.ToString());
                     xmlWriter.WriteElementString("IsDownload", null, productVariant.IsDownload.ToString());
                     xmlWriter.WriteElementString("DownloadId", null, productVariant.DownloadId.ToString());
                     xmlWriter.WriteElementString("UnlimitedDownloads", null, productVariant.UnlimitedDownloads.ToString());
@@ -681,6 +682,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                 tableDefinition.Add("SKU", string.Format("nvarchar(200)", maxStringLength));
                 tableDefinition.Add("ManufacturerPartNumber", string.Format("nvarchar({0})", maxStringLength));
                 tableDefinition.Add("IsGiftCard", "nvarchar(5)");
+                tableDefinition.Add("GiftCardType", "int");
                 tableDefinition.Add("IsDownload", "nvarchar(5)");
                 tableDefinition.Add("DownloadId", "int");
                 tableDefinition.Add("UnlimitedDownloads", "nvarchar(5)");
@@ -732,7 +734,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                     foreach (var pv in productVariants)
                     {
                         StringBuilder sb = new StringBuilder();
-                        sb.Append("INSERT INTO [Products] (Name, ShortDescription,FullDescription,ProductTypeId,TemplateId,ShowOnHomePage,MetaKeywords,MetaDescription,MetaTitle,AllowCustomerReviews,AllowCustomerRatings,Published,SKU,ManufacturerPartNumber,IsGiftCard,IsDownload,DownloadId,UnlimitedDownloads,MaxNumberOfDownloads,DownloadActivationType,HasSampleDownload,SampleDownloadId,HasUserAgreement,UserAgreementText,IsRecurring,CycleLength,CyclePeriod,TotalCycles,IsShipEnabled,IsFreeShipping,AdditionalShippingCharge,IsTaxExempt,TaxCategoryId,ManageInventory,StockQuantity,DisplayStockAvailability,DisplayStockQuantity,MinStockQuantity,LowStockActivityId,NotifyAdminForQuantityBelow,Backorders,OrderMinimumQuantity,OrderMaximumQuantity,DisableBuyButton,Price,OldPrice,ProductCost,CustomerEntersPrice,MinimumCustomerEnteredPrice,MaximumCustomerEnteredPrice,Weight, Length, Width, Height, CreatedOn) VALUES (");
+                        sb.Append("INSERT INTO [Products] (Name, ShortDescription,FullDescription,ProductTypeId,TemplateId,ShowOnHomePage,MetaKeywords,MetaDescription,MetaTitle,AllowCustomerReviews,AllowCustomerRatings,Published,SKU,ManufacturerPartNumber,IsGiftCard,GiftCardType,IsDownload,DownloadId,UnlimitedDownloads,MaxNumberOfDownloads,DownloadActivationType,HasSampleDownload,SampleDownloadId,HasUserAgreement,UserAgreementText,IsRecurring,CycleLength,CyclePeriod,TotalCycles,IsShipEnabled,IsFreeShipping,AdditionalShippingCharge,IsTaxExempt,TaxCategoryId,ManageInventory,StockQuantity,DisplayStockAvailability,DisplayStockQuantity,MinStockQuantity,LowStockActivityId,NotifyAdminForQuantityBelow,Backorders,OrderMinimumQuantity,OrderMaximumQuantity,DisableBuyButton,Price,OldPrice,ProductCost,CustomerEntersPrice,MinimumCustomerEnteredPrice,MaximumCustomerEnteredPrice,Weight, Length, Width, Height, CreatedOn) VALUES (");
                         string name = p.Name;
                         if (name.Length > maxStringLength)
                             name = name.Substring(0, maxStringLength);
@@ -772,6 +774,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                             manufacturerPartNumber = manufacturerPartNumber.Substring(0, maxStringLength);
                         sb.Append('"'); sb.Append(manufacturerPartNumber.Replace('"', '\'')); sb.Append("\",");
                         sb.Append('"'); sb.Append(pv.IsGiftCard); sb.Append("\",");
+                        sb.Append('"'); sb.Append(pv.GiftCardType); sb.Append("\",");
                         sb.Append('"'); sb.Append(pv.IsDownload); sb.Append("\",");
                         sb.Append(pv.DownloadId); sb.Append(",");
                         sb.Append('"'); sb.Append(pv.UnlimitedDownloads); sb.Append("\",");
@@ -800,7 +803,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                         sb.Append(pv.MinStockQuantity); sb.Append(",");
                         sb.Append(pv.LowStockActivityId); sb.Append(",");
                         sb.Append(pv.NotifyAdminForQuantityBelow); sb.Append(",");
-                        sb.Append('"'); sb.Append(pv.Backorders); sb.Append("\",");
+                        sb.Append(pv.Backorders); sb.Append(",");
                         sb.Append(pv.OrderMinimumQuantity); sb.Append(",");
                         sb.Append(pv.OrderMaximumQuantity); sb.Append(",");
                         sb.Append('"'); sb.Append(pv.DisableBuyButton); sb.Append("\",");

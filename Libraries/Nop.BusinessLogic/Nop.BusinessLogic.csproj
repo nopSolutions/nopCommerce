@@ -193,6 +193,7 @@
     <Compile Include="Products\Attributes\CheckoutAttributeValueLocalized.cs" />
     <Compile Include="Products\Attributes\CheckoutAttributeHelper.cs" />
     <Compile Include="Products\BackordersModeEnum.cs" />
+    <Compile Include="Products\GiftCardTypeEnum.cs" />
     <Compile Include="Products\ProductVariantEventArgs.cs" />
     <Compile Include="Products\ProductEventArgs.cs" />
     <Compile Include="Products\ProductRating.cs" />

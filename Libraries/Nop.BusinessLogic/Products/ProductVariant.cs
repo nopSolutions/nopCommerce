@@ -88,6 +88,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         public bool IsGiftCard { get; set; }
 
         /// <summary>
+        /// Gets or sets the gift card type
+        /// </summary>
+        public int GiftCardType { get; set; }
+        
+        /// <summary>
         /// Gets or sets a value indicating whether the product variant is download
         /// </summary>
         public bool IsDownload { get; set; }

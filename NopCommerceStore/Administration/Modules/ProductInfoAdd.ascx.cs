@@ -55,6 +55,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         private void FillDropDowns()
         {
+            CommonHelper.FillDropDownWithEnum(this.ddlGiftCardType, typeof(GiftCardTypeEnum));
+
             CommonHelper.FillDropDownWithEnum(this.ddlDownloadActivationType, typeof(DownloadActivationTypeEnum));
 
             CommonHelper.FillDropDownWithEnum(this.ddlCyclePeriod, typeof(RecurringProductCyclePeriodEnum));
@@ -113,6 +115,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             BindJQuery();
             BindJQueryIdTabs();
 
+            this.cbIsGiftCard.Attributes.Add("onclick", "toggleGiftCard();");
+
             this.cbCustomerEntersPrice.Attributes.Add("onclick", "toggleCustomerEntersPrice();");
 
             this.cbIsDownload.Attributes.Add("onclick", "toggleDownloadableProduct();");
@@ -164,6 +168,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             string sku = txtSKU.Text.Trim();
             string manufacturerPartNumber = txtManufacturerPartNumber.Text.Trim();
             bool isGiftCard = cbIsGiftCard.Checked;
+            int giftCardType = int.Parse(this.ddlGiftCardType.SelectedItem.Value);
             bool isDownload = cbIsDownload.Checked;
             int productVariantDownloadId = 0;
             if (isDownload)
@@ -275,7 +280,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
             ProductVariant productVariant = ProductManager.InsertProductVariant(product.ProductId,
                  string.Empty, sku, string.Empty, string.Empty, manufacturerPartNumber,
-                 isGiftCard, isDownload, productVariantDownloadId, unlimitedDownloads,
+                 isGiftCard, giftCardType, isDownload, productVariantDownloadId, unlimitedDownloads,
                  maxNumberOfDownloads, downloadExpirationDays, downloadActivationType,
                  hasSampleDownload, productVariantSampleDownloadId,
                  hasUserAgreement, userAgreementText,

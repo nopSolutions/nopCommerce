@@ -66,6 +66,9 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 }
                 this.lblPurchasedOn.Text = DateTimeHelper.ConvertToUserTime(gc.CreatedOn, DateTimeKind.Utc).ToString();
 
+                this.pnlRecipientEmail.Visible = (GiftCardTypeEnum)gc.PurchasedOrderProductVariant.ProductVariant.GiftCardType == GiftCardTypeEnum.Virtual;
+                this.pnlSenderEmail.Visible = (GiftCardTypeEnum)gc.PurchasedOrderProductVariant.ProductVariant.GiftCardType == GiftCardTypeEnum.Virtual;
+                this.pnlIsRecipientNotified.Visible = (GiftCardTypeEnum)gc.PurchasedOrderProductVariant.ProductVariant.GiftCardType == GiftCardTypeEnum.Virtual;
             }
             else
             {

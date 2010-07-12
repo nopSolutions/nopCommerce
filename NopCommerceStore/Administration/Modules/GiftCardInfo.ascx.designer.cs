@@ -166,6 +166,15 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         protected global::NopSolutions.NopCommerce.Web.Administration.Modules.SimpleTextBox txtRecipientName;
         
         /// <summary>
+        /// pnlRecipientEmail control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlTableRow pnlRecipientEmail;
+        
+        /// <summary>
         /// lblRecipientEmail control.
         /// </summary>
         /// <remarks>
@@ -202,6 +211,15 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         protected global::NopSolutions.NopCommerce.Web.Administration.Modules.SimpleTextBox txtSenderName;
         
         /// <summary>
+        /// pnlSenderEmail control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlTableRow pnlSenderEmail;
+        
+        /// <summary>
         /// lblSenderEmail control.
         /// </summary>
         /// <remarks>
@@ -236,6 +254,15 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtMessage;
+        
+        /// <summary>
+        /// pnlIsRecipientNotified control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlTableRow pnlIsRecipientNotified;
         
         /// <summary>
         /// lblIsRecipientNotifiedTooltip control.

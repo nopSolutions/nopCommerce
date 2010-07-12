@@ -213,6 +213,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                     string SKU = dr["SKU"].ToString();
                     string ManufacturerPartNumber = dr["ManufacturerPartNumber"].ToString();
                     bool IsGiftCard = Convert.ToBoolean(dr["IsGiftCard"]);
+                    int GiftCardType = Convert.ToInt32(dr["GiftCardType"]);
                     bool IsDownload = Convert.ToBoolean(dr["IsDownload"]);
                     int DownloadId = Convert.ToInt32(dr["DownloadId"]);
                     bool UnlimitedDownloads = Convert.ToBoolean(dr["UnlimitedDownloads"]);
@@ -268,7 +269,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                         productVariant = ProductManager.UpdateProductVariant(productVariant.ProductVariantId,
                             productVariant.ProductId, productVariant.Name, SKU,
                             productVariant.Description, productVariant.AdminComment,
-                            ManufacturerPartNumber, IsGiftCard, IsDownload, DownloadId,
+                            ManufacturerPartNumber, IsGiftCard, GiftCardType, IsDownload, DownloadId,
                             UnlimitedDownloads, MaxNumberOfDownloads, productVariant.DownloadExpirationDays,
                             (DownloadActivationTypeEnum)DownloadActivationType, HasSampleDownload,
                             SampleDownloadId, HasUserAgreement, UserAgreementText, IsRecurring,
@@ -295,7 +296,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
 
                         productVariant = ProductManager.InsertProductVariant(product.ProductId,
                             string.Empty, SKU, string.Empty, string.Empty, ManufacturerPartNumber,
-                            IsGiftCard, IsDownload, DownloadId,
+                            IsGiftCard, GiftCardType, IsDownload, DownloadId,
                             UnlimitedDownloads, MaxNumberOfDownloads, null, (DownloadActivationTypeEnum)DownloadActivationType,
                             HasSampleDownload, SampleDownloadId, HasUserAgreement, UserAgreementText, IsRecurring, CycleLength, CyclePeriod, TotalCycles,
                             IsShipEnabled, IsFreeShipping, AdditionalShippingCharge, IsTaxExempt,

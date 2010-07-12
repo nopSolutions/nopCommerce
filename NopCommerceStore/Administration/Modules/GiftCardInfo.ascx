@@ -80,7 +80,7 @@
                         </nopCommerce:SimpleTextBox>
                     </td>
                 </tr>
-                <tr>
+                <tr runat="server" id="pnlRecipientEmail">
                     <td class="adminTitle">
                         <nopCommerce:ToolTipLabel runat="server" ID="lblRecipientEmail" Text="<% $NopResources:Admin.GiftCardInfo.RecipientEmail %>"
                             ToolTip="<% $NopResources:Admin.GiftCardInfo.RecipientEmail.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
@@ -100,7 +100,7 @@
                         </nopCommerce:SimpleTextBox>
                     </td>
                 </tr>
-                <tr>
+                <tr runat="server" id="pnlSenderEmail">
                     <td class="adminTitle">
                         <nopCommerce:ToolTipLabel runat="server" ID="lblSenderEmail" Text="<% $NopResources:Admin.GiftCardInfo.SenderEmail %>"
                             ToolTip="<% $NopResources:Admin.GiftCardInfo.SenderEmail.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
@@ -118,11 +118,11 @@
                         <asp:TextBox runat="server" ID="txtMessage" TextMode="MultiLine" Height="150px" Width="500px"></asp:TextBox>
                     </td>
                 </tr>
-                
-                <tr>
+                <tr runat="server" id="pnlIsRecipientNotified">
                     <td class="adminTitle">
                         <nopCommerce:ToolTipLabel runat="server" ID="lblIsRecipientNotifiedTooltip" Text="<% $NopResources:Admin.GiftCardInfo.IsRecipientNotified %>"
-                            ToolTip="<% $NopResources:Admin.GiftCardInfo.IsRecipientNotified.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
+                            ToolTip="<% $NopResources:Admin.GiftCardInfo.IsRecipientNotified.Tooltip %>"
+                            ToolTipImage="~/Administration/Common/ico-help.gif" />
                     </td>
                     <td class="adminData">
                         <asp:Label runat="server" ID="lblIsRecipientNotified"></asp:Label>

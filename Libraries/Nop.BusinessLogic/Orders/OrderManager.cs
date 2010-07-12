@@ -220,16 +220,39 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                         null, null,null,null,null,null,false, string.Empty);
                     foreach (var gc in giftCards)
                     {
-                        Language customerLang = LanguageManager.GetLanguageById(updatedOrder.CustomerLanguageId);
-                        if (customerLang == null)
-                            customerLang = NopContext.Current.WorkingLanguage;
-                        int queuedEmailId = MessageManager.SendGiftCardNotification(gc, customerLang.LanguageId);
+                        bool isRecipientNotified = gc.IsRecipientNotified;
+                        switch (gc.PurchasedOrderProductVariant.ProductVariant.GiftCardType)
+                        {
+                            case (int)GiftCardTypeEnum.Virtual:
+                                {
+                                    //send email for virtual gift card
+                                    if (!String.IsNullOrEmpty(gc.RecipientEmail) &&
+                                        !String.IsNullOrEmpty(gc.SenderEmail))
+                                    {
+                                        Language customerLang = LanguageManager.GetLanguageById(updatedOrder.CustomerLanguageId);
+                                        if (customerLang == null)
+                                            customerLang = NopContext.Current.WorkingLanguage;
+                                        int queuedEmailId = MessageManager.SendGiftCardNotification(gc, customerLang.LanguageId);
+                                        if (queuedEmailId > 0)
+                                        {
+                                            isRecipientNotified = true;
+                                        }
+                                    }
+                                }
+                                break;
+                            case (int)GiftCardTypeEnum.Physical:
+                                {
+                                }
+                                break;
+                            default: 
+                                break;
+                        }
 
                         OrderManager.UpdateGiftCard(gc.GiftCardId,
                             gc.PurchasedOrderProductVariantId, gc.Amount, true,
                             gc.GiftCardCouponCode, gc.RecipientName, gc.RecipientEmail,
                             gc.SenderName, gc.SenderEmail, gc.Message,
-                            true, gc.CreatedOn);
+                            isRecipientNotified, gc.CreatedOn);
                     }
                 }
 

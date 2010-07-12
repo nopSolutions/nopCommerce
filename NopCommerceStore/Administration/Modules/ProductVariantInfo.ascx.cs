@@ -67,6 +67,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                 //gift card
                 this.cbIsGiftCard.Checked = productVariant.IsGiftCard;
+                CommonHelper.SelectListItem(this.ddlGiftCardType, productVariant.GiftCardType);
 
                 //downloable products
                 this.cbIsDownload.Checked = productVariant.IsDownload;
@@ -209,6 +210,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         private void FillDropDowns()
         {
+            CommonHelper.FillDropDownWithEnum(this.ddlGiftCardType, typeof(GiftCardTypeEnum));
+
             CommonHelper.FillDropDownWithEnum(this.ddlDownloadActivationType, typeof(DownloadActivationTypeEnum));
 
             CommonHelper.FillDropDownWithEnum(this.ddlCyclePeriod, typeof(RecurringProductCyclePeriodEnum));
@@ -250,6 +253,9 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             BindJQuery();
             BindJQueryIdTabs();
 
+
+            this.cbIsGiftCard.Attributes.Add("onclick", "toggleGiftCard();");
+
             this.cbCustomerEntersPrice.Attributes.Add("onclick", "toggleCustomerEntersPrice();");
 
             this.cbIsDownload.Attributes.Add("onclick", "toggleDownloadableProduct();");
@@ -280,6 +286,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             string adminComment = txtAdminComment.Text.Trim();
             string manufacturerPartNumber = txtManufacturerPartNumber.Text.Trim();
             bool isGiftCard = cbIsGiftCard.Checked;
+            int giftCardType = int.Parse(this.ddlGiftCardType.SelectedItem.Value);
             bool isDownload = cbIsDownload.Checked;
             bool unlimitedDownloads = cbUnlimitedDownloads.Checked;
             int maxNumberOfDownloads = txtMaxNumberOfDownloads.Value;
@@ -442,7 +449,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                 productVariant = ProductManager.UpdateProductVariant(ProductVariantId,
                     productVariant.ProductId, name, sku, description, adminComment, manufacturerPartNumber,
-                    isGiftCard, isDownload, productVariantDownloadId, unlimitedDownloads,
+                    isGiftCard, giftCardType, isDownload, productVariantDownloadId, unlimitedDownloads,
                     maxNumberOfDownloads, downloadExpirationDays, downloadActivationType,
                     hasSampleDownload, productVariantSampleDownloadId, hasUserAgreement, userAgreementText,
                     isRecurring, cycleLength, (int)cyclePeriod, totalCycles,
@@ -528,7 +535,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                     productVariant = ProductManager.InsertProductVariant(product.ProductId,
                          name, sku, description, adminComment, manufacturerPartNumber,
-                         isGiftCard, isDownload, productVariantDownloadId, unlimitedDownloads,
+                         isGiftCard, giftCardType, isDownload, productVariantDownloadId, unlimitedDownloads,
                          maxNumberOfDownloads, downloadExpirationDays, downloadActivationType,
                          hasSampleDownload, productVariantSampleDownloadId,
                          hasUserAgreement, userAgreementText,

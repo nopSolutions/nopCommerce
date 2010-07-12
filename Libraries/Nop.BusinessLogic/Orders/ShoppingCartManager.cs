@@ -878,14 +878,22 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 if (String.IsNullOrEmpty(giftCardRecipientName))
                     warnings.Add(LocalizationManager.GetLocaleResourceString("ShoppingCartWarning.RecipientNameError"));
 
-                if (String.IsNullOrEmpty(giftCardRecipientEmail) || !CommonHelper.IsValidEmail(giftCardRecipientEmail))
-                    warnings.Add(LocalizationManager.GetLocaleResourceString("ShoppingCartWarning.RecipientEmailError"));
+                if ((GiftCardTypeEnum)productVariant.GiftCardType == GiftCardTypeEnum.Virtual)
+                {
+                    //validate for virtual gift cards only
+                    if (String.IsNullOrEmpty(giftCardRecipientEmail) || !CommonHelper.IsValidEmail(giftCardRecipientEmail))
+                        warnings.Add(LocalizationManager.GetLocaleResourceString("ShoppingCartWarning.RecipientEmailError"));
+                }
 
                 if (String.IsNullOrEmpty(giftCardSenderName))
                     warnings.Add(LocalizationManager.GetLocaleResourceString("ShoppingCartWarning.SenderNameError"));
 
-                if (String.IsNullOrEmpty(giftCardSenderEmail) || !CommonHelper.IsValidEmail(giftCardSenderEmail))
-                    warnings.Add(LocalizationManager.GetLocaleResourceString("ShoppingCartWarning.SenderEmailError"));
+                if ((GiftCardTypeEnum)productVariant.GiftCardType == GiftCardTypeEnum.Virtual)
+                {
+                    //validate for virtual gift cards only
+                    if (String.IsNullOrEmpty(giftCardSenderEmail) || !CommonHelper.IsValidEmail(giftCardSenderEmail))
+                        warnings.Add(LocalizationManager.GetLocaleResourceString("ShoppingCartWarning.SenderEmailError"));
+                }
             }
 
             return warnings;

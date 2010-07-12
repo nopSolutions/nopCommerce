@@ -8,13 +8,23 @@
     TagPrefix="nopCommerce" %>
 
 <script type="text/javascript">
-    $(document).ready(function() {
+    $(document).ready(function () {
+        toggleGiftCard();
         toggleCustomerEntersPrice();
         toggleDownloadableProduct();
         toggleRecurring();
         toggleShipping();
         toggleManageStock();
     });
+
+    function toggleGiftCard() {
+        if (getE('<%=cbIsGiftCard.ClientID %>').checked) {
+            $('#pnlGiftCardType').show();
+        }
+        else {
+            $('#pnlGiftCardType').hide();
+        }
+    }
 
     function toggleCustomerEntersPrice() {
         if (getE('<%=cbCustomerEntersPrice.ClientID %>').checked) {
@@ -418,6 +428,16 @@
         </td>
         <td class="adminData">
             <asp:CheckBox ID="cbIsGiftCard" runat="server" Checked="False"></asp:CheckBox>
+        </td>
+    </tr>
+    <tr id="pnlGiftCardType">
+        <td class="adminTitle">
+            <nopCommerce:ToolTipLabel runat="server" ID="lblGiftCardType" Text="<% $NopResources:Admin.ProductVariantInfo.GiftCardType %>"
+                ToolTip="<% $NopResources:Admin.ProductVariantInfo.GiftCardType.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
+        </td>
+        <td class="adminData">
+            <asp:DropDownList ID="ddlGiftCardType" runat="server">
+            </asp:DropDownList>
         </td>
     </tr>
     <tr class="adminSeparator">

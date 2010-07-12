@@ -1190,7 +1190,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                     // product variant
                     var productVariantCopy = InsertProductVariant(productCopy.ProductId, productVariant.Name,
                         productVariant.SKU, productVariant.Description, productVariant.AdminComment, productVariant.ManufacturerPartNumber,
-                        productVariant.IsGiftCard, productVariant.IsDownload, downloadId,
+                        productVariant.IsGiftCard, productVariant.GiftCardType, 
+                        productVariant.IsDownload, downloadId,
                         productVariant.UnlimitedDownloads, productVariant.MaxNumberOfDownloads,
                         productVariant.DownloadExpirationDays, (DownloadActivationTypeEnum)productVariant.DownloadActivationType,
                         productVariant.HasSampleDownload, sampleDownloadId,
@@ -1299,7 +1300,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             {
                 UpdateProductVariant(productVariant.ProductVariantId, productVariant.ProductId, productVariant.Name,
                     productVariant.SKU, productVariant.Description, productVariant.AdminComment, productVariant.ManufacturerPartNumber,
-                    productVariant.IsGiftCard, productVariant.IsDownload, productVariant.DownloadId,
+                    productVariant.IsGiftCard, productVariant.GiftCardType, 
+                    productVariant.IsDownload, productVariant.DownloadId,
                     productVariant.UnlimitedDownloads, productVariant.MaxNumberOfDownloads,
                     productVariant.DownloadExpirationDays, (DownloadActivationTypeEnum)productVariant.DownloadActivationType,
                     productVariant.HasSampleDownload, productVariant.SampleDownloadId,
@@ -1353,7 +1355,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                 UpdateProductVariant(productVariant.ProductVariantId, productVariant.ProductId, productVariant.Name,
                     productVariant.SKU, productVariant.Description, productVariant.AdminComment,
                     productVariant.ManufacturerPartNumber, productVariant.IsGiftCard,
-                    productVariant.IsDownload, 0,
+                    productVariant.GiftCardType, productVariant.IsDownload, 0,
                     productVariant.UnlimitedDownloads, productVariant.MaxNumberOfDownloads,
                     productVariant.DownloadExpirationDays, (DownloadActivationTypeEnum)productVariant.DownloadActivationType,
                     productVariant.HasSampleDownload, productVariant.SampleDownloadId,
@@ -1391,7 +1393,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                 UpdateProductVariant(productVariant.ProductVariantId, productVariant.ProductId, productVariant.Name,
                     productVariant.SKU, productVariant.Description, productVariant.AdminComment,
                     productVariant.ManufacturerPartNumber, productVariant.IsGiftCard,
-                    productVariant.IsDownload, productVariant.DownloadId,
+                    productVariant.GiftCardType, productVariant.IsDownload, productVariant.DownloadId,
                     productVariant.UnlimitedDownloads, productVariant.MaxNumberOfDownloads,
                     productVariant.DownloadExpirationDays, (DownloadActivationTypeEnum)productVariant.DownloadActivationType,
                     productVariant.HasSampleDownload, 0,
@@ -1511,6 +1513,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         /// <param name="adminComment">The admin comment</param>
         /// <param name="manufacturerPartNumber">The manufacturer part number</param>
         /// <param name="isGiftCard">A value indicating whether the product variant is gift card</param>
+        /// <param name="giftCardType">Gift card type</param>
         /// <param name="isDownload">A value indicating whether the product variant is download</param>
         /// <param name="downloadId">The download identifier</param>
         /// <param name="unlimitedDownloads">The value indicating whether this downloadable product can be downloaded unlimited number of times</param>
@@ -1564,7 +1567,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         public static ProductVariant InsertProductVariant(int productId,
             string name, string sku,
             string description, string adminComment, string manufacturerPartNumber,
-            bool isGiftCard, bool isDownload, int downloadId, bool unlimitedDownloads,
+            bool isGiftCard, int giftCardType, 
+            bool isDownload, int downloadId, bool unlimitedDownloads,
             int maxNumberOfDownloads, int? downloadExpirationDays,
             DownloadActivationTypeEnum downloadActivationType, bool hasSampleDownload,
             int sampleDownloadId, bool hasUserAgreement,
@@ -1602,6 +1606,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             productVariant.AdminComment = adminComment;
             productVariant.ManufacturerPartNumber = manufacturerPartNumber;
             productVariant.IsGiftCard = isGiftCard;
+            productVariant.GiftCardType = giftCardType;
             productVariant.IsDownload = isDownload;
             productVariant.DownloadId = downloadId;
             productVariant.UnlimitedDownloads = unlimitedDownloads;
@@ -1681,6 +1686,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         /// <param name="adminComment">The admin comment</param>
         /// <param name="manufacturerPartNumber">The manufacturer part number</param>
         /// <param name="isGiftCard">A value indicating whether the product variant is gift card</param>
+        /// <param name="giftCardType">Gift card type</param>
         /// <param name="isDownload">A value indicating whether the product variant is download</param>
         /// <param name="downloadId">The download identifier</param>
         /// <param name="unlimitedDownloads">The value indicating whether this downloadable product can be downloaded unlimited number of times</param>
@@ -1734,7 +1740,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         public static ProductVariant UpdateProductVariant(int productVariantId,
             int productId, string name, string sku,
             string description, string adminComment, string manufacturerPartNumber,
-            bool isGiftCard, bool isDownload, int downloadId, bool unlimitedDownloads,
+            bool isGiftCard, int giftCardType, 
+            bool isDownload, int downloadId, bool unlimitedDownloads,
             int maxNumberOfDownloads, int? downloadExpirationDays,
             DownloadActivationTypeEnum downloadActivationType, bool hasSampleDownload,
             int sampleDownloadId, bool hasUserAgreement,
@@ -1777,6 +1784,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             productVariant.AdminComment = adminComment;
             productVariant.ManufacturerPartNumber = manufacturerPartNumber;
             productVariant.IsGiftCard = isGiftCard;
+            productVariant.GiftCardType = giftCardType;
             productVariant.IsDownload = isDownload;
             productVariant.DownloadId = downloadId;
             productVariant.UnlimitedDownloads = unlimitedDownloads;
@@ -2070,7 +2078,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                     productVariant.ProductId, productVariant.Name,
                     productVariant.SKU, productVariant.Description, 
                     productVariant.AdminComment, productVariant.ManufacturerPartNumber,
-                    productVariant.IsGiftCard, productVariant.IsDownload, 
+                    productVariant.IsGiftCard, productVariant.GiftCardType, productVariant.IsDownload, 
                     productVariant.DownloadId, productVariant.UnlimitedDownloads, 
                     productVariant.MaxNumberOfDownloads,
                     productVariant.DownloadExpirationDays, (DownloadActivationTypeEnum)productVariant.DownloadActivationType,
@@ -2155,7 +2163,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
 
                         productVariant = UpdateProductVariant(productVariant.ProductVariantId, productVariant.ProductId, productVariant.Name,
                              productVariant.SKU, productVariant.Description, productVariant.AdminComment, productVariant.ManufacturerPartNumber,
-                             productVariant.IsGiftCard, productVariant.IsDownload, productVariant.DownloadId,
+                             productVariant.IsGiftCard, productVariant.GiftCardType, 
+                             productVariant.IsDownload, productVariant.DownloadId,
                              productVariant.UnlimitedDownloads, productVariant.MaxNumberOfDownloads,
                              productVariant.DownloadExpirationDays, (DownloadActivationTypeEnum)productVariant.DownloadActivationType,
                              productVariant.HasSampleDownload, productVariant.SampleDownloadId,

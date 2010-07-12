@@ -37,11 +37,16 @@ namespace NopSolutions.NopCommerce.Web.Modules
             }
             else
             {
+                //pre-entered data
                 if (NopContext.Current.User != null && !NopContext.Current.User.IsGuest)
                 {
                     txtSenderName.Text = NopContext.Current.User.FullName;
                     txtSenderEmail.Text = NopContext.Current.User.Email;
                 }
+
+                //gift card type
+                phRecipientEmail.Visible = (GiftCardTypeEnum)pv.GiftCardType == GiftCardTypeEnum.Virtual;
+                phSenderEmail.Visible = (GiftCardTypeEnum)pv.GiftCardType == GiftCardTypeEnum.Virtual;
             }
         }
 
