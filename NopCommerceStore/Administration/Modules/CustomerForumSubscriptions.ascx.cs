@@ -37,7 +37,7 @@ using NopSolutions.NopCommerce.Common.Xml;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
-    public partial class CustomerForumSubscriptionsControl : BaseNopUserControl
+    public partial class CustomerForumSubscriptionsControl : BaseNopAdministrationUserControl
     {
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -47,37 +47,9 @@ namespace NopSolutions.NopCommerce.Web.Modules
             }
         }
 
-        protected override void OnPreRender(EventArgs e)
-        {
-            BindJQuery();
-            base.OnPreRender(e);
-        }
-
-        protected string GetInfo(ForumSubscription subscription)
-        {
-            if (subscription == null)
-            {
-                return String.Empty;
-            }
-
-            Forum forum = subscription.Forum;
-            if (forum != null)
-            {
-                return Server.HtmlEncode(forum.Name);
-            }
-
-            ForumTopic topic = subscription.Topic;
-            if (topic != null)
-            {
-                return String.Format("{0}/{1}", Server.HtmlEncode(topic.Forum.Name), Server.HtmlEncode(topic.Subject)); ;
-            }
-
-            return String.Empty;
-        }
-
         public void BindData()
         {
-            gvForumSubscriptions.DataSource = ForumManager.GetAllSubscriptions(CustomerId, 0, 0, gvForumSubscriptions.PageSize, gvForumSubscriptions.PageIndex);
+            gvForumSubscriptions.DataSource = ForumManager.GetAllSubscriptions(CustomerId, 0, 0, int.MaxValue, 0);
             gvForumSubscriptions.DataBind();
         }
 
@@ -111,6 +83,51 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     }
                 }
             }
+        }
+
+        protected string GetForumTopicLink(ForumSubscription subscription)
+        {
+            if (subscription == null)
+            {
+                return String.Empty;
+            }
+
+            Forum forum = subscription.Forum;
+            if (forum != null)
+            {
+                return SEOHelper.GetForumUrl(forum);
+            }
+
+            ForumTopic topic = subscription.Topic;
+            if (topic != null)
+            {
+                return SEOHelper.GetForumTopicUrl(topic);
+            }
+
+            return String.Empty;
+        }
+
+
+        protected string GetForumTopicInfo(ForumSubscription subscription)
+        {
+            if (subscription == null)
+            {
+                return String.Empty;
+            }
+
+            Forum forum = subscription.Forum;
+            if (forum != null)
+            {
+                return Server.HtmlEncode(forum.Name);
+            }
+
+            ForumTopic topic = subscription.Topic;
+            if (topic != null)
+            {
+                return Server.HtmlEncode(topic.Subject);
+            }
+
+            return String.Empty;
         }
     }
 }

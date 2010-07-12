@@ -14,7 +14,9 @@
                 <asp:TemplateField HeaderText="<% $NopResources:ForumSubscriptions.InfoColumn %>" HeaderStyle-HorizontalAlign="Center"
                     ItemStyle-Width="90%">
                     <ItemTemplate>
-                        <%#GetInfo(Container.DataItem as ForumSubscription)%>
+                        <a href='<%#GetForumTopicLink(Container.DataItem as ForumSubscription)%>'>
+                            <%#GetForumTopicInfo(Container.DataItem as ForumSubscription)%>
+                        </a>
                     </ItemTemplate>
                 </asp:TemplateField>
             </Columns>

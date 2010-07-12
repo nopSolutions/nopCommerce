@@ -126,7 +126,7 @@ set @resources='
     <Value>Forum Subscriptions</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ForumsSettings.AllowToManageSubscriptions">
-    <Value>Allow customers manage forum subscriptions</Value>
+    <Value>Allow customers manage forum subscriptions:</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ForumsSettings.AllowToManageSubscriptions.Tooltip">
     <Value>Check if you want allow customers manage forum subscriptions</Value>
@@ -622,6 +622,12 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.ProductBackorderMode.AllowQtyBelow0AndNotifyCustomer">
     <Value>Allow qty below 0 and notify customer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ForumsSettings.AllowGuestsToCreatePosts">
+    <Value>Allow guests to create posts:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ForumsSettings.AllowGuestsToCreateTopics">
+    <Value>Allow guests to create topics:</Value>
   </LocaleResource>
 </Language>
 '

@@ -62,7 +62,30 @@ namespace NopSolutions.NopCommerce.Web.Modules
             base.OnPreRender(e);
         }
 
-        protected string GetInfo(ForumSubscription subscription)
+        protected string GetForumTopicLink(ForumSubscription subscription)
+        {
+            if (subscription == null)
+            {
+                return String.Empty;
+            }
+
+            Forum forum = subscription.Forum;
+            if (forum != null)
+            {
+                return SEOHelper.GetForumUrl(forum);
+            }
+
+            ForumTopic topic = subscription.Topic;
+            if (topic != null)
+            {
+                return SEOHelper.GetForumTopicUrl(topic);
+            }
+
+            return String.Empty;
+        }
+
+
+        protected string GetForumTopicInfo(ForumSubscription subscription)
         {
             if (subscription == null)
             {
@@ -78,7 +101,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             ForumTopic topic = subscription.Topic;
             if (topic != null)
             {
-                return String.Format("{0}/{1}", Server.HtmlEncode(topic.Forum.Name), Server.HtmlEncode(topic.Subject)); ;
+                return Server.HtmlEncode(topic.Subject);
             }
 
             return String.Empty;
@@ -99,11 +122,12 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     {
                         var cbSelect = row.FindControl("cbSelect") as CheckBox;
                         var hfForumSubscriptionId = row.FindControl("hfForumSubscriptionId") as HiddenField;
-                        if (cbSelect != null && hfForumSubscriptionId != null)
+                        if (cbSelect != null && cbSelect.Checked && hfForumSubscriptionId != null)
                         {
-                            bool selected = cbSelect.Checked;
                             int forumSubscriptionId = int.Parse(hfForumSubscriptionId.Value);
-                            if (selected)
+                            ForumSubscription subscription = ForumManager.GetSubscriptionById(forumSubscriptionId);
+
+                            if (subscription != null && subscription.UserId == NopContext.Current.User.CustomerId)
                             {
                                 ForumManager.DeleteSubscription(forumSubscriptionId);
                             }

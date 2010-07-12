@@ -132,7 +132,7 @@ namespace NopSolutions.NopCommerce.Web
             if (NopContext.Current.User == null)
                 return new List<ForumSubscription>();
 
-            var result = ForumManager.GetAllSubscriptions(NopContext.Current.User.CustomerId, 0, 0, PageSize, StartIndex, out totalRecords);
+            var result = ForumManager.GetAllSubscriptions(NopContext.Current.User.CustomerId, 0, 0, PageSize, PageIndex, out totalRecords);
             return result;
         }
         #endregion

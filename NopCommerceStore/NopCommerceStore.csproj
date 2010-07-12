@@ -381,6 +381,7 @@
     </Compile>
     <Compile Include="Administration\Modules\CustomerForumSubscriptions.ascx.cs">
       <DependentUpon>CustomerForumSubscriptions.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Administration\Modules\CustomerForumSubscriptions.ascx.designer.cs">
       <DependentUpon>CustomerForumSubscriptions.ascx</DependentUpon>
@@ -3738,6 +3739,7 @@
     </Compile>
     <Compile Include="Modules\ForumSubscriptions.ascx.cs">
       <DependentUpon>ForumSubscriptions.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\ForumSubscriptions.ascx.designer.cs">
       <DependentUpon>ForumSubscriptions.ascx</DependentUpon>
@@ -6889,7 +6891,7 @@
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>1675</DevelopmentServerPort>
+          <DevelopmentServerPort>7718</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://localhost/NopCommerceStore</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
