@@ -91,7 +91,6 @@
           <EntitySet Name="Nop_ProductTag" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_ProductTag" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Nop_ProductTag_Product_Mapping" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_ProductTag_Product_Mapping" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Nop_ProductTemplate" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_ProductTemplate" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="Nop_ProductType" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_ProductType" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Nop_ProductVariant" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_ProductVariant" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Nop_ProductVariant_Discount_Mapping" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_ProductVariant_Discount_Mapping" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Nop_ProductVariant_Pricelist_Mapping" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_ProductVariant_Pricelist_Mapping" store:Type="Tables" Schema="dbo" />
@@ -387,10 +386,6 @@
           </AssociationSet>
           <AssociationSet Name="FK_Nop_Product_Nop_ProductTemplate" Association="NopSolutions.NopCommerce.BusinessLogic.Data.Store.FK_Nop_Product_Nop_ProductTemplate">
             <End Role="Nop_ProductTemplate" EntitySet="Nop_ProductTemplate" />
-            <End Role="Nop_Product" EntitySet="Nop_Product" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Nop_Product_Nop_ProductType" Association="NopSolutions.NopCommerce.BusinessLogic.Data.Store.FK_Nop_Product_Nop_ProductType">
-            <End Role="Nop_ProductType" EntitySet="Nop_ProductType" />
             <End Role="Nop_Product" EntitySet="Nop_Product" />
           </AssociationSet>
           <AssociationSet Name="FK_Nop_Product_SpecificationAttribute_Mapping_Nop_Product" Association="NopSolutions.NopCommerce.BusinessLogic.Data.Store.FK_Nop_Product_SpecificationAttribute_Mapping_Nop_Product">
@@ -1555,7 +1550,6 @@
           <Property Name="ShortDescription" Type="nvarchar(max)" Nullable="false" />
           <Property Name="FullDescription" Type="nvarchar(max)" Nullable="false" />
           <Property Name="AdminComment" Type="nvarchar(max)" Nullable="false" />
-          <Property Name="ProductTypeID" Type="int" Nullable="false" />
           <Property Name="TemplateID" Type="int" Nullable="false" />
           <Property Name="ShowOnHomePage" Type="bit" Nullable="false" />
           <Property Name="MetaKeywords" Type="nvarchar" Nullable="false" MaxLength="400" />
@@ -1705,17 +1699,7 @@
           <Property Name="DisplayOrder" Type="int" Nullable="false" />
           <Property Name="CreatedOn" Type="datetime" Nullable="false" />
           <Property Name="UpdatedOn" Type="datetime" Nullable="false" />
-        </EntityType>
-        <EntityType Name="Nop_ProductType">
-          <Key>
-            <PropertyRef Name="ProductTypeID" />
-          </Key>
-          <Property Name="ProductTypeID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="100" />
-          <Property Name="DisplayOrder" Type="int" />
-          <Property Name="CreatedOn" Type="datetime" Nullable="false" />
-          <Property Name="UpdatedOn" Type="datetime" Nullable="false" />
-        </EntityType>
+        </EntityType>        
         <EntityType Name="Nop_ProductVariant">
           <Key>
             <PropertyRef Name="ProductVariantId" />
@@ -1728,7 +1712,6 @@
           <Property Name="AdminComment" Type="nvarchar" Nullable="false" />
           <Property Name="ManufacturerPartNumber" Type="nvarchar" Nullable="false" MaxLength="100" />
           <Property Name="IsGiftCard" Type="bit" Nullable="false" />
-          <Property Name="GiftCardType" Type="int" Nullable="false" />
           <Property Name="IsDownload" Type="bit" Nullable="false" />
           <Property Name="DownloadID" Type="int" Nullable="false" />
           <Property Name="UnlimitedDownloads" Type="bit" Nullable="false" />
@@ -1778,6 +1761,7 @@
           <Property Name="UpdatedOn" Type="datetime" Nullable="false" />
           <Property Name="DisplayStockQuantity" Type="bit" Nullable="false" />
           <Property Name="Backorders" Type="int" Nullable="false" />
+          <Property Name="GiftCardType" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Nop_ProductVariant_Discount_Mapping">
           <Key>
@@ -3072,18 +3056,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Nop_Product_Nop_ProductType">
-          <End Role="Nop_ProductType" Type="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_ProductType" Multiplicity="1" />
-          <End Role="Nop_Product" Type="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_Product" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Nop_ProductType">
-              <PropertyRef Name="ProductTypeID" />
-            </Principal>
-            <Dependent Role="Nop_Product">
-              <PropertyRef Name="ProductTypeID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Nop_Product_SpecificationAttribute_Mapping_Nop_Product">
           <End Role="Nop_Product" Type="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_Product" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -4286,7 +4258,6 @@
           <EntitySet Name="Polls" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Poll" />
           <EntitySet Name="PollAnswers" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.PollAnswer" />
           <EntitySet Name="PollVotingRecords" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.PollVotingRecord" />
-          <EntitySet Name="ProductTypes" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.ProductType" />
           <AssociationSet Name="FK_Nop_PollVotingRecord_Nop_Customer" Association="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_PollVotingRecord_Nop_Customer">
             <End Role="Customer" EntitySet="Customers" />
             <End Role="Nop_PollVotingRecord" EntitySet="PollVotingRecords" />
@@ -4338,10 +4309,6 @@
           </AssociationSet>
           <AssociationSet Name="FK_Nop_Product_Nop_ProductTemplate" Association="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_Product_Nop_ProductTemplate">
             <End Role="ProductTemplate" EntitySet="ProductTemplates" />
-            <End Role="Nop_Product" EntitySet="Products" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Nop_Product_Nop_ProductType" Association="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_Product_Nop_ProductType">
-            <End Role="ProductType" EntitySet="ProductTypes" />
             <End Role="Nop_Product" EntitySet="Products" />
           </AssociationSet>
           <AssociationSet Name="FK_Nop_ProductLocalized_Nop_Product" Association="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_ProductLocalized_Nop_Product">
@@ -6031,16 +5998,6 @@
           <NavigationProperty Name="NpPollAnswer" Relationship="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_PollVotingRecord_Nop_PollAnswer" FromRole="Nop_PollVotingRecord" ToRole="Nop_PollAnswer" />
           <NavigationProperty Name="NpCustomer" Relationship="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_PollVotingRecord_Nop_Customer" FromRole="Nop_PollVotingRecord" ToRole="Customer" />
         </EntityType>
-        <EntityType Name="ProductType">
-          <Key>
-            <PropertyRef Name="ProductTypeId" />
-          </Key>
-          <Property Type="Int32" Name="ProductTypeId" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
-          <Property Type="String" Name="Name" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Type="Int32" Name="DisplayOrder" />
-          <Property Type="DateTime" Name="CreatedOn" Nullable="false" />
-          <Property Type="DateTime" Name="UpdatedOn" Nullable="false" />
-        </EntityType>
         <Association Name="FK_Nop_PollVotingRecord_Nop_Customer">
           <End Type="NopSolutions.NopCommerce.BusinessLogic.Data.Customer" Role="Customer" Multiplicity="1" />
           <End Type="NopSolutions.NopCommerce.BusinessLogic.Data.PollVotingRecord" Role="Nop_PollVotingRecord" Multiplicity="*" />
@@ -6213,7 +6170,6 @@
           <Property Type="String" Name="ShortDescription" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="FullDescription" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="AdminComment" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="Int32" Name="ProductTypeId" Nullable="false" />
           <Property Type="Int32" Name="TemplateId" Nullable="false" />
           <Property Type="Boolean" Name="ShowOnHomePage" Nullable="false" />
           <Property Type="String" Name="MetaKeywords" Nullable="false" MaxLength="400" FixedLength="false" Unicode="true" />
@@ -6274,18 +6230,6 @@
             </Principal>
             <Dependent Role="Nop_Product">
               <PropertyRef Name="TemplateId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Nop_Product_Nop_ProductType">
-          <End Type="NopSolutions.NopCommerce.BusinessLogic.Data.ProductType" Role="ProductType" Multiplicity="1" />
-          <End Type="NopSolutions.NopCommerce.BusinessLogic.Data.Product" Role="Nop_Product" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="ProductType">
-              <PropertyRef Name="ProductTypeId" />
-            </Principal>
-            <Dependent Role="Nop_Product">
-              <PropertyRef Name="ProductTypeId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -8740,17 +8684,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="ProductTypes">
-            <EntityTypeMapping TypeName="NopSolutions.NopCommerce.BusinessLogic.Data.ProductType">
-              <MappingFragment StoreEntitySet="Nop_ProductType">
-                <ScalarProperty Name="UpdatedOn" ColumnName="UpdatedOn" />
-                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
-                <ScalarProperty Name="DisplayOrder" ColumnName="DisplayOrder" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="ProductTypeId" ColumnName="ProductTypeID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Discounts">
             <EntityTypeMapping TypeName="NopSolutions.NopCommerce.BusinessLogic.Data.Discount">
               <MappingFragment StoreEntitySet="Nop_Discount">
@@ -8840,7 +8773,6 @@
                 <ScalarProperty Name="MetaKeywords" ColumnName="MetaKeywords" />
                 <ScalarProperty Name="ShowOnHomePage" ColumnName="ShowOnHomePage" />
                 <ScalarProperty Name="TemplateId" ColumnName="TemplateID" />
-                <ScalarProperty Name="ProductTypeId" ColumnName="ProductTypeID" />
                 <ScalarProperty Name="AdminComment" ColumnName="AdminComment" />
                 <ScalarProperty Name="FullDescription" ColumnName="FullDescription" />
                 <ScalarProperty Name="ShortDescription" ColumnName="ShortDescription" />
@@ -9919,7 +9851,6 @@
         <EntityTypeShape EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Poll" Width="1.5" PointX="34.375" PointY="3.5" Height="2.5783902994791656" />
         <EntityTypeShape EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.PollAnswer" Width="1.625" PointX="34.375" PointY="0.5" Height="1.9210009765625" />
         <EntityTypeShape EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.PollVotingRecord" Width="1.625" PointX="37.5" PointY="0.5" Height="1.7566536458333335" />
-        <EntityTypeShape EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.ProductType" Width="1.625" PointX="20.75" PointY="13.25" Height="1.7566536458333326" />
         <AssociationConnector Association="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_PollVotingRecord_Nop_Customer" >
           <ConnectorPoint PointX="44.66894603125" PointY="15.625" />
           <ConnectorPoint PointX="44.66894603125" PointY="1.3783268229166668" />
@@ -9991,11 +9922,6 @@
           <ConnectorPoint PointX="14.6875" PointY="15.171000976562503" />
           <ConnectorPoint PointX="14.6875" PointY="20.846448626302134" />
           <ConnectorPoint PointX="17.125" PointY="20.846448626302134" />
-        </AssociationConnector>
-        <AssociationConnector Association="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_Product_Nop_ProductType" >
-          <ConnectorPoint PointX="20.96875" PointY="15.006653645833332" />
-          <ConnectorPoint PointX="20.96875" PointY="20.891508033854215" />
-          <ConnectorPoint PointX="20" PointY="20.891508033854215" />
         </AssociationConnector>
         <AssociationConnector Association="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_ProductLocalized_Nop_Product" >
           <ConnectorPoint PointX="20" PointY="17.871368815104166" />

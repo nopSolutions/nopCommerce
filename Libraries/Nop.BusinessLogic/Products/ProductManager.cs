@@ -78,7 +78,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             if (product != null)
             {
                 product = UpdateProduct(product.ProductId, product.Name, product.ShortDescription,
-                    product.FullDescription, product.AdminComment, product.ProductTypeId,
+                    product.FullDescription, product.AdminComment,
                     product.TemplateId, product.ShowOnHomePage, product.MetaKeywords, product.MetaDescription,
                     product.MetaTitle, product.SEName, product.AllowCustomerReviews, product.AllowCustomerRatings, product.RatingSum,
                     product.TotalRatingVotes, product.Published, true, product.CreatedOn, product.UpdatedOn);
@@ -385,7 +385,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         /// <param name="shortDescription">The short description</param>
         /// <param name="fullDescription">The full description</param>
         /// <param name="adminComment">The admin comment</param>
-        /// <param name="productTypeId">The product type identifier</param>
         /// <param name="templateId">The template identifier</param>
         /// <param name="showOnHomePage">A value indicating whether to show the product on the home page</param>
         /// <param name="metaKeywords">The meta keywords</param>
@@ -402,7 +401,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         /// <param name="updatedOn">The date and time of product update</param>
         /// <returns>Product</returns>
         public static Product InsertProduct(string name, string shortDescription,
-            string fullDescription, string adminComment, int productTypeId,
+            string fullDescription, string adminComment,
             int templateId, bool showOnHomePage,
             string metaKeywords, string metaDescription, string metaTitle,
             string seName, bool allowCustomerReviews, bool allowCustomerRatings,
@@ -422,7 +421,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             product.ShortDescription = shortDescription;
             product.FullDescription = fullDescription;
             product.AdminComment = adminComment;
-            product.ProductTypeId = productTypeId;
             product.TemplateId = templateId;
             product.ShowOnHomePage = showOnHomePage;
             product.MetaKeywords = metaKeywords;
@@ -464,7 +462,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         /// <param name="shortDescription">The short description</param>
         /// <param name="fullDescription">The full description</param>
         /// <param name="adminComment">The admin comment</param>
-        /// <param name="productTypeId">The product type identifier</param>
         /// <param name="templateId">The template identifier</param>
         /// <param name="showOnHomePage">A value indicating whether to show the product on the home page</param>
         /// <param name="metaKeywords">The meta keywords</param>
@@ -482,7 +479,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         /// <returns>Product</returns>
         public static Product UpdateProduct(int productId,
             string name, string shortDescription,
-            string fullDescription, string adminComment, int productTypeId,
+            string fullDescription, string adminComment,
             int templateId, bool showOnHomePage,
             string metaKeywords, string metaDescription, string metaTitle,
             string seName, bool allowCustomerReviews, bool allowCustomerRatings,
@@ -507,7 +504,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             product.ShortDescription = shortDescription;
             product.FullDescription = fullDescription;
             product.AdminComment = adminComment;
-            product.ProductTypeId = productTypeId;
             product.TemplateId = templateId;
             product.ShowOnHomePage = showOnHomePage;
             product.MetaKeywords = metaKeywords;
@@ -1068,7 +1064,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             {
                 // product
                 productCopy = InsertProduct(name, product.ShortDescription,
-                    product.FullDescription, product.AdminComment, product.ProductTypeId,
+                    product.FullDescription, product.AdminComment,
                     product.TemplateId, product.ShowOnHomePage, product.MetaKeywords,
                     product.MetaDescription, product.MetaTitle, product.SEName,
                     product.AllowCustomerReviews, product.AllowCustomerRatings, 0, 0,
@@ -2204,7 +2200,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                             if (allProductVariantsUnpublished)
                             {
                                 UpdateProduct(product.ProductId, product.Name, product.ShortDescription,
-                                    product.FullDescription, product.AdminComment, product.ProductTypeId,
+                                    product.FullDescription, product.AdminComment,
                                     product.TemplateId, product.ShowOnHomePage, product.MetaKeywords, product.MetaDescription,
                                     product.MetaTitle, product.SEName, product.AllowCustomerReviews, product.AllowCustomerRatings, product.RatingSum,
                                     product.TotalRatingVotes, false, product.Deleted, product.CreatedOn, product.UpdatedOn);
@@ -2631,42 +2627,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                 productReview.CreatedOn);
         }
         
-        #endregion
-
-        #region Product types
-
-        /// <summary>
-        /// Gets all product types
-        /// </summary>
-        /// <returns>Product type collection</returns>
-        public static List<ProductType> GetAllProductTypes()
-        {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from pt in context.ProductTypes
-                        orderby pt.DisplayOrder
-                        select pt;
-            var productTypes = query.ToList();
-            return productTypes;
-        }
-
-        /// <summary>
-        /// Gets a product type
-        /// </summary>
-        /// <param name="productTypeId">Product type identifier</param>
-        /// <returns>Product type</returns>
-        public static ProductType GetProductTypeById(int productTypeId)
-        {
-            if (productTypeId == 0)
-                return null;
-
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from pt in context.ProductTypes
-                        where pt.ProductTypeId == productTypeId
-                        select pt;
-            var productType = query.SingleOrDefault();
-            return productType;
-        }
-
         #endregion
 
         #region Related products

@@ -56,7 +56,6 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 this.txtShortDescription.Text = product.ShortDescription;
                 this.txtFullDescription.Content = product.FullDescription;
                 this.txtAdminComment.Text = product.AdminComment;
-                CommonHelper.SelectListItem(this.ddlProductType, product.ProductTypeId);
                 CommonHelper.SelectListItem(this.ddlTemplate, product.TemplateId);
                 this.cbShowOnHomePage.Checked = product.ShowOnHomePage;
 
@@ -86,14 +85,6 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 ListItem item2 = new ListItem(productTemplate.Name, productTemplate.ProductTemplateId.ToString());
                 this.ddlTemplate.Items.Add(item2);
-            }
-
-            this.ddlProductType.Items.Clear();
-            var productTypeCollection = ProductManager.GetAllProductTypes();
-            foreach (ProductType productType in productTypeCollection)
-            {
-                ListItem item2 = new ListItem(productType.Name, productType.ProductTypeId.ToString());
-                this.ddlProductType.Items.Add(item2);
             }
         }
 
@@ -149,7 +140,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             if (product != null)
             {
                 product = ProductManager.UpdateProduct(product.ProductId, txtName.Text, txtShortDescription.Text, txtFullDescription.Content, txtAdminComment.Text,
-                     int.Parse(this.ddlProductType.SelectedItem.Value), int.Parse(this.ddlTemplate.SelectedItem.Value),
+                     int.Parse(this.ddlTemplate.SelectedItem.Value),
                      cbShowOnHomePage.Checked, product.MetaKeywords, product.MetaDescription,
                      product.MetaTitle, product.SEName, cbAllowCustomerReviews.Checked,
                      cbAllowCustomerRatings.Checked, product.RatingSum, product.TotalRatingVotes, cbPublished.Checked,

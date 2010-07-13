@@ -357,7 +357,6 @@
     <Compile Include="Payment\PaymentMethod.cs" />
     <Compile Include="Products\Product.cs" />
     <Compile Include="Templates\ProductTemplate.cs" />
-    <Compile Include="Products\ProductType.cs" />
     <Compile Include="Products\ProductVariant.cs" />
     <Compile Include="Configuration\Settings\Setting.cs" />
     <Compile Include="Shipping\ShippingMethod.cs" />

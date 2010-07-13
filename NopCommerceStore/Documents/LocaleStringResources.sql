@@ -638,6 +638,12 @@ set @resources='
   <LocaleResource Name="Admin.ProductVariantInfo.GiftCardType.Tooltip">
     <Value>Select gift card type. WARNING: not recommended to change in production environment.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ProductInfo.ProductType">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductInfo.ProductType.Tooltip">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 

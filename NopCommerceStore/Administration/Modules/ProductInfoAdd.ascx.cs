@@ -69,14 +69,6 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 this.ddlTemplate.Items.Add(item2);
             }
 
-            this.ddlProductType.Items.Clear();
-            var productTypeCollection = ProductManager.GetAllProductTypes();
-            foreach (ProductType productType in productTypeCollection)
-            {
-                ListItem item2 = new ListItem(productType.Name, productType.ProductTypeId.ToString());
-                this.ddlProductType.Items.Add(item2);
-            }
-
             this.ddlTaxCategory.Items.Clear();
             ListItem itemTaxCategory = new ListItem("---", "0");
             this.ddlTaxCategory.Items.Add(itemTaxCategory);
@@ -159,7 +151,6 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             string shortDescription = txtShortDescription.Text.Trim();
             string fullDescription = txtFullDescription.Content.Trim();
             string adminComment = txtAdminComment.Text.Trim();
-            int productTypeId = int.Parse(this.ddlProductType.SelectedItem.Value);
             int templateId = int.Parse(this.ddlTemplate.SelectedItem.Value);
             bool showOnHomePage = cbShowOnHomePage.Checked;
             bool allowCustomerReviews = cbAllowCustomerReviews.Checked;
@@ -274,7 +265,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             }
 
             Product product = ProductManager.InsertProduct(name, shortDescription, fullDescription,
-                adminComment, productTypeId, templateId, showOnHomePage, string.Empty, string.Empty,
+                adminComment, templateId, showOnHomePage, string.Empty, string.Empty,
                 string.Empty, string.Empty, allowCustomerReviews, allowCustomerRatings, 0, 0,
                  published, false, nowDT, nowDT);
 

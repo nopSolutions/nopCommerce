@@ -201,7 +201,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                     string Name = dr["Name"].ToString();
                     string ShortDescription = dr["ShortDescription"].ToString();
                     string FullDescription = dr["FullDescription"].ToString();
-                    int ProductTypeId = Convert.ToInt32(dr["ProductTypeId"]);
                     int TemplateId = Convert.ToInt32(dr["TemplateId"]);
                     bool ShowOnHomePage = Convert.ToBoolean(dr["ShowOnHomePage"]);
                     string MetaKeywords = dr["MetaKeywords"].ToString();
@@ -260,7 +259,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                     {
                         var product = ProductManager.GetProductById(productVariant.ProductId);
                         product = ProductManager.UpdateProduct(product.ProductId, Name, ShortDescription,
-                            FullDescription, product.AdminComment, ProductTypeId,
+                            FullDescription, product.AdminComment,
                             TemplateId, ShowOnHomePage, MetaKeywords, MetaDescription,
                             MetaTitle, product.SEName, AllowCustomerReviews, AllowCustomerRatings,
                             product.RatingSum, product.TotalRatingVotes,
@@ -290,7 +289,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                     else
                     {
                         var product = ProductManager.InsertProduct(Name, ShortDescription, FullDescription,
-                            string.Empty, ProductTypeId, TemplateId, ShowOnHomePage, MetaKeywords, MetaDescription,
+                            string.Empty, TemplateId, ShowOnHomePage, MetaKeywords, MetaDescription,
                             MetaTitle, string.Empty, AllowCustomerReviews, AllowCustomerRatings, 0, 0,
                             Published, false, CreatedOn, DateTime.UtcNow);
 

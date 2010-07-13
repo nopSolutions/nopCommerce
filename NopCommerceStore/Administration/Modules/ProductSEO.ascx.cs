@@ -85,7 +85,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             if (product != null)
             {
                 product = ProductManager.UpdateProduct(product.ProductId, product.Name, product.ShortDescription,
-                    product.FullDescription, product.AdminComment, product.ProductTypeId,
+                    product.FullDescription, product.AdminComment,
                     product.TemplateId, product.ShowOnHomePage, txtMetaKeywords.Text,
                     txtMetaDescription.Text, txtMetaTitle.Text, txtSEName.Text,
                     product.AllowCustomerReviews, product.AllowCustomerRatings, product.RatingSum,

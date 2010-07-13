@@ -1139,19 +1139,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<ProductTemplate> _productTemplates;
 
-        public ObjectSet<ProductType> ProductTypes
-        {
-            get
-            {
-                if ((_productTypes == null))
-                {
-                    _productTypes = CreateObjectSet<ProductType>();
-                }
-                return _productTypes;
-            }
-        }
-        private ObjectSet<ProductType> _productTypes;
-
         public ObjectSet<ProductVariantAttributeCombination> ProductVariantAttributeCombinations
         {
             get

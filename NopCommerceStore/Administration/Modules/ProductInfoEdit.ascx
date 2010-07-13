@@ -111,17 +111,6 @@
     </tr>
     <tr>
         <td class="adminTitle">
-            <nopCommerce:ToolTipLabel runat="server" ID="lblProductType" Text="<% $NopResources:Admin.ProductInfo.ProductType %>"
-                ToolTip="<% $NopResources:Admin.ProductInfo.ProductType.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
-        </td>
-        <td class="adminData">
-            <asp:DropDownList ID="ddlProductType" AutoPostBack="False" CssClass="adminInput"
-                runat="server">
-            </asp:DropDownList>
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
             <nopCommerce:ToolTipLabel runat="server" ID="lblProductTemplate" Text="<% $NopResources:Admin.ProductInfo.ProductTemplate %>"
                 ToolTip="<% $NopResources:Admin.ProductInfo.ProductTemplate.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
         </td>

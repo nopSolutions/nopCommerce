@@ -439,7 +439,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                 xmlWriter.WriteElementString("ShortDescription", null, product.ShortDescription);
                 xmlWriter.WriteElementString("FullDescription", null, product.FullDescription);
                 xmlWriter.WriteElementString("AdminComment", null, product.AdminComment);
-                xmlWriter.WriteElementString("ProductTypeId", null, product.ProductTypeId.ToString());
                 xmlWriter.WriteElementString("TemplateId", null, product.TemplateId.ToString());
                 xmlWriter.WriteElementString("ShowOnHomePage", null, product.ShowOnHomePage.ToString());
                 xmlWriter.WriteElementString("MetaKeywords", null, product.MetaKeywords);
@@ -670,7 +669,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                 tableDefinition.Add("Name", string.Format("nvarchar({0})",maxStringLength));
                 tableDefinition.Add("ShortDescription", string.Format("nvarchar({0})", maxStringLength));
                 tableDefinition.Add("FullDescription", string.Format("nvarchar({0})", maxStringLength));
-                tableDefinition.Add("ProductTypeId", "int");
                 tableDefinition.Add("TemplateId", "int");
                 tableDefinition.Add("ShowOnHomePage", "nvarchar(5)");
                 tableDefinition.Add("MetaKeywords", string.Format("nvarchar({0})", maxStringLength));
@@ -734,7 +732,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                     foreach (var pv in productVariants)
                     {
                         StringBuilder sb = new StringBuilder();
-                        sb.Append("INSERT INTO [Products] (Name, ShortDescription,FullDescription,ProductTypeId,TemplateId,ShowOnHomePage,MetaKeywords,MetaDescription,MetaTitle,AllowCustomerReviews,AllowCustomerRatings,Published,SKU,ManufacturerPartNumber,IsGiftCard,GiftCardType,IsDownload,DownloadId,UnlimitedDownloads,MaxNumberOfDownloads,DownloadActivationType,HasSampleDownload,SampleDownloadId,HasUserAgreement,UserAgreementText,IsRecurring,CycleLength,CyclePeriod,TotalCycles,IsShipEnabled,IsFreeShipping,AdditionalShippingCharge,IsTaxExempt,TaxCategoryId,ManageInventory,StockQuantity,DisplayStockAvailability,DisplayStockQuantity,MinStockQuantity,LowStockActivityId,NotifyAdminForQuantityBelow,Backorders,OrderMinimumQuantity,OrderMaximumQuantity,DisableBuyButton,Price,OldPrice,ProductCost,CustomerEntersPrice,MinimumCustomerEnteredPrice,MaximumCustomerEnteredPrice,Weight, Length, Width, Height, CreatedOn) VALUES (");
+                        sb.Append("INSERT INTO [Products] (Name, ShortDescription,FullDescription,TemplateId,ShowOnHomePage,MetaKeywords,MetaDescription,MetaTitle,AllowCustomerReviews,AllowCustomerRatings,Published,SKU,ManufacturerPartNumber,IsGiftCard,GiftCardType,IsDownload,DownloadId,UnlimitedDownloads,MaxNumberOfDownloads,DownloadActivationType,HasSampleDownload,SampleDownloadId,HasUserAgreement,UserAgreementText,IsRecurring,CycleLength,CyclePeriod,TotalCycles,IsShipEnabled,IsFreeShipping,AdditionalShippingCharge,IsTaxExempt,TaxCategoryId,ManageInventory,StockQuantity,DisplayStockAvailability,DisplayStockQuantity,MinStockQuantity,LowStockActivityId,NotifyAdminForQuantityBelow,Backorders,OrderMinimumQuantity,OrderMaximumQuantity,DisableBuyButton,Price,OldPrice,ProductCost,CustomerEntersPrice,MinimumCustomerEnteredPrice,MaximumCustomerEnteredPrice,Weight, Length, Width, Height, CreatedOn) VALUES (");
                         string name = p.Name;
                         if (name.Length > maxStringLength)
                             name = name.Substring(0, maxStringLength);
@@ -747,7 +745,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                         if (fullDescription.Length > maxStringLength)
                             fullDescription = fullDescription.Substring(0, maxStringLength);
                         sb.Append('"'); sb.Append(fullDescription.Replace('"', '\'')); sb.Append("\",");
-                        sb.Append(p.ProductTypeId); sb.Append(",");
                         sb.Append(p.TemplateId); sb.Append(",");
                         sb.Append('"'); sb.Append(p.ShowOnHomePage); sb.Append("\",");
                         string metaKeywords = p.MetaKeywords;

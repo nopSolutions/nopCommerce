@@ -71,11 +71,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         public string AdminComment { get; set; }
 
         /// <summary>
-        /// Gets or sets the product type identifier
-        /// </summary>
-        public int ProductTypeId { get; set; }
-
-        /// <summary>
         /// Gets or sets the template identifier
         /// </summary>
         public int TemplateId { get; set; }
@@ -419,17 +414,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             get
             {
                 return TemplateManager.GetProductTemplateById(this.TemplateId);
-            }
-        }
-
-        /// <summary>
-        /// Gets the product type
-        /// </summary>
-        public ProductType ProductType
-        {
-            get
-            {
-                return ProductManager.GetProductTypeById(this.ProductTypeId);
             }
         }
 
