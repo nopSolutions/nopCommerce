@@ -29,6 +29,7 @@ using System.Web.UI.WebControls.WebParts;
 using System.Xml;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.Web.Administration.Modules;
+using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -96,6 +97,11 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     ProcessException(exc);
                 }
             }
+        }
+
+        protected void btnSaveExchangeRateProvider_Click(object sender, EventArgs e)
+        {
+            SettingManager.SetParam("ExchangeRateProvider.Current", ddlExchangeRateProviders.SelectedProvider);
         }
 
         protected void gvLiveRates_RowCommand(object sender, GridViewCommandEventArgs e)

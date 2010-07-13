@@ -379,6 +379,13 @@
     <Compile Include="Administration\BulkEditProducts.aspx.designer.cs">
       <DependentUpon>BulkEditProducts.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Administration\Modules\ExchangeRateProviderList.ascx.cs">
+      <DependentUpon>ExchangeRateProviderList.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Administration\Modules\ExchangeRateProviderList.ascx.designer.cs">
+      <DependentUpon>ExchangeRateProviderList.ascx</DependentUpon>
+    </Compile>
     <Compile Include="Administration\Modules\CustomerForumSubscriptions.ascx.cs">
       <DependentUpon>CustomerForumSubscriptions.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -5609,6 +5616,7 @@
     <Content Include="Administration\CategoryTemplateAdd.aspx" />
     <Content Include="Administration\CategoryTemplateDetails.aspx" />
     <Content Include="Administration\CategoryTemplates.aspx" />
+    <Content Include="Administration\Modules\ExchangeRateProviderList.ascx" />
     <Content Include="Administration\Modules\CustomerForumSubscriptions.ascx" />
     <Content Include="Administration\NewsletterSubscribers.aspx" />
     <Content Include="Administration\Modules\NewsletterSubscribers.ascx" />

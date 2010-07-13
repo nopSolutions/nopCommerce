@@ -1,6 +1,7 @@
 <%@ Control Language="C#" AutoEventWireup="true" Inherits="NopSolutions.NopCommerce.Web.Administration.Modules.CurrenciesControl"
     CodeBehind="Currencies.ascx.cs" %>
 <%@ Register TagPrefix="nopCommerce" TagName="DecimalTextBox" Src="DecimalTextBox.ascx" %>
+<%@ Register TagPrefix="nopCommerce" TagName="ExchangeRateProviderList" Src="ExchangeRateProviderList.ascx" %>
 <div class="section-header">
     <div class="title">
         <img src="Common/ico-configuration.png" alt="<%=GetLocaleResourceString("Admin.Currencies.Title")%>" />
@@ -16,6 +17,20 @@
             id="btnAddNew" class="adminButtonBlue" title="<%=GetLocaleResourceString("Admin.Currencies.AddNewButton.Tooltip")%>" />
     </div>
 </div>
+<table>
+    <tr>
+        <td class="adminTitle">
+            <%=GetLocaleResourceString("Admin.Currencies.ExchangeRateProvider")%>
+        </td>
+        <td class="adminData">
+            <nopCommerce:ExchangeRateProviderList ID="ddlExchangeRateProviders" runat="server" AutoPostBack="false" CssClass="adminInput" />
+        </td>
+        <td>
+            <asp:Button runat="server" ID="btnSaveExchangeRateProvider" OnClick="btnSaveExchangeRateProvider_Click" CausesValidation="false" CssClass="adminButtonBlue" Text="<% $NopResources:Admin.Currencies.SaveExchangeRateProviderButton %>" />
+        </td>
+    </tr>
+</table>
+<br />
 <asp:GridView ID="gvCurrencies" runat="server" AutoGenerateColumns="False" Width="100%">
     <Columns>
         <asp:TemplateField HeaderText="<% $NopResources:Admin.Currencies.Name %>" ItemStyle-Width="20%">

@@ -1038,3 +1038,27 @@ BEGIN
 
 END
 GO
+
+IF NOT EXISTS ( SELECT 1 FROM [dbo].[Nop_Setting] WHERE [Name] = N'ExchangeRateProvider1.Classname')
+BEGIN
+	INSERT [dbo].[Nop_Setting] ([Name], [Value], [Description]) VALUES (N'ExchangeRateProvider1.Classname', N'NopSolutions.NopCommerce.BusinessLogic.Directory.ExchangeRates.EcbExchangeRateProvider, Nop.BusinessLogic', N'')
+END
+GO
+
+IF NOT EXISTS ( SELECT 1 FROM [dbo].[Nop_Setting] WHERE [Name] = N'ExchangeRateProvider2.Classname')
+BEGIN
+	INSERT [dbo].[Nop_Setting] ([Name], [Value], [Description]) VALUES (N'ExchangeRateProvider2.Classname', N'NopSolutions.NopCommerce.BusinessLogic.Directory.ExchangeRates.McExchangeRateProvider, Nop.BusinessLogic', N'')
+END
+GO
+
+IF NOT EXISTS ( SELECT 1 FROM [dbo].[Nop_Setting] WHERE [Name] = N'ExchangeRateProvider3.Classname')
+BEGIN
+	INSERT [dbo].[Nop_Setting] ([Name], [Value], [Description]) VALUES (N'ExchangeRateProvider3.Classname', N'', N'')
+END
+GO
+
+IF NOT EXISTS ( SELECT 1 FROM [dbo].[Nop_Setting] WHERE [Name] = N'ExchangeRateProvider.Current')
+BEGIN
+	INSERT [dbo].[Nop_Setting] ([Name], [Value], [Description]) VALUES (N'ExchangeRateProvider.Current', N'1', N'')
+END
+GO

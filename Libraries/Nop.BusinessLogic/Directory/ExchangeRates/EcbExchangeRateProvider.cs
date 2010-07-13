@@ -93,5 +93,15 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory.ExchangeRates
         }
 
         #endregion
+
+        #region Properties
+        public string Name
+        {
+            get
+            {
+                return "ECB";
+            }
+        }
+        #endregion
     }
 }

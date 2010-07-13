@@ -44,5 +44,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory.ExchangeRates
         /// <param name="rates">Currency rates table</param>
         /// <returns>Exchange rates</returns>
         List<ExchangeRate> GetCurrencyLiveRates(string exchangeRateCurrencyCode);
+
+        /// <summary>
+        /// Gets exchange rate provider name
+        /// </summary>
+        string Name { get; }
     }
 }

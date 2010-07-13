@@ -644,6 +644,12 @@ set @resources='
   <LocaleResource Name="Admin.ProductInfo.ProductType.Tooltip">
     <Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Currencies.ExchangeRateProvider">
+    <Value>Current exchange rate provider:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Currencies.SaveExchangeRateProviderButton">
+    <Value>Save</Value>
+  </LocaleResource>
 </Language>
 '
 

@@ -53,9 +53,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
         /// <returns>Exchange rates</returns>
         public static List<ExchangeRate> GetCurrencyLiveRates(string exchangeRateCurrencyCode)
         {
-            var exchangeRateProvider = new EcbExchangeRateProvider();
-            //uncomment the following string to use themoneyconverter.com exchange rate provider
-            //var exchangeRateProvider = new McExchangeRateProvider();
+            var exchangeRateProvider = CurrentExchangeRateProvider;
             return exchangeRateProvider.GetCurrencyLiveRates(exchangeRateCurrencyCode);
         }
 
@@ -383,6 +381,34 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
             get
             {
                 return SettingManager.GetSettingValueBoolean("Cache.CurrencyManager.CacheEnabled");
+            }
+        }
+
+        public static IExchangeRateProvider CurrentExchangeRateProvider
+        {
+            get
+            {
+                int i = SettingManager.GetSettingValueInteger("ExchangeRateProvider.Current");
+                string className = SettingManager.GetSettingValue(String.Format("ExchangeRateProvider{0}.Classname", i));
+
+                if (String.IsNullOrEmpty(className))
+                {
+                    throw new NopException("Current exchange rate provider class name isn't valid");
+                }
+
+                Type type = Type.GetType(className);
+
+                if (type == null)
+                {
+                    throw new NopException("Current exchange rate provider type isn't valid");
+                }
+
+                IExchangeRateProvider instance = Activator.CreateInstance(type) as IExchangeRateProvider;
+                if (instance == null)
+                {
+                    throw new NopException("Current exchange rate provider isn't valid");
+                }
+                return instance;
             }
         }
         #endregion
