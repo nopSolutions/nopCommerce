@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="NopSolutions.NopCommerce.BusinessLogic.Data.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+    <Schema Namespace="NopSolutions.NopCommerce.BusinessLogic.Data.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2005" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
         <EntityContainer Name="NopSolutionsNopCommerceBusinessLogicDataStoreContainer">
           <EntitySet Name="Nop_ACL" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_ACL" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Nop_ActivityLog" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_ActivityLog" store:Type="Tables" Schema="dbo" />

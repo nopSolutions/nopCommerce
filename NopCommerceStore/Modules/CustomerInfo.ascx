@@ -91,17 +91,29 @@
         <div class="section-body">
             <table class="table-container">
                 <tbody>
-                    <tr class="row">
-                        <td class="item-name">
-                            <%=GetLocaleResourceString("Account.CompanyName")%>:
-                        </td>
-                        <td class="item-value">
-                            <asp:TextBox ID="txtCompany" runat="server"></asp:TextBox>
-                            <asp:RequiredFieldValidator ID="rfvCompany" runat="server" ControlToValidate="txtCompany"
-                                ErrorMessage="<% $NopResources:Account.CompanyIsRequired %>" ToolTip="<% $NopResources:Account.CompanyIsRequired %>"
-                                ValidationGroup="CustomerInfo">*</asp:RequiredFieldValidator>
-                        </td>
-                    </tr>
+                    <asp:PlaceHolder runat="server" ID="phCompanyName">
+                        <tr class="row">
+                            <td class="item-name">
+                                <%=GetLocaleResourceString("Account.CompanyName")%>:
+                            </td>
+                            <td class="item-value">
+                                <asp:TextBox ID="txtCompany" runat="server"></asp:TextBox>
+                                <asp:RequiredFieldValidator ID="rfvCompany" runat="server" ControlToValidate="txtCompany"
+                                    ErrorMessage="<% $NopResources:Account.CompanyIsRequired %>" ToolTip="<% $NopResources:Account.CompanyIsRequired %>"
+                                    ValidationGroup="CustomerInfo">*</asp:RequiredFieldValidator>
+                            </td>
+                        </tr>
+                    </asp:PlaceHolder>
+                    <asp:PlaceHolder runat="server" ID="phVatNumber">
+                        <tr class="row">
+                            <td class="item-name">
+                                <%=GetLocaleResourceString("Account.VATNumber")%>:
+                            </td>
+                            <td class="item-value">
+                                <asp:TextBox ID="txtVatNumber" runat="server" />&nbsp;&nbsp;&nbsp;<asp:Label ID="lblVatNumberStatus" runat="server" />
+                            </td>
+                        </tr>
+                    </asp:PlaceHolder>
                 </tbody>
             </table>
         </div>

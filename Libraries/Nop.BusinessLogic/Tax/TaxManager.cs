@@ -18,6 +18,8 @@ using System.Text;
 using System.Web.Compilation;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
+using NopSolutions.NopCommerce.BusinessLogic.Directory;
+using NopSolutions.NopCommerce.BusinessLogic.Localization;
 using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.Payment;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
@@ -705,6 +707,34 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
             return GetPrice(null, taxClassId, price, includingTax, customer, priceIncludesTax, ref error);
         }
 
+        /// <summary>
+        /// Gets VAT Number status
+        /// </summary>
+        /// <param name="country">Country</param>
+        /// <param name="vatNumber">VAT number</param>
+        /// <returns>VAT Number status</returns>
+        public static VatNumberStatusEnum GetVatNumberStatus(Country country,
+            string vatNumber)
+        {
+            if (String.IsNullOrEmpty(vatNumber))
+                return VatNumberStatusEnum.Empty;
+
+            if (country == null)
+                return VatNumberStatusEnum.Unknown;
+
+            return VatNumberStatusEnum.Valid;
+        }
+
+        /// <summary>
+        /// Gets VAT Number status name
+        /// </summary>
+        /// <param name="status">VAT Number status</param>
+        /// <returns>VAT Number status name</returns>
+        public static string GetVatNumberStatusName(VatNumberStatusEnum status)
+        {
+            return LocalizationManager.GetLocaleResourceString(string.Format("VatNumberStatus.{0}", status.ToString()));
+        }
+
         #endregion
 
         #region Properties
@@ -966,6 +996,86 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
             set
             {
                 SettingManager.SetParam("Tax.PaymentMethodAdditionalFeeTaxClassId", value.ToString());
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether EU VAT (Eupore Union Value Added Tax) is enabled
+        /// </summary>
+        public static bool EUVatEnabled
+        {
+            get
+            {
+                bool result = SettingManager.GetSettingValueBoolean("Tax.EUVat.Enabled");
+                return result;
+            }
+            set
+            {
+                SettingManager.SetParam("Tax.EUVat.Enabled", value.ToString());
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a shop country identifier
+        /// </summary>
+        public static int EUVatShopCountryId
+        {
+            get
+            {
+                int result = SettingManager.GetSettingValueInteger("Tax.EUVat.EUVatShopCountryId");
+                return result;
+            }
+            set
+            {
+                SettingManager.SetParam("Tax.EUVat.EUVatShopCountryId", value.ToString());
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this store will exempt eligible VAT-registered customers from VAT
+        /// </summary>
+        public static bool EUVatAllowVATExemption
+        {
+            get
+            {
+                bool result = SettingManager.GetSettingValueBoolean("Tax.EUVat.AllowVATExemption", true);
+                return result;
+            }
+            set
+            {
+                SettingManager.SetParam("Tax.EUVat.AllowVATExemption", value.ToString());
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether we should use the EU web service to validate VAT numbers
+        /// </summary>
+        public static bool EUVatUseWebService
+        {
+            get
+            {
+                bool result = SettingManager.GetSettingValueBoolean("Tax.EUVat.UseWebService");
+                return result;
+            }
+            set
+            {
+                SettingManager.SetParam("Tax.EUVat.UseWebService", value.ToString());
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether we should email the results of EU web service VAT number validation to the shop admin
+        /// </summary>
+        public static bool EUVatEmailAdminWithWebServiceResults
+        {
+            get
+            {
+                bool result = SettingManager.GetSettingValueBoolean("Tax.EUVat.EmailAdminWithWebServiceResults");
+                return result;
+            }
+            set
+            {
+                SettingManager.SetParam("Tax.EUVat.EmailAdminWithWebServiceResults", value.ToString());
             }
         }
 

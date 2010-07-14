@@ -56,6 +56,11 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
             pnlPaymentMethodAdditionalFeeIncludesTax.Visible = cbPaymentMethodAdditionalFeeIsTaxable.Checked;
             pnlPaymentMethodAdditionalFeeTaxClass.Visible = cbPaymentMethodAdditionalFeeIsTaxable.Checked;
+
+            pnlEUVatShopCountry.Visible = cbEUVatEnabled.Checked;
+            pnlEUVatAllowVATExemption.Visible = cbEUVatEnabled.Checked;
+            pnlEUVatUseWebService.Visible = cbEUVatEnabled.Checked;
+            pnlEUVatEmailAdminWithWebServiceResults.Visible = cbEUVatEnabled.Checked;
         }
 
         protected void FillDropDowns()
@@ -86,11 +91,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected void FillCountryDropDowns()
         {
+            var countries = CountryManager.GetAllCountries();
+
             this.ddlTaxDefaultCountry.Items.Clear();
-            ListItem noCountryItem = new ListItem(GetLocaleResourceString("Admin.TaxSettings.TaxDefaultCountry.SelectCountry"), "0");
-            this.ddlTaxDefaultCountry.Items.Add(noCountryItem);
-            var countryCollection = CountryManager.GetAllCountries();
-            foreach (Country country in countryCollection)
+            ListItem noCountryItem1 = new ListItem(GetLocaleResourceString("Admin.TaxSettings.TaxDefaultCountry.SelectCountry"), "0");
+            this.ddlTaxDefaultCountry.Items.Add(noCountryItem1);
+            foreach (Country country in countries)
             {
                 ListItem ddlCountryItem2 = new ListItem(country.Name, country.CountryId.ToString());
                 this.ddlTaxDefaultCountry.Items.Add(ddlCountryItem2);
@@ -115,8 +121,23 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             }
         }
 
+        protected void FillEUVATCountryDropDowns()
+        {
+            var countries = CountryManager.GetAllCountries();
+
+            this.ddlEUVatShopCountry.Items.Clear();
+            ListItem noCountryItem2 = new ListItem(GetLocaleResourceString("Admin.TaxSettings.EUVatShopCountry.SelectCountry"), "0");
+            this.ddlEUVatShopCountry.Items.Add(noCountryItem2);
+            foreach (Country country in countries)
+            {
+                ListItem ddlCountryItem2 = new ListItem(country.Name, country.CountryId.ToString());
+                this.ddlEUVatShopCountry.Items.Add(ddlCountryItem2);
+            }
+        }
+
         private void BindData()
         {
+            //standard settings
             cbPricesIncludeTax.Checked = TaxManager.PricesIncludeTax;
             cbAllowCustomersToSelectTaxDisplayType.Checked = TaxManager.AllowCustomersToSelectTaxDisplayType;
             CommonHelper.SelectListItem(this.ddlTaxDisplayType, (int)TaxManager.TaxDisplayType);
@@ -125,6 +146,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             cbHideTaxInOrderSummary.Checked = TaxManager.HideTaxInOrderSummary;
             CommonHelper.SelectListItem(this.ddlTaxBasedOn, (int)TaxManager.TaxBasedOn);
 
+            //tax address
             Address defaultTaxAddress = TaxManager.DefaultTaxAddress;
             this.FillCountryDropDowns();
             CommonHelper.SelectListItem(this.ddlTaxDefaultCountry, defaultTaxAddress.CountryId);
@@ -132,13 +154,23 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             CommonHelper.SelectListItem(this.ddlTaxDefaultStateProvince, defaultTaxAddress.StateProvinceId);
             txtTaxDefaultZipPostalCode.Text = defaultTaxAddress.ZipPostalCode;
 
+            //shipping
             cbShippingIsTaxable.Checked = TaxManager.ShippingIsTaxable;
             cbShippingPriceIncludesTax.Checked = TaxManager.ShippingPriceIncludesTax;
             CommonHelper.SelectListItem(this.ddlShippingTaxClass, TaxManager.ShippingTaxClassId);
 
+            //additional payment fee
             cbPaymentMethodAdditionalFeeIsTaxable.Checked = TaxManager.PaymentMethodAdditionalFeeIsTaxable;
             cbPaymentMethodAdditionalFeeIncludesTax.Checked = TaxManager.PaymentMethodAdditionalFeeIncludesTax;
             CommonHelper.SelectListItem(this.ddlPaymentMethodAdditionalFeeTaxClass, TaxManager.PaymentMethodAdditionalFeeTaxClassId);
+
+            //EU VAT support
+            cbEUVatEnabled.Checked = TaxManager.EUVatEnabled;
+            this.FillEUVATCountryDropDowns();
+            CommonHelper.SelectListItem(this.ddlEUVatShopCountry, TaxManager.EUVatShopCountryId);
+            cbEUVatAllowVATExemption.Checked = TaxManager.EUVatAllowVATExemption;
+            cbEUVatUseWebService.Checked = TaxManager.EUVatUseWebService;
+            cbEUVatEmailAdminWithWebServiceResults.Checked = TaxManager.EUVatEmailAdminWithWebServiceResults;
         }
 
         protected void ddlTaxDefaultCountry_SelectedIndexChanged(object sender, EventArgs e)
@@ -161,35 +193,51 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             TogglePanels();
         }
 
+        protected void cbEUVatEnabled_CheckedChanged(object sender, EventArgs e)
+        {
+            TogglePanels();
+        }
+
         protected void btnSave_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
                 try
                 {
+                    //standard settings
                     TaxManager.PricesIncludeTax = cbPricesIncludeTax.Checked;
                     TaxManager.AllowCustomersToSelectTaxDisplayType = cbAllowCustomersToSelectTaxDisplayType.Checked;
-
                     TaxManager.TaxDisplayType = (TaxDisplayTypeEnum)Enum.ToObject(typeof(TaxDisplayTypeEnum), int.Parse(this.ddlTaxDisplayType.SelectedItem.Value));
                     TaxManager.DisplayTaxSuffix = cbDisplayTaxSuffix.Checked;
                     TaxManager.HideZeroTax= cbHideZeroTax.Checked;
                     TaxManager.HideTaxInOrderSummary = cbHideTaxInOrderSummary.Checked; 
                     TaxManager.TaxBasedOn = (TaxBasedOnEnum)Enum.ToObject(typeof(TaxBasedOnEnum), int.Parse(this.ddlTaxBasedOn.SelectedItem.Value));
 
+                    //tax address
                     Address defaultTaxAddress = new Address();
                     defaultTaxAddress.CountryId = int.Parse(this.ddlTaxDefaultCountry.SelectedItem.Value);
                     defaultTaxAddress.StateProvinceId = int.Parse(this.ddlTaxDefaultStateProvince.SelectedItem.Value);
                     defaultTaxAddress.ZipPostalCode = txtTaxDefaultZipPostalCode.Text;
                     TaxManager.DefaultTaxAddress = defaultTaxAddress;
 
+                    //shipping
                     TaxManager.ShippingIsTaxable = cbShippingIsTaxable.Checked;
                     TaxManager.ShippingPriceIncludesTax = cbShippingPriceIncludesTax.Checked;
                     TaxManager.ShippingTaxClassId = int.Parse(this.ddlShippingTaxClass.SelectedItem.Value);
 
+                    //additional payment fee
                     TaxManager.PaymentMethodAdditionalFeeIsTaxable = cbPaymentMethodAdditionalFeeIsTaxable.Checked;
                     TaxManager.PaymentMethodAdditionalFeeIncludesTax = cbPaymentMethodAdditionalFeeIncludesTax.Checked;
                     TaxManager.PaymentMethodAdditionalFeeTaxClassId = int.Parse(this.ddlPaymentMethodAdditionalFeeTaxClass.SelectedItem.Value);
 
+                    //EU VAT support
+                    TaxManager.EUVatEnabled = cbEUVatEnabled.Checked;
+                    TaxManager.EUVatShopCountryId = int.Parse(this.ddlEUVatShopCountry.SelectedItem.Value);
+                    TaxManager.EUVatAllowVATExemption = cbEUVatAllowVATExemption.Checked;
+                    TaxManager.EUVatUseWebService = cbEUVatUseWebService.Checked;
+                    TaxManager.EUVatEmailAdminWithWebServiceResults = cbEUVatEmailAdminWithWebServiceResults.Checked;
+
+                    //logging
                     CustomerActivityManager.InsertActivity(
                         "EditTaxSettings",
                         GetLocaleResourceString("ActivityLog.EditTaxSettings"));

@@ -612,6 +612,69 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         }
 
         /// <summary>
+        /// Gets or sets the VAT number
+        /// </summary>
+        public string VatNumber
+        {
+            get
+            {
+                var customerAttributes = this.CustomerAttributes;
+                CustomerAttribute vatNumberAttr = customerAttributes.FindAttribute("VatNumber", this.CustomerId);
+                if (vatNumberAttr != null)
+                    return vatNumberAttr.Value;
+                else
+                    return string.Empty;
+            }
+            set
+            {
+                if (value == null)
+                    value = string.Empty;
+                value = value.Trim();
+
+                var customerAttributes = this.CustomerAttributes;
+                CustomerAttribute vatNumberAttr = customerAttributes.FindAttribute("VatNumber", this.CustomerId);
+                if (vatNumberAttr != null)
+                    vatNumberAttr = CustomerManager.UpdateCustomerAttribute(vatNumberAttr.CustomerAttributeId, vatNumberAttr.CustomerId, "VatNumber", value);
+                else
+                    vatNumberAttr = CustomerManager.InsertCustomerAttribute(this.CustomerId, "VatNumber", value);
+
+                ResetCachedValues();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the VAT number status
+        /// </summary>
+        public VatNumberStatusEnum VatNumberStatus
+        {
+            get
+            {
+                var customerAttributes = this.CustomerAttributes;
+                CustomerAttribute vatNumberStatusAttr = customerAttributes.FindAttribute("VatNumberStatus", this.CustomerId);
+                if (vatNumberStatusAttr != null)
+                {
+                    int _vatNumberStatusId = 0;
+                    int.TryParse(vatNumberStatusAttr.Value, out _vatNumberStatusId);
+                    return (VatNumberStatusEnum)_vatNumberStatusId;
+                }
+                else
+                    return VatNumberStatusEnum.Empty;
+            }
+            set
+            {
+                int vatNumberStatusId = (int)value;
+                var customerAttributes = this.CustomerAttributes;
+                CustomerAttribute vatNumberStatusAttr = customerAttributes.FindAttribute("VatNumberStatus", this.CustomerId);
+                if (vatNumberStatusAttr != null)
+                    vatNumberStatusAttr = CustomerManager.UpdateCustomerAttribute(vatNumberStatusAttr.CustomerAttributeId, vatNumberStatusAttr.CustomerId, "VatNumberStatus", vatNumberStatusId.ToString());
+                else
+                    vatNumberStatusAttr = CustomerManager.InsertCustomerAttribute(this.CustomerId, "VatNumberStatus", vatNumberStatusId.ToString());
+
+                ResetCachedValues();
+            }
+        }
+
+        /// <summary>
         /// Gets or sets the street address
         /// </summary>
         public string StreetAddress

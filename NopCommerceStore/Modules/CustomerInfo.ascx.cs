@@ -31,6 +31,7 @@ using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
+using NopSolutions.NopCommerce.BusinessLogic.Tax;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Common.Xml;
 
@@ -43,9 +44,13 @@ namespace NopSolutions.NopCommerce.Web.Modules
             phGender.Visible = CustomerManager.FormFieldGenderEnabled;
             phDateOfBirth.Visible = CustomerManager.FormFieldDateOfBirthEnabled;
 
-            phCompanyDetails.Visible = CustomerManager.FormFieldCompanyEnabled;
+            phCompanyName.Visible = CustomerManager.FormFieldCompanyEnabled;
             rfvCompany.Enabled = CustomerManager.FormFieldCompanyEnabled &&
                 CustomerManager.FormFieldCompanyRequired;
+            phVatNumber.Visible = TaxManager.EUVatEnabled;
+            phCompanyDetails.Visible = CustomerManager.FormFieldCompanyEnabled ||
+                TaxManager.EUVatEnabled;
+
             phStreetAddress.Visible = CustomerManager.FormFieldStreetAddressEnabled;
             rfvStreetAddress.Enabled = CustomerManager.FormFieldStreetAddressEnabled &&
                 CustomerManager.FormFieldStreetAddressRequired;
@@ -118,6 +123,16 @@ namespace NopSolutions.NopCommerce.Web.Modules
             dtDateOfBirth.SelectedDate = customer.DateOfBirth;
 
             txtCompany.Text = customer.Company;
+            txtVatNumber.Text = customer.VatNumber;
+            if (customer.VatNumberStatus != VatNumberStatusEnum.Empty)
+            {
+                lblVatNumberStatus.Visible = true;
+                lblVatNumberStatus.Text = string.Format(GetLocaleResourceString("Account.VATNumberStatus"), TaxManager.GetVatNumberStatusName(customer.VatNumberStatus));
+            }
+            else
+            {
+                lblVatNumberStatus.Visible = false;
+            }
             txtStreetAddress.Text = customer.StreetAddress;
             txtStreetAddress2.Text = customer.StreetAddress2;
             txtZipPostalCode.Text = customer.ZipPostalCode;
@@ -206,6 +221,13 @@ namespace NopSolutions.NopCommerce.Web.Modules
                         customer.FaxNumber = txtFaxNumber.Text;
                     }
                     customer.ReceiveNewsletter = cbNewsletter.Checked;
+                    
+                    //set VAT number after country is saved
+                    if (TaxManager.EUVatEnabled)
+                    {
+                        customer.VatNumber = txtVatNumber.Text;
+                        customer.VatNumberStatus = TaxManager.GetVatNumberStatus(CountryManager.GetCountryById(customer.CountryId), customer.VatNumber);
+                    }
 
                     if (DateTimeHelper.AllowCustomersToSetTimeZone)
                     {
@@ -220,6 +242,9 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     {
                         customer = CustomerManager.SetCustomerSignature(customer.CustomerId, txtSignature.Text);
                     }
+
+                    //bind data
+                    BindData();
                 }
                 catch (Exception exc)
                 {

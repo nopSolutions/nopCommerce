@@ -669,7 +669,7 @@ set @resources='
     <Value>SMS provider name</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.SMSProviderInfo.Name.ErrorMessage">
-    <Value>Name not specified</Value>
+    <Value>Name is required</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.SMSProviderInfo.ClassName">
     <Value>Class name:</Value>
@@ -678,7 +678,7 @@ set @resources='
     <Value>Enter fully qualified name of SMS provider class</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.SMSProviderInfo.ClassName.ErrorMessage">
-    <Value>Class name not specified</Value>
+    <Value>Class name is required</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.SMSProviderInfo.SystemKeyword">
     <Value>System keyword:</Value>
@@ -787,6 +787,69 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.Sitemap.SMSProvidersDescription">
     <Value>Manage SMS Providers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.TaxSettings.EUVatEnabled">
+    <Value>EU VAT enabled:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.TaxSettings.EUVatEnabled.Tooltip">
+    <Value>Check to enable EU VAT (the European Union Value Added Tax).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.TaxSettings.EUVatShopCountry">
+    <Value>Your shop country:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.TaxSettings.EUVatShopCountry.Tooltip">
+    <Value>Select your shop country for VAT calculation</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.TaxSettings.EUVatAllowVATExemption">
+    <Value>Allow VAT exemption:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.TaxSettings.EUVatAllowVATExemption.Tooltip">
+    <Value>Check if this store will exempt eligible VAT-registered customers from VAT</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.TaxSettings.EUVatUseWebService">
+    <Value>Use web service:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.TaxSettings.EUVatUseWebService.Tooltip">
+    <Value>Check if you want to use the EU web service to validate VAT numbers. WARNING: If this option is enabled, then DO NOT disable country form field available during registration (public store).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.TaxSettings.EUVatEmailAdminWithWebServiceResults">
+    <Value>Email web service results to admin:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.TaxSettings.EUVatEmailAdminWithWebServiceResults.Tooltip">
+    <Value>Check if you want to receive the results of EU web service VAT number validation</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.TaxSettings.EUVatShopCountry.SelectCountry">
+    <Value>Select country</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VATNumber">
+    <Value>VAT number</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VATNumberStatus">
+    <Value>(status: {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="VatNumberStatus.Unknown">
+    <Value>Unknown</Value>
+  </LocaleResource>
+  <LocaleResource Name="VatNumberStatus.Empty">
+    <Value>Empty</Value>
+  </LocaleResource>
+  <LocaleResource Name="VatNumberStatus.Valid">
+    <Value>Valid</Value>
+  </LocaleResource>
+  <LocaleResource Name="VatNumberStatus.Invalid">
+    <Value>Invalid</Value>
+  </LocaleResource>
+  <LocaleResource Name="VatNumberStatus.AwaitsApproval">
+    <Value>Awaits approval</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ConfigurationHome.SMSProviders.TitleDescription">
+    <Value>SMS Providers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ConfigurationHome.SMSProviders.Title">
+    <Value>SMS Providers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ConfigurationHome.SMSProviders.Description">
+    <Value>Manage SMS notification settings and providers.</Value>
   </LocaleResource>
 </Language>
 '

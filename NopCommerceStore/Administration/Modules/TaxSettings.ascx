@@ -189,4 +189,65 @@
             </asp:DropDownList>
         </td>
     </tr>
+    <tr class="adminSeparator">
+        <td colspan="2">
+            <hr />
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            <nopCommerce:ToolTipLabel runat="server" ID="lblEUVatEnabled"
+                Text="<% $NopResources:Admin.TaxSettings.EUVatEnabled %>" ToolTip="<% $NopResources:Admin.TaxSettings.EUVatEnabled.Tooltip %>"
+                ToolTipImage="~/Administration/Common/ico-help.gif" />
+        </td>
+        <td class="adminData">
+            <asp:CheckBox ID="cbEUVatEnabled" runat="server" AutoPostBack="true"
+                OnCheckedChanged="cbEUVatEnabled_CheckedChanged"></asp:CheckBox>
+        </td>
+    </tr>
+    <tr  runat="server" id="pnlEUVatShopCountry">
+        <td class="adminTitle">
+            <nopCommerce:ToolTipLabel runat="server" ID="lblEUVatShopCountry" Text="<% $NopResources:Admin.TaxSettings.EUVatShopCountry %>"
+                ToolTip="<% $NopResources:Admin.TaxSettings.EUVatShopCountry.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
+        </td>
+        <td class="adminData">
+            <asp:DropDownList ID="ddlEUVatShopCountry" AutoPostBack="False" runat="server" CssClass="adminInput">
+            </asp:DropDownList>
+        </td>
+    </tr>
+    <tr runat="server" id="pnlEUVatAllowVATExemption">
+        <td class="adminTitle">
+            <nopCommerce:ToolTipLabel runat="server" ID="lblEUVatAllowVATExemption" Text="<% $NopResources:Admin.TaxSettings.EUVatAllowVATExemption %>"
+                ToolTip="<% $NopResources:Admin.TaxSettings.EUVatAllowVATExemption.Tooltip %>"
+                ToolTipImage="~/Administration/Common/ico-help.gif" />
+        </td>
+        <td class="adminData">
+            <asp:CheckBox ID="cbEUVatAllowVATExemption" runat="server"></asp:CheckBox>
+        </td>
+    </tr>
+    <tr runat="server" id="pnlEUVatUseWebService">
+        <td class="adminTitle">
+            <nopCommerce:ToolTipLabel runat="server" ID="lblEUVatUseWebService" Text="<% $NopResources:Admin.TaxSettings.EUVatUseWebService %>"
+                ToolTip="<% $NopResources:Admin.TaxSettings.EUVatUseWebService.Tooltip %>"
+                ToolTipImage="~/Administration/Common/ico-help.gif" />
+        </td>
+        <td class="adminData">
+            <asp:CheckBox ID="cbEUVatUseWebService" runat="server"></asp:CheckBox>
+        </td>
+    </tr>
+    <tr runat="server" id="pnlEUVatEmailAdminWithWebServiceResults">
+        <td class="adminTitle">
+            <nopCommerce:ToolTipLabel runat="server" ID="lblEUVatEmailAdminWithWebServiceResults" Text="<% $NopResources:Admin.TaxSettings.EUVatEmailAdminWithWebServiceResults %>"
+                ToolTip="<% $NopResources:Admin.TaxSettings.EUVatEmailAdminWithWebServiceResults.Tooltip %>"
+                ToolTipImage="~/Administration/Common/ico-help.gif" />
+        </td>
+        <td class="adminData">
+            <asp:CheckBox ID="cbEUVatEmailAdminWithWebServiceResults" runat="server"></asp:CheckBox>
+        </td>
+    </tr>
+    <tr class="adminSeparator">
+        <td colspan="2">
+            <hr />
+        </td>
+    </tr>
 </table>

@@ -102,7 +102,18 @@
             </li>
             <li>
                 <div class="title">
-                    <a href="settings.aspx" title="<%=GetLocaleResourceString("Admin.ConfigurationHome.ThirdPartyIntegration.TitleDescription")%>">
+                    <a href="smsproviders.aspx" title="<%=GetLocaleResourceString("Admin.ConfigurationHome.SMSProviders.TitleDescription")%>">
+                        <%=GetLocaleResourceString("Admin.ConfigurationHome.SMSProviders.Title")%></a>
+                </div>
+                <div class="description">
+                    <p>
+                        <%=GetLocaleResourceString("Admin.ConfigurationHome.SMSProviders.Description")%>
+                    </p>
+                </div>
+            </li>
+            <li>
+                <div class="title">
+                    <a href="thirdpartyintegration.aspx" title="<%=GetLocaleResourceString("Admin.ConfigurationHome.ThirdPartyIntegration.TitleDescription")%>">
                         <%=GetLocaleResourceString("Admin.ConfigurationHome.ThirdPartyIntegration.Title")%></a>
                 </div>
                 <div class="description">

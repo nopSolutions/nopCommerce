@@ -286,6 +286,7 @@
     <Compile Include="Tasks\TaskManager.cs" />
     <Compile Include="Tasks\TaskThread.cs" />
     <Compile Include="Tax\CalculateTaxRequest.cs" />
+    <Compile Include="Tax\VatNumberStatusEnum.cs" />
     <Compile Include="Tax\Extensions.cs" />
     <Compile Include="Tax\TaxBasedOnEnum.cs" />
     <Compile Include="Tax\TaxDisplayTypeEnum.cs" />

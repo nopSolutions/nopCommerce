@@ -28,6 +28,7 @@ using NopSolutions.NopCommerce.BusinessLogic;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
+using NopSolutions.NopCommerce.BusinessLogic.Tax;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Common.Xml;
 using NopSolutions.NopCommerce.Controls;
@@ -150,6 +151,8 @@ namespace NopSolutions.NopCommerce.Web.Modules
             var phGender = (PlaceHolder)CreateUserWizardStep1.ContentTemplateContainer.FindControl("phGender");
             var phDateOfBirth = (PlaceHolder)CreateUserWizardStep1.ContentTemplateContainer.FindControl("phDateOfBirth");
             var phCompanyDetails = (PlaceHolder)CreateUserWizardStep1.ContentTemplateContainer.FindControl("phCompanyDetails");
+            var phCompanyName = (PlaceHolder)CreateUserWizardStep1.ContentTemplateContainer.FindControl("phCompanyName");
+            var phVatNumber = (PlaceHolder)CreateUserWizardStep1.ContentTemplateContainer.FindControl("phVatNumber");
             var rfvCompany = (RequiredFieldValidator)CreateUserWizardStep1.ContentTemplateContainer.FindControl("rfvCompany");
             var phStreetAddress = (PlaceHolder)CreateUserWizardStep1.ContentTemplateContainer.FindControl("phStreetAddress");
             var rfvStreetAddress = (RequiredFieldValidator)CreateUserWizardStep1.ContentTemplateContainer.FindControl("rfvStreetAddress");
@@ -171,9 +174,13 @@ namespace NopSolutions.NopCommerce.Web.Modules
             phGender.Visible = CustomerManager.FormFieldGenderEnabled;
             phDateOfBirth.Visible = CustomerManager.FormFieldDateOfBirthEnabled;
 
-            phCompanyDetails.Visible = CustomerManager.FormFieldCompanyEnabled;
+            phCompanyName.Visible = CustomerManager.FormFieldCompanyEnabled;
             rfvCompany.Enabled = CustomerManager.FormFieldCompanyEnabled &&
                 CustomerManager.FormFieldCompanyRequired;
+            phVatNumber.Visible = TaxManager.EUVatEnabled;
+            phCompanyDetails.Visible = CustomerManager.FormFieldCompanyEnabled ||
+                TaxManager.EUVatEnabled;
+
             phStreetAddress.Visible = CustomerManager.FormFieldStreetAddressEnabled;
             rfvStreetAddress.Enabled = CustomerManager.FormFieldStreetAddressEnabled &&
                 CustomerManager.FormFieldStreetAddressRequired;
@@ -216,6 +223,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             var txtDateOfBirth = (TextBox)CreateUserWizardStep1.ContentTemplateContainer.FindControl("txtDateOfBirth");
             var UserName = (TextBox)CreateUserWizardStep1.ContentTemplateContainer.FindControl("UserName");
             var txtCompany = (TextBox)CreateUserWizardStep1.ContentTemplateContainer.FindControl("txtCompany");
+            var txtVatNumber = (TextBox)CreateUserWizardStep1.ContentTemplateContainer.FindControl("txtVatNumber");
             var txtStreetAddress = (TextBox)CreateUserWizardStep1.ContentTemplateContainer.FindControl("txtStreetAddress");
             var txtStreetAddress2 = (TextBox)CreateUserWizardStep1.ContentTemplateContainer.FindControl("txtStreetAddress2");
             var txtZipPostalCode = (TextBox)CreateUserWizardStep1.ContentTemplateContainer.FindControl("txtZipPostalCode");
@@ -287,6 +295,13 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 customer.FaxNumber = txtFaxNumber.Text;
             }
             customer.ReceiveNewsletter = cbNewsletter.Checked;
+
+            //set VAT number after country is saved
+            if (TaxManager.EUVatEnabled)
+            {
+                customer.VatNumber = txtVatNumber.Text;
+                customer.VatNumberStatus = TaxManager.GetVatNumberStatus(CountryManager.GetCountryById(customer.CountryId), customer.VatNumber);
+            }
 
             //billing address
             var billingAddress = new Address()

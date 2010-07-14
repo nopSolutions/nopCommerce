@@ -706,7 +706,7 @@ IF EXISTS (SELECT 1
 ALTER TABLE dbo.Nop_Product
 DROP CONSTRAINT FK_Nop_Product_Nop_ProductType
 GO
-IF EXISTS (select 1 from sysobjects where id = object_id(N'[dbo].[Nop_ProductType]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+if exists (select 1 from sysobjects where id = object_id(N'[dbo].[Nop_ProductType]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
 BEGIN
 DROP TABLE [Nop_ProductType]
 ALTER TABLE [dbo].[Nop_Product] DROP CONSTRAINT [DF_Nop_Product_ProductTypeID]
@@ -1105,7 +1105,7 @@ GO
 
 IF NOT EXISTS(SELECT 1 FROM [Nop_ActivityLogType] WHERE [SystemKeyword] = N'EditSMSProviders')
 BEGIN
-	INSERT INTO [Nop_ActivityLogType] ([SystemKeyword], [Name], [Enabled]) VALUES (N'EditSMSProviders', N'Edit SMS providers settings', 1)
+	INSERT INTO [Nop_ActivityLogType] ([SystemKeyword], [Name], [Enabled]) VALUES (N'EditSMSProviders', N'Edit SMS provider settings', 1)
 END
 GO
 
@@ -1115,7 +1115,7 @@ IF NOT EXISTS (
 		WHERE [SystemKeyword] = N'ManageSMSProviders')
 BEGIN
 	INSERT [dbo].[Nop_CustomerAction] ([Name], [SystemKeyword], [Comment], [DisplayOrder])
-	VALUES (N'Manage SMSProviders', N'ManageSMSProviders', N'',200)
+	VALUES (N'Manage SMS Providers', N'ManageSMSProviders', N'',305)
 END
 GO
 
