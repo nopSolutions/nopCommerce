@@ -26,7 +26,6 @@
             toggleRecentlyViewedProducts();
             toggleRecentlyAddedProducts();
             toggleShowBestsellersOnHomePage();
-            toggleSMSAlerts();
             toggleLiveChat();
             toggleGoogleAdsense();
         });
@@ -66,31 +65,6 @@
             }
             else {
                 $('#pnlGoogleAdsenseCode').hide();
-            }
-        }
-
-        function toggleSMSAlerts() {
-            if (getE('<%=cbIsSMSAlertsEnabled.ClientID %>').checked) {
-                $('#pnlSMSAlertsPhoneNumber').show();
-                $('#pnlSMSAlertsClickatellAPIId').show();
-                $('#pnlSMSAlertsClickatellUsername').show();
-                $('#pnlSMSAlertsClickatellPassword').show();
-                $('#pnlSMSAlertsTest_0').show();
-                $('#pnlSMSAlertsTest_1').show();
-                $('#pnlSMSAlertsTest_2').show();
-                $('#pnlSMSAlertsTest_3').show();
-                $('#pnlSMSAlertsTest_4').show();
-            }
-            else {
-                $('#pnlSMSAlertsPhoneNumber').hide();
-                $('#pnlSMSAlertsClickatellAPIId').hide();
-                $('#pnlSMSAlertsClickatellUsername').hide();
-                $('#pnlSMSAlertsClickatellPassword').hide();
-                $('#pnlSMSAlertsTest_0').hide();
-                $('#pnlSMSAlertsTest_1').hide();
-                $('#pnlSMSAlertsTest_2').hide();
-                $('#pnlSMSAlertsTest_3').hide();
-                $('#pnlSMSAlertsTest_4').hide();
             }
         }
 
@@ -700,121 +674,6 @@
                         <td class="adminData" style="color: red">
                             <asp:Label ID="lblSendTestEmailResult" runat="server" EnableViewState="false">
                             </asp:Label>
-                        </td>
-                    </tr>
-                </table>
-            </ContentTemplate>
-        </ajaxToolkit:TabPanel>
-        <ajaxToolkit:TabPanel runat="server" ID="pnlSMSAlerts" HeaderText="<% $NopResources:Admin.GlobalSettings.SMSAlerts.Title %>">
-            <ContentTemplate>
-                <table class="adminContent">
-                    <tr>
-                        <td class="adminTitle" colspan="2">
-                            To receive an SMS notification when an order is placed from your store you need
-                            to follow a few simple steps, which are shown below:
-                            <ul>
-                                <li><a href="http://www.clickatell.com" target='_blank'>Register for a Clickatell account
-                                    here</a></li>
-                                <li>Clickatell works with all countries and includes 10 free messages so you can test
-                                    SMS notifications</li>
-                                <li>Fill in the form below with your Clickatell account details, including the number
-                                    you want the notification messages to be sent to</li>
-                                <li>Click 'Save' button</li>
-                                <li>Now when you receive a new order, an SMS text message will be sent to the number
-                                    you enter below automatically</li>
-                            </ul>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="adminTitle">
-                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
-                                ID="lblIsSMSAlertsEnabled" Text="<% $NopResources:Admin.GlobalSettings.SMSAlerts.Enabled %>"
-                                ToolTip="<% $NopResources:Admin.GlobalSettings.SMSAlerts.Enabled.Tooltip %>" />
-                        </td>
-                        <td class="adminData">
-                            <asp:CheckBox runat="server" ID="cbIsSMSAlertsEnabled" Checked="false" />
-                        </td>
-                    </tr>
-                    <tr id="pnlSMSAlertsPhoneNumber">
-                        <td class="adminTitle">
-                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
-                                ID="lblSMSAlertsPhoneNumber" Text="<% $NopResources:Admin.GlobalSettings.SMSAlerts.PhoneNumber %>"
-                                ToolTip="<% $NopResources:Admin.GlobalSettings.SMSAlerts.PhoneNumber.Tooltip %>" />
-                        </td>
-                        <td class="adminData">
-                            <asp:TextBox runat="server" ID="txtSMSAlertsPhoneNumber" />
-                        </td>
-                    </tr>
-                    <tr id="pnlSMSAlertsClickatellAPIId">
-                        <td class="adminTitle">
-                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
-                                ID="lblSMSAlertsClickatellAPIId" Text="<% $NopResources:Admin.GlobalSettings.SMSAlerts.Clickatell.APIID %>"
-                                ToolTip="<% $NopResources:Admin.GlobalSettings.SMSAlerts.Clickatell.APIID.Tooltip %>" />
-                        </td>
-                        <td class="adminData">
-                            <asp:TextBox runat="server" ID="txtSMSAlertsClickatellAPIId" />
-                        </td>
-                    </tr>
-                    <tr id="pnlSMSAlertsClickatellUsername">
-                        <td class="adminTitle">
-                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
-                                ID="lblSMSAlertsClickatellUsername" Text="<% $NopResources:Admin.GlobalSettings.SMSAlerts.Clickatell.Username %>"
-                                ToolTip="<% $NopResources:Admin.GlobalSettings.SMSAlerts.Clickatell.Username.Tooltip %>" />
-                        </td>
-                        <td class="adminData">
-                            <asp:TextBox runat="server" ID="txtSMSAlertsClickatellUsername" />
-                        </td>
-                    </tr>
-                    <tr id="pnlSMSAlertsClickatellPassword">
-                        <td class="adminTitle">
-                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
-                                ID="lblSMSAlertsClickatellPassword" Text="<% $NopResources:Admin.GlobalSettings.SMSAlerts.Clickatell.Password %>"
-                                ToolTip="<% $NopResources:Admin.GlobalSettings.SMSAlerts.Clickatell.Password.Tooltip %>" />
-                        </td>
-                        <td class="adminData">
-                            <asp:TextBox runat="server" ID="txtSMSAlertsClickatellPassword" />
-                        </td>
-                    </tr>
-                    <tr class="adminSeparator" id="pnlSMSAlertsTest_0">
-                        <td colspan="2">
-                            <hr />
-                        </td>
-                    </tr>
-                    <tr id="pnlSMSAlertsTest_1">
-                        <td colspan="2">
-                            <p>
-                                <strong>
-                                    <%=GetLocaleResourceString("Admin.GlobalSettings.SMSAlerts.SendTestSMS")%>
-                                </strong>
-                            </p>
-                        </td>
-                    </tr>
-                    <tr id="pnlSMSAlertsTest_2">
-                        <td class="adminTitle">
-                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
-                                ID="lblTestPhone" Text="<% $NopResources:Admin.GlobalSettings.SMSAlerts.TestPhone %>"
-                                ToolTip="<% $NopResources:Admin.GlobalSettings.SMSAlerts.TestPhone.Tooltip %>" />
-                        </td>
-                        <td class="adminData">
-                            <asp:TextBox runat="server" CssClass="adminInput" ID="txtTestPhone" ValidationGroup="SendTestSMS" />
-                            <asp:RequiredFieldValidator runat="server" ControlToValidate="txtTestPhone" ErrorMessage="*"
-                                ValidationGroup="SendTestSMS" />
-                        </td>
-                    </tr>
-                    <tr id="pnlSMSAlertsTest_3">
-                        <td class="adminTitle">
-                        </td>
-                        <td class="adminData">
-                            <asp:Button ID="btnSendTestSMS" runat="server" Text="<% $NopResources:Admin.GlobalSettings.SMSAlerts.SendTestSMSButton %>"
-                                CssClass="adminButton" OnClick="BtnSendTestSMS_OnClick" ValidationGroup="SendTestSMS"
-                                ToolTip="<% $NopResources:Admin.GlobalSettings.SMSAlerts.SendTestSMSButton.Tooltip %>" />
-                        </td>
-                    </tr>
-                    <tr id="pnlSMSAlertsTest_4">
-                        <td class="adminTitle">
-                        </td>
-                        <td class="adminData" style="color: red">
-                            <asp:Label ID="lblSendTestSmsResult" runat="server" EnableViewState="false" />
                         </td>
                     </tr>
                 </table>

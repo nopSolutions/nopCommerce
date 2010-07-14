@@ -161,12 +161,6 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             cbProductsAlsoPurchased.Checked = ProductManager.ProductsAlsoPurchasedEnabled;
             txtProductsAlsoPurchasedNumber.Value = ProductManager.ProductsAlsoPurchasedNumber;
 
-            cbIsSMSAlertsEnabled.Checked = SMSManager.IsSMSAlertsEnabled;
-            txtSMSAlertsPhoneNumber.Text = SMSManager.PhoneNumber;
-            txtSMSAlertsClickatellAPIId.Text = SMSManager.ClickatellAPIId;
-            txtSMSAlertsClickatellUsername.Text = SMSManager.ClickatellUsername;
-            txtSMSAlertsClickatellPassword.Text = SMSManager.ClickatellPassword;
-
             cbLiveChatEnabled.Checked = SettingManager.GetSettingValueBoolean("LiveChat.Enabled", false);
             txtLiveChatBtnCode.Text = SettingManager.GetSettingValue("LiveChat.BtnCode");
             txtLiveChatMonCode.Text = SettingManager.GetSettingValue("LiveChat.MonCode");
@@ -289,7 +283,6 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             this.cbRecentlyViewedProductsEnabled.Attributes.Add("onclick", "toggleRecentlyViewedProducts();");
             this.cbRecentlyAddedProductsEnabled.Attributes.Add("onclick", "toggleRecentlyAddedProducts();");
             this.cbShowBestsellersOnHomePage.Attributes.Add("onclick", "toggleShowBestsellersOnHomePage();");
-            this.cbIsSMSAlertsEnabled.Attributes.Add("onclick", "toggleSMSAlerts();");
             this.cbLiveChatEnabled.Attributes.Add("onclick", "toggleLiveChat();");
             this.cbGoogleAdsenseEnabled.Attributes.Add("onclick", "toggleGoogleAdsense();");
 
@@ -421,12 +414,6 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     ProductManager.ProductsAlsoPurchasedEnabled = cbProductsAlsoPurchased.Checked;
                     ProductManager.ProductsAlsoPurchasedNumber = txtProductsAlsoPurchasedNumber.Value;
 
-                    SMSManager.IsSMSAlertsEnabled = cbIsSMSAlertsEnabled.Checked;
-                    SMSManager.PhoneNumber = txtSMSAlertsPhoneNumber.Text;
-                    SMSManager.ClickatellAPIId = txtSMSAlertsClickatellAPIId.Text;
-                    SMSManager.ClickatellUsername = txtSMSAlertsClickatellUsername.Text;
-                    SMSManager.ClickatellPassword = txtSMSAlertsClickatellPassword.Text;
-
                     SettingManager.SetParam("LiveChat.Enabled", cbLiveChatEnabled.Checked.ToString());
                     SettingManager.SetParam("LiveChat.BtnCode", txtLiveChatBtnCode.Text);
                     SettingManager.SetParam("LiveChat.MonCode", txtLiveChatMonCode.Text);
@@ -522,28 +509,6 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 catch (Exception exc)
                 {
                     lblSendTestEmailResult.Text = exc.Message;
-                }
-            }
-        }
-
-        protected void BtnSendTestSMS_OnClick(object sender, EventArgs e)
-        {
-            if(Page.IsValid)
-            {
-                try
-                {
-                    if(SMSManager.Send("Test message", txtTestPhone.Text))
-                    {
-                        lblSendTestSmsResult.Text = GetLocaleResourceString("Admin.GlobalSettings.SMSAlerts.SendTestSMSSuccess");
-                    }
-                    else
-                    {
-                        lblSendTestSmsResult.Text = GetLocaleResourceString("Admin.GlobalSettings.SMSAlerts.SendTestSMSFail");
-                    }
-                }
-                catch(Exception exc)
-                {
-                    lblSendTestSmsResult.Text = exc.Message;
                 }
             }
         }

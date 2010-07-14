@@ -650,6 +650,144 @@ set @resources='
   <LocaleResource Name="Admin.Currencies.SaveExchangeRateProviderButton">
     <Value>Save</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.SMSProviders.Title">
+    <Value>SMS Providers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SMSProviders.SaveButton.Text">
+    <Value>Save</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SMSProviders.SaveButton.Tooltip">
+    <Value>Save changes</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SMSProviders.Clickatell.Title">
+    <Value>Clickatell</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SMSProviderInfo.Name">
+    <Value>Name:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SMSProviderInfo.Name.Tooltip">
+    <Value>SMS provider name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SMSProviderInfo.Name.ErrorMessage">
+    <Value>Name not specified</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SMSProviderInfo.ClassName">
+    <Value>Class name:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SMSProviderInfo.ClassName.Tooltip">
+    <Value>Enter fully qualified name of SMS provider class</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SMSProviderInfo.ClassName.ErrorMessage">
+    <Value>Class name not specified</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SMSProviderInfo.SystemKeyword">
+    <Value>System keyword:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SMSProviderInfo.SystemKeyword.Tooltip">
+    <Value>SMS provider system keywork</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SMSProviderInfo.Active">
+    <Value>Active:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SMSProviderInfo.Active.Tooltip">
+    <Value>Determines whether this SMS provider is active.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.SMSAlerts.Title">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.SMSAlerts.Enabled">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.SMSAlerts.Enabled.Tooltip">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.SMSAlerts.PhoneNumber">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.SMSAlerts.PhoneNumber.Tooltip">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.SMSAlerts.Clickatell.APIID">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.SMSAlerts.Clickatell.APIID.Tooltip">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.SMSAlerts.Clickatell.Username">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.SMSAlerts.Clickatell.Username.Tooltip">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.SMSAlerts.Clickatell.Password">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.SMSAlerts.Clickatell.Password.Tooltip">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.SMSAlerts.TestPhone">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.SMSAlerts.TestPhone.Tooltip">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.SMSAlerts.SendTestSMSButton">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.SMSAlerts.SendTestSMSButton.Tooltip">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SMSProviders.Clickatell.PhoneNumber">
+    <Value>Phone number:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SMSProviders.Clickatell.PhoneNumber.Tooltip">
+    <Value>Your phone number</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SMSProviders.Clickatell.APIID">
+    <Value>API ID:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SMSProviders.Clickatell.APIID.Tooltip">
+    <Value>Clickatell API ID</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SMSProviders.Clickatell.Username">
+    <Value>Username:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SMSProviders.Clickatell.Username.Tooltip">
+    <Value>Clickatell username</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SMSProviders.Clickatell.Password">
+    <Value>Password:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SMSProviders.Clickatell.Password.Tooltip">
+    <Value>Clickatell password</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SMSProviders.TestMessage.Title">
+    <Value>Test Message</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SMSProviders.TestMessage.Text">
+    <Value>Message text:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SMSProviders.TestMessage.Text.Tooltip">
+    <Value>Text of test message</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SMSProviders.TestMessage.SendButton">
+    <Value>Send</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SMSProviders.TestMessage.SendButton.Tooltip">
+    <Value>Click here to send test message</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SMSProviders.TestMessage.Success">
+    <Value>{0} test message(s) sent</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.EditSMSProviders">
+    <Value>SMS providers settings were changed</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Sitemap.SMSProvidersTitle">
+    <Value>SMS Providers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Sitemap.SMSProvidersDescription">
+    <Value>Manage SMS Providers</Value>
+  </LocaleResource>
 </Language>
 '
 

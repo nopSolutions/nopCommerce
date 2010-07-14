@@ -379,6 +379,27 @@
     <Compile Include="Administration\BulkEditProducts.aspx.designer.cs">
       <DependentUpon>BulkEditProducts.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Administration\SMSProviders.aspx.cs">
+      <DependentUpon>SMSProviders.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Administration\SMSProviders.aspx.designer.cs">
+      <DependentUpon>SMSProviders.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Administration\Modules\SMSProviderInfo.ascx.cs">
+      <DependentUpon>SMSProviderInfo.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Administration\Modules\SMSProviderInfo.ascx.designer.cs">
+      <DependentUpon>SMSProviderInfo.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Administration\Modules\SMSProviders.ascx.cs">
+      <DependentUpon>SMSProviders.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Administration\Modules\SMSProviders.ascx.designer.cs">
+      <DependentUpon>SMSProviders.ascx</DependentUpon>
+    </Compile>
     <Compile Include="Administration\Modules\ExchangeRateProviderList.ascx.cs">
       <DependentUpon>ExchangeRateProviderList.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -5616,6 +5637,9 @@
     <Content Include="Administration\CategoryTemplateAdd.aspx" />
     <Content Include="Administration\CategoryTemplateDetails.aspx" />
     <Content Include="Administration\CategoryTemplates.aspx" />
+    <Content Include="Administration\SMSProviders.aspx" />
+    <Content Include="Administration\Modules\SMSProviderInfo.ascx" />
+    <Content Include="Administration\Modules\SMSProviders.ascx" />
     <Content Include="Administration\Modules\ExchangeRateProviderList.ascx" />
     <Content Include="Administration\Modules\CustomerForumSubscriptions.ascx" />
     <Content Include="Administration\NewsletterSubscribers.aspx" />

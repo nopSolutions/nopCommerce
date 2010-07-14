@@ -1438,6 +1438,19 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<ShoppingCartType> _shoppingCartTypes;
 
+        public ObjectSet<SMSProvider> SMSProviders
+        {
+            get
+            {
+                if (_smsProviders == null)
+                {
+                    _smsProviders = CreateObjectSet<SMSProvider>();
+                }
+                return _smsProviders;
+            }
+        }
+        private ObjectSet<SMSProvider> _smsProviders;
+
         public ObjectSet<SpecificationAttributeLocalized> SpecificationAttributeLocalized
         {
             get

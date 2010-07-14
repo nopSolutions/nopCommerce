@@ -1,10 +1,11 @@
-﻿using NopSolutions.NopCommerce.BusinessLogic.Orders;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using NopSolutions.NopCommerce.BusinessLogic.Caching;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
+using NopSolutions.NopCommerce.BusinessLogic.Data;
+using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.Common.Utils;
-using System;
-using NopSolutions.NopCommerce.BusinessLogic.Audit;
-using NopSolutions.NopCommerce.BusinessLogic.Clickatell;
-using NopSolutions.NopCommerce.Common;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Messages
 {
@@ -13,54 +14,192 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
     /// </summary>
     public class SMSManager
     {
+        #region Constants
+        private const string SMSPROVIDERS_BY_ID_KEY = "Nop.smsprovider.id-{0}";
+        private const string SMSPROVIDERS_PATTERN_KEY = "Nop.smsprovider.";
+        #endregion
+
         #region Methods
         /// <summary>
-        /// Sends SMS message
+        /// Deletes a SMS provider
         /// </summary>
-        /// <param name="text">The text of message</param>
-        /// <returns>true if message was sent successfully; otherwise false.</returns>
-        public static bool Send(string text)
+        /// <param name="smsProviderId">SMS provider identifier</param>
+        public static void DeleteSMSProvider(int smsProviderId)
         {
-            return Send(text, PhoneNumber);
-        }
-        
-        /// <summary>
-        /// Sends SMS message
-        /// </summary>
-        /// <param name="text">The text of message</param>
-        /// <param name="phone">The phone number</param>
-        /// <returns>true if message was sent successfully; otherwise false.</returns>
-        public static bool Send(string text, string phone)
-        {
-            try
-            {
-                using(var svc = new PushServerWS())
-                {
-                    string authRsp = svc.auth(Int32.Parse(ClickatellAPIId), 
-                        ClickatellUsername, ClickatellPassword);
-                    if(!authRsp.ToUpperInvariant().StartsWith("OK"))
-                    {
-                        throw new NopException(authRsp);
-                    }
-                    string ssid = authRsp.Substring(4);
-                    string[] sndRsp = svc.sendmsg(ssid, 
-                        Int32.Parse(ClickatellAPIId), ClickatellUsername, 
-                        ClickatellPassword, new string[1] { phone }, 
-                        String.Empty, text, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-                        String.Empty, 0, String.Empty, String.Empty, String.Empty, 0);
+            var smsProvider = GetSMSProviderById(smsProviderId);
+            if (smsProvider == null)
+                return;
 
-                    if (!sndRsp[0].ToUpperInvariant().StartsWith("ID"))
-                    {
-                        throw new NopException(sndRsp[0]);
-                    }
-                    return true;
+            var context = ObjectContextHelper.CurrentObjectContext;
+            if (!context.IsAttached(smsProvider))
+                context.SMSProviders.Attach(smsProvider);
+            context.DeleteObject(smsProvider);
+            context.SaveChanges();
+
+            if (CacheEnabled)
+            {
+                NopRequestCache.RemoveByPattern(SMSPROVIDERS_PATTERN_KEY);
+            }
+        }
+
+        /// <summary>
+        /// Gets a SMS provider
+        /// </summary>
+        /// <param name="smsProviderId">SMS provider identifier</param>
+        /// <returns>SMS provider</returns>
+        public static SMSProvider GetSMSProviderById(int smsProviderId)
+        {
+            if (smsProviderId == 0)
+                return null;
+
+            string key = string.Format(SMSPROVIDERS_BY_ID_KEY, smsProviderId);
+            object obj2 = NopRequestCache.Get(key);
+            if (CacheEnabled && (obj2 != null))
+            {
+                return (SMSProvider)obj2;
+            }
+
+            var context = ObjectContextHelper.CurrentObjectContext;
+            var query = from p in context.SMSProviders
+                        where p.SMSProviderId == smsProviderId
+                        select p;
+            var smsProvider = query.SingleOrDefault();
+
+            if (CacheEnabled)
+            {
+                NopRequestCache.Add(key, smsProvider);
+            }
+            return smsProvider;
+        }
+
+        /// <summary>
+        /// Gets a SMS provider
+        /// </summary>
+        /// <param name="systemKeyword">SMS provider system keyword</param>
+        /// <returns>SMS provider</returns>
+        public static SMSProvider GetSMSProviderBySystemKeyword(string systemKeyword)
+        {
+            var context = ObjectContextHelper.CurrentObjectContext;
+            var query = from p in context.SMSProviders
+                        where p.SystemKeyword == systemKeyword
+                        select p;
+            var smsProvider = query.FirstOrDefault();
+
+            return smsProvider;
+        }
+
+        /// <summary>
+        /// Gets all SMS providers
+        /// </summary>
+        /// <returns>SMS provider collection</returns>
+        public static List<SMSProvider> GetAllSMSProviders()
+        {
+            return GetAllSMSProviders();
+        }
+
+        /// <summary>
+        /// Gets all SMS providers
+        /// </summary>
+        /// <param name="showHidden">A value indicating whether the not active SMS providers should be load</param>
+        /// <returns>SMS provider collection</returns>
+        public static List<SMSProvider> GetAllSMSProviders(bool showHidden)
+        {
+            var context = ObjectContextHelper.CurrentObjectContext;
+            var query = from p in context.SMSProviders
+                        where showHidden || p.IsActive
+                        orderby p.Name
+                        select p;
+            return query.ToList();
+        }
+
+        /// <summary>
+        /// Inserts a SMS provider
+        /// </summary>
+        /// <param name="name">The name</param>
+        /// <param name="className">The class name</param>
+        /// <param name="systemKeyword">The system keyword</param>
+        /// <param name="isActive">A value indicating whether the SMS provider is active</param>
+        /// <returns>SMS provider</returns>
+        public static SMSProvider InsertSMSProvider(string name, string className, string systemKeyword, bool isActive)
+        {
+            name = CommonHelper.EnsureMaximumLength(name, 100);
+            className = CommonHelper.EnsureMaximumLength(className, 500);
+            systemKeyword = CommonHelper.EnsureMaximumLength(systemKeyword, 500);
+
+            var context = ObjectContextHelper.CurrentObjectContext;
+
+            var smsProvider = context.SMSProviders.CreateObject();
+            smsProvider.Name = name;
+            smsProvider.ClassName = className;
+            smsProvider.SystemKeyword = systemKeyword;
+            smsProvider.IsActive = isActive;
+
+            context.SMSProviders.AddObject(smsProvider);
+            context.SaveChanges();
+
+            if (CacheEnabled)
+            {
+                NopRequestCache.RemoveByPattern(SMSPROVIDERS_PATTERN_KEY);
+            }
+            return smsProvider;
+        }
+
+        /// <summary>
+        /// Updates the SMS provider
+        /// </summary>
+        /// <param name="smsProviderId">The SMS provider identifer</param>
+        /// <param name="name">The name</param>
+        /// <param name="className">The class name</param>
+        /// <param name="systemKeyword">The system keyword</param>
+        /// <param name="isActive">A value indicating whether the SMS provider is active</param>
+        /// <returns>SMS provider</returns>
+        public static SMSProvider UpdateSMSProvider(int smsProviderId, string name, string className, string systemKeyword, bool isActive)
+        {
+            name = CommonHelper.EnsureMaximumLength(name, 100);
+            className = CommonHelper.EnsureMaximumLength(className, 500);
+            systemKeyword = CommonHelper.EnsureMaximumLength(systemKeyword, 500);
+
+            var smsProvider = GetSMSProviderById(smsProviderId);
+            if (smsProvider == null)
+                return null;
+
+            var context = ObjectContextHelper.CurrentObjectContext;
+            if (!context.IsAttached(smsProvider))
+                context.SMSProviders.Attach(smsProvider);
+
+            smsProvider.Name = name;
+            smsProvider.ClassName = className;
+            smsProvider.SystemKeyword = systemKeyword;
+            smsProvider.IsActive = isActive;
+            context.SaveChanges();
+
+            if (CacheEnabled)
+            {
+                NopRequestCache.RemoveByPattern(SMSPROVIDERS_PATTERN_KEY);
+            }
+            return smsProvider;
+        }
+
+        /// <summary>
+        /// Sends SMS
+        /// </summary>
+        /// <param name="from">From</param>
+        /// <param name="to">To</param>
+        /// <param name="text">Text</param>
+        /// <returns>Number of sent messages</returns>
+        public static int SendSMS(string text)
+        {
+            int i = 0;
+
+            foreach (SMSProvider smsProvider in GetAllSMSProviders(false))
+            {
+                var iSMSProvider = Activator.CreateInstance(Type.GetType(smsProvider.ClassName)) as ISMSProvider;
+                if (iSMSProvider.SendSMS(text))
+                {
+                    i++;
                 }
             }
-            catch(Exception ex)
-            {
-                LogManager.InsertLog(LogTypeEnum.Unknown, ex.Message, ex);
-            }
-            return false;
+            return i;
         }
 
         /// <summary>
@@ -68,88 +207,27 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// </summary>
         /// <param name="order">The order</param>
         /// <returns>true if message was sent successfully; otherwise false.</returns>
-        public static bool SendOrderPlacedNotification(Order order)
+        public static void SendOrderPlacedNotification(Order order)
         {
-            if(order == null)
-                return false;
-
-            return Send(String.Format("New order(#{0}) has been placed.", order.OrderId));
+            if (order != null)
+            {
+                if (SendSMS(String.Format("New order(#{0}) has been placed.", order.OrderId)) > 0)
+                {
+                    OrderManager.InsertOrderNote(order.OrderId, "\"Order placed\" SMS alert (to store owner) has been sent", false, DateTime.UtcNow);
+                }
+            }
         }
         #endregion
 
         #region Properties
         /// <summary>
-        /// Gets or sets a value indicating whether the SMS notifications is enabled
+        /// Gets a value indicating whether cache is enabled
         /// </summary>
-        public static bool IsSMSAlertsEnabled
+        public static bool CacheEnabled
         {
             get
             {
-                return SettingManager.GetSettingValueBoolean("Mobile.SMS.IsEnabled", false);
-            }
-            set
-            {
-                SettingManager.SetParam("Mobile.SMS.IsEnabled", value.ToString());
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the admin phone number
-        /// </summary>
-        public static string PhoneNumber
-        {
-            get
-            {
-                return SettingManager.GetSettingValue("Mobile.SMS.AdminPhoneNumber");
-            }
-            set
-            {
-                SettingManager.SetParam("Mobile.SMS.AdminPhoneNumber", value);
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the Clickatell API ID
-        /// </summary>
-        public static string ClickatellAPIId
-        {
-            get
-            {
-                return SettingManager.GetSettingValue("Mobile.SMS.Clickatell.APIID");
-            }
-            set
-            {
-                SettingManager.SetParam("Mobile.SMS.Clickatell.APIID", value);
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the Clickatell username
-        /// </summary>
-        public static string ClickatellUsername
-        {
-            get
-            {
-                return SettingManager.GetSettingValue("Mobile.SMS.Clickatell.Username");
-            }
-            set
-            {
-                SettingManager.SetParam("Mobile.SMS.Clickatell.Username", value);
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the Clickatell password
-        /// </summary>
-        public static string ClickatellPassword
-        {
-            get
-            {
-                return SettingManager.GetSettingValue("Mobile.SMS.Clickatell.Password");
-            }
-            set
-            {
-                SettingManager.SetParam("Mobile.SMS.Clickatell.Password", value);
+                return SettingManager.GetSettingValueBoolean("Cache.SMSManager.CacheEnabled");
             }
         }
         #endregion

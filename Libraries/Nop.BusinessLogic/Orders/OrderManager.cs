@@ -3699,10 +3699,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                             InsertOrderNote(order.OrderId, string.Format("\"Order placed\" email (to customer) has been queued. Queued email identifier: {0}.", orderPlacedCustomerNotificationQueuedEmailId), false, DateTime.UtcNow);
                         }
 
-                        if (SMSManager.IsSMSAlertsEnabled && SMSManager.SendOrderPlacedNotification(order))
-                        {
-                            InsertOrderNote(order.OrderId, "\"Order placed\" SMS alert (to store owner) has been sent", false, DateTime.UtcNow);
-                        }
+                        SMSManager.SendOrderPlacedNotification(order);
 
                         //order status
                         order = CheckOrderStatus(order.OrderId);

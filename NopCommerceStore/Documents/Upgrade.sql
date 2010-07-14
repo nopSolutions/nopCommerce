@@ -706,7 +706,7 @@ IF EXISTS (SELECT 1
 ALTER TABLE dbo.Nop_Product
 DROP CONSTRAINT FK_Nop_Product_Nop_ProductType
 GO
-if not exists (select 1 from sysobjects where id = object_id(N'[dbo].[Nop_ProductType]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+IF EXISTS (select 1 from sysobjects where id = object_id(N'[dbo].[Nop_ProductType]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
 BEGIN
 DROP TABLE [Nop_ProductType]
 ALTER TABLE [dbo].[Nop_Product] DROP CONSTRAINT [DF_Nop_Product_ProductTypeID]
@@ -1060,5 +1060,71 @@ GO
 IF NOT EXISTS ( SELECT 1 FROM [dbo].[Nop_Setting] WHERE [Name] = N'ExchangeRateProvider.Current')
 BEGIN
 	INSERT [dbo].[Nop_Setting] ([Name], [Value], [Description]) VALUES (N'ExchangeRateProvider.Current', N'1', N'')
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[dbo].[Nop_SMSProvider]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+BEGIN
+CREATE TABLE [dbo].[Nop_SMSProvider](
+	[SMSProviderId] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [nvarchar](100) NOT NULL,
+	[ClassName] [nvarchar](500) NOT NULL,
+	[SystemKeyword] [nvarchar](500) NOT NULL,
+	[IsActive] [bit] NOT NULL,
+ CONSTRAINT [PK_SMSProvider] PRIMARY KEY CLUSTERED 
+(
+	[SMSProviderId] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 80) ON [PRIMARY]
+) ON [PRIMARY]
+END
+GO
+
+IF NOT EXISTS ( SELECT 1 FROM [dbo].[Nop_Setting] WHERE [Name] = N'Cache.SMSManager.CacheEnabled')
+BEGIN
+	INSERT [dbo].[Nop_Setting] ([Name], [Value], [Description]) VALUES (N'Cache.SMSManager.CacheEnabled', N'True', N'')
+END
+GO
+
+IF EXISTS ( SELECT 1 FROM [dbo].[Nop_Setting] WHERE [Name] = N'Mobile.SMS.IsEnabled')
+BEGIN
+	DELETE FROM [dbo].[Nop_Setting] WHERE [Name] = N'Mobile.SMS.IsEnabled'
+END
+GO
+
+IF NOT EXISTS ( SELECT 1 FROM [dbo].[Nop_Setting] WHERE [Name] = N'Mobile.SMS.Clickatell.PhoneNumber')
+BEGIN
+	INSERT [dbo].[Nop_Setting] ([Name], [Value], [Description]) VALUES (N'Mobile.SMS.Clickatell.PhoneNumber', N'', N'')
+END
+GO
+
+IF EXISTS ( SELECT 1 FROM [dbo].[Nop_Setting] WHERE [Name] = N'Mobile.SMS.AdminPhoneNumber')
+BEGIN
+	DELETE FROM [dbo].[Nop_Setting] WHERE [Name] = N'Mobile.SMS.AdminPhoneNumber'
+END
+GO
+
+IF NOT EXISTS(SELECT 1 FROM [Nop_ActivityLogType] WHERE [SystemKeyword] = N'EditSMSProviders')
+BEGIN
+	INSERT INTO [Nop_ActivityLogType] ([SystemKeyword], [Name], [Enabled]) VALUES (N'EditSMSProviders', N'Edit SMS providers settings', 1)
+END
+GO
+
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[Nop_CustomerAction]
+		WHERE [SystemKeyword] = N'ManageSMSProviders')
+BEGIN
+	INSERT [dbo].[Nop_CustomerAction] ([Name], [SystemKeyword], [Comment], [DisplayOrder])
+	VALUES (N'Manage SMSProviders', N'ManageSMSProviders', N'',200)
+END
+GO
+
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[Nop_SMSProvider]
+		WHERE [ClassName] = N'NopSolutions.NopCommerce.BusinessLogic.Messages.ClickatellSMSProvider, Nop.BusinessLogic')
+BEGIN
+	INSERT [dbo].[Nop_SMSProvider] ([Name], [ClassName], [SystemKeyword], [IsActive]) 
+	VALUES (N'Clickatell', N'NopSolutions.NopCommerce.BusinessLogic.Messages.ClickatellSMSProvider, Nop.BusinessLogic', N'SMSPROVIDERS_CLICKATELL', 0)
 END
 GO
