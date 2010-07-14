@@ -761,23 +761,26 @@ set @resources='
   <LocaleResource Name="Admin.SMSProviders.Clickatell.Password.Tooltip">
     <Value>Clickatell password</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.SMSProviders.TestMessage.Title">
-    <Value>Test Message</Value>
+  <LocaleResource Name="Admin.SMSProviders.Clickatell.TestMessage">
+    <Value>Send test message</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.SMSProviders.TestMessage.Text">
+  <LocaleResource Name="Admin.SMSProviders.Clickatell.TestMessage.Text">
     <Value>Message text:</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.SMSProviders.TestMessage.Text.Tooltip">
+  <LocaleResource Name="Admin.SMSProviders.Clickatell.TestMessage.Text.Tooltip">
     <Value>Text of test message</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.SMSProviders.TestMessage.SendButton">
+  <LocaleResource Name="Admin.SMSProviders.Clickatell.TestMessage.SendButton">
     <Value>Send</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.SMSProviders.TestMessage.SendButton.Tooltip">
+  <LocaleResource Name="Admin.SMSProviders.Clickatell.TestMessage.SendButton.Tooltip">
     <Value>Click here to send test message</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.SMSProviders.TestMessage.Success">
-    <Value>{0} test message(s) sent</Value>
+  <LocaleResource Name="Admin.SMSProviders.Clickatell.TestMessage.Success">
+    <Value>Test message sent</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SMSProviders.Clickatell.TestMessage.Failed">
+    <Value>Test message sending failed</Value>
   </LocaleResource>
   <LocaleResource Name="ActivityLog.EditSMSProviders">
     <Value>SMS providers settings were changed</Value>
@@ -850,6 +853,36 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.ConfigurationHome.SMSProviders.Description">
     <Value>Manage SMS notification settings and providers.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SMSProviders.Verizon.Title">
+    <Value>Verizon</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SMSProviders.Verizon.Email">
+    <Value>Email:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SMSProviders.Verizon.Email.Tooltip">
+    <Value>Verizon email address(e.g. your_phone_number@vtext.com)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SMSProviders.Verizon.TestMessage">
+    <Value>Send test message</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SMSProviders.Verizon.TestMessage.Text">
+    <Value>Text:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SMSProviders.Verizon.TestMessageText.Tooltip">
+    <Value>Text of test message</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SMSProviders.Verizon.TestMessage.SendButton">
+    <Value>Send</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SMSProviders.Verizon.TestMessage.SendButton.Tooltip">
+    <Value>Clich to send test message</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SMSProviders.Verizon.TestMessage.Failed">
+    <Value>Test message sending failed</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SMSProviders.Verizon.TestMessage.Success">
+    <Value>Test message sent</Value>
   </LocaleResource>
 </Language>
 '

@@ -183,8 +183,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// <summary>
         /// Sends SMS
         /// </summary>
-        /// <param name="from">From</param>
-        /// <param name="to">To</param>
         /// <param name="text">Text</param>
         /// <returns>Number of sent messages</returns>
         public static int SendSMS(string text)
@@ -193,7 +191,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
 
             foreach (SMSProvider smsProvider in GetAllSMSProviders(false))
             {
-                var iSMSProvider = Activator.CreateInstance(Type.GetType(smsProvider.ClassName)) as ISMSProvider;
+                var iSMSProvider = smsProvider.Instance;
                 if (iSMSProvider.SendSMS(text))
                 {
                     i++;

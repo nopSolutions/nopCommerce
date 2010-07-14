@@ -34,7 +34,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         #endregion
 
         #region Properties
-
         /// <summary>
         /// Gets or sets the SMS provider identifier
         /// </summary>
@@ -59,6 +58,19 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// Gets or sets a value indicating whether the SMS provider is active
         /// </summary>
         public bool IsActive { get; set; }
+        #endregion
+
+        #region Custom properties
+        /// <summary>
+        /// Gets instance of ClassName type as ISMSProvider
+        /// </summary>
+        public ISMSProvider Instance
+        {
+            get
+            {
+                return Activator.CreateInstance(Type.GetType(ClassName)) as ISMSProvider;
+            }
+        }
         #endregion
     }
 }

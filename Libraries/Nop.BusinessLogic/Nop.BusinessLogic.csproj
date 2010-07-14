@@ -168,6 +168,7 @@
     <Compile Include="Manufacturers\Extensions.cs" />
     <Compile Include="Manufacturers\ManufacturerLocalized.cs" />
     <Compile Include="Messages\ClickatellSMSProvider.cs" />
+    <Compile Include="Messages\VerizonSMSProvider.cs" />
     <Compile Include="Messages\ISMSProvider.cs" />
     <Compile Include="Messages\NewsLetterSubscription.cs" />
     <Compile Include="Messages\SMSProvider.cs" />

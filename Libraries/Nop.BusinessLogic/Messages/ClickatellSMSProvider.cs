@@ -15,8 +15,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// <summary>
         /// Sends SMS
         /// </summary>
-        /// <param name="from">From</param>
-        /// <param name="to">To</param>
         /// <param name="text">Text</param>
         public bool SendSMS(string text)
         {

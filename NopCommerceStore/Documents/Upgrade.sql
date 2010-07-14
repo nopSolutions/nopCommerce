@@ -1128,3 +1128,19 @@ BEGIN
 	VALUES (N'Clickatell', N'NopSolutions.NopCommerce.BusinessLogic.Messages.ClickatellSMSProvider, Nop.BusinessLogic', N'SMSPROVIDERS_CLICKATELL', 0)
 END
 GO
+
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[Nop_SMSProvider]
+		WHERE [ClassName] = N'NopSolutions.NopCommerce.BusinessLogic.Messages.VerizonSMSProvider, Nop.BusinessLogic')
+BEGIN
+	INSERT [dbo].[Nop_SMSProvider] ([Name], [ClassName], [SystemKeyword], [IsActive]) 
+	VALUES (N'Verizon', N'NopSolutions.NopCommerce.BusinessLogic.Messages.VerizonSMSProvider, Nop.BusinessLogic', N'SMSPROVIDERS_VERIZON', 0)
+END
+GO
+
+IF NOT EXISTS ( SELECT 1 FROM [dbo].[Nop_Setting] WHERE [Name] = N'Mobile.SMS.Verizon.Email')
+BEGIN
+	INSERT [dbo].[Nop_Setting] ([Name], [Value], [Description]) VALUES (N'Mobile.SMS.Verizon.Email', N'', N'')
+END
+GO

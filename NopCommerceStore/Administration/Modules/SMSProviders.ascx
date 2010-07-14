@@ -35,6 +35,23 @@
                         </td>
                     </tr>
                     <tr>
+                        <td class="adminTitle" colspan="2">
+                            To receive an SMS notification when an order is placed from your store you need
+                            to follow a few simple steps, which are shown below:
+                            <ul>
+                                <li><a href="http://www.clickatell.com" target='_blank'>Register for a Clickatell account
+                                    here</a></li>
+                                <li>Clickatell works with all countries and includes 10 free messages so you can test
+                                    SMS notifications</li>
+                                <li>Fill in the form below with your Clickatell account details, including the number
+                                    you want the notification messages to be sent to</li>
+                                <li>Click 'Save' button</li>
+                                <li>Now when you receive a new order, an SMS text message will be sent to the number
+                                    you enter below automatically</li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr>
                         <td class="adminTitle">
                             <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
                                 ID="lblClickatellPhoneNumber" Text="<% $NopResources:Admin.SMSProviders.Clickatell.PhoneNumber %>"
@@ -74,31 +91,96 @@
                             <asp:TextBox runat="server" ID="txtClickatellPassword" />
                         </td>
                     </tr>
-                </table>
-            </ContentTemplate>
-        </ajaxToolkit:TabPanel>
-        <ajaxToolkit:TabPanel runat="server" ID="pnlTestMessage" HeaderText="<% $NopResources:Admin.SMSProviders.TestMessage.Title %>">
-            <ContentTemplate>
-                <table class="adminContent">
+                    <tr class="adminSeparator">
+                        <td colspan="2">
+                            <hr />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <p>
+                                <strong>
+                                    <%=GetLocaleResourceString("Admin.SMSProviders.Clickatell.TestMessage")%>
+                                </strong>
+                            </p>
+                        </td>
+                    </tr>
                     <tr>
                         <td class="adminTitle">
                             <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
-                                ID="lblTestMessageText" Text="<% $NopResources:Admin.SMSProviders.TestMessage.Text %>"
-                                ToolTip="<% $NopResources:Admin.SMSProviders.TestMessage.Text.Tooltip %>" />
+                                ID="lblClickatellTestMessageText" Text="<% $NopResources:Admin.SMSProviders.Clickatell.TestMessage.Text %>"
+                                ToolTip="<% $NopResources:Admin.SMSProviders.Clickatell.TestMessageText.Tooltip %>" />
                         </td>
                         <td class="adminData">
-                            <asp:TextBox runat="server" CssClass="adminInput" ID="txtTestMessageText" ValidationGroup="TestMessage" TextMode="MultiLine" />
-                            <asp:RequiredFieldValidator ID="vldTestMessageText" runat="server" ControlToValidate="txtTestMessageText" ErrorMessage="*"
-                                ValidationGroup="TestMessage" />
+                            <asp:TextBox runat="server" CssClass="adminInput" ID="txtClickatellTestMessageText" ValidationGroup="ClickatellTestMessage" TextMode="MultiLine" />
+                            <asp:RequiredFieldValidator ID="vldClickatellTestMessageText" runat="server" ControlToValidate="txtClickatellTestMessageText" ErrorMessage="*"
+                                ValidationGroup="ClickatellTestMessage" />
                         </td>
                     </tr>
                     <tr>
                         <td>
                         </td>
                         <td class="adminData">
-                            <asp:Button ID="btnTestMessageSend" runat="server" Text="<% $NopResources:Admin.SMSProviders.TestMessage.SendButton %>"
-                                CssClass="adminButton" OnClick="BtnTestMessageSend_OnClick" ValidationGroup="TestMessage"
-                                ToolTip="<% $NopResources:Admin.SMSProviders.TestMessage.SendButton.Tooltip %>" />
+                            <asp:Button ID="btnClickatellTestMessageSend" runat="server" Text="<% $NopResources:Admin.SMSProviders.Clickatell.TestMessage.SendButton %>"
+                                CssClass="adminButton" OnClick="BtnClickatellTestMessageSend_OnClick" ValidationGroup="ClickatellTestMessage"
+                                ToolTip="<% $NopResources:Admin.SMSProviders.Clickatell.TestMessage.SendButton.Tooltip %>" />
+                        </td>
+                    </tr>
+                </table>
+            </ContentTemplate>
+        </ajaxToolkit:TabPanel>
+        <ajaxToolkit:TabPanel runat="server" ID="pnlVerizon" HeaderText="<% $NopResources:Admin.SMSProviders.Verizon.Title %>">
+            <ContentTemplate>
+                <nopCommerce:SMSProviderInfo runat="server" ID="ctrlVerizonProviderInfo" SMSProviderSystemKeyword="SMSPROVIDERS_VERIZON" />
+                <table class="adminContent">
+                    <tr class="adminSeparator">
+                        <td colspan="2">
+                            <hr />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
+                                ID="lblVerizonEmail" Text="<% $NopResources:Admin.SMSProviders.Verizon.Email %>"
+                                ToolTip="<% $NopResources:Admin.SMSProviders.Verizon.Email.Tooltip %>" />
+                        </td>
+                        <td class="adminData">
+                            <nopCommerce:EmailTextBox runat="server" ID="txtVerizonEmail" />
+                        </td>
+                    </tr>
+                    <tr class="adminSeparator">
+                        <td colspan="2">
+                            <hr />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <p>
+                                <strong>
+                                    <%=GetLocaleResourceString("Admin.SMSProviders.Verizon.TestMessage")%>
+                                </strong>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
+                                ID="lblVerizonTestMessageText" Text="<% $NopResources:Admin.SMSProviders.Verizon.TestMessage.Text %>"
+                                ToolTip="<% $NopResources:Admin.SMSProviders.Verizon.TestMessageText.Tooltip %>" />
+                        </td>
+                        <td class="adminData">
+                            <asp:TextBox runat="server" CssClass="adminInput" ID="txtVerizonTestMessageText" ValidationGroup="VerizonTestMessage" TextMode="MultiLine" />
+                            <asp:RequiredFieldValidator ID="vldVerizonTestMessageText" runat="server" ControlToValidate="txtVerizonTestMessageText" ErrorMessage="*"
+                                ValidationGroup="VerizonTestMessage" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        </td>
+                        <td class="adminData">
+                            <asp:Button ID="btnVerizonTestMessageSend" runat="server" Text="<% $NopResources:Admin.SMSProviders.Verizon.TestMessage.SendButton %>"
+                                CssClass="adminButton" OnClick="BtnVerizonTestMessageSend_OnClick" ValidationGroup="VerizonTestMessage"
+                                ToolTip="<% $NopResources:Admin.SMSProviders.Verizon.TestMessage.SendButton.Tooltip %>" />
                         </td>
                     </tr>
                 </table>

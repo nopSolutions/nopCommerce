@@ -55,6 +55,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             txtClickatellAPIId.Text = SettingManager.GetSettingValue("Mobile.SMS.Clickatell.APIID");
             txtClickatellUsername.Text = SettingManager.GetSettingValue("Mobile.SMS.Clickatell.Username");
             txtClickatellPassword.Text = SettingManager.GetSettingValue("Mobile.SMS.Clickatell.Password");
+
+            txtVerizonEmail.Text = SettingManager.GetSettingValue("Mobile.SMS.Verizon.Email");
         }
 
         private void FillDropDowns()
@@ -75,11 +77,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 try
                 {
                     ctrlClickatellProviderInfo.SaveInfo();
+                    ctrlVerizonProviderInfo.SaveInfo();
 
                     SettingManager.SetParam("Mobile.SMS.Clickatell.PhoneNumber", txtClickatellPhoneNumber.Text);
                     SettingManager.SetParam("Mobile.SMS.Clickatell.APIID", txtClickatellAPIId.Text);
                     SettingManager.SetParam("Mobile.SMS.Clickatell.Username", txtClickatellUsername.Text);
                     SettingManager.SetParam("Mobile.SMS.Clickatell.Password", txtClickatellPassword.Text);
+                    SettingManager.SetParam("Mobile.SMS.Verizon.Email", txtVerizonEmail.Text);
 
                     CustomerActivityManager.InsertActivity("EditSMSProviders", GetLocaleResourceString("ActivityLog.EditSMSProviders"));
 
@@ -92,12 +96,61 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             }
         }
 
-        protected void BtnTestMessageSend_OnClick(object sender, EventArgs e)
+        protected void BtnClickatellTestMessageSend_OnClick(object sender, EventArgs e)
         {
             try
             {
-                int msgNum = SMSManager.SendSMS(txtTestMessageText.Text);
-                ShowMessage(String.Format(GetLocaleResourceString("Admin.SMSProviders.TestMessage.Success"), msgNum));
+                SMSProvider smsProvider = SMSManager.GetSMSProviderBySystemKeyword("SMSPROVIDERS_CLICKATELL");
+                if (smsProvider == null)
+                {
+                    ShowError(GetLocaleResourceString("Admin.SMSProviders.Clickatell.TestMessage.Failed"));
+                    return;
+                }
+
+                ISMSProvider iSMSProvider = smsProvider.Instance;
+                if(iSMSProvider == null)
+                {
+                    ShowError(GetLocaleResourceString("Admin.SMSProviders.Clickatell.TestMessage.Failed"));
+                    return;
+                }
+
+                if (!iSMSProvider.SendSMS(txtClickatellTestMessageText.Text))
+                {
+                    ShowError(GetLocaleResourceString("Admin.SMSProviders.Clickatell.TestMessage.Failed"));
+                    return;
+                }
+                ShowMessage(GetLocaleResourceString("Admin.SMSProviders.Clickatell.TestMessage.Success"));
+            }
+            catch (Exception exc)
+            {
+                ProcessException(exc);
+            }
+        }
+
+        protected void BtnVerizonTestMessageSend_OnClick(object sender, EventArgs e)
+        {
+            try
+            {
+                SMSProvider smsProvider = SMSManager.GetSMSProviderBySystemKeyword("SMSPROVIDERS_VERIZON");
+                if (smsProvider == null)
+                {
+                    ShowError(GetLocaleResourceString("Admin.SMSProviders.Verizon.TestMessage.Failed"));
+                    return;
+                }
+
+                ISMSProvider iSMSProvider = smsProvider.Instance;
+                if(iSMSProvider == null)
+                {
+                    ShowError(GetLocaleResourceString("Admin.SMSProviders.Verizon.TestMessage.Failed"));
+                    return;
+                }
+
+                if (!iSMSProvider.SendSMS(txtClickatellTestMessageText.Text))
+                {
+                    ShowError(GetLocaleResourceString("Admin.SMSProviders.Verizon.TestMessage.Failed"));
+                    return;
+                }
+                ShowMessage(GetLocaleResourceString("Admin.SMSProviders.Verizon.TestMessage.Success"));
             }
             catch (Exception exc)
             {

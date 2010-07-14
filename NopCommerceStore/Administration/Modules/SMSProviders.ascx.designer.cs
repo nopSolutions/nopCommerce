@@ -121,48 +121,111 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         protected global::System.Web.UI.WebControls.TextBox txtClickatellPassword;
         
         /// <summary>
-        /// pnlTestMessage control.
+        /// lblClickatellTestMessageText control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::AjaxControlToolkit.TabPanel pnlTestMessage;
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblClickatellTestMessageText;
         
         /// <summary>
-        /// lblTestMessageText control.
+        /// txtClickatellTestMessageText control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblTestMessageText;
+        protected global::System.Web.UI.WebControls.TextBox txtClickatellTestMessageText;
         
         /// <summary>
-        /// txtTestMessageText control.
+        /// vldClickatellTestMessageText control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtTestMessageText;
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator vldClickatellTestMessageText;
         
         /// <summary>
-        /// vldTestMessageText control.
+        /// btnClickatellTestMessageSend control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator vldTestMessageText;
+        protected global::System.Web.UI.WebControls.Button btnClickatellTestMessageSend;
         
         /// <summary>
-        /// btnTestMessageSend control.
+        /// pnlVerizon control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnTestMessageSend;
+        protected global::AjaxControlToolkit.TabPanel pnlVerizon;
+        
+        /// <summary>
+        /// ctrlVerizonProviderInfo control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.SMSProviderInfoControl ctrlVerizonProviderInfo;
+        
+        /// <summary>
+        /// lblVerizonEmail control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblVerizonEmail;
+        
+        /// <summary>
+        /// txtVerizonEmail control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.EmailTextBox txtVerizonEmail;
+        
+        /// <summary>
+        /// lblVerizonTestMessageText control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblVerizonTestMessageText;
+        
+        /// <summary>
+        /// txtVerizonTestMessageText control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtVerizonTestMessageText;
+        
+        /// <summary>
+        /// vldVerizonTestMessageText control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator vldVerizonTestMessageText;
+        
+        /// <summary>
+        /// btnVerizonTestMessageSend control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnVerizonTestMessageSend;
     }
 }
