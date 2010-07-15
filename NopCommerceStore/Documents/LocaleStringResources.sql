@@ -932,6 +932,21 @@ set @resources='
   <LocaleResource Name="Admin.NewsletterSubscribers.ImportEmailsButton.Success">
     <Value>{0} emails have been successfully imported</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.CurrentShoppingCarts.Title">
+    <Value>Current Shopping Carts</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CurrentShoppingCarts.Empty">
+    <Value>No records found</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Sitemap.CurrentShoppingCartsTitle">
+    <Value>Current Shopping Carts</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Sitemap.CurrentShoppingCartsDescription">
+    <Value>Manage Current Shopping Carts</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CustomerShoppingCart.CustomerColumn">
+    <Value>Customer</Value>
+  </LocaleResource>
 </Language>
 '
 

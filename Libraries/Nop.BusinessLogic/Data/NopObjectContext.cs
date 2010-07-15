@@ -1785,6 +1785,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
             base.ExecuteFunction("Sp_CustomerSessionDeleteExpired", olderThanParameter);
         }
 
+        public List<CustomerSession> Sp_CustomerSessionLoadNonEmpty()
+        {
+            return base.ExecuteFunction<CustomerSession>("Sp_CustomerSessionLoadNonEmpty").ToList();
+        }
+
         public List<DiscountUsageHistory> Sp_DiscountUsageHistoryLoadAll(int? discountId,
             int? customerId, int? orderId)
         {

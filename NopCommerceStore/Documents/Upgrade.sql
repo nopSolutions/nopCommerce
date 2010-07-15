@@ -1188,4 +1188,36 @@ BEGIN
 END
 GO
 
-
+IF EXISTS (
+		SELECT *
+		FROM dbo.sysobjects
+		WHERE id = OBJECT_ID(N'[dbo].[Nop_CustomerSessionLoadNonEmpty]') AND OBJECTPROPERTY(id,N'IsProcedure') = 1)
+BEGIN
+DROP PROCEDURE [dbo].[Nop_CustomerSessionLoadNonEmpty]
+END
+GO
+CREATE PROCEDURE [dbo].[Nop_CustomerSessionLoadNonEmpty]
+AS
+BEGIN
+	SET NOCOUNT OFF
+		
+	SELECT
+		*
+	FROM 
+		[Nop_CustomerSession]
+	WHERE 
+		CustomerSessionGUID 
+	IN
+	(
+		SELECT 
+			cs.CustomerSessionGUID
+		FROM 
+			[Nop_CustomerSession] cs
+		WHERE 
+			cs.CustomerSessionGUID IN 
+			(
+					SELECT DISTINCT sci.CustomerSessionGUID FROM [Nop_ShoppingCartItem] sci
+			)
+	)
+END
+GO

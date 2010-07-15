@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="NopSolutions.NopCommerce.BusinessLogic.Data.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2005" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+    <Schema Namespace="NopSolutions.NopCommerce.BusinessLogic.Data.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
         <EntityContainer Name="NopSolutionsNopCommerceBusinessLogicDataStoreContainer">
           <EntitySet Name="Nop_ACL" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_ACL" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Nop_ActivityLog" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_ActivityLog" store:Type="Tables" Schema="dbo" />
@@ -1402,9 +1402,9 @@
           <Property Name="ShippedDate" Type="datetime" />
           <Property Name="TrackingNumber" Type="nvarchar" Nullable="false" MaxLength="100" />
           <Property Name="DeliveryDate" Type="datetime" />
-          <Property Name="VatNumber" Type="nvarchar" Nullable="false" MaxLength="100" />
           <Property Name="Deleted" Type="bit" Nullable="false" />
           <Property Name="CreatedOn" Type="datetime" Nullable="false" />
+          <Property Name="VatNumber" Type="nvarchar" Nullable="false" MaxLength="100" />
         </EntityType>
         <EntityType Name="Nop_OrderNote">
           <Key>
@@ -3837,6 +3837,7 @@
         <Function Name="Nop_CustomerSessionDeleteExpired" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="OlderThan" Type="datetime" Mode="In" />
         </Function>
+        <Function Name="Nop_CustomerSessionLoadNonEmpty" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="Nop_DiscountUsageHistoryLoadAll" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="DiscountID" Type="int" Mode="In" />
           <Parameter Name="CustomerID" Type="int" Mode="In" />
@@ -4895,6 +4896,7 @@
           <Parameter Name="OlderThan" Mode="In" Type="DateTime" />
           </FunctionImport>
           <EntitySet Name="SMSProviders" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.SMSProvider" />
+          <FunctionImport Name="Sp_CustomerSessionLoadNonEmpty" EntitySet="CustomerSessions" ReturnType="Collection(NopSolutions.NopCommerce.BusinessLogic.Data.CustomerSession)" />
         </EntityContainer>
         <EntityType Name="Language">
           <Key>
@@ -9670,6 +9672,7 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="Sp_CustomerSessionLoadNonEmpty" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_CustomerSessionLoadNonEmpty" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

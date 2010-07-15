@@ -2344,6 +2344,16 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         }
 
         /// <summary>
+        /// Gets all customer sessions with non empty shopping cart
+        /// </summary>
+        /// <returns>Customer session collection</returns>
+        public static List<CustomerSession> GetAllCustomerSessionsWithNonEmptyShoppingCart()
+        {
+            var context = ObjectContextHelper.CurrentObjectContext;
+            return context.Sp_CustomerSessionLoadNonEmpty();
+        }
+
+        /// <summary>
         /// Deletes all expired customer sessions
         /// </summary>
         /// <param name="olderThan">Older than date and time</param>
