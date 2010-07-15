@@ -70,12 +70,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 this.Visible = false;
         }
 
-        protected void Page_Load(object sender, EventArgs e)
+        protected override void OnInit(EventArgs e)
         {
-            if (!Page.IsPostBack)
-            {
-                BindTaxDisplayTypes();
-            }
+            BindTaxDisplayTypes();
+            base.OnInit(e);
         }
 
         protected void ddlTaxDisplayType_OnSelectedIndexChanged(object sender, EventArgs e)

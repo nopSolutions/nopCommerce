@@ -1204,20 +1204,13 @@ BEGIN
 	SELECT
 		*
 	FROM 
-		[Nop_CustomerSession]
+		[Nop_CustomerSession] cs
 	WHERE 
 		CustomerSessionGUID 
 	IN
 	(
-		SELECT 
-			cs.CustomerSessionGUID
-		FROM 
-			[Nop_CustomerSession] cs
-		WHERE 
-			cs.CustomerSessionGUID IN 
-			(
-					SELECT DISTINCT sci.CustomerSessionGUID FROM [Nop_ShoppingCartItem] sci
-			)
+		SELECT DISTINCT sci.CustomerSessionGUID FROM [Nop_ShoppingCartItem] sci
 	)
+	ORDER BY cs.LastAccessed desc
 END
-GO
+GO 

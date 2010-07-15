@@ -40,15 +40,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
     public partial class BlogCommentControl : BaseNopUserControl
     {
         BlogComment blogComment = null;
-
-        protected void Page_Load(object sender, EventArgs e)
-        {
-            if (!Page.IsPostBack)
-            {
-                BindData();
-            }
-        }
-
+        
         public override void DataBind()
         {
             base.DataBind();

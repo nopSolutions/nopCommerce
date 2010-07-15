@@ -32,7 +32,6 @@ namespace NopSolutions.NopCommerce.Web.Modules
 {
     public partial class CurrencySelectorControl : BaseNopUserControl
     {
-
         private void BindCurrencies()
         {
             var currencies = CurrencyManager.GetAllCurrencies();
@@ -53,12 +52,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 this.Visible = false;
         }
 
-        protected void Page_Load(object sender, EventArgs e)
+        protected override void OnInit(EventArgs e)
         {
-            if (!Page.IsPostBack)
-            {
-                BindCurrencies();
-            }
+            BindCurrencies();
+            base.OnInit(e);
         }
 
         protected void ddlCurrencies_OnSelectedIndexChanged(object sender, EventArgs e)

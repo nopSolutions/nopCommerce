@@ -37,12 +37,12 @@ namespace NopSolutions.NopCommerce.Web.Modules
 {
     public partial class BlogPostControl : BaseNopUserControl
     {
-        protected void Page_Load(object sender, EventArgs e)
+        protected override void OnInit(EventArgs e)
         {
-            if (!Page.IsPostBack)
-                this.BindData();
+            this.BindData();
+            base.OnInit(e);
         }
-
+        
         private void BindData()
         {
             pnlError.Visible = false;

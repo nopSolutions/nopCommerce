@@ -36,7 +36,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 {
     public partial class CustomerOrdersControl : BaseNopUserControl
     {
-        protected void Page_Load(object sender, EventArgs e)
+        protected override void OnInit(EventArgs e)
         {
             if (NopContext.Current.User == null)
             {
@@ -44,11 +44,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 Response.Redirect(loginURL);
             }
 
-            if (!Page.IsPostBack)
-            {
-                BindOrders();
-                BindRecurringPayments();
-            }
+            BindOrders();
+            BindRecurringPayments();
+
+            base.OnInit(e);
         }
 
         private void BindRecurringPayments()

@@ -38,10 +38,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!Page.IsPostBack)
-            {
-                BindData();
-            }
+            BindData();
         }
 
         private void BindData()

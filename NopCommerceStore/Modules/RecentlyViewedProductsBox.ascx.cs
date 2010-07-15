@@ -35,12 +35,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
 {
     public partial class RecentlyViewedProductsBoxControl : BaseNopUserControl
     {
-        protected void Page_Load(object sender, EventArgs e)
+        protected override void OnInit(EventArgs e)
         {
-            if (!Page.IsPostBack)
-            {
-                BindData();
-            }
+            BindData();
+            base.OnInit(e);
         }
 
         private void BindData()

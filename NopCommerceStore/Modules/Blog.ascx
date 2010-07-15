@@ -11,7 +11,7 @@
                 <td style="text-align: right; vertical-align: middle;">
                     <a href="<%= GetBlogRSSUrl()%>">
                         <asp:Image ID="imgRSS" runat="server" ImageUrl="~/images/icon_rss.gif" ToolTip="<% $NopResources:BlogRSS.Tooltip %>"
-                            AlternateText="RSS" />
+                            AlternateText="RSS" EnableViewState="false" />
                     </a>
                 </td>
             </tr>
@@ -20,7 +20,7 @@
     <div class="clear">
     </div>
     <div class="blogposts">
-        <asp:Repeater ID="rptrBlogPosts" runat="server" OnItemDataBound="rptrBlogPosts_ItemDataBound">
+        <asp:Repeater ID="rptrBlogPosts" runat="server" OnItemDataBound="rptrBlogPosts_ItemDataBound" EnableViewState="false">
             <ItemTemplate>
                 <div class="post">
                     <a class="blogtitle" href="<%#SEOHelper.GetBlogPostUrl(Convert.ToInt32(Eval("BlogPostId")))%>">
@@ -41,6 +41,6 @@
     <div class="pager">
         <nopCommerce:Pager runat="server" ID="postsPager" QueryStringProperty="p" FirstButtonText="<% $NopResources:Pager.First %>"
             LastButtonText="<% $NopResources:Pager.Last %>" NextButtonText="<% $NopResources:Pager.Next %>"
-            PreviousButtonText="<% $NopResources:Pager.Previous %>" CurrentPageText="Pager.CurrentPage" />
+            PreviousButtonText="<% $NopResources:Pager.Previous %>" CurrentPageText="Pager.CurrentPage" EnableViewState="false" />
     </div>
 </div>

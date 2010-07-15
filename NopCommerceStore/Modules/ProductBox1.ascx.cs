@@ -43,10 +43,6 @@ namespace NopSolutions.NopCommerce.Web.Modules
     {
         Product product = null;
 
-        protected void Page_Load(object sender, EventArgs e)
-        {
-        }
-
         public override void DataBind()
         {
             base.DataBind();

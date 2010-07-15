@@ -2,7 +2,7 @@
     CodeBehind="HomePageCategories.ascx.cs" %>
 <div class="home-page-category-grid">
     <asp:DataList ID="dlCategories" runat="server" RepeatColumns="3" RepeatDirection="Horizontal"
-        RepeatLayout="Table" OnItemDataBound="dlCategories_ItemDataBound" ItemStyle-CssClass="item-box">
+        RepeatLayout="Table" OnItemDataBound="dlCategories_ItemDataBound" ItemStyle-CssClass="item-box" EnableViewState="false">
         <ItemTemplate>
             <div class="category-item">
                 <h2 class="title">

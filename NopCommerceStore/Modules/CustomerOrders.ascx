@@ -10,7 +10,7 @@
         <div class="recurring-payments-box">
             <asp:GridView ID="gvRecurringPayments" runat="server" AutoGenerateColumns="False"
                 Width="100%" DataKeyNames="RecurringPaymentId" OnRowDataBound="gvRecurringPayments_RowDataBound"
-                OnRowCommand="gvRecurringPayments_RowCommand">
+                OnRowCommand="gvRecurringPayments_RowCommand" EnableViewState="false">
                 <Columns>
                     <asp:TemplateField HeaderText="<% $NopResources:Order.RecurringPayments.StartDateColumn %>"
                         HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
@@ -57,7 +57,7 @@
     <div class="clear">
     </div>
     <div class="order-list">
-        <asp:Repeater ID="rptrOrders" runat="server">
+        <asp:Repeater ID="rptrOrders" runat="server" EnableViewState="false">
             <ItemTemplate>
                 <div class="order-item">
                     <table width="100%" cellspacing="0" cellpadding="2" border="0">

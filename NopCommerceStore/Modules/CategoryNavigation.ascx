@@ -7,7 +7,7 @@
     <div class="clear"></div>
     <div class="listbox">
         <ul>
-            <asp:PlaceHolder runat="server" ID="phCategories" />
+            <asp:PlaceHolder runat="server" ID="phCategories" EnableViewState="false" />
         </ul>
     </div>
 </div>

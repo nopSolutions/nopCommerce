@@ -34,7 +34,7 @@ namespace NopSolutions.NopCommerce.Web.Administration
     {
         protected override bool ValidatePageSecurity()
         {
-            return ACLManager.IsActionAllowed("ManageCustomers");
+            return ACLManager.IsActionAllowed("ManageOrders");
         }
     }
 }

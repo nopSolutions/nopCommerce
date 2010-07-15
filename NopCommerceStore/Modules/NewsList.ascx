@@ -18,7 +18,7 @@
     <div class="clear">
     </div>
     <div class="newsitems">
-        <asp:Repeater ID="rptrNews" runat="server">
+        <asp:Repeater ID="rptrNews" runat="server" EnableViewState="false">
             <ItemTemplate>
                 <div class="item">
                     <a class="newstitle" href="<%#SEOHelper.GetNewsUrl(Convert.ToInt32(Eval("NewsId")))%>">

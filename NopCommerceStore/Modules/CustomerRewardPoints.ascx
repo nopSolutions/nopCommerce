@@ -7,9 +7,9 @@
     <div class="clear">
     </div>
     <div class="reward-points-overview">
-        <asp:Label runat="server" ID="lblBalance"></asp:Label>
+        <asp:Label runat="server" ID="lblBalance" EnableViewState="false"></asp:Label>
         <br />
-        <asp:Label runat="server" ID="lblRate"></asp:Label>
+        <asp:Label runat="server" ID="lblRate" EnableViewState="false"></asp:Label>
     </div>
     <div class="clear">
     </div>
@@ -21,7 +21,7 @@
     <div class="reward-points-history">
         <asp:GridView ID="gvRewardPoints" runat="server" AutoGenerateColumns="False" Width="100%"
             OnPageIndexChanging="gvRewardPoints_PageIndexChanging" AllowPaging="true"
-            PageSize="15">
+            PageSize="15" EnableViewState="false">
             <Columns>
                 <asp:TemplateField HeaderText="<% $NopResources:Customer.RewardPoints.Grid.Date %>"
                     ItemStyle-Width="20%" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
@@ -49,6 +49,6 @@
                 </asp:TemplateField>
             </Columns>
         </asp:GridView>
-        <asp:Label runat="server" ID="lblHistoryMessage" />
+        <asp:Label runat="server" ID="lblHistoryMessage" EnableViewState="false" />
     </div>
 </div>

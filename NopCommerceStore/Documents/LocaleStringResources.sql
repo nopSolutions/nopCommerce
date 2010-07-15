@@ -777,7 +777,7 @@ set @resources='
     <Value>Click here to send test message</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.SMSProviders.Clickatell.TestMessage.Success">
-    <Value>Test message sent</Value>
+    <Value>Test message was sent</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.SMSProviders.Clickatell.TestMessage.Failed">
     <Value>Test message sending failed</Value>
@@ -918,10 +918,10 @@ set @resources='
     <Value>Test message sending failed</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.SMSProviders.Verizon.TestMessage.Success">
-    <Value>Test message sent</Value>
+    <Value>Test message was sent</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.NewsletterSubscribers.ImportCSV.CSVFile">
-    <Value>CSV(tab-delimited) file:</Value>
+    <Value>CSV (tab-delimited) file:</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.NewsletterSubscribers.ImportEmailsButton.Text">
     <Value>Import emails from CSV</Value>
@@ -946,6 +946,21 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.CustomerShoppingCart.CustomerColumn">
     <Value>Customer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CustomerShoppingCart.CustomerColumn.Guest">
+    <Value>Guest</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CustomerShoppingCart.NameColumn">
+    <Value>Product name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CustomerShoppingCart.PriceColumn">
+    <Value>Unit price</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CustomerShoppingCart.QuantityColumn">
+    <Value>Quantity</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CustomerShoppingCart.TotalColumn">
+    <Value>Total</Value>
   </LocaleResource>
 </Language>
 '

@@ -7,7 +7,7 @@
     <div class="clear">
     </div>
     <div class="listbox">
-        <asp:Repeater ID="rptrManufacturers" runat="server" OnItemDataBound="rptrManufacturers_ItemDataBound">
+        <asp:Repeater ID="rptrManufacturers" runat="server" OnItemDataBound="rptrManufacturers_ItemDataBound" EnableViewState="false">
             <HeaderTemplate>
                 <ul>
             </HeaderTemplate>

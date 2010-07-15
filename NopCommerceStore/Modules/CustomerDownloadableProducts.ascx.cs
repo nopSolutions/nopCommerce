@@ -42,6 +42,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
     public partial class CustomerDownloadableProductsControl : BaseNopUserControl
     {
         #region Utilities
+
         protected void BindData()
         {
             var items = OrderManager.GetAllOrderProductVariants(null, NopContext.Current.User.CustomerId, null, null, null, null, null, true);
@@ -59,10 +60,12 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 pnlMessage.Visible = true;
             }
         }
+
         #endregion
 
         #region Handlers
-        protected void Page_Load(object sender, EventArgs e)
+
+        protected override void OnInit(EventArgs e)
         {
             if (NopContext.Current.User == null)
             {
@@ -70,11 +73,11 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 Response.Redirect(loginURL);
             }
 
-            if (!Page.IsPostBack)
-            {
-                this.BindData();
-            }
+            this.BindData();
+
+            base.OnInit(e);
         }
+
         #endregion
 
         #region Methods
@@ -89,6 +92,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             }
             return result.ToLowerInvariant();
         }
+
         public string GetOrderDate(OrderProductVariant opv)
         {
             string result = string.Empty;

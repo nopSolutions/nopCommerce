@@ -7,8 +7,8 @@
     <div class="clear">
     </div>
     <div class="listbox">
-        <asp:Literal runat="server" ID="lShoppingCart" />
-        <asp:PlaceHolder runat="server" ID="phCheckoutInfo">
+        <asp:Literal runat="server" ID="lShoppingCart" EnableViewState="false" />
+        <asp:PlaceHolder runat="server" ID="phCheckoutInfo" EnableViewState="false">
             <br />
             <asp:Label runat="server" ID="lblOrderSubtotal" CssClass="subtotal" />
             <div class="buttons">
@@ -16,7 +16,7 @@
                     OnClick="BtnCheckout_OnClick" CausesValidation="false" CssClass="minicartcheckoutbutton" />
             </div>
         </asp:PlaceHolder>
-        <asp:ListView ID="lvCart" runat="server" OnItemDataBound="lvCart_ItemDataBound">
+        <asp:ListView ID="lvCart" runat="server" OnItemDataBound="lvCart_ItemDataBound" EnableViewState="false">
             <LayoutTemplate>
                 <div class="items">
                     <ul>

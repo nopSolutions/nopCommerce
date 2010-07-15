@@ -7,6 +7,6 @@
     <div class="clear">
     </div>
     <div class="listbox">
-        <asp:Literal runat="server" ID="lblLiveChatBtn" />
+        <asp:Literal runat="server" ID="lblLiveChatBtn" EnableViewState="false" />
     </div>
 </div>

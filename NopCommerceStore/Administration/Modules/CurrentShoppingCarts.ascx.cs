@@ -74,7 +74,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 if (customer.IsGuest)
                 {
-                    customerInfo = string.Format("<a href=\"CustomerDetails.aspx?CustomerID={0}\">{1}</a>", customer.CustomerId, GetLocaleResourceString("Admin.Orders.CustomerColumn.Guest"));
+                    customerInfo = string.Format("<a href=\"CustomerDetails.aspx?CustomerID={0}\">{1}</a>", customer.CustomerId, GetLocaleResourceString("Admin.CustomerShoppingCart.CustomerColumn.Guest"));
                 }
                 else
                 {

@@ -30,7 +30,6 @@ using NopSolutions.NopCommerce.BusinessLogic.Content.Polls;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
  
  
-
 namespace NopSolutions.NopCommerce.Web.Modules
 {
     public partial class TodaysPollControl : BaseNopUserControl

@@ -3,15 +3,15 @@
 <%@ Register TagPrefix="nopCommerce" TagName="NewsComment" Src="~/Modules/NewsComment.ascx" %>
 <div class="newsitem">
     <div class="page-title">
-        <h1><asp:Literal runat="server" ID="lTitle"></asp:Literal></h1>
+        <h1><asp:Literal runat="server" ID="lTitle" EnableViewState="false"></asp:Literal></h1>
     </div>
     <div class="clear">
     </div>
     <div class="newsdate">
-        <asp:Literal runat="server" ID="lCreatedOn"></asp:Literal>
+        <asp:Literal runat="server" ID="lCreatedOn" EnableViewState="false"></asp:Literal>
     </div>
     <div class="newsbody">
-        <asp:Literal runat="server" ID="lFull"></asp:Literal>
+        <asp:Literal runat="server" ID="lFull" EnableViewState="false"></asp:Literal>
     </div>
     <div id="pnlComments" runat="server" class="newscomments">
         <div class="title">
@@ -24,7 +24,7 @@
                 <tr>
                     <td colspan="2" class="leavetitle">
                         <strong>
-                            <asp:Literal runat="server" ID="lblLeaveYourComment"></asp:Literal>
+                            <asp:Literal runat="server" ID="lblLeaveYourComment" EnableViewState="false"></asp:Literal>
                         </strong>
                     </td>
                 </tr>

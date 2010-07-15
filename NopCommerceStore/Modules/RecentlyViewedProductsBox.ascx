@@ -7,7 +7,7 @@
     <div class="clear">
     </div>
     <div class="listbox">
-        <asp:ListView ID="lvRecentlyViewedProducts" runat="server" OnItemDataBound="lvRecentlyViewedProducts_ItemDataBound">
+        <asp:ListView ID="lvRecentlyViewedProducts" runat="server" OnItemDataBound="lvRecentlyViewedProducts_ItemDataBound" EnableViewState="false">
             <LayoutTemplate>
                 <ul>
                     <asp:PlaceHolder ID="itemPlaceholder" runat="server"></asp:PlaceHolder>

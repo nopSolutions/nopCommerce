@@ -3,7 +3,7 @@
 <%@ Register TagPrefix="nopCommerce" TagName="EmailTextBox" Src="EmailTextBox.ascx" %>
 <div class="block block-newsletter">
     <div class="title">
-        <asp:Label runat="server" Text="<% $NopResources:NewsLetterSubscriptionBox.Info %>" />
+        <%=GetLocaleResourceString("NewsLetterSubscriptionBox.Info")%>
     </div>
     <div class="clear">
     </div>

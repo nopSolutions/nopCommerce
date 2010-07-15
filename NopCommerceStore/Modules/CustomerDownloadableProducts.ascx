@@ -4,7 +4,7 @@
     <asp:Panel runat="server" ID="pnlProducts" CssClass="info">
         <div class="products-box">
             <asp:GridView ID="gvOrderProductVariants" runat="server" AutoGenerateColumns="False"
-                Width="100%">
+                Width="100%" EnableViewState="false">
                 <Columns>
                     <asp:TemplateField HeaderText="<% $NopResources:Account.DownloadableProducts.ProductsGrid.Order %>"
                         HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center" ItemStyle-Width="15%">
@@ -47,7 +47,7 @@
             </asp:GridView>
         </div>
     </asp:Panel>
-    <asp:Panel runat="server" ID="pnlMessage" CssClass="info">
+    <asp:Panel runat="server" ID="pnlMessage" CssClass="info" EnableViewState="false">
         <%=GetLocaleResourceString("Account.DownloadableProducts.NoProducts")%>
     </asp:Panel>
 </div>

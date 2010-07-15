@@ -2,7 +2,7 @@
 
 <div class="section-header">
     <div class="title">
-        <img src="Common/ico-customers.png" alt="<%=GetLocaleResourceString("Admin.CurrentShoppingCarts.Title")%>" />
+        <img src="Common/ico-sales.png" alt="<%=GetLocaleResourceString("Admin.CurrentShoppingCarts.Title")%>" />
         <%=GetLocaleResourceString("Admin.CurrentShoppingCarts.Title")%>
     </div>
     <div class="options">
@@ -16,26 +16,26 @@ OnPageIndexChanging="gvProductVariants_PageIndexChanging" PageSize="15">
                 <%#GetCustomerInfo((ShoppingCartItem)Container.DataItem)%>
             </ItemTemplate>
         </asp:TemplateField>
-        <asp:TemplateField HeaderText="<% $NopResources:Admin.CustomerShoppingCart.Name %>"
+        <asp:TemplateField HeaderText="<% $NopResources:Admin.CustomerShoppingCart.NameColumn %>"
             ItemStyle-Width="45%">
             <ItemTemplate>
                 <div style="padding-left: 10px; padding-right: 10px; text-align: left;">
-                    <em><a href='<%#GetProductVariantUrl((ShoppingCartItem)Container.DataItem)%>' title="<%#GetLocaleResourceString("Admin.CustomerShoppingCart.Name.Tooltip")%>">
+                    <em><a href='<%#GetProductVariantUrl((ShoppingCartItem)Container.DataItem)%>'>
                         <%#Server.HtmlEncode(GetProductVariantName((ShoppingCartItem)Container.DataItem))%></a></em>
                     <%#GetAttributeDescription((ShoppingCartItem)Container.DataItem)%>
                 </div>
             </ItemTemplate>
         </asp:TemplateField>
-        <asp:TemplateField HeaderText="<% $NopResources:Admin.CustomerShoppingCart.Price %>"
+        <asp:TemplateField HeaderText="<% $NopResources:Admin.CustomerShoppingCart.PriceColumn %>"
             HeaderStyle-HorizontalAlign="Center" ItemStyle-Width="20%" ItemStyle-HorizontalAlign="Center">
             <ItemTemplate>
                 <%#GetShoppingCartItemUnitPriceString((ShoppingCartItem)Container.DataItem)%>
             </ItemTemplate>
         </asp:TemplateField>
-        <asp:BoundField DataField="Quantity" HeaderText="<% $NopResources:Admin.CustomerShoppingCart.Quantity %>"
+        <asp:BoundField DataField="Quantity" HeaderText="<% $NopResources:Admin.CustomerShoppingCart.QuantityColumn %>"
             HeaderStyle-HorizontalAlign="Center" ItemStyle-Width="15%" ItemStyle-HorizontalAlign="Center">
         </asp:BoundField>
-        <asp:TemplateField HeaderText="<% $NopResources:Admin.CustomerShoppingCart.Total %>"
+        <asp:TemplateField HeaderText="<% $NopResources:Admin.CustomerShoppingCart.TotalColumn %>"
             HeaderStyle-HorizontalAlign="Center" ItemStyle-Width="20%" ItemStyle-HorizontalAlign="Center">
             <ItemTemplate>
                 <%#GetShoppingCartItemSubTotalString((ShoppingCartItem)Container.DataItem)%>

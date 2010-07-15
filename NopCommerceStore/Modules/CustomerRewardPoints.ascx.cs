@@ -37,7 +37,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 {
     public partial class CustomerRewardPointsControl : BaseNopUserControl
     {
-        protected void Page_Load(object sender, EventArgs e)
+        protected override void OnInit(EventArgs e)
         {
             if (NopContext.Current.User == null)
             {
@@ -45,10 +45,9 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 Response.Redirect(loginURL);
             }
 
-            if (!Page.IsPostBack)
-            {
-                BindData();
-            }
+            BindData();
+
+            base.OnInit(e);
         }
 
         protected void gvRewardPoints_PageIndexChanging(object sender, GridViewPageEventArgs e)

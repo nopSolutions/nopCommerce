@@ -85,12 +85,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
             }
         }
 
-        protected void Page_Load(object sender, EventArgs e)
+        protected override void OnInit(EventArgs e)
         {
-            if (!Page.IsPostBack)
-            {
-                BindLanguages();
-            }
+            BindLanguages();
+            base.OnInit(e);
         }
 
         protected void ddlLanguages_OnSelectedIndexChanged(object sender, EventArgs e)

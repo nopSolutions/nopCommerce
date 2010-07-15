@@ -34,12 +34,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
 {
     public partial class BlogControl : BaseNopUserControl
     {
-        protected void Page_Load(object sender, EventArgs e)
+        protected override void OnInit(EventArgs e)
         {
-            if (!Page.IsPostBack)
-            {
-                BindData();
-            }
+            BindData();
+            base.OnInit(e);
         }
 
         private void BindData()
@@ -75,8 +73,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
         {
             return SEOHelper.GetBlogRssUrl();
         }
-
-
+        
         protected void rptrBlogPosts_ItemDataBound(object sender, RepeaterItemEventArgs e)
         {
             if (e.Item.ItemType == ListItemType.AlternatingItem || e.Item.ItemType == ListItemType.Item)

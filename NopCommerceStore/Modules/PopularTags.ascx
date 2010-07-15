@@ -7,7 +7,7 @@
     <div class="clear">
     </div>
     <div class="listbox">
-        <asp:ListView ID="lvTagCloud" runat="server">
+        <asp:ListView ID="lvTagCloud" runat="server" EnableViewState="false">
             <LayoutTemplate>
                 <div class="tags">
                     <ul>
