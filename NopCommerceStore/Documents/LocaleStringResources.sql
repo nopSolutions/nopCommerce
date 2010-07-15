@@ -920,6 +920,18 @@ set @resources='
   <LocaleResource Name="Admin.SMSProviders.Verizon.TestMessage.Success">
     <Value>Test message sent</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.NewsletterSubscribers.ImportCSV.CSVFile">
+    <Value>CSV(tab-delimited) file:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.NewsletterSubscribers.ImportEmailsButton.Text">
+    <Value>Import emails from CSV</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.NewsletterSubscribers.ImportEmailsButton.Tooltip">
+    <Value>Import emails from CSV(tab-delimeted) file</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.NewsletterSubscribers.ImportEmailsButton.Success">
+    <Value>{0} emails have been successfully imported</Value>
+  </LocaleResource>
 </Language>
 '
 

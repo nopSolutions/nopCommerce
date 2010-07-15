@@ -9,8 +9,11 @@
     </div>
     <div class="options">
         <asp:Button ID="SearchButton" runat="server" Text="<% $NopResources:Admin.NewsletterSubscribers.SearchButton.Text %>"
-            CssClass="adminButtonBlue" OnClick="SearchButton_Click" /> 
-            <asp:Button runat="server" Text="<% $NopResources:Admin.NewsletterSubscribers.ExportEmailsButton.Text %>"
+            CssClass="adminButtonBlue" OnClick="SearchButton_Click" />
+        <asp:Button runat="server" Text="<% $NopResources:Admin.NewsletterSubscribers.ImportEmailsButton.Text %>"
+            CssClass="adminButtonBlue" ID="btnImportCSV" OnClick="btnImportCSV_Click" 
+            ToolTip="<% $NopResources:Admin.NewsletterSubscribers.ImportEmailsButton.Tooltip %>" />
+       <asp:Button runat="server" Text="<% $NopResources:Admin.NewsletterSubscribers.ExportEmailsButton.Text %>"
             CssClass="adminButtonBlue" ID="btnExportCVS" OnClick="btnExportCVS_Click"
             ToolTip="<% $NopResources:Admin.NewsletterSubscribers.ExportEmailsButton.Tooltip %>" />
         <asp:Button runat="server" Text="<% $NopResources:Admin.NewsletterSubscribers.DeleteButton.Text %>"
@@ -80,3 +83,20 @@
     </Columns>
     <PagerSettings PageButtonCount="50" Position="TopAndBottom" />
 </asp:GridView>
+<ajaxToolkit:ConfirmButtonExtender ID="cbeImportCSV" runat="server" TargetControlID="btnImportCSV"
+    DisplayModalPopupID="mpeImportCSV" />
+<ajaxToolkit:ModalPopupExtender runat="server" ID="mpeImportCSV" TargetControlID="btnImportCSV"
+    OkControlID="btnImportCSVOk" CancelControlID="btnImportCSVCancel" PopupControlID="pnlImportCSVPopupPanel"
+    BackgroundCssClass="modalBackground" />
+<asp:Panel runat="server" ID="pnlImportCSVPopupPanel" Style="display: none; width: 250px;
+    background-color: White; border-width: 2px; border-color: Black; border-style: solid;
+    padding: 20px;">
+    <div style="text-align: center;">
+        <%=GetLocaleResourceString("Admin.NewsletterSubscribers.ImportCSV.CSVFile")%>
+        <asp:FileUpload runat="server" ID="fuCsvFile" />
+        <asp:Button ID="btnImportCSVOk" runat="server" Text="<% $NopResources:Admin.Common.OK %>"
+            CssClass="adminButton" CausesValidation="false" />
+        <asp:Button ID="btnImportCSVCancel" runat="server" Text="<% $NopResources:Admin.Common.Cancel %>"
+            CssClass="adminButton" CausesValidation="false" />
+    </div>
+</asp:Panel>

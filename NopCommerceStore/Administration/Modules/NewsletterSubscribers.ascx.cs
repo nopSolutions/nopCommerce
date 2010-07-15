@@ -82,7 +82,49 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     ProcessException(exc);
                 }
             }
-        }        
+        }
+
+        protected void btnImportCSV_Click(object sender, EventArgs e)
+        {
+            if (fuCsvFile.PostedFile != null && !String.IsNullOrEmpty(fuCsvFile.FileName))
+            {
+                try
+                {
+                    int count = 0;
+
+                    using (StreamReader reader = new StreamReader(fuCsvFile.FileContent))
+                    {
+                        while (!reader.EndOfStream)
+                        {
+                            string line = reader.ReadLine();
+                            string[] tmp = line.Split('\t');
+
+                            if (tmp.Length == 2)
+                            {
+                                string email = tmp[0].Trim();
+                                bool isActive = Boolean.Parse(tmp[1]);
+
+                                NewsLetterSubscription subscription = MessageManager.GetNewsLetterSubscriptionByEmail(email);
+                                if (subscription != null)
+                                {
+                                    subscription = MessageManager.UpdateNewsLetterSubscription(subscription.NewsLetterSubscriptionId, email, isActive);
+                                }
+                                else
+                                {
+                                    subscription = MessageManager.InsertNewsLetterSubscription(email, isActive);
+                                }
+                                count++;
+                            }
+                        }
+                        ShowMessage(String.Format(GetLocaleResourceString("Admin.NewsletterSubscribers.ImportEmailsButton.Success"), count));
+                    }
+                }
+                catch (Exception exc)
+                {
+                    ProcessException(exc);
+                }
+            }
+        }    
 
         protected void gvNewsletterSubscribers_PageIndexChanging(object sender, GridViewPageEventArgs e)
         {
