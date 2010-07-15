@@ -9,9 +9,5 @@ namespace NopSolutions.NopCommerce.Web.MasterPages
 {
     public partial class OneColumn : BaseNopNestedMasterPage
     {
-        protected void Page_Load(object sender, EventArgs e)
-        {
-
-        }
     }
 }

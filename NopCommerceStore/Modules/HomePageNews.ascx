@@ -1,5 +1,5 @@
-<%@ Control Language="C#" AutoEventWireup="true" Inherits="NopSolutions.NopCommerce.Web.Modules.NewsListControl"
-    CodeBehind="NewsList.ascx.cs" %>
+<%@ Control Language="C#" AutoEventWireup="true" Inherits="NopSolutions.NopCommerce.Web.Modules.HomePageNewsControl"
+    CodeBehind="HomePageNews.ascx.cs" %>
 <div class="newslist">
     <div class="title">
         <table style="width: 100%;">
@@ -10,7 +10,7 @@
                 <td style="text-align: right; vertical-align: middle;">
                     <a href="<%= GetNewsRSSUrl()%>">
                         <asp:Image ID="imgRSS" runat="server" ImageUrl="~/images/icon_rss.gif" ToolTip="<% $NopResources:NewsRSS.Tooltip %>"
-                            AlternateText="RSS" /></a>
+                            AlternateText="RSS" EnableViewState="false" /></a>
                 </td>
             </tr>
         </table>

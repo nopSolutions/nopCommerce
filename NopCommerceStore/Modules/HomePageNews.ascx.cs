@@ -31,11 +31,12 @@ using NopSolutions.NopCommerce.BusinessLogic.SEO;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
-    public partial class NewsListControl : BaseNopUserControl
+    public partial class HomePageNewsControl : BaseNopUserControl
     {
-        protected void Page_Load(object sender, EventArgs e)
+        protected override void OnPreRender(EventArgs e)
         {
             BindData();
+            base.OnPreRender(e);
         }
 
         protected string GetNewsRSSUrl()
@@ -45,35 +46,23 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void BindData()
         {
-
-            var newsCollection = NewsManager.GetAllNews(NopContext.Current.WorkingLanguage.LanguageId, NewsCount);
-            if (newsCollection.Count > 0)
+            if (NewsManager.NewsEnabled && NewsManager.ShowNewsOnMainPage)
             {
-                rptrNews.DataSource = newsCollection;
-                rptrNews.DataBind();
-
-            }
-            else
-                this.Visible = false;
-        }
-
-        [DefaultValue(0)]
-        public int NewsCount
-        {
-            get
-            {
-                if(ViewState["NewsCount"] == null)
+                var newsCollection = NewsManager.GetAllNews(NopContext.Current.WorkingLanguage.LanguageId, NewsManager.MainPageNewsCount);
+                if (newsCollection.Count > 0)
                 {
-                    return 0;
+                    rptrNews.DataSource = newsCollection;
+                    rptrNews.DataBind();
+
                 }
                 else
                 {
-                    return (int)ViewState["NewsCount"];
+                    this.Visible = false;
                 }
             }
-            set 
-            { 
-                ViewState["NewsCount"] = value; 
+            else
+            {
+                this.Visible = false;
             }
         }
     }

@@ -4637,8 +4637,8 @@
     <Compile Include="Modules\NewsItem.ascx.designer.cs">
       <DependentUpon>NewsItem.ascx</DependentUpon>
     </Compile>
-    <Compile Include="Modules\NewsList.ascx.designer.cs">
-      <DependentUpon>NewsList.ascx</DependentUpon>
+    <Compile Include="Modules\HomePageNews.ascx.designer.cs">
+      <DependentUpon>HomePageNews.ascx</DependentUpon>
     </Compile>
     <Compile Include="Modules\NumericTextBox.ascx.designer.cs">
       <DependentUpon>NumericTextBox.ascx</DependentUpon>
@@ -4985,8 +4985,8 @@
       <DependentUpon>NewsItem.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Modules\NewsList.ascx.cs">
-      <DependentUpon>NewsList.ascx</DependentUpon>
+    <Compile Include="Modules\HomePageNews.ascx.cs">
+      <DependentUpon>HomePageNews.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\NumericTextBox.ascx.cs">
@@ -5962,7 +5962,7 @@
     <Content Include="Modules\LanguageSelector.ascx" />
     <Content Include="Modules\ManufacturerNavigation.ascx" />
     <Content Include="Modules\NewsItem.ascx" />
-    <Content Include="Modules\NewsList.ascx" />
+    <Content Include="Modules\HomePageNews.ascx" />
     <Content Include="Modules\NumericTextBox.ascx" />
     <Content Include="Modules\OrderDetails.ascx" />
     <Content Include="Modules\OrderSummary.ascx" />

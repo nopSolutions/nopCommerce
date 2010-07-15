@@ -47,39 +47,46 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected override void OnPreRender(EventArgs e)
         {
-            var shoppingCart = ShoppingCartManager.GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
-            if (shoppingCart.Count == 0)
+            if (SettingManager.GetSettingValueBoolean("Common.ShowMiniShoppingCart"))
             {
-                phCheckoutInfo.Visible = false;
-                lShoppingCart.Text = GetLocaleResourceString("MiniShoppingCartBox.NoItems");
+                var shoppingCart = ShoppingCartManager.GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
+                if (shoppingCart.Count == 0)
+                {
+                    phCheckoutInfo.Visible = false;
+                    lShoppingCart.Text = GetLocaleResourceString("MiniShoppingCartBox.NoItems");
 
-                lvCart.Visible = false;
+                    lvCart.Visible = false;
+                }
+                else
+                {
+                    phCheckoutInfo.Visible = true;
+                    if (shoppingCart.Count == 1)
+                    {
+                        lShoppingCart.Text = string.Format(GetLocaleResourceString("MiniShoppingCartBox.OneItemText"), string.Format("<a href=\"{0}\" class=\"items\">{1}</a>", Page.ResolveUrl("~/shoppingcart.aspx"), GetLocaleResourceString("MiniShoppingCartBox.OneItem")));
+                    }
+                    else
+                    {
+                        lShoppingCart.Text = string.Format(GetLocaleResourceString("MiniShoppingCartBox.SeveralItemsText"), string.Format("<a href=\"{0}\" class=\"items\">{1}</a>", Page.ResolveUrl("~/shoppingcart.aspx"), string.Format(GetLocaleResourceString("MiniShoppingCartBox.SeveralItems"), shoppingCart.Count)));
+                    }
+
+                    lblOrderSubtotal.Text = GetLocaleResourceString("MiniShoppingCartBox.OrderSubtotal", GetOrderSubtotal(shoppingCart));
+
+                    if (SettingManager.GetSettingValueBoolean("Display.ItemsInMiniShoppingCart", false))
+                    {
+                        lvCart.Visible = true;
+                        lvCart.DataSource = shoppingCart;
+                        lvCart.DataBind();
+                    }
+                    else
+                    {
+                        lvCart.Visible = false;
+                    }
+
+                }
             }
             else
             {
-                phCheckoutInfo.Visible = true;
-                if (shoppingCart.Count == 1)
-                {
-                    lShoppingCart.Text = string.Format(GetLocaleResourceString("MiniShoppingCartBox.OneItemText"), string.Format("<a href=\"{0}\" class=\"items\">{1}</a>", Page.ResolveUrl("~/shoppingcart.aspx"), GetLocaleResourceString("MiniShoppingCartBox.OneItem")));
-                }
-                else
-                {
-                    lShoppingCart.Text = string.Format(GetLocaleResourceString("MiniShoppingCartBox.SeveralItemsText"), string.Format("<a href=\"{0}\" class=\"items\">{1}</a>", Page.ResolveUrl("~/shoppingcart.aspx"), string.Format(GetLocaleResourceString("MiniShoppingCartBox.SeveralItems"), shoppingCart.Count)));
-                }
-
-                lblOrderSubtotal.Text = GetLocaleResourceString("MiniShoppingCartBox.OrderSubtotal", GetOrderSubtotal(shoppingCart));
-
-                if (SettingManager.GetSettingValueBoolean("Display.ItemsInMiniShoppingCart", false))
-                {
-                    lvCart.Visible = true;
-                    lvCart.DataSource = shoppingCart;
-                    lvCart.DataBind();
-                }
-                else
-                {
-                    lvCart.Visible = false;
-                }
-
+                this.Visible = false;
             }
             base.OnPreRender(e);
         }

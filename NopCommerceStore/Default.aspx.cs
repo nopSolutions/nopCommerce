@@ -50,15 +50,6 @@ namespace NopSolutions.NopCommerce.Web
         {
             ctrlBestSellers.Visible = SettingManager.GetSettingValueBoolean("Display.ShowBestsellersOnMainPage");
 
-            if (NewsManager.NewsEnabled && NewsManager.ShowNewsOnMainPage)
-            {
-                ctrlNewsList.NewsCount = NewsManager.MainPageNewsCount;
-            }
-            else
-            {
-                ctrlNewsList.Visible = false;
-            }
-
             bool showWelcomeMessageOnMainPage = SettingManager.GetSettingValueBoolean("Display.ShowWelcomeMessageOnMainPage");
             if (!showWelcomeMessageOnMainPage)
             {

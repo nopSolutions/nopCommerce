@@ -4,13 +4,20 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using NopSolutions.NopCommerce.BusinessLogic.Messages;
 using NopSolutions.NopCommerce.BusinessLogic;
+using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
+using NopSolutions.NopCommerce.BusinessLogic.Messages;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
     public partial class NewsLetterSubscriptionBoxControl : BaseNopUserControl
     {
+        protected override void OnInit(EventArgs e)
+        {
+            this.Visible = !SettingManager.GetSettingValueBoolean("Display.HideNewsletterBox");
+            base.OnInit(e);
+        }
+
         protected void BtnSubscribe_OnClick(object sender, EventArgs e)
         {
             try

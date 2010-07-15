@@ -2,7 +2,7 @@
     Inherits="NopSolutions.NopCommerce.Web.Default" CodeBehind="Default.aspx.cs" %>
 
 <%@ Register TagPrefix="nopCommerce" TagName="TodaysPoll" Src="~/Modules/TodaysPoll.ascx" %>
-<%@ Register TagPrefix="nopCommerce" TagName="NewsList" Src="~/Modules/NewsList.ascx" %>
+<%@ Register TagPrefix="nopCommerce" TagName="HomePageNews" Src="~/Modules/HomePageNews.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="HomePageCategories" Src="~/Modules/HomePageCategories.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="HomePageProducts" Src="~/Modules/HomePageProducts.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="BestSellers" Src="~/Modules/BestSellers.ascx" %>
@@ -21,7 +21,7 @@
     <nopCommerce:BestSellers ID="ctrlBestSellers" runat="server" />
     <div class="clear">
     </div>
-    <nopCommerce:NewsList ID="ctrlNewsList" runat="server" />
+    <nopCommerce:HomePageNews ID="ctrlHomePageNews" runat="server" />
     <div class="clear">
     </div>
     <nopCommerce:TodaysPoll ID="ctrlTodaysPoll" runat="server" />

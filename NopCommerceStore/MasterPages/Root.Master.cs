@@ -9,9 +9,5 @@ namespace NopSolutions.NopCommerce.Web.MasterPages
 {
     public partial class root : BaseNopMasterPage
     {
-        protected override void OnLoad(EventArgs e)
-        {
-            base.OnLoad(e);
-        }
     }
 }

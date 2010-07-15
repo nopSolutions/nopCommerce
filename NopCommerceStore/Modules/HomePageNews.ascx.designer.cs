@@ -10,7 +10,7 @@
 namespace NopSolutions.NopCommerce.Web.Modules {
     
     
-    public partial class NewsListControl {
+    public partial class HomePageNewsControl {
         
         /// <summary>
         /// imgRSS control.
