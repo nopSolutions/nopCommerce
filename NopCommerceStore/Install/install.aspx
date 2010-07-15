@@ -238,7 +238,7 @@
                                         <tr>
                                             <td>
                                                 <div style="border: solid 1px #000000; text-align: center; margin: 20px 10px 20px 20px; padding: 5px 5px 5px 5px;" runat="server" id="pnlChangeAdminCredentials">
-                                                    By default your email/password are admin@yourstore.com / admin. You can change it bellow. If you don't want to change it, then click "Go to site" link.
+                                                    By default your email/password are admin@yourstore.com / admin. You can change it below. If you don't want to change it, then click "Go to site" link.
                                                     <br />
                                                     <table style="text-align: left; margin: 10px 10px 10px 60px;">
                                                         <tr>

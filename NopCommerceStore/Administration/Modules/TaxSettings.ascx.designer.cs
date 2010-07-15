@@ -58,15 +58,6 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         protected global::System.Web.UI.WebControls.CheckBox cbAllowCustomersToSelectTaxDisplayType;
         
         /// <summary>
-        /// pnlTaxDisplayType control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlTableRow pnlTaxDisplayType;
-        
-        /// <summary>
         /// lblTaxDisplayType control.
         /// </summary>
         /// <remarks>
@@ -229,15 +220,6 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         protected global::System.Web.UI.WebControls.CheckBox cbShippingIsTaxable;
         
         /// <summary>
-        /// pnlShippingPriceIncludesTax control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlTableRow pnlShippingPriceIncludesTax;
-        
-        /// <summary>
         /// lblShippingPriceIncludesTax control.
         /// </summary>
         /// <remarks>
@@ -254,15 +236,6 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox cbShippingPriceIncludesTax;
-        
-        /// <summary>
-        /// pnlShippingTaxClass control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlTableRow pnlShippingTaxClass;
         
         /// <summary>
         /// lblShippingTaxClass control.
@@ -301,15 +274,6 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         protected global::System.Web.UI.WebControls.CheckBox cbPaymentMethodAdditionalFeeIsTaxable;
         
         /// <summary>
-        /// pnlPaymentMethodAdditionalFeeIncludesTax control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlTableRow pnlPaymentMethodAdditionalFeeIncludesTax;
-        
-        /// <summary>
         /// lblPaymentMethodAdditionalFeeIncludesTax control.
         /// </summary>
         /// <remarks>
@@ -326,15 +290,6 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox cbPaymentMethodAdditionalFeeIncludesTax;
-        
-        /// <summary>
-        /// pnlPaymentMethodAdditionalFeeTaxClass control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlTableRow pnlPaymentMethodAdditionalFeeTaxClass;
         
         /// <summary>
         /// lblPaymentMethodAdditionalTaxClass control.
@@ -373,15 +328,6 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         protected global::System.Web.UI.WebControls.CheckBox cbEUVatEnabled;
         
         /// <summary>
-        /// pnlEUVatShopCountry control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlTableRow pnlEUVatShopCountry;
-        
-        /// <summary>
         /// lblEUVatShopCountry control.
         /// </summary>
         /// <remarks>
@@ -398,15 +344,6 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlEUVatShopCountry;
-        
-        /// <summary>
-        /// pnlEUVatAllowVATExemption control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlTableRow pnlEUVatAllowVATExemption;
         
         /// <summary>
         /// lblEUVatAllowVATExemption control.
@@ -427,15 +364,6 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         protected global::System.Web.UI.WebControls.CheckBox cbEUVatAllowVATExemption;
         
         /// <summary>
-        /// pnlEUVatUseWebService control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlTableRow pnlEUVatUseWebService;
-        
-        /// <summary>
         /// lblEUVatUseWebService control.
         /// </summary>
         /// <remarks>
@@ -452,15 +380,6 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox cbEUVatUseWebService;
-        
-        /// <summary>
-        /// pnlEUVatEmailAdminWhenNewVATSubmitted control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlTableRow pnlEUVatEmailAdminWhenNewVATSubmitted;
         
         /// <summary>
         /// lblEUVatEmailAdminWhenNewVATSubmitted control.

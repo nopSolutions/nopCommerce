@@ -44,24 +44,20 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 FillDropDowns();
                 BindData();
-                TogglePanels();
             }
         }
-
-        private void TogglePanels()
+        
+        protected override void OnPreRender(EventArgs e)
         {
-            pnlTaxDisplayType.Visible = !cbAllowCustomersToSelectTaxDisplayType.Checked;
+            BindJQuery();
+            BindJQueryIdTabs();
 
-            pnlShippingPriceIncludesTax.Visible = cbShippingIsTaxable.Checked;
-            pnlShippingTaxClass.Visible = cbShippingIsTaxable.Checked;
+            this.cbAllowCustomersToSelectTaxDisplayType.Attributes.Add("onclick", "toggleTaxDisplayType();");
+            this.cbShippingIsTaxable.Attributes.Add("onclick", "toggleShipping();");
+            this.cbPaymentMethodAdditionalFeeIsTaxable.Attributes.Add("onclick", "togglePayment();");
+            this.cbEUVatEnabled.Attributes.Add("onclick", "toggleEUVAT();");
 
-            pnlPaymentMethodAdditionalFeeIncludesTax.Visible = cbPaymentMethodAdditionalFeeIsTaxable.Checked;
-            pnlPaymentMethodAdditionalFeeTaxClass.Visible = cbPaymentMethodAdditionalFeeIsTaxable.Checked;
-
-            pnlEUVatShopCountry.Visible = cbEUVatEnabled.Checked;
-            pnlEUVatAllowVATExemption.Visible = cbEUVatEnabled.Checked;
-            pnlEUVatUseWebService.Visible = cbEUVatEnabled.Checked;
-            pnlEUVatEmailAdminWhenNewVATSubmitted.Visible = cbEUVatEnabled.Checked;
+            base.OnPreRender(e);
         }
 
         protected void FillDropDowns()
@@ -177,26 +173,6 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         protected void ddlTaxDefaultCountry_SelectedIndexChanged(object sender, EventArgs e)
         {
             FillStateProvinceDropDowns();
-        }
-
-        protected void cbAllowCustomersToSelectTaxDisplayType_CheckedChanged(object sender, EventArgs e)
-        {
-            TogglePanels();
-        }
-
-        protected void cbShippingIsTaxable_CheckedChanged(object sender, EventArgs e)
-        {
-            TogglePanels();
-        }
-
-        protected void cbPaymentMethodAdditionalFeeIsTaxable_CheckedChanged(object sender, EventArgs e)
-        {
-            TogglePanels();
-        }
-
-        protected void cbEUVatEnabled_CheckedChanged(object sender, EventArgs e)
-        {
-            TogglePanels();
         }
 
         protected void btnSave_Click(object sender, EventArgs e)

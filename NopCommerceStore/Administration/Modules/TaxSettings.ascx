@@ -2,6 +2,63 @@
     CodeBehind="TaxSettings.ascx.cs" %>
 <%@ Register TagPrefix="nopCommerce" TagName="DecimalTextBox" Src="DecimalTextBox.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="ToolTipLabel" Src="ToolTipLabelControl.ascx" %>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        toggleTaxDisplayType();
+        toggleShipping();
+        togglePayment();
+        toggleEUVAT();
+    });
+
+    function toggleTaxDisplayType() {
+        if (getE('<%=cbAllowCustomersToSelectTaxDisplayType.ClientID %>').checked) {
+            $('#pnlTaxDisplayType').hide();
+        }
+        else {
+            $('#pnlTaxDisplayType').show();
+        }
+    }
+
+    function toggleShipping() {
+        if (getE('<%=cbShippingIsTaxable.ClientID %>').checked) {
+            $('#pnlShippingPriceIncludesTax').show();
+            $('#pnlShippingTaxClass').show();
+        }
+        else {
+            $('#pnlShippingPriceIncludesTax').hide();
+            $('#pnlShippingTaxClass').hide();
+        }
+    }
+
+    function togglePayment() {
+        if (getE('<%=cbPaymentMethodAdditionalFeeIsTaxable.ClientID %>').checked) {
+            $('#pnlPaymentMethodAdditionalFeeIncludesTax').show();
+            $('#pnlPaymentMethodAdditionalFeeTaxClass').show();
+        }
+        else {
+            $('#pnlPaymentMethodAdditionalFeeIncludesTax').hide();
+            $('#pnlPaymentMethodAdditionalFeeTaxClass').hide();
+        }
+    }
+
+    function toggleEUVAT() {
+        if (getE('<%=cbEUVatEnabled.ClientID %>').checked) {
+            $('#pnlEUVatShopCountry').show();
+            $('#pnlEUVatAllowVATExemption').show();
+            $('#pnlEUVatUseWebService').show();
+            $('#pnlEUVatEmailAdminWhenNewVATSubmitted').show();
+        }
+        else {
+            $('#pnlEUVatShopCountry').hide();
+            $('#pnlEUVatAllowVATExemption').hide();
+            $('#pnlEUVatUseWebService').hide();
+            $('#pnlEUVatEmailAdminWhenNewVATSubmitted').hide();
+        }
+    }
+
+</script>
+
 <div class="section-header">
     <div class="title">
         <img src="Common/ico-configuration.png" alt="<%=GetLocaleResourceString("Admin.TaxSettings.Title")%>" />
@@ -29,11 +86,10 @@
                 ToolTipImage="~/Administration/Common/ico-help.gif" />
         </td>
         <td class="adminData">
-            <asp:CheckBox ID="cbAllowCustomersToSelectTaxDisplayType" runat="server" AutoPostBack="true"
-                OnCheckedChanged="cbAllowCustomersToSelectTaxDisplayType_CheckedChanged"></asp:CheckBox>
+            <asp:CheckBox ID="cbAllowCustomersToSelectTaxDisplayType" runat="server"></asp:CheckBox>
         </td>
     </tr>
-    <tr runat="server" id="pnlTaxDisplayType">
+    <tr id="pnlTaxDisplayType">
         <td class="adminTitle">
             <nopCommerce:ToolTipLabel runat="server" ID="lblTaxDisplayType" Text="<% $NopResources:Admin.TaxSettings.TaxDisplayType %>"
                 ToolTip="<% $NopResources:Admin.TaxSettings.TaxDisplayType.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
@@ -128,11 +184,10 @@
                 ToolTip="<% $NopResources:Admin.TaxSettings.ShippingIsTaxable.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
         </td>
         <td class="adminData">
-            <asp:CheckBox ID="cbShippingIsTaxable" runat="server" AutoPostBack="true" OnCheckedChanged="cbShippingIsTaxable_CheckedChanged">
-            </asp:CheckBox>
+            <asp:CheckBox ID="cbShippingIsTaxable" runat="server"></asp:CheckBox>
         </td>
     </tr>
-    <tr runat="server" id="pnlShippingPriceIncludesTax">
+    <tr  id="pnlShippingPriceIncludesTax">
         <td class="adminTitle">
             <nopCommerce:ToolTipLabel runat="server" ID="lblShippingPriceIncludesTax" Text="<% $NopResources:Admin.TaxSettings.ShippingPriceIncludesTax %>"
                 ToolTip="<% $NopResources:Admin.TaxSettings.ShippingPriceIncludesTax.Tooltip %>"
@@ -142,7 +197,7 @@
             <asp:CheckBox ID="cbShippingPriceIncludesTax" runat="server"></asp:CheckBox>
         </td>
     </tr>
-    <tr runat="server" id="pnlShippingTaxClass">
+    <tr  id="pnlShippingTaxClass">
         <td class="adminTitle">
             <nopCommerce:ToolTipLabel runat="server" ID="lblShippingTaxClass" Text="<% $NopResources:Admin.TaxSettings.ShippingTaxClass %>"
                 ToolTip="<% $NopResources:Admin.TaxSettings.ShippingTaxClass.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
@@ -164,11 +219,10 @@
                 ToolTipImage="~/Administration/Common/ico-help.gif" />
         </td>
         <td class="adminData">
-            <asp:CheckBox ID="cbPaymentMethodAdditionalFeeIsTaxable" runat="server" AutoPostBack="true"
-                OnCheckedChanged="cbPaymentMethodAdditionalFeeIsTaxable_CheckedChanged"></asp:CheckBox>
+            <asp:CheckBox ID="cbPaymentMethodAdditionalFeeIsTaxable" runat="server"></asp:CheckBox>
         </td>
     </tr>
-    <tr runat="server" id="pnlPaymentMethodAdditionalFeeIncludesTax">
+    <tr id="pnlPaymentMethodAdditionalFeeIncludesTax">
         <td class="adminTitle">
             <nopCommerce:ToolTipLabel runat="server" ID="lblPaymentMethodAdditionalFeeIncludesTax"
                 Text="<% $NopResources:Admin.TaxSettings.PaymentMethodFeeIncludesTax %>" ToolTip="<% $NopResources:Admin.TaxSettings.PaymentMethodFeeIncludesTax.Tooltip %>"
@@ -178,7 +232,7 @@
             <asp:CheckBox ID="cbPaymentMethodAdditionalFeeIncludesTax" runat="server"></asp:CheckBox>
         </td>
     </tr>
-    <tr runat="server" id="pnlPaymentMethodAdditionalFeeTaxClass">
+    <tr  id="pnlPaymentMethodAdditionalFeeTaxClass">
         <td class="adminTitle">
             <nopCommerce:ToolTipLabel runat="server" ID="lblPaymentMethodAdditionalTaxClass"
                 Text="<% $NopResources:Admin.TaxSettings.PaymentMethodTaxClass %>" ToolTip="<% $NopResources:Admin.TaxSettings.PaymentMethodTaxClass.Tooltip %>"
@@ -201,11 +255,10 @@
                 ToolTipImage="~/Administration/Common/ico-help.gif" />
         </td>
         <td class="adminData">
-            <asp:CheckBox ID="cbEUVatEnabled" runat="server" AutoPostBack="true"
-                OnCheckedChanged="cbEUVatEnabled_CheckedChanged"></asp:CheckBox>
+            <asp:CheckBox ID="cbEUVatEnabled" runat="server"></asp:CheckBox>
         </td>
     </tr>
-    <tr  runat="server" id="pnlEUVatShopCountry">
+    <tr id="pnlEUVatShopCountry">
         <td class="adminTitle">
             <nopCommerce:ToolTipLabel runat="server" ID="lblEUVatShopCountry" Text="<% $NopResources:Admin.TaxSettings.EUVatShopCountry %>"
                 ToolTip="<% $NopResources:Admin.TaxSettings.EUVatShopCountry.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
@@ -215,7 +268,7 @@
             </asp:DropDownList>
         </td>
     </tr>
-    <tr runat="server" id="pnlEUVatAllowVATExemption">
+    <tr id="pnlEUVatAllowVATExemption">
         <td class="adminTitle">
             <nopCommerce:ToolTipLabel runat="server" ID="lblEUVatAllowVATExemption" Text="<% $NopResources:Admin.TaxSettings.EUVatAllowVATExemption %>"
                 ToolTip="<% $NopResources:Admin.TaxSettings.EUVatAllowVATExemption.Tooltip %>"
@@ -225,7 +278,7 @@
             <asp:CheckBox ID="cbEUVatAllowVATExemption" runat="server"></asp:CheckBox>
         </td>
     </tr>
-    <tr runat="server" id="pnlEUVatUseWebService">
+    <tr id="pnlEUVatUseWebService">
         <td class="adminTitle">
             <nopCommerce:ToolTipLabel runat="server" ID="lblEUVatUseWebService" Text="<% $NopResources:Admin.TaxSettings.EUVatUseWebService %>"
                 ToolTip="<% $NopResources:Admin.TaxSettings.EUVatUseWebService.Tooltip %>"
@@ -235,7 +288,7 @@
             <asp:CheckBox ID="cbEUVatUseWebService" runat="server"></asp:CheckBox>
         </td>
     </tr>
-    <tr runat="server" id="pnlEUVatEmailAdminWhenNewVATSubmitted">
+    <tr id="pnlEUVatEmailAdminWhenNewVATSubmitted">
         <td class="adminTitle">
             <nopCommerce:ToolTipLabel runat="server" ID="lblEUVatEmailAdminWhenNewVATSubmitted" Text="<% $NopResources:Admin.TaxSettings.EUVatEmailAdminWhenNewVATSubmitted %>"
                 ToolTip="<% $NopResources:Admin.TaxSettings.EUVatEmailAdminWhenNewVATSubmitted.Tooltip %>"
