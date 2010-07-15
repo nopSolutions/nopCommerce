@@ -1129,6 +1129,49 @@ BEGIN
 END
 GO
 
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[Nop_Country]') and NAME='SubjectToVAT')
+BEGIN
+	ALTER TABLE [dbo].[Nop_Country] 
+	ADD [SubjectToVAT] bit NOT NULL CONSTRAINT [DF_Nop_Country_SubjectToVAT] DEFAULT ((0))
+END
+GO
+
+UPDATE		Nop_Country
+SET			SubjectToVAT = 1
+WHERE		(TwoLetterISOCode IN (N'AT', N'BE', N'BG', N'CY', N'CZ', N'DE', N'DK', N'EE', N'ES', N'FI', N'FR', N'GB', N'GR', N'HU', N'IE', N'IT', N'LT', N'LU', N'LV', N'MT', N'NL', N'PL', N'PT', N'RO', N'SE', N'SI', N'SK'))
+GO
+
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[Nop_Order]') and NAME='VatNumber')
+BEGIN
+	ALTER TABLE [dbo].[Nop_Order] 
+	ADD [VatNumber] nvarchar(100) NOT NULL CONSTRAINT [DF_Nop_Order_VatNumber] DEFAULT ((''))
+END
+GO
+
+
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[Nop_MessageTemplate]
+		WHERE [Name] = N'NewVATSubmitted.StoreOwnerNotification')
+BEGIN
+	INSERT [dbo].[Nop_MessageTemplate] ([Name])
+	VALUES (N'NewVATSubmitted.StoreOwnerNotification')
+
+	DECLARE @MessageTemplateID INT 
+	SELECT @MessageTemplateID =	mt.MessageTemplateID FROM Nop_MessageTemplate mt
+							WHERE mt.Name = N'NewVATSubmitted.StoreOwnerNotification' 
+
+	IF (@MessageTemplateID > 0)
+	BEGIN
+		INSERT [dbo].[Nop_MessageTemplateLocalized] ([MessageTemplateID], [LanguageID], [BCCEmailAddresses], [Subject], [Body]) 
+		VALUES (@MessageTemplateID, 7, N'', N'New VAT number is submitted.',  N'<p><a href="%Store.URL%">%Store.Name%</a> <br />
+<br />
+%Customer.FullName% (%Customer.Email%) has just submitted a new VAT number (%Customer.VatNumber%).
+</p>')
+	END
+END
+GO
+
 IF NOT EXISTS (
 		SELECT 1
 		FROM [dbo].[Nop_SMSProvider]
@@ -1141,6 +1184,8 @@ GO
 
 IF NOT EXISTS ( SELECT 1 FROM [dbo].[Nop_Setting] WHERE [Name] = N'Mobile.SMS.Verizon.Email')
 BEGIN
-	INSERT [dbo].[Nop_Setting] ([Name], [Value], [Description]) VALUES (N'Mobile.SMS.Verizon.Email', N'', N'')
+	INSERT [dbo].[Nop_Setting] ([Name], [Value], [Description]) VALUES (N'Mobile.SMS.Verizon.Email', N'yournumber@vtext.com', N'')
 END
 GO
+
+

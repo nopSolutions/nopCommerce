@@ -815,11 +815,11 @@ set @resources='
   <LocaleResource Name="Admin.TaxSettings.EUVatUseWebService.Tooltip">
     <Value>Check if you want to use the EU web service to validate VAT numbers. WARNING: If this option is enabled, then DO NOT disable country form field available during registration (public store).</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.TaxSettings.EUVatEmailAdminWithWebServiceResults">
-    <Value>Email web service results to admin:</Value>
+  <LocaleResource Name="Admin.TaxSettings.EUVatEmailAdminWhenNewVATSubmitted">
+    <Value>Notify admin when a new VAT number is submitted:</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.TaxSettings.EUVatEmailAdminWithWebServiceResults.Tooltip">
-    <Value>Check if you want to receive the results of EU web service VAT number validation</Value>
+  <LocaleResource Name="Admin.TaxSettings.EUVatEmailAdminWhenNewVATSubmitted.Tooltip">
+    <Value>Check if you want to receive a notification (email) when a new VAT number is submitted</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.TaxSettings.EUVatShopCountry.SelectCountry">
     <Value>Select country</Value>
@@ -842,9 +842,6 @@ set @resources='
   <LocaleResource Name="VatNumberStatus.Invalid">
     <Value>Invalid</Value>
   </LocaleResource>
-  <LocaleResource Name="VatNumberStatus.AwaitsApproval">
-    <Value>Awaits approval</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.ConfigurationHome.SMSProviders.TitleDescription">
     <Value>SMS Providers</Value>
   </LocaleResource>
@@ -853,6 +850,45 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.ConfigurationHome.SMSProviders.Description">
     <Value>Manage SMS notification settings and providers.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CustomerInfo.VatNumber">
+    <Value>VAT number:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CustomerInfo.VatNumber.Tooltip">
+    <Value>Enter company VAT number</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CustomerInfo.VATNumberStatus">
+    <Value>(status: {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CustomerInfo.BtnMarkVatNumberAsValid.Text">
+    <Value>Mark VAT number as valid</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CustomerInfo.BtnMarkVatNumberAsInvalid.Text">
+    <Value>Mark VAT number as invalid</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Countries.SubjectToVAT">
+    <Value>Subject to VAT</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CountryInfo.SubjectToVAT">
+    <Value>Subject to VAT:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CountryInfo.SubjectToVAT.Tooltip">
+    <Value>Value indicating whether customers in this country must be charged EU VAT (the European Union Value Added Tax)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.OrderDetails.VatNumber">
+    <Value>VAT number:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.OrderDetails.VatNumber.Tooltip">
+    <Value>Used VAT number (the European Union Value Added Tax)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.VATNumber">
+    <Value>VAT number</Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFInvoice.VATNumber">
+    <Value>VAT number: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.ShippedOn">
+    <Value>Shipped on</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.SMSProviders.Verizon.Title">
     <Value>Verizon</Value>
@@ -870,13 +906,13 @@ set @resources='
     <Value>Text:</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.SMSProviders.Verizon.TestMessageText.Tooltip">
-    <Value>Text of test message</Value>
+    <Value>Text of the test message</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.SMSProviders.Verizon.TestMessage.SendButton">
     <Value>Send</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.SMSProviders.Verizon.TestMessage.SendButton.Tooltip">
-    <Value>Clich to send test message</Value>
+    <Value>Click to send test message</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.SMSProviders.Verizon.TestMessage.Failed">
     <Value>Test message sending failed</Value>
@@ -944,5 +980,6 @@ DEALLOCATE cur_localeresource
 
 DROP TABLE #LocaleStringResourceTmp
 GO
+
 
 

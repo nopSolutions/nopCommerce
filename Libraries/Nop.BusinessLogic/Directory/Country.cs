@@ -79,6 +79,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
         public int NumericIsoCode { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether customers in this country must be charged EU VAT
+        /// </summary>
+        public bool SubjectToVAT { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether the entity is published
         /// </summary>
         public bool Published { get; set; }

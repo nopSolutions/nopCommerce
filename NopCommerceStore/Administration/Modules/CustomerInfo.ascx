@@ -92,6 +92,25 @@
             <asp:TextBox ID="txtCompany" runat="server" CssClass="adminInput"></asp:TextBox>
         </td>
     </tr>
+    <% } %>    
+    <% if (TaxManager.EUVatEnabled)
+       { %>
+    <tr>
+        <td class="adminTitle">
+            <nopCommerce:ToolTipLabel runat="server" ID="lblVatNumberTitle" Text="<% $NopResources:Admin.CustomerInfo.VatNumber %>"
+                ToolTip="<% $NopResources:Admin.CustomerInfo.VatNumber.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
+        </td>
+        <td class="adminData">
+            <asp:TextBox ID="txtVatNumber" runat="server" CssClass="adminInput" />&nbsp;&nbsp;&nbsp;<asp:Label
+                ID="lblVatNumberStatus" runat="server" />
+            &nbsp;&nbsp;&nbsp;<asp:Button runat="server" ID="btnMarkVatNumberAsValid" CssClass="adminButton"
+                CausesValidation="false" Text="<% $NopResources:Admin.CustomerInfo.BtnMarkVatNumberAsValid.Text %>"
+                OnClick="BtnMarkVatNumberAsValid_OnClick" />&nbsp;&nbsp;&nbsp;
+            <asp:Button runat="server" ID="btnMarkVatNumberAsInvalid" CssClass="adminButton"
+                CausesValidation="false" Text="<% $NopResources:Admin.CustomerInfo.BtnMarkVatNumberAsInvalid.Text %>"
+                OnClick="BtnMarkVatNumberAsInvalid_OnClick" />
+        </td>
+    </tr>
     <% } %>
     <% if (CustomerManager.FormFieldStreetAddressEnabled)
        { %>

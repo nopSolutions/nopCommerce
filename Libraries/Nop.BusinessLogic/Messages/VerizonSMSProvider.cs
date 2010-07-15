@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Net.Mail;
 using NopSolutions.NopCommerce.BusinessLogic.Audit;
 using NopSolutions.NopCommerce.BusinessLogic.Clickatell;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.Common;
-using System.Net.Mail;
+using NopSolutions.NopCommerce.Common.Utils;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Messages
 {
@@ -16,7 +17,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// <summary>
         /// Sends SMS
         /// </summary>
-        /// <param name="text">Text</param>
+        /// <param name="text">SMS text</param>
+        /// <returns>Result</returns>
         public bool SendSMS(string text)
         {
             try
@@ -24,14 +26,15 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
                 var from = new MailAddress(MessageManager.AdminEmailAddress, MessageManager.AdminEmailDisplayName);
                 var to = new MailAddress(VerizonEmail);
 
-                MessageManager.SendEmail(String.Empty, text, from, to);
+                MessageManager.InsertQueuedEmail(5, from, to,
+                    string.Empty, string.Empty, SettingManager.StoreName, text, DateTime.UtcNow, 0, null);
                 return true;
             }
             catch (Exception ex)
             {
                 LogManager.InsertLog(LogTypeEnum.Unknown, ex.Message, ex);
+                return false;
             }
-            return false;
         }
         #endregion
 

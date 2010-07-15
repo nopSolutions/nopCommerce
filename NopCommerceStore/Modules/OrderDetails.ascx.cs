@@ -58,6 +58,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             this.lblOrderStatus.Text = OrderManager.GetOrderStatusName(order.OrderStatusId);
             btnReOrder.Visible = OrderManager.IsReOrderAllowed;
 
+            //shipping info
             if (order.ShippingStatus != ShippingStatusEnum.ShippingNotRequired)
             {
                 this.pnlShipping.Visible = true;
@@ -112,6 +113,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 this.pnlShippingTotal.Visible = false;
             }
 
+            //billing info
             this.lBillingFirstName.Text = Server.HtmlEncode(order.BillingFirstName);
             this.lBillingLastName.Text = Server.HtmlEncode(order.BillingLastName);
             this.lBillingPhoneNumber.Text = Server.HtmlEncode(order.BillingPhoneNumber);
@@ -134,13 +136,20 @@ namespace NopSolutions.NopCommerce.Web.Modules
             else
                 pnlBillingCountry.Visible = false;
 
+            //VAT number
+            if (!String.IsNullOrEmpty(order.VatNumber))
+                this.lVatNumber.Text = Server.HtmlEncode(order.VatNumber);
+            else
+                phVatNumber.Visible = false;
 
+            //payment method
             var paymentMethod = PaymentMethodManager.GetPaymentMethodById(order.PaymentMethodId);
             if (paymentMethod != null)
                 this.lPaymentMethod.Text = paymentMethod.VisibleName;
             else
                 this.lPaymentMethod.Text = order.PaymentMethodName;
 
+            //totals
             switch (order.CustomerTaxDisplayType)
             {
                 case TaxDisplayTypeEnum.ExcludingTax:

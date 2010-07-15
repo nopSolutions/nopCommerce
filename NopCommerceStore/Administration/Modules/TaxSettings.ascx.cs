@@ -17,6 +17,7 @@ using System.Collections;
 using System.Configuration;
 using System.Data;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Web;
@@ -60,7 +61,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             pnlEUVatShopCountry.Visible = cbEUVatEnabled.Checked;
             pnlEUVatAllowVATExemption.Visible = cbEUVatEnabled.Checked;
             pnlEUVatUseWebService.Visible = cbEUVatEnabled.Checked;
-            pnlEUVatEmailAdminWithWebServiceResults.Visible = cbEUVatEnabled.Checked;
+            pnlEUVatEmailAdminWhenNewVATSubmitted.Visible = cbEUVatEnabled.Checked;
         }
 
         protected void FillDropDowns()
@@ -123,7 +124,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected void FillEUVATCountryDropDowns()
         {
-            var countries = CountryManager.GetAllCountries();
+            var countries = CountryManager.GetAllCountries().Where(country => country.SubjectToVAT).ToList();
 
             this.ddlEUVatShopCountry.Items.Clear();
             ListItem noCountryItem2 = new ListItem(GetLocaleResourceString("Admin.TaxSettings.EUVatShopCountry.SelectCountry"), "0");
@@ -170,7 +171,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             CommonHelper.SelectListItem(this.ddlEUVatShopCountry, TaxManager.EUVatShopCountryId);
             cbEUVatAllowVATExemption.Checked = TaxManager.EUVatAllowVATExemption;
             cbEUVatUseWebService.Checked = TaxManager.EUVatUseWebService;
-            cbEUVatEmailAdminWithWebServiceResults.Checked = TaxManager.EUVatEmailAdminWithWebServiceResults;
+            cbEUVatEmailAdminWhenNewVATSubmitted.Checked = TaxManager.EUVatEmailAdminWhenNewVATSubmitted;
         }
 
         protected void ddlTaxDefaultCountry_SelectedIndexChanged(object sender, EventArgs e)
@@ -235,7 +236,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     TaxManager.EUVatShopCountryId = int.Parse(this.ddlEUVatShopCountry.SelectedItem.Value);
                     TaxManager.EUVatAllowVATExemption = cbEUVatAllowVATExemption.Checked;
                     TaxManager.EUVatUseWebService = cbEUVatUseWebService.Checked;
-                    TaxManager.EUVatEmailAdminWithWebServiceResults = cbEUVatEmailAdminWithWebServiceResults.Checked;
+                    TaxManager.EUVatEmailAdminWhenNewVATSubmitted = cbEUVatEmailAdminWhenNewVATSubmitted.Checked;
 
                     //logging
                     CustomerActivityManager.InsertActivity(

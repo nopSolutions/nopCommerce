@@ -41,6 +41,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 this.txtTwoLetterISOCode.Text = country.TwoLetterIsoCode;
                 this.txtThreeLetterISOCode.Text = country.ThreeLetterIsoCode;
                 this.txtNumericISOCode.Value = country.NumericIsoCode;
+                this.cbSubjectToVAT.Checked = country.SubjectToVAT;
                 this.cbPublished.Checked = country.Published;
                 this.txtDisplayOrder.Value = country.DisplayOrder;
             }
@@ -64,8 +65,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     txtName.Text, cbAllowsRegistration.Checked,
                     cbAllowsBilling.Checked, cbAllowsShipping.Checked,
                     txtTwoLetterISOCode.Text, txtThreeLetterISOCode.Text,
-                    txtNumericISOCode.Value, cbPublished.Checked,
-                    txtDisplayOrder.Value);
+                    txtNumericISOCode.Value, cbSubjectToVAT.Checked, 
+                    cbPublished.Checked, txtDisplayOrder.Value);
             }
             else
             {
@@ -73,7 +74,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     cbAllowsRegistration.Checked, cbAllowsBilling.Checked,
                     cbAllowsShipping.Checked, txtTwoLetterISOCode.Text,
                     txtThreeLetterISOCode.Text, txtNumericISOCode.Value,
-                    cbPublished.Checked, txtDisplayOrder.Value);
+                    cbSubjectToVAT.Checked, cbPublished.Checked, 
+                    txtDisplayOrder.Value);
             }
 
             return country;

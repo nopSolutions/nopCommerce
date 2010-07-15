@@ -83,7 +83,7 @@ namespace NopSolutions.NopCommerce.Web
                        order.ShippingCountry, order.ShippingCountryId,
                        order.ShippingMethod, order.ShippingRateComputationMethodId,
                        order.ShippedDate, order.DeliveryDate,
-                       order.TrackingNumber, order.Deleted, order.CreatedOn);
+                       order.TrackingNumber, order.VatNumber, order.Deleted, order.CreatedOn);
 
                     if(OrderManager.CanMarkOrderAsAuthorized(order))
                     {
@@ -124,8 +124,8 @@ namespace NopSolutions.NopCommerce.Web
                        order.ShippingStateProvince, order.ShippingStateProvinceId, order.ShippingZipPostalCode,
                        order.ShippingCountry, order.ShippingCountryId,
                        order.ShippingMethod, order.ShippingRateComputationMethodId,
-                       order.ShippedDate, order.DeliveryDate, 
-                       order.TrackingNumber, order.Deleted, order.CreatedOn);
+                       order.ShippedDate, order.DeliveryDate,
+                       order.TrackingNumber, order.VatNumber, order.Deleted, order.CreatedOn);
 
                     if(OrderManager.CanMarkOrderAsPaid(order))
                     {

@@ -29,6 +29,8 @@ using NopSolutions.NopCommerce.BusinessLogic;
 using NopSolutions.NopCommerce.BusinessLogic.Content.Forums;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
+using NopSolutions.NopCommerce.BusinessLogic.Localization;
+using NopSolutions.NopCommerce.BusinessLogic.Messages;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.BusinessLogic.Tax;
@@ -225,8 +227,19 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     //set VAT number after country is saved
                     if (TaxManager.EUVatEnabled)
                     {
+                        string prevVatNumber = customer.VatNumber;
                         customer.VatNumber = txtVatNumber.Text;
-                        customer.VatNumberStatus = TaxManager.GetVatNumberStatus(CountryManager.GetCountryById(customer.CountryId), customer.VatNumber);
+                        //set VAT number status
+                        if (!txtVatNumber.Text.Trim().Equals(prevVatNumber))
+                        {
+                            customer.VatNumberStatus = TaxManager.GetVatNumberStatus(CountryManager.GetCountryById(customer.CountryId), customer.VatNumber);
+
+                            //admin notification
+                            if (!String.IsNullOrEmpty(customer.VatNumber) && TaxManager.EUVatEmailAdminWhenNewVATSubmitted)
+                            {
+                                MessageManager.SendNewVATSubmittedStoreOwnerNotification(customer, LocalizationManager.DefaultAdminLanguage.LanguageId);
+                            }
+                        }
                     }
 
                     if (DateTimeHelper.AllowCustomersToSetTimeZone)

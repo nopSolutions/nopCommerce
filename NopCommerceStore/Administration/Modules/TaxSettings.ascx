@@ -235,14 +235,14 @@
             <asp:CheckBox ID="cbEUVatUseWebService" runat="server"></asp:CheckBox>
         </td>
     </tr>
-    <tr runat="server" id="pnlEUVatEmailAdminWithWebServiceResults">
+    <tr runat="server" id="pnlEUVatEmailAdminWhenNewVATSubmitted">
         <td class="adminTitle">
-            <nopCommerce:ToolTipLabel runat="server" ID="lblEUVatEmailAdminWithWebServiceResults" Text="<% $NopResources:Admin.TaxSettings.EUVatEmailAdminWithWebServiceResults %>"
-                ToolTip="<% $NopResources:Admin.TaxSettings.EUVatEmailAdminWithWebServiceResults.Tooltip %>"
+            <nopCommerce:ToolTipLabel runat="server" ID="lblEUVatEmailAdminWhenNewVATSubmitted" Text="<% $NopResources:Admin.TaxSettings.EUVatEmailAdminWhenNewVATSubmitted %>"
+                ToolTip="<% $NopResources:Admin.TaxSettings.EUVatEmailAdminWhenNewVATSubmitted.Tooltip %>"
                 ToolTipImage="~/Administration/Common/ico-help.gif" />
         </td>
         <td class="adminData">
-            <asp:CheckBox ID="cbEUVatEmailAdminWithWebServiceResults" runat="server"></asp:CheckBox>
+            <asp:CheckBox ID="cbEUVatEmailAdminWhenNewVATSubmitted" runat="server"></asp:CheckBox>
         </td>
     </tr>
     <tr class="adminSeparator">

@@ -460,6 +460,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         public string TrackingNumber { get; set; }
 
         /// <summary>
+        /// Gets or sets the VAT number (the European Union Value Added Tax)
+        /// </summary>
+        public string VatNumber { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether the entity has been deleted
         /// </summary>
         public bool Deleted { get; set; }

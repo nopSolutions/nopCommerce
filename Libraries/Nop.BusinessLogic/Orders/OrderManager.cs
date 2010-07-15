@@ -153,7 +153,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                     order.ShippingRateComputationMethodId, 
                     order.ShippedDate,
                     order.DeliveryDate,
-                    order.TrackingNumber, 
+                    order.TrackingNumber,
+                    order.VatNumber,
                     order.Deleted,
                     order.CreatedOn);
 
@@ -353,7 +354,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                     order.ShippingCountry, order.ShippingCountryId,
                     order.ShippingMethod, order.ShippingRateComputationMethodId,
                     order.ShippedDate, order.DeliveryDate,
-                    order.TrackingNumber, order.Deleted, order.CreatedOn);
+                    order.TrackingNumber, order.VatNumber, order.Deleted, order.CreatedOn);
             }
 
             return order;
@@ -441,8 +442,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                     order.ShippingStateProvince, order.ShippingStateProvinceId, order.ShippingZipPostalCode,
                     order.ShippingCountry, order.ShippingCountryId,
                     order.ShippingMethod, order.ShippingRateComputationMethodId,
-                    order.ShippedDate, order.DeliveryDate, order.TrackingNumber, true,
-                    order.CreatedOn);
+                    order.ShippedDate, order.DeliveryDate, order.TrackingNumber, 
+                    order.VatNumber, true, order.CreatedOn);
             }
         }
 
@@ -635,6 +636,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="shippedDate">The shipped date and time</param>
         /// <param name="deliveryDate">The delivery date and time</param>
         /// <param name="trackingNumber">The tracking number of order</param>
+        /// <param name="vatNumber">The VAT number (the European Union Value Added Tax)</param>
         /// <param name="deleted">A value indicating whether the entity has been deleted</param>
         /// <param name="createdOn">The date and time of order creation</param>
         /// <returns>Order</returns>
@@ -720,6 +722,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             DateTime? shippedDate,
             DateTime? deliveryDate,
             string trackingNumber,
+            string vatNumber,
             bool deleted,
             DateTime createdOn)
         {
@@ -799,6 +802,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 shippingMethod = string.Empty;
             if (trackingNumber == null)
                 trackingNumber = string.Empty;
+            if (vatNumber == null)
+                vatNumber = string.Empty;
 
             customerIP = CommonHelper.EnsureMaximumLength(customerIP, 50);
             cardType = CommonHelper.EnsureMaximumLength(cardType, 100);
@@ -842,6 +847,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             shippingCountry = CommonHelper.EnsureMaximumLength(shippingCountry, 100);
             shippingMethod = CommonHelper.EnsureMaximumLength(shippingMethod, 100);
             trackingNumber = CommonHelper.EnsureMaximumLength(trackingNumber, 100);
+            vatNumber = CommonHelper.EnsureMaximumLength(vatNumber, 100);
 
             var context = ObjectContextHelper.CurrentObjectContext;
 
@@ -928,6 +934,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             order.ShippedDate = shippedDate;
             order.DeliveryDate = deliveryDate;
             order.TrackingNumber = trackingNumber;
+            order.VatNumber = vatNumber;
             order.Deleted = deleted;
             order.CreatedOn = createdOn;
 
@@ -1033,6 +1040,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="shippedDate">The shipped date and time</param>
         /// <param name="deliveryDate">The delivery date and time</param>
         /// <param name="trackingNumber">The tracking number of order</param>
+        /// <param name="vatNumber">The VAT number (the European Union Value Added Tax)</param>
         /// <param name="deleted">A value indicating whether the entity has been deleted</param>
         /// <param name="createdOn">The date and time of order creation</param>
         /// <returns>Order</returns>
@@ -1119,6 +1127,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             DateTime? shippedDate,
             DateTime? deliveryDate,
             string trackingNumber,
+            string vatNumber,
             bool deleted,
             DateTime createdOn)
         {
@@ -1167,6 +1176,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             shippingCountry = CommonHelper.EnsureMaximumLength(shippingCountry, 100);
             shippingMethod = CommonHelper.EnsureMaximumLength(shippingMethod, 100);
             trackingNumber = CommonHelper.EnsureMaximumLength(trackingNumber, 100);
+            vatNumber = CommonHelper.EnsureMaximumLength(vatNumber, 100);
 
             var order = GetOrderById(orderId);
             if (order == null)
@@ -1258,6 +1268,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             order.ShippedDate = shippedDate;
             order.DeliveryDate = deliveryDate;
             order.TrackingNumber = trackingNumber;
+            order.VatNumber = vatNumber;
             order.Deleted = deleted;
             order.CreatedOn = createdOn;
             context.SaveChanges();
@@ -1317,7 +1328,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                    order.ShippingCountry, order.ShippingCountryId,
                    order.ShippingMethod, order.ShippingRateComputationMethodId,
                    order.ShippedDate, order.DeliveryDate,
-                   trackingNumber, order.Deleted, order.CreatedOn);
+                   trackingNumber, order.VatNumber, order.Deleted, order.CreatedOn);
             }
         }
 
@@ -3109,8 +3120,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 //tax total
                 decimal orderTaxTotal = decimal.Zero;
                 decimal orderTaxInCustomerCurrency = decimal.Zero;
+                string vatNumber = string.Empty;
                 if (!paymentInfo.IsRecurringPayment)
                 {
+                    //tax amount
                     string taxError = string.Empty;
                     orderTaxTotal = TaxManager.GetTaxTotal(cart, 
                         paymentInfo.PaymentMethodId, customer, ref taxError);
@@ -3119,11 +3132,21 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
 
                     //in customer currency
                     orderTaxInCustomerCurrency = CurrencyManager.ConvertCurrency(orderTaxTotal, CurrencyManager.PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
+
+                    //VAT number
+                    if (TaxManager.EUVatEnabled && customer.VatNumberStatus == VatNumberStatusEnum.Valid)
+                    {
+                        vatNumber = customer.VatNumber;
+                    }
                 }
                 else
                 {
                     orderTaxTotal = initialOrder.OrderTax;
                     orderTaxInCustomerCurrency = initialOrder.OrderTaxInCustomerCurrency;
+
+                    //VAT number
+                    //TODO: Possible BUG: VAT number status may have changed since original order was placed, probably best to recalculate tax or do some checks?
+                    vatNumber = initialOrder.VatNumber;
                 }
 
 
@@ -3490,6 +3513,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                              null,
                              null,
                              string.Empty,
+                             vatNumber,
                              false,
                              DateTime.UtcNow);
 
@@ -3978,7 +4002,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 order.ShippingStateProvince, order.ShippingStateProvinceId, order.ShippingZipPostalCode,
                 order.ShippingCountry, order.ShippingCountryId,
                 order.ShippingMethod, order.ShippingRateComputationMethodId, shippedDate,
-                order.DeliveryDate, order.TrackingNumber, order.Deleted, order.CreatedOn);
+                order.DeliveryDate, order.TrackingNumber, order.VatNumber, 
+                order.Deleted, order.CreatedOn);
 
             InsertOrderNote(order.OrderId, string.Format("Order has been shipped"), false, DateTime.UtcNow);
 
@@ -4061,7 +4086,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 order.ShippingStateProvince, order.ShippingStateProvinceId, order.ShippingZipPostalCode,
                 order.ShippingCountry, order.ShippingCountryId,
                 order.ShippingMethod, order.ShippingRateComputationMethodId, order.ShippedDate,
-                deliveryDate, order.TrackingNumber, order.Deleted, order.CreatedOn);
+                deliveryDate, order.TrackingNumber, order.VatNumber, 
+                order.Deleted, order.CreatedOn);
 
             InsertOrderNote(order.OrderId, string.Format("Order has been delivered"), false, DateTime.UtcNow);
 
@@ -4190,8 +4216,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                    order.ShippingStateProvince, order.ShippingStateProvinceId, order.ShippingZipPostalCode,
                    order.ShippingCountry, order.ShippingCountryId,
                    order.ShippingMethod, order.ShippingRateComputationMethodId,
-                   order.ShippedDate, order.DeliveryDate, 
-                   order.TrackingNumber, order.Deleted, order.CreatedOn);
+                   order.ShippedDate, order.DeliveryDate,
+                   order.TrackingNumber, order.VatNumber, order.Deleted, order.CreatedOn);
 
             InsertOrderNote(order.OrderId, string.Format("Order has been marked as authorized"), false, DateTime.UtcNow);
 
@@ -4290,7 +4316,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                         order.ShippingCountry, order.ShippingCountryId,
                         order.ShippingMethod, order.ShippingRateComputationMethodId,
                         order.ShippedDate, order.DeliveryDate,
-                        order.TrackingNumber, order.Deleted, order.CreatedOn);
+                        order.TrackingNumber, order.VatNumber, order.Deleted, order.CreatedOn);
 
                     InsertOrderNote(order.OrderId, string.Format("Order has been captured"), false, DateTime.UtcNow);
 
@@ -4382,7 +4408,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                     order.ShippingCountry, order.ShippingCountryId,
                     order.ShippingMethod, order.ShippingRateComputationMethodId,
                     order.ShippedDate, order.DeliveryDate,
-                    order.TrackingNumber, order.Deleted, order.CreatedOn);
+                    order.TrackingNumber, order.VatNumber, order.Deleted, order.CreatedOn);
 
             InsertOrderNote(order.OrderId, string.Format("Order has been marked as paid"), false, DateTime.UtcNow);
 
@@ -4473,7 +4499,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                         order.ShippingCountry, order.ShippingCountryId,
                         order.ShippingMethod, order.ShippingRateComputationMethodId,
                         order.ShippedDate, order.DeliveryDate,
-                        order.TrackingNumber, order.Deleted, order.CreatedOn);
+                        order.TrackingNumber, order.VatNumber, order.Deleted, order.CreatedOn);
 
                     InsertOrderNote(order.OrderId, string.Format("Order has been refunded"), false, DateTime.UtcNow);
 
@@ -4563,7 +4589,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                    order.ShippingCountry, order.ShippingCountryId,
                    order.ShippingMethod, order.ShippingRateComputationMethodId,
                    order.ShippedDate, order.DeliveryDate,
-                   order.TrackingNumber, order.Deleted, order.CreatedOn);
+                   order.TrackingNumber, order.VatNumber, order.Deleted, order.CreatedOn);
 
             InsertOrderNote(order.OrderId, string.Format("Order has been marked as refunded"), false, DateTime.UtcNow);
 
@@ -4654,7 +4680,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                         order.ShippingCountry, order.ShippingCountryId,
                         order.ShippingMethod, order.ShippingRateComputationMethodId,
                         order.ShippedDate, order.DeliveryDate,
-                        order.TrackingNumber, order.Deleted, order.CreatedOn);
+                        order.TrackingNumber, order.VatNumber, order.Deleted, order.CreatedOn);
 
                     InsertOrderNote(order.OrderId, string.Format("Order has been voided"), false, DateTime.UtcNow);
                 }
@@ -4744,7 +4770,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                    order.ShippingCountry, order.ShippingCountryId,
                    order.ShippingMethod, order.ShippingRateComputationMethodId,
                    order.ShippedDate, order.DeliveryDate,
-                   order.TrackingNumber, order.Deleted, order.CreatedOn);
+                   order.TrackingNumber, order.VatNumber, order.Deleted, order.CreatedOn);
 
             InsertOrderNote(order.OrderId, string.Format("Order has been marked as voided"), false, DateTime.UtcNow);
 

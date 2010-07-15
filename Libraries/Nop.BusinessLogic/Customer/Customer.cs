@@ -612,7 +612,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         }
 
         /// <summary>
-        /// Gets or sets the VAT number
+        /// Gets or sets the VAT number (the European Union Value Added Tax)
         /// </summary>
         public string VatNumber
         {
@@ -637,7 +637,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                     vatNumberAttr = CustomerManager.UpdateCustomerAttribute(vatNumberAttr.CustomerAttributeId, vatNumberAttr.CustomerId, "VatNumber", value);
                 else
                     vatNumberAttr = CustomerManager.InsertCustomerAttribute(this.CustomerId, "VatNumber", value);
-
+                
                 ResetCachedValues();
             }
         }

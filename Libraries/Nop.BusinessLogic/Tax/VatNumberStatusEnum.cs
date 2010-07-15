@@ -9,7 +9,7 @@
 // The Initial Developer of the Original Code is NopSolutions.
 // All Rights Reserved.
 // 
-// Contributor(s): _______. 
+// Contributor(s): Stephen Kennedy - VAT support, _______. 
 //------------------------------------------------------------------------------
 
 using System;
@@ -43,10 +43,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// <summary>
         /// Invalid
         /// </summary>
-        Invalid = 30,
-        /// <summary>
-        /// Awaits approval
-        /// </summary>
-        AwaitsApproval = 40,
+        Invalid = 30
     }
 }

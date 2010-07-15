@@ -454,30 +454,30 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         protected global::System.Web.UI.WebControls.CheckBox cbEUVatUseWebService;
         
         /// <summary>
-        /// pnlEUVatEmailAdminWithWebServiceResults control.
+        /// pnlEUVatEmailAdminWhenNewVATSubmitted control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlTableRow pnlEUVatEmailAdminWithWebServiceResults;
+        protected global::System.Web.UI.HtmlControls.HtmlTableRow pnlEUVatEmailAdminWhenNewVATSubmitted;
         
         /// <summary>
-        /// lblEUVatEmailAdminWithWebServiceResults control.
+        /// lblEUVatEmailAdminWhenNewVATSubmitted control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblEUVatEmailAdminWithWebServiceResults;
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblEUVatEmailAdminWhenNewVATSubmitted;
         
         /// <summary>
-        /// cbEUVatEmailAdminWithWebServiceResults control.
+        /// cbEUVatEmailAdminWhenNewVATSubmitted control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox cbEUVatEmailAdminWithWebServiceResults;
+        protected global::System.Web.UI.WebControls.CheckBox cbEUVatEmailAdminWhenNewVATSubmitted;
     }
 }

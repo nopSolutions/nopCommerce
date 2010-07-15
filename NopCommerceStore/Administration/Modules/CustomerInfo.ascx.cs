@@ -31,6 +31,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.BusinessLogic.Promo.Affiliates;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Common;
+using NopSolutions.NopCommerce.BusinessLogic.Tax;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -73,6 +74,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 {
                     txtCompany.Text = customer.Company;
                 }
+                if (TaxManager.EUVatEnabled)
+                {
+                    txtVatNumber.Text = customer.VatNumber;
+                    lblVatNumberStatus.Text = string.Format(GetLocaleResourceString("Admin.CustomerInfo.VATNumberStatus"), TaxManager.GetVatNumberStatusName(customer.VatNumberStatus));
+                }
+
                 if (CustomerManager.FormFieldStreetAddressEnabled)
                 {
                     txtStreetAddress.Text = customer.StreetAddress;
@@ -97,7 +104,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     CustomerManager.FormFieldStateEnabled)
                 {
                     FillStateProvinceDropDowns();
-                    CommonHelper.SelectListItem(ddlStateProvince, customer.StateProvinceId.ToString());
+                    CommonHelper.SelectListItem(this.ddlStateProvince, customer.StateProvinceId.ToString());
                 }
                 if (CustomerManager.FormFieldPhoneEnabled)
                 {
@@ -318,6 +325,18 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             }
             customer.ReceiveNewsletter = cbNewsletter.Checked;
 
+            //set VAT number after country is saved
+            if (TaxManager.EUVatEnabled)
+            {
+                string prevVatNumber = customer.VatNumber;
+                customer.VatNumber = txtVatNumber.Text;
+                //set VAT number status
+                if (!txtVatNumber.Text.Trim().Equals(prevVatNumber))
+                {
+                    customer.VatNumberStatus = TaxManager.GetVatNumberStatus(CountryManager.GetCountryById(customer.CountryId), customer.VatNumber);
+                }
+            }
+
             if (DateTimeHelper.AllowCustomersToSetTimeZone)
             {
                 if (ddlTimeZone.SelectedItem != null && !String.IsNullOrEmpty(ddlTimeZone.SelectedItem.Value))
@@ -345,6 +364,35 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             }
         }
 
+        protected void BtnMarkVatNumberAsValid_OnClick(object sender, EventArgs e)
+        {
+            try
+            {
+                Customer customer = CustomerManager.GetCustomerById(this.CustomerId);
+                customer.VatNumberStatus = VatNumberStatusEnum.Valid;
+                BindData();
+            }
+            catch(Exception ex)
+            {
+                ProcessException(ex);
+            }
+        }
+
+        protected void BtnMarkVatNumberAsInvalid_OnClick(object sender, EventArgs e)
+        {
+            try
+            {
+                Customer customer = CustomerManager.GetCustomerById(this.CustomerId);
+                customer.VatNumberStatus = VatNumberStatusEnum.Invalid;
+                BindData();
+            }
+            catch(Exception ex)
+            {
+                ProcessException(ex);
+            }
+        }
+        
+            
         public int CustomerId
         {
             get

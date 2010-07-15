@@ -28,6 +28,8 @@ using NopSolutions.NopCommerce.BusinessLogic;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
+using NopSolutions.NopCommerce.BusinessLogic.Localization;
+using NopSolutions.NopCommerce.BusinessLogic.Messages;
 using NopSolutions.NopCommerce.BusinessLogic.Tax;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Common.Xml;
@@ -301,6 +303,11 @@ namespace NopSolutions.NopCommerce.Web.Modules
             {
                 customer.VatNumber = txtVatNumber.Text;
                 customer.VatNumberStatus = TaxManager.GetVatNumberStatus(CountryManager.GetCountryById(customer.CountryId), customer.VatNumber);
+                //admin notification
+                if (!String.IsNullOrEmpty(customer.VatNumber) && TaxManager.EUVatEmailAdminWhenNewVATSubmitted)
+                {
+                    MessageManager.SendNewVATSubmittedStoreOwnerNotification(customer, LocalizationManager.DefaultAdminLanguage.LanguageId);
+                }
             }
 
             //billing address

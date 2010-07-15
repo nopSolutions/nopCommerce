@@ -239,6 +239,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Utils
                 row.Cells[0].AddParagraph("   " + String.Format(LocalizationManager.GetLocaleResourceString("PDFInvoice.Address2", languageId), order.BillingAddress2));
             row.Cells[0].AddParagraph("   " + String.Format("{0}, {1}", order.BillingCountry, order.BillingStateProvince));
             row.Cells[0].AddParagraph("   " + String.Format("{0}, {1}", order.BillingCity, order.BillingZipPostalCode));
+            //VAT number
+            if (!String.IsNullOrEmpty(order.VatNumber))
+            {
+                row.Cells[0].AddParagraph("   " + String.Format(LocalizationManager.GetLocaleResourceString("PDFInvoice.VATNumber", languageId), order.VatNumber));
+            }
             row.Cells[0].AddParagraph();
 
             //shipping info

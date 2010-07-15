@@ -422,6 +422,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.map</DependentUpon>
     </Compile>
+    <Compile Include="Web References\EuropaCheckVatService\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nop.Common\Nop.Common.csproj">
@@ -444,6 +449,17 @@
       <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
       <CachedSettingsPropName>Nop_BusinessLogic_Clickatell_PushServerWS</CachedSettingsPropName>
     </WebReferenceUrl>
+    <WebReferenceUrl Include="http://ec.europa.eu/taxation_customs/vies/services/checkVatService.wsdl">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\EuropaCheckVatService\</RelPath>
+      <UpdateFromURL>http://ec.europa.eu/taxation_customs/vies/services/checkVatService.wsdl</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>Nop_BusinessLogic_EuropaCheckVatService_checkVatService</CachedSettingsPropName>
+    </WebReferenceUrl>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">
@@ -459,6 +475,14 @@
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
     <None Include="Web References\Clickatell\webservice_vs.wsdl" />
+    <None Include="Web References\EuropaCheckVatService\checkVatService.wsdl" />
+    <None Include="Web References\EuropaCheckVatService\matchCode.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\EuropaCheckVatService\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />

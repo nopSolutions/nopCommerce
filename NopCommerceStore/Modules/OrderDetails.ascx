@@ -198,6 +198,19 @@
                                                 <asp:Literal ID="lBillingCountry" runat="server"></asp:Literal></asp:Panel>
                                         </td>
                                     </tr>
+                                    <asp:PlaceHolder runat="server" ID="phVatNumber">
+                                        <tr>
+                                            <td>
+                                                <b>
+                                                    <%=GetLocaleResourceString("Order.VATNumber")%></b>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <asp:Literal runat="server" ID="lVatNumber"></asp:Literal>
+                                            </td>
+                                        </tr>
+                                    </asp:PlaceHolder>
                                     <tr>
                                         <td>
                                             <b>

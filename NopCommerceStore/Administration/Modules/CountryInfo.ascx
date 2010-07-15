@@ -77,6 +77,15 @@
     </tr>
     <tr>
         <td class="adminTitle">
+            <nopCommerce:ToolTipLabel runat="server" ID="lblSubjectToVAT" Text="<% $NopResources:Admin.CountryInfo.SubjectToVAT %>"
+                ToolTip="<% $NopResources:Admin.CountryInfo.SubjectToVAT.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
+        </td>
+        <td class="adminData">
+            <asp:CheckBox ID="cbSubjectToVAT" runat="server"></asp:CheckBox>
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
             <nopCommerce:ToolTipLabel runat="server" ID="lblPublished" Text="<% $NopResources:Admin.CountryInfo.Published %>"
                 ToolTip="<% $NopResources:Admin.CountryInfo.Published.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
         </td>

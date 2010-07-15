@@ -248,7 +248,16 @@
                             ConfirmText="<% $NopResources:Admin.Common.AreYouSure %>" />
                     </td>
                 </tr>
-                <tr runat="server" id="divAffiliate">
+                <tr runat="server" id="pnlVatNumber">
+                    <td class="adminTitle">
+                        <nopCommerce:ToolTipLabel runat="server" ID="lblVatNumberTitle" Text="<% $NopResources:Admin.OrderDetails.VatNumber %>"
+                            ToolTip="<% $NopResources:Admin.OrderDetails.VatNumber.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
+                    </td>
+                    <td class="adminData">
+                        <asp:Label ID="lblVatNumber" runat="server"></asp:Label>
+                    </td>
+                </tr>
+                <tr runat="server" id="pnlAffiliate">
                     <td class="adminTitle">
                         <nopCommerce:ToolTipLabel runat="server" ID="lblAffiliateTitle" Text="<% $NopResources:Admin.OrderDetails.Affiliate %>"
                             ToolTip="<% $NopResources:Admin.OrderDetails.Affiliate.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />

@@ -9,7 +9,7 @@
 // The Initial Developer of the Original Code is NopSolutions.
 // All Rights Reserved.
 // 
-// Contributor(s): _______. 
+// Contributor(s): Stephen Kennedy - VAT support, _______. 
 //------------------------------------------------------------------------------
 
 using System;
@@ -38,12 +38,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         #region Utilities
 
         /// <summary>
-        /// Gets a value indicating whether tax is free
+        /// Gets a value indicating whether tax exempt
         /// </summary>
         /// <param name="productVariant">Product variant</param>
         /// <param name="customer">Customer</param>
-        /// <returns>A value indicating whether tax is free</returns>
-        protected static bool IsFreeTax(ProductVariant productVariant, Customer customer)
+        /// <returns>A value indicating whether tax exempt</returns>
+        protected static bool IsTaxExempt(ProductVariant productVariant, Customer customer)
         {
             if (customer != null)
             {
@@ -69,6 +69,71 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
             return false;
         }
 
+        /// <summary>
+        /// Gets a value indicating whether EU VAT exempt (the European Union Value Added Tax)
+        /// </summary>
+        /// <param name="address">Address</param>
+        /// <param name="customer">Customer</param>
+        /// <returns>Result</returns>
+        protected static bool IsVatExempt(Address address, Customer customer)
+        {
+            if (!TaxManager.EUVatEnabled)
+            {
+                return false;
+            }
+
+            if (address == null || address.Country == null || customer == null)
+            {
+                return false;
+            }
+
+
+            if (!address.Country.SubjectToVAT)
+            {
+                // VAT not chargeable if shipping outside VAT zone:
+                return true;
+            }
+            else
+            {
+                // VAT not chargeable if address, customer and config meet our VAT exemption requirements:
+                // returns true if this customer is VAT exempt because they are shipping within the EU but outside our shop country, they have supplied a validated VAT number, and the shop is configured to allow VAT exemption
+                return address.CountryId != TaxManager.EUVatShopCountryId &&
+                    customer.VatNumberStatus == VatNumberStatusEnum.Valid &&
+                    TaxManager.EUVatAllowVATExemption;
+            }
+        }
+
+        /// <summary>
+        /// Performs a basic check of a VAT number for validity
+        /// </summary>
+        /// <remarks>Doesn't check the name and address</remarks>
+        /// <returns>A value from the VatNumberStatusEnum enumeration</returns>
+        protected static VatNumberStatusEnum DoVatCheck(string countryCode, string vatNumber, out string name, out string address, out Exception exception)
+        {
+            NopSolutions.NopCommerce.BusinessLogic.EuropaCheckVatService.checkVatService s = null;
+
+            try
+            {
+                bool valid;
+                vatNumber = vatNumber.Trim().Replace(" ", "");
+
+                s = new NopSolutions.NopCommerce.BusinessLogic.EuropaCheckVatService.checkVatService();
+                s.checkVat(ref countryCode, ref vatNumber, out valid, out name, out address);
+                exception = null;
+                return valid ? VatNumberStatusEnum.Valid : VatNumberStatusEnum.Invalid;
+            }
+            catch (Exception ex)
+            {
+                name = address = string.Empty;
+                exception = ex;
+                return VatNumberStatusEnum.Unknown;
+            }
+            finally
+            {
+                if (s != null)
+                    s.Dispose();
+            }
+        }
         /// <summary>
         /// Create request for tax calculation
         /// </summary>
@@ -316,19 +381,33 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         public static decimal GetTaxRate(ProductVariant productVariant, 
             int taxClassId, Customer customer, ref string error)
         {
-            bool isFreeTax = IsFreeTax(productVariant, customer);
-            if (isFreeTax)
+            //tax exempt
+            if (IsTaxExempt(productVariant, customer))
+            {
                 return decimal.Zero;
+            }
 
+            //tax request
             var calculateTaxRequest = CreateCalculateTaxRequest(productVariant, taxClassId, customer);
 
+            //make EU VAT exempt validation (the European Union Value Added Tax)
+            if (TaxManager.EUVatEnabled)
+            {
+                if (IsVatExempt(calculateTaxRequest.Address, calculateTaxRequest.Customer))
+                {
+                    //return zero if VAT is not chargeable
+                    return decimal.Zero;
+                }
+            }
+
+            //instantiate tax provider
             var activeTaxProvider = TaxManager.ActiveTaxProvider;
             if (activeTaxProvider == null)
                 throw new NopException("Tax provider could not be loaded");
             var iTaxProvider = Activator.CreateInstance(Type.GetType(activeTaxProvider.ClassName)) as ITaxProvider;
 
+            //get tax rate
             decimal taxRate = iTaxProvider.GetTaxRate(calculateTaxRequest, ref error);
-
             return taxRate;
         }
         
@@ -716,13 +795,34 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         public static VatNumberStatusEnum GetVatNumberStatus(Country country,
             string vatNumber)
         {
+            if (vatNumber == null)
+                vatNumber = string.Empty;
+
+            vatNumber = vatNumber.Trim();
+
             if (String.IsNullOrEmpty(vatNumber))
                 return VatNumberStatusEnum.Empty;
 
             if (country == null)
                 return VatNumberStatusEnum.Unknown;
 
-            return VatNumberStatusEnum.Valid;
+            if (!TaxManager.EUVatUseWebService)
+                return VatNumberStatusEnum.Unknown;
+
+
+            //UNDONE
+            try
+            {
+                string name = string.Empty;
+                string address = string.Empty;
+                Exception exception = null;
+                return DoVatCheck(country.TwoLetterIsoCode, vatNumber, out name, out address, out exception);
+            }
+            catch (Exception exc)
+            {
+                return VatNumberStatusEnum.Unknown;
+            }
+
         }
 
         /// <summary>
@@ -1064,18 +1164,18 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether we should email the results of EU web service VAT number validation to the shop admin
+        /// Gets or sets a value indicating whether we should notify a store owner when a new VAT number is submitted
         /// </summary>
-        public static bool EUVatEmailAdminWithWebServiceResults
+        public static bool EUVatEmailAdminWhenNewVATSubmitted
         {
             get
             {
-                bool result = SettingManager.GetSettingValueBoolean("Tax.EUVat.EmailAdminWithWebServiceResults");
+                bool result = SettingManager.GetSettingValueBoolean("Tax.EUVat.EUVatEmailAdminWhenNewVATSubmitted");
                 return result;
             }
             set
             {
-                SettingManager.SetParam("Tax.EUVat.EmailAdminWithWebServiceResults", value.ToString());
+                SettingManager.SetParam("Tax.EUVat.EUVatEmailAdminWhenNewVATSubmitted", value.ToString());
             }
         }
 

@@ -95,6 +95,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                     string firstName = dr["FirstName"].ToString();
                     string lastName = dr["LastName"].ToString();
                     string company = dr["Company"].ToString();
+                    string vatNumber = dr["VatNumber"].ToString();
+                    VatNumberStatusEnum vatNumberStatus = (VatNumberStatusEnum)Convert.ToInt32(dr["VatNumberStatus"]);
                     string streetAddress = dr["StreetAddress"].ToString();
                     string streetAddress2 = dr["StreetAddress2"].ToString();
                     string zipPostalCode = dr["ZipPostalCode"].ToString();
@@ -180,6 +182,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                     if (CustomerManager.FormFieldStateEnabled)
                         customer.StateProvinceId = stateProvinceId;
                     customer.ReceiveNewsletter = receiveNewsletter;
+
+                    if (TaxManager.EUVatEnabled)
+                    {
+                        customer.VatNumber = vatNumber;
+                        customer.VatNumberStatus = vatNumberStatus;
+                    }
                 }
             }
         }

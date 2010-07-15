@@ -839,6 +839,7 @@
           <Property Name="NumericISOCode" Type="int" Nullable="false" />
           <Property Name="Published" Type="bit" Nullable="false" />
           <Property Name="DisplayOrder" Type="int" Nullable="false" />
+          <Property Name="SubjectToVAT" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Nop_CreditCardType">
           <Key>
@@ -1401,6 +1402,7 @@
           <Property Name="ShippedDate" Type="datetime" />
           <Property Name="TrackingNumber" Type="nvarchar" Nullable="false" MaxLength="100" />
           <Property Name="DeliveryDate" Type="datetime" />
+          <Property Name="VatNumber" Type="nvarchar" Nullable="false" MaxLength="100" />
           <Property Name="Deleted" Type="bit" Nullable="false" />
           <Property Name="CreatedOn" Type="datetime" Nullable="false" />
         </EntityType>
@@ -4917,6 +4919,7 @@
           <Property Type="String" Name="TwoLetterIsoCode" Nullable="false" MaxLength="2" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="ThreeLetterIsoCode" Nullable="false" MaxLength="3" FixedLength="false" Unicode="true" />
           <Property Type="Int32" Name="NumericIsoCode" Nullable="false" />
+          <Property Type="Boolean" Name="SubjectToVAT" Nullable="false" />
           <Property Type="Boolean" Name="Published" Nullable="false" />
           <Property Type="Int32" Name="DisplayOrder" Nullable="false" />
           <NavigationProperty Name="NpStateProvinces" Relationship="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_StateProvince_Nop_Country" FromRole="Nop_Country" ToRole="Nop_StateProvince" />
@@ -7440,11 +7443,12 @@
           <Property Type="DateTime" Name="ShippedDate" />
           <Property Type="String" Name="TrackingNumber" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Type="DateTime" Name="DeliveryDate" />
+          <Property Type="String" Name="VatNumber" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Type="Boolean" Name="Deleted" Nullable="false" />
           <Property Type="DateTime" Name="CreatedOn" Nullable="false" />
           <NavigationProperty Name="NpOrderNotes" Relationship="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_OrderNote_Nop_Order" FromRole="Nop_Order" ToRole="Nop_OrderNote" />
           <NavigationProperty Name="NpOrderProductVariants" Relationship="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_OrderProductVariant_Nop_Order" FromRole="Nop_Order" ToRole="Nop_OrderProductVariant" />
-          <NavigationProperty Name="NpDiscountUsageHistory" Relationship="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_DiscountUsageHistory_Nop_Order" FromRole="Nop_Order" ToRole="Nop_DiscountUsageHistory" />
+          <NavigationProperty Name="NpDiscountUsageHistory" Relationship="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_DiscountUsageHistory_Nop_Order" FromRole="Nop_Order" ToRole="Nop_DiscountUsageHistory" />          
         </EntityType>
         <EntityType Name="OrderNote">
           <Key>
@@ -7824,6 +7828,7 @@
               <MappingFragment StoreEntitySet="Nop_Country">
                 <ScalarProperty Name="DisplayOrder" ColumnName="DisplayOrder" />
                 <ScalarProperty Name="Published" ColumnName="Published" />
+                <ScalarProperty Name="SubjectToVAT" ColumnName="SubjectToVAT" />
                 <ScalarProperty Name="NumericIsoCode" ColumnName="NumericISOCode" />
                 <ScalarProperty Name="ThreeLetterIsoCode" ColumnName="ThreeLetterISOCode" />
                 <ScalarProperty Name="TwoLetterIsoCode" ColumnName="TwoLetterISOCode" />
@@ -9318,6 +9323,7 @@
               <MappingFragment StoreEntitySet="Nop_Order">
                 <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
                 <ScalarProperty Name="Deleted" ColumnName="Deleted" />
+                <ScalarProperty Name="VatNumber" ColumnName="VatNumber" />
                 <ScalarProperty Name="DeliveryDate" ColumnName="DeliveryDate" />
                 <ScalarProperty Name="TrackingNumber" ColumnName="TrackingNumber" />
                 <ScalarProperty Name="ShippedDate" ColumnName="ShippedDate" />

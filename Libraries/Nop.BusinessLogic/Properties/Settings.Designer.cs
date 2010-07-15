@@ -32,5 +32,15 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Properties {
                 return ((string)(this["Nop_BusinessLogic_Clickatell_PushServerWS"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.WebServiceUrl)]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://ec.europa.eu/taxation_customs/vies/services/checkVatService")]
+        public string Nop_BusinessLogic_EuropaCheckVatService_checkVatService {
+            get {
+                return ((string)(this["Nop_BusinessLogic_EuropaCheckVatService_checkVatService"]));
+            }
+        }
     }
 }

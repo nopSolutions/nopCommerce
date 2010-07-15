@@ -18,35 +18,38 @@
             </ItemTemplate>
         </asp:TemplateField>
         <asp:BoundField DataField="AllowsRegistration" HeaderText="<% $NopResources:Admin.Countries.AllowsRegistration %>"
-            HeaderStyle-HorizontalAlign="Center" ItemStyle-Width="10%" ItemStyle-HorizontalAlign="Center">
+            HeaderStyle-HorizontalAlign="Center" ItemStyle-Width="8%" ItemStyle-HorizontalAlign="Center">
         </asp:BoundField>
         <asp:BoundField DataField="AllowsBilling" HeaderText="<% $NopResources:Admin.Countries.AllowsBilling %>"
-            HeaderStyle-HorizontalAlign="Center" ItemStyle-Width="10%" ItemStyle-HorizontalAlign="Center">
+            HeaderStyle-HorizontalAlign="Center" ItemStyle-Width="8%" ItemStyle-HorizontalAlign="Center">
         </asp:BoundField>
         <asp:BoundField DataField="AllowsShipping" HeaderText="<% $NopResources:Admin.Countries.AllowsShipping %>"
-            HeaderStyle-HorizontalAlign="Center" ItemStyle-Width="10%" ItemStyle-HorizontalAlign="Center">
+            HeaderStyle-HorizontalAlign="Center" ItemStyle-Width="8%" ItemStyle-HorizontalAlign="Center">
         </asp:BoundField>
         <asp:BoundField DataField="TwoLetterIsoCode" HeaderText="<% $NopResources:Admin.Countries.TwoLetterISOCode %>"
-            HeaderStyle-HorizontalAlign="Center" ItemStyle-Width="10%" ItemStyle-HorizontalAlign="Center">
+            HeaderStyle-HorizontalAlign="Center" ItemStyle-Width="8%" ItemStyle-HorizontalAlign="Center">
         </asp:BoundField>
         <asp:BoundField DataField="ThreeLetterIsoCode" HeaderText="<% $NopResources:Admin.Countries.ThreeLetterISOCode %>"
-            HeaderStyle-HorizontalAlign="Center" ItemStyle-Width="12%" ItemStyle-HorizontalAlign="Center">
+            HeaderStyle-HorizontalAlign="Center" ItemStyle-Width="8%" ItemStyle-HorizontalAlign="Center">
         </asp:BoundField>
         <asp:BoundField DataField="NumericIsoCode" HeaderText="<% $NopResources:Admin.Countries.NumericISOCode %>"
-            HeaderStyle-HorizontalAlign="Center" ItemStyle-Width="10%" ItemStyle-HorizontalAlign="Center">
+            HeaderStyle-HorizontalAlign="Center" ItemStyle-Width="8%" ItemStyle-HorizontalAlign="Center">
+        </asp:BoundField>
+        <asp:BoundField DataField="SubjectToVAT" HeaderText="<% $NopResources:Admin.Countries.SubjectToVAT %>"
+            HeaderStyle-HorizontalAlign="Center" ItemStyle-Width="8%" ItemStyle-HorizontalAlign="Center">
         </asp:BoundField>
         <asp:BoundField DataField="DisplayOrder" HeaderText="<% $NopResources:Admin.Countries.DisplayOrder %>"
-            HeaderStyle-HorizontalAlign="Center" ItemStyle-Width="10%" ItemStyle-HorizontalAlign="Center">
+            HeaderStyle-HorizontalAlign="Center" ItemStyle-Width="8%" ItemStyle-HorizontalAlign="Center">
         </asp:BoundField>
         <asp:TemplateField HeaderText="<% $NopResources:Admin.Countries.Published %>" HeaderStyle-HorizontalAlign="Center"
-            ItemStyle-Width="10%" ItemStyle-HorizontalAlign="Center">
+            ItemStyle-Width="8%" ItemStyle-HorizontalAlign="Center">
             <ItemTemplate>
                 <nopCommerce:ImageCheckBox runat="server" ID="cbPublished" Checked='<%# Eval("Published") %>'>
                 </nopCommerce:ImageCheckBox>
             </ItemTemplate>
         </asp:TemplateField>
         <asp:TemplateField HeaderText="<% $NopResources:Admin.Countries.Edit %>" HeaderStyle-HorizontalAlign="Center"
-            ItemStyle-Width="12%" ItemStyle-HorizontalAlign="Center">
+            ItemStyle-Width="8%" ItemStyle-HorizontalAlign="Center">
             <ItemTemplate>
                 <a href="CountryDetails.aspx?CountryID=<%#Eval("CountryId")%>" title="<%#GetLocaleResourceString("Admin.Countries.Edit.Tooltip")%>">
                     <%#GetLocaleResourceString("Admin.Countries.Edit")%></a>

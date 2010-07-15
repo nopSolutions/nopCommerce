@@ -1132,6 +1132,32 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         }
 
         /// <summary>
+        /// Sends a "new VAt sumitted" notification to a store owner
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        public static int SendNewVATSubmittedStoreOwnerNotification(Customer customer, int languageId)
+        {
+            if (customer == null)
+                throw new ArgumentNullException("customer");
+
+            string templateName = "NewVATSubmitted.StoreOwnerNotification";
+            LocalizedMessageTemplate localizedMessageTemplate = MessageManager.GetLocalizedMessageTemplate(templateName, languageId);
+            if (localizedMessageTemplate == null || !localizedMessageTemplate.IsActive)
+                return 0;
+            //throw new NopException(string.Format("Message template ({0}-{1}) couldn't be loaded", TemplateName, LanguageId));
+
+            string subject = ReplaceMessageTemplateTokens(customer, localizedMessageTemplate.Subject);
+            string body = ReplaceMessageTemplateTokens(customer, localizedMessageTemplate.Body);
+            string bcc = localizedMessageTemplate.BccEmailAddresses;
+            var from = new MailAddress(AdminEmailAddress, AdminEmailDisplayName);
+            var to = new MailAddress(AdminEmailAddress, AdminEmailDisplayName);
+            var queuedEmail = InsertQueuedEmail(5, from, to, string.Empty, bcc, subject, body, DateTime.UtcNow, 0, null);
+            return queuedEmail.QueuedEmailId;
+        }
+
+        /// <summary>
         /// Sends "email a friend" message
         /// </summary>
         /// <param name="customer">Customer instance</param>
@@ -1500,6 +1526,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             allowedTokens.Add("%Order.ShippingZipPostalCode%");
             allowedTokens.Add("%Order.ShippingCountry%");
             allowedTokens.Add("%Order.TrackingNumber%");
+            allowedTokens.Add("%Order.VatNumber%");
             allowedTokens.Add("%Order.Product(s)%");
             allowedTokens.Add("%Order.CreatedOn%");
             allowedTokens.Add("%Order.OrderURLForCustomer%");
@@ -1508,6 +1535,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             allowedTokens.Add("%Customer.PasswordRecoveryURL%");
             allowedTokens.Add("%Customer.AccountActivationURL%");
             allowedTokens.Add("%Customer.FullName%");
+            allowedTokens.Add("%Customer.VatNumber%");
             allowedTokens.Add("%Product.Name%");
             allowedTokens.Add("%Product.ShortDescription%");
             allowedTokens.Add("%Product.ProductURLForCustomer%");
@@ -1595,7 +1623,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             tokens.Add("Order.ShippingCountry", HttpUtility.HtmlEncode(order.ShippingCountry));
 
             tokens.Add("Order.TrackingNumber", HttpUtility.HtmlEncode(order.TrackingNumber));
-
+            tokens.Add("Order.VatNumber", HttpUtility.HtmlEncode(order.VatNumber));
+            
             tokens.Add("Order.Product(s)", ProductListToHtmlTable(order, languageId));
 
             var language = LanguageManager.GetLanguageById(languageId);
@@ -1668,6 +1697,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             tokens.Add("Customer.Email", HttpUtility.HtmlEncode(customer.Email));
             tokens.Add("Customer.Username", HttpUtility.HtmlEncode(customer.Username));
             tokens.Add("Customer.FullName", HttpUtility.HtmlEncode(customer.FullName));
+            tokens.Add("Customer.VatNumber", HttpUtility.HtmlEncode(customer.VatNumber));
 
             string passwordRecoveryUrl = string.Empty;
             passwordRecoveryUrl = string.Format("{0}passwordrecovery.aspx?prt={1}&email={2}", SettingManager.StoreUrl, customer.PasswordRecoveryToken, customer.Email);
@@ -1704,6 +1734,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             tokens.Add("Customer.Email", HttpUtility.HtmlEncode(customer.Email));
             tokens.Add("Customer.Username", HttpUtility.HtmlEncode(customer.Username));
             tokens.Add("Customer.FullName", HttpUtility.HtmlEncode(customer.FullName));
+            tokens.Add("Customer.VatNumber", HttpUtility.HtmlEncode(customer.VatNumber));
 
             tokens.Add("Product.Name", HttpUtility.HtmlEncode(product.Name));
             tokens.Add("Product.ShortDescription", product.ShortDescription);
@@ -1742,6 +1773,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             tokens.Add("Customer.Email", HttpUtility.HtmlEncode(customer.Email));
             tokens.Add("Customer.Username", HttpUtility.HtmlEncode(customer.Username));
             tokens.Add("Customer.FullName", HttpUtility.HtmlEncode(customer.FullName));
+            tokens.Add("Customer.VatNumber", HttpUtility.HtmlEncode(customer.VatNumber));
 
             tokens.Add("Forums.TopicURL", SEOHelper.GetForumTopicUrl(forumTopic));
             tokens.Add("Forums.TopicName", HttpUtility.HtmlEncode(forumTopic.Subject));

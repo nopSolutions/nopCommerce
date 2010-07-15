@@ -59,6 +59,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 this.lblOrderId.Text = order.OrderId.ToString();
                 this.lblOrderGuid.Text = order.OrderGuid.ToString();
 
+                //customer info
                 Customer customer = order.Customer;
                 if (customer != null)
                 {
@@ -76,6 +77,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     this.lblCustomer.Text = "Customer was deleted";
                 }
 
+                //customer IP address
                 if (!String.IsNullOrEmpty(order.CustomerIP))
                 {
                     lblCustomerIP.Text = order.CustomerIP;
@@ -85,17 +87,31 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     btnBanByCustomerIP.Enabled = false;
                 }
 
+                //VAT number
+                if (!String.IsNullOrEmpty(order.VatNumber))
+                {
+                    this.pnlVatNumber.Visible = true;
+                    lblVatNumber.Text = Server.HtmlEncode(order.VatNumber);
+                }
+                else
+                {
+                    this.pnlVatNumber.Visible = false;
+                }
+
+                //affiliate
                 Affiliate affiliate = order.Affiliate;
                 if (affiliate != null)
                 {
                     this.lblAffiliate.Text = string.Format("<a href=\"AffiliateDetails.aspx?AffiliateID={0}\">{1}</a>", affiliate.AffiliateId, Server.HtmlEncode(affiliate.FullName));
-                    this.divAffiliate.Visible = true;
+                    this.pnlAffiliate.Visible = true;
                 }
                 else
-                    this.divAffiliate.Visible = false;
+                    this.pnlAffiliate.Visible = false;
 
+                //creation date
                 this.lblCreatedOn.Text = DateTimeHelper.ConvertToUserTime(order.CreatedOn, DateTimeKind.Utc).ToString();
 
+                //etc
                 BindOrderTotals(order);
                 BindPaymentInfo(order);
                 BindBillingInfo(order);
@@ -821,8 +837,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         order.ShippingStateProvince, order.ShippingStateProvinceId, order.ShippingZipPostalCode,
                         order.ShippingCountry, order.ShippingCountryId,
                         order.ShippingMethod, order.ShippingRateComputationMethodId,
-                        order.ShippedDate, order.DeliveryDate, order.TrackingNumber, order.Deleted,
-                        order.CreatedOn);
+                        order.ShippedDate, order.DeliveryDate, order.TrackingNumber, 
+                        order.VatNumber, order.Deleted, order.CreatedOn);
                 }
 
                 string url = string.Format("{0}OrderDetails.aspx?OrderID={1}&TabID={2}", CommonHelper.GetStoreAdminLocation(), this.OrderId, this.GetActiveTabId(this.OrderTabs));
@@ -896,8 +912,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         shippingStateProvinceStr, shippingStateProvinceId, shippingZipPostalCode,
                         shippingCountryStr, shippingCountryId,
                         order.ShippingMethod, order.ShippingRateComputationMethodId,
-                        order.ShippedDate, order.DeliveryDate, order.TrackingNumber, order.Deleted,
-                        order.CreatedOn);
+                        order.ShippedDate, order.DeliveryDate, order.TrackingNumber, 
+                        order.VatNumber, order.Deleted, order.CreatedOn);
                 }
 
                 string url = string.Format("{0}OrderDetails.aspx?OrderID={1}&TabID={2}", CommonHelper.GetStoreAdminLocation(), this.OrderId, this.GetActiveTabId(this.OrderTabs));
@@ -1034,8 +1050,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         order.ShippingZipPostalCode, order.ShippingCountry, 
                         order.ShippingCountryId, order.ShippingMethod, 
                         order.ShippingRateComputationMethodId, order.ShippedDate,
-                        order.DeliveryDate, order.TrackingNumber, order.Deleted,
-                        order.CreatedOn);
+                        order.DeliveryDate, order.TrackingNumber, order.VatNumber, 
+                        order.Deleted, order.CreatedOn);
 
                     BindData();
                 }

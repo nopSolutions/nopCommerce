@@ -193,13 +193,40 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ConfirmationBox cbBanByCustomerIP;
         
         /// <summary>
-        /// divAffiliate control.
+        /// pnlVatNumber control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlTableRow divAffiliate;
+        protected global::System.Web.UI.HtmlControls.HtmlTableRow pnlVatNumber;
+        
+        /// <summary>
+        /// lblVatNumberTitle control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblVatNumberTitle;
+        
+        /// <summary>
+        /// lblVatNumber control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblVatNumber;
+        
+        /// <summary>
+        /// pnlAffiliate control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlTableRow pnlAffiliate;
         
         /// <summary>
         /// lblAffiliateTitle control.

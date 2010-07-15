@@ -194,8 +194,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
                        order.ShippingStateProvince, order.ShippingStateProvinceId, order.ShippingZipPostalCode,
                        order.ShippingCountry, order.ShippingCountryId,
                        order.ShippingMethod, order.ShippingRateComputationMethodId,
-                       order.ShippedDate, order.DeliveryDate, 
-                       order.TrackingNumber, order.Deleted, order.CreatedOn);
+                       order.ShippedDate, order.DeliveryDate, order.TrackingNumber, 
+                       order.VatNumber, order.Deleted, order.CreatedOn);
                 }
 
                 SettingManager.SetParam("Security.EncryptionPrivateKey", newEncryptionPrivateKey);

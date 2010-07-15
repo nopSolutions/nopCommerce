@@ -145,7 +145,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     return;
                 }
 
-                if (!iSMSProvider.SendSMS(txtClickatellTestMessageText.Text))
+                if (!iSMSProvider.SendSMS(txtVerizonTestMessageText.Text))
                 {
                     ShowError(GetLocaleResourceString("Admin.SMSProviders.Verizon.TestMessage.Failed"));
                     return;

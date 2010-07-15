@@ -158,6 +158,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                 if (customer.DateOfBirth.HasValue)
                     xmlWriter.WriteElementString("DateOfBirth", null, customer.DateOfBirth.Value.ToBinary().ToString());
                 xmlWriter.WriteElementString("Company", null, customer.Company);
+                xmlWriter.WriteElementString("VatNumber", null, customer.VatNumber);
+                xmlWriter.WriteElementString("VatNumberStatus", null, ((int)customer.VatNumberStatus).ToString());
                 xmlWriter.WriteElementString("StreetAddress", null, customer.StreetAddress);
                 xmlWriter.WriteElementString("StreetAddress2", null, customer.StreetAddress2);
                 xmlWriter.WriteElementString("ZipPostalCode", null, customer.ZipPostalCode);
@@ -277,6 +279,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                 tableDefinition.Add("FirstName", "nvarchar(100)");
                 tableDefinition.Add("LastName", "nvarchar(100)");
                 tableDefinition.Add("Company", "nvarchar(100)");
+                tableDefinition.Add("VatNumber", "nvarchar(100)");
+                tableDefinition.Add("VatNumberStatus", "int");
                 tableDefinition.Add("StreetAddress", "nvarchar(100)");
                 tableDefinition.Add("StreetAddress2", "nvarchar(100)");
                 tableDefinition.Add("ZipPostalCode", "nvarchar(100)");
@@ -293,7 +297,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                 foreach (var customer in customers)
                 {
                     StringBuilder sb = new StringBuilder();
-                    sb.Append("INSERT INTO [Customers] (CustomerId, CustomerGuid, Email, Username, PasswordHash, SaltKey, AffiliateId, LanguageId, CurrencyId, TaxDisplayTypeId, IsTaxExempt, IsAdmin, IsGuest, IsForumModerator, TotalForumPosts, Signature, AdminComment, Active, Deleted, RegistrationDate, TimeZoneId, AvatarId, Gender, FirstName, LastName, Company, StreetAddress, StreetAddress2, ZipPostalCode, City, PhoneNumber, FaxNumber, CountryId, StateProvinceId, ReceiveNewsletter) VALUES (");
+                    sb.Append("INSERT INTO [Customers] (CustomerId, CustomerGuid, Email, Username, PasswordHash, SaltKey, AffiliateId, LanguageId, CurrencyId, TaxDisplayTypeId, IsTaxExempt, IsAdmin, IsGuest, IsForumModerator, TotalForumPosts, Signature, AdminComment, Active, Deleted, RegistrationDate, TimeZoneId, AvatarId, Gender, FirstName, LastName, Company, VatNumber, VatNumberStatus, StreetAddress, StreetAddress2, ZipPostalCode, City, PhoneNumber, FaxNumber, CountryId, StateProvinceId, ReceiveNewsletter) VALUES (");
                     sb.Append(customer.CustomerId); sb.Append(",");
                     sb.Append('"'); sb.Append(customer.CustomerGuid); sb.Append("\",");
                     sb.Append('"'); sb.Append(customer.Email.Replace('"', '\'')); sb.Append("\",");
@@ -322,6 +326,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                     sb.Append('"'); sb.Append(customer.FirstName); sb.Append("\",");
                     sb.Append('"'); sb.Append(customer.LastName); sb.Append("\",");
                     sb.Append('"'); sb.Append(customer.Company); sb.Append("\",");
+                    sb.Append('"'); sb.Append(customer.VatNumber); sb.Append("\",");
+                    sb.Append(((int)customer.VatNumberStatus).ToString()); sb.Append(',');
                     sb.Append('"'); sb.Append(customer.StreetAddress); sb.Append("\",");
                     sb.Append('"'); sb.Append(customer.StreetAddress2); sb.Append("\",");
                     sb.Append('"'); sb.Append(customer.ZipPostalCode); sb.Append("\",");
@@ -920,6 +926,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                 xmlWriter.WriteElementString("ShippingRateComputationMethodId", null, order.ShippingRateComputationMethodId.ToString());
                 xmlWriter.WriteElementString("ShippedDate", null, (order.ShippedDate == null) ? string.Empty : order.ShippedDate.Value.ToString());
                 xmlWriter.WriteElementString("TrackingNumber", null, order.TrackingNumber);
+                xmlWriter.WriteElementString("VatNumber", null, order.VatNumber);
                 xmlWriter.WriteElementString("Deleted", null, order.Deleted.ToString());
                 xmlWriter.WriteElementString("CreatedOn", null, order.CreatedOn.ToString());
 
@@ -1036,6 +1043,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                 tableDefinition.Add("ShippingCountry", "nvarchar(100)");
                 tableDefinition.Add("ShippingMethod", "nvarchar(100)");
                 tableDefinition.Add("ShippingRateComputationMethodId", "int");
+                tableDefinition.Add("VatNumber", "nvarchar(100)");
                 tableDefinition.Add("CreatedOn", "decimal");
                 excelHelper.WriteTable("Orders", tableDefinition);
                 
@@ -1044,7 +1052,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                 foreach (var order in orders)
                 {
                     StringBuilder sb = new StringBuilder();
-                    sb.Append("INSERT INTO [Orders] (OrderId, OrderGuid, CustomerId, OrderSubtotalInclTax, OrderSubtotalExclTax, OrderShippingInclTax, OrderShippingExclTax, PaymentMethodAdditionalFeeInclTax, PaymentMethodAdditionalFeeExclTax, OrderTax, OrderTotal, OrderDiscount, OrderSubtotalInclTaxInCustomerCurrency, OrderSubtotalExclTaxInCustomerCurrency, OrderShippingInclTaxInCustomerCurrency, OrderShippingExclTaxInCustomerCurrency, PaymentMethodAdditionalFeeInclTaxInCustomerCurrency, PaymentMethodAdditionalFeeExclTaxInCustomerCurrency, OrderTaxInCustomerCurrency, OrderTotalInCustomerCurrency, OrderDiscountInCustomerCurrency, CustomerCurrencyCode, OrderWeight, AffiliateId, OrderStatusId, PaymentMethodId, PaymentMethodName, PurchaseOrderNumber, PaymentStatusId, BillingFirstName, BillingLastName, BillingPhoneNumber, BillingEmail, BillingFaxNumber, BillingCompany, BillingAddress1, BillingAddress2, BillingCity, BillingStateProvince, BillingZipPostalCode, BillingCountry, ShippingStatusId,  ShippingFirstName, ShippingLastName, ShippingPhoneNumber, ShippingEmail, ShippingFaxNumber, ShippingCompany,  ShippingAddress1, ShippingAddress2, ShippingCity, ShippingStateProvince, ShippingZipPostalCode, ShippingCountry, ShippingMethod, ShippingRateComputationMethodId, CreatedOn) VALUES (");
+                    sb.Append("INSERT INTO [Orders] (OrderId, OrderGuid, CustomerId, OrderSubtotalInclTax, OrderSubtotalExclTax, OrderShippingInclTax, OrderShippingExclTax, PaymentMethodAdditionalFeeInclTax, PaymentMethodAdditionalFeeExclTax, OrderTax, OrderTotal, OrderDiscount, OrderSubtotalInclTaxInCustomerCurrency, OrderSubtotalExclTaxInCustomerCurrency, OrderShippingInclTaxInCustomerCurrency, OrderShippingExclTaxInCustomerCurrency, PaymentMethodAdditionalFeeInclTaxInCustomerCurrency, PaymentMethodAdditionalFeeExclTaxInCustomerCurrency, OrderTaxInCustomerCurrency, OrderTotalInCustomerCurrency, OrderDiscountInCustomerCurrency, CustomerCurrencyCode, OrderWeight, AffiliateId, OrderStatusId, PaymentMethodId, PaymentMethodName, PurchaseOrderNumber, PaymentStatusId, BillingFirstName, BillingLastName, BillingPhoneNumber, BillingEmail, BillingFaxNumber, BillingCompany, BillingAddress1, BillingAddress2, BillingCity, BillingStateProvince, BillingZipPostalCode, BillingCountry, ShippingStatusId,  ShippingFirstName, ShippingLastName, ShippingPhoneNumber, ShippingEmail, ShippingFaxNumber, ShippingCompany,  ShippingAddress1, ShippingAddress2, ShippingCity, ShippingStateProvince, ShippingZipPostalCode, ShippingCountry, ShippingMethod, ShippingRateComputationMethodId, VatNumber, CreatedOn) VALUES (");
 
 
                     sb.Append(order.OrderId); sb.Append(",");
@@ -1103,6 +1111,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                     sb.Append('"'); sb.Append(order.ShippingCountry.Replace('"', '\'')); sb.Append("\",");
                     sb.Append('"'); sb.Append(order.ShippingMethod.Replace('"', '\'')); sb.Append("\",");
                     sb.Append(order.ShippingRateComputationMethodId); sb.Append(",");
+                    sb.Append('"'); sb.Append(order.VatNumber.Replace('"', '\'')); sb.Append("\",");
                     sb.Append(decimalQuoter); sb.Append(order.CreatedOn.ToOADate()); sb.Append(decimalQuoter); 
                     sb.Append(")");
 

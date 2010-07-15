@@ -248,13 +248,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
         /// <param name="twoLetterIsoCode">The two letter ISO code</param>
         /// <param name="threeLetterIsoCode">The three letter ISO code</param>
         /// <param name="numericIsoCode">The numeric ISO code</param>
+        /// <param name="subjectToVAT">A value indicating whether customers in this country must be charged EU VAT</param>
         /// <param name="published">A value indicating whether the entity is published</param>
         /// <param name="displayOrder">The display order</param>
         /// <returns>Country</returns>
         public static Country InsertCountry(string name,
             bool allowsRegistration, bool allowsBilling, bool allowsShipping,
             string twoLetterIsoCode, string threeLetterIsoCode, int numericIsoCode,
-            bool published, int displayOrder)
+            bool subjectToVAT, bool published, int displayOrder)
         {
             name = CommonHelper.EnsureMaximumLength(name, 100);
             twoLetterIsoCode = CommonHelper.EnsureMaximumLength(twoLetterIsoCode, 2);
@@ -269,6 +270,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
             country.TwoLetterIsoCode = twoLetterIsoCode;
             country.ThreeLetterIsoCode = threeLetterIsoCode;
             country.NumericIsoCode = numericIsoCode;
+            country.SubjectToVAT = subjectToVAT;
             country.Published = published;
             country.DisplayOrder = displayOrder;
 
@@ -293,13 +295,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
         /// <param name="twoLetterIsoCode">The two letter ISO code</param>
         /// <param name="threeLetterIsoCode">The three letter ISO code</param>
         /// <param name="numericIsoCode">The numeric ISO code</param>
+        /// <param name="subjectToVAT">A value indicating whether customers in this country must be charged EU VAT</param>
         /// <param name="published">A value indicating whether the entity is published</param>
         /// <param name="displayOrder">The display order</param>
         /// <returns>Country</returns>
         public static Country UpdateCountry(int countryId, string name,
             bool allowsRegistration, bool allowsBilling, bool allowsShipping,
             string twoLetterIsoCode, string threeLetterIsoCode, int numericIsoCode,
-            bool published, int displayOrder)
+            bool subjectToVAT, bool published, int displayOrder)
         {
             name = CommonHelper.EnsureMaximumLength(name, 100);
             twoLetterIsoCode = CommonHelper.EnsureMaximumLength(twoLetterIsoCode, 2);
@@ -320,6 +323,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
             country.TwoLetterIsoCode = twoLetterIsoCode;
             country.ThreeLetterIsoCode = threeLetterIsoCode;
             country.NumericIsoCode = numericIsoCode;
+            country.SubjectToVAT = subjectToVAT;
             country.Published = published;
             country.DisplayOrder = displayOrder;
             context.SaveChanges();
