@@ -1004,6 +1004,21 @@ set @resources='
   <LocaleResource Name="Admin.PromotionProviders.Froogle.FTPFilename.Tooltip">
     <Value>Feed file name</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.CustomerShoppingCart.ShoppingCartColumn">
+    <Value>Shopping cart</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesHome.CurrentShoppingCarts.TitleDescription">
+    <Value>Current Shopping Carts</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesHome.CurrentShoppingCarts.Title">
+    <Value>Current Shopping Carts</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesHome.CurrentShoppingCarts.Description">
+    <Value>Manage current shopping carts</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CustomerShoppingCart.CustomerColumn.LastAccess">
+    <Value>Last access: {0}</Value>
+  </LocaleResource>
 </Language>
 '
 

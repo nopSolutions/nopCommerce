@@ -16,14 +16,15 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Web.UI;
+using System.Web.UI.WebControls;
 using NopSolutions.NopCommerce.BusinessLogic;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.BusinessLogic.Products.Attributes;
+using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.BusinessLogic.Tax;
-using System.Web.UI.WebControls;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -39,36 +40,50 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected void BindGrid()
         {
-            List<ShoppingCartItem> itemCollection = new List<ShoppingCartItem>();
-
-            foreach (CustomerSession session in CustomerManager.GetAllCustomerSessionsWithNonEmptyShoppingCart())
-            {
-                itemCollection.AddRange(ShoppingCartManager.GetCustomerShoppingCart(session.CustomerId, ShoppingCartTypeEnum.ShoppingCart));
-            }
-            if (itemCollection.Count == 0)
+            var customerSessions = CustomerManager.GetAllCustomerSessionsWithNonEmptyShoppingCart();
+            if (customerSessions.Count == 0)
             {
                 lblCurrentShoppingCartsEmpty.Visible = true;
-                gvProductVariants.Visible = false;
+                gvCustomerSessions.Visible = false;
             }
             else
             {
                 lblCurrentShoppingCartsEmpty.Visible = false;
-                gvProductVariants.Visible = true;
-                gvProductVariants.DataSource = itemCollection;
-                gvProductVariants.DataBind();
+                gvCustomerSessions.Visible = true;
+                gvCustomerSessions.DataSource = customerSessions;
+                gvCustomerSessions.DataBind();
             }
         }
 
-        protected void gvProductVariants_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        protected void gvCustomerSessions_PageIndexChanging(object sender, GridViewPageEventArgs e)
         {
-            gvProductVariants.PageIndex = e.NewPageIndex;
+            gvCustomerSessions.PageIndex = e.NewPageIndex;
             BindGrid();
         }
 
-        protected string GetCustomerInfo(ShoppingCartItem shoppingCartItem)
+        protected void gvCustomerSessions_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                CustomerSession customerSession = (CustomerSession)e.Row.DataItem;
+
+                GridView gvProductVariants = e.Row.FindControl("gvProductVariants") as GridView;
+
+                if (gvProductVariants != null)
+                {
+                    var cart = ShoppingCartManager.GetShoppingCartByCustomerSessionGuid(ShoppingCartTypeEnum.ShoppingCart, 
+                        customerSession.CustomerSessionGuid);
+
+                    gvProductVariants.DataSource = cart;
+                    gvProductVariants.DataBind();
+                }
+            }
+        }
+
+        protected string GetCustomerInfo(CustomerSession customerSession)
         {
             string customerInfo = string.Empty;
-            Customer customer = shoppingCartItem.CustomerSession.Customer;
+            Customer customer = customerSession.Customer;
 
             if (customer != null)
             {
@@ -81,8 +96,20 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     customerInfo = string.Format("<a href=\"CustomerDetails.aspx?CustomerID={0}\">{1}</a>", customer.CustomerId, Server.HtmlEncode(customer.Email));
                 }
             }
+            else
+            {
+                customerInfo = GetLocaleResourceString("Admin.CustomerShoppingCart.CustomerColumn.Guest");
+            }
             return customerInfo;
         }
+
+        protected string GetLastAccessInfo(CustomerSession customerSession)
+        {
+            string info = string.Format(GetLocaleResourceString("Admin.CustomerShoppingCart.CustomerColumn.LastAccess"), 
+                DateTimeHelper.ConvertToUserTime(customerSession.LastAccessed, DateTimeKind.Utc));
+            return info;
+        }
+        
 
         public string GetProductVariantUrl(ShoppingCartItem shoppingCartItem)
         {
