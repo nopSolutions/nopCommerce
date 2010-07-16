@@ -32,6 +32,7 @@ using System.IO;
 using NopSolutions.NopCommerce.Froogle;
 using NopSolutions.NopCommerce.PriceGrabber;
 using NopSolutions.NopCommerce.Become;
+using System.Net;
 
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
@@ -51,6 +52,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         private void BindData()
         {
             cbAllowPublicFroogleAccess.Checked = SettingManager.GetSettingValueBoolean("Froogle.AllowPublicFroogleAccess");
+            txtFroogleFTPHostname.Text = SettingManager.GetSettingValue("Froogle.FTPHostname");
+            txtFroogleFTPFilename.Text = SettingManager.GetSettingValue("Froogle.FTPFilename");
+            txtFroogleFTPUsername.Text = SettingManager.GetSettingValue("Froogle.FTPUsername");
+            txtFroogleFTPPassword.Text = SettingManager.GetSettingValue("Froogle.FTPPassword");
         }
 
         private void FillDropDowns()
@@ -71,6 +76,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 try
                 {
                     SettingManager.SetParam("Froogle.AllowPublicFroogleAccess", cbAllowPublicFroogleAccess.Checked.ToString());
+                    SettingManager.SetParam("Froogle.FTPHostname", txtFroogleFTPHostname.Text);
+                    SettingManager.SetParam("Froogle.FTPFilename", txtFroogleFTPFilename.Text);
+                    SettingManager.SetParam("Froogle.FTPUsername", txtFroogleFTPUsername.Text);
+                    SettingManager.SetParam("Froogle.FTPPassword", txtFroogleFTPPassword.Text);
 
                     CustomerActivityManager.InsertActivity("EditPromotionProviders", GetLocaleResourceString("ActivityLog.EditPromotionProviders"));
 
@@ -139,6 +148,43 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 string clickhereStr = string.Format("<a href=\"{0}files/become/{1}\" target=\"_blank\">{2}</a>", CommonHelper.GetStoreLocation(false), fileName, GetLocaleResourceString("Admin.PromotionProviders.Become.ClickHere"));
                 string result = string.Format(GetLocaleResourceString("Admin.PromotionProviders.Become.SuccessResult"), clickhereStr);
                 ShowMessage(result);
+            }
+            catch (Exception exc)
+            {
+                ProcessException(exc);
+            }
+        }
+
+        protected void btnFroogleFTPUpload_OnClick(object sender, EventArgs e)
+        {
+            try
+            {
+                SettingManager.SetParam("Froogle.FTPHostname", txtFroogleFTPHostname.Text);
+                SettingManager.SetParam("Froogle.FTPFilename", txtFroogleFTPFilename.Text);
+                SettingManager.SetParam("Froogle.FTPUsername", txtFroogleFTPUsername.Text);
+                SettingManager.SetParam("Froogle.FTPPassword", txtFroogleFTPPassword.Text);
+
+                string hostname = SettingManager.GetSettingValue("Froogle.FTPHostname");
+                string filename = SettingManager.GetSettingValue("Froogle.FTPFilename");
+                string uri = String.Format("{0}/{1}", hostname, filename);
+                string username = SettingManager.GetSettingValue("Froogle.FTPUsername");
+                string password = SettingManager.GetSettingValue("Froogle.FTPPassword");
+
+
+                FtpWebRequest req = WebRequest.Create(uri) as FtpWebRequest;
+                req.Credentials = new NetworkCredential(username, password);
+                req.KeepAlive = true;
+                req.UseBinary = true;
+                req.Method = WebRequestMethods.Ftp.UploadFile;
+
+                using (Stream reqStream = req.GetRequestStream())
+                {
+                    FroogleService.GenerateFeed(reqStream);
+                }
+
+                FtpWebResponse rsp = req.GetResponse() as FtpWebResponse;
+
+                ShowMessage(String.Format(GetLocaleResourceString("Admin.PromotionProviders.Froogle.FTPUploadStatus"), rsp.StatusDescription));
             }
             catch (Exception exc)
             {

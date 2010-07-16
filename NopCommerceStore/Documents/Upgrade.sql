@@ -1213,4 +1213,28 @@ BEGIN
 	)
 	ORDER BY cs.LastAccessed desc
 END
-GO 
+GO
+
+IF NOT EXISTS ( SELECT 1 FROM [dbo].[Nop_Setting] WHERE [Name] = N'Froogle.FTPHostname')
+BEGIN
+	INSERT [dbo].[Nop_Setting] ([Name], [Value], [Description]) VALUES (N'Froogle.FTPHostname', N'ftp://uploads.google.com', N'')
+END
+GO
+
+IF NOT EXISTS ( SELECT 1 FROM [dbo].[Nop_Setting] WHERE [Name] = N'Froogle.FTPFilename')
+BEGIN
+	INSERT [dbo].[Nop_Setting] ([Name], [Value], [Description]) VALUES (N'Froogle.FTPFilename', N'', N'')
+END
+GO
+
+IF NOT EXISTS ( SELECT 1 FROM [dbo].[Nop_Setting] WHERE [Name] = N'Froogle.FTPUsername')
+BEGIN
+	INSERT [dbo].[Nop_Setting] ([Name], [Value], [Description]) VALUES (N'Froogle.FTPUsername', N'', N'')
+END
+GO
+
+IF NOT EXISTS ( SELECT 1 FROM [dbo].[Nop_Setting] WHERE [Name] = N'Froogle.FTPPassword')
+BEGIN
+	INSERT [dbo].[Nop_Setting] ([Name], [Value], [Description]) VALUES (N'Froogle.FTPPassword', N'', N'')
+END
+GO

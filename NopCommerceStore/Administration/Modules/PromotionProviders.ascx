@@ -44,6 +44,77 @@
                                 OnClick="btnFroogleGenerate_Click" ToolTip="<% $NopResources:Admin.PromotionProviders.Froogle.GenerateButton.Tooltip %>" />
                         </td>
                     </tr>
+                    <tr class="adminSeparator">
+                        <td colspan="2">
+                            <hr />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <p>
+                                <strong>
+                                    <%=GetLocaleResourceString("Admin.PromotionProviders.Froogle.FTPUpload")%>
+                                </strong>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
+                                ID="lblFroogleFTPHostname" Text="<% $NopResources:Admin.PromotionProviders.Froogle.FTPHostname.Text %>"
+                                ToolTip="<% $NopResources:Admin.PromotionProviders.Froogle.FTPHostname.Tooltip %>" />
+                        </td>
+                        <td class="adminData">
+                            <asp:TextBox runat="server" CssClass="adminInput" ID="txtFroogleFTPHostname" ValidationGroup="FroogleFTPUpload" />
+                            <asp:RequiredFieldValidator ID="vldFroogleFTPHostname" runat="server" ControlToValidate="txtFroogleFTPHostname" ErrorMessage="*"
+                                ValidationGroup="FroogleFTPUpload" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
+                                ID="lblFroogleFTPFilename" Text="<% $NopResources:Admin.PromotionProviders.Froogle.FTPFilename.Text %>"
+                                ToolTip="<% $NopResources:Admin.PromotionProviders.Froogle.FTPFilename.Tooltip %>" />
+                        </td>
+                        <td class="adminData">
+                            <asp:TextBox runat="server" CssClass="adminInput" ID="txtFroogleFTPFilename" ValidationGroup="FroogleFTPUpload" />
+                            <asp:RequiredFieldValidator ID="vldFroogleFTPFilename" runat="server" ControlToValidate="txtFroogleFTPFilename" ErrorMessage="*"
+                                ValidationGroup="FroogleFTPUpload" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
+                                ID="lblFroogleFTPUsername" Text="<% $NopResources:Admin.PromotionProviders.Froogle.FTPUsername.Text %>"
+                                ToolTip="<% $NopResources:Admin.PromotionProviders.Froogle.FTPUsername.Tooltip %>" />
+                        </td>
+                        <td class="adminData">
+                            <asp:TextBox runat="server" CssClass="adminInput" ID="txtFroogleFTPUsername" ValidationGroup="FroogleFTPUpload" />
+                            <asp:RequiredFieldValidator ID="vldFroogleFTPUsername" runat="server" ControlToValidate="txtFroogleFTPUsername" ErrorMessage="*"
+                                ValidationGroup="FroogleFTPUpload" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
+                                ID="lblFroogleFTPPassword" Text="<% $NopResources:Admin.PromotionProviders.Froogle.FTPPassword.Text %>"
+                                ToolTip="<% $NopResources:Admin.PromotionProviders.Froogle.FTPPassword.Tooltip %>" />
+                        </td>
+                        <td class="adminData">
+                            <asp:TextBox runat="server" CssClass="adminInput" ID="txtFroogleFTPPassword" ValidationGroup="FroogleFTPUpload" />
+                            <asp:RequiredFieldValidator ID="vldFroogleFTPPassword" runat="server" ControlToValidate="txtFroogleFTPPassword" ErrorMessage="*"
+                                ValidationGroup="FroogleFTPUpload" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        </td>
+                        <td class="adminData">
+                            <asp:Button ID="btnFroogleFTPUpload" runat="server" Text="<% $NopResources:Admin.PromotionProviders.Froogle.FTPUploadButton %>"
+                                CssClass="adminButton" OnClick="btnFroogleFTPUpload_OnClick" ValidationGroup="FroogleFTPUpload"
+                                ToolTip="<% $NopResources:Admin.PromotionProviders.Froogle.FTPUploadButton.Tooltip %>" />
+                        </td>
+                    </tr>
                 </table>
             </ContentTemplate>
         </ajaxToolkit:TabPanel>

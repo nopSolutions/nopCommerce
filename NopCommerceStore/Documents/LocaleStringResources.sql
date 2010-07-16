@@ -962,6 +962,42 @@ set @resources='
   <LocaleResource Name="Admin.CustomerShoppingCart.TotalColumn">
     <Value>Total</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.PromotionProviders.Froogle.FTPUpload">
+    <Value>Upload feed to Google FTP server</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.PromotionProviders.Froogle.FTPHostname.Text">
+    <Value>Hostname:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.PromotionProviders.Froogle.FTPHostname.Tooltip">
+    <Value>Google FTP server hostname</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.PromotionProviders.Froogle.FTPUsername.Text">
+    <Value>Username:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.PromotionProviders.Froogle.FTPUsername.Tooltip">
+    <Value>Google FTP account username</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.PromotionProviders.Froogle.FTPPassword.Text">
+    <Value>Password:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.PromotionProviders.Froogle.FTPPassword.Tooltip">
+    <Value>Google FTP account password</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.PromotionProviders.Froogle.FTPUploadButton">
+    <Value>Upload</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.PromotionProviders.Froogle.FTPUploadButton.Tooltip">
+    <Value>Click here to upload feed</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.PromotionProviders.Froogle.FTPUploadStatus">
+    <Value>Froogle feed upload status: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.PromotionProviders.Froogle.FTPFilename.Text">
+    <Value>File name:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.PromotionProviders.Froogle.FTPFilename.Tooltip">
+    <Value>Feed file name</Value>
+  </LocaleResource>
 </Language>
 '
 
