@@ -59,32 +59,15 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     paymentMethodId = NopContext.Current.User.LastPaymentMethodId;
 
                 //subtotal
-                decimal subTotalDiscountBase = decimal.Zero;
-                Discount appliedDiscount = null;
                 //don't include checkout attributes on shopping cart page
-                decimal subtotalBaseWithoutPromo = decimal.Zero;
-                decimal subtotalBaseWithPromo = decimal.Zero;
+                decimal subtotalBase = decimal.Zero;
                 string SubTotalError = ShoppingCartManager.GetShoppingCartSubTotal(cart,
-                    NopContext.Current.User, out subTotalDiscountBase,
-                    out appliedDiscount, 
-                    out subtotalBaseWithoutPromo, out subtotalBaseWithPromo);
+                    NopContext.Current.User, out subtotalBase);
                 if (String.IsNullOrEmpty(SubTotalError))
                 {
-                    decimal subtotalWithoutPromo = CurrencyManager.ConvertCurrency(subtotalBaseWithoutPromo, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
-                    lblSubTotalAmount.Text = PriceHelper.FormatPrice(subtotalWithoutPromo);
+                    decimal subtotal = CurrencyManager.ConvertCurrency(subtotalBase, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                    lblSubTotalAmount.Text = PriceHelper.FormatPrice(subtotal);
                     lblSubTotalAmount.CssClass = "productPrice";
-
-                    //discount
-                    if (subTotalDiscountBase > decimal.Zero)
-                    {
-                        decimal subTotalDiscount = CurrencyManager.ConvertCurrency(subTotalDiscountBase, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
-                        lblSubTotalDiscountAmount.Text = PriceHelper.FormatPrice(-subTotalDiscount, true, false);
-                        phSubTotalDiscount.Visible = true;
-                    }
-                    else
-                    {
-                        phSubTotalDiscount.Visible = false;
-                    }
                 }
                 else
                 {
@@ -164,6 +147,8 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 phTaxTotal.Visible = displayTax;
 
                 //total
+                decimal discountAmountBase = decimal.Zero;
+                Discount appliedDiscount = null;
                 List<AppliedGiftCard> appliedGiftCards = null;
                 int redeemedRewardPoints = 0;
                 decimal redeemedRewardPointsAmount = decimal.Zero;
@@ -172,6 +157,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     useRewardPoints = NopContext.Current.User.UseRewardPointsDuringCheckout;
                 decimal? shoppingCartTotalBase = ShoppingCartManager.GetShoppingCartTotal(cart,
                     paymentMethodId, NopContext.Current.User,
+                    out discountAmountBase, out appliedDiscount, 
                     out appliedGiftCards, useRewardPoints,
                     out redeemedRewardPoints, out redeemedRewardPointsAmount);
                 if (shoppingCartTotalBase.HasValue)
@@ -184,6 +170,18 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 {
                     lblTotalAmount.Text = GetLocaleResourceString("ShoppingCart.CalculatedDuringCheckout");
                     lblTotalAmount.CssClass = string.Empty;
+                }
+
+                //discount
+                if (discountAmountBase > decimal.Zero)
+                {
+                    decimal discountAmount = CurrencyManager.ConvertCurrency(discountAmountBase, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                    lblDiscountAmount.Text = PriceHelper.FormatPrice(-discountAmount, true, false);
+                    phDiscount.Visible = true;
+                }
+                else
+                {
+                    phDiscount.Visible = false;
                 }
 
                 //gift cards

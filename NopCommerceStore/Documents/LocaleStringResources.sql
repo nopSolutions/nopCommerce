@@ -962,6 +962,12 @@ set @resources='
   <LocaleResource Name="Admin.CustomerShoppingCart.TotalColumn">
     <Value>Total</Value>
   </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Sub-TotalDiscount">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.OrderDiscount">
+    <Value>Discount</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.PromotionProviders.Froogle.FTPUpload">
     <Value>Upload feed to Google FTP server</Value>
   </LocaleResource>

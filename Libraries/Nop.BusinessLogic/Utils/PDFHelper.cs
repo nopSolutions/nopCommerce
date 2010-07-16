@@ -385,14 +385,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Utils
                 p6.Format.Alignment = ParagraphAlignment.Right;
             }
 
-            //discount
-            if(order.OrderDiscountInCustomerCurrency > decimal.Zero)
-            {
-                string orderDiscountInCustomerCurrencyStr = PriceHelper.FormatPrice(-order.OrderDiscountInCustomerCurrency, true, order.CustomerCurrencyCode, false);
-                Paragraph p7 = sec.AddParagraph(String.Format("{0} {1}", LocalizationManager.GetLocaleResourceString("PDFInvoice.Discount", languageId), orderDiscountInCustomerCurrencyStr));
-                p7.Format.Alignment = ParagraphAlignment.Right;
-            }
-
             //shipping
             if(order.ShippingStatus != ShippingStatusEnum.ShippingNotRequired)
             {
@@ -466,6 +458,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Utils
             {
                 var p11 = sec.AddParagraph(String.Format("{0} {1}", LocalizationManager.GetLocaleResourceString("PDFInvoice.Tax", languageId), taxStr));
                 p11.Format.Alignment = ParagraphAlignment.Right;
+            }
+
+            //discount
+            if (order.OrderDiscountInCustomerCurrency > decimal.Zero)
+            {
+                string orderDiscountInCustomerCurrencyStr = PriceHelper.FormatPrice(-order.OrderDiscountInCustomerCurrency, true, order.CustomerCurrencyCode, false);
+                Paragraph p7 = sec.AddParagraph(String.Format("{0} {1}", LocalizationManager.GetLocaleResourceString("PDFInvoice.Discount", languageId), orderDiscountInCustomerCurrencyStr));
+                p7.Format.Alignment = ParagraphAlignment.Right;
             }
 
             //gift cards

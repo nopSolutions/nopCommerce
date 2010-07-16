@@ -546,6 +546,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 this.pnlPaymentMethodAdditionalFeeExclTax.Visible = false;
             }
 
+            //tax
+            this.lblOrderTax.Text = PriceHelper.FormatPrice(order.OrderTax, true, false);
+
+
             //discount
             if (order.OrderDiscount > 0)
             {
@@ -557,9 +561,6 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 pnlDiscount.Visible = false;
             }
 
-            //tax
-            this.lblOrderTax.Text = PriceHelper.FormatPrice(order.OrderTax, true, false);
-            
             //gift cards
             var gcuhC = OrderManager.GetAllGiftCardUsageHistoryEntries(null, null, order.OrderId);
             if (gcuhC.Count > 0)

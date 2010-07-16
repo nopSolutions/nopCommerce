@@ -301,33 +301,6 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         protected global::System.Web.UI.WebControls.Label lblOrderSubtotalExclTax;
         
         /// <summary>
-        /// pnlDiscount control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlTableRow pnlDiscount;
-        
-        /// <summary>
-        /// lblOrderDiscountTitle control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblOrderDiscountTitle;
-        
-        /// <summary>
-        /// lblOrderDiscount control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblOrderDiscount;
-        
-        /// <summary>
         /// pnlOrderShippingInclTax control.
         /// </summary>
         /// <remarks>
@@ -454,6 +427,33 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         protected global::System.Web.UI.WebControls.Label lblOrderTax;
         
         /// <summary>
+        /// pnlDiscount control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlTableRow pnlDiscount;
+        
+        /// <summary>
+        /// lblOrderDiscountTitle control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblOrderDiscountTitle;
+        
+        /// <summary>
+        /// lblOrderDiscount control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblOrderDiscount;
+        
+        /// <summary>
         /// rptrGiftCards control.
         /// </summary>
         /// <remarks>
@@ -560,42 +560,6 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtOrderSubtotalInCustomerCurrencyExclTax;
-        
-        /// <summary>
-        /// lblOrderDiscountInPrimaryCurrencyTitle control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblOrderDiscountInPrimaryCurrencyTitle;
-        
-        /// <summary>
-        /// txtOrderDiscountInPrimaryCurrency control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtOrderDiscountInPrimaryCurrency;
-        
-        /// <summary>
-        /// lblOrderDiscountInCustomerCurrencyTitle control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblOrderDiscountInCustomerCurrencyTitle;
-        
-        /// <summary>
-        /// txtOrderDiscountInCustomerCurrency control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtOrderDiscountInCustomerCurrency;
         
         /// <summary>
         /// lblOrderShippingInPrimaryCurrencyTitle control.
@@ -740,6 +704,42 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtOrderTaxInCustomerCurrency;
+        
+        /// <summary>
+        /// lblOrderDiscountInPrimaryCurrencyTitle control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblOrderDiscountInPrimaryCurrencyTitle;
+        
+        /// <summary>
+        /// txtOrderDiscountInPrimaryCurrency control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtOrderDiscountInPrimaryCurrency;
+        
+        /// <summary>
+        /// lblOrderDiscountInCustomerCurrencyTitle control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblOrderDiscountInCustomerCurrencyTitle;
+        
+        /// <summary>
+        /// txtOrderDiscountInCustomerCurrency control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtOrderDiscountInCustomerCurrency;
         
         /// <summary>
         /// lblOrderTotalInPrimaryCurrencyTitle control.

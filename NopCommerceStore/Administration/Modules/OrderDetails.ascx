@@ -284,15 +284,6 @@
                         <asp:Label ID="lblOrderSubtotalExclTax" runat="server"></asp:Label>
                     </td>
                 </tr>
-                <tr runat="server" id="pnlDiscount">
-                    <td class="adminTitle">
-                        <nopCommerce:ToolTipLabel runat="server" ID="lblOrderDiscountTitle" Text="<% $NopResources:Admin.OrderDetails.Discount %>"
-                            ToolTip="<% $NopResources:Admin.OrderDetails.Discount.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
-                    </td>
-                    <td class="adminData">
-                        <asp:Label ID="lblOrderDiscount" runat="server"></asp:Label>
-                    </td>
-                </tr>
                 <tr runat="server" id="pnlOrderShippingInclTax">
                     <td class="adminTitle">
                         <nopCommerce:ToolTipLabel runat="server" ID="lblOrderShippingInclTaxTitle" Text="<% $NopResources:Admin.OrderDetails.ShippingInclTax %>"
@@ -340,6 +331,15 @@
                     </td>
                     <td class="adminData">
                         <asp:Label ID="lblOrderTax" runat="server"></asp:Label>
+                    </td>
+                </tr>
+                <tr runat="server" id="pnlDiscount">
+                    <td class="adminTitle">
+                        <nopCommerce:ToolTipLabel runat="server" ID="lblOrderDiscountTitle" Text="<% $NopResources:Admin.OrderDetails.Discount %>"
+                            ToolTip="<% $NopResources:Admin.OrderDetails.Discount.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
+                    </td>
+                    <td class="adminData">
+                        <asp:Label ID="lblOrderDiscount" runat="server"></asp:Label>
                     </td>
                 </tr>
                 <asp:Repeater runat="server" ID="rptrGiftCards" OnItemDataBound="rptrGiftCards_ItemDataBound">
@@ -401,24 +401,6 @@
                                     <%=GetLocaleResourceString("Admin.OrderDetails.EditOrderTotals.ExclTax")%>
                                     <asp:TextBox ID="txtOrderSubtotalInCustomerCurrencyExclTax" runat="server" CssClass="adminInput" />
                                 </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <asp:Label runat="server" ID="lblOrderDiscountInPrimaryCurrencyTitle"></asp:Label>
-                                </td>
-                                <td colspan="2">
-                                    <asp:TextBox ID="txtOrderDiscountInPrimaryCurrency" runat="server" CssClass="adminInput" />
-                                </td>
-                                <td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <asp:Label runat="server" ID="lblOrderDiscountInCustomerCurrencyTitle"></asp:Label>
-                                </td>
-                                <td colspan="2">
-                                    <asp:TextBox ID="txtOrderDiscountInCustomerCurrency" runat="server" CssClass="adminInput" />
-                                </td>
-                                <td>
                             </tr>
                             <tr>
                                 <td>
@@ -491,6 +473,24 @@
                                 </td>
                                 <td colspan="2">
                                     <asp:TextBox ID="txtOrderTaxInCustomerCurrency" runat="server" CssClass="adminInput" />
+                                </td>
+                                <td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <asp:Label runat="server" ID="lblOrderDiscountInPrimaryCurrencyTitle"></asp:Label>
+                                </td>
+                                <td colspan="2">
+                                    <asp:TextBox ID="txtOrderDiscountInPrimaryCurrency" runat="server" CssClass="adminInput" />
+                                </td>
+                                <td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <asp:Label runat="server" ID="lblOrderDiscountInCustomerCurrencyTitle"></asp:Label>
+                                </td>
+                                <td colspan="2">
+                                    <asp:TextBox ID="txtOrderDiscountInCustomerCurrency" runat="server" CssClass="adminInput" />
                                 </td>
                                 <td>
                             </tr>

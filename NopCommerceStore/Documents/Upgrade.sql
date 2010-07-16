@@ -1196,6 +1196,7 @@ BEGIN
 DROP PROCEDURE [dbo].[Nop_CustomerSessionLoadNonEmpty]
 END
 GO
+
 CREATE PROCEDURE [dbo].[Nop_CustomerSessionLoadNonEmpty]
 AS
 BEGIN
@@ -1237,4 +1238,9 @@ IF NOT EXISTS ( SELECT 1 FROM [dbo].[Nop_Setting] WHERE [Name] = N'Froogle.FTPPa
 BEGIN
 	INSERT [dbo].[Nop_Setting] ([Name], [Value], [Description]) VALUES (N'Froogle.FTPPassword', N'', N'')
 END
+GO
+
+UPDATE [dbo].[Nop_DiscountType] 
+SET [Name] = N'Assigned to order total'
+WHERE [DiscountTypeID] = 1
 GO

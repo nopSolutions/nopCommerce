@@ -285,10 +285,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         public static decimal? GetShoppingCartTotal(ShoppingCart cart,
             int paymentMethodId, Customer customer, bool useRewardPoints)
         {
+            decimal discountAmount = decimal.Zero;
+            Discount appliedDiscount = null;
+
             int redeemedRewardPoints = 0;
             decimal redeemedRewardPointsAmount = decimal.Zero;
             List<AppliedGiftCard> appliedGiftCards = null;
             return GetShoppingCartTotal(cart, paymentMethodId, customer,
+                out discountAmount, out appliedDiscount,
                 out appliedGiftCards, useRewardPoints, 
                 out redeemedRewardPoints, out redeemedRewardPointsAmount);
         }
@@ -300,14 +304,17 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="paymentMethodId">Payment method identifier</param>
         /// <param name="customer">Customer</param>
         /// <param name="appliedGiftCards">Applied gift cards</param>
+        /// <param name="discountAmount">Applied discount amount</param>
+        /// <param name="appliedDiscount">Applied discount</param>
         /// <param name="useRewardPoints">A value indicating whether to use reward points</param>
         /// <param name="redeemedRewardPoints">Reward points to redeem</param>
         /// <param name="redeemedRewardPointsAmount">Reward points amount in primary store currency to redeem</param>
         /// <returns>Shopping cart total;Null if shopping cart total couldn't be calculated now</returns>
         public static decimal? GetShoppingCartTotal(ShoppingCart cart,
             int paymentMethodId, Customer customer,
-            out List<AppliedGiftCard> appliedGiftCards, bool useRewardPoints,
-            out int redeemedRewardPoints, out decimal redeemedRewardPointsAmount)
+            out decimal discountAmount, out Discount appliedDiscount, 
+            out List<AppliedGiftCard> appliedGiftCards,
+            bool useRewardPoints, out int redeemedRewardPoints, out decimal redeemedRewardPointsAmount)
         {
             string subTotalError = string.Empty;
             string shippingError = string.Empty;
@@ -317,14 +324,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             redeemedRewardPointsAmount = decimal.Zero;
 
             //subtotal without tax
-            decimal subTotalDiscountBase = decimal.Zero;
-            Discount appliedDiscount = null;
-            decimal subtotalBaseWithoutPromo = decimal.Zero;
-            decimal subtotalBaseWithPromo = decimal.Zero;
+            decimal subtotalBase = decimal.Zero;
             subTotalError = ShoppingCartManager.GetShoppingCartSubTotal(cart,
-                customer, out subTotalDiscountBase,
-                out appliedDiscount, false,
-                out subtotalBaseWithoutPromo, out subtotalBaseWithPromo);
+                customer, false, out subtotalBase);
 
             //shipping without tax
             decimal? shoppingCartShipping = ShippingManager.GetShoppingCartShippingTotal(cart, customer, false, ref shippingError);
@@ -343,7 +345,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
 
             //order total
             decimal resultTemp = decimal.Zero;
-            resultTemp += subtotalBaseWithPromo;
+            resultTemp += subtotalBase;
             if (shoppingCartShipping.HasValue)
             {
                 resultTemp += shoppingCartShipping.Value;
@@ -351,6 +353,23 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             resultTemp += paymentMethodAdditionalFeeWithoutTax;
             resultTemp += shoppingCartTax;
             resultTemp = Math.Round(resultTemp, 2);
+
+            #region Discount
+
+            discountAmount = GetOrderDiscount(customer, resultTemp, out appliedDiscount);
+
+            //sub totals with discount        
+            if (resultTemp < discountAmount)
+                discountAmount = resultTemp;
+
+            //reduce subtotal
+            resultTemp -= discountAmount;
+
+            if (resultTemp < decimal.Zero)
+                resultTemp = decimal.Zero;
+            resultTemp = Math.Round(resultTemp, 2);
+
+            #endregion
 
             #region Gift Cards
 
@@ -440,14 +459,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// </summary>
         /// <param name="cart">Cart</param>
         /// <param name="customer">Customer</param>
-        /// <param name="discountAmount">Subtotal discount amount</param>
-        /// <param name="appliedDiscount">Applied discount</param>
-        /// <param name="subtotalWithoutPromo">Sub total without promo (discounts, gift cards)</param>
-        /// <param name="subtotalWithPromo">Sub total with promo (discounts, gift cards)</param>
+        /// <param name="subTotal">Sub total</param>
         /// <returns>Error</returns>
-        public static string GetShoppingCartSubTotal(ShoppingCart cart, Customer customer,
-            out decimal discountAmount, out Discount appliedDiscount,
-            out decimal subtotalWithoutPromo, out decimal subtotalWithPromo)
+        public static string GetShoppingCartSubTotal(ShoppingCart cart, 
+            Customer customer, out decimal subTotal)
         {
             bool includingTax = false;
             switch (NopContext.Current.TaxDisplayType)
@@ -459,9 +474,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                     includingTax = true;
                     break;
             }
-            return GetShoppingCartSubTotal(cart, customer, out discountAmount,
-                out appliedDiscount, includingTax,
-                out subtotalWithoutPromo, out subtotalWithPromo);
+            return GetShoppingCartSubTotal(cart, customer, includingTax, out subTotal);
         }
 
         /// <summary>
@@ -469,31 +482,27 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// </summary>
         /// <param name="cart">Cart</param>
         /// <param name="customer">Customer</param>
-        /// <param name="discountAmount">Subtotal discount amount</param>
-        /// <param name="appliedDiscount">Applied discount</param>
         /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
-        /// <param name="subtotalWithoutPromo">Sub total without promo (discounts, gift cards)</param>
-        /// <param name="subtotalWithPromo">Sub total with promo (discounts, gift cards)</param>
+        /// <param name="subTotal">Sub total</param>
         /// <returns>Error</returns>
-        public static string GetShoppingCartSubTotal(ShoppingCart cart, Customer customer,
-            out decimal discountAmount, out Discount appliedDiscount, bool includingTax,
-            out decimal subtotalWithoutPromo, out decimal subtotalWithPromo)
+        public static string GetShoppingCartSubTotal(ShoppingCart cart, 
+            Customer customer, bool includingTax, out decimal subTotal)
         {
             string error = string.Empty;
 
-            //sub totals without discount and gift cards
-            decimal subTotalExclTaxWithoutDiscount = decimal.Zero;
-            decimal subTotalInclTaxWithoutDiscount = decimal.Zero;
+            //sub totals
+            decimal subTotalExclTax = decimal.Zero;
+            decimal subTotalInclTax = decimal.Zero;
             foreach (var shoppingCartItem in cart)
             {
                 string error2 = string.Empty;
                 decimal sciSubTotal = PriceHelper.GetSubTotal(shoppingCartItem, customer, true);
-                subTotalExclTaxWithoutDiscount += TaxManager.GetPrice(shoppingCartItem.ProductVariant, sciSubTotal, false, customer, ref error2);
+                subTotalExclTax += TaxManager.GetPrice(shoppingCartItem.ProductVariant, sciSubTotal, false, customer, ref error2);
                 if (!String.IsNullOrEmpty(error2))
                 {
                     error = error2;
                 }
-                subTotalInclTaxWithoutDiscount += TaxManager.GetPrice(shoppingCartItem.ProductVariant, sciSubTotal, true, customer, ref error2);
+                subTotalInclTax += TaxManager.GetPrice(shoppingCartItem.ProductVariant, sciSubTotal, true, customer, ref error2);
                 if (!String.IsNullOrEmpty(error2))
                 {
                     error = error2;
@@ -507,12 +516,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 foreach (var caValue in caValues)
                 {
                     string error3 = string.Empty;
-                    subTotalExclTaxWithoutDiscount += TaxManager.GetCheckoutAttributePrice(caValue, false, customer, ref error3);
+                    subTotalExclTax += TaxManager.GetCheckoutAttributePrice(caValue, false, customer, ref error3);
                     if (!String.IsNullOrEmpty(error3))
                     {
                         error = error3;
                     }
-                    subTotalInclTaxWithoutDiscount += TaxManager.GetCheckoutAttributePrice(caValue, true, customer, ref error3);
+                    subTotalInclTax += TaxManager.GetCheckoutAttributePrice(caValue, true, customer, ref error3);
                     if (!String.IsNullOrEmpty(error3))
                     {
                         error = error3;
@@ -521,44 +530,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             }
 
             if (includingTax)
-                subtotalWithoutPromo = subTotalInclTaxWithoutDiscount;
+                subTotal = subTotalInclTax;
             else
-                subtotalWithoutPromo = subTotalExclTaxWithoutDiscount;
-            
+                subTotal = subTotalExclTax;
 
-            #region Discounts
-            //Discount amount (excl tax)
-            //We calculate discount amount on subtotal excl tax
-            //This type of discounts [Assigned to whole order] is not taxable
-            discountAmount = GetOrderDiscount(customer, subTotalExclTaxWithoutDiscount, out appliedDiscount);
-
-            //sub totals with discount
-            decimal subTotalWithDiscount = decimal.Zero;
-            if (includingTax)
-            {
-                if (subTotalInclTaxWithoutDiscount < discountAmount)
-                    discountAmount = subTotalInclTaxWithoutDiscount;
-
-                subTotalWithDiscount = subTotalInclTaxWithoutDiscount - discountAmount;
-            }
-            else
-            {
-                if (subTotalExclTaxWithoutDiscount < discountAmount)
-                    discountAmount = subTotalExclTaxWithoutDiscount;
-
-                subTotalWithDiscount = subTotalExclTaxWithoutDiscount - discountAmount;
-            }
-
-            if (subTotalWithDiscount < decimal.Zero)
-                subTotalWithDiscount = decimal.Zero;
-            subTotalWithDiscount = Math.Round(subTotalWithDiscount, 2);
-
-            #endregion
-
-            subtotalWithPromo = subTotalWithDiscount;
-            if (subtotalWithPromo < decimal.Zero)
-                subtotalWithPromo = decimal.Zero;
-            subtotalWithPromo = Math.Round(subtotalWithPromo, 2);
+            subTotal = subTotal;
+            if (subTotal < decimal.Zero)
+                subTotal = decimal.Zero;
+            subTotal = Math.Round(subTotal, 2);
 
             return error;
         }
@@ -567,24 +546,24 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// Gets an order discount
         /// </summary>
         /// <param name="customer">Customer</param>
-        /// <param name="orderSubTotal">Order subtotal</param>
+        /// <param name="orderTotal">Order total</param>
         /// <param name="appliedDiscount">Applied discount</param>
         /// <returns>Order discount</returns>
         public static decimal GetOrderDiscount(Customer customer, 
-            decimal orderSubTotal, out Discount appliedDiscount)
+            decimal orderTotal, out Discount appliedDiscount)
         {
-            decimal subTotalDiscountAmount = decimal.Zero;
+            decimal discountAmount = decimal.Zero;
 
             string customerCouponCode = string.Empty;
             if (customer != null)
                 customerCouponCode = customer.LastAppliedCouponCode;
 
-            var allDiscounts = DiscountManager.GetAllDiscounts(DiscountTypeEnum.AssignedToOrderSubTotal);
+            var allDiscounts = DiscountManager.GetAllDiscounts(DiscountTypeEnum.AssignedToOrderTotal);
             var allowedDiscounts = new List<Discount>();
             foreach (var _discount in allDiscounts)
             {
                 if (_discount.IsActive(customerCouponCode) &&
-                    _discount.DiscountType == DiscountTypeEnum.AssignedToOrderSubTotal &&
+                    _discount.DiscountType == DiscountTypeEnum.AssignedToOrderTotal &&
                     !allowedDiscounts.ContainsDiscount(_discount.Name))
                 {
                     //discount requirements
@@ -596,18 +575,18 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 }
             }
 
-            appliedDiscount = DiscountManager.GetPreferredDiscount(allowedDiscounts, orderSubTotal);
+            appliedDiscount = DiscountManager.GetPreferredDiscount(allowedDiscounts, orderTotal);
             if (appliedDiscount != null)
             {
-                subTotalDiscountAmount = appliedDiscount.GetDiscountAmount(orderSubTotal);
+                discountAmount = appliedDiscount.GetDiscountAmount(orderTotal);
             }
 
-            if (subTotalDiscountAmount < decimal.Zero)
-                subTotalDiscountAmount = decimal.Zero;
+            if (discountAmount < decimal.Zero)
+                discountAmount = decimal.Zero;
 
-            subTotalDiscountAmount = Math.Round(subTotalDiscountAmount, 2);
+            discountAmount = Math.Round(discountAmount, 2);
 
-            return subTotalDiscountAmount;
+            return discountAmount;
         }
               
         /// <summary>

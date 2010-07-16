@@ -2985,48 +2985,31 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 //sub total
                 decimal orderSubTotalInclTax = decimal.Zero;
                 decimal orderSubTotalExclTax = decimal.Zero;
-                decimal orderSubTotalDiscountAmount = decimal.Zero;
                 decimal orderSubtotalInclTaxInCustomerCurrency = decimal.Zero;
                 decimal orderSubtotalExclTaxInCustomerCurrency = decimal.Zero;
-                decimal orderSubtotalDiscountInCustomerCurrency = decimal.Zero;
                 if (!paymentInfo.IsRecurringPayment)
                 {
-                    Discount subTotalAppliedDiscountInclTax = null;
-                    decimal subtotalBaseWithPromoInclTax = decimal.Zero;
                     string subTotalError1 = ShoppingCartManager.GetShoppingCartSubTotal(cart, customer,
-                        out orderSubTotalDiscountAmount, out subTotalAppliedDiscountInclTax,
-                        true, out orderSubTotalInclTax, out subtotalBaseWithPromoInclTax);
+                        true, out orderSubTotalInclTax);
                     
-
-                    Discount subTotalAppliedDiscountExclTax = null;
-                    decimal subtotalBaseWithPromoExclTax = decimal.Zero;
                     string subTotalError2 = ShoppingCartManager.GetShoppingCartSubTotal(cart, customer,
-                        out orderSubTotalDiscountAmount, out subTotalAppliedDiscountExclTax,
-                        false, out orderSubTotalExclTax, out subtotalBaseWithPromoExclTax);
+                        false, out orderSubTotalExclTax);
                     
                     if (!String.IsNullOrEmpty(subTotalError1) || !String.IsNullOrEmpty(subTotalError2))
                         throw new NopException("Sub total couldn't be calculated");
-
-                    if (subTotalAppliedDiscountInclTax != null && !appliedDiscounts.ContainsDiscount(subTotalAppliedDiscountInclTax.Name))
-                        appliedDiscounts.Add(subTotalAppliedDiscountInclTax);
-                    if (subTotalAppliedDiscountExclTax != null && !appliedDiscounts.ContainsDiscount(subTotalAppliedDiscountExclTax.Name))
-                        appliedDiscounts.Add(subTotalAppliedDiscountExclTax);
-
+                    
                     //in customer currency
                     orderSubtotalInclTaxInCustomerCurrency = CurrencyManager.ConvertCurrency(orderSubTotalInclTax, CurrencyManager.PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
                     orderSubtotalExclTaxInCustomerCurrency = CurrencyManager.ConvertCurrency(orderSubTotalExclTax, CurrencyManager.PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
-                    orderSubtotalDiscountInCustomerCurrency = CurrencyManager.ConvertCurrency(orderSubTotalDiscountAmount, CurrencyManager.PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
                 }
                 else
                 {
                     orderSubTotalInclTax = initialOrder.OrderSubtotalInclTax;
                     orderSubTotalExclTax = initialOrder.OrderSubtotalExclTax;
-                    orderSubTotalDiscountAmount = initialOrder.OrderDiscount;
 
                     //in customer currency
                     orderSubtotalInclTaxInCustomerCurrency = initialOrder.OrderSubtotalInclTaxInCustomerCurrency;
                     orderSubtotalExclTaxInCustomerCurrency = initialOrder.OrderSubtotalExclTaxInCustomerCurrency;
-                    orderSubtotalDiscountInCustomerCurrency = initialOrder.OrderDiscountInCustomerCurrency;
                 }
 
 
@@ -3150,30 +3133,44 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 }
 
 
-                //order total, gift cards, reward points
+                //order total (and applied discounts, gift cards, reward points)
                 decimal? orderTotal = null;
                 decimal orderTotalInCustomerCurrency = decimal.Zero;
+                decimal orderDiscountAmount = decimal.Zero;
+                decimal orderDiscountInCustomerCurrency = decimal.Zero;
                 List<AppliedGiftCard> appliedGiftCards = null;
                 int redeemedRewardPoints = 0;
                 decimal redeemedRewardPointsAmount = decimal.Zero;
                 if (!paymentInfo.IsRecurringPayment)
                 {
+                    Discount orderAppliedDiscount = null;
+
                     bool useRewardPoints = customer.UseRewardPointsDuringCheckout;
 
                     orderTotal = ShoppingCartManager.GetShoppingCartTotal(cart,
                         paymentInfo.PaymentMethodId, customer,
+                        out orderDiscountAmount, out orderAppliedDiscount, 
                         out appliedGiftCards, useRewardPoints,
                         out redeemedRewardPoints, out redeemedRewardPointsAmount);
                     if (!orderTotal.HasValue)
                         throw new NopException("Order total couldn't be calculated");
 
+                    //discount history
+                    if (orderAppliedDiscount != null && !appliedDiscounts.ContainsDiscount(orderAppliedDiscount.Name))
+                        appliedDiscounts.Add(orderAppliedDiscount);
+
                     //in customer currency
+                    orderDiscountInCustomerCurrency = CurrencyManager.ConvertCurrency(orderDiscountAmount,
+                        CurrencyManager.PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
                     orderTotalInCustomerCurrency = CurrencyManager.ConvertCurrency(orderTotal.Value, 
                         CurrencyManager.PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
                 }
                 else
                 {
+                    orderDiscountAmount = initialOrder.OrderDiscount;
                     orderTotal = initialOrder.OrderTotal;
+
+                    orderDiscountInCustomerCurrency = initialOrder.OrderDiscountInCustomerCurrency;
                     orderTotalInCustomerCurrency = initialOrder.OrderTotalInCustomerCurrency;
                 }
                 paymentInfo.OrderTotal = orderTotal.Value;
@@ -3444,7 +3441,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                              paymentAdditionalFeeExclTax,
                              orderTaxTotal,
                              orderTotal.Value,
-                             orderSubTotalDiscountAmount,
+                             orderDiscountAmount,
                              orderSubtotalInclTaxInCustomerCurrency,
                              orderSubtotalExclTaxInCustomerCurrency,
                              orderShippingInclTaxInCustomerCurrency,
@@ -3453,7 +3450,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                              paymentAdditionalFeeExclTaxInCustomerCurrency,
                              orderTaxInCustomerCurrency,
                              orderTotalInCustomerCurrency,
-                             orderSubtotalDiscountInCustomerCurrency,
+                             orderDiscountInCustomerCurrency,
                              checkoutAttributeDescription,
                              checkoutAttributesXml,
                              customerCurrencyCode,

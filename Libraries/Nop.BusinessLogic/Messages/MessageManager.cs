@@ -186,9 +186,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
 
             string CusSubTotal = string.Empty;
             string CusShipTotal = string.Empty;
-            string CusDiscount = string.Empty;
             string CusPaymentMethodAdditionalFee = string.Empty;
             string CusTaxTotal = string.Empty;
+            string CusDiscount = string.Empty;
             string CusTotal = string.Empty;
             //subtotal, shipping, payment method fee
             switch (order.CustomerTaxDisplayType)
@@ -207,14 +207,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
                         CusPaymentMethodAdditionalFee = PriceHelper.FormatPaymentMethodAdditionalFee(order.PaymentMethodAdditionalFeeInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, language, true);
                     }
                     break;
-            }
-
-            //discount
-            bool dislayDiscount = false;
-            if (order.OrderDiscountInCustomerCurrency > decimal.Zero)
-            {
-                CusDiscount = PriceHelper.FormatPrice(-order.OrderDiscountInCustomerCurrency, true, order.CustomerCurrencyCode, false);
-                dislayDiscount = true;
             }
 
             //shipping
@@ -245,6 +237,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
                     CusTaxTotal = taxStr;
                 }
             }
+
+            //discount
+            bool dislayDiscount = false;
+            if (order.OrderDiscountInCustomerCurrency > decimal.Zero)
+            {
+                CusDiscount = PriceHelper.FormatPrice(-order.OrderDiscountInCustomerCurrency, true, order.CustomerCurrencyCode, false);
+                dislayDiscount = true;
+            }
             
             //total
             CusTotal = PriceHelper.FormatPrice(order.OrderTotalInCustomerCurrency, true, order.CustomerCurrencyCode, false);
@@ -254,12 +254,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
 
             //subtotal
             sb.AppendLine(string.Format("<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{1}</strong></td> <td style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{2}</strong></td></tr>", color3, LocalizationManager.GetLocaleResourceString("Order.Sub-Total", languageId), CusSubTotal));
-            //discount
-            if (dislayDiscount)
-            {
-                sb.AppendLine(string.Format("<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{1}</strong></td> <td style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{2}</strong></td></tr>", color3, LocalizationManager.GetLocaleResourceString("Order.Discount", languageId), CusDiscount));
-            }
-
+            
             //shipping
             if (dislayShipping)
             {
@@ -279,6 +274,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
                 sb.AppendLine(string.Format("<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{1}</strong></td> <td style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{2}</strong></td></tr>", color3, LocalizationManager.GetLocaleResourceString("Order.Tax", languageId), CusTaxTotal));
             }
 
+            //discount
+            if (dislayDiscount)
+            {
+                sb.AppendLine(string.Format("<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{1}</strong></td> <td style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{2}</strong></td></tr>", color3, LocalizationManager.GetLocaleResourceString("Order.Discount", languageId), CusDiscount));
+            }
+            
             //gift cards
             var gcuhC = OrderManager.GetAllGiftCardUsageHistoryEntries(null, null, order.OrderId);
             foreach (var giftCardUsageHistory in gcuhC)

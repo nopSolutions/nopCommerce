@@ -98,17 +98,13 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected string GetOrderSubtotal(ShoppingCart shoppingCart)
         {
-            decimal subTotalDiscountBase = decimal.Zero;
-            Discount appliedDiscount = null;
-            decimal subtotalBaseWithoutPromo = decimal.Zero;
-            decimal subtotalBaseWithPromo = decimal.Zero;
+            decimal subtotalBase = decimal.Zero;
             string SubTotalError = ShoppingCartManager.GetShoppingCartSubTotal(shoppingCart,
-                NopContext.Current.User, out subTotalDiscountBase,
-                out appliedDiscount, out subtotalBaseWithoutPromo, out subtotalBaseWithPromo);
+                NopContext.Current.User, out subtotalBase);
 
             if (String.IsNullOrEmpty(SubTotalError))
             {
-                decimal subTotal = CurrencyManager.ConvertCurrency(subtotalBaseWithoutPromo, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                decimal subTotal = CurrencyManager.ConvertCurrency(subtotalBase, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
                 return PriceHelper.FormatPrice(subTotal);
             }
             else
