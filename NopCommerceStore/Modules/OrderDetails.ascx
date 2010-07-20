@@ -400,6 +400,11 @@
             <br />
             <asp:Button runat="server" ID="btnReOrder" CssClass="reorderbutton" Text="<% $NopResources:Order.BtnReOrder.Text %>"
                 ToolTip="<% $NopResources:Order.BtnReOrder.Tooltip %>" OnClick="BtnReOrder_OnClick" />
+            <asp:PlaceHolder runat="server" ID="phReturnRequest">
+                &nbsp;&nbsp;&nbsp;
+                <asp:Button runat="server" ID="btnReturnItems" OnClick="btnReturnItems_Click" Text="<% $NopResources:OrderDetails.ReturnItemsButton %>"
+                    CssClass="returnitemsbutton" />
+            </asp:PlaceHolder>
             <%} %>
         </div>
         <%if (!this.IsInvoice)

@@ -1616,6 +1616,32 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             return result;
         }
 
+        public string GetReturnRequests(OrderProductVariant opv)
+        {
+            string result = string.Empty;
+            var returnRequests = OrderManager.SearchReturnRequests(0, opv.OrderProductVariantId, null);
+            if (returnRequests.Count > 0)
+            {
+                string Ids = string.Empty;
+                for (int i = 0; i < returnRequests.Count;i++)
+                {
+                    var rr = returnRequests[i];
+                    string link = string.Format("<a href=\"ReturnRequestDetails.aspx?ReturnRequestID={0}\">{1}</a>", rr.ReturnRequestId, rr.ReturnRequestId);
+                    Ids += link;
+                    if (i != returnRequests.Count - 1)
+                    {
+                        Ids += ", ";
+                    }
+                }
+                result = "<br /><hr />";
+                result += string.Format(GetLocaleResourceString("Admin.OrderDetails.Products.ReturnRequests"), Ids);
+                
+                if (!String.IsNullOrEmpty(result))
+                    result = "<br />" + result;
+            }
+            return result;
+        }
+        
         public string GetDownloadUrl(OrderProductVariant orderProductVariant)
         {
             string result = string.Empty;

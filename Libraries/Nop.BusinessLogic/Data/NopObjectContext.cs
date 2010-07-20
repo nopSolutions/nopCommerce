@@ -1295,6 +1295,19 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<RelatedProduct> _relatedProducts;
 
+        public ObjectSet<ReturnRequest> ReturnRequests
+        {
+            get
+            {
+                if ((_returnRequests == null))
+                {
+                    _returnRequests = CreateObjectSet<ReturnRequest>();
+                }
+                return _returnRequests;
+            }
+        }
+        private ObjectSet<ReturnRequest> _returnRequests;
+
         public ObjectSet<RewardPointsHistory> RewardPointsHistory
         {
             get

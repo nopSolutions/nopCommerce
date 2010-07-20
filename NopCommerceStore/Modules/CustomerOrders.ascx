@@ -57,7 +57,7 @@
     <div class="clear">
     </div>
     <div class="order-list">
-        <asp:Repeater ID="rptrOrders" runat="server" EnableViewState="false">
+        <asp:Repeater ID="rptrOrders" runat="server" EnableViewState="false" OnItemDataBound="rptrOrders_ItemDataBound">
             <ItemTemplate>
                 <div class="order-item">
                     <table width="100%" cellspacing="0" cellpadding="2" border="0">
@@ -69,6 +69,10 @@
                                         <%#Eval("OrderId")%></b>
                                 </td>
                                 <td align="right">
+                                    <asp:PlaceHolder runat="server" ID="phReturnRequest">
+                                        <asp:Button runat="server" ID="btnReturnItems" OnCommand="btnReturnItems_Click" Text="<% $NopResources:OrderDetails.ReturnItemsButton %>"
+                                            ValidationGroup="OrderDetails" CommandArgument='<%# Eval("OrderId") %>' CssClass="returnitemsbutton" />
+                                        &nbsp;&nbsp;&nbsp; </asp:PlaceHolder>
                                     <asp:Button runat="server" ID="btnOrderDetails" OnCommand="btnOrderDetails_Click"
                                         Text="<% $NopResources:Common.Details %>" ValidationGroup="OrderDetails" CommandArgument='<%# Eval("OrderId") %>'
                                         CssClass="orderdetailsbutton" />

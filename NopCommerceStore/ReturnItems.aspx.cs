@@ -25,40 +25,17 @@ using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic;
-using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
-using NopSolutions.NopCommerce.BusinessLogic.Content.Forums;
-using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
-using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.Payment;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
 namespace NopSolutions.NopCommerce.Web
 {
-    /// <summary>
-    /// AccountPage page handler.
-    /// </summary>
-    public partial class AccountPage : BaseNopPage
+    public partial class ReturnItemsPage : BaseNopPage
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            CommonHelper.SetResponseNoCache(Response);
-
-            if (NopContext.Current.User == null || NopContext.Current.User.IsGuest)
-            {
-                string loginURL = SEOHelper.GetLoginPageUrl(true);
-                Response.Redirect(loginURL);
-            }
-
-            string title = GetLocaleResourceString("PageTitle.Account");
+            string title = GetLocaleResourceString("PageTitle.ReturnItems");
             SEOHelper.RenderTitle(this, title, true);
-        }
-
-        protected void Page_PreRender(object sender, EventArgs e)
-        {
-            pnlAvatar.Visible = CustomerManager.AllowCustomersToUploadAvatars;
-            pnlRewardPoints.Visible = OrderManager.RewardPointsEnabled;
-            pnlForumSubscriptions.Visible = ForumManager.AllowCustomersToManageSubscriptions;
-            pnlReturnRequests.Visible = ctrlReturnRequests.Visible && SettingManager.GetSettingValueBoolean("ReturnRequests.Enable");
         }
 
         public override PageSslProtectionEnum SslProtected

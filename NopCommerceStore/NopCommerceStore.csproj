@@ -379,12 +379,47 @@
     <Compile Include="Administration\BulkEditProducts.aspx.designer.cs">
       <DependentUpon>BulkEditProducts.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Administration\Modules\ReturnRequestInfo.ascx.cs">
+      <DependentUpon>ReturnRequestInfo.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Administration\Modules\ReturnRequestInfo.ascx.designer.cs">
+      <DependentUpon>ReturnRequestInfo.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Administration\ReturnRequestDetails.aspx.cs">
+      <DependentUpon>ReturnRequestDetails.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Administration\ReturnRequestDetails.aspx.designer.cs">
+      <DependentUpon>ReturnRequestDetails.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Administration\Modules\ReturnRequestDetails.ascx.cs">
+      <DependentUpon>ReturnRequestDetails.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Administration\Modules\ReturnRequestDetails.ascx.designer.cs">
+      <DependentUpon>ReturnRequestDetails.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Administration\ReturnRequests.aspx.cs">
+      <DependentUpon>ReturnRequests.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Administration\ReturnRequests.aspx.designer.cs">
+      <DependentUpon>ReturnRequests.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Administration\CurrentShoppingCarts.aspx.cs">
       <DependentUpon>CurrentShoppingCarts.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Administration\CurrentShoppingCarts.aspx.designer.cs">
       <DependentUpon>CurrentShoppingCarts.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Administration\Modules\ReturnRequests.ascx.cs">
+      <DependentUpon>ReturnRequests.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Administration\Modules\ReturnRequests.ascx.designer.cs">
+      <DependentUpon>ReturnRequests.ascx</DependentUpon>
     </Compile>
     <Compile Include="Administration\Modules\CurrentShoppingCarts.ascx.cs">
       <DependentUpon>CurrentShoppingCarts.ascx</DependentUpon>
@@ -3779,6 +3814,27 @@
     <Compile Include="Alipay_Return.aspx.designer.cs">
       <DependentUpon>Alipay_Return.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Modules\CustomerReturnRequests.ascx.cs">
+      <DependentUpon>CustomerReturnRequests.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\CustomerReturnRequests.ascx.designer.cs">
+      <DependentUpon>CustomerReturnRequests.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="ReturnItems.aspx.cs">
+      <DependentUpon>ReturnItems.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ReturnItems.aspx.designer.cs">
+      <DependentUpon>ReturnItems.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\ReturnItems.ascx.cs">
+      <DependentUpon>ReturnItems.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\ReturnItems.ascx.designer.cs">
+      <DependentUpon>ReturnItems.ascx</DependentUpon>
+    </Compile>
     <Compile Include="Modules\ForumSubscriptions.ascx.cs">
       <DependentUpon>ForumSubscriptions.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -5651,7 +5707,12 @@
     <Content Include="Administration\CategoryTemplateAdd.aspx" />
     <Content Include="Administration\CategoryTemplateDetails.aspx" />
     <Content Include="Administration\CategoryTemplates.aspx" />
+    <Content Include="Administration\Modules\ReturnRequestInfo.ascx" />
+    <Content Include="Administration\ReturnRequestDetails.aspx" />
+    <Content Include="Administration\Modules\ReturnRequestDetails.ascx" />
+    <Content Include="Administration\ReturnRequests.aspx" />
     <Content Include="Administration\CurrentShoppingCarts.aspx" />
+    <Content Include="Administration\Modules\ReturnRequests.ascx" />
     <Content Include="Administration\Modules\CurrentShoppingCarts.ascx" />
     <Content Include="Administration\SMSProviders.aspx" />
     <Content Include="Administration\Modules\SMSProviderInfo.ascx" />
@@ -5885,6 +5946,8 @@
     <Content Include="CompareProducts.aspx" />
     <Content Include="ConditionsInfo.aspx" />
     <Content Include="ContactUs.aspx" />
+    <Content Include="Modules\CustomerReturnRequests.ascx" />
+    <Content Include="ReturnItems.aspx" />
     <Content Include="Default.aspx" />
     <Content Include="ErrorPage.htm" />
     <Content Include="FileNotFound.htm" />
@@ -5920,6 +5983,7 @@
     <Content Include="Install\Scripts\nopCommerce_createData.sql" />
     <Content Include="Install\Scripts\nopCommerce_createDatabase.sql" />
     <Content Include="Install\Scripts\nopCommerce_createSampleData.sql" />
+    <Content Include="Modules\ReturnItems.ascx" />
     <Content Include="Modules\ForumSubscriptions.ascx" />
     <Content Include="Modules\GiftCardAttributes.ascx" />
     <Content Include="Modules\ProductPrice2.ascx" />

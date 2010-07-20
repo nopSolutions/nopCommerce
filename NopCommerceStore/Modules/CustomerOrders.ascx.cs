@@ -115,6 +115,12 @@ namespace NopSolutions.NopCommerce.Web.Modules
             int orderId = Convert.ToInt32(e.CommandArgument);
             Response.Redirect(string.Format("~/orderdetails.aspx?orderid={0}", orderId));
         }
+
+        protected void btnReturnItems_Click(object sender, CommandEventArgs e)
+        {
+            int orderId = Convert.ToInt32(e.CommandArgument);
+            Response.Redirect(string.Format("~/returnitems.aspx?orderid={0}", orderId));
+        }
         
         protected void gvRecurringPayments_RowCommand(object sender, GridViewCommandEventArgs e)
         {
@@ -148,6 +154,20 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     btnCancelRecurringPayment.Visible = OrderManager.CanCancelRecurringPayment(NopContext.Current.User, rp);
                 }
             }
-        } 
+        }
+
+        protected void rptrOrders_ItemDataBound(object sender, RepeaterItemEventArgs e)
+        {
+            if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+            {
+                Order order = (Order)e.Item.DataItem;
+                var phReturnRequest = (PlaceHolder)e.Item.FindControl("phReturnRequest");
+                if (phReturnRequest != null)
+                {
+                    phReturnRequest.Visible = OrderManager.IsReturnRequestAllowed(order);
+                }
+            }
+        }
+        
     }
 }

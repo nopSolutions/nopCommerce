@@ -50,6 +50,18 @@
             </li>
             <li>
                 <div class="title">
+                    <a href="returnrequests.aspx" title="<%=GetLocaleResourceString("Admin.SalesHome.ReturnRequests.TitleDescription")%>">
+                        <%=GetLocaleResourceString("Admin.SalesHome.ReturnRequests.Title")%>
+                    </a>
+                </div>
+                <div class="description">
+                    <p>
+                        <%=GetLocaleResourceString("Admin.SalesHome.ReturnRequests.Description")%>
+                    </p>
+                </div>
+            </li>
+            <li>
+                <div class="title">
                     <a href="currentshoppingcarts.aspx" title="<%=GetLocaleResourceString("Admin.SalesHome.CurrentShoppingCarts.TitleDescription")%>">
                         <%=GetLocaleResourceString("Admin.SalesHome.CurrentShoppingCarts.Title")%>
                     </a>

@@ -32,6 +32,7 @@
       <siteMapNode title="Orders" url="~/administration/orders.aspx" description="Manage Customer Orders" nopResourceTitle="Admin.Sitemap.OrdersTitle" nopResourceDescription="Admin.Sitemap.OrdersDescription" />
       <siteMapNode title="Recurring Payments" url="~/administration/recurringpayments.aspx" description="Manage Recurring Payments" nopResourceTitle="Admin.Sitemap.RecurringPaymentsTitle" nopResourceDescription="Admin.Sitemap.RecurringPaymentsDescription" />
       <siteMapNode title="Purchased Gift Cards" url="~/administration/purchasedgiftcards.aspx" description="Manage Purchased Gift Cards" nopResourceTitle="Admin.Sitemap.PurchasedGiftCardsTitle" nopResourceDescription="Admin.Sitemap.PurchasedGiftCardsDescription" />
+      <siteMapNode title="Return Requests" url="~/administration/returnrequests.aspx" description="Manage Return Requests" nopResourceTitle="Admin.Sitemap.ReturnRequestsTitle" nopResourceDescription="Admin.Sitemap.ReturnRequestsDescription" />
       <siteMapNode title="Current Shopping Carts" url="~/administration/currentshoppingcarts.aspx" description="Manage Current Shopping Carts" nopResourceTitle="Admin.Sitemap.CurrentShoppingCartsTitle" nopResourceDescription="Admin.Sitemap.CurrentShoppingCartsDescription" />
       <siteMapNode title="Sales Report" url="~/administration/salesreport.aspx" description="View Sales Report" nopResourceTitle="Admin.Sitemap.SalesReportTitle" nopResourceDescription="Admin.Sitemap.SalesReportDescription" />
     </siteMapNode>

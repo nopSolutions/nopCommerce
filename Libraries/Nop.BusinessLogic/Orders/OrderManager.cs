@@ -2724,6 +2724,228 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
 
         #endregion
 
+        #region Return requests (RMA)
+
+        /// <summary>
+        /// Gets a return request status name
+        /// </summary>
+        /// <param name="rs">Return status</param>
+        /// <returns>Return request status name</returns>
+        public static string GetReturnRequestStatusName(ReturnStatusEnum rs)
+        {
+            string name = string.Empty;
+            switch (rs)
+            {
+                case ReturnStatusEnum.Pending:
+                    name = LocalizationManager.GetLocaleResourceString("ReturnStatus.Pending");
+                    break;
+                case ReturnStatusEnum.Received:
+                    name = LocalizationManager.GetLocaleResourceString("ReturnStatus.Received");
+                    break;
+                case ReturnStatusEnum.ReturnAuthorized:
+                    name = LocalizationManager.GetLocaleResourceString("ReturnStatus.ReturnAuthorized");
+                    break;
+                case ReturnStatusEnum.ItemsRepaired:
+                    name = LocalizationManager.GetLocaleResourceString("ReturnStatus.ItemsRepaired");
+                    break;
+                case ReturnStatusEnum.ItemsRefunded:
+                    name = LocalizationManager.GetLocaleResourceString("ReturnStatus.ItemsRefunded");
+                    break;
+                case ReturnStatusEnum.RequestRejected:
+                    name = LocalizationManager.GetLocaleResourceString("ReturnStatus.RequestRejected");
+                    break;
+                case ReturnStatusEnum.Cancelled:
+                    name = LocalizationManager.GetLocaleResourceString("ReturnStatus.Cancelled");
+                    break;
+                default:
+                    name = CommonHelper.ConvertEnum(rs.ToString());
+                    break;
+            }
+            return name;
+        }
+
+        /// <summary>
+        /// Check whether return request is allowed
+        /// </summary>
+        /// <param name="order">Order</param>
+        /// <returns>Result</returns>
+        public static bool IsReturnRequestAllowed(Order order)
+        {
+            if (!SettingManager.GetSettingValueBoolean("ReturnRequests.Enable"))
+                return false;
+
+            if (order == null || order.Deleted)
+                return false;
+
+            return order.OrderStatus == OrderStatusEnum.Complete;
+        }
+
+        /// <summary>
+        /// Gets a return request
+        /// </summary>
+        /// <param name="returnRequestId">Return request identifier</param>
+        /// <returns>Return request</returns>
+        public static ReturnRequest GetReturnRequestById(int returnRequestId)
+        {
+            if (returnRequestId == 0)
+                return null;
+
+            var context = ObjectContextHelper.CurrentObjectContext;
+            var query = from rr in context.ReturnRequests
+                        where rr.ReturnRequestId == returnRequestId
+                        select rr;
+            var returnRequest = query.SingleOrDefault();
+            return returnRequest;
+        }
+        
+        /// <summary>
+        /// Deletes a return request
+        /// </summary>
+        /// <param name="returnRequestId">Return request identifier</param>
+        public static void DeleteReturnRequest(int returnRequestId)
+        {
+            var returnRequest = GetReturnRequestById(returnRequestId);
+            if (returnRequest == null)
+                return;
+
+            var context = ObjectContextHelper.CurrentObjectContext;
+            if (!context.IsAttached(returnRequest))
+                context.ReturnRequests.Attach(returnRequest);
+            context.DeleteObject(returnRequest);
+            context.SaveChanges();
+        }
+
+        /// <summary>
+        /// Search return requests
+        /// </summary>
+        /// <param name="customerId">Customer identifier; null to load all entries</param>
+        /// <param name="orderProductVariantId">Order product variant identifier; null to load all entries</param>
+        /// <returns>Return requests</returns>
+        public static List<ReturnRequest> SearchReturnRequests(int customerId, 
+            int orderProductVariantId, ReturnStatusEnum? rs)
+        {
+            int? returnStatusId = null;
+            if (rs.HasValue)
+                returnStatusId = (int)rs.Value;
+
+            var context = ObjectContextHelper.CurrentObjectContext;
+
+            var query = from rr in context.ReturnRequests
+                        where (!returnStatusId.HasValue || returnStatusId == rr.ReturnStatusId) &&
+                        (customerId == 0 || customerId == rr.CustomerId) &&
+                        (orderProductVariantId == 0 || orderProductVariantId == rr.OrderProductVariantId)
+                        orderby rr.CreatedOn descending, rr.ReturnRequestId descending
+                        select rr;
+
+            var returnRequests = query.ToList();
+            return returnRequests;
+        }
+
+        /// <summary>
+        /// Inserts a return request
+        /// </summary>
+        /// <param name="orderProductVariantId">Order product variant identifier</param>
+        /// <param name="quantity">Quantity</param>
+        /// <param name="customerId">Customer identifier</param>
+        /// <param name="reasonForReturn">Reason to return</param>
+        /// <param name="requestedAction">Requested action</param>
+        /// <param name="customerComments">Customer comments</param>
+        /// <param name="staffNotes">Staff notes</param>
+        /// <param name="returnStatus">Return status</param>
+        /// <param name="createdOn">The date and time of entity creation</param>
+        /// <param name="updatedOn">The date and time of entity update</param>
+        /// <returns>Return request</returns>
+        public static ReturnRequest InsertReturnRequest(int orderProductVariantId,
+            int quantity, int customerId, string reasonForReturn, 
+            string requestedAction, string customerComments, 
+            string staffNotes, ReturnStatusEnum returnStatus,
+            DateTime createdOn, DateTime updatedOn)
+        {
+            reasonForReturn = CommonHelper.EnsureMaximumLength(reasonForReturn, 400);
+            requestedAction = CommonHelper.EnsureMaximumLength(requestedAction, 400);
+
+            var context = ObjectContextHelper.CurrentObjectContext;
+
+            var returnRequest = context.ReturnRequests.CreateObject();
+            returnRequest.OrderProductVariantId = orderProductVariantId;
+            returnRequest.Quantity = quantity;
+            returnRequest.CustomerId = customerId;
+            returnRequest.ReasonForReturn = reasonForReturn;
+            returnRequest.RequestedAction = requestedAction;
+            returnRequest.CustomerComments = customerComments;
+            returnRequest.StaffNotes = staffNotes;
+            returnRequest.ReturnStatusId = (int)returnStatus;
+            returnRequest.CreatedOn = createdOn;
+            returnRequest.UpdatedOn = updatedOn;
+
+            context.ReturnRequests.AddObject(returnRequest);
+            context.SaveChanges();
+            return returnRequest;
+        }
+
+
+        /// <summary>
+        /// Updates the return request
+        /// </summary>
+        /// <param name="returnRequestId">Return request identifier</param>
+        /// <param name="orderProductVariantId">Order product variant identifier</param>
+        /// <param name="quantity">Quantity</param>
+        /// <param name="customerId">Customer identifier</param>
+        /// <param name="reasonForReturn">Reason to return</param>
+        /// <param name="requestedAction">Requested action</param>
+        /// <param name="customerComments">Customer comments</param>
+        /// <param name="staffNotes">Staff notes</param>
+        /// <param name="returnStatus">Return status</param>
+        /// <param name="createdOn">The date and time of entity creation</param>
+        /// <param name="updatedOn">The date and time of entity update</param>
+        /// <returns>Return request</returns>
+        public static ReturnRequest UpdateReturnRequest(int returnRequestId, int orderProductVariantId,
+            int quantity, int customerId, string reasonForReturn,
+            string requestedAction, string customerComments,
+            string staffNotes,  ReturnStatusEnum returnStatus,
+            DateTime createdOn, DateTime updatedOn)
+        {
+            reasonForReturn = CommonHelper.EnsureMaximumLength(reasonForReturn, 400);
+            requestedAction = CommonHelper.EnsureMaximumLength(requestedAction, 400);
+
+            var returnRequest = GetReturnRequestById(returnRequestId);
+            if (returnRequest == null)
+                return null;
+
+            var context = ObjectContextHelper.CurrentObjectContext;
+            if (!context.IsAttached(returnRequest))
+                context.ReturnRequests.Attach(returnRequest);
+
+            returnRequest.OrderProductVariantId = orderProductVariantId;
+            returnRequest.Quantity = quantity;
+            returnRequest.CustomerId = customerId;
+            returnRequest.ReasonForReturn = reasonForReturn;
+            returnRequest.RequestedAction = requestedAction;
+            returnRequest.CustomerComments = customerComments;
+            returnRequest.StaffNotes = staffNotes;
+            returnRequest.ReturnStatusId = (int)returnStatus;
+            returnRequest.CreatedOn = createdOn;
+            returnRequest.UpdatedOn = updatedOn;
+            context.SaveChanges();
+            return returnRequest;
+        }
+
+        /// <summary>
+        /// Formats the comments text of a return request
+        /// </summary>
+        /// <param name="text">Text</param>
+        /// <returns>Formatted text</returns>
+        public static string FormatReturnRequestCommentsText(string text)
+        {
+            if (String.IsNullOrEmpty(text))
+                return string.Empty;
+
+            text = HtmlHelper.FormatText(text, false, true, false, false, false, false);
+            return text;
+        }
+
+        #endregion
+
         #endregion
 
         #region Etc

@@ -4,6 +4,7 @@
 <%@ Register TagPrefix="nopCommerce" TagName="CustomerInfo" Src="~/Modules/CustomerInfo.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="CustomerAddresses" Src="~/Modules/CustomerAddresses.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="CustomerOrders" Src="~/Modules/CustomerOrders.ascx" %>
+<%@ Register TagPrefix="nopCommerce" TagName="CustomerReturnRequests" Src="~/Modules/CustomerReturnRequests.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="CustomerChangePassword" Src="~/Modules/CustomerChangePassword.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="CustomerAvatar" Src="~/Modules/CustomerAvatar.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="CustomerRewardPoints" Src="~/Modules/CustomerRewardPoints.ascx" %>
@@ -33,6 +34,11 @@
                 <ajaxToolkit:TabPanel runat="server" ID="pnlCustomerOrders" HeaderText="<% $NopResources:Account.CustomerOrders %>">
                     <ContentTemplate>
                         <nopCommerce:CustomerOrders ID="ctrlCustomerOrders" runat="server" />
+                    </ContentTemplate>
+                </ajaxToolkit:TabPanel>
+               <ajaxToolkit:TabPanel runat="server" ID="pnlReturnRequests" HeaderText="<% $NopResources:Account.CustomerReturnRequests %>">
+                    <ContentTemplate>
+                        <nopCommerce:CustomerReturnRequests ID="ctrlReturnRequests" runat="server" />
                     </ContentTemplate>
                 </ajaxToolkit:TabPanel>
                 <ajaxToolkit:TabPanel runat="server" ID="pnlDP" HeaderText="<% $NopResources:Account.DownloadableProducts %>">

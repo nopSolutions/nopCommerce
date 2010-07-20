@@ -803,7 +803,8 @@ textarea
 .newaddressnextstepbutton, .selectbillingaddressbutton, .sameasshippingaddressbutton,  
 .shippingmethodnextstepbutton, .paymentmethodnextstepbutton, .paymentinfonextstepbutton, 
 .confirmordernextstepbutton, .submitforumtopicbutton, .submitpmbutton, .replypmbutton, 
-.deleteselectedpmbutton, .reorderbutton, .minicartcheckoutbutton, .newsletterbox-subscribebutton, .useragreementbutton, .deleteselectedfsbutton
+.deleteselectedpmbutton, .reorderbutton, .minicartcheckoutbutton, .newsletterbox-subscribebutton, 
+.useragreementbutton, .deleteselectedfsbutton, .submitreturnrequestbutton
 {
 	background: url(images/orange_button_bg.gif) no-repeat 25% 50% rgb(255, 136, 0);
 	border: 1px solid rgb(255, 136, 0);
@@ -816,7 +817,8 @@ textarea
 
 .productlistaddtocartbutton, .productgridaddtocartbutton, .productemailafriendbutton, 
 .productaddtocomparelistbutton, .productvariantaddtowishlistbutton, .editaddressbutton, 
-.deleteaddressbutton, .cancelrecurringorderbutton, .orderdetailsbutton, .orderdetailsprintbutton, 
+.deleteaddressbutton, .cancelrecurringorderbutton, .orderdetailsbutton, 
+.returnitemsbutton, .orderdetailsprintbutton, 
 .updatewishlistbutton, .applycouponcodebutton, .updatecartbutton, .continueshoppingbutton, 
 .orderprocessedcontinuebutton, .submitpollvotebutton, .cancelforumtopicbutton, .forumsearchbutton, 
 .forumsearchboxbutton, .cancelpmbutton, .deletepmbutton, .backpmbutton
@@ -1679,6 +1681,63 @@ ul.languagelist li .selected
 	padding-bottom: 40px;
 	padding-right: 1px;
 }
+
+.return-request
+{
+	margin-bottom: 15px;
+	padding: 0px;
+}
+.return-request .page-title
+{
+	border-bottom: 0 none;
+}
+.return-request .section-addinfo
+{
+	padding: 10px 10px 5px 0px;
+	font-weight: bold;
+}
+.return-request .products-box
+{
+	text-align: left;
+	padding: 10px;
+	border: 1px solid #d7d7d7;
+	height: auto;
+}
+.return-request .why
+{
+}
+.return-request .buttons
+{
+	
+}
+
+.customer-return-request-list
+{
+	margin: 0px 0 0 0;
+	padding: 5px 5px 5px 5px;
+	font-size: 11px;
+	color: #555;
+	background-color: inherit;
+}
+.customer-return-request-list .section-title
+{
+	padding: 10px 10px 5px 0px;
+	font-weight: bold;
+	clear: both;
+	font-size: 12px;
+}
+.customer-return-request-list .request-list
+{
+}
+.customer-return-request-list .request-list .request-item
+{
+	text-align: left;
+	margin-bottom: 10px;
+	padding: 10px;
+	border: 1px solid #d7d7d7;
+	height: auto;
+}
+
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*
 

@@ -7,189 +7,189 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace NopSolutions.NopCommerce.Web {
+namespace NopSolutions.NopCommerce.Web.Administration.Modules {
     
     
-    public partial class AccountPage {
+    public partial class ReturnRequestInfoControl {
         
         /// <summary>
-        /// sm1 control.
+        /// lblReturnRequestIdTitle control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::AjaxControlToolkit.ToolkitScriptManager sm1;
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblReturnRequestIdTitle;
         
         /// <summary>
-        /// CustomerTabs control.
+        /// lblReturnRequestId control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::AjaxControlToolkit.TabContainer CustomerTabs;
+        protected global::System.Web.UI.WebControls.Label lblReturnRequestId;
         
         /// <summary>
-        /// pnlCustomerInfo control.
+        /// lblNameTitle control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::AjaxControlToolkit.TabPanel pnlCustomerInfo;
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblNameTitle;
         
         /// <summary>
-        /// ctrlCustomerInfo control.
+        /// lblName control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Modules.CustomerInfoControl ctrlCustomerInfo;
+        protected global::System.Web.UI.WebControls.Label lblName;
         
         /// <summary>
-        /// pnlCustomerAddresses control.
+        /// lblOrderTitle control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::AjaxControlToolkit.TabPanel pnlCustomerAddresses;
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblOrderTitle;
         
         /// <summary>
-        /// ctrlCustomerAddresses control.
+        /// lblOrder control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Modules.CustomerAddressesControl ctrlCustomerAddresses;
+        protected global::System.Web.UI.WebControls.Label lblOrder;
         
         /// <summary>
-        /// pnlCustomerOrders control.
+        /// lblCustomerTitle control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::AjaxControlToolkit.TabPanel pnlCustomerOrders;
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblCustomerTitle;
         
         /// <summary>
-        /// ctrlCustomerOrders control.
+        /// lblCustomer control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Modules.CustomerOrdersControl ctrlCustomerOrders;
+        protected global::System.Web.UI.WebControls.Label lblCustomer;
         
         /// <summary>
-        /// pnlReturnRequests control.
+        /// lblStatus control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::AjaxControlToolkit.TabPanel pnlReturnRequests;
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblStatus;
         
         /// <summary>
-        /// ctrlReturnRequests control.
+        /// ddlStatus control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Modules.CustomerReturnRequestsControl ctrlReturnRequests;
+        protected global::System.Web.UI.WebControls.DropDownList ddlStatus;
         
         /// <summary>
-        /// pnlDP control.
+        /// lblReasonForReturn control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::AjaxControlToolkit.TabPanel pnlDP;
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblReasonForReturn;
         
         /// <summary>
-        /// ctrlDP control.
+        /// txtReasonForReturn control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Modules.CustomerDownloadableProductsControl ctrlDP;
+        protected global::System.Web.UI.WebControls.TextBox txtReasonForReturn;
         
         /// <summary>
-        /// pnlRewardPoints control.
+        /// lblRequestedAction control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::AjaxControlToolkit.TabPanel pnlRewardPoints;
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblRequestedAction;
         
         /// <summary>
-        /// ctrlRewardPoints control.
+        /// txtRequestedAction control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Modules.CustomerRewardPointsControl ctrlRewardPoints;
+        protected global::System.Web.UI.WebControls.TextBox txtRequestedAction;
         
         /// <summary>
-        /// pnlChangePassword control.
+        /// lblCustomerComments control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::AjaxControlToolkit.TabPanel pnlChangePassword;
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblCustomerComments;
         
         /// <summary>
-        /// ctrlCustomerChangePassword control.
+        /// txtCustomerComments control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Modules.CustomerChangePasswordControl ctrlCustomerChangePassword;
+        protected global::System.Web.UI.WebControls.TextBox txtCustomerComments;
         
         /// <summary>
-        /// pnlAvatar control.
+        /// lblStaffNotes control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::AjaxControlToolkit.TabPanel pnlAvatar;
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblStaffNotes;
         
         /// <summary>
-        /// ctrlCustomerAvatar control.
+        /// txtStaffNotes control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Modules.CustomerAvatarControl ctrlCustomerAvatar;
+        protected global::System.Web.UI.WebControls.TextBox txtStaffNotes;
         
         /// <summary>
-        /// pnlForumSubscriptions control.
+        /// lblDateTooltip control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::AjaxControlToolkit.TabPanel pnlForumSubscriptions;
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblDateTooltip;
         
         /// <summary>
-        /// ctrForumSubscriptions control.
+        /// lblDate control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Modules.ForumSubscriptionsControl ctrForumSubscriptions;
+        protected global::System.Web.UI.WebControls.Label lblDate;
     }
 }

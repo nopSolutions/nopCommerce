@@ -1019,6 +1019,255 @@ set @resources='
   <LocaleResource Name="Admin.CustomerShoppingCart.CustomerColumn.LastAccess">
     <Value>Last access: {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="ReturnStatus.Pending">
+    <Value>Pending</Value>
+  </LocaleResource>
+  <LocaleResource Name="ReturnStatus.Received">
+    <Value>Received</Value>
+  </LocaleResource>
+  <LocaleResource Name="ReturnStatus.ReturnAuthorized">
+    <Value>Return authorized</Value>
+  </LocaleResource>
+  <LocaleResource Name="ReturnStatus.ItemsRepaired">
+    <Value>Item(s) repaired</Value>
+  </LocaleResource>
+  <LocaleResource Name="ReturnStatus.ItemsRefunded">
+    <Value>Item(s) refunded</Value>
+  </LocaleResource>
+  <LocaleResource Name="ReturnStatus.RequestRejected">
+    <Value>Request rejected</Value>
+  </LocaleResource>
+  <LocaleResource Name="ReturnStatus.Cancelled">
+    <Value>Cancelled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.ReturnRequests.Title">
+    <Value>Return Requests</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.ReturnRequests.Enabled">
+    <Value>Enable Returns System:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.ReturnRequests.Enabled.Tooltip">
+    <Value>Check if you want to allow customers to submit return requests for items they''ve previously purchased.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.ReturnRequests.ReturnReasons">
+    <Value>Return reasons:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.ReturnRequests.ReturnReasons.Tooltip">
+    <Value>A comma-separated list of reasons a customer will be able to choose when submitting a return request.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.ReturnRequests.ReturnActions">
+    <Value>Return action:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.ReturnRequests.ReturnActions.Tooltip">
+    <Value>A comma-separated list of actions a customer will be able to choose when submitting a return request.</Value>
+  </LocaleResource>
+  <LocaleResource Name="OrderDetails.ReturnItemsButton">
+    <Value>Return Item(s)</Value>
+  </LocaleResource>
+  <LocaleResource Name="PageTitle.ReturnItems">
+    <Value>Return Item(s)</Value>
+  </LocaleResource>
+  <LocaleResource Name="ReturnItems.Title">
+    <Value>Return item(s) from order #{0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="ReturnItems.SelectProduct(s)">
+    <Value>Which items do you want to return?</Value>
+  </LocaleResource>
+  <LocaleResource Name="ReturnItems.ProductsGrid.Name">
+    <Value>Product</Value>
+  </LocaleResource>
+  <LocaleResource Name="ReturnItems.ProductsGrid.Price">
+    <Value>Unit price</Value>
+  </LocaleResource>
+  <LocaleResource Name="ReturnItems.ProductsGrid.Quantity">
+    <Value>Qty. to return</Value>
+  </LocaleResource>
+  <LocaleResource Name="ReturnItems.WhyReturning">
+    <Value>Why are you returning these items?</Value>
+  </LocaleResource>
+  <LocaleResource Name="ReturnItems.ReturnReason">
+    <Value>Return reason:</Value>
+  </LocaleResource>
+  <LocaleResource Name="ReturnItems.ReturnAction">
+    <Value>Return Action:</Value>
+  </LocaleResource>
+  <LocaleResource Name="ReturnItems.Comments">
+    <Value>Comments:</Value>
+  </LocaleResource>
+  <LocaleResource Name="ReturnItems.SubmitButton">
+    <Value>Submit return request</Value>
+  </LocaleResource>
+  <LocaleResource Name="ReturnItems.Submitted">
+    <Value>Your return request has been submitted successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ReturnItems.NoItems">
+    <Value>Your return request has not been submitted because you haven''t chosen any items.</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomerReturnRequests.Title">
+    <Value>Your Return Requests</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomerReturnRequests.RequestTitle">
+    <Value>Return #{0} - {1}</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomerReturnRequests.Item">
+    <Value>Returned Item: {0} x {1}</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomerReturnRequests.Reason">
+    <Value>Return Reason: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomerReturnRequests.Action">
+    <Value>Return Action: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomerReturnRequests.Date">
+    <Value>Date Requested: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomerReturnRequests.Comments">
+    <Value>Your Comments:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerReturnRequests">
+    <Value>Return Requests</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Sitemap.ReturnRequestsTitle">
+    <Value>Return Requests</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Sitemap.ReturnRequestsDescription">
+    <Value>Manage Return Requests</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesHome.ReturnRequests.TitleDescription">
+    <Value>Manage Return Requests</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesHome.ReturnRequests.Title">
+    <Value>Return Requests</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesHome.ReturnRequests.Description">
+    <Value>The returns system will allow your customers to request a return on items they''ve purchased. These are also known as RMA requests. Manage return requests here.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.Title">
+    <Value>Return Requests</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.IDColumn">
+    <Value>Request ID</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.NameColumn">
+    <Value>Product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.CustomerColumn">
+    <Value>Customer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.CustomerColumn.Guest">
+    <Value>Guest</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.OrderColumn">
+    <Value>Order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.OrderColumn.View">
+    <Value>View</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.DateColumn">
+    <Value>Date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.StatusColumn">
+    <Value>Status</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.Edit">
+    <Value>Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.NoRecordsFound">
+    <Value>No records found</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.EditReturnRequest">
+    <Value>Edited a return request (ID = {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.DeleteReturnRequest">
+    <Value>Deleted a return request (ID = {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequestDetails.Title">
+    <Value>Edit return request</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequestDetails.BackToReturnRequests">
+    <Value>Back to return requests</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequestDetails.SaveButton.Text">
+    <Value>Save</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequestDetails.SaveButton.Tooltip">
+    <Value>Save the return request</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequestDetails.DeleteButton.Text">
+    <Value>Delete</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequestDetails.DeleteButton.Tooltip">
+    <Value>Delete the return request</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequestInfo.RequestId">
+    <Value>Request ID:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequestInfo.RequestId.Tooltip">
+    <Value>The indentifier of this return request</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequestInfo.Order">
+    <Value>Order:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequestInfo.Order.Tooltip">
+    <Value>Order information.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequestInfo.Order.View">
+    <Value>View (ID - {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequestInfo.Customer">
+    <Value>Customer: </Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequestInfo.Customer.Tooltip">
+    <Value>Customer information.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequestInfo.Customer.View">
+    <Value>View ({0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequestInfo.Name">
+    <Value>Product:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequestInfo.Name.Tooltip">
+    <Value>Product information.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequestInfo.Date">
+    <Value>Date:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequestInfo.Date.Tooltip">
+    <Value>Date when the return request has been submitted</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequestInfo.ReasonForReturn">
+    <Value>Reason for return:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequestInfo.ReasonForReturn.Tooltip">
+    <Value>Chosen reason for return</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequestInfo.RequestedAction">
+    <Value>Requested action:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequestInfo.RequestedAction.Tooltip">
+    <Value>Chosen requested action</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequestInfo.CustomerComments">
+    <Value>Customer comments:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequestInfo.CustomerComments.Tooltip">
+    <Value>Entered customer comments</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequestInfo.StaffNotes">
+    <Value>Staff notes:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequestInfo.StaffNotes.Tooltip">
+    <Value>Entered staff comments</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequestInfo.Status">
+    <Value>Status:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequestInfo.Status.Tooltip">
+    <Value>Choose request status</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.OrderDetails.Products.ReturnRequests">
+    <Value>Return requests: {0}</Value>
+  </LocaleResource>
 </Language>
 '
 

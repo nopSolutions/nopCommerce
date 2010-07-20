@@ -900,6 +900,50 @@
                 </table>
             </ContentTemplate>
         </ajaxToolkit:TabPanel>
+        <ajaxToolkit:TabPanel runat="server" ID="pnlReturnRequests" HeaderText="<% $NopResources:Admin.GlobalSettings.ReturnRequests.Title %>">
+            <ContentTemplate>
+                <table class="adminContent">
+                    <tr>
+                        <td class="adminTitle" colspan="2">
+                            The returns system will allow your customers to request a return on items they've
+                            purchased. These are also known as RMA requests.
+                            <br /><br />
+                            NOTE: This option is available for completed orders.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
+                                ID="lbReturnRequestsEnabled" Text="<% $NopResources:Admin.GlobalSettings.ReturnRequests.Enabled %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.ReturnRequests.Enabled.Tooltip %>" />
+                        </td>
+                        <td class="adminData">
+                            <asp:CheckBox runat="server" ID="cbReturnRequestsEnabled"></asp:CheckBox>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ID="lblReturnReasons" Text="<% $NopResources:Admin.GlobalSettings.ReturnRequests.ReturnReasons %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.ReturnRequests.ReturnReasons.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
+                        </td>
+                        <td class="adminData">
+                            <asp:TextBox runat="server" CssClass="adminInput" ID="txtReturnReasons" Width="600px">
+                            </asp:TextBox>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ID="lblReturnActions" Text="<% $NopResources:Admin.GlobalSettings.ReturnRequests.ReturnActions %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.ReturnRequests.ReturnActions.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
+                        </td>
+                        <td class="adminData">
+                            <asp:TextBox runat="server" CssClass="adminInput" ID="txtReturnActions" Width="600px">
+                            </asp:TextBox>
+                        </td>
+                    </tr>
+                </table>
+            </ContentTemplate>
+        </ajaxToolkit:TabPanel>
         <ajaxToolkit:TabPanel runat="server" ID="pnlSecurity" HeaderText="<% $NopResources:Admin.GlobalSettings.Security.Title %>">
             <ContentTemplate>
                 <table class="adminContent">

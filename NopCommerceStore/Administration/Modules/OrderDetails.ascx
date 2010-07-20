@@ -1045,6 +1045,7 @@
                                                 <%#Server.HtmlEncode(GetProductVariantName(Convert.ToInt32(Eval("ProductVariantId"))))%></a></em>
                                             <%#GetAttributeDescription((OrderProductVariant)Container.DataItem)%>
                                             <%#GetRecurringDescription((OrderProductVariant)Container.DataItem)%>
+                                            <%#GetReturnRequests((OrderProductVariant)Container.DataItem)%>
                                             <asp:HiddenField ID="hfOrderProductVariantId" runat="server" Value='<%# Eval("OrderProductVariantId") %>' />
                                         </div>
                                     </ItemTemplate>

@@ -1244,3 +1244,107 @@ UPDATE [dbo].[Nop_DiscountType]
 SET [Name] = N'Assigned to order total'
 WHERE [DiscountTypeID] = 1
 GO
+
+--return requests
+IF NOT EXISTS (SELECT 1 FROM dbo.sysobjects WHERE id = OBJECT_ID(N'[dbo].[Nop_ReturnRequest]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+BEGIN
+CREATE TABLE [dbo].[Nop_ReturnRequest](
+	[ReturnRequestId] [int] IDENTITY(1,1) NOT NULL,
+	[OrderProductVariantId] [int] NOT NULL,
+	[Quantity] [int] NOT NULL,
+	[CustomerId] [int] NOT NULL,
+	[ReasonForReturn] [nvarchar](400) NOT NULL,
+	[RequestedAction] [nvarchar](400) NOT NULL,
+	[CustomerComments] [nvarchar](MAX) NOT NULL,
+	[StaffNotes] [nvarchar](MAX) NOT NULL,
+	[ReturnStatusId] [int] NOT NULL,
+	[CreatedOn] [datetime] NOT NULL,
+	[UpdatedOn] [datetime] NOT NULL,
+ CONSTRAINT [PK_Nop_ReturnRequest] PRIMARY KEY CLUSTERED 
+(
+	[ReturnRequestId] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+END
+GO
+
+IF EXISTS (SELECT 1
+           FROM   sysobjects
+           WHERE  name = 'FK_Nop_ReturnRequest_Nop_OrderProductVariant'
+           AND parent_obj = Object_id('Nop_ReturnRequest')
+           AND Objectproperty(id,N'IsForeignKey') = 1)
+ALTER TABLE dbo.Nop_ReturnRequest
+DROP CONSTRAINT FK_Nop_ReturnRequest_Nop_OrderProductVariant
+GO
+ALTER TABLE [dbo].[Nop_ReturnRequest]  WITH CHECK ADD  CONSTRAINT [FK_Nop_ReturnRequest_Nop_OrderProductVariant] FOREIGN KEY([OrderProductVariantId])
+REFERENCES [dbo].[Nop_OrderProductVariant] ([OrderProductVariantId])
+ON UPDATE CASCADE
+ON DELETE CASCADE
+GO
+
+IF EXISTS (SELECT 1
+           FROM   sysobjects
+           WHERE  name = 'FK_Nop_ReturnRequest_Nop_Customer'
+           AND parent_obj = Object_id('Nop_ReturnRequest')
+           AND Objectproperty(id,N'IsForeignKey') = 1)
+ALTER TABLE dbo.Nop_ReturnRequest
+DROP CONSTRAINT FK_Nop_ReturnRequest_Nop_Customer
+GO
+ALTER TABLE [dbo].[Nop_ReturnRequest]  WITH CHECK ADD  CONSTRAINT [FK_Nop_ReturnRequest_Nop_Customer] FOREIGN KEY([CustomerId])
+REFERENCES [dbo].[Nop_Customer] ([CustomerId])
+ON UPDATE CASCADE
+ON DELETE CASCADE
+GO
+
+
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[Nop_Setting]
+		WHERE [Name] = N'ReturnRequests.Enable')
+BEGIN
+	INSERT [dbo].[Nop_Setting] ([Name], [Value], [Description])
+	VALUES (N'ReturnRequests.Enable', N'True', N'')
+END
+GO
+
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[Nop_Setting]
+		WHERE [Name] = N'ReturnRequests.ReturnReasons')
+BEGIN
+	INSERT [dbo].[Nop_Setting] ([Name], [Value], [Description])
+	VALUES (N'ReturnRequests.ReturnReasons', N'Received Wrong Product, Wrong Product Ordered, There Was A Problem With The Product', N'')
+END
+GO
+
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[Nop_Setting]
+		WHERE [Name] = N'ReturnRequests.ReturnActions')
+BEGIN
+	INSERT [dbo].[Nop_Setting] ([Name], [Value], [Description])
+	VALUES (N'ReturnRequests.ReturnActions', N'Repair, Replacement, Store Credit', N'')
+END
+GO
+
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[Nop_CustomerAction]
+		WHERE [SystemKeyword] = N'ManageReturnRequests')
+BEGIN
+	INSERT [dbo].[Nop_CustomerAction] ([Name], [SystemKeyword], [Comment], [DisplayOrder])
+	VALUES (N'Manage Return Requests', N'ManageReturnRequests', N'',45)
+END
+GO
+
+IF NOT EXISTS(SELECT 1 FROM [Nop_ActivityLogType] WHERE [SystemKeyword] = N'EditReturnRequest')
+BEGIN
+	INSERT INTO [Nop_ActivityLogType] ([SystemKeyword], [Name], [Enabled]) VALUES (N'EditReturnRequest', N'Edit a return request', 1)
+END
+GO
+
+IF NOT EXISTS(SELECT 1 FROM [Nop_ActivityLogType] WHERE [SystemKeyword] = N'DeleteReturnRequest')
+BEGIN
+	INSERT INTO [Nop_ActivityLogType] ([SystemKeyword], [Name], [Enabled]) VALUES (N'DeleteReturnRequest', N'Delete a return request', 1)
+END
+GO

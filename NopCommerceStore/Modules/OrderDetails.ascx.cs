@@ -45,7 +45,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
     public partial class OrderDetailsControl : BaseNopUserControl
     {
         #region Fields
-        Order order = null;
+        private Order order = null;
         #endregion
 
         #region Utilities
@@ -56,7 +56,8 @@ namespace NopSolutions.NopCommerce.Web.Modules
             this.lblOrderId.Text = order.OrderId.ToString();
             this.lblCreatedOn.Text = DateTimeHelper.ConvertToUserTime(order.CreatedOn, DateTimeKind.Utc).ToString("D");
             this.lblOrderStatus.Text = OrderManager.GetOrderStatusName(order.OrderStatusId);
-            btnReOrder.Visible = OrderManager.IsReOrderAllowed;
+            this.btnReOrder.Visible = OrderManager.IsReOrderAllowed;
+            this.phReturnRequest.Visible = OrderManager.IsReturnRequestAllowed(order);
 
             //shipping info
             if (order.ShippingStatus != ShippingStatusEnum.ShippingNotRequired)
@@ -307,6 +308,11 @@ namespace NopSolutions.NopCommerce.Web.Modules
             }
         }
 
+        protected void btnReturnItems_Click(object sender, EventArgs e)
+        {
+            Response.Redirect(string.Format("~/returnitems.aspx?orderid={0}", this.OrderId));
+        }
+        
         protected void lbPDFInvoice_Click(object sender, EventArgs e)
         {
             try

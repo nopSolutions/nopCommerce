@@ -175,6 +175,8 @@
     <Compile Include="Messages\SMSManager.cs" />
     <Compile Include="Orders\BestSellersReportLine.cs" />
     <Compile Include="Orders\AppliedGiftCard.cs" />
+    <Compile Include="Orders\ReturnStatusEnum.cs" />
+    <Compile Include="Orders\ReturnRequest.cs" />
     <Compile Include="Orders\OrderEventArgs.cs" />
     <Compile Include="Orders\OrderProductVariantReportLine.cs" />
     <Compile Include="Orders\OrderIncompleteReportLine.cs" />

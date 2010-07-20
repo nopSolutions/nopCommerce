@@ -218,6 +218,11 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             cbffPhoneRequired.Checked = CustomerManager.FormFieldPhoneRequired;
             cbffFaxEnabled.Checked = CustomerManager.FormFieldFaxEnabled;
             cbffFaxRequired.Checked = CustomerManager.FormFieldFaxRequired;
+
+            //return requests (RMA)
+            cbReturnRequestsEnabled.Checked = SettingManager.GetSettingValueBoolean("ReturnRequests.Enable");
+            txtReturnReasons.Text = SettingManager.GetSettingValue("ReturnRequests.ReturnReasons");
+            txtReturnActions.Text = SettingManager.GetSettingValue("ReturnRequests.ReturnActions");
         }
 
         private void FillDropDowns()
@@ -479,6 +484,11 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     CustomerManager.FormFieldPhoneRequired = cbffPhoneRequired.Checked;
                     CustomerManager.FormFieldFaxEnabled = cbffFaxEnabled.Checked;
                     CustomerManager.FormFieldFaxRequired = cbffFaxRequired.Checked;
+
+                    //return requests (RMA)
+                    SettingManager.SetParam("ReturnRequests.Enable", cbReturnRequestsEnabled.Checked.ToString());
+                    SettingManager.SetParam("ReturnRequests.ReturnReasons", txtReturnReasons.Text);
+                    SettingManager.SetParam("ReturnRequests.ReturnActions", txtReturnActions.Text);
 
                     CustomerActivityManager.InsertActivity(
                         "EditGlobalSettings",
