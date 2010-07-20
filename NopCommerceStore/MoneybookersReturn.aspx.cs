@@ -30,7 +30,6 @@ using NopSolutions.NopCommerce.BusinessLogic;
 using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.Payment;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.Payment.Methods.PayPal;
 namespace NopSolutions.NopCommerce.Web
 {
     public partial class MoneybookersReturnPage : BaseNopPage

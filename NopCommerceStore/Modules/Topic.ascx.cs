@@ -54,8 +54,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
                         SEOHelper.RenderTitle(this.Page, title, true);
 
                     //meta
-                    SEOHelper.RenderMetaTag(this.Page, "description", this.Topic.MetaDescription, true);
-                    SEOHelper.RenderMetaTag(this.Page, "keywords", this.Topic.MetaKeywords, true);
+                    if (!String.IsNullOrEmpty(this.Topic.MetaDescription))
+                        SEOHelper.RenderMetaTag(this.Page, "description", this.Topic.MetaDescription, true);
+                    if (!String.IsNullOrEmpty(this.Topic.MetaKeywords))
+                        SEOHelper.RenderMetaTag(this.Page, "keywords", this.Topic.MetaKeywords, true);
                 }
             }
         }
