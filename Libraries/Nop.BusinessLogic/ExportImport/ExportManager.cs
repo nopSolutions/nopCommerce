@@ -671,20 +671,19 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                 excelHelper.Hdr = "YES";
                 excelHelper.Imex = "0";
                 Dictionary<string, string> tableDefinition = new Dictionary<string, string>();
-                int maxStringLength = 200;
-                tableDefinition.Add("Name", string.Format("nvarchar({0})",maxStringLength));
-                tableDefinition.Add("ShortDescription", string.Format("nvarchar({0})", maxStringLength));
-                tableDefinition.Add("FullDescription", string.Format("nvarchar({0})", maxStringLength));
+                tableDefinition.Add("Name", "ntext");
+                tableDefinition.Add("ShortDescription", "ntext");
+                tableDefinition.Add("FullDescription", "ntext");
                 tableDefinition.Add("TemplateId", "int");
                 tableDefinition.Add("ShowOnHomePage", "nvarchar(5)");
-                tableDefinition.Add("MetaKeywords", string.Format("nvarchar({0})", maxStringLength));
-                tableDefinition.Add("MetaDescription", string.Format("nvarchar({0})", maxStringLength));
-                tableDefinition.Add("MetaTitle", string.Format("nvarchar({0})", maxStringLength));
+                tableDefinition.Add("MetaKeywords", "ntext");
+                tableDefinition.Add("MetaDescription", "ntext");
+                tableDefinition.Add("MetaTitle", "ntext");
                 tableDefinition.Add("AllowCustomerReviews", "nvarchar(5)");
                 tableDefinition.Add("AllowCustomerRatings", "nvarchar(5)");
                 tableDefinition.Add("Published", "nvarchar(5)");
-                tableDefinition.Add("SKU", string.Format("nvarchar(200)", maxStringLength));
-                tableDefinition.Add("ManufacturerPartNumber", string.Format("nvarchar({0})", maxStringLength));
+                tableDefinition.Add("SKU", "ntext");
+                tableDefinition.Add("ManufacturerPartNumber", "ntext");
                 tableDefinition.Add("IsGiftCard", "nvarchar(5)");
                 tableDefinition.Add("GiftCardType", "int");
                 tableDefinition.Add("IsDownload", "nvarchar(5)");
@@ -695,7 +694,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                 tableDefinition.Add("HasSampleDownload", "nvarchar(5)");
                 tableDefinition.Add("SampleDownloadId", "int");
                 tableDefinition.Add("HasUserAgreement", "nvarchar(5)");
-                tableDefinition.Add("UserAgreementText", String.Format("nvarchar({0})", maxStringLength));
+                tableDefinition.Add("UserAgreementText", "ntext");
                 tableDefinition.Add("IsRecurring", "nvarchar(5)");
                 tableDefinition.Add("CycleLength", "int");
                 tableDefinition.Add("CyclePeriod", "int");
@@ -739,43 +738,19 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                     {
                         StringBuilder sb = new StringBuilder();
                         sb.Append("INSERT INTO [Products] (Name, ShortDescription,FullDescription,TemplateId,ShowOnHomePage,MetaKeywords,MetaDescription,MetaTitle,AllowCustomerReviews,AllowCustomerRatings,Published,SKU,ManufacturerPartNumber,IsGiftCard,GiftCardType,IsDownload,DownloadId,UnlimitedDownloads,MaxNumberOfDownloads,DownloadActivationType,HasSampleDownload,SampleDownloadId,HasUserAgreement,UserAgreementText,IsRecurring,CycleLength,CyclePeriod,TotalCycles,IsShipEnabled,IsFreeShipping,AdditionalShippingCharge,IsTaxExempt,TaxCategoryId,ManageInventory,StockQuantity,DisplayStockAvailability,DisplayStockQuantity,MinStockQuantity,LowStockActivityId,NotifyAdminForQuantityBelow,Backorders,OrderMinimumQuantity,OrderMaximumQuantity,DisableBuyButton,Price,OldPrice,ProductCost,CustomerEntersPrice,MinimumCustomerEnteredPrice,MaximumCustomerEnteredPrice,Weight, Length, Width, Height, CreatedOn) VALUES (");
-                        string name = p.Name;
-                        if (name.Length > maxStringLength)
-                            name = name.Substring(0, maxStringLength);
-                        sb.Append('"'); sb.Append(name.Replace('"', '\'')); sb.Append("\",");
-                        string shortDescription = p.ShortDescription;
-                        if (shortDescription.Length > maxStringLength)
-                            shortDescription = shortDescription.Substring(0, maxStringLength);
-                        sb.Append('"'); sb.Append(shortDescription.Replace('"', '\'')); sb.Append("\",");
-                        string fullDescription = p.FullDescription;
-                        if (fullDescription.Length > maxStringLength)
-                            fullDescription = fullDescription.Substring(0, maxStringLength);
-                        sb.Append('"'); sb.Append(fullDescription.Replace('"', '\'')); sb.Append("\",");
+                        sb.Append('"'); sb.Append(p.Name.Replace('"', '\'')); sb.Append("\",");
+                        sb.Append('"'); sb.Append(p.ShortDescription.Replace('"', '\'')); sb.Append("\",");
+                        sb.Append('"'); sb.Append(p.FullDescription.Replace('"', '\'')); sb.Append("\",");
                         sb.Append(p.TemplateId); sb.Append(",");
                         sb.Append('"'); sb.Append(p.ShowOnHomePage); sb.Append("\",");
-                        string metaKeywords = p.MetaKeywords;
-                        if (metaKeywords.Length > maxStringLength)
-                            metaKeywords = metaKeywords.Substring(0, maxStringLength);
-                        sb.Append('"'); sb.Append(metaKeywords.Replace('"', '\'')); sb.Append("\",");
-                        string metaDescription = p.MetaDescription;
-                        if (metaDescription.Length > maxStringLength)
-                            metaDescription = metaDescription.Substring(0, maxStringLength);
-                        sb.Append('"'); sb.Append(metaDescription.Replace('"', '\'')); sb.Append("\",");
-                        string metaTitle = p.MetaTitle;
-                        if (metaTitle.Length > maxStringLength)
-                            metaTitle = metaTitle.Substring(0, maxStringLength);
-                        sb.Append('"'); sb.Append(metaTitle.Replace('"', '\'')); sb.Append("\",");
+                        sb.Append('"'); sb.Append(p.MetaKeywords.Replace('"', '\'')); sb.Append("\",");
+                        sb.Append('"'); sb.Append(p.MetaDescription.Replace('"', '\'')); sb.Append("\",");
+                        sb.Append('"'); sb.Append(p.MetaTitle.Replace('"', '\'')); sb.Append("\",");
                         sb.Append('"'); sb.Append(p.AllowCustomerReviews); sb.Append("\",");
                         sb.Append('"'); sb.Append(p.AllowCustomerRatings); sb.Append("\",");
                         sb.Append('"'); sb.Append(p.Published); sb.Append("\",");
-                        string SKU = pv.SKU;
-                        if (SKU.Length > maxStringLength)
-                            SKU = SKU.Substring(0, maxStringLength);
-                        sb.Append('"'); sb.Append(SKU.Replace('"', '\'')); sb.Append("\",");
-                        string manufacturerPartNumber = pv.ManufacturerPartNumber;
-                        if (manufacturerPartNumber.Length > maxStringLength)
-                            manufacturerPartNumber = manufacturerPartNumber.Substring(0, maxStringLength);
-                        sb.Append('"'); sb.Append(manufacturerPartNumber.Replace('"', '\'')); sb.Append("\",");
+                        sb.Append('"'); sb.Append(pv.SKU.Replace('"', '\'')); sb.Append("\",");
+                        sb.Append('"'); sb.Append(pv.ManufacturerPartNumber.Replace('"', '\'')); sb.Append("\",");
                         sb.Append('"'); sb.Append(pv.IsGiftCard); sb.Append("\",");
                         sb.Append('"'); sb.Append(pv.GiftCardType); sb.Append("\",");
                         sb.Append('"'); sb.Append(pv.IsDownload); sb.Append("\",");
@@ -786,10 +761,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                         sb.Append('"'); sb.Append(pv.HasSampleDownload); sb.Append("\",");
                         sb.Append(pv.SampleDownloadId); sb.Append(",");
                         sb.Append('"'); sb.Append(pv.HasUserAgreement); sb.Append("\",");
-                        string UserAgreementText = pv.UserAgreementText;
-                        if(UserAgreementText.Length > maxStringLength)
-                            UserAgreementText = UserAgreementText.Substring(0, maxStringLength);
-                        sb.Append('"'); sb.Append(UserAgreementText.Replace('"', '\'')); sb.Append("\",");
+                        sb.Append('"'); sb.Append(pv.UserAgreementText.Replace('"', '\'')); sb.Append("\",");
                         sb.Append('"'); sb.Append(pv.IsRecurring); sb.Append("\",");
                         sb.Append(pv.CycleLength); sb.Append(",");
                         sb.Append(pv.CyclePeriod); sb.Append(",");
