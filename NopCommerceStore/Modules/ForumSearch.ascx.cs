@@ -163,7 +163,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 {
                     if(customer != null && CustomerManager.AllowViewingProfiles && !customer.IsGuest)
                     {
-                        hlTopicStarter.Text = Server.HtmlEncode(CustomerManager.FormatUserName(customer));
+                        hlTopicStarter.Text = Server.HtmlEncode(CustomerManager.FormatUserName(customer, true));
                         hlTopicStarter.NavigateUrl = SEOHelper.GetUserProfileUrl(customer.CustomerId);
                     }
                     else
@@ -177,7 +177,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 {
                     if (customer != null && (!CustomerManager.AllowViewingProfiles || customer.IsGuest))
                     {
-                        lblTopicStarter.Text = Server.HtmlEncode(CustomerManager.FormatUserName(customer));
+                        lblTopicStarter.Text = Server.HtmlEncode(CustomerManager.FormatUserName(customer, true));
                     }
                     else
                     {

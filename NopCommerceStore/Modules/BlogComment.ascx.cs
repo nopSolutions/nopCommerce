@@ -60,13 +60,13 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 {
                     if (CustomerManager.AllowViewingProfiles)
                     {
-                        hlUser.Text = Server.HtmlEncode(CustomerManager.FormatUserName(customer));
+                        hlUser.Text = Server.HtmlEncode(CustomerManager.FormatUserName(customer, true));
                         hlUser.NavigateUrl = SEOHelper.GetUserProfileUrl(customer.CustomerId);
                         lblUser.Visible = false;
                     }
                     else
                     {
-                        lblUser.Text = Server.HtmlEncode(CustomerManager.FormatUserName(customer));
+                        lblUser.Text = Server.HtmlEncode(CustomerManager.FormatUserName(customer, true));
                         hlUser.Visible = false;
                     }
 

@@ -2438,6 +2438,18 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// <returns>Name</returns>
         public static string FormatUserName(Customer customer)
         {
+            return FormatUserName(customer, false);
+        }
+
+
+        /// <summary>
+        /// Formats customer name
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="stripTooLong">Strip too long customer name</param>
+        /// <returns>Name</returns>
+        public static string FormatUserName(Customer customer, bool stripTooLong)
+        {
             if (customer == null)
                 return string.Empty;
 
@@ -2460,6 +2472,15 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                     break;
                 default:
                     break;
+            }
+
+            if (stripTooLong)
+            {
+                int maxLength = SettingManager.GetSettingValueInteger("Customer.FormatNameMaxLength", 0);
+                if (maxLength > 0 && result.Length > maxLength)
+                {
+                    result = result.Substring(0, maxLength);
+                }
             }
 
             return result;

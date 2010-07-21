@@ -1348,3 +1348,13 @@ BEGIN
 	INSERT INTO [Nop_ActivityLogType] ([SystemKeyword], [Name], [Enabled]) VALUES (N'DeleteReturnRequest', N'Delete a return request', 1)
 END
 GO
+
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[Nop_Setting]
+		WHERE [Name] = N'Customer.FormatNameMaxLength')
+BEGIN
+	INSERT [dbo].[Nop_Setting] ([Name], [Value], [Description])
+	VALUES (N'Customer.FormatNameMaxLength', N'0', N'')
+END
+GO
