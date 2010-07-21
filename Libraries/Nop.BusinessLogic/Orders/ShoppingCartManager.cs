@@ -700,6 +700,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                     break;
             }
 
+            //availability dates
+            bool availableStartDateError = false;
             if (productVariant.AvailableStartDateTime.HasValue)
             {
                 DateTime _now = DateTime.UtcNow;
@@ -707,9 +709,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 if (_availableStartDateTime.CompareTo(_now) > 0)
                 {
                     warnings.Add("Product is not available");
+                    availableStartDateError = true;
                 }
             }
-            else if (productVariant.AvailableEndDateTime.HasValue)
+            if (productVariant.AvailableEndDateTime.HasValue && !availableStartDateError)
             {
                 DateTime _now = DateTime.UtcNow;
                 DateTime _availableEndDateTime = DateTime.SpecifyKind(productVariant.AvailableEndDateTime.Value, DateTimeKind.Utc);
