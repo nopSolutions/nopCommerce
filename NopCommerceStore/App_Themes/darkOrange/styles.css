@@ -330,6 +330,7 @@ a.logo
 {
 	list-style: none;
 	display: inline;
+	white-space: nowrap;
 }
 
 .headermenu a
