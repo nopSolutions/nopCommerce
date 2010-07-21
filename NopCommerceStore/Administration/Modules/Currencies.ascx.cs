@@ -39,8 +39,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             if (!Page.IsPostBack)
             {
+                BindSettings();
                 BindCurrencyGrid();
             }
+        }
+
+        protected void BindSettings()
+        {
+            cbCurrencyRateAutoUpdateEnabled.Checked = SettingManager.GetSettingValueBoolean("ExchangeRateProvider.AutoUpdateEnabled", false);
         }
 
         protected void BindCurrencyGrid()
@@ -52,8 +58,6 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected void BindLiveRateGrid()
         {
-            DataTable liveRates = null;
-
             var exchangeRates = CurrencyManager.GetCurrencyLiveRates(CurrencyManager.PrimaryExchangeRateCurrency.CurrencyCode);
             gvLiveRates.DataSource = exchangeRates;
             gvLiveRates.DataBind();
@@ -63,6 +67,11 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
+                //save exchange rate provider settings
+                SettingManager.SetParam("ExchangeRateProvider.Current", ddlExchangeRateProviders.SelectedProvider);
+                SettingManager.SetParam("ExchangeRateProvider.AutoUpdateEnabled", cbCurrencyRateAutoUpdateEnabled.Checked.ToString());
+
+                //save currencies
                 foreach (GridViewRow row in gvCurrencies.Rows)
                 {
                     HiddenField hfCurrencyId = (HiddenField)row.FindControl("hfCurrencyId");
@@ -97,11 +106,6 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     ProcessException(exc);
                 }
             }
-        }
-
-        protected void btnSaveExchangeRateProvider_Click(object sender, EventArgs e)
-        {
-            SettingManager.SetParam("ExchangeRateProvider.Current", ddlExchangeRateProviders.SelectedProvider);
         }
 
         protected void gvLiveRates_RowCommand(object sender, GridViewCommandEventArgs e)

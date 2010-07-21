@@ -31,6 +31,15 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         protected global::System.Web.UI.WebControls.Button btnGetLiveRates;
         
         /// <summary>
+        /// lblExchangeRateProvider control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblExchangeRateProvider;
+        
+        /// <summary>
         /// ddlExchangeRateProviders control.
         /// </summary>
         /// <remarks>
@@ -40,13 +49,22 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ExchangeRateProviderListControl ddlExchangeRateProviders;
         
         /// <summary>
-        /// btnSaveExchangeRateProvider control.
+        /// lblCurrencyRateAutoUpdateEnabled control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnSaveExchangeRateProvider;
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblCurrencyRateAutoUpdateEnabled;
+        
+        /// <summary>
+        /// cbCurrencyRateAutoUpdateEnabled control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbCurrencyRateAutoUpdateEnabled;
         
         /// <summary>
         /// gvCurrencies control.

@@ -23,7 +23,6 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         private void BindData()
         {
-
             string prv1 = SettingManager.GetSettingValue("ExchangeRateProvider1.Classname");
             string prv2 = SettingManager.GetSettingValue("ExchangeRateProvider2.Classname");
             string prv3 = SettingManager.GetSettingValue("ExchangeRateProvider3.Classname");

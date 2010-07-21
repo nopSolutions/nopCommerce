@@ -53,7 +53,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
         /// <returns>Exchange rates</returns>
         public static List<ExchangeRate> GetCurrencyLiveRates(string exchangeRateCurrencyCode)
         {
-            var exchangeRateProvider = CurrentExchangeRateProvider;
+            var exchangeRateProvider = CurrencyManager.CurrentExchangeRateProvider;
             return exchangeRateProvider.GetCurrencyLiveRates(exchangeRateCurrencyCode);
         }
 
@@ -118,7 +118,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
         {
             if (String.IsNullOrEmpty(currencyCode))
                 return null;
-            return GetAllCurrencies().FirstOrDefault(c => c.CurrencyCode.ToLower() == currencyCode.ToLower());
+            return GetAllCurrencies(true).FirstOrDefault(c => c.CurrencyCode.ToLower() == currencyCode.ToLower());
         }
 
         /// <summary>

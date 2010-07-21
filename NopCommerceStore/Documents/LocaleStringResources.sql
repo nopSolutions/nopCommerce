@@ -647,8 +647,8 @@ set @resources='
   <LocaleResource Name="Admin.Currencies.ExchangeRateProvider">
     <Value>Current exchange rate provider:</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Currencies.SaveExchangeRateProviderButton">
-    <Value>Save</Value>
+  <LocaleResource Name="Admin.Currencies.ExchangeRateProvider.ToolTip">
+    <Value>Select an exchange rate provider that will be used to get live rates.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.SMSProviders.Title">
     <Value>SMS Providers</Value>
@@ -1291,6 +1291,12 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.ProductVariantDetails.PreviewButton.ToolTip">
     <Value>Click to preview the product page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Currencies.CurrencyRateAutoUpdateEnabled">
+    <Value>Auto update enabled:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Currencies.CurrencyRateAutoUpdateEnabled.ToolTip">
+    <Value>Click to enable auto update of currency rates each one hour</Value>
   </LocaleResource>
 </Language>
 '

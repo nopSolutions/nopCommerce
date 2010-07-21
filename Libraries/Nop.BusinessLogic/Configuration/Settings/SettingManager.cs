@@ -279,6 +279,32 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings
         }
 
         /// <summary>
+        /// Gets a long value of a setting
+        /// </summary>
+        /// <param name="name">The setting name</param>
+        /// <returns>The setting value</returns>
+        public static long GetSettingValueLong(string name)
+        {
+            return GetSettingValueLong(name, 0);
+        }
+
+        /// <summary>
+        ///  Gets a long value of a setting
+        /// </summary>
+        /// <param name="name">The setting name</param>
+        /// <param name="defaultValue">The default value</param>
+        /// <returns>The setting value</returns>
+        public static long GetSettingValueLong(string name, int defaultValue)
+        {
+            string value = GetSettingValue(name);
+            if (!String.IsNullOrEmpty(value))
+            {
+                return long.Parse(value);
+            }
+            return defaultValue;
+        }
+
+        /// <summary>
         /// Gets a decimal value of a setting in US locale
         /// </summary>
         /// <param name="name">The setting name</param>
