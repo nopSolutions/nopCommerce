@@ -33,6 +33,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts;
 using NopSolutions.NopCommerce.BusinessLogic.Templates;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Web.Administration.Modules;
+using NopSolutions.NopCommerce.BusinessLogic.SEO;
  
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
@@ -92,6 +93,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 ProcessException(exc);
             }
+        }
+
+        protected override void OnPreRender(EventArgs e)
+        {
+            PreviewButton.OnClientClick = string.Format("javascript:OpenWindow('{0}', 800, 600, true); return false;", SEOHelper.GetCategoryUrl(this.CategoryId));
+
+            base.OnPreRender(e);
         }
 
         public int CategoryId

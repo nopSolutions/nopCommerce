@@ -33,6 +33,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Products.Specs;
 using NopSolutions.NopCommerce.BusinessLogic.Templates;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Web.Administration.Modules;
+using NopSolutions.NopCommerce.BusinessLogic.SEO;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -53,6 +54,9 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 txtProductCopyName.Text = "Copy of " + txtName.Text;
             }
+
+            PreviewButton.OnClientClick = string.Format("javascript:OpenWindow('{0}', 800, 600, true); return false;", SEOHelper.GetProductUrl(this.ProductId));
+
             base.OnPreRender(e);
         }
 

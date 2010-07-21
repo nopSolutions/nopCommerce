@@ -4,6 +4,7 @@
 <%@ Register TagPrefix="nopCommerce" TagName="ManufacturerSEO" Src="ManufacturerSEO.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="ManufacturerProducts" Src="ManufacturerProducts.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="ConfirmationBox" Src="ConfirmationBox.ascx" %>
+
 <div class="section-header">
     <div class="title">
         <img src="Common/ico-catalog.png" alt="<%=GetLocaleResourceString("Admin.ManufacturerDetails.Title")%>" />
@@ -12,6 +13,8 @@
             (<%=GetLocaleResourceString("Admin.ManufacturerDetails.BackToManufacturers")%>)</a>
     </div>
     <div class="options">
+        <asp:Button ID="PreviewButton" runat="server" CssClass="adminButtonBlue" Text="<% $NopResources:Admin.ManufacturerDetails.PreviewButton.Text %>"
+            ToolTip="<% $NopResources:Admin.ManufacturerDetails.PreviewButton.ToolTip %>" />
         <asp:Button ID="SaveButton" runat="server" CssClass="adminButtonBlue" Text="<% $NopResources:Admin.ManufacturerDetails.SaveButton.Text %>"
             OnClick="SaveButton_Click" ToolTip="<% $NopResources:Admin.ManufacturerDetails.SaveButton.Tooltip %>" />
         <asp:Button ID="DeleteButton" runat="server" CssClass="adminButtonBlue" Text="<% $NopResources:Admin.ManufacturerDetails.DeleteButton.Text %>"

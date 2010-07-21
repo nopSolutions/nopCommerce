@@ -1268,6 +1268,30 @@ set @resources='
   <LocaleResource Name="Admin.OrderDetails.Products.ReturnRequests">
     <Value>Return requests: {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.CategoryDetails.PreviewButton.Text">
+    <Value>Preview</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CategoryDetails.PreviewButton.ToolTip">
+    <Value>Click to preview the category page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ManufacturerDetails.PreviewButton.Text">
+    <Value>Preview</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ManufacturerDetails.PreviewButton.ToolTip">
+    <Value>Click to preview the manufacturer page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductDetails.PreviewButton.Text">
+    <Value>Preview</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductDetails.PreviewButton.ToolTip">
+    <Value>Click to preview the product page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductVariantDetails.PreviewButton.Text">
+    <Value>Preview</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductVariantDetails.PreviewButton.ToolTip">
+    <Value>Click to preview the product page</Value>
+  </LocaleResource>
 </Language>
 '
 

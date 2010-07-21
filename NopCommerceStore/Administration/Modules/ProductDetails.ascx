@@ -17,6 +17,8 @@
             (<%=GetLocaleResourceString("Admin.ProductDetails.BackToProductList")%>)</a>
     </div>
     <div class="options">
+        <asp:Button ID="PreviewButton" runat="server" CssClass="adminButtonBlue" Text="<% $NopResources:Admin.ProductDetails.PreviewButton.Text %>"
+            ToolTip="<% $NopResources:Admin.ProductDetails.PreviewButton.ToolTip %>" />
         <asp:Button ID="btnDuplicate" runat="server" CssClass="adminButtonBlue" Text="<% $NopResources:Admin.ProductDetails.BtnDuplicate.Text %>" OnClick="BtnDuplicate_OnClick" ToolTip="<% $NopResources:Admin.ProductDetails.BtnDuplicate.Tooltip %>" />
         <asp:Button ID="SaveButton" runat="server" CssClass="adminButtonBlue" Text="<% $NopResources:Admin.ProductDetails.SaveButton.Text %>"
             OnClick="SaveButton_Click" ToolTip="<% $NopResources:Admin.ProductDetails.SaveButton.Tooltip %>" />

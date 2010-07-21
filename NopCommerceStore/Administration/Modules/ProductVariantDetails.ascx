@@ -14,6 +14,8 @@
         <asp:HyperLink runat="server" ID="hlProductURL" Text="<% $NopResources:Admin.ProductVariantDetails.BackToProductDetails %>" />
     </div>
     <div class="options">
+        <asp:Button ID="PreviewButton" runat="server" CssClass="adminButtonBlue" Text="<% $NopResources:Admin.ProductVariantDetails.PreviewButton.Text %>"
+            ToolTip="<% $NopResources:Admin.ProductVariantDetails.PreviewButton.ToolTip %>" />
         <asp:Button ID="SaveButton" runat="server" CssClass="adminButtonBlue" Text="<% $NopResources:Admin.ProductVariantDetails.SaveButton.Text %>"
             OnClick="SaveButton_Click" ToolTip="<% $NopResources:Admin.ProductVariantDetails.SaveButton.Tooltip %>" />
         <asp:Button ID="DeleteButton" runat="server" CssClass="adminButtonBlue" Text="<% $NopResources:Admin.ProductVariantDetails.DeleteButton.Text %>"

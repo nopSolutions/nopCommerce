@@ -33,6 +33,7 @@ using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.Warehouses;
 using NopSolutions.NopCommerce.Web.Administration.Modules;
 using NopSolutions.NopCommerce.BusinessLogic.Audit;
+using NopSolutions.NopCommerce.BusinessLogic.SEO;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -114,6 +115,18 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 ProcessException(exc);
             }
+        }
+        
+        protected override void OnPreRender(EventArgs e)
+        {
+            ProductVariant productVariant = ProductManager.GetProductVariantById(this.ProductVariantId);
+            if (productVariant != null)
+            {
+                PreviewButton.OnClientClick = string.Format("javascript:OpenWindow('{0}', 800, 600, true); return false;", SEOHelper.GetProductUrl(productVariant.ProductId));
+            }
+            
+
+            base.OnPreRender(e);
         }
 
         public int ProductVariantId
