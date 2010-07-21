@@ -167,12 +167,12 @@
     <Compile Include="Maintenance\DatabaseMaintanceTask.cs" />
     <Compile Include="Manufacturers\Extensions.cs" />
     <Compile Include="Manufacturers\ManufacturerLocalized.cs" />
-    <Compile Include="Messages\ClickatellSMSProvider.cs" />
-    <Compile Include="Messages\VerizonSMSProvider.cs" />
-    <Compile Include="Messages\ISMSProvider.cs" />
+    <Compile Include="Messages\SMS\ClickatellSMSProvider.cs" />
+    <Compile Include="Messages\SMS\VerizonSMSProvider.cs" />
+    <Compile Include="Messages\SMS\ISMSProvider.cs" />
     <Compile Include="Messages\NewsLetterSubscription.cs" />
-    <Compile Include="Messages\SMSProvider.cs" />
-    <Compile Include="Messages\SMSManager.cs" />
+    <Compile Include="Messages\SMS\SMSProvider.cs" />
+    <Compile Include="Messages\SMS\SMSManager.cs" />
     <Compile Include="Orders\BestSellersReportLine.cs" />
     <Compile Include="Orders\AppliedGiftCard.cs" />
     <Compile Include="Orders\ReturnStatusEnum.cs" />

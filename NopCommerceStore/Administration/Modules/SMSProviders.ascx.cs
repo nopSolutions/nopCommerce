@@ -16,6 +16,7 @@ using System;
 using System.Collections;
 using System.Configuration;
 using System.Data;
+using System.IO;
 using System.Text;
 using System.Web;
 using System.Web.Security;
@@ -23,16 +24,13 @@ using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
+using NopSolutions.NopCommerce.BusinessLogic.Audit;
+using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
-using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
-using NopSolutions.NopCommerce.BusinessLogic.Audit;
-using System.IO;
-using NopSolutions.NopCommerce.Froogle;
-using NopSolutions.NopCommerce.PriceGrabber;
-using NopSolutions.NopCommerce.Become;
 using NopSolutions.NopCommerce.BusinessLogic.Messages;
+using NopSolutions.NopCommerce.BusinessLogic.Messages.SMS;
+using NopSolutions.NopCommerce.Common.Utils;
 
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules

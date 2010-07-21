@@ -7,7 +7,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Data;
 using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.Common.Utils;
 
-namespace NopSolutions.NopCommerce.BusinessLogic.Messages
+namespace NopSolutions.NopCommerce.BusinessLogic.Messages.SMS
 {
     /// <summary>
     /// Represents the SMS manager

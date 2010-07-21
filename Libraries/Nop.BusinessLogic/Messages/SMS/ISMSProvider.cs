@@ -20,7 +20,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Orders;
 
 
 
-namespace NopSolutions.NopCommerce.BusinessLogic.Messages
+namespace NopSolutions.NopCommerce.BusinessLogic.Messages.SMS
 {
     /// <summary>
     /// Provides an interface for SMS providers

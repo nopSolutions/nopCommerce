@@ -6,7 +6,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
 
-namespace NopSolutions.NopCommerce.BusinessLogic.Messages
+namespace NopSolutions.NopCommerce.BusinessLogic.Messages.SMS
 {
     /// <summary>
     /// Represents the Verizon SMS provider

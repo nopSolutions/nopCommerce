@@ -4,7 +4,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Clickatell;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.Common;
 
-namespace NopSolutions.NopCommerce.BusinessLogic.Messages
+namespace NopSolutions.NopCommerce.BusinessLogic.Messages.SMS
 {
     /// <summary>
     /// Represents the Clickatell SMS provider
