@@ -302,11 +302,11 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 {
                     // Check IP list
                     string ipList = txtAllowedIPList.Text.Trim();
-                    if(!String.IsNullOrEmpty(ipList))
+                    if (!String.IsNullOrEmpty(ipList))
                     {
-                        foreach(string s in ipList.Split(new char[1]{','}))
+                        foreach (string s in ipList.Split(new char[1] { ',' }))
                         {
-                            if(!IpBlacklistManager.IsValidIp(s.Trim()))
+                            if (!IpBlacklistManager.IsValidIp(s.Trim()))
                             {
                                 throw new NopException("IP list is not valid.");
                             }
@@ -426,10 +426,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     SettingManager.SetParam("GoogleAdsense.Enabled", cbGoogleAdsenseEnabled.Checked.ToString());
                     SettingManager.SetParam("GoogleAdsense.Code", txtGoogleAdsenseCode.Text);
 
-                    if(uplPdfLogo.HasFile)
+                    if (uplPdfLogo.HasFile)
                     {
                         HttpPostedFile postedFile = uplPdfLogo.PostedFile;
-                        if(!postedFile.ContentType.Equals("image/jpeg") && !postedFile.ContentType.Equals("image/gif") && !postedFile.ContentType.Equals("image/png"))
+                        if (!postedFile.ContentType.Equals("image/jpeg") && !postedFile.ContentType.Equals("image/gif") && !postedFile.ContentType.Equals("image/png"))
                         {
                             throw new NopException("Image format not recognized, allowed formats are: .png, .jpg, .jpeg, .gif");
                         }
@@ -442,14 +442,40 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     OrderManager.RewardPointsForRegistration = txtRewardPointsForRegistration.Value;
                     OrderManager.RewardPointsForPurchases_Amount = txtRewardPointsForPurchases_Amount.Value;
                     OrderManager.RewardPointsForPurchases_Points = txtRewardPointsForPurchases_Points.Value;
-                    OrderManager.RewardPointsForPurchases_Awarded = (OrderStatusEnum)int.Parse(ddlRewardPointsAwardedOrderStatus.SelectedItem.Value);
-                    OrderManager.RewardPointsForPurchases_Canceled = (OrderStatusEnum)int.Parse(ddlRewardPointsCanceledOrderStatus.SelectedItem.Value);
+                    OrderStatusEnum rppa = (OrderStatusEnum)int.Parse(ddlRewardPointsAwardedOrderStatus.SelectedItem.Value);
+                    if (rppa != OrderStatusEnum.Pending)
+                    {
+                        OrderManager.RewardPointsForPurchases_Awarded = rppa;
+                    }
+                    else
+                    {
+                        //ensure that order status is not pending
+                        throw new NopException(GetLocaleResourceString("Admin.GlobalSettings.PendingOrderStatusNotAllowed"));
+                    }
+                    OrderStatusEnum rppc = (OrderStatusEnum)int.Parse(ddlRewardPointsCanceledOrderStatus.SelectedItem.Value);
+                    if (rppc != OrderStatusEnum.Pending)
+                    {
+                        OrderManager.RewardPointsForPurchases_Canceled = rppc;
+                    }
+                    else
+                    {
+                        //ensure that order status is not pending
+                        throw new NopException(GetLocaleResourceString("Admin.GlobalSettings.PendingOrderStatusNotAllowed"));
+                    }
 
                     //gift cards
                     int gcaos = int.Parse(ddlGiftCardsActivationOrderStatus.SelectedItem.Value);
                     if (gcaos > 0)
                     {
-                        OrderManager.GiftCards_Activated = (OrderStatusEnum)gcaos;
+                        if ((OrderStatusEnum)gcaos != OrderStatusEnum.Pending)
+                        {
+                            OrderManager.GiftCards_Activated = (OrderStatusEnum)gcaos;
+                        }
+                        else
+                        {
+                            //ensure that order status is not pending
+                            throw new NopException(GetLocaleResourceString("Admin.GlobalSettings.PendingOrderStatusNotAllowed"));
+                        }
                     }
                     else
                     {
@@ -458,7 +484,15 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     int gcdos = int.Parse(ddlGiftCardsDeactivationOrderStatus.SelectedItem.Value);
                     if (gcdos > 0)
                     {
-                        OrderManager.GiftCards_Deactivated = (OrderStatusEnum)gcdos;
+                        if ((OrderStatusEnum)gcdos != OrderStatusEnum.Pending)
+                        {
+                            OrderManager.GiftCards_Deactivated = (OrderStatusEnum)gcdos;
+                        }
+                        else
+                        {
+                            //ensure that order status is not pending
+                            throw new NopException(GetLocaleResourceString("Admin.GlobalSettings.PendingOrderStatusNotAllowed"));
+                        }
                     }
                     else
                     {
@@ -472,8 +506,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     CustomerManager.FormFieldCompanyRequired = cbffCompanyRequired.Checked;
                     CustomerManager.FormFieldStreetAddressEnabled = cbffStreetAddressEnabled.Checked;
                     CustomerManager.FormFieldStreetAddressRequired = cbffStreetAddressRequired.Checked;
-                    CustomerManager.FormFieldStreetAddress2Enabled= cbffStreetAddress2Enabled.Checked;
-                    CustomerManager.FormFieldStreetAddress2Required= cbffStreetAddress2Required.Checked;
+                    CustomerManager.FormFieldStreetAddress2Enabled = cbffStreetAddress2Enabled.Checked;
+                    CustomerManager.FormFieldStreetAddress2Required = cbffStreetAddress2Required.Checked;
                     CustomerManager.FormFieldPostCodeEnabled = cbffPostCodeEnabled.Checked;
                     CustomerManager.FormFieldPostCodeRequired = cbffPostCodeRequired.Checked;
                     CustomerManager.FormFieldCityEnabled = cbffCityEnabled.Checked;

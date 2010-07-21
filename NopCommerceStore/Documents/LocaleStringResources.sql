@@ -1298,6 +1298,9 @@ set @resources='
   <LocaleResource Name="Admin.Currencies.CurrencyRateAutoUpdateEnabled.ToolTip">
     <Value>Click to enable auto update of currency rates each one hour</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.PendingOrderStatusNotAllowed">
+    <Value>Order status could not be set to Pending</Value>
+  </LocaleResource>
 </Language>
 '
 
