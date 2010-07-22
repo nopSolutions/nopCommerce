@@ -819,7 +819,7 @@ textarea
 .productlistaddtocartbutton, .productgridaddtocartbutton, .productemailafriendbutton, 
 .productaddtocomparelistbutton, .productvariantaddtowishlistbutton, .editaddressbutton, 
 .deleteaddressbutton, .cancelrecurringorderbutton, .orderdetailsbutton, 
-.returnitemsbutton, .orderdetailsprintbutton, 
+.returnitemsbutton, .orderdetailsprintbutton, .estimateshippingbutton, 
 .updatewishlistbutton, .applycouponcodebutton, .updatecartbutton, .continueshoppingbutton, 
 .orderprocessedcontinuebutton, .submitpollvotebutton, .cancelforumtopicbutton, .forumsearchbutton, 
 .forumsearchboxbutton, .cancelpmbutton, .deletepmbutton, .backpmbutton
@@ -1273,6 +1273,40 @@ ul.languagelist li .selected
 	margin: 0px;
 	padding: 10px 10px 10px 10px;
 	text-align: right;
+}
+
+
+
+.estimate-shipping
+{
+	margin: 0px;
+	padding: 10px 10px 10px 10px;
+	font-size: 11px;
+	color: #555;
+	background: rgb(247, 245, 232);
+	margin-bottom: 10px;
+	border: dotted 1px #d3d3d3;
+}
+.estimate-shipping .shipping-options
+{
+	text-align: left;
+	margin: 10px 10px 10px 10px;
+	border: 1px solid #d7d7d7;
+	height: auto;
+}
+.estimate-shipping .shipping-options .shipping-option-item
+{
+	text-align: left;
+	vertical-align: text-top;
+	padding: 5px 0 0 5px;
+}
+.estimate-shipping .shipping-options .shipping-option-item .option-name
+{
+	font-weight: bold;
+}
+.estimate-shipping .shipping-options .shipping-option-item .option-description
+{
+	padding: 5px 0 5px 16px;
 }
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*

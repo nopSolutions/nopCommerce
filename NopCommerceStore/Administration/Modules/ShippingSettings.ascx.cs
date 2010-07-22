@@ -80,6 +80,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         private void BindData()
         {
+            cbEstimateShippingEnabled.Checked = SettingManager.GetSettingValueBoolean("Shipping.EstimateShipping.Enabled");
             cbFreeShippingOverX.Checked = SettingManager.GetSettingValueBoolean("Shipping.FreeShippingOverX.Enabled");
             txtFreeShippingOverX.Value = SettingManager.GetSettingValueDecimalNative("Shipping.FreeShippingOverX.Value");
 
@@ -102,6 +103,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 try
                 {
+                    SettingManager.SetParam("Shipping.EstimateShipping.Enabled", cbEstimateShippingEnabled.Checked.ToString());
                     SettingManager.SetParam("Shipping.FreeShippingOverX.Enabled", cbFreeShippingOverX.Checked.ToString());
                     SettingManager.SetParamNative("Shipping.FreeShippingOverX.Value", txtFreeShippingOverX.Value);
 

@@ -3,6 +3,7 @@
 <%@ Register TagPrefix="nopCommerce" TagName="GoogleCheckoutButton" Src="~/Modules/GoogleCheckoutButton.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="OrderTotals" Src="~/Modules/OrderTotals.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="CheckoutAttributes" Src="~/Modules/CheckoutAttributes.ascx" %>
+<%@ Register TagPrefix="nopCommerce" TagName="EstimateShipping" Src="~/Modules/EstimateShipping.ascx" %>
 <asp:Panel class="order-summary-content" runat="server" ID="pnlEmptyCart">
     <%=GetLocaleResourceString("ShoppingCart.CartIsEmpty")%>
 </asp:Panel>
@@ -151,6 +152,10 @@
             </nopCommerce:CheckoutAttributes>
         <div class="clear">
         </div>
+            <nopCommerce:EstimateShipping ID="ctrlEstimateShipping" runat="server">
+            </nopCommerce:EstimateShipping>
+        <div class="clear">
+        </div>
         <div class="buttons">
             <%if (SettingManager.GetSettingValueBoolean("Checkout.TermsOfServiceEnabled"))
               { %>
@@ -163,14 +168,6 @@
                     }
                     else
                         return true;
-                }
-                function OpenWindow(query, w, h, scroll) {
-                    var l = (screen.width - w) / 2;
-                    var t = (screen.height - h) / 2;
-
-                    winprops = 'resizable=0, height=' + h + ',width=' + w + ',top=' + t + ',left=' + l + 'w';
-                    if (scroll) winprops += ',scrollbars=1';
-                    var f = window.open(query, "_blank", winprops);
                 }
             </script>
             <div class="terms-of-service">

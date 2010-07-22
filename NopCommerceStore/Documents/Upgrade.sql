@@ -1358,3 +1358,13 @@ BEGIN
 	VALUES (N'Customer.FormatNameMaxLength', N'0', N'')
 END
 GO
+
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[Nop_Setting]
+		WHERE [Name] = N'Shipping.EstimateShipping.Enabled')
+BEGIN
+	INSERT [dbo].[Nop_Setting] ([Name], [Value], [Description])
+	VALUES (N'Shipping.EstimateShipping.Enabled', N'true', N'')
+END
+GO

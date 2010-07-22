@@ -43,6 +43,16 @@
     </tr>
     <tr>
         <td class="adminTitle">
+            <nopCommerce:ToolTipLabel runat="server" ID="lblEstimateShippingEnabled" Text="<% $NopResources:Admin.ShippingSettings.EstimateShippingEnabled %>"
+                ToolTip="<% $NopResources:Admin.ShippingSettings.EstimateShippingEnabled.Tooltip %>"
+                ToolTipImage="~/Administration/Common/ico-help.gif" />
+        </td>
+        <td class="adminData">
+            <asp:CheckBox runat="server" ID="cbEstimateShippingEnabled" Checked="false"></asp:CheckBox>
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
             <nopCommerce:ToolTipLabel runat="server" ID="lblShippingOriginCountry" Text="<% $NopResources:Admin.ShippingSettings.OriginCountry %>"
                 ToolTip="<% $NopResources:Admin.ShippingSettings.OriginCountry.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
         </td>

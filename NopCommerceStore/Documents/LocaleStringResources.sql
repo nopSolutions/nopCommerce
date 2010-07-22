@@ -1301,6 +1301,39 @@ set @resources='
   <LocaleResource Name="Admin.GlobalSettings.PendingOrderStatusNotAllowed">
     <Value>Order status could not be set to Pending</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ShippingSettings.EstimateShippingEnabled">
+    <Value>Estimate shipping enabled:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ShippingSettings.EstimateShippingEnabled.Tooltip">
+    <Value>Check to allow customers to estimate shipping on shopping cart page</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.EstimateShippingButton">
+    <Value>Estimate shipping</Value>
+  </LocaleResource>
+  <LocaleResource Name="EstimateShipping.Country">
+    <Value>Country:</Value>
+  </LocaleResource>
+  <LocaleResource Name="EstimateShipping.StateProvince">
+    <Value>State / province:</Value>
+  </LocaleResource>
+  <LocaleResource Name="EstimateShipping.StateProvinceNonUS">
+    <Value>Other (Non US)</Value>
+  </LocaleResource>
+  <LocaleResource Name="EstimateShipping.ZipPostalCode">
+    <Value>Zip / postal code:</Value>
+  </LocaleResource>
+  <LocaleResource Name="EstimateShipping.ZipPostalCodeIsRequired">
+    <Value>Zip / Postal code is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="EstimateShipping.GetQuoteButton">
+    <Value>Get a quote</Value>
+  </LocaleResource>
+  <LocaleResource Name="EstimateShipping.Title">
+    <Value>Estimate shipping</Value>
+  </LocaleResource>
+  <LocaleResource Name="EstimateShipping.Tooltip">
+    <Value>Enter your destination to get a shipping estimate</Value>
+  </LocaleResource>
 </Language>
 '
 

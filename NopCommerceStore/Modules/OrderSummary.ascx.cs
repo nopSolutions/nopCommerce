@@ -56,7 +56,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
         {
             if (SettingManager.GetSettingValueBoolean("Checkout.TermsOfServiceEnabled"))
             {
-                string onclickTerms = string.Format(" return accepttermsofservice('{0}') && " + Page.ClientScript.GetPostBackEventReference(this.btnCheckout, ""), GetLocaleResourceString("Checkout.PleaseAcceptTermsOfService"));
+                string onclickTerms = string.Format("return accepttermsofservice('{0}') && " + Page.ClientScript.GetPostBackEventReference(this.btnCheckout, ""), GetLocaleResourceString("Checkout.PleaseAcceptTermsOfService"));
                 this.btnCheckout.Attributes.Add("onclick", onclickTerms);
 
                 string termsLink = string.Format("{0}conditionsinfopopup.aspx", CommonHelper.GetStoreLocation());

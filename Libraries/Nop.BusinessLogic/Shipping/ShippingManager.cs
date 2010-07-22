@@ -448,7 +448,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
             }
 
             //no shipping options loaded
-            if (shippingOptions.Count == 0)
+            if (shippingOptions.Count == 0 && String.IsNullOrEmpty(error))
             {
                 error = "Shipping options could not be loaded";
             }

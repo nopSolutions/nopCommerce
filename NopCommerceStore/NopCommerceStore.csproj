@@ -3814,6 +3814,13 @@
     <Compile Include="Alipay_Return.aspx.designer.cs">
       <DependentUpon>Alipay_Return.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Modules\EstimateShipping.ascx.cs">
+      <DependentUpon>EstimateShipping.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\EstimateShipping.ascx.designer.cs">
+      <DependentUpon>EstimateShipping.ascx</DependentUpon>
+    </Compile>
     <Compile Include="Modules\CustomerReturnRequests.ascx.cs">
       <DependentUpon>CustomerReturnRequests.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -5946,6 +5953,7 @@
     <Content Include="CompareProducts.aspx" />
     <Content Include="ConditionsInfo.aspx" />
     <Content Include="ContactUs.aspx" />
+    <Content Include="Modules\EstimateShipping.ascx" />
     <Content Include="Modules\CustomerReturnRequests.ascx" />
     <Content Include="ReturnItems.aspx" />
     <Content Include="Default.aspx" />

@@ -58,6 +58,24 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         protected global::NopSolutions.NopCommerce.Web.Administration.Modules.DecimalTextBox txtFreeShippingOverX;
         
         /// <summary>
+        /// lblEstimateShippingEnabled control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblEstimateShippingEnabled;
+        
+        /// <summary>
+        /// cbEstimateShippingEnabled control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbEstimateShippingEnabled;
+        
+        /// <summary>
         /// lblShippingOriginCountry control.
         /// </summary>
         /// <remarks>
