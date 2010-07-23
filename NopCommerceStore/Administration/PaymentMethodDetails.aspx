@@ -126,6 +126,44 @@
                                 MinimumValue="-99999" MaximumValue="99999"></nopCommerce:NumericTextBox>
                         </td>
                     </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ID="lblCanCaptureTooltip" Text="<% $NopResources:Admin.PaymentMethodInfo.CanCapture %>"
+                                ToolTip="<% $NopResources:Admin.PaymentMethodInfo.CanCapture.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
+                        </td>
+                        <td class="adminData">
+                            <asp:Label ID="lblCanCapture" runat="server"></asp:Label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ID="lblCanRefundTooltip" Text="<% $NopResources:Admin.PaymentMethodInfo.CanRefund %>"
+                                ToolTip="<% $NopResources:Admin.PaymentMethodInfo.CanRefund.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
+                        </td>
+                        <td class="adminData">
+                            <asp:Label ID="lblCanRefund" runat="server"></asp:Label>
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ID="lblCanVoidTooltip" Text="<% $NopResources:Admin.PaymentMethodInfo.CanVoid %>"
+                                ToolTip="<% $NopResources:Admin.PaymentMethodInfo.CanVoid.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
+                        </td>
+                        <td class="adminData">
+                            <asp:Label ID="lblCanVoid" runat="server"></asp:Label>
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ID="lblSupportRecurringPaymentsTooltip" Text="<% $NopResources:Admin.PaymentMethodInfo.SupportRecurringPayments %>"
+                                ToolTip="<% $NopResources:Admin.PaymentMethodInfo.SupportRecurringPayments.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
+                        </td>
+                        <td class="adminData">
+                            <asp:Label ID="lblSupportRecurringPayments" runat="server"></asp:Label>
+                        </td>
+                    </tr>
                 </table>
             </ContentTemplate>
         </ajaxToolkit:TabPanel>

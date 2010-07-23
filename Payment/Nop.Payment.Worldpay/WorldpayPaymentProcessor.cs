@@ -51,9 +51,6 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Worldpay
         {
             useSandBox = SettingManager.GetSettingValueBoolean(WorldpayConstants.SETTING_USE_SANDBOX);
             instanceID = SettingManager.GetSettingValue(WorldpayConstants.SETTING_INSTANCEID);
-
-            if (string.IsNullOrEmpty(instanceID))
-                throw new NopException("Worldpay Instance ID is not set");
         }
         #endregion
 

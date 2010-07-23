@@ -229,6 +229,78 @@ namespace NopSolutions.NopCommerce.Web.Administration {
         protected global::NopSolutions.NopCommerce.Web.Administration.Modules.NumericTextBox txtDisplayOrder;
         
         /// <summary>
+        /// lblCanCaptureTooltip control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblCanCaptureTooltip;
+        
+        /// <summary>
+        /// lblCanCapture control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblCanCapture;
+        
+        /// <summary>
+        /// lblCanRefundTooltip control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblCanRefundTooltip;
+        
+        /// <summary>
+        /// lblCanRefund control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblCanRefund;
+        
+        /// <summary>
+        /// lblCanVoidTooltip control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblCanVoidTooltip;
+        
+        /// <summary>
+        /// lblCanVoid control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblCanVoid;
+        
+        /// <summary>
+        /// lblSupportRecurringPaymentsTooltip control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblSupportRecurringPaymentsTooltip;
+        
+        /// <summary>
+        /// lblSupportRecurringPayments control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblSupportRecurringPayments;
+        
+        /// <summary>
         /// pnlConfigure control.
         /// </summary>
         /// <remarks>

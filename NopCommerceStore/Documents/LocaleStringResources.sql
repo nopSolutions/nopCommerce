@@ -1334,6 +1334,30 @@ set @resources='
   <LocaleResource Name="EstimateShipping.Tooltip">
     <Value>Enter your destination to get a shipping estimate</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.PaymentMethodInfo.CanCapture">
+    <Value>Supports capture:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.PaymentMethodInfo.CanCapture.Tooltip">
+    <Value>Value indicating whether this payment method supports "Capture"</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.PaymentMethodInfo.CanRefund">
+    <Value>Supports refund:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.PaymentMethodInfo.CanRefund.Tooltip">
+    <Value>Value indicating whether this payment method supports "Refund"</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.PaymentMethodInfo.CanVoid">
+    <Value>Supports void:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.PaymentMethodInfo.CanVoid.Tooltip">
+    <Value>Value indicating whether this payment method supports "Void"</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.PaymentMethodInfo.SupportRecurringPayments">
+    <Value>Supports recurring payments:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.PaymentMethodInfo.SupportRecurringPayments.Tooltip">
+    <Value>Value indicating whether this payment method supports recurring payments</Value>
+  </LocaleResource>
 </Language>
 '
 

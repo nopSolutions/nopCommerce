@@ -68,12 +68,6 @@ namespace NopSolutions.NopCommerce.Payment.Methods.SagePay
 
             if (string.IsNullOrEmpty(partnerID))
                 partnerID = string.Empty; // this is OK - just means we don't have a partner id
-            if (string.IsNullOrEmpty(vendorName))
-                throw new NopException("SagePay VendorDescription is not set");
-            if (string.IsNullOrEmpty(vendorDescription))
-                throw new NopException("SagePay VendorDescription is not set");
-            if (string.IsNullOrEmpty(encryptionPassword))
-                throw new NopException("SagePay Encryption Password is not set");
             if (string.IsNullOrEmpty(protocolNumber))
                 protocolNumber = "2.23";
         }
@@ -95,6 +89,9 @@ namespace NopSolutions.NopCommerce.Payment.Methods.SagePay
 
         private string GenerateCryptField(Order order)
         {
+            if (string.IsNullOrEmpty(encryptionPassword))
+                throw new NopException("SagePay Encryption Password is not set");
+
             StringBuilder cryptBuilder = new StringBuilder();
 
             cryptBuilder.AppendFormat("VendorTxCode={0}", order.OrderId.ToString("N"));
@@ -323,6 +320,11 @@ namespace NopSolutions.NopCommerce.Payment.Methods.SagePay
         /// <returns>The error status, or String.Empty if no errors</returns>
         public string PostProcessPayment(Order order)
         {
+            if (string.IsNullOrEmpty(vendorName))
+                throw new NopException("SagePay VendorDescription is not set");
+            if (string.IsNullOrEmpty(vendorDescription))
+                throw new NopException("SagePay VendorDescription is not set");
+
             RemotePost remotePostHelper = new RemotePost();
             remotePostHelper.FormName = "SagePayForm";
             remotePostHelper.Url = GetSagePayUrl();
@@ -399,6 +401,9 @@ namespace NopSolutions.NopCommerce.Payment.Methods.SagePay
         {
             try
             {
+                if (string.IsNullOrEmpty(encryptionPassword))
+                    throw new NopException("SagePay Encryption Password is not set");
+
                 // the base 64 encoded string is put into urls a bit oddly - see https://support.sagepay.com/forum/Topic321-23-1.aspx
                 // so we need to correct plusses back to spaces.
                 string correctedInputCrypt = inputCrypt.Replace(" ", "+");

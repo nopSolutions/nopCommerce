@@ -52,6 +52,20 @@ namespace NopSolutions.NopCommerce.Web.Administration
                 this.cbHidePaymentInfoForZeroOrders.Checked = paymentMethod.HidePaymentInfoForZeroOrders;
                 this.cbActive.Checked = paymentMethod.IsActive;
                 this.txtDisplayOrder.Value = paymentMethod.DisplayOrder;
+                try
+                {
+                    lblCanCapture.Text = PaymentManager.CanCapture(this.PaymentMethodId) ? GetLocaleResourceString("Admin.Common.Yes") : GetLocaleResourceString("Admin.Common.No");
+                    lblCanRefund.Text = PaymentManager.CanRefund(this.PaymentMethodId) ? GetLocaleResourceString("Admin.Common.Yes") : GetLocaleResourceString("Admin.Common.No");
+                    lblCanVoid.Text = PaymentManager.CanVoid(this.PaymentMethodId) ? GetLocaleResourceString("Admin.Common.Yes") : GetLocaleResourceString("Admin.Common.No");
+                    lblSupportRecurringPayments.Text = CommonHelper.ConvertEnum(PaymentManager.SupportRecurringPayments(this.PaymentMethodId).ToString());
+                }
+                catch
+                {
+                    lblCanCapture.Text = "Unknown";
+                    lblCanRefund.Text = "Unknown";
+                    lblCanVoid.Text = "Unknown";
+                    lblSupportRecurringPayments.Text = "Unknown";
+                }
             }
             else
                 Response.Redirect("PaymentMethods.aspx");
