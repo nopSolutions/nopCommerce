@@ -1705,3 +1705,6 @@ BEGIN
 
 END
 GO
+
+ALTER TABLE [dbo].[Nop_Order] ALTER COLUMN [CardName] nvarchar(1000) NOT NULL
+GO

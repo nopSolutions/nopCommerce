@@ -808,7 +808,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
 
             customerIP = CommonHelper.EnsureMaximumLength(customerIP, 50);
             cardType = CommonHelper.EnsureMaximumLength(cardType, 100);
-            cardName = CommonHelper.EnsureMaximumLength(cardName, 100);
+            cardName = CommonHelper.EnsureMaximumLength(cardName, 1000);
             cardNumber = CommonHelper.EnsureMaximumLength(cardNumber, 100);
             maskedCreditCardNumber = CommonHelper.EnsureMaximumLength(maskedCreditCardNumber, 100);
             cardCvv2 = CommonHelper.EnsureMaximumLength(cardCvv2, 100);
@@ -1137,7 +1137,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
 
             customerIP = CommonHelper.EnsureMaximumLength(customerIP, 50);
             cardType = CommonHelper.EnsureMaximumLength(cardType, 100);
-            cardName = CommonHelper.EnsureMaximumLength(cardName, 100);
+            cardName = CommonHelper.EnsureMaximumLength(cardName, 1000);
             cardNumber = CommonHelper.EnsureMaximumLength(cardNumber, 100);
             maskedCreditCardNumber = CommonHelper.EnsureMaximumLength(maskedCreditCardNumber, 100);
             cardCvv2 = CommonHelper.EnsureMaximumLength(cardCvv2, 100);
@@ -3123,9 +3123,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
 
                 if (paymentInfo.CreditCardCvv2 == null)
                     paymentInfo.CreditCardCvv2 = string.Empty;
-
+                
                 if (paymentInfo.CreditCardName == null)
                     paymentInfo.CreditCardName = string.Empty;
+                paymentInfo.CreditCardName = CommonHelper.EnsureMaximumLength(paymentInfo.CreditCardName, 100);
 
                 if (paymentInfo.CreditCardNumber == null)
                     paymentInfo.CreditCardNumber = string.Empty;

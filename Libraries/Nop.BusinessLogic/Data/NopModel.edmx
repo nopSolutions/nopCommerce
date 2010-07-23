@@ -1360,7 +1360,7 @@
           <Property Name="OrderStatusID" Type="int" Nullable="false" />
           <Property Name="AllowStoringCreditCardNumber" Type="bit" Nullable="false" />
           <Property Name="CardType" Type="nvarchar" Nullable="false" MaxLength="100" />
-          <Property Name="CardName" Type="nvarchar" Nullable="false" MaxLength="100" />
+          <Property Name="CardName" Type="nvarchar" Nullable="false" MaxLength="1000" />
           <Property Name="CardNumber" Type="nvarchar" Nullable="false" MaxLength="100" />
           <Property Name="MaskedCreditCardNumber" Type="nvarchar" Nullable="false" MaxLength="100" />
           <Property Name="CardCVV2" Type="nvarchar" Nullable="false" MaxLength="100" />
@@ -7456,7 +7456,7 @@
           <Property Type="Int32" Name="OrderStatusId" Nullable="false" />
           <Property Type="Boolean" Name="AllowStoringCreditCardNumber" Nullable="false" />
           <Property Type="String" Name="CardType" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="CardName" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="CardName" Nullable="false" MaxLength="1000" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="CardNumber" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="MaskedCreditCardNumber" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="CardCvv2" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
@@ -9812,7 +9812,7 @@
     </Options>
     <!-- Diagram content (shape and connector positions) -->
     <Diagrams>
-      <Diagram Name="NopModel" ZoomLevel="85">
+      <Diagram Name="NopModel" ZoomLevel="53">
         <EntityTypeShape EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Language" Width="3.125" PointX="23.625" PointY="11.25" Height="1.9210009765624996" IsExpanded="true" />
         <EntityTypeShape EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Country" Width="2" PointX="63.25" PointY="16.75" Height="3.0714322916666674" />
         <EntityTypeShape EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.StateProvince" Width="1.875" PointX="62.875" PointY="9.125" Height="1.9210009765624996" />
