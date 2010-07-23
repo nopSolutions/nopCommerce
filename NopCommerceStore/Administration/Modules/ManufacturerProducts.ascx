@@ -9,8 +9,8 @@
         <td width="100%">
             <asp:UpdatePanel ID="upMappings" runat="server">
                 <ContentTemplate>
-                    <nopCommerce:NopDataPagerGridView ID="gvProductManufacturerMappings" runat="server"
-                        AutoGenerateColumns="false" Width="100%" OnPageIndexChanging="gvProductManufacturerMappings_PageIndexChanging"
+                    <asp:GridView ID="gvProductManufacturerMappings" runat="server" AutoGenerateColumns="false"
+                        Width="100%" OnPageIndexChanging="gvProductManufacturerMappings_PageIndexChanging"
                         AllowPaging="true">
                         <Columns>
                             <asp:TemplateField HeaderText="<% $NopResources:Admin.ManufacturerProducts.Product %>"
@@ -51,28 +51,15 @@
                                 </ItemTemplate>
                             </asp:TemplateField>
                         </Columns>
-                    </nopCommerce:NopDataPagerGridView>
-                    <div class="pager">
-                        <asp:DataPager ID="pagerProductManufacturerMappings" runat="server" PageSize="15"
-                            PagedControlID="gvProductManufacturerMappings">
-                            <Fields>
-                                <asp:NextPreviousPagerField ButtonCssClass="command" FirstPageText="«" PreviousPageText="‹"
-                                    RenderDisabledButtonsAsLabels="true" ShowFirstPageButton="true" ShowPreviousPageButton="true"
-                                    ShowLastPageButton="false" ShowNextPageButton="false" />
-                                <asp:NumericPagerField ButtonCount="7" NumericButtonCssClass="command" CurrentPageLabelCssClass="current"
-                                    NextPreviousButtonCssClass="command" />
-                                <asp:NextPreviousPagerField ButtonCssClass="command" LastPageText="»" NextPageText="›"
-                                    RenderDisabledButtonsAsLabels="true" ShowFirstPageButton="false" ShowPreviousPageButton="false"
-                                    ShowLastPageButton="true" ShowNextPageButton="true" />
-                            </Fields>
-                        </asp:DataPager>
-                    </div>
+                        <PagerSettings PageButtonCount="50" Position="TopAndBottom" />
+                    </asp:GridView>
                 </ContentTemplate>
             </asp:UpdatePanel>
             <asp:UpdateProgress ID="up1" runat="server" AssociatedUpdatePanelID="upMappings">
                 <ProgressTemplate>
                     <div class="progress">
-                        <asp:Image ID="imgUpdateProgress" runat="server" ImageUrl="~/images/UpdateProgress.gif" AlternateText="update"  />
+                        <asp:Image ID="imgUpdateProgress" runat="server" ImageUrl="~/images/UpdateProgress.gif"
+                            AlternateText="update" />
                         <%=GetLocaleResourceString("Admin.Common.Wait...")%>
                     </div>
                 </ProgressTemplate>

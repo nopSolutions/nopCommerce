@@ -9,8 +9,8 @@
         <td width="100%">
             <asp:UpdatePanel ID="upMappings" runat="server">
                 <ContentTemplate>
-                    <nopCommerce:NopDataPagerGridView ID="gvProductCategoryMappings" runat="server" AutoGenerateColumns="false"
-                        Width="100%" AllowPaging="true" OnPageIndexChanging="gvProductCategoryMappings_PageIndexChanging">
+                    <asp:GridView ID="gvProductCategoryMappings" runat="server" AutoGenerateColumns="false"
+                        Width="100%" AllowPaging="true" PageSize="15" OnPageIndexChanging="gvProductCategoryMappings_PageIndexChanging">
                         <Columns>
                             <asp:TemplateField HeaderText="<% $NopResources:Admin.CategoryProducts.Product %>"
                                 ItemStyle-Width="60%">
@@ -50,22 +50,8 @@
                                 </ItemTemplate>
                             </asp:TemplateField>
                         </Columns>
-                        <PagerSettings Visible="False" />
-                    </nopCommerce:NopDataPagerGridView>
-                    <div class="pager">
-                        <asp:DataPager ID="pagerProductCategoryMappings" runat="server" PageSize="15" PagedControlID="gvProductCategoryMappings">
-                            <Fields>
-                                <asp:NextPreviousPagerField ButtonCssClass="command" FirstPageText="«" PreviousPageText="‹"
-                                    RenderDisabledButtonsAsLabels="true" ShowFirstPageButton="true" ShowPreviousPageButton="true"
-                                    ShowLastPageButton="false" ShowNextPageButton="false" />
-                                <asp:NumericPagerField ButtonCount="7" NumericButtonCssClass="command" CurrentPageLabelCssClass="current"
-                                    NextPreviousButtonCssClass="command" />
-                                <asp:NextPreviousPagerField ButtonCssClass="command" LastPageText="»" NextPageText="›"
-                                    RenderDisabledButtonsAsLabels="true" ShowFirstPageButton="false" ShowPreviousPageButton="false"
-                                    ShowLastPageButton="true" ShowNextPageButton="true" />
-                            </Fields>
-                        </asp:DataPager>
-                    </div>
+                        <PagerSettings PageButtonCount="50" Position="TopAndBottom" />
+                    </asp:GridView>
                 </ContentTemplate>
             </asp:UpdatePanel>
             <asp:UpdateProgress ID="up1" runat="server" AssociatedUpdatePanelID="upMappings">

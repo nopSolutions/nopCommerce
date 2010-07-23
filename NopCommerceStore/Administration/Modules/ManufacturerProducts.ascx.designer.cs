@@ -28,16 +28,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::NopSolutions.NopCommerce.Controls.NopDataPagerGridView gvProductManufacturerMappings;
-        
-        /// <summary>
-        /// pagerProductManufacturerMappings control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DataPager pagerProductManufacturerMappings;
+        protected global::System.Web.UI.WebControls.GridView gvProductManufacturerMappings;
         
         /// <summary>
         /// up1 control.
