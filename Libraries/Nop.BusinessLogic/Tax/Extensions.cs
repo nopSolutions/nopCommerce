@@ -20,8 +20,18 @@ using System.Text;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Tax
 {
+    /// <summary>
+    /// Extensions
+    /// </summary>
     public static class Extensions
     {
+        /// <summary>
+        /// Finds tax rate
+        /// </summary>
+        /// <param name="source">Source</param>
+        /// <param name="countryId">Country identifier</param>
+        /// <param name="taxCategoryId">Tax category identifier</param>
+        /// <returns>Found tax rates</returns>
         public static List<TaxRate> FindTaxRates(this List<TaxRate> source,
             int countryId, int taxCategoryId)
         {

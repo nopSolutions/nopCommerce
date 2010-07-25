@@ -18,10 +18,14 @@ using System.Data;
 using System.Data.Objects;
 using System.Linq;
 using System.Text;
+using System.Diagnostics;
 
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Data
 {
+    /// <summary>
+    /// Extensions
+    /// </summary>
     public static class Extensions
     {
         /// <summary>
@@ -44,6 +48,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
             }
             catch (Exception exc)
             {
+                Debug.WriteLine(exc.ToString());
             }
             return false;
         }

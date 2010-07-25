@@ -114,6 +114,9 @@ namespace NopSolutions.NopCommerce.Web.Modules
             }
         }
 
+        /// <summary>
+        ///  Gets or sets the skin to apply to the control.
+        /// </summary>
         public string SkinID
         {
             get

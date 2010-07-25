@@ -121,7 +121,6 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                                 break;
                             default:
                                 throw new Exception("Not supported column type");
-                                break;
                         }
                         ctrl.DataBinding += new EventHandler(this.ctrl_DataBinding);
                         container.Controls.Add(ctrl);

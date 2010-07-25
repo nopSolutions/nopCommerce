@@ -23,7 +23,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
     /// </summary>
     public enum QBEditionEnum : int
     {
+        /// <summary>
+        /// SimpleStart
+        /// </summary>
         SimpleStart = 1,
+        /// <summary>
+        /// Pro
+        /// </summary>
         Pro = 2
     }
 }

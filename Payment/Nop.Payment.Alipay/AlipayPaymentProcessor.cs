@@ -55,7 +55,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Alipay
         /// <returns>The error status, or String.Empty if no errors</returns>
         public string PostProcessPayment(Order order)
         { 
-            string gateway = "https://www.alipay.com/cooperate/gateway.do?";
+            //string gateway = "https://www.alipay.com/cooperate/gateway.do?";
             string service = "create_direct_pay_by_user";
 
             string seller_email = SettingManager.GetSettingValue("PaymentMethod.Alipay.SellerEmail");

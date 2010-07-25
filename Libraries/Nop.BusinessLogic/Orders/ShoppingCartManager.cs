@@ -485,24 +485,19 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
         /// <param name="subTotal">Sub total</param>
         /// <returns>Error</returns>
-        public static string GetShoppingCartSubTotal(ShoppingCart cart, 
+        public static string GetShoppingCartSubTotal(ShoppingCart cart,
             Customer customer, bool includingTax, out decimal subTotal)
         {
             string error = string.Empty;
 
             //sub totals
-            decimal subTotalExclTax = decimal.Zero;
-            decimal subTotalInclTax = decimal.Zero;
+            decimal _subTotalTmp = decimal.Zero;
             foreach (var shoppingCartItem in cart)
             {
                 string error2 = string.Empty;
                 decimal sciSubTotal = PriceHelper.GetSubTotal(shoppingCartItem, customer, true);
-                subTotalExclTax += TaxManager.GetPrice(shoppingCartItem.ProductVariant, sciSubTotal, false, customer, ref error2);
-                if (!String.IsNullOrEmpty(error2))
-                {
-                    error = error2;
-                }
-                subTotalInclTax += TaxManager.GetPrice(shoppingCartItem.ProductVariant, sciSubTotal, true, customer, ref error2);
+
+                _subTotalTmp += TaxManager.GetPrice(shoppingCartItem.ProductVariant, sciSubTotal, includingTax, customer, ref error2);
                 if (!String.IsNullOrEmpty(error2))
                 {
                     error = error2;
@@ -516,25 +511,17 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 foreach (var caValue in caValues)
                 {
                     string error3 = string.Empty;
-                    subTotalExclTax += TaxManager.GetCheckoutAttributePrice(caValue, false, customer, ref error3);
+                    _subTotalTmp += TaxManager.GetCheckoutAttributePrice(caValue, includingTax, customer, ref error3);
                     if (!String.IsNullOrEmpty(error3))
                     {
                         error = error3;
                     }
-                    subTotalInclTax += TaxManager.GetCheckoutAttributePrice(caValue, true, customer, ref error3);
-                    if (!String.IsNullOrEmpty(error3))
-                    {
-                        error = error3;
-                    }
+
                 }
             }
 
-            if (includingTax)
-                subTotal = subTotalInclTax;
-            else
-                subTotal = subTotalExclTax;
+            subTotal = _subTotalTmp;
 
-            subTotal = subTotal;
             if (subTotal < decimal.Zero)
                 subTotal = decimal.Zero;
             subTotal = Math.Round(subTotal, 2);

@@ -34,6 +34,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Configuration;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Installation;
+using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
 
 namespace NopSolutions.NopCommerce.Web.Install
@@ -504,8 +505,7 @@ namespace NopSolutions.NopCommerce.Web.Install
 
                     if (admin == null || !admin.IsAdmin)
                     {
-                        throw new Exception("Admin record does not exist.");
-                        return;
+                        throw new NopException("Admin record does not exist.");
                     }
                     
                     admin = CustomerManager.UpdateCustomer(admin.CustomerId,

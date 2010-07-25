@@ -77,7 +77,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
         }
         
         /// <summary>
-        /// Gets or sets the date & time when entity was created
+        /// Gets or sets the date and time when entity was created
         /// </summary>
         public DateTime CreatedOn
         {
@@ -86,7 +86,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
         }
 
         /// <summary>
-        /// Gets or sets the date & time when entity was updated
+        /// Gets or sets the date and time when entity was updated
         /// </summary>
         public DateTime UpdatedOn
         {

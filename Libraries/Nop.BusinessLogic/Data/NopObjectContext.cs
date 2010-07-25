@@ -85,6 +85,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
 
         #region Object sets
 
+        /// <summary>
+        /// Gets an instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
+        /// <typeparam name="T">Type</typeparam>
+        /// <returns>Object set</returns>
         public ObjectSet<T> EntitySet<T>()
             where T : BaseEntity
         {
@@ -100,6 +105,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
             return (ObjectSet<T>)match;
         }
 
+        /// <summary>
+        /// Gets an ACL instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<ACL> ACL
         {
             get
@@ -113,6 +121,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<ACL> _acl;
 
+        /// <summary>
+        /// Gets an ActivityLog instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<ActivityLog> ActivityLog
         {
             get
@@ -126,6 +137,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<ActivityLog> _activityLog;
 
+        /// <summary>
+        /// Gets an ActivityLogTypes instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<ActivityLogType> ActivityLogTypes
         {
             get
@@ -139,6 +153,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<ActivityLogType> _activityLogTypes;
 
+        /// <summary>
+        /// Gets an Addresses instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<Address> Addresses
         {
             get
@@ -152,6 +169,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<Address> _addresses;
 
+        /// <summary>
+        /// Gets an Affiliates instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<Affiliate> Affiliates
         {
             get
@@ -165,6 +185,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<Affiliate> _affiliates;
 
+        /// <summary>
+        /// Gets a BannedIpAddresses instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<BannedIpAddress> BannedIpAddresses
         {
             get
@@ -178,6 +201,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<BannedIpAddress> _bannedIpAddresses;
 
+        /// <summary>
+        /// Gets a BannedIpNetworks instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<BannedIpNetwork> BannedIpNetworks
         {
             get
@@ -191,6 +217,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<BannedIpNetwork> _bannedIpNetworks;
 
+        /// <summary>
+        /// Gets a BlogPosts instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<BlogPost> BlogPosts
         {
             get
@@ -204,6 +233,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<BlogPost> _blogPosts;
 
+        /// <summary>
+        /// Gets a BlogComments instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<BlogComment> BlogComments
         {
             get
@@ -217,6 +249,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<BlogComment> _blogComments;
 
+        /// <summary>
+        /// Gets a Campaigns instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<Campaign> Campaigns
         {
             get
@@ -230,6 +265,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<Campaign> _campaigns;
 
+        /// <summary>
+        /// Gets a CategoryLocalized instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<CategoryLocalized> CategoryLocalized
         {
             get
@@ -243,6 +281,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<CategoryLocalized> _categoryLocalized;
 
+        /// <summary>
+        /// Gets a Categories instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<Category> Categories
         {
             get
@@ -255,7 +296,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
             }
         }
         private ObjectSet<Category> _categories;
-        
+
+        /// <summary>
+        /// Gets a CategoryTemplates instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<CategoryTemplate> CategoryTemplates
         {
             get
@@ -269,6 +313,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<CategoryTemplate> _categoryTemplates;
 
+        /// <summary>
+        /// Gets a CheckoutAttributeLocalized instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<CheckoutAttributeLocalized> CheckoutAttributeLocalized
         {
             get
@@ -282,6 +329,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<CheckoutAttributeLocalized> _checkoutAttributeLocalized;
 
+        /// <summary>
+        /// Gets a CheckoutAttributes instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<CheckoutAttribute> CheckoutAttributes
         {
             get
@@ -295,6 +345,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<CheckoutAttribute> _checkoutAttributes;
 
+        /// <summary>
+        /// Gets a CheckoutAttributeValueLocalized instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<CheckoutAttributeValueLocalized> CheckoutAttributeValueLocalized
         {
             get
@@ -308,6 +361,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<CheckoutAttributeValueLocalized> _checkoutAttributeValueLocalized;
 
+        /// <summary>
+        /// Gets a CheckoutAttributeValues instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<CheckoutAttributeValue> CheckoutAttributeValues
         {
             get
@@ -321,6 +377,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<CheckoutAttributeValue> _checkoutAttributeValues;
 
+        /// <summary>
+        /// Gets a Countries instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<Country> Countries
         {
             get
@@ -334,6 +393,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<Country> _countries;
 
+        /// <summary>
+        /// Gets a CreditCardTypes instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<CreditCardType> CreditCardTypes
         {
             get
@@ -347,6 +409,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<CreditCardType> _creditCardTypes;
 
+        /// <summary>
+        /// Gets a Currencies instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<Currency> Currencies
         {
             get
@@ -359,7 +424,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
             }
         }
         private ObjectSet<Currency> _currencies;
-        
+
+        /// <summary>
+        /// Gets a Customers instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<Customer> Customers
         {
             get
@@ -373,6 +441,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<Customer> _customers;
 
+        /// <summary>
+        /// Gets a CustomerActions instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<CustomerAction> CustomerActions
         {
             get
@@ -386,6 +457,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<CustomerAction> _customerActions;
 
+        /// <summary>
+        /// Gets a CustomerAttributes instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<CustomerAttribute> CustomerAttributes
         {
             get
@@ -399,6 +473,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<CustomerAttribute> _customerAttributes;
 
+        /// <summary>
+        /// Gets a CustomerRoles instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<CustomerRole> CustomerRoles
         {
             get
@@ -412,6 +489,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<CustomerRole> _customerRoles;
 
+        /// <summary>
+        /// Gets a CustomerRoleProductPrices instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<CustomerRoleProductPrice> CustomerRoleProductPrices
         {
             get
@@ -425,6 +505,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<CustomerRoleProductPrice> _customerRoleProductPrices;
 
+        /// <summary>
+        /// Gets a CustomerSessions instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<CustomerSession> CustomerSessions
         {
             get
@@ -438,6 +521,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<CustomerSession> _customerSessions;
 
+        /// <summary>
+        /// Gets a DiscountLimitations instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<DiscountLimitation> DiscountLimitations
         {
             get
@@ -451,6 +537,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<DiscountLimitation> _discountLimitations;
 
+        /// <summary>
+        /// Gets a DiscountRequirements instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<DiscountRequirement> DiscountRequirements
         {
             get
@@ -464,6 +553,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<DiscountRequirement> _discountRequirements;
 
+        /// <summary>
+        /// Gets a Discounts instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<Discount> Discounts
         {
             get
@@ -477,6 +569,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<Discount> _discounts;
 
+        /// <summary>
+        /// Gets a DiscountTypes instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<DiscountType> DiscountTypes
         {
             get
@@ -490,6 +585,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<DiscountType> _discountTypes;
 
+        /// <summary>
+        /// Gets a DiscountUsageHistory instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<DiscountUsageHistory> DiscountUsageHistory
         {
             get
@@ -503,6 +601,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<DiscountUsageHistory> _discountUsageHistory;
 
+        /// <summary>
+        /// Gets a Downloads instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<Download> Downloads
         {
             get
@@ -516,6 +617,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<Download> _downloads;
 
+        /// <summary>
+        /// Gets a Forums instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<Forum> Forums
         {
             get
@@ -529,6 +633,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<Forum> _forums;
 
+        /// <summary>
+        /// Gets a ForumGroups instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<ForumGroup> ForumGroups
         {
             get
@@ -542,6 +649,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<ForumGroup> _forumGroups;
 
+        /// <summary>
+        /// Gets a ForumPosts instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<ForumPost> ForumPosts
         {
             get
@@ -555,6 +665,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<ForumPost> _forumPosts;
 
+        /// <summary>
+        /// Gets a ForumSubscriptions instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<ForumSubscription> ForumSubscriptions
         {
             get
@@ -568,6 +681,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<ForumSubscription> _forumSubscriptions;
 
+        /// <summary>
+        /// Gets a ForumTopics instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<ForumTopic> ForumTopics
         {
             get
@@ -581,6 +697,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<ForumTopic> _forumTopics;
 
+        /// <summary>
+        /// Gets a GiftCards instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<GiftCard> GiftCards
         {
             get
@@ -594,6 +713,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<GiftCard> _giftCards;
 
+        /// <summary>
+        /// Gets a GiftCardUsageHistory instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<GiftCardUsageHistory> GiftCardUsageHistory
         {
             get
@@ -607,6 +729,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<GiftCardUsageHistory> _giftCardUsageHistory;
 
+        /// <summary>
+        /// Gets a Languages instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<Language> Languages
         {
             get
@@ -620,6 +745,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<Language> _languages;
 
+        /// <summary>
+        /// Gets a LocaleStringResources instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<LocaleStringResource> LocaleStringResources
         {
             get
@@ -633,6 +761,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<LocaleStringResource> _localeStringResources;
 
+        /// <summary>
+        /// Gets a LocalizedMessageTemplates instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<LocalizedMessageTemplate> LocalizedMessageTemplates
         {
             get
@@ -646,6 +777,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<LocalizedMessageTemplate> _localizedMessageTemplates;
 
+        /// <summary>
+        /// Gets a LocalizedTopics instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<LocalizedTopic> LocalizedTopics
         {
             get
@@ -659,6 +793,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<LocalizedTopic> _localizedTopics;
 
+        /// <summary>
+        /// Gets a Log instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<Log> Log
         {
             get
@@ -672,6 +809,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<Log> _log;
 
+        /// <summary>
+        /// Gets a LogTypes instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<LogType> LogTypes
         {
             get
@@ -685,6 +825,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<LogType> _logType;
 
+        /// <summary>
+        /// Gets a LowStockActivities instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<LowStockActivity> LowStockActivities
         {
             get
@@ -698,6 +841,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<LowStockActivity> _lowStockActivities;
 
+        /// <summary>
+        /// Gets a ManufacturerLocalized instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<ManufacturerLocalized> ManufacturerLocalized
         {
             get
@@ -711,6 +857,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<ManufacturerLocalized> _manufacturerLocalized;
 
+        /// <summary>
+        /// Gets a Manufacturers instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<Manufacturer> Manufacturers
         {
             get
@@ -724,6 +873,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<Manufacturer> _manufacturers;
 
+        /// <summary>
+        /// Gets a ManufacturerTemplates instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<ManufacturerTemplate> ManufacturerTemplates
         {
             get
@@ -737,6 +889,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<ManufacturerTemplate> _manufacturerTemplates;
 
+        /// <summary>
+        /// Gets a MeasureDimensions instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<MeasureDimension> MeasureDimensions
         {
             get
@@ -750,6 +905,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<MeasureDimension> _measureDimensions;
 
+        /// <summary>
+        /// Gets a MeasureWeights instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<MeasureWeight> MeasureWeights
         {
             get
@@ -763,6 +921,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<MeasureWeight> _measureWeights;
 
+        /// <summary>
+        /// Gets a MessageTemplates instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<MessageTemplate> MessageTemplates
         {
             get
@@ -776,6 +937,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<MessageTemplate> _messageTemplates;
 
+        /// <summary>
+        /// Gets a News instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<News> News
         {
             get
@@ -789,6 +953,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<News> _news;
 
+        /// <summary>
+        /// Gets a NewsComments instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<NewsComment> NewsComments
         {
             get
@@ -802,6 +969,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<NewsComment> _newsComments;
 
+        /// <summary>
+        /// Gets a NewsLetterSubscriptions instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<NewsLetterSubscription> NewsLetterSubscriptions
         {
             get
@@ -815,6 +985,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<NewsLetterSubscription> _newsLetterSubscriptions;
 
+        /// <summary>
+        /// Gets an OrderNotes instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<OrderNote> OrderNotes
         {
             get
@@ -828,6 +1001,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<OrderNote> _ordernotes;
 
+        /// <summary>
+        /// Gets an OrderProductVariants instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<OrderProductVariant> OrderProductVariants
         {
             get
@@ -841,6 +1017,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<OrderProductVariant> _orderProductVariants;
 
+        /// <summary>
+        /// Gets an Orders instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<Order> Orders
         {
             get
@@ -854,6 +1033,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<Order> _orders;
 
+        /// <summary>
+        /// Gets an OrderStatuses instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<OrderStatus> OrderStatuses
         {
             get
@@ -867,6 +1049,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<OrderStatus> _orderStatuses;
 
+        /// <summary>
+        /// Gets a PaymentMethods instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<PaymentMethod> PaymentMethods
         {
             get
@@ -880,6 +1065,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<PaymentMethod> _paymentMethods;
 
+        /// <summary>
+        /// Gets a PaymentStatuses instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<PaymentStatus> PaymentStatuses
         {
             get
@@ -893,6 +1081,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<PaymentStatus> _paymentStatuses;
 
+        /// <summary>
+        /// Gets a Pictures instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<Picture> Pictures
         {
             get
@@ -906,6 +1097,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<Picture> _pictures;
 
+        /// <summary>
+        /// Gets a Polls instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<Poll> Polls
         {
             get
@@ -919,6 +1113,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<Poll> _polls;
 
+        /// <summary>
+        /// Gets a PollAnswers instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<PollAnswer> PollAnswers
         {
             get
@@ -932,6 +1129,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<PollAnswer> _pollAnswers;
 
+        /// <summary>
+        /// Gets a PollVotingRecords instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<PollVotingRecord> PollVotingRecords
         {
             get
@@ -945,6 +1145,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<PollVotingRecord> _pollVotingRecords;
 
+        /// <summary>
+        /// Gets a Pricelists instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<Pricelist> Pricelists
         {
             get
@@ -958,6 +1161,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<Pricelist> _pricelists;
 
+        /// <summary>
+        /// Gets a PrivateMessages instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<PrivateMessage> PrivateMessages
         {
             get
@@ -971,6 +1177,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<PrivateMessage> _privateMessagess;
 
+        /// <summary>
+        /// Gets a ProductAttributeLocalized instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<ProductAttributeLocalized> ProductAttributeLocalized
         {
             get
@@ -984,6 +1193,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<ProductAttributeLocalized> _productAttributeLocalized;
 
+        /// <summary>
+        /// Gets a ProductAttributes instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<ProductAttribute> ProductAttributes
         {
             get
@@ -997,6 +1209,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<ProductAttribute> _productAttributes;
 
+        /// <summary>
+        /// Gets a ProductCategories instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<ProductCategory> ProductCategories
         {
             get
@@ -1010,6 +1225,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<ProductCategory> _productCategories;
 
+        /// <summary>
+        /// Gets a ProductLocalized instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<ProductLocalized> ProductLocalized
         {
             get
@@ -1023,6 +1241,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<ProductLocalized> _productLocalized;
 
+        /// <summary>
+        /// Gets a ProductManufacturers instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<ProductManufacturer> ProductManufacturers
         {
             get
@@ -1036,6 +1257,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<ProductManufacturer> _productManufacturers;
 
+        /// <summary>
+        /// Gets a ProductPictures instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<ProductPicture> ProductPictures
         {
             get
@@ -1049,6 +1273,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<ProductPicture> _productPictures;
 
+        /// <summary>
+        /// Gets a ProductRatings instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<ProductRating> ProductRatings
         {
             get
@@ -1062,6 +1289,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<ProductRating> _productRatings;
 
+        /// <summary>
+        /// Gets a ProductReviewHelpfulness instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<ProductReviewHelpfulness> ProductReviewHelpfulness
         {
             get
@@ -1075,6 +1305,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<ProductReviewHelpfulness> _productReviewHelpfulness;
 
+        /// <summary>
+        /// Gets a ProductReviews instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<ProductReview> ProductReviews
         {
             get
@@ -1088,6 +1321,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<ProductReview> _productReviews;
 
+        /// <summary>
+        /// Gets a Products instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<Product> Products
         {
             get
@@ -1101,6 +1337,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<Product> _products;
 
+        /// <summary>
+        /// Gets a ProductSpecificationAttributes instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<ProductSpecificationAttribute> ProductSpecificationAttributes
         {
             get
@@ -1114,6 +1353,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<ProductSpecificationAttribute> _productSpecificationAttributes;
 
+        /// <summary>
+        /// Gets a ProductTags instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<ProductTag> ProductTags
         {
             get
@@ -1127,6 +1369,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<ProductTag> productTags;
 
+        /// <summary>
+        /// Gets a ProductTemplates instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<ProductTemplate> ProductTemplates
         {
             get
@@ -1140,6 +1385,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<ProductTemplate> _productTemplates;
 
+        /// <summary>
+        /// Gets a ProductVariantAttributeCombinations instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<ProductVariantAttributeCombination> ProductVariantAttributeCombinations
         {
             get
@@ -1153,6 +1401,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<ProductVariantAttributeCombination> _productVariantAttributeCombinations;
 
+        /// <summary>
+        /// Gets a ProductVariantAttributes instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<ProductVariantAttribute> ProductVariantAttributes
         {
             get
@@ -1166,6 +1417,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<ProductVariantAttribute> _productVariantAttributes;
 
+        /// <summary>
+        /// Gets a ProductVariantAttributeValueLocalized instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<ProductVariantAttributeValueLocalized> ProductVariantAttributeValueLocalized
         {
             get
@@ -1179,6 +1433,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<ProductVariantAttributeValueLocalized> _productVariantAttributeValueLocalized;
 
+        /// <summary>
+        /// Gets a ProductVariantAttributeValues instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<ProductVariantAttributeValue> ProductVariantAttributeValues
         {
             get
@@ -1192,6 +1449,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<ProductVariantAttributeValue> _productVariantAttributeValues;
 
+        /// <summary>
+        /// Gets a ProductVariantLocalized instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<ProductVariantLocalized> ProductVariantLocalized
         {
             get
@@ -1205,6 +1465,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<ProductVariantLocalized> _productVariantLocalized;
 
+        /// <summary>
+        /// Gets a ProductVariantPricelists instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<ProductVariantPricelist> ProductVariantPricelists
         {
             get
@@ -1218,6 +1481,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<ProductVariantPricelist> _productVariantPricelists;
 
+        /// <summary>
+        /// Gets a ProductVariants instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<ProductVariant> ProductVariants
         {
             get
@@ -1231,6 +1497,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<ProductVariant> _productVariants;
 
+        /// <summary>
+        /// Gets a QueuedEmails instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<QueuedEmail> QueuedEmails
         {
             get
@@ -1244,6 +1513,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<QueuedEmail> _queuedEmails;
 
+        /// <summary>
+        /// Gets a QBEntities instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<QBEntity> QBEntities
         {
             get
@@ -1257,6 +1529,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<QBEntity> _qbEntities;
 
+        /// <summary>
+        /// Gets a RecurringPaymentHistory instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<RecurringPaymentHistory> RecurringPaymentHistory
         {
             get
@@ -1270,6 +1545,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<RecurringPaymentHistory> _recurringPaymentHistory;
 
+        /// <summary>
+        /// Gets a RecurringPayments instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<RecurringPayment> RecurringPayments
         {
             get
@@ -1283,6 +1561,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<RecurringPayment> _recurringPayments;
 
+        /// <summary>
+        /// Gets a RelatedProducts instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<RelatedProduct> RelatedProducts
         {
             get
@@ -1296,6 +1577,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<RelatedProduct> _relatedProducts;
 
+        /// <summary>
+        /// Gets a ReturnRequests instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<ReturnRequest> ReturnRequests
         {
             get
@@ -1309,6 +1593,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<ReturnRequest> _returnRequests;
 
+        /// <summary>
+        /// Gets a Warehouses instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<RewardPointsHistory> RewardPointsHistory
         {
             get
@@ -1322,6 +1609,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<RewardPointsHistory> _rewardPointsHistory;
 
+        /// <summary>
+        /// Gets a SearchLog instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<SearchLog> SearchLog
         {
             get
@@ -1335,6 +1625,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<SearchLog> _searchLog;
 
+        /// <summary>
+        /// Gets a Settings instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<Setting> Settings
         {
             get
@@ -1348,6 +1641,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<Setting> _settings;
 
+        /// <summary>
+        /// Gets a ShippingByTotal instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<ShippingByTotal> ShippingByTotal
         {
             get
@@ -1361,6 +1657,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<ShippingByTotal> _shippingByTotal;
 
+        /// <summary>
+        /// Gets a ShippingByWeight instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<ShippingByWeight> ShippingByWeight
         {
             get
@@ -1374,6 +1673,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<ShippingByWeight> _shippingByWeight;
 
+        /// <summary>
+        /// Gets a ShippingByWeightAndCountry instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<ShippingByWeightAndCountry> ShippingByWeightAndCountry
         {
             get
@@ -1387,6 +1689,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<ShippingByWeightAndCountry> _shippingByWeightAndCountry;
 
+        /// <summary>
+        /// Gets a ShippingMethods instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<ShippingMethod> ShippingMethods
         {
             get
@@ -1400,6 +1705,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<ShippingMethod> _shippingMethods;
 
+        /// <summary>
+        /// Gets a ShippingRateComputationMethods instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<ShippingRateComputationMethod> ShippingRateComputationMethods
         {
             get
@@ -1413,6 +1721,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<ShippingRateComputationMethod> _shippingRateComputationMethods;
 
+        /// <summary>
+        /// Gets a ShippingStatuses instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<ShippingStatus> ShippingStatuses
         {
             get
@@ -1426,6 +1737,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<ShippingStatus> _shippingStatuses;
 
+        /// <summary>
+        /// Gets a ShoppingCartItems instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<ShoppingCartItem> ShoppingCartItems
         {
             get
@@ -1439,6 +1753,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<ShoppingCartItem> _shoppingCartItems;
 
+        /// <summary>
+        /// Gets a ShoppingCartTypes instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<ShoppingCartType> ShoppingCartTypes
         {
             get
@@ -1452,6 +1769,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<ShoppingCartType> _shoppingCartTypes;
 
+        /// <summary>
+        /// Gets a SMSProviders instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<SMSProvider> SMSProviders
         {
             get
@@ -1465,6 +1785,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<SMSProvider> _smsProviders;
 
+        /// <summary>
+        /// Gets a SpecificationAttributeLocalized instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<SpecificationAttributeLocalized> SpecificationAttributeLocalized
         {
             get
@@ -1478,6 +1801,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<SpecificationAttributeLocalized> _specificationAttributeLocalized;
 
+        /// <summary>
+        /// Gets a SpecificationAttributeOptionLocalized instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<SpecificationAttributeOptionLocalized> SpecificationAttributeOptionLocalized
         {
             get
@@ -1491,6 +1817,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<SpecificationAttributeOptionLocalized> _specificationAttributeOptionLocalized;
 
+        /// <summary>
+        /// Gets a SpecificationAttributeOptions instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<SpecificationAttributeOption> SpecificationAttributeOptions
         {
             get
@@ -1504,6 +1833,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<SpecificationAttributeOption> _specificationAttributeOptions;
 
+        /// <summary>
+        /// Gets a SpecificationAttributes instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<SpecificationAttribute> SpecificationAttributes
         {
             get
@@ -1517,6 +1849,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<SpecificationAttribute> _specificationAttributes;
 
+        /// <summary>
+        /// Gets a StateProvinces instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<StateProvince> StateProvinces
         {
             get
@@ -1530,6 +1865,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<StateProvince> _stateProvinces;
 
+        /// <summary>
+        /// Gets a TaxCategories instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<TaxCategory> TaxCategories
         {
             get
@@ -1543,6 +1881,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<TaxCategory> _taxCategories;
 
+        /// <summary>
+        /// Gets a TaxProviders instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<TaxProvider> TaxProviders
         {
             get
@@ -1556,6 +1897,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<TaxProvider> _taxProviders;
 
+        /// <summary>
+        /// Gets a TaxRates instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<TaxRate> TaxRates
         {
             get
@@ -1569,6 +1913,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<TaxRate> _taxRates;
 
+        /// <summary>
+        /// Gets a TierPrices instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<TierPrice> TierPrices
         {
             get
@@ -1582,6 +1929,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<TierPrice> _tierPrices;
 
+        /// <summary>
+        /// Gets a Topics instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<Topic> Topics
         {
             get
@@ -1595,6 +1945,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
         private ObjectSet<Topic> _topics;
 
+        /// <summary>
+        /// Gets a Warehouses instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
         public ObjectSet<Warehouse> Warehouses
         {
             get
@@ -2626,6 +2979,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
             ObjectParameter olderThanParameter = new ObjectParameter("OlderThan", olderThan);
             base.ExecuteFunction("Sp_ShoppingCartItemDeleteExpired", olderThanParameter);
         }
+
         public List<SpecificationAttributeOptionFilter> Sp_SpecificationAttributeOptionFilter_LoadByFilter(int categoryId, int languageId)
         {
             ObjectParameter categoryIdParameter = new ObjectParameter("categoryId", categoryId);

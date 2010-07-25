@@ -23,8 +23,17 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
     /// </summary>
     public enum SynStateEnum : int
     {
+        /// <summary>
+        /// Failed
+        /// </summary>
         Failed = -1,
+        /// <summary>
+        /// Requested
+        /// </summary>
         Requested = 0,
+        /// <summary>
+        /// Success
+        /// </summary>
         Success = 1
     }
 }

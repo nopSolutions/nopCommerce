@@ -1863,7 +1863,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         /// Gets product variants by product identifier
         /// </summary>
         /// <param name="productId">The product identifier</param>
-        /// <param name="languageId">Language identifier</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Product variant collection</returns>
         public static List<ProductVariant> GetProductVariantsByProductId(int productId, bool showHidden)
@@ -2121,7 +2120,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                         //do nothing
                         return;
                     }
-                    break;
                 case ManageInventoryMethodEnum.ManageStock:
                     {
                         int newStockQuantity = 0;

@@ -2821,6 +2821,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// </summary>
         /// <param name="customerId">Customer identifier; null to load all entries</param>
         /// <param name="orderProductVariantId">Order product variant identifier; null to load all entries</param>
+        /// <param name="rs">Return status; null to load all entries</param>
         /// <returns>Return requests</returns>
         public static List<ReturnRequest> SearchReturnRequests(int customerId, 
             int orderProductVariantId, ReturnStatusEnum? rs)
@@ -3597,14 +3598,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                         {
                             case RecurringPaymentTypeEnum.NotSupported:
                                 throw new NopException("Recurring payments are not supported by selected payment method");
-                                break;
                             case RecurringPaymentTypeEnum.Manual:
                             case RecurringPaymentTypeEnum.Automatic:
                                 PaymentManager.ProcessRecurringPayment(paymentInfo, customer, orderGuid, ref processPaymentResult);
                                 break;
                             default:
                                 throw new NopException("Not supported recurring payment type");
-                                break;
                         }
                     }
                     else
@@ -3622,7 +3621,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                         {
                             case RecurringPaymentTypeEnum.NotSupported:
                                 throw new NopException("Recurring payments are not supported by selected payment method");
-                                break;
                             case RecurringPaymentTypeEnum.Manual:
                                 PaymentManager.ProcessRecurringPayment(paymentInfo, customer, orderGuid, ref processPaymentResult);
                                 break;
@@ -3631,7 +3629,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                                 break;
                             default:
                                 throw new NopException("Not supported recurring payment type");
-                                break;
                         }
                     }
                     else
@@ -5019,7 +5016,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <summary>
         /// Converts an amount in primary store currency to reward points
         /// </summary>
-        /// <param name="rewardPoints">Reward points</param>
+        /// <param name="amount">Amount</param>
         /// <returns>Converted value</returns>
         public static int ConvertAmountToRewardPoints(decimal amount)
         {

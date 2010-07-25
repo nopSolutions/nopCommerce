@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using System.Web.Compilation;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
@@ -820,6 +821,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
             }
             catch (Exception exc)
             {
+                Debug.WriteLine(exc.ToString());
                 return VatNumberStatusEnum.Unknown;
             }
 

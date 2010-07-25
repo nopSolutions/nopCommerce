@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -200,6 +201,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Localization
             }
             catch (Exception exc)
             {
+                Debug.WriteLine(exc.ToString());
                 throw;
             }
             finally

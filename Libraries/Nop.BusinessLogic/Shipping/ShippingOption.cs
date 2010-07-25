@@ -29,7 +29,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         private decimal _rate;
         private string _name;
         private string _description;
-        private int _appliedDiscountId;
 
         #region Properties
 

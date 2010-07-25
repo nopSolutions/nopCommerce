@@ -20,8 +20,12 @@ using System.Text;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Categories
 {
+    /// <summary>
+    /// Extensions
+    /// </summary>
     public static class Extensions
     {
+        /// <summary>
         /// Returns a ProductCategory that has the specified values
         /// </summary>
         /// <param name="source">Source</param>

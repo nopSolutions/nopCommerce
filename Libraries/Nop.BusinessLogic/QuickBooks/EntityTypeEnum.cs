@@ -23,10 +23,25 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
     /// </summary>
     public enum EntityTypeEnum : int
     {
+        /// <summary>
+        /// Invoice
+        /// </summary>
         Invoice = 1,
+        /// <summary>
+        /// Customer
+        /// </summary>
         Customer = 2,
+        /// <summary>
+        /// ReceivePayment
+        /// </summary>
         ReceivePayment = 3,
+        /// <summary>
+        /// TxnVoid
+        /// </summary>
         TxnVoid = 4,
+        /// <summary>
+        /// TxnDel
+        /// </summary>
         TxnDel = 5
     }
 }

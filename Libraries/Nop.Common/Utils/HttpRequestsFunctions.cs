@@ -75,7 +75,6 @@ namespace NopSolutions.NopCommerce.Common.Utils
             {
                 throw new NopException("HttpPost: Response error", ex.InnerException);
             }
-            return null;
         } // end HttpPost 
 
         private static Stream getResponseStream(WebRequest request)

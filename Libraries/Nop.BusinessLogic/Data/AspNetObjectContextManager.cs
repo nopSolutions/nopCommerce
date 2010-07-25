@@ -58,7 +58,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
                 return HttpContext.Current.Items[ocKey] as T;
             }
         }
-
+        
+        /// <summary>
+        /// Ctor
+        /// </summary>
         public AspNetObjectContextManager()
         {
             _lockObject = new object();

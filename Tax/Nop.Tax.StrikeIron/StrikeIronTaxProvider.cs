@@ -129,24 +129,22 @@ namespace NopSolutions.NopCommerce.Tax
                 taxService.LicenseInfoValue.RegisteredUser.UserID = userID;
                 taxService.LicenseInfoValue.RegisteredUser.Password = password;
 
-                /// The GetTaxRateUS operation can now be called.  The output type for this operation is SIWSOutputOfTaxRateUSAData.
-                /// Note that for simplicity, there is no error handling in this sample project.  In a production environment, any
-                /// web service call should be encapsulated in a try-catch block.
-                /// 
+                // The GetTaxRateUS operation can now be called.  The output type for this operation is SIWSOutputOfTaxRateUSAData.
+                // Note that for simplicity, there is no error handling in this sample project.  In a production environment, any
+                // web service call should be encapsulated in a try-catch block.
                 var wsOutput = taxService.GetTaxRateUS(zipCode);
 
-                /// The output objects of this StrikeIron web service contains two sections: ServiceStatus, which stores data
-                /// indicating the success/failure status of the the web service request; and ServiceResult, which contains the
-                /// actual data returne as a result of the request.
-                /// 
-                /// ServiceStatus contains two elements - StatusNbr: a numeric status code, and StatusDescription: a string
-                /// describing the status of the output object.  As a standard, you can apply the following assumptions for the value of
-                /// StatusNbr:
-                ///   200-299: Successful web service call (data found, etc...)
-                ///   300-399: Nonfatal error (No data found, etc...)
-                ///   400-499: Error due to invalid input
-                ///   500+: Unexpected internal error; contact support@strikeiron.com
-                ///     
+                // The output objects of this StrikeIron web service contains two sections: ServiceStatus, which stores data
+                // indicating the success/failure status of the the web service request; and ServiceResult, which contains the
+                // actual data returne as a result of the request.
+
+                // ServiceStatus contains two elements - StatusNbr: a numeric status code, and StatusDescription: a string
+                // describing the status of the output object.  As a standard, you can apply the following assumptions for the value of
+                // StatusNbr:
+                //   200-299: Successful web service call (data found, etc...)
+                //   300-399: Nonfatal error (No data found, etc...)
+                //   400-499: Error due to invalid input
+                //   500+: Unexpected internal error; contact support@strikeiron.com
                 if ((wsOutput.ServiceStatus.StatusNbr >= 200) && (wsOutput.ServiceStatus.StatusNbr < 300))
                 {
                     //Successfully called SalesTax service...

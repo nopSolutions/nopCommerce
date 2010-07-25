@@ -389,6 +389,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
         /// </summary>
         public virtual ICollection<ManufacturerLocalized> NpManufacturerLocalized { get; set; }
 
+        /// <summary>
         /// Gets the product manufacturers
         /// </summary>
         public virtual ICollection<ProductManufacturer> NpProductManufacturers { get; set; }

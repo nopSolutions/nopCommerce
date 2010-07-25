@@ -26,19 +26,22 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
     public partial class QBConnector : System.Web.Services.WebService
     {
         #region Methods
-        [WebMethod]
         /// <summary>
         /// To enable web service with its version number returned back to QBWC
         /// </summary>
+        /// <returns>Server version</returns>
+        [WebMethod]
         public string serverVersion()
         {
             return SiteHelper.GetCurrentVersion();
         }
 
-        [WebMethod]
         /// <summary>
         /// To enable web service with QBWC version control
         /// </summary>
+        /// <param name="strVersion">Version</param>
+        /// <returns>Client version</returns>
+        [WebMethod]
         public string clientVersion(string strVersion)
         {
             if(String.IsNullOrEmpty(strVersion))
@@ -60,6 +63,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
         }
 
 
+        /// <summary>
+        /// Authenticate user
+        /// </summary>
+        /// <param name="strUserName">Username</param>
+        /// <param name="strPassword">Password</param>
+        /// <returns>Authenticate result</returns>
         [System.Web.Services.WebMethodAttribute()]
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://developer.intuit.com/authenticate", RequestNamespace = "http://developer.intuit.com/", ResponseNamespace = "http://developer.intuit.com/", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         public string[] authenticate(string strUserName, string strPassword)
@@ -80,6 +89,16 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
 
         }
 
+        /// <summary>
+        /// Send request
+        /// </summary>
+        /// <param name="ticket">Ticket</param>
+        /// <param name="strHCPResponse">HCP Response</param>
+        /// <param name="strCompanyFileName">Company filename</param>
+        /// <param name="qbXMLCountry">Country</param>
+        /// <param name="qbXMLMajorVers">Major version</param>
+        /// <param name="qbXMLMinorVers">Minor version</param>
+        /// <returns>Result</returns>
         [System.Web.Services.WebMethodAttribute()]
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://developer.intuit.com/sendRequestXML", RequestNamespace = "http://developer.intuit.com/", ResponseNamespace = "http://developer.intuit.com/", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         public string sendRequestXML(string ticket, string strHCPResponse, string strCompanyFileName, string qbXMLCountry, int qbXMLMajorVers, int qbXMLMinorVers)
@@ -135,6 +154,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
             }
         }
 
+        /// <summary>
+        /// Receive response
+        /// </summary>
+        /// <param name="ticket">Ticket</param>
+        /// <param name="response">Response</param>
+        /// <param name="hresult">Hresult</param>
+        /// <param name="message">Message</param>
+        /// <returns>Result code</returns>
         [System.Web.Services.WebMethodAttribute()]
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://developer.intuit.com/receiveResponseXML", RequestNamespace = "http://developer.intuit.com/", ResponseNamespace = "http://developer.intuit.com/", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         public int receiveResponseXML(string ticket, string response, string hresult, string message)
@@ -212,6 +239,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
             }
         }
 
+        /// <summary>
+        /// Connection error notification
+        /// </summary>
+        /// <param name="ticket">Ticker</param>
+        /// <param name="hresult">hresult</param>
+        /// <param name="message">Message</param>
+        /// <returns>Result</returns>
         [System.Web.Services.WebMethodAttribute()]
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://developer.intuit.com/connectionError", RequestNamespace = "http://developer.intuit.com/", ResponseNamespace = "http://developer.intuit.com/", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         public string connectionError(string ticket, string hresult, string message)
@@ -220,6 +254,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
             return String.Empty;
         }
 
+        /// <summary>
+        /// Gets the last error
+        /// </summary>
+        /// <param name="ticket">Ticket</param>
+        /// <returns>Error</returns>
         [System.Web.Services.WebMethodAttribute()]
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://developer.intuit.com/getLastError", RequestNamespace = "http://developer.intuit.com/", ResponseNamespace = "http://developer.intuit.com/", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         public string getLastError(string ticket)
@@ -227,6 +266,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
             return String.Empty;
         }
 
+        /// <summary>
+        /// Close connection
+        /// </summary>
+        /// <param name="ticket">Ticket</param>
+        /// <returns>Result</returns>
         [System.Web.Services.WebMethodAttribute()]
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://developer.intuit.com/closeConnection", RequestNamespace = "http://developer.intuit.com/", ResponseNamespace = "http://developer.intuit.com/", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         public string closeConnection(string ticket)

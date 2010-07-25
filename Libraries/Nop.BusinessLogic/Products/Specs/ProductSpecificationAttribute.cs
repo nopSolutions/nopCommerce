@@ -111,6 +111,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
         /// </summary>
         public virtual Product NpProduct { get; set; }
 
+        /// <summary>
         /// Gets the specification attribute option
         /// </summary>
         public virtual SpecificationAttributeOption NpSpecificationAttributeOption { get; set; }

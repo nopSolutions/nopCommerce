@@ -177,7 +177,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
                     {
                         return true;
                     }
-                    break;
                 case DiscountRequirementEnum.MustBeAssignedToCustomerRole:
                     {
                         if (customer != null)
@@ -286,13 +285,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
                     {
                         return true;
                     }
-                    break;
                 case DiscountLimitationEnum.OneTimeOnly:
                     {
                         var usageHistory = DiscountManager.GetAllDiscountUsageHistoryEntries(this.DiscountId, null, null);
                         return usageHistory.Count < 1;
                     }
-                    break;
                 case DiscountLimitationEnum.OneTimePerCustomer:
                     {
                         if (customer != null)
@@ -304,8 +301,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
                         {
                             return false;
                         }
-                    }
-                    break;                
+                    }             
                 default:
                     break;
             }

@@ -21,6 +21,10 @@ using System.Threading;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Data
 {
+    /// <summary>
+    /// Scoped object contect manager
+    /// </summary>
+    /// <typeparam name="T">Context type</typeparam>
     public sealed class ScopedObjectContextManager<T> : ObjectContextManager<T> where T : ObjectContext, new()
     {
         private T _objectContext;

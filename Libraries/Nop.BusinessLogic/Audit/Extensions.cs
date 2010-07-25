@@ -20,6 +20,9 @@ using System.Text;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Audit
 {
+    /// <summary>
+    /// Extensions
+    /// </summary>
     public static class Extensions
     {
         /// <summary>
