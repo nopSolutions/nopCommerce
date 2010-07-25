@@ -187,6 +187,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             string CusSubTotal = string.Empty;
             string CusShipTotal = string.Empty;
             string CusPaymentMethodAdditionalFee = string.Empty;
+            SortedDictionary<decimal, decimal> taxRates = new SortedDictionary<decimal, decimal>();
             string CusTaxTotal = string.Empty;
             string CusDiscount = string.Empty;
             string CusTotal = string.Empty;
@@ -221,18 +222,26 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
 
             //tax
             bool displayTax = true;
+            bool displayTaxRates = true;
             if (TaxManager.HideTaxInOrderSummary && order.CustomerTaxDisplayType == TaxDisplayTypeEnum.IncludingTax)
             {
                 displayTax = false;
+                displayTaxRates = false;
             }
             else
             {
                 if (order.OrderTax == 0 && TaxManager.HideZeroTax)
                 {
                     displayTax = false;
+                    displayTaxRates = false;
                 }
                 else
                 {
+                    taxRates = order.TaxRatesDictionaryInCustomerCurrency;
+                   
+                    displayTaxRates = TaxManager.DisplayTaxRates && taxRates.Count > 0;
+                    displayTax = !displayTaxRates;
+
                     string taxStr = PriceHelper.FormatPrice(order.OrderTaxInCustomerCurrency, true, order.CustomerCurrencyCode, false);
                     CusTaxTotal = taxStr;
                 }
@@ -272,6 +281,15 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             if (displayTax)
             {
                 sb.AppendLine(string.Format("<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{1}</strong></td> <td style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{2}</strong></td></tr>", color3, LocalizationManager.GetLocaleResourceString("Order.Tax", languageId), CusTaxTotal));
+            }
+            if (displayTaxRates)
+            {
+                foreach (var item in taxRates)
+                {
+                    string taxRate = String.Format(LocalizationManager.GetLocaleResourceString("Order.Totals.TaxRate"), TaxManager.FormatTaxRate(item.Key));
+                    string taxValue = PriceHelper.FormatPrice(item.Value, true, false);
+                    sb.AppendLine(string.Format("<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{1}</strong></td> <td style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{2}</strong></td></tr>", color3, taxRate, taxValue));
+                }
             }
 
             //discount

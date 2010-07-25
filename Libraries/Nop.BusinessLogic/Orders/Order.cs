@@ -14,6 +14,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
 using System.Text;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Payment;
@@ -35,12 +37,53 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         #endregion
 
         #region Ctor
+
         /// <summary>
         /// Creates a new instance of the Order class
         /// </summary>
         public Order()
         {
         }
+
+        #endregion
+
+        #region Methods
+
+        protected SortedDictionary<decimal, decimal> ParseTaxRates(string taxRatesStr)
+        {
+            var taxRatesDictionary = new SortedDictionary<decimal, decimal>();
+            if (String.IsNullOrEmpty(taxRatesStr))
+                return taxRatesDictionary;
+
+            string[] lines = taxRatesStr.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+            foreach (string line in lines)
+            {
+                if (String.IsNullOrEmpty(line.Trim()))
+                    continue;
+
+                string[] taxes = line.Split(new char[] { ':'});
+                if (taxes.Length == 2)
+                {
+                    try
+                    {
+                        decimal taxRate = decimal.Parse(taxes[0].Trim(), new CultureInfo("en-US"));
+                        decimal taxValue = decimal.Parse(taxes[1].Trim(), new CultureInfo("en-US"));
+                        taxRatesDictionary.Add(taxRate, taxValue);
+                    }
+                    catch (Exception exc)
+                    {
+                        Debug.WriteLine(exc.ToString());
+                    }
+                }
+            }
+            
+            //add at least one tax rate (0%)
+            if (taxRatesDictionary.Count == 0)
+                taxRatesDictionary.Add(decimal.Zero, decimal.Zero);
+
+            return taxRatesDictionary;
+        }
+
         #endregion
 
         #region Properties
@@ -105,6 +148,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         public decimal PaymentMethodAdditionalFeeExclTax { get; set; }
 
         /// <summary>
+        /// Gets or sets the tax rates
+        /// </summary>
+        public string TaxRates { get; set; }
+
+        /// <summary>
         /// Gets or sets the order tax
         /// </summary>
         public decimal OrderTax { get; set; }
@@ -148,6 +196,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// Gets or sets the payment method additional fee excl tax (customer currency)
         /// </summary>
         public decimal PaymentMethodAdditionalFeeExclTaxInCustomerCurrency { get; set; }
+
+        /// <summary>
+        /// Gets or sets the tax rates (customer currency)
+        /// </summary>
+        public string TaxRatesInCustomerCurrency { get; set; }
 
         /// <summary>
         /// Gets or sets the order tax (customer currency)
@@ -635,6 +688,29 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 return _rph;
             }
         }
+
+        /// <summary>
+        /// Gets the applied tax rates
+        /// </summary>
+        public SortedDictionary<decimal, decimal> TaxRatesDictionary
+        {
+            get
+            {
+                return ParseTaxRates(this.TaxRates);
+            }
+        }
+
+        /// <summary>
+        /// Gets the applied tax rates (customer currency)
+        /// </summary>
+        public SortedDictionary<decimal, decimal> TaxRatesDictionaryInCustomerCurrency
+        {
+            get
+            {
+                return ParseTaxRates(this.TaxRatesInCustomerCurrency);
+            }
+        }
+
         #endregion
 
         #region Navigation Properties

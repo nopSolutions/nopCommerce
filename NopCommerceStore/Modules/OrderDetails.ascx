@@ -265,6 +265,21 @@
                                             </td>
                                         </tr>
                                     </asp:PlaceHolder>
+                                    <asp:Repeater runat="server" ID="rptrTaxRates" OnItemDataBound="rptrTaxRates_ItemDataBound">
+                                        <ItemTemplate>
+                                            <tr>
+                                               <td width="100%" align="right">
+                                                    <strong>
+                                                        <asp:Literal runat="server" ID="lTaxRateTitle"></asp:Literal>:
+                                                </td>
+                                               <td align="right">
+                                                    <span style="white-space: nowrap;">
+                                                        <asp:Literal runat="server" ID="lTaxRateValue"></asp:Literal>
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        </ItemTemplate>
+                                    </asp:Repeater>
                                     <asp:PlaceHolder runat="server" ID="phTaxTotal">
                                         <tr>
                                             <td width="100%" align="right">

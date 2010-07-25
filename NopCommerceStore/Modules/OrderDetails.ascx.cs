@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
 using System.Data;
@@ -178,22 +179,33 @@ namespace NopSolutions.NopCommerce.Web.Modules
             
             //tax
             bool displayTax = true;
+            bool displayTaxRates = true;
             if (TaxManager.HideTaxInOrderSummary && order.CustomerTaxDisplayType == TaxDisplayTypeEnum.IncludingTax)
             {
                 displayTax = false;
+                displayTaxRates = false;
             }
             else
             {
                 if (order.OrderTax == 0 && TaxManager.HideZeroTax)
                 {
                     displayTax = false;
+                    displayTaxRates = false;
                 }
                 else
                 {
+                    SortedDictionary<decimal, decimal> taxRates = order.TaxRatesDictionaryInCustomerCurrency;
+
+                    displayTaxRates = TaxManager.DisplayTaxRates && taxRates.Count > 0;
+                    displayTax = !displayTaxRates;
+
                     string taxStr = PriceHelper.FormatPrice(order.OrderTaxInCustomerCurrency, true, order.CustomerCurrencyCode, false);
                     this.lblOrderTax.Text = taxStr;
+                    rptrTaxRates.DataSource = taxRates;
+                    rptrTaxRates.DataBind();
                 }
             }
+            rptrTaxRates.Visible = displayTaxRates;
             phTaxTotal.Visible = displayTax;
 
             //discount
@@ -326,6 +338,20 @@ namespace NopSolutions.NopCommerce.Web.Modules
             catch(Exception ex)
             {
                 LogManager.InsertLog(LogTypeEnum.CustomerError, "Error generating PDF", ex);
+            }
+        }
+
+        protected void rptrTaxRates_ItemDataBound(object sender, RepeaterItemEventArgs e)
+        {
+            if (e.Item.ItemType == ListItemType.AlternatingItem || e.Item.ItemType == ListItemType.Item)
+            {
+                var item = (KeyValuePair<decimal, decimal>)e.Item.DataItem;
+
+                var lTaxRateTitle = e.Item.FindControl("lTaxRateTitle") as Literal;
+                lTaxRateTitle.Text = String.Format(GetLocaleResourceString("Order.Totals.TaxRate"), TaxManager.FormatTaxRate(item.Key));
+
+                var lTaxRateValue = e.Item.FindControl("lTaxRateValue") as Literal;
+                lTaxRateValue.Text = PriceHelper.FormatPrice(item.Value, true, false);
             }
         }
 

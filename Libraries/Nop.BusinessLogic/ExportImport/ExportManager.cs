@@ -830,6 +830,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                 xmlWriter.WriteElementString("OrderShippingExclTax", null, order.OrderShippingExclTax.ToString());
                 xmlWriter.WriteElementString("PaymentMethodAdditionalFeeInclTax", null, order.PaymentMethodAdditionalFeeInclTax.ToString());
                 xmlWriter.WriteElementString("PaymentMethodAdditionalFeeExclTax", null, order.PaymentMethodAdditionalFeeExclTax.ToString());
+                xmlWriter.WriteElementString("TaxRates", null, order.TaxRates);
                 xmlWriter.WriteElementString("OrderTax", null, order.OrderTax.ToString());
                 xmlWriter.WriteElementString("OrderTotal", null, order.OrderTotal.ToString());
                 xmlWriter.WriteElementString("OrderDiscount", null, order.OrderDiscount.ToString());
@@ -839,6 +840,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                 xmlWriter.WriteElementString("OrderShippingExclTaxInCustomerCurrency", null, order.OrderShippingExclTaxInCustomerCurrency.ToString());
                 xmlWriter.WriteElementString("PaymentMethodAdditionalFeeInclTaxInCustomerCurrency", null, order.PaymentMethodAdditionalFeeInclTaxInCustomerCurrency.ToString());
                 xmlWriter.WriteElementString("PaymentMethodAdditionalFeeExclTaxInCustomerCurrency", null, order.PaymentMethodAdditionalFeeExclTaxInCustomerCurrency.ToString());
+                xmlWriter.WriteElementString("TaxRatesInCustomerCurrency", null, order.TaxRatesInCustomerCurrency);
                 xmlWriter.WriteElementString("OrderTaxInCustomerCurrency", null, order.OrderTaxInCustomerCurrency.ToString());
                 xmlWriter.WriteElementString("OrderTotalInCustomerCurrency", null, order.OrderTotalInCustomerCurrency.ToString());
                 xmlWriter.WriteElementString("OrderDiscountInCustomerCurrency", null, order.OrderDiscountInCustomerCurrency.ToString());
@@ -968,6 +970,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                 tableDefinition.Add("OrderShippingExclTax", "decimal");
                 tableDefinition.Add("PaymentMethodAdditionalFeeInclTax", "decimal");
                 tableDefinition.Add("PaymentMethodAdditionalFeeExclTax", "decimal");
+                tableDefinition.Add("TaxRates", "nvarchar(255)");
                 tableDefinition.Add("OrderTax", "decimal");
                 tableDefinition.Add("OrderTotal", "decimal");
                 tableDefinition.Add("OrderDiscount", "decimal");
@@ -977,6 +980,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                 tableDefinition.Add("OrderShippingExclTaxInCustomerCurrency", "decimal");
                 tableDefinition.Add("PaymentMethodAdditionalFeeInclTaxInCustomerCurrency", "decimal");
                 tableDefinition.Add("PaymentMethodAdditionalFeeExclTaxInCustomerCurrency", "decimal");
+                tableDefinition.Add("TaxRatesInCustomerCurrency", "nvarchar(255)");
                 tableDefinition.Add("OrderTaxInCustomerCurrency", "decimal");
                 tableDefinition.Add("OrderTotalInCustomerCurrency", "decimal");
                 tableDefinition.Add("OrderDiscountInCustomerCurrency", "decimal");
@@ -1024,7 +1028,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                 foreach (var order in orders)
                 {
                     StringBuilder sb = new StringBuilder();
-                    sb.Append("INSERT INTO [Orders] (OrderId, OrderGuid, CustomerId, OrderSubtotalInclTax, OrderSubtotalExclTax, OrderShippingInclTax, OrderShippingExclTax, PaymentMethodAdditionalFeeInclTax, PaymentMethodAdditionalFeeExclTax, OrderTax, OrderTotal, OrderDiscount, OrderSubtotalInclTaxInCustomerCurrency, OrderSubtotalExclTaxInCustomerCurrency, OrderShippingInclTaxInCustomerCurrency, OrderShippingExclTaxInCustomerCurrency, PaymentMethodAdditionalFeeInclTaxInCustomerCurrency, PaymentMethodAdditionalFeeExclTaxInCustomerCurrency, OrderTaxInCustomerCurrency, OrderTotalInCustomerCurrency, OrderDiscountInCustomerCurrency, CustomerCurrencyCode, OrderWeight, AffiliateId, OrderStatusId, PaymentMethodId, PaymentMethodName, PurchaseOrderNumber, PaymentStatusId, BillingFirstName, BillingLastName, BillingPhoneNumber, BillingEmail, BillingFaxNumber, BillingCompany, BillingAddress1, BillingAddress2, BillingCity, BillingStateProvince, BillingZipPostalCode, BillingCountry, ShippingStatusId,  ShippingFirstName, ShippingLastName, ShippingPhoneNumber, ShippingEmail, ShippingFaxNumber, ShippingCompany,  ShippingAddress1, ShippingAddress2, ShippingCity, ShippingStateProvince, ShippingZipPostalCode, ShippingCountry, ShippingMethod, ShippingRateComputationMethodId, VatNumber, CreatedOn) VALUES (");
+                    sb.Append("INSERT INTO [Orders] (OrderId, OrderGuid, CustomerId, OrderSubtotalInclTax, OrderSubtotalExclTax, OrderShippingInclTax, OrderShippingExclTax, PaymentMethodAdditionalFeeInclTax, PaymentMethodAdditionalFeeExclTax, TaxRates, OrderTax, OrderTotal, OrderDiscount, OrderSubtotalInclTaxInCustomerCurrency, OrderSubtotalExclTaxInCustomerCurrency, OrderShippingInclTaxInCustomerCurrency, OrderShippingExclTaxInCustomerCurrency, PaymentMethodAdditionalFeeInclTaxInCustomerCurrency, PaymentMethodAdditionalFeeExclTaxInCustomerCurrency, TaxRatesInCustomerCurrency, OrderTaxInCustomerCurrency, OrderTotalInCustomerCurrency, OrderDiscountInCustomerCurrency, CustomerCurrencyCode, OrderWeight, AffiliateId, OrderStatusId, PaymentMethodId, PaymentMethodName, PurchaseOrderNumber, PaymentStatusId, BillingFirstName, BillingLastName, BillingPhoneNumber, BillingEmail, BillingFaxNumber, BillingCompany, BillingAddress1, BillingAddress2, BillingCity, BillingStateProvince, BillingZipPostalCode, BillingCountry, ShippingStatusId,  ShippingFirstName, ShippingLastName, ShippingPhoneNumber, ShippingEmail, ShippingFaxNumber, ShippingCompany,  ShippingAddress1, ShippingAddress2, ShippingCity, ShippingStateProvince, ShippingZipPostalCode, ShippingCountry, ShippingMethod, ShippingRateComputationMethodId, VatNumber, CreatedOn) VALUES (");
 
 
                     sb.Append(order.OrderId); sb.Append(",");
@@ -1036,6 +1040,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                     sb.Append(decimalQuoter); sb.Append(order.OrderShippingExclTax); sb.Append(decimalQuoter); sb.Append(",");
                     sb.Append(decimalQuoter); sb.Append(order.PaymentMethodAdditionalFeeInclTax); sb.Append(decimalQuoter); sb.Append(",");
                     sb.Append(decimalQuoter); sb.Append(order.PaymentMethodAdditionalFeeExclTax); sb.Append(decimalQuoter); sb.Append(",");
+                    sb.Append('"'); sb.Append(order.TaxRates.Replace('"', '\'')); sb.Append("\",");
                     sb.Append(decimalQuoter); sb.Append(order.OrderTax); sb.Append(decimalQuoter); sb.Append(",");
                     sb.Append(decimalQuoter); sb.Append(order.OrderTotal); sb.Append(decimalQuoter); sb.Append(",");
                     sb.Append(decimalQuoter); sb.Append(order.OrderDiscount); sb.Append(decimalQuoter); sb.Append(",");
@@ -1045,6 +1050,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                     sb.Append(decimalQuoter); sb.Append(order.OrderShippingExclTaxInCustomerCurrency); sb.Append(decimalQuoter); sb.Append(",");
                     sb.Append(decimalQuoter); sb.Append(order.PaymentMethodAdditionalFeeInclTaxInCustomerCurrency); sb.Append(decimalQuoter); sb.Append(",");
                     sb.Append(decimalQuoter); sb.Append(order.PaymentMethodAdditionalFeeExclTaxInCustomerCurrency); sb.Append(decimalQuoter); sb.Append(",");
+                    sb.Append('"'); sb.Append(order.TaxRatesInCustomerCurrency.Replace('"', '\'')); sb.Append("\",");
                     sb.Append(decimalQuoter); sb.Append(order.OrderTaxInCustomerCurrency); sb.Append(decimalQuoter); sb.Append(",");
                     sb.Append(decimalQuoter); sb.Append(order.OrderTotalInCustomerCurrency); sb.Append(decimalQuoter); sb.Append(",");
                     sb.Append(decimalQuoter); sb.Append(order.OrderDiscountInCustomerCurrency); sb.Append(decimalQuoter); sb.Append(",");

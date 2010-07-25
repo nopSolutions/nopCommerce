@@ -89,13 +89,17 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                     order.OrderShippingExclTax, 
                     order.PaymentMethodAdditionalFeeInclTax,
                     order.PaymentMethodAdditionalFeeExclTax,
-                    order.OrderTax, order.OrderTotal, order.OrderDiscount,
+                    order.TaxRates,
+                    order.OrderTax, 
+                    order.OrderTotal, 
+                    order.OrderDiscount,
                     order.OrderSubtotalInclTaxInCustomerCurrency, 
                     order.OrderSubtotalExclTaxInCustomerCurrency,
                     order.OrderShippingInclTaxInCustomerCurrency, 
                     order.OrderShippingExclTaxInCustomerCurrency,
-                    order.PaymentMethodAdditionalFeeInclTaxInCustomerCurrency, 
+                    order.PaymentMethodAdditionalFeeInclTaxInCustomerCurrency,
                     order.PaymentMethodAdditionalFeeExclTaxInCustomerCurrency,
+                    order.TaxRatesInCustomerCurrency,
                     order.OrderTaxInCustomerCurrency, 
                     order.OrderTotalInCustomerCurrency,
                     order.OrderDiscountInCustomerCurrency,
@@ -327,10 +331,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 order = UpdateOrder(order.OrderId, order.OrderGuid, order.CustomerId, order.CustomerLanguageId,
                     order.CustomerTaxDisplayType, order.CustomerIP, order.OrderSubtotalInclTax, order.OrderSubtotalExclTax, order.OrderShippingInclTax,
                     order.OrderShippingExclTax, order.PaymentMethodAdditionalFeeInclTax, order.PaymentMethodAdditionalFeeExclTax,
-                    order.OrderTax, order.OrderTotal, order.OrderDiscount,
+                    order.TaxRates, order.OrderTax, order.OrderTotal, order.OrderDiscount,
                     order.OrderSubtotalInclTaxInCustomerCurrency, order.OrderSubtotalExclTaxInCustomerCurrency,
                     order.OrderShippingInclTaxInCustomerCurrency, order.OrderShippingExclTaxInCustomerCurrency,
                     order.PaymentMethodAdditionalFeeInclTaxInCustomerCurrency, order.PaymentMethodAdditionalFeeExclTaxInCustomerCurrency,
+                    order.TaxRatesInCustomerCurrency,
                     order.OrderTaxInCustomerCurrency, order.OrderTotalInCustomerCurrency,
                     order.OrderDiscountInCustomerCurrency,
                     order.CheckoutAttributeDescription, order.CheckoutAttributesXml, 
@@ -417,11 +422,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 UpdateOrder(order.OrderId, order.OrderGuid, order.CustomerId, order.CustomerLanguageId,
                     order.CustomerTaxDisplayType, order.CustomerIP, order.OrderSubtotalInclTax, order.OrderSubtotalExclTax, order.OrderShippingInclTax,
                    order.OrderShippingExclTax, order.PaymentMethodAdditionalFeeInclTax, order.PaymentMethodAdditionalFeeExclTax,
-                   order.OrderTax, order.OrderTotal, order.OrderDiscount,
+                   order.TaxRates, order.OrderTax, order.OrderTotal, order.OrderDiscount,
                    order.OrderSubtotalInclTaxInCustomerCurrency, order.OrderSubtotalExclTaxInCustomerCurrency,
                    order.OrderShippingInclTaxInCustomerCurrency, order.OrderShippingExclTaxInCustomerCurrency,
                    order.PaymentMethodAdditionalFeeInclTaxInCustomerCurrency, order.PaymentMethodAdditionalFeeExclTaxInCustomerCurrency,
-                   order.OrderTaxInCustomerCurrency, order.OrderTotalInCustomerCurrency,
+                   order.TaxRatesInCustomerCurrency, order.OrderTaxInCustomerCurrency, order.OrderTotalInCustomerCurrency,
                    order.OrderDiscountInCustomerCurrency,
                    order.CheckoutAttributeDescription, order.CheckoutAttributesXml,
                    order.CustomerCurrencyCode, order.OrderWeight,
@@ -566,6 +571,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="orderShippingExclTax">The order shipping (excl tax)</param>
         /// <param name="paymentMethodAdditionalFeeInclTax">The payment method additional fee (incl tax)</param>
         /// <param name="paymentMethodAdditionalFeeExclTax">The payment method additional fee (excl tax)</param>
+        /// <param name="taxRates">The tax rates</param>
         /// <param name="orderTax">The order tax</param>
         /// <param name="orderTotal">The order total</param>
         /// <param name="orderDiscount">The order discount</param>
@@ -575,6 +581,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="orderShippingExclTaxInCustomerCurrency">The order shipping excl tax (customer currency)</param>
         /// <param name="paymentMethodAdditionalFeeInclTaxInCustomerCurrency">The payment method additional fee incl tax (customer currency)</param>
         /// <param name="paymentMethodAdditionalFeeExclTaxInCustomerCurrency">The payment method additional fee excl tax (customer currency)</param>
+        /// <param name="taxRatesInCustomerCurrency">The tax rates (customer currency)</param>
         /// <param name="orderTaxInCustomerCurrency">The order tax (customer currency)</param>
         /// <param name="orderTotalInCustomerCurrency">The order total (customer currency)</param>
         /// <param name="orderDiscountInCustomerCurrency">The order discount (customer currency)</param>
@@ -652,6 +659,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             decimal orderShippingExclTax,
             decimal paymentMethodAdditionalFeeInclTax,
             decimal paymentMethodAdditionalFeeExclTax,
+            string taxRates,
             decimal orderTax,
             decimal orderTotal,
             decimal orderDiscount,
@@ -661,6 +669,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             decimal orderShippingExclTaxInCustomerCurrency,
             decimal paymentMethodAdditionalFeeInclTaxInCustomerCurrency,
             decimal paymentMethodAdditionalFeeExclTaxInCustomerCurrency,
+            string taxRatesInCustomerCurrency,
             decimal orderTaxInCustomerCurrency,
             decimal orderTotalInCustomerCurrency,
             decimal orderDiscountInCustomerCurrency,
@@ -727,6 +736,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             bool deleted,
             DateTime createdOn)
         {
+            if (taxRates == null)
+                taxRates = string.Empty;
+            if (taxRatesInCustomerCurrency == null)
+                taxRatesInCustomerCurrency = string.Empty;
             if (customerIP == null)
                 customerIP = string.Empty;
             if (checkoutAttributeDescription == null)
@@ -805,6 +818,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 trackingNumber = string.Empty;
             if (vatNumber == null)
                 vatNumber = string.Empty;
+            
+            taxRates = CommonHelper.EnsureMaximumLength(taxRates, 4000);
+            taxRatesInCustomerCurrency = CommonHelper.EnsureMaximumLength(taxRatesInCustomerCurrency, 4000);
 
             customerIP = CommonHelper.EnsureMaximumLength(customerIP, 50);
             cardType = CommonHelper.EnsureMaximumLength(cardType, 100);
@@ -864,6 +880,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             order.OrderShippingExclTax = orderShippingExclTax;
             order.PaymentMethodAdditionalFeeInclTax = paymentMethodAdditionalFeeInclTax;
             order.PaymentMethodAdditionalFeeExclTax = paymentMethodAdditionalFeeExclTax;
+            order.TaxRates = taxRates;
             order.OrderTax = orderTax;
             order.OrderTotal = orderTotal;
             order.OrderDiscount = orderDiscount;
@@ -873,6 +890,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             order.OrderShippingExclTaxInCustomerCurrency = orderShippingExclTaxInCustomerCurrency;
             order.PaymentMethodAdditionalFeeInclTaxInCustomerCurrency = paymentMethodAdditionalFeeInclTaxInCustomerCurrency;
             order.PaymentMethodAdditionalFeeExclTaxInCustomerCurrency = paymentMethodAdditionalFeeExclTaxInCustomerCurrency;
+            order.TaxRatesInCustomerCurrency = taxRatesInCustomerCurrency;
             order.OrderTaxInCustomerCurrency = orderTaxInCustomerCurrency;
             order.OrderTotalInCustomerCurrency = orderTotalInCustomerCurrency;
             order.OrderDiscountInCustomerCurrency = orderDiscountInCustomerCurrency;
@@ -970,6 +988,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="orderShippingExclTax">The order shipping (excl tax)</param>
         /// <param name="paymentMethodAdditionalFeeInclTax">The payment method additional fee (incl tax)</param>
         /// <param name="paymentMethodAdditionalFeeExclTax">The payment method additional fee (excl tax)</param>
+        /// <param name="taxRates">The tax rates</param>
         /// <param name="orderTax">The order tax</param>
         /// <param name="orderTotal">The order total</param>
         /// <param name="orderDiscount">The order discount</param>
@@ -979,6 +998,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="orderShippingExclTaxInCustomerCurrency">The order shipping excl tax (customer currency)</param>
         /// <param name="paymentMethodAdditionalFeeInclTaxInCustomerCurrency">The payment method additional fee incl tax (customer currency)</param>
         /// <param name="paymentMethodAdditionalFeeExclTaxInCustomerCurrency">The payment method additional fee excl tax (customer currency)</param>
+        /// <param name="taxRatesInCustomerCurrency">The tax rates (customer currency)</param>
         /// <param name="orderTaxInCustomerCurrency">The order tax (customer currency)</param>
         /// <param name="orderTotalInCustomerCurrency">The order total (customer currency)</param>
         /// <param name="orderDiscountInCustomerCurrency">The order discount (customer currency)</param>
@@ -1057,6 +1077,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             decimal orderShippingExclTax,
             decimal paymentMethodAdditionalFeeInclTax,
             decimal paymentMethodAdditionalFeeExclTax,
+            string taxRates,
             decimal orderTax,
             decimal orderTotal,
             decimal orderDiscount,
@@ -1066,6 +1087,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             decimal orderShippingExclTaxInCustomerCurrency,
             decimal paymentMethodAdditionalFeeInclTaxInCustomerCurrency,
             decimal paymentMethodAdditionalFeeExclTaxInCustomerCurrency,
+            string taxRatesInCustomerCurrency,
             decimal orderTaxInCustomerCurrency,
             decimal orderTotalInCustomerCurrency,
             decimal orderDiscountInCustomerCurrency,
@@ -1135,6 +1157,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             if (trackingNumber == null)
                 trackingNumber = string.Empty;
 
+            taxRates = CommonHelper.EnsureMaximumLength(taxRates, 4000);
+            taxRatesInCustomerCurrency = CommonHelper.EnsureMaximumLength(taxRatesInCustomerCurrency, 4000);
             customerIP = CommonHelper.EnsureMaximumLength(customerIP, 50);
             cardType = CommonHelper.EnsureMaximumLength(cardType, 100);
             cardName = CommonHelper.EnsureMaximumLength(cardName, 1000);
@@ -1198,6 +1222,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             order.OrderShippingExclTax = orderShippingExclTax;
             order.PaymentMethodAdditionalFeeInclTax = paymentMethodAdditionalFeeInclTax;
             order.PaymentMethodAdditionalFeeExclTax = paymentMethodAdditionalFeeExclTax;
+            order.TaxRates = taxRates;
             order.OrderTax = orderTax;
             order.OrderTotal = orderTotal;
             order.OrderDiscount = orderDiscount;
@@ -1207,6 +1232,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             order.OrderShippingExclTaxInCustomerCurrency = orderShippingExclTaxInCustomerCurrency;
             order.PaymentMethodAdditionalFeeInclTaxInCustomerCurrency = paymentMethodAdditionalFeeInclTaxInCustomerCurrency;
             order.PaymentMethodAdditionalFeeExclTaxInCustomerCurrency = paymentMethodAdditionalFeeExclTaxInCustomerCurrency;
+            order.TaxRatesInCustomerCurrency = taxRatesInCustomerCurrency;
             order.OrderTaxInCustomerCurrency = orderTaxInCustomerCurrency;
             order.OrderTotalInCustomerCurrency = orderTotalInCustomerCurrency;
             order.OrderDiscountInCustomerCurrency = orderDiscountInCustomerCurrency;
@@ -1302,11 +1328,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                    order.OrderId, order.OrderGuid, order.CustomerId, order.CustomerLanguageId,
                    order.CustomerTaxDisplayType, order.CustomerIP, order.OrderSubtotalInclTax, order.OrderSubtotalExclTax, order.OrderShippingInclTax,
                    order.OrderShippingExclTax, order.PaymentMethodAdditionalFeeInclTax, order.PaymentMethodAdditionalFeeExclTax,
-                   order.OrderTax, order.OrderTotal, order.OrderDiscount,
+                   order.TaxRates, order.OrderTax, order.OrderTotal, order.OrderDiscount,
                    order.OrderSubtotalInclTaxInCustomerCurrency, order.OrderSubtotalExclTaxInCustomerCurrency,
                    order.OrderShippingInclTaxInCustomerCurrency, order.OrderShippingExclTaxInCustomerCurrency,
                    order.PaymentMethodAdditionalFeeInclTaxInCustomerCurrency, order.PaymentMethodAdditionalFeeExclTaxInCustomerCurrency,
-                   order.OrderTaxInCustomerCurrency, order.OrderTotalInCustomerCurrency,
+                   order.TaxRatesInCustomerCurrency, order.OrderTaxInCustomerCurrency, order.OrderTotalInCustomerCurrency,
                    order.OrderDiscountInCustomerCurrency,
                    order.CheckoutAttributeDescription, order.CheckoutAttributesXml, 
                    order.CustomerCurrencyCode, order.OrderWeight,
@@ -3330,12 +3356,15 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 decimal orderTaxTotal = decimal.Zero;
                 decimal orderTaxInCustomerCurrency = decimal.Zero;
                 string vatNumber = string.Empty;
+                string taxRates = string.Empty;
+                string taxRatesInCustomerCurrency = string.Empty;
                 if (!paymentInfo.IsRecurringPayment)
                 {
                     //tax amount
+                    SortedDictionary<decimal, decimal> taxRatesDictionary = null;
                     string taxError = string.Empty;
-                    orderTaxTotal = TaxManager.GetTaxTotal(cart, 
-                        paymentInfo.PaymentMethodId, customer, ref taxError);
+                    orderTaxTotal = TaxManager.GetTaxTotal(cart,
+                        paymentInfo.PaymentMethodId, customer, out taxRatesDictionary, ref taxError);
                     if (!String.IsNullOrEmpty(taxError))
                         throw new NopException("Tax total couldn't be calculated");
 
@@ -3346,6 +3375,18 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                     if (TaxManager.EUVatEnabled && customer.VatNumberStatus == VatNumberStatusEnum.Valid)
                     {
                         vatNumber = customer.VatNumber;
+                    }
+
+                    //tax rates
+                    foreach (var kvp in taxRatesDictionary)
+                    {
+                        var taxRate = kvp.Key;
+                        var taxValue = kvp.Value;
+
+                        var taxValueInCustomerCurrency = CurrencyManager.ConvertCurrency(taxValue, CurrencyManager.PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
+
+                        taxRates += string.Format("{0}:{1};   ", taxRate.ToString(new CultureInfo("en-US")), taxValue.ToString(new CultureInfo("en-US")));
+                        taxRatesInCustomerCurrency += string.Format("{0}:{1};   ", taxRate.ToString(new CultureInfo("en-US")), taxValueInCustomerCurrency.ToString(new CultureInfo("en-US")));
                     }
                 }
                 else
@@ -3661,6 +3702,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                              orderShippingTotalExclTax.Value,
                              paymentAdditionalFeeInclTax,
                              paymentAdditionalFeeExclTax,
+                             taxRates,
                              orderTaxTotal,
                              orderTotal.Value,
                              orderDiscountAmount,
@@ -3670,6 +3712,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                              orderShippingExclTaxInCustomerCurrency,
                              paymentAdditionalFeeInclTaxInCustomerCurrency,
                              paymentAdditionalFeeExclTaxInCustomerCurrency,
+                             taxRatesInCustomerCurrency,
                              orderTaxInCustomerCurrency,
                              orderTotalInCustomerCurrency,
                              orderDiscountInCustomerCurrency,
@@ -4195,11 +4238,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             order = UpdateOrder(order.OrderId, order.OrderGuid, order.CustomerId, order.CustomerLanguageId,
                 order.CustomerTaxDisplayType, order.CustomerIP, order.OrderSubtotalInclTax, order.OrderSubtotalExclTax, order.OrderShippingInclTax,
                 order.OrderShippingExclTax, order.PaymentMethodAdditionalFeeInclTax, order.PaymentMethodAdditionalFeeExclTax,
-                order.OrderTax, order.OrderTotal, order.OrderDiscount,
+                order.TaxRates, order.OrderTax, order.OrderTotal, order.OrderDiscount,
                 order.OrderSubtotalInclTaxInCustomerCurrency, order.OrderSubtotalExclTaxInCustomerCurrency,
                 order.OrderShippingInclTaxInCustomerCurrency, order.OrderShippingExclTaxInCustomerCurrency,
                 order.PaymentMethodAdditionalFeeInclTaxInCustomerCurrency, order.PaymentMethodAdditionalFeeExclTaxInCustomerCurrency,
-                order.OrderTaxInCustomerCurrency, order.OrderTotalInCustomerCurrency,
+                order.TaxRatesInCustomerCurrency, order.OrderTaxInCustomerCurrency, order.OrderTotalInCustomerCurrency,
                 order.OrderDiscountInCustomerCurrency,
                 order.CheckoutAttributeDescription, order.CheckoutAttributesXml, 
                 order.CustomerCurrencyCode, order.OrderWeight,
@@ -4279,11 +4322,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             order = UpdateOrder(order.OrderId, order.OrderGuid, order.CustomerId, order.CustomerLanguageId,
                 order.CustomerTaxDisplayType, order.CustomerIP, order.OrderSubtotalInclTax, order.OrderSubtotalExclTax, order.OrderShippingInclTax,
                 order.OrderShippingExclTax, order.PaymentMethodAdditionalFeeInclTax, order.PaymentMethodAdditionalFeeExclTax,
-                order.OrderTax, order.OrderTotal, order.OrderDiscount,
+                order.TaxRates, order.OrderTax, order.OrderTotal, order.OrderDiscount,
                 order.OrderSubtotalInclTaxInCustomerCurrency, order.OrderSubtotalExclTaxInCustomerCurrency,
                 order.OrderShippingInclTaxInCustomerCurrency, order.OrderShippingExclTaxInCustomerCurrency,
                 order.PaymentMethodAdditionalFeeInclTaxInCustomerCurrency, order.PaymentMethodAdditionalFeeExclTaxInCustomerCurrency,
-                order.OrderTaxInCustomerCurrency, order.OrderTotalInCustomerCurrency,
+                order.TaxRatesInCustomerCurrency, order.OrderTaxInCustomerCurrency, order.OrderTotalInCustomerCurrency,
                 order.OrderDiscountInCustomerCurrency,
                 order.CheckoutAttributeDescription, order.CheckoutAttributesXml,
                 order.CustomerCurrencyCode, order.OrderWeight,
@@ -4408,11 +4451,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             order = UpdateOrder(order.OrderId, order.OrderGuid, order.CustomerId, order.CustomerLanguageId,
                 order.CustomerTaxDisplayType, order.CustomerIP, order.OrderSubtotalInclTax, order.OrderSubtotalExclTax, order.OrderShippingInclTax,
                    order.OrderShippingExclTax, order.PaymentMethodAdditionalFeeInclTax, order.PaymentMethodAdditionalFeeExclTax,
-                   order.OrderTax, order.OrderTotal, order.OrderDiscount,
+                   order.TaxRates, order.OrderTax, order.OrderTotal, order.OrderDiscount,
                    order.OrderSubtotalInclTaxInCustomerCurrency, order.OrderSubtotalExclTaxInCustomerCurrency,
                    order.OrderShippingInclTaxInCustomerCurrency, order.OrderShippingExclTaxInCustomerCurrency,
                    order.PaymentMethodAdditionalFeeInclTaxInCustomerCurrency, order.PaymentMethodAdditionalFeeExclTaxInCustomerCurrency,
-                   order.OrderTaxInCustomerCurrency, order.OrderTotalInCustomerCurrency,
+                   order.TaxRatesInCustomerCurrency, order.OrderTaxInCustomerCurrency, order.OrderTotalInCustomerCurrency,
                    order.OrderDiscountInCustomerCurrency,
                    order.CheckoutAttributeDescription, order.CheckoutAttributesXml,
                    order.CustomerCurrencyCode, order.OrderWeight,
@@ -4505,11 +4548,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                     order = UpdateOrder(order.OrderId, order.OrderGuid, order.CustomerId, order.CustomerLanguageId,
                         order.CustomerTaxDisplayType, order.CustomerIP, order.OrderSubtotalInclTax, order.OrderSubtotalExclTax, order.OrderShippingInclTax,
                         order.OrderShippingExclTax, order.PaymentMethodAdditionalFeeInclTax, order.PaymentMethodAdditionalFeeExclTax,
-                        order.OrderTax, order.OrderTotal, order.OrderDiscount,
+                        order.TaxRates, order.OrderTax, order.OrderTotal, order.OrderDiscount,
                         order.OrderSubtotalInclTaxInCustomerCurrency, order.OrderSubtotalExclTaxInCustomerCurrency,
                         order.OrderShippingInclTaxInCustomerCurrency, order.OrderShippingExclTaxInCustomerCurrency,
                         order.PaymentMethodAdditionalFeeInclTaxInCustomerCurrency, order.PaymentMethodAdditionalFeeExclTaxInCustomerCurrency,
-                        order.OrderTaxInCustomerCurrency, order.OrderTotalInCustomerCurrency,
+                        order.TaxRatesInCustomerCurrency, order.OrderTaxInCustomerCurrency, order.OrderTotalInCustomerCurrency,
                         order.OrderDiscountInCustomerCurrency,
                         order.CheckoutAttributeDescription, order.CheckoutAttributesXml, 
                         order.CustomerCurrencyCode, order.OrderWeight,
@@ -4600,11 +4643,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             order = UpdateOrder(order.OrderId, order.OrderGuid, order.CustomerId, order.CustomerLanguageId,
                     order.CustomerTaxDisplayType, order.CustomerIP, order.OrderSubtotalInclTax, order.OrderSubtotalExclTax, order.OrderShippingInclTax,
                     order.OrderShippingExclTax, order.PaymentMethodAdditionalFeeInclTax, order.PaymentMethodAdditionalFeeExclTax,
-                    order.OrderTax, order.OrderTotal, order.OrderDiscount,
+                    order.TaxRates, order.OrderTax, order.OrderTotal, order.OrderDiscount,
                     order.OrderSubtotalInclTaxInCustomerCurrency, order.OrderSubtotalExclTaxInCustomerCurrency,
                     order.OrderShippingInclTaxInCustomerCurrency, order.OrderShippingExclTaxInCustomerCurrency,
                     order.PaymentMethodAdditionalFeeInclTaxInCustomerCurrency, order.PaymentMethodAdditionalFeeExclTaxInCustomerCurrency,
-                    order.OrderTaxInCustomerCurrency, order.OrderTotalInCustomerCurrency,
+                    order.TaxRatesInCustomerCurrency, order.OrderTaxInCustomerCurrency, order.OrderTotalInCustomerCurrency,
                     order.OrderDiscountInCustomerCurrency,
                     order.CheckoutAttributeDescription, order.CheckoutAttributesXml, 
                     order.CustomerCurrencyCode, order.OrderWeight,
@@ -4689,11 +4732,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                     order = UpdateOrder(order.OrderId, order.OrderGuid, order.CustomerId, order.CustomerLanguageId,
                         order.CustomerTaxDisplayType, order.CustomerIP, order.OrderSubtotalInclTax, order.OrderSubtotalExclTax, order.OrderShippingInclTax,
                         order.OrderShippingExclTax, order.PaymentMethodAdditionalFeeInclTax, order.PaymentMethodAdditionalFeeExclTax,
-                        order.OrderTax, order.OrderTotal, order.OrderDiscount,
+                        order.TaxRates, order.OrderTax, order.OrderTotal, order.OrderDiscount,
                         order.OrderSubtotalInclTaxInCustomerCurrency, order.OrderSubtotalExclTaxInCustomerCurrency,
                         order.OrderShippingInclTaxInCustomerCurrency, order.OrderShippingExclTaxInCustomerCurrency,
                         order.PaymentMethodAdditionalFeeInclTaxInCustomerCurrency, order.PaymentMethodAdditionalFeeExclTaxInCustomerCurrency,
-                        order.OrderTaxInCustomerCurrency, order.OrderTotalInCustomerCurrency,
+                        order.TaxRatesInCustomerCurrency, order.OrderTaxInCustomerCurrency, order.OrderTotalInCustomerCurrency,
                         order.OrderDiscountInCustomerCurrency,
                         order.CheckoutAttributeDescription, order.CheckoutAttributesXml,
                         order.CustomerCurrencyCode, order.OrderWeight,
@@ -4781,11 +4824,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             order = UpdateOrder(order.OrderId, order.OrderGuid, order.CustomerId, order.CustomerLanguageId,
                 order.CustomerTaxDisplayType, order.CustomerIP, order.OrderSubtotalInclTax, order.OrderSubtotalExclTax, order.OrderShippingInclTax,
                    order.OrderShippingExclTax, order.PaymentMethodAdditionalFeeInclTax, order.PaymentMethodAdditionalFeeExclTax,
-                   order.OrderTax, order.OrderTotal, order.OrderDiscount,
+                   order.TaxRates, order.OrderTax, order.OrderTotal, order.OrderDiscount,
                    order.OrderSubtotalInclTaxInCustomerCurrency, order.OrderSubtotalExclTaxInCustomerCurrency,
                    order.OrderShippingInclTaxInCustomerCurrency, order.OrderShippingExclTaxInCustomerCurrency,
                    order.PaymentMethodAdditionalFeeInclTaxInCustomerCurrency, order.PaymentMethodAdditionalFeeExclTaxInCustomerCurrency,
-                   order.OrderTaxInCustomerCurrency, order.OrderTotalInCustomerCurrency,
+                   order.TaxRatesInCustomerCurrency, order.OrderTaxInCustomerCurrency, order.OrderTotalInCustomerCurrency,
                    order.OrderDiscountInCustomerCurrency,
                    order.CheckoutAttributeDescription, order.CheckoutAttributesXml, 
                    order.CustomerCurrencyCode, order.OrderWeight,
@@ -4869,11 +4912,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                     order = UpdateOrder(order.OrderId, order.OrderGuid, order.CustomerId, order.CustomerLanguageId,
                         order.CustomerTaxDisplayType, order.CustomerIP, order.OrderSubtotalInclTax, order.OrderSubtotalExclTax, order.OrderShippingInclTax,
                         order.OrderShippingExclTax, order.PaymentMethodAdditionalFeeInclTax, order.PaymentMethodAdditionalFeeExclTax,
-                        order.OrderTax, order.OrderTotal, order.OrderDiscount,
+                        order.TaxRates, order.OrderTax, order.OrderTotal, order.OrderDiscount,
                         order.OrderSubtotalInclTaxInCustomerCurrency, order.OrderSubtotalExclTaxInCustomerCurrency,
                         order.OrderShippingInclTaxInCustomerCurrency, order.OrderShippingExclTaxInCustomerCurrency,
                         order.PaymentMethodAdditionalFeeInclTaxInCustomerCurrency, order.PaymentMethodAdditionalFeeExclTaxInCustomerCurrency,
-                        order.OrderTaxInCustomerCurrency, order.OrderTotalInCustomerCurrency,
+                        order.TaxRatesInCustomerCurrency, order.OrderTaxInCustomerCurrency, order.OrderTotalInCustomerCurrency,
                         order.OrderDiscountInCustomerCurrency,
                         order.CheckoutAttributeDescription, order.CheckoutAttributesXml, 
                         order.CustomerCurrencyCode, order.OrderWeight,
@@ -4961,11 +5004,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             order = UpdateOrder(order.OrderId, order.OrderGuid, order.CustomerId, order.CustomerLanguageId,
                 order.CustomerTaxDisplayType, order.CustomerIP, order.OrderSubtotalInclTax, order.OrderSubtotalExclTax, order.OrderShippingInclTax,
                    order.OrderShippingExclTax, order.PaymentMethodAdditionalFeeInclTax, order.PaymentMethodAdditionalFeeExclTax,
-                   order.OrderTax, order.OrderTotal, order.OrderDiscount,
+                   order.TaxRates, order.OrderTax, order.OrderTotal, order.OrderDiscount,
                    order.OrderSubtotalInclTaxInCustomerCurrency, order.OrderSubtotalExclTaxInCustomerCurrency,
                    order.OrderShippingInclTaxInCustomerCurrency, order.OrderShippingExclTaxInCustomerCurrency,
                    order.PaymentMethodAdditionalFeeInclTaxInCustomerCurrency, order.PaymentMethodAdditionalFeeExclTaxInCustomerCurrency,
-                   order.OrderTaxInCustomerCurrency, order.OrderTotalInCustomerCurrency,
+                   order.TaxRatesInCustomerCurrency, order.OrderTaxInCustomerCurrency, order.OrderTotalInCustomerCurrency,
                    order.OrderDiscountInCustomerCurrency,
                    order.CheckoutAttributeDescription, order.CheckoutAttributesXml, 
                    order.CustomerCurrencyCode, order.OrderWeight,

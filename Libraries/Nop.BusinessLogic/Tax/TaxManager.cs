@@ -424,7 +424,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
                 }
             }
 
-            //add at least one tax rate
+            //add at least one tax rate (0%)
             if (taxRates.Count == 0)
                 taxRates.Add(decimal.Zero, decimal.Zero);
 

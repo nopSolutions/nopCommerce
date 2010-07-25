@@ -438,7 +438,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Utils
 
             //tax
             string taxStr = string.Empty;
+            SortedDictionary<decimal, decimal> taxRates = new SortedDictionary<decimal, decimal>();
             bool displayTax = true;
+            bool displayTaxRates = true;
             if(TaxManager.HideTaxInOrderSummary && order.CustomerTaxDisplayType == TaxDisplayTypeEnum.IncludingTax)
             {
                 displayTax = false;
@@ -448,9 +450,15 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Utils
                 if(order.OrderTax == 0 && TaxManager.HideZeroTax)
                 {
                     displayTax = false;
+                    displayTaxRates = false;
                 }
                 else
                 {
+                    taxRates = order.TaxRatesDictionaryInCustomerCurrency;
+
+                    displayTaxRates = TaxManager.DisplayTaxRates && taxRates.Count > 0;
+                    displayTax = !displayTaxRates;
+
                     taxStr = PriceHelper.FormatPrice(order.OrderTaxInCustomerCurrency, true, order.CustomerCurrencyCode, false);
                 }
             }
@@ -458,6 +466,17 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Utils
             {
                 var p11 = sec.AddParagraph(String.Format("{0} {1}", LocalizationManager.GetLocaleResourceString("PDFInvoice.Tax", languageId), taxStr));
                 p11.Format.Alignment = ParagraphAlignment.Right;
+            }
+            if (displayTaxRates)
+            {
+                foreach (var item in taxRates)
+                {
+                    string taxRate = String.Format(LocalizationManager.GetLocaleResourceString("PDFInvoice.Totals.TaxRate"), TaxManager.FormatTaxRate(item.Key));
+                    string taxValue = PriceHelper.FormatPrice(item.Value, true, false);
+
+                    var p13 = sec.AddParagraph(String.Format("{0} {1}", taxRate, taxValue));
+                    p13.Format.Alignment = ParagraphAlignment.Right;
+                }
             }
 
             //discount

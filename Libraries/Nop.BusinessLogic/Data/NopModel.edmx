@@ -1340,6 +1340,7 @@
           <Property Name="OrderShippingExclTax" Type="money" Nullable="false" />
           <Property Name="PaymentMethodAdditionalFeeInclTax" Type="money" Nullable="false" />
           <Property Name="PaymentMethodAdditionalFeeExclTax" Type="money" Nullable="false" />
+          <Property Name="TaxRates" Type="nvarchar" Nullable="false" />
           <Property Name="OrderTax" Type="money" Nullable="false" />
           <Property Name="OrderTotal" Type="money" Nullable="false" />
           <Property Name="OrderDiscount" Type="money" Nullable="false" />
@@ -1349,6 +1350,7 @@
           <Property Name="OrderShippingExclTaxInCustomerCurrency" Type="money" Nullable="false" />
           <Property Name="PaymentMethodAdditionalFeeInclTaxInCustomerCurrency" Type="money" Nullable="false" />
           <Property Name="PaymentMethodAdditionalFeeExclTaxInCustomerCurrency" Type="money" Nullable="false" />
+          <Property Name="TaxRatesInCustomerCurrency" Type="nvarchar" Nullable="false" />
           <Property Name="OrderTaxInCustomerCurrency" Type="money" Nullable="false" />
           <Property Name="OrderTotalInCustomerCurrency" Type="money" Nullable="false" />
           <Property Name="OrderDiscountInCustomerCurrency" Type="money" Nullable="false" />
@@ -7436,6 +7438,7 @@
           <Property Type="Decimal" Name="OrderShippingExclTax" Nullable="false" Precision="19" Scale="4" />
           <Property Type="Decimal" Name="PaymentMethodAdditionalFeeInclTax" Nullable="false" Precision="19" Scale="4" />
           <Property Type="Decimal" Name="PaymentMethodAdditionalFeeExclTax" Nullable="false" Precision="19" Scale="4" />
+          <Property Type="String" Name="TaxRates" Nullable="false" MaxLength="4000" FixedLength="false" Unicode="true" />
           <Property Type="Decimal" Name="OrderTax" Nullable="false" Precision="19" Scale="4" />
           <Property Type="Decimal" Name="OrderTotal" Nullable="false" Precision="19" Scale="4" />
           <Property Type="Decimal" Name="OrderDiscount" Nullable="false" Precision="19" Scale="4" />
@@ -7445,6 +7448,7 @@
           <Property Type="Decimal" Name="OrderShippingExclTaxInCustomerCurrency" Nullable="false" Precision="19" Scale="4" />
           <Property Type="Decimal" Name="PaymentMethodAdditionalFeeInclTaxInCustomerCurrency" Nullable="false" Precision="19" Scale="4" />
           <Property Type="Decimal" Name="PaymentMethodAdditionalFeeExclTaxInCustomerCurrency" Nullable="false" Precision="19" Scale="4" />
+          <Property Type="String" Name="TaxRatesInCustomerCurrency" Nullable="false" MaxLength="4000" FixedLength="false" Unicode="true" />
           <Property Type="Decimal" Name="OrderTaxInCustomerCurrency" Nullable="false" Precision="19" Scale="4" />
           <Property Type="Decimal" Name="OrderTotalInCustomerCurrency" Nullable="false" Precision="19" Scale="4" />
           <Property Type="Decimal" Name="OrderDiscountInCustomerCurrency" Nullable="false" Precision="19" Scale="4" />
@@ -7512,7 +7516,7 @@
           <Property Type="DateTime" Name="CreatedOn" Nullable="false" />
           <NavigationProperty Name="NpOrderNotes" Relationship="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_OrderNote_Nop_Order" FromRole="Nop_Order" ToRole="Nop_OrderNote" />
           <NavigationProperty Name="NpOrderProductVariants" Relationship="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_OrderProductVariant_Nop_Order" FromRole="Nop_Order" ToRole="Nop_OrderProductVariant" />
-          <NavigationProperty Name="NpDiscountUsageHistory" Relationship="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_DiscountUsageHistory_Nop_Order" FromRole="Nop_Order" ToRole="Nop_DiscountUsageHistory" />          
+          <NavigationProperty Name="NpDiscountUsageHistory" Relationship="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_DiscountUsageHistory_Nop_Order" FromRole="Nop_Order" ToRole="Nop_DiscountUsageHistory" />
         </EntityType>
         <EntityType Name="OrderNote">
           <Key>
@@ -9490,6 +9494,7 @@
                 <ScalarProperty Name="OrderDiscountInCustomerCurrency" ColumnName="OrderDiscountInCustomerCurrency" />
                 <ScalarProperty Name="OrderTotalInCustomerCurrency" ColumnName="OrderTotalInCustomerCurrency" />
                 <ScalarProperty Name="OrderTaxInCustomerCurrency" ColumnName="OrderTaxInCustomerCurrency" />
+                <ScalarProperty Name="TaxRatesInCustomerCurrency" ColumnName="TaxRatesInCustomerCurrency" />
                 <ScalarProperty Name="PaymentMethodAdditionalFeeExclTaxInCustomerCurrency" ColumnName="PaymentMethodAdditionalFeeExclTaxInCustomerCurrency" />
                 <ScalarProperty Name="PaymentMethodAdditionalFeeInclTaxInCustomerCurrency" ColumnName="PaymentMethodAdditionalFeeInclTaxInCustomerCurrency" />
                 <ScalarProperty Name="OrderShippingExclTaxInCustomerCurrency" ColumnName="OrderShippingExclTaxInCustomerCurrency" />
@@ -9499,6 +9504,7 @@
                 <ScalarProperty Name="OrderDiscount" ColumnName="OrderDiscount" />
                 <ScalarProperty Name="OrderTotal" ColumnName="OrderTotal" />
                 <ScalarProperty Name="OrderTax" ColumnName="OrderTax" />
+                <ScalarProperty Name="TaxRates" ColumnName="TaxRates" />
                 <ScalarProperty Name="PaymentMethodAdditionalFeeExclTax" ColumnName="PaymentMethodAdditionalFeeExclTax" />
                 <ScalarProperty Name="PaymentMethodAdditionalFeeInclTax" ColumnName="PaymentMethodAdditionalFeeInclTax" />
                 <ScalarProperty Name="OrderShippingExclTax" ColumnName="OrderShippingExclTax" />

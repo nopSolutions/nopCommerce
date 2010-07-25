@@ -241,6 +241,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 lTaxRateValue.Text = PriceHelper.FormatPrice(taxValue, true, false);
             }
         }
+
         protected void rptrGiftCards_ItemDataBound(object sender, RepeaterItemEventArgs e)
         {
             if (e.Item.ItemType == ListItemType.AlternatingItem || e.Item.ItemType == ListItemType.Item)

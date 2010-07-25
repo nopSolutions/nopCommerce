@@ -1708,3 +1708,18 @@ GO
 
 ALTER TABLE [dbo].[Nop_Order] ALTER COLUMN [CardName] nvarchar(1000) NOT NULL
 GO
+
+
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[Nop_Order]') and NAME='TaxRates')
+BEGIN
+	ALTER TABLE [dbo].[Nop_Order] 
+	ADD [TaxRates] nvarchar(4000) NOT NULL CONSTRAINT [DF_Nop_Order_TaxRates] DEFAULT ((''))
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[Nop_Order]') and NAME='TaxRatesInCustomerCurrency')
+BEGIN
+	ALTER TABLE [dbo].[Nop_Order] 
+	ADD [TaxRatesInCustomerCurrency] nvarchar(4000) NOT NULL CONSTRAINT [DF_Nop_Order_TaxRatesInCustomerCurrency] DEFAULT ((''))
+END
+GO

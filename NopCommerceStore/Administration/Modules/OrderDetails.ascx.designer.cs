@@ -409,6 +409,24 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         protected global::System.Web.UI.WebControls.Label lblPaymentMethodAdditionalFeeExclTax;
         
         /// <summary>
+        /// rptrTaxRates control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Repeater rptrTaxRates;
+        
+        /// <summary>
+        /// phTaxTotal control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.PlaceHolder phTaxTotal;
+        
+        /// <summary>
         /// lblOrderTaxTitle control.
         /// </summary>
         /// <remarks>
@@ -668,6 +686,42 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtOrderPaymentMethodAdditionalFeeInCustomerCurrencyExclTax;
+        
+        /// <summary>
+        /// lblOrderTaxRatesInPrimaryCurrencyTitle control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblOrderTaxRatesInPrimaryCurrencyTitle;
+        
+        /// <summary>
+        /// txtOrderTaxRatesInPrimaryCurrency control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtOrderTaxRatesInPrimaryCurrency;
+        
+        /// <summary>
+        /// lblOrderTaxRatesInCustomerCurrencyTitle control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblOrderTaxRatesInCustomerCurrencyTitle;
+        
+        /// <summary>
+        /// txtOrderTaxRatesInCustomerCurrency control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtOrderTaxRatesInCustomerCurrency;
         
         /// <summary>
         /// lblOrderTaxInPrimaryCurrencyTitle control.

@@ -1367,6 +1367,42 @@ set @resources='
   <LocaleResource Name="ShoppingCart.Totals.TaxRate">
     <Value>Tax {0}%</Value>
   </LocaleResource>
+  <LocaleResource Name="Order.Totals.TaxRate">
+    <Value>Tax {0}%</Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFInvoice.Totals.TaxRate">
+    <Value>Tax {0}%:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.OrderDetails.Totals.TaxRate">
+    <Value>Order tax {0}%:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.OrderDetails.Totals.TaxRate.Tooltip">
+    <Value>Order tax {0}%.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.OrderDetails.EditOrderTotals.TaxRates.InPrimaryCurrency">
+    <Value>Tax rates in primary currency - {0}:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.OrderDetails.EditOrderTotals.TaxRates.InCustomerCurrency">
+    <Value>Tax rates in customer currency - {0}:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.OrderDetails.EditOrderTotals.Subtotal.InCustomerCurrency">
+    <Value>Subtotal in customer currency - {0}:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.OrderDetails.EditOrderTotals.Discount.InCustomerCurrency">
+    <Value>Discount in customer currency - {0}:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.OrderDetails.EditOrderTotals.Shipping.InCustomerCurrency">
+    <Value>Shipping in customer currency - {0}:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.OrderDetails.EditOrderTotals.PaymentMethodAdditionalFee.InCustomerCurrency">
+    <Value>Payment method additional fee in customer currency - {0}:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.OrderDetails.EditOrderTotals.Tax.InCustomerCurrency">
+    <Value>Tax in customer currency - {0}:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.OrderDetails.EditOrderTotals.Total.InCustomerCurrency">
+    <Value>Total in customer currency - {0}:</Value>
+  </LocaleResource>
 </Language>
 '
 
