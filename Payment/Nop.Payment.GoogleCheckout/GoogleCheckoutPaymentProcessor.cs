@@ -450,9 +450,10 @@ namespace NopSolutions.NopCommerce.Payment.Methods.GoogleCheckout
                 ProductVariant productVariant = sci.ProductVariant;
                 if (productVariant != null)
                 {
+                    decimal taxRate = decimal.Zero;
                     string description = ProductAttributeHelper.FormatAttributes(productVariant, sci.AttributesXml, NopContext.Current.User, ", ", false);
                     string fullName = productVariant.LocalizedFullProductName;
-                    decimal unitPrice = TaxManager.GetPrice(sci.ProductVariant, PriceHelper.GetUnitPrice(sci, NopContext.Current.User, true));
+                    decimal unitPrice = TaxManager.GetPrice(sci.ProductVariant, PriceHelper.GetUnitPrice(sci, NopContext.Current.User, true), out taxRate);
                     req.AddItem(fullName, description, sci.ShoppingCartItemId.ToString(), unitPrice, sci.Quantity);
                 }
             }

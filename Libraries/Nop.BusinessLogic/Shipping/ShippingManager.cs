@@ -208,12 +208,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
         /// <param name="error">Error</param>
         /// <returns>Shipping total</returns>
-        public static decimal? GetShoppingCartShippingTotal(ShoppingCart cart, 
+        public static decimal? GetShoppingCartShippingTotal(ShoppingCart cart,
             Customer customer, bool includingTax, ref string error)
         {
-            Discount appliedDiscount = null;
-            return GetShoppingCartShippingTotal(cart, customer, includingTax,
-                out appliedDiscount, ref error);
+            decimal taxRate = decimal.Zero;
+            return GetShoppingCartShippingTotal(cart, customer,
+                includingTax, out taxRate, ref error);
         }
 
         /// <summary>
@@ -222,16 +222,36 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         /// <param name="cart">Cart</param>
         /// <param name="customer">Customer</param>
         /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
+        /// <param name="taxRate">Applied tax rate</param>
+        /// <param name="error">Error</param>
+        /// <returns>Shipping total</returns>
+        public static decimal? GetShoppingCartShippingTotal(ShoppingCart cart,
+            Customer customer, bool includingTax, out decimal taxRate, ref string error)
+        {
+            Discount appliedDiscount = null;
+            return GetShoppingCartShippingTotal(cart, customer, 
+                includingTax, out taxRate, out appliedDiscount, ref error);
+        }
+
+        /// <summary>
+        /// Gets shopping cart shipping total
+        /// </summary>
+        /// <param name="cart">Cart</param>
+        /// <param name="customer">Customer</param>
+        /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
+        /// <param name="taxRate">Applied tax rate</param>
         /// <param name="appliedDiscount">Applied discount</param>
         /// <param name="error">Error</param>
         /// <returns>Shipping total</returns>
         public static decimal? GetShoppingCartShippingTotal(ShoppingCart cart,
-            Customer customer, bool includingTax, out Discount appliedDiscount, ref string error)
+            Customer customer, bool includingTax, out decimal taxRate, 
+            out Discount appliedDiscount, ref string error)
         {
             decimal? shippingTotalWithoutDiscount = null;
             decimal? shippingTotalWithDiscount = null;
             decimal? shippingTotalWithDiscountTaxed = null;
             appliedDiscount = null;
+            taxRate = decimal.Zero;
 
             bool isFreeShipping = IsFreeShipping(cart, customer);
             if (isFreeShipping)
@@ -298,6 +318,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
                 shippingTotalWithDiscountTaxed = TaxManager.GetShippingPrice(shippingTotalWithDiscount.Value,
                     includingTax,
                     customer,
+                    out taxRate,
                     ref error);
 
                 shippingTotalWithDiscountTaxed = Math.Round(shippingTotalWithDiscountTaxed.Value, 2);

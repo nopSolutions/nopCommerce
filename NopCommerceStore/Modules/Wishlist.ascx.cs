@@ -266,7 +266,8 @@ namespace NopSolutions.NopCommerce.Web.Modules
         public string GetShoppingCartItemUnitPriceString(ShoppingCartItem shoppingCartItem)
         {
             var sb = new StringBuilder();
-            decimal shoppingCartUnitPriceWithDiscountBase = TaxManager.GetPrice(shoppingCartItem.ProductVariant, PriceHelper.GetUnitPrice(shoppingCartItem, true));
+            decimal taxRate = decimal.Zero;
+            decimal shoppingCartUnitPriceWithDiscountBase = TaxManager.GetPrice(shoppingCartItem.ProductVariant, PriceHelper.GetUnitPrice(shoppingCartItem, true), out taxRate);
             decimal shoppingCartUnitPriceWithDiscount = CurrencyManager.ConvertCurrency(shoppingCartUnitPriceWithDiscountBase, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
             string unitPriceString = PriceHelper.FormatPrice(shoppingCartUnitPriceWithDiscount);
 
@@ -280,7 +281,8 @@ namespace NopSolutions.NopCommerce.Web.Modules
         {
             //sub total
             var sb = new StringBuilder();
-            decimal shoppingCartItemSubTotalWithDiscountBase = TaxManager.GetPrice(shoppingCartItem.ProductVariant, PriceHelper.GetSubTotal(shoppingCartItem, true));
+            decimal taxRate = decimal.Zero;
+            decimal shoppingCartItemSubTotalWithDiscountBase = TaxManager.GetPrice(shoppingCartItem.ProductVariant, PriceHelper.GetSubTotal(shoppingCartItem, true), out taxRate);
             decimal shoppingCartItemSubTotalWithDiscount = CurrencyManager.ConvertCurrency(shoppingCartItemSubTotalWithDiscountBase, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
             string subTotalString = PriceHelper.FormatPrice(shoppingCartItemSubTotalWithDiscount);
 
@@ -289,7 +291,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             sb.Append("</span>");
 
             //display an applied discount amount
-            decimal shoppingCartItemSubTotalWithoutDiscountBase = TaxManager.GetPrice(shoppingCartItem.ProductVariant, PriceHelper.GetSubTotal(shoppingCartItem, false));
+            decimal shoppingCartItemSubTotalWithoutDiscountBase = TaxManager.GetPrice(shoppingCartItem.ProductVariant, PriceHelper.GetSubTotal(shoppingCartItem, false), out taxRate);
             decimal shoppingCartItemDiscountBase = shoppingCartItemSubTotalWithoutDiscountBase - shoppingCartItemSubTotalWithDiscountBase;
             if (shoppingCartItemDiscountBase > decimal.Zero)
             {

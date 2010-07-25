@@ -116,34 +116,45 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
                 //tax
                 bool displayTax = true;
+                bool displayTaxRates = true;
                 if (TaxManager.HideTaxInOrderSummary && NopContext.Current.TaxDisplayType == TaxDisplayTypeEnum.IncludingTax)
                 {
                     displayTax = false;
+                    displayTaxRates = false;
                 }
                 else
                 {
-                    string TaxError = string.Empty;
-                    decimal shoppingCartTaxBase = TaxManager.GetTaxTotal(cart, paymentMethodId, NopContext.Current.User, ref TaxError);
+                    string taxError = string.Empty;
+                    SortedDictionary<decimal, decimal> taxRates = null;
+                    decimal shoppingCartTaxBase = TaxManager.GetTaxTotal(cart, paymentMethodId, NopContext.Current.User, out taxRates, ref taxError);
                     decimal shoppingCartTax = CurrencyManager.ConvertCurrency(shoppingCartTaxBase, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
 
-                    if (String.IsNullOrEmpty(TaxError))
+                    if (String.IsNullOrEmpty(taxError))
                     {
                         if (shoppingCartTaxBase == 0 && TaxManager.HideZeroTax)
                         {
                             displayTax = false;
+                            displayTaxRates = false;
                         }
                         else
                         {
+                            displayTaxRates = TaxManager.DisplayTaxRates && taxRates.Count > 0;
+                            displayTax = !displayTaxRates;
+
                             lblTaxAmount.Text = PriceHelper.FormatPrice(shoppingCartTax, true, false);
                             lblTaxAmount.CssClass = "productPrice";
+                            rptrTaxRates.DataSource = taxRates;
+                            rptrTaxRates.DataBind();
                         }
                     }
                     else
                     {
                         lblTaxAmount.Text = GetLocaleResourceString("ShoppingCart.CalculatedDuringCheckout");
                         lblTaxAmount.CssClass = string.Empty;
+                        displayTaxRates = false;
                     }
                 }
+                rptrTaxRates.Visible = displayTaxRates;
                 phTaxTotal.Visible = displayTax;
 
                 //total
@@ -216,6 +227,20 @@ namespace NopSolutions.NopCommerce.Web.Modules
             }
         }
 
+        protected void rptrTaxRates_ItemDataBound(object sender, RepeaterItemEventArgs e)
+        {
+            if (e.Item.ItemType == ListItemType.AlternatingItem || e.Item.ItemType == ListItemType.Item)
+            {
+                var item = (KeyValuePair<decimal, decimal>)e.Item.DataItem;
+                
+                var lTaxRateTitle = e.Item.FindControl("lTaxRateTitle") as Literal;
+                lTaxRateTitle.Text = String.Format(GetLocaleResourceString("ShoppingCart.Totals.TaxRate"), TaxManager.FormatTaxRate(item.Key));
+
+                var lTaxRateValue = e.Item.FindControl("lTaxRateValue") as Literal;
+                decimal taxValue = CurrencyManager.ConvertCurrency(item.Value, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                lTaxRateValue.Text = PriceHelper.FormatPrice(taxValue, true, false);
+            }
+        }
         protected void rptrGiftCards_ItemDataBound(object sender, RepeaterItemEventArgs e)
         {
             if (e.Item.ItemType == ListItemType.AlternatingItem || e.Item.ItemType == ListItemType.Item)

@@ -110,6 +110,15 @@
     </tr>
     <tr>
         <td class="adminTitle">
+            <nopCommerce:ToolTipLabel runat="server" ID="lblDisplayTaxRates" Text="<% $NopResources:Admin.TaxSettings.DisplayTaxRates %>"
+                ToolTip="<% $NopResources:Admin.TaxSettings.DisplayTaxRates.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
+        </td>
+        <td class="adminData">
+            <asp:CheckBox ID="cbDisplayTaxRates" runat="server"></asp:CheckBox>
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
             <nopCommerce:ToolTipLabel runat="server" ID="lblHideZeroTax" Text="<% $NopResources:Admin.TaxSettings.HideZeroTax %>"
                 ToolTip="<% $NopResources:Admin.TaxSettings.HideZeroTax.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
         </td>

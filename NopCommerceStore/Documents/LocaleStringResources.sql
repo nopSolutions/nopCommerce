@@ -1358,6 +1358,15 @@ set @resources='
   <LocaleResource Name="Admin.PaymentMethodInfo.SupportRecurringPayments.Tooltip">
     <Value>Value indicating whether this payment method supports recurring payments</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.TaxSettings.DisplayTaxRates">
+    <Value>Display tax rates:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.TaxSettings.DisplayTaxRates.Tooltip">
+    <Value>A value indicating whether each tax rate should be displayed on separate line (shopping cart page)</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Totals.TaxRate">
+    <Value>Tax {0}%</Value>
+  </LocaleResource>
 </Language>
 '
 

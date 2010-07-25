@@ -129,7 +129,8 @@ namespace NopSolutions.NopCommerce.Web.Modules
                                             (NopContext.Current.User != null &&
                                             !NopContext.Current.User.IsGuest)))
                                         {
-                                            decimal priceAdjustmentBase = TaxManager.GetPrice(productVariant, pvaValue.PriceAdjustment);
+                                            decimal taxRate = decimal.Zero;
+                                            decimal priceAdjustmentBase = TaxManager.GetPrice(productVariant, pvaValue.PriceAdjustment, out taxRate);
                                             decimal priceAdjustment = CurrencyManager.ConvertCurrency(priceAdjustmentBase, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
                                             if(priceAdjustmentBase > decimal.Zero)
                                             {
@@ -166,7 +167,8 @@ namespace NopSolutions.NopCommerce.Web.Modules
                                             (NopContext.Current.User != null &&
                                             !NopContext.Current.User.IsGuest)))
                                         {
-                                            decimal priceAdjustmentBase = TaxManager.GetPrice(productVariant, pvaValue.PriceAdjustment);
+                                            decimal taxRate = decimal.Zero;
+                                            decimal priceAdjustmentBase = TaxManager.GetPrice(productVariant, pvaValue.PriceAdjustment, out taxRate);
                                             decimal priceAdjustment = CurrencyManager.ConvertCurrency(priceAdjustmentBase, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
                                             if(priceAdjustmentBase > decimal.Zero)
                                             {
@@ -201,7 +203,8 @@ namespace NopSolutions.NopCommerce.Web.Modules
                                             (NopContext.Current.User != null &&
                                             !NopContext.Current.User.IsGuest)))
                                         {
-                                            decimal priceAdjustmentBase = TaxManager.GetPrice(productVariant, pvaValue.PriceAdjustment);
+                                            decimal taxRate = decimal.Zero;
+                                            decimal priceAdjustmentBase = TaxManager.GetPrice(productVariant, pvaValue.PriceAdjustment, out taxRate);
                                             decimal priceAdjustment = CurrencyManager.ConvertCurrency(priceAdjustmentBase, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
                                             if (priceAdjustmentBase > decimal.Zero)
                                                 pvaValueName += string.Format(" [+{0}]", PriceHelper.FormatPrice(priceAdjustment, false, false));

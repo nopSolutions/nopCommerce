@@ -491,13 +491,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             string error = string.Empty;
 
             //sub totals
-            decimal _subTotalTmp = decimal.Zero;
+            decimal subTotalTmp = decimal.Zero;
             foreach (var shoppingCartItem in cart)
             {
+                decimal taxRate = decimal.Zero;
                 string error2 = string.Empty;
                 decimal sciSubTotal = PriceHelper.GetSubTotal(shoppingCartItem, customer, true);
 
-                _subTotalTmp += TaxManager.GetPrice(shoppingCartItem.ProductVariant, sciSubTotal, includingTax, customer, ref error2);
+                subTotalTmp += TaxManager.GetPrice(shoppingCartItem.ProductVariant, sciSubTotal, includingTax, customer, out taxRate, ref error2);
                 if (!String.IsNullOrEmpty(error2))
                 {
                     error = error2;
@@ -510,8 +511,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 var caValues = CheckoutAttributeHelper.ParseCheckoutAttributeValues(customer.CheckoutAttributes);
                 foreach (var caValue in caValues)
                 {
+                    decimal taxRate = decimal.Zero;
                     string error3 = string.Empty;
-                    _subTotalTmp += TaxManager.GetCheckoutAttributePrice(caValue, includingTax, customer, ref error3);
+                    subTotalTmp += TaxManager.GetCheckoutAttributePrice(caValue, includingTax, customer, out taxRate, ref error3);
                     if (!String.IsNullOrEmpty(error3))
                     {
                         error = error3;
@@ -520,7 +522,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 }
             }
 
-            subTotal = _subTotalTmp;
+            subTotal = subTotalTmp;
 
             if (subTotal < decimal.Zero)
                 subTotal = decimal.Zero;

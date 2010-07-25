@@ -74,9 +74,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 var productVariant = tierPrice.ProductVariant;
 
                 var lblQuantity = (Label)currentItem.FindControl("lblQuantity");
-                var lblPrice = (Label)currentItem.FindControl("lblPrice");              
+                var lblPrice = (Label)currentItem.FindControl("lblPrice");
 
-                decimal priceBase = TaxManager.GetPrice(productVariant, tierPrice.Price);
+                decimal taxRate = decimal.Zero;
+                decimal priceBase = TaxManager.GetPrice(productVariant, tierPrice.Price, out taxRate);
                 decimal price = CurrencyManager.ConvertCurrency(priceBase, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
 
                 string priceStr = PriceHelper.FormatPrice(price, false, false);

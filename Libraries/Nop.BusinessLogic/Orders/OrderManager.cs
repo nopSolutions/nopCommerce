@@ -3271,10 +3271,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 decimal orderShippingExclTaxInCustomerCurrency = decimal.Zero;
                 if (!paymentInfo.IsRecurringPayment)
                 {
+                    decimal taxRate = decimal.Zero;
                     string shippingTotalError1 = string.Empty;
                     string shippingTotalError2 = string.Empty;
                     Discount shippingTotalDiscount = null;
-                    orderShippingTotalInclTax = ShippingManager.GetShoppingCartShippingTotal(cart, customer, true, out shippingTotalDiscount, ref shippingTotalError1);
+                    orderShippingTotalInclTax = ShippingManager.GetShoppingCartShippingTotal(cart, customer, true, out taxRate, out shippingTotalDiscount, ref shippingTotalError1);
                     orderShippingTotalExclTax = ShippingManager.GetShoppingCartShippingTotal(cart, customer, false, ref shippingTotalError2);
                     if (!orderShippingTotalInclTax.HasValue || !orderShippingTotalExclTax.HasValue)
                         throw new NopException("Shipping total couldn't be calculated");
@@ -3743,12 +3744,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                             foreach (var sc in cart)
                             {
                                 //prices
+                                decimal taxRate = decimal.Zero;
                                 decimal scUnitPrice = PriceHelper.GetUnitPrice(sc, customer, true);
                                 decimal scSubTotal = PriceHelper.GetSubTotal(sc, customer, true);
-                                decimal scUnitPriceInclTax = TaxManager.GetPrice(sc.ProductVariant, scUnitPrice, true, customer);
-                                decimal scUnitPriceExclTax = TaxManager.GetPrice(sc.ProductVariant, scUnitPrice, false, customer);
-                                decimal scSubTotalInclTax = TaxManager.GetPrice(sc.ProductVariant, scSubTotal, true, customer);
-                                decimal scSubTotalExclTax = TaxManager.GetPrice(sc.ProductVariant, scSubTotal, false, customer);
+                                decimal scUnitPriceInclTax = TaxManager.GetPrice(sc.ProductVariant, scUnitPrice, true, customer, out taxRate);
+                                decimal scUnitPriceExclTax = TaxManager.GetPrice(sc.ProductVariant, scUnitPrice, false, customer, out taxRate);
+                                decimal scSubTotalInclTax = TaxManager.GetPrice(sc.ProductVariant, scSubTotal, true, customer, out taxRate);
+                                decimal scSubTotalExclTax = TaxManager.GetPrice(sc.ProductVariant, scSubTotal, false, customer, out taxRate);
                                 decimal scUnitPriceInclTaxInCustomerCurrency = CurrencyManager.ConvertCurrency(scUnitPriceInclTax, CurrencyManager.PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
                                 decimal scUnitPriceExclTaxInCustomerCurrency = CurrencyManager.ConvertCurrency(scUnitPriceExclTax, CurrencyManager.PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
                                 decimal scSubTotalInclTaxInCustomerCurrency = CurrencyManager.ConvertCurrency(scSubTotalInclTax, CurrencyManager.PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
@@ -3757,8 +3759,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                                 //discounts
                                 Discount scDiscount = null;
                                 decimal discountAmount = PriceHelper.GetDiscountAmount(sc, customer, out scDiscount);
-                                decimal discountAmountInclTax = TaxManager.GetPrice(sc.ProductVariant, discountAmount, true, customer);
-                                decimal discountAmountExclTax = TaxManager.GetPrice(sc.ProductVariant, discountAmount, false, customer);
+                                decimal discountAmountInclTax = TaxManager.GetPrice(sc.ProductVariant, discountAmount, true, customer, out taxRate);
+                                decimal discountAmountExclTax = TaxManager.GetPrice(sc.ProductVariant, discountAmount, false, customer, out taxRate);
                                 if (scDiscount != null && !appliedDiscounts.ContainsDiscount(scDiscount.Name))
                                     appliedDiscounts.Add(scDiscount);
 

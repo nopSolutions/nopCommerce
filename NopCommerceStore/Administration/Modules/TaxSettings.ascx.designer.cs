@@ -94,6 +94,24 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         protected global::System.Web.UI.WebControls.CheckBox cbDisplayTaxSuffix;
         
         /// <summary>
+        /// lblDisplayTaxRates control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblDisplayTaxRates;
+        
+        /// <summary>
+        /// cbDisplayTaxRates control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbDisplayTaxRates;
+        
+        /// <summary>
         /// lblHideZeroTax control.
         /// </summary>
         /// <remarks>

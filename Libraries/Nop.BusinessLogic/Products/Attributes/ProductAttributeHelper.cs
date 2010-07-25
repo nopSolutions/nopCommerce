@@ -511,7 +511,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                                 pvaAttribute = string.Format("{0}: {1}", pva.ProductAttribute.LocalizedName, pvaValue.LocalizedName);
                                 if (renderPrices)
                                 {
-                                    decimal priceAdjustmentBase = TaxManager.GetPrice(productVariant, pvaValue.PriceAdjustment, customer);
+                                    decimal taxRate = decimal.Zero;
+                                    decimal priceAdjustmentBase = TaxManager.GetPrice(productVariant, pvaValue.PriceAdjustment, customer, out taxRate);
                                     decimal priceAdjustment = CurrencyManager.ConvertCurrency(priceAdjustmentBase, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
                                     if (priceAdjustmentBase > 0)
                                     {

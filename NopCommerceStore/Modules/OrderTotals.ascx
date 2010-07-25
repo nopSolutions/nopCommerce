@@ -38,6 +38,21 @@
                     </td>
                 </tr>
             </asp:PlaceHolder>
+            <asp:Repeater runat="server" ID="rptrTaxRates" OnItemDataBound="rptrTaxRates_ItemDataBound">
+                <ItemTemplate>
+                    <tr>
+                        <td class="cart_total_left">
+                            <strong>
+                                <asp:Literal runat="server" ID="lTaxRateTitle"></asp:Literal>:
+                        </td>
+                        <td class="cart_total_right">
+                            <span style="white-space: nowrap;">
+                                <asp:Literal runat="server" ID="lTaxRateValue"></asp:Literal>
+                            </span>
+                        </td>
+                    </tr>
+                </ItemTemplate>
+            </asp:Repeater>
             <asp:PlaceHolder runat="server" ID="phTaxTotal">
                 <tr>
                     <td class="cart_total_left">
@@ -65,7 +80,7 @@
                 </tr>
             </asp:PlaceHolder>
             <asp:Repeater runat="server" ID="rptrGiftCards" OnItemDataBound="rptrGiftCards_ItemDataBound"
-                Visible="false" OnItemCommand="rptrGiftCards_ItemCommand" >
+                Visible="false" OnItemCommand="rptrGiftCards_ItemCommand">
                 <ItemTemplate>
                     <tr>
                         <td class="cart_total_left">

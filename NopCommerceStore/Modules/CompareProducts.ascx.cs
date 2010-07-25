@@ -155,7 +155,8 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     if (productVariantCollection.Count > 0)
                     {
                         var productVariant = productVariantCollection[0];
-                        decimal finalPriceWithoutDiscountBase = TaxManager.GetPrice(productVariant, PriceHelper.GetFinalPrice(productVariant, false));
+                        decimal taxRate = decimal.Zero;
+                        decimal finalPriceWithoutDiscountBase = TaxManager.GetPrice(productVariant, PriceHelper.GetFinalPrice(productVariant, false), out taxRate);
                         decimal finalPriceWithoutDiscount = CurrencyManager.ConvertCurrency(finalPriceWithoutDiscountBase, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
                         priceCell.InnerText = PriceHelper.FormatPrice(finalPriceWithoutDiscount);
                     }

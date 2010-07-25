@@ -70,8 +70,9 @@ namespace NopSolutions.NopCommerce.Web.Modules
                             }
                             else
                             {
-                                decimal oldPriceBase = TaxManager.GetPrice(productVariant, productVariant.OldPrice);
-                                decimal finalPriceBase = TaxManager.GetPrice(productVariant, PriceHelper.GetFinalPrice(productVariant, true));
+                                decimal taxRate = decimal.Zero;
+                                decimal oldPriceBase = TaxManager.GetPrice(productVariant, productVariant.OldPrice, out taxRate);
+                                decimal finalPriceBase = TaxManager.GetPrice(productVariant, PriceHelper.GetFinalPrice(productVariant, true), out taxRate);
 
                                 decimal oldPrice = CurrencyManager.ConvertCurrency(oldPriceBase, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
                                 decimal finalPrice = CurrencyManager.ConvertCurrency(finalPriceBase, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
@@ -110,7 +111,8 @@ namespace NopSolutions.NopCommerce.Web.Modules
                                 }
                                 else
                                 {
-                                    decimal fromPriceBase = TaxManager.GetPrice(productVariant, PriceHelper.GetFinalPrice(productVariant, false));
+                                    decimal taxRate = decimal.Zero;
+                                    decimal fromPriceBase = TaxManager.GetPrice(productVariant, PriceHelper.GetFinalPrice(productVariant, false), out taxRate);
                                     decimal fromPrice = CurrencyManager.ConvertCurrency(fromPriceBase, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
                                     lblOldPrice.Visible = false;
                                     lblPrice.Text = String.Format(GetLocaleResourceString("Products.PriceRangeFromText"), PriceHelper.FormatPrice(fromPrice));

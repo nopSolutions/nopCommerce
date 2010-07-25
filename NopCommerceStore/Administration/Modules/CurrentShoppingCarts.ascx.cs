@@ -145,7 +145,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             Customer customer = shoppingCartItem.CustomerSession.Customer;
             StringBuilder sb = new StringBuilder();
-            decimal shoppingCartUnitPriceWithDiscountBase = TaxManager.GetPrice(shoppingCartItem.ProductVariant, PriceHelper.GetUnitPrice(shoppingCartItem, customer, true), customer);
+            decimal taxRate = decimal.Zero;
+            decimal shoppingCartUnitPriceWithDiscountBase = TaxManager.GetPrice(shoppingCartItem.ProductVariant, PriceHelper.GetUnitPrice(shoppingCartItem, customer, true), customer, out taxRate);
             decimal shoppingCartUnitPriceWithDiscount = CurrencyManager.ConvertCurrency(shoppingCartUnitPriceWithDiscountBase, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
             string unitPriceString = PriceHelper.FormatPrice(shoppingCartUnitPriceWithDiscount);
 
@@ -157,13 +158,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             Customer customer = shoppingCartItem.CustomerSession.Customer;
             StringBuilder sb = new StringBuilder();
-            decimal shoppingCartItemSubTotalWithDiscountBase = TaxManager.GetPrice(shoppingCartItem.ProductVariant, PriceHelper.GetSubTotal(shoppingCartItem, customer, true), customer);
+            decimal taxRate = decimal.Zero;
+            decimal shoppingCartItemSubTotalWithDiscountBase = TaxManager.GetPrice(shoppingCartItem.ProductVariant, PriceHelper.GetSubTotal(shoppingCartItem, customer, true), customer, out taxRate);
             decimal shoppingCartItemSubTotalWithDiscount = CurrencyManager.ConvertCurrency(shoppingCartItemSubTotalWithDiscountBase, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
             string subTotalString = PriceHelper.FormatPrice(shoppingCartItemSubTotalWithDiscount);
 
             sb.Append(subTotalString);
 
-            decimal shoppingCartItemDiscountBase = TaxManager.GetPrice(shoppingCartItem.ProductVariant, PriceHelper.GetDiscountAmount(shoppingCartItem, customer), customer);
+            decimal shoppingCartItemDiscountBase = TaxManager.GetPrice(shoppingCartItem.ProductVariant, PriceHelper.GetDiscountAmount(shoppingCartItem, customer), customer, out taxRate);
             if (shoppingCartItemDiscountBase > decimal.Zero)
             {
                 decimal shoppingCartItemDiscount = CurrencyManager.ConvertCurrency(shoppingCartItemDiscountBase, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);

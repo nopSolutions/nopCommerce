@@ -70,9 +70,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     }
                     else
                     {
-                        decimal oldPriceBase = TaxManager.GetPrice(productVariant, productVariant.OldPrice);
-                        decimal finalPriceWithoutDiscountBase = TaxManager.GetPrice(productVariant, PriceHelper.GetFinalPrice(productVariant, false));
-                        decimal finalPriceWithDiscountBase = TaxManager.GetPrice(productVariant, PriceHelper.GetFinalPrice(productVariant, true));
+                        decimal taxRate = decimal.Zero;
+                        decimal oldPriceBase = TaxManager.GetPrice(productVariant, productVariant.OldPrice, out taxRate);
+                        decimal finalPriceWithoutDiscountBase = TaxManager.GetPrice(productVariant, PriceHelper.GetFinalPrice(productVariant, false), out taxRate);
+                        decimal finalPriceWithDiscountBase = TaxManager.GetPrice(productVariant, PriceHelper.GetFinalPrice(productVariant, true), out taxRate);
 
                         decimal oldPrice = CurrencyManager.ConvertCurrency(oldPriceBase, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
                         decimal finalPriceWithoutDiscount = CurrencyManager.ConvertCurrency(finalPriceWithoutDiscountBase, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
@@ -148,10 +149,11 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 var productVariant = ProductManager.GetProductVariantById(this.ProductVariantId);
                 if(productVariant != null)
                 {
-                    decimal finalPriceWithoutDiscountBase = TaxManager.GetPrice(productVariant, PriceHelper.GetFinalPrice(productVariant, false));
+                    decimal taxRate = decimal.Zero;
+                    decimal finalPriceWithoutDiscountBase = TaxManager.GetPrice(productVariant, PriceHelper.GetFinalPrice(productVariant, false), out taxRate);
                     decimal finalPriceWithoutDiscount = CurrencyManager.ConvertCurrency(finalPriceWithoutDiscountBase, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
 
-                    decimal finalPriceWithDiscountBase = TaxManager.GetPrice(productVariant, PriceHelper.GetFinalPrice(productVariant, true));
+                    decimal finalPriceWithDiscountBase = TaxManager.GetPrice(productVariant, PriceHelper.GetFinalPrice(productVariant, true), out taxRate);
                     decimal finalPriceWithDiscount = CurrencyManager.ConvertCurrency(finalPriceWithDiscountBase, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
 
                     float val = (float)(finalPriceWithoutDiscountBase != finalPriceWithDiscountBase ? finalPriceWithDiscount : finalPriceWithoutDiscount);

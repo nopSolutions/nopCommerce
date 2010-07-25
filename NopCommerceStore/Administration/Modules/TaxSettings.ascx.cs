@@ -139,6 +139,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             cbAllowCustomersToSelectTaxDisplayType.Checked = TaxManager.AllowCustomersToSelectTaxDisplayType;
             CommonHelper.SelectListItem(this.ddlTaxDisplayType, (int)TaxManager.TaxDisplayType);
             cbDisplayTaxSuffix.Checked = TaxManager.DisplayTaxSuffix;
+            cbDisplayTaxRates.Checked = TaxManager.DisplayTaxRates;
             cbHideZeroTax.Checked = TaxManager.HideZeroTax;
             cbHideTaxInOrderSummary.Checked = TaxManager.HideTaxInOrderSummary;
             CommonHelper.SelectListItem(this.ddlTaxBasedOn, (int)TaxManager.TaxBasedOn);
@@ -186,6 +187,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     TaxManager.AllowCustomersToSelectTaxDisplayType = cbAllowCustomersToSelectTaxDisplayType.Checked;
                     TaxManager.TaxDisplayType = (TaxDisplayTypeEnum)Enum.ToObject(typeof(TaxDisplayTypeEnum), int.Parse(this.ddlTaxDisplayType.SelectedItem.Value));
                     TaxManager.DisplayTaxSuffix = cbDisplayTaxSuffix.Checked;
+                    TaxManager.DisplayTaxRates = cbDisplayTaxRates.Checked;
                     TaxManager.HideZeroTax= cbHideZeroTax.Checked;
                     TaxManager.HideTaxInOrderSummary = cbHideTaxInOrderSummary.Checked; 
                     TaxManager.TaxBasedOn = (TaxBasedOnEnum)Enum.ToObject(typeof(TaxBasedOnEnum), int.Parse(this.ddlTaxBasedOn.SelectedItem.Value));

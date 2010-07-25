@@ -15,6 +15,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Text;
 using System.Web.Compilation;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
@@ -220,6 +221,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
             }
             return result;
         }
+
         #endregion
 
         #region Methods
@@ -248,16 +250,36 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         public static decimal GetTaxTotal(ShoppingCart cart, int paymentMethodId, 
             Customer customer, ref string error)
         {
+            SortedDictionary<decimal, decimal> taxRates = null;
+            return  GetTaxTotal(cart, paymentMethodId, 
+                customer, out taxRates, ref error);
+        }
+
+        /// <summary>
+        /// Gets tax
+        /// </summary>
+        /// <param name="cart">Shopping cart</param>
+        /// <param name="paymentMethodId">Payment method identifier</param>
+        /// <param name="customer">Customer</param>
+        /// <param name="taxRates">Tax rates</param>
+        /// <param name="error">Error</param>
+        /// <returns>Tax total</returns>
+        public static decimal GetTaxTotal(ShoppingCart cart, int paymentMethodId,
+            Customer customer, out SortedDictionary<decimal, decimal> taxRates, ref string error)
+        {
             decimal taxTotal = decimal.Zero;
+            taxRates = new SortedDictionary<decimal, decimal>();
 
             //items
             decimal itemsTaxTotal = decimal.Zero;
             foreach (var shoppingCartItem in cart)
             {
+                decimal taxRate = decimal.Zero;
                 string error1 = string.Empty;
                 string error2 = string.Empty;
-                decimal subTotalWithoutDiscountExclTax = TaxManager.GetPrice(shoppingCartItem.ProductVariant, PriceHelper.GetSubTotal(shoppingCartItem, customer, true), false, customer, ref error1);
-                decimal subTotalWithoutDiscountInclTax = TaxManager.GetPrice(shoppingCartItem.ProductVariant, PriceHelper.GetSubTotal(shoppingCartItem, customer, true), true, customer, ref error2);
+
+                decimal subTotalExclTax = GetPrice(shoppingCartItem.ProductVariant, PriceHelper.GetSubTotal(shoppingCartItem, customer, true), false, customer, out taxRate, ref error1);
+                decimal subTotalInclTax = GetPrice(shoppingCartItem.ProductVariant, PriceHelper.GetSubTotal(shoppingCartItem, customer, true), true, customer, out taxRate, ref error2);
                 if (!String.IsNullOrEmpty(error1))
                 {
                     error = error1;
@@ -267,7 +289,22 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
                     error = error2;
                 }
 
-                decimal shoppingCartItemTax = subTotalWithoutDiscountInclTax - subTotalWithoutDiscountExclTax;
+                decimal shoppingCartItemTax = subTotalInclTax - subTotalExclTax;
+
+                //tax rates
+                if (taxRate > decimal.Zero && shoppingCartItemTax > decimal.Zero)
+                {
+                    if (!taxRates.ContainsKey(taxRate))
+                    {
+                        taxRates.Add(taxRate, shoppingCartItemTax);
+                    }
+                    else
+                    {
+                        taxRates[taxRate] = taxRates[taxRate] + shoppingCartItemTax;
+                    }
+                }
+
+                //tax total
                 itemsTaxTotal += shoppingCartItemTax;
             }
 
@@ -278,10 +315,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
                 var caValues = CheckoutAttributeHelper.ParseCheckoutAttributeValues(customer.CheckoutAttributes);
                 foreach (var caValue in caValues)
                 {
+                    decimal taxRate = decimal.Zero;
                     string error1 = string.Empty;
                     string error2 = string.Empty;
-                    decimal caExclTax = TaxManager.GetCheckoutAttributePrice(caValue, false, customer, ref error1);
-                    decimal caInclTax = TaxManager.GetCheckoutAttributePrice(caValue, true, customer, ref error2);
+
+                    decimal caExclTax = TaxManager.GetCheckoutAttributePrice(caValue, false, customer, out taxRate, ref error1);
+                    decimal caInclTax = TaxManager.GetCheckoutAttributePrice(caValue, true, customer, out taxRate, ref error2);
                     if (!String.IsNullOrEmpty(error1))
                     {
                         error = error1;
@@ -292,6 +331,20 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
                     }
 
                     decimal caTax = caInclTax - caExclTax;
+
+                    //tax rates
+                    if (taxRate > decimal.Zero && caTax > decimal.Zero)
+                    {
+                        if (!taxRates.ContainsKey(taxRate))
+                        {
+                            taxRates.Add(taxRate, caTax);
+                        }
+                        else
+                        {
+                            taxRates[taxRate] = taxRates[taxRate] + caTax;
+                        }
+                    }
+
                     checkoutAttributesTax += caTax;
                 }
             }
@@ -300,10 +353,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
             decimal shippingTax = decimal.Zero;
             if (TaxManager.ShippingIsTaxable)
             {
+                decimal taxRate = decimal.Zero;
                 string error1 = string.Empty;
                 string error2 = string.Empty;
-                decimal? shippingExclTax = ShippingManager.GetShoppingCartShippingTotal(cart, customer, false, ref error1);
-                decimal? shippingInclTax = ShippingManager.GetShoppingCartShippingTotal(cart, customer, true, ref error2);
+
+                decimal? shippingExclTax = ShippingManager.GetShoppingCartShippingTotal(cart, customer, false, out taxRate, ref error1);
+                decimal? shippingInclTax = ShippingManager.GetShoppingCartShippingTotal(cart, customer, true, out taxRate, ref error2);
                 if (!String.IsNullOrEmpty(error1))
                 {
                     error = error1;
@@ -315,6 +370,19 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
                 if (shippingExclTax.HasValue && shippingInclTax.HasValue)
                 {
                     shippingTax = shippingInclTax.Value - shippingExclTax.Value;
+
+                    //tax rates
+                    if (taxRate > decimal.Zero && shippingTax > decimal.Zero)
+                    {
+                        if (!taxRates.ContainsKey(taxRate))
+                        {
+                            taxRates.Add(taxRate, shippingTax);
+                        }
+                        else
+                        {
+                            taxRates[taxRate] = taxRates[taxRate] + shippingTax;
+                        }
+                    }
                 }
             }
 
@@ -322,11 +390,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
             decimal paymentMethodAdditionalFeeTax = decimal.Zero;
             if (TaxManager.PaymentMethodAdditionalFeeIsTaxable)
             {
+                decimal taxRate = decimal.Zero;
                 string error1 = string.Empty;
                 string error2 = string.Empty;
+
                 decimal paymentMethodAdditionalFee = PaymentManager.GetAdditionalHandlingFee(paymentMethodId);
-                decimal? paymentMethodAdditionalFeeExclTax = TaxManager.GetPaymentMethodAdditionalFee(paymentMethodAdditionalFee, false, customer, ref error1);
-                decimal? paymentMethodAdditionalFeeInclTax = TaxManager.GetPaymentMethodAdditionalFee(paymentMethodAdditionalFee, true, customer, ref error2);
+                decimal? paymentMethodAdditionalFeeExclTax = TaxManager.GetPaymentMethodAdditionalFee(paymentMethodAdditionalFee, false, customer, out taxRate, ref error1);
+                decimal? paymentMethodAdditionalFeeInclTax = TaxManager.GetPaymentMethodAdditionalFee(paymentMethodAdditionalFee, true, customer, out taxRate, ref error2);
                 if (!String.IsNullOrEmpty(error1))
                 {
                     error = error1;
@@ -338,9 +408,27 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
                 if (paymentMethodAdditionalFeeExclTax.HasValue && paymentMethodAdditionalFeeInclTax.HasValue)
                 {
                     paymentMethodAdditionalFeeTax = paymentMethodAdditionalFeeInclTax.Value - paymentMethodAdditionalFeeExclTax.Value;
+
+                    //tax rates
+                    if (taxRate > decimal.Zero && paymentMethodAdditionalFeeTax > decimal.Zero)
+                    {
+                        if (!taxRates.ContainsKey(taxRate))
+                        {
+                            taxRates.Add(taxRate, paymentMethodAdditionalFeeTax);
+                        }
+                        else
+                        {
+                            taxRates[taxRate] = taxRates[taxRate] + paymentMethodAdditionalFeeTax;
+                        }
+                    }
                 }
             }
 
+            //add at least one tax rate
+            if (taxRates.Count == 0)
+                taxRates.Add(decimal.Zero, decimal.Zero);
+
+            //summarize taxes
             taxTotal = itemsTaxTotal + checkoutAttributesTax + shippingTax + paymentMethodAdditionalFeeTax;
             taxTotal = Math.Round(taxTotal, 2);
             return taxTotal;
@@ -417,11 +505,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// </summary>
         /// <param name="productVariant">Product variant</param>
         /// <param name="price">Price</param>
+        /// <param name="taxRate">Tax rate</param>
         /// <returns>Price</returns>
-        public static decimal GetPrice(ProductVariant productVariant, decimal price)
+        public static decimal GetPrice(ProductVariant productVariant, decimal price, 
+            out decimal taxRate)
         {
             string error = string.Empty;
-            return GetPrice(productVariant, price, ref error);
+            return GetPrice(productVariant, price, out taxRate, ref error);
         }
 
         /// <summary>
@@ -429,13 +519,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// </summary>
         /// <param name="productVariant">Product variant</param>
         /// <param name="price">Price</param>
+        /// <param name="taxRate">Tax rate</param>
         /// <param name="error">Error</param>
         /// <returns>Price</returns>
-        public static decimal GetPrice(ProductVariant productVariant, 
-            decimal price, ref string error)
+        public static decimal GetPrice(ProductVariant productVariant, decimal price, 
+            out decimal taxRate, ref string error)
         {
             var customer = NopContext.Current.User;
-            return GetPrice(productVariant, price, customer, ref error);
+            return GetPrice(productVariant, price, customer, out taxRate, ref error);
         }
 
         /// <summary>
@@ -444,11 +535,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// <param name="productVariant">Product variant</param>
         /// <param name="price">Price</param>
         /// <param name="customer">Customer</param>
+        /// <param name="taxRate">Tax rate</param>
         /// <returns>Price</returns>
-        public static decimal GetPrice(ProductVariant productVariant, decimal price, Customer customer)
+        public static decimal GetPrice(ProductVariant productVariant, decimal price,
+            Customer customer, out decimal taxRate)
         {
             string error = string.Empty;
-            return GetPrice(productVariant, price, customer, ref error);
+            return GetPrice(productVariant, price, customer, out taxRate, ref error);
         }
 
         /// <summary>
@@ -457,10 +550,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// <param name="productVariant">Product variant</param>
         /// <param name="price">Price</param>
         /// <param name="customer">Customer</param>
+        /// <param name="taxRate">Tax rate</param>
         /// <param name="error">Error</param>
         /// <returns>Price</returns>
         public static decimal GetPrice(ProductVariant productVariant, decimal price,
-            Customer customer, ref string error)
+            Customer customer, out decimal taxRate, ref string error)
         {
             bool includingTax = false;
             switch (NopContext.Current.TaxDisplayType)
@@ -472,7 +566,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
                     includingTax = true;
                     break;
             }
-            return GetPrice(productVariant, price, includingTax, customer, ref error);
+            return GetPrice(productVariant, price, includingTax, customer, out taxRate, ref error);
         }
 
         /// <summary>
@@ -482,12 +576,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// <param name="price">Price</param>
         /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
         /// <param name="customer">Customer</param>
+        /// <param name="taxRate">Tax rate</param>
         /// <returns>Price</returns>
         public static decimal GetPrice(ProductVariant productVariant, decimal price,
-            bool includingTax, Customer customer)
+            bool includingTax, Customer customer, out decimal taxRate)
         {
             string error = string.Empty;
-            return GetPrice(productVariant, price, includingTax, customer, ref error);
+            return GetPrice(productVariant, price, includingTax, customer, out taxRate, ref error);
         }
 
         /// <summary>
@@ -497,14 +592,16 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// <param name="price">Price</param>
         /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
         /// <param name="customer">Customer</param>
+        /// <param name="taxRate">Tax rate</param>
         /// <param name="error">Error</param>
         /// <returns>Price</returns>
         public static decimal GetPrice(ProductVariant productVariant, decimal price,
-            bool includingTax, Customer customer, ref string error)
+            bool includingTax, Customer customer, out decimal taxRate, ref string error)
         {
             bool priceIncludesTax = TaxManager.PricesIncludeTax;
             int taxClassId = 0;
-            return GetPrice(productVariant, taxClassId, price, includingTax, customer, priceIncludesTax, ref error);
+            return GetPrice(productVariant, taxClassId, price, includingTax, 
+                customer, priceIncludesTax, out taxRate, ref error);
         }
 
         /// <summary>
@@ -516,12 +613,15 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
         /// <param name="customer">Customer</param>
         /// <param name="priceIncludesTax">A value indicating whether price already includes tax</param>
+        /// <param name="taxRate">Tax rate</param>
         /// <returns>Price</returns>
-        public static decimal GetPrice(ProductVariant productVariant, int taxClassId, 
-            decimal price, bool includingTax, Customer customer, bool priceIncludesTax)
+        public static decimal GetPrice(ProductVariant productVariant, int taxClassId,
+            decimal price, bool includingTax, Customer customer, out decimal taxRate, 
+            bool priceIncludesTax)
         {
             string error = string.Empty;
-            return GetPrice(productVariant, taxClassId, price, includingTax, customer, priceIncludesTax, ref error);           
+            return GetPrice(productVariant, taxClassId, price, includingTax,
+                customer, priceIncludesTax, out taxRate, ref error);           
         }
 
         /// <summary>
@@ -533,26 +633,27 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
         /// <param name="customer">Customer</param>
         /// <param name="priceIncludesTax">A value indicating whether price already includes tax</param>
+        /// <param name="taxRate">Tax rate</param>
         /// <param name="error">Error</param>
         /// <returns>Price</returns>
-        public static decimal GetPrice(ProductVariant productVariant, int taxClassId, 
-            decimal price,  bool includingTax, Customer customer, 
-            bool priceIncludesTax, ref string error)
+        public static decimal GetPrice(ProductVariant productVariant, int taxClassId,
+            decimal price, bool includingTax, Customer customer,
+            bool priceIncludesTax, out decimal taxRate, ref string error)
         {
+            taxRate = GetTaxRate(productVariant, taxClassId, customer, ref error);
+            
             if (priceIncludesTax)
             {
                 if (!includingTax)
                 {
-                    decimal includingPercent = GetTaxRate(productVariant, taxClassId, customer, ref error);
-                    price = CalculatePrice(price, includingPercent, false);
+                    price = CalculatePrice(price, taxRate, false);
                 }
             }
             else
             {
                 if (includingTax)
                 {
-                    decimal percent = GetTaxRate(productVariant, taxClassId, customer, ref error);
-                    price = CalculatePrice(price, percent, true);
+                    price = CalculatePrice(price, taxRate, true);
                 }
             }
 
@@ -622,13 +723,32 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         public static decimal GetShippingPrice(decimal price, bool includingTax, 
             Customer customer, ref string error)
         {
+            decimal taxRate = decimal.Zero;
+            return GetShippingPrice(price, includingTax, customer, out taxRate, ref error);
+        }
+
+        /// <summary>
+        /// Gets shipping price
+        /// </summary>
+        /// <param name="price">Price</param>
+        /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
+        /// <param name="customer">Customer</param>
+        /// <param name="taxRate">Tax rate</param>
+        /// <param name="error">Error</param>
+        /// <returns>Price</returns>
+        public static decimal GetShippingPrice(decimal price, bool includingTax,
+            Customer customer, out decimal taxRate, ref string error)
+        {
+            taxRate = decimal.Zero;
+
             if (!TaxManager.ShippingIsTaxable)
             {
                 return price;
             }
             int taxClassId = TaxManager.ShippingTaxClassId;
             bool priceIncludesTax = TaxManager.ShippingPriceIncludesTax;
-            return GetPrice(null, taxClassId, price, includingTax, customer, priceIncludesTax, ref error);
+            return GetPrice(null, taxClassId, price, includingTax, customer, 
+                priceIncludesTax, out taxRate, ref error);
         }
 
         /// <summary>
@@ -690,13 +810,33 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         public static decimal GetPaymentMethodAdditionalFee(decimal price, 
             bool includingTax, Customer customer, ref string error)
         {
+            decimal taxRate = decimal.Zero;
+            return GetPaymentMethodAdditionalFee(price, includingTax, 
+                customer, out taxRate, ref error);
+        }
+        
+        /// <summary>
+        /// Gets payment method additional handling fee
+        /// </summary>
+        /// <param name="price">Price</param>
+        /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
+        /// <param name="customer">Customer</param>
+        /// <param name="taxRate">Tax rate</param>
+        /// <param name="error">Error</param>
+        /// <returns>Price</returns>
+        public static decimal GetPaymentMethodAdditionalFee(decimal price,
+            bool includingTax, Customer customer, out decimal taxRate, ref string error)
+        {
+            taxRate = decimal.Zero;
+
             if (!TaxManager.PaymentMethodAdditionalFeeIsTaxable)
             {
                 return price;
             }
             int taxClassId = TaxManager.PaymentMethodAdditionalFeeTaxClassId;
             bool priceIncludesTax = TaxManager.PaymentMethodAdditionalFeeIncludesTax;
-            return GetPrice(null, taxClassId, price, includingTax, customer, priceIncludesTax, ref error);
+            return GetPrice(null, taxClassId, price, includingTax, customer, 
+                priceIncludesTax, out taxRate, ref error);
         }
 
         /// <summary>
@@ -773,8 +913,27 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         public static decimal GetCheckoutAttributePrice(CheckoutAttributeValue cav,
             bool includingTax, Customer customer, ref string error)
         {
+            decimal taxRate = decimal.Zero;
+            return GetCheckoutAttributePrice(cav, includingTax, customer,
+                out taxRate, ref error);
+        }
+
+        /// <summary>
+        /// Gets checkout attribute value price
+        /// </summary>
+        /// <param name="cav">Checkout attribute value</param>
+        /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
+        /// <param name="customer">Customer</param>
+        /// <param name="taxRate">Tax rate</param>
+        /// <param name="error">Error</param>
+        /// <returns>Price</returns>
+        public static decimal GetCheckoutAttributePrice(CheckoutAttributeValue cav,
+            bool includingTax, Customer customer, out decimal taxRate, ref string error)
+        {
             if (cav == null)
                 throw new ArgumentNullException("cav");
+
+            taxRate = decimal.Zero;
 
             decimal price = cav.PriceAdjustment;
             if (cav.CheckoutAttribute.IsTaxExempt)
@@ -784,7 +943,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
 
             bool priceIncludesTax = TaxManager.PricesIncludeTax;
             int taxClassId = cav.CheckoutAttribute.TaxCategoryId;
-            return GetPrice(null, taxClassId, price, includingTax, customer, priceIncludesTax, ref error);
+            return GetPrice(null, taxClassId, price, includingTax, customer, 
+                priceIncludesTax, out taxRate, ref error);
         }
 
         /// <summary>
@@ -835,6 +995,16 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         public static string GetVatNumberStatusName(VatNumberStatusEnum status)
         {
             return LocalizationManager.GetLocaleResourceString(string.Format("VatNumberStatus.{0}", status.ToString()));
+        }
+
+        /// <summary>
+        /// Formats a tax rate
+        /// </summary>
+        /// <param name="taxRate">Tax rate</param>
+        /// <returns>Formatted tax rate</returns>
+        public static string FormatTaxRate(decimal taxRate)
+        {
+            return taxRate.ToString("G29");
         }
 
         #endregion
@@ -938,6 +1108,22 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
             set
             {
                 SettingManager.SetParam("Tax.DisplayTaxSuffix", value.ToString());
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether each tax rate should be displayed on separate line (shopping cart page)
+        /// </summary>
+        public static bool DisplayTaxRates
+        {
+            get
+            {
+                bool displayTaxRate = SettingManager.GetSettingValueBoolean("Tax.DisplayTaxRates", false);
+                return displayTaxRate;
+            }
+            set
+            {
+                SettingManager.SetParam("Tax.DisplayTaxRates", value.ToString());
             }
         }
 
