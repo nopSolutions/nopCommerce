@@ -1733,3 +1733,13 @@ BEGIN
 	VALUES (N'OnlineUserManager.Enabled', N'False', N'')
 END
 GO
+
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[Nop_Setting]
+		WHERE [Name] = N'Display.DownloadableProductsTab')
+BEGIN
+	INSERT [dbo].[Nop_Setting] ([Name], [Value], [Description])
+	VALUES (N'Display.DownloadableProductsTab', N'True', N'')
+END
+GO

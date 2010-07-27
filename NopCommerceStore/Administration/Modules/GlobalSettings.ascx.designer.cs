@@ -2011,6 +2011,24 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         protected global::System.Web.UI.WebControls.CheckBox cbShowShareButton;
         
         /// <summary>
+        /// lblDownloadableProductsTab control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblDownloadableProductsTab;
+        
+        /// <summary>
+        /// cbDownloadableProductsTab control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbDownloadableProductsTab;
+        
+        /// <summary>
         /// lblUseImagesForLanguageSelection control.
         /// </summary>
         /// <remarks>

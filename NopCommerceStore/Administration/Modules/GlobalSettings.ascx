@@ -1395,6 +1395,16 @@
                     <tr>
                         <td class="adminTitle">
                             <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
+                                ID="lblDownloadableProductsTab" Text="<% $NopResources:Admin.GlobalSettings.Other.DownloadableProductsTab %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Other.DownloadableProductsTab.Tooltip %>" />
+                        </td>
+                        <td class="adminData">
+                            <asp:CheckBox runat="server" ID="cbDownloadableProductsTab"></asp:CheckBox>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
                                 ID="lblUseImagesForLanguageSelection" Text="<% $NopResources:Admin.GlobalSettings.Other.UseImagesForLanguageSelection %>"
                                 ToolTip="<% $NopResources:Admin.GlobalSettings.Other.UseImagesForLanguageSelection.Tooltip %>" />
                         </td>

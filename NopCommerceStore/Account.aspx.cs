@@ -57,8 +57,9 @@ namespace NopSolutions.NopCommerce.Web
         {
             pnlAvatar.Visible = CustomerManager.AllowCustomersToUploadAvatars;
             pnlRewardPoints.Visible = OrderManager.RewardPointsEnabled;
-            pnlForumSubscriptions.Visible = ForumManager.AllowCustomersToManageSubscriptions;
+            pnlForumSubscriptions.Visible = ForumManager.AllowCustomersToManageSubscriptions && ForumManager.ForumsEnabled;
             pnlReturnRequests.Visible = ctrlReturnRequests.Visible && SettingManager.GetSettingValueBoolean("ReturnRequests.Enable");
+            pnlDP.Visible = SettingManager.GetSettingValueBoolean("Display.DownloadableProductsTab");
         }
 
         public override PageSslProtectionEnum SslProtected

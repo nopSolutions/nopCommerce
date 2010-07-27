@@ -141,6 +141,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             cbEnableDynamicPriceUpdate.Checked = SettingManager.GetSettingValueBoolean("ProductAttribute.EnableDynamicPriceUpdate");
             cbAllowProductSorting.Checked = SettingManager.GetSettingValueBoolean("Common.AllowProductSorting");
             cbShowShareButton.Checked = ProductManager.ShowShareButton;
+            cbDownloadableProductsTab.Checked = SettingManager.GetSettingValueBoolean("Display.DownloadableProductsTab");
             cbUseImagesForLanguageSelection.Checked = SettingManager.GetSettingValueBoolean("Common.UseImagesForLanguageSelection", false);
             cbEnableCompareProducts.Checked = ProductManager.CompareProductsEnabled;
             cbEnableWishlist.Checked = SettingManager.GetSettingValueBoolean("Common.EnableWishlist");
@@ -160,7 +161,6 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             txtShowBestsellersOnHomePageNumber.Value = SettingManager.GetSettingValueInteger("Display.ShowBestsellersOnMainPageNumber");
             cbProductsAlsoPurchased.Checked = ProductManager.ProductsAlsoPurchasedEnabled;
             txtProductsAlsoPurchasedNumber.Value = ProductManager.ProductsAlsoPurchasedNumber;
-
             cbLiveChatEnabled.Checked = SettingManager.GetSettingValueBoolean("LiveChat.Enabled", false);
             txtLiveChatBtnCode.Text = SettingManager.GetSettingValue("LiveChat.BtnCode");
             txtLiveChatMonCode.Text = SettingManager.GetSettingValue("LiveChat.MonCode");
@@ -399,6 +399,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     SettingManager.SetParam("ProductAttribute.EnableDynamicPriceUpdate", cbEnableDynamicPriceUpdate.Checked.ToString());
                     SettingManager.SetParam("Common.AllowProductSorting", cbAllowProductSorting.Checked.ToString());
                     ProductManager.ShowShareButton = cbShowShareButton.Checked;
+                    SettingManager.SetParam("Display.DownloadableProductsTab", cbDownloadableProductsTab.Checked.ToString());
                     SettingManager.SetParam("Common.UseImagesForLanguageSelection", cbUseImagesForLanguageSelection.Checked.ToString());
                     ProductManager.CompareProductsEnabled = cbEnableCompareProducts.Checked;
                     SettingManager.SetParam("Common.EnableWishlist", cbEnableWishlist.Checked.ToString());

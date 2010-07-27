@@ -1442,6 +1442,15 @@ set @resources='
   <LocaleResource Name="Admin.OnlineCustomers.SaveButton.Text">
     <Value>Save</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.ShowShareButton">
+    <Value>Show a share button:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.DownloadableProductsTab">
+    <Value>Show "Downloadable products tab":</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.DownloadableProductsTab.Tooltip">
+    <Value>Check to show "Downloadable products tab" on My Account page</Value>
+  </LocaleResource>
 </Language>
 '
 
