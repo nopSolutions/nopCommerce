@@ -1309,6 +1309,16 @@
                             <asp:CheckBox ID="cbffFaxRequired" runat="server"></asp:CheckBox>
                         </td>
                     </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ID="lblffNewsletterBoxEnabled" Text="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.NewsletterBoxEnabled %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.NewsletterBoxEnabled.Tooltip %>"
+                                ToolTipImage="~/Administration/Common/ico-help.gif" />
+                        </td>
+                        <td class="adminData">
+                            <asp:CheckBox ID="cbffNewsletterBoxEnabled" runat="server"></asp:CheckBox>
+                        </td>
+                    </tr>
                 </table>
             </ContentTemplate>
         </ajaxToolkit:TabPanel>

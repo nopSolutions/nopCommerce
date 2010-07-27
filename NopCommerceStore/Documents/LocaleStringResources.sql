@@ -1451,6 +1451,12 @@ set @resources='
   <LocaleResource Name="Admin.GlobalSettings.Other.DownloadableProductsTab.Tooltip">
     <Value>Check to show "Downloadable products tab" on My Account page</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Profiles.FormFields.NewsletterBoxEnabled">
+    <Value>''Newsletter'' enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Profiles.FormFields.NewsletterBoxEnabled.Tooltip">
+    <Value>Set if ''Newsletter'' is enabled</Value>
+  </LocaleResource>
 </Language>
 '
 

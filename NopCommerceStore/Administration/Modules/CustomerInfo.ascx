@@ -210,6 +210,8 @@
         </td>
     </tr>
     <% } %>
+    <% if (CustomerManager.FormFieldNewsletterEnabled)
+       { %>
     <tr>
         <td class="adminTitle">
             <nopCommerce:ToolTipLabel runat="server" ID="lblNewsletterTitle" Text="<% $NopResources:Admin.CustomerInfo.Newsletter %>"
@@ -219,6 +221,7 @@
             <asp:CheckBox ID="cbNewsletter" runat="server"></asp:CheckBox>
         </td>
     </tr>
+    <% } %>
     <tr runat="server" id="pnlTimeZone">
         <td class="adminTitle">
             <nopCommerce:ToolTipLabel runat="server" ID="lblTimeZoneTitle" Text="<% $NopResources:Admin.CustomerInfo.TimeZone %>"

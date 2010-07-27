@@ -218,6 +218,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             cbffPhoneRequired.Checked = CustomerManager.FormFieldPhoneRequired;
             cbffFaxEnabled.Checked = CustomerManager.FormFieldFaxEnabled;
             cbffFaxRequired.Checked = CustomerManager.FormFieldFaxRequired;
+            cbffNewsletterBoxEnabled.Checked = CustomerManager.FormFieldNewsletterEnabled;
 
             //return requests (RMA)
             cbReturnRequestsEnabled.Checked = SettingManager.GetSettingValueBoolean("ReturnRequests.Enable");
@@ -519,6 +520,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     CustomerManager.FormFieldPhoneRequired = cbffPhoneRequired.Checked;
                     CustomerManager.FormFieldFaxEnabled = cbffFaxEnabled.Checked;
                     CustomerManager.FormFieldFaxRequired = cbffFaxRequired.Checked;
+                    CustomerManager.FormFieldNewsletterEnabled = cbffNewsletterBoxEnabled.Checked;
 
                     //return requests (RMA)
                     SettingManager.SetParam("ReturnRequests.Enable", cbReturnRequestsEnabled.Checked.ToString());

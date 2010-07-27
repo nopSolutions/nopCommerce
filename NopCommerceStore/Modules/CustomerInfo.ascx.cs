@@ -83,6 +83,8 @@ namespace NopSolutions.NopCommerce.Web.Modules
             phYourContactInformation.Visible = CustomerManager.FormFieldPhoneEnabled ||
                 CustomerManager.FormFieldFaxEnabled;
 
+            phNewsletter.Visible = CustomerManager.FormFieldNewsletterEnabled;
+
             trTimeZone.Visible = DateTimeHelper.AllowCustomersToSetTimeZone;
             trSignature.Visible = ForumManager.ForumsEnabled && ForumManager.SignaturesEnabled;
             divPreferences.Visible = trTimeZone.Visible || trSignature.Visible;
@@ -222,8 +224,11 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     {
                         customer.FaxNumber = txtFaxNumber.Text;
                     }
-                    customer.ReceiveNewsletter = cbNewsletter.Checked;
-                    
+                    if (CustomerManager.FormFieldNewsletterEnabled)
+                    {
+                        customer.ReceiveNewsletter = cbNewsletter.Checked;
+                    }
+
                     //set VAT number after country is saved
                     if (TaxManager.EUVatEnabled)
                     {

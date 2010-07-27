@@ -251,27 +251,29 @@
         <div class="clear">
         </div>
     </asp:PlaceHolder>
-    <div class="section-title">
-        <%=GetLocaleResourceString("Account.Options")%>
-    </div>
+    <asp:PlaceHolder runat="server" ID="phNewsletter">
+        <div class="section-title">
+            <%=GetLocaleResourceString("Account.Options")%>
+        </div>
+        <div class="clear">
+        </div>
+        <div class="section-body">
+            <table class="table-container">
+                <tbody>
+                    <tr class="row">
+                        <td class="item-name">
+                            <%=GetLocaleResourceString("Account.Newsletter")%>:
+                        </td>
+                        <td class="item-value">
+                            <asp:CheckBox ID="cbNewsletter" runat="server"></asp:CheckBox>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     <div class="clear">
     </div>
-    <div class="section-body">
-        <table class="table-container">
-            <tbody>
-                <tr class="row">
-                    <td class="item-name">
-                        <%=GetLocaleResourceString("Account.Newsletter")%>:
-                    </td>
-                    <td class="item-value">
-                        <asp:CheckBox ID="cbNewsletter" runat="server"></asp:CheckBox>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    <div class="clear">
-    </div>
+    </asp:PlaceHolder>
     <asp:PlaceHolder runat="server" ID="divPreferences">
         <div class="section-title">
             <%=GetLocaleResourceString("Account.Preferences")%>

@@ -114,7 +114,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 {
                     txtFaxNumber.Text = customer.FaxNumber;
                 }
-                cbNewsletter.Checked = customer.ReceiveNewsletter;
+                if (CustomerManager.FormFieldNewsletterEnabled)
+                {
+                    cbNewsletter.Checked = customer.ReceiveNewsletter;
+                }
 
                 if (DateTimeHelper.AllowCustomersToSetTimeZone)
                 {
@@ -323,7 +326,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 customer.FaxNumber = txtFaxNumber.Text;
             }
-            customer.ReceiveNewsletter = cbNewsletter.Checked;
+            if (CustomerManager.FormFieldNewsletterEnabled)
+            {
+                customer.ReceiveNewsletter = cbNewsletter.Checked;
+            }
 
             //set VAT number after country is saved
             if (TaxManager.EUVatEnabled)

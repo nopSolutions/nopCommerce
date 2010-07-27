@@ -172,7 +172,8 @@ namespace NopSolutions.NopCommerce.Web.Modules
             var phFaxNumber = (PlaceHolder)CreateUserWizardStep1.ContentTemplateContainer.FindControl("phFaxNumber");
             var rfvFaxNumber = (RequiredFieldValidator)CreateUserWizardStep1.ContentTemplateContainer.FindControl("rfvFaxNumber");
             var phYourContactInformation = (PlaceHolder)CreateUserWizardStep1.ContentTemplateContainer.FindControl("phYourContactInformation");
-            
+            var phNewsletter = (PlaceHolder)CreateUserWizardStep1.ContentTemplateContainer.FindControl("phNewsletter");
+
             phGender.Visible = CustomerManager.FormFieldGenderEnabled;
             phDateOfBirth.Visible = CustomerManager.FormFieldDateOfBirthEnabled;
 
@@ -212,6 +213,8 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 CustomerManager.FormFieldFaxRequired;
             phYourContactInformation.Visible = CustomerManager.FormFieldPhoneEnabled ||
                 CustomerManager.FormFieldFaxEnabled;
+
+            phNewsletter.Visible = CustomerManager.FormFieldNewsletterEnabled;
 
             base.OnInit(e);
         }
@@ -296,7 +299,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
             {
                 customer.FaxNumber = txtFaxNumber.Text;
             }
-            customer.ReceiveNewsletter = cbNewsletter.Checked;
+            if (CustomerManager.FormFieldNewsletterEnabled)
+            {
+                customer.ReceiveNewsletter = cbNewsletter.Checked;
+            }
 
             //set VAT number after country is saved
             if (TaxManager.EUVatEnabled)

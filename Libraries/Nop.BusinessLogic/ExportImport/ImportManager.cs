@@ -181,7 +181,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                         customer.CountryId = countryId;
                     if (CustomerManager.FormFieldStateEnabled)
                         customer.StateProvinceId = stateProvinceId;
-                    customer.ReceiveNewsletter = receiveNewsletter;
+                    if (CustomerManager.FormFieldNewsletterEnabled)
+                        customer.ReceiveNewsletter = receiveNewsletter;
 
                     if (TaxManager.EUVatEnabled)
                     {

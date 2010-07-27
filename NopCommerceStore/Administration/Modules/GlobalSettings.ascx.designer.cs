@@ -1876,6 +1876,24 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         protected global::System.Web.UI.WebControls.CheckBox cbffFaxRequired;
         
         /// <summary>
+        /// lblffNewsletterBoxEnabled control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblffNewsletterBoxEnabled;
+        
+        /// <summary>
+        /// cbffNewsletterBoxEnabled control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbffNewsletterBoxEnabled;
+        
+        /// <summary>
         /// pnlOther control.
         /// </summary>
         /// <remarks>

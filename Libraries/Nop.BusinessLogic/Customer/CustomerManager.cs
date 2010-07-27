@@ -3012,6 +3012,22 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             }
         }
 
+
+        /// <summary>
+        /// Gets or sets a value indicating whether 'Newsletter' is enabled
+        /// </summary>
+        public static bool FormFieldNewsletterEnabled
+        {
+            get
+            {
+                bool setting = SettingManager.GetSettingValueBoolean("FormField.NewsletterEnabled", true);
+                return setting;
+            }
+            set
+            {
+                SettingManager.SetParam("FormField.NewsletterEnabled", value.ToString());
+            }
+        }
         #endregion
     }
 }
