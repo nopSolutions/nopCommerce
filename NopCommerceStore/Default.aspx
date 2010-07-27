@@ -1,7 +1,7 @@
 ﻿<%@ Page Language="C#" MasterPageFile="~/MasterPages/TwoColumn.master" AutoEventWireup="true"
     Inherits="NopSolutions.NopCommerce.Web.Default" CodeBehind="Default.aspx.cs" %>
 
-<%@ Register TagPrefix="nopCommerce" TagName="TodaysPoll" Src="~/Modules/TodaysPoll.ascx" %>
+<%@ Register TagPrefix="nopCommerce" TagName="HomePagePoll" Src="~/Modules/HomePagePoll.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="HomePageNews" Src="~/Modules/HomePageNews.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="HomePageCategories" Src="~/Modules/HomePageCategories.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="HomePageProducts" Src="~/Modules/HomePageProducts.ascx" %>
@@ -24,5 +24,5 @@
     <nopCommerce:HomePageNews ID="ctrlHomePageNews" runat="server" />
     <div class="clear">
     </div>
-    <nopCommerce:TodaysPoll ID="ctrlTodaysPoll" runat="server" />
+    <nopCommerce:HomePagePoll ID="ctrlPolls" runat="server" />
 </asp:Content>

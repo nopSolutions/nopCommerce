@@ -1,11 +1,6 @@
-﻿<%@ Control Language="C#" AutoEventWireup="true" Inherits="NopSolutions.NopCommerce.Web.Modules.TodaysPollControl" Codebehind="TodaysPoll.ascx.cs" %>
+﻿<%@ Control Language="C#" AutoEventWireup="true" Inherits="NopSolutions.NopCommerce.Web.Modules.HomePagePollControl" Codebehind="HomePagePoll.ascx.cs" %>
 <%@ Register TagPrefix="nopCommerce" TagName="Poll" Src="~/Modules/Poll.ascx" %>
 <div class="todays-poll-box">
-    <div class="title">
-        <%=GetLocaleResourceString("Polls.TodaysPoll")%>
-    </div>
-    <div class="clear">
-    </div>
     <div class="poll-item">
         <asp:Repeater runat="server" ID="rptPollBlocks">
             <ItemTemplate>

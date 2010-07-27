@@ -4801,8 +4801,8 @@
     <Compile Include="Modules\SimpleTextBox.ascx.designer.cs">
       <DependentUpon>SimpleTextBox.ascx</DependentUpon>
     </Compile>
-    <Compile Include="Modules\TodaysPoll.ascx.designer.cs">
-      <DependentUpon>TodaysPoll.ascx</DependentUpon>
+    <Compile Include="Modules\HomePagePoll.ascx.designer.cs">
+      <DependentUpon>HomePagePoll.ascx</DependentUpon>
     </Compile>
     <Compile Include="Modules\Wishlist.ascx.designer.cs">
       <DependentUpon>Wishlist.ascx</DependentUpon>
@@ -5178,8 +5178,8 @@
       <DependentUpon>SimpleTextBox.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Modules\TodaysPoll.ascx.cs">
-      <DependentUpon>TodaysPoll.ascx</DependentUpon>
+    <Compile Include="Modules\HomePagePoll.ascx.cs">
+      <DependentUpon>HomePagePoll.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\Wishlist.ascx.cs">
@@ -6079,7 +6079,7 @@
     <Content Include="Modules\Search.ascx" />
     <Content Include="Modules\SearchBox.ascx" />
     <Content Include="Modules\SimpleTextBox.ascx" />
-    <Content Include="Modules\TodaysPoll.ascx" />
+    <Content Include="Modules\HomePagePoll.ascx" />
     <Content Include="Modules\Wishlist.ascx" />
     <Content Include="MoneybookersReturn.aspx" />
     <Content Include="News.aspx" />

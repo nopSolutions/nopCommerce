@@ -32,7 +32,7 @@ using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
  
 namespace NopSolutions.NopCommerce.Web.Modules
 {
-    public partial class TodaysPollControl : BaseNopUserControl
+    public partial class HomePagePollControl : BaseNopUserControl
     {
         protected void Page_Load(object sender, EventArgs e)
         {

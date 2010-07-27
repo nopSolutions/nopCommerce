@@ -10,7 +10,7 @@
 namespace NopSolutions.NopCommerce.Web.Modules {
     
     
-    public partial class TodaysPollControl {
+    public partial class HomePagePollControl {
         
         /// <summary>
         /// rptPollBlocks control.
