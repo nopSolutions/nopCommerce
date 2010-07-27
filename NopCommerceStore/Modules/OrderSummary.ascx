@@ -131,16 +131,11 @@
             </asp:Repeater>
         </tbody>
     </table>
-    <%if (!this.IsShoppingCart)
-      { %>
     <div class="clear">
     </div>
     <div class="selected-checkout-attributes">
         <%=GetCheckoutAttributeDescription()%>
     </div>
-    <%
-        }
-    %>
     <div class="clear">
     </div>
     <div class="cart-footer">
@@ -148,12 +143,10 @@
           { %>
         <div class="clear">
         </div>
-            <nopCommerce:CheckoutAttributes ID="ctrlCheckoutAttributes" runat="server">
-            </nopCommerce:CheckoutAttributes>
+        <nopCommerce:CheckoutAttributes ID="ctrlCheckoutAttributes" runat="server"></nopCommerce:CheckoutAttributes>
         <div class="clear">
         </div>
-            <nopCommerce:EstimateShipping ID="ctrlEstimateShipping" runat="server">
-            </nopCommerce:EstimateShipping>
+        <nopCommerce:EstimateShipping ID="ctrlEstimateShipping" runat="server"></nopCommerce:EstimateShipping>
         <div class="clear">
         </div>
         <div class="buttons">

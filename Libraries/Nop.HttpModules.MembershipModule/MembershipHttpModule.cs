@@ -22,6 +22,7 @@ using System.Web;
 using System.Web.Security;
 using NopSolutions.NopCommerce.BusinessLogic;
 using NopSolutions.NopCommerce.BusinessLogic.Audit;
+using NopSolutions.NopCommerce.BusinessLogic.Audit.UsersOnline;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.BusinessLogic.Installation;
@@ -144,6 +145,13 @@ namespace NopSolutions.NopCommerce.HttpModules
                 {
                     return;
                 }
+                
+                //set current culture
+                var currentLanguage = NopContext.Current.WorkingLanguage;
+                if (currentLanguage != null)
+                {
+                    NopContext.Current.SetCulture(new CultureInfo(currentLanguage.LanguageCulture));
+                }
 
                 //session workflow
                 if (NopContext.Current.Session != null)
@@ -158,13 +166,6 @@ namespace NopSolutions.NopCommerce.HttpModules
                             NopContext.Current.Session.LastAccessed,
                             false);
                     }
-                }
-
-                //set current culture
-                var currentLanguage = NopContext.Current.WorkingLanguage;
-                if (currentLanguage != null)
-                {
-                    NopContext.Current.SetCulture(new CultureInfo(currentLanguage.LanguageCulture));
                 }
             }
         }
@@ -196,6 +197,9 @@ namespace NopSolutions.NopCommerce.HttpModules
                     {
                         NopContext.Current.SessionSaveToClient();
                     }
+
+                    //online user tracking
+                    OnlineUserManager.TrackCurrentUser();
                 }
                 catch (Exception exc)
                 {

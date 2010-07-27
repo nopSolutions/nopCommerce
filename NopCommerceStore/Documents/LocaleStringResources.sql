@@ -1403,6 +1403,45 @@ set @resources='
   <LocaleResource Name="Admin.OrderDetails.EditOrderTotals.Total.InCustomerCurrency">
     <Value>Total in customer currency - {0}:</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Sitemap.OnlineCustomersTitle">
+    <Value>Online Customers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Sitemap.OnlineCustomersDescription">
+    <Value>Online Customers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CustomersHome.OnlineCustomers.TitleDescription">
+    <Value>Online Customers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CustomersHome.OnlineCustomers.Title">
+    <Value>Online Customers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CustomersHome.OnlineCustomers.Description">
+    <Value>See how many online users you got on your site in this moment.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.OnlineCustomers.Title">
+    <Value>Online Customers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.OnlineCustomers.Guests">
+    <Value>Guests:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.OnlineCustomers.Guests.Tooltip">
+    <Value>See how many guests you got on your site in this moment.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.OnlineCustomers.CustomerInfoColumn">
+    <Value>Customer info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.LastVisitColumn">
+    <Value>Last visit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.OnlineCustomers.Enabled">
+    <Value>Module enabled:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.OnlineCustomers.Enabled.Tooltip">
+    <Value>Check to enable "online customers" module to see how many guests you got on your site in this moment.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.OnlineCustomers.SaveButton.Text">
+    <Value>Save</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1463,6 +1502,5 @@ DEALLOCATE cur_localeresource
 
 DROP TABLE #LocaleStringResourceTmp
 GO
-
 
 

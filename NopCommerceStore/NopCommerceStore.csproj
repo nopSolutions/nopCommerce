@@ -379,6 +379,20 @@
     <Compile Include="Administration\BulkEditProducts.aspx.designer.cs">
       <DependentUpon>BulkEditProducts.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Administration\Modules\OnlineCustomers.ascx.cs">
+      <DependentUpon>OnlineCustomers.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Administration\Modules\OnlineCustomers.ascx.designer.cs">
+      <DependentUpon>OnlineCustomers.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Administration\OnlineCustomers.aspx.cs">
+      <DependentUpon>OnlineCustomers.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Administration\OnlineCustomers.aspx.designer.cs">
+      <DependentUpon>OnlineCustomers.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Administration\Modules\ReturnRequestInfo.ascx.cs">
       <DependentUpon>ReturnRequestInfo.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -5714,6 +5728,8 @@
     <Content Include="Administration\CategoryTemplateAdd.aspx" />
     <Content Include="Administration\CategoryTemplateDetails.aspx" />
     <Content Include="Administration\CategoryTemplates.aspx" />
+    <Content Include="Administration\Modules\OnlineCustomers.ascx" />
+    <Content Include="Administration\OnlineCustomers.aspx" />
     <Content Include="Administration\Modules\ReturnRequestInfo.ascx" />
     <Content Include="Administration\ReturnRequestDetails.aspx" />
     <Content Include="Administration\Modules\ReturnRequestDetails.ascx" />

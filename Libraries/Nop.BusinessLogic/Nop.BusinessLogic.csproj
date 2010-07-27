@@ -121,6 +121,9 @@
     <Compile Include="Audit\LogType.cs" />
     <Compile Include="Audit\CustomerActivityManager.cs" />
     <Compile Include="Audit\Extensions.cs" />
+    <Compile Include="Audit\UsersOnline\PurgeOnlineUsersTask.cs" />
+    <Compile Include="Audit\UsersOnline\OnlineUserManager.cs" />
+    <Compile Include="Audit\UsersOnline\OnlineUserInfo.cs" />
     <Compile Include="Caching\NopRequestCache.cs" />
     <Compile Include="Caching\NopStaticCache.cs" />
     <Compile Include="Categories\CategoryLocalized.cs" />

@@ -48,8 +48,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 BindData();
             }
         }
-
-
+        
         protected void BindData()
         {
             cbForumsEnabled.Checked = ForumManager.ForumsEnabled;

@@ -1723,3 +1723,13 @@ BEGIN
 	ADD [TaxRatesInCustomerCurrency] nvarchar(4000) NOT NULL CONSTRAINT [DF_Nop_Order_TaxRatesInCustomerCurrency] DEFAULT ((''))
 END
 GO
+
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[Nop_Setting]
+		WHERE [Name] = N'OnlineUserManager.Enabled')
+BEGIN
+	INSERT [dbo].[Nop_Setting] ([Name], [Value], [Description])
+	VALUES (N'OnlineUserManager.Enabled', N'False', N'')
+END
+GO
