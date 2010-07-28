@@ -136,6 +136,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
                     s.Dispose();
             }
         }
+       
         /// <summary>
         /// Create request for tax calculation
         /// </summary>

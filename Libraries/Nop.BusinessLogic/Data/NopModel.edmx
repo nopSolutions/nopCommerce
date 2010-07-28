@@ -1340,9 +1340,9 @@
           <Property Name="OrderShippingExclTax" Type="money" Nullable="false" />
           <Property Name="PaymentMethodAdditionalFeeInclTax" Type="money" Nullable="false" />
           <Property Name="PaymentMethodAdditionalFeeExclTax" Type="money" Nullable="false" />
-          <Property Name="TaxRates" Type="nvarchar" Nullable="false" />
           <Property Name="OrderTax" Type="money" Nullable="false" />
           <Property Name="OrderTotal" Type="money" Nullable="false" />
+          <Property Name="RefundedAmount" Type="money" Nullable="false" />
           <Property Name="OrderDiscount" Type="money" Nullable="false" />
           <Property Name="OrderSubtotalInclTaxInCustomerCurrency" Type="money" Nullable="false" />
           <Property Name="OrderSubtotalExclTaxInCustomerCurrency" Type="money" Nullable="false" />
@@ -1350,7 +1350,6 @@
           <Property Name="OrderShippingExclTaxInCustomerCurrency" Type="money" Nullable="false" />
           <Property Name="PaymentMethodAdditionalFeeInclTaxInCustomerCurrency" Type="money" Nullable="false" />
           <Property Name="PaymentMethodAdditionalFeeExclTaxInCustomerCurrency" Type="money" Nullable="false" />
-          <Property Name="TaxRatesInCustomerCurrency" Type="nvarchar" Nullable="false" />
           <Property Name="OrderTaxInCustomerCurrency" Type="money" Nullable="false" />
           <Property Name="OrderTotalInCustomerCurrency" Type="money" Nullable="false" />
           <Property Name="OrderDiscountInCustomerCurrency" Type="money" Nullable="false" />
@@ -1416,6 +1415,8 @@
           <Property Name="Deleted" Type="bit" Nullable="false" />
           <Property Name="CreatedOn" Type="datetime" Nullable="false" />
           <Property Name="VatNumber" Type="nvarchar" Nullable="false" MaxLength="100" />
+          <Property Name="TaxRates" Type="nvarchar" Nullable="false" />
+          <Property Name="TaxRatesInCustomerCurrency" Type="nvarchar" Nullable="false" />
         </EntityType>
         <EntityType Name="Nop_OrderNote">
           <Key>
@@ -7441,6 +7442,7 @@
           <Property Type="String" Name="TaxRates" Nullable="false" MaxLength="4000" FixedLength="false" Unicode="true" />
           <Property Type="Decimal" Name="OrderTax" Nullable="false" Precision="19" Scale="4" />
           <Property Type="Decimal" Name="OrderTotal" Nullable="false" Precision="19" Scale="4" />
+          <Property Type="Decimal" Name="RefundedAmount" Nullable="false" Precision="19" Scale="4" />
           <Property Type="Decimal" Name="OrderDiscount" Nullable="false" Precision="19" Scale="4" />
           <Property Type="Decimal" Name="OrderSubtotalInclTaxInCustomerCurrency" Nullable="false" Precision="19" Scale="4" />
           <Property Type="Decimal" Name="OrderSubtotalExclTaxInCustomerCurrency" Nullable="false" Precision="19" Scale="4" />
@@ -9502,6 +9504,7 @@
                 <ScalarProperty Name="OrderSubtotalExclTaxInCustomerCurrency" ColumnName="OrderSubtotalExclTaxInCustomerCurrency" />
                 <ScalarProperty Name="OrderSubtotalInclTaxInCustomerCurrency" ColumnName="OrderSubtotalInclTaxInCustomerCurrency" />
                 <ScalarProperty Name="OrderDiscount" ColumnName="OrderDiscount" />
+                <ScalarProperty Name="RefundedAmount" ColumnName="RefundedAmount" />
                 <ScalarProperty Name="OrderTotal" ColumnName="OrderTotal" />
                 <ScalarProperty Name="OrderTax" ColumnName="OrderTax" />
                 <ScalarProperty Name="TaxRates" ColumnName="TaxRates" />

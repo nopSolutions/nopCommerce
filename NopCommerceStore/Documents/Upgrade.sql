@@ -1743,3 +1743,24 @@ BEGIN
 	VALUES (N'Display.DownloadableProductsTab', N'True', N'')
 END
 GO
+
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[Nop_Order]') and NAME='RefundedAmount')
+BEGIN
+	ALTER TABLE [dbo].[Nop_Order] 
+	ADD [RefundedAmount] money NOT NULL CONSTRAINT [DF_Nop_Order_RefundedAmount] DEFAULT ((0))
+
+	exec ('UPDATE [dbo].[Nop_Order]
+	SET [RefundedAmount]=[OrderTotal]
+	WHERE [PaymentStatusID]=40')
+END
+GO
+
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[Nop_PaymentStatus]
+		WHERE [PaymentStatusID] = 35)
+BEGIN
+	INSERT [dbo].[Nop_PaymentStatus] ([PaymentStatusID], [Name])
+	VALUES (35, N'PartiallyRefunded')
+END
+GO

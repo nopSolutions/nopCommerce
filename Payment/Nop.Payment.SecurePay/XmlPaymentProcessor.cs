@@ -130,7 +130,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.SecurePay
             bool success = false;
             string code = "";
 
-            success = sxml.processRefund(order.OrderTotal, order.OrderGuid.ToString(), cancelPaymentResult.CaptureTransactionId);
+            success = sxml.processRefund(cancelPaymentResult.Amount, order.OrderGuid.ToString(), cancelPaymentResult.CaptureTransactionId);
 
             code = sxml["response_code"];
 
@@ -172,6 +172,17 @@ namespace NopSolutions.NopCommerce.Payment.Methods.SecurePay
 				return true;
 			}
 		}
+
+        /// <summary>
+        /// Gets a value indicating whether partial refund is supported
+        /// </summary>
+        public bool CanPartiallyRefund
+        {
+            get
+            {
+                return false;
+            }
+        }
 
         public bool CanRefund
         {

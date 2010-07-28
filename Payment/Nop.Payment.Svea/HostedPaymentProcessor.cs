@@ -182,7 +182,19 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Svea
         #endregion
 
         #region Properties
+
         public bool CanCapture
+        {
+            get
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether partial refund is supported
+        /// </summary>
+        public bool CanPartiallyRefund
         {
             get
             {

@@ -1457,6 +1457,60 @@ set @resources='
   <LocaleResource Name="Admin.GlobalSettings.Profiles.FormFields.NewsletterBoxEnabled.Tooltip">
     <Value>Set if ''Newsletter'' is enabled</Value>
   </LocaleResource>
+  <LocaleResource Name="PaymentStatus.PartiallyRefunded">
+    <Value>Partially Refunded</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.PaymentMethodInfo.CanPartiallyRefund">
+    <Value>Supports partial refund:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.PaymentMethodInfo.CanPartiallyRefund.Tooltip">
+    <Value>Value indicating whether this payment method supports "Partial refund"</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SMSProviders.Clickatell.TestMessageText.Tooltip">
+    <Value>Text of the test message</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.OrderDetails.RefundedAmount">
+    <Value>Refunded amount:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.OrderDetails.RefundedAmount.Tooltip">
+    <Value>The total refunded amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.OrderPartialRefund.Title">
+    <Value>Partial refund</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.OrderPartialRefund.OrderInfo">
+    <Value>Partial refund for order {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.OrderPartialRefund.AmountToRefund">
+    <Value>Amount to refund:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.OrderPartialRefund.AmountToRefund.Tooltip">
+    <Value>Enter amount to refund</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.OrderPartialRefund.AmountToRefund.RequiredErrorMessage">
+    <Value>The amount to refund is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.OrderPartialRefund.AmountToRefund.RangeErrorMessage">
+    <Value>The amount to refund be from 0 to 100000000</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.OrderPartialRefund.MaxRefund">
+    <Value>Max amount is {0} {1}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.OrderDetails.PartialRefundButton.Text">
+    <Value>Partial refund</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.OrderDetails.PartialRefundButton.Tooltip">
+    <Value>Partial refund</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.OrderDetails.PartialRefundOfflineButton.Text">
+    <Value>Partial refund (Offline)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.OrderDetails.PartialRefundOfflineButton.Tooltip">
+    <Value>Partial refund (Offline)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.OrderPartialRefund.Refund">
+    <Value>Refund</Value>
+  </LocaleResource>
 </Language>
 '
 

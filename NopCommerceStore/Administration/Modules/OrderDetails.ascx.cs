@@ -222,6 +222,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             this.btnMarkAsPaid.Visible = OrderManager.CanMarkOrderAsPaid(order);
             this.btnRefund.Visible = OrderManager.CanRefund(order);
             this.btnRefundOffline.Visible = OrderManager.CanRefundOffline(order);
+            this.btnPartialRefund.Visible = OrderManager.CanPartiallyRefund(order, decimal.Zero);
+            this.btnPartialRefundOffline.Visible = OrderManager.CanPartiallyRefundOffline(order, decimal.Zero);
             this.btnVoid.Visible = OrderManager.CanVoid(order);
             this.btnVoidOffline.Visible = OrderManager.CanVoidOffline(order);
         }
@@ -595,6 +597,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             //total
             this.lblOrderTotal.Text = PriceHelper.FormatPrice(order.OrderTotal, true, false);
 
+            //refunded amount
+            this.phRefundedAmount.Visible = order.RefundedAmount > decimal.Zero;
+            this.lblRefundedAmount.Text = PriceHelper.FormatPrice(order.RefundedAmount, true, false);
+
             //edit order
             this.lblOrderSubtotalInPrimaryCurrencyTitle.Text = string.Format(GetLocaleResourceString("Admin.OrderDetails.EditOrderTotals.Subtotal.InPrimaryCurrency"), CurrencyManager.PrimaryStoreCurrency.CurrencyCode);
             this.txtOrderSubtotalInPrimaryCurrencyInclTax.Text = order.OrderSubtotalInclTax.ToString();
@@ -743,6 +749,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             
             }
 
+            //refund buttons with pop-up window
+            btnPartialRefund.OnClientClick = string.Format("javascript:OpenWindow('OrderPartialRefund.aspx?oid={0}&online=true&BtnId={1}', 500, 300, true); return false;", this.OrderId, btnRefresh.ClientID);
+            btnPartialRefundOffline.OnClientClick = string.Format("javascript:OpenWindow('OrderPartialRefund.aspx?oid={0}&online=false&BtnId={1}', 500, 300, true); return false;", this.OrderId, btnRefresh.ClientID);
+
             base.OnPreRender(e);
         }
         
@@ -833,14 +843,19 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     }
                     string billingZipPostalCode = this.txtBillingZipPostalCode.Text;
 
-                    order = OrderManager.UpdateOrder(order.OrderId, order.OrderGuid, order.CustomerId, order.CustomerLanguageId,
-                        order.CustomerTaxDisplayType, order.CustomerIP, order.OrderSubtotalInclTax, order.OrderSubtotalExclTax, order.OrderShippingInclTax,
-                       order.OrderShippingExclTax, order.PaymentMethodAdditionalFeeInclTax, order.PaymentMethodAdditionalFeeExclTax,
-                       order.TaxRates, order.OrderTax, order.OrderTotal, order.OrderDiscount,
+                    order = OrderManager.UpdateOrder(order.OrderId, order.OrderGuid,
+                        order.CustomerId, order.CustomerLanguageId,
+                        order.CustomerTaxDisplayType, order.CustomerIP, 
+                        order.OrderSubtotalInclTax, order.OrderSubtotalExclTax, 
+                        order.OrderShippingInclTax, order.OrderShippingExclTax, 
+                        order.PaymentMethodAdditionalFeeInclTax, order.PaymentMethodAdditionalFeeExclTax,
+                       order.TaxRates, order.OrderTax, order.OrderTotal,
+                       order.RefundedAmount, order.OrderDiscount,
                        order.OrderSubtotalInclTaxInCustomerCurrency, order.OrderSubtotalExclTaxInCustomerCurrency,
                        order.OrderShippingInclTaxInCustomerCurrency, order.OrderShippingExclTaxInCustomerCurrency,
                        order.PaymentMethodAdditionalFeeInclTaxInCustomerCurrency, order.PaymentMethodAdditionalFeeExclTaxInCustomerCurrency,
-                       order.TaxRatesInCustomerCurrency, order.OrderTaxInCustomerCurrency, order.OrderTotalInCustomerCurrency,
+                       order.TaxRatesInCustomerCurrency, order.OrderTaxInCustomerCurrency,
+                       order.OrderTotalInCustomerCurrency,
                        order.OrderDiscountInCustomerCurrency,
                        order.CheckoutAttributeDescription, order.CheckoutAttributesXml,
                        order.CustomerCurrencyCode, order.OrderWeight,
@@ -911,11 +926,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     order = OrderManager.UpdateOrder(order.OrderId, order.OrderGuid, order.CustomerId, order.CustomerLanguageId,
                         order.CustomerTaxDisplayType, order.CustomerIP, order.OrderSubtotalInclTax, order.OrderSubtotalExclTax, order.OrderShippingInclTax,
                        order.OrderShippingExclTax, order.PaymentMethodAdditionalFeeInclTax, order.PaymentMethodAdditionalFeeExclTax,
-                       order.TaxRates, order.OrderTax, order.OrderTotal, order.OrderDiscount,
+                       order.TaxRates, order.OrderTax, order.OrderTotal,
+                       order.RefundedAmount, order.OrderDiscount,
                        order.OrderSubtotalInclTaxInCustomerCurrency, order.OrderSubtotalExclTaxInCustomerCurrency,
                        order.OrderShippingInclTaxInCustomerCurrency, order.OrderShippingExclTaxInCustomerCurrency,
                        order.PaymentMethodAdditionalFeeInclTaxInCustomerCurrency, order.PaymentMethodAdditionalFeeExclTaxInCustomerCurrency,
-                       order.TaxRatesInCustomerCurrency, order.OrderTaxInCustomerCurrency, order.OrderTotalInCustomerCurrency,
+                       order.TaxRatesInCustomerCurrency, order.OrderTaxInCustomerCurrency,
+                       order.OrderTotalInCustomerCurrency,
                        order.OrderDiscountInCustomerCurrency,
                        order.CheckoutAttributeDescription, order.CheckoutAttributesXml,
                        order.CustomerCurrencyCode, order.OrderWeight,
@@ -1049,11 +1066,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         orderSubtotalInclTax, orderSubtotalExclTax, 
                         orderShippingInclTax, orderShippingExclTax, 
                         paymentMethodAdditionalFeeInclTax, paymentMethodAdditionalFeeExclTax,
-                        taxRates, orderTax, orderTotal, orderDiscount,
+                        taxRates, orderTax, orderTotal,
+                        order.RefundedAmount, orderDiscount,
                         orderSubtotalInclTaxInCustomerCurrency, orderSubtotalExclTaxInCustomerCurrency,
                         orderShippingInclTaxInCustomerCurrency, orderShippingExclTaxInCustomerCurrency,
                         paymentMethodAdditionalFeeInclTaxInCustomerCurrency, paymentMethodAdditionalFeeExclTaxInCustomerCurrency,
-                        taxRatesInCustomerCurrency, orderTaxInCustomerCurrency, orderTotalInCustomerCurrency,
+                        taxRatesInCustomerCurrency, orderTaxInCustomerCurrency,
+                        orderTotalInCustomerCurrency,
                         orderDiscountInCustomerCurrency, 
                         order.CheckoutAttributeDescription, order.CheckoutAttributesXml,
                         order.CustomerCurrencyCode, order.OrderWeight,
@@ -1207,6 +1226,18 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             }
         }
 
+        protected void btnRefresh_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                BindData();
+            }
+            catch (Exception exc)
+            {
+                ProcessException(exc);
+            }
+        }
+        
         protected void BtnPrintPdfPackagingSlip_OnClick(object sender, EventArgs e)
         {
             try

@@ -265,6 +265,24 @@ namespace NopSolutions.NopCommerce.Web.Administration {
         protected global::System.Web.UI.WebControls.Label lblCanRefund;
         
         /// <summary>
+        /// lblCanPartiallyRefundTooltip control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblCanPartiallyRefundTooltip;
+        
+        /// <summary>
+        /// lblCanPartiallyRefund control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblCanPartiallyRefund;
+        
+        /// <summary>
         /// lblCanVoidTooltip control.
         /// </summary>
         /// <remarks>

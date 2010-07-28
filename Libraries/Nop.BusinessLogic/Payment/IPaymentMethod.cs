@@ -99,6 +99,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
         bool CanCapture { get; }
 
         /// <summary>
+        /// Gets a value indicating whether partial refund is supported
+        /// </summary>
+        bool CanPartiallyRefund { get; }
+
+        /// <summary>
         /// Gets a value indicating whether refund is supported
         /// </summary>
         bool CanRefund { get; }

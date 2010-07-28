@@ -833,6 +833,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                 xmlWriter.WriteElementString("TaxRates", null, order.TaxRates);
                 xmlWriter.WriteElementString("OrderTax", null, order.OrderTax.ToString());
                 xmlWriter.WriteElementString("OrderTotal", null, order.OrderTotal.ToString());
+                xmlWriter.WriteElementString("RefundedAmount", null, order.RefundedAmount.ToString());
                 xmlWriter.WriteElementString("OrderDiscount", null, order.OrderDiscount.ToString());
                 xmlWriter.WriteElementString("OrderSubtotalInclTaxInCustomerCurrency", null, order.OrderSubtotalInclTaxInCustomerCurrency.ToString());
                 xmlWriter.WriteElementString("OrderSubtotalExclTaxInCustomerCurrency", null, order.OrderSubtotalExclTaxInCustomerCurrency.ToString());
@@ -973,6 +974,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                 tableDefinition.Add("TaxRates", "nvarchar(255)");
                 tableDefinition.Add("OrderTax", "decimal");
                 tableDefinition.Add("OrderTotal", "decimal");
+                tableDefinition.Add("RefundedAmount", "decimal");
                 tableDefinition.Add("OrderDiscount", "decimal");
                 tableDefinition.Add("OrderSubtotalInclTaxInCustomerCurrency", "decimal");
                 tableDefinition.Add("OrderSubtotalExclTaxInCustomerCurrency", "decimal");
@@ -1028,7 +1030,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                 foreach (var order in orders)
                 {
                     StringBuilder sb = new StringBuilder();
-                    sb.Append("INSERT INTO [Orders] (OrderId, OrderGuid, CustomerId, OrderSubtotalInclTax, OrderSubtotalExclTax, OrderShippingInclTax, OrderShippingExclTax, PaymentMethodAdditionalFeeInclTax, PaymentMethodAdditionalFeeExclTax, TaxRates, OrderTax, OrderTotal, OrderDiscount, OrderSubtotalInclTaxInCustomerCurrency, OrderSubtotalExclTaxInCustomerCurrency, OrderShippingInclTaxInCustomerCurrency, OrderShippingExclTaxInCustomerCurrency, PaymentMethodAdditionalFeeInclTaxInCustomerCurrency, PaymentMethodAdditionalFeeExclTaxInCustomerCurrency, TaxRatesInCustomerCurrency, OrderTaxInCustomerCurrency, OrderTotalInCustomerCurrency, OrderDiscountInCustomerCurrency, CustomerCurrencyCode, OrderWeight, AffiliateId, OrderStatusId, PaymentMethodId, PaymentMethodName, PurchaseOrderNumber, PaymentStatusId, BillingFirstName, BillingLastName, BillingPhoneNumber, BillingEmail, BillingFaxNumber, BillingCompany, BillingAddress1, BillingAddress2, BillingCity, BillingStateProvince, BillingZipPostalCode, BillingCountry, ShippingStatusId,  ShippingFirstName, ShippingLastName, ShippingPhoneNumber, ShippingEmail, ShippingFaxNumber, ShippingCompany,  ShippingAddress1, ShippingAddress2, ShippingCity, ShippingStateProvince, ShippingZipPostalCode, ShippingCountry, ShippingMethod, ShippingRateComputationMethodId, VatNumber, CreatedOn) VALUES (");
+                    sb.Append("INSERT INTO [Orders] (OrderId, OrderGuid, CustomerId, OrderSubtotalInclTax, OrderSubtotalExclTax, OrderShippingInclTax, OrderShippingExclTax, PaymentMethodAdditionalFeeInclTax, PaymentMethodAdditionalFeeExclTax, TaxRates, OrderTax, OrderTotal, RefundedAmount, OrderDiscount, OrderSubtotalInclTaxInCustomerCurrency, OrderSubtotalExclTaxInCustomerCurrency, OrderShippingInclTaxInCustomerCurrency, OrderShippingExclTaxInCustomerCurrency, PaymentMethodAdditionalFeeInclTaxInCustomerCurrency, PaymentMethodAdditionalFeeExclTaxInCustomerCurrency, TaxRatesInCustomerCurrency, OrderTaxInCustomerCurrency, OrderTotalInCustomerCurrency, OrderDiscountInCustomerCurrency, CustomerCurrencyCode, OrderWeight, AffiliateId, OrderStatusId, PaymentMethodId, PaymentMethodName, PurchaseOrderNumber, PaymentStatusId, BillingFirstName, BillingLastName, BillingPhoneNumber, BillingEmail, BillingFaxNumber, BillingCompany, BillingAddress1, BillingAddress2, BillingCity, BillingStateProvince, BillingZipPostalCode, BillingCountry, ShippingStatusId,  ShippingFirstName, ShippingLastName, ShippingPhoneNumber, ShippingEmail, ShippingFaxNumber, ShippingCompany,  ShippingAddress1, ShippingAddress2, ShippingCity, ShippingStateProvince, ShippingZipPostalCode, ShippingCountry, ShippingMethod, ShippingRateComputationMethodId, VatNumber, CreatedOn) VALUES (");
 
 
                     sb.Append(order.OrderId); sb.Append(",");
@@ -1043,6 +1045,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                     sb.Append('"'); sb.Append(order.TaxRates.Replace('"', '\'')); sb.Append("\",");
                     sb.Append(decimalQuoter); sb.Append(order.OrderTax); sb.Append(decimalQuoter); sb.Append(",");
                     sb.Append(decimalQuoter); sb.Append(order.OrderTotal); sb.Append(decimalQuoter); sb.Append(",");
+                    sb.Append(decimalQuoter); sb.Append(order.RefundedAmount); sb.Append(decimalQuoter); sb.Append(",");
                     sb.Append(decimalQuoter); sb.Append(order.OrderDiscount); sb.Append(decimalQuoter); sb.Append(",");
                     sb.Append(decimalQuoter); sb.Append(order.OrderSubtotalInclTaxInCustomerCurrency); sb.Append(decimalQuoter); sb.Append(",");
                     sb.Append(decimalQuoter); sb.Append(order.OrderSubtotalExclTaxInCustomerCurrency); sb.Append(decimalQuoter); sb.Append(",");

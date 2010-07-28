@@ -233,8 +233,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.USAePay
                 {
                     case "A":
                         cancelPaymentResult.PaymentStatus = PaymentStatusEnum.Refunded;
-                        cancelPaymentResult.Amount = order.OrderTotal;
-                        cancelPaymentResult.AuthorizationTransactionId = usaepay.RefNum;
+                        //cancelPaymentResult.AuthorizationTransactionId = usaepay.RefNum;
                         break;
                     case "D":
                         cancelPaymentResult.Error = "Refund Declined: " + usaepay.ErrorMesg;
@@ -267,7 +266,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.USAePay
                 {
                     case "A":
                         cancelPaymentResult.PaymentStatus = PaymentStatusEnum.Voided;
-                        cancelPaymentResult.AuthorizationTransactionId = usaepay.RefNum;
+                        //cancelPaymentResult.AuthorizationTransactionId = usaepay.RefNum;
                         break;
                     case "D":
                         cancelPaymentResult.Error = "Void Declined: " + usaepay.ErrorMesg;
@@ -301,6 +300,17 @@ namespace NopSolutions.NopCommerce.Payment.Methods.USAePay
         public bool CanCapture
         {
             get { return true; }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether partial refund is supported
+        /// </summary>
+        public bool CanPartiallyRefund
+        {
+            get
+            {
+                return false;
+            }
         }
 
 

@@ -36,6 +36,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
         /// </summary>
         Paid = 30,
         /// <summary>
+        /// Partially Refunded
+        /// </summary>
+        PartiallyRefunded = 35,
+        /// <summary>
         /// Refunded
         /// </summary>
         Refunded = 40,

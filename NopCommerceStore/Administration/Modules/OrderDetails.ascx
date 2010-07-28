@@ -22,6 +22,8 @@
         <nopCommerce:ConfirmationBox runat="server" ID="cbDelete" TargetControlID="DeleteButton"
             YesText="<% $NopResources:Admin.Common.Yes %>" NoText="<% $NopResources:Admin.Common.No %>"
             ConfirmText="<% $NopResources:Admin.Common.AreYouSure %>" />
+        <asp:Button ID="btnRefresh" runat="server" Style="display: none" CausesValidation="false"
+        CssClass="adminButton" Text="Refresh" OnClick="btnRefresh_Click" ToolTip="Refresh list" />
     </div>
 </div>
 
@@ -387,6 +389,17 @@
                         <asp:Label ID="lblOrderTotal" runat="server"></asp:Label>
                     </td>
                 </tr>
+                <asp:PlaceHolder runat="server" ID="phRefundedAmount">                
+                <tr>
+                    <td class="adminTitle">
+                        <nopCommerce:ToolTipLabel runat="server" ID="lblRefundedAmountTitle" Text="<% $NopResources:Admin.OrderDetails.RefundedAmount %>"
+                            ToolTip="<% $NopResources:Admin.OrderDetails.RefundedAmount.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
+                    </td>
+                    <td class="adminData">
+                        <asp:Label ID="lblRefundedAmount" runat="server"></asp:Label>
+                    </td>
+                </tr>
+                </asp:PlaceHolder>
                 <tr id="trEditOrderTotals">
                     <td colspan="2">
                         <table style="border: solid 1px black; padding: 5px;">
@@ -658,6 +671,11 @@
                         <nopCommerce:ConfirmationBox runat="server" ID="cbRefundOffline" TargetControlID="btnRefundOffline"
                             YesText="<% $NopResources:Admin.Common.Yes %>" NoText="<% $NopResources:Admin.Common.No %>"
                             ConfirmText="<% $NopResources:Admin.Common.AreYouSure %>" />
+                        <asp:Button ID="btnPartialRefund" CssClass="adminButton" runat="server" Text="<% $NopResources:Admin.OrderDetails.PartialRefundButton.Text %>"
+                            ToolTip="<% $NopResources:Admin.OrderDetails.PartialRefundButton.Tooltip %>" />
+                        &nbsp;
+                        <asp:Button ID="btnPartialRefundOffline" CssClass="adminButton" runat="server" Text="<% $NopResources:Admin.OrderDetails.PartialRefundOfflineButton.Text %>"
+                            ToolTip="<% $NopResources:Admin.OrderDetails.PartialRefundOfflineButton.Tooltip %>" />                        
                         &nbsp;
                         <asp:Button ID="btnVoid" CssClass="adminButton" runat="server" Text="<% $NopResources:Admin.OrderDetails.VoidButton.Text %>"
                             OnClick="btnVoid_Click" ToolTip="<% $NopResources:Admin.OrderDetails.VoidButton.Tooltip %>" />

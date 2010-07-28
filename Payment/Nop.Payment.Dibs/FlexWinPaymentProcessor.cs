@@ -143,6 +143,17 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Dibs
                 return false;
             }
         }
+        
+        /// <summary>
+        /// Gets a value indicating whether partial refund is supported
+        /// </summary>
+        public bool CanPartiallyRefund
+        {
+            get
+            {
+                return false;
+            }
+        }
 
         public bool CanRefund
         {

@@ -144,7 +144,15 @@
                             <asp:Label ID="lblCanRefund" runat="server"></asp:Label>
                         </td>
                     </tr>
-                    
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ID="lblCanPartiallyRefundTooltip" Text="<% $NopResources:Admin.PaymentMethodInfo.CanPartiallyRefund %>"
+                                ToolTip="<% $NopResources:Admin.PaymentMethodInfo.CanPartiallyRefund.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
+                        </td>
+                        <td class="adminData">
+                            <asp:Label ID="lblCanPartiallyRefund" runat="server"></asp:Label>
+                        </td>
+                    </tr>
                     <tr>
                         <td class="adminTitle">
                             <nopCommerce:ToolTipLabel runat="server" ID="lblCanVoidTooltip" Text="<% $NopResources:Admin.PaymentMethodInfo.CanVoid %>"

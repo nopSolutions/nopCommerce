@@ -16,6 +16,7 @@ using System;
 using System.Collections;
 using System.Configuration;
 using System.Data;
+using System.Diagnostics;
 using System.Web;
 using System.Web.Security;
 using System.Web.UI;
@@ -56,13 +57,16 @@ namespace NopSolutions.NopCommerce.Web.Administration
                 {
                     lblCanCapture.Text = PaymentManager.CanCapture(this.PaymentMethodId) ? GetLocaleResourceString("Admin.Common.Yes") : GetLocaleResourceString("Admin.Common.No");
                     lblCanRefund.Text = PaymentManager.CanRefund(this.PaymentMethodId) ? GetLocaleResourceString("Admin.Common.Yes") : GetLocaleResourceString("Admin.Common.No");
+                    lblCanPartiallyRefund.Text = PaymentManager.CanPartiallyRefund(this.PaymentMethodId) ? GetLocaleResourceString("Admin.Common.Yes") : GetLocaleResourceString("Admin.Common.No");
                     lblCanVoid.Text = PaymentManager.CanVoid(this.PaymentMethodId) ? GetLocaleResourceString("Admin.Common.Yes") : GetLocaleResourceString("Admin.Common.No");
                     lblSupportRecurringPayments.Text = CommonHelper.ConvertEnum(PaymentManager.SupportRecurringPayments(this.PaymentMethodId).ToString());
                 }
-                catch
+                catch (Exception exc)
                 {
+                    Debug.WriteLine(exc.ToString());
                     lblCanCapture.Text = "Unknown";
                     lblCanRefund.Text = "Unknown";
+                    lblCanPartiallyRefund.Text = "Unknown";
                     lblCanVoid.Text = "Unknown";
                     lblSupportRecurringPayments.Text = "Unknown";
                 }

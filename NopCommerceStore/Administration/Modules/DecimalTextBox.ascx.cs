@@ -40,7 +40,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             }
             set
             {
-                txtValue.Text = value.ToString();
+                txtValue.Text = value.ToString("G29");
             }
         }
 

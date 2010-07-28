@@ -122,6 +122,20 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
         }
 
         /// <summary>
+        /// Gets a value indicating whether partial refund is supported by payment method
+        /// </summary>
+        /// <param name="paymentMethodId">Payment method identifier</param>
+        /// <returns>A value indicating whether partial refund is supported</returns>
+        public static bool CanPartiallyRefund(int paymentMethodId)
+        {
+            var paymentMethod = PaymentMethodManager.GetPaymentMethodById(paymentMethodId);
+            if (paymentMethod == null)
+                return false;
+            var iPaymentMethod = Activator.CreateInstance(Type.GetType(paymentMethod.ClassName)) as IPaymentMethod;
+            return iPaymentMethod.CanPartiallyRefund;
+        }
+
+        /// <summary>
         /// Gets a value indicating whether refund is supported by payment method
         /// </summary>
         /// <param name="paymentMethodId">Payment method identifier</param>

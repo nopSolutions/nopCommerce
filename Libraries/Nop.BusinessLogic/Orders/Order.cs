@@ -163,6 +163,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         public decimal OrderTotal { get; set; }
 
         /// <summary>
+        /// Gets or sets the refunded amount
+        /// </summary>
+        public decimal RefundedAmount { get; set; }
+
+        /// <summary>
         /// Gets or sets the order discount
         /// </summary>
         public decimal OrderDiscount { get; set; }

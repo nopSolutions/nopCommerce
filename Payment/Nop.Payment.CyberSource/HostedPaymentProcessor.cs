@@ -190,6 +190,17 @@ namespace NopSolutions.NopCommerce.Payment.Methods.CyberSource
         }
 
         /// <summary>
+        /// Gets a value indicating whether partial refund is supported
+        /// </summary>
+        public bool CanPartiallyRefund
+        {
+            get
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
         /// Gets a value indicating whether refund is supported
         /// </summary>
         public bool CanRefund
