@@ -26,6 +26,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Tax;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Tax;
+using NopSolutions.NopCommerce.Web.Administration.Modules;
 using NopSolutions.NopCommerce.Web.Templates.Tax;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Tax.FixedRate
@@ -40,12 +41,38 @@ namespace NopSolutions.NopCommerce.Web.Administration.Tax.FixedRate
 
         private void BindData()
         {
-            txtFixedRate.Value = SettingManager.GetSettingValueDecimalNative("Tax.TaxProvider.FixedRate.Rate");
+            var taxCategories = TaxCategoryManager.GetAllTaxCategories();
+            gvTaxCategories.DataSource = taxCategories;
+            gvTaxCategories.DataBind();
         }
+
+        protected void gvTaxCategories_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                TaxCategory taxCategory = (TaxCategory)e.Row.DataItem;
+
+                DecimalTextBox txtRate = e.Row.FindControl("txtRate") as DecimalTextBox;
+                if (txtRate != null)
+                {
+                   txtRate.Value = SettingManager.GetSettingValueDecimalNative(string.Format("Tax.TaxProvider.FixedRate.TaxCategoryId{0}", taxCategory.TaxCategoryId));
+                }
+            }
+        }
+
 
         public void Save()
         {
-            SettingManager.SetParamNative("Tax.TaxProvider.FixedRate.Rate", txtFixedRate.Value);
+            foreach (GridViewRow row in gvTaxCategories.Rows)
+            {
+                DecimalTextBox txtRate = row.FindControl("txtRate") as DecimalTextBox;
+                HiddenField hfTaxCategoryId = row.FindControl("hfTaxCategoryId") as HiddenField;
+
+                int taxCategoryId = int.Parse(hfTaxCategoryId.Value);
+                decimal rate = txtRate.Value;
+
+                SettingManager.SetParamNative(string.Format("Tax.TaxProvider.FixedRate.TaxCategoryId{0}", taxCategoryId), rate);
+            }
         }
     }
 }

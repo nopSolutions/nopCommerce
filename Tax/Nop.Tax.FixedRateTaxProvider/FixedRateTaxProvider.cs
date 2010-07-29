@@ -34,7 +34,34 @@ namespace NopSolutions.NopCommerce.Tax
         /// <returns>Tax</returns>
         public decimal GetTaxRate(CalculateTaxRequest calculateTaxRequest, ref string error)
         {
-            decimal rate = SettingManager.GetSettingValueDecimalNative("Tax.TaxProvider.FixedRate.Rate");
+            decimal taxRate = decimal.Zero;
+
+            int taxClassID = 0;
+            if (calculateTaxRequest.TaxClassId > 0)
+            {
+                taxClassID = calculateTaxRequest.TaxClassId;
+            }
+            else
+            {
+                var productVariant = calculateTaxRequest.Item;
+                if (productVariant != null)
+                {
+                    taxClassID = productVariant.TaxCategoryId;
+                }
+            }
+            taxRate = GetTaxRate(taxClassID);
+
+            return taxRate;
+        }
+
+        /// <summary>
+        /// Gets a tax rate
+        /// </summary>
+        /// <param name="taxCategoryID">The tax category identifier</param>
+        /// <returns>Tax rate</returns>
+        protected decimal GetTaxRate(int taxCategoryID)
+        {
+            decimal rate = SettingManager.GetSettingValueDecimalNative(string.Format("Tax.TaxProvider.FixedRate.TaxCategoryId{0}", taxCategoryID));
             return rate;
         }
     }

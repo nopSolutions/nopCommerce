@@ -1764,3 +1764,7 @@ BEGIN
 	VALUES (35, N'PartiallyRefunded')
 END
 GO
+
+DELETE FROM [dbo].[Nop_Setting] 
+WHERE [Name] = N'Tax.TaxProvider.FixedRate.Rate'
+GO
