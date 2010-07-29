@@ -1523,6 +1523,12 @@ set @resources='
   <LocaleResource Name="Admin.GlobalSettings.Other.ShowGiftCardBox.Tooltip">
     <Value>Check if you want the gift card coupon box to be displayed on shopping cart page</Value>
   </LocaleResource>
+  <LocaleResource Name="Profile.PersonalInfo">
+    <Value>Profile info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Profile.LatestPosts.NoPosts">
+    <Value>No posts found</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1583,5 +1589,3 @@ DEALLOCATE cur_localeresource
 
 DROP TABLE #LocaleStringResourceTmp
 GO
-
-

@@ -1,21 +1,18 @@
 <%@ Control Language="C#" AutoEventWireup="true" Inherits="NopSolutions.NopCommerce.Web.Modules.PrivateMessagesInboxControl"
     CodeBehind="PrivateMessagesInbox.ascx.cs" %>
 <div class="private-messages-box">
+    <script type="text/javascript">
 
-
-<script type="text/javascript">
-
-    $(window).bind('load', function () {
-        var cbHeader = $(".cbHeaderPMInbox input");
-        var cbRowItem = $(".cbRowItemPMInbox input");
-        cbHeader.bind("click", function () {
-            cbRowItem.each(function () { this.checked = cbHeader[0].checked; })
+        $(window).bind('load', function () {
+            var cbHeader = $(".cbHeaderPMInbox input");
+            var cbRowItem = $(".cbRowItemPMInbox input");
+            cbHeader.bind("click", function () {
+                cbRowItem.each(function () { this.checked = cbHeader[0].checked; })
+            });
+            cbRowItem.bind("click", function () { if ($(this).checked == false) cbHeader[0].checked = false; });
         });
-        cbRowItem.bind("click", function () { if ($(this).checked == false) cbHeader[0].checked = false; });
-    });
     
-</script>
-
+    </script>
     <div class="PrivateMessages">
         <asp:GridView ID="gvInbox" DataKeyNames="PrivateMessageId" runat="server" AllowPaging="True"
             AutoGenerateColumns="False" CellPadding="4" DataSourceID="odsInbox" GridLines="None"
@@ -26,14 +23,14 @@
             <PagerStyle CssClass="pmgridpagerstyle" />
             <Columns>
                 <asp:TemplateField ItemStyle-Width="5%" ItemStyle-HorizontalAlign="Center">
-                <HeaderTemplate>
-                    <asp:CheckBox ID="cbSelectAll" runat="server" CssClass="cbHeaderPMInbox" />
-                </HeaderTemplate>
-                <ItemTemplate>
-                    <asp:CheckBox ID="cbSelect" runat="server" CssClass="cbRowItemPMInbox" />
-                    <asp:HiddenField ID="hfPrivateMessageId" runat="server" Value='<%# Eval("PrivateMessageId") %>' />
-                </ItemTemplate>
-            </asp:TemplateField>
+                    <HeaderTemplate>
+                        <asp:CheckBox ID="cbSelectAll" runat="server" CssClass="cbHeaderPMInbox" />
+                    </HeaderTemplate>
+                    <ItemTemplate>
+                        <asp:CheckBox ID="cbSelect" runat="server" CssClass="cbRowItemPMInbox" />
+                        <asp:HiddenField ID="hfPrivateMessageId" runat="server" Value='<%# Eval("PrivateMessageId") %>' />
+                    </ItemTemplate>
+                </asp:TemplateField>
                 <asp:TemplateField HeaderText="<% $NopResources:PrivateMessages.Inbox.FromColumn %>"
                     ItemStyle-Width="20%">
                     <ItemTemplate>

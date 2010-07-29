@@ -28,6 +28,7 @@ using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Messages;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.BusinessLogic.Utils.Html;
+using NopSolutions.NopCommerce.Common.Utils;
 
 namespace NopSolutions.NopCommerce.Web
 {
@@ -37,13 +38,6 @@ namespace NopSolutions.NopCommerce.Web
     public partial class ForumHelper
     {
         #region Methods
-
-        public static int GetCurrentUserSentPrivateMessagesCount()
-        {
-            int totalRecords = 0;
-            GetCurrentUserSentPrivateMessages(0, 1, out totalRecords);
-            return totalRecords;
-        }
 
         [DataObjectMethod(DataObjectMethodType.Select)]
         public static List<PrivateMessage> GetCurrentUserSentPrivateMessages(int StartIndex, int PageSize)
@@ -78,6 +72,8 @@ namespace NopSolutions.NopCommerce.Web
             return totalRecords;
         }
 
+
+
         [DataObjectMethod(DataObjectMethodType.Select)]
         public static List<PrivateMessage> GetCurrentUserInboxPrivateMessages(int StartIndex, int PageSize)
         {
@@ -111,6 +107,8 @@ namespace NopSolutions.NopCommerce.Web
             return totalRecords;
         }
 
+
+
         [DataObjectMethod(DataObjectMethodType.Select)]
         public static List<ForumSubscription> GetCurrentUserForumSubscriptions(int StartIndex, int PageSize)
         {
@@ -135,6 +133,51 @@ namespace NopSolutions.NopCommerce.Web
             var result = ForumManager.GetAllSubscriptions(NopContext.Current.User.CustomerId, 0, 0, PageSize, PageIndex, out totalRecords);
             return result;
         }
+        
+        public static int GetCurrentUserSentPrivateMessagesCount()
+        {
+            int totalRecords = 0;
+            GetCurrentUserSentPrivateMessages(0, 1, out totalRecords);
+            return totalRecords;
+        }
+
+
+
+        [DataObjectMethod(DataObjectMethodType.Select)]
+        public static List<ForumPost> GetUserLatestPosts(int StartIndex, int PageSize)
+        {
+            int totalRecord = 0;
+            return GetUserLatestPosts(StartIndex, PageSize, out totalRecord);
+        }
+
+        public static List<ForumPost> GetUserLatestPosts(int StartIndex, int PageSize, out int totalRecords)
+        {
+            if (PageSize <= 0)
+                PageSize = 10;
+            if (PageSize == int.MaxValue)
+                PageSize = int.MaxValue - 1;
+
+            int PageIndex = StartIndex / PageSize;
+
+            totalRecords = 0;
+            //it's used on profile.aspx page, so we're using UserId query string parameter
+            int userId = CommonHelper.QueryStringInt("UserId");
+            var user = CustomerManager.GetCustomerById(userId);
+            if (user == null)
+                return new List<ForumPost>();
+
+            var result = ForumManager.GetAllPosts(0,
+                    user.CustomerId, string.Empty, false, PageSize, PageIndex, out totalRecords);
+            return result;
+        }
+
+        public static int GetUserLatestPostCount()
+        {
+            int totalRecords = 0;
+            GetUserLatestPosts(0, 1, out totalRecords);
+            return totalRecords;
+        }
+
         #endregion
     }
 }

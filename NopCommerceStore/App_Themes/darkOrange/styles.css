@@ -4267,7 +4267,7 @@ ul.languagelist li .selected
 	border-right-color: #808080;
 }
 
-.pmgridpagerstyle
+.pmgridpagerstyle, .latestpostsgridpagerstyle
 {
 	height: 28px;
 	background: url(Images/grid_header_back.png) repeat-x;
@@ -5163,6 +5163,7 @@ ul.languagelist li .selected
 
 .profile-page .body
 {
+    margin-top: 15px;
 }
 
 .profile-page .body .profileInfoBox
@@ -5463,7 +5464,6 @@ pre {
 
 .orange .ajax__tab_body
 {
-	font-size: 10pt;
 	border: 1px solid #333;
 	border-top: none;
 	background-color: #ffffff;
@@ -5537,7 +5537,6 @@ pre {
 .grey .ajax__tab_body
 {
 	font-family: arial,helvetica;
-	font-size: 10pt;
 	background-color: #fff;
 	border: solid 1px #d7d7d7;
 	border-top-width: 0;

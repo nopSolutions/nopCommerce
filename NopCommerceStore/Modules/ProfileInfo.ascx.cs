@@ -49,8 +49,22 @@ namespace NopSolutions.NopCommerce.Web.Modules
             }
         }
 
+        protected override void OnInit(EventArgs e)
+        {
+            gvLP.PageSize = ForumManager.LatestUserPostsPageSize;
+            base.OnInit(e);
+        }
+
+        protected override void OnPreRender(EventArgs e)
+        {
+            pnlLatestPosts.Visible = ForumManager.ForumsEnabled;
+
+            base.OnPreRender(e);
+        }
+
         private void BindData()
         {
+            //general info
             var customer = CustomerManager.GetCustomerById(this.CustomerId);
             if (customer == null)
             {
@@ -58,6 +72,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 return;
             }
 
+            //avatar
             if (CustomerManager.AllowCustomersToUploadAvatars)
             {
                 phAvatar.Visible = true;
@@ -86,8 +101,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 phAvatar.Visible = false;
             }
 
+            //name
             phFullName.Visible = false;
 
+            //location
             if (CustomerManager.ShowCustomersLocation)
             {
                 phLocation.Visible = true;
@@ -106,6 +123,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 phLocation.Visible = false;
             }
 
+            //private message
             if (ForumManager.AllowPrivateMessages)
             {
                 if (customer != null && !customer.IsGuest)
@@ -123,6 +141,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 phPM.Visible = false;
             }
 
+            //total forum posts
             if (ForumManager.ForumsEnabled && ForumManager.ShowCustomersPostCount)
             {
                 phTotalPosts.Visible = true;
@@ -133,6 +152,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 phTotalPosts.Visible = false;
             }
 
+            //registration date
             if (CustomerManager.ShowCustomersJoinDate)
             {
                 phJoinDate.Visible = true;
@@ -143,7 +163,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 phJoinDate.Visible = false;
             }
 
-
+            //birth date
             if (customer.DateOfBirth.HasValue)
             {
                 lblDateOfBirth.Text = customer.DateOfBirth.Value.ToString("D");
@@ -152,40 +172,15 @@ namespace NopSolutions.NopCommerce.Web.Modules
             {
                 phDateOfBirth.Visible = false;
             }
-
-            if (ForumManager.ForumsEnabled)
-            {
-                int totaRecords = 0;
-                int pageSize = 5;
-                if (ForumManager.LatestUserPostsPageSize > 0)
-                {
-                    pageSize = ForumManager.LatestUserPostsPageSize;
-                }
-                var forumPosts = ForumManager.GetAllPosts(0, 
-                    customer.CustomerId, string.Empty, false, pageSize, 0, out totaRecords);
-                if (forumPosts.Count > 0)
-                {
-                    rptrLatestPosts.DataSource = forumPosts;
-                    rptrLatestPosts.DataBind();
-                }
-                else
-                {
-                    phLatestPosts.Visible = false;
-                }
-            }
-            else
-            {
-                phLatestPosts.Visible = false;
-            }
         }
 
-        protected void rptrLatestPosts_ItemDataBound(object sender, RepeaterItemEventArgs e)
+        protected void gvLP_RowDataBound(object sender, GridViewRowEventArgs e)
         {
-            if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+            if (e.Row.RowType == DataControlRowType.DataRow)
             {
-                var forumPost = e.Item.DataItem as ForumPost;
+                ForumPost forumPost = (ForumPost)e.Row.DataItem;
 
-                var hlTopic = e.Item.FindControl("hlTopic") as HyperLink;
+                HyperLink hlTopic = e.Row.FindControl("hlTopic") as HyperLink;
                 if (hlTopic != null)
                 {
                     ForumTopic forumTopic = forumPost.Topic;
@@ -196,13 +191,13 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     }
                 }
 
-                var lblPosted = e.Item.FindControl("lblPosted") as Label;
+                Label lblPosted = e.Row.FindControl("lblPosted") as Label;
                 if (lblPosted != null)
                 {
                     lblPosted.Text = DateTimeHelper.ConvertToUserTime(forumPost.CreatedOn, DateTimeKind.Utc).ToString("f");
                 }
 
-                var lblPost = e.Item.FindControl("lblPost") as Label;
+                Label lblPost = e.Row.FindControl("lblPost") as Label;
                 if (lblPost != null)
                 {
                     lblPost.Text = ForumManager.FormatPostText(forumPost.Text);
