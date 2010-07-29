@@ -57,9 +57,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit.UsersOnline
 
         #region Utilities
 
-        private static Dictionary<Guid, OnlineUserInfo> GetUserList()
+        private static Dictionary<Guid, OnlineUserInfo> GetAnonymousUserList()
         {
-            string key = "Nop.OnlineUserList";
+            string key = "Nop.OnlineUserList.Anonymous";
             Dictionary<Guid, OnlineUserInfo> obj2 = NopStaticCache.Get(key) as Dictionary<Guid, OnlineUserInfo>;
             if (obj2 != null)
             {
@@ -74,7 +74,56 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit.UsersOnline
             return obj2;
         }
 
-        #endregion 
+        private static Dictionary<Guid, OnlineUserInfo> GetRegisteredUserList()
+        {
+            string key = "Nop.OnlineUserList.Registered";
+            Dictionary<Guid, OnlineUserInfo> obj2 = NopStaticCache.Get(key) as Dictionary<Guid, OnlineUserInfo>;
+            if (obj2 != null)
+            {
+                return obj2;
+            }
+            else
+            {
+                obj2 = new Dictionary<Guid, OnlineUserInfo>();
+                NopStaticCache.Max(key, obj2);
+            }
+
+            return obj2;
+        }
+
+
+        /// <summary>
+        /// Purges expired users
+        /// </summary>
+        /// <param name="userList">User list</param>
+        protected static void PurgeUsers(Dictionary<Guid, OnlineUserInfo> userList)
+        {
+            if (!OnlineUserManager.Enabled)
+                return;
+
+            if (userList == null)
+                throw new ArgumentNullException("userList");
+
+            int expMinutes = 20;
+
+            lock (s_lock)
+            {
+                //user list
+                List<Guid> usersToRemove = new List<Guid>();
+
+                foreach (KeyValuePair<Guid, OnlineUserInfo> kvp in userList)
+                {
+                    if (kvp.Value.LastVisit.AddMinutes(expMinutes) < DateTime.UtcNow)
+                        usersToRemove.Add(kvp.Key);
+                }
+
+                foreach (Guid guid in usersToRemove)
+                {
+                    userList.Remove(guid);
+                }
+            }
+        }
+        #endregion
 
         #region Methods
 
@@ -87,31 +136,45 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit.UsersOnline
             {
                 if (!OnlineUserManager.Enabled || HttpContext.Current == null)
                     return;
+
                 lock (s_lock)
                 {
-                    //user list
-                    Dictionary<Guid, OnlineUserInfo> userList = GetUserList();
-
                     //getting current user info (OnlineUserInfo)
                     OnlineUserInfo oui = null;
 
-                    //find online user info for registered user
+                    //user list
+                    Dictionary<Guid, OnlineUserInfo> userList = null;
                     if (NopContext.Current.User != null && !NopContext.Current.User.IsGuest)
                     {
-                        foreach (var kvp in userList)
-                        {
-                            if (kvp.Value.AssociatedCustomerId.HasValue &&
-                                kvp.Value.AssociatedCustomerId.Value == NopContext.Current.User.CustomerId)
-                            {
-                                oui = kvp.Value;
-                                break;
-                            }
-                        }
-                    }
+                        //registered user
+                        userList = GetRegisteredUserList();
 
-                    //check tracking cookie if existing one was not found
-                    if (oui == null)
+                        //find user info
+                        if (userList.ContainsKey(NopContext.Current.User.CustomerGuid))
+                        {
+                            oui = userList[NopContext.Current.User.CustomerGuid];
+                        }
+
+                        //create new user if existing one was not found
+                        if (oui == null)
+                        {
+                            oui = new OnlineUserInfo();
+                            oui.OnlineUserGuid = NopContext.Current.User.CustomerGuid;
+                            oui.CreatedOn = DateTime.UtcNow;
+                            userList.Add(oui.OnlineUserGuid, oui);
+                        }
+
+                        //update LastVisit and AssociatedCustomerGuid properties
+                        oui.LastVisit = DateTime.UtcNow;
+                        oui.AssociatedCustomerId = NopContext.Current.User.CustomerId;
+                        HttpContext.Current.Response.Cookies.Remove(TRACKINGCOOKIENAME);
+                    }
+                    else
                     {
+                        //guest
+                        userList = GetAnonymousUserList();
+
+                        //find user info
                         string cookieValue = string.Empty;
                         if ((HttpContext.Current.Request.Cookies[TRACKINGCOOKIENAME] != null) && (HttpContext.Current.Request.Cookies[TRACKINGCOOKIENAME].Value != null))
                         {
@@ -129,30 +192,27 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit.UsersOnline
                                 }
                             }
                         }
-                    }
 
-                    //create new user if existing one was not found
-                    if (oui == null)
-                    {
-                        oui = new OnlineUserInfo();
-                        oui.OnlineUserGuid = Guid.NewGuid();
-                        oui.CreatedOn = DateTime.UtcNow;
-                        userList.Add(oui.OnlineUserGuid, oui);
-                    }
+                        //create new user if existing one was not found
+                        if (oui == null)
+                        {
+                            oui = new OnlineUserInfo();
+                            oui.OnlineUserGuid = Guid.NewGuid();
+                            oui.CreatedOn = DateTime.UtcNow;
+                            userList.Add(oui.OnlineUserGuid, oui);
+                        }
 
-                    //update LastVisit and AssociatedCustomerGuid properties
-                    oui.LastVisit = DateTime.UtcNow;
-                    if (NopContext.Current.User != null && !NopContext.Current.User.IsGuest)
-                        oui.AssociatedCustomerId = NopContext.Current.User.CustomerId;
-                    else
+                        //update LastVisit and AssociatedCustomerGuid properties
+                        oui.LastVisit = DateTime.UtcNow;
                         oui.AssociatedCustomerId = null;
 
-                    //save new cookie
-                    HttpCookie cookie = new HttpCookie(TRACKINGCOOKIENAME);
-                    cookie.Value = oui.OnlineUserGuid.ToString();
-                    cookie.Expires = DateTime.Now.AddHours(1);
-                    HttpContext.Current.Response.Cookies.Remove(TRACKINGCOOKIENAME);
-                    HttpContext.Current.Response.Cookies.Add(cookie);
+                        //save new cookie
+                        HttpCookie cookie = new HttpCookie(TRACKINGCOOKIENAME);
+                        cookie.Value = oui.OnlineUserGuid.ToString();
+                        cookie.Expires = DateTime.Now.AddHours(1);
+                        HttpContext.Current.Response.Cookies.Remove(TRACKINGCOOKIENAME);
+                        HttpContext.Current.Response.Cookies.Add(cookie);
+                    }
                 }
             }
             catch (NopException exc)
@@ -171,9 +231,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit.UsersOnline
 
             lock (s_lock)
             {
-                //user list
-                Dictionary<Guid, OnlineUserInfo> userList = GetUserList();
-                userList.Clear();
+                Dictionary<Guid, OnlineUserInfo> userList1 = GetAnonymousUserList();
+                Dictionary<Guid, OnlineUserInfo> userList2 = GetRegisteredUserList();
+                userList1.Clear();
+                userList2.Clear();
             }
         }
 
@@ -185,45 +246,49 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit.UsersOnline
             if (!OnlineUserManager.Enabled)
                 return;
 
-            int expMinutes = 20;
-
-            lock (s_lock)
-            {
-                //user list
-                List<Guid> usersToRemove = new List<Guid>();
-
-                Dictionary<Guid, OnlineUserInfo> userList = GetUserList();
-                foreach (KeyValuePair<Guid, OnlineUserInfo> kvp in userList)
-                {
-                    if (kvp.Value.LastVisit.AddMinutes(expMinutes) < DateTime.UtcNow)
-                        usersToRemove.Add(kvp.Key);
-                }
-
-                foreach (Guid guid in usersToRemove)
-                {
-                    userList.Remove(guid);
-                }
-            }
+            PurgeUsers(GetAnonymousUserList());
+            PurgeUsers(GetRegisteredUserList());
         }
 
         /// <summary>
-        /// Get online users
+        /// Get online users (guest)
         /// </summary>
         /// <returns>Online user list</returns>
-        public static List<OnlineUserInfo> GetOnlineUsers()
+        public static List<OnlineUserInfo> GetGuestList()
         {
             lock (s_lock)
             {
                 //user list
                 List<OnlineUserInfo> users = new List<OnlineUserInfo>();
 
-                Dictionary<Guid, OnlineUserInfo> userList = GetUserList();
+                Dictionary<Guid, OnlineUserInfo> userList = GetAnonymousUserList();
                 foreach (KeyValuePair<Guid, OnlineUserInfo> kvp in userList)
                 {
                     users.Add(kvp.Value);
                 }
 
-                return users;
+                return users.OrderByDescending(oui => oui.LastVisit).ToList();
+            }
+        }
+
+        /// <summary>
+        /// Get online users (registered)
+        /// </summary>
+        /// <returns>Online user list</returns>
+        public static List<OnlineUserInfo> GetRegisteredUsersOnline()
+        {
+            lock (s_lock)
+            {
+                //user list
+                List<OnlineUserInfo> users = new List<OnlineUserInfo>();
+
+                Dictionary<Guid, OnlineUserInfo> userList = GetRegisteredUserList();
+                foreach (KeyValuePair<Guid, OnlineUserInfo> kvp in userList)
+                {
+                    users.Add(kvp.Value);
+                }
+
+                return users.OrderByDescending(oui => oui.LastVisit).ToList();
             }
         }
 

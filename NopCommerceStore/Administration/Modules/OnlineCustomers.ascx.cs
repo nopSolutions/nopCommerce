@@ -73,9 +73,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 phOnlineStats.Visible = true;
 
-                var users = OnlineUserManager.GetOnlineUsers();
-                var registeredUsers = users.FindAll(oui => oui.AssociatedCustomerId.HasValue).OrderByDescending(oui => oui.LastVisit).ToList();
-                var guests = users.FindAll(oui => !oui.AssociatedCustomerId.HasValue);
+                var registeredUsers = OnlineUserManager.GetRegisteredUsersOnline();
+                var guests = OnlineUserManager.GetGuestList();
 
                 lblGuests.Text = guests.Count.ToString();
                 gvCustomers.DataSource = registeredUsers;
