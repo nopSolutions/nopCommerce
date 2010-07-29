@@ -10,6 +10,8 @@
 <asp:Panel class="order-summary-content" runat="server" ID="pnlCart">
     <%if (this.IsShoppingCart)
       { %>
+    <%if (SettingManager.GetSettingValueBoolean("Display.Checkout.DiscountCouponBox"))
+      { %>
     <asp:Panel runat="server" ID="phCoupon" CssClass="coupon-box">
         <b>
             <%=GetLocaleResourceString("ShoppingCart.DiscountCouponCode")%></b>
@@ -27,8 +29,11 @@
                 Visible="false"></asp:Label>
         </asp:Panel>
     </asp:Panel>
+    <%} %>
     <div class="clear">
     </div>
+    <%if (SettingManager.GetSettingValueBoolean("Display.Checkout.GiftCardBox"))
+      { %>
     <asp:Panel runat="server" ID="phGiftCards" CssClass="coupon-box">
         <b>
             <%=GetLocaleResourceString("ShoppingCart.GiftCards")%></b>
@@ -46,6 +51,7 @@
                 Visible="false"></asp:Label>
         </asp:Panel>
     </asp:Panel>
+    <%} %>
     <div class="clear">
     </div>
     <%} %>

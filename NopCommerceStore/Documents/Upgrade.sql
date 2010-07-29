@@ -1768,3 +1768,22 @@ GO
 DELETE FROM [dbo].[Nop_Setting] 
 WHERE [Name] = N'Tax.TaxProvider.FixedRate.Rate'
 GO
+
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[Nop_Setting]
+		WHERE [Name] = N'Display.Checkout.DiscountCouponBox')
+BEGIN
+	INSERT [dbo].[Nop_Setting] ([Name], [Value], [Description])
+	VALUES (N'Display.Checkout.DiscountCouponBox', N'True', N'')
+END
+GO
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[Nop_Setting]
+		WHERE [Name] = N'Display.Checkout.GiftCardBox')
+BEGIN
+	INSERT [dbo].[Nop_Setting] ([Name], [Value], [Description])
+	VALUES (N'Display.Checkout.GiftCardBox', N'True', N'')
+END
+GO

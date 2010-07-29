@@ -1975,6 +1975,42 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         protected global::System.Web.UI.WebControls.CheckBox cbHidePricesForNonRegistered;
         
         /// <summary>
+        /// lblShowDiscountCouponBox control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblShowDiscountCouponBox;
+        
+        /// <summary>
+        /// cbShowDiscountCouponBox control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbShowDiscountCouponBox;
+        
+        /// <summary>
+        /// lblShowGiftCardBox control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblShowGiftCardBox;
+        
+        /// <summary>
+        /// cbShowGiftCardBox control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbShowGiftCardBox;
+        
+        /// <summary>
         /// lblEnableDynamicPriceUpdate control.
         /// </summary>
         /// <remarks>

@@ -1374,6 +1374,27 @@
                     </tr>
                     <tr>
                         <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
+                                ID="lblShowDiscountCouponBox" Text="<% $NopResources:Admin.GlobalSettings.Other.ShowDiscountCouponBox %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Other.ShowDiscountCouponBox.Tooltip %>" />
+                        </td>
+                        <td class="adminData">
+                            <asp:CheckBox runat="server" ID="cbShowDiscountCouponBox"></asp:CheckBox>
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
+                                ID="lblShowGiftCardBox" Text="<% $NopResources:Admin.GlobalSettings.Other.ShowGiftCardBox %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Other.ShowGiftCardBox.Tooltip %>" />
+                        </td>
+                        <td class="adminData">
+                            <asp:CheckBox runat="server" ID="cbShowGiftCardBox"></asp:CheckBox>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
                             <nopCommerce:ToolTipLabel runat="server" ID="lblEnableDynamicPriceUpdate" Text="<% $NopResources:Admin.GlobalSettings.Other.EnableDynamicPriceUpdate %>"
                                 ToolTip="<% $NopResources:Admin.GlobalSettings.Other.EnableDynamicPriceUpdate.Tooltip %>"
                                 ToolTipImage="~/Administration/Common/ico-help.gif" />

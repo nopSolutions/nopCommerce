@@ -1446,7 +1446,7 @@ set @resources='
     <Value>Show a share button:</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.GlobalSettings.Other.DownloadableProductsTab">
-    <Value>Show "Downloadable products tab":</Value>
+    <Value>Show "Downloadable products" tab:</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.GlobalSettings.Other.DownloadableProductsTab.Tooltip">
     <Value>Check to show "Downloadable products tab" on My Account page</Value>
@@ -1510,6 +1510,18 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.OrderPartialRefund.Refund">
     <Value>Refund</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.ShowDiscountCouponBox">
+    <Value>Show discount box:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.ShowDiscountCouponBox.Tooltip">
+    <Value>Check if you want the discount coupon box to be displayed on shopping cart page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.ShowGiftCardBox">
+    <Value>Show gift card box:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.ShowGiftCardBox.Tooltip">
+    <Value>Check if you want the gift card coupon box to be displayed on shopping cart page</Value>
   </LocaleResource>
 </Language>
 '
