@@ -4752,6 +4752,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 cancelPaymentResult.CaptureTransactionId = order.CaptureTransactionId;
                 cancelPaymentResult.SubscriptionTransactionId = order.SubscriptionTransactionId;
                 cancelPaymentResult.Amount = amountToRefund;
+                cancelPaymentResult.IsPartialRefund = false;
                 cancelPaymentResult.PaymentStatus = order.PaymentStatus;
 
                 PaymentManager.Refund(order, ref cancelPaymentResult);
@@ -4968,6 +4969,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 cancelPaymentResult.CaptureTransactionId = order.CaptureTransactionId;
                 cancelPaymentResult.SubscriptionTransactionId = order.SubscriptionTransactionId;
                 cancelPaymentResult.Amount = amountToRefund;
+                cancelPaymentResult.IsPartialRefund = true;
                 cancelPaymentResult.PaymentStatus = order.PaymentStatus;
 
                 PaymentManager.Refund(order, ref cancelPaymentResult);

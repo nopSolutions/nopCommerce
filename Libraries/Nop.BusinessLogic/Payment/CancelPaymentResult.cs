@@ -29,6 +29,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
         private string _captureTransactionId = string.Empty;
         private string _subscriptionTransactionId = string.Empty;
         private decimal _amount = decimal.Zero;
+        private bool _isPartialRefund;
         private string _error = string.Empty;
         private string _fullError = string.Empty;
         private PaymentStatusEnum _paymentStatus = PaymentStatusEnum.Pending;
@@ -93,6 +94,22 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
             set
             {
                 _amount = value;
+            }
+        }
+
+
+        /// <summary>
+        /// Gets or sets a value indicating whether it's a partial refund; otherwize, full refund
+        /// </summary>
+        public bool IsPartialRefund
+        {
+            get
+            {
+                return _isPartialRefund;
+            }
+            set
+            {
+                _isPartialRefund = value;
             }
         }
 

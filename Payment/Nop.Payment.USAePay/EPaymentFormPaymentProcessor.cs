@@ -162,7 +162,12 @@ namespace NopSolutions.NopCommerce.Payment.Methods.USAePay
                     switch(rsp.ResultCode)
                     {
                         case "A":
-                            cancelPaymentResult.PaymentStatus = PaymentStatusEnum.Refunded;
+                            {
+                                if (cancelPaymentResult.IsPartialRefund)
+                                    cancelPaymentResult.PaymentStatus = PaymentStatusEnum.PartiallyRefunded;
+                                else
+                                    cancelPaymentResult.PaymentStatus = PaymentStatusEnum.Refunded;
+                            }
                             break;
                         case "D":
                         case "E":
@@ -252,7 +257,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.USAePay
         {
             get
             {
-                return false;
+                return true;
             }
         }
 
