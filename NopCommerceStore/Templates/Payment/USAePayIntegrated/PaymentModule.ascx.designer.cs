@@ -101,5 +101,14 @@ namespace NopSolutions.NopCommerce.Web.Templates.Payment.USAePayIntegrated {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvCVV2;
+        
+        /// <summary>
+        /// revCVV2 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RegularExpressionValidator revCVV2;
     }
 }

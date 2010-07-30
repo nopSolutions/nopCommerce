@@ -58,6 +58,8 @@
             <asp:TextBox ID="creditCardCVV2" runat="server" Width="60px" MaxLength="4" AutoCompleteType="Disabled"></asp:TextBox>
             <asp:RequiredFieldValidator runat="server" ID="rfvCVV2" ControlToValidate="creditCardCVV2"
                 ErrorMessage="*" EnableClientScript="False" Display="Dynamic"></asp:RequiredFieldValidator>
+			<asp:RegularExpressionValidator runat="server" ID="revCVV2" ControlToValidate="creditCardCVV2"
+				ValidationExpression="[0-9]{3,4}$" ErrorMessage="Check CVV" EnableClientScript="false" Display="Dynamic"></asp:RegularExpressionValidator>
         </td>
     </tr>
 </table>

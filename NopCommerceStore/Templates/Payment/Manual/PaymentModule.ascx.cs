@@ -65,7 +65,11 @@ namespace NopSolutions.NopCommerce.Web.Templates.Payment.Manual
 
         public bool ValidateForm()
         {
-            return ((this.CCNameValidator.IsValid && this.CCValidator.IsValid) && (this.CCRequiredValidator.IsValid && this.rfvCVV2.IsValid));
+            return (this.CCNameValidator.IsValid &&
+                this.CCValidator.IsValid &&
+                this.CCRequiredValidator.IsValid &&
+                this.rfvCVV2.IsValid &&
+                this.revCVV2.IsValid);
         }
 
         public PaymentInfo GetPaymentInfo()
