@@ -1549,14 +1549,7 @@ ul.languagelist li .selected
 	text-align: left;
 	padding-bottom: 10px;
 }
-.order-details .shipping-box
-{
-	text-align: left;
-	padding: 10px;
-	border: 1px solid rgb(232, 230, 210);
-	height: auto;
-}
-.order-details .billing-box
+.order-details .order-details-box
 {
 	text-align: left;
 	padding: 10px;

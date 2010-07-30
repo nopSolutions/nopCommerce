@@ -1629,14 +1629,7 @@ ul.languagelist li .selected
 	text-align: left;
 	padding-bottom: 10px;
 }
-.order-details .shipping-box
-{
-	text-align: left;
-	padding: 10px;
-	border: 1px solid #d7d7d7;
-	height: auto;
-}
-.order-details .billing-box
+.order-details .order-details-box
 {
 	text-align: left;
 	padding: 10px;

@@ -43,7 +43,7 @@
                     <tr>
                         <td class="cart_total_left">
                             <strong>
-                                <asp:Literal runat="server" ID="lTaxRateTitle"></asp:Literal>:
+                                <asp:Literal runat="server" ID="lTaxRateTitle"></asp:Literal>:</strong>
                         </td>
                         <td class="cart_total_right">
                             <span style="white-space: nowrap;">

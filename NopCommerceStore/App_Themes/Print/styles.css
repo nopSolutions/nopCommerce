@@ -24,7 +24,6 @@ body
 	margin-bottom: 15px;
 	padding: 0px;
 }
-
 .order-details .title
 {
 	padding: 10px 10px 5px 0px;
@@ -32,41 +31,22 @@ body
 	text-transform: uppercase;
 	clear: both;
 }
-
 .order-details .info
 {
 	border: 1px solid #d7d7d7;
 	padding: 10px;
 }
-
 .order-details .section-title
 {
 	padding: 10px 10px 5px 0px;
 	font-weight: bold;
 	clear: both;
 }
-
 .order-details .order-overview
 {
 	text-align: left;
 	padding-bottom: 10px;
 }
-.order-details .shipping-box
-{
-	text-align: left;
-	padding: 10px;
-	border: 1px solid #d7d7d7;
-	height: auto;
-}
-
-.order-details .billing-box
-{
-	text-align: left;
-	padding: 10px;
-	border: 1px solid #d7d7d7;
-	height: auto;
-}
-
 .order-details .products-box, .order-details .ordernotes-box
 {
 	text-align: left;
@@ -74,7 +54,6 @@ body
 	border: 1px solid #d7d7d7;
 	height: auto;
 }
-
 .order-details .checkout-attributes
 {
 	text-align: right;

@@ -1529,6 +1529,9 @@ set @resources='
   <LocaleResource Name="Profile.LatestPosts.NoPosts">
     <Value>No posts found</Value>
   </LocaleResource>
+  <LocaleResource Name="Order.BillingInformation">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 

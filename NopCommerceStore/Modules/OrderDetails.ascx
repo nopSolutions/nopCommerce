@@ -56,17 +56,54 @@
         </div>
         <div class="clear">
         </div>
-        <asp:Panel CssClass="shipping-box" runat="server" ID="pnlShipping">
-            <table width="100%" border="0">
+        <div class="order-details-box">
+            <table width="100%" cellspacing="0" cellpadding="2" border="0">
                 <tbody>
                     <tr>
-                        <td>
+                        <td width="50%" align="left" style="vertical-align:top;">
+                            <b>
+                                <%=GetLocaleResourceString("Order.BillingAddress")%></b>
+                            <br />
+                            <asp:Literal ID="lBillingFirstName" runat="server"></asp:Literal>
+                            <asp:Literal ID="lBillingLastName" runat="server"></asp:Literal><br />
+                            <div>
+                                <%=GetLocaleResourceString("Order.Email")%>:
+                                <asp:Literal ID="lBillingEmail" runat="server"></asp:Literal></div>
+                            <div>
+                                <%=GetLocaleResourceString("Order.Phone")%>:
+                                <asp:Literal ID="lBillingPhoneNumber" runat="server"></asp:Literal></div>
+                            <div>
+                                <%=GetLocaleResourceString("Order.Fax")%>:
+                                <asp:Literal ID="lBillingFaxNumber" runat="server"></asp:Literal></div>
+                            <asp:Panel ID="pnlBillingCompany" runat="server">
+                                <asp:Literal ID="lBillingCompany" runat="server"></asp:Literal></asp:Panel>
+                            <div>
+                                <asp:Literal ID="lBillingAddress1" runat="server"></asp:Literal></div>
+                            <asp:Panel ID="pnlBillingAddress2" runat="server">
+                                <asp:Literal ID="lBillingAddress2" runat="server"></asp:Literal></asp:Panel>
+                            <div>
+                                <asp:Literal ID="lBillingCity" runat="server"></asp:Literal>,
+                                <asp:Literal ID="lBillingStateProvince" runat="server"></asp:Literal>
+                                <asp:Literal ID="lBillingZipPostalCode" runat="server"></asp:Literal></div>
+                            <asp:Panel ID="pnlBillingCountry" runat="server">
+                                <asp:Literal ID="lBillingCountry" runat="server"></asp:Literal></asp:Panel>
+                            <br />
+                            <br />
+                            <asp:PlaceHolder runat="server" ID="phVatNumber"><b>
+                                <%=GetLocaleResourceString("Order.VATNumber")%></b> <br />
+                                <asp:Literal runat="server" ID="lVatNumber"></asp:Literal>
+                                <br />
+                                <br />
+                            </asp:PlaceHolder>
+                            <b>
+                                <%=GetLocaleResourceString("Order.PaymentMethod")%></b>
+                            <br />
+                            <asp:Literal runat="server" ID="lPaymentMethod"></asp:Literal>
+                        </td>
+                        <td width="50%" align="left" runat="server" id="pnlShipping" style="vertical-align:top;">
                             <b>
                                 <%=GetLocaleResourceString("Order.ShippingAddress")%></b>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
+                            <br />
                             <asp:Literal ID="lShippingFirstName" runat="server"></asp:Literal>
                             <asp:Literal ID="lShippingLastName" runat="server"></asp:Literal><br />
                             <div>
@@ -90,263 +127,37 @@
                                 <asp:Literal ID="lShippingZipPostalCode" runat="server"></asp:Literal></div>
                             <asp:Panel ID="pnlShippingCountry" runat="server">
                                 <asp:Literal ID="lShippingCountry" runat="server"></asp:Literal></asp:Panel>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
+                            <br />
+                            <br />
                             <b>
                                 <%=GetLocaleResourceString("Order.ShippingMethod")%></b>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
+                            <br />
                             <asp:Label ID="lblShippingMethod" runat="server"></asp:Label>
-                        </td>
-                    </tr>
-                    <tr runat="server" id="pnlTrackingNumber">
-                        <td>
-                            <b>
-                                <%=GetLocaleResourceString("Order.TrackingNumber")%></b>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
+                            <asp:PlaceHolder runat="server" ID="pnlTrackingNumber">
+                                <br />
+                                <b>
+                                    <%=GetLocaleResourceString("Order.TrackingNumber")%></b> </asp:PlaceHolder>
+                            <br />
                             <asp:Label ID="lblTrackingNumber" runat="server"></asp:Label>
-                        </td>
-                    </tr>
-                    <%if (!this.IsInvoice)
-                      { %>
-                    <tr>
-                        <td>
-                            <b>
-                                <%=GetLocaleResourceString("Order.ShippedOn")%></b>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:Label ID="lblShippedDate" runat="server"></asp:Label>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <b>
-                                <%=GetLocaleResourceString("Order.DeliveredOn")%></b>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:Label ID="lblDeliveredOn" runat="server"></asp:Label>
-                        </td>
-                    </tr>
-                    <%} %>
-                    <tr>
-                        <td>
-                            <b>
-                                <%=GetLocaleResourceString("Order.Weight")%></b>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:Label ID="lblOrderWeight" runat="server"></asp:Label>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </asp:Panel>
-        <div class="clear">
-        </div>
-        <div class="section-title">
-            <%=GetLocaleResourceString("Order.BillingInformation")%>
-        </div>
-        <div class="billing-box">
-            <table width="100%" border="0">
-                <tbody>
-                    <tr>
-                        <td>
-                            <table width="100%" cellspacing="3" cellpadding="2" border="0">
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <b>
-                                                <%=GetLocaleResourceString("Order.BillingAddress")%></b>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <asp:Literal ID="lBillingFirstName" runat="server"></asp:Literal>
-                                            <asp:Literal ID="lBillingLastName" runat="server"></asp:Literal><br />
-                                            <div>
-                                                <%=GetLocaleResourceString("Order.Email")%>:
-                                                <asp:Literal ID="lBillingEmail" runat="server"></asp:Literal></div>
-                                            <div>
-                                                <%=GetLocaleResourceString("Order.Phone")%>:
-                                                <asp:Literal ID="lBillingPhoneNumber" runat="server"></asp:Literal></div>
-                                            <div>
-                                                <%=GetLocaleResourceString("Order.Fax")%>:
-                                                <asp:Literal ID="lBillingFaxNumber" runat="server"></asp:Literal></div>
-                                            <asp:Panel ID="pnlBillingCompany" runat="server">
-                                                <asp:Literal ID="lBillingCompany" runat="server"></asp:Literal></asp:Panel>
-                                            <div>
-                                                <asp:Literal ID="lBillingAddress1" runat="server"></asp:Literal></div>
-                                            <asp:Panel ID="pnlBillingAddress2" runat="server">
-                                                <asp:Literal ID="lBillingAddress2" runat="server"></asp:Literal></asp:Panel>
-                                            <div>
-                                                <asp:Literal ID="lBillingCity" runat="server"></asp:Literal>,
-                                                <asp:Literal ID="lBillingStateProvince" runat="server"></asp:Literal>
-                                                <asp:Literal ID="lBillingZipPostalCode" runat="server"></asp:Literal></div>
-                                            <asp:Panel ID="pnlBillingCountry" runat="server">
-                                                <asp:Literal ID="lBillingCountry" runat="server"></asp:Literal></asp:Panel>
-                                        </td>
-                                    </tr>
-                                    <asp:PlaceHolder runat="server" ID="phVatNumber">
-                                        <tr>
-                                            <td>
-                                                <b>
-                                                    <%=GetLocaleResourceString("Order.VATNumber")%></b>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <asp:Literal runat="server" ID="lVatNumber"></asp:Literal>
-                                            </td>
-                                        </tr>
-                                    </asp:PlaceHolder>
-                                    <tr>
-                                        <td>
-                                            <b>
-                                                <%=GetLocaleResourceString("Order.PaymentMethod")%></b>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <asp:Literal runat="server" ID="lPaymentMethod"></asp:Literal>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td align="right">
-                            <table width="100%" cellspacing="0" cellpadding="2" border="0">
-                                <tbody>
-                                    <tr>
-                                        <td width="100%" align="right">
-                                            <b>
-                                                <%=GetLocaleResourceString("Order.Sub-Total")%>:</b>
-                                        </td>
-                                        <td align="right">
-                                            <span style="white-space: nowrap;">
-                                                <asp:Label ID="lblOrderSubtotal" runat="server"></asp:Label>
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    <tr runat="server" id="pnlShippingTotal">
-                                        <td width="100%" align="right">
-                                            <b>
-                                                <%=GetLocaleResourceString("Order.Shipping")%>:</b>
-                                        </td>
-                                        <td align="right">
-                                            <span style="white-space: nowrap;">
-                                                <asp:Label ID="lblOrderShipping" runat="server"></asp:Label>
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    <asp:PlaceHolder runat="server" ID="phPaymentMethodAdditionalFee">
-                                        <tr>
-                                            <td width="100%" align="right">
-                                                <b>
-                                                    <%=GetLocaleResourceString("Order.PaymentMethodAdditionalFee")%>:</b>
-                                            </td>
-                                            <td align="right">
-                                                <span style="white-space: nowrap;">
-                                                    <asp:Label ID="lblPaymentMethodAdditionalFee" runat="server"></asp:Label>
-                                                </span>
-                                            </td>
-                                        </tr>
-                                    </asp:PlaceHolder>
-                                    <asp:Repeater runat="server" ID="rptrTaxRates" OnItemDataBound="rptrTaxRates_ItemDataBound">
-                                        <ItemTemplate>
-                                            <tr>
-                                               <td width="100%" align="right">
-                                                    <strong>
-                                                        <asp:Literal runat="server" ID="lTaxRateTitle"></asp:Literal>:
-                                                </td>
-                                               <td align="right">
-                                                    <span style="white-space: nowrap;">
-                                                        <asp:Literal runat="server" ID="lTaxRateValue"></asp:Literal>
-                                                    </span>
-                                                </td>
-                                            </tr>
-                                        </ItemTemplate>
-                                    </asp:Repeater>
-                                    <asp:PlaceHolder runat="server" ID="phTaxTotal">
-                                        <tr>
-                                            <td width="100%" align="right">
-                                                <b>
-                                                    <%=GetLocaleResourceString("Order.Tax")%>:</b>
-                                            </td>
-                                            <td align="right">
-                                                <span style="white-space: nowrap;">
-                                                    <asp:Label ID="lblOrderTax" runat="server"></asp:Label>
-                                                </span>
-                                            </td>
-                                        </tr>
-                                    </asp:PlaceHolder>
-                                    <asp:PlaceHolder runat="server" ID="phDiscount">
-                                        <tr>
-                                            <td width="100%" align="right">
-                                                <b>
-                                                    <%=GetLocaleResourceString("Order.Discount")%>:</b>
-                                            </td>
-                                            <td align="right">
-                                                <span style="white-space: nowrap;">
-                                                    <asp:Label ID="lblDiscount" runat="server"></asp:Label>
-                                                </span>
-                                            </td>
-                                        </tr>
-                                    </asp:PlaceHolder>
-                                    <asp:Repeater runat="server" ID="rptrGiftCards" OnItemDataBound="rptrGiftCards_ItemDataBound">
-                                        <ItemTemplate>
-                                            <tr>
-                                                <td width="100%" align="right">
-                                                    <b>
-                                                        <asp:Literal runat="server" ID="lGiftCard"></asp:Literal>:</b>
-                                                </td>
-                                                <td align="right">
-                                                    <span style="white-space: nowrap;">
-                                                        <asp:Label ID="lblGiftCardAmount" runat="server"></asp:Label>
-                                                    </span>
-                                                </td>
-                                            </tr>
-                                        </ItemTemplate>
-                                    </asp:Repeater>
-                                    <asp:PlaceHolder runat="server" ID="phRewardPoints">
-                                        <tr>
-                                            <td width="100%" align="right">
-                                                <b>
-                                                    <asp:Literal runat="server" ID="lRewardPointsTitle"></asp:Literal>:</b>
-                                            </td>
-                                            <td align="right">
-                                                <span style="white-space: nowrap;">
-                                                    <asp:Label ID="lblRewardPointsAmount" runat="server"></asp:Label>
-                                                </span>
-                                            </td>
-                                        </tr>
-                                    </asp:PlaceHolder>
-                                    <tr>
-                                        <td width="100%" align="right">
-                                            <b>
-                                                <%=GetLocaleResourceString("Order.OrderTotal")%>:</b>
-                                        </td>
-                                        <td align="right">
-                                            <b><span style="white-space: nowrap;">
-                                                <asp:Label ID="lblOrderTotal2" runat="server"></asp:Label>
-                                            </span></b>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <br />
+                            <%if (!this.IsInvoice)
+                              { %>
+                            <br />
+                                <b>
+                                    <%=GetLocaleResourceString("Order.ShippedOn")%></b>
+                                <br />
+                                <asp:Label ID="lblShippedDate" runat="server"></asp:Label>
+                                <br />
+                                <b>
+                                    <%=GetLocaleResourceString("Order.DeliveredOn")%></b>
+                                <br />
+                                <asp:Label ID="lblDeliveredOn" runat="server"></asp:Label>
+                                <br />
+                                <%} %>
+                                <b>
+                                    <%=GetLocaleResourceString("Order.Weight")%></b>
+                                <br />
+                                <asp:Label ID="lblOrderWeight" runat="server"></asp:Label>
                         </td>
                     </tr>
                 </tbody>
@@ -415,12 +226,136 @@
             <br />
             <asp:Button runat="server" ID="btnReOrder" CssClass="reorderbutton" Text="<% $NopResources:Order.BtnReOrder.Text %>"
                 ToolTip="<% $NopResources:Order.BtnReOrder.Tooltip %>" OnClick="BtnReOrder_OnClick" />
-            <asp:PlaceHolder runat="server" ID="phReturnRequest">
-                &nbsp;&nbsp;&nbsp;
+            <asp:PlaceHolder runat="server" ID="phReturnRequest">&nbsp;&nbsp;&nbsp;
                 <asp:Button runat="server" ID="btnReturnItems" OnClick="btnReturnItems_Click" Text="<% $NopResources:OrderDetails.ReturnItemsButton %>"
                     CssClass="returnitemsbutton" />
             </asp:PlaceHolder>
             <%} %>
+        </div>
+        <div class="clear">
+        </div>
+        <table width="100%" cellspacing="0" cellpadding="2" border="0">
+            <tbody>
+                <tr>
+                    <td width="100%" align="right">
+                        <b>
+                            <%=GetLocaleResourceString("Order.Sub-Total")%>:</b>
+                    </td>
+                    <td align="right">
+                        <span style="white-space: nowrap;">
+                            <asp:Label ID="lblOrderSubtotal" runat="server"></asp:Label>
+                        </span>
+                    </td>
+                </tr>
+                <tr runat="server" id="pnlShippingTotal">
+                    <td width="100%" align="right">
+                        <b>
+                            <%=GetLocaleResourceString("Order.Shipping")%>:</b>
+                    </td>
+                    <td align="right">
+                        <span style="white-space: nowrap;">
+                            <asp:Label ID="lblOrderShipping" runat="server"></asp:Label>
+                        </span>
+                    </td>
+                </tr>
+                <asp:PlaceHolder runat="server" ID="phPaymentMethodAdditionalFee">
+                    <tr>
+                        <td width="100%" align="right">
+                            <b>
+                                <%=GetLocaleResourceString("Order.PaymentMethodAdditionalFee")%>:</b>
+                        </td>
+                        <td align="right">
+                            <span style="white-space: nowrap;">
+                                <asp:Label ID="lblPaymentMethodAdditionalFee" runat="server"></asp:Label>
+                            </span>
+                        </td>
+                    </tr>
+                </asp:PlaceHolder>
+                <asp:Repeater runat="server" ID="rptrTaxRates" OnItemDataBound="rptrTaxRates_ItemDataBound">
+                    <ItemTemplate>
+                        <tr>
+                            <td width="100%" align="right">
+                                <b>
+                                    <asp:Literal runat="server" ID="lTaxRateTitle"></asp:Literal>:</b>
+                            </td>
+                            <td align="right">
+                                <span style="white-space: nowrap;">
+                                    <asp:Literal runat="server" ID="lTaxRateValue"></asp:Literal>
+                                </span>
+                            </td>
+                        </tr>
+                    </ItemTemplate>
+                </asp:Repeater>
+                <asp:PlaceHolder runat="server" ID="phTaxTotal">
+                    <tr>
+                        <td width="100%" align="right">
+                            <b>
+                                <%=GetLocaleResourceString("Order.Tax")%>:</b>
+                        </td>
+                        <td align="right">
+                            <span style="white-space: nowrap;">
+                                <asp:Label ID="lblOrderTax" runat="server"></asp:Label>
+                            </span>
+                        </td>
+                    </tr>
+                </asp:PlaceHolder>
+                <asp:PlaceHolder runat="server" ID="phDiscount">
+                    <tr>
+                        <td width="100%" align="right">
+                            <b>
+                                <%=GetLocaleResourceString("Order.Discount")%>:</b>
+                        </td>
+                        <td align="right">
+                            <span style="white-space: nowrap;">
+                                <asp:Label ID="lblDiscount" runat="server"></asp:Label>
+                            </span>
+                        </td>
+                    </tr>
+                </asp:PlaceHolder>
+                <asp:Repeater runat="server" ID="rptrGiftCards" OnItemDataBound="rptrGiftCards_ItemDataBound">
+                    <ItemTemplate>
+                        <tr>
+                            <td width="100%" align="right">
+                                <b>
+                                    <asp:Literal runat="server" ID="lGiftCard"></asp:Literal>:</b>
+                            </td>
+                            <td align="right">
+                                <span style="white-space: nowrap;">
+                                    <asp:Label ID="lblGiftCardAmount" runat="server"></asp:Label>
+                                </span>
+                            </td>
+                        </tr>
+                    </ItemTemplate>
+                </asp:Repeater>
+                <asp:PlaceHolder runat="server" ID="phRewardPoints">
+                    <tr>
+                        <td width="100%" align="right">
+                            <b>
+                                <asp:Literal runat="server" ID="lRewardPointsTitle"></asp:Literal>:</b>
+                        </td>
+                        <td align="right">
+                            <span style="white-space: nowrap;">
+                                <asp:Label ID="lblRewardPointsAmount" runat="server"></asp:Label>
+                            </span>
+                        </td>
+                    </tr>
+                </asp:PlaceHolder>
+                <tr>
+                    <td width="100%" align="right">
+                        <b>
+                            <%=GetLocaleResourceString("Order.OrderTotal")%>:</b>
+                    </td>
+                    <td align="right">
+                        <b><span style="white-space: nowrap;">
+                            <asp:Label ID="lblOrderTotal2" runat="server"></asp:Label>
+                        </span></b>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="clear">
+        </div>
+        <div>
         </div>
         <%if (!this.IsInvoice)
           { %>
@@ -453,4 +388,4 @@
         </div>
         <%} %>
     </div>
-</div>
+</div> 
