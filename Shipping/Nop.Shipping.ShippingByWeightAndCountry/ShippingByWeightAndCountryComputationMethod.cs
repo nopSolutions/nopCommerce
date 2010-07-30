@@ -21,6 +21,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.BusinessLogic.Shipping;
 using NopSolutions.NopCommerce.Common;
+using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 
 namespace NopSolutions.NopCommerce.Shipping.Methods.ShippingByWeightAndCountryCM
 {
@@ -31,9 +32,12 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.ShippingByWeightAndCountryCM
     {
         #region Utilities
 
-        private decimal GetRate(decimal subTotal, decimal weight, int ShippingMethodID, int CountryID)
+        private decimal? GetRate(decimal subTotal, decimal weight, int ShippingMethodID, int CountryID)
         {
-            decimal shippingTotal = decimal.Zero;
+            decimal? shippingTotal = null;
+
+            bool limitMethodsToCreated = SettingManager.GetSettingValueBoolean("ShippingByWeightAndCountry.LimitMethodsToCreated");
+
             ShippingByWeightAndCountry shippingByWeightAndCountry = null;
             var shippingByWeightAndCountryCollection = ShippingByWeightAndCountryManager.GetAllByShippingMethodIdAndCountryId(ShippingMethodID, CountryID);
             foreach (var shippingByWeightAndCountry2 in shippingByWeightAndCountryCollection)
@@ -45,7 +49,16 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.ShippingByWeightAndCountryCM
                 }
             }
             if (shippingByWeightAndCountry == null)
-                return decimal.Zero;
+            {
+                if (limitMethodsToCreated)
+                {
+                    return null;
+                }
+                else
+                {
+                    return decimal.Zero;
+                }
+            }
             if (shippingByWeightAndCountry.UsePercentage && shippingByWeightAndCountry.ShippingChargePercentage <= decimal.Zero)
                 return decimal.Zero;
             if (!shippingByWeightAndCountry.UsePercentage && shippingByWeightAndCountry.ShippingChargeAmount <= decimal.Zero)
@@ -108,11 +121,15 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.ShippingByWeightAndCountryCM
             var shippingMethods = ShippingMethodManager.GetAllShippingMethods(shipmentPackage.ShippingAddress.CountryId);
             foreach (var shippingMethod in shippingMethods)
             {
-                var shippingOption = new ShippingOption();
-                shippingOption.Name = shippingMethod.Name;
-                shippingOption.Description = shippingMethod.Description;
-                shippingOption.Rate = GetRate(subTotal, weight, shippingMethod.ShippingMethodId, shipmentPackage.ShippingAddress.Country.CountryId);
-                shippingOptions.Add(shippingOption);
+                decimal? rate = GetRate(subTotal, weight, shippingMethod.ShippingMethodId, shipmentPackage.ShippingAddress.Country.CountryId);
+                if (rate.HasValue)
+                {
+                    var shippingOption = new ShippingOption();
+                    shippingOption.Name = shippingMethod.Name;
+                    shippingOption.Description = shippingMethod.Description;
+                    shippingOption.Rate = rate.Value;
+                    shippingOptions.Add(shippingOption);
+                }
             }
 
             return shippingOptions;

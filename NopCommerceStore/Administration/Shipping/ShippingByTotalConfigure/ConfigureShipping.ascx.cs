@@ -16,9 +16,9 @@ using System;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using NopSolutions.NopCommerce.BusinessLogic.Shipping;
-using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Web.Administration.Modules;
 using NopSolutions.NopCommerce.Web.Templates.Shipping;
+using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Shipping.ShippingByTotalConfigure
 {
@@ -29,6 +29,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.ShippingByTotalCo
             if (!Page.IsPostBack)
             {
                 FillDropDowns();
+                BindSettings();
                 BindData();
             }
         }
@@ -51,6 +52,11 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.ShippingByTotalCo
             gvShippingByTotals.DataBind();
         }
 
+        private void BindSettings()
+        {
+            cbLimitMethodsToCreated.Checked = SettingManager.GetSettingValueBoolean("ShippingByTotal.LimitMethodsToCreated");
+        }
+        
         protected void btnAdd_Click(object sender, EventArgs e)
         {
             try
@@ -139,7 +145,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.ShippingByTotalCo
 
         public void Save()
         {
-     
+            SettingManager.SetParam("ShippingByTotal.LimitMethodsToCreated", cbLimitMethodsToCreated.Checked.ToString());
         }
     }
 }

@@ -17,9 +17,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NopSolutions.NopCommerce.BusinessLogic;
+using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Orders;
-using NopSolutions.NopCommerce.BusinessLogic.Shipping;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
+using NopSolutions.NopCommerce.BusinessLogic.Shipping;
 using NopSolutions.NopCommerce.Common;
 
 namespace NopSolutions.NopCommerce.Shipping.Methods.ShippingByWeightCM
@@ -31,9 +32,11 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.ShippingByWeightCM
     {
         #region Utilities
 
-        private decimal GetRate(decimal subTotal, decimal Weight, int ShippingMethodID)
+        private decimal? GetRate(decimal subTotal, decimal Weight, int ShippingMethodID)
         {
-            decimal shippingTotal = decimal.Zero;
+            decimal? shippingTotal = null;
+
+            bool limitMethodsToCreated = SettingManager.GetSettingValueBoolean("ShippingByWeight.LimitMethodsToCreated");
 
             ShippingByWeight shippingByWeight = null;
             var shippingByWeightCollection = ShippingByWeightManager.GetAllByShippingMethodId(ShippingMethodID);
@@ -46,7 +49,16 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.ShippingByWeightCM
                 }
             }
             if (shippingByWeight == null)
-                return decimal.Zero;
+            {
+                if (limitMethodsToCreated)
+                {
+                    return null;
+                }
+                else
+                {
+                    return decimal.Zero;
+                }
+            }
             if (shippingByWeight.UsePercentage && shippingByWeight.ShippingChargePercentage <= decimal.Zero)
                 return decimal.Zero;
             if (!shippingByWeight.UsePercentage && shippingByWeight.ShippingChargeAmount <= decimal.Zero)
@@ -109,11 +121,15 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.ShippingByWeightCM
             var shippingMethods = ShippingMethodManager.GetAllShippingMethods(shipmentPackage.ShippingAddress.CountryId);
             foreach (var shippingMethod in shippingMethods)
             {
-                var shippingOption = new ShippingOption();
-                shippingOption.Name = shippingMethod.Name;
-                shippingOption.Description = shippingMethod.Description;
-                shippingOption.Rate = GetRate(subTotal, weight, shippingMethod.ShippingMethodId);
-                shippingOptions.Add(shippingOption);
+                decimal? rate = GetRate(subTotal, weight, shippingMethod.ShippingMethodId);
+                if (rate.HasValue)
+                {
+                    var shippingOption = new ShippingOption();
+                    shippingOption.Name = shippingMethod.Name;
+                    shippingOption.Description = shippingMethod.Description;
+                    shippingOption.Rate = rate.Value;
+                    shippingOptions.Add(shippingOption);
+                }
             }
 
             return shippingOptions;
@@ -128,6 +144,7 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.ShippingByWeightCM
         {
             return null;
         }
+
         #endregion
 
         #region Properties

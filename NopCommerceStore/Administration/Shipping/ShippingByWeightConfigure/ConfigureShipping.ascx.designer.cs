@@ -40,6 +40,24 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.ShippingByWeightC
         protected global::System.Web.UI.WebControls.Literal lErrorTitle;
         
         /// <summary>
+        /// lblLimitMethodsToCreated control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblLimitMethodsToCreated;
+        
+        /// <summary>
+        /// cbLimitMethodsToCreated control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbLimitMethodsToCreated;
+        
+        /// <summary>
         /// gvShippingByWeights control.
         /// </summary>
         /// <remarks>

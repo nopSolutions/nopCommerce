@@ -16,10 +16,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using NopSolutions.NopCommerce.BusinessLogic.Orders;
-using NopSolutions.NopCommerce.BusinessLogic.Shipping;
 using NopSolutions.NopCommerce.BusinessLogic;
+using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
+using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
+using NopSolutions.NopCommerce.BusinessLogic.Shipping;
 using NopSolutions.NopCommerce.Common;
 
 namespace NopSolutions.NopCommerce.Shipping.Methods.ShippingByTotalCM
@@ -37,9 +38,11 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.ShippingByTotalCM
         /// <param name="subTotal">Subtotal</param>
         /// <param name="ShippingMethodID">Shipping method identifier</param>
         /// <returns>Shipping rate</returns>
-        protected decimal GetRate(decimal subTotal, int ShippingMethodID)
+        protected decimal? GetRate(decimal subTotal, int ShippingMethodID)
         {
-            decimal shippingTotal = decimal.Zero;
+            decimal? shippingTotal = null;
+
+            bool limitMethodsToCreated = SettingManager.GetSettingValueBoolean("ShippingByTotal.LimitMethodsToCreated");
 
             ShippingByTotal shippingByTotal = null;
             var shippingByTotalCollection = ShippingByTotalManager.GetAllByShippingMethodId(ShippingMethodID);
@@ -52,7 +55,16 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.ShippingByTotalCM
                 }
             }
             if (shippingByTotal == null)
-                return decimal.Zero;
+            {
+                if (limitMethodsToCreated)
+                {
+                    return null;
+                }
+                else
+                {
+                    return decimal.Zero;
+                }
+            }
             if (shippingByTotal.UsePercentage && shippingByTotal.ShippingChargePercentage <= decimal.Zero)
                 return decimal.Zero;
             if (!shippingByTotal.UsePercentage && shippingByTotal.ShippingChargeAmount <= decimal.Zero)
@@ -105,11 +117,15 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.ShippingByTotalCM
             var shippingMethods = ShippingMethodManager.GetAllShippingMethods(shipmentPackage.ShippingAddress.CountryId);
             foreach (var shippingMethod in shippingMethods)
             {
-                var shippingOption = new ShippingOption();
-                shippingOption.Name = shippingMethod.Name;
-                shippingOption.Description = shippingMethod.Description;
-                shippingOption.Rate = GetRate(subTotal, shippingMethod.ShippingMethodId);
-                shippingOptions.Add(shippingOption);
+                decimal? rate = GetRate(subTotal, shippingMethod.ShippingMethodId);
+                if (rate.HasValue)
+                {
+                    var shippingOption = new ShippingOption();
+                    shippingOption.Name = shippingMethod.Name;
+                    shippingOption.Description = shippingMethod.Description;
+                    shippingOption.Rate = rate.Value;
+                    shippingOptions.Add(shippingOption);
+                }
             }
 
             return shippingOptions;

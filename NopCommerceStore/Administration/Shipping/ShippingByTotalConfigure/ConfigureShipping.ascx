@@ -1,11 +1,28 @@
 <%@ Control Language="C#" AutoEventWireup="true" Inherits="NopSolutions.NopCommerce.Web.Administration.Shipping.ShippingByTotalConfigure.ConfigureShipping"
     CodeBehind="ConfigureShipping.ascx.cs" %>
 <%@ Register TagPrefix="nopCommerce" TagName="DecimalTextBox" Src="../../Modules/DecimalTextBox.ascx" %>
+<%@ Register TagPrefix="nopCommerce" TagName="ToolTipLabel" Src="../../Modules/ToolTipLabelControl.ascx" %>
 <asp:UpdatePanel ID="upShip" runat="server">
     <ContentTemplate>
         <asp:Panel runat="server" ID="pnlError" EnableViewState="false" Visible="false" class="messageBox messageBoxError">
             <asp:Literal runat="server" ID="lErrorTitle" EnableViewState="false" />
         </asp:Panel>
+        <table class="adminContent" style="border: 1px solid black;padding: 15px;">
+            <tr>
+                <td class="adminTitle">
+                    <nopCommerce:ToolTipLabel runat="server" ID="lblLimitMethodsToCreated" Text="Limit shipping methods to configured ones:"
+                        ToolTip="If you check this option, then your customers will be limited to configured (created) shipping options. Otherwise, they'll be able to choose any existing shipping options even they're not configured here (zero price in this case)."
+                        ToolTipImage="~/Administration/Common/ico-help.gif" />
+                </td>
+                <td class="adminData">
+                    <asp:CheckBox ID="cbLimitMethodsToCreated" runat="server">
+                    </asp:CheckBox>
+                </td>
+            </tr>
+        </table>
+        <br />
+        <hr />
+        <br />
         <table class="adminContent">
             <tr>
                 <td colspan="2" width="100%">
@@ -82,15 +99,14 @@
                     </asp:GridView>
                 </td>
             </tr>
+        </table>
+        <br />
+        <hr />
+        <br />
+        <table class="adminContent" style="border: 1px solid black;padding: 15px;">
             <tr>
-                <td colspan="2" width="100%">
-                    <hr />
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2" width="100%">
-                    <br />
-                    Adding new values:
+                <td class="adminTitle" colspan="2">
+                    <b>Adding new values:</b>
                 </td>
             </tr>
             <tr>
@@ -155,7 +171,7 @@
                 </td>
             </tr>
             <tr>
-                <td colspan="2" align="left">
+                <td  class="adminTitle" colspan="2">
                     <asp:Button runat="server" ID="btnAdd" Text="Add new" CssClass="adminButton" ValidationGroup="AddShippingByTotal"
                         OnClick="btnAdd_Click"></asp:Button>
                 </td>

@@ -15,6 +15,7 @@
 using System;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.BusinessLogic.Measures;
 using NopSolutions.NopCommerce.BusinessLogic.Shipping;
@@ -38,6 +39,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.ShippingByWeightA
                     gvShippingByWeightAndCountry.Columns[6].HeaderText += string.Format(" per {0}", MeasureManager.BaseWeightIn.Name);
                 }
                 FillDropDowns();
+                BindSettings();
                 BindData();
             }
         }
@@ -66,6 +68,11 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.ShippingByWeightA
             var shippingByWeightAndCountryCollection = ShippingByWeightAndCountryManager.GetAll();
             gvShippingByWeightAndCountry.DataSource = shippingByWeightAndCountryCollection;
             gvShippingByWeightAndCountry.DataBind();
+        }
+
+        private void BindSettings()
+        {
+            cbLimitMethodsToCreated.Checked = SettingManager.GetSettingValueBoolean("ShippingByWeightAndCountry.LimitMethodsToCreated");
         }
 
         protected void btnAdd_Click(object sender, EventArgs e)
@@ -168,10 +175,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.ShippingByWeightA
             pnlError.Visible = true;
             lErrorTitle.Text = exc.Message;
         }
-
+        
         public void Save()
         {
-
+            SettingManager.SetParam("ShippingByWeightAndCountry.LimitMethodsToCreated", cbLimitMethodsToCreated.Checked.ToString());
         }
     }
 }
