@@ -1458,7 +1458,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
 
             var context = ObjectContextHelper.CurrentObjectContext;
             var query = from pv in context.ProductVariants
-                        orderby pv.DisplayOrder
+                        orderby pv.DisplayOrder, pv.ProductVariantId
                         where !pv.Deleted &&
                         pv.SKU == sku
                         select pv;

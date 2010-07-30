@@ -1532,6 +1532,18 @@ set @resources='
   <LocaleResource Name="Order.BillingInformation">
     <Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Products.GoDirectlySKU">
+    <Value>Go directly to product SKU:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Products.GoDirectlySKU.Tooltip">
+    <Value>Enter product SKU and click Go</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Products.GoDirectlySKU.ErrorMessage">
+    <Value>SKU is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Products.GoSKUButton.Text">
+    <Value>Go</Value>
+  </LocaleResource>
 </Language>
 '
 

@@ -254,5 +254,26 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 return PictureManager.GetDefaultPictureUrl(SettingManager.GetSettingValueInteger("Media.ShoppingCart.ThumbnailImageSize", 80));
             }
         }
+
+        protected void btnGoDirectlyToSKU_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+            {
+                try
+                {
+                    string sku = txtSKU.Text.Trim();
+                    var pv = ProductManager.GetProductVariantBySKU(sku);
+                    if (pv != null)
+                    {
+                        string url = string.Format("{0}ProductDetails.aspx?ProductID={1}", CommonHelper.GetStoreAdminLocation(), pv.ProductId);
+                        Response.Redirect(url);
+                    }
+                }
+                catch (Exception exc)
+                {
+                    ProcessException(exc);
+                }
+            }
+        }
     }
 }

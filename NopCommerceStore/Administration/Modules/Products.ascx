@@ -1,6 +1,7 @@
 <%@ Control Language="C#" AutoEventWireup="true" Inherits="NopSolutions.NopCommerce.Web.Administration.Modules.ProductsControl" CodeBehind="Products.ascx.cs" %>
 <%@ Register TagPrefix="nopCommerce" TagName="ToolTipLabel" Src="ToolTipLabelControl.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="SelectCategoryControl" Src="SelectCategoryControl.ascx" %>
+<%@ Register TagPrefix="nopCommerce" TagName="SimpleTextBox" Src="SimpleTextBox.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="ConfirmationBox" Src="ConfirmationBox.ascx" %>
 
 <div class="section-header">
@@ -25,9 +26,9 @@
             id="btnAddNew" class="adminButtonBlue" title="<%=GetLocaleResourceString("Admin.Products.AddButton.Tooltip")%>" />
         <asp:Button runat="server" Text="<% $NopResources:Admin.Products.DeleteButton.Text %>"
             CssClass="adminButtonBlue" ID="btnDelete" OnClick="btnDelete_Click" />
-            <nopCommerce:ConfirmationBox runat="server" ID="cbDelete" TargetControlID="btnDelete"
-    YesText="<% $NopResources:Admin.Common.Yes %>" NoText="<% $NopResources:Admin.Common.No %>"
-    ConfirmText="<% $NopResources:Admin.Common.AreYouSure %>" />
+        <nopCommerce:ConfirmationBox runat="server" ID="cbDelete" TargetControlID="btnDelete"
+            YesText="<% $NopResources:Admin.Common.Yes %>" NoText="<% $NopResources:Admin.Common.No %>"
+            ConfirmText="<% $NopResources:Admin.Common.AreYouSure %>" />
     </div>
 </div>
 <table width="100%">
@@ -58,6 +59,20 @@
         <td class="adminData">
             <asp:DropDownList ID="ddlManufacturer" runat="server" CssClass="adminInput">
             </asp:DropDownList>
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            <nopCommerce:ToolTipLabel runat="server" ID="lblGoDirectlyToSKU" Text="<% $NopResources:Admin.Products.GoDirectlySKU %>"
+                ToolTip="<% $NopResources:Admin.Products.GoDirectlySKU.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
+        </td>
+        <td class="adminData">
+            <nopCommerce:SimpleTextBox runat="server" CssClass="adminInput" ID="txtSKU" Width="150px"
+                ValidationGroup="GoDirectlySKU" ErrorMessage="<% $NopResources:Admin.Products.GoDirectlySKU.ErrorMessage %>">
+            </nopCommerce:SimpleTextBox>
+            <asp:Button runat="server" Text="<% $NopResources:Admin.Products.GoSKUButton.Text %>"
+                CssClass="adminButtonBlue" ID="btnGoDirectlyToSKU" OnClick="btnGoDirectlyToSKU_Click"
+                ValidationGroup="GoDirectlySKU" />
         </td>
     </tr>
 </table>
