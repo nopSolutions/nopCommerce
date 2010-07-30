@@ -20,9 +20,12 @@
                     <asp:BoundField DataField="Price" HeaderText="<% $NopResources:Admin.Product.ProductVariants.Price %>"
                         HeaderStyle-HorizontalAlign="Center" ItemStyle-Width="10%" ItemStyle-HorizontalAlign="Center">
                     </asp:BoundField>
-                    <asp:BoundField DataField="StockQuantity" HeaderText="<% $NopResources:Admin.Product.ProductVariants.StockQuantity %>"
+                    <asp:TemplateField HeaderText="<% $NopResources:Admin.Product.ProductVariants.StockQuantity %>"
                         HeaderStyle-HorizontalAlign="Center" ItemStyle-Width="10%" ItemStyle-HorizontalAlign="Center">
-                    </asp:BoundField>
+                        <ItemTemplate>
+                            <%#Server.HtmlEncode(GetStockQuantity(Container.DataItem as ProductVariant))%>
+                        </ItemTemplate>
+                    </asp:TemplateField>
                     <asp:BoundField DataField="DisplayOrder" HeaderText="<% $NopResources:Admin.Product.ProductVariants.DisplayOrder %>"
                         HeaderStyle-HorizontalAlign="Center" ItemStyle-Width="10%" ItemStyle-HorizontalAlign="Center">
                     </asp:BoundField>

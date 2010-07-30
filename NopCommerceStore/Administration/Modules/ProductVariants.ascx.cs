@@ -58,6 +58,16 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             return variantName;
         }
 
+        public string GetStockQuantity(ProductVariant productVariant)
+        {
+            string stock = string.Empty;
+
+            if (productVariant.ManageInventory == (int)ManageInventoryMethodEnum.ManageStock)
+                stock = productVariant.StockQuantity.ToString();
+
+            return stock;
+        }
+        
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!Page.IsPostBack)
