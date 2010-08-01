@@ -76,6 +76,33 @@ namespace NopSolutions.NopCommerce.Web.Templates.Products {
         protected global::System.Web.UI.WebControls.Literal lShortDescription;
         
         /// <summary>
+        /// phManufacturers control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.PlaceHolder phManufacturers;
+        
+        /// <summary>
+        /// lManufacturersTitle control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lManufacturersTitle;
+        
+        /// <summary>
+        /// rptrManufacturers control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Repeater rptrManufacturers;
+        
+        /// <summary>
         /// ctrlProductRating control.
         /// </summary>
         /// <remarks>

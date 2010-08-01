@@ -1544,6 +1544,12 @@ set @resources='
   <LocaleResource Name="Admin.Products.GoSKUButton.Text">
     <Value>Go</Value>
   </LocaleResource>
+  <LocaleResource Name="Products.Manufacturer">
+    <Value>Manufacturer: </Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Manufacturers">
+    <Value>Manufacturers: </Value>
+  </LocaleResource>
 </Language>
 '
 

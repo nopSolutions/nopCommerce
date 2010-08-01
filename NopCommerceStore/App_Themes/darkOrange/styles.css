@@ -3596,7 +3596,7 @@ ul.languagelist li .selected
 	margin-bottom: 0.3em;
 }
 
-.product-details-info .overview .shortdescription
+.product-details-info .overview .shortdescription, .product-details-info .overview .manufacturers
 {
 	color: #555;
 	margin-bottom: 0.3em;

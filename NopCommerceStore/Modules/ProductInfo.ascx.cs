@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
 using System.Data;
@@ -25,10 +26,11 @@ using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic;
+using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
+using NopSolutions.NopCommerce.BusinessLogic.Manufacturers;
 using NopSolutions.NopCommerce.BusinessLogic.Media;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -49,6 +51,33 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 lShortDescription.Text = product.LocalizedShortDescription;
                 lFullDescription.Text = product.LocalizedFullDescription;
 
+                //manufacturers
+                List<Manufacturer> manufacturers = new List<Manufacturer>();
+                foreach (var pm in product.ProductManufacturers)
+                {
+                    var manufacturer = pm.Manufacturer;
+                    if (manufacturer != null)
+                        manufacturers.Add(manufacturer);
+                }
+                if (manufacturers.Count > 0)
+                {
+                    if (manufacturers.Count == 1)
+                    {
+                        lManufacturersTitle.Text = GetLocaleResourceString("Products.Manufacturer");
+                    }
+                    else
+                    {
+                        lManufacturersTitle.Text = GetLocaleResourceString("Products.Manufacturers");
+                    }
+                    rptrManufacturers.DataSource = manufacturers;
+                    rptrManufacturers.DataBind();
+                }
+                else
+                {
+                    phManufacturers.Visible = false;
+                }
+
+                //pictures
                 var pictures = PictureManager.GetPicturesByProductId(product.ProductId);
                 if (pictures.Count > 1)
                 {

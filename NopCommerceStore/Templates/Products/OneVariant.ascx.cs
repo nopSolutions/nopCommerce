@@ -16,6 +16,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Products.Attributes;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Web.Modules;
+using NopSolutions.NopCommerce.BusinessLogic.Manufacturers;
 
 namespace NopSolutions.NopCommerce.Web.Templates.Products
 {
@@ -47,6 +48,33 @@ namespace NopSolutions.NopCommerce.Web.Templates.Products
             lShortDescription.Text = product.LocalizedShortDescription;
             lFullDescription.Text = product.LocalizedFullDescription;
 
+            //manufacturers
+            List<Manufacturer> manufacturers = new List<Manufacturer>();
+            foreach (var pm in product.ProductManufacturers)
+            {
+                var manufacturer = pm.Manufacturer;
+                if (manufacturer != null)
+                    manufacturers.Add(manufacturer);
+            }
+            if (manufacturers.Count > 0)
+            {
+                if (manufacturers.Count == 1)
+                {
+                    lManufacturersTitle.Text = GetLocaleResourceString("Products.Manufacturer");
+                }
+                else
+                {
+                    lManufacturersTitle.Text = GetLocaleResourceString("Products.Manufacturers");
+                }
+                rptrManufacturers.DataSource = manufacturers;
+                rptrManufacturers.DataBind();
+            }
+            else
+            {
+                phManufacturers.Visible = false;
+            }
+
+            //pictures
             var pictures = PictureManager.GetPicturesByProductId(product.ProductId);
             if (pictures.Count > 1)
             {

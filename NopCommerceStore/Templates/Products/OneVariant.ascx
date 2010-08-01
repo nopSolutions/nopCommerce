@@ -68,6 +68,25 @@
             <div class="shortdescription">
                 <asp:Literal ID="lShortDescription" runat="server" />
             </div>
+            <div class="clear">
+            </div>
+            <asp:PlaceHolder runat="server" ID="phManufacturers">
+                <div class="manufacturers">
+                    <asp:Literal ID="lManufacturersTitle" runat="server" />
+                    <asp:Repeater runat="server" ID="rptrManufacturers">
+                        <ItemTemplate>
+                            <asp:HyperLink ID="hlManufacturer" runat="server" Text='<%#Server.HtmlEncode(Eval("LocalizedName").ToString()) %>' NavigateUrl='<%#SEOHelper.GetManufacturerUrl((Manufacturer)(Container.DataItem)) %>' />
+                        </ItemTemplate>
+                        <SeparatorTemplate>
+                            ,
+                        </SeparatorTemplate>
+                    </asp:Repeater>
+                </div>
+            </asp:PlaceHolder>
+            <div class="clear">
+            </div>
+        <div class="clear">
+        </div>
             <div class="product-collateral">
                 <nopCommerce:ProductRating ID="ctrlProductRating" runat="server" />
                 <br />
