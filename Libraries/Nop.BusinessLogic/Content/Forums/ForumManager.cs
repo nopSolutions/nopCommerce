@@ -714,13 +714,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
             int forumTopicId = forumPost.TopicId;
              
             //delete topic if it was the first post
+            bool deleteTopic = false;
             var forumTopic = ForumManager.GetTopicById(forumTopicId);
             if (forumTopic != null)
             {
                 ForumPost firstPost = forumTopic.FirstPost;
                 if (firstPost != null && firstPost.ForumPostId == forumPostId)
                 {
-                    DeleteTopic(forumTopic.ForumTopicId);
+                    deleteTopic = true;
                 }
             }
 
@@ -728,7 +729,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
             if (!context.IsAttached(forumPost))
                 context.ForumPosts.Attach(forumPost);
             context.DeleteObject(forumPost);
-            context.SaveChanges();          
+            context.SaveChanges();
+
+            if (deleteTopic)
+            {
+                DeleteTopic(forumTopicId);
+            }
 
             if (ForumManager.CacheEnabled)
             {
