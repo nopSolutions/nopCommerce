@@ -1366,7 +1366,20 @@
                         <td class="adminData">
                             <asp:CheckBox runat="server" ID="cbHidePricesForNonRegistered"></asp:CheckBox>
                         </td>
-                    </tr>                    
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
+                                ID="lblMinOrderAmount" Text="<% $NopResources:Admin.GlobalSettings.Other.MinOrderAmount %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Other.MinOrderAmount.Tooltip %>" />
+                        </td>
+                        <td class="adminData">
+                            <nopCommerce:DecimalTextBox runat="server" CssClass="adminInput" Width="50px" ID="txtMinOrderAmount"
+                                RequiredErrorMessage="<% $NopResources:Admin.GlobalSettings.Other.MinOrderAmount.RequiredErrorMessage %>"
+                                MinimumValue="0" MaximumValue="100000000" RangeErrorMessage="<% $NopResources:Admin.GlobalSettings.Other.MinOrderAmount.RangeErrorMessage %>" />
+                            <%=CurrencyManager.PrimaryStoreCurrency.CurrencyCode%>
+                        </td>
+                    </tr>
                     <tr class="adminSeparator">
                         <td colspan="2">
                             <hr />

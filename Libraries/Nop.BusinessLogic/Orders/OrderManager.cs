@@ -5556,7 +5556,22 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 }
             }
         }
-        
+
+        /// <summary>
+        /// Gets or sets a minimum order amount
+        /// </summary>
+        public static decimal MinOrderAmount
+        {
+            get
+            {
+                return SettingManager.GetSettingValueDecimalNative("Order.MinOrderAmount", decimal.Zero);
+            }
+            set
+            {
+                SettingManager.SetParamNative("Order.MinOrderAmount", value);
+            }
+        }
+
         #endregion
     }
 }

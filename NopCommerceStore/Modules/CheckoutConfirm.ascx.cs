@@ -15,6 +15,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Text;
@@ -28,8 +29,11 @@ using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic;
 using NopSolutions.NopCommerce.BusinessLogic.Audit;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
+using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.Payment;
+using NopSolutions.NopCommerce.BusinessLogic.Products;
+using NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.BusinessLogic.Shipping;
 using NopSolutions.NopCommerce.Common.Utils;
@@ -122,7 +126,39 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         public void BindData()
         {
+            //min order amount validation
+            int paymentMethodId = 0;
+            if (NopContext.Current.User != null)
+                paymentMethodId = NopContext.Current.User.LastPaymentMethodId;
 
+            decimal discountAmountBase = decimal.Zero;
+            Discount appliedDiscount = null;
+            List<AppliedGiftCard> appliedGiftCards = null;
+            int redeemedRewardPoints = 0;
+            decimal redeemedRewardPointsAmount = decimal.Zero;
+            bool useRewardPoints = false;
+            if (NopContext.Current.User != null)
+                useRewardPoints = NopContext.Current.User.UseRewardPointsDuringCheckout;
+            decimal? shoppingCartTotalBase = ShoppingCartManager.GetShoppingCartTotal(this.Cart,
+                paymentMethodId, NopContext.Current.User,
+                out discountAmountBase, out appliedDiscount,
+                out appliedGiftCards, useRewardPoints,
+                out redeemedRewardPoints, out redeemedRewardPointsAmount);
+            if (shoppingCartTotalBase.HasValue)
+            {
+                if (shoppingCartTotalBase.Value < OrderManager.MinOrderAmount)
+                {
+                    decimal minOrderAmount = CurrencyManager.ConvertCurrency(OrderManager.MinOrderAmount, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                    lMinOrderAmount.Text = string.Format(GetLocaleResourceString("Checkout.MinOrderAmount"), PriceHelper.FormatPrice(minOrderAmount, true, false));
+                    lMinOrderAmount.Visible = true;
+                    btnNextStep.Visible = false;
+                }
+                else
+                {
+                    lMinOrderAmount.Visible = false;
+                    btnNextStep.Visible = true;
+                }
+            }
         }
 
         public event CheckoutStepChangedEventHandler CheckoutStepChanged

@@ -1550,6 +1550,21 @@ set @resources='
   <LocaleResource Name="Products.Manufacturers">
     <Value>Manufacturers: </Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.MinOrderAmount">
+    <Value>Min order amount:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.MinOrderAmount.Tooltip">
+    <Value>Enter minimum order amount here</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.MinOrderAmount.RequiredErrorMessage">
+    <Value>Minimum order amount is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.MinOrderAmount.RangeErrorMessage">
+    <Value>The minimum order amount must be from 0 to 100000000</Value>
+  </LocaleResource>
+  <LocaleResource Name="Checkout.MinOrderAmount">
+    <Value>Minimum order amount is {0}</Value>
+  </LocaleResource>
 </Language>
 '
 

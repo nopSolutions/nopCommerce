@@ -138,6 +138,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             cbAllowNavigationOnlyRegisteredCustomers.Checked = CustomerManager.AllowNavigationOnlyRegisteredCustomers;
             cbHideNewsletterBox.Checked = SettingManager.GetSettingValueBoolean("Display.HideNewsletterBox");
             cbHidePricesForNonRegistered.Checked = SettingManager.GetSettingValueBoolean("Common.HidePricesForNonRegistered");
+            txtMinOrderAmount.Value = OrderManager.MinOrderAmount;
             cbShowDiscountCouponBox.Checked = SettingManager.GetSettingValueBoolean("Display.Checkout.DiscountCouponBox");
             cbShowGiftCardBox.Checked = SettingManager.GetSettingValueBoolean("Display.Checkout.GiftCardBox");
             cbEnableDynamicPriceUpdate.Checked = SettingManager.GetSettingValueBoolean("ProductAttribute.EnableDynamicPriceUpdate");
@@ -399,6 +400,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     CustomerManager.AllowNavigationOnlyRegisteredCustomers = cbAllowNavigationOnlyRegisteredCustomers.Checked;
                     SettingManager.SetParam("Display.HideNewsletterBox", cbHideNewsletterBox.Checked.ToString());
                     SettingManager.SetParam("Common.HidePricesForNonRegistered", cbHidePricesForNonRegistered.Checked.ToString());
+                    OrderManager.MinOrderAmount = txtMinOrderAmount.Value;
                     SettingManager.SetParam("Display.Checkout.DiscountCouponBox", cbShowDiscountCouponBox.Checked.ToString());
                     SettingManager.SetParam("Display.Checkout.GiftCardBox", cbShowGiftCardBox.Checked.ToString());
                     SettingManager.SetParam("ProductAttribute.EnableDynamicPriceUpdate", cbEnableDynamicPriceUpdate.Checked.ToString());
