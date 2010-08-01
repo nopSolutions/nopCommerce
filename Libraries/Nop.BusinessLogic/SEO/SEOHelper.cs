@@ -178,6 +178,36 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO
         }
 
         /// <summary>
+        /// Gets my account URL
+        /// </summary>
+        /// <returns>My account URL</returns>
+        public static string GetMyAccountUrl()
+        {
+            string url = string.Format("{0}Account.aspx", CommonHelper.GetStoreLocation());
+            return url.ToLowerInvariant();
+        }
+
+        /// <summary>
+        /// Gets shopping cart URL
+        /// </summary>
+        /// <returns>Shopping cart URL</returns>
+        public static string GetShoppingCartUrl()
+        {
+            string url = string.Format("{0}ShoppingCart.aspx", CommonHelper.GetStoreLocation());
+            return url.ToLowerInvariant();
+        }
+
+        /// <summary>
+        /// Gets wishlistt URL
+        /// </summary>
+        /// <returns>Wishlist URL</returns>
+        public static string GetWishlistUrl()
+        {
+            string url = string.Format("{0}Wishlist.aspx", CommonHelper.GetStoreLocation());
+            return url.ToLowerInvariant();
+        }
+
+        /// <summary>
         /// Gets login page URL
         /// </summary>
         /// <returns>Login page URL</returns>

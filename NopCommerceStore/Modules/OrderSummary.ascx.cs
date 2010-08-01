@@ -222,7 +222,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     }
                 }
 
-                Response.Redirect("~/shoppingcart.aspx");
+                Response.Redirect(SEOHelper.GetShoppingCartUrl());
             }
         }
 

@@ -13,6 +13,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Media;
 using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.BusinessLogic.Products.Attributes;
+using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Web.Modules;
 
@@ -247,7 +248,7 @@ namespace NopSolutions.NopCommerce.Web.Templates.Products
                         quantity);
                     if(addToCartWarnings.Count == 0)
                     {
-                        Response.Redirect("~/shoppingcart.aspx");
+                        Response.Redirect(SEOHelper.GetShoppingCartUrl());
                     }
                     else
                     {
@@ -280,7 +281,7 @@ namespace NopSolutions.NopCommerce.Web.Templates.Products
                         quantity);
                     if(addToCartWarnings.Count == 0)
                     {
-                        Response.Redirect("~/wishlist.aspx");
+                        Response.Redirect(SEOHelper.GetWishlistUrl());
                     }
                     else
                     {

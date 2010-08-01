@@ -16,7 +16,7 @@
         <%} %>
         <li><a href="<%=Page.ResolveUrl("~/search.aspx")%>">
             <%=GetLocaleResourceString("Search.Search")%></a> </li>
-        <li><a href="<%=Page.ResolveUrl("~/account.aspx")%>">
+        <li><a href="<%= SEOHelper.GetMyAccountUrl()%>">
             <%=GetLocaleResourceString("Account.MyAccount")%></a> </li>
         <% if (BlogManager.BlogEnabled)
            { %>
@@ -25,7 +25,7 @@
         <%} %>
         <% if (ForumManager.ForumsEnabled)
            { %>
-        <li><a href="<%= SEOHelper.GetForumMainUrl()%> ">
+        <li><a href="<%= SEOHelper.GetForumMainUrl()%>">
             <%=GetLocaleResourceString("Forum.Forums")%></a></li>
         <%} %>
         <li><a href="<%=Page.ResolveUrl("~/contactus.aspx")%>">

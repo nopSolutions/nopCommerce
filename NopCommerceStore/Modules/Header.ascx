@@ -33,14 +33,14 @@
                         <%} %>
                     </LoggedInTemplate>
                 </asp:LoginView>
-                <li><a href="<%=Page.ResolveUrl("~/shoppingcart.aspx")%>" class="ico-cart">
+                <li><a href="<%= SEOHelper.GetShoppingCartUrl()%>" class="ico-cart">
                     <%=GetLocaleResourceString("Account.ShoppingCart")%>
-                </a><a href="<%=Page.ResolveUrl("~/shoppingcart.aspx")%>">(<%=ShoppingCartManager.GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart).Count%>)</a>
+                </a><a href="<%= SEOHelper.GetShoppingCartUrl()%>">(<%=ShoppingCartManager.GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart).Count%>)</a>
                 </li>
                 <% if (SettingManager.GetSettingValueBoolean("Common.EnableWishlist"))
                    { %>
-                <li><a href="<%=Page.ResolveUrl("~/wishlist.aspx")%>" class="ico-wishlist">
-                    <%=GetLocaleResourceString("Wishlist.Wishlist")%></a> <a href="<%=Page.ResolveUrl("~/wishlist.aspx")%>">
+                <li><a href="<%= SEOHelper.GetWishlistUrl()%>" class="ico-wishlist">
+                    <%=GetLocaleResourceString("Wishlist.Wishlist")%></a> <a href="<%= SEOHelper.GetWishlistUrl()%>">
                         (<%=ShoppingCartManager.GetCurrentShoppingCart(ShoppingCartTypeEnum.Wishlist).Count%>)</a></li>
                 <%} %>
                 <% if (NopContext.Current.User != null && NopContext.Current.User.IsAdmin)

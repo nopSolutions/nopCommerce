@@ -161,7 +161,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             }
 
             if (this.Cart.Count == 0)
-                Response.Redirect("~/shoppingcart.aspx");
+                Response.Redirect(SEOHelper.GetShoppingCartUrl());
         }
 
         public event CheckoutStepChangedEventHandler CheckoutStepChanged

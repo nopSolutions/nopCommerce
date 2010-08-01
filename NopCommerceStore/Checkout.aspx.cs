@@ -46,7 +46,7 @@ namespace NopSolutions.NopCommerce.Web
             CommonHelper.SetResponseNoCache(Response);
 
             if (this.Cart.Count == 0)
-                Response.Redirect("~/shoppingcart.aspx");
+                Response.Redirect(SEOHelper.GetShoppingCartUrl());
 
             //user validation
             if (NopContext.Current.User == null && CustomerManager.AnonymousCheckoutAllowed)
@@ -69,7 +69,7 @@ namespace NopSolutions.NopCommerce.Web
             var scWarnings = ShoppingCartManager.GetShoppingCartWarnings(Cart, NopContext.Current.User.CheckoutAttributes, true);
             if (scWarnings.Count > 0)
             {
-                Response.Redirect("~/shoppingcart.aspx");
+                Response.Redirect(SEOHelper.GetShoppingCartUrl());
             }
             else
             {
@@ -83,7 +83,7 @@ namespace NopSolutions.NopCommerce.Web
                             sci.Quantity);
                     if (sciWarnings.Count > 0)
                     {
-                        Response.Redirect("~/shoppingcart.aspx");
+                        Response.Redirect(SEOHelper.GetShoppingCartUrl());
                     }
                 }
             }

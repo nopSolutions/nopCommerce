@@ -313,7 +313,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             try
             {
                 OrderManager.ReOrder(this.OrderId);
-                Response.Redirect("~/shoppingcart.aspx");
+                Response.Redirect(SEOHelper.GetShoppingCartUrl());
             }
             catch(Exception)
             {

@@ -122,7 +122,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     productVariantId, string.Empty, decimal.Zero, 1);
                 if (addToCartWarnings.Count == 0)
                 {
-                    Response.Redirect("~/shoppingcart.aspx");
+                    Response.Redirect(SEOHelper.GetShoppingCartUrl());
                 }
                 else
                 {

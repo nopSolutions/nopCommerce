@@ -86,7 +86,7 @@ namespace NopSolutions.NopCommerce.Web
                 if (DeleteAddress)
                 {
                     CustomerManager.DeleteAddress(address.AddressId);
-                    Response.Redirect("~/account.aspx");
+                    Response.Redirect(SEOHelper.GetMyAccountUrl());
                 }
             }
 
@@ -120,14 +120,14 @@ namespace NopSolutions.NopCommerce.Web
                         inputedAddress.City, inputedAddress.StateProvinceId, inputedAddress.ZipPostalCode,
                         inputedAddress.CountryId, DateTime.UtcNow, DateTime.UtcNow);
                 }
-                Response.Redirect("~/account.aspx");
+                Response.Redirect(SEOHelper.GetMyAccountUrl());
             }
         }
 
         protected void btnDelete_Click(object sender, EventArgs e)
         {
             CustomerManager.DeleteAddress(this.AddressId);
-            Response.Redirect("~/account.aspx");
+            Response.Redirect(SEOHelper.GetMyAccountUrl());
         }
 
         public int AddressId

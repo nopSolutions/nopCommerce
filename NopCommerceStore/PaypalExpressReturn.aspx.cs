@@ -98,7 +98,7 @@ namespace NopSolutions.NopCommerce.Web
 
             ShoppingCart cart = ShoppingCartManager.GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
             if (cart.Count == 0)
-                Response.Redirect("~/shoppingcart.aspx");
+                Response.Redirect(SEOHelper.GetShoppingCartUrl());
 
             this.btnNextStep.Attributes.Add("onclick", "this.disabled = true;" + Page.ClientScript.GetPostBackEventReference(this.btnNextStep, ""));
         }
