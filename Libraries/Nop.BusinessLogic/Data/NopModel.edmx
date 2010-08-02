@@ -1342,7 +1342,6 @@
           <Property Name="PaymentMethodAdditionalFeeExclTax" Type="money" Nullable="false" />
           <Property Name="OrderTax" Type="money" Nullable="false" />
           <Property Name="OrderTotal" Type="money" Nullable="false" />
-          <Property Name="RefundedAmount" Type="money" Nullable="false" />
           <Property Name="OrderDiscount" Type="money" Nullable="false" />
           <Property Name="OrderSubtotalInclTaxInCustomerCurrency" Type="money" Nullable="false" />
           <Property Name="OrderSubtotalExclTaxInCustomerCurrency" Type="money" Nullable="false" />
@@ -1417,6 +1416,7 @@
           <Property Name="VatNumber" Type="nvarchar" Nullable="false" MaxLength="100" />
           <Property Name="TaxRates" Type="nvarchar" Nullable="false" />
           <Property Name="TaxRatesInCustomerCurrency" Type="nvarchar" Nullable="false" />
+          <Property Name="RefundedAmount" Type="money" Nullable="false" />
         </EntityType>
         <EntityType Name="Nop_OrderNote">
           <Key>
@@ -1756,6 +1756,7 @@
           <Property Name="OrderMaximumQuantity" Type="int" Nullable="false" />
           <Property Name="WarehouseID" Type="int" Nullable="false" />
           <Property Name="DisableBuyButton" Type="bit" Nullable="false" />
+          <Property Name="CallForPrice" Type="bit" Nullable="false" />
           <Property Name="Price" Type="money" Nullable="false" />
           <Property Name="OldPrice" Type="money" Nullable="false" />
           <Property Name="ProductCost" Type="money" Nullable="false" />
@@ -6371,6 +6372,7 @@
           <Property Type="Int32" Name="OrderMaximumQuantity" Nullable="false" />
           <Property Type="Int32" Name="WarehouseId" Nullable="false" />
           <Property Type="Boolean" Name="DisableBuyButton" Nullable="false" />
+          <Property Type="Boolean" Name="CallForPrice" Nullable="false" />
           <Property Type="Decimal" Name="Price" Nullable="false" Precision="19" Scale="4" />
           <Property Type="Decimal" Name="OldPrice" Nullable="false" Precision="19" Scale="4" />
           <Property Type="Decimal" Name="ProductCost" Nullable="false" Precision="19" Scale="4" />
@@ -8955,6 +8957,7 @@
                 <ScalarProperty Name="ProductCost" ColumnName="ProductCost" />
                 <ScalarProperty Name="OldPrice" ColumnName="OldPrice" />
                 <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="CallForPrice" ColumnName="CallForPrice" />
                 <ScalarProperty Name="DisableBuyButton" ColumnName="DisableBuyButton" />
                 <ScalarProperty Name="WarehouseId" ColumnName="WarehouseID" />
                 <ScalarProperty Name="OrderMaximumQuantity" ColumnName="OrderMaximumQuantity" />

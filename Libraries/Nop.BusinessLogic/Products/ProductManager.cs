@@ -1202,7 +1202,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                         productVariant.NotifyAdminForQuantityBelow, productVariant.Backorders,
                         productVariant.OrderMinimumQuantity, productVariant.OrderMaximumQuantity,
                         productVariant.WarehouseId, productVariant.DisableBuyButton,
-                        productVariant.Price, productVariant.OldPrice, 
+                        productVariant.CallForPrice, productVariant.Price, productVariant.OldPrice, 
                         productVariant.ProductCost, productVariant.CustomerEntersPrice,
                         productVariant.MinimumCustomerEnteredPrice, productVariant.MaximumCustomerEnteredPrice,
                         productVariant.Weight, productVariant.Length, productVariant.Width, productVariant.Height, pictureId,
@@ -1311,8 +1311,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                     productVariant.LowStockActivity, productVariant.NotifyAdminForQuantityBelow,
                     productVariant.Backorders, productVariant.OrderMinimumQuantity,
                     productVariant.OrderMaximumQuantity, productVariant.WarehouseId,
-                    productVariant.DisableBuyButton, productVariant.Price,
-                    productVariant.OldPrice, productVariant.ProductCost,
+                    productVariant.DisableBuyButton, productVariant.CallForPrice,
+                    productVariant.Price, productVariant.OldPrice, productVariant.ProductCost,
                     productVariant.CustomerEntersPrice,
                     productVariant.MinimumCustomerEnteredPrice, 
                     productVariant.MaximumCustomerEnteredPrice,
@@ -1365,8 +1365,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                     productVariant.LowStockActivity, productVariant.NotifyAdminForQuantityBelow,
                     productVariant.Backorders, productVariant.OrderMinimumQuantity,
                     productVariant.OrderMaximumQuantity, productVariant.WarehouseId,
-                    productVariant.DisableBuyButton, productVariant.Price,
-                    productVariant.OldPrice, productVariant.ProductCost,
+                    productVariant.DisableBuyButton, productVariant.CallForPrice, 
+                    productVariant.Price, productVariant.OldPrice, productVariant.ProductCost,
                     productVariant.CustomerEntersPrice,
                     productVariant.MinimumCustomerEnteredPrice, 
                     productVariant.MaximumCustomerEnteredPrice,
@@ -1404,7 +1404,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                     productVariant.LowStockActivity, productVariant.NotifyAdminForQuantityBelow,
                     productVariant.Backorders, productVariant.OrderMinimumQuantity,
                     productVariant.OrderMaximumQuantity, productVariant.WarehouseId,
-                    productVariant.DisableBuyButton, productVariant.Price, productVariant.OldPrice,
+                    productVariant.DisableBuyButton, productVariant.CallForPrice, 
+                    productVariant.Price, productVariant.OldPrice,
                     productVariant.ProductCost, productVariant.CustomerEntersPrice,
                     productVariant.MinimumCustomerEnteredPrice, productVariant.MaximumCustomerEnteredPrice,
                     productVariant.Weight, productVariant.Length, productVariant.Width, productVariant.Height,
@@ -1541,6 +1542,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         /// <param name="orderMaximumQuantity">The order maximum quantity</param>
         /// <param name="warehouseId">The warehouse identifier</param>
         /// <param name="disableBuyButton">A value indicating whether to disable buy button</param>
+        /// <param name="callForPrice">A value indicating whether to show "Call for Pricing" or "Call for quote" instead of price</param>
         /// <param name="price">The price</param>
         /// <param name="oldPrice">The old price</param>
         /// <param name="productCost">The product cost</param>
@@ -1576,7 +1578,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             bool displayStockQuantity, int minStockQuantity, LowStockActivityEnum lowStockActivity,
             int notifyAdminForQuantityBelow, int backorders,
             int orderMinimumQuantity, int orderMaximumQuantity,
-            int warehouseId, bool disableBuyButton, decimal price,
+            int warehouseId, bool disableBuyButton, 
+            bool callForPrice, decimal price,
             decimal oldPrice, decimal productCost, bool customerEntersPrice,
             decimal minimumCustomerEnteredPrice, decimal maximumCustomerEnteredPrice,
             decimal weight, decimal length, decimal width, decimal height, int pictureId,
@@ -1634,6 +1637,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             productVariant.OrderMaximumQuantity = orderMaximumQuantity;
             productVariant.WarehouseId = warehouseId;
             productVariant.DisableBuyButton = disableBuyButton;
+            productVariant.CallForPrice = callForPrice;
             productVariant.Price = price;
             productVariant.OldPrice = oldPrice;
             productVariant.ProductCost = productCost;
@@ -1714,6 +1718,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         /// <param name="orderMaximumQuantity">The order maximum quantity</param>
         /// <param name="warehouseId">The warehouse identifier</param>
         /// <param name="disableBuyButton">A value indicating whether to disable buy button</param>
+        /// <param name="callForPrice">A value indicating whether to show "Call for Pricing" or "Call for quote" instead of price</param>
         /// <param name="price">The price</param>
         /// <param name="oldPrice">The old price</param>
         /// <param name="productCost">The product cost</param>
@@ -1749,7 +1754,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             bool displayStockQuantity, int minStockQuantity, LowStockActivityEnum lowStockActivity,
             int notifyAdminForQuantityBelow, int backorders,
             int orderMinimumQuantity, int orderMaximumQuantity,
-            int warehouseId, bool disableBuyButton, decimal price,
+            int warehouseId, bool disableBuyButton, 
+            bool callForPrice, decimal price,
             decimal oldPrice, decimal productCost, bool customerEntersPrice,
             decimal minimumCustomerEnteredPrice, decimal maximumCustomerEnteredPrice,
             decimal weight, decimal length, decimal width, decimal height, int pictureId,
@@ -1812,6 +1818,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             productVariant.OrderMaximumQuantity = orderMaximumQuantity;
             productVariant.WarehouseId = warehouseId;
             productVariant.DisableBuyButton = disableBuyButton;
+            productVariant.CallForPrice = callForPrice;
             productVariant.Price = price;
             productVariant.OldPrice = oldPrice;
             productVariant.ProductCost = productCost;
@@ -2090,7 +2097,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                     productVariant.NotifyAdminForQuantityBelow, productVariant.Backorders,
                     productVariant.OrderMinimumQuantity, productVariant.OrderMaximumQuantity,
                     productVariant.WarehouseId, productVariant.DisableBuyButton,
-                    productVariant.Price, productVariant.OldPrice,
+                    productVariant.CallForPrice, productVariant.Price, productVariant.OldPrice,
                     productVariant.ProductCost, productVariant.CustomerEntersPrice,
                     productVariant.MinimumCustomerEnteredPrice, productVariant.MaximumCustomerEnteredPrice,
                     productVariant.Weight, productVariant.Length, productVariant.Width, productVariant.Height, productVariant.PictureId,
@@ -2172,7 +2179,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                              productVariant.MinStockQuantity, productVariant.LowStockActivity,
                              productVariant.NotifyAdminForQuantityBelow, productVariant.Backorders,
                              productVariant.OrderMinimumQuantity, productVariant.OrderMaximumQuantity,
-                             productVariant.WarehouseId, newDisableBuyButton, productVariant.Price,
+                             productVariant.WarehouseId, newDisableBuyButton,
+                             productVariant.CallForPrice, productVariant.Price,
                              productVariant.OldPrice, productVariant.ProductCost, 
                              productVariant.CustomerEntersPrice,
                              productVariant.MinimumCustomerEnteredPrice, 

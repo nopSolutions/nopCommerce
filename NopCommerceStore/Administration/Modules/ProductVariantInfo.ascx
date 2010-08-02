@@ -360,6 +360,15 @@
     </tr>
     <tr>
         <td class="adminTitle">
+            <nopCommerce:ToolTipLabel runat="server" ID="lblCallForPrice" Text="<% $NopResources:Admin.ProductVariantInfo.CallForPrice %>"
+                ToolTip="<% $NopResources:Admin.ProductVariantInfo.CallForPrice.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
+        </td>
+        <td class="adminData">
+            <asp:CheckBox ID="cbCallForPrice" runat="server" Checked="False"></asp:CheckBox>
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
             <nopCommerce:ToolTipLabel runat="server" ID="lblCustomerEntersPrice" Text="<% $NopResources:Admin.ProductVariantInfo.CustomerEntersPrice %>"
                 ToolTip="<% $NopResources:Admin.ProductVariantInfo.CustomerEntersPrice.Tooltip %>"
                 ToolTipImage="~/Administration/Common/ico-help.gif" />

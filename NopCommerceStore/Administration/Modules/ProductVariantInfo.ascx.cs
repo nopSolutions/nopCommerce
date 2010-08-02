@@ -163,6 +163,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 //other settings
                 CommonHelper.SelectListItem(this.ddlWarehouse, productVariant.WarehouseId);
                 this.cbDisableBuyButton.Checked = productVariant.DisableBuyButton;
+                this.cbCallForPrice.Checked = productVariant.CallForPrice;                
                 this.txtPrice.Value = productVariant.Price;
                 this.txtOldPrice.Value = productVariant.OldPrice;
                 this.txtProductCost.Value = productVariant.ProductCost;
@@ -175,12 +176,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 this.txtWidth.Value = productVariant.Width;
                 this.txtHeight.Value = productVariant.Height;
 
+                //picture
                 Picture productVariantPicture = productVariant.Picture;
                 btnRemoveProductVariantImage.Visible = productVariantPicture != null;
                 string pictureUrl = PictureManager.GetPictureUrl(productVariantPicture, 100);
                 this.iProductVariantPicture.Visible = true;
                 this.iProductVariantPicture.ImageUrl = pictureUrl;
 
+                //available dates
                 if (productVariant.AvailableStartDateTime.HasValue)
                 {
                     this.ctrlAvailableStartDateTimePicker.SelectedDate = productVariant.AvailableStartDateTime.Value;
@@ -320,6 +323,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             int orderMaximumQuantity = txtOrderMaximumQuantity.Value;
             int warehouseId = int.Parse(this.ddlWarehouse.SelectedItem.Value);
             bool disableBuyButton = cbDisableBuyButton.Checked;
+            bool callForPrice = cbCallForPrice.Checked;
             decimal price = txtPrice.Value;
             decimal oldPrice = txtOldPrice.Value;
             decimal productCost = txtProductCost.Value;
@@ -458,7 +462,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     displayStockAvailability, displayStockQuantity,
                     minStockQuantity, lowStockActivity, notifyForQuantityBelow,
                     backorders, orderMinimumQuantity, orderMaximumQuantity,
-                    warehouseId, disableBuyButton, price,
+                    warehouseId, disableBuyButton, callForPrice, price,
                     oldPrice, productCost, customerEntersPrice,
                     minimumCustomerEnteredPrice, maximumCustomerEnteredPrice, 
                     weight, length, width, height, productVariantPictureId,
@@ -544,7 +548,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                          manageStock, stockQuantity, displayStockAvailability, displayStockQuantity,
                          minStockQuantity, lowStockActivity, notifyForQuantityBelow,
                          backorders, orderMinimumQuantity, orderMaximumQuantity,
-                         warehouseId, disableBuyButton, price, oldPrice, productCost,
+                         warehouseId, disableBuyButton, callForPrice, price, oldPrice, productCost,
                          customerEntersPrice, minimumCustomerEnteredPrice, maximumCustomerEnteredPrice, 
                          weight, length, width, height, productVariantPictureId,
                          availableStartDateTime, availableEndDateTime, published,

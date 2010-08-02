@@ -168,7 +168,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                                 productVariant.NotifyAdminForQuantityBelow, productVariant.Backorders,
                                 productVariant.OrderMinimumQuantity, productVariant.OrderMaximumQuantity,
                                 productVariant.WarehouseId, productVariant.DisableBuyButton,
-                                price, oldPrice,
+                                productVariant.CallForPrice, price, oldPrice,
                                 productVariant.ProductCost, productVariant.CustomerEntersPrice,
                                 productVariant.MinimumCustomerEnteredPrice, productVariant.MaximumCustomerEnteredPrice,
                                 productVariant.Weight, productVariant.Length, productVariant.Width, 

@@ -243,6 +243,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             int orderMaximumQuantity = txtOrderMaximumQuantity.Value;
             int warehouseId = int.Parse(this.ddlWarehouse.SelectedItem.Value);
             bool disableBuyButton = cbDisableBuyButton.Checked;
+            bool callForPrice = cbCallForPrice.Checked;
             decimal price = txtPrice.Value;
             decimal oldPrice = txtOldPrice.Value;
             decimal productCost = txtProductCost.Value;
@@ -281,7 +282,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                  displayStockAvailability, displayStockQuantity,
                  minStockQuantity, lowStockActivity, notifyForQuantityBelow, backorders,
                  orderMinimumQuantity, orderMaximumQuantity, warehouseId, disableBuyButton,
-                 price, oldPrice, productCost, customerEntersPrice,
+                 callForPrice, price, oldPrice, productCost, customerEntersPrice,
                  minimumCustomerEnteredPrice, maximumCustomerEnteredPrice,
                  weight, length, width, height, 0, availableStartDateTime, availableEndDateTime,
                  published, false, 1, nowDT, nowDT);

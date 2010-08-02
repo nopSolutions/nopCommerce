@@ -621,6 +621,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             {
                 warnings.Add("Buying is disabled");
             }
+            
+            if (shoppingCartType == ShoppingCartTypeEnum.ShoppingCart &&
+                productVariant.CallForPrice)
+            {
+                warnings.Add(LocalizationManager.GetLocaleResourceString("Products.CallForPrice"));
+            }
 
             if (productVariant.CustomerEntersPrice)
             {

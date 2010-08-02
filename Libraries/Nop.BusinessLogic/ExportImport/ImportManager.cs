@@ -251,6 +251,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                     int OrderMinimumQuantity = Convert.ToInt32(dr["OrderMinimumQuantity"]);
                     int OrderMaximumQuantity = Convert.ToInt32(dr["OrderMaximumQuantity"]);
                     bool DisableBuyButton = Convert.ToBoolean(dr["DisableBuyButton"]);
+                    bool CallForPrice = Convert.ToBoolean(dr["CallForPrice"]);
                     decimal Price = Convert.ToDecimal(dr["Price"]);
                     decimal OldPrice = Convert.ToDecimal(dr["OldPrice"]);
                     decimal ProductCost = Convert.ToDecimal(dr["ProductCost"]);
@@ -288,7 +289,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                             (LowStockActivityEnum)LowStockActivityId, NotifyAdminForQuantityBelow,
                             Backorders, OrderMinimumQuantity,
                             OrderMaximumQuantity, productVariant.WarehouseId, DisableBuyButton,
-                            Price, OldPrice, ProductCost, CustomerEntersPrice, 
+                            CallForPrice, Price, OldPrice, ProductCost, CustomerEntersPrice, 
                             MinimumCustomerEnteredPrice, MaximumCustomerEnteredPrice,
                             Weight, Length, Width, Height,
                             productVariant.PictureId, productVariant.AvailableStartDateTime,
@@ -312,7 +313,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                             DisplayStockAvailability, DisplayStockQuantity, MinStockQuantity,
                             (LowStockActivityEnum)LowStockActivityId, NotifyAdminForQuantityBelow,
                             Backorders, OrderMinimumQuantity,
-                            OrderMaximumQuantity, 0, DisableBuyButton,
+                            OrderMaximumQuantity, 0, DisableBuyButton, CallForPrice,
                             Price, OldPrice, ProductCost, CustomerEntersPrice,
                             MinimumCustomerEnteredPrice, MaximumCustomerEnteredPrice, 
                             Weight, Length, Width, Height, 0, null, null,

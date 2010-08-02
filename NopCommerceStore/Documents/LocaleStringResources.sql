@@ -1592,6 +1592,21 @@ set @resources='
   <LocaleResource Name="Content.Sitemap">
     <Value>Sitemap</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ProductInfo.CallForPrice">
+    <Value>Call for price:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductInfo.CallForPrice.Tooltip">
+    <Value>Check to show "Call for Pricing" or "Call for quote" instead of price</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductVariantInfo.CallForPrice">
+    <Value>Call for price:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductVariantInfo.CallForPrice.Tooltip">
+    <Value>Check to show "Call for Pricing" or "Call for quote" instead of price</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.CallForPrice">
+    <Value>Call for pricing</Value>
+  </LocaleResource>
 </Language>
 '
 

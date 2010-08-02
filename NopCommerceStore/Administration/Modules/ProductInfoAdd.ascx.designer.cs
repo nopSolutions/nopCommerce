@@ -319,6 +319,24 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         protected global::System.Web.UI.WebControls.CheckBox cbDisableBuyButton;
         
         /// <summary>
+        /// lblCallForPrice control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblCallForPrice;
+        
+        /// <summary>
+        /// cbCallForPrice control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbCallForPrice;
+        
+        /// <summary>
         /// lblCustomerEntersPrice control.
         /// </summary>
         /// <remarks>

@@ -418,6 +418,15 @@
     </tr>
     <tr>
         <td class="adminTitle">
+            <nopCommerce:ToolTipLabel runat="server" ID="lblCallForPrice" Text="<% $NopResources:Admin.ProductInfo.CallForPrice %>"
+                ToolTip="<% $NopResources:Admin.ProductInfo.CallForPrice.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
+        </td>
+        <td class="adminData">
+            <asp:CheckBox ID="cbCallForPrice" runat="server" Checked="False"></asp:CheckBox>
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
             <nopCommerce:ToolTipLabel runat="server" ID="lblCustomerEntersPrice" Text="<% $NopResources:Admin.ProductInfo.CustomerEntersPrice %>"
                 ToolTip="<% $NopResources:Admin.ProductInfo.CustomerEntersPrice.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
         </td>

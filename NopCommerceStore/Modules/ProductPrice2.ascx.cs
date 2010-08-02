@@ -70,22 +70,30 @@ namespace NopSolutions.NopCommerce.Web.Modules
                             }
                             else
                             {
-                                decimal taxRate = decimal.Zero;
-                                decimal oldPriceBase = TaxManager.GetPrice(productVariant, productVariant.OldPrice, out taxRate);
-                                decimal finalPriceBase = TaxManager.GetPrice(productVariant, PriceHelper.GetFinalPrice(productVariant, true), out taxRate);
-
-                                decimal oldPrice = CurrencyManager.ConvertCurrency(oldPriceBase, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
-                                decimal finalPrice = CurrencyManager.ConvertCurrency(finalPriceBase, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
-
-                                if (finalPriceBase != oldPriceBase && oldPriceBase != decimal.Zero)
+                                if (productVariant.CallForPrice)
                                 {
-                                    lblOldPrice.Text = PriceHelper.FormatPrice(oldPrice);
-                                    lblPrice.Text = PriceHelper.FormatPrice(finalPrice);
+                                    lblOldPrice.Visible = false;
+                                    lblPrice.Text = GetLocaleResourceString("Products.CallForPrice");
                                 }
                                 else
                                 {
-                                    lblOldPrice.Visible = false;
-                                    lblPrice.Text = PriceHelper.FormatPrice(finalPrice);
+                                    decimal taxRate = decimal.Zero;
+                                    decimal oldPriceBase = TaxManager.GetPrice(productVariant, productVariant.OldPrice, out taxRate);
+                                    decimal finalPriceBase = TaxManager.GetPrice(productVariant, PriceHelper.GetFinalPrice(productVariant, true), out taxRate);
+
+                                    decimal oldPrice = CurrencyManager.ConvertCurrency(oldPriceBase, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                                    decimal finalPrice = CurrencyManager.ConvertCurrency(finalPriceBase, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+
+                                    if (finalPriceBase != oldPriceBase && oldPriceBase != decimal.Zero)
+                                    {
+                                        lblOldPrice.Text = PriceHelper.FormatPrice(oldPrice);
+                                        lblPrice.Text = PriceHelper.FormatPrice(finalPrice);
+                                    }
+                                    else
+                                    {
+                                        lblOldPrice.Visible = false;
+                                        lblPrice.Text = PriceHelper.FormatPrice(finalPrice);
+                                    }
                                 }
                             }
                         }
@@ -111,11 +119,19 @@ namespace NopSolutions.NopCommerce.Web.Modules
                                 }
                                 else
                                 {
-                                    decimal taxRate = decimal.Zero;
-                                    decimal fromPriceBase = TaxManager.GetPrice(productVariant, PriceHelper.GetFinalPrice(productVariant, false), out taxRate);
-                                    decimal fromPrice = CurrencyManager.ConvertCurrency(fromPriceBase, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
-                                    lblOldPrice.Visible = false;
-                                    lblPrice.Text = String.Format(GetLocaleResourceString("Products.PriceRangeFromText"), PriceHelper.FormatPrice(fromPrice));
+                                    if (productVariant.CallForPrice)
+                                    {
+                                        lblOldPrice.Visible = false;
+                                        lblPrice.Text = GetLocaleResourceString("Products.CallForPrice");
+                                    }
+                                    else
+                                    {
+                                        decimal taxRate = decimal.Zero;
+                                        decimal fromPriceBase = TaxManager.GetPrice(productVariant, PriceHelper.GetFinalPrice(productVariant, false), out taxRate);
+                                        decimal fromPrice = CurrencyManager.ConvertCurrency(fromPriceBase, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                                        lblOldPrice.Visible = false;
+                                        lblPrice.Text = String.Format(GetLocaleResourceString("Products.PriceRangeFromText"), PriceHelper.FormatPrice(fromPrice));
+                                    }
                                 }
                             }
                             else

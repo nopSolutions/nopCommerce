@@ -248,6 +248,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         public bool DisableBuyButton { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether to show "Call for Pricing" or "Call for quote" instead of price
+        /// </summary>
+        public bool CallForPrice { get; set; }
+        
+        /// <summary>
         /// Gets or sets the price
         /// </summary>
         public decimal Price { get; set; }

@@ -266,42 +266,60 @@ namespace NopSolutions.NopCommerce.Web.Modules
         public string GetShoppingCartItemUnitPriceString(ShoppingCartItem shoppingCartItem)
         {
             var sb = new StringBuilder();
-            decimal taxRate = decimal.Zero;
-            decimal shoppingCartUnitPriceWithDiscountBase = TaxManager.GetPrice(shoppingCartItem.ProductVariant, PriceHelper.GetUnitPrice(shoppingCartItem, true), out taxRate);
-            decimal shoppingCartUnitPriceWithDiscount = CurrencyManager.ConvertCurrency(shoppingCartUnitPriceWithDiscountBase, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
-            string unitPriceString = PriceHelper.FormatPrice(shoppingCartUnitPriceWithDiscount);
+            if (shoppingCartItem.ProductVariant.CallForPrice)
+            {
+                sb.Append("<span class=\"productPrice\">");
+                sb.Append(GetLocaleResourceString("Products.CallForPrice"));
+                sb.Append("</span>");
+            }
+            else
+            {
+                decimal taxRate = decimal.Zero;
+                decimal shoppingCartUnitPriceWithDiscountBase = TaxManager.GetPrice(shoppingCartItem.ProductVariant, PriceHelper.GetUnitPrice(shoppingCartItem, true), out taxRate);
+                decimal shoppingCartUnitPriceWithDiscount = CurrencyManager.ConvertCurrency(shoppingCartUnitPriceWithDiscountBase, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                string unitPriceString = PriceHelper.FormatPrice(shoppingCartUnitPriceWithDiscount);
 
-            sb.Append("<span class=\"productPrice\">");
-            sb.Append(unitPriceString);
-            sb.Append("</span>");
+                sb.Append("<span class=\"productPrice\">");
+                sb.Append(unitPriceString);
+                sb.Append("</span>");
+            }
             return sb.ToString();
         }
 
         public string GetShoppingCartItemSubTotalString(ShoppingCartItem shoppingCartItem)
         {
-            //sub total
             var sb = new StringBuilder();
-            decimal taxRate = decimal.Zero;
-            decimal shoppingCartItemSubTotalWithDiscountBase = TaxManager.GetPrice(shoppingCartItem.ProductVariant, PriceHelper.GetSubTotal(shoppingCartItem, true), out taxRate);
-            decimal shoppingCartItemSubTotalWithDiscount = CurrencyManager.ConvertCurrency(shoppingCartItemSubTotalWithDiscountBase, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
-            string subTotalString = PriceHelper.FormatPrice(shoppingCartItemSubTotalWithDiscount);
-
-            sb.Append("<span class=\"productPrice\">");
-            sb.Append(subTotalString);
-            sb.Append("</span>");
-
-            //display an applied discount amount
-            decimal shoppingCartItemSubTotalWithoutDiscountBase = TaxManager.GetPrice(shoppingCartItem.ProductVariant, PriceHelper.GetSubTotal(shoppingCartItem, false), out taxRate);
-            decimal shoppingCartItemDiscountBase = shoppingCartItemSubTotalWithoutDiscountBase - shoppingCartItemSubTotalWithDiscountBase;
-            if (shoppingCartItemDiscountBase > decimal.Zero)
+            if (shoppingCartItem.ProductVariant.CallForPrice)
             {
-                decimal shoppingCartItemDiscount = CurrencyManager.ConvertCurrency(shoppingCartItemDiscountBase, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
-                string discountString = PriceHelper.FormatPrice(shoppingCartItemDiscount);
+                sb.Append("<span class=\"productPrice\">");
+                sb.Append(GetLocaleResourceString("Products.CallForPrice"));
+                sb.Append("</span>");
+            }
+            else
+            {
+                //sub total
+                decimal taxRate = decimal.Zero;
+                decimal shoppingCartItemSubTotalWithDiscountBase = TaxManager.GetPrice(shoppingCartItem.ProductVariant, PriceHelper.GetSubTotal(shoppingCartItem, true), out taxRate);
+                decimal shoppingCartItemSubTotalWithDiscount = CurrencyManager.ConvertCurrency(shoppingCartItemSubTotalWithDiscountBase, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                string subTotalString = PriceHelper.FormatPrice(shoppingCartItemSubTotalWithDiscount);
 
-                sb.Append("<br />");
-                sb.Append(GetLocaleResourceString("Wishlist.ItemYouSave"));
-                sb.Append("&nbsp;&nbsp;");
-                sb.Append(discountString);
+                sb.Append("<span class=\"productPrice\">");
+                sb.Append(subTotalString);
+                sb.Append("</span>");
+
+                //display an applied discount amount
+                decimal shoppingCartItemSubTotalWithoutDiscountBase = TaxManager.GetPrice(shoppingCartItem.ProductVariant, PriceHelper.GetSubTotal(shoppingCartItem, false), out taxRate);
+                decimal shoppingCartItemDiscountBase = shoppingCartItemSubTotalWithoutDiscountBase - shoppingCartItemSubTotalWithDiscountBase;
+                if (shoppingCartItemDiscountBase > decimal.Zero)
+                {
+                    decimal shoppingCartItemDiscount = CurrencyManager.ConvertCurrency(shoppingCartItemDiscountBase, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                    string discountString = PriceHelper.FormatPrice(shoppingCartItemDiscount);
+
+                    sb.Append("<br />");
+                    sb.Append(GetLocaleResourceString("Wishlist.ItemYouSave"));
+                    sb.Append("&nbsp;&nbsp;");
+                    sb.Append(discountString);
+                }
             }
             return sb.ToString();
         }
