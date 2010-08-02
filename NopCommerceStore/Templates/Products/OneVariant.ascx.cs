@@ -47,7 +47,6 @@ namespace NopSolutions.NopCommerce.Web.Templates.Products
             lProductName.Text = Server.HtmlEncode(product.LocalizedName);
             lShortDescription.Text = product.LocalizedShortDescription;
             lFullDescription.Text = product.LocalizedFullDescription;
-
             //manufacturers
             List<Manufacturer> manufacturers = new List<Manufacturer>();
             foreach (var pm in product.ProductManufacturers)
@@ -112,6 +111,18 @@ namespace NopSolutions.NopCommerce.Web.Templates.Products
         protected void BindProductVariantInfo(ProductVariant productVariant)
         {
             btnAddToWishlist.Visible = SettingManager.GetSettingValueBoolean("Common.EnableWishlist");
+
+            //sku
+            if (SettingManager.GetSettingValueBoolean("Display.Products.ShowSKU") &&
+                !String.IsNullOrEmpty(productVariant.SKU))
+            {
+                phSKU.Visible = true;
+                lSKU.Text = Server.HtmlEncode(productVariant.SKU);
+            }
+            else
+            {
+                phSKU.Visible = false;
+            }
 
             ctrlTierPrices.ProductVariantId = productVariant.ProductVariantId;
             ctrlProductAttributes.ProductVariantId = productVariant.ProductVariantId;

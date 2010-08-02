@@ -48,6 +48,14 @@
                     <asp:Label ID="lblStockAvailablity" runat="server">
                     </asp:Label>
                 </asp:Panel>
+                <asp:PlaceHolder runat="server" ID="phSKU">
+                    <div class="clear">
+                    </div>
+                    <div class="sku">
+                        <%=GetLocaleResourceString("Products.SKU")%>
+                        <asp:Literal runat="server" ID="lSKU" />
+                    </div>
+                </asp:PlaceHolder>
                 <div class="clear">
                 </div>
                 <nopCommerce:GiftCardAttributes ID="ctrlGiftCardAttributes" runat="server" ProductVariantId='<%#Eval("ProductVariantId") %>' />

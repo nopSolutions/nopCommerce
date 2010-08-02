@@ -262,7 +262,13 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     break;
                 }
             }
-            gvOrderProductVariants.Columns[1].Visible = hasDownloadableItems && !this.IsInvoice;
+
+            //sku column
+            gvOrderProductVariants.Columns[0].Visible = SettingManager.GetSettingValueBoolean("Display.Products.ShowSKU");
+            //downloads column
+            gvOrderProductVariants.Columns[2].Visible = hasDownloadableItems && !this.IsInvoice;
+
+            //bind data
             gvOrderProductVariants.DataSource = orderProductVariants;
             gvOrderProductVariants.DataBind();
 

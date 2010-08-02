@@ -76,6 +76,24 @@ namespace NopSolutions.NopCommerce.Web.Templates.Products {
         protected global::System.Web.UI.WebControls.Literal lShortDescription;
         
         /// <summary>
+        /// phSKU control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.PlaceHolder phSKU;
+        
+        /// <summary>
+        /// lSKU control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lSKU;
+        
+        /// <summary>
         /// phManufacturers control.
         /// </summary>
         /// <remarks>

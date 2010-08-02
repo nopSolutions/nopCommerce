@@ -68,6 +68,14 @@
             <div class="shortdescription">
                 <asp:Literal ID="lShortDescription" runat="server" />
             </div>
+            <asp:PlaceHolder runat="server" ID="phSKU">
+                <div class="clear">
+                </div>
+                <div class="sku">
+                    <%=GetLocaleResourceString("Products.SKU")%>
+                    <asp:Literal runat="server" ID="lSKU" />
+                </div>
+            </asp:PlaceHolder>
             <div class="clear">
             </div>
             <asp:PlaceHolder runat="server" ID="phManufacturers">

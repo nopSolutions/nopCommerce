@@ -184,6 +184,8 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 var iProductVariantPicture = e.Item.FindControl("iProductVariantPicture") as Image;
                 var pnlStockAvailablity = e.Item.FindControl("pnlStockAvailablity") as Panel;
                 var lblStockAvailablity = e.Item.FindControl("lblStockAvailablity") as Label;
+                var phSKU = e.Item.FindControl("phSKU") as PlaceHolder;
+                var lSKU = e.Item.FindControl("lSKU") as Literal;
                 var txtCustomerEnteredPrice = e.Item.FindControl("txtCustomerEnteredPrice") as NumericTextBox;
                 var txtQuantity = e.Item.FindControl("txtQuantity") as NumericTextBox;
                 var btnAddToCart = e.Item.FindControl("btnAddToCart") as Button;
@@ -215,6 +217,18 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     {
                         pnlStockAvailablity.Visible = false;
                     }
+                }
+
+                //sku
+                if (SettingManager.GetSettingValueBoolean("Display.Products.ShowSKU") &&
+                    !String.IsNullOrEmpty(productVariant.SKU))
+                {
+                    phSKU.Visible = true;
+                    lSKU.Text = Server.HtmlEncode(productVariant.SKU);
+                }
+                else
+                {
+                    phSKU.Visible = false;
                 }
                 
                 //price entered by a customer

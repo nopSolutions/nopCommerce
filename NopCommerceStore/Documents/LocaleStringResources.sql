@@ -1565,6 +1565,24 @@ set @resources='
   <LocaleResource Name="Checkout.MinOrderAmount">
     <Value>Minimum order amount is {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.ShowSKU">
+    <Value>Show SKU:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.ShowSKU.Tooltip">
+    <Value>Check to show product SKU in public store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.SKU">
+    <Value>SKU: </Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.SKU">
+    <Value>SKU</Value>
+  </LocaleResource>
+  <LocaleResource Name="Wishlist.SKU">
+    <Value>SKU</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.ProductsGrid.SKU">
+    <Value>SKU</Value>
+  </LocaleResource>
 </Language>
 '
 

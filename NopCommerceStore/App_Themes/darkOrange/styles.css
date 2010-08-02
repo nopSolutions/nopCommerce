@@ -3596,7 +3596,8 @@ ul.languagelist li .selected
 	margin-bottom: 0.3em;
 }
 
-.product-details-info .overview .shortdescription, .product-details-info .overview .manufacturers
+.product-details-info .overview .shortdescription, .product-details-info .overview .manufacturers,
+.product-details-info .overview .sku
 {
 	color: #555;
 	margin-bottom: 0.3em;
@@ -3721,7 +3722,7 @@ ul.languagelist li .selected
 {
 }
 
-.product-variant-line .stock
+.product-variant-line .stock, .product-variant-line .sku 
 {
 }
 

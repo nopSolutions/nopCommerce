@@ -173,6 +173,14 @@
             <asp:GridView ID="gvOrderProductVariants" runat="server" AutoGenerateColumns="False"
                 Width="100%">
                 <Columns>
+                    <asp:TemplateField HeaderText="<% $NopResources:Order.ProductsGrid.SKU %>" HeaderStyle-HorizontalAlign="Center"
+                        ItemStyle-HorizontalAlign="Left">
+                        <ItemTemplate>
+                            <div style="padding-left: 10px; padding-right: 10px;">
+                                <%#Server.HtmlEncode(((OrderProductVariant)Container.DataItem).ProductVariant.SKU)%>
+                            </div>
+                        </ItemTemplate>
+                    </asp:TemplateField>
                     <asp:TemplateField HeaderText="<% $NopResources:Order.ProductsGrid.Name %>" HeaderStyle-HorizontalAlign="Center"
                         ItemStyle-HorizontalAlign="Left">
                         <ItemTemplate>

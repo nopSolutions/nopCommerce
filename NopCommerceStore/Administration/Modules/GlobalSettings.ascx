@@ -1395,7 +1395,6 @@
                             <asp:CheckBox runat="server" ID="cbShowDiscountCouponBox"></asp:CheckBox>
                         </td>
                     </tr>
-                    
                     <tr>
                         <td class="adminTitle">
                             <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
@@ -1404,6 +1403,16 @@
                         </td>
                         <td class="adminData">
                             <asp:CheckBox runat="server" ID="cbShowGiftCardBox"></asp:CheckBox>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
+                                ID="lblShowSKU" Text="<% $NopResources:Admin.GlobalSettings.Other.ShowSKU %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Other.ShowSKU.Tooltip %>" />
+                        </td>
+                        <td class="adminData">
+                            <asp:CheckBox runat="server" ID="cbShowSKU"></asp:CheckBox>
                         </td>
                     </tr>
                     <tr>

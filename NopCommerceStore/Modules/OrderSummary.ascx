@@ -69,6 +69,12 @@
                     <%=GetLocaleResourceString("ShoppingCart.Remove")%>
                 </td>
                 <%} %>
+                <%if (SettingManager.GetSettingValueBoolean("Display.Products.ShowSKU"))
+                  {%>
+                <td width="10%">
+                    <%=GetLocaleResourceString("ShoppingCart.SKU")%>
+                </td>
+                <%} %>
                 <%if (SettingManager.GetSettingValueBoolean("Display.ShowProductImagesOnShoppingCart"))
                   {%>
                 <td class="picture">
@@ -94,6 +100,12 @@
                           { %>
                         <td width="10%">
                             <asp:CheckBox runat="server" ID="cbRemoveFromCart" />
+                        </td>
+                        <%} %>
+                        <%if (SettingManager.GetSettingValueBoolean("Display.Products.ShowSKU"))
+                          {%>
+                        <td width="10%">
+                            <%#Server.HtmlEncode(((ShoppingCartItem)Container.DataItem).ProductVariant.SKU)%>
                         </td>
                         <%} %>
                         <%if (SettingManager.GetSettingValueBoolean("Display.ShowProductImagesOnShoppingCart"))

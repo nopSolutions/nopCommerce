@@ -21,6 +21,12 @@
                 <td width="10%">
                     <%=GetLocaleResourceString("Wishlist.AddToCart")%>
                 </td>
+                <%if (SettingManager.GetSettingValueBoolean("Display.Products.ShowSKU"))
+                  {%>
+                <td width="10%">
+                    <%=GetLocaleResourceString("ShoppingCart.SKU")%>
+                </td>
+                <%} %>
                 <%if (SettingManager.GetSettingValueBoolean("Display.ShowProductImagesOnWishList"))
                   {%>
                 <td class="picture">
@@ -51,6 +57,12 @@
                         <td width="10%">
                             <asp:CheckBox runat="server" ID="cbAddToCart" />
                         </td>
+                        <%if (SettingManager.GetSettingValueBoolean("Display.Products.ShowSKU"))
+                          {%>
+                        <td width="10%">
+                            <%#Server.HtmlEncode(((ShoppingCartItem)Container.DataItem).ProductVariant.SKU)%>
+                        </td>
+                        <%} %>
                         <%if (SettingManager.GetSettingValueBoolean("Display.ShowProductImagesOnWishList"))
                           {%>
                         <td class="productpicture">
