@@ -561,27 +561,37 @@ a.linkButton:hover
 	font-family: Verdana, Arial, Helvetica, sans-serif;
 	font-size: 10px;
 }
-
 .copyright a
 {
 	color: #3664A5;
 	background-color: inherit;
 }
 
-ul.sitemap
+/* sitemap */
+.sitemap-page
 {
-		
+	margin-left: auto;
+	margin-right: auto;
+	width: 100%;
+	margin-bottom: 15px;
 }
-
-ul.sitemap li
+.sitemap-page .entity
 {
-	padding: 3px 0px 3px 0px;
+	margin: 5px 0px 30px 0px;
 }
-
-ul.sitemap li span
+.sitemap-page .topic-box, .sitemap-page .manufacturer-box, 
+.sitemap-page .category-box, .sitemap-page .product-box
 {
-	text-transform: uppercase;
-	margin: 10px 0px 10px 0px;
+	text-align: center;
+	vertical-align: bottom;
+}
+.sitemap-page .topic-box .item, .sitemap-page .manufacturer-box .item,
+.sitemap-page .category-box .item, .sitemap-page .product-box .item
+{
+	text-align: left;
+	margin: 3px 10px 3px 10px;
+	width: 150px;
+	border-bottom:1px dotted #ADACAC;
 }
 
 checkbox, input, radio, select

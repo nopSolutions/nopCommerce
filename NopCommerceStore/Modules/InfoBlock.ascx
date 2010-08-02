@@ -37,6 +37,8 @@
             <li><a href="<%=Page.ResolveUrl("~/compareproducts.aspx")%>">
                 <%=GetLocaleResourceString("Products.CompareProductsList")%></a></li>
             <%} %>
+            <li><a href="<%=Page.ResolveUrl("~/sitemap.aspx")%>">
+                <%=GetLocaleResourceString("Content.Sitemap")%></a></li>
             <li><a href="<%=Page.ResolveUrl("~/shippinginfo.aspx")%>">
                 <%=GetLocaleResourceString("Content.Shipping&Returns")%></a></li>
             <li><a href="<%=Page.ResolveUrl("~/privacyinfo.aspx")%>">

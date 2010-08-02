@@ -1583,6 +1583,15 @@ set @resources='
   <LocaleResource Name="Order.ProductsGrid.SKU">
     <Value>SKU</Value>
   </LocaleResource>
+  <LocaleResource Name="Sitemap.Title">
+    <Value>Sitemap</Value>
+  </LocaleResource>
+  <LocaleResource Name="PageTitle.Sitemap">
+    <Value>Sitemap</Value>
+  </LocaleResource>
+  <LocaleResource Name="Content.Sitemap">
+    <Value>Sitemap</Value>
+  </LocaleResource>
 </Language>
 '
 

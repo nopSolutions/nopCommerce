@@ -21,122 +21,184 @@ namespace NopSolutions.NopCommerce.Web
     {
         protected override void OnPreRender(EventArgs e)
         {
+            string title = GetLocaleResourceString("PageTitle.Sitemap");
+            SEOHelper.RenderTitle(this, title, true);
+
             BindData();
             base.OnPreRender(e);
         }
 
         protected void BindData()
         {
-            try
+            //topics
+            var sitemapTopics = new List<SitemapTopic>();
+            if (SettingManager.GetSettingValueBoolean("Sitemap.IncludeTopics", true))
             {
-                StringBuilder sb = new StringBuilder();
-                if (SettingManager.GetSettingValueBoolean("Sitemap.IncludeCategories", true))
+                var topics = TopicManager.GetAllTopics();
+                foreach (var topic in topics)
                 {
-                    sb.Append("<li>");
-                    sb.AppendFormat("<span>{0}</span>", GetLocaleResourceString("Sitemap.Categories"));
-                    sb.Append("<ul>");
-                    WriteCategories(sb, CategoryManager.GetAllCategories(0));
-                    sb.Append("</ul>");
-                    sb.Append("</li>");
-                }
-                if (SettingManager.GetSettingValueBoolean("Sitemap.IncludeManufacturers", true))
-                {
-                    sb.Append("<li>");
-                    sb.AppendFormat("<span>{0}</span>", GetLocaleResourceString("Sitemap.Manufacturers"));
-                    sb.Append("<ul>");
-                    WriteManufacturers(sb, ManufacturerManager.GetAllManufacturers());
-                    sb.Append("</ul>");
-                    sb.Append("</li>");
-                }
-                if (SettingManager.GetSettingValueBoolean("Sitemap.IncludeProducts", true))
-                {
-                    sb.Append("<li>");
-                    sb.AppendFormat("<span>{0}</span>", GetLocaleResourceString("Sitemap.Products"));
-                    sb.Append("<ul>");
-                    WriteProducts(sb, ProductManager.GetAllProducts());
-                    sb.Append("</ul>");
-                    sb.Append("</li>");
-                }
-                if (SettingManager.GetSettingValueBoolean("Sitemap.IncludeTopics", true))
-                {
-                    sb.Append("<li>");
-                    sb.AppendFormat("<span>{0}</span>", GetLocaleResourceString("Sitemap.Topics"));
-                    sb.Append("<ul>");
-                    WriteTopics(sb, TopicManager.GetAllTopics());
-                    sb.Append("</ul>");
-                    sb.Append("</li>");
-                }
-                string otherPages = SettingManager.GetSettingValue("Sitemap.OtherPages");
-                if (!String.IsNullOrEmpty(otherPages))
-                {
-                    sb.Append("<li>");
-                    sb.AppendFormat("<span>{0}</span>", GetLocaleResourceString("Sitemap.OtherPages"));
-                    sb.Append("<ul>");
-                    WriteOtherPages(sb, otherPages.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries));
-                    sb.Append("</ul>");
-                    sb.Append("</li>");
-                }
+                    LocalizedTopic localizedTopic = TopicManager.GetLocalizedTopic(topic.TopicId, NopContext.Current.WorkingLanguage.LanguageId);
+                    if (localizedTopic != null && !String.IsNullOrEmpty(localizedTopic.Title))
+                    {
+                        string topicURL = SEOHelper.GetTopicUrl(localizedTopic.TopicId, localizedTopic.Title);
+                        string topicName = localizedTopic.Title;
 
-                lSitemapContent.Text = sb.ToString();
-            }
-            catch (Exception ex)
-            {
-                lSitemapContent.Text = ex.Message;
-                LogManager.InsertLog(LogTypeEnum.CommonError, ex.Message, ex);
-            }
-        }
-
-        private void WriteCategories(StringBuilder sb, List<Category> categoryCollection)
-        {
-            foreach(Category category in categoryCollection)
-            {
-                sb.Append("<li>");
-                sb.AppendFormat("<a href=\"{0}\">{1}</a>", SEOHelper.GetCategoryUrl(category), Server.HtmlEncode(category.LocalizedName));
-                var childCategoryCollection = CategoryManager.GetAllCategories(category.CategoryId);
-                if(childCategoryCollection.Count > 0)
-                {
-                    sb.Append("<ul>");
-                    WriteCategories(sb, childCategoryCollection);
-                    sb.Append("</ul>");
+                        sitemapTopics.Add(new SitemapTopic() { Name = topicName, Url = topicURL });
+                    }
                 }
-                sb.Append("</li>");
             }
-        }
 
-        private void WriteManufacturers(StringBuilder sb, List<Manufacturer> manufacturerCollection)
-        {
-            foreach(Manufacturer manufacturer in manufacturerCollection)
+            //other pages
+            string otherPages = SettingManager.GetSettingValue("Sitemap.OtherPages");
+            if (!String.IsNullOrEmpty(otherPages))
             {
-                sb.AppendFormat("<li><a href=\"{0}\">{1}</a></li>", SEOHelper.GetManufacturerUrl(manufacturer), Server.HtmlEncode(manufacturer.LocalizedName));
+                string[] pages = otherPages.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                foreach (string page in pages)
+                {
+                    sitemapTopics.Add(new SitemapTopic() { Name = page, Url = string.Format("{0}{1}", CommonHelper.GetStoreLocation(), page.Trim()) });
+                }
+            }
+            if (sitemapTopics.Count > 0)
+            {
+                dlTopics.DataSource = sitemapTopics;
+                dlTopics.DataBind();
+            }
+            else
+            {
+                dlTopics.Visible = false;
+            }
+
+            //categories
+            if (SettingManager.GetSettingValueBoolean("Sitemap.IncludeCategories", true))
+            {
+                //root categories only here
+                var categories = CategoryManager.GetAllCategories(0);
+                if (categories.Count > 0)
+                {
+                    dlCategories.DataSource = categories;
+                    dlCategories.DataBind();
+                }
+                else
+                {
+                    dlCategories.Visible = false;
+                }
+            }
+            else
+            {
+                dlCategories.Visible = false;
+            }
+
+            //manufacturers
+            if (SettingManager.GetSettingValueBoolean("Sitemap.IncludeManufacturers", true))
+            {
+                var manufacturers = ManufacturerManager.GetAllManufacturers();
+                if (manufacturers.Count > 0)
+                {
+                    dlManufacturers.DataSource = ManufacturerManager.GetAllManufacturers();
+                    dlManufacturers.DataBind();
+                }
+                else
+                {
+                    dlManufacturers.Visible = false;
+                }
+            }
+            else
+            {
+                dlManufacturers.Visible = false;
+            }
+            
+            //products
+            if (SettingManager.GetSettingValueBoolean("Sitemap.IncludeProducts", true))
+            {
+                var products = ProductManager.GetAllProducts();
+                if (products.Count > 0)
+                {
+                    dlProducts.DataSource = products;
+                    dlProducts.DataBind();
+                }
+                else
+                {
+                    dlProducts.Visible = false;
+                }
+            }
+            else
+            {
+                dlProducts.Visible = false;
             }
         }
 
         private void WriteProducts(StringBuilder sb, List<Product> productCollection)
         {
-            foreach(Product product in productCollection)
+            foreach (Product product in productCollection)
             {
                 sb.AppendFormat("<li><a href=\"{0}\">{1}</a></li>", SEOHelper.GetProductUrl(product), Server.HtmlEncode(product.LocalizedName));
             }
         }
 
-        private void WriteTopics(StringBuilder sb, List<Topic> topicCollection)
+        protected void dlCategories_ItemDataBound(object sender, DataListItemEventArgs e)
         {
-            foreach(Topic topic in topicCollection)
+            if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
             {
-                LocalizedTopic localizedTopic = TopicManager.GetLocalizedTopic(topic.TopicId, NopContext.Current.WorkingLanguage.LanguageId);
-                if(localizedTopic != null)
+                var category = e.Item.DataItem as Category;
+
+                var hlLink = e.Item.FindControl("hlLink") as HyperLink;
+                if (hlLink != null)
                 {
-                    sb.AppendFormat("<li><a href=\"{0}\">{1}</a></li>", SEOHelper.GetTopicUrl(localizedTopic.TopicId, localizedTopic.Title), (String.IsNullOrEmpty(localizedTopic.Title) ? localizedTopic.TopicId.ToString() : Server.HtmlEncode(localizedTopic.Title)));
+                    hlLink.NavigateUrl = SEOHelper.GetCategoryUrl(category);
+                    hlLink.Text = Server.HtmlEncode(category.LocalizedName);
                 }
             }
         }
 
-        private void WriteOtherPages(StringBuilder sb, string[] pages)
+        protected void dlManufacturers_ItemDataBound(object sender, DataListItemEventArgs e)
         {
-            foreach(string page in pages)
+            if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
             {
-                sb.AppendFormat("<li><a href=\"{0}{1}\">{2}</a></li>", CommonHelper.GetStoreLocation(), page.Trim(), Server.HtmlEncode(page));
+                var manufacturer = e.Item.DataItem as Manufacturer;
+
+                var hlLink = e.Item.FindControl("hlLink") as HyperLink;
+                if (hlLink != null)
+                {
+                    hlLink.NavigateUrl = SEOHelper.GetManufacturerUrl(manufacturer);
+                    hlLink.Text = Server.HtmlEncode(manufacturer.LocalizedName);
+                }
             }
+        }
+
+        protected void dlProducts_ItemDataBound(object sender, DataListItemEventArgs e)
+        {
+            if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+            {
+                var product = e.Item.DataItem as Product;
+
+                var hlLink = e.Item.FindControl("hlLink") as HyperLink;
+                if (hlLink != null)
+                {
+                    hlLink.NavigateUrl = SEOHelper.GetProductUrl(product);
+                    hlLink.Text = Server.HtmlEncode(product.LocalizedName);
+                }
+            }
+        }
+
+        protected void dlTopics_ItemDataBound(object sender, DataListItemEventArgs e)
+        {
+            if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+            {
+                var sitemapTopic = e.Item.DataItem as SitemapTopic;
+
+                var hlLink = e.Item.FindControl("hlLink") as HyperLink;
+                if (hlLink != null)
+                {
+                    hlLink.NavigateUrl = sitemapTopic.Url;
+                    hlLink.Text = Server.HtmlEncode(sitemapTopic.Name);
+                }
+            }
+        }
+
+        private class SitemapTopic
+        {
+            public string Name { get; set; }
+            public string Url { get; set; }
         }
     }
 }
