@@ -44,6 +44,15 @@
             <asp:CheckBox ID="cbBlogPostAllowComments" runat="server" Checked="True"></asp:CheckBox>
         </td>
     </tr>
+    <tr>
+        <td class="adminTitle">
+            <nopCommerce:ToolTipLabel runat="server" ID="lblTags" Text="<% $NopResources:Admin.BlogPostInfo.Tags%>"
+                ToolTip="<% $NopResources: Admin.BlogPostInfo.Tags.Tooltip%>" ToolTipImage="~/Administration/Common/ico-help.gif" />
+        </td>
+        <td class="adminData">
+            <asp:TextBox ID="txtTags" CssClass="adminInput" runat="server"></asp:TextBox>
+        </td>
+    </tr>
     <tr runat="server" id="pnlCreatedOn">
         <td class="adminTitle">
             <nopCommerce:ToolTipLabel runat="server" ID="lblCreatedOnTitle" Text="<% $NopResources:Admin.BlogPostInfo.CreatedOn %>"

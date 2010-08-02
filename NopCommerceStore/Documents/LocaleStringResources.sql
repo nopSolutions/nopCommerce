@@ -1607,6 +1607,18 @@ set @resources='
   <LocaleResource Name="Products.CallForPrice">
     <Value>Call for pricing</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.BlogPostInfo.Tags">
+    <Value>Tags:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.BlogPostInfo.Tags.Tooltip">
+    <Value>Tags are keywords that this blog post can also be identified by. Enter a comma separated list of the tags to be associated with this blog post.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Blog.Tags">
+    <Value>Tags:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Blog.TaggedWith">
+    <Value>Blog posts tagged with ''{0}''</Value>
+  </LocaleResource>
 </Language>
 '
 

@@ -53,6 +53,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 this.txtBlogPostTitle.Text = blogPost.BlogPostTitle;
                 this.txtBlogPostBody.Content = blogPost.BlogPostBody;
                 this.cbBlogPostAllowComments.Checked = blogPost.BlogPostAllowComments;
+                this.txtTags.Text = blogPost.Tags;
 
                 this.pnlCreatedOn.Visible = true;
                 this.lblCreatedOn.Text = DateTimeHelper.ConvertToUserTime(blogPost.CreatedOn, DateTimeKind.Utc).ToString();
@@ -90,13 +91,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 blogPost = BlogManager.UpdateBlogPost(this.BlogPostId, int.Parse(this.ddlLanguage.SelectedItem.Value),
                     txtBlogPostTitle.Text, txtBlogPostBody.Content,
-                    cbBlogPostAllowComments.Checked, blogPost.CreatedById, blogPost.CreatedOn);
+                    cbBlogPostAllowComments.Checked, txtTags.Text.Trim(), blogPost.CreatedById, blogPost.CreatedOn);
             }
             else
             {
                 blogPost = BlogManager.InsertBlogPost(int.Parse(this.ddlLanguage.SelectedItem.Value),
                    txtBlogPostTitle.Text, txtBlogPostBody.Content,
-                   cbBlogPostAllowComments.Checked, NopContext.Current.User.CustomerId, DateTime.UtcNow);
+                   cbBlogPostAllowComments.Checked, txtTags.Text.Trim(), NopContext.Current.User.CustomerId, DateTime.UtcNow);
             }
             return blogPost;
         }

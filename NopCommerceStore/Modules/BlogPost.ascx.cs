@@ -17,6 +17,7 @@ using System.Collections;
 using System.Configuration;
 using System.Data;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Security;
 using System.Web.UI;
@@ -29,9 +30,9 @@ using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Content.Blog;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
-using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.Utils.Html;
 using NopSolutions.NopCommerce.Common;
+using NopSolutions.NopCommerce.Common.Utils;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -53,6 +54,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 this.lBlogPostTitle.Text = Server.HtmlEncode(blogPost.BlogPostTitle);
                 this.lCreatedOn.Text = DateTimeHelper.ConvertToUserTime(blogPost.CreatedOn, DateTimeKind.Utc).ToString("D");
                 this.lBlogPostBody.Text = blogPost.BlogPostBody;
+                this.lTags.Text = RenderBlogPosts(blogPost);
 
                 if (blogPost.BlogPostAllowComments)
                 {
@@ -84,6 +86,31 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 Response.Redirect(CommonHelper.GetStoreLocation());
         }
 
+        protected string RenderBlogPosts(BlogPost blogPost)
+        {
+            StringBuilder sb = new StringBuilder();
+            var tags = blogPost.ParsedTags;
+
+            if (tags.Length > 0)
+            {
+                sb.Append(GetLocaleResourceString("Blog.Tags"));
+                sb.Append(" ");
+
+                for (int i = 0; i < tags.Length; i++)
+                {
+                    string tag = tags[i].Trim();
+                    string url = string.Format("{0}blog.aspx?tag={1}", CommonHelper.GetStoreLocation(), tag).ToLowerInvariant();
+                    sb.Append(string.Format("<a href=\"{0}\">{1}</a>", url, Server.HtmlEncode(tag)));
+                    if (i != tags.Length - 1)
+                    {
+                        sb.Append(", ");
+                    }
+                }
+            }
+
+            return sb.ToString();
+        }
+        
         protected void btnComment_Click(object sender, EventArgs e)
         {
             try

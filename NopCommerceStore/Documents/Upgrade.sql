@@ -1985,3 +1985,80 @@ BEGIN
 	DROP TABLE #PageIndex
 END
 GO
+
+
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[Nop_BlogPost]') and NAME='Tags')
+BEGIN
+	ALTER TABLE [dbo].[Nop_BlogPost] 
+	ADD [Tags] nvarchar(4000) NOT NULL CONSTRAINT [DF_Nop_BlogPost_Tags] DEFAULT ((''))
+END
+GO
+
+IF EXISTS (
+		SELECT *
+		FROM dbo.sysobjects
+		WHERE id = OBJECT_ID(N'[dbo].[Nop_BlogPostLoadAll]') AND OBJECTPROPERTY(id,N'IsProcedure') = 1)
+DROP PROCEDURE [dbo].[Nop_BlogPostLoadAll]
+GO
+CREATE PROCEDURE [dbo].[Nop_BlogPostLoadAll]
+(
+	@LanguageID	int,
+	@PageSize			int = 2147483644,
+	@PageIndex			int = 0, 
+	@TotalRecords		int = null OUTPUT
+)
+AS
+BEGIN
+	--paging
+	DECLARE @PageLowerBound int
+	DECLARE @PageUpperBound int
+	DECLARE @RowsToReturn int
+	
+	SET @RowsToReturn = @PageSize * (@PageIndex + 1)	
+	SET @PageLowerBound = @PageSize * @PageIndex
+	SET @PageUpperBound = @PageLowerBound + @PageSize + 1
+	
+	CREATE TABLE #PageIndex 
+	(
+		IndexID int IDENTITY (1, 1) NOT NULL,
+		BlogPostID int NOT NULL,
+	)
+
+	INSERT INTO #PageIndex (BlogPostID)
+	SELECT
+		bp.BlogPostID
+	FROM 
+	    Nop_BlogPost bp 
+	WITH 
+		(NOLOCK)
+	WHERE
+		@LanguageID IS NULL OR @LanguageID = 0 OR LanguageID = @LanguageID
+	ORDER BY 
+		CreatedOn 
+	DESC
+
+
+	SET @TotalRecords = @@rowcount	
+	SET ROWCOUNT @RowsToReturn
+	
+	SELECT  
+		bp.[BlogPostId],
+		bp.[LanguageId],
+		bp.[BlogPostTitle],
+		bp.[BlogPostBody],
+		bp.[BlogPostAllowComments],
+		bp.[Tags],
+		bp.[CreatedById],
+		bp.[CreatedOn]
+	FROM
+		#PageIndex [pi]
+		INNER JOIN Nop_BlogPost bp on bp.BlogPostID = [pi].BlogPostID
+	WHERE
+		[pi].IndexID > @PageLowerBound AND 
+		[pi].IndexID < @PageUpperBound
+	ORDER BY
+		IndexID
+	
+	SET ROWCOUNT 0
+END
+GO

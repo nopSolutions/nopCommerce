@@ -13,6 +13,13 @@
     <div class="postbody">
         <asp:Literal runat="server" ID="lBlogPostBody" EnableViewState="false"></asp:Literal>
     </div>
+    <div class="clear">
+    </div>
+    <div class="tags">
+        <asp:Literal runat="server" ID="lTags" EnableViewState="false"></asp:Literal>
+    </div>
+    <div class="clear">
+    </div>
     <div id="pnlComments" runat="server" class="blogcomments">
         <div class="title">
             <%=GetLocaleResourceString("Blog.Comments")%>

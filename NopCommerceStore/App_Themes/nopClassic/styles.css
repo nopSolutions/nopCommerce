@@ -2947,20 +2947,20 @@ ul.languagelist li .selected
 {
 }
 
-.blogposts .post .blogdate
+.blog .blogposts .post .blogdate
 {
 	color: #9a9a9a;
 	font-style: italic;
 }
 
-.blogposts .post a.blogtitle
+.blog .blogposts .post a.blogtitle
 {
 	color: #444;
 	text-decoration: none;
 	font-size: 1.2em;
 }
 
-.blogposts .post a.blogtitle:Hover
+.blog .blogposts .post a.blogtitle:Hover
 {
 	text-decoration: underline;
 }
@@ -2978,7 +2978,7 @@ ul.languagelist li .selected
 	padding-bottom: 10px;
 }
 
-.blog .blogposts .blogbody
+.blog .blogposts .blogbody, .blog .blogposts .tags
 {
 	margin-top: 10px;
 	margin-bottom: 10px;
@@ -3010,7 +3010,7 @@ ul.languagelist li .selected
 	font-style: italic;
 }
 
-.blogpost .postbody
+.blogpost .postbody, .blogpost .tags
 {
 	margin: 0px 0 0 0;
 	padding: 0px 0 0 0;

@@ -6,7 +6,7 @@
             <tr>
                 <td style="text-align: left; vertical-align: middle;">
                     <h1>
-                        <%=GetLocaleResourceString("Blog.Blog")%></h1>
+                        <asp:Literal runat="server" ID="lTitle" /></h1>
                 </td>
                 <td style="text-align: right; vertical-align: middle;">
                     <a href="<%= GetBlogRSSUrl()%>">
@@ -30,6 +30,11 @@
                         </span>
                     <div class="blogbody">
                         <%#Eval("BlogPostBody")%>
+                    </div>
+                    <div class="clear">
+                    </div>
+                    <div class="tags">
+                        <%#RenderBlogPosts((BlogPost)Container.DataItem)%>
                     </div>
                     <a href="<%#SEOHelper.GetBlogPostUrl(Convert.ToInt32(Eval("BlogPostId")))%>" class="blogdetails">
                         <asp:Literal ID="lComments" runat="server"></asp:Literal>

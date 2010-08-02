@@ -720,6 +720,7 @@
           <Property Name="BlogPostTitle" Type="nvarchar" Nullable="false" MaxLength="200" />
           <Property Name="BlogPostBody" Type="nvarchar(max)" Nullable="false" />
           <Property Name="BlogPostAllowComments" Type="bit" Nullable="false" />
+          <Property Name="Tags" Type="nvarchar" Nullable="false" />
           <Property Name="CreatedByID" Type="int" Nullable="false" />
           <Property Name="CreatedOn" Type="datetime" Nullable="false" />
         </EntityType>
@@ -1756,7 +1757,6 @@
           <Property Name="OrderMaximumQuantity" Type="int" Nullable="false" />
           <Property Name="WarehouseID" Type="int" Nullable="false" />
           <Property Name="DisableBuyButton" Type="bit" Nullable="false" />
-          <Property Name="CallForPrice" Type="bit" Nullable="false" />
           <Property Name="Price" Type="money" Nullable="false" />
           <Property Name="OldPrice" Type="money" Nullable="false" />
           <Property Name="ProductCost" Type="money" Nullable="false" />
@@ -1778,6 +1778,7 @@
           <Property Name="DisplayStockQuantity" Type="bit" Nullable="false" />
           <Property Name="Backorders" Type="int" Nullable="false" />
           <Property Name="GiftCardType" Type="int" Nullable="false" />
+          <Property Name="CallForPrice" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Nop_ProductVariant_Discount_Mapping">
           <Key>
@@ -5765,6 +5766,7 @@
           <Property Type="String" Name="BlogPostTitle" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="BlogPostBody" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Type="Boolean" Name="BlogPostAllowComments" Nullable="false" />
+          <Property Type="String" Name="Tags" Nullable="false" MaxLength="4000" FixedLength="false" Unicode="true" />
           <Property Type="Int32" Name="CreatedById" Nullable="false" />
           <Property Type="DateTime" Name="CreatedOn" Nullable="false" />
           <NavigationProperty Name="NpBlogComments" Relationship="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_BlogComment_Nop_BlogPost" FromRole="Nop_BlogPost" ToRole="Nop_BlogComment" />
@@ -8558,6 +8560,7 @@
               <MappingFragment StoreEntitySet="Nop_BlogPost">
                 <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
                 <ScalarProperty Name="CreatedById" ColumnName="CreatedByID" />
+                <ScalarProperty Name="Tags" ColumnName="Tags" />
                 <ScalarProperty Name="BlogPostAllowComments" ColumnName="BlogPostAllowComments" />
                 <ScalarProperty Name="BlogPostBody" ColumnName="BlogPostBody" />
                 <ScalarProperty Name="BlogPostTitle" ColumnName="BlogPostTitle" />

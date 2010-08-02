@@ -135,20 +135,46 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
         }
 
         /// <summary>
+        /// Gets all blog posts
+        /// </summary>
+        /// <param name="languageId">Language identifier. 0 if you want to get all news</param>
+        /// <param name="tag">Tag</param>
+        /// <returns>Blog posts</returns>
+        public static List<BlogPost> GetAllBlogPostsByTag(int languageId, string tag)
+        {
+            tag = tag.Trim();
+
+            var blogPostsAll = GetAllBlogPosts(languageId);
+            List<BlogPost> blogPosts = new List<BlogPost>();
+            foreach (var blogPost in blogPostsAll)
+            {
+                var tags = blogPost.ParsedTags;
+                if (!String.IsNullOrEmpty(tags.FirstOrDefault(t => t.Equals(tag, StringComparison.InvariantCultureIgnoreCase))))
+                {
+                    blogPosts.Add(blogPost);
+                }
+            }
+
+            return blogPosts;
+        }
+
+        /// <summary>
         /// Inserts an blog post
         /// </summary>
         /// <param name="languageId">The language identifier</param>
         /// <param name="blogPostTitle">The blog post title</param>
         /// <param name="blogPostBody">The blog post title</param>
         /// <param name="blogPostAllowComments">A value indicating whether the blog post comments are allowed</param>
+        /// <param name="tags">The blog post tags</param>
         /// <param name="createdById">The user identifier who created the blog post</param>
         /// <param name="createdOn">The date and time of instance creation</param>
         /// <returns>Blog post</returns>
         public static BlogPost InsertBlogPost(int languageId, string blogPostTitle,
             string blogPostBody, bool blogPostAllowComments,
-            int createdById, DateTime createdOn)
+            string tags, int createdById, DateTime createdOn)
         {
             blogPostTitle = CommonHelper.EnsureMaximumLength(blogPostTitle, 200);
+            tags = CommonHelper.EnsureMaximumLength(tags, 4000);
 
             var context = ObjectContextHelper.CurrentObjectContext;
 
@@ -157,6 +183,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
             blogPost.BlogPostTitle = blogPostTitle;
             blogPost.BlogPostBody = blogPostBody;
             blogPost.BlogPostAllowComments = blogPostAllowComments;
+            blogPost.Tags = tags;
             blogPost.CreatedById = createdById;
             blogPost.CreatedOn = createdOn;
 
@@ -179,15 +206,17 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
         /// <param name="blogPostTitle">The blog post title</param>
         /// <param name="blogPostBody">The blog post title</param>
         /// <param name="blogPostAllowComments">A value indicating whether the blog post comments are allowed</param>
+        /// <param name="tags">The blog post tags</param>
         /// <param name="createdById">The user identifier who created the blog post</param>
         /// <param name="createdOn">The date and time of instance creation</param>
         /// <returns>Blog post</returns>
         public static BlogPost UpdateBlogPost(int blogPostId,
             int languageId, string blogPostTitle,
             string blogPostBody, bool blogPostAllowComments,
-            int createdById, DateTime createdOn)
+            string tags, int createdById, DateTime createdOn)
         {
             blogPostTitle = CommonHelper.EnsureMaximumLength(blogPostTitle, 200);
+            tags = CommonHelper.EnsureMaximumLength(tags, 4000);
 
             var blogPost = GetBlogPostById(blogPostId);
             if (blogPost == null)
@@ -201,6 +230,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
             blogPost.BlogPostTitle = blogPostTitle;
             blogPost.BlogPostBody = blogPostBody;
             blogPost.BlogPostAllowComments = blogPostAllowComments;
+            blogPost.Tags = tags;
             blogPost.CreatedById = createdById;
             blogPost.CreatedOn = createdOn;
             context.SaveChanges();

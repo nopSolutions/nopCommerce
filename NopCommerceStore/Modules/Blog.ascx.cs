@@ -14,9 +14,11 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Security;
 using System.Web.UI;
@@ -27,8 +29,8 @@ using System.Xml.Linq;
 using NopSolutions.NopCommerce.BusinessLogic;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Content.Blog;
-using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
+using NopSolutions.NopCommerce.Common.Utils;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -42,36 +44,63 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         private void BindData()
         {
-            int totalRecords = 0;
-            int pageSize = BlogManager.PostsPageSize;
-
-            var blogPosts = BlogManager.GetAllBlogPosts(NopContext.Current.WorkingLanguage.LanguageId, pageSize, CurrentPageIndex, out totalRecords);
-            if(blogPosts.Count > 0)
+            if (String.IsNullOrEmpty(this.Tag))
             {
-                this.postsPager.PageSize = pageSize;
-                this.postsPager.TotalRecords = totalRecords;
-                this.postsPager.PageIndex = this.CurrentPageIndex;
+                lTitle.Text = GetLocaleResourceString("Blog.Blog");
+                int totalRecords = 0;
+                int pageSize = BlogManager.PostsPageSize;
 
-                rptrBlogPosts.DataSource = blogPosts;
-                rptrBlogPosts.DataBind();
+                var blogPosts = BlogManager.GetAllBlogPosts(NopContext.Current.WorkingLanguage.LanguageId, pageSize, CurrentPageIndex, out totalRecords);
+                if (blogPosts.Count > 0)
+                {
+                    this.postsPager.PageSize = pageSize;
+                    this.postsPager.TotalRecords = totalRecords;
+                    this.postsPager.PageIndex = this.CurrentPageIndex;
+
+                    rptrBlogPosts.DataSource = blogPosts;
+                    rptrBlogPosts.DataBind();
+                }
             }
-        }
-
-        public int CurrentPageIndex
-        {
-            get
+            else
             {
-                int _pageIndex = CommonHelper.QueryStringInt(postsPager.QueryStringProperty);
-                _pageIndex--;
-                if(_pageIndex < 0)
-                    _pageIndex = 0;
-                return _pageIndex;
+                lTitle.Text = string.Format(GetLocaleResourceString("Blog.TaggedWith"), Server.HtmlEncode(this.Tag));
+                var blogPosts = BlogManager.GetAllBlogPostsByTag(NopContext.Current.WorkingLanguage.LanguageId, this.Tag);
+                if (blogPosts.Count > 0)
+                {
+                    rptrBlogPosts.DataSource = blogPosts;
+                    rptrBlogPosts.DataBind();
+                }
             }
         }
 
         protected string GetBlogRSSUrl()
         {
             return SEOHelper.GetBlogRssUrl();
+        }
+
+        protected string RenderBlogPosts(BlogPost blogPost)
+        {
+            StringBuilder sb = new StringBuilder();
+            var tags = blogPost.ParsedTags;
+
+            if (tags.Length > 0)
+            {
+                sb.Append(GetLocaleResourceString("Blog.Tags"));
+                sb.Append(" ");
+                
+                for (int i = 0; i < tags.Length; i++)
+                {
+                    string tag = tags[i].Trim();
+                    string url = string.Format("{0}blog.aspx?tag={1}", CommonHelper.GetStoreLocation(), tag).ToLowerInvariant();
+                    sb.Append(string.Format("<a href=\"{0}\">{1}</a>", url, Server.HtmlEncode(tag)));
+                    if (i != tags.Length - 1)
+                    {
+                        sb.Append(", ");
+                    }
+                }
+            }
+
+            return sb.ToString();
         }
         
         protected void rptrBlogPosts_ItemDataBound(object sender, RepeaterItemEventArgs e)
@@ -81,6 +110,27 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 var blogPost = e.Item.DataItem as BlogPost;
                 var lComments = e.Item.FindControl("lComments") as Literal;
                 lComments.Text = String.Format(GetLocaleResourceString("Blog.CommentsLink"), blogPost.BlogComments.Count);
+            }
+        }
+
+        public int CurrentPageIndex
+        {
+            get
+            {
+                int _pageIndex = CommonHelper.QueryStringInt(postsPager.QueryStringProperty);
+                _pageIndex--;
+                if (_pageIndex < 0)
+                    _pageIndex = 0;
+                return _pageIndex;
+            }
+        }
+
+        public string Tag
+        {
+            get
+            {
+                string tag = CommonHelper.QueryString("tag");
+                return tag;
             }
         }
 

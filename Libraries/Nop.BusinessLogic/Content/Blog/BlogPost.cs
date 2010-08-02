@@ -63,6 +63,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
         public bool BlogPostAllowComments { get; set; }
 
         /// <summary>
+        /// Gets or sets the blog tags
+        /// </summary>
+        public string Tags { get; set; }
+
+        /// <summary>
         /// Gets or sets the user identifier who created the blog post
         /// </summary>
         public int CreatedById { get; set; }
@@ -75,6 +80,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
         #endregion 
 
         #region Custom Properties
+
         /// <summary>
         /// Gets the language
         /// </summary>
@@ -105,6 +111,26 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
             get
             {
                 return BlogManager.GetBlogCommentsByBlogPostId(this.BlogPostId);
+            }
+        }
+
+        /// <summary>
+        /// Gets the parsed blog post tags
+        /// </summary>
+        public string[] ParsedTags
+        {
+            get
+            {
+                List<string> parsedTags = new List<string>();
+                if (!String.IsNullOrEmpty(this.Tags))
+                {
+                    string[] tags2 = this.Tags.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                    foreach (string tag2 in tags2)
+                    {
+                        parsedTags.Add(tag2.Trim());
+                    }
+                }
+                return parsedTags.ToArray();
             }
         }
         #endregion
