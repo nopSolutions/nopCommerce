@@ -1267,7 +1267,12 @@ INSERT [dbo].[Nop_MessageTemplateLocalized] ([MessageTemplateLocalizedID], [Mess
 		A new post has been created in the topic <a href="%Forums.TopicURL%">"%Forums.TopicName%"</a> at <a href="%Forums.ForumURL%">"%Forums.ForumName%"</a> forum.
 		<br />
 		<br />
-		Click <a href="%Forums.TopicURL%">here</a> for more info.</p>', 1)
+		Click <a href="%Forums.TopicURL%">here</a> for more info.
+		<br />
+		<br />
+		Post author: %Forums.PostAuthor%
+		<br />
+		Post body: %Forums.PostBody%</p>', 1)
 INSERT [dbo].[Nop_MessageTemplateLocalized] ([MessageTemplateLocalizedID], [MessageTemplateID], [LanguageID], [BCCEmailAddresses], [Subject], [Body], [IsActive]) VALUES (216, 24, 7, N'', N'%Store.Name%. New news comment.', N'<p><a href="%Store.URL%">%Store.Name%</a> <br />
 		<br />
 		A new news comment has been created for news "%NewsComment.NewsTitle%".</p>', 1)

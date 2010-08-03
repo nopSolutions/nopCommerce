@@ -1230,8 +1230,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
                 return 0;
                 //throw new NopException(string.Format("Message template ({0}-{1}) couldn't be loaded", TemplateName, LanguageId));
 
-            string subject = ReplaceMessageTemplateTokens(customer, forumTopic, forum, localizedMessageTemplate.Subject);
-            string body = ReplaceMessageTemplateTokens(customer, forumTopic, forum, localizedMessageTemplate.Body);
+            string subject = ReplaceMessageTemplateTokens(customer, null, forumTopic, forum, localizedMessageTemplate.Subject);
+            string body = ReplaceMessageTemplateTokens(customer, null, forumTopic, forum, localizedMessageTemplate.Body);
             string bcc = localizedMessageTemplate.BccEmailAddresses;
             var from = new MailAddress(AdminEmailAddress, AdminEmailDisplayName);
             var to = new MailAddress(customer.Email, customer.FullName);
@@ -1243,11 +1243,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// Sends a forum subscription message to a customer
         /// </summary>
         /// <param name="customer">Customer instance</param>
+        /// <param name="forumPost">Forum post</param>
         /// <param name="forumTopic">Forum Topic</param>
         /// <param name="forum">Forum</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public static int SendNewForumPostMessage(Customer customer, ForumTopic forumTopic, 
+        public static int SendNewForumPostMessage(Customer customer,
+            ForumPost forumPost, ForumTopic forumTopic, 
             Forum forum, int languageId)
         {
             if (customer == null)
@@ -1259,8 +1261,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
                 return 0;
                 //throw new NopException(string.Format("Message template ({0}-{1}) couldn't be loaded", TemplateName, LanguageId));
 
-            string subject = ReplaceMessageTemplateTokens(customer, forumTopic, forum, localizedMessageTemplate.Subject);
-            string body = ReplaceMessageTemplateTokens(customer, forumTopic, forum, localizedMessageTemplate.Body);
+            string subject = ReplaceMessageTemplateTokens(customer, forumPost, forumTopic, forum, localizedMessageTemplate.Subject);
+            string body = ReplaceMessageTemplateTokens(customer, forumPost, forumTopic, forum, localizedMessageTemplate.Body);
             string bcc = localizedMessageTemplate.BccEmailAddresses;
             var from = new MailAddress(AdminEmailAddress, AdminEmailDisplayName);
             var to = new MailAddress(customer.Email, customer.FullName);
@@ -1572,6 +1574,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             allowedTokens.Add("%GiftCard.Amount%");
             allowedTokens.Add("%GiftCard.CouponCode%");
             allowedTokens.Add("%GiftCard.Message%");
+            allowedTokens.Add("%Forums.TopicURL%");
+            allowedTokens.Add("%Forums.TopicName%");
+            allowedTokens.Add("%Forums.ForumURL%");
+            allowedTokens.Add("%Forums.ForumName%");
+            allowedTokens.Add("%Forums.PostAuthor%");
+            allowedTokens.Add("%Forums.PostBody%");
             
             return allowedTokens.ToArray();
         }
@@ -1776,12 +1784,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// Replaces a message template tokens
         /// </summary>
         /// <param name="customer">Customer instance</param>
-        /// <param name="forumTopic">Forum Topic</param>
+        /// <param name="forumPost">Forum post</param>
+        /// <param name="forumTopic">Forum topic</param>
         /// <param name="forum">Forum</param>
         /// <param name="template">Template</param>
         /// <returns>New template</returns>
-        public static string ReplaceMessageTemplateTokens(Customer customer, 
-            ForumTopic forumTopic, Forum forum, 
+        public static string ReplaceMessageTemplateTokens(Customer customer,
+            ForumPost forumPost, ForumTopic forumTopic, Forum forum, 
             string template)
         {
             var tokens = new NameValueCollection();
@@ -1794,11 +1803,21 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             tokens.Add("Customer.FullName", HttpUtility.HtmlEncode(customer.FullName));
             tokens.Add("Customer.VatNumber", HttpUtility.HtmlEncode(customer.VatNumber));
 
-            tokens.Add("Forums.TopicURL", SEOHelper.GetForumTopicUrl(forumTopic));
-            tokens.Add("Forums.TopicName", HttpUtility.HtmlEncode(forumTopic.Subject));
-            tokens.Add("Forums.ForumURL", SEOHelper.GetForumUrl(forum));
-            tokens.Add("Forums.ForumName", HttpUtility.HtmlEncode(forum.Name));
-
+            if (forumPost != null)
+            {
+                tokens.Add("Forums.PostAuthor", HttpUtility.HtmlEncode(CustomerManager.FormatUserName(forumPost.User)));
+                tokens.Add("Forums.PostBody", ForumManager.FormatPostText(forumPost.Text));
+            }
+            if (forumTopic != null)
+            {
+                tokens.Add("Forums.TopicURL", SEOHelper.GetForumTopicUrl(forumTopic));
+                tokens.Add("Forums.TopicName", HttpUtility.HtmlEncode(forumTopic.Subject));
+            }
+            if (forum != null)
+            {
+                tokens.Add("Forums.ForumURL", SEOHelper.GetForumUrl(forum));
+                tokens.Add("Forums.ForumName", HttpUtility.HtmlEncode(forum.Name));
+            }
             foreach(string token in tokens.Keys)
             {
                 template = Replace(template, String.Format(@"%{0}%", token), tokens[token]);

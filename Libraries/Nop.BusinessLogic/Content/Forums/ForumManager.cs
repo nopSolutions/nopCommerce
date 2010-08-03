@@ -873,7 +873,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
                         continue;
 
                     MessageManager.SendNewForumPostMessage(subscription.User,
-                        forumTopic, forum, NopContext.Current.WorkingLanguage.LanguageId);
+                        forumPost, forumTopic, forum, 
+                        NopContext.Current.WorkingLanguage.LanguageId);
                 }
             }
 
