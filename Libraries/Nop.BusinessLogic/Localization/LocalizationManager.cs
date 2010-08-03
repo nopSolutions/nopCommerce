@@ -190,7 +190,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Localization
                 int defaultAdminLanguageId = SettingManager.GetSettingValueInteger("Localization.DefaultAdminLanguageId");
 
                 var language = LanguageManager.GetLanguageById(defaultAdminLanguageId);
-                if (language != null & language.Published)
+                if (language != null && language.Published)
                 {
                     return language;
                 }
