@@ -480,13 +480,15 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// <param name="forumId">The forum group identifier</param>
         /// <param name="userId">The user identifier</param>
         /// <param name="keywords">Keywords</param>
-        /// <param name="searchPosts">A value indicating whether to search in posts</param>
+        /// <param name="searchType">Search type</param>
+        /// <param name="limitDays">Limit by the last number days; 0 to load all topics</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="totalRecords">Total records</param>
         /// <returns>Topics</returns>
         public static List<ForumTopic> GetAllTopics(int forumId,
-            int userId, string keywords, bool searchPosts, int pageSize,
+            int userId, string keywords, ForumSearchTypeEnum searchType,
+            int limitDays, int pageSize,
             int pageIndex, out int totalRecords)
         {
             if (pageSize <= 0)
@@ -498,10 +500,17 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
                 pageIndex = 0;
             if (pageIndex == int.MaxValue)
                 pageIndex = int.MaxValue - 1;
-            
+
+            DateTime? limitDate = null;
+            if (limitDays > 0)
+            {
+                limitDate = DateTime.UtcNow.AddDays(-limitDays);
+            }
+
             var context = ObjectContextHelper.CurrentObjectContext;
             var forumTopics = context.Sp_Forums_TopicLoadAll(forumId,
-                userId, keywords, searchPosts, pageSize, pageIndex, out totalRecords);
+                userId, keywords, (int)searchType, limitDate,
+                pageSize, pageIndex, out totalRecords);
 
             return forumTopics;
         }

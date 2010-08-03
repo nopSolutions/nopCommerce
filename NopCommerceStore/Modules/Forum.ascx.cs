@@ -73,7 +73,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 }
 
                 var forumTopics = ForumManager.GetAllTopics(forum.ForumId, 0, string.Empty,
-                    false, pageSize, this.CurrentPageIndex, out totalRecords);
+                     ForumSearchTypeEnum.All, 0, pageSize, this.CurrentPageIndex, out totalRecords);
                 if (forumTopics.Count > 0)
                 {
                     this.topicsPager1.PageSize = pageSize;

@@ -1619,6 +1619,54 @@ set @resources='
   <LocaleResource Name="Blog.TaggedWith">
     <Value>Blog posts tagged with ''{0}''</Value>
   </LocaleResource>
+  <LocaleResource Name="ForumSearch.AdvancedSearch">
+    <Value>Advanced search</Value>
+  </LocaleResource>
+  <LocaleResource Name="ForumSearch.SearchInForum">
+    <Value>Search in forum:</Value>
+  </LocaleResource>
+  <LocaleResource Name="ForumSearch.SearchWithin">
+    <Value>Search within:</Value>
+  </LocaleResource>
+  <LocaleResource Name="ForumSearch.LimitResultsToPrevious">
+    <Value>Limit results to previous:</Value>
+  </LocaleResource>
+  <LocaleResource Name="ForumSearch.LimitResultsToPrevious.AllResults">
+    <Value>All results</Value>
+  </LocaleResource>
+  <LocaleResource Name="ForumSearch.LimitResultsToPrevious.1day">
+    <Value>1 day</Value>
+  </LocaleResource>
+  <LocaleResource Name="ForumSearch.LimitResultsToPrevious.7days">
+    <Value>7 days</Value>
+  </LocaleResource>
+  <LocaleResource Name="ForumSearch.LimitResultsToPrevious.2weeks">
+    <Value>2 weeks</Value>
+  </LocaleResource>
+  <LocaleResource Name="ForumSearch.LimitResultsToPrevious.1month">
+    <Value>1 month</Value>
+  </LocaleResource>
+  <LocaleResource Name="ForumSearch.LimitResultsToPrevious.3months">
+    <Value>3 months</Value>
+  </LocaleResource>
+  <LocaleResource Name="ForumSearch.LimitResultsToPrevious.6months">
+    <Value>6 months</Value>
+  </LocaleResource>
+  <LocaleResource Name="ForumSearch.LimitResultsToPrevious.1year">
+    <Value>1 year</Value>
+  </LocaleResource>
+  <LocaleResource Name="ForumSearch.SearchWithin.All">
+    <Value>Topic titles and post text</Value>
+  </LocaleResource>
+  <LocaleResource Name="ForumSearch.SearchWithin.TopicTitlesOnly">
+    <Value>Topic titles only</Value>
+  </LocaleResource>
+  <LocaleResource Name="ForumSearch.SearchWithin.PostTextOnly">
+    <Value>Post text only</Value>
+  </LocaleResource>
+  <LocaleResource Name="ForumSearch.SearchInForum.All">
+    <Value>All forums</Value>
+  </LocaleResource>
 </Language>
 '
 

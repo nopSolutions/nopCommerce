@@ -43,10 +43,24 @@ namespace NopSolutions.NopCommerce.Web.Modules
             {
                 if (!String.IsNullOrEmpty(this.SearchTerms))
                     txtSearchTerm.Text = this.SearchTerms;
+
+                this.cbAdvancedSearch.Checked = this.AdvSearch;
+                this.ctrlForumSelector.SelectedForumId = this.SearchInForumId;
+
+                FillDropDowns();
+
+                CommonHelper.SelectListItem(this.ddlSearchWithin, this.SearchWithinId);
+                CommonHelper.SelectListItem(this.ddlLimitResultsToPrevious, this.LimitResultsToPreviousId);
+
                 BindData();
             }
         }
-        
+
+        protected void FillDropDowns()
+        {
+            ctrlForumSelector.BindData();
+        }
+
         protected void BindData()
         {
             try
@@ -63,6 +77,17 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     if (keywords.Length < searchTermMinimumLength)
                         throw new NopException(string.Format(LocalizationManager.GetLocaleResourceString("Forum.SearchTermMinimumLengthIsNCharacters"), searchTermMinimumLength));
 
+                    int forumId = 0;
+                    ForumSearchTypeEnum searchWithin = 0;
+                    int limitResultsToPrevious = 0;
+                    if (cbAdvancedSearch.Checked)
+                    {
+                        //adv search
+                        forumId = ctrlForumSelector.SelectedForumId;
+                        searchWithin = (ForumSearchTypeEnum)Convert.ToInt32(ddlSearchWithin.SelectedValue);
+                        limitResultsToPrevious = Convert.ToInt32(ddlLimitResultsToPrevious.SelectedValue);
+                    }
+
                     int totalRecords = 0;
                     int pageSize = 10;
                     if (ForumManager.SearchResultsPageSize > 0)
@@ -70,8 +95,8 @@ namespace NopSolutions.NopCommerce.Web.Modules
                         pageSize = ForumManager.SearchResultsPageSize;
                     }
 
-                    var forumTopics = ForumManager.GetAllTopics(0, 0, keywords, true,
-                        pageSize, this.CurrentPageIndex, out totalRecords);
+                    var forumTopics = ForumManager.GetAllTopics(forumId, 0, keywords, searchWithin,
+                        limitResultsToPrevious, pageSize, this.CurrentPageIndex, out totalRecords);
                     if (forumTopics.Count > 0)
                     {
                         this.searchPager1.PageSize = pageSize;
@@ -104,6 +129,11 @@ namespace NopSolutions.NopCommerce.Web.Modules
         protected void btnSearch_Click(object sender, EventArgs e)
         {
             string url = SEOHelper.GetForumSearchUrl(txtSearchTerm.Text);
+            url = CommonHelper.ModifyQueryString(url, "adv=" + cbAdvancedSearch.Checked.ToString(), null);
+            url = CommonHelper.ModifyQueryString(url, "fid=" + ctrlForumSelector.SelectedForumId.ToString(), null);
+            url = CommonHelper.ModifyQueryString(url, "w=" + ddlSearchWithin.SelectedValue.ToString(), null);
+            url = CommonHelper.ModifyQueryString(url, "l=" + ddlLimitResultsToPrevious.SelectedValue.ToString(), null);
+
             Response.Redirect(url);
         }
 
@@ -161,7 +191,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 var hlTopicStarter = e.Item.FindControl("hlTopicStarter") as HyperLink;
                 if (hlTopicStarter != null)
                 {
-                    if(customer != null && CustomerManager.AllowViewingProfiles && !customer.IsGuest)
+                    if (customer != null && CustomerManager.AllowViewingProfiles && !customer.IsGuest)
                     {
                         hlTopicStarter.Text = Server.HtmlEncode(CustomerManager.FormatUserName(customer, true));
                         hlTopicStarter.NavigateUrl = SEOHelper.GetUserProfileUrl(customer.CustomerId);
@@ -187,12 +217,14 @@ namespace NopSolutions.NopCommerce.Web.Modules
             }
         }
 
-        public string SearchTerms
+        protected override void OnPreRender(EventArgs e)
         {
-            get
-            {
-                return CommonHelper.QueryString("SearchTerms");
-            }
+            BindJQuery();
+
+            this.cbAdvancedSearch.Attributes.Add("onclick", "toggleAdvancedSearch();");
+
+            txtSearchTerm.Attributes.Add("onkeydown", "if(event.which || event.keyCode){if ((event.which == 13) || (event.keyCode == 13)) {document.getElementById('" + btnSearch.ClientID + "').click();return false;}} else {return true}; ");
+            base.OnPreRender(e);
         }
 
         public int CurrentPageIndex
@@ -207,11 +239,44 @@ namespace NopSolutions.NopCommerce.Web.Modules
             }
         }
 
-        protected override void OnPreRender(EventArgs e)
+        public string SearchTerms
         {
-            txtSearchTerm.Attributes.Add("onkeydown", "if(event.which || event.keyCode){if ((event.which == 13) || (event.keyCode == 13)) {document.getElementById('" + btnSearch.ClientID + "').click();return false;}} else {return true}; ");
-            base.OnPreRender(e);
+            get
+            {
+                return CommonHelper.QueryString("SearchTerms");
+            }
         }
 
+        public bool AdvSearch
+        {
+            get
+            {
+                return CommonHelper.QueryStringBool("adv");
+            }
+        }
+
+        public int SearchInForumId
+        {
+            get
+            {
+                return CommonHelper.QueryStringInt("fid");
+            }
+        }
+
+        public int SearchWithinId
+        {
+            get
+            {
+                return CommonHelper.QueryStringInt("w");
+            }
+        }
+
+        public int LimitResultsToPreviousId
+        {
+            get
+            {
+                return CommonHelper.QueryStringInt("l");
+            }
+        }
     }
 }

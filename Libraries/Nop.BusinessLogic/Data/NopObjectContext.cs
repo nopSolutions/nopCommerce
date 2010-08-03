@@ -2313,7 +2313,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }     
 
         public List<ForumTopic> Sp_Forums_TopicLoadAll(int forumId,
-            int userId, string keywords, bool searchPosts, int pageSize,
+            int userId, string keywords, int searchType,
+            DateTime? limitDate, int pageSize,
             int pageIndex, out int totalRecords)
         {
             totalRecords = 0;
@@ -2321,15 +2322,24 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
             ObjectParameter forumIdParameter = new ObjectParameter("forumId", forumId);
             ObjectParameter userIdParameter = new ObjectParameter("userId", userId);
             ObjectParameter keywordsParameter = new ObjectParameter("keywords", keywords);
-            ObjectParameter searchPostsParameter = new ObjectParameter("searchPosts", searchPosts);
+            ObjectParameter searchTypeParameter = new ObjectParameter("searchType", searchType);
+            ObjectParameter limitDateParameter;
+            if (limitDate.HasValue)
+            {
+                limitDateParameter = new ObjectParameter("LimitDate", limitDate);
+            }
+            else
+            {
+                limitDateParameter = new ObjectParameter("LimitDate", typeof(DateTime));
+            }
             ObjectParameter pageSizeParameter = new ObjectParameter("PageSize", pageSize);
             ObjectParameter pageIndexParameter = new ObjectParameter("PageIndex", pageIndex);
             ObjectParameter totalRecordsParameter = new ObjectParameter("TotalRecords", typeof(int));
 
             var result = base.ExecuteFunction<ForumTopic>("Sp_Forums_TopicLoadAll",
                 forumIdParameter, userIdParameter, keywordsParameter,
-                searchPostsParameter, pageSizeParameter, 
-                pageIndexParameter, totalRecordsParameter).ToList();
+                searchTypeParameter, limitDateParameter, 
+                pageSizeParameter, pageIndexParameter, totalRecordsParameter).ToList();
             totalRecords = Convert.ToInt32(totalRecordsParameter.Value);
             return result;
         }     

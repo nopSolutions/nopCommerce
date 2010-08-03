@@ -2062,3 +2062,99 @@ BEGIN
 	SET ROWCOUNT 0
 END
 GO
+
+
+
+
+IF EXISTS (
+		SELECT *
+		FROM dbo.sysobjects
+		WHERE id = OBJECT_ID(N'[dbo].[Nop_Forums_TopicLoadAll]') AND OBJECTPROPERTY(id,N'IsProcedure') = 1)
+DROP PROCEDURE [dbo].[Nop_Forums_TopicLoadAll]
+GO
+CREATE PROCEDURE [dbo].[Nop_Forums_TopicLoadAll]
+(
+	@ForumID			int,
+	@UserID				int,
+	@Keywords			nvarchar(MAX),	
+	@SearchType			int = 0,
+	@LimitDate			datetime,
+	@PageIndex			int = 0, 
+	@PageSize			int = 2147483644,
+	@TotalRecords		int = null OUTPUT
+)
+AS
+BEGIN
+	
+	SET @Keywords = isnull(@Keywords, '')
+	SET @Keywords = '%' + rtrim(ltrim(@Keywords)) + '%'
+
+	--paging
+	DECLARE @PageLowerBound int
+	DECLARE @PageUpperBound int
+	DECLARE @RowsToReturn int
+	
+	SET @RowsToReturn = @PageSize * (@PageIndex + 1)	
+	SET @PageLowerBound = @PageSize * @PageIndex
+	SET @PageUpperBound = @PageLowerBound + @PageSize + 1
+	
+	CREATE TABLE #PageIndex 
+	(
+		IndexID int IDENTITY (1, 1) NOT NULL,
+		TopicID int NOT NULL,
+		TopicTypeID int NOT NULL,
+		LastPostTime datetime NULL,
+	)
+
+	INSERT INTO #PageIndex (TopicID, TopicTypeID, LastPostTime)
+	SELECT DISTINCT
+		ft.TopicID, ft.TopicTypeID, ft.LastPostTime
+	FROM Nop_Forums_Topic ft with (NOLOCK) 
+	LEFT OUTER JOIN Nop_Forums_Post fp with (NOLOCK) ON ft.TopicID = fp.TopicID
+	WHERE  (
+				@ForumID IS NULL OR @ForumID=0
+				OR (ft.ForumID=@ForumID)
+			)
+		AND (
+				@UserID IS NULL OR @UserID=0
+				OR (ft.UserID=@UserID)
+			)
+		AND	(
+				((@SearchType = 0 or @SearchType = 10) and patindex(@Keywords, ft.Subject) > 0)
+				OR
+				((@SearchType = 0 or @SearchType = 20) and patindex(@Keywords, fp.Text) > 0)
+			)
+		AND (
+				@LimitDate IS NULL
+				OR (DATEDIFF(second, @LimitDate, ft.LastPostTime) > 0)
+			)
+	ORDER BY ft.TopicTypeID desc, ft.LastPostTime desc, ft.TopicID desc
+
+	SET @TotalRecords = @@rowcount	
+	SET ROWCOUNT @RowsToReturn
+	
+	SELECT  
+		ft.TopicID as ForumTopicId,
+		ft.ForumId,
+		ft.UserId,
+		ft.TopicTypeId,
+		ft.Subject,
+		ft.NumPosts,
+		ft.Views,
+		ft.LastPostId,
+		ft.LastPostUserId,
+		ft.LastPostTime,
+		ft.CreatedOn,
+		ft.UpdatedOn
+	FROM
+		#PageIndex [pi]
+		INNER JOIN Nop_Forums_Topic ft on ft.TopicID = [pi].TopicID
+	WHERE
+		[pi].IndexID > @PageLowerBound AND 
+		[pi].IndexID < @PageUpperBound
+	ORDER BY
+		IndexID
+	
+	SET ROWCOUNT 0
+END
+GO

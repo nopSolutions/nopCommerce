@@ -27,6 +27,12 @@ namespace NopSolutions.NopCommerce.Web.Modules
         {
             string prefix = "--";
             ddlForums.Items.Clear();
+            //insert root item if required
+            if (!String.IsNullOrEmpty(this.RootItemText))
+            {
+                var itemRoot = new ListItem(this.RootItemText, "0");
+                this.ddlForums.Items.Add(itemRoot);
+            }
             var forumGroups = ForumManager.GetAllForumGroups();
             foreach (var forumGroup in forumGroups)
             {
@@ -75,6 +81,18 @@ namespace NopSolutions.NopCommerce.Web.Modules
             {
                 this.selectedForumId = value;
             }
+        }
+
+        public string RootItemText
+        {
+            get
+            {
+                if (ViewState["RootItemText"] == null)
+                    return string.Empty;
+                else
+                    return (string)ViewState["RootItemText"];
+            }
+            set { ViewState["RootItemText"] = value; }
         }
     }
 }

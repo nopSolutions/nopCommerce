@@ -5012,6 +5012,39 @@ ul.languagelist li .selected
 {
 }
 
+.forum-search-panel table.adv-search
+{
+	border: collapse;
+	color: #333;
+	margin: 0px;
+	width: 100%;
+	vertical-align: middle;
+	text-align: left;
+}
+
+.forum-search-panel table.adv-search
+{
+    border-top: solid #D3D3D3 1px;
+    margin-top:10px;
+}
+
+.forum-search-panel table.adv-search td.title
+{
+	padding: 4px 4px 4px 4px;
+	text-align: left;
+	vertical-align: middle;
+	width: 130px;
+}
+
+.forum-search-panel table.adv-search td.data
+{
+	padding: 4px 4px 4px 4px;
+	text-align: left;
+	vertical-align: middle;
+	white-space: nowrap;
+}
+
+
 .forumsearch .topicsgroup
 {
 	background: url('images/forum-footer-bg.gif') repeat-x bottom;
