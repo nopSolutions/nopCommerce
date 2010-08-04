@@ -1667,6 +1667,21 @@ set @resources='
   <LocaleResource Name="ForumSearch.SearchInForum.All">
     <Value>All forums</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.ImpersonatedAs">
+    <Value>Impersonated as {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.ImpersonatedAs.Finish">
+    <Value>finish session</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.ImpersonatedAs.Finish.Tooltip">
+    <Value>Click here to finish impersonated session</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CustomerPlaceOrder.PlaceOrder">
+    <Value>Place order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CustomerDetails.PlaceOrder">
+    <Value>Place order</Value>
+  </LocaleResource>
 </Language>
 '
 

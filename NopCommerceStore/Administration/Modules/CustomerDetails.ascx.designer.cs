@@ -94,24 +94,6 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         protected global::NopSolutions.NopCommerce.Web.Administration.Modules.CustomerShippingAddressesControl ctrlCustomerShippingAddresses;
         
         /// <summary>
-        /// pnlCustomerOrders control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::AjaxControlToolkit.TabPanel pnlCustomerOrders;
-        
-        /// <summary>
-        /// ctrlCustomerOrders control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.CustomerOrdersControl ctrlCustomerOrders;
-        
-        /// <summary>
         /// pnlCustomerRoleMappings control.
         /// </summary>
         /// <remarks>
@@ -146,6 +128,42 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::NopSolutions.NopCommerce.Web.Administration.Modules.CustomerRewardPointsControl ctrlCustomerRewardPoints;
+        
+        /// <summary>
+        /// pnlCustomerOrders control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::AjaxControlToolkit.TabPanel pnlCustomerOrders;
+        
+        /// <summary>
+        /// ctrlCustomerOrders control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.CustomerOrdersControl ctrlCustomerOrders;
+        
+        /// <summary>
+        /// pnlCustomerPlaceOrder control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::AjaxControlToolkit.TabPanel pnlCustomerPlaceOrder;
+        
+        /// <summary>
+        /// ctrlCustomerPlaceOrder control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.CustomerPlaceOrderControl ctrlCustomerPlaceOrder;
         
         /// <summary>
         /// pnlCustomerShoppingCart control.

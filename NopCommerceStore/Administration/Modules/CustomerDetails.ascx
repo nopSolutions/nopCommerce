@@ -9,6 +9,7 @@
 <%@ Register TagPrefix="nopCommerce" TagName="CustomerRewardPoints" Src="CustomerRewardPoints.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="CustomerShoppingCart" Src="CustomerShoppingCart.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="CustomerWishlist" Src="CustomerWishlist.ascx" %>
+<%@ Register TagPrefix="nopCommerce" TagName="CustomerPlaceOrder" Src="CustomerPlaceOrder.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="CustomerSendEmail" Src="CustomerSendEmail.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="CustomerSendPrivateMessage" Src="CustomerSendPrivateMessage.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="ConfirmationBox" Src="ConfirmationBox.ascx" %>
@@ -45,11 +46,6 @@
             </nopCommerce:CustomerShippingAddresses>
         </ContentTemplate>
     </ajaxToolkit:TabPanel>
-    <ajaxToolkit:TabPanel runat="server" ID="pnlCustomerOrders" HeaderText="<% $NopResources:Admin.CustomerDetails.Orders %>">
-        <ContentTemplate>
-            <nopCommerce:CustomerOrders runat="server" ID="ctrlCustomerOrders"></nopCommerce:CustomerOrders>
-        </ContentTemplate>
-    </ajaxToolkit:TabPanel>
     <ajaxToolkit:TabPanel runat="server" ID="pnlCustomerRoleMappings" HeaderText="<% $NopResources:Admin.CustomerDetails.Roles %>">
         <ContentTemplate>
             <nopCommerce:CustomerRoleMappings runat="server" ID="ctrlCustomerRoleMappings"></nopCommerce:CustomerRoleMappings>
@@ -58,6 +54,16 @@
     <ajaxToolkit:TabPanel runat="server" ID="pnlCustomerRewardPoints" HeaderText="<% $NopResources:Admin.CustomerDetails.RewardPoints %>">
         <ContentTemplate>
             <nopCommerce:CustomerRewardPoints runat="server" ID="ctrlCustomerRewardPoints"></nopCommerce:CustomerRewardPoints>
+        </ContentTemplate>
+    </ajaxToolkit:TabPanel>
+    <ajaxToolkit:TabPanel runat="server" ID="pnlCustomerOrders" HeaderText="<% $NopResources:Admin.CustomerDetails.Orders %>">
+        <ContentTemplate>
+            <nopCommerce:CustomerOrders runat="server" ID="ctrlCustomerOrders"></nopCommerce:CustomerOrders>
+        </ContentTemplate>
+    </ajaxToolkit:TabPanel>
+    <ajaxToolkit:TabPanel runat="server" ID="pnlCustomerPlaceOrder" HeaderText="<% $NopResources:Admin.CustomerDetails.PlaceOrder %>">
+        <ContentTemplate>
+            <nopCommerce:CustomerPlaceOrder runat="server" ID="ctrlCustomerPlaceOrder"></nopCommerce:CustomerPlaceOrder>
         </ContentTemplate>
     </ajaxToolkit:TabPanel>
     <ajaxToolkit:TabPanel runat="server" ID="pnlCustomerShoppingCart" HeaderText="<% $NopResources:Admin.CustomerDetails.CurrentCart %>">

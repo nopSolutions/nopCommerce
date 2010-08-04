@@ -90,22 +90,48 @@ namespace NopSolutions.NopCommerce.HttpModules
                     
                     if (customer != null)
                     {
-                        var registeredCustomerSession = CustomerManager.GetCustomerSessionByCustomerId(customer.CustomerId);
-                        if (registeredCustomerSession == null)
-                        {
-                            registeredCustomerSession = NopContext.Current.GetSession(true);
-                            registeredCustomerSession.IsExpired = false;
-                            registeredCustomerSession.LastAccessed = DateTime.UtcNow;
-                            registeredCustomerSession.CustomerId = customer.CustomerId;
-                            registeredCustomerSession = CustomerManager.SaveCustomerSession(registeredCustomerSession.CustomerSessionGuid, registeredCustomerSession.CustomerId, registeredCustomerSession.LastAccessed, registeredCustomerSession.IsExpired);
-                        }
-
                         if (!String.IsNullOrEmpty(HttpContext.Current.User.Identity.Name)
                             && customer.Active
                             && !customer.Deleted && !customer.IsGuest)
                         {
-                            NopContext.Current.User = customer;
-                            NopContext.Current.Session = registeredCustomerSession;
+                            //impersonate user if required (currently used for 'phone order' support)
+                            //and validate that the current user is admin
+                            //and validate that we're in public store
+                            if (customer.IsAdmin &&
+                                !CommonHelper.IsAdmin() &&
+                                customer.ImpersonatedCustomerGuid != Guid.Empty)
+                            {
+                                //set impersonated customer
+                                var impersonatedCustomer = CustomerManager.GetCustomerByGuid(customer.ImpersonatedCustomerGuid);
+                                if (impersonatedCustomer != null)
+                                {
+                                    NopContext.Current.User = impersonatedCustomer;
+                                    NopContext.Current.IsCurrentCustomerImpersonated = true;
+                                    NopContext.Current.OriginalUser = customer;
+                                }
+                                else
+                                {
+                                    //set current customer
+                                    NopContext.Current.User = customer;
+                                }
+                            }
+                            else
+                            {
+                                //set current customer
+                                NopContext.Current.User = customer;
+                            }
+
+                            //set current customer session
+                            var customerSession = CustomerManager.GetCustomerSessionByCustomerId(NopContext.Current.User.CustomerId);
+                            if (customerSession == null)
+                            {
+                                customerSession = NopContext.Current.GetSession(true);
+                                customerSession.IsExpired = false;
+                                customerSession.LastAccessed = DateTime.UtcNow;
+                                customerSession.CustomerId = NopContext.Current.User.CustomerId;
+                                customerSession = CustomerManager.SaveCustomerSession(customerSession.CustomerSessionGuid, customerSession.CustomerId, customerSession.LastAccessed, customerSession.IsExpired);
+                            }
+                            NopContext.Current.Session = customerSession;
                         }
                         else
                         {

@@ -21,6 +21,15 @@
                     <LoggedInTemplate>
                         <li>
                             <a href="<%= SEOHelper.GetMyAccountUrl()%>" class="account"><%=Page.User.Identity.Name %></a>
+                            <% if (NopContext.Current.IsCurrentCustomerImpersonated)
+                               { 
+                            %>
+                            <span class="impersonate">(<%=string.Format(GetLocaleResourceString("Account.ImpersonatedAs"), CustomerManager.UsernamesEnabled ? Server.HtmlEncode(NopContext.Current.User.Username) : Server.HtmlEncode(NopContext.Current.User.Email))%>
+                                -
+                                <asp:LinkButton runat="server" ID="lFinishImpersonate" Text="<% $NopResources:Account.ImpersonatedAs.Finish %>"
+                                    ToolTip="<% $NopResources:Account.ImpersonatedAs.Finish.Tooltip %>" OnClick="lFinishImpersonate_Click"
+                                    CssClass="finish-impersonation"></asp:LinkButton>)</span>
+                            <%} %>
                         </li>
                         <li><a href="<%=Page.ResolveUrl("~/logout.aspx")%>" class="ico-logout">
                             <%=GetLocaleResourceString("Account.Logout")%></a> </li>

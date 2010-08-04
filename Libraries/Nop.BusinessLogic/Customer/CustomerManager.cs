@@ -1718,10 +1718,19 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         public static void Logout()
         {
             if (NopContext.Current != null)
+            {
                 NopContext.Current.ResetSession();
-
+            }
+            if (NopContext.Current != null &&
+                NopContext.Current.IsCurrentCustomerImpersonated &&
+                NopContext.Current.OriginalUser!=null)
+            {
+                NopContext.Current.OriginalUser.ImpersonatedCustomerGuid = Guid.Empty;
+            }
             if (HttpContext.Current != null && HttpContext.Current.Session != null)
+            {
                 HttpContext.Current.Session.Abandon();
+            }
             FormsAuthentication.SignOut();
         }
 

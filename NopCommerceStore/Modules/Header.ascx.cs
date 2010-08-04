@@ -27,6 +27,7 @@ using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Content.Forums;
+using NopSolutions.NopCommerce.Common.Utils;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -35,7 +36,18 @@ namespace NopSolutions.NopCommerce.Web.Modules
         protected void Page_Load(object sender, EventArgs e)
         {
         }
-
+        
+        protected void lFinishImpersonate_Click(object sender, EventArgs e)
+        {
+            if (NopContext.Current != null &&
+                NopContext.Current.IsCurrentCustomerImpersonated &&
+                NopContext.Current.OriginalUser != null)
+            {
+                NopContext.Current.OriginalUser.ImpersonatedCustomerGuid = Guid.Empty;
+                Response.Redirect(CommonHelper.GetStoreLocation());
+            }
+        }
+        
         protected override void OnPreRender(EventArgs e)
         {
             Literal lUnreadPrivateMessages = topLoginView.FindControl("lUnreadPrivateMessages") as Literal;

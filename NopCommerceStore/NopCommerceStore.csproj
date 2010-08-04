@@ -379,6 +379,13 @@
     <Compile Include="Administration\BulkEditProducts.aspx.designer.cs">
       <DependentUpon>BulkEditProducts.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Administration\Modules\CustomerPlaceOrder.ascx.cs">
+      <DependentUpon>CustomerPlaceOrder.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Administration\Modules\CustomerPlaceOrder.ascx.designer.cs">
+      <DependentUpon>CustomerPlaceOrder.ascx</DependentUpon>
+    </Compile>
     <Compile Include="Administration\Modules\OrderPartialRefund.ascx.cs">
       <DependentUpon>OrderPartialRefund.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -5742,6 +5749,7 @@
     <Content Include="Administration\CategoryTemplateAdd.aspx" />
     <Content Include="Administration\CategoryTemplateDetails.aspx" />
     <Content Include="Administration\CategoryTemplates.aspx" />
+    <Content Include="Administration\Modules\CustomerPlaceOrder.ascx" />
     <Content Include="Administration\Modules\OrderPartialRefund.ascx" />
     <Content Include="Administration\OrderPartialRefund.aspx" />
     <Content Include="Administration\Modules\OnlineCustomers.ascx" />

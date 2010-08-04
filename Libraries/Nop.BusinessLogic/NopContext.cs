@@ -41,6 +41,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic
 
         #region Fields
         private Customer _currentCustomer;
+        private bool _isCurrentCustomerImpersonated;
+        private Customer _originalCustomer;
         private bool? _isAdmin;
         private HttpContext _context = HttpContext.Current;
         #endregion
@@ -274,6 +276,36 @@ namespace NopSolutions.NopCommerce.BusinessLogic
             set
             {
                 this._currentCustomer = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the value indicating whether current user is impersonated
+        /// </summary>
+        public bool IsCurrentCustomerImpersonated
+        {
+            get
+            {
+                return this._isCurrentCustomerImpersonated;
+            }
+            set
+            {
+                this._isCurrentCustomerImpersonated = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the current user (in case th current user is impersonated)
+        /// </summary>
+        public Customer OriginalUser
+        {
+            get
+            {
+                return this._originalCustomer;
+            }
+            set
+            {
+                this._originalCustomer = value;
             }
         }
 

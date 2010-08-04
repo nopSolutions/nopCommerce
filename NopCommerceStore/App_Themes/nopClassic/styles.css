@@ -320,6 +320,17 @@ a.logo
 	color: #3664A5;
 }
 
+.header-links span.impersonate
+{
+	color:#E44097;
+	font-weight:bold;
+}
+
+.header-links span.impersonate .finish-impersonation
+{
+	color:#58DE81;
+}
+
 .headermenu
 {
 	color: #FFFFFF;

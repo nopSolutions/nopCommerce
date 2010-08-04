@@ -1145,6 +1145,37 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             }
         }
 
+        /// <summary>
+        /// Gets or sets the impersonated customer identifier
+        /// </summary>
+        public Guid ImpersonatedCustomerGuid
+        {
+            get
+            {
+                var customerAttributes = this.CustomerAttributes;
+                CustomerAttribute attr = customerAttributes.FindAttribute("ImpersonatedCustomerGuid", this.CustomerId);
+                if (attr != null)
+                {
+                    Guid _impersonatedCustomerGuid = Guid.Empty;
+                    Guid.TryParse(attr.Value, out _impersonatedCustomerGuid);
+                    return _impersonatedCustomerGuid;
+                }
+                else
+                    return Guid.Empty;
+            }
+            set
+            {
+                var customerAttributes = this.CustomerAttributes;
+                CustomerAttribute attr = customerAttributes.FindAttribute("ImpersonatedCustomerGuid", this.CustomerId);
+                if (attr != null)
+                    attr = CustomerManager.UpdateCustomerAttribute(attr.CustomerAttributeId, attr.CustomerId, "ImpersonatedCustomerGuid", value.ToString());
+                else
+                    attr = CustomerManager.InsertCustomerAttribute(this.CustomerId, "ImpersonatedCustomerGuid", value.ToString());
+
+                ResetCachedValues();
+            }
+        }
+
         #endregion
 
         #region Navigation Properties
