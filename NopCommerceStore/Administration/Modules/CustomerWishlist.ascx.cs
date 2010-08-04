@@ -143,8 +143,6 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 sb.Append("Saved:");
                 sb.Append("&nbsp;&nbsp;");
                 sb.Append(discountString);
-                sb.Append("<br />");
-                sb.Append("<em>NOTE: This discount is applied to the current user</em>");
             }
             return sb.ToString();
         }
