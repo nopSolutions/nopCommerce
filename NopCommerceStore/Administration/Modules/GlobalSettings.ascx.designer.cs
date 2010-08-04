@@ -1030,6 +1030,69 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         protected global::System.Web.UI.WebControls.TextBox txtGoogleAdsenseCode;
         
         /// <summary>
+        /// pnlGoogleAnalytics control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::AjaxControlToolkit.TabPanel pnlGoogleAnalytics;
+        
+        /// <summary>
+        /// lblGoogleAnalyticsEnabled control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblGoogleAnalyticsEnabled;
+        
+        /// <summary>
+        /// cbGoogleAnalyticsEnabled control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbGoogleAnalyticsEnabled;
+        
+        /// <summary>
+        /// lblGoogleAnalyticsId control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblGoogleAnalyticsId;
+        
+        /// <summary>
+        /// txtGoogleAnalyticsId control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtGoogleAnalyticsId;
+        
+        /// <summary>
+        /// lblGoogleAnalyticsJS control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblGoogleAnalyticsJS;
+        
+        /// <summary>
+        /// txtGoogleAnalyticsJS control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtGoogleAnalyticsJS;
+        
+        /// <summary>
         /// pnlRewardPoints control.
         /// </summary>
         /// <remarks>

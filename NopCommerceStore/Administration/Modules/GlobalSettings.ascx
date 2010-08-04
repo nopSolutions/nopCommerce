@@ -28,6 +28,7 @@
             toggleShowBestsellersOnHomePage();
             toggleLiveChat();
             toggleGoogleAdsense();
+            toggleGoogleAnalytics();
         });
 
         function toggleUrlRewriting() {
@@ -68,6 +69,17 @@
             }
         }
 
+        function toggleGoogleAnalytics() {
+            if (getE('<%=cbGoogleAnalyticsEnabled.ClientID %>').checked) {
+                $('#pnlGoogleAnalyticsId').show();
+                $('#pnlGoogleAnalyticsJS').show();
+            }
+            else {
+                $('#pnlGoogleAnalyticsId').hide();
+                $('#pnlGoogleAnalyticsJS').hide();
+            }
+        }
+        
         function toggleProductsAlsoPurchased() {
             if (getE('<%=cbProductsAlsoPurchased.ClientID %>').checked) {
                 $('#pnlProductsAlsoPurchasedNumber').show();
@@ -765,6 +777,43 @@
                         </td>
                         <td class="adminData">
                             <asp:TextBox runat="server" ID="txtGoogleAdsenseCode" TextMode="MultiLine" Rows="5"
+                                CssClass="adminInput" />
+                        </td>
+                    </tr>
+                </table>
+            </ContentTemplate>
+        </ajaxToolkit:TabPanel>
+        <ajaxToolkit:TabPanel runat="server" ID="pnlGoogleAnalytics" HeaderText="<% $NopResources:Admin.GlobalSettings.GoogleAnalytics.Title %>">
+            <ContentTemplate>
+                <table class="adminContent">
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
+                                ID="lblGoogleAnalyticsEnabled" Text="<% $NopResources:Admin.GlobalSettings.GoogleAnalytics.Enabled %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.GoogleAnalytics.Enabled.Tooltip %>" />
+                        </td>
+                        <td class="adminData">
+                            <asp:CheckBox runat="server" ID="cbGoogleAnalyticsEnabled" Checked="false" TextAlign="Left" />
+                        </td>
+                    </tr>
+                    <tr id="pnlGoogleAnalyticsId">
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
+                                ID="lblGoogleAnalyticsId" Text="<% $NopResources:Admin.GlobalSettings.GoogleAnalytics.ID %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.GoogleAnalytics.ID.Tooltip %>" />
+                        </td>
+                        <td class="adminData">
+                            <asp:TextBox runat="server" ID="txtGoogleAnalyticsId" CssClass="adminInput" />
+                        </td>
+                    </tr>
+                    <tr id="pnlGoogleAnalyticsJS">
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
+                                ID="lblGoogleAnalyticsJS" Text="<% $NopResources:Admin.GlobalSettings.GoogleAnalytics.JS %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.GoogleAnalytics.JS.Tooltip %>" />
+                        </td>
+                        <td class="adminData">
+                            <asp:TextBox runat="server" ID="txtGoogleAnalyticsJS" TextMode="MultiLine" Rows="5"
                                 CssClass="adminInput" />
                         </td>
                     </tr>

@@ -169,8 +169,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             txtLiveChatBtnCode.Text = SettingManager.GetSettingValue("LiveChat.BtnCode");
             txtLiveChatMonCode.Text = SettingManager.GetSettingValue("LiveChat.MonCode");
 
+            //Google Adsense
             cbGoogleAdsenseEnabled.Checked = SettingManager.GetSettingValueBoolean("GoogleAdsense.Enabled", false);
             txtGoogleAdsenseCode.Text = SettingManager.GetSettingValue("GoogleAdsense.Code");
+
+            //Google Analytics
+            cbGoogleAnalyticsEnabled.Checked = SettingManager.GetSettingValueBoolean("Analytics.GoogleEnabled", false);
+            txtGoogleAnalyticsId.Text = SettingManager.GetSettingValue("Analytics.GoogleID");
+            txtGoogleAnalyticsJS.Text = SettingManager.GetSettingValue("Analytics.GoogleJS");
 
             txtAllowedIPList.Text = SettingManager.GetSettingValue("Security.AdminAreaAllowedIP");
 
@@ -295,6 +301,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             this.cbShowBestsellersOnHomePage.Attributes.Add("onclick", "toggleShowBestsellersOnHomePage();");
             this.cbLiveChatEnabled.Attributes.Add("onclick", "toggleLiveChat();");
             this.cbGoogleAdsenseEnabled.Attributes.Add("onclick", "toggleGoogleAdsense();");
+            this.cbGoogleAnalyticsEnabled.Attributes.Add("onclick", "toggleGoogleAnalytics();");
 
             base.OnPreRender(e);
         }
@@ -433,8 +440,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     SettingManager.SetParam("LiveChat.BtnCode", txtLiveChatBtnCode.Text);
                     SettingManager.SetParam("LiveChat.MonCode", txtLiveChatMonCode.Text);
 
+                    //Google Adsense
                     SettingManager.SetParam("GoogleAdsense.Enabled", cbGoogleAdsenseEnabled.Checked.ToString());
                     SettingManager.SetParam("GoogleAdsense.Code", txtGoogleAdsenseCode.Text);
+
+                    //Google Analytics
+                    SettingManager.SetParam("Analytics.GoogleEnabled", cbGoogleAnalyticsEnabled.Checked.ToString());
+                    SettingManager.SetParam("Analytics.GoogleID", txtGoogleAnalyticsId.Text);
+                    SettingManager.SetParam("Analytics.GoogleJS", txtGoogleAnalyticsJS.Text);
 
                     if (uplPdfLogo.HasFile)
                     {
