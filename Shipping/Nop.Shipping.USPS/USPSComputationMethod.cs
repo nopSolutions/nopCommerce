@@ -204,6 +204,11 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.USPS
 
                 if ((!IsPackageTooHeavy(pounds)) && (!IsPackageTooLarge(length, height, width)))
                 {
+                    //little hack here for international requests
+                    length = 12;
+                    width = 12;
+                    height = 12;
+
                     string mailType = "Package"; //Package, Envelope
                     sb.Append("<Package ID=\"0\">");
                     // No use of pounds in this classes
@@ -254,6 +259,11 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.USPS
                         width2 = 1;
                     if (length2 < 1)
                         length2 = 1;
+
+                    //little hack here for international requests
+                    length2 = 12;
+                    width2 = 12;
+                    height2 = 12;
 
                     for (int i = 0; i < totalPackages; i++)
                     {
