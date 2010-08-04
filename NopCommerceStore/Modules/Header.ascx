@@ -20,7 +20,7 @@
                     </AnonymousTemplate>
                     <LoggedInTemplate>
                         <li>
-                            <%=Page.User.Identity.Name %>
+                            <a href="<%= SEOHelper.GetMyAccountUrl()%>" class="account"><%=Page.User.Identity.Name %></a>
                         </li>
                         <li><a href="<%=Page.ResolveUrl("~/logout.aspx")%>" class="ico-logout">
                             <%=GetLocaleResourceString("Account.Logout")%></a> </li>
