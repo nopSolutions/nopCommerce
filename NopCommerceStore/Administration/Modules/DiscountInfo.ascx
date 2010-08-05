@@ -5,12 +5,28 @@
 <%@ Register TagPrefix="nopCommerce" TagName="SelectCustomerRolesControl" Src="SelectCustomerRolesControl.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="ToolTipLabel" Src="ToolTipLabelControl.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="DatePicker" Src="DatePicker.ascx" %>
+<%@ Register TagPrefix="nopCommerce" TagName="NumericTextBox" Src="NumericTextBox.ascx" %>
 
 <script type="text/javascript">
-    $(document).ready(function() {
+    $(document).ready(function () {
+        toggleLimitation();
         toggleUsePercentage();
         toggleRequiresCouponCode();
     });
+
+
+    function toggleLimitation() {
+        var selectedDiscountLimitation = document.getElementById('<%=ddlDiscountLimitation.ClientID %>');
+        var selectedDiscountLimitationId = selectedDiscountLimitation.options[selectedDiscountLimitation.selectedIndex].value;
+        if (selectedDiscountLimitationId == 15 || selectedDiscountLimitationId == 25) {
+            //'N Times Only' or 'N Times Per Customer'
+            $('#pnlLimitationTimes').show();
+        }
+        else {
+            $('#pnlLimitationTimes').hide();
+
+        }
+    }
 
     function toggleUsePercentage() {
         if (getE('<%=cbUsePercentage.ClientID %>').checked) {
@@ -91,6 +107,19 @@
                     <td class="adminData">
                         <asp:DropDownList ID="ddlDiscountLimitation" CssClass="adminInput" runat="server">
                         </asp:DropDownList>
+                    </td>
+                </tr>
+                <tr id="pnlLimitationTimes">
+                    <td class="adminTitle">
+                        <nopCommerce:ToolTipLabel runat="server" ID="lblLimitationTimes" Text="<% $NopResources:Admin.DiscountInfo.LimitationTimes %>"
+                            ToolTip="<% $NopResources:Admin.DiscountInfo.LimitationTimes.Tooltip %>"
+                            ToolTipImage="~/Administration/Common/ico-help.gif" />
+                    </td>
+                    <td class="adminData">
+                        <nopCommerce:NumericTextBox runat="server" CssClass="adminInput" ID="txtLimitationTimes"
+                            Value="1" RequiredErrorMessage="<% $NopResources:Admin.DiscountInfo.LimitationTimes.RequiredErrorMessage%>"
+                            MinimumValue="1" MaximumValue="100000000" RangeErrorMessage="<% $NopResources:Admin.DiscountInfo.LimitationTimes.RangeErrorMessage %>">
+                        </nopCommerce:NumericTextBox> <%=GetLocaleResourceString("Admin.DiscountInfo.LimitationTimes.Times")%>
                     </td>
                 </tr>
                 <tr>

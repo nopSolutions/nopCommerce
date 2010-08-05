@@ -119,7 +119,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
             {
                 UpdateDiscount(discount.DiscountId, discount.DiscountType, 
                     discount.DiscountRequirement, discount.RequirementSpentAmount,                    
-                    discount.DiscountLimitation,
+                    discount.DiscountLimitation, discount.LimitationTimes,
                     discount.Name, discount.UsePercentage, discount.DiscountPercentage,
                     discount.DiscountAmount, discount.StartDate,
                     discount.EndDate, discount.RequiresCouponCode,
@@ -181,6 +181,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         /// <param name="discountRequirement">The discount requirement</param>
         /// <param name="requirementSpentAmount">The discount requirement - applies if customer has spent/purchased x.xx amount</param>
         /// <param name="discountLimitation">The discount limitation</param>
+        /// <param name="limitationTimes">The discount limitation times (used when Limitation is set to "N Times Only" or "N Times Per Customer")</param>
         /// <param name="name">The name</param>
         /// <param name="usePercentage">A value indicating whether to use percentage</param>
         /// <param name="discountPercentage">The discount percentage</param>
@@ -193,7 +194,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         /// <returns>Discount</returns>
         public static Discount InsertDiscount(DiscountTypeEnum discountType,
             DiscountRequirementEnum discountRequirement, decimal requirementSpentAmount,
-            DiscountLimitationEnum discountLimitation, string name, bool usePercentage, 
+            DiscountLimitationEnum discountLimitation, int limitationTimes, 
+            string name, bool usePercentage, 
             decimal discountPercentage, decimal discountAmount,
             DateTime startDate, DateTime endDate, bool requiresCouponCode, 
             string couponCode, bool deleted)
@@ -216,6 +218,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
             discount.DiscountRequirementId = (int)discountRequirement;
             discount.RequirementSpentAmount = requirementSpentAmount;
             discount.DiscountLimitationId = (int)discountLimitation;
+            discount.LimitationTimes = limitationTimes;
             discount.Name = name;
             discount.UsePercentage = usePercentage;
             discount.DiscountPercentage = discountPercentage;
@@ -244,6 +247,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         /// <param name="discountRequirement">The discount requirement</param>
         /// <param name="requirementSpentAmount">The discount requirement - applies if customer has spent/purchased x.xx amount</param>
         /// <param name="discountLimitation">The discount limitation</param>
+        /// <param name="limitationTimes">The discount limitation times (used when Limitation is set to "N Times Only" or "N Times Per Customer")</param>
         /// <param name="name">The name</param>
         /// <param name="usePercentage">A value indicating whether to use percentage</param>
         /// <param name="discountPercentage">The discount percentage</param>
@@ -255,8 +259,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         /// <param name="deleted">A value indicating whether the entity has been deleted</param>
         /// <returns>Discount</returns>
         public static Discount UpdateDiscount(int discountId, DiscountTypeEnum discountType,
-            DiscountRequirementEnum discountRequirement, decimal requirementSpentAmount, 
-            DiscountLimitationEnum discountLimitation, string name, bool usePercentage,
+            DiscountRequirementEnum discountRequirement, decimal requirementSpentAmount,
+            DiscountLimitationEnum discountLimitation, int limitationTimes, 
+            string name, bool usePercentage,
             decimal discountPercentage, decimal discountAmount,
             DateTime startDate, DateTime endDate, bool requiresCouponCode, 
             string couponCode, bool deleted)
@@ -284,6 +289,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
             discount.DiscountRequirementId = (int)discountRequirement;
             discount.RequirementSpentAmount = requirementSpentAmount;
             discount.DiscountLimitationId = (int)discountLimitation;
+            discount.LimitationTimes = limitationTimes;
             discount.Name = name;
             discount.UsePercentage = usePercentage;
             discount.DiscountPercentage = discountPercentage;

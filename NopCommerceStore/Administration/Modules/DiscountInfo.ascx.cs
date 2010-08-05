@@ -106,6 +106,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 this.txtRequirementSpentAmount.Value = discount.RequirementSpentAmount;
                 this.txtRestrictedProductVariants.Text = GenerateListOfRestrictedProductVariants(ProductManager.GetProductVariantsRestrictedByDiscountId(discount.DiscountId));
                 CommonHelper.SelectListItem(this.ddlDiscountLimitation, discount.DiscountLimitationId);
+                this.txtLimitationTimes.Value = discount.LimitationTimes;
                 this.txtName.Text = discount.Name;
                 this.cbUsePercentage.Checked = discount.UsePercentage;
                 this.txtDiscountPercentage.Value = discount.DiscountPercentage;
@@ -192,6 +193,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     discountRequirement,
                     txtRequirementSpentAmount.Value,
                     discountLimitation,
+                    txtLimitationTimes.Value,
                     txtName.Text,
                     cbUsePercentage.Checked,
                     txtDiscountPercentage.Value,
@@ -219,6 +221,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     discountRequirement,
                     txtRequirementSpentAmount.Value,
                     discountLimitation,
+                    txtLimitationTimes.Value,
                     txtName.Text,
                     cbUsePercentage.Checked,
                     txtDiscountPercentage.Value,
@@ -276,6 +279,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
             this.cbUsePercentage.Attributes.Add("onclick", "toggleUsePercentage();");
             this.cbRequiresCouponCode.Attributes.Add("onclick", "toggleRequiresCouponCode();");
+            this.ddlDiscountLimitation.Attributes.Add("onchange", "toggleLimitation();");
 
             base.OnPreRender(e);
         }

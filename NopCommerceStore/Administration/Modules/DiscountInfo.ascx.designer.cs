@@ -139,6 +139,24 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         protected global::System.Web.UI.WebControls.DropDownList ddlDiscountLimitation;
         
         /// <summary>
+        /// lblLimitationTimes control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblLimitationTimes;
+        
+        /// <summary>
+        /// txtLimitationTimes control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.NumericTextBox txtLimitationTimes;
+        
+        /// <summary>
         /// lblName control.
         /// </summary>
         /// <remarks>

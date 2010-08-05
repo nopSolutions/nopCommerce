@@ -32,8 +32,16 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         /// </summary>
         OneTimeOnly = 10,
         /// <summary>
+        /// N Times Only
+        /// </summary>
+        NTimesOnly = 15,
+        /// <summary>
         /// One Time Per Customer
         /// </summary>
         OneTimePerCustomer = 20,
+        /// <summary>
+        /// N Times Per Customer
+        /// </summary>
+        NTimesPerCustomer = 25,
     }
 }

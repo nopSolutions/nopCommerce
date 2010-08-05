@@ -57,7 +57,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         public int DiscountRequirementId { get; set; }
 
         /// <summary>
-        /// Gets or sets the the discount requirement - applies if customer has spent/purchased x.xx amount
+        /// Gets or sets the the discount requirement - applies if customer has spent/purchased x.xx amount (used when requirement is set to "Customer had spent/purchased x.xx amount")
         /// </summary>
         public decimal RequirementSpentAmount { get; set; }
         
@@ -66,6 +66,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         /// </summary>
         public int DiscountLimitationId { get; set; }
 
+        /// <summary>
+        /// Gets or sets the discount limitation times (used when Limitation is set to "N Times Only" or "N Times Per Customer")
+        /// </summary>
+        public int LimitationTimes { get; set; }
+        
         /// <summary>
         /// Gets or sets the name
         /// </summary>
@@ -290,6 +295,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
                         var usageHistory = DiscountManager.GetAllDiscountUsageHistoryEntries(this.DiscountId, null, null);
                         return usageHistory.Count < 1;
                     }
+                case DiscountLimitationEnum.NTimesOnly:
+                    {
+                        var usageHistory = DiscountManager.GetAllDiscountUsageHistoryEntries(this.DiscountId, null, null);
+                        return usageHistory.Count < this.LimitationTimes;
+                    }
                 case DiscountLimitationEnum.OneTimePerCustomer:
                     {
                         if (customer != null)
@@ -301,7 +311,19 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
                         {
                             return false;
                         }
-                    }             
+                    }
+                case DiscountLimitationEnum.NTimesPerCustomer:
+                    {
+                        if (customer != null)
+                        {
+                            var usageHistory = DiscountManager.GetAllDiscountUsageHistoryEntries(this.DiscountId, customer.CustomerId, null);
+                            return usageHistory.Count < this.LimitationTimes;
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
                 default:
                     break;
             }

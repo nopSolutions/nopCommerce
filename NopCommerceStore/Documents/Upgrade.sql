@@ -2200,3 +2200,31 @@ BEGIN
 	exec [dbo].[Nop_CustomerUpdateCounts] @UserID
 END
 GO
+
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[Nop_DiscountLimitation]
+		WHERE [DiscountLimitationID] = 15)
+BEGIN
+	INSERT [dbo].[Nop_DiscountLimitation] ([DiscountLimitationID], [Name])
+	VALUES (15, N'N Times Only')
+END
+GO
+
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[Nop_DiscountLimitation]
+		WHERE [DiscountLimitationID] = 25)
+BEGIN
+	INSERT [dbo].[Nop_DiscountLimitation] ([DiscountLimitationID], [Name])
+	VALUES (25, N'N Times Per Customer')
+END
+GO
+
+
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[Nop_Discount]') and NAME='LimitationTimes')
+BEGIN
+	ALTER TABLE [dbo].[Nop_Discount] 
+	ADD [LimitationTimes] int NOT NULL CONSTRAINT [DF_Nop_Discount_LimitationTimes] DEFAULT ((1))
+END
+GO
