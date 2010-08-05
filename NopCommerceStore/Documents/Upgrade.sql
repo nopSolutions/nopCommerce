@@ -2158,3 +2158,45 @@ BEGIN
 	SET ROWCOUNT 0
 END
 GO
+
+
+IF EXISTS (
+		SELECT *
+		FROM dbo.sysobjects
+		WHERE id = OBJECT_ID(N'[dbo].[Nop_Forums_PostDelete]') AND OBJECTPROPERTY(id,N'IsProcedure') = 1)
+DROP PROCEDURE [dbo].[Nop_Forums_PostDelete]
+GO
+CREATE PROCEDURE [dbo].[Nop_Forums_PostDelete]
+(
+	@PostID int
+)
+AS
+BEGIN
+	SET NOCOUNT ON
+
+	declare @UserID int
+	declare @ForumID int
+	declare @TopicID int
+	SELECT 
+		@UserID = fp.UserID,
+		@ForumID = ft.ForumID,
+		@TopicID = ft.TopicID
+	FROM
+		[Nop_Forums_Topic] ft
+		INNER JOIN 
+		[Nop_Forums_Post] fp
+		ON ft.TopicID=fp.TopicID
+	WHERE
+		fp.PostID = @PostID 
+	
+	DELETE
+	FROM [Nop_Forums_Post]
+	WHERE
+		PostID = @PostID
+
+	--update stats/info
+	exec [dbo].[Nop_Forums_TopicUpdateCounts] @TopicID
+	exec [dbo].[Nop_Forums_ForumUpdateCounts] @ForumID
+	exec [dbo].[Nop_CustomerUpdateCounts] @UserID
+END
+GO
