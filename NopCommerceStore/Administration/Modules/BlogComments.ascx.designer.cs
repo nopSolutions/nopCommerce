@@ -13,21 +13,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
     public partial class BlogCommentsControl {
         
         /// <summary>
-        /// pagerBlogComments control.
+        /// gvBlogComments control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DataPager pagerBlogComments;
-        
-        /// <summary>
-        /// lvBlogComments control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.ListView lvBlogComments;
+        protected global::System.Web.UI.WebControls.GridView gvBlogComments;
     }
 }

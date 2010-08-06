@@ -33,7 +33,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         protected void btnEditNewsComment_Click(object sender, CommandEventArgs e)
         {
-            if (e.CommandName == "Edit")
+            if (e.CommandName == "EditItem")
             {
                 int newsCommentId = Convert.ToInt32(e.CommandArgument);
                 Response.Redirect("NewsCommentDetails.aspx?NewsCommentID=" + newsCommentId.ToString());
@@ -42,7 +42,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected void btnDeleteNewsComment_Click(object sender, CommandEventArgs e)
         {
-            if (e.CommandName == "Delete")
+            if (e.CommandName == "DeleteItem")
             {
                 int newsCommentId = Convert.ToInt32(e.CommandArgument);
                 NewsManager.DeleteNewsComment(newsCommentId);
@@ -50,9 +50,9 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             }
         }
 
-        protected void lvNewsComments_OnPagePropertiesChanging(object sender, PagePropertiesChangingEventArgs e)
+        protected void gvNewsComments_PageIndexChanging(object sender, GridViewPageEventArgs e)
         {
-            this.pagerNewsComments.SetPageProperties(e.StartRowIndex, e.MaximumRows, false);
+            this.gvNewsComments.PageIndex = e.NewPageIndex;
             BindData();
         }
 
@@ -82,13 +82,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected void BindData()
         {
-            List<NewsComment> newsCommentCollection = null;
+            List<NewsComment> newsComments = null;
             if (this.NewsId > 0)
-                newsCommentCollection = NewsManager.GetNewsCommentsByNewsId(this.NewsId);
+                newsComments = NewsManager.GetNewsCommentsByNewsId(this.NewsId);
             else
-                newsCommentCollection = NewsManager.GetAllNewsComments();
-            lvNewsComments.DataSource = newsCommentCollection;
-            lvNewsComments.DataBind();
+                newsComments = NewsManager.GetAllNewsComments();
+            gvNewsComments.DataSource = newsComments;
+            gvNewsComments.DataBind();
         }
 
         public int NewsId

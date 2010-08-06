@@ -33,7 +33,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         protected void btnUpdateProductReview_Click(object sender, CommandEventArgs e)
         {
-            if (e.CommandName == "Update")
+            if (e.CommandName == "UpdateItem")
             {
                 int productReviewId = Convert.ToInt32(e.CommandArgument);
                 ProductReview productReview = ProductManager.GetProductReviewById(productReviewId);
@@ -49,7 +49,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected void btnEditProductReview_Click(object sender, CommandEventArgs e)
         {
-            if (e.CommandName == "Edit")
+            if (e.CommandName == "EditItem")
             {
                 int productReviewId = Convert.ToInt32(e.CommandArgument);
                 Response.Redirect("ProductReviewDetails.aspx?ProductReviewID=" + productReviewId.ToString());
@@ -58,7 +58,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected void btnDeleteProductReview_Click(object sender, CommandEventArgs e)
         {
-            if (e.CommandName == "Delete")
+            if (e.CommandName == "DeleteItem")
             {
                 int productReviewId = Convert.ToInt32(e.CommandArgument);
                 ProductManager.DeleteProductReview(productReviewId);
@@ -66,9 +66,9 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             }
         }
 
-        protected void lvProductReviews_OnPagePropertiesChanging(object sender, PagePropertiesChangingEventArgs e)
+        protected void gvProductReviews_PageIndexChanging(object sender, GridViewPageEventArgs e)
         {
-            this.pagerProductReviews.SetPageProperties(e.StartRowIndex, e.MaximumRows, false);
+            this.gvProductReviews.PageIndex = e.NewPageIndex;
             BindData();
         }
 
@@ -92,13 +92,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected void BindData()
         {
-            List<ProductReview> productReviewCollection = null;
+            List<ProductReview> productReviews = null;
             if (this.ProductId > 0)
-                productReviewCollection = ProductManager.GetProductReviewByProductId(ProductId);
+                productReviews = ProductManager.GetProductReviewByProductId(ProductId);
             else
-                productReviewCollection = ProductManager.GetAllProductReviews();
-            lvProductReviews.DataSource = productReviewCollection;
-            lvProductReviews.DataBind();
+                productReviews = ProductManager.GetAllProductReviews();
+
+            gvProductReviews.DataSource = productReviews;
+            gvProductReviews.DataBind();
         }
 
         public int ProductId

@@ -34,7 +34,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         protected void btnEditBlogComment_Click(object sender, CommandEventArgs e)
         {
-            if (e.CommandName == "Edit")
+            if (e.CommandName == "EditItem")
             {
                 int blogCommentId = Convert.ToInt32(e.CommandArgument);
                 Response.Redirect("BlogCommentDetails.aspx?BlogCommentID=" + blogCommentId.ToString());
@@ -43,7 +43,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected void btnDeleteBlogComment_Click(object sender, CommandEventArgs e)
         {
-            if (e.CommandName == "Delete")
+            if (e.CommandName == "DeleteItem")
             {
                 int blogCommentId = Convert.ToInt32(e.CommandArgument);
                 BlogManager.DeleteBlogComment(blogCommentId);
@@ -51,16 +51,16 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             }
         }
 
-        protected void lvBlogComments_OnPagePropertiesChanging(object sender, PagePropertiesChangingEventArgs e)
-        {
-            this.pagerBlogComments.SetPageProperties(e.StartRowIndex, e.MaximumRows, false);
-            BindData();
-        }
-
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!Page.IsPostBack)
                 BindData();
+        }
+
+        protected void gvBlogComments_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        {
+            this.gvBlogComments.PageIndex = e.NewPageIndex;
+            BindData();
         }
 
         protected string GetCustomerInfo(int customerId)
@@ -83,13 +83,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected void BindData()
         {
-            List<BlogComment> blogCommentCollection = null;
+            List<BlogComment> blogComments = null;
             if (this.BlogPostId > 0)
-                blogCommentCollection = BlogManager.GetBlogCommentsByBlogPostId(this.BlogPostId);
+                blogComments = BlogManager.GetBlogCommentsByBlogPostId(this.BlogPostId);
             else
-                blogCommentCollection = BlogManager.GetAllBlogComments();
-            lvBlogComments.DataSource = blogCommentCollection;
-            lvBlogComments.DataBind();
+                blogComments = BlogManager.GetAllBlogComments();
+
+            gvBlogComments.DataSource = blogComments;
+            gvBlogComments.DataBind();
         }
 
         public int BlogPostId

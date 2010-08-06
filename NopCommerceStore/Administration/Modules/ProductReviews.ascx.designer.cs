@@ -13,21 +13,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
     public partial class ProductReviewsControl {
         
         /// <summary>
-        /// pagerProductReviews control.
+        /// gvProductReviews control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DataPager pagerProductReviews;
-        
-        /// <summary>
-        /// lvProductReviews control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.ListView lvProductReviews;
+        protected global::System.Web.UI.WebControls.GridView gvProductReviews;
     }
 }
