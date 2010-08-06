@@ -207,6 +207,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 pnlCardExpiryYear.Visible = false;
             }
 
+            //purchase order number
             PaymentMethod pm = PaymentMethodManager.GetPaymentMethodById(order.PaymentMethodId);
             if (pm != null && pm.SystemKeyword == "PURCHASEORDER")
             {
@@ -216,8 +217,38 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 pnlPONumber.Visible = false;
             }
+
+            //payment transaction info
+            if (!String.IsNullOrEmpty(order.AuthorizationTransactionId))
+            {
+                this.lblAuthorizationTransactionID.Text = Server.HtmlEncode(order.AuthorizationTransactionId);
+            }
+            else
+            {
+                pnlAuthorizationTransactionID.Visible = false;
+            }
+            if (!String.IsNullOrEmpty(order.CaptureTransactionId))
+            {
+                this.lblCaptureTransactionID.Text = Server.HtmlEncode(order.CaptureTransactionId);
+            }
+            else
+            {
+                pnlCaptureTransactionID.Visible = false;
+            }
+            if (!String.IsNullOrEmpty(order.SubscriptionTransactionId))
+            {
+                this.lblSubscriptionTransactionID.Text = Server.HtmlEncode(order.SubscriptionTransactionId);
+            }
+            else
+            {
+                pnlSubscriptionTransactionID.Visible = false;
+            }
+
+            //payment method info
             this.lblPaymentMethodName.Text = Server.HtmlEncode(order.PaymentMethodName);
             this.lblPaymentStatus.Text = PaymentStatusManager.GetPaymentStatusName(order.PaymentStatusId);
+
+            //payment method buttons
             this.btnCapture.Visible = OrderManager.CanCapture(order);
             this.btnMarkAsPaid.Visible = OrderManager.CanMarkOrderAsPaid(order);
             this.btnRefund.Visible = OrderManager.CanRefund(order);

@@ -632,6 +632,33 @@
                         <asp:Label ID="lblPONumber" runat="server"></asp:Label>
                     </td>
                 </tr>
+                <tr runat="server" id="pnlAuthorizationTransactionID">
+                    <td class="adminTitle">
+                        <nopCommerce:ToolTipLabel runat="server" ID="lblAuthorizationTransactionIDTitle" Text="<% $NopResources:Admin.OrderDetails.AuthorizationTransactionID %>"
+                            ToolTip="<% $NopResources:Admin.OrderDetails.AuthorizationTransactionID.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
+                    </td>
+                    <td class="adminData">
+                        <asp:Label ID="lblAuthorizationTransactionID" runat="server"></asp:Label>
+                    </td>
+                </tr>
+                <tr runat="server" id="pnlCaptureTransactionID">
+                    <td class="adminTitle">
+                        <nopCommerce:ToolTipLabel runat="server" ID="lblCaptureTransactionIDTitle" Text="<% $NopResources:Admin.OrderDetails.CaptureTransactionID %>"
+                            ToolTip="<% $NopResources:Admin.OrderDetails.CaptureTransactionID.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
+                    </td>
+                    <td class="adminData">
+                        <asp:Label ID="lblCaptureTransactionID" runat="server"></asp:Label>
+                    </td>
+                </tr>
+                <tr runat="server" id="pnlSubscriptionTransactionID">
+                    <td class="adminTitle">
+                        <nopCommerce:ToolTipLabel runat="server" ID="lblSubscriptionTransactionIDTitle" Text="<% $NopResources:Admin.OrderDetails.SubscriptionTransactionID %>"
+                            ToolTip="<% $NopResources:Admin.OrderDetails.SubscriptionTransactionID.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
+                    </td>
+                    <td class="adminData">
+                        <asp:Label ID="lblSubscriptionTransactionID" runat="server"></asp:Label>
+                    </td>
+                </tr>
                 <tr>
                     <td class="adminTitle">
                         <nopCommerce:ToolTipLabel runat="server" ID="lblPaymentMethodTitle" Text="<% $NopResources:Admin.OrderDetails.PaymentMethod %>"

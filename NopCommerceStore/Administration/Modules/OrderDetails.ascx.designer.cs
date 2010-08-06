@@ -1084,6 +1084,87 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         protected global::System.Web.UI.WebControls.Label lblPONumber;
         
         /// <summary>
+        /// pnlAuthorizationTransactionID control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlTableRow pnlAuthorizationTransactionID;
+        
+        /// <summary>
+        /// lblAuthorizationTransactionIDTitle control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblAuthorizationTransactionIDTitle;
+        
+        /// <summary>
+        /// lblAuthorizationTransactionID control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblAuthorizationTransactionID;
+        
+        /// <summary>
+        /// pnlCaptureTransactionID control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlTableRow pnlCaptureTransactionID;
+        
+        /// <summary>
+        /// lblCaptureTransactionIDTitle control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblCaptureTransactionIDTitle;
+        
+        /// <summary>
+        /// lblCaptureTransactionID control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblCaptureTransactionID;
+        
+        /// <summary>
+        /// pnlSubscriptionTransactionID control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlTableRow pnlSubscriptionTransactionID;
+        
+        /// <summary>
+        /// lblSubscriptionTransactionIDTitle control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblSubscriptionTransactionIDTitle;
+        
+        /// <summary>
+        /// lblSubscriptionTransactionID control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblSubscriptionTransactionID;
+        
+        /// <summary>
         /// lblPaymentMethodTitle control.
         /// </summary>
         /// <remarks>

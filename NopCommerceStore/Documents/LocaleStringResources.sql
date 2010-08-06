@@ -1718,6 +1718,24 @@ set @resources='
   <LocaleResource Name="Admin.DiscountInfo.LimitationTimes.Times">
     <Value>times</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.OrderDetails.AuthorizationTransactionID">
+    <Value>Authorization transaction ID:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.OrderDetails.AuthorizationTransactionID.Tooltip">
+    <Value>Authorization transaction identifer received from your payment gateway</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.OrderDetails.CaptureTransactionID">
+    <Value>Capture transaction ID:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.OrderDetails.CaptureTransactionID.Tooltip">
+    <Value>Capture transaction identifer received from your payment gateway</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.OrderDetails.SubscriptionTransactionID">
+    <Value>Subscription transaction ID:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.OrderDetails.SubscriptionTransactionID.Tooltip">
+    <Value>Subscription transaction identifer received from your payment gateway</Value>
+  </LocaleResource>
 </Language>
 '
 
