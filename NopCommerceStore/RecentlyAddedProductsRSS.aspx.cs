@@ -42,9 +42,9 @@ namespace NopSolutions.NopCommerce.Web
         {
             if (ProductManager.RecentlyAddedProductsEnabled)
             {
-                int number = 10;
-                var productCollection = ProductManager.GetRecentlyAddedProducts(number);
-                rptrRecentlyAddedProducts.DataSource = productCollection;
+                int number = ProductManager.RecentlyAddedProductsNumber;
+                var products = ProductManager.GetRecentlyAddedProducts(number);
+                rptrRecentlyAddedProducts.DataSource = products;
                 rptrRecentlyAddedProducts.DataBind();
             }
             else

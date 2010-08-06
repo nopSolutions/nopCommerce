@@ -980,9 +980,7 @@
           <Property Name="DiscountID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="DiscountTypeID" Type="int" Nullable="false" />
           <Property Name="DiscountRequirementID" Type="int" Nullable="false" />
-          <Property Name="RequirementSpentAmount" Type="money" Nullable="false" />
           <Property Name="DiscountLimitationID" Type="int" Nullable="false" />
-          <Property Name="LimitationTimes" Type="int" Nullable="false" />
           <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="100" />
           <Property Name="UsePercentage" Type="bit" Nullable="false" />
           <Property Name="DiscountPercentage" Type="decimal" Nullable="false" Scale="4" />
@@ -992,6 +990,8 @@
           <Property Name="RequiresCouponCode" Type="bit" Nullable="false" />
           <Property Name="CouponCode" Type="nvarchar" Nullable="false" MaxLength="100" />
           <Property Name="Deleted" Type="bit" Nullable="false" />
+          <Property Name="RequirementSpentAmount" Type="money" Nullable="false" />
+          <Property Name="LimitationTimes" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Nop_DiscountLimitation">
           <Key>
@@ -4077,6 +4077,7 @@
           <Parameter Name="FeaturedProducts" Type="bit" Mode="In" />
           <Parameter Name="PriceMin" Type="money" Mode="In" />
           <Parameter Name="PriceMax" Type="money" Mode="In" />
+          <Parameter Name="RelatedToProductID" Type="int" Mode="In" />
           <Parameter Name="Keywords" Type="nvarchar(max)" Mode="In" />
           <Parameter Name="SearchDescriptions" Type="bit" Mode="In" />
           <Parameter Name="ShowHidden" Type="bit" Mode="In" />
@@ -4831,6 +4832,7 @@
             <Parameter Name="FeaturedProducts" Mode="In" Type="Boolean" />
             <Parameter Name="PriceMin" Mode="In" Type="Decimal" />
             <Parameter Name="PriceMax" Mode="In" Type="Decimal" />
+            <Parameter Name="RelatedToProductID" Mode="In" Type="Int32" />
             <Parameter Name="Keywords" Mode="In" Type="String" />
             <Parameter Name="SearchDescriptions" Mode="In" Type="Boolean" />
             <Parameter Name="ShowHidden" Mode="In" Type="Boolean" />

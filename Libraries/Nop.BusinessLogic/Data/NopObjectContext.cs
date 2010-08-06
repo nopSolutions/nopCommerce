@@ -2715,7 +2715,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         public List<Product> Sp_ProductLoadAllPaged(int categoryId,
             int manufacturerId, int productTagId,
             bool? featuredProducts, decimal? priceMin, decimal? priceMax,
-            string keywords, bool searchDescriptions,
+            int relatedToProductId, string keywords, bool searchDescriptions,
             int pageSize, int pageIndex, List<int> filteredSpecs,
             int languageId, int orderBy, bool showHidden, out int totalRecords)
         {
@@ -2751,6 +2751,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
             {
                 priceMaxParameter = new ObjectParameter("PriceMax", typeof(decimal));
             }
+            ObjectParameter relatedToProductIdParameter = new ObjectParameter("RelatedToProductID", relatedToProductId);
             ObjectParameter keywordsParameter = new ObjectParameter("Keywords", keywords);
             ObjectParameter searchDescriptionsParameter = new ObjectParameter("SearchDescriptions", searchDescriptions);
             ObjectParameter showHiddenParameter = new ObjectParameter("ShowHidden", showHidden);
@@ -2778,7 +2779,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
             var result = base.ExecuteFunction<Product>("Sp_ProductLoadAllPaged",
                 categoryIdParameter, manufacturerIdParameter, productTagIdParameter,
                 featuredProductsParameter, priceMinParameter, priceMaxParameter,
-                keywordsParameter, searchDescriptionsParameter, showHiddenParameter,
+                relatedToProductIdParameter, keywordsParameter, searchDescriptionsParameter, showHiddenParameter,
                 pageSizeParameter, pageIndexParameter, filteredSpecsParameter,
                 languageIdParameter, orderByParameter, totalRecordsParameter).ToList();
             totalRecords = Convert.ToInt32(totalRecordsParameter.Value);

@@ -48,27 +48,35 @@ namespace NopSolutions.NopCommerce.Web.Modules
             var product = ProductManager.GetProductById(this.ProductId);
             if (product != null)
             {
-                var relatedProducts = product.RelatedProducts;
-                if (relatedProducts.Count > 0)
+                int totalRecords = 0;
+                var products = ProductManager.GetAllProducts(0,
+                    0, 0, null, null, null, this.ProductId, string.Empty, false, int.MaxValue,
+                    0, null, NopContext.Current.WorkingLanguage.LanguageId,
+                    ProductSortingEnum.Position, out totalRecords);
+                if (products.Count > 0)
                 {
                     this.Visible = true;
-                    dlRelatedProducts.DataSource = relatedProducts;
+                    dlRelatedProducts.DataSource = products;
                     dlRelatedProducts.DataBind();
                 }
                 else
+                {
                     this.Visible = false;
+                }
+
             }
             else
+            {
                 this.Visible = false;
+            }
         }
 
         protected void dlRelatedProducts_ItemDataBound(object sender, DataListItemEventArgs e)
         {
             if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
             {
-                var relatedProduct = e.Item.DataItem as RelatedProduct;
-                var product = relatedProduct.Product2;
-                if (relatedProduct != null && product != null)
+                var product = e.Item.DataItem as Product;
+                if (product != null)
                 {
                     string productURL = SEOHelper.GetProductUrl(product);
 

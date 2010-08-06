@@ -35,6 +35,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         /// Price
         /// </summary>
         Price = 10,
+        /// <summary>
+        /// Product creation date
+        /// </summary>
+        CreatedOn = 15,
 
     }
 }

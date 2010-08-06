@@ -304,6 +304,40 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             int pageIndex, List<int> filteredSpecs, int languageId,
             ProductSortingEnum orderBy, out int totalRecords)
         {
+            return GetAllProducts(categoryId,
+                manufacturerId, productTagId, featuredProducts,
+                priceMin, priceMax, 0,
+                keywords, searchDescriptions, pageSize,
+                pageIndex, filteredSpecs, languageId,
+                orderBy, out totalRecords);
+        }
+
+        /// <summary>
+        /// Gets all products
+        /// </summary>
+        /// <param name="categoryId">Category identifier; 0 to load all recordss</param>
+        /// <param name="manufacturerId">Manufacturer identifier; 0 to load all recordss</param>
+        /// <param name="productTagId">Product tag identifier; 0 to load all recordss</param>
+        /// <param name="featuredProducts">A value indicating whether loaded products are marked as featured (relates only to categories and manufacturers). 0 to load featured products only, 1 to load not featured products only, null to load all products</param>
+        /// <param name="priceMin">Minimum price</param>
+        /// <param name="priceMax">Maximum price</param>
+        /// <param name="relatedToProductId">Filter by related product; 0 to load all recordss</param>
+        /// <param name="keywords">Keywords</param>
+        /// <param name="searchDescriptions">A value indicating whether to search in descriptions</param>
+        /// <param name="pageSize">Page size</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="filteredSpecs">Filtered product specification identifiers</param>
+        /// <param name="languageId">Language identifier</param>
+        /// <param name="orderBy">Order by</param>
+        /// <param name="totalRecords">Total records</param>
+        /// <returns>Product collection</returns>
+        public static List<Product> GetAllProducts(int categoryId,
+            int manufacturerId, int productTagId, bool? featuredProducts,
+            decimal? priceMin, decimal? priceMax,
+            int relatedToProductId, string keywords, bool searchDescriptions, int pageSize,
+            int pageIndex, List<int> filteredSpecs, int languageId,
+            ProductSortingEnum orderBy, out int totalRecords)
+        {
             if (pageSize <= 0)
                 pageSize = 10;
             if (pageSize == int.MaxValue)
@@ -315,10 +349,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                 pageIndex = int.MaxValue - 1;
 
             bool showHidden = NopContext.Current.IsAdmin;
-            
+
             var context = ObjectContextHelper.CurrentObjectContext;
             var products = context.Sp_ProductLoadAllPaged(categoryId,
-               manufacturerId, productTagId, featuredProducts, priceMin, priceMax,
+               manufacturerId, productTagId, featuredProducts,
+               priceMin, priceMax, relatedToProductId, 
                keywords, searchDescriptions, pageSize, pageIndex, filteredSpecs,
                languageId, (int)orderBy, showHidden, out totalRecords);
 
@@ -994,19 +1029,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         /// <returns>"recently added" product list</returns>
         public static List<Product> GetRecentlyAddedProducts(int number)
         {
-            bool showHidden = NopContext.Current.IsAdmin;
-
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from p in context.Products
-                        orderby p.CreatedOn descending
-                        where (showHidden || p.Published) &&
-                        !p.Deleted
-                        select p;
-            if (number > 0)
-            {
-                query = query.Take(number);
-            }
-            var products = query.ToList();
+            int totalRecords = 0;
+            var products = ProductManager.GetAllProducts(0,
+                0, 0, null, null, null, 0, string.Empty, false, number,
+                0, null, NopContext.Current.WorkingLanguage.LanguageId,
+                ProductSortingEnum.CreatedOn, out totalRecords);
             return products;
         }
 
