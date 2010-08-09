@@ -13,6 +13,15 @@
             <asp:Label ID="lblAffiliateId" runat="server"></asp:Label>
         </td>
     </tr>
+    <tr runat="server" id="pnlAffiliateUrl">
+        <td class="adminTitle">
+            <nopCommerce:ToolTipLabel runat="server" ID="lblAffiliateUrl" Text="<% $NopResources:Admin.AffiliateInfo.AffiliateURL %>"
+                ToolTip="<% $NopResources:Admin.AffiliateInfo.AffiliateURL.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
+        </td>
+        <td class="adminData">
+            <asp:HyperLink Target="_blank" ID="hlAffiliateUrl" runat="server"></asp:HyperLink>
+        </td>
+    </tr>
     <tr>
         <td class="adminTitle">
             <nopCommerce:ToolTipLabel runat="server" ID="lblFirstName" Text="<% $NopResources:Admin.AffiliateInfo.FirstName %>"

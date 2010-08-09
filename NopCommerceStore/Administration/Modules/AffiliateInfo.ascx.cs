@@ -40,6 +40,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             if (affiliate != null)
             {
                 this.lblAffiliateId.Text = affiliate.AffiliateId.ToString();
+                this.hlAffiliateUrl.NavigateUrl = this.hlAffiliateUrl.Text = CommonHelper.ModifyQueryString(CommonHelper.GetStoreLocation() + "default.aspx", "AffiliateID=" + affiliate.AffiliateId.ToString(), null);
+                
                 this.txtFirstName.Text = affiliate.FirstName;
                 this.txtLastName.Text = affiliate.LastName;
                 this.txtMiddleName.Text = affiliate.MiddleName;
@@ -59,6 +61,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             else
             {
                 this.pnlAffiliateId.Visible = false;
+                this.pnlAffiliateUrl.Visible = false;
             }
         }
 

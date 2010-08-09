@@ -1769,6 +1769,12 @@ set @resources='
   <LocaleResource Name="Admin.OnlineCustomers.EntryColumn">
     <Value>Entry</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.AffiliateInfo.AffiliateURL">
+    <Value>Affiliate URL:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.AffiliateInfo.AffiliateURL.Tooltip">
+    <Value>When this hyperlink is clicked from the affiliate site, this site looks for an Affiliate ID query string parameter. If one exists, the customer is tagged with that affiliate.</Value>
+  </LocaleResource>
 </Language>
 '
 
