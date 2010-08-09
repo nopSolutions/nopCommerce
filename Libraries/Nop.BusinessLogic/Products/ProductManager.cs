@@ -1275,7 +1275,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                     }
                     foreach (var combination in ProductAttributeManager.GetAllProductVariantAttributeCombinations(productVariant.ProductVariantId))
                     {
-                        ProductAttributeManager.InsertProductVariantAttributeCombination(productVariant.ProductVariantId,
+                        ProductAttributeManager.InsertProductVariantAttributeCombination(productVariantCopy.ProductVariantId,
                               combination.AttributesXml,
                               combination.StockQuantity,
                               combination.AllowOutOfStockOrders);

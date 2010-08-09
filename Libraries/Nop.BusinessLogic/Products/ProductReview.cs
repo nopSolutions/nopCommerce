@@ -116,8 +116,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         }
         #endregion
         
-        
-
         #region Navigation Properties
 
         /// <summary>

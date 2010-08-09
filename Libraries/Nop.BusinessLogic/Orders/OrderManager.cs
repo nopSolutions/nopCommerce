@@ -788,6 +788,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 billingPhoneNumber = string.Empty;
             if (billingEmail == null)
                 billingEmail = string.Empty;
+            billingEmail = billingEmail.Trim();
             if (billingFaxNumber == null)
                 billingFaxNumber = string.Empty;
             if (billingCompany == null)
@@ -802,6 +803,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 shippingPhoneNumber = string.Empty;
             if (shippingEmail == null)
                 shippingEmail = string.Empty;
+            shippingEmail = shippingEmail.Trim();
             if (shippingFaxNumber == null)
                 shippingFaxNumber = string.Empty;
             if (shippingCompany == null)
