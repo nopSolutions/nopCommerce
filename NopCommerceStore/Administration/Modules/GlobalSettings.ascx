@@ -1466,6 +1466,16 @@
                     </tr>
                     <tr>
                         <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
+                                ID="lblDisplayCartAfterAddingProduct" Text="<% $NopResources:Admin.GlobalSettings.Other.DisplayCartAfterAddingProduct %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Other.DisplayCartAfterAddingProduct.Tooltip %>" />
+                        </td>
+                        <td class="adminData">
+                            <asp:CheckBox runat="server" ID="cbDisplayCartAfterAddingProduct"></asp:CheckBox>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
                             <nopCommerce:ToolTipLabel runat="server" ID="lblEnableDynamicPriceUpdate" Text="<% $NopResources:Admin.GlobalSettings.Other.EnableDynamicPriceUpdate %>"
                                 ToolTip="<% $NopResources:Admin.GlobalSettings.Other.EnableDynamicPriceUpdate.Tooltip %>"
                                 ToolTipImage="~/Administration/Common/ico-help.gif" />

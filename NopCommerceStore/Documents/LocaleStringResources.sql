@@ -1736,6 +1736,15 @@ set @resources='
   <LocaleResource Name="Admin.OrderDetails.SubscriptionTransactionID.Tooltip">
     <Value>Subscription transaction identifer received from your payment gateway</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.DisplayCartAfterAddingProduct">
+    <Value>Display cart after adding product:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.DisplayCartAfterAddingProduct.Tooltip">
+    <Value>If checked a customer will be taken to the Shopping Cart page immediately after adding a product to their cart. If unchecked a customer will stay on the same page that they are adding the product to the cart from.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.ProductHasBeenAddedToTheCart">
+    <Value>The product has been added to the cart</Value>
+  </LocaleResource>
 </Language>
 '
 

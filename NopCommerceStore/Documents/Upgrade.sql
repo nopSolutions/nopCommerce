@@ -2453,3 +2453,13 @@ BEGIN
 	DROP TABLE #PageIndex
 END
 GO
+
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[Nop_Setting]
+		WHERE [Name] = N'Display.Products.DisplayCartAfterAddingProduct')
+BEGIN
+	INSERT [dbo].[Nop_Setting] ([Name], [Value], [Description])
+	VALUES (N'Display.Products.DisplayCartAfterAddingProduct', N'True', N'')
+END
+GO

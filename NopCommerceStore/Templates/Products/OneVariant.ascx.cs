@@ -287,7 +287,16 @@ namespace NopSolutions.NopCommerce.Web.Templates.Products
                         quantity);
                     if(addToCartWarnings.Count == 0)
                     {
-                        Response.Redirect(SEOHelper.GetShoppingCartUrl());
+                        if (SettingManager.GetSettingValueBoolean("Display.Products.DisplayCartAfterAddingProduct"))
+                        {
+                            //redirect to shopping cart page
+                            Response.Redirect(SEOHelper.GetShoppingCartUrl());
+                        }
+                        else
+                        {
+                            //display notification message
+                            this.DisplayAlertMessage(GetLocaleResourceString("Products.ProductHasBeenAddedToTheCart"));
+                        }
                     }
                     else
                     {

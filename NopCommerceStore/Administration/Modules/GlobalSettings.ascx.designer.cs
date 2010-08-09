@@ -2110,6 +2110,24 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         protected global::System.Web.UI.WebControls.CheckBox cbShowSKU;
         
         /// <summary>
+        /// lblDisplayCartAfterAddingProduct control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblDisplayCartAfterAddingProduct;
+        
+        /// <summary>
+        /// cbDisplayCartAfterAddingProduct control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbDisplayCartAfterAddingProduct;
+        
+        /// <summary>
         /// lblEnableDynamicPriceUpdate control.
         /// </summary>
         /// <remarks>
