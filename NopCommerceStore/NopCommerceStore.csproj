@@ -6027,6 +6027,7 @@
     <Content Include="images\sp.gif" />
     <Content Include="images\UpdateProgress.gif" />
     <Content Include="Install\install.aspx" />
+    <None Include="files\GeoIP.dat" />
     <None Include="Install\Scripts\1.70\nopCommerce_upgrade.sql" />
     <Content Include="Install\Scripts\nopCommerce_createData.sql" />
     <Content Include="Install\Scripts\nopCommerce_createDatabase.sql" />

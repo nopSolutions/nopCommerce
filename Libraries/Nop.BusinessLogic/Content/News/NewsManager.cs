@@ -373,11 +373,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
         public static NewsComment InsertNewsComment(int newsId, int customerId,
             string title, string comment, DateTime createdOn, bool notify)
         {
-            string IPAddress = string.Empty;
-            if(HttpContext.Current != null && HttpContext.Current.Request != null)
-            {
-                IPAddress = HttpContext.Current.Request.UserHostAddress;
-            }
+            string IPAddress = NopContext.Current.UserHostAddress;
             return InsertNewsComment(newsId, customerId, IPAddress, title, comment, createdOn, notify);
         }
 

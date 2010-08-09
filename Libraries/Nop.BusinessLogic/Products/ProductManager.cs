@@ -2483,11 +2483,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             string reviewText, int rating, int helpfulYesTotal,
             int helpfulNoTotal, bool isApproved, DateTime createdOn, bool notify)
         {
-            string IPAddress = string.Empty;
-            if(HttpContext.Current != null && HttpContext.Current.Request != null)
-            {
-                IPAddress = HttpContext.Current.Request.UserHostAddress;
-            }
+            string IPAddress = NopContext.Current.UserHostAddress;
             return InsertProductReview(productId, customerId, IPAddress, title, reviewText, rating, helpfulYesTotal, helpfulNoTotal, isApproved, createdOn, notify);
         }
 

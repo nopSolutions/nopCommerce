@@ -85,7 +85,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.CDGcommerce
 			if (paymentInfo.BillingAddress.Country != null)
 				form.Add("BCOUNTRY", paymentInfo.BillingAddress.Country.TwoLetterIsoCode);
 			form.Add("invoice_num", orderGuid.ToString());
-			form.Add("customer_ip", HttpContext.Current.Request.UserHostAddress);
+            form.Add("customer_ip", NopContext.Current.UserHostAddress);
 			form.Add("BCUST_EMAIL", paymentInfo.BillingAddress.Email);
 
 

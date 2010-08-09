@@ -335,11 +335,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
         public static BlogComment InsertBlogComment(int blogPostId,
             int customerId, string commentText, DateTime createdOn, bool notify)
         {
-            string IPAddress = string.Empty;
-            if(HttpContext.Current != null && HttpContext.Current.Request != null)
-            {
-                IPAddress = HttpContext.Current.Request.UserHostAddress;
-            }
+            string IPAddress = NopContext.Current.UserHostAddress;
             return InsertBlogComment(blogPostId, customerId, IPAddress, commentText, createdOn, notify);
         }
 

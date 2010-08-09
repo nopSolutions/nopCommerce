@@ -23,6 +23,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.Common;
 using System.Diagnostics;
+using NopSolutions.NopCommerce.Common.Utils;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Audit.UsersOnline
 {
@@ -164,8 +165,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit.UsersOnline
                             userList.Add(oui.OnlineUserGuid, oui);
                         }
 
-                        //update LastVisit and AssociatedCustomerGuid properties
+                        //update other properties
                         oui.LastVisit = DateTime.UtcNow;
+                        oui.LastPageVisited = CommonHelper.GetThisPageUrl(false);
+                        oui.IPAddress = NopContext.Current.UserHostAddress;
                         oui.AssociatedCustomerId = NopContext.Current.User.CustomerId;
                         HttpContext.Current.Response.Cookies.Remove(TRACKINGCOOKIENAME);
                     }
@@ -202,8 +205,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit.UsersOnline
                             userList.Add(oui.OnlineUserGuid, oui);
                         }
 
-                        //update LastVisit and AssociatedCustomerGuid properties
+                        //update other properties
                         oui.LastVisit = DateTime.UtcNow;
+                        oui.LastPageVisited = CommonHelper.GetThisPageUrl(false);
+                        oui.IPAddress = NopContext.Current.UserHostAddress;
                         oui.AssociatedCustomerId = null;
 
                         //save new cookie
@@ -289,6 +294,23 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit.UsersOnline
                 }
 
                 return users.OrderByDescending(oui => oui.LastVisit).ToList();
+            }
+        }
+
+        /// <summary>
+        /// Get online users (guests and registered users)
+        /// </summary>
+        /// <returns>Online user list</returns>
+        public static List<OnlineUserInfo> GetAllUserList()
+        {
+            lock (s_lock)
+            {
+                //user list
+                var allUsers = new List<OnlineUserInfo>();
+                allUsers.AddRange(GetRegisteredUsersOnline());
+                allUsers.AddRange(GetGuestList());
+
+                return allUsers.OrderByDescending(oui => oui.LastVisit).ToList();
             }
         }
 

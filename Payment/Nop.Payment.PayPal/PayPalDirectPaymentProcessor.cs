@@ -213,7 +213,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.PayPal
             req.DoDirectPaymentRequest.Version = this.APIVersion;
             DoDirectPaymentRequestDetailsType details = new DoDirectPaymentRequestDetailsType();
             req.DoDirectPaymentRequest.DoDirectPaymentRequestDetails = details;
-            details.IPAddress = HttpContext.Current.Request.UserHostAddress;
+            details.IPAddress = NopContext.Current.UserHostAddress;
             if (authorizeOnly)
                 details.PaymentAction = PaymentActionCodeType.Authorization;
             else

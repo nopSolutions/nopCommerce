@@ -32,6 +32,8 @@ using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.ExportImport;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.Common.Utils;
+using System.Diagnostics;
+using NopSolutions.NopCommerce.BusinessLogic.Directory;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -75,9 +77,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                 var registeredUsers = OnlineUserManager.GetRegisteredUsersOnline();
                 var guests = OnlineUserManager.GetGuestList();
+                var allUsers = OnlineUserManager.GetAllUserList();
 
                 lblGuests.Text = guests.Count.ToString();
-                gvCustomers.DataSource = registeredUsers;
+                gvCustomers.DataSource = allUsers;
                 gvCustomers.DataBind();
             }
             else
@@ -96,10 +99,44 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 {
                     customerInfo = string.Format("{0} (<a href=\"CustomerDetails.aspx?CustomerID={1}\">{2}</a>)", Server.HtmlEncode(customer.FullName), customer.CustomerId, Server.HtmlEncode(customer.Email));
                 }
+                else
+                {
+                    customerInfo = GetLocaleResourceString("Admin.OnlineCustomers.CustomerInfoColumn.Guest");
+                }
             }
+            else
+            {
+                customerInfo = GetLocaleResourceString("Admin.OnlineCustomers.CustomerInfoColumn.Guest");
+            }
+
             return customerInfo;
         }
 
+        protected string GetLocationInfo(OnlineUserInfo oui)
+        {
+            string result= string.Empty;
+            try
+            {
+                string countryName = GeoCountryLookup.LookupCountryName(oui.IPAddress);
+                result = Server.HtmlEncode(countryName);
+            }
+            catch (Exception exc)
+            {
+                Debug.WriteLine(exc.ToString());
+            }
+            return result;
+        }
+
+        protected string GetLastPageVisitedInfo(OnlineUserInfo oui)
+        {
+            string result= string.Empty;
+            if (!String.IsNullOrEmpty(oui.LastPageVisited))
+            {
+                result = string.Format("<a href=\"{0}\" target=\"_blank\">{0}</a>", oui.LastPageVisited);
+            }
+            return result;
+        }
+        
         protected void gvCustomers_PageIndexChanging(object sender, GridViewPageEventArgs e)
         {
             gvCustomers.PageIndex = e.NewPageIndex;

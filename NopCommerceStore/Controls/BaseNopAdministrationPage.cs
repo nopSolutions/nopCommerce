@@ -127,7 +127,7 @@ namespace NopSolutions.NopCommerce.Web
             }
             foreach (string s in ipList.Split(new char[1] { ',' }, StringSplitOptions.RemoveEmptyEntries))
             {
-                if (s.Trim().Equals(HttpContext.Current.Request.UserHostAddress))
+                if (s.Trim().Equals(NopContext.Current.UserHostAddress))
                 {
                     return true;
                 }

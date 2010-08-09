@@ -23,21 +23,43 @@
     </tr>
 </table>
 <asp:PlaceHolder runat="server" ID="phOnlineStats">
-    <br />
-    <hr />
     <asp:GridView ID="gvCustomers" runat="server" AutoGenerateColumns="False" Width="100%"
         OnPageIndexChanging="gvCustomers_PageIndexChanging" AllowPaging="true" PageSize="15">
         <Columns>
             <asp:TemplateField HeaderText="<% $NopResources:Admin.OnlineCustomers.CustomerInfoColumn %>"
-                ItemStyle-Width="70%">
+                ItemStyle-Width="20%">
                 <ItemTemplate>
                     <%#GetCustomerInfo((OnlineUserInfo)Container.DataItem)%>
                 </ItemTemplate>
             </asp:TemplateField>
-            <asp:TemplateField HeaderText="<% $NopResources:Admin.Customers.LastVisitColumn %>"
-                HeaderStyle-HorizontalAlign="Center" ItemStyle-Width="30%" ItemStyle-HorizontalAlign="Center">
+            <asp:TemplateField HeaderText="<% $NopResources:Admin.OnlineCustomers.IPAddressColumn %>"
+                ItemStyle-Width="10%">
                 <ItemTemplate>
-                    <%#DateTimeHelper.ConvertToUserTime((DateTime)Eval("LastVisit"), DateTimeKind.Utc).ToString()%>
+                    <%#Server.HtmlEncode(Eval("IPAddress").ToString())%>
+                </ItemTemplate>
+            </asp:TemplateField>
+            <asp:TemplateField HeaderText="<% $NopResources:Admin.OnlineCustomers.LocationColumn %>"
+                ItemStyle-Width="15%">
+                <ItemTemplate>
+                    <%#GetLocationInfo((OnlineUserInfo)Container.DataItem)%>
+                </ItemTemplate>
+            </asp:TemplateField>
+            <asp:TemplateField HeaderText="<% $NopResources:Admin.OnlineCustomers.EntryColumn %>"
+                ItemStyle-Width="10%">
+                <ItemTemplate>
+                    <%#DateTimeHelper.ConvertToUserTime((DateTime)Eval("CreatedOn"), DateTimeKind.Utc).ToString("T")%>
+                </ItemTemplate>
+            </asp:TemplateField>
+            <asp:TemplateField HeaderText="<% $NopResources:Admin.OnlineCustomers.LastVisitColumn %>"
+                ItemStyle-Width="10%">
+                <ItemTemplate>
+                    <%#DateTimeHelper.ConvertToUserTime((DateTime)Eval("LastVisit"), DateTimeKind.Utc).ToString("T")%>
+                </ItemTemplate>
+            </asp:TemplateField>
+            <asp:TemplateField HeaderText="<% $NopResources:Admin.OnlineCustomers.LastPageVisitedColumn %>"
+                 ItemStyle-Width="35%">
+                <ItemTemplate>
+                    <%#GetLastPageVisitedInfo((OnlineUserInfo)Container.DataItem)%>
                 </ItemTemplate>
             </asp:TemplateField>
         </Columns>

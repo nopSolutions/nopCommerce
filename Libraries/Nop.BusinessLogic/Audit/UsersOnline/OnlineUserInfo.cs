@@ -47,6 +47,16 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit.UsersOnline
         public int? AssociatedCustomerId { get; set; }
 
         /// <summary>
+        /// Gets or sets the IP Address
+        /// </summary>
+        public string IPAddress { get; set; }
+
+        /// <summary>
+        /// Gets or sets the last page visited
+        /// </summary>
+        public string LastPageVisited { get; set; }
+
+        /// <summary>
         /// Gets or sets the date and time of instance creation
         /// </summary>
         public DateTime CreatedOn { get; set; }

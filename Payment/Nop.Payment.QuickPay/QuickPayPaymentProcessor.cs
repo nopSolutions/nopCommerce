@@ -231,7 +231,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.QuickPay
             string cancelurl = CommonHelper.GetStoreLocation(false) + "QuickpayCancel.aspx";
             string callbackurl = CommonHelper.GetStoreLocation(false) + "QuickpayReturn.aspx";
             string merchant = SettingManager.GetSettingValue(QuickPayConstants.SETTING_MERCHANTID);
-            string ipaddress = System.Web.HttpContext.Current.Request.UserHostAddress;
+            string ipaddress = NopContext.Current.UserHostAddress;
             string msgtype = "authorize";
             string md5secret = SettingManager.GetSettingValue(QuickPayConstants.SETTING_MD5SECRET);
             string ordernumber = FormatOrderNumber(order.OrderId.ToString());

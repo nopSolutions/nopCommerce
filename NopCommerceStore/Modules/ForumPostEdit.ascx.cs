@@ -390,9 +390,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 var topicType = ForumTopicTypeEnum.Normal;
                 bool subscribe = cbSubscribe.Checked;
 
-                string IPAddress = string.Empty;
-                if (HttpContext.Current != null && HttpContext.Current.Request != null)
-                    IPAddress = HttpContext.Current.Request.UserHostAddress;
+                string IPAddress = NopContext.Current.UserHostAddress;
 
                 DateTime nowDT = DateTime.UtcNow;
 

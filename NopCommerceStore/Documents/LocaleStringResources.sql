@@ -1430,7 +1430,7 @@ set @resources='
   <LocaleResource Name="Admin.OnlineCustomers.CustomerInfoColumn">
     <Value>Customer info</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Customers.LastVisitColumn">
+  <LocaleResource Name="Admin.OnlineCustomers.LastVisitColumn">
     <Value>Last visit</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.OnlineCustomers.Enabled">
@@ -1753,6 +1753,21 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.OrderDetails.CancelCCButton.Text">
     <Value>Cancel editing</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.OnlineCustomers.LastPageVisitedColumn">
+    <Value>Last URL</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.OnlineCustomers.CustomerInfoColumn.Guest">
+    <Value>Guest</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.OnlineCustomers.IPAddressColumn">
+    <Value>IP Address</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.OnlineCustomers.LocationColumn">
+    <Value>Location</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.OnlineCustomers.EntryColumn">
+    <Value>Entry</Value>
   </LocaleResource>
 </Language>
 '

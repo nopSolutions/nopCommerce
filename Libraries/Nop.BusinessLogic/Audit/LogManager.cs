@@ -116,9 +116,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
             int customerId = 0;
             if (NopContext.Current != null && NopContext.Current.User != null)
                 customerId = NopContext.Current.User.CustomerId;
-            string IPAddress = string.Empty;
-            if (HttpContext.Current != null && HttpContext.Current.Request!=null)
-                IPAddress = HttpContext.Current.Request.UserHostAddress;
+            string IPAddress = NopContext.Current.UserHostAddress;
             string pageUrl = CommonHelper.GetThisPageUrl(true);
 
             return InsertLog(logType, 11, message, exception, IPAddress, customerId, pageUrl);
