@@ -2,6 +2,7 @@
     CodeBehind="ProductVariantsInGrid.ascx.cs" %>
 <%@ Register TagPrefix="nopCommerce" TagName="SimpleTextBox" Src="~/Modules/SimpleTextBox.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="NumericTextBox" Src="~/Modules/NumericTextBox.ascx" %>
+<%@ Register TagPrefix="nopCommerce" TagName="DecimalTextBox" Src="~/Modules/DecimalTextBox.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="ProductAttributes" Src="~/Modules/ProductAttributes.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="GiftCardAttributes" Src="~/Modules/GiftCardAttributes.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="ProductPrice1" Src="~/Modules/ProductPrice1.ascx" %>
@@ -63,9 +64,9 @@
                 </div>
                 <div class="price">
                     <nopCommerce:ProductPrice1 ID="ctrlProductPrice" runat="server" ProductVariantId='<%#Eval("ProductVariantId") %>' />
-                    <nopCommerce:NumericTextBox runat="server" ID="txtCustomerEnteredPrice" Value="1"
+                    <nopCommerce:DecimalTextBox runat="server" ID="txtCustomerEnteredPrice" Value="1"
                         RequiredErrorMessage="<% $NopResources:Products.CustomerEnteredPrice.EnterPrice %>"
-                        MinimumValue="0" MaximumValue="100000000" Width="100"></nopCommerce:NumericTextBox>
+                        MinimumValue="0" MaximumValue="100000000" Width="100" />
                 </div>
                 <div class="add-info">
                     <nopCommerce:NumericTextBox runat="server" ID="txtQuantity" Value="1" RequiredErrorMessage="<% $NopResources:Products.EnterQuantity %>"

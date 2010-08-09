@@ -145,7 +145,7 @@ namespace NopSolutions.NopCommerce.Web.Templates.Products {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Modules.NumericTextBox txtCustomerEnteredPrice;
+        protected global::NopSolutions.NopCommerce.Web.Modules.DecimalTextBox txtCustomerEnteredPrice;
         
         /// <summary>
         /// txtQuantity control.

@@ -70,7 +70,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             if (e.CommandName == "AddToCart" || e.CommandName == "AddToWishlist")
             {
                 var txtQuantity = e.Item.FindControl("txtQuantity") as NumericTextBox;
-                var txtCustomerEnteredPrice = e.Item.FindControl("txtCustomerEnteredPrice") as NumericTextBox;
+                var txtCustomerEnteredPrice = e.Item.FindControl("txtCustomerEnteredPrice") as DecimalTextBox;
                 var productVariantId = e.Item.FindControl("ProductVariantId") as Label;
                 var ctrlProductAttributes = e.Item.FindControl("ctrlProductAttributes") as ProductAttributesControl;
                 var ctrlGiftCardAttributes = e.Item.FindControl("ctrlGiftCardAttributes") as GiftCardAttributesControl;                
@@ -195,7 +195,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 var lblStockAvailablity = e.Item.FindControl("lblStockAvailablity") as Label;
                 var phSKU = e.Item.FindControl("phSKU") as PlaceHolder;
                 var lSKU = e.Item.FindControl("lSKU") as Literal;
-                var txtCustomerEnteredPrice = e.Item.FindControl("txtCustomerEnteredPrice") as NumericTextBox;
+                var txtCustomerEnteredPrice = e.Item.FindControl("txtCustomerEnteredPrice") as DecimalTextBox;
                 var txtQuantity = e.Item.FindControl("txtQuantity") as NumericTextBox;
                 var btnAddToCart = e.Item.FindControl("btnAddToCart") as Button;
                 var btnAddToWishlist = e.Item.FindControl("btnAddToWishlist") as Button;
