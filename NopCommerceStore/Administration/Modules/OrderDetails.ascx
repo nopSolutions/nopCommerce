@@ -30,6 +30,7 @@
 <script type="text/javascript">
     $(document).ready(function() {
         toggleOrderTotals(false);
+        toggleCC(false);
         toggleBillingAddress(false);
         toggleShippingAddress(false);
     });
@@ -46,6 +47,43 @@
             $('#<%=btnEditOrderTotals.ClientID %>').show();
             $('#<%=btnSaveOrderTotals.ClientID %>').hide();
             $('#<%=btnCancelOrderTotals.ClientID %>').hide();
+        }
+    }
+
+    function toggleCC(editmode) {
+        if (editmode) {
+            $('#<%=lblCardType.ClientID %>').hide();
+            $('#<%=txtCardType.ClientID %>').show();
+            $('#<%=lblCardName.ClientID %>').hide();
+            $('#<%=txtCardName.ClientID %>').show();
+            $('#<%=lblCardNumber.ClientID %>').hide();
+            $('#<%=txtCardNumber.ClientID %>').show();
+            $('#<%=lblCardCVV2.ClientID %>').hide();
+            $('#<%=txtCardCVV2.ClientID %>').show();
+            $('#<%=lblCardExpirationMonth.ClientID %>').hide();
+            $('#<%=txtCardExpirationMonth.ClientID %>').show();
+            $('#<%=lblCardExpirationYear.ClientID %>').hide();
+            $('#<%=txtCardExpirationYear.ClientID %>').show();
+            $('#<%=btnEditCC.ClientID %>').hide();
+            $('#<%=btnSaveCC.ClientID %>').show();
+            $('#<%=btnCancelCC.ClientID %>').show();
+        }
+        else {
+            $('#<%=lblCardType.ClientID %>').show();
+            $('#<%=txtCardType.ClientID %>').hide();
+            $('#<%=lblCardName.ClientID %>').show();
+            $('#<%=txtCardName.ClientID %>').hide();
+            $('#<%=lblCardNumber.ClientID %>').show();
+            $('#<%=txtCardNumber.ClientID %>').hide();
+            $('#<%=lblCardCVV2.ClientID %>').show();
+            $('#<%=txtCardCVV2.ClientID %>').hide();
+            $('#<%=lblCardExpirationMonth.ClientID %>').show();
+            $('#<%=txtCardExpirationMonth.ClientID %>').hide();
+            $('#<%=lblCardExpirationYear.ClientID %>').show();
+            $('#<%=txtCardExpirationYear.ClientID %>').hide();
+            $('#<%=btnEditCC.ClientID %>').show();
+            $('#<%=btnSaveCC.ClientID %>').hide();
+            $('#<%=btnCancelCC.ClientID %>').hide();
         }
     }
 
@@ -576,6 +614,7 @@
                     </td>
                     <td class="adminData">
                         <asp:Label ID="lblCardType" runat="server"></asp:Label>
+                        <asp:TextBox runat="server" ID="txtCardType" CssClass="adminInput"></asp:TextBox>
                     </td>
                 </tr>
                 <tr runat="server" id="pnlCardName">
@@ -585,6 +624,7 @@
                     </td>
                     <td class="adminData">
                         <asp:Label ID="lblCardName" runat="server"></asp:Label>
+                        <asp:TextBox runat="server" ID="txtCardName" CssClass="adminInput"></asp:TextBox>
                     </td>
                 </tr>
                 <tr runat="server" id="pnlCardNumber">
@@ -594,6 +634,7 @@
                     </td>
                     <td class="adminData">
                         <asp:Label ID="lblCardNumber" runat="server"></asp:Label>
+                        <asp:TextBox runat="server" ID="txtCardNumber" CssClass="adminInput"></asp:TextBox>
                     </td>
                 </tr>
                 <tr runat="server" id="pnlCardCVV2">
@@ -603,6 +644,7 @@
                     </td>
                     <td class="adminData">
                         <asp:Label ID="lblCardCVV2" runat="server"></asp:Label>
+                        <asp:TextBox runat="server" ID="txtCardCVV2" CssClass="adminInput"></asp:TextBox>
                     </td>
                 </tr>
                 <tr runat="server" id="pnlCardExpiryMonth">
@@ -612,6 +654,7 @@
                     </td>
                     <td class="adminData">
                         <asp:Label ID="lblCardExpirationMonth" runat="server"></asp:Label>
+                        <asp:TextBox runat="server" ID="txtCardExpirationMonth" CssClass="adminInput"></asp:TextBox>
                     </td>
                 </tr>
                 <tr runat="server" id="pnlCardExpiryYear">
@@ -621,6 +664,19 @@
                     </td>
                     <td class="adminData">
                         <asp:Label ID="lblCardExpirationYear" runat="server"></asp:Label>
+                        <asp:TextBox runat="server" ID="txtCardExpirationYear" CssClass="adminInput"></asp:TextBox>
+                    </td>
+                </tr>
+                <tr runat="server" id="pnlEditCC">
+                    <td>
+                        <asp:Button ID="btnEditCC" CssClass="adminButton" runat="server" Text="<% $NopResources:Admin.OrderDetails.EditCCButton.Text %>">
+                        </asp:Button>
+                        <asp:Button ID="btnSaveCC" CssClass="adminButton" runat="server" Text="<% $NopResources:Admin.OrderDetails.SaveCCButton.Text %>"
+                            OnClick="btnSaveCC_Click"></asp:Button>
+                    </td>
+                    <td>
+                        <asp:Button ID="btnCancelCC" CssClass="adminButton" runat="server" Text="<% $NopResources:Admin.OrderDetails.CancelCCButton.Text %>">
+                        </asp:Button>
                     </td>
                 </tr>
                 <tr runat="server" id="pnlPONumber">

@@ -922,6 +922,15 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         protected global::System.Web.UI.WebControls.Label lblCardType;
         
         /// <summary>
+        /// txtCardType control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtCardType;
+        
+        /// <summary>
         /// pnlCardName control.
         /// </summary>
         /// <remarks>
@@ -947,6 +956,15 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblCardName;
+        
+        /// <summary>
+        /// txtCardName control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtCardName;
         
         /// <summary>
         /// pnlCardNumber control.
@@ -976,6 +994,15 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         protected global::System.Web.UI.WebControls.Label lblCardNumber;
         
         /// <summary>
+        /// txtCardNumber control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtCardNumber;
+        
+        /// <summary>
         /// pnlCardCVV2 control.
         /// </summary>
         /// <remarks>
@@ -1001,6 +1028,15 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblCardCVV2;
+        
+        /// <summary>
+        /// txtCardCVV2 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtCardCVV2;
         
         /// <summary>
         /// pnlCardExpiryMonth control.
@@ -1030,6 +1066,15 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         protected global::System.Web.UI.WebControls.Label lblCardExpirationMonth;
         
         /// <summary>
+        /// txtCardExpirationMonth control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtCardExpirationMonth;
+        
+        /// <summary>
         /// pnlCardExpiryYear control.
         /// </summary>
         /// <remarks>
@@ -1055,6 +1100,51 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblCardExpirationYear;
+        
+        /// <summary>
+        /// txtCardExpirationYear control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtCardExpirationYear;
+        
+        /// <summary>
+        /// pnlEditCC control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlTableRow pnlEditCC;
+        
+        /// <summary>
+        /// btnEditCC control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnEditCC;
+        
+        /// <summary>
+        /// btnSaveCC control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnSaveCC;
+        
+        /// <summary>
+        /// btnCancelCC control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnCancelCC;
         
         /// <summary>
         /// pnlPONumber control.

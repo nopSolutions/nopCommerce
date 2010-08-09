@@ -135,6 +135,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 if (!String.IsNullOrEmpty(cardTypeDecrypted))
                 {
                     this.lblCardType.Text = Server.HtmlEncode(cardTypeDecrypted);
+                    this.txtCardType.Text = cardTypeDecrypted;
                 }
                 else
                 {
@@ -146,6 +147,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 if (!String.IsNullOrEmpty(cardNameDecrypted))
                 {
                     this.lblCardName.Text = Server.HtmlEncode(cardNameDecrypted);
+                    this.txtCardName.Text = cardNameDecrypted;
                 }
                 else
                 {
@@ -157,6 +159,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 if (!String.IsNullOrEmpty(cardNumberDecrypted))
                 {
                     this.lblCardNumber.Text = Server.HtmlEncode(cardNumberDecrypted);
+                    this.txtCardNumber.Text = cardNumberDecrypted;
                 }
                 else
                 {
@@ -166,12 +169,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 //cvv
                 string cardCVV2Decrypted = SecurityHelper.Decrypt(order.CardCvv2);
                 this.lblCardCVV2.Text = Server.HtmlEncode(cardCVV2Decrypted);
+                this.txtCardCVV2.Text = cardCVV2Decrypted;
 
                 //expiry date
                 string cardExpirationMonthDecrypted = SecurityHelper.Decrypt(order.CardExpirationMonth);
                 if (!String.IsNullOrEmpty(cardExpirationMonthDecrypted) && cardExpirationMonthDecrypted != "0")
                 {
                     this.lblCardExpirationMonth.Text = cardExpirationMonthDecrypted;
+                    this.txtCardExpirationMonth.Text = cardExpirationMonthDecrypted;
                 }
                 else
                 {
@@ -181,11 +186,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 if (!String.IsNullOrEmpty(cardExpirationYearDecrypted) && cardExpirationYearDecrypted != "0")
                 {
                     this.lblCardExpirationYear.Text = cardExpirationYearDecrypted;
+                    this.txtCardExpirationYear.Text = cardExpirationYearDecrypted;
                 }
                 else
                 {
                     pnlCardExpiryYear.Visible = false;
                 }
+
+                pnlEditCC.Visible = true;
             }
             else
             {
@@ -205,6 +213,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 pnlCardCVV2.Visible = false;
                 pnlCardExpiryMonth.Visible = false;
                 pnlCardExpiryYear.Visible = false;
+
+                pnlEditCC.Visible = false;
             }
 
             //purchase order number
@@ -712,6 +722,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             this.btnEditOrderTotals.Attributes.Add("onclick", "toggleOrderTotals(true);return false;");
             this.btnCancelOrderTotals.Attributes.Add("onclick", "toggleOrderTotals(false);return false;");
 
+            //CC editing
+            this.btnEditCC.Attributes.Add("onclick", "toggleCC(true);return false;");
+            this.btnCancelCC.Attributes.Add("onclick", "toggleCC(false);return false;");
+
             //address editing
             this.btnEditBillingAddress.Attributes.Add("onclick", "toggleBillingAddress(true);return false;");
             this.btnCancelBillingAddress.Attributes.Add("onclick", "toggleBillingAddress(false);return false;");
@@ -813,6 +827,74 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                 Label lblGiftCardAmount = e.Item.FindControl("lblGiftCardAmount") as Label;
                 lblGiftCardAmount.Text = PriceHelper.FormatPrice(-giftCardUsageHistory.UsedValue, true, false);
+            }
+        }
+
+        protected void btnSaveCC_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var order = OrderManager.GetOrderById(this.OrderId);
+                if (order != null && order.AllowStoringCreditCardNumber)
+                {
+                    string cardType = this.txtCardType.Text.Trim();
+                    string cardName = this.txtCardName.Text.Trim();
+                    string cardNumber = this.txtCardNumber.Text.Trim();
+                    string cardCVV2 = this.txtCardCVV2.Text.Trim();
+                    string cardExpirationMonth = this.txtCardExpirationMonth.Text.Trim();
+                    string cardExpirationYear = this.txtCardExpirationYear.Text.Trim();
+
+                    order = OrderManager.UpdateOrder(order.OrderId, order.OrderGuid,
+                        order.CustomerId, order.CustomerLanguageId,
+                        order.CustomerTaxDisplayType, order.CustomerIP,
+                        order.OrderSubtotalInclTax, order.OrderSubtotalExclTax,
+                        order.OrderShippingInclTax, order.OrderShippingExclTax,
+                        order.PaymentMethodAdditionalFeeInclTax, order.PaymentMethodAdditionalFeeExclTax,
+                       order.TaxRates, order.OrderTax, order.OrderTotal,
+                       order.RefundedAmount, order.OrderDiscount,
+                       order.OrderSubtotalInclTaxInCustomerCurrency, order.OrderSubtotalExclTaxInCustomerCurrency,
+                       order.OrderShippingInclTaxInCustomerCurrency, order.OrderShippingExclTaxInCustomerCurrency,
+                       order.PaymentMethodAdditionalFeeInclTaxInCustomerCurrency, order.PaymentMethodAdditionalFeeExclTaxInCustomerCurrency,
+                       order.TaxRatesInCustomerCurrency, order.OrderTaxInCustomerCurrency,
+                       order.OrderTotalInCustomerCurrency,
+                       order.OrderDiscountInCustomerCurrency,
+                       order.CheckoutAttributeDescription, order.CheckoutAttributesXml,
+                       order.CustomerCurrencyCode, order.OrderWeight,
+                       order.AffiliateId, order.OrderStatus, 
+                       order.AllowStoringCreditCardNumber, 
+                       SecurityHelper.Encrypt(cardType),
+                       SecurityHelper.Encrypt(cardName), 
+                       SecurityHelper.Encrypt(cardNumber),
+                       SecurityHelper.Encrypt(PaymentManager.GetMaskedCreditCardNumber(cardNumber)),
+                       SecurityHelper.Encrypt(cardCVV2), 
+                       SecurityHelper.Encrypt(cardExpirationMonth),
+                       SecurityHelper.Encrypt(cardExpirationYear),
+                        order.PaymentMethodId, order.PaymentMethodName, order.AuthorizationTransactionId,
+                        order.AuthorizationTransactionCode, order.AuthorizationTransactionResult,
+                        order.CaptureTransactionId, order.CaptureTransactionResult,
+                        order.SubscriptionTransactionId, order.PurchaseOrderNumber,
+                        order.PaymentStatus, order.PaidDate,
+                        order.BillingFirstName, order.BillingLastName, order.BillingPhoneNumber,
+                        order.BillingEmail, order.BillingFaxNumber, order.BillingCompany, order.BillingAddress1,
+                        order.BillingAddress2, order.BillingCity, order.BillingStateProvince,
+                        order.BillingStateProvinceId, order.BillingZipPostalCode, order.BillingCountry,
+                        order.BillingCountryId, order.ShippingStatus,
+                        order.ShippingFirstName, order.ShippingLastName, order.ShippingPhoneNumber,
+                        order.ShippingEmail, order.ShippingFaxNumber, order.ShippingCompany,
+                        order.ShippingAddress1, order.ShippingAddress2, order.ShippingCity,
+                        order.ShippingStateProvince, order.ShippingStateProvinceId, order.ShippingZipPostalCode,
+                        order.ShippingCountry, order.ShippingCountryId,
+                        order.ShippingMethod, order.ShippingRateComputationMethodId,
+                        order.ShippedDate, order.DeliveryDate, order.TrackingNumber,
+                        order.VatNumber, order.Deleted, order.CreatedOn);
+                }
+
+                string url = string.Format("{0}OrderDetails.aspx?OrderID={1}&TabID={2}", CommonHelper.GetStoreAdminLocation(), this.OrderId, this.GetActiveTabId(this.OrderTabs));
+                Response.Redirect(url);
+            }
+            catch (Exception exc)
+            {
+                ProcessException(exc);
             }
         }
 

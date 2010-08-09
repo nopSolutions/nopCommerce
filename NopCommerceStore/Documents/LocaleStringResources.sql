@@ -1745,6 +1745,15 @@ set @resources='
   <LocaleResource Name="Products.ProductHasBeenAddedToTheCart">
     <Value>The product has been added to the cart</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.OrderDetails.EditCCButton.Text">
+    <Value>Edit credit card</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.OrderDetails.SaveCCButton.Text">
+    <Value>Save credit card</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.OrderDetails.CancelCCButton.Text">
+    <Value>Cancel editing</Value>
+  </LocaleResource>
 </Language>
 '
 
