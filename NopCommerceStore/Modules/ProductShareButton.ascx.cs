@@ -38,7 +38,14 @@ namespace NopSolutions.NopCommerce.Web.Modules
         {
             if (ProductManager.ShowShareButton)
             {
-                lShareCode.Text = SettingManager.GetSettingValue("Products.AddThisSharing.Code");
+                string shareCode = SettingManager.GetSettingValue("Products.AddThisSharing.Code");
+                if (CommonHelper.IsCurrentConnectionSecured())
+                {
+                    //need to change the addthis link to be https linked when the page is, so that the page doesnt ask about mixed mode when viewed in https...
+                    shareCode = shareCode.Replace("http://", "https://");
+                }
+                lShareCode.Text = shareCode;
+                
             }
             else
             {
