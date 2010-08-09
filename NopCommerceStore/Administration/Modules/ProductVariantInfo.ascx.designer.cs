@@ -13,6 +13,33 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
     public partial class ProductVariantInfoControl {
         
         /// <summary>
+        /// pnlProductVariantId control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlTableRow pnlProductVariantId;
+        
+        /// <summary>
+        /// lblCreatedOnTitle control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblCreatedOnTitle;
+        
+        /// <summary>
+        /// lblProductVariantId control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblProductVariantId;
+        
+        /// <summary>
         /// rptrLanguageTabs control.
         /// </summary>
         /// <remarks>
@@ -65,33 +92,6 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Repeater rptrLanguageDivs;
-        
-        /// <summary>
-        /// pnlProductVariantId control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlTableRow pnlProductVariantId;
-        
-        /// <summary>
-        /// lblCreatedOnTitle control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblCreatedOnTitle;
-        
-        /// <summary>
-        /// lblProductVariantId control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblProductVariantId;
         
         /// <summary>
         /// lblSKU control.

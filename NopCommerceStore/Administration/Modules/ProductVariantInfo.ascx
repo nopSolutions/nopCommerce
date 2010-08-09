@@ -178,6 +178,17 @@
     }
 </script>
 
+<table class="adminContent">
+    <tr runat="server" id="pnlProductVariantId">
+        <td class="adminTitle">
+            <nopCommerce:ToolTipLabel runat="server" ID="lblCreatedOnTitle" Text="<% $NopResources:Admin.ProductVariantInfo.ID %>"
+                ToolTip="<% $NopResources:Admin.ProductVariantInfo.ID.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
+        </td>
+        <td class="adminData">
+            <asp:Label ID="lblProductVariantId" runat="server"></asp:Label>
+        </td>
+    </tr>
+    </table>
 <%if (this.HasLocalizableContent)
   { %>
 <div id="localizablecontentpanel" class="tabcontainer-usual">
@@ -250,16 +261,8 @@
     </asp:Repeater>
 </div>
 <%} %>
+
 <table class="adminContent">
-    <tr runat="server" id="pnlProductVariantId">
-        <td class="adminTitle">
-            <nopCommerce:ToolTipLabel runat="server" ID="lblCreatedOnTitle" Text="<% $NopResources:Admin.ProductVariantInfo.ID %>"
-                ToolTip="<% $NopResources:Admin.ProductVariantInfo.ID.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
-        </td>
-        <td class="adminData">
-            <asp:Label ID="lblProductVariantId" runat="server"></asp:Label>
-        </td>
-    </tr>
     <tr>
         <td class="adminTitle">
             <nopCommerce:ToolTipLabel runat="server" ID="lblSKU" Text="<% $NopResources:Admin.ProductVariantInfo.SKU %>"
