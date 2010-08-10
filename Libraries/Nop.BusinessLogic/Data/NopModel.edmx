@@ -3867,6 +3867,8 @@
         </Function>
         <Function Name="Nop_BlogPostLoadAll" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="LanguageID" Type="int" Mode="In" />
+          <Parameter Name="DateFrom" Type="datetime" Mode="In" />
+          <Parameter Name="DateTo" Type="datetime" Mode="In" />
           <Parameter Name="PageSize" Type="int" Mode="In" />
           <Parameter Name="PageIndex" Type="int" Mode="In" />
           <Parameter Name="TotalRecords" Type="int" Mode="InOut" />
@@ -4721,6 +4723,8 @@
           <FunctionImport Name="Sp_ActivityLogClearAll" />
           <FunctionImport Name="Sp_BlogPostLoadAll" EntitySet="BlogPosts" ReturnType="Collection(NopSolutions.NopCommerce.BusinessLogic.Data.BlogPost)">
             <Parameter Name="LanguageID" Mode="In" Type="Int32" />
+            <Parameter Name="DateFrom" Mode="In" Type="DateTime" />
+            <Parameter Name="DateTo" Mode="In" Type="DateTime" />
             <Parameter Name="PageSize" Mode="In" Type="Int32" />
             <Parameter Name="PageIndex" Mode="In" Type="Int32" />
             <Parameter Name="TotalRecords" Mode="InOut" Type="Int32" />

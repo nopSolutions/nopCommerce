@@ -99,7 +99,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
         /// <summary>
         /// Gets all blog posts
         /// </summary>
-        /// <param name="languageId">Language identifier. 0 if you want to get all news</param>
+        /// <param name="languageId">Language identifier. 0 if you want to get all records</param>
         /// <returns>Blog posts</returns>
         public static List<BlogPost> GetAllBlogPosts(int languageId)
         {
@@ -110,7 +110,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
         /// <summary>
         /// Gets all blog posts
         /// </summary>
-        /// <param name="languageId">Language identifier. 0 if you want to get all news</param>
+        /// <param name="languageId">Language identifier. 0 if you want to get all records</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="totalRecords">Total records</param>
@@ -118,18 +118,36 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
         public static List<BlogPost> GetAllBlogPosts(int languageId, int pageSize,
             int pageIndex, out int totalRecords)
         {
-            if(pageSize <= 0)
+            return GetAllBlogPosts(languageId,
+                null, null, pageSize, pageIndex, out totalRecords);
+        }
+
+        /// <summary>
+        /// Gets all blog posts
+        /// </summary>
+        /// <param name="languageId">Language identifier; 0 if you want to get all records</param>
+        /// <param name="dateFrom">Filter by created date; null if you want to get all records</param>
+        /// <param name="dateTo">Filter by created date; null if you want to get all records</param>
+        /// <param name="pageSize">Page size</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="totalRecords">Total records</param>
+        /// <returns>Blog posts</returns>
+        public static List<BlogPost> GetAllBlogPosts(int languageId, 
+            DateTime? dateFrom, DateTime? dateTo, int pageSize,
+            int pageIndex, out int totalRecords)
+        {
+            if (pageSize <= 0)
                 pageSize = 10;
-            if(pageSize == Int32.MaxValue)
+            if (pageSize == Int32.MaxValue)
                 pageSize = Int32.MaxValue - 1;
-            if(pageIndex < 0)
+            if (pageIndex < 0)
                 pageIndex = 0;
-            if(pageIndex == Int32.MaxValue)
+            if (pageIndex == Int32.MaxValue)
                 pageIndex = Int32.MaxValue - 1;
 
             var context = ObjectContextHelper.CurrentObjectContext;
             var blogPosts = context.Sp_BlogPostLoadAll(languageId,
-                pageSize, pageIndex, out totalRecords).ToList();
+                dateFrom, dateTo, pageSize, pageIndex, out totalRecords).ToList();
 
             return blogPosts;
         }
@@ -156,6 +174,41 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
             }
 
             return blogPosts;
+        }
+
+        /// <summary>
+        /// Gets all blog post tags
+        /// </summary>
+        /// <param name="languageId">Language identifier. 0 if you want to get all news</param>
+        /// <returns>Blog post tags</returns>
+        public static List<BlogPostTag> GetAllBlogPostTags(int languageId)
+        {
+            List<BlogPostTag> blogPostTags = new List<BlogPostTag>();
+
+            var blogPostsAll = GetAllBlogPosts(languageId);
+            foreach (var blogPost in blogPostsAll)
+            {
+                var tags = blogPost.ParsedTags;
+                foreach (string tag in tags)
+                {
+                    var foundBlogPostTag = blogPostTags.Find(bpt => bpt.Name.Equals(tag, StringComparison.InvariantCultureIgnoreCase));
+                    if (foundBlogPostTag == null)
+                    {
+                        foundBlogPostTag = new BlogPostTag()
+                        {
+                            Name = tag,
+                            BlogPostCount = 1
+                        };
+                        blogPostTags.Add(foundBlogPostTag);
+                    }
+                    else
+                    {
+                        foundBlogPostTag.BlogPostCount++;
+                    }
+                }
+            }
+
+            return blogPostTags;
         }
 
         /// <summary>

@@ -30,6 +30,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Content.Blog;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
+using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.BusinessLogic.Utils.Html;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
@@ -54,7 +55,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 this.lBlogPostTitle.Text = Server.HtmlEncode(blogPost.BlogPostTitle);
                 this.lCreatedOn.Text = DateTimeHelper.ConvertToUserTime(blogPost.CreatedOn, DateTimeKind.Utc).ToString("D");
                 this.lBlogPostBody.Text = blogPost.BlogPostBody;
-                this.lTags.Text = RenderBlogPosts(blogPost);
+                this.lTags.Text = RenderBlogTags(blogPost);
 
                 if (blogPost.BlogPostAllowComments)
                 {
@@ -86,7 +87,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 Response.Redirect(CommonHelper.GetStoreLocation());
         }
 
-        protected string RenderBlogPosts(BlogPost blogPost)
+        protected string RenderBlogTags(BlogPost blogPost)
         {
             StringBuilder sb = new StringBuilder();
             var tags = blogPost.ParsedTags;
@@ -99,7 +100,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 for (int i = 0; i < tags.Length; i++)
                 {
                     string tag = tags[i].Trim();
-                    string url = string.Format("{0}blog.aspx?tag={1}", CommonHelper.GetStoreLocation(), tag).ToLowerInvariant();
+                    string url = SEOHelper.GetBlogUrlForTag(tag);
                     sb.Append(string.Format("<a href=\"{0}\">{1}</a>", url, Server.HtmlEncode(tag)));
                     if (i != tags.Length - 1)
                     {

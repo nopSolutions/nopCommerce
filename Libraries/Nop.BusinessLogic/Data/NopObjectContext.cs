@@ -2012,18 +2012,38 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         }
 
         public List<BlogPost> Sp_BlogPostLoadAll(int languageId,
-            int pageSize, int pageIndex, out int totalRecords)
+            DateTime? dateFrom, DateTime? dateTo, int pageSize, int pageIndex, out int totalRecords)
         {
             totalRecords = 0;
 
             ObjectParameter languageIdParameter = new ObjectParameter("LanguageID", languageId);
+
+            ObjectParameter dateFromParameter;
+            if (dateFrom.HasValue)
+            {
+                dateFromParameter = new ObjectParameter("DateFrom", dateFrom);
+            }
+            else
+            {
+                dateFromParameter = new ObjectParameter("DateFrom", typeof(DateTime));
+            }
+            ObjectParameter dateToParameter;
+            if (dateTo.HasValue)
+            {
+                dateToParameter = new ObjectParameter("DateTo", dateTo);
+            }
+            else
+            {
+                dateToParameter = new ObjectParameter("DateTo", typeof(DateTime));
+            }
+
             ObjectParameter pageSizeParameter = new ObjectParameter("PageSize", pageSize);
             ObjectParameter pageIndexParameter = new ObjectParameter("PageIndex", pageIndex);
             ObjectParameter totalRecordsParameter = new ObjectParameter("TotalRecords", typeof(int));
 
             var result = base.ExecuteFunction<BlogPost>("Sp_BlogPostLoadAll", 
-                languageIdParameter, pageSizeParameter, 
-                pageIndexParameter, totalRecordsParameter).ToList();
+                languageIdParameter, dateFromParameter, dateToParameter,
+                pageSizeParameter, pageIndexParameter, totalRecordsParameter).ToList();
             totalRecords = Convert.ToInt32(totalRecordsParameter.Value);
             return result;
         }

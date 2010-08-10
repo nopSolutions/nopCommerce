@@ -1775,6 +1775,15 @@ set @resources='
   <LocaleResource Name="Admin.AffiliateInfo.AffiliateURL.Tooltip">
     <Value>When this hyperlink is clicked from the affiliate site, this site looks for an Affiliate ID query string parameter. If one exists, the customer is tagged with that affiliate.</Value>
   </LocaleResource>
+  <LocaleResource Name="Blog.Archive">
+    <Value>Blog Archive</Value>
+  </LocaleResource>
+  <LocaleResource Name="Blog.FilteredByMonth">
+    <Value>Blog posts of ''{0}'' ''{1}''</Value>
+  </LocaleResource>
+  <LocaleResource Name="Blog.TagsCloud.Title">
+    <Value>Popular blog tags</Value>
+  </LocaleResource>
 </Language>
 '
 

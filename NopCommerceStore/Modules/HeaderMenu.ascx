@@ -20,7 +20,7 @@
             <%=GetLocaleResourceString("Account.MyAccount")%></a> </li>
         <% if (BlogManager.BlogEnabled)
            { %>
-        <li><a href="<%=Page.ResolveUrl("~/blog.aspx")%>">
+        <li><a href="<%= SEOHelper.GetBlogUrl()%>">
             <%=GetLocaleResourceString("Blog.Blog")%></a> </li>
         <%} %>
         <% if (ForumManager.ForumsEnabled)

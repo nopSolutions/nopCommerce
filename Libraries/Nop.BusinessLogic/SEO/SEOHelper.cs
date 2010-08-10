@@ -392,6 +392,40 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO
         }
 
         /// <summary>
+        /// Gets blog URL
+        /// </summary>
+        /// <param name="tag">Blog tag</param>
+        /// <returns>Blog URL</returns>
+        public static string GetBlogUrl()
+        {
+            string url = string.Format("{0}blog.aspx", CommonHelper.GetStoreLocation());
+            return url.ToLowerInvariant();
+        }
+
+        /// <summary>
+        /// Gets blog URL
+        /// </summary>
+        /// <param name="tag">Blog tag</param>
+        /// <returns>Blog URL</returns>
+        public static string GetBlogUrlForTag(string tag)
+        {
+            tag = tag.Trim();
+            string url = string.Format("{0}blog.aspx?tag={1}", CommonHelper.GetStoreLocation(), tag);
+            return url.ToLowerInvariant();
+        }
+
+        /// <summary>
+        /// Gets blog URL
+        /// </summary>
+        /// <param name="tag">Blog tag</param>
+        /// <returns>Blog URL</returns>
+        public static string GetBlogUrlByMonth(DateTime month)
+        {
+            string url = string.Format("{0}blog.aspx?month={1}-{2}", CommonHelper.GetStoreLocation(), month.Year, month.Month);
+            return url.ToLowerInvariant();
+        }
+
+        /// <summary>
         /// Gets blog post URL
         /// </summary>
         /// <param name="blogPostId">Blog post identifier</param>

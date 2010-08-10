@@ -25,7 +25,8 @@ using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
-using NopSolutions.NopCommerce.BusinessLogic.Products;
+using NopSolutions.NopCommerce.BusinessLogic;
+using NopSolutions.NopCommerce.BusinessLogic.Content.Blog;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Controls;
@@ -33,7 +34,7 @@ using NopSolutions.NopCommerce.Controls;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
-    public partial class PopularTagsControl : BaseNopUserControl
+    public partial class BlogPopularTagsControl : BaseNopUserControl
     {
         double _mean;
         double _stdDev;
@@ -47,37 +48,51 @@ namespace NopSolutions.NopCommerce.Web.Modules
         {
             //get all tags
             int maxItems = 15;
-            var productTags = ProductManager.GetAllProductTags(0, string.Empty);
-            List<ProductTag> cloudItems = new List<ProductTag>();
-            for (int i = 0; i < productTags.Count; i++)
+            var blogPostTags = BlogManager.GetAllBlogPostTags(NopContext.Current.WorkingLanguage.LanguageId);
+            List<BlogPostTag> cloudItems = new List<BlogPostTag>();
+            for (int i = 0; i < blogPostTags.Count; i++)
             {
-                ProductTag productTag = productTags[i];
+                BlogPostTag blogTag = blogPostTags[i];
                 if (i < maxItems)
                 {
-                    cloudItems.Add(productTag);
+                    cloudItems.Add(blogTag);
                 }
             }
 
             //calculate weights
             _mean = 0;
             List<double> itemWeights = new List<double>();
-            foreach (var productTag in cloudItems)
+            foreach (var blogTag in cloudItems)
             {
-                itemWeights.Add(productTag.ProductCount);
+                itemWeights.Add(blogTag.BlogPostCount);
             }
             _stdDev = StdDev(itemWeights, out _mean);
             
             //sorting
-            cloudItems.Sort(new ProductTagComparer());
+            cloudItems.Sort(new BlogTagComparer());
 
             //binding
             if (cloudItems.Count > 0)
             {
-                lvTagCloud.DataSource = cloudItems;
-                lvTagCloud.DataBind();
+                rptrTagCloud.DataSource = cloudItems;
+                rptrTagCloud.DataBind();
             }
             else
                 this.Visible = false;
+        }
+
+        protected void rptrTagCloud_ItemDataBound(object sender, RepeaterItemEventArgs e)
+        {
+            if (e.Item.ItemType == ListItemType.AlternatingItem || e.Item.ItemType == ListItemType.Item)
+            {
+                var blogPostTag = e.Item.DataItem as BlogPostTag;
+                var hlLink = e.Item.FindControl("hlLink") as HyperLink;
+                if (hlLink != null)
+                {
+                    hlLink.NavigateUrl = SEOHelper.GetBlogUrlForTag(blogPostTag.Name);
+                    hlLink.Font.Size = new FontUnit(GetFontSize(blogPostTag.BlogPostCount), UnitType.Percentage);
+                }
+            }
         }
 
         protected int GetFontSize(double weight, double mean, double stdDev)
@@ -95,9 +110,9 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 75;
         }
 
-        protected int GetFontSize(int productCount)
+        protected int GetFontSize(int blogPostCount)
         {
-            int result = GetFontSize(productCount, _mean, _stdDev);
+            int result = GetFontSize(blogPostCount, _mean, _stdDev);
             return result;
         }
 
@@ -135,11 +150,11 @@ namespace NopSolutions.NopCommerce.Web.Modules
         {
             double mean;
             return StdDev(values, out mean);
-        }	
-
-        protected class ProductTagComparer : IComparer<ProductTag>
+        }
+        
+        protected class BlogTagComparer : IComparer<BlogPostTag>
         {
-            public int Compare(ProductTag x, ProductTag y)
+            public int Compare(BlogPostTag x, BlogPostTag y)
             {
                 if (y == null || String.IsNullOrEmpty(y.Name))
                     return -1;

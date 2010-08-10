@@ -3849,6 +3849,20 @@
     <Compile Include="Alipay_Return.aspx.designer.cs">
       <DependentUpon>Alipay_Return.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Modules\BlogMonths.ascx.cs">
+      <DependentUpon>BlogMonths.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\BlogMonths.ascx.designer.cs">
+      <DependentUpon>BlogMonths.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\BlogPopularTags.ascx.cs">
+      <DependentUpon>BlogPopularTags.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\BlogPopularTags.ascx.designer.cs">
+      <DependentUpon>BlogPopularTags.ascx</DependentUpon>
+    </Compile>
     <Compile Include="Modules\DecimalTextBox.ascx.cs">
       <DependentUpon>DecimalTextBox.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -6000,6 +6014,8 @@
     <Content Include="CompareProducts.aspx" />
     <Content Include="ConditionsInfo.aspx" />
     <Content Include="ContactUs.aspx" />
+    <Content Include="Modules\BlogMonths.ascx" />
+    <Content Include="Modules\BlogPopularTags.ascx" />
     <Content Include="Modules\DecimalTextBox.ascx" />
     <Content Include="Modules\EstimateShipping.ascx" />
     <Content Include="Modules\CustomerReturnRequests.ascx" />

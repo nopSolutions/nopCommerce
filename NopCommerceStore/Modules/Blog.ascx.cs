@@ -46,11 +46,24 @@ namespace NopSolutions.NopCommerce.Web.Modules
         {
             if (String.IsNullOrEmpty(this.Tag))
             {
-                lTitle.Text = GetLocaleResourceString("Blog.Blog");
                 int totalRecords = 0;
                 int pageSize = BlogManager.PostsPageSize;
+                DateTime? dateFrom = null;
+                DateTime? dateTo = null;
+                if (this.FilterByMonth.HasValue)
+                {
+                    dateFrom = this.FilterByMonth.Value;
+                    dateTo = dateFrom.Value.AddMonths(1).AddSeconds(-1);
 
-                var blogPosts = BlogManager.GetAllBlogPosts(NopContext.Current.WorkingLanguage.LanguageId, pageSize, CurrentPageIndex, out totalRecords);
+                    lTitle.Text = string.Format(GetLocaleResourceString("Blog.FilteredByMonth"), this.FilterByMonth.Value.Year, this.FilterByMonth.Value.ToString("MMMM"));
+                }
+                else
+                {
+                    lTitle.Text = GetLocaleResourceString("Blog.Blog");
+                }
+
+                var blogPosts = BlogManager.GetAllBlogPosts(NopContext.Current.WorkingLanguage.LanguageId,
+                    dateFrom, dateTo, pageSize, CurrentPageIndex, out totalRecords);
                 if (blogPosts.Count > 0)
                 {
                     this.postsPager.PageSize = pageSize;
@@ -78,7 +91,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             return SEOHelper.GetBlogRssUrl();
         }
 
-        protected string RenderBlogPosts(BlogPost blogPost)
+        protected string RenderBlogTags(BlogPost blogPost)
         {
             StringBuilder sb = new StringBuilder();
             var tags = blogPost.ParsedTags;
@@ -87,11 +100,12 @@ namespace NopSolutions.NopCommerce.Web.Modules
             {
                 sb.Append(GetLocaleResourceString("Blog.Tags"));
                 sb.Append(" ");
-                
+
                 for (int i = 0; i < tags.Length; i++)
                 {
                     string tag = tags[i].Trim();
-                    string url = string.Format("{0}blog.aspx?tag={1}", CommonHelper.GetStoreLocation(), tag).ToLowerInvariant();
+
+                    string url = SEOHelper.GetBlogUrlForTag(tag);
                     sb.Append(string.Format("<a href=\"{0}\">{1}</a>", url, Server.HtmlEncode(tag)));
                     if (i != tags.Length - 1)
                     {
@@ -102,7 +116,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
             return sb.ToString();
         }
-        
+
         protected void rptrBlogPosts_ItemDataBound(object sender, RepeaterItemEventArgs e)
         {
             if (e.Item.ItemType == ListItemType.AlternatingItem || e.Item.ItemType == ListItemType.Item)
@@ -134,5 +148,22 @@ namespace NopSolutions.NopCommerce.Web.Modules
             }
         }
 
+        public DateTime? FilterByMonth
+        {
+            get
+            {
+                DateTime? result = null;
+                string dateStr = CommonHelper.QueryString("month");
+                if (!String.IsNullOrEmpty(dateStr))
+                {
+                    string[] tempDate = dateStr.Split(new char[] { '-' });
+                    if (tempDate.Length == 2)
+                    {
+                        result = new DateTime(Convert.ToInt32(tempDate[0]), Convert.ToInt32(tempDate[1]), 1);
+                    }
+                }
+                return result;
+            }
+        }
     }
 }

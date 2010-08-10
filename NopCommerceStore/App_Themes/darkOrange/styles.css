@@ -974,7 +974,8 @@ ul.languagelist li .selected
 
 
 .block-category-navigation, .block-manufacturer-navigation, .block-recently-viewed-products, 
-.block-info, .block-shoppingcart, .block-newsletter, .block-livechat, .block-popular-tags
+.block-info, .block-shoppingcart, .block-newsletter, .block-livechat, .block-popular-tags,
+.block-popular-blogtags, .block-blog-archive
 {
 	
 }
@@ -1051,11 +1052,18 @@ ul.languagelist li .selected
 	color: #ff9933;
 }
 
-.block-popular-tags li
+.block-popular-tags li, .block-blog-archive li
 {
     display:inline !important;
 }
 
+.block-blog-archive .year
+{
+	color: #ff9933;
+	font-weight: bold;
+	text-decoration: none;
+	font-weight: bold;
+}
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*
 
 	ORDER SUMMARY, SHOPPING CART, WISHLIST

@@ -34,7 +34,7 @@
                     <div class="clear">
                     </div>
                     <div class="tags">
-                        <%#RenderBlogPosts((BlogPost)Container.DataItem)%>
+                        <%#RenderBlogTags((BlogPost)Container.DataItem)%>
                     </div>
                     <a href="<%#SEOHelper.GetBlogPostUrl(Convert.ToInt32(Eval("BlogPostId")))%>" class="blogdetails">
                         <asp:Literal ID="lComments" runat="server"></asp:Literal>
