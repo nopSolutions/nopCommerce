@@ -81,10 +81,10 @@ namespace NopSolutions.NopCommerce.Web.Templates.Categories
             lDescription.Text = category.LocalizedDescription;
 
             //subcategories
-            var subCategoryCollection = CategoryManager.GetAllCategories(category.CategoryId);
-            if (subCategoryCollection.Count > 0)
+            var subCategories = CategoryManager.GetAllCategories(category.CategoryId);
+            if (subCategories.Count > 0)
             {
-                dlSubCategories.DataSource = subCategoryCollection;
+                dlSubCategories.DataSource = subCategories;
                 dlSubCategories.DataBind();
             }
             else

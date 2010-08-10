@@ -29,15 +29,20 @@
     </div>
     <div class="clear">
     </div>
-    <div class="sub-category-list">
-        <asp:Repeater ID="rptrSubCategories" runat="server" OnItemDataBound="rptrSubCategories_ItemDataBound">
+    <div class="sub-category-grid">
+        <asp:DataList ID="dlSubCategories" runat="server" RepeatColumns="3" RepeatDirection="Horizontal"
+            RepeatLayout="Table" OnItemDataBound="dlSubCategories_ItemDataBound" ItemStyle-CssClass="item-box">
             <ItemTemplate>
-                <asp:HyperLink ID="hlCategory" runat="server" />
+                <div class="sub-category-item">
+                    <h2 class="category-title">
+                        <asp:HyperLink ID="hlCategory" runat="server" />
+                    </h2>
+                    <div class="picture">
+                        <asp:HyperLink ID="hlImageLink" runat="server" />
+                    </div>
+                </div>
             </ItemTemplate>
-            <SeparatorTemplate>
-                <br />
-            </SeparatorTemplate>
-        </asp:Repeater>
+        </asp:DataList>
     </div>
     <div class="clear">
     </div>

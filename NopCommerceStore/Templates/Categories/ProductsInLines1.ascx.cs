@@ -30,6 +30,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Categories;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.BusinessLogic.Localization;
+using NopSolutions.NopCommerce.BusinessLogic.Media;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
@@ -82,14 +83,14 @@ namespace NopSolutions.NopCommerce.Web.Templates.Categories
             lDescription.Text = category.LocalizedDescription;
 
             //subcategories
-            var subCategoryCollection = CategoryManager.GetAllCategories(this.CategoryId);
-            if (subCategoryCollection.Count > 0)
+            var subCategories = CategoryManager.GetAllCategories(category.CategoryId);
+            if (subCategories.Count > 0)
             {
-                rptrSubCategories.DataSource = subCategoryCollection;
-                rptrSubCategories.DataBind();
+                dlSubCategories.DataSource = subCategories;
+                dlSubCategories.DataBind();
             }
             else
-                rptrSubCategories.Visible = false;
+                dlSubCategories.Visible = false;
 
             //featured products
             var featuredProducts = category.FeaturedProducts;
@@ -195,21 +196,32 @@ namespace NopSolutions.NopCommerce.Web.Templates.Categories
             base.OnPreRender(e);
         }
 
-        protected void rptrSubCategories_ItemDataBound(object sender, RepeaterItemEventArgs e)
+        protected void dlSubCategories_ItemDataBound(object sender, DataListItemEventArgs e)
         {
-            if (e.Item.ItemType == ListItemType.AlternatingItem || e.Item.ItemType == ListItemType.Item)
+            if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
             {
                 var category = e.Item.DataItem as Category;
+                string categoryURL = SEOHelper.GetCategoryUrl(category);
+
+                var hlImageLink = e.Item.FindControl("hlImageLink") as HyperLink;
+                if (hlImageLink != null)
+                {
+                    hlImageLink.ImageUrl = PictureManager.GetPictureUrl(category.PictureId, SettingManager.GetSettingValueInteger("Media.Category.ThumbnailImageSize", 125), true);
+                    hlImageLink.NavigateUrl = categoryURL;
+                    hlImageLink.ToolTip = String.Format(GetLocaleResourceString("Media.Category.ImageLinkTitleFormat"), category.LocalizedName);
+                    hlImageLink.Text = String.Format(GetLocaleResourceString("Media.Category.ImageAlternateTextFormat"), category.LocalizedName);
+                }
+
                 var hlCategory = e.Item.FindControl("hlCategory") as HyperLink;
                 if (hlCategory != null)
                 {
-                    hlCategory.NavigateUrl = SEOHelper.GetCategoryUrl(category);
+                    hlCategory.NavigateUrl = categoryURL;
                     hlCategory.ToolTip = String.Format(GetLocaleResourceString("Media.Category.ImageLinkTitleFormat"), category.LocalizedName);
                     hlCategory.Text = Server.HtmlEncode(category.LocalizedName);
                 }
             }
         }
-
+        
         public int CurrentPageIndex
         {
             get
