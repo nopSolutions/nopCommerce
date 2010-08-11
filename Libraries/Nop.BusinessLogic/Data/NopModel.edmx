@@ -980,7 +980,11 @@
           <Property Name="DiscountID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="DiscountTypeID" Type="int" Nullable="false" />
           <Property Name="DiscountRequirementID" Type="int" Nullable="false" />
+          <Property Name="RequirementSpentAmount" Type="money" Nullable="false" />
+          <Property Name="RequirementBillingCountryIs" Type="int" Nullable="false" />
+          <Property Name="RequirementShippingCountryIs" Type="int" Nullable="false" />
           <Property Name="DiscountLimitationID" Type="int" Nullable="false" />
+          <Property Name="LimitationTimes" Type="int" Nullable="false" />
           <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="100" />
           <Property Name="UsePercentage" Type="bit" Nullable="false" />
           <Property Name="DiscountPercentage" Type="decimal" Nullable="false" Scale="4" />
@@ -990,8 +994,6 @@
           <Property Name="RequiresCouponCode" Type="bit" Nullable="false" />
           <Property Name="CouponCode" Type="nvarchar" Nullable="false" MaxLength="100" />
           <Property Name="Deleted" Type="bit" Nullable="false" />
-          <Property Name="RequirementSpentAmount" Type="money" Nullable="false" />
-          <Property Name="LimitationTimes" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Nop_DiscountLimitation">
           <Key>
@@ -6160,6 +6162,8 @@
           <Property Type="Int32" Name="DiscountTypeId" Nullable="false" />
           <Property Type="Int32" Name="DiscountRequirementId" Nullable="false" />
           <Property Type="Decimal" Name="RequirementSpentAmount" Nullable="false" Precision="19" Scale="4" />
+          <Property Type="Int32" Name="RequirementBillingCountryIs" Nullable="false" />
+          <Property Type="Int32" Name="RequirementShippingCountryIs" Nullable="false" />
           <Property Type="Int32" Name="DiscountLimitationId" Nullable="false" />
           <Property Type="Int32" Name="LimitationTimes" Nullable="false" />
           <Property Type="String" Name="Name" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
@@ -8850,6 +8854,8 @@
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="LimitationTimes" ColumnName="LimitationTimes" />
                 <ScalarProperty Name="DiscountLimitationId" ColumnName="DiscountLimitationID" />
+                <ScalarProperty Name="RequirementShippingCountryIs" ColumnName="RequirementShippingCountryIs" />
+                <ScalarProperty Name="RequirementBillingCountryIs" ColumnName="RequirementBillingCountryIs" />
                 <ScalarProperty Name="RequirementSpentAmount" ColumnName="RequirementSpentAmount" />
                 <ScalarProperty Name="DiscountRequirementId" ColumnName="DiscountRequirementID" />
                 <ScalarProperty Name="DiscountTypeId" ColumnName="DiscountTypeID" />

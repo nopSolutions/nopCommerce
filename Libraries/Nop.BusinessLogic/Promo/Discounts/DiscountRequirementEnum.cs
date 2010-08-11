@@ -43,5 +43,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         /// Customer had spent/purchased x.xx amount
         /// </summary>
         HadSpentAmount = 30,
+        /// <summary>
+        /// Billing country is
+        /// </summary>
+        BillingCountryIs = 60,
+        /// <summary>
+        /// Shipping country is
+        /// </summary>
+        ShippingCountryIs = 70,
     }
 }

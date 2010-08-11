@@ -118,7 +118,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
             if (discount != null)
             {
                 UpdateDiscount(discount.DiscountId, discount.DiscountType, 
-                    discount.DiscountRequirement, discount.RequirementSpentAmount,                    
+                    discount.DiscountRequirement, discount.RequirementSpentAmount,
+                    discount.RequirementBillingCountryIs,
+                    discount.RequirementShippingCountryIs,
                     discount.DiscountLimitation, discount.LimitationTimes,
                     discount.Name, discount.UsePercentage, discount.DiscountPercentage,
                     discount.DiscountAmount, discount.StartDate,
@@ -180,6 +182,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         /// <param name="discountType">The discount type</param>
         /// <param name="discountRequirement">The discount requirement</param>
         /// <param name="requirementSpentAmount">The discount requirement - applies if customer has spent/purchased x.xx amount</param>
+        /// <param name="requirementBillingCountryIs">The discount requirement - customer's billing country is... (used when requirement is set to "Billing country is")</param>
+        /// <param name="requirementShippingCountryIs">The discount requirement - customer's shipping country is... (used when requirement is set to "Shipping country is")</param>
         /// <param name="discountLimitation">The discount limitation</param>
         /// <param name="limitationTimes">The discount limitation times (used when Limitation is set to "N Times Only" or "N Times Per Customer")</param>
         /// <param name="name">The name</param>
@@ -194,6 +198,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         /// <returns>Discount</returns>
         public static Discount InsertDiscount(DiscountTypeEnum discountType,
             DiscountRequirementEnum discountRequirement, decimal requirementSpentAmount,
+            int requirementBillingCountryIs, int requirementShippingCountryIs,
             DiscountLimitationEnum discountLimitation, int limitationTimes, 
             string name, bool usePercentage, 
             decimal discountPercentage, decimal discountAmount,
@@ -217,6 +222,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
             discount.DiscountTypeId = (int)discountType;
             discount.DiscountRequirementId = (int)discountRequirement;
             discount.RequirementSpentAmount = requirementSpentAmount;
+            discount.RequirementBillingCountryIs = requirementBillingCountryIs;
+            discount.RequirementShippingCountryIs = requirementShippingCountryIs;
             discount.DiscountLimitationId = (int)discountLimitation;
             discount.LimitationTimes = limitationTimes;
             discount.Name = name;
@@ -246,6 +253,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         /// <param name="discountType">The discount type</param>
         /// <param name="discountRequirement">The discount requirement</param>
         /// <param name="requirementSpentAmount">The discount requirement - applies if customer has spent/purchased x.xx amount</param>
+        /// <param name="requirementBillingCountryIs">The discount requirement - customer's billing country is... (used when requirement is set to "Billing country is")</param>
+        /// <param name="requirementShippingCountryIs">The discount requirement - customer's shipping country is... (used when requirement is set to "Shipping country is")</param>
         /// <param name="discountLimitation">The discount limitation</param>
         /// <param name="limitationTimes">The discount limitation times (used when Limitation is set to "N Times Only" or "N Times Per Customer")</param>
         /// <param name="name">The name</param>
@@ -260,6 +269,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         /// <returns>Discount</returns>
         public static Discount UpdateDiscount(int discountId, DiscountTypeEnum discountType,
             DiscountRequirementEnum discountRequirement, decimal requirementSpentAmount,
+            int requirementBillingCountryIs, int requirementShippingCountryIs,
             DiscountLimitationEnum discountLimitation, int limitationTimes, 
             string name, bool usePercentage,
             decimal discountPercentage, decimal discountAmount,
@@ -288,6 +298,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
             discount.DiscountTypeId = (int)discountType;
             discount.DiscountRequirementId = (int)discountRequirement;
             discount.RequirementSpentAmount = requirementSpentAmount;
+            discount.RequirementBillingCountryIs = requirementBillingCountryIs;
+            discount.RequirementShippingCountryIs = requirementShippingCountryIs;
             discount.DiscountLimitationId = (int)discountLimitation;
             discount.LimitationTimes = limitationTimes;
             discount.Name = name;

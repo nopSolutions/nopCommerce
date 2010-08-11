@@ -17,6 +17,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.Text;
 using System.Web;
 using System.Web.Security;
 using System.Web.UI;
@@ -25,11 +26,11 @@ using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
-using NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts;
-using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.Common;
+using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
-using System.Text;
+using NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts;
+using NopSolutions.NopCommerce.Common;
+using NopSolutions.NopCommerce.Common.Utils;
  
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -37,6 +38,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void FillDropDowns()
         {
+            //discunt types
             this.ddlDiscountType.Items.Clear();
             var discountTypes = DiscountManager.GetAllDiscountTypes();
             foreach (DiscountType discountType in discountTypes)
@@ -45,6 +47,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 this.ddlDiscountType.Items.Add(item2);
             }
 
+            //discount requirements
             this.ddlDiscountRequirement.Items.Clear();
             var discountRequirements = DiscountManager.GetAllDiscountRequirements();
             foreach (DiscountRequirement discountRequirement in discountRequirements)
@@ -53,12 +56,35 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 this.ddlDiscountRequirement.Items.Add(item2);
             }
 
+            //discount limitations
             this.ddlDiscountLimitation.Items.Clear();
             var discountLimitations = DiscountManager.GetAllDiscountLimitations();
             foreach (DiscountLimitation discountLimitation in discountLimitations)
             {
                 ListItem item2 = new ListItem(discountLimitation.Name, discountLimitation.DiscountLimitationId.ToString());
                 this.ddlDiscountLimitation.Items.Add(item2);
+            }
+            
+            //required billing countries
+            this.ddlRequirementBillingCountryIs.Items.Clear();
+            ListItem rbciEmpty = new ListItem(GetLocaleResourceString("Admin.DiscountInfo.RequirementBillingCountryIs.SelectCountry"), "0");
+            this.ddlRequirementBillingCountryIs.Items.Add(rbciEmpty);
+            var billingCountries = CountryManager.GetAllCountriesForBilling();
+            foreach (Country country in billingCountries)
+            {
+                ListItem ddlCountryItem2 = new ListItem(country.Name, country.CountryId.ToString());
+                this.ddlRequirementBillingCountryIs.Items.Add(ddlCountryItem2);
+            }
+
+            //required shipping countries
+            this.ddlRequirementShippingCountryIs.Items.Clear();
+            ListItem rsciEmpty = new ListItem(GetLocaleResourceString("Admin.DiscountInfo.RequirementShippingCountryIs.SelectCountry"), "0");
+            this.ddlRequirementShippingCountryIs.Items.Add(rsciEmpty);
+            var shippingCountries = CountryManager.GetAllCountriesForShipping();
+            foreach (Country country in shippingCountries)
+            {
+                ListItem ddlCountryItem2 = new ListItem(country.Name, country.CountryId.ToString());
+                this.ddlRequirementShippingCountryIs.Items.Add(ddlCountryItem2);
             }
         }
 
@@ -105,6 +131,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 CommonHelper.SelectListItem(this.ddlDiscountRequirement, discount.DiscountRequirementId);
                 this.txtRequirementSpentAmount.Value = discount.RequirementSpentAmount;
                 this.txtRestrictedProductVariants.Text = GenerateListOfRestrictedProductVariants(ProductManager.GetProductVariantsRestrictedByDiscountId(discount.DiscountId));
+                CommonHelper.SelectListItem(this.ddlRequirementBillingCountryIs, discount.RequirementBillingCountryIs);
+                CommonHelper.SelectListItem(this.ddlRequirementShippingCountryIs, discount.RequirementShippingCountryIs);
                 CommonHelper.SelectListItem(this.ddlDiscountLimitation, discount.DiscountLimitationId);
                 this.txtLimitationTimes.Value = discount.LimitationTimes;
                 this.txtName.Text = discount.Name;
@@ -147,9 +175,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         private void TogglePanels()
         {
             DiscountRequirementEnum discountRequirement = (DiscountRequirementEnum)int.Parse(this.ddlDiscountRequirement.SelectedItem.Value);
+
             pnlCustomerRoles.Visible = discountRequirement == DiscountRequirementEnum.MustBeAssignedToCustomerRole;
             pnlRestrictedProductVariants.Visible = (discountRequirement == DiscountRequirementEnum.HadPurchasedAllOfTheseProductVariants ||discountRequirement == DiscountRequirementEnum.HadPurchasedOneOfTheseProductVariants );
             pnlRequirementSpentAmount.Visible = (discountRequirement == DiscountRequirementEnum.HadSpentAmount);
+            pnlRequirementBillingCountryIs.Visible = (discountRequirement == DiscountRequirementEnum.BillingCountryIs);
+            pnlRequirementShippingCountryIs.Visible = (discountRequirement == DiscountRequirementEnum.ShippingCountryIs);
         }
 
         private void SetDefaultValues()
@@ -160,27 +191,42 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public Discount SaveInfo()
         {
+            //discou tn type
             DiscountTypeEnum discountType = (DiscountTypeEnum)int.Parse(this.ddlDiscountType.SelectedItem.Value);
+            
+            //requirements
             DiscountRequirementEnum discountRequirement = (DiscountRequirementEnum)int.Parse(this.ddlDiscountRequirement.SelectedItem.Value);
+            
             int[] restrictedProductVariantIds = new int[0];
             if (discountRequirement == DiscountRequirementEnum.HadPurchasedAllOfTheseProductVariants || discountRequirement == DiscountRequirementEnum.HadPurchasedOneOfTheseProductVariants)
                 restrictedProductVariantIds = ParseListOfRestrictedProductVariants(txtRestrictedProductVariants.Text);
-            DiscountLimitationEnum discountLimitation = (DiscountLimitationEnum)int.Parse(this.ddlDiscountLimitation.SelectedItem.Value);
+            decimal requirementSpentAmount = txtRequirementSpentAmount.Value;
 
+            int requirementBillingCountryIs= int.Parse(this.ddlRequirementBillingCountryIs.SelectedItem.Value);
+            int requirementShippingCountryIs = int.Parse(this.ddlRequirementShippingCountryIs.SelectedItem.Value);
+
+            //limitation
+            DiscountLimitationEnum discountLimitation = (DiscountLimitationEnum)int.Parse(this.ddlDiscountLimitation.SelectedItem.Value);
+            int limitationTimes = txtLimitationTimes.Value;
+
+            string name = txtName.Text.Trim();
+            bool usePercentage= cbUsePercentage.Checked;
+            decimal discountPercentage = txtDiscountPercentage.Value;
+            decimal discountAmount = txtDiscountAmount.Value;
+            bool requiresCouponCode = cbRequiresCouponCode.Checked;
+            string couponCode = txtCouponCode.Text.Trim();
+
+            //dates
             if(!ctrlStartDatePicker.SelectedDate.HasValue)
             {
                 throw new NopException("Start date is not set");
             }
-
             DateTime discountStartDate = ctrlStartDatePicker.SelectedDate.Value;
-
             if(!ctrlEndDatePicker.SelectedDate.HasValue)
             {
                 throw new NopException("End date is not set");
             }
-
             DateTime discountEndDate = ctrlEndDatePicker.SelectedDate.Value;
-
             discountStartDate = DateTime.SpecifyKind(discountStartDate, DateTimeKind.Utc);
             discountEndDate = DateTime.SpecifyKind(discountEndDate, DateTimeKind.Utc);
             
@@ -191,17 +237,19 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 discount = DiscountManager.UpdateDiscount(discount.DiscountId,
                     discountType,
                     discountRequirement,
-                    txtRequirementSpentAmount.Value,
+                    requirementSpentAmount,
+                    requirementBillingCountryIs,
+                    requirementShippingCountryIs,
                     discountLimitation,
-                    txtLimitationTimes.Value,
-                    txtName.Text,
-                    cbUsePercentage.Checked,
-                    txtDiscountPercentage.Value,
-                    txtDiscountAmount.Value,
+                    limitationTimes,
+                    name,
+                    usePercentage,
+                    discountPercentage,
+                    discountAmount,
                     discountStartDate,
                     discountEndDate,
-                    cbRequiresCouponCode.Checked,
-                    txtCouponCode.Text.Trim(),
+                    requiresCouponCode,
+                    couponCode,
                     discount.Deleted);
 
                 //discount requirements
@@ -219,17 +267,19 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 discount = DiscountManager.InsertDiscount(discountType,
                     discountRequirement,
-                    txtRequirementSpentAmount.Value,
+                    requirementSpentAmount,
+                    requirementBillingCountryIs,
+                    requirementShippingCountryIs,
                     discountLimitation,
-                    txtLimitationTimes.Value,
-                    txtName.Text,
-                    cbUsePercentage.Checked,
-                    txtDiscountPercentage.Value,
-                    txtDiscountAmount.Value,
+                    limitationTimes,
+                    name,
+                    usePercentage,
+                    discountPercentage,
+                    discountAmount,
                     discountStartDate,
                     discountEndDate,
-                    cbRequiresCouponCode.Checked,
-                    txtCouponCode.Text.Trim(),
+                    requiresCouponCode,
+                    couponCode,
                     false);
 
                 //discount requirements

@@ -121,6 +121,60 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         protected global::NopSolutions.NopCommerce.Web.Administration.Modules.DecimalTextBox txtRequirementSpentAmount;
         
         /// <summary>
+        /// pnlRequirementBillingCountryIs control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlTableRow pnlRequirementBillingCountryIs;
+        
+        /// <summary>
+        /// lblRequirementBillingCountryIs control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblRequirementBillingCountryIs;
+        
+        /// <summary>
+        /// ddlRequirementBillingCountryIs control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlRequirementBillingCountryIs;
+        
+        /// <summary>
+        /// pnlRequirementShippingCountryIs control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlTableRow pnlRequirementShippingCountryIs;
+        
+        /// <summary>
+        /// lblRequirementShippingCountryIs control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblRequirementShippingCountryIs;
+        
+        /// <summary>
+        /// ddlRequirementShippingCountryIs control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlRequirementShippingCountryIs;
+        
+        /// <summary>
         /// lblDiscountLimitation control.
         /// </summary>
         /// <remarks>

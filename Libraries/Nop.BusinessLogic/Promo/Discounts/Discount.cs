@@ -57,9 +57,19 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         public int DiscountRequirementId { get; set; }
 
         /// <summary>
-        /// Gets or sets the the discount requirement - applies if customer has spent/purchased x.xx amount (used when requirement is set to "Customer had spent/purchased x.xx amount")
+        /// Gets or sets the the discount requirement spent amount - customer has spent/purchased x.xx amount (used when requirement is set to "Customer had spent/purchased x.xx amount")
         /// </summary>
         public decimal RequirementSpentAmount { get; set; }
+
+        /// <summary>
+        /// Gets or sets the discount requirement - customer's billing country is... (used when requirement is set to "Billing country is")
+        /// </summary>
+        public int RequirementBillingCountryIs { get; set; }
+
+        /// <summary>
+        /// Gets or sets the discount requirement - customer's shipping country is... (used when requirement is set to "Shipping country is")
+        /// </summary>
+        public int RequirementShippingCountryIs { get; set; }
         
         /// <summary>
         /// Gets or sets the discount limitation identifier
@@ -268,6 +278,28 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
                             var orders = customer.Orders.FindAll(o=>o.OrderStatus == OrderStatusEnum.Complete);
                             decimal spentAmount = orders.Sum(o=>o.OrderTotal);
                             return spentAmount > this.RequirementSpentAmount;
+                        }
+                    }
+                    break;
+                case DiscountRequirementEnum.BillingCountryIs:
+                    {
+                        if (customer != null && 
+                            customer.BillingAddress!=null &&
+                            customer.BillingAddress.CountryId > 0 &&
+                            this.RequirementBillingCountryIs > 0)
+                        {
+                            return customer.BillingAddress.CountryId == this.RequirementBillingCountryIs;
+                        }
+                    }
+                    break;
+                case DiscountRequirementEnum.ShippingCountryIs:
+                    {
+                        if (customer != null &&
+                            customer.ShippingAddress != null &&
+                            customer.ShippingAddress.CountryId > 0 &&
+                            this.RequirementShippingCountryIs > 0)
+                        {
+                            return customer.ShippingAddress.CountryId == this.RequirementShippingCountryIs;
                         }
                     }
                     break;

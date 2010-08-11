@@ -1784,6 +1784,24 @@ set @resources='
   <LocaleResource Name="Blog.TagsCloud.Title">
     <Value>Popular blog tags</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.DiscountInfo.RequirementBillingCountryIs">
+    <Value>Required billing country:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.DiscountInfo.RequirementBillingCountryIs.Tooltip">
+    <Value>Select required billing country.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.DiscountInfo.RequirementShippingCountryIs">
+    <Value>Required shipping country:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.DiscountInfo.RequirementShippingCountryIs.Tooltip">
+    <Value>Select required shipping country.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.DiscountInfo.RequirementBillingCountryIs.SelectCountry">
+    <Value>Select billing country</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.DiscountInfo.RequirementShippingCountryIs.SelectCountry">
+    <Value>Select shipping country</Value>
+  </LocaleResource>
 </Language>
 '
 

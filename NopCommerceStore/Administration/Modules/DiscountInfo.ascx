@@ -98,6 +98,26 @@
                             MinimumValue="0" MaximumValue="100000000" RangeErrorMessage="<% $NopResources:Admin.DiscountInfo.RequirementSpentAmount.RangeErrorMessage %>">
                         </nopCommerce:DecimalTextBox>
                     </td>
+                </tr>                
+                <tr runat="server" id="pnlRequirementBillingCountryIs">
+                    <td class="adminTitle">
+                        <nopCommerce:ToolTipLabel runat="server" ID="lblRequirementBillingCountryIs" Text="<% $NopResources:Admin.DiscountInfo.RequirementBillingCountryIs %>"
+                            ToolTip="<% $NopResources:Admin.DiscountInfo.RequirementBillingCountryIs.Tooltip %>"
+                            ToolTipImage="~/Administration/Common/ico-help.gif" />
+                    </td>
+                    <td class="adminData">
+                        <asp:DropDownList ID="ddlRequirementBillingCountryIs" AutoPostBack="False" runat="server" CssClass="adminInput" />
+                    </td>
+                </tr>             
+                <tr runat="server" id="pnlRequirementShippingCountryIs">
+                    <td class="adminTitle">
+                        <nopCommerce:ToolTipLabel runat="server" ID="lblRequirementShippingCountryIs" Text="<% $NopResources:Admin.DiscountInfo.RequirementShippingCountryIs %>"
+                            ToolTip="<% $NopResources:Admin.DiscountInfo.RequirementShippingCountryIs.Tooltip %>"
+                            ToolTipImage="~/Administration/Common/ico-help.gif" />
+                    </td>
+                    <td class="adminData">
+                        <asp:DropDownList ID="ddlRequirementShippingCountryIs" AutoPostBack="False" runat="server" CssClass="adminInput" />
+                    </td>
                 </tr>
                 <tr>
                     <td class="adminTitle">

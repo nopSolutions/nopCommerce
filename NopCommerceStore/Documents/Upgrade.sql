@@ -2539,3 +2539,37 @@ BEGIN
 	SET ROWCOUNT 0
 END
 GO
+
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[Nop_DiscountRequirement]
+		WHERE [DiscountRequirementID] = 60)
+BEGIN
+	INSERT [dbo].[Nop_DiscountRequirement] ([DiscountRequirementID], [Name])
+	VALUES (60, N'Billing country is')
+END
+GO
+
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[Nop_DiscountRequirement]
+		WHERE [DiscountRequirementID] = 70)
+BEGIN
+	INSERT [dbo].[Nop_DiscountRequirement] ([DiscountRequirementID], [Name])
+	VALUES (70, N'Shipping country is')
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[Nop_Discount]') and NAME='RequirementBillingCountryIs')
+BEGIN
+	ALTER TABLE [dbo].[Nop_Discount] 
+	ADD [RequirementBillingCountryIs] int NOT NULL CONSTRAINT [DF_Nop_Discount_RequirementBillingCountryIs] DEFAULT ((0))
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[Nop_Discount]') and NAME='RequirementShippingCountryIs')
+BEGIN
+	ALTER TABLE [dbo].[Nop_Discount] 
+	ADD [RequirementShippingCountryIs] int NOT NULL CONSTRAINT [DF_Nop_Discount_RequirementShippingCountryIs] DEFAULT ((0))
+END
+GO
