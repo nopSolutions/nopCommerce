@@ -921,6 +921,7 @@
           <Property Name="RegistrationDate" Type="datetime" Nullable="false" />
           <Property Name="TimeZoneID" Type="nvarchar" Nullable="false" MaxLength="200" />
           <Property Name="AvatarID" Type="int" Nullable="false" />
+          <Property Name="DateOfBirth" Type="datetime" />
         </EntityType>
         <EntityType Name="Nop_Customer_CustomerRole_Mapping">
           <Key>
@@ -3917,6 +3918,8 @@
           <Parameter Name="Email" Type="nvarchar" Mode="In" />
           <Parameter Name="Username" Type="nvarchar" Mode="In" />
           <Parameter Name="DontLoadGuestCustomers" Type="bit" Mode="In" />
+          <Parameter Name="DateOfBirthMonth" Type="int" Mode="In" />
+          <Parameter Name="DateOfBirthDay" Type="int" Mode="In" />
           <Parameter Name="PageSize" Type="int" Mode="In" />
           <Parameter Name="PageIndex" Type="int" Mode="In" />
           <Parameter Name="TotalRecords" Type="int" Mode="InOut" />
@@ -4773,6 +4776,8 @@
             <Parameter Name="Email" Mode="In" Type="String" />
             <Parameter Name="Username" Mode="In" Type="String" />
             <Parameter Name="DontLoadGuestCustomers" Mode="In" Type="Boolean" />
+            <Parameter Name="DateOfBirthMonth" Mode="In" Type="Int32" />
+            <Parameter Name="DateOfBirthDay" Mode="In" Type="Int32" />
             <Parameter Name="PageSize" Mode="In" Type="Int32" />
             <Parameter Name="PageIndex" Mode="In" Type="Int32" />
             <Parameter Name="TotalRecords" Mode="InOut" Type="Int32" />
@@ -5633,6 +5638,7 @@
           <NavigationProperty Name="NpDiscountUsageHistory" Relationship="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_DiscountUsageHistory_Nop_Customer" FromRole="Customer" ToRole="Nop_DiscountUsageHistory" />
           <NavigationProperty Name="NpGiftCardUsageHistory" Relationship="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_GiftCardUsageHistory_Nop_Customer" FromRole="Customer" ToRole="Nop_GiftCardUsageHistory" />
           <NavigationProperty Name="NpRewardPointsHistory" Relationship="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_RewardPointsHistory_Nop_Customer" FromRole="Customer" ToRole="Nop_RewardPointsHistory" />
+          <Property Type="DateTime" Name="DateOfBirth" />
         </EntityType>
         <EntityType Name="TaxRate">
           <Key>
@@ -8495,6 +8501,7 @@
           <EntitySetMapping Name="Customers">
             <EntityTypeMapping TypeName="NopSolutions.NopCommerce.BusinessLogic.Data.Customer">
               <MappingFragment StoreEntitySet="Nop_Customer">
+                <ScalarProperty Name="DateOfBirth" ColumnName="DateOfBirth" />
                 <ScalarProperty Name="AvatarId" ColumnName="AvatarID" />
                 <ScalarProperty Name="TimeZoneId" ColumnName="TimeZoneID" />
                 <ScalarProperty Name="RegistrationDate" ColumnName="RegistrationDate" />

@@ -185,7 +185,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     customer.LastName = txtLastName.Text;
                     if (CustomerManager.FormFieldDateOfBirthEnabled)
                     {
-                        customer.DateOfBirth = dtDateOfBirth.SelectedDate;
+                        customer = CustomerManager.SetCustomerDateOfBirth(customer.CustomerId, dtDateOfBirth.SelectedDate);
                     }
                     if (CustomerManager.FormFieldCompanyEnabled)
                     {

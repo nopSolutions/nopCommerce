@@ -209,7 +209,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// Gets or sets the avatar identifier
         /// </summary>
         public int AvatarId { get; set; }
-
+        
+        /// <summary>
+        /// Gets or sets the date of birth
+        /// </summary>
+        public DateTime? DateOfBirth { get; set; }
         #endregion
 
         #region Custom Properties
@@ -528,58 +532,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                 ResetCachedValues();
             }
         }
-
-        /// <summary>
-        /// Gets or sets the date of birth
-        /// </summary>
-        public DateTime? DateOfBirth
-        {
-            get
-            {
-                var customerAttributes = this.CustomerAttributes;
-                CustomerAttribute dateOfBirthAttr = customerAttributes.FindAttribute("DateOfBirth", this.CustomerId);
-                if (dateOfBirthAttr != null)
-                {
-                    try
-                    {
-                        return XmlHelper.DeserializeDateTime(dateOfBirthAttr.Value);
-                    }
-                    catch
-                    {
-                        return null;
-                    }
-                }
-                else
-                    return null;
-            }
-            set
-            {
-                var customerAttributes = this.CustomerAttributes;
-                CustomerAttribute dateOfBirthAttr = customerAttributes.FindAttribute("DateOfBirth", this.CustomerId);
-
-                if (dateOfBirthAttr != null)
-                {
-                    if (value.HasValue)
-                    {
-                        dateOfBirthAttr = CustomerManager.UpdateCustomerAttribute(dateOfBirthAttr.CustomerAttributeId, dateOfBirthAttr.CustomerId, "DateOfBirth", XmlHelper.SerializeDateTime(value.Value));
-                    }
-                    else
-                    {
-                        CustomerManager.DeleteCustomerAttribute(dateOfBirthAttr.CustomerAttributeId);
-                    }
-                }
-                else
-                {
-                    if (value.HasValue)
-                    {
-                        dateOfBirthAttr = CustomerManager.InsertCustomerAttribute(this.CustomerId, "DateOfBirth", XmlHelper.SerializeDateTime(value.Value));
-                    }
-                }
-
-                ResetCachedValues();
-            }
-        }
-
+        
         /// <summary>
         /// Gets or sets the company
         /// </summary>

@@ -2632,3 +2632,169 @@ GO
 DELETE FROM [dbo].[Nop_Setting]
 WHERE [Name] = N'SEO.Sitemaps.IncludeTopics'
 GO
+
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[Nop_Customer]') and NAME='DateOfBirth')
+BEGIN
+	ALTER TABLE [dbo].[Nop_Customer] 
+	ADD [DateOfBirth] datetime
+END
+GO
+
+
+CREATE TABLE #DateOfBirthImportTmp
+	(
+		[CustomerID] [int] NOT NULL,
+		[DateOfBirthXml] xml NOT NULL
+	)
+
+
+
+INSERT INTO #DateOfBirthImportTmp (CustomerId, DateOfBirthXml)
+SELECT	ca.CustomerId, ca.[Value]
+FROM	Nop_CustomerAttribute ca
+WHERE	ca.[Key] = N'DateOfBirth'
+
+DECLARE @CustomerID int
+DECLARE @DateOfBirthXml xml
+DECLARE cur_attributes CURSOR FOR
+SELECT CustomerID, DateOfBirthXml
+FROM #DateOfBirthImportTmp
+OPEN cur_attributes
+FETCH NEXT FROM cur_attributes INTO @CustomerID, @DateOfBirthXml
+WHILE @@FETCH_STATUS = 0
+BEGIN
+
+BEGIN TRY
+--limit to 10 chars (datetime only)
+UPDATE Nop_Customer
+SET [DateOfBirth] = CAST(@DateOfBirthXml.value('dateTime[1]', 'nvarchar(10)') as datetime)
+WHERE CustomerID = @CustomerID
+END TRY
+BEGIN CATCH
+SELECT ERROR_MESSAGE()
+END CATCH
+
+FETCH NEXT FROM cur_attributes INTO @CustomerID, @DateOfBirthXml
+END
+CLOSE cur_attributes
+DEALLOCATE cur_attributes
+
+DROP TABLE #DateOfBirthImportTmp
+GO
+
+DELETE FROM Nop_CustomerAttribute
+WHERE [Key] = N'DateOfBirth'
+GO
+
+
+
+
+IF EXISTS (
+		SELECT *
+		FROM dbo.sysobjects
+		WHERE id = OBJECT_ID(N'[dbo].[Nop_CustomerLoadAll]') AND OBJECTPROPERTY(id,N'IsProcedure') = 1)
+DROP PROCEDURE [dbo].[Nop_CustomerLoadAll]
+GO
+CREATE PROCEDURE [dbo].[Nop_CustomerLoadAll]
+(
+	@StartTime				datetime = NULL,
+	@EndTime				datetime = NULL,
+	@Email					nvarchar(200),
+	@Username				nvarchar(200),
+	@DontLoadGuestCustomers	bit = 0,
+	@DateOfBirthMonth		int = 0,
+	@DateOfBirthDay			int = 0,
+	@PageSize				int = 2147483644,
+	@PageIndex				int = 0, 
+	@TotalRecords			int = null OUTPUT
+)
+AS
+BEGIN
+
+	SET @Email = isnull(@Email, '')
+	SET @Email = '%' + rtrim(ltrim(@Email)) + '%'
+
+	SET @Username = isnull(@Username, '')
+	SET @Username = '%' + rtrim(ltrim(@Username)) + '%'
+
+
+	--paging
+	DECLARE @PageLowerBound int
+	DECLARE @PageUpperBound int
+	DECLARE @RowsToReturn int
+	DECLARE @TotalThreads int
+	
+	SET @RowsToReturn = @PageSize * (@PageIndex + 1)	
+	SET @PageLowerBound = @PageSize * @PageIndex
+	SET @PageUpperBound = @PageLowerBound + @PageSize + 1
+	
+	CREATE TABLE #PageIndex 
+	(
+		IndexID int IDENTITY (1, 1) NOT NULL,
+		CustomerID int NOT NULL,
+		RegistrationDate datetime NOT NULL,
+	)
+
+	INSERT INTO #PageIndex (CustomerID, RegistrationDate)
+	SELECT DISTINCT
+		c.CustomerID, c.RegistrationDate
+	FROM [Nop_Customer] c with (NOLOCK)
+	WHERE 
+		(@StartTime is NULL or @StartTime <= c.RegistrationDate) and
+		(@EndTime is NULL or @EndTime >= c.RegistrationDate) and 
+		(patindex(@Email, c.Email) > 0) and
+		(patindex(@Username, c.Username) > 0) and
+		(@DontLoadGuestCustomers = 0 or c.IsGuest = 0) and 
+		(@DateOfBirthMonth = 0 or (c.DateOfBirth is not null and DATEPART(month, c.DateOfBirth) = @DateOfBirthMonth)) and 
+		(@DateOfBirthDay = 0 or (c.DateOfBirth is not null and DATEPART(day, c.DateOfBirth) = @DateOfBirthDay)) and 
+		c.deleted=0
+	order by c.RegistrationDate desc 
+
+	SET @TotalRecords = @@rowcount	
+	SET ROWCOUNT @RowsToReturn
+	
+	SELECT  
+		c.CustomerId,
+		c.CustomerGuid,
+		c.Email,
+		c.Username,
+		c.PasswordHash,
+		c.SaltKey,
+		c.AffiliateId,
+		c.BillingAddressId,
+		c.ShippingAddressId,
+		c.LastPaymentMethodId,
+		c.LastAppliedCouponCode,
+		c.GiftCardCouponCodes,
+		c.CheckoutAttributes,
+		c.LanguageId,
+		c.CurrencyId,
+		c.TaxDisplayTypeId,
+		c.IsTaxExempt,
+		c.IsAdmin,
+		c.IsGuest,
+		c.IsForumModerator,
+		c.TotalForumPosts,
+		c.Signature,
+		c.AdminComment,
+		c.Active,
+		c.Deleted,
+		c.RegistrationDate,
+		c.TimeZoneId,
+		c.AvatarId,
+		c.DateOfBirth
+	FROM
+		#PageIndex [pi]
+		INNER JOIN [Nop_Customer] c on c.CustomerID = [pi].CustomerID
+	WHERE
+		[pi].IndexID > @PageLowerBound AND 
+		[pi].IndexID < @PageUpperBound
+	ORDER BY
+		IndexID
+	
+	SET ROWCOUNT 0
+
+	DROP TABLE #PageIndex
+	
+END
+GO

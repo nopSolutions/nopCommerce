@@ -41,6 +41,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 SetDefaultValues();
                 phUsername.Visible = CustomerManager.UsernamesEnabled;
+                phDateOfBirth.Visible = CustomerManager.FormFieldDateOfBirthEnabled;
                 gvCustomers.Columns[2].Visible = CustomerManager.UsernamesEnabled;
 
                 //buttons
@@ -74,9 +75,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             string email = txtEmail.Text.Trim();
             string username = txtUsername.Text.Trim();
             bool dontLoadGuestCustomers = cbDontLoadGuestCustomers.Checked;
+            int dateOfBirthDay = int.Parse(this.ddlDateOfBirthDay.SelectedValue);
+            int dateOfBirthMonth = int.Parse(this.ddlDateOfBirthMonth.SelectedValue);
             int totalRecords = 0;
             var customers = CustomerManager.GetAllCustomers(startDate,
-                endDate, email, username, dontLoadGuestCustomers, int.MaxValue, 0, out totalRecords);
+                endDate, email, username, dontLoadGuestCustomers,
+                dateOfBirthMonth, dateOfBirthDay, int.MaxValue, 0, out totalRecords);
             return customers;
         }
 

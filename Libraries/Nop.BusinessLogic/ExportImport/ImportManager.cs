@@ -117,7 +117,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                             lastAppliedCouponCode, string.Empty, string.Empty,
                             languageId, currencyId, (TaxDisplayTypeEnum)taxDisplayTypeId, isTaxExempt,
                             isAdmin, isGuest, isForumModerator, totalForumPosts, signature,
-                            adminComment, active, deleted, registrationDate, timeZoneId, avatarId);
+                            adminComment, active, deleted, registrationDate, timeZoneId, avatarId, null);
                     }
                     else
                     {
@@ -130,7 +130,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                                 string.Empty, string.Empty, languageId, currencyId,
                                 (TaxDisplayTypeEnum)taxDisplayTypeId, isTaxExempt, isAdmin, isGuest,
                                 isForumModerator, totalForumPosts, signature, adminComment,
-                                active, deleted, registrationDate, timeZoneId, avatarId);
+                                active, deleted, registrationDate, timeZoneId, avatarId, customer.DateOfBirth);
                         }
                         else
                         {
@@ -144,7 +144,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                                     string.Empty, languageId, currencyId,
                                     (TaxDisplayTypeEnum)taxDisplayTypeId, isTaxExempt,
                                     isAdmin, isGuest, isForumModerator, totalForumPosts, signature,
-                                    adminComment, active, deleted, registrationDate, timeZoneId, avatarId);
+                                    adminComment, active, deleted, registrationDate, timeZoneId, avatarId, null);
                             }
                             else
                             {
@@ -154,7 +154,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                                     string.Empty, string.Empty, languageId, currencyId,
                                     (TaxDisplayTypeEnum)taxDisplayTypeId, isTaxExempt, isAdmin, isGuest,
                                     isForumModerator, totalForumPosts, signature, adminComment,
-                                    active, deleted, registrationDate, timeZoneId, avatarId);
+                                    active, deleted, registrationDate, timeZoneId, avatarId, customer.DateOfBirth);
                             }
                         }
                     }

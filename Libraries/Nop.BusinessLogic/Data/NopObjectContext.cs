@@ -2128,7 +2128,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         
         public List<Customer> Sp_CustomerLoadAll(DateTime? registrationFrom,
             DateTime? registrationTo, string email, string username,
-            bool dontLoadGuestCustomers, int pageSize, int pageIndex, out int totalRecords)
+            bool dontLoadGuestCustomers, int dateOfBirthMonth, int dateOfBirthDay,
+            int pageSize, int pageIndex, out int totalRecords)
         {
             totalRecords = 0;
 
@@ -2155,12 +2156,15 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
             ObjectParameter emailParameter = new ObjectParameter("Email", email);
             ObjectParameter usernameParameter = new ObjectParameter("Username", username);
             ObjectParameter dontLoadGuestCustomersParameter = new ObjectParameter("DontLoadGuestCustomers", dontLoadGuestCustomers);
+            ObjectParameter dateOfBirthMonthParameter = new ObjectParameter("DateOfBirthMonth", dateOfBirthMonth);
+            ObjectParameter dateOfBirthDayParameter = new ObjectParameter("DateOfBirthDay", dateOfBirthDay);
             ObjectParameter pageSizeParameter = new ObjectParameter("PageSize", pageSize);
             ObjectParameter pageIndexParameter = new ObjectParameter("PageIndex", pageIndex);
             ObjectParameter totalRecordsParameter = new ObjectParameter("TotalRecords", typeof(int));
 
             var result = base.ExecuteFunction<Customer>("Sp_CustomerLoadAll", startTimeParameter,
                 endTimeParameter, emailParameter, usernameParameter, dontLoadGuestCustomersParameter, 
+                dateOfBirthMonthParameter, dateOfBirthDayParameter,
                 pageSizeParameter, pageIndexParameter, totalRecordsParameter).ToList();
             totalRecords = Convert.ToInt32(totalRecordsParameter.Value);
             return result;

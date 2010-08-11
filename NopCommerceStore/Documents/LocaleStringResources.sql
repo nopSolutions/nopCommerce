@@ -1901,6 +1901,18 @@ set @resources='
   <LocaleResource Name="Admin.Topics.IncludeInSitemap">
     <Value>Include in sitemap</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.DateOfBirth">
+    <Value>Date of birth:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.DateOfBirth.Tooltip">
+    <Value>Filter by date of birth. Don''t select any value to load all records</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.DateOfBirth.Month">
+    <Value>Month</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.DateOfBirth.Day">
+    <Value>Day</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1955,7 +1967,7 @@ BEGIN
 	END
 	
 	FETCH NEXT FROM cur_localeresource INTO @LanguageID, @ResourceName, @ResourceValue
-	END
+END
 CLOSE cur_localeresource
 DEALLOCATE cur_localeresource
 

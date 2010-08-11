@@ -376,7 +376,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic
                         customer.IsForumModerator, customer.TotalForumPosts,
                         customer.Signature, customer.AdminComment, customer.Active,
                         customer.Deleted, customer.RegistrationDate, 
-                        customer.TimeZoneId, customer.AvatarId);
+                        customer.TimeZoneId, customer.AvatarId, customer.DateOfBirth);
 
                     NopContext.Current.User = customer;
                 }
@@ -431,7 +431,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic
                         customer.IsTaxExempt, customer.IsAdmin, customer.IsGuest,
                         customer.IsForumModerator, customer.TotalForumPosts,
                         customer.Signature, customer.AdminComment, customer.Active, customer.Deleted, customer.RegistrationDate,
-                        customer.TimeZoneId, customer.AvatarId);
+                        customer.TimeZoneId, customer.AvatarId, customer.DateOfBirth);
 
                     NopContext.Current.User = customer;
                 }
@@ -497,8 +497,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic
                         customer.LanguageId, customer.CurrencyId, value,
                         customer.IsTaxExempt, customer.IsAdmin, customer.IsGuest,
                         customer.IsForumModerator, customer.TotalForumPosts,
-                        customer.Signature, customer.AdminComment, customer.Active, customer.Deleted, 
-                        customer.RegistrationDate, customer.TimeZoneId, customer.AvatarId);
+                        customer.Signature, customer.AdminComment,
+                        customer.Active, customer.Deleted, customer.RegistrationDate, 
+                        customer.TimeZoneId, customer.AvatarId, customer.DateOfBirth);
                 }
                 if (!NopContext.Current.IsAdmin)
                 {

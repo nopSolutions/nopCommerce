@@ -250,7 +250,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     customer.LanguageId, customer.CurrencyId, customer.TaxDisplayType,
                     isTaxExempt, isAdmin, customer.IsGuest, isForumModerator,
                     customer.TotalForumPosts, customer.Signature, adminComment, active,
-                    customer.Deleted, customer.RegistrationDate, customer.TimeZoneId, customer.AvatarId);
+                    customer.Deleted, customer.RegistrationDate,
+                    customer.TimeZoneId, customer.AvatarId, customer.DateOfBirth);
             }
             else
             {
@@ -259,6 +260,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 if (String.IsNullOrEmpty(password))
                     throw new NopException(GetLocaleResourceString("Customer.PasswordIsRequired"));
                 MembershipCreateStatus createStatus = MembershipCreateStatus.Success;
+
                 customer = CustomerManager.AddCustomer(Guid.NewGuid(), email, username,
                     password, affiliateId,
                     0, 0, 0, string.Empty, string.Empty, string.Empty,
@@ -268,7 +270,9 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     isTaxExempt, isAdmin,
                     false, isForumModerator,
                     0, string.Empty, adminComment, active,
-                    false, DateTime.UtcNow, string.Empty, 0, out createStatus);
+                    false, DateTime.UtcNow, string.Empty,
+                    0, null, out createStatus);
+
                 if (createStatus != MembershipCreateStatus.Success)
                 {
                     throw new NopException(string.Format("Could not create new customer: {0}", createStatus.ToString()));
@@ -283,11 +287,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 else
                     customer.Gender = "F";
             }
+
             customer.FirstName = txtFirstName.Text;
             customer.LastName = txtLastName.Text;
             if (CustomerManager.FormFieldDateOfBirthEnabled)
             {
-                customer.DateOfBirth = ctrlDateOfBirthDatePicker.SelectedDate;
+                customer = CustomerManager.SetCustomerDateOfBirth(customer.CustomerId, ctrlDateOfBirthDatePicker.SelectedDate);
             }
             if (CustomerManager.FormFieldCompanyEnabled)
             {

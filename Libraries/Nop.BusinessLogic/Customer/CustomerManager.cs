@@ -472,7 +472,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                     customer.TotalForumPosts, customer.Signature,
                     customer.AdminComment, customer.Active,
                     customer.Deleted, customer.RegistrationDate,
-                    customer.TimeZoneId, customer.AvatarId);
+                    customer.TimeZoneId, customer.AvatarId, customer.DateOfBirth);
             }
             return customer;
         }
@@ -502,7 +502,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                     customer.TotalForumPosts, customer.Signature,
                     customer.AdminComment, customer.Active,
                     customer.Deleted, customer.RegistrationDate,
-                    customer.TimeZoneId, customer.AvatarId);
+                    customer.TimeZoneId, customer.AvatarId, customer.DateOfBirth);
             }
             return customer;
         }
@@ -530,7 +530,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                      customer.IsGuest, customer.IsForumModerator, customer.TotalForumPosts,
                      customer.Signature, customer.AdminComment,
                      customer.Active, customer.Deleted,
-                     customer.RegistrationDate, customer.TimeZoneId, customer.AvatarId);
+                     customer.RegistrationDate, customer.TimeZoneId,
+                     customer.AvatarId, customer.DateOfBirth);
             }
             return customer;
         }
@@ -552,9 +553,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                      customer.GiftCardCouponCodes, customer.CheckoutAttributes,
                      customer.LanguageId, customer.CurrencyId, customer.TaxDisplayType,
                      customer.IsTaxExempt, customer.IsAdmin,
-                     customer.IsGuest, customer.IsForumModerator, customer.TotalForumPosts,
-                     customer.Signature, customer.AdminComment, customer.Active, customer.Deleted,
-                     customer.RegistrationDate, timeZoneId, customer.AvatarId);
+                     customer.IsGuest, customer.IsForumModerator, 
+                     customer.TotalForumPosts,  customer.Signature, customer.AdminComment, 
+                     customer.Active, customer.Deleted, customer.RegistrationDate, 
+                     timeZoneId, customer.AvatarId, customer.DateOfBirth);
             }
             return customer;
         }
@@ -599,7 +601,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                     customer.IsTaxExempt, customer.IsAdmin,
                     customer.IsGuest, customer.IsForumModerator, customer.TotalForumPosts,
                     customer.Signature, customer.AdminComment, customer.Active, customer.Deleted,
-                    customer.RegistrationDate, customer.TimeZoneId, customer.AvatarId);
+                    customer.RegistrationDate, customer.TimeZoneId, customer.AvatarId, customer.DateOfBirth);
             }
             return customer;
         }
@@ -632,7 +634,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                     customer.IsTaxExempt, customer.IsAdmin,
                     customer.IsGuest, customer.IsForumModerator, customer.TotalForumPosts,
                     signature, customer.AdminComment, customer.Active, customer.Deleted,
-                    customer.RegistrationDate, customer.TimeZoneId, customer.AvatarId);
+                    customer.RegistrationDate, customer.TimeZoneId, customer.AvatarId, customer.DateOfBirth);
             }
             return customer;
         }
@@ -657,7 +659,32 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                     customer.IsTaxExempt, customer.IsAdmin,
                     customer.IsGuest, customer.IsForumModerator, customer.TotalForumPosts,
                     customer.Signature, customer.AdminComment, customer.Active, customer.Deleted,
-                    customer.RegistrationDate, customer.TimeZoneId, customer.AvatarId);
+                    customer.RegistrationDate, customer.TimeZoneId, customer.AvatarId, customer.DateOfBirth);
+            }
+            return customer;
+        }
+
+        /// <summary>
+        /// Sets a customer's affiliate
+        /// </summary>
+        /// <param name="customerId">Customer identifier</param>
+        /// <param name="dateOfBirth">Date of birth</param>
+        /// <returns>Customer</returns>
+        public static Customer SetCustomerDateOfBirth(int customerId, DateTime? dateOfBirth)
+        {
+            var customer = GetCustomerById(customerId);
+            if (customer != null)
+            {
+                customer = UpdateCustomer(customer.CustomerId, customer.CustomerGuid, customer.Email,
+                    customer.Username, customer.PasswordHash, customer.SaltKey, customer.AffiliateId,
+                    customer.BillingAddressId, customer.ShippingAddressId, customer.LastPaymentMethodId,
+                    customer.LastAppliedCouponCode, customer.GiftCardCouponCodes,
+                    customer.CheckoutAttributes, customer.LanguageId,
+                    customer.CurrencyId, customer.TaxDisplayType,
+                    customer.IsTaxExempt, customer.IsAdmin,
+                    customer.IsGuest, customer.IsForumModerator, customer.TotalForumPosts,
+                    customer.Signature, customer.AdminComment, customer.Active, customer.Deleted,
+                    customer.RegistrationDate, customer.TimeZoneId, customer.AvatarId, dateOfBirth);
             }
             return customer;
         }
@@ -682,7 +709,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                      customer.TaxDisplayType, customer.IsTaxExempt, customer.IsAdmin,
                      customer.IsGuest, customer.IsForumModerator, customer.TotalForumPosts,
                      customer.Signature, customer.AdminComment, customer.Active, customer.Deleted,
-                     customer.RegistrationDate, customer.TimeZoneId, avatarId);
+                     customer.RegistrationDate, customer.TimeZoneId, avatarId, customer.DateOfBirth);
             }
             return customer;
         }
@@ -749,7 +776,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                     customer.IsAdmin, customer.IsGuest, customer.IsForumModerator,
                     customer.TotalForumPosts, customer.Signature, customer.AdminComment,
                     customer.Active, customer.Deleted, customer.RegistrationDate,
-                    customer.TimeZoneId, customer.AvatarId);
+                    customer.TimeZoneId, customer.AvatarId, customer.DateOfBirth);
             }
             return customer;
         }
@@ -787,7 +814,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                     customer.TaxDisplayType, customer.IsTaxExempt, customer.IsAdmin, customer.IsGuest,
                     customer.IsForumModerator, customer.TotalForumPosts,
                     customer.Signature, customer.AdminComment, customer.Active,
-                    customer.Deleted, customer.RegistrationDate, customer.TimeZoneId, customer.AvatarId);
+                    customer.Deleted, customer.RegistrationDate, 
+                    customer.TimeZoneId, customer.AvatarId, customer.DateOfBirth);
             }
             return customer;
         }
@@ -827,7 +855,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                     customer.TaxDisplayType, customer.IsTaxExempt, customer.IsAdmin, customer.IsGuest,
                     customer.IsForumModerator, customer.TotalForumPosts,
                     customer.Signature, customer.AdminComment, customer.Active,
-                    customer.Deleted, customer.RegistrationDate, customer.TimeZoneId, customer.AvatarId);
+                    customer.Deleted, customer.RegistrationDate,
+                    customer.TimeZoneId, customer.AvatarId, customer.DateOfBirth);
             }
             return customer;
         }
@@ -859,6 +888,30 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             DateTime? registrationTo, string email, string username,
             bool dontLoadGuestCustomers, int pageSize, int pageIndex, out int totalRecords)
         {
+            return GetAllCustomers(registrationFrom, registrationTo,
+                email, username, dontLoadGuestCustomers, 0, 0,
+                pageSize, pageIndex, out totalRecords);
+        }
+        
+        /// <summary>
+        /// Gets all customers
+        /// </summary>
+        /// <param name="registrationFrom">Customer registration from; null to load all customers</param>
+        /// <param name="registrationTo">Customer registration to; null to load all customers</param>
+        /// <param name="email">Customer Email</param>
+        /// <param name="username">Customer username</param>
+        /// <param name="dontLoadGuestCustomers">A value indicating whether to don't load guest customers</param>
+        /// <param name="dateOfBirthMonth">Filter by date of birth (month); 0 to load all customers;</param>
+        /// <param name="dateOfBirthDay">Filter by date of birth (day); 0 to load all customers;</param>
+        /// <param name="pageSize">Page size</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="totalRecords">Total records</param>
+        /// <returns>Customer collection</returns>
+        public static List<Customer> GetAllCustomers(DateTime? registrationFrom,
+            DateTime? registrationTo, string email, string username,
+            bool dontLoadGuestCustomers, int dateOfBirthMonth, int dateOfBirthDay, 
+            int pageSize, int pageIndex, out int totalRecords)
+        {
             if (pageSize <= 0)
                 pageSize = 10;
             if (pageSize == int.MaxValue)
@@ -878,6 +931,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             var context = ObjectContextHelper.CurrentObjectContext;
             var customers = context.Sp_CustomerLoadAll(registrationFrom,
                 registrationTo, email, username, dontLoadGuestCustomers,
+                dateOfBirthMonth, dateOfBirthDay, 
                 pageSize, pageIndex, out totalRecords).ToList();
 
             return customers;
@@ -959,7 +1013,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                     customer.IsGuest, customer.IsForumModerator,
                     customer.TotalForumPosts, customer.Signature,
                     customer.AdminComment, customer.Active,
-                    true, customer.RegistrationDate, customer.TimeZoneId, customer.AvatarId);
+                    true, customer.RegistrationDate, customer.TimeZoneId, 
+                    customer.AvatarId, customer.DateOfBirth);
             }
         }
 
@@ -1067,7 +1122,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                 NopContext.Current.WorkingCurrency.CurrencyId,
                 NopContext.Current.TaxDisplayType, false, isAdmin, isGuest,
                 false, 0, string.Empty, string.Empty, active,
-                false, DateTime.UtcNow, string.Empty, 0, out status);
+                false, DateTime.UtcNow, string.Empty, 0, null, out status);
 
             if (status == MembershipCreateStatus.Success)
             {
@@ -1106,7 +1161,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                 NopContext.Current.WorkingCurrency.CurrencyId,
                 NopContext.Current.TaxDisplayType, false,
                 isAdmin, isGuest, false, 0, string.Empty, string.Empty, active,
-                false, DateTime.UtcNow, string.Empty, 0, out status);
+                false, DateTime.UtcNow, string.Empty, 0, null, out status);
         }
 
         /// <summary>
@@ -1138,6 +1193,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// <param name="registrationDate">The date and time of customer registration</param>
         /// <param name="timeZoneId">The time zone identifier</param>
         /// <param name="avatarId">The avatar identifier</param>
+        /// <param name="dateOfBirth">Date of birth</param>
         /// <param name="status">Status</param>
         /// <returns>A customer</returns>
         public static Customer AddCustomer(Guid customerGuid, string email, string username,
@@ -1148,7 +1204,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             TaxDisplayTypeEnum taxDisplayType, bool isTaxExempt, bool isAdmin, bool isGuest,
             bool isForumModerator, int totalForumPosts, string signature, string adminComment,
             bool active, bool deleted, DateTime registrationDate,
-            string timeZoneId, int avatarId, out MembershipCreateStatus status)
+            string timeZoneId, int avatarId, DateTime? dateOfBirth, out MembershipCreateStatus status)
         {
             Customer customer = null;
 
@@ -1230,7 +1286,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                 checkoutAttributes, languageId, currencyId, taxDisplayType,
                 isTaxExempt, isAdmin, isGuest, isForumModerator,
                 totalForumPosts, signature, adminComment, active,
-                deleted, registrationDate, timeZoneId, avatarId);
+                deleted, registrationDate, timeZoneId, avatarId, dateOfBirth);
 
             if (!isGuest)
             {
@@ -1290,6 +1346,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// <param name="registrationDate">The date and time of customer registration</param>
         /// <param name="timeZoneId">The time zone identifier</param>
         /// <param name="avatarId">The avatar identifier</param>
+        /// <param name="dateOfBirth">Date of birth</param>
         /// <returns>A customer</returns>
         public static Customer AddCustomerForced(Guid customerGuid, string email,
             string username, string passwordHash, string saltKey,
@@ -1299,8 +1356,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             string checkoutAttributes, int languageId,
             int currencyId, TaxDisplayTypeEnum taxDisplayType, bool isTaxExempt,
             bool isAdmin, bool isGuest, bool isForumModerator,
-            int totalForumPosts, string signature, string adminComment, bool active,
-            bool deleted, DateTime registrationDate, string timeZoneId, int avatarId)
+            int totalForumPosts, string signature, string adminComment, 
+            bool active, bool deleted, DateTime registrationDate, string timeZoneId,
+            int avatarId, DateTime? dateOfBirth)
         {
             if (username == null)
                 username = string.Empty;
@@ -1348,6 +1406,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             customer.RegistrationDate = registrationDate;
             customer.TimeZoneId = timeZoneId;
             customer.AvatarId = avatarId;
+            customer.DateOfBirth = dateOfBirth;
 
             context.Customers.AddObject(customer);
             context.SaveChanges();
@@ -1401,6 +1460,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// <param name="registrationDate">The date and time of customer registration</param>
         /// <param name="timeZoneId">The time zone identifier</param>
         /// <param name="avatarId">The avatar identifier</param>
+        /// <param name="dateOfBirth">Date of birth</param>
         /// <returns>A customer</returns>
         public static Customer UpdateCustomer(int customerId,
             Guid customerGuid, string email,
@@ -1411,8 +1471,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             string checkoutAttributes, int languageId,
             int currencyId, TaxDisplayTypeEnum taxDisplayType,
             bool isTaxExempt, bool isAdmin, bool isGuest, bool isForumModerator,
-            int totalForumPosts, string signature, string adminComment, bool active,
-            bool deleted, DateTime registrationDate, string timeZoneId, int avatarId)
+            int totalForumPosts, string signature, string adminComment, 
+            bool active, bool deleted, DateTime registrationDate, 
+            string timeZoneId, int avatarId, DateTime? dateOfBirth)
         {
             if (username == null)
                 username = string.Empty;
@@ -1470,6 +1531,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             customer.RegistrationDate = registrationDate;
             customer.TimeZoneId = timeZoneId;
             customer.AvatarId = avatarId;
+            customer.DateOfBirth = dateOfBirth;
             context.SaveChanges();
 
             if (subscriptionOld != null && !email.ToLower().Equals(subscriptionOld.Email.ToLower()))
@@ -1542,7 +1604,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                     customer.IsTaxExempt, customer.IsAdmin, customer.IsGuest,
                     customer.IsForumModerator, customer.TotalForumPosts,
                     customer.Signature, customer.AdminComment, customer.Active,
-                    customer.Deleted, customer.RegistrationDate, customer.TimeZoneId, customer.AvatarId);
+                    customer.Deleted, customer.RegistrationDate,
+                    customer.TimeZoneId, customer.AvatarId, customer.DateOfBirth);
             }
         }
 
@@ -1588,7 +1651,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                     customer.IsTaxExempt, customer.IsAdmin, customer.IsGuest,
                     customer.IsForumModerator, customer.TotalForumPosts,
                     customer.Signature, customer.AdminComment, true,
-                    customer.Deleted, customer.RegistrationDate, customer.TimeZoneId, customer.AvatarId);
+                    customer.Deleted, customer.RegistrationDate,
+                    customer.TimeZoneId, customer.AvatarId, customer.DateOfBirth);
 
                 if (sendCustomerWelcomeMessage)
                 {
@@ -1629,7 +1693,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                     customer.IsGuest, customer.IsForumModerator,
                     customer.TotalForumPosts, customer.Signature,
                     customer.AdminComment, false, customer.Deleted,
-                    customer.RegistrationDate, customer.TimeZoneId, customer.AvatarId);
+                    customer.RegistrationDate, customer.TimeZoneId, 
+                    customer.AvatarId, customer.DateOfBirth);
             }
         }
 
