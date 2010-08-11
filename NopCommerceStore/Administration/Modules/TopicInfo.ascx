@@ -50,6 +50,15 @@
                         <asp:TextBox runat="server" ID="txtPassword" CssClass="adminInput" />
                     </td>
                 </tr>
+                <tr>
+                    <td class="adminTitle">
+                        <nopCommerce:ToolTipLabel runat="server" ID="lblIncludeInSitemap" Text="<% $NopResources:Admin.TopicInfo.IncludeInSitemap %>"
+                            ToolTip="<% $NopResources:Admin.TopicInfo.IncludeInSitemap.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
+                    </td>
+                    <td class="adminData">
+                        <asp:CheckBox ID="cbIncludeInSitemap" runat="server"></asp:CheckBox>
+                    </td>
+                </tr>
             </table>
             <div id="localizablecontentpanel" class="tabcontainer-usual">
                 <ul class="idTabs">

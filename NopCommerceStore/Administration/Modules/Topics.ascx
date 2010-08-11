@@ -27,8 +27,15 @@
                 </nopCommerce:ImageCheckBox>
             </ItemTemplate>
         </asp:TemplateField>
+        <asp:TemplateField HeaderText="<% $NopResources:Admin.Topics.IncludeInSitemap %>" HeaderStyle-HorizontalAlign="Center"
+            ItemStyle-Width="20%" ItemStyle-HorizontalAlign="Center">
+            <ItemTemplate>
+                <nopCommerce:ImageCheckBox runat="server" ID="cbIncludeInSitemap" Checked='<%# Eval("IncludeInSitemap") %>'>
+                </nopCommerce:ImageCheckBox>
+            </ItemTemplate>
+        </asp:TemplateField>
         <asp:TemplateField HeaderText="<% $NopResources:Admin.Topics.EditInfo %>" HeaderStyle-HorizontalAlign="Center"
-            ItemStyle-Width="40%" ItemStyle-HorizontalAlign="Center">
+            ItemStyle-Width="20%" ItemStyle-HorizontalAlign="Center">
             <ItemTemplate>
                 <a href="TopicDetails.aspx?TopicID=<%#Eval("TopicId")%>">
                     <%#GetLocaleResourceString("Admin.Topics.EditInfo.Link")%></a>

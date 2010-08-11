@@ -37,6 +37,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 this.txtSystemName.Text = this.Topic.Name;
                 this.cbIsPasswordProtected.Checked = this.Topic.IsPasswordProtected;
                 this.txtPassword.Text = this.Topic.Password;
+                this.cbIncludeInSitemap.Checked = this.Topic.IncludeInSitemap;
             }
 
             var languages = this.GetLocalizableLanguagesSupported();
@@ -136,12 +137,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             if (topic != null)
             {
                 topic = TopicManager.UpdateTopic(topic.TopicId, txtSystemName.Text,
-                    cbIsPasswordProtected.Checked, txtPassword.Text.Trim());
+                    cbIsPasswordProtected.Checked, txtPassword.Text.Trim(), cbIncludeInSitemap.Checked);
             }
             else
             {
                 topic = TopicManager.InsertTopic(txtSystemName.Text,
-                    cbIsPasswordProtected.Checked, txtPassword.Text.Trim());
+                    cbIsPasswordProtected.Checked, txtPassword.Text.Trim(), cbIncludeInSitemap.Checked);
             }
 
 

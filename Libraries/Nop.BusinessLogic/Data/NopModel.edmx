@@ -2178,6 +2178,7 @@
           <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="200" />
           <Property Name="IsPasswordProtected" Type="bit" Nullable="false" />
           <Property Name="Password" Type="nvarchar" Nullable="false" MaxLength="200" />
+          <Property Name="IncludeInSitemap" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Nop_TopicLocalized">
           <Key>
@@ -5070,6 +5071,7 @@
           <NavigationProperty Name="NpLocalizedTopics" Relationship="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_TopicLocalized_Nop_Topic" FromRole="Nop_Topic" ToRole="Nop_TopicLocalized" />
           <Property Type="Boolean" Name="IsPasswordProtected" Nullable="false" />
           <Property Type="String" Name="Password" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Type="Boolean" Name="IncludeInSitemap" Nullable="false" />
         </EntityType>
         <EntityType Name="LocalizedTopic">
           <Key>
@@ -8034,6 +8036,7 @@
           <EntitySetMapping Name="Topics">
             <EntityTypeMapping TypeName="NopSolutions.NopCommerce.BusinessLogic.Data.Topic">
               <MappingFragment StoreEntitySet="Nop_Topic">
+                <ScalarProperty Name="IncludeInSitemap" ColumnName="IncludeInSitemap" />
                 <ScalarProperty Name="Password" ColumnName="Password" />
                 <ScalarProperty Name="IsPasswordProtected" ColumnName="IsPasswordProtected" />
                 <ScalarProperty Name="Name" ColumnName="Name" />

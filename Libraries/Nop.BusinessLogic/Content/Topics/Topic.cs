@@ -34,6 +34,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Topics
         #endregion
 
         #region Properties
+
         /// <summary>
         /// Gets or sets the topic identifier
         /// </summary>
@@ -53,6 +54,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Topics
         /// Gets or sets the password to access the content of this topic
         /// </summary>
         public string Password { get; set; }
+        
+        /// <summary>
+        /// Gets or sets the value indicating whether this topic should be included in sitemap
+        /// </summary>
+        public bool IncludeInSitemap { get; set; }
+
         #endregion
 
         #region Navigation Properties

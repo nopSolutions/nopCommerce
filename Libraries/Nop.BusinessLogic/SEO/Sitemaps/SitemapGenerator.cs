@@ -58,7 +58,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO.Sitemaps
             bool IncludeCategories = SettingManager.GetSettingValueBoolean("SEO.Sitemaps.IncludeCategories", true);
             bool IncludeManufacturers = SettingManager.GetSettingValueBoolean("SEO.Sitemaps.IncludeManufacturers", false);
             bool IncludeProducts = SettingManager.GetSettingValueBoolean("SEO.Sitemaps.IncludeProducts", false);
-            bool IncludeTopics = SettingManager.GetSettingValueBoolean("SEO.Sitemaps.IncludeTopics", false);
             string OtherPages = SettingManager.GetSettingValue("SEO.Sitemaps.OtherPages").ToLowerInvariant();
             
             if (IncludeCategories)
@@ -76,10 +75,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO.Sitemaps
                 WriteProducts();
             }
 
-            if (IncludeTopics)
-            {
-                WriteTopics();
-            }
+            WriteTopics();
 
             WriteOtherPages(OtherPages);
         }
@@ -125,6 +121,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO.Sitemaps
         private void WriteTopics()
         {
             var topics = TopicManager.GetAllTopics();
+            topics = topics.FindAll(t => t.IncludeInSitemap);
             foreach (Topic topic in topics)
             {
                 var localizedTopics = TopicManager.GetAllLocalizedTopics(topic.Name);

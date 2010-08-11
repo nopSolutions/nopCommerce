@@ -2589,7 +2589,6 @@ CREATE TABLE [dbo].[Nop_CrossSellProduct](
 END
 GO
 
-
 IF EXISTS (SELECT 1
            FROM   sysobjects
            WHERE  name = 'FK_Nop_CrossSellProduct_Nop_Product'
@@ -2604,8 +2603,6 @@ ON UPDATE CASCADE
 ON DELETE CASCADE
 GO
 
-
-
 IF EXISTS (SELECT 1
            FROM   sysobjects
            WHERE  name = 'IX_Nop_CrossSellProduct_Unique'
@@ -2619,4 +2616,19 @@ ALTER TABLE [dbo].[Nop_CrossSellProduct]  WITH CHECK ADD CONSTRAINT [IX_Nop_Cros
 	[ProductId1] ASC,
 	[ProductId2] ASC
 )
+GO
+
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[Nop_Topic]') and NAME='IncludeInSitemap')
+BEGIN
+	ALTER TABLE [dbo].[Nop_Topic] 
+	ADD [IncludeInSitemap] bit NOT NULL CONSTRAINT [DF_Nop_Topic_IncludeInSitemap] DEFAULT ((0))
+END
+GO
+
+DELETE FROM [dbo].[Nop_Setting]
+WHERE [Name] = N'Sitemap.IncludeTopics' 
+GO
+
+DELETE FROM [dbo].[Nop_Setting]
+WHERE [Name] = N'SEO.Sitemaps.IncludeTopics'
 GO

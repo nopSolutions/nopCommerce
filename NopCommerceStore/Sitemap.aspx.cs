@@ -32,19 +32,17 @@ namespace NopSolutions.NopCommerce.Web
         {
             //topics
             var sitemapTopics = new List<SitemapTopic>();
-            if (SettingManager.GetSettingValueBoolean("Sitemap.IncludeTopics", true))
+            var topics = TopicManager.GetAllTopics();
+            topics = topics.FindAll(t => t.IncludeInSitemap);
+            foreach (var topic in topics)
             {
-                var topics = TopicManager.GetAllTopics();
-                foreach (var topic in topics)
+                LocalizedTopic localizedTopic = TopicManager.GetLocalizedTopic(topic.TopicId, NopContext.Current.WorkingLanguage.LanguageId);
+                if (localizedTopic != null && !String.IsNullOrEmpty(localizedTopic.Title))
                 {
-                    LocalizedTopic localizedTopic = TopicManager.GetLocalizedTopic(topic.TopicId, NopContext.Current.WorkingLanguage.LanguageId);
-                    if (localizedTopic != null && !String.IsNullOrEmpty(localizedTopic.Title))
-                    {
-                        string topicURL = SEOHelper.GetTopicUrl(localizedTopic.TopicId, localizedTopic.Title);
-                        string topicName = localizedTopic.Title;
+                    string topicURL = SEOHelper.GetTopicUrl(localizedTopic.TopicId, localizedTopic.Title);
+                    string topicName = localizedTopic.Title;
 
-                        sitemapTopics.Add(new SitemapTopic() { Name = topicName, Url = topicURL });
-                    }
+                    sitemapTopics.Add(new SitemapTopic() { Name = topicName, Url = topicURL });
                 }
             }
 
@@ -106,7 +104,7 @@ namespace NopSolutions.NopCommerce.Web
             {
                 dlManufacturers.Visible = false;
             }
-            
+
             //products
             if (SettingManager.GetSettingValueBoolean("Sitemap.IncludeProducts", true))
             {

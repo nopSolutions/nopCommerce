@@ -64,9 +64,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Topics
         /// <param name="name">The name</param>
         /// <param name="isPasswordProtected">The value indicating whether this topic is password proceted</param>
         /// <param name="password">The password to access the content of this topic</param>
+        /// <param name="includeInSitemap">The value indicating whether this topic should be included in sitemap</param>
         /// <returns>Topic</returns>
         public static Topic InsertTopic(string name, bool isPasswordProtected,
-            string password)
+            string password, bool includeInSitemap)
         {
             name = CommonHelper.EnsureMaximumLength(name, 200);
             password = CommonHelper.EnsureMaximumLength(password, 200);
@@ -77,6 +78,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Topics
             topic.Name = name;
             topic.IsPasswordProtected = isPasswordProtected;
             topic.Password = password;
+            topic.IncludeInSitemap = includeInSitemap;
 
             context.Topics.AddObject(topic);
             context.SaveChanges();
@@ -91,9 +93,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Topics
         /// <param name="name">The name</param>
         /// <param name="isPasswordProtected">The value indicating whether this topic is password proceted</param>
         /// <param name="password">The password to access the content of this topic</param>
+        /// <param name="includeInSitemap">The value indicating whether this topic should be included in sitemap</param>
         /// <returns>Topic</returns>
-        public static Topic UpdateTopic(int topicId, string name, 
-            bool isPasswordProtected, string password)
+        public static Topic UpdateTopic(int topicId, string name,
+            bool isPasswordProtected, string password, bool includeInSitemap)
         {
             name = CommonHelper.EnsureMaximumLength(name, 200);
             password = CommonHelper.EnsureMaximumLength(password, 200);
@@ -109,6 +112,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Topics
             topic.Name = name;
             topic.IsPasswordProtected = isPasswordProtected;
             topic.Password = password;
+            topic.IncludeInSitemap = includeInSitemap;
             context.SaveChanges();
 
             return topic;

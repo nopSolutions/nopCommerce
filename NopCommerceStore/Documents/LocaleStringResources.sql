@@ -1892,6 +1892,15 @@ set @resources='
   <LocaleResource Name="ShoppingCart.CrossSells">
     <Value>Based on your selection, you may be interested in the following items:</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.TopicInfo.IncludeInSitemap">
+    <Value>Include in sitemap:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.TopicInfo.IncludeInSitemap.Tooltip">
+    <Value>Check to include this topic in the sitemap.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Topics.IncludeInSitemap">
+    <Value>Include in sitemap</Value>
+  </LocaleResource>
 </Language>
 '
 
