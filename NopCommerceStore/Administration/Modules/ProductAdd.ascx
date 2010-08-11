@@ -5,6 +5,7 @@
 <%@ Register TagPrefix="nopCommerce" TagName="ProductCategory" Src="ProductCategory.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="ProductManufacturer" Src="ProductManufacturer.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="RelatedProducts" Src="RelatedProducts.ascx" %>
+<%@ Register TagPrefix="nopCommerce" TagName="CrossSellProducts" Src="CrossSellProducts.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="ProductPictures" Src="ProductPictures.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="ProductSpecifications" Src="ProductSpecifications.ascx" %>
 
@@ -44,6 +45,11 @@
     <ajaxToolkit:TabPanel runat="server" ID="pnlRelatedProducts" HeaderText="<% $NopResources:Admin.ProductAdd.RelatedProducts %>">
         <ContentTemplate>
             <nopCommerce:RelatedProducts ID="ctrlRelatedProducts" runat="server" />
+        </ContentTemplate>
+    </ajaxToolkit:TabPanel>
+    <ajaxToolkit:TabPanel runat="server" ID="pnlCrossSellProducts" HeaderText="<% $NopResources:Admin.ProductAdd.CrossSellProducts %>">
+        <ContentTemplate>
+            <nopCommerce:CrossSellProducts ID="ctrlCrossSellProducts" runat="server" />
         </ContentTemplate>
     </ajaxToolkit:TabPanel>
     <ajaxToolkit:TabPanel runat="server" ID="pnlPictures" HeaderText="<% $NopResources:Admin.ProductAdd.Pictures %>">

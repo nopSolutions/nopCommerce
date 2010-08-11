@@ -410,6 +410,22 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         private ObjectSet<CreditCardType> _creditCardTypes;
 
         /// <summary>
+        /// Gets an ActivityLog instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
+        public ObjectSet<CrossSellProduct> CrossSellProducts
+        {
+            get
+            {
+                if ((_crossSellProducts == null))
+                {
+                    _crossSellProducts = CreateObjectSet<CrossSellProduct>();
+                }
+                return _crossSellProducts;
+            }
+        }
+        private ObjectSet<CrossSellProduct> _crossSellProducts;
+
+        /// <summary>
         /// Gets a Currencies instance that is used to query, add, modify, and delete objects of the specified entity type.
         /// </summary>
         public ObjectSet<Currency> Currencies

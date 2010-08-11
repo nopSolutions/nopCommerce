@@ -1802,6 +1802,96 @@ set @resources='
   <LocaleResource Name="Admin.DiscountInfo.RequirementShippingCountryIs.SelectCountry">
     <Value>Select shipping country</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.CrossSellProducts.Product">
+    <Value>Product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CrossSellProducts.Product.Tooltip">
+    <Value>Mark this product as a cross-sell product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CrossSellProducts.View">
+    <Value>View</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CrossSellProducts.View.Tooltip">
+    <Value>View product details</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CrossSellProducts.AddNewButton.Text">
+    <Value>Add new cross-sell product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CrossSellProducts.AvailableAfterSaving">
+    <Value>You need to save the product before you can add cross-sell products for this product page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CrossSellProducts.Image">
+    <Value>Image</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.AddCrossSellProduct.Title">
+    <Value>Add cross-sell product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.AddCrossSellProduct.ProductName">
+    <Value>Product name:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.AddCrossSellProduct.ProductName.Tooltip">
+    <Value>A product name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.AddCrossSellProduct.Category">
+    <Value>Category:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.AddCrossSellProduct.Category.Tooltip">
+    <Value>Search by a specific category.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.AddCrossSellProduct.Manufacturer">
+    <Value>Manufacturer:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.AddCrossSellProduct.Manufacturer.Tooltip">
+    <Value>Search by a specific manufacturer.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.AddCrossSellProduct.SearchButton.Text">
+    <Value>Search</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.AddCrossSellProduct.SearchButton.Tooltip">
+    <Value>Search for products based on the criteria below</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.AddCrossSellProduct.ProductColumn">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.AddCrossSellProduct.ProductColumn.Tooltip">
+    <Value>Mark this product as a cross-sell product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.AddCrossSellProduct.PublishedColumn">
+    <Value>Published</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.AddCrossSellProduct.NoProductsFound">
+    <Value>No products found</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.AddCrossSellProduct.SaveColumn">
+    <Value>Save</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.AddCrossSellProduct.SaveColumn.Tooltip">
+    <Value>Save cross-sell products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.AddCrossSellProduct.Image">
+    <Value>Image</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductAdd.CrossSellProducts">
+    <Value>Cross-sells</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductDetails.CrossSellProducts">
+    <Value>Cross-sells</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.CrossSellsNumber">
+    <Value>Number of ''Cross-Sells'':</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.CrossSellsNumber.Tooltip">
+    <Value>The number of ''Cross-Sells'' to display on shopping cart page; 0 if you don''t want to load cross-sells</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.CrossSellsNumber.RequiredErrorMessage">
+    <Value>Number of ''Cross-Sells'' is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.CrossSellsNumber.RangeErrorMessage">
+    <Value>The number of ''Cross-Sells'' must be from 0 to 999999.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.CrossSells">
+    <Value>Based on your selection, you may be interested in the following items:</Value>
+  </LocaleResource>
 </Language>
 '
 

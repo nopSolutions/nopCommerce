@@ -1026,7 +1026,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         /// Gets a recently added products list
         /// </summary>
         /// <param name="number">Number of products to load</param>
-        /// <returns>"recently added" product list</returns>
+        /// <returns>Recently added products</returns>
         public static List<Product> GetRecentlyAddedProducts(int number)
         {
             int totalRecords = 0;
@@ -1306,6 +1306,54 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             }
 
             return productCopy;
+        }
+
+        /// <summary>
+        /// Gets a cross-sells
+        /// </summary>
+        /// <param name="cart">Shopping cart</param>
+        /// <returns>Cross-sells</returns>
+        public static List<Product> GetCrosssellProductsByShoppingCart(ShoppingCart cart)
+        {
+            List<Product> result = new List<Product>();
+
+            if (ProductManager.CrossSellsNumber == 0)
+                return result;
+
+            if (cart == null || cart.Count == 0)
+                return result;
+
+            List<int> cartProductIds = new List<int>();
+            foreach (var sci in cart)
+            {
+                int prodId = sci.ProductVariant.ProductId;
+                if (!cartProductIds.Contains(prodId))
+                {
+                    cartProductIds.Add(prodId);
+                }
+            }
+
+            for (int i = 0; i < cart.Count; i++)
+            {
+                var sci = cart[i];
+                var crossSells = sci.ProductVariant.Product.CrossSellProducts;
+                foreach (var crossSell in crossSells)
+                {
+                    //TODO create a helper method to validate product availability (dates, quantity) etc
+                    
+
+                    //validate that this product is not added to result yet
+                    //validate that this product is not in the cart
+                    if (result.Find(p => p.ProductId == crossSell.ProductId2) == null &&
+                        !cartProductIds.Contains(crossSell.ProductId2))
+                    {
+                        result.Add(crossSell.Product2);
+                        if (result.Count >= ProductManager.CrossSellsNumber)
+                            return result;
+                    }
+                }
+            }
+            return result;
         }
 
         #endregion
@@ -2703,7 +2751,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         /// Gets a related product
         /// </summary>
         /// <param name="relatedProductId">Related product identifer</param>
-        /// <returns></returns>
+        /// <returns>Related product</returns>
         public static RelatedProduct GetRelatedProductById(int relatedProductId)
         {
             if (relatedProductId == 0)
@@ -2764,6 +2812,112 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             context.SaveChanges();
 
             return relatedProduct;
+        }
+
+        #endregion
+
+        #region Cross-sell products
+
+        /// <summary>
+        /// Deletes a cross-sell product
+        /// </summary>
+        /// <param name="crossSellProductId">Cross-sell identifer</param>
+        public static void DeleteCrossSellProduct(int crossSellProductId)
+        {
+            var crossSellProduct = GetCrossSellProductById(crossSellProductId);
+            if (crossSellProduct == null)
+                return;
+
+            var context = ObjectContextHelper.CurrentObjectContext;
+            if (!context.IsAttached(crossSellProduct))
+                context.CrossSellProducts.Attach(crossSellProduct);
+            context.DeleteObject(crossSellProduct);
+            context.SaveChanges();
+        }
+
+        /// <summary>
+        /// Gets a cross-sell product collection by product identifier
+        /// </summary>
+        /// <param name="productId1">The first product identifier</param>
+        /// <returns>Cross-sell product collection</returns>
+        public static List<CrossSellProduct> GetCrossSellProductsByProductId1(int productId1)
+        {
+            bool showHidden = NopContext.Current.IsAdmin;
+
+            var context = ObjectContextHelper.CurrentObjectContext;
+            var query = from csp in context.CrossSellProducts
+                        join p in context.Products on csp.ProductId2 equals p.ProductId
+                        where csp.ProductId1 == productId1 &&
+                        !p.Deleted &&
+                        (showHidden || p.Published)
+                        orderby csp.CrossSellProductId
+                        select csp;
+            var crossSellProducts = query.ToList();
+
+            return crossSellProducts;
+        }
+
+        /// <summary>
+        /// Gets a cross-sell product
+        /// </summary>
+        /// <param name="crossSellProductId">Cross-sell product identifer</param>
+        /// <returns>Cross-sell product</returns>
+        public static CrossSellProduct GetCrossSellProductById(int crossSellProductId)
+        {
+            if (crossSellProductId == 0)
+                return null;
+
+            var context = ObjectContextHelper.CurrentObjectContext;
+            var query = from csp in context.CrossSellProducts
+                        where csp.CrossSellProductId == crossSellProductId
+                        select csp;
+            var crossSellProduct = query.SingleOrDefault();
+            return crossSellProduct;
+        }
+
+        /// <summary>
+        /// Inserts a cross-sell product
+        /// </summary>
+        /// <param name="productId1">The first product identifier</param>
+        /// <param name="productId2">The second product identifier</param>
+        /// <returns>Cross-sell product</returns>
+        public static CrossSellProduct InsertCrossSellProduct(int productId1,
+            int productId2)
+        {
+            var context = ObjectContextHelper.CurrentObjectContext;
+            var crossSellProduct = context.CrossSellProducts.CreateObject();
+            crossSellProduct.ProductId1 = productId1;
+            crossSellProduct.ProductId2 = productId2;
+
+            context.CrossSellProducts.AddObject(crossSellProduct);
+            context.SaveChanges();
+
+            return crossSellProduct;
+        }
+
+        /// <summary>
+        /// Updates a cross-sell product
+        /// </summary>
+        /// <param name="crossSellProductId">Cross-sell product identifer</param>
+        /// <param name="productId1">The first product identifier</param>
+        /// <param name="productId2">The second product identifier</param>
+        /// <returns>Cross-sell product</returns>
+        public static CrossSellProduct UpdateCrossSellProduct(int crossSellProductId,
+            int productId1, int productId2)
+        {
+            var crossSellProduct = GetCrossSellProductById(crossSellProductId);
+            if (crossSellProduct == null)
+                return null;
+
+            var context = ObjectContextHelper.CurrentObjectContext;
+            if (!context.IsAttached(crossSellProduct))
+                context.CrossSellProducts.Attach(crossSellProduct);
+
+            crossSellProduct.ProductId1 = productId1;
+            crossSellProduct.ProductId2 = productId2;
+            context.SaveChanges();
+
+            return crossSellProduct;
         }
 
         #endregion
@@ -3645,6 +3799,22 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         }
 
         /// <summary>
+        /// Gets or sets a number of "Cross-sells"
+        /// </summary>
+        public static int CrossSellsNumber
+        {
+            get
+            {
+                int result = SettingManager.GetSettingValueInteger("Display.CrossSellsNumber", 2);
+                return result;
+            }
+            set
+            {
+                SettingManager.SetParam("Display.CrossSellsNumber", value.ToString());
+            }
+        }
+
+        /// <summary>
         /// Gets or sets a value indicating whether to displays a button from AddThis.com on your product pages
         /// </summary>
         public static bool ShowShareButton
@@ -3707,8 +3877,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                 SettingManager.SetParam("Display.ListOfProductsAlsoPurchasedNumberToDisplay", value.ToString());
             }
         }
-
-
+        
         /// <summary>
         /// Gets or sets a value indicating whether to notify about new product reviews
         /// </summary>

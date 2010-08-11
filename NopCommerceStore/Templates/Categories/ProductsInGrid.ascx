@@ -92,6 +92,8 @@
             </ItemTemplate>
         </asp:DataList>
     </div>
+    <div class="clear">
+    </div>
     <div class="product-pager">
         <nopCommerce:Pager runat="server" ID="productsPager" FirstButtonText="<% $NopResources:Pager.First %>"
             LastButtonText="<% $NopResources:Pager.Last %>" NextButtonText="<% $NopResources:Pager.Next %>"

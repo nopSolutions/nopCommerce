@@ -74,9 +74,24 @@ namespace NopSolutions.NopCommerce.Web.Modules
             {
                 pnlEmptyCart.Visible = false;
                 pnlCart.Visible = true;
-
+                
+                //shopping cart
                 rptShoppingCart.DataSource = cart;
                 rptShoppingCart.DataBind();
+
+                //cross-sells
+                var crossSells = ProductManager.GetCrosssellProductsByShoppingCart(cart);
+                if (crossSells.Count > 0)
+                {
+                    dlCrossSells.DataSource = crossSells;
+                    dlCrossSells.DataBind();
+                    dlCrossSells.Visible = true;
+                }
+                else
+                {
+                    dlCrossSells.Visible = false;
+                }
+
                 ValidateShoppingCart();
                 ValidateCartItems();
             }

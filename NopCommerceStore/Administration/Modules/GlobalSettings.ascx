@@ -1750,6 +1750,24 @@
                                 Width="50px" />
                         </td>
                     </tr>
+                    <tr class="adminSeparator">
+                        <td colspan="2">
+                            <hr />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
+                                ID="lblCrossSellsNumber" Text="<% $NopResources:Admin.GlobalSettings.Other.CrossSellsNumber %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Other.CrossSellsNumber.Tooltip %>" />
+                        </td>
+                        <td class="adminData">
+                            <nopCommerce:NumericTextBox runat="server" CssClass="adminInput" ID="txtCrossSellsNumber"
+                                RequiredErrorMessage="<% $NopResources:Admin.GlobalSettings.Other.CrossSellsNumber.RequiredErrorMessage %>"
+                                MinimumValue="0" MaximumValue="999999" RangeErrorMessage="<% $NopResources:Admin.GlobalSettings.Other.CrossSellsNumber.RangeErrorMessage %>"
+                                Width="50px" />
+                        </td>
+                    </tr>
                 </table>
             </ContentTemplate>
         </ajaxToolkit:TabPanel>

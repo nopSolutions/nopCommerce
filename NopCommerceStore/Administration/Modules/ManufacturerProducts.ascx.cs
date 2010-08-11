@@ -109,7 +109,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     pmmhc.ProductManufacturerId = pm.ProductManufacturerId;
                     pmmhc.ProductId = pm.ProductId;
                     pmmhc.ProductInfo = product.Name;
-                    pmmhc.ProductImage = GetProductImageUrl(product);
+                    if (SettingManager.GetSettingValueBoolean("Display.ShowAdminProductImages"))
+                    {
+                        pmmhc.ProductImage = GetProductImageUrl(product);
+                    }
                     pmmhc.IsMapped = true;
                     pmmhc.IsFeatured = pm.IsFeaturedProduct;
                     pmmhc.DisplayOrder = pm.DisplayOrder;

@@ -122,7 +122,13 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     productVariantId, string.Empty, decimal.Zero, 1);
                 if (addToCartWarnings.Count == 0)
                 {
-                    if (SettingManager.GetSettingValueBoolean("Display.Products.DisplayCartAfterAddingProduct"))
+                    bool displayCart = true;
+                    if (this.RedirectCartAfterAddingProduct.HasValue)
+                        displayCart = this.RedirectCartAfterAddingProduct.Value;
+                    else
+                        displayCart = SettingManager.GetSettingValueBoolean("Display.Products.DisplayCartAfterAddingProduct");
+
+                    if (displayCart)
                     {
                         //redirect to shopping cart page
                         Response.Redirect(SEOHelper.GetShoppingCartUrl());
@@ -170,6 +176,24 @@ namespace NopSolutions.NopCommerce.Web.Modules
             set
             {
                 ViewState["ProductImageSize"] = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value whether we redirects a customer to shopping cart page after adding a product to the cart (overrides "Display.Products.DisplayCartAfterAddingProduct" settings)
+        /// </summary>
+        public bool? RedirectCartAfterAddingProduct
+        {
+            get
+            {
+                if (ViewState["RedirectCartAfterAddingProduct"] == null)
+                    return null;
+                else
+                    return (bool)ViewState["RedirectCartAfterAddingProduct"];
+            }
+            set
+            {
+                ViewState["RedirectCartAfterAddingProduct"] = value;
             }
         }
     }

@@ -35,6 +35,8 @@
                 <br />
             </ItemSeparatorTemplate>
         </asp:ListView>
+        <div class="clear">
+        </div>
         <nopCommerce:Pager runat="server" ID="catalogPager" FirstButtonText="<% $NopResources:Pager.First %>"
             LastButtonText="<% $NopResources:Pager.Last %>" NextButtonText="<% $NopResources:Pager.Next %>"
             PreviousButtonText="<% $NopResources:Pager.Previous %>" CurrentPageText="Pager.CurrentPage" />

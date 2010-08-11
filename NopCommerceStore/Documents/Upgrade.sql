@@ -2573,3 +2573,50 @@ BEGIN
 	ADD [RequirementShippingCountryIs] int NOT NULL CONSTRAINT [DF_Nop_Discount_RequirementShippingCountryIs] DEFAULT ((0))
 END
 GO
+
+--Cross-sells
+IF NOT EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[dbo].[Nop_CrossSellProduct]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+BEGIN
+CREATE TABLE [dbo].[Nop_CrossSellProduct](
+	[CrossSellProductId] [int] IDENTITY(1,1) NOT NULL,
+	[ProductId1] [int] NOT NULL,
+	[ProductId2] [int] NOT NULL,
+ CONSTRAINT [PK_CrossSellProduct] PRIMARY KEY CLUSTERED 
+(
+	[CrossSellProductId] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 80) ON [PRIMARY]
+) ON [PRIMARY]
+END
+GO
+
+
+IF EXISTS (SELECT 1
+           FROM   sysobjects
+           WHERE  name = 'FK_Nop_CrossSellProduct_Nop_Product'
+           AND parent_obj = Object_id('Nop_CrossSellProduct')
+           AND Objectproperty(id,N'IsForeignKey') = 1)
+ALTER TABLE dbo.Nop_CrossSellProduct
+DROP CONSTRAINT FK_Nop_CrossSellProduct_Nop_Product
+GO
+ALTER TABLE [dbo].[Nop_CrossSellProduct]  WITH CHECK ADD  CONSTRAINT [FK_Nop_CrossSellProduct_Nop_Product] FOREIGN KEY([ProductId1])
+REFERENCES [dbo].[Nop_Product] ([ProductId])
+ON UPDATE CASCADE
+ON DELETE CASCADE
+GO
+
+
+
+IF EXISTS (SELECT 1
+           FROM   sysobjects
+           WHERE  name = 'IX_Nop_CrossSellProduct_Unique'
+           AND parent_obj = Object_id('Nop_CrossSellProduct')
+           AND Objectproperty(id,N'IsConstraint') = 1)
+ALTER TABLE dbo.Nop_CrossSellProduct
+DROP CONSTRAINT IX_Nop_CrossSellProduct_Unique
+GO
+ALTER TABLE [dbo].[Nop_CrossSellProduct]  WITH CHECK ADD CONSTRAINT [IX_Nop_CrossSellProduct_Unique]  UNIQUE NONCLUSTERED
+(
+	[ProductId1] ASC,
+	[ProductId2] ASC
+)
+GO

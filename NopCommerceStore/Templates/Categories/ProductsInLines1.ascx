@@ -96,6 +96,8 @@
                 </div>
             </ItemTemplate>
         </asp:ListView>
+        <div class="clear">
+        </div>
         <div class="product-pager">
             <nopcommerce:pager runat="server" id="catalogPager" firstbuttontext="<% $NopResources:Pager.First %>"
                 lastbuttontext="<% $NopResources:Pager.Last %>" nextbuttontext="<% $NopResources:Pager.Next %>"

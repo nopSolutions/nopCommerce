@@ -4,6 +4,7 @@
 <%@ Register TagPrefix="nopCommerce" TagName="OrderTotals" Src="~/Modules/OrderTotals.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="CheckoutAttributes" Src="~/Modules/CheckoutAttributes.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="EstimateShipping" Src="~/Modules/EstimateShipping.ascx" %>
+<%@ Register TagPrefix="nopCommerce" TagName="ProductBox1" Src="~/Modules/ProductBox1.ascx" %>
 <asp:Panel class="order-summary-content" runat="server" ID="pnlEmptyCart">
     <%=GetLocaleResourceString("ShoppingCart.CartIsEmpty")%>
 </asp:Panel>
@@ -201,5 +202,24 @@
         </div>
         <%} %>
         <nopCommerce:OrderTotals runat="server" ID="ctrlOrderTotals" />
+        <%if (this.IsShoppingCart)
+          { %>
+        <div class="clear">
+        </div>
+        <div class="product-grid">
+            <asp:DataList ID="dlCrossSells" runat="server" RepeatColumns="2" RepeatDirection="Horizontal"
+                RepeatLayout="Table" ItemStyle-CssClass="item-box">
+                <HeaderTemplate>
+                    <span class="crosssells-title"><%=GetLocaleResourceString("ShoppingCart.CrossSells")%></span>
+                </HeaderTemplate>
+                <ItemTemplate>
+                    <nopCommerce:ProductBox1 ID="ctrlProductBox" Product='<%# Container.DataItem %>'
+                        runat="server" RedirectCartAfterAddingProduct="True"  />
+                </ItemTemplate>
+            </asp:DataList>
+        </div>
+        <div class="clear">
+        </div>
+        <%} %>
     </div>
 </asp:Panel>

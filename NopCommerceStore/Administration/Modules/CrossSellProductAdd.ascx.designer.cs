@@ -7,108 +7,99 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace NopSolutions.NopCommerce.Web.Templates.Manufacturers {
+namespace NopSolutions.NopCommerce.Web.Administration.Modules {
     
     
-    public partial class ProductsInGrid {
+    public partial class CrossSellProductAddControl {
         
         /// <summary>
-        /// lName control.
+        /// lblProductName control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal lName;
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblProductName;
         
         /// <summary>
-        /// lDescription control.
+        /// txtProductName control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal lDescription;
+        protected global::System.Web.UI.WebControls.TextBox txtProductName;
         
         /// <summary>
-        /// pnlFeaturedProducts control.
+        /// lblCategory control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnlFeaturedProducts;
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblCategory;
         
         /// <summary>
-        /// dlFeaturedProducts control.
+        /// ParentCategory control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DataList dlFeaturedProducts;
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.SelectCategoryControl ParentCategory;
         
         /// <summary>
-        /// pnlSorting control.
+        /// lblManufacturer control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnlSorting;
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblManufacturer;
         
         /// <summary>
-        /// ddlSorting control.
+        /// ddlManufacturer control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlSorting;
+        protected global::System.Web.UI.WebControls.DropDownList ddlManufacturer;
         
         /// <summary>
-        /// pnlFilters control.
+        /// SearchButton control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnlFilters;
+        protected global::System.Web.UI.WebControls.Button SearchButton;
         
         /// <summary>
-        /// lblProductFilterTitle control.
+        /// gvProducts control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblProductFilterTitle;
+        protected global::System.Web.UI.WebControls.GridView gvProducts;
         
         /// <summary>
-        /// ctrlPriceRangeFilter control.
+        /// lblNoProductsFound control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Modules.PriceRangeFilterControl ctrlPriceRangeFilter;
+        protected global::System.Web.UI.WebControls.Label lblNoProductsFound;
         
         /// <summary>
-        /// dlProducts control.
+        /// btnSave control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DataList dlProducts;
-        
-        /// <summary>
-        /// productsPager control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::NopSolutions.NopCommerce.Controls.Pager productsPager;
+        protected global::System.Web.UI.WebControls.Button btnSave;
     }
 }

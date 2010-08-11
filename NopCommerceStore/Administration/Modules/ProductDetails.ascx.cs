@@ -76,6 +76,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         ctrlProductCategory.SaveInfo();
                         ctrlProductManufacturer.SaveInfo();
                         ctrlRelatedProducts.SaveInfo();
+                        ctrlCrossSellProducts.SaveInfo();
                         ctrlProductPictures.SaveInfo();
                         ctrlProductSpecifications.SaveInfo();
 

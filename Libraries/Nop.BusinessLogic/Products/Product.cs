@@ -429,6 +429,17 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         }
 
         /// <summary>
+        /// Gets the cross-sell products
+        /// </summary>
+        public List<CrossSellProduct> CrossSellProducts
+        {
+            get
+            {
+                return ProductManager.GetCrossSellProductsByProductId1(this.ProductId);
+            }
+        }
+
+        /// <summary>
         /// Gets the default product pictures
         /// </summary>
         public Picture DefaultPicture

@@ -35,7 +35,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
-    public partial class RelatedProductsControl : BaseNopAdministrationUserControl
+    public partial class CrossSellProductsControl : BaseNopAdministrationUserControl
     {
         private void BindData()
         {
@@ -45,11 +45,11 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 pnlData.Visible = true;
                 pnlMessage.Visible = false;
 
-                var existingRelatedProductCollection = product.RelatedProducts;
-                List<RelatedProductHelperClass> relatedProducts = GetRelatedProducts(existingRelatedProductCollection);
-                gvRelatedProducts.Columns[1].Visible = SettingManager.GetSettingValueBoolean("Display.ShowAdminProductImages");
-                gvRelatedProducts.DataSource = relatedProducts;
-                gvRelatedProducts.DataBind();
+                var existingCrossSellProductCollection = product.CrossSellProducts;
+                List<CrossSellProductHelperClass> crossSellProducts = GetCrossSellProducts(existingCrossSellProductCollection);
+                gvCrossSellProducts.Columns[1].Visible = SettingManager.GetSettingValueBoolean("Display.ShowAdminProductImages");
+                gvCrossSellProducts.DataSource = crossSellProducts;
+                gvCrossSellProducts.DataBind();
             }
             else
             {
@@ -58,16 +58,16 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             }
         }
 
-        private List<RelatedProductHelperClass> GetRelatedProducts(List<RelatedProduct> existingRelatedProductCollection)
+        private List<CrossSellProductHelperClass> GetCrossSellProducts(List<CrossSellProduct> existingCrossSellProductCollection)
         {
-            List<RelatedProductHelperClass> result = new List<RelatedProductHelperClass>();
-            foreach (RelatedProduct relatedProduct in existingRelatedProductCollection)
+            List<CrossSellProductHelperClass> result = new List<CrossSellProductHelperClass>();
+            foreach (CrossSellProduct crossSellProduct in existingCrossSellProductCollection)
             {
-                Product product = relatedProduct.Product2;
+                Product product = crossSellProduct.Product2;
                 if (product != null)
                 {
-                    RelatedProductHelperClass rphc = new RelatedProductHelperClass();
-                    rphc.RelatedProductId = relatedProduct.RelatedProductId;
+                    CrossSellProductHelperClass rphc = new CrossSellProductHelperClass();
+                    rphc.CrossSellProductId = crossSellProduct.CrossSellProductId;
                     rphc.ProductId2 = product.ProductId;
                     rphc.ProductInfo2 = product.Name;
                     if (SettingManager.GetSettingValueBoolean("Display.ShowAdminProductImages"))
@@ -75,7 +75,6 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         rphc.ProductImage = GetProductImageUrl(product);
                     }
                     rphc.IsMapped = true;
-                    rphc.DisplayOrder = relatedProduct.DisplayOrder;
                     result.Add(rphc);
                 }
             }
@@ -97,14 +96,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         }
 
         [Serializable]
-        private class RelatedProductHelperClass
+        private class CrossSellProductHelperClass
         {
-            public int RelatedProductId { get; set; }
+            public int CrossSellProductId { get; set; }
             public int ProductId2 { get; set; }
             public string ProductInfo2 { get; set; }
             public string ProductImage { get; set; }
             public bool IsMapped { get; set; }
-            public int DisplayOrder { get; set; }
         }
 
         public void SaveInfo()
@@ -112,27 +110,25 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             Product product = ProductManager.GetProductById(this.ProductId);
             if (product != null)
             {
-                foreach (GridViewRow row in gvRelatedProducts.Rows)
+                foreach (GridViewRow row in gvCrossSellProducts.Rows)
                 {
                     CheckBox cbProductInfo2 = row.FindControl("cbProductInfo2") as CheckBox;
                     HiddenField hfProductId2 = row.FindControl("hfProductId2") as HiddenField;
-                    HiddenField hfRelatedProductId = row.FindControl("hfRelatedProductId") as HiddenField;
-                    NumericTextBox txtRowDisplayOrder = row.FindControl("txtDisplayOrder") as NumericTextBox;
-                    int relatedProductId = int.Parse(hfRelatedProductId.Value);
+                    HiddenField hfCrossSellProductId = row.FindControl("hfCrossSellProductId") as HiddenField;
+                    int crossSellProductId = int.Parse(hfCrossSellProductId.Value);
                     int productId2 = int.Parse(hfProductId2.Value);
-                    int displayOrder = txtRowDisplayOrder.Value;
-
-                    if (relatedProductId > 0 && !cbProductInfo2.Checked)
-                        ProductManager.DeleteRelatedProduct(relatedProductId);
-                    if (relatedProductId > 0 && cbProductInfo2.Checked)
-                        ProductManager.UpdateRelatedProduct(relatedProductId, product.ProductId, productId2, displayOrder);
+                    
+                    if (crossSellProductId > 0 && !cbProductInfo2.Checked)
+                        ProductManager.DeleteCrossSellProduct(crossSellProductId);
+                    if (crossSellProductId > 0 && cbProductInfo2.Checked)
+                        ProductManager.UpdateCrossSellProduct(crossSellProductId, product.ProductId, productId2);
                 }
             }
         }
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            btnAddNew.OnClientClick = string.Format("javascript:OpenWindow('RelatedProductAdd.aspx?pid={0}&BtnId={1}', 800, 600, true); return false;", this.ProductId, btnRefresh.ClientID);
+            btnAddNew.OnClientClick = string.Format("javascript:OpenWindow('CrossSellProductAdd.aspx?pid={0}&BtnId={1}', 800, 600, true); return false;", this.ProductId, btnRefresh.ClientID);
             
             if (!Page.IsPostBack)
             {

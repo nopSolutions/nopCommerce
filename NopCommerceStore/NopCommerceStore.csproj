@@ -379,6 +379,27 @@
     <Compile Include="Administration\BulkEditProducts.aspx.designer.cs">
       <DependentUpon>BulkEditProducts.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Administration\CrossSellProductAdd.aspx.cs">
+      <DependentUpon>CrossSellProductAdd.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Administration\CrossSellProductAdd.aspx.designer.cs">
+      <DependentUpon>CrossSellProductAdd.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Administration\Modules\CrossSellProductAdd.ascx.cs">
+      <DependentUpon>CrossSellProductAdd.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Administration\Modules\CrossSellProductAdd.ascx.designer.cs">
+      <DependentUpon>CrossSellProductAdd.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Administration\Modules\CrossSellProducts.ascx.cs">
+      <DependentUpon>CrossSellProducts.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Administration\Modules\CrossSellProducts.ascx.designer.cs">
+      <DependentUpon>CrossSellProducts.ascx</DependentUpon>
+    </Compile>
     <Compile Include="Administration\Modules\CustomerPlaceOrder.ascx.cs">
       <DependentUpon>CustomerPlaceOrder.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -5770,6 +5791,9 @@
     <Content Include="Administration\CategoryTemplateAdd.aspx" />
     <Content Include="Administration\CategoryTemplateDetails.aspx" />
     <Content Include="Administration\CategoryTemplates.aspx" />
+    <Content Include="Administration\CrossSellProductAdd.aspx" />
+    <Content Include="Administration\Modules\CrossSellProductAdd.ascx" />
+    <Content Include="Administration\Modules\CrossSellProducts.ascx" />
     <Content Include="Administration\Modules\CustomerPlaceOrder.ascx" />
     <Content Include="Administration\Modules\OrderPartialRefund.ascx" />
     <Content Include="Administration\OrderPartialRefund.aspx" />

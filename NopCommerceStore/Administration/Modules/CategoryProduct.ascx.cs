@@ -111,7 +111,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     ProductCategoryMappingHelperClass pcmhc = new ProductCategoryMappingHelperClass();
                     pcmhc.ProductCategoryId = pc.ProductCategoryId;
                     pcmhc.ProductId = pc.ProductId;
-                    pcmhc.ProductImage = GetProductImageUrl(product);
+                    if (SettingManager.GetSettingValueBoolean("Display.ShowAdminProductImages"))
+                    {
+                        pcmhc.ProductImage = GetProductImageUrl(product);
+                    }
                     pcmhc.ProductInfo = product.Name;
                     pcmhc.IsMapped = true;
                     pcmhc.IsFeatured = pc.IsFeaturedProduct;
