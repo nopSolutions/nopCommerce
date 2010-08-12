@@ -1913,6 +1913,216 @@ set @resources='
   <LocaleResource Name="Admin.Customers.DateOfBirth.Day">
     <Value>Day</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.MessageQueueDetails.EmailAccount">
+    <Value>Email account:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.MessageQueueDetails.EmailAccount.Tooltip">
+    <Value>The email account that will be used to send this email.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.MessageTemplateDetails.EmailAccount">
+    <Value>Email account:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.MessageTemplateDetails.EmailAccount.Tooltip">
+    <Value>The email account that will be used to send this message template.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.MailSettings.Title">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.MailSettings.Email">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.MailSettings.Email.Tooltip">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.MailSettings.EmailDisplayName">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.MailSettings.EmailDisplayName.Tooltip">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.MailSettings.EmailHost">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.MailSettings.EmailHost.Tooltip">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.MailSettings.EmailPort">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.MailSettings.EmailPort.Tooltip">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.MailSettings.User">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.MailSettings.User.Tooltip">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.MailSettings.Password">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.MailSettings.Password.Tooltip">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.MailSettings.SSL">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.MailSettings.SSL.Tooltip">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.MailSettings.DefaultCredentials">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.MailSettings.DefaultCredentials.Tooltip">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.MailSettings.SendTestEmail">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.MailSettings.TestEmailTo">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.MailSettings.TestEmailTo.Tooltip">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.MailSettings.SendTestEmailButton.Text">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.MailSettings.SendTestEmailButton.Tooltip">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.MailSettings.SendTestEmailSuccess">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.EmailAccountInfo.Email">
+    <Value>Email address:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.EmailAccountInfo.Email.Tooltip">
+    <Value>This is the from address for all outgoing emails from your store e.g. ''sales@yourstore.com''.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.EmailAccountInfo.EmailDisplayName">
+    <Value>Email display name:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.EmailAccountInfo.EmailDisplayName.Tooltip">
+    <Value>This is the friendly display name for outgoing emails from your store e.g. ''Your Store Sales Department''</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.EmailAccountInfo.EmailHost">
+    <Value>Host:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.EmailAccountInfo.EmailHost.Tooltip">
+    <Value>This is the host name or IP address of your mail server. You can normally find this out from your ISP or web host.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.EmailAccountInfo.EmailPort">
+    <Value>Port:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.EmailAccountInfo.EmailPort.Tooltip">
+    <Value>This is the SMTP port of your mail server. This is usually port 25.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.EmailAccountInfo.User">
+    <Value>User:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.EmailAccountInfo.User.Tooltip">
+    <Value>This is the username you use to authenticate to your mail server.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.EmailAccountInfo.Password">
+    <Value>Password:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.EmailAccountInfo.Password.Tooltip">
+    <Value>This is the password you use to authenticate to your mail server.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.EmailAccountInfo.SSL">
+    <Value>Enable SSL:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.EmailAccountInfo.SSL.Tooltip">
+    <Value>Check to use Secure Sockets Layer (SSL) to encrypt the SMTP connection.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.EmailAccountInfo.DefaultCredentials">
+    <Value>Use default credentials:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.EmailAccountInfo.DefaultCredentials.Tooltip">
+    <Value>Check to use default credentials for the connection</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.EmailAccountInfo.SendTestEmail">
+    <Value>Send Test Email (save settings first by clicking "Save" button)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.EmailAccountInfo.TestEmailTo">
+    <Value>Send email to:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.EmailAccountInfo.TestEmailTo.Tooltip">
+    <Value>The email address to which you want to send your test email.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.EmailAccountInfo.SendTestEmailButton.Text">
+    <Value>Send Test Email</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.EmailAccountInfo.SendTestEmailButton.Tooltip">
+    <Value>Send the test email</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.EmailAccountInfo.SendTestEmailSuccess">
+    <Value>Email has been successfully sent.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.EmailAccountAdd.Title">
+    <Value>Add email account</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.EmailAccountAdd.BackTo">
+    <Value>back to email accounts</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.EmailAccountAdd.SaveButton.Text">
+    <Value>Save</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.EmailAccountDetails.Title">
+    <Value>Edit email account</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.EmailAccountDetails.BackTo">
+    <Value>back to email accounts</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.EmailAccountDetails.SaveButton.Text">
+    <Value>Save</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.EmailAccountDetails.DeleteButton.Text">
+    <Value>Delete</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.EmailAccounts.Title">
+    <Value>Email accounts</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.EmailAccounts.SaveButton.Text">
+    <Value>Save</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.EmailAccounts.AddNewButton.Text">
+    <Value>Add new</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.EmailAccounts.AddNewButton.Tooltip">
+    <Value>Add new email account</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.EmailAccounts.Email">
+    <Value>Email</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.EmailAccounts.DisplayName">
+    <Value>Display name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.EmailAccounts.IsDefault">
+    <Value>Is default</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.EmailAccounts.IsDefault.Tooltip">
+    <Value>Check to make this email account default one, then click ''Save'' button</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.EmailAccounts.Edit">
+    <Value>Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Sitemap.EmailAccountsTitle">
+    <Value>Email Accounts</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Sitemap.EmailAccountsDescription">
+    <Value>Configure Email Accounts</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ConfigurationHome.EmailAccounts.TitleDescription">
+    <Value>Email accounts</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ConfigurationHome.EmailAccounts.Title">
+    <Value>Email accounts</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ConfigurationHome.EmailAccounts.Description">
+    <Value>Manage email accounts and settings</Value>
+  </LocaleResource>
 </Language>
 '
 

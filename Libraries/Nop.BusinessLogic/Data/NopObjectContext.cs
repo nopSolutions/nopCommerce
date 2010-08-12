@@ -634,6 +634,22 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         private ObjectSet<Download> _downloads;
 
         /// <summary>
+        /// Gets an EmailAccount instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
+        public ObjectSet<EmailAccount> EmailAccounts
+        {
+            get
+            {
+                if ((_emailAccounts == null))
+                {
+                    _emailAccounts = CreateObjectSet<EmailAccount>();
+                }
+                return _emailAccounts;
+            }
+        }
+        private ObjectSet<EmailAccount> _emailAccounts;
+
+        /// <summary>
         /// Gets a Forums instance that is used to query, add, modify, and delete objects of the specified entity type.
         /// </summary>
         public ObjectSet<Forum> Forums

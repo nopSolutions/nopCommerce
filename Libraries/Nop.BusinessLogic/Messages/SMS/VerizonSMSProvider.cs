@@ -23,11 +23,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages.SMS
         {
             try
             {
-                var from = new MailAddress(MessageManager.AdminEmailAddress, MessageManager.AdminEmailDisplayName);
+                var emailAccount = MessageManager.DefaultEmailAccount;
+
+                var from = new MailAddress(emailAccount.Email, emailAccount.DisplayName);
                 var to = new MailAddress(VerizonEmail);
 
                 MessageManager.InsertQueuedEmail(5, from, to,
-                    string.Empty, string.Empty, SettingManager.StoreName, text, DateTime.UtcNow, 0, null);
+                    string.Empty, string.Empty, SettingManager.StoreName, text, 
+                    DateTime.UtcNow, 0, null, emailAccount.EmailAccountId);
                 return true;
             }
             catch (Exception ex)

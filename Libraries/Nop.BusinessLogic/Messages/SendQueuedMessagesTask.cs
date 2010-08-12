@@ -61,19 +61,21 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
                 {
                     MessageManager.SendEmail(queuedEmail.Subject, queuedEmail.Body,
                        new MailAddress(queuedEmail.From, queuedEmail.FromName),
-                       new MailAddress(queuedEmail.To, queuedEmail.ToName), bcc, cc);
+                       new MailAddress(queuedEmail.To, queuedEmail.ToName), bcc, cc, queuedEmail.EmailAccount);
 
                     MessageManager.UpdateQueuedEmail(queuedEmail.QueuedEmailId, queuedEmail.Priority,
                         queuedEmail.From, queuedEmail.FromName, queuedEmail.To, queuedEmail.ToName,
                         queuedEmail.CC, queuedEmail.Bcc, queuedEmail.Subject, queuedEmail.Body,
-                        queuedEmail.CreatedOn, ++queuedEmail.SendTries, DateTime.UtcNow);
+                        queuedEmail.CreatedOn, ++queuedEmail.SendTries, DateTime.UtcNow,
+                        queuedEmail.EmailAccountId);
                 }
                 catch (Exception exc)
                 {
                     MessageManager.UpdateQueuedEmail(queuedEmail.QueuedEmailId, queuedEmail.Priority,
                         queuedEmail.From, queuedEmail.FromName, queuedEmail.To, queuedEmail.ToName,
                         queuedEmail.CC, queuedEmail.Bcc, queuedEmail.Subject, queuedEmail.Body,
-                        queuedEmail.CreatedOn, ++queuedEmail.SendTries, queuedEmail.SentOn);
+                        queuedEmail.CreatedOn, ++queuedEmail.SendTries, queuedEmail.SentOn,
+                        queuedEmail.EmailAccountId);
 
                     LogManager.InsertLog(LogTypeEnum.MailError, string.Format("Error sending e-mail. {0}", exc.Message), exc);
                 }

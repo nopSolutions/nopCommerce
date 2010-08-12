@@ -165,13 +165,17 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Campaigns
                 throw new NopException("Campaign could not be loaded");
             }
 
+
+            var emailAccount = MessageManager.DefaultEmailAccount;
+
             foreach (var subscription in subscriptions)
             {
                 string subject = MessageManager.ReplaceMessageTemplateTokens(subscription, campaign.Subject);
                 string body = MessageManager.ReplaceMessageTemplateTokens(subscription, campaign.Body);
-                var from = new MailAddress(MessageManager.AdminEmailAddress, MessageManager.AdminEmailDisplayName);
+                var from = new MailAddress(emailAccount.Email, emailAccount.DisplayName);
                 var to = new MailAddress(subscription.Email);
-                MessageManager.InsertQueuedEmail(3, from, to, string.Empty, string.Empty, subject, body, DateTime.UtcNow, 0, null);
+                MessageManager.InsertQueuedEmail(3, from, to, string.Empty, string.Empty,
+                    subject, body, DateTime.UtcNow, 0, null, emailAccount.EmailAccountId);
                 totalEmailsSent++;
             }
             return totalEmailsSent;
@@ -192,9 +196,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Campaigns
 
             string subject = campaign.Subject;
             string body = campaign.Body;
-            var from = new MailAddress(MessageManager.AdminEmailAddress, MessageManager.AdminEmailDisplayName);
+
+            var emailAccount = MessageManager.DefaultEmailAccount;
+            var from = new MailAddress(emailAccount.Email, emailAccount.DisplayName);
             var to = new MailAddress(email);
-            MessageManager.SendEmail(subject, body, from, to);
+            MessageManager.SendEmail(subject, body, from, to, emailAccount);
         }
         #endregion
     }

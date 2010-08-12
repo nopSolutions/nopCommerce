@@ -43,6 +43,7 @@
           <EntitySet Name="Nop_DiscountType" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_DiscountType" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Nop_DiscountUsageHistory" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_DiscountUsageHistory" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Nop_Download" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_Download" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Nop_EmailAccount" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_EmailAccount" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Nop_Forums_Forum" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_Forums_Forum" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Nop_Forums_Group" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_Forums_Group" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Nop_Forums_Post" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_Forums_Post" store:Type="Tables" Schema="dbo" />
@@ -1061,6 +1062,20 @@
           <Property Name="Extension" Type="nvarchar" Nullable="false" MaxLength="20" />
           <Property Name="IsNew" Type="bit" Nullable="false" />
         </EntityType>
+        <EntityType Name="Nop_EmailAccount">
+          <Key>
+            <PropertyRef Name="EmailAccountId" />
+          </Key>
+          <Property Name="EmailAccountId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Email" Type="nvarchar" Nullable="false" MaxLength="255" />
+          <Property Name="DisplayName" Type="nvarchar" Nullable="false" MaxLength="255" />
+          <Property Name="Host" Type="nvarchar" Nullable="false" MaxLength="255" />
+          <Property Name="Port" Type="int" Nullable="false" />
+          <Property Name="Username" Type="nvarchar" Nullable="false" MaxLength="255" />
+          <Property Name="Password" Type="nvarchar" Nullable="false" MaxLength="255" />
+          <Property Name="EnableSSL" Type="bit" Nullable="false" />
+          <Property Name="UseDefaultCredentials" Type="bit" Nullable="false" />
+        </EntityType>
         <EntityType Name="Nop_Forums_Forum">
           <Key>
             <PropertyRef Name="ForumID" />
@@ -1306,6 +1321,7 @@
           <Property Name="Subject" Type="nvarchar" Nullable="false" MaxLength="200" />
           <Property Name="Body" Type="nvarchar(max)" Nullable="false" />
           <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="EmailAccountId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Nop_News">
           <Key>
@@ -1899,6 +1915,7 @@
           <Property Name="CreatedOn" Type="datetime" Nullable="false" />
           <Property Name="SendTries" Type="int" Nullable="false" />
           <Property Name="SentOn" Type="datetime" />
+          <Property Name="EmailAccountId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Nop_RecurringPayment">
           <Key>
@@ -5013,6 +5030,7 @@
             <End Role="Product" EntitySet="Products" />
             <End Role="Nop_CrossSellProduct" EntitySet="CrossSellProducts" />
           </AssociationSet>
+          <EntitySet Name="EmailAccounts" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.EmailAccount" />
         </EntityContainer>
         <EntityType Name="Language">
           <Key>
@@ -5135,6 +5153,7 @@
           <Property Type="DateTime" Name="CreatedOn" Nullable="false" />
           <Property Type="Int32" Name="SendTries" Nullable="false" />
           <Property Type="DateTime" Name="SentOn" />
+          <Property Type="Int32" Name="EmailAccountId" Nullable="false" />
         </EntityType>
         <EntityType Name="BannedIpAddress">
           <Key>
@@ -5178,6 +5197,7 @@
           <Property Type="String" Name="Body" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Type="Boolean" Name="IsActive" Nullable="false" />
           <NavigationProperty Name="NpMessageTemplate" Relationship="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_MessageTemplateLocalized_Nop_MessageTemplate" FromRole="Nop_MessageTemplateLocalized" ToRole="Nop_MessageTemplate" />
+          <Property Type="Int32" Name="EmailAccountId" Nullable="false" />
         </EntityType>
         <Association Name="FK_Nop_MessageTemplateLocalized_Nop_Language">
           <End Type="NopSolutions.NopCommerce.BusinessLogic.Data.Language" Role="Language" Multiplicity="1" />
@@ -7997,6 +8017,20 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="EmailAccount">
+          <Key>
+            <PropertyRef Name="EmailAccountId" />
+          </Key>
+          <Property Type="Int32" Name="EmailAccountId" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Type="String" Name="Email" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="DisplayName" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Host" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="Port" Nullable="false" />
+          <Property Type="String" Name="Username" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Password" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="Boolean" Name="EnableSSL" Nullable="false" />
+          <Property Type="Boolean" Name="UseDefaultCredentials" Nullable="false" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -8069,6 +8103,7 @@
           <EntitySetMapping Name="QueuedEmails">
             <EntityTypeMapping TypeName="NopSolutions.NopCommerce.BusinessLogic.Data.QueuedEmail">
               <MappingFragment StoreEntitySet="Nop_QueuedEmail">
+                <ScalarProperty Name="EmailAccountId" ColumnName="EmailAccountId" />
                 <ScalarProperty Name="SentOn" ColumnName="SentOn" />
                 <ScalarProperty Name="SendTries" ColumnName="SendTries" />
                 <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
@@ -8120,6 +8155,7 @@
           <EntitySetMapping Name="LocalizedMessageTemplate">
             <EntityTypeMapping TypeName="NopSolutions.NopCommerce.BusinessLogic.Data.LocalizedMessageTemplate">
               <MappingFragment StoreEntitySet="Nop_MessageTemplateLocalized">
+                <ScalarProperty Name="EmailAccountId" ColumnName="EmailAccountId" />
                 <ScalarProperty Name="IsActive" ColumnName="IsActive" />
                 <ScalarProperty Name="Body" ColumnName="Body" />
                 <ScalarProperty Name="Subject" ColumnName="Subject" />
@@ -9895,6 +9931,21 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="EmailAccounts">
+            <EntityTypeMapping TypeName="NopSolutions.NopCommerce.BusinessLogic.Data.EmailAccount">
+              <MappingFragment StoreEntitySet="Nop_EmailAccount">
+                <ScalarProperty Name="UseDefaultCredentials" ColumnName="UseDefaultCredentials" />
+                <ScalarProperty Name="EnableSSL" ColumnName="EnableSSL" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="Port" ColumnName="Port" />
+                <ScalarProperty Name="Host" ColumnName="Host" />
+                <ScalarProperty Name="DisplayName" ColumnName="DisplayName" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="EmailAccountId" ColumnName="EmailAccountId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -9915,7 +9966,7 @@
     </Options>
     <!-- Diagram content (shape and connector positions) -->
     <Diagrams>
-      <Diagram Name="NopModel" ZoomLevel="53">
+      <Diagram Name="NopModel" ZoomLevel="66">
         <EntityTypeShape EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Language" Width="3.125" PointX="23.625" PointY="11.25" Height="1.9210009765624996" IsExpanded="true" />
         <EntityTypeShape EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Country" Width="2" PointX="63.25" PointY="16.75" Height="3.0714322916666674" />
         <EntityTypeShape EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.StateProvince" Width="1.875" PointX="62.875" PointY="9.125" Height="1.9210009765624996" />
@@ -9939,15 +9990,13 @@
         <EntityTypeShape EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.MessageTemplate" Width="2.25" PointX="20.125" PointY="0.5" Height="1.4279589843749996" />
         <EntityTypeShape EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.LocalizedMessageTemplate" Width="2.5" PointX="20" PointY="3" Height="2.2496956380208335" />
         <AssociationConnector Association="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_MessageTemplateLocalized_Nop_Language" >
-          <ConnectorPoint PointX="23.625" PointY="12.307398721288045" />
-          <ConnectorPoint PointX="23.395833333333332" PointY="12.307398721288045" />
-          <ConnectorPoint PointX="23.229166666666668" PointY="12.307398721288045" />
-          <ConnectorPoint PointX="21.25" PointY="12.307398721288045" />
-          <ConnectorPoint PointX="21.25" PointY="5.2496956380208335" />
+          <ConnectorPoint PointX="23.625" PointY="12.227242693824604" />
+          <ConnectorPoint PointX="21.3125" PointY="12.227242693824604" />
+          <ConnectorPoint PointX="21.3125" PointY="5.41404296875" />
         </AssociationConnector>
         <AssociationConnector Association="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_MessageTemplateLocalized_Nop_MessageTemplate" >
-          <ConnectorPoint PointX="21.46875" PointY="1.9279589843749996" />
-          <ConnectorPoint PointX="21.46875" PointY="3" />
+          <ConnectorPoint PointX="21.3125" PointY="1.9279589843749996" />
+          <ConnectorPoint PointX="21.3125" PointY="3" />
         </AssociationConnector>
         <EntityTypeShape EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.MeasureDimension" Width="2.125" PointX="7.375" PointY="46.375" Height="1.7566536458333353" />
         <EntityTypeShape EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.MeasureWeight" Width="2.25" PointX="11" PointY="46.5" Height="1.7566536458333317" />
@@ -10280,12 +10329,10 @@
         </AssociationConnector>
         <AssociationConnector Association="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_ManufacturerLocalized_Nop_Language" >
           <ConnectorPoint PointX="23.625" PointY="11.523720983797054" />
-          <ConnectorPoint PointX="23.395833333333332" PointY="11.523720983797054" />
-          <ConnectorPoint PointX="23.229166666666668" PointY="11.523720983797054" />
-          <ConnectorPoint PointX="21.333333333333332" PointY="11.523720983797054" />
-          <ConnectorPoint PointX="21.166666666666668" PointY="11.523720983797054" />
-          <ConnectorPoint PointX="19.833333333333332" PointY="11.523720983797054" />
-          <ConnectorPoint PointX="19.666666666666668" PointY="11.523720983797054" />
+          <ConnectorPoint PointX="21.395833333333332" PointY="11.523720983797054" />
+          <ConnectorPoint PointX="21.229166666666668" PointY="11.523720983797054" />
+          <ConnectorPoint PointX="20.208333333333332" PointY="11.523720983797054" />
+          <ConnectorPoint PointX="20.041666666666668" PointY="11.523720983797054" />
           <ConnectorPoint PointX="19.325059986150617" PointY="11.523720983797054" />
           <ConnectorPoint PointX="19.158393319483952" PointY="11.523720983797054" />
           <ConnectorPoint PointX="18.879291638967903" PointY="11.523720983797054" />
@@ -10346,12 +10393,10 @@
         <EntityTypeShape EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.ProductAttributeLocalized" Width="2.125" PointX="7" PointY="29.75" Height="1.9210009765625031" />
         <AssociationConnector Association="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_ProductAttributeLocalized_Nop_Language" >
           <ConnectorPoint PointX="23.625" PointY="11.91555985254255" />
-          <ConnectorPoint PointX="23.395833333333332" PointY="11.91555985254255" />
-          <ConnectorPoint PointX="23.229166666666668" PointY="11.91555985254255" />
-          <ConnectorPoint PointX="21.333333333333332" PointY="11.91555985254255" />
-          <ConnectorPoint PointX="21.166666666666668" PointY="11.91555985254255" />
-          <ConnectorPoint PointX="19.833333333333332" PointY="11.91555985254255" />
-          <ConnectorPoint PointX="19.666666666666668" PointY="11.91555985254255" />
+          <ConnectorPoint PointX="21.395833333333332" PointY="11.91555985254255" />
+          <ConnectorPoint PointX="21.229166666666668" PointY="11.91555985254255" />
+          <ConnectorPoint PointX="20.208333333333332" PointY="11.91555985254255" />
+          <ConnectorPoint PointX="20.041666666666668" PointY="11.91555985254255" />
           <ConnectorPoint PointX="19.325059986150617" PointY="11.91555985254255" />
           <ConnectorPoint PointX="19.158393319483952" PointY="11.91555985254255" />
           <ConnectorPoint PointX="18.879291638967903" PointY="11.91555985254255" />
@@ -10455,64 +10500,64 @@
           <ConnectorPoint PointX="6.125" PointY="25.167674153645834" />
         </AssociationConnector>
         <AssociationConnector Association="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_ProductRating_Nop_Customer" >
-          <ConnectorPoint PointX="45.614139011718748" PointY="15.625" />
-          <ConnectorPoint PointX="45.614139011718748" PointY="6.7553614225260432" />
-          <ConnectorPoint PointX="45.373924077473959" PointY="6.7553614225260423" />
-          <ConnectorPoint PointX="45.207257410807287" PointY="6.7553614225260432" />
-          <ConnectorPoint PointX="45.070776714680989" PointY="6.7553614225260423" />
-          <ConnectorPoint PointX="44.904110048014317" PointY="6.7553614225260432" />
-          <ConnectorPoint PointX="44.767629351888019" PointY="6.7553614225260423" />
-          <ConnectorPoint PointX="44.600962685221347" PointY="6.7553614225260432" />
-          <ConnectorPoint PointX="31.208333333333332" PointY="6.7553614225260423" />
-          <ConnectorPoint PointX="31.041666666666668" PointY="6.7553614225260432" />
-          <ConnectorPoint PointX="26.270833333333332" PointY="6.7553614225260423" />
-          <ConnectorPoint PointX="26.104166666666668" PointY="6.7553614225260432" />
-          <ConnectorPoint PointX="24.958333333333332" PointY="6.7553614225260423" />
-          <ConnectorPoint PointX="24.791666666666668" PointY="6.7553614225260432" />
-          <ConnectorPoint PointX="23.927083333333332" PointY="6.7553614225260423" />
-          <ConnectorPoint PointX="23.760416666666668" PointY="6.7553614225260432" />
-          <ConnectorPoint PointX="21.333333333333332" PointY="6.7553614225260423" />
-          <ConnectorPoint PointX="21.166666666666668" PointY="6.7553614225260432" />
-          <ConnectorPoint PointX="19.833333333333332" PointY="6.7553614225260423" />
-          <ConnectorPoint PointX="19.666666666666668" PointY="6.7553614225260432" />
-          <ConnectorPoint PointX="18.879291638967903" PointY="6.7553614225260423" />
-          <ConnectorPoint PointX="18.712624972301239" PointY="6.7553614225260432" />
-          <ConnectorPoint PointX="18.047974902812506" PointY="6.7553614225260423" />
-          <ConnectorPoint PointX="17.881308236145841" PointY="6.7553614225260432" />
-          <ConnectorPoint PointX="14.375" PointY="6.7553614225260432" />
+          <ConnectorPoint PointX="45.626956375" PointY="15.625" />
+          <ConnectorPoint PointX="45.626956375" PointY="6.7061275170897838" />
+          <ConnectorPoint PointX="45.390533211507162" PointY="6.7061275170897829" />
+          <ConnectorPoint PointX="45.22386654484049" PointY="6.7061275170897838" />
+          <ConnectorPoint PointX="45.070776714680989" PointY="6.7061275170897829" />
+          <ConnectorPoint PointX="44.904110048014317" PointY="6.7061275170897838" />
+          <ConnectorPoint PointX="44.784093783040369" PointY="6.7061275170897829" />
+          <ConnectorPoint PointX="44.6174271163737" PointY="6.7061275170897838" />
+          <ConnectorPoint PointX="31.208333333333332" PointY="6.7061275170897829" />
+          <ConnectorPoint PointX="31.041666666666668" PointY="6.7061275170897838" />
+          <ConnectorPoint PointX="26.270833333333332" PointY="6.7061275170897829" />
+          <ConnectorPoint PointX="26.104166666666668" PointY="6.7061275170897838" />
+          <ConnectorPoint PointX="24.958333333333332" PointY="6.7061275170897829" />
+          <ConnectorPoint PointX="24.791666666666668" PointY="6.7061275170897838" />
+          <ConnectorPoint PointX="24.302083333333332" PointY="6.7061275170897829" />
+          <ConnectorPoint PointX="24.135416666666668" PointY="6.7061275170897838" />
+          <ConnectorPoint PointX="21.395833333333332" PointY="6.7061275170897829" />
+          <ConnectorPoint PointX="21.229166666666668" PointY="6.7061275170897838" />
+          <ConnectorPoint PointX="20.208333333333332" PointY="6.7061275170897829" />
+          <ConnectorPoint PointX="20.041666666666668" PointY="6.7061275170897838" />
+          <ConnectorPoint PointX="18.879291638967903" PointY="6.7061275170897829" />
+          <ConnectorPoint PointX="18.712624972301239" PointY="6.7061275170897838" />
+          <ConnectorPoint PointX="18.047974902812506" PointY="6.7061275170897829" />
+          <ConnectorPoint PointX="17.881308236145841" PointY="6.7061275170897838" />
+          <ConnectorPoint PointX="14.375" PointY="6.7061275170897838" />
         </AssociationConnector>
         <AssociationConnector Association="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_ProductReview_Nop_Customer" >
-          <ConnectorPoint PointX="45.963322005859375" PointY="15.625" />
-          <ConnectorPoint PointX="45.963322005859375" PointY="8.0033268229166623" />
-          <ConnectorPoint PointX="45.697472345052084" PointY="8.0033268229166623" />
-          <ConnectorPoint PointX="45.530805678385413" PointY="8.0033268229166623" />
-          <ConnectorPoint PointX="45.373924077473959" PointY="8.0033268229166623" />
-          <ConnectorPoint PointX="45.207257410807287" PointY="8.0033268229166623" />
-          <ConnectorPoint PointX="45.070776714680989" PointY="8.0033268229166623" />
-          <ConnectorPoint PointX="44.904110048014317" PointY="8.0033268229166623" />
-          <ConnectorPoint PointX="44.767629351888019" PointY="8.0033268229166623" />
-          <ConnectorPoint PointX="44.600962685221347" PointY="8.0033268229166623" />
-          <ConnectorPoint PointX="44.227192350911459" PointY="8.0033268229166623" />
-          <ConnectorPoint PointX="44.060525684244787" PointY="8.0033268229166623" />
-          <ConnectorPoint PointX="31.208333333333332" PointY="8.0033268229166623" />
-          <ConnectorPoint PointX="31.041666666666668" PointY="8.0033268229166623" />
-          <ConnectorPoint PointX="26.270833333333332" PointY="8.0033268229166623" />
-          <ConnectorPoint PointX="26.104166666666668" PointY="8.0033268229166623" />
-          <ConnectorPoint PointX="24.958333333333332" PointY="8.0033268229166623" />
-          <ConnectorPoint PointX="24.791666666666668" PointY="8.0033268229166623" />
-          <ConnectorPoint PointX="23.927083333333332" PointY="8.0033268229166623" />
-          <ConnectorPoint PointX="23.760416666666668" PointY="8.0033268229166623" />
-          <ConnectorPoint PointX="21.333333333333332" PointY="8.0033268229166623" />
-          <ConnectorPoint PointX="21.166666666666668" PointY="8.0033268229166623" />
-          <ConnectorPoint PointX="19.833333333333332" PointY="8.0033268229166623" />
-          <ConnectorPoint PointX="19.666666666666668" PointY="8.0033268229166623" />
-          <ConnectorPoint PointX="18.879291638967903" PointY="8.0033268229166623" />
-          <ConnectorPoint PointX="18.712624972301239" PointY="8.0033268229166623" />
-          <ConnectorPoint PointX="18.494885770890203" PointY="8.0033268229166623" />
-          <ConnectorPoint PointX="18.328219104223539" PointY="8.0033268229166623" />
-          <ConnectorPoint PointX="18.047974902812506" PointY="8.0033268229166623" />
-          <ConnectorPoint PointX="17.881308236145841" PointY="8.0033268229166623" />
-          <ConnectorPoint PointX="11.375" PointY="8.0033268229166623" />
+          <ConnectorPoint PointX="45.969730687500004" PointY="15.625" />
+          <ConnectorPoint PointX="45.969730687500004" PointY="8.003326822916673" />
+          <ConnectorPoint PointX="45.710289708333335" PointY="8.003326822916673" />
+          <ConnectorPoint PointX="45.543623041666663" PointY="8.003326822916673" />
+          <ConnectorPoint PointX="45.390533211507162" PointY="8.003326822916673" />
+          <ConnectorPoint PointX="45.22386654484049" PointY="8.003326822916673" />
+          <ConnectorPoint PointX="45.070776714680989" PointY="8.003326822916673" />
+          <ConnectorPoint PointX="44.904110048014317" PointY="8.003326822916673" />
+          <ConnectorPoint PointX="44.784093783040369" PointY="8.003326822916673" />
+          <ConnectorPoint PointX="44.6174271163737" PointY="8.003326822916673" />
+          <ConnectorPoint PointX="44.591960596761069" PointY="8.003326822916673" />
+          <ConnectorPoint PointX="44.4252939300944" PointY="8.003326822916673" />
+          <ConnectorPoint PointX="31.208333333333332" PointY="8.003326822916673" />
+          <ConnectorPoint PointX="31.041666666666668" PointY="8.003326822916673" />
+          <ConnectorPoint PointX="26.270833333333332" PointY="8.003326822916673" />
+          <ConnectorPoint PointX="26.104166666666668" PointY="8.003326822916673" />
+          <ConnectorPoint PointX="24.958333333333332" PointY="8.003326822916673" />
+          <ConnectorPoint PointX="24.791666666666668" PointY="8.003326822916673" />
+          <ConnectorPoint PointX="24.302083333333332" PointY="8.003326822916673" />
+          <ConnectorPoint PointX="24.135416666666668" PointY="8.003326822916673" />
+          <ConnectorPoint PointX="21.395833333333332" PointY="8.003326822916673" />
+          <ConnectorPoint PointX="21.229166666666668" PointY="8.003326822916673" />
+          <ConnectorPoint PointX="20.208333333333332" PointY="8.003326822916673" />
+          <ConnectorPoint PointX="20.041666666666668" PointY="8.003326822916673" />
+          <ConnectorPoint PointX="18.879291638967903" PointY="8.003326822916673" />
+          <ConnectorPoint PointX="18.712624972301239" PointY="8.003326822916673" />
+          <ConnectorPoint PointX="18.494885770890203" PointY="8.003326822916673" />
+          <ConnectorPoint PointX="18.328219104223539" PointY="8.003326822916673" />
+          <ConnectorPoint PointX="18.047974902812506" PointY="8.003326822916673" />
+          <ConnectorPoint PointX="17.881308236145841" PointY="8.003326822916673" />
+          <ConnectorPoint PointX="11.375" PointY="8.003326822916673" />
         </AssociationConnector>
         <AssociationConnector Association="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_Product_Manufacturer_Mapping_Nop_Manufacturer1" >
           <ConnectorPoint PointX="5.5" PointY="16.417674153645834" />
@@ -10800,6 +10845,7 @@
           <ConnectorPoint PointX="17.125" PointY="20.5889794921875" />
           <ConnectorPoint PointX="15.5" PointY="20.5889794921875" />
         </AssociationConnector>
+        <EntityTypeShape EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.EmailAccount" Width="1.875" PointX="0.75" PointY="0.75" Height="2.4140429687499818" />
         </Diagram>
     </Diagrams>
   </Designer>

@@ -34,6 +34,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         #endregion
 
         #region Properties
+
         /// <summary>
         /// Gets or sets the message template identifier
         /// </summary>
@@ -43,6 +44,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// Gets or sets the name
         /// </summary>
         public string Name { get; set; }
+        
         #endregion
 
         #region Navigation Properties

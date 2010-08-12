@@ -79,6 +79,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
             {
+                var ddlEmailAccount = (DropDownList)e.Item.FindControl("ddlEmailAccount");
                 var txtBCCEmailAddresses = (TextBox)e.Item.FindControl("txtBCCEmailAddresses");
                 var txtSubject = (TextBox)e.Item.FindControl("txtSubject");
                 var txtBody = (AjaxControlToolkit.HTMLEditor.Editor)e.Item.FindControl("txtBody");
@@ -87,13 +88,26 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 
                 int languageId = int.Parse(lblLanguageId.Text);
 
+                var emailAccounts= MessageManager.GetAllEmailAccounts();
+                ddlEmailAccount.Items.Clear();
+                foreach(var emailAccount in emailAccounts)
+                {
+                    ListItem item = new ListItem(emailAccount.FriendlyName, emailAccount.EmailAccountId.ToString());
+                    ddlEmailAccount.Items.Add(item);
+                }
+
                 var content = MessageManager.GetLocalizedMessageTemplate(this.MessageTemplate.Name, languageId);
                 if (content != null)
                 {
+                    CommonHelper.SelectListItem(ddlEmailAccount, content.EmailAccount.EmailAccountId);
                     txtBCCEmailAddresses.Text = content.BccEmailAddresses;
                     txtSubject.Text = content.Subject;
                     txtBody.Content = content.Body;
                     cbActive.Checked = content.IsActive;
+                }
+                else
+                {
+                    CommonHelper.SelectListItem(ddlEmailAccount, MessageManager.DefaultEmailAccount.EmailAccountId);
                 }
             }
         }
@@ -111,12 +125,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         {
                             if (item.ItemType == ListItemType.Item || item.ItemType == ListItemType.AlternatingItem)
                             {
+                                var ddlEmailAccount = (DropDownList)item.FindControl("ddlEmailAccount");
                                 var txtBCCEmailAddresses = (TextBox)item.FindControl("txtBCCEmailAddresses");
                                 var txtSubject = (TextBox)item.FindControl("txtSubject");
                                 var txtBody = (AjaxControlToolkit.HTMLEditor.Editor)item.FindControl("txtBody");
                                 var cbActive = (CheckBox)item.FindControl("cbActive");
                                 var lblLanguageId = (Label)item.FindControl("lblLanguageId");
 
+                                int emailAccountId = int.Parse(ddlEmailAccount.SelectedValue);
                                 int languageId = int.Parse(lblLanguageId.Text);
                                 string BCCEmailAddresses = txtBCCEmailAddresses.Text;
                                 string subject = txtSubject.Text;
@@ -127,13 +143,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                                 if (content == null)
                                 {
                                     content = MessageManager.InsertLocalizedMessageTemplate(this.MessageTemplateId,
-                                        languageId, BCCEmailAddresses, subject, body, active);
+                                        languageId, emailAccountId, BCCEmailAddresses, 
+                                        subject, body, active);
                                 }
                                 else
                                 {
                                     content = MessageManager.UpdateLocalizedMessageTemplate(content.MessageTemplateLocalizedId,
                                         content.MessageTemplateId, content.LanguageId,
-                                        BCCEmailAddresses, subject, body, active);
+                                        emailAccountId, BCCEmailAddresses, subject, body, active);
                                 }
                             }
                         }
@@ -152,7 +169,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             }
         }
 
-        MessageTemplate _messageTemplate;
+        private MessageTemplate _messageTemplate;
         public MessageTemplate MessageTemplate
         {
             get

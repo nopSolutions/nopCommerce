@@ -175,6 +175,7 @@
     <Compile Include="Maintenance\DatabaseMaintanceTask.cs" />
     <Compile Include="Manufacturers\Extensions.cs" />
     <Compile Include="Manufacturers\ManufacturerLocalized.cs" />
+    <Compile Include="Messages\EmailAccount.cs" />
     <Compile Include="Messages\SMS\ClickatellSMSProvider.cs" />
     <Compile Include="Messages\SMS\VerizonSMSProvider.cs" />
     <Compile Include="Messages\SMS\ISMSProvider.cs" />

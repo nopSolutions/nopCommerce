@@ -2798,3 +2798,75 @@ BEGIN
 	
 END
 GO
+
+--Multiple email senders
+IF NOT EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[dbo].[Nop_EmailAccount]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+BEGIN
+CREATE TABLE [dbo].[Nop_EmailAccount](
+	[EmailAccountId] int IDENTITY(1,1) NOT NULL,
+	[Email] nvarchar(255) NOT NULL,
+	[DisplayName] nvarchar(255) NOT NULL,
+	[Host] nvarchar(255) NOT NULL,
+	[Port] int NOT NULL,
+	[Username] nvarchar(255) NOT NULL,
+	[Password] nvarchar(255) NOT NULL,
+	[EnableSSL] bit NOT NULL,
+	[UseDefaultCredentials] bit NOT NULL,
+ CONSTRAINT [PK_EmailAccount] PRIMARY KEY CLUSTERED 
+(
+	[EmailAccountId] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 80) ON [PRIMARY]
+) ON [PRIMARY]
+END
+GO
+
+--migrate default email accont details
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[Nop_EmailAccount])
+BEGIN
+
+declare @Email nvarchar(255)
+declare @DisplayName nvarchar(255)
+declare @Host nvarchar(255)
+declare @Port int
+declare @Username nvarchar(255)
+declare @Password nvarchar(255)
+
+
+SELECT @Email = isnull([Value], N'') FROM Nop_Setting WHERE [Name]=N'Email.AdminEmailAddress'
+SELECT @DisplayName = isnull([Value], N'') FROM Nop_Setting WHERE [Name]=N'Email.AdminEmailDisplayName'
+SELECT @Host = isnull([Value], N'') FROM Nop_Setting WHERE [Name]=N'Email.AdminEmailHost'
+SELECT @Port = isnull([Value], 25) FROM Nop_Setting WHERE [Name]=N'Email.AdminEmailPort'
+SELECT @Username = isnull([Value], N'') FROM Nop_Setting WHERE [Name]=N'Email.AdminEmailUser'
+SELECT @Password = isnull([Value], N'') FROM Nop_Setting WHERE [Name]=N'Email.AdminEmailPassword'
+
+INSERT INTO [Nop_EmailAccount]([Email], [DisplayName], [Host], [Port], [Username], [Password], [EnableSSL], [UseDefaultCredentials])
+VALUES (isnull(@Email, N''), isnull(@DisplayName, N''), isnull(@Host, N''), isnull(@Port, 25), isnull(@Username, N''), isnull(@Password, N''), 0, 0)
+
+DELETE FROM Nop_Setting WHERE [Name]=N'Email.AdminEmailAddress'
+DELETE FROM Nop_Setting WHERE [Name]=N'Email.AdminEmailDisplayName'
+DELETE FROM Nop_Setting WHERE [Name]=N'Email.AdminEmailHost'
+DELETE FROM Nop_Setting WHERE [Name]=N'Email.AdminEmailPort'
+DELETE FROM Nop_Setting WHERE [Name]=N'Email.AdminEmailUser'
+DELETE FROM Nop_Setting WHERE [Name]=N'Email.AdminEmailPassword'
+DELETE FROM Nop_Setting WHERE [Name]=N'Email.AdminEmailUseDefaultCredentials'
+DELETE FROM Nop_Setting WHERE [Name]=N'Email.AdminEmailEnableSsl'
+
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[Nop_MessageTemplateLocalized]') and NAME='EmailAccountId')
+BEGIN
+	ALTER TABLE [dbo].[Nop_MessageTemplateLocalized] 
+	ADD [EmailAccountId] int NOT NULL CONSTRAINT [DF_Nop_MessageTemplateLocalized_EmailAccountId] DEFAULT ((0))
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[Nop_QueuedEmail]') and NAME='EmailAccountId')
+BEGIN
+	ALTER TABLE [dbo].[Nop_QueuedEmail] 
+	ADD [EmailAccountId] int NOT NULL CONSTRAINT [DF_Nop_QueuedEmail_EmailAccountId] DEFAULT ((0))
+END
+GO
+

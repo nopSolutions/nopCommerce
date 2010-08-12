@@ -25,6 +25,17 @@
             </li>
             <li>
                 <div class="title">
+                    <a href="emailaccounts.aspx" title="<%=GetLocaleResourceString("Admin.ConfigurationHome.EmailAccounts.TitleDescription")%>">
+                        <%=GetLocaleResourceString("Admin.ConfigurationHome.EmailAccounts.Title")%></a>
+                </div>
+                <div class="description">
+                    <p>
+                        <%=GetLocaleResourceString("Admin.ConfigurationHome.EmailAccounts.Description")%>
+                    </p>
+                </div>
+            </li>
+            <li>
+                <div class="title">
                     <a href="paymentsettingshome.aspx" title="<%=GetLocaleResourceString("Admin.ConfigurationHome.PaymentSettingsHome.TitleDescription")%>">
                         <%=GetLocaleResourceString("Admin.ConfigurationHome.PaymentSettingsHome.Title")%></a>
                 </div>

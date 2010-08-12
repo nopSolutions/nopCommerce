@@ -22,52 +22,21 @@ using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
-using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Messages;
-using NopSolutions.NopCommerce.BusinessLogic.Products;
-using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.Common.Utils;
-using System.Net.Mail;
-using NopSolutions.NopCommerce.BusinessLogic;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
-    public partial class CustomerSendEmailControl : BaseNopAdministrationUserControl
+    public partial class EmailAccountDetailsControl : BaseNopAdministrationUserControl
     {
-        private void BindData()
-        {
-        }
-
-        protected void Page_Load(object sender, EventArgs e)
-        {
-            if (!Page.IsPostBack)
-            {
-                this.BindData();
-            }
-        }
-
-        protected void btnSend_Click(object sender, EventArgs e)
+        protected void SaveButton_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
                 try
                 {
-                    var customer = CustomerManager.GetCustomerById(this.CustomerId);
-
-                    if (customer != null)
-                    {
-                        var emailAccount = MessageManager.DefaultEmailAccount;
-
-                        var from = new MailAddress(emailAccount.Email, emailAccount.DisplayName);
-                        var to = new MailAddress(customer.Email, customer.FullName);
-                        var subject = txtSubject.Text;
-                        var body = txtBody.Content;
-
-                        var email = MessageManager.InsertQueuedEmail(5, from, to, string.Empty,
-                            string.Empty, subject, body, DateTime.UtcNow, 0, null, emailAccount.EmailAccountId);
-                    }
-
-                    Response.Redirect(string.Format("CustomerDetails.aspx?CustomerID={0}", CustomerId));
+                    EmailAccount emailAccount = ctrlEmailAccountInfo.SaveInfo();
+                    Response.Redirect("EmailAccountDetails.aspx?EmailAccountID=" + emailAccount.EmailAccountId.ToString());
                 }
                 catch (Exception exc)
                 {
@@ -76,11 +45,24 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             }
         }
 
-        public int CustomerId
+        protected void DeleteButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                MessageManager.DeleteEmailAccount(this.EmailAccountId);
+                Response.Redirect("EmailAccounts.aspx");
+            }
+            catch (Exception exc)
+            {
+                ProcessException(exc);
+            }
+        }
+
+        public int EmailAccountId
         {
             get
             {
-                return CommonHelper.QueryStringInt("CustomerId");
+                return CommonHelper.QueryStringInt("EmailAccountId");
             }
         }
     }

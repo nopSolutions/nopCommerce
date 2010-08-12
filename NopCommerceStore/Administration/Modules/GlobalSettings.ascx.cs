@@ -104,21 +104,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             txtShoppingCartThumbSize.Value = SettingManager.GetSettingValueInteger("Media.ShoppingCart.ThumbnailImageSize");
             cbShowAdminProductImages.Checked = SettingManager.GetSettingValueBoolean("Display.ShowAdminProductImages");
 
-            txtAdminEmailAddress.Text = MessageManager.AdminEmailAddress;
-            txtAdminEmailDisplayName.Text = MessageManager.AdminEmailDisplayName;
-            txtAdminEmailHost.Text = MessageManager.AdminEmailHost;
-            txtAdminEmailPort.Text = MessageManager.AdminEmailPort.ToString();
-            txtAdminEmailUser.Text = MessageManager.AdminEmailUser;
-            txtAdminEmailPassword.Text = MessageManager.AdminEmailPassword;
-            cbAdminEmailEnableSsl.Checked = MessageManager.AdminEmailEnableSsl;
-            cbAdminEmailUseDefaultCredentials.Checked = MessageManager.AdminEmailUseDefaultCredentials;
-
-
             txtEncryptionPrivateKey.Text = SettingManager.GetSettingValue("Security.EncryptionPrivateKey");
             cbEnableLoginCaptchaImage.Checked = SettingManager.GetSettingValueBoolean("Common.LoginCaptchaImageEnabled");
             cbEnableRegisterCaptchaImage.Checked = SettingManager.GetSettingValueBoolean("Common.RegisterCaptchaImageEnabled");
-
-
+            
             CommonHelper.SelectListItem(this.ddlCustomerNameFormat, (int)CustomerManager.CustomerNameFormatting);
             cbShowCustomersLocation.Checked = CustomerManager.ShowCustomersLocation;
             cbShowCustomersJoinDate.Checked = CustomerManager.ShowCustomersJoinDate;
@@ -375,18 +364,6 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     SettingManager.SetParam("Media.ShoppingCart.ThumbnailImageSize", txtShoppingCartThumbSize.Value.ToString());
                     SettingManager.SetParam("Display.ShowAdminProductImages", cbShowAdminProductImages.Checked.ToString());
 
-                    MessageManager.AdminEmailAddress = txtAdminEmailAddress.Text;
-                    MessageManager.AdminEmailDisplayName = txtAdminEmailDisplayName.Text;
-                    MessageManager.AdminEmailHost = txtAdminEmailHost.Text;
-                    if (!String.IsNullOrEmpty(txtAdminEmailPort.Text))
-                        MessageManager.AdminEmailPort = int.Parse(txtAdminEmailPort.Text);
-                    else
-                        MessageManager.AdminEmailPort = 0;
-                    MessageManager.AdminEmailUser = txtAdminEmailUser.Text;
-                    MessageManager.AdminEmailPassword = txtAdminEmailPassword.Text;
-                    MessageManager.AdminEmailEnableSsl = cbAdminEmailEnableSsl.Checked;
-                    MessageManager.AdminEmailUseDefaultCredentials = cbAdminEmailUseDefaultCredentials.Checked;
-
                     SettingManager.SetParam("Security.AdminAreaAllowedIP", ipList);
 
                     SettingManager.SetParam("Common.LoginCaptchaImageEnabled", cbEnableLoginCaptchaImage.Checked.ToString());
@@ -561,26 +538,6 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 catch (Exception exc)
                 {
                     ProcessException(exc);
-                }
-            }
-        }
-
-        protected void btnSendTestEmail_Click(object sender, EventArgs e)
-        {
-            if (Page.IsValid)
-            {
-                try
-                {
-                    MailAddress from = new MailAddress(MessageManager.AdminEmailAddress, MessageManager.AdminEmailDisplayName);
-                    MailAddress to = new MailAddress(txtSendEmailTo.Text);
-                    string subject = SettingManager.StoreName + ". Testing email functionaly.";
-                    string body = "Email works fine.";
-                    MessageManager.SendEmail(subject, body, from, to);
-                    lblSendTestEmailResult.Text = GetLocaleResourceString("Admin.GlobalSettings.MailSettings.SendTestEmailSuccess");
-                }
-                catch (Exception exc)
-                {
-                    lblSendTestEmailResult.Text = exc.Message;
                 }
             }
         }

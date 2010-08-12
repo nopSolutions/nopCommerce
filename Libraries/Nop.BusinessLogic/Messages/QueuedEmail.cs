@@ -103,6 +103,30 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// Gets or sets the sent date and time
         /// </summary>
         public DateTime? SentOn { get; set; }
+
+        /// <summary>
+        /// Gets or sets the used email account identifier
+        /// </summary>
+        public int EmailAccountId { get; set; }
+
+        #endregion
+
+        #region Custom Properties
+
+        /// <summary>
+        /// Gets the used email account
+        /// </summary>
+        public EmailAccount EmailAccount
+        {
+            get
+            {
+                var emailAccount = MessageManager.GetEmailAccountById(this.EmailAccountId);
+                if (emailAccount == null)
+                    emailAccount = MessageManager.DefaultEmailAccount;
+                return emailAccount;
+            }
+        }
+
         #endregion
     }
 }

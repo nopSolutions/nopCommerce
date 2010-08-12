@@ -61,7 +61,16 @@
         <ItemTemplate>
             <div id="idTab_Info<%# Container.ItemIndex+2 %>" class="tab">
                 <asp:Label ID="lblLanguageId" runat="server" Text='<%#Eval("LanguageId") %>' Visible="false"></asp:Label>
-                <table class="adminContent">
+                <table class="adminContent">                    
+                    <tr>
+                        <td class="adminTitle">
+                            <nopcommerce:tooltiplabel runat="server" id="lblEmailAccount" text="<% $NopResources:Admin.MessageTemplateDetails.EmailAccount %>"
+                                tooltip="<% $NopResources:Admin.MessageTemplateDetails.EmailAccount.Tooltip %>" tooltipimage="~/Administration/Common/ico-help.gif" />
+                        </td>
+                        <td class="adminData">
+                            <asp:DropDownList runat="server" ID="ddlEmailAccount" />
+                        </td>
+                    </tr>
                     <tr>
                         <td class="adminTitle">
                             <nopcommerce:tooltiplabel runat="server" id="lblBCCEmailAddresses" text="<% $NopResources:Admin.MessageTemplateDetails.BCCEmailAddresses %>"

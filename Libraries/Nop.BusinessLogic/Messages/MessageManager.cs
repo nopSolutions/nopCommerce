@@ -442,13 +442,15 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// </summary>
         /// <param name="messageTemplateId">The message template identifier</param>
         /// <param name="languageId">The language identifier</param>
+        /// <param name="emailAccountId">The email account identifier that will be used to send this message template</param>
         /// <param name="bccEmailAddresses">The BCC Email addresses</param>
         /// <param name="subject">The subject</param>
         /// <param name="body">The body</param>
         /// <param name="isActive">A value indicating whether the message template is active</param>
         /// <returns>Localized message template</returns>
         public static LocalizedMessageTemplate InsertLocalizedMessageTemplate(int messageTemplateId,
-            int languageId, string bccEmailAddresses, string subject, string body, bool isActive)
+            int languageId, int emailAccountId, string bccEmailAddresses, 
+            string subject, string body, bool isActive)
         {
             bccEmailAddresses = CommonHelper.EnsureMaximumLength(bccEmailAddresses, 200);
             subject = CommonHelper.EnsureMaximumLength(subject, 200);
@@ -458,6 +460,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             var localizedMessageTemplate = context.LocalizedMessageTemplates.CreateObject();
             localizedMessageTemplate.MessageTemplateId = messageTemplateId;
             localizedMessageTemplate.LanguageId = languageId;
+            localizedMessageTemplate.EmailAccountId = emailAccountId;
             localizedMessageTemplate.BccEmailAddresses = bccEmailAddresses;
             localizedMessageTemplate.Subject = subject;
             localizedMessageTemplate.Body = body;
@@ -475,14 +478,15 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// <param name="messageTemplateLocalizedId">The localized message template identifier</param>
         /// <param name="messageTemplateId">The message template identifier</param>
         /// <param name="languageId">The language identifier</param>
+        /// <param name="emailAccountId">The email account identifier that will be used to send this message template</param>
         /// <param name="bccEmailAddresses">The BCC Email addresses</param>
         /// <param name="subject">The subject</param>
         /// <param name="body">The body</param>
         /// <param name="isActive">A value indicating whether the message template is active</param>
         /// <returns>Localized message template</returns>
         public static LocalizedMessageTemplate UpdateLocalizedMessageTemplate(int messageTemplateLocalizedId,
-            int messageTemplateId, int languageId, string bccEmailAddresses,
-            string subject, string body, bool isActive)
+            int messageTemplateId, int languageId, int emailAccountId,
+            string bccEmailAddresses, string subject, string body, bool isActive)
         {
             bccEmailAddresses = CommonHelper.EnsureMaximumLength(bccEmailAddresses, 200);
             subject = CommonHelper.EnsureMaximumLength(subject, 200);
@@ -497,6 +501,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
 
             localizedMessageTemplate.MessageTemplateId = messageTemplateId;
             localizedMessageTemplate.LanguageId = languageId;
+            localizedMessageTemplate.EmailAccountId = emailAccountId;
             localizedMessageTemplate.BccEmailAddresses = bccEmailAddresses;
             localizedMessageTemplate.Subject = subject;
             localizedMessageTemplate.Body = body;
@@ -615,11 +620,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// <param name="sentOn">The sent date and time. Null if email is not sent yet</param>
         /// <returns>Queued email</returns>
         public static QueuedEmail InsertQueuedEmail(int priority, MailAddress from,
-             MailAddress to, string cc, string bcc,
-            string subject, string body, DateTime createdOn, int sendTries, DateTime? sentOn)
+            MailAddress to, string cc, string bcc,
+            string subject, string body, DateTime createdOn, int sendTries,
+            DateTime? sentOn, int emailAccountId)
         {
             return InsertQueuedEmail(priority, from.Address, from.DisplayName,
-              to.Address, to.DisplayName, cc, bcc, subject, body, createdOn, sendTries, sentOn);
+              to.Address, to.DisplayName, cc, bcc, subject, body, createdOn, 
+              sendTries, sentOn, emailAccountId);
         }
 
         /// <summary>
@@ -640,7 +647,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// <returns>Queued email</returns>
         public static QueuedEmail InsertQueuedEmail(int priority, string from,
             string fromName, string to, string toName, string cc, string bcc,
-            string subject, string body, DateTime createdOn, int sendTries, DateTime? sentOn)
+            string subject, string body, DateTime createdOn, int sendTries,
+            DateTime? sentOn, int emailAccountId)
         {
             from = CommonHelper.EnsureMaximumLength(from, 500);
             fromName = CommonHelper.EnsureMaximumLength(fromName, 500);
@@ -665,6 +673,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             queuedEmail.CreatedOn = createdOn;
             queuedEmail.SendTries = sendTries;
             queuedEmail.SentOn = sentOn;
+            queuedEmail.EmailAccountId = emailAccountId;
 
             context.QueuedEmails.AddObject(queuedEmail);
             context.SaveChanges();
@@ -692,7 +701,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         public static QueuedEmail UpdateQueuedEmail(int queuedEmailId,
             int priority, string from,
             string fromName, string to, string toName, string cc, string bcc,
-            string subject, string body, DateTime createdOn, int sendTries, DateTime? sentOn)
+            string subject, string body, DateTime createdOn, int sendTries,
+            DateTime? sentOn, int emailAccountId)
         {
             from = CommonHelper.EnsureMaximumLength(from, 500);
             fromName = CommonHelper.EnsureMaximumLength(fromName, 500);
@@ -722,6 +732,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             queuedEmail.CreatedOn = createdOn;
             queuedEmail.SendTries = sendTries;
             queuedEmail.SentOn = sentOn;
+            queuedEmail.EmailAccountId = emailAccountId;
             context.SaveChanges();
 
             return queuedEmail;
@@ -882,7 +893,158 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             context.DeleteObject(newsLetterSubscription);
             context.SaveChanges();
         }
-        
+
+        /// <summary>
+        /// Gets a email account by identifier
+        /// </summary>
+        /// <param name="emailAccountId">The email account identifier</param>
+        /// <returns>Email account</returns>
+        public static EmailAccount GetEmailAccountById(int emailAccountId)
+        {
+            if (emailAccountId == 0)
+                return null;
+
+            var context = ObjectContextHelper.CurrentObjectContext;
+            var query = from ea in context.EmailAccounts
+                        where ea.EmailAccountId == emailAccountId
+                        select ea;
+            var emailAccount = query.SingleOrDefault();
+            return emailAccount;
+        }
+
+        /// <summary>
+        /// Deletes the email account
+        /// </summary>
+        /// <param name="emailAccountId">The email account identifier</param>
+        public static void DeleteEmailAccount(int emailAccountId)
+        {
+            var emailAccount = GetEmailAccountById(emailAccountId);
+            if (emailAccount == null)
+                return;
+
+            if (GetAllEmailAccounts().Count == 1)
+                throw new NopException("You cannot delete this email account. At least one account is required.");
+
+            var context = ObjectContextHelper.CurrentObjectContext;
+            if (!context.IsAttached(emailAccount))
+                context.EmailAccounts.Attach(emailAccount);
+            context.DeleteObject(emailAccount);
+            context.SaveChanges();
+        }
+
+        /// <summary>
+        /// Inserts an email account
+        /// </summary>
+        /// <param name="email">The priority</param>
+        /// <param name="displayName">From</param>
+        /// <param name="host">From name</param>
+        /// <param name="port">To</param>
+        /// <param name="username">To name</param>
+        /// <param name="password">Cc</param>
+        /// <param name="enableSsl">Bcc</param>
+        /// <param name="useDefaultCredentials">Subject</param>
+        /// <returns>Email account</returns>
+        public static EmailAccount InsertEmailAccount(string email, string displayName,
+            string host, int port, string username, string password,
+            bool enableSsl, bool useDefaultCredentials)
+        {
+            email = CommonHelper.EnsureMaximumLength(email, 255);
+            displayName = CommonHelper.EnsureMaximumLength(displayName, 255);
+            host = CommonHelper.EnsureMaximumLength(host, 255);
+            username = CommonHelper.EnsureMaximumLength(username, 255);
+            password = CommonHelper.EnsureMaximumLength(password, 255);
+
+            email = email.Trim();
+            displayName = displayName.Trim();
+            host = host.Trim();
+            username = username.Trim();
+            password = password.Trim();
+
+            var context = ObjectContextHelper.CurrentObjectContext;
+
+            var emailAccount = context.EmailAccounts.CreateObject();
+            emailAccount.Email = email;
+            emailAccount.DisplayName = displayName;
+            emailAccount.Host = host;
+            emailAccount.Port = port;
+            emailAccount.Username = username;
+            emailAccount.Password = password;
+            emailAccount.EnableSSL = enableSsl;
+            emailAccount.UseDefaultCredentials = useDefaultCredentials;
+
+            context.EmailAccounts.AddObject(emailAccount);
+            context.SaveChanges();
+
+            return emailAccount;
+        }
+
+        /// <summary>
+        /// Updates an email account
+        /// </summary>
+        /// <param name="emailAccountId">Email account identifier</param>
+        /// <param name="email">The priority</param>
+        /// <param name="displayName">From</param>
+        /// <param name="host">From name</param>
+        /// <param name="port">To</param>
+        /// <param name="username">To name</param>
+        /// <param name="password">Cc</param>
+        /// <param name="enableSsl">Bcc</param>
+        /// <param name="useDefaultCredentials">Subject</param>
+        /// <returns>Email account</returns>
+        public static EmailAccount UpdateEmailAccount(int emailAccountId,
+            string email, string displayName,
+            string host, int port, string username, string password,
+            bool enableSsl, bool useDefaultCredentials)
+        {
+            email = CommonHelper.EnsureMaximumLength(email, 255);
+            displayName = CommonHelper.EnsureMaximumLength(displayName, 255);
+            host = CommonHelper.EnsureMaximumLength(host, 255);
+            username = CommonHelper.EnsureMaximumLength(username, 255);
+            password = CommonHelper.EnsureMaximumLength(password, 255);
+
+            email = email.Trim();
+            displayName = displayName.Trim();
+            host = host.Trim();
+            username = username.Trim();
+            password = password.Trim();
+
+            var emailAccount = GetEmailAccountById(emailAccountId);
+            if (emailAccount == null)
+                return null;
+
+            var context = ObjectContextHelper.CurrentObjectContext;
+            if (!context.IsAttached(emailAccount))
+                context.EmailAccounts.Attach(emailAccount);
+
+            emailAccount.Email = email;
+            emailAccount.DisplayName = displayName;
+            emailAccount.Host = host;
+            emailAccount.Port = port;
+            emailAccount.Username = username;
+            emailAccount.Password = password;
+            emailAccount.EnableSSL = enableSsl;
+            emailAccount.UseDefaultCredentials = useDefaultCredentials;
+            context.SaveChanges();
+
+            return emailAccount;
+        }
+
+        /// <summary>
+        /// Gets all email accounts
+        /// </summary>
+        /// <returns>Email accounts</returns>
+        public static List<EmailAccount> GetAllEmailAccounts()
+        {
+            var context = ObjectContextHelper.CurrentObjectContext;
+            var query = from ea in context.EmailAccounts
+                        orderby ea.EmailAccountId
+                        select ea;
+
+            var emailAccounts = query.ToList();
+
+            return emailAccounts;
+        }
+
         #endregion
 
         #region Workflow methods
@@ -902,14 +1064,16 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             LocalizedMessageTemplate localizedMessageTemplate = MessageManager.GetLocalizedMessageTemplate(templateName, languageId);
             if(localizedMessageTemplate == null || !localizedMessageTemplate.IsActive)
                 return 0;
-                //throw new NopException(string.Format("Message template ({0}-{1}) couldn't be loaded", TemplateName, LanguageId));
+                
+            var emailAccount = localizedMessageTemplate.EmailAccount;
 
             string subject = ReplaceMessageTemplateTokens(order, localizedMessageTemplate.Subject, languageId);
             string body = ReplaceMessageTemplateTokens(order, localizedMessageTemplate.Body, languageId);
             string bcc = localizedMessageTemplate.BccEmailAddresses;
-            var from = new MailAddress(AdminEmailAddress, AdminEmailDisplayName);
+            var from = new MailAddress(emailAccount.Email, emailAccount.DisplayName);
             var to = new MailAddress(order.BillingEmail, order.BillingFullName);
-            var queuedEmail = InsertQueuedEmail(5, from, to, string.Empty, bcc, subject, body, DateTime.UtcNow, 0, null);
+            var queuedEmail = InsertQueuedEmail(5, from, to, string.Empty, bcc, subject, body,
+                DateTime.UtcNow, 0, null, emailAccount.EmailAccountId);
             return queuedEmail.QueuedEmailId;
         }
 
@@ -929,14 +1093,16 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             LocalizedMessageTemplate localizedMessageTemplate = MessageManager.GetLocalizedMessageTemplate(templateName, languageId);
             if(localizedMessageTemplate == null || !localizedMessageTemplate.IsActive)
                 return 0;
-                //throw new NopException(string.Format("Message template ({0}-{1}) couldn't be loaded", TemplateName, LanguageId));
+
+            var emailAccount = localizedMessageTemplate.EmailAccount;
 
             string subject = ReplaceMessageTemplateTokens(order, localizedMessageTemplate.Subject, languageId);
             string body = ReplaceMessageTemplateTokens(order, localizedMessageTemplate.Body, languageId);
             string bcc = localizedMessageTemplate.BccEmailAddresses;
-            var from = new MailAddress(AdminEmailAddress, AdminEmailDisplayName);
-            var to = new MailAddress(AdminEmailAddress, AdminEmailDisplayName);
-            var queuedEmail = InsertQueuedEmail(5, from, to, string.Empty, bcc, subject, body, DateTime.UtcNow, 0, null);
+            var from = new MailAddress(emailAccount.Email, emailAccount.DisplayName);
+            var to = new MailAddress(emailAccount.Email, emailAccount.DisplayName);
+            var queuedEmail = InsertQueuedEmail(5, from, to, string.Empty, bcc, subject, body,
+                DateTime.UtcNow, 0, null, emailAccount.EmailAccountId);
             return queuedEmail.QueuedEmailId;
         }
 
@@ -955,14 +1121,16 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             LocalizedMessageTemplate localizedMessageTemplate = MessageManager.GetLocalizedMessageTemplate(templateName, languageId);
             if(localizedMessageTemplate == null || !localizedMessageTemplate.IsActive)
                 return 0;
-                //throw new NopException(string.Format("Message template ({0}-{1}) couldn't be loaded", TemplateName, LanguageId));
+
+            var emailAccount = localizedMessageTemplate.EmailAccount;
 
             string subject = ReplaceMessageTemplateTokens(productVariant, localizedMessageTemplate.Subject, languageId);
             string body = ReplaceMessageTemplateTokens(productVariant, localizedMessageTemplate.Body, languageId);
             string bcc = localizedMessageTemplate.BccEmailAddresses;
-            var from = new MailAddress(AdminEmailAddress, AdminEmailDisplayName);
-            var to = new MailAddress(AdminEmailAddress, AdminEmailDisplayName);
-            var queuedEmail = InsertQueuedEmail(5, from, to, string.Empty, bcc, subject, body, DateTime.UtcNow, 0, null);
+            var from = new MailAddress(emailAccount.Email, emailAccount.DisplayName);
+            var to = new MailAddress(emailAccount.Email, emailAccount.DisplayName);
+            var queuedEmail = InsertQueuedEmail(5, from, to, string.Empty, bcc, subject, body,
+                DateTime.UtcNow, 0, null, emailAccount.EmailAccountId);
             return queuedEmail.QueuedEmailId;
         }
 
@@ -981,14 +1149,16 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             LocalizedMessageTemplate localizedMessageTemplate = MessageManager.GetLocalizedMessageTemplate(templateName, languageId);
             if(localizedMessageTemplate == null || !localizedMessageTemplate.IsActive)
                 return 0;
-                //throw new NopException(string.Format("Message template ({0}-{1}) couldn't be loaded", TemplateName, LanguageId));
+
+            var emailAccount = localizedMessageTemplate.EmailAccount;
 
             string subject = ReplaceMessageTemplateTokens(order, localizedMessageTemplate.Subject, languageId);
             string body = ReplaceMessageTemplateTokens(order, localizedMessageTemplate.Body, languageId);
             string bcc = localizedMessageTemplate.BccEmailAddresses;
-            var from = new MailAddress(AdminEmailAddress, AdminEmailDisplayName);
+            var from = new MailAddress(emailAccount.Email, emailAccount.DisplayName);
             var to = new MailAddress(order.BillingEmail, order.BillingFullName);
-            var queuedEmail = InsertQueuedEmail(5, from, to, string.Empty, bcc, subject, body, DateTime.UtcNow, 0, null);
+            var queuedEmail = InsertQueuedEmail(5, from, to, string.Empty, bcc, subject, body,
+                DateTime.UtcNow, 0, null, emailAccount.EmailAccountId);
             return queuedEmail.QueuedEmailId;
         }
 
@@ -1007,14 +1177,16 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             LocalizedMessageTemplate localizedMessageTemplate = MessageManager.GetLocalizedMessageTemplate(templateName, languageId);
             if(localizedMessageTemplate == null || !localizedMessageTemplate.IsActive)
                 return 0;
-                //throw new NopException(string.Format("Message template ({0}-{1}) couldn't be loaded", TemplateName, LanguageId));
+
+            var emailAccount = localizedMessageTemplate.EmailAccount;
 
             string subject = ReplaceMessageTemplateTokens(order, localizedMessageTemplate.Subject, languageId);
             string body = ReplaceMessageTemplateTokens(order, localizedMessageTemplate.Body, languageId);
             string bcc = localizedMessageTemplate.BccEmailAddresses;
-            var from = new MailAddress(AdminEmailAddress, AdminEmailDisplayName);
+            var from = new MailAddress(emailAccount.Email, emailAccount.DisplayName);
             var to = new MailAddress(order.BillingEmail, order.BillingFullName);
-            var queuedEmail = InsertQueuedEmail(5, from, to, string.Empty, bcc, subject, body, DateTime.UtcNow, 0, null);
+            var queuedEmail = InsertQueuedEmail(5, from, to, string.Empty, bcc, subject, body,
+                DateTime.UtcNow, 0, null, emailAccount.EmailAccountId);
             return queuedEmail.QueuedEmailId;
         }
 
@@ -1033,14 +1205,16 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             LocalizedMessageTemplate localizedMessageTemplate = MessageManager.GetLocalizedMessageTemplate(templateName, languageId);
             if (localizedMessageTemplate == null || !localizedMessageTemplate.IsActive)
                 return 0;
-            //throw new NopException(string.Format("Message template ({0}-{1}) couldn't be loaded", TemplateName, LanguageId));
+
+            var emailAccount = localizedMessageTemplate.EmailAccount;
 
             string subject = ReplaceMessageTemplateTokens(order, localizedMessageTemplate.Subject, languageId);
             string body = ReplaceMessageTemplateTokens(order, localizedMessageTemplate.Body, languageId);
             string bcc = localizedMessageTemplate.BccEmailAddresses;
-            var from = new MailAddress(AdminEmailAddress, AdminEmailDisplayName);
+            var from = new MailAddress(emailAccount.Email, emailAccount.DisplayName);
             var to = new MailAddress(order.BillingEmail, order.BillingFullName);
-            var queuedEmail = InsertQueuedEmail(5, from, to, string.Empty, bcc, subject, body, DateTime.UtcNow, 0, null);
+            var queuedEmail = InsertQueuedEmail(5, from, to, string.Empty, bcc, subject, body,
+                DateTime.UtcNow, 0, null, emailAccount.EmailAccountId);
             return queuedEmail.QueuedEmailId;
         }
 
@@ -1059,14 +1233,16 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             var localizedMessageTemplate = MessageManager.GetLocalizedMessageTemplate(templateName, languageId);
             if(localizedMessageTemplate == null || !localizedMessageTemplate.IsActive)
                 return 0;
-                //throw new NopException(string.Format("Message template ({0}-{1}) couldn't be loaded", TemplateName, LanguageId));
+
+            var emailAccount = localizedMessageTemplate.EmailAccount;
 
             string subject = ReplaceMessageTemplateTokens(order, localizedMessageTemplate.Subject, languageId);
             string body = ReplaceMessageTemplateTokens(order, localizedMessageTemplate.Body, languageId);
             string bcc = localizedMessageTemplate.BccEmailAddresses;
-            var from = new MailAddress(AdminEmailAddress, AdminEmailDisplayName);
+            var from = new MailAddress(emailAccount.Email, emailAccount.DisplayName);
             var to = new MailAddress(order.BillingEmail, order.BillingFullName);
-            var queuedEmail = InsertQueuedEmail(5, from, to, string.Empty, bcc, subject, body, DateTime.UtcNow, 0, null);
+            var queuedEmail = InsertQueuedEmail(5, from, to, string.Empty, bcc, subject, body,
+                DateTime.UtcNow, 0, null, emailAccount.EmailAccountId);
             return queuedEmail.QueuedEmailId;
         }
 
@@ -1086,14 +1262,16 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             var localizedMessageTemplate = MessageManager.GetLocalizedMessageTemplate(templateName, languageId);
             if(localizedMessageTemplate == null || !localizedMessageTemplate.IsActive)
                 return 0;
-                //throw new NopException(string.Format("Message template ({0}-{1}) couldn't be loaded", TemplateName, LanguageId));
+
+            var emailAccount = localizedMessageTemplate.EmailAccount;
 
             string subject = ReplaceMessageTemplateTokens(customer, localizedMessageTemplate.Subject);
             string body = ReplaceMessageTemplateTokens(customer, localizedMessageTemplate.Body);
             string bcc = localizedMessageTemplate.BccEmailAddresses;
-            var from = new MailAddress(AdminEmailAddress, AdminEmailDisplayName);
+            var from = new MailAddress(emailAccount.Email, emailAccount.DisplayName);
             var to = new MailAddress(customer.Email, customer.FullName);
-            var queuedEmail = InsertQueuedEmail(5, from, to, string.Empty, bcc, subject, body, DateTime.UtcNow, 0, null);
+            var queuedEmail = InsertQueuedEmail(5, from, to, string.Empty, bcc, subject, body,
+                DateTime.UtcNow, 0, null, emailAccount.EmailAccountId);
             return queuedEmail.QueuedEmailId;
         }
 
@@ -1113,14 +1291,16 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             var localizedMessageTemplate = MessageManager.GetLocalizedMessageTemplate(templateName, languageId);
             if(localizedMessageTemplate == null || !localizedMessageTemplate.IsActive)
                 return 0;
-                //throw new NopException(string.Format("Message template ({0}-{1}) couldn't be loaded", TemplateName, LanguageId));
+
+            var emailAccount = localizedMessageTemplate.EmailAccount;
 
             string subject = ReplaceMessageTemplateTokens(customer, localizedMessageTemplate.Subject);
             string body = ReplaceMessageTemplateTokens(customer, localizedMessageTemplate.Body);
             string bcc = localizedMessageTemplate.BccEmailAddresses;
-            var from = new MailAddress(AdminEmailAddress, AdminEmailDisplayName);
+            var from = new MailAddress(emailAccount.Email, emailAccount.DisplayName);
             var to = new MailAddress(customer.Email, customer.FullName);
-            var queuedEmail = InsertQueuedEmail(5, from, to, string.Empty, bcc, subject, body, DateTime.UtcNow, 0, null);
+            var queuedEmail = InsertQueuedEmail(5, from, to, string.Empty, bcc, subject, body,
+                DateTime.UtcNow, 0, null, emailAccount.EmailAccountId);
             return queuedEmail.QueuedEmailId;
         }
 
@@ -1139,14 +1319,16 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             var localizedMessageTemplate = MessageManager.GetLocalizedMessageTemplate(templateName, languageId);
             if(localizedMessageTemplate == null || !localizedMessageTemplate.IsActive)
                 return 0;
-                //throw new NopException(string.Format("Message template ({0}-{1}) couldn't be loaded", TemplateName, LanguageId));
+
+            var emailAccount = localizedMessageTemplate.EmailAccount;
 
             string subject = ReplaceMessageTemplateTokens(customer, localizedMessageTemplate.Subject);
             string body = ReplaceMessageTemplateTokens(customer, localizedMessageTemplate.Body);
             string bcc = localizedMessageTemplate.BccEmailAddresses;
-            var from = new MailAddress(AdminEmailAddress, AdminEmailDisplayName);
+            var from = new MailAddress(emailAccount.Email, emailAccount.DisplayName);
             var to = new MailAddress(customer.Email, customer.FullName);
-            var queuedEmail = InsertQueuedEmail(5, from, to, string.Empty, bcc, subject, body, DateTime.UtcNow, 0, null);
+            var queuedEmail = InsertQueuedEmail(5, from, to, string.Empty, bcc, subject, body,
+                DateTime.UtcNow, 0, null, emailAccount.EmailAccountId);
             return queuedEmail.QueuedEmailId;
         }
 
@@ -1165,14 +1347,16 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             LocalizedMessageTemplate localizedMessageTemplate = MessageManager.GetLocalizedMessageTemplate(templateName, languageId);
             if (localizedMessageTemplate == null || !localizedMessageTemplate.IsActive)
                 return 0;
-            //throw new NopException(string.Format("Message template ({0}-{1}) couldn't be loaded", TemplateName, LanguageId));
+
+            var emailAccount = localizedMessageTemplate.EmailAccount;
 
             string subject = ReplaceMessageTemplateTokens(customer, localizedMessageTemplate.Subject);
             string body = ReplaceMessageTemplateTokens(customer, localizedMessageTemplate.Body);
             string bcc = localizedMessageTemplate.BccEmailAddresses;
-            var from = new MailAddress(AdminEmailAddress, AdminEmailDisplayName);
-            var to = new MailAddress(AdminEmailAddress, AdminEmailDisplayName);
-            var queuedEmail = InsertQueuedEmail(5, from, to, string.Empty, bcc, subject, body, DateTime.UtcNow, 0, null);
+            var from = new MailAddress(emailAccount.Email, emailAccount.DisplayName);
+            var to = new MailAddress(emailAccount.Email, emailAccount.DisplayName);
+            var queuedEmail = InsertQueuedEmail(5, from, to, string.Empty, bcc, subject, body,
+                DateTime.UtcNow, 0, null, emailAccount.EmailAccountId);
             return queuedEmail.QueuedEmailId;
         }
 
@@ -1197,16 +1381,18 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             var localizedMessageTemplate = MessageManager.GetLocalizedMessageTemplate(templateName, languageId);
             if(localizedMessageTemplate == null || !localizedMessageTemplate.IsActive)
                 return 0;
-                //throw new NopException(string.Format("Message template ({0}-{1}) couldn't be loaded", TemplateName, LanguageId));
+
+            var emailAccount = localizedMessageTemplate.EmailAccount;
 
             var additinalKeys = new NameValueCollection();
             additinalKeys.Add("EmailAFriend.PersonalMessage", personalMessage);
             string subject = ReplaceMessageTemplateTokens(customer, product, localizedMessageTemplate.Subject, additinalKeys);
             string body = ReplaceMessageTemplateTokens(customer, product, localizedMessageTemplate.Body, additinalKeys);
             string bcc = localizedMessageTemplate.BccEmailAddresses;
-            var from = new MailAddress(AdminEmailAddress, AdminEmailDisplayName);
+            var from = new MailAddress(emailAccount.Email, emailAccount.DisplayName);
             var to = new MailAddress(friendsEmail);
-            var queuedEmail = InsertQueuedEmail(5, from, to, string.Empty, bcc, subject, body, DateTime.UtcNow, 0, null);
+            var queuedEmail = InsertQueuedEmail(5, from, to, string.Empty, bcc, subject, body,
+                DateTime.UtcNow, 0, null, emailAccount.EmailAccountId);
             return queuedEmail.QueuedEmailId;
         }
 
@@ -1228,14 +1414,16 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             var localizedMessageTemplate = MessageManager.GetLocalizedMessageTemplate(templateName, languageId);
             if(localizedMessageTemplate == null || !localizedMessageTemplate.IsActive)
                 return 0;
-                //throw new NopException(string.Format("Message template ({0}-{1}) couldn't be loaded", TemplateName, LanguageId));
+
+            var emailAccount = localizedMessageTemplate.EmailAccount;
 
             string subject = ReplaceMessageTemplateTokens(customer, null, forumTopic, forum, localizedMessageTemplate.Subject);
             string body = ReplaceMessageTemplateTokens(customer, null, forumTopic, forum, localizedMessageTemplate.Body);
             string bcc = localizedMessageTemplate.BccEmailAddresses;
-            var from = new MailAddress(AdminEmailAddress, AdminEmailDisplayName);
+            var from = new MailAddress(emailAccount.Email, emailAccount.DisplayName);
             var to = new MailAddress(customer.Email, customer.FullName);
-            var queuedEmail = InsertQueuedEmail(5, from, to, string.Empty, bcc, subject, body, DateTime.UtcNow, 0, null);
+            var queuedEmail = InsertQueuedEmail(5, from, to, string.Empty, bcc, subject, body,
+                DateTime.UtcNow, 0, null, emailAccount.EmailAccountId);
             return queuedEmail.QueuedEmailId;
         }
 
@@ -1259,14 +1447,16 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             LocalizedMessageTemplate localizedMessageTemplate = MessageManager.GetLocalizedMessageTemplate(templateName, languageId);
             if(localizedMessageTemplate == null || !localizedMessageTemplate.IsActive)
                 return 0;
-                //throw new NopException(string.Format("Message template ({0}-{1}) couldn't be loaded", TemplateName, LanguageId));
+
+            var emailAccount = localizedMessageTemplate.EmailAccount;
 
             string subject = ReplaceMessageTemplateTokens(customer, forumPost, forumTopic, forum, localizedMessageTemplate.Subject);
             string body = ReplaceMessageTemplateTokens(customer, forumPost, forumTopic, forum, localizedMessageTemplate.Body);
             string bcc = localizedMessageTemplate.BccEmailAddresses;
-            var from = new MailAddress(AdminEmailAddress, AdminEmailDisplayName);
+            var from = new MailAddress(emailAccount.Email, emailAccount.DisplayName);
             var to = new MailAddress(customer.Email, customer.FullName);
-            var queuedEmail = InsertQueuedEmail(5, from, to, string.Empty, bcc, subject, body, DateTime.UtcNow, 0, null);
+            var queuedEmail = InsertQueuedEmail(5, from, to, string.Empty, bcc, subject, body,
+                DateTime.UtcNow, 0, null, emailAccount.EmailAccountId);
             return queuedEmail.QueuedEmailId;
         }
 
@@ -1285,14 +1475,16 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             var localizedMessageTemplate = MessageManager.GetLocalizedMessageTemplate(templateName, languageId);
             if(localizedMessageTemplate == null || !localizedMessageTemplate.IsActive)
                 return 0;
-                //throw new NopException(string.Format("Message template ({0}-{1}) couldn't be loaded", TemplateName, LanguageId));
+
+            var emailAccount = localizedMessageTemplate.EmailAccount;
 
             string subject = ReplaceMessageTemplateTokens(newsComment, localizedMessageTemplate.Subject);
             string body = ReplaceMessageTemplateTokens(newsComment, localizedMessageTemplate.Body);
             string bcc = localizedMessageTemplate.BccEmailAddresses;
-            var from = new MailAddress(AdminEmailAddress, AdminEmailDisplayName);
-            var to = new MailAddress(AdminEmailAddress, AdminEmailDisplayName);
-            var queuedEmail = InsertQueuedEmail(5, from, to, string.Empty, bcc, subject, body, DateTime.UtcNow, 0, null);
+            var from = new MailAddress(emailAccount.Email, emailAccount.DisplayName);
+            var to = new MailAddress(emailAccount.Email, emailAccount.DisplayName);
+            var queuedEmail = InsertQueuedEmail(5, from, to, string.Empty, bcc, subject, body,
+                DateTime.UtcNow, 0, null, emailAccount.EmailAccountId);
             return queuedEmail.QueuedEmailId;
         }
 
@@ -1311,14 +1503,16 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             var localizedMessageTemplate = MessageManager.GetLocalizedMessageTemplate(templateName, languageId);
             if(localizedMessageTemplate == null || !localizedMessageTemplate.IsActive)
                 return 0;
-                //throw new NopException(string.Format("Message template ({0}-{1}) couldn't be loaded", TemplateName, LanguageId));
+
+            var emailAccount = localizedMessageTemplate.EmailAccount;
 
             string subject = ReplaceMessageTemplateTokens(blogComment, localizedMessageTemplate.Subject);
             string body = ReplaceMessageTemplateTokens(blogComment, localizedMessageTemplate.Body);
             string bcc = localizedMessageTemplate.BccEmailAddresses;
-            var from = new MailAddress(AdminEmailAddress, AdminEmailDisplayName);
-            var to = new MailAddress(AdminEmailAddress, AdminEmailDisplayName);
-            var queuedEmail = InsertQueuedEmail(5, from, to, string.Empty, bcc, subject, body, DateTime.UtcNow, 0, null);
+            var from = new MailAddress(emailAccount.Email, emailAccount.DisplayName);
+            var to = new MailAddress(emailAccount.Email, emailAccount.DisplayName);
+            var queuedEmail = InsertQueuedEmail(5, from, to, string.Empty, bcc, subject, body,
+                DateTime.UtcNow, 0, null, emailAccount.EmailAccountId);
             return queuedEmail.QueuedEmailId;
         }
 
@@ -1338,14 +1532,16 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             var localizedMessageTemplate = MessageManager.GetLocalizedMessageTemplate(templateName, languageId);
             if(localizedMessageTemplate == null || !localizedMessageTemplate.IsActive)
                 return 0;
-                //throw new NopException(string.Format("Message template ({0}-{1}) couldn't be loaded", TemplateName, LanguageId));
+
+            var emailAccount = localizedMessageTemplate.EmailAccount;
 
             string subject = ReplaceMessageTemplateTokens(productReview, localizedMessageTemplate.Subject);
             string body = ReplaceMessageTemplateTokens(productReview, localizedMessageTemplate.Body);
             string bcc = localizedMessageTemplate.BccEmailAddresses;
-            var from = new MailAddress(AdminEmailAddress, AdminEmailDisplayName);
-            var to = new MailAddress(AdminEmailAddress, AdminEmailDisplayName);
-            var queuedEmail = InsertQueuedEmail(5, from, to, string.Empty, bcc, subject, body, DateTime.UtcNow, 0, null);
+            var from = new MailAddress(emailAccount.Email, emailAccount.DisplayName);
+            var to = new MailAddress(emailAccount.Email, emailAccount.DisplayName);
+            var queuedEmail = InsertQueuedEmail(5, from, to, string.Empty, bcc, subject, body,
+                DateTime.UtcNow, 0, null, emailAccount.EmailAccountId);
             return queuedEmail.QueuedEmailId;
         }
 
@@ -1366,12 +1562,16 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
                 return 0;
             }
 
-            var from = new MailAddress(AdminEmailAddress, AdminEmailDisplayName);
+            var emailAccount = localizedMessageTemplate.EmailAccount;
+
+            var from = new MailAddress(emailAccount.Email, emailAccount.DisplayName);
             var to = new MailAddress(subscription.Email);
             string subject = ReplaceMessageTemplateTokens(subscription, localizedMessageTemplate.Subject);
             string body = ReplaceMessageTemplateTokens(subscription, localizedMessageTemplate.Body);
 
-            var queuedEmail = InsertQueuedEmail(5, from, to, String.Empty, localizedMessageTemplate.BccEmailAddresses, subject, body, DateTime.UtcNow, 0, null);
+            var queuedEmail = InsertQueuedEmail(5, from, to, String.Empty,
+                localizedMessageTemplate.BccEmailAddresses, subject, body, 
+                DateTime.UtcNow, 0, null, emailAccount.EmailAccountId);
 
             return queuedEmail.QueuedEmailId;
         }
@@ -1393,12 +1593,16 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
                 return 0;
             }
 
-            var from = new MailAddress(AdminEmailAddress, AdminEmailDisplayName);
+            var emailAccount = localizedMessageTemplate.EmailAccount;
+
+            var from = new MailAddress(emailAccount.Email, emailAccount.DisplayName);
             var to = new MailAddress(subscription.Email);
             string subject = ReplaceMessageTemplateTokens(subscription, localizedMessageTemplate.Subject);
             string body = ReplaceMessageTemplateTokens(subscription, localizedMessageTemplate.Body);
 
-            var queuedEmail = InsertQueuedEmail(5, from, to, String.Empty, localizedMessageTemplate.BccEmailAddresses, subject, body, DateTime.UtcNow, 0, null);
+            var queuedEmail = InsertQueuedEmail(5, from, to, String.Empty, 
+                localizedMessageTemplate.BccEmailAddresses, subject, body,
+                DateTime.UtcNow, 0, null, emailAccount.EmailAccountId);
 
             return queuedEmail.QueuedEmailId;
         }
@@ -1418,14 +1622,16 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             var localizedMessageTemplate = MessageManager.GetLocalizedMessageTemplate(templateName, languageId);
             if(localizedMessageTemplate == null || !localizedMessageTemplate.IsActive)
                 return 0;
-            //throw new NopException(string.Format("Message template ({0}-{1}) couldn't be loaded", TemplateName, LanguageId));
+
+            var emailAccount = localizedMessageTemplate.EmailAccount;
 
             string subject = ReplaceMessageTemplateTokens(giftCard, localizedMessageTemplate.Subject);
             string body = ReplaceMessageTemplateTokens(giftCard, localizedMessageTemplate.Body);
             string bcc = localizedMessageTemplate.BccEmailAddresses;
-            var from = new MailAddress(AdminEmailAddress, AdminEmailDisplayName);
+            var from = new MailAddress(emailAccount.Email, emailAccount.DisplayName);
             var to = new MailAddress(giftCard.RecipientEmail, giftCard.RecipientName);
-            var queuedEmail = InsertQueuedEmail(5, from, to, string.Empty, bcc, subject, body, DateTime.UtcNow, 0, null);
+            var queuedEmail = InsertQueuedEmail(5, from, to, string.Empty, bcc, subject, body,
+                DateTime.UtcNow, 0, null, emailAccount.EmailAccountId);
             return queuedEmail.QueuedEmailId;
         }
 
@@ -1436,10 +1642,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// <param name="body">Body</param>
         /// <param name="from">From</param>
         /// <param name="to">To</param>
-        public static void SendEmail(string subject, string body, string from, string to)
+        /// <param name="emailAccount">Email account to use</param>
+        public static void SendEmail(string subject, string body, string from, string to, EmailAccount emailAccount)
         {
             SendEmail(subject, body, new MailAddress(from), new MailAddress(to), 
-                new List<String>(), new List<String>());
+                new List<String>(), new List<String>(), emailAccount);
         }
 
         /// <summary>
@@ -1449,10 +1656,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// <param name="body">Body</param>
         /// <param name="from">From</param>
         /// <param name="to">To</param>
-        public static void SendEmail(string subject, string body, MailAddress from, 
-            MailAddress to)
+        /// <param name="emailAccount">Email account to use</param>
+        public static void SendEmail(string subject, string body, MailAddress from,
+            MailAddress to, EmailAccount emailAccount)
         {
-            SendEmail(subject, body, from, to, new List<String>(), new List<String>());
+            SendEmail(subject, body, from, to, new List<String>(), new List<String>(), emailAccount);
         }
 
         /// <summary>
@@ -1464,8 +1672,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// <param name="to">To</param>
         /// <param name="bcc">BCC</param>
         /// <param name="cc">CC</param>
-        public static void SendEmail(string subject, string body, 
-            MailAddress from, MailAddress to, List<string> bcc, List<string> cc)
+        /// <param name="emailAccount">Email account to use</param>
+        public static void SendEmail(string subject, string body,
+            MailAddress from, MailAddress to, List<string> bcc, List<string> cc, EmailAccount emailAccount)
         {
             var message = new MailMessage();
             message.From = from;
@@ -1497,14 +1706,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             message.IsBodyHtml = true;
 
             var smtpClient = new SmtpClient();
-            smtpClient.UseDefaultCredentials = AdminEmailUseDefaultCredentials;
-            smtpClient.Host = AdminEmailHost;
-            smtpClient.Port = AdminEmailPort;
-            smtpClient.EnableSsl = AdminEmailEnableSsl;
-            if (AdminEmailUseDefaultCredentials)
+            smtpClient.UseDefaultCredentials = emailAccount.UseDefaultCredentials;
+            smtpClient.Host = emailAccount.Host;
+            smtpClient.Port = emailAccount.Port;
+            smtpClient.EnableSsl = emailAccount.EnableSSL;
+            if (emailAccount.UseDefaultCredentials)
                 smtpClient.Credentials = CredentialCache.DefaultNetworkCredentials;
             else
-                smtpClient.Credentials = new NetworkCredential(AdminEmailUser, AdminEmailPassword);
+                smtpClient.Credentials = new NetworkCredential(emailAccount.Username, emailAccount.Password);
             smtpClient.Send(message);
         }
 
@@ -1613,7 +1822,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             var tokens = new NameValueCollection();
             tokens.Add("Store.Name", SettingManager.StoreName);
             tokens.Add("Store.URL", SettingManager.StoreUrl);
-            tokens.Add("Store.Email", AdminEmailAddress);
+            tokens.Add("Store.Email", MessageManager.DefaultEmailAccount.Email);
 
             tokens.Add("Order.OrderNumber", order.OrderId.ToString());
             
@@ -1689,7 +1898,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
 
             tokens.Add("Store.Name", SettingManager.StoreName);
             tokens.Add("Store.URL", SettingManager.StoreUrl);
-            tokens.Add("Store.Email", AdminEmailAddress);
+            tokens.Add("Store.Email", MessageManager.DefaultEmailAccount.Email);
             tokens.Add("NewsLetterSubscription.Email", HttpUtility.HtmlEncode(subscription.Email));
             tokens.Add("NewsLetterSubscription.ActivationUrl", String.Format("{0}newslettersubscriptionactivation.aspx?t={1}&active=1", SettingManager.StoreUrl, subscription.NewsLetterSubscriptionGuid));
             tokens.Add("NewsLetterSubscription.DeactivationUrl", String.Format("{0}newslettersubscriptionactivation.aspx?t={1}&active=0", SettingManager.StoreUrl, subscription.NewsLetterSubscriptionGuid));
@@ -1719,7 +1928,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             var tokens = new NameValueCollection();
             tokens.Add("Store.Name", SettingManager.StoreName);
             tokens.Add("Store.URL", SettingManager.StoreUrl);
-            tokens.Add("Store.Email", AdminEmailAddress);
+            tokens.Add("Store.Email", MessageManager.DefaultEmailAccount.Email);
 
             tokens.Add("Customer.Email", HttpUtility.HtmlEncode(customer.Email));
             tokens.Add("Customer.Username", HttpUtility.HtmlEncode(customer.Username));
@@ -1756,7 +1965,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             var tokens = new NameValueCollection();
             tokens.Add("Store.Name", SettingManager.StoreName);
             tokens.Add("Store.URL", SettingManager.StoreUrl);
-            tokens.Add("Store.Email", AdminEmailAddress);
+            tokens.Add("Store.Email", MessageManager.DefaultEmailAccount.Email);
 
             tokens.Add("Customer.Email", HttpUtility.HtmlEncode(customer.Email));
             tokens.Add("Customer.Username", HttpUtility.HtmlEncode(customer.Username));
@@ -1796,7 +2005,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             var tokens = new NameValueCollection();
             tokens.Add("Store.Name", SettingManager.StoreName);
             tokens.Add("Store.URL", SettingManager.StoreUrl);
-            tokens.Add("Store.Email", AdminEmailAddress);
+            tokens.Add("Store.Email", MessageManager.DefaultEmailAccount.Email);
 
             tokens.Add("Customer.Email", HttpUtility.HtmlEncode(customer.Email));
             tokens.Add("Customer.Username", HttpUtility.HtmlEncode(customer.Username));
@@ -1839,7 +2048,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             var tokens = new NameValueCollection();
             tokens.Add("Store.Name", SettingManager.StoreName);
             tokens.Add("Store.URL", SettingManager.StoreUrl);
-            tokens.Add("Store.Email", AdminEmailAddress);
+            tokens.Add("Store.Email", MessageManager.DefaultEmailAccount.Email);
 
             tokens.Add("ProductVariant.ID", productVariant.ProductVariantId.ToString());
             tokens.Add("ProductVariant.FullProductName", HttpUtility.HtmlEncode(productVariant.FullProductName));
@@ -1865,7 +2074,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             var tokens = new NameValueCollection();
             tokens.Add("Store.Name", SettingManager.StoreName);
             tokens.Add("Store.URL", SettingManager.StoreUrl);
-            tokens.Add("Store.Email", AdminEmailAddress);
+            tokens.Add("Store.Email", MessageManager.DefaultEmailAccount.Email);
 
             tokens.Add("NewsComment.NewsTitle", HttpUtility.HtmlEncode(newsComment.News.Title));
 
@@ -1889,7 +2098,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             var tokens = new NameValueCollection();
             tokens.Add("Store.Name", SettingManager.StoreName);
             tokens.Add("Store.URL", SettingManager.StoreUrl);
-            tokens.Add("Store.Email", AdminEmailAddress);
+            tokens.Add("Store.Email", MessageManager.DefaultEmailAccount.Email);
 
             tokens.Add("BlogComment.BlogPostTitle", HttpUtility.HtmlEncode(blogComment.BlogPost.BlogPostTitle));
 
@@ -1913,7 +2122,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             var tokens = new NameValueCollection();
             tokens.Add("Store.Name", SettingManager.StoreName);
             tokens.Add("Store.URL", SettingManager.StoreUrl);
-            tokens.Add("Store.Email", AdminEmailAddress);
+            tokens.Add("Store.Email", MessageManager.DefaultEmailAccount.Email);
 
             tokens.Add("ProductReview.ProductName", HttpUtility.HtmlEncode(productReview.Product.Name));
 
@@ -1936,7 +2145,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             var tokens = new NameValueCollection();
             tokens.Add("Store.Name", SettingManager.StoreName);
             tokens.Add("Store.URL", SettingManager.StoreUrl);
-            tokens.Add("Store.Email", AdminEmailAddress);
+            tokens.Add("Store.Email", MessageManager.DefaultEmailAccount.Email);
 
             tokens.Add("GiftCard.SenderName", HttpUtility.HtmlEncode(giftCard.SenderName));
             tokens.Add("GiftCard.SenderEmail", HttpUtility.HtmlEncode(giftCard.SenderEmail));
@@ -1973,123 +2182,25 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         #endregion
 
         #region Properties
-        /// <summary>
-        /// Gets or sets an admin email address
-        /// </summary>
-        public static string AdminEmailAddress
-        {
-            get
-            {
-                return SettingManager.GetSettingValue("Email.AdminEmailAddress");
-            }
-            set
-            {
-                SettingManager.SetParam("Email.AdminEmailAddress", value.Trim());
-            }
-        }
 
         /// <summary>
-        /// Gets or sets an admin email display name
+        /// Gets or sets a primary store currency
         /// </summary>
-        public static string AdminEmailDisplayName
+        public static EmailAccount DefaultEmailAccount
         {
             get
             {
-                return SettingManager.GetSettingValue("Email.AdminEmailDisplayName");
-            }
-            set
-            {
-                SettingManager.SetParam("Email.AdminEmailDisplayName", value.Trim());
-            }
-        }
+                int defaultEmailAccountId = SettingManager.GetSettingValueInteger("EmailAccount.DefaultEmailAccountId");
+                var emailAccount = GetEmailAccountById(defaultEmailAccountId);
+                if (emailAccount == null)
+                    emailAccount = GetAllEmailAccounts().FirstOrDefault();
 
-        /// <summary>
-        /// Gets or sets an admin email host
-        /// </summary>
-        public static string AdminEmailHost
-        {
-            get
-            {
-                return SettingManager.GetSettingValue("Email.AdminEmailHost");
+                return emailAccount;
             }
             set
             {
-                SettingManager.SetParam("Email.AdminEmailHost", value.Trim());
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets an admin email port
-        /// </summary>
-        public static int AdminEmailPort
-        {
-            get
-            {
-                return SettingManager.GetSettingValueInteger("Email.AdminEmailPort");
-            }
-            set
-            {
-                SettingManager.SetParam("Email.AdminEmailPort", value.ToString());
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets an admin email user name
-        /// </summary>
-        public static string AdminEmailUser
-        {
-            get
-            {
-                return SettingManager.GetSettingValue("Email.AdminEmailUser");
-            }
-            set
-            {
-                SettingManager.SetParam("Email.AdminEmailUser", value.Trim());
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets an admin email password
-        /// </summary>
-        public static string AdminEmailPassword
-        {
-            get
-            {
-                return SettingManager.GetSettingValue("Email.AdminEmailPassword");
-            }
-            set
-            {
-                SettingManager.SetParam("Email.AdminEmailPassword", value);
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets a value that controls whether the default system credentials of the application are sent with requests.
-        /// </summary>
-        public static bool AdminEmailUseDefaultCredentials
-        {
-            get
-            {
-                return SettingManager.GetSettingValueBoolean("Email.AdminEmailUseDefaultCredentials");
-            }
-            set
-            {
-                SettingManager.SetParam("Email.AdminEmailUseDefaultCredentials", value.ToString());
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets a value that controls whether the SmtpClient uses Secure Sockets Layer (SSL) to encrypt the connection
-        /// </summary>
-        public static bool AdminEmailEnableSsl
-        {
-            get
-            {
-                return SettingManager.GetSettingValueBoolean("Email.AdminEmailEnableSsl");
-            }
-            set
-            {
-                SettingManager.SetParam("Email.AdminEmailEnableSsl", value.ToString());
+                if (value != null)
+                    SettingManager.SetParam("EmailAccount.DefaultEmailAccountId", value.EmailAccountId.ToString());
             }
         }
 

@@ -379,12 +379,61 @@
     <Compile Include="Administration\BulkEditProducts.aspx.designer.cs">
       <DependentUpon>BulkEditProducts.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Administration\EmailAccountAdd.aspx.cs">
+      <DependentUpon>EmailAccountAdd.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Administration\EmailAccountAdd.aspx.designer.cs">
+      <DependentUpon>EmailAccountAdd.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Administration\EmailAccountDetails.aspx.cs">
+      <DependentUpon>EmailAccountDetails.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Administration\EmailAccountDetails.aspx.designer.cs">
+      <DependentUpon>EmailAccountDetails.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Administration\EmailAccounts.aspx.cs">
+      <DependentUpon>EmailAccounts.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Administration\EmailAccounts.aspx.designer.cs">
+      <DependentUpon>EmailAccounts.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Administration\CrossSellProductAdd.aspx.cs">
       <DependentUpon>CrossSellProductAdd.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Administration\CrossSellProductAdd.aspx.designer.cs">
       <DependentUpon>CrossSellProductAdd.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Administration\Modules\EmailAccounts.ascx.cs">
+      <DependentUpon>EmailAccounts.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Administration\Modules\EmailAccounts.ascx.designer.cs">
+      <DependentUpon>EmailAccounts.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Administration\Modules\EmailAccountAdd.ascx.cs">
+      <DependentUpon>EmailAccountAdd.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Administration\Modules\EmailAccountAdd.ascx.designer.cs">
+      <DependentUpon>EmailAccountAdd.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Administration\Modules\EmailAccountDetails.ascx.cs">
+      <DependentUpon>EmailAccountDetails.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Administration\Modules\EmailAccountDetails.ascx.designer.cs">
+      <DependentUpon>EmailAccountDetails.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Administration\Modules\EmailAccountInfo.ascx.cs">
+      <DependentUpon>EmailAccountInfo.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Administration\Modules\EmailAccountInfo.ascx.designer.cs">
+      <DependentUpon>EmailAccountInfo.ascx</DependentUpon>
     </Compile>
     <Compile Include="Administration\Modules\CrossSellProductAdd.ascx.cs">
       <DependentUpon>CrossSellProductAdd.ascx</DependentUpon>
@@ -5791,7 +5840,14 @@
     <Content Include="Administration\CategoryTemplateAdd.aspx" />
     <Content Include="Administration\CategoryTemplateDetails.aspx" />
     <Content Include="Administration\CategoryTemplates.aspx" />
+    <Content Include="Administration\EmailAccountAdd.aspx" />
+    <Content Include="Administration\EmailAccountDetails.aspx" />
+    <Content Include="Administration\EmailAccounts.aspx" />
     <Content Include="Administration\CrossSellProductAdd.aspx" />
+    <Content Include="Administration\Modules\EmailAccounts.ascx" />
+    <Content Include="Administration\Modules\EmailAccountAdd.ascx" />
+    <Content Include="Administration\Modules\EmailAccountDetails.ascx" />
+    <Content Include="Administration\Modules\EmailAccountInfo.ascx" />
     <Content Include="Administration\Modules\CrossSellProductAdd.ascx" />
     <Content Include="Administration\Modules\CrossSellProducts.ascx" />
     <Content Include="Administration\Modules\CustomerPlaceOrder.ascx" />

@@ -139,6 +139,15 @@
             <asp:Label ID="lblSentOn" runat="server"></asp:Label>
         </td>
     </tr>
+    <tr>
+        <td class="adminTitle">
+            <nopCommerce:ToolTipLabel runat="server" ID="lblEmailAccountTitle" Text="<% $NopResources:Admin.MessageQueueDetails.EmailAccount %>"
+                ToolTip="<% $NopResources:Admin.MessageQueueDetails.EmailAccount.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
+        </td>
+        <td class="adminData">
+            <asp:Label ID="lblEmailAccount" runat="server"></asp:Label>
+        </td>
+    </tr>
 </table>
 <nopCommerce:ConfirmationBox runat="server" ID="cbDelete" TargetControlID="DeleteButton"
     YesText="<% $NopResources:Admin.Common.Yes %>" NoText="<% $NopResources:Admin.Common.No %>"

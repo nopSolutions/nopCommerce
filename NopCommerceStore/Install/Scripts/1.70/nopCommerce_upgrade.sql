@@ -7391,3 +7391,14 @@ UPDATE [dbo].[Nop_Setting]
 SET [Value]='1.70'
 WHERE [Name]='Common.CurrentVersion'
 GO
+
+
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[Nop_CustomerAction]
+		WHERE [SystemKeyword] = N'ManageEmailSettings')
+BEGIN
+	INSERT [dbo].[Nop_CustomerAction] ([Name], [SystemKeyword], [Comment], [DisplayOrder])
+	VALUES (N'Manage Email Settings', N'ManageEmailSettings', N'',205)
+END
+GO

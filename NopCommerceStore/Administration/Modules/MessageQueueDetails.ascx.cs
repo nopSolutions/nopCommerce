@@ -49,6 +49,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 this.lblCreatedOn.Text = DateTimeHelper.ConvertToUserTime(queuedEmail.CreatedOn, DateTimeKind.Utc).ToString();
                 this.txtSendTries.Value = queuedEmail.SendTries;
                 this.lblSentOn.Text = GetSentOnInfo(queuedEmail);
+                this.lblEmailAccount.Text = Server.HtmlEncode(queuedEmail.EmailAccount.FriendlyName);
             }
             else
                 Response.Redirect("MessageQueue.aspx");
@@ -75,7 +76,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                             txtFrom.Text, txtFromName.Text,
                             txtTo.Text, txtToName.Text, txtCc.Text, txtBcc.Text,
                             txtSubject.Text, txtBody.Content, DateTime.UtcNow,
-                            0, null);
+                            0, null, queuedEmail.EmailAccountId);
                         Response.Redirect("MessageQueueDetails.aspx?QueuedEmailID=" + requeuedEmail.QueuedEmailId.ToString());
                     }
                     else
@@ -101,7 +102,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                            txtPriority.Value, txtFrom.Text, txtFromName.Text,
                            txtTo.Text, txtToName.Text, txtCc.Text, txtBcc.Text,
                            txtSubject.Text, txtBody.Content, queuedEmail.CreatedOn,
-                           txtSendTries.Value, queuedEmail.SentOn);
+                           txtSendTries.Value, queuedEmail.SentOn, queuedEmail.EmailAccountId);
                         Response.Redirect("MessageQueueDetails.aspx?QueuedEmailID=" + queuedEmail.QueuedEmailId.ToString());
                     }
                     else

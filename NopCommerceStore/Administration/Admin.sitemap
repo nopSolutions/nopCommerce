@@ -89,6 +89,7 @@
     <!-- Configuration -->
     <siteMapNode title="Configuration" url="~/administration/configurationhome.aspx" IconUrl="~/administration/common/ico-configuration.png" description="Configuration Home" nopResourceTitle="Admin.Sitemap.ConfigurationTitle" nopResourceDescription="Admin.Sitemap.ConfigurationDescription" >
       <siteMapNode title="Global Settings" url="~/administration/globalsettings.aspx" description="Configure Global Settings" nopResourceTitle="Admin.Sitemap.GlobalSettingsTitle" nopResourceDescription="Admin.Sitemap.GlobalSettingsDescription" />
+      <siteMapNode title="Email Accounts" url="~/administration/emailaccounts.aspx" description="Configure Email Accounts" nopResourceTitle="Admin.Sitemap.EmailAccountsTitle" nopResourceDescription="Admin.Sitemap.EmailAccountsDescription" />
       <siteMapNode title="Blacklist" url="~/administration/blacklist.aspx" description="Manage banned IP addresses and networks" nopResourceTitle="Admin.Sitemap.BlacklistTitle" nopResourceDescription="Admin.Sitemap.BlacklistDescription" />
       <siteMapNode title="Payment" url="~/administration/paymentsettingshome.aspx" description="Payment Settings Home" nopResourceTitle="Admin.Sitemap.PaymentSettingsHomeTitle" nopResourceDescription="Admin.Sitemap.PaymentSettingsHomeDescription" >
         <siteMapNode title="Credit Cards" url="~/administration/creditcardtypes.aspx" description="Manage Credit Cards" nopResourceTitle="Admin.Sitemap.CreditCardTypesTitle" nopResourceDescription="Admin.Sitemap.CreditCardTypesDescription" />

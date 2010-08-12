@@ -67,15 +67,17 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     string body = MessageManager.FormatContactUsFormText(txtEnquiry.Text);
 
                     var from = new MailAddress(email, fullName);
-
+                    
+                    var emailAccount = MessageManager.DefaultEmailAccount;
                     //required for some SMTP servers
                     if (SettingManager.GetSettingValueBoolean("Email.UseSystemEmailForContactUsForm"))
                     {
-                        from = new MailAddress(MessageManager.AdminEmailAddress, MessageManager.AdminEmailDisplayName);
+                        from = new MailAddress(emailAccount.Email, emailAccount.DisplayName);
                         body = string.Format("<b>From</b>: {0} - {1}<br /><br />{2}", Server.HtmlEncode(fullName), Server.HtmlEncode(email), body);
                     }
-                    var to = new MailAddress(MessageManager.AdminEmailAddress, MessageManager.AdminEmailDisplayName);
-                    MessageManager.InsertQueuedEmail(5, from, to, string.Empty, string.Empty, subject, body, DateTime.UtcNow, 0, null);
+                    var to = new MailAddress(emailAccount.Email, emailAccount.DisplayName);
+                    MessageManager.InsertQueuedEmail(5, from, to, string.Empty, string.Empty, subject, body,
+                        DateTime.UtcNow, 0, null, emailAccount.EmailAccountId);
 
                     pnlResult.Visible = true;
                     pnlContactUs.Visible = false;

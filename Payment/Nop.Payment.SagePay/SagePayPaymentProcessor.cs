@@ -113,7 +113,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.SagePay
             // ** Pass the Customer's name for use within confirmation emails and the Sage Pay Admin area.
             cryptBuilder.AppendFormat("&CustomerName={0} {1}", order.BillingFirstName, order.BillingLastName);
             cryptBuilder.AppendFormat("&CustomerEMail={0}", order.BillingEmail);
-            cryptBuilder.AppendFormat("&VendorEMail={0}", MessageManager.AdminEmailAddress);
+            cryptBuilder.AppendFormat("&VendorEMail={0}", MessageManager.DefaultEmailAccount.Email);
 
             // SendEMail ** Optional setting. 0 = Do not send either customer or vendor e-mails, 1 = Send customer and vendor e-mails if address(es) are provided(DEFAULT). 
             cryptBuilder.AppendFormat("&SendEMail={0}", sendEmails ? "1" : "0");
