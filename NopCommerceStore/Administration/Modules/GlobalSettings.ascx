@@ -787,6 +787,19 @@
             <ContentTemplate>
                 <table class="adminContent">
                     <tr>
+                        <td class="adminTitle" colspan="2">
+                            Follow the next steps to enable Google Analytics integration:
+                            <ul>
+                                <li><a href="http://www.google.com/analytics/" target="_blank">Create a Google Analytics
+                                    account</a> and follow the wizard to add your website</li>
+                                <li>Copy the Google Analytics ID into the 'ID' box below</li>
+                                <li>Copy the tracking code from Google Analytics into the 'Tracking Code' box below</li>
+                                <li>Click the 'Save' button below and Google Analytics will be integrated into your
+                                    store</li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr>
                         <td class="adminTitle">
                             <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
                                 ID="lblGoogleAnalyticsEnabled" Text="<% $NopResources:Admin.GlobalSettings.GoogleAnalytics.Enabled %>"
