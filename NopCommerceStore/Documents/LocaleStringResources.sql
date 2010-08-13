@@ -2129,6 +2129,336 @@ set @resources='
   <LocaleResource Name="Admin.Orders.OrderGuid.Tooltip">
     <Value>Search by order GUID (Global unique identifier) or part of GUID. Leave empty to load all orders.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.General.TermsOfService">
+    <Value>Terms of service:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.Title">
+    <Value>Products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.HidePricesForNonRegistered">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.HidePricesForNonRegistered.Tooltip">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.ShowSKU">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.ShowSKU.Tooltip">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.DisplayCartAfterAddingProduct">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.DisplayCartAfterAddingProduct.Tooltip">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.EnableDynamicPriceUpdate">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.EnableDynamicPriceUpdate.Tooltip">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.AllowProductSorting">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.AllowProductSorting.Tooltip">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.ShowShareButton">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.ShowShareButton.Tooltip">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.DownloadableProductsTab">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.DownloadableProductsTab.Tooltip">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.CompareProducts">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.CompareProducts.Tooltip">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.WishList">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.WishList.Tooltip">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.NotifyNewProductReviews">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.NotifyNewProductReviews.Tooltip">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.ProductReviewsMustBeApproved">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.ProductReviewsMustBeApproved.Tooltip">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.AllowAnonymousUsersToReviewProduct">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.AllowAnonymousUsersToReviewProduct.Tooltip">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.AllowAnonymousUsersToSetProductRatings">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.AllowAnonymousUsersToSetProductRatings.Tooltip">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.RecentlyViewedProducts">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.RecentlyViewedProducts.Tooltip">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.RecentlyViewedProductsNumber">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.RecentlyViewedProductsNumber.Tooltip">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.RecentlyViewedProductsNumber.RequiredErrorMessage">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.RecentlyViewedProductsNumber.RangeErrorMessage">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.RecentlyAddedProducts">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.RecentlyAddedProducts.Tooltip">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.RecentlyAddedProductsNumber">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.RecentlyAddedProductsNumber.Tooltip">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.RecentlyAddedProductsNumber.RequiredErrorMessage">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.RecentlyAddedProductsNumber.RangeErrorMessage">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.ShowBestsellersOnHomePage">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.ShowBestsellersOnHomePage.Tooltip">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.ShowBestsellersOnHomePageNumber">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.ShowBestsellersOnHomePageNumber.Tooltip">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.ShowBestsellersOnHomePageNumber.RequiredErrorMessage">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.ShowBestsellersOnHomePageNumber.RangeErrorMessage">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.AlsoPurchased">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.AlsoPurchased.Tooltip">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.AlsoPurchasedNumber">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.AlsoPurchasedNumber.Tooltip">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.AlsoPurchasedNumber.RequiredErrorMessage">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.AlsoPurchasedNumber.RangeErrorMessage">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.CrossSellsNumber">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.CrossSellsNumber.Tooltip">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.CrossSellsNumber.RequiredErrorMessage">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.CrossSellsNumber.RangeErrorMessage">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.HidePricesForNonRegistered">
+    <Value>Hide prices for non-registered customers:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.HidePricesForNonRegistered.Tooltip">
+    <Value>Check to disable product prices for all non-registered customers so that anyone browsing the site cant see prices. And ''Add to cart''/''Add to wishlist'' buttons will be hidden.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.ShowSKU">
+    <Value>Show SKU:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.ShowSKU.Tooltip">
+    <Value>Check to show product SKU in public store.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.DisplayCartAfterAddingProduct">
+    <Value>Display cart after adding product:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.DisplayCartAfterAddingProduct.Tooltip">
+    <Value>If checked a customer will be taken to the Shopping Cart page immediately after adding a product to their cart. If unchecked a customer will stay on the same page that they are adding the product to the cart from.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.EnableDynamicPriceUpdate">
+    <Value>Enable dynamic price update:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.EnableDynamicPriceUpdate.Tooltip">
+    <Value>Check if you want to enable dynamic price update on product details page in case a product has product attributes with price adjustments.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.AllowProductSorting">
+    <Value>Allow product sorting:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.AllowProductSorting.Tooltip">
+    <Value>Check to enable product sorting option on category/manufacturer details page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.ShowShareButton">
+    <Value>Show a share button:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.ShowShareButton.Tooltip">
+    <Value>Displays a button from AddThis.com on your product pages that allows customers to share your product with various bookmarking social services</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.DownloadableProductsTab">
+    <Value>Show "Downloadable products" tab:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.DownloadableProductsTab.Tooltip">
+    <Value>Check to show "Downloadable products tab" on My Account page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.CompareProducts">
+    <Value>''Compare Products'' enabled:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.CompareProducts.Tooltip">
+    <Value>Check to allow customers to use the ''Compare Products'' option in your store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.WishList">
+    <Value>''Wishlist'' Enabled:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.WishList.Tooltip">
+    <Value>Check to enable customer wishlists in your store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.NotifyNewProductReviews">
+    <Value>Notify about new product reviews:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.NotifyNewProductReviews.Tooltip">
+    <Value>Check to notify store owner about new product reviews.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.ProductReviewsMustBeApproved">
+    <Value>Product reviews must be approved:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.ProductReviewsMustBeApproved.Tooltip">
+    <Value>Check if product reviews must be approved by administrator.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.AllowAnonymousUsersToReviewProduct">
+    <Value>Allow anonymous users to write product reviews:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.AllowAnonymousUsersToReviewProduct.Tooltip">
+    <Value>Check to allow anonymous users to write product reviews.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.AllowAnonymousUsersToSetProductRatings">
+    <Value>Allow anonymous users to set product ratings:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.AllowAnonymousUsersToSetProductRatings.Tooltip">
+    <Value>Check to allow anonymous users to set product ratings.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.RecentlyViewedProducts">
+    <Value>''Recently viewed products'' enabled:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.RecentlyViewedProducts.Tooltip">
+    <Value>Check to allow customers to use the ''Recently viewed products'' feature in your store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.RecentlyViewedProductsNumber">
+    <Value>Number of ''Recently viewed products'':</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.RecentlyViewedProductsNumber.Tooltip">
+    <Value>The number of ''Recently viewed products'' to display when ''Recently viewed products'' option is enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.RecentlyViewedProductsNumber.RequiredErrorMessage">
+    <Value>Enter a number of ''Recently viewed products'' to display</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.RecentlyViewedProductsNumber.RangeErrorMessage">
+    <Value>The value must be from 1 to 999999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.RecentlyAddedProducts">
+    <Value>''Recently added products'' enabled:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.RecentlyAddedProducts.Tooltip">
+    <Value>Check to allow customers to use the ''Recently added products'' feature in your store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.RecentlyAddedProductsNumber">
+    <Value>Number of ''Recently added products'':</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.RecentlyAddedProductsNumber.Tooltip">
+    <Value>The number of ''Recently added products'' to display when ''Recently added products'' option is enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.RecentlyAddedProductsNumber.RequiredErrorMessage">
+    <Value>Enter a number of ''Recently added products'' to display</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.RecentlyAddedProductsNumber.RangeErrorMessage">
+    <Value>The value must be from 1 to 999999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.ShowBestsellersOnHomePage">
+    <Value>Show best sellers on home page:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.ShowBestsellersOnHomePage.Tooltip">
+    <Value>Check to show best sellers on home page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.ShowBestsellersOnHomePageNumber">
+    <Value>Number of best sellers on home page:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.ShowBestsellersOnHomePageNumber.Tooltip">
+    <Value>The number of best sellers on home page to display when ''Show best sellers on home page'' option is enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.ShowBestsellersOnHomePageNumber.RequiredErrorMessage">
+    <Value>Enter a number of best sellers on home page to display</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.ShowBestsellersOnHomePageNumber.RangeErrorMessage">
+    <Value>The value must be from 1 to 999999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.AlsoPurchased">
+    <Value>''Products also purchased'' enabled:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.AlsoPurchased.Tooltip">
+    <Value>Check to allow customers to view a list of products purchased by other customers who purchased the above</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.AlsoPurchasedNumber">
+    <Value>Number of also purchased products to display:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.AlsoPurchasedNumber.Tooltip">
+    <Value>The number of products also purchased by other customers to display when ''Products also purchased'' option is enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.AlsoPurchasedNumber.RequiredErrorMessage">
+    <Value>Enter a number of products also purchased by other customers to display</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.AlsoPurchasedNumber.RangeErrorMessage">
+    <Value>The value must be from 0 to 999999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.CrossSellsNumber">
+    <Value>Number of ''Cross-Sells'':</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.CrossSellsNumber.Tooltip">
+    <Value>The number of ''Cross-Sells'' to display on shopping cart page; 0 if you don''t want to load cross-sells</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.CrossSellsNumber.RequiredErrorMessage">
+    <Value>Number of ''Cross-Sells'' is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.CrossSellsNumber.RangeErrorMessage">
+    <Value>The number of ''Cross-Sells'' must be from 0 to 999999.</Value>
+  </LocaleResource>
 </Language>
 '
 

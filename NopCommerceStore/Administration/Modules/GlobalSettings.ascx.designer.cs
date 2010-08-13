@@ -148,6 +148,942 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         protected global::System.Web.UI.WebControls.CheckBox cbCheckoutTermsOfService;
         
         /// <summary>
+        /// pnlProducts control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::AjaxControlToolkit.TabPanel pnlProducts;
+        
+        /// <summary>
+        /// lblHidePricesForNonRegistered control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblHidePricesForNonRegistered;
+        
+        /// <summary>
+        /// cbHidePricesForNonRegistered control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbHidePricesForNonRegistered;
+        
+        /// <summary>
+        /// lblShowSKU control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblShowSKU;
+        
+        /// <summary>
+        /// cbShowSKU control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbShowSKU;
+        
+        /// <summary>
+        /// lblDisplayCartAfterAddingProduct control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblDisplayCartAfterAddingProduct;
+        
+        /// <summary>
+        /// cbDisplayCartAfterAddingProduct control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbDisplayCartAfterAddingProduct;
+        
+        /// <summary>
+        /// lblEnableDynamicPriceUpdate control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblEnableDynamicPriceUpdate;
+        
+        /// <summary>
+        /// cbEnableDynamicPriceUpdate control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbEnableDynamicPriceUpdate;
+        
+        /// <summary>
+        /// lblAllowProductSorting control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblAllowProductSorting;
+        
+        /// <summary>
+        /// cbAllowProductSorting control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbAllowProductSorting;
+        
+        /// <summary>
+        /// lblShowShareButton control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblShowShareButton;
+        
+        /// <summary>
+        /// cbShowShareButton control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbShowShareButton;
+        
+        /// <summary>
+        /// lblDownloadableProductsTab control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblDownloadableProductsTab;
+        
+        /// <summary>
+        /// cbDownloadableProductsTab control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbDownloadableProductsTab;
+        
+        /// <summary>
+        /// lblCompareProducts control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblCompareProducts;
+        
+        /// <summary>
+        /// cbEnableCompareProducts control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbEnableCompareProducts;
+        
+        /// <summary>
+        /// lblWishList control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblWishList;
+        
+        /// <summary>
+        /// cbEnableWishlist control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbEnableWishlist;
+        
+        /// <summary>
+        /// lblNotifyAboutNewProductReviews control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblNotifyAboutNewProductReviews;
+        
+        /// <summary>
+        /// cbNotifyAboutNewProductReviews control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbNotifyAboutNewProductReviews;
+        
+        /// <summary>
+        /// lblProductReviewsMustBeApproved control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblProductReviewsMustBeApproved;
+        
+        /// <summary>
+        /// cbProductReviewsMustBeApproved control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbProductReviewsMustBeApproved;
+        
+        /// <summary>
+        /// lblAllowAnonymousUsersToReviewProduct control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblAllowAnonymousUsersToReviewProduct;
+        
+        /// <summary>
+        /// cbAllowAnonymousUsersToReviewProduct control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbAllowAnonymousUsersToReviewProduct;
+        
+        /// <summary>
+        /// lblAllowAnonymousUsersToSetProductRatings control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblAllowAnonymousUsersToSetProductRatings;
+        
+        /// <summary>
+        /// cbAllowAnonymousUsersToSetProductRatings control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbAllowAnonymousUsersToSetProductRatings;
+        
+        /// <summary>
+        /// lblRecentlyViewedProductsEnabled control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblRecentlyViewedProductsEnabled;
+        
+        /// <summary>
+        /// cbRecentlyViewedProductsEnabled control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbRecentlyViewedProductsEnabled;
+        
+        /// <summary>
+        /// lblRecentlyViewedProductsNumber control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblRecentlyViewedProductsNumber;
+        
+        /// <summary>
+        /// txtRecentlyViewedProductsNumber control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.NumericTextBox txtRecentlyViewedProductsNumber;
+        
+        /// <summary>
+        /// lblRecentlyAddedProductsEnabled control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblRecentlyAddedProductsEnabled;
+        
+        /// <summary>
+        /// cbRecentlyAddedProductsEnabled control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbRecentlyAddedProductsEnabled;
+        
+        /// <summary>
+        /// lblRecentlyAddedProductsNumber control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblRecentlyAddedProductsNumber;
+        
+        /// <summary>
+        /// txtRecentlyAddedProductsNumber control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.NumericTextBox txtRecentlyAddedProductsNumber;
+        
+        /// <summary>
+        /// lblShowBestsellersOnHomePage control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblShowBestsellersOnHomePage;
+        
+        /// <summary>
+        /// cbShowBestsellersOnHomePage control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbShowBestsellersOnHomePage;
+        
+        /// <summary>
+        /// lblShowBestsellersOnHomePageNumber control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblShowBestsellersOnHomePageNumber;
+        
+        /// <summary>
+        /// txtShowBestsellersOnHomePageNumber control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.NumericTextBox txtShowBestsellersOnHomePageNumber;
+        
+        /// <summary>
+        /// lblProductsAlsoPurchased control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblProductsAlsoPurchased;
+        
+        /// <summary>
+        /// cbProductsAlsoPurchased control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbProductsAlsoPurchased;
+        
+        /// <summary>
+        /// lblProductsAlsoPurchasedNumber control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblProductsAlsoPurchasedNumber;
+        
+        /// <summary>
+        /// txtProductsAlsoPurchasedNumber control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.NumericTextBox txtProductsAlsoPurchasedNumber;
+        
+        /// <summary>
+        /// lblCrossSellsNumber control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblCrossSellsNumber;
+        
+        /// <summary>
+        /// txtCrossSellsNumber control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.NumericTextBox txtCrossSellsNumber;
+        
+        /// <summary>
+        /// pnlCustomerProfiles control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::AjaxControlToolkit.TabPanel pnlCustomerProfiles;
+        
+        /// <summary>
+        /// lblCustomerNameFormat control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblCustomerNameFormat;
+        
+        /// <summary>
+        /// ddlCustomerNameFormat control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlCustomerNameFormat;
+        
+        /// <summary>
+        /// lblCustomersAllowedToUploadAvatars control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblCustomersAllowedToUploadAvatars;
+        
+        /// <summary>
+        /// cbCustomersAllowedToUploadAvatars control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbCustomersAllowedToUploadAvatars;
+        
+        /// <summary>
+        /// lblDefaultAvatarEnabled control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblDefaultAvatarEnabled;
+        
+        /// <summary>
+        /// cbDefaultAvatarEnabled control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbDefaultAvatarEnabled;
+        
+        /// <summary>
+        /// lblAllowViewingProfiles control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblAllowViewingProfiles;
+        
+        /// <summary>
+        /// cbAllowViewingProfiles control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbAllowViewingProfiles;
+        
+        /// <summary>
+        /// lblShowCustomersLocation control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblShowCustomersLocation;
+        
+        /// <summary>
+        /// cbShowCustomersLocation control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbShowCustomersLocation;
+        
+        /// <summary>
+        /// lblShowCustomersJoinDate control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblShowCustomersJoinDate;
+        
+        /// <summary>
+        /// cbShowCustomersJoinDate control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbShowCustomersJoinDate;
+        
+        /// <summary>
+        /// lblAllowPM control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblAllowPM;
+        
+        /// <summary>
+        /// cbAllowPM control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbAllowPM;
+        
+        /// <summary>
+        /// lblAllowCustomersToSetTimeZone control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblAllowCustomersToSetTimeZone;
+        
+        /// <summary>
+        /// cbAllowCustomersToSetTimeZone control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbAllowCustomersToSetTimeZone;
+        
+        /// <summary>
+        /// lblCurrentTimeZoneInfo control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblCurrentTimeZoneInfo;
+        
+        /// <summary>
+        /// lblCurrentTimeZone control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblCurrentTimeZone;
+        
+        /// <summary>
+        /// lblDefaultStoreTimeZone control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblDefaultStoreTimeZone;
+        
+        /// <summary>
+        /// ddlDefaultStoreTimeZone control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlDefaultStoreTimeZone;
+        
+        /// <summary>
+        /// lblffGenderEnabled control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblffGenderEnabled;
+        
+        /// <summary>
+        /// cbffGenderEnabled control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbffGenderEnabled;
+        
+        /// <summary>
+        /// lblffDateOfBirthEnabled control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblffDateOfBirthEnabled;
+        
+        /// <summary>
+        /// cbffDateOfBirthEnabled control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbffDateOfBirthEnabled;
+        
+        /// <summary>
+        /// lblffCompanyEnabled control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblffCompanyEnabled;
+        
+        /// <summary>
+        /// cbffCompanyEnabled control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbffCompanyEnabled;
+        
+        /// <summary>
+        /// lblffCompanyRequired control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblffCompanyRequired;
+        
+        /// <summary>
+        /// cbffCompanyRequired control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbffCompanyRequired;
+        
+        /// <summary>
+        /// lblffStreetAddressEnabled control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblffStreetAddressEnabled;
+        
+        /// <summary>
+        /// cbffStreetAddressEnabled control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbffStreetAddressEnabled;
+        
+        /// <summary>
+        /// lblffStreetAddressRequired control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblffStreetAddressRequired;
+        
+        /// <summary>
+        /// cbffStreetAddressRequired control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbffStreetAddressRequired;
+        
+        /// <summary>
+        /// lblffStreetAddress2Enabled control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblffStreetAddress2Enabled;
+        
+        /// <summary>
+        /// cbffStreetAddress2Enabled control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbffStreetAddress2Enabled;
+        
+        /// <summary>
+        /// lblffStreetAddress2Required control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblffStreetAddress2Required;
+        
+        /// <summary>
+        /// cbffStreetAddress2Required control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbffStreetAddress2Required;
+        
+        /// <summary>
+        /// lblffPostCodeEnabled control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblffPostCodeEnabled;
+        
+        /// <summary>
+        /// cbffPostCodeEnabled control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbffPostCodeEnabled;
+        
+        /// <summary>
+        /// lblffPostCodeRequired control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblffPostCodeRequired;
+        
+        /// <summary>
+        /// cbffPostCodeRequired control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbffPostCodeRequired;
+        
+        /// <summary>
+        /// lblffCityEnabled control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblffCityEnabled;
+        
+        /// <summary>
+        /// cbffCityEnabled control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbffCityEnabled;
+        
+        /// <summary>
+        /// lblffCityRequired control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblffCityRequired;
+        
+        /// <summary>
+        /// cbffCityRequired control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbffCityRequired;
+        
+        /// <summary>
+        /// lblffCountryEnabled control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblffCountryEnabled;
+        
+        /// <summary>
+        /// cbffCountryEnabled control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbffCountryEnabled;
+        
+        /// <summary>
+        /// lblffStateEnabled control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblffStateEnabled;
+        
+        /// <summary>
+        /// cbffStateEnabled control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbffStateEnabled;
+        
+        /// <summary>
+        /// lblffPhoneEnabled control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblffPhoneEnabled;
+        
+        /// <summary>
+        /// cbffPhoneEnabled control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbffPhoneEnabled;
+        
+        /// <summary>
+        /// lblffPhoneRequired control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblffPhoneRequired;
+        
+        /// <summary>
+        /// cbffPhoneRequired control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbffPhoneRequired;
+        
+        /// <summary>
+        /// lblffFaxEnabled control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblffFaxEnabled;
+        
+        /// <summary>
+        /// cbffFaxEnabled control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbffFaxEnabled;
+        
+        /// <summary>
+        /// lblffFaxRequired control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblffFaxRequired;
+        
+        /// <summary>
+        /// cbffFaxRequired control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbffFaxRequired;
+        
+        /// <summary>
+        /// lblffNewsletterBoxEnabled control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblffNewsletterBoxEnabled;
+        
+        /// <summary>
+        /// cbffNewsletterBoxEnabled control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbffNewsletterBoxEnabled;
+        
+        /// <summary>
         /// pnlSEODisplay control.
         /// </summary>
         /// <remarks>
@@ -1237,537 +2173,6 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         protected global::System.Web.UI.WebControls.CheckBox cbEnableRegisterCaptchaImage;
         
         /// <summary>
-        /// pnlCustomerProfiles control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::AjaxControlToolkit.TabPanel pnlCustomerProfiles;
-        
-        /// <summary>
-        /// lblCustomerNameFormat control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblCustomerNameFormat;
-        
-        /// <summary>
-        /// ddlCustomerNameFormat control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlCustomerNameFormat;
-        
-        /// <summary>
-        /// lblCustomersAllowedToUploadAvatars control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblCustomersAllowedToUploadAvatars;
-        
-        /// <summary>
-        /// cbCustomersAllowedToUploadAvatars control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox cbCustomersAllowedToUploadAvatars;
-        
-        /// <summary>
-        /// lblDefaultAvatarEnabled control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblDefaultAvatarEnabled;
-        
-        /// <summary>
-        /// cbDefaultAvatarEnabled control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox cbDefaultAvatarEnabled;
-        
-        /// <summary>
-        /// lblAllowViewingProfiles control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblAllowViewingProfiles;
-        
-        /// <summary>
-        /// cbAllowViewingProfiles control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox cbAllowViewingProfiles;
-        
-        /// <summary>
-        /// lblShowCustomersLocation control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblShowCustomersLocation;
-        
-        /// <summary>
-        /// cbShowCustomersLocation control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox cbShowCustomersLocation;
-        
-        /// <summary>
-        /// lblShowCustomersJoinDate control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblShowCustomersJoinDate;
-        
-        /// <summary>
-        /// cbShowCustomersJoinDate control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox cbShowCustomersJoinDate;
-        
-        /// <summary>
-        /// lblAllowPM control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblAllowPM;
-        
-        /// <summary>
-        /// cbAllowPM control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox cbAllowPM;
-        
-        /// <summary>
-        /// lblAllowCustomersToSetTimeZone control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblAllowCustomersToSetTimeZone;
-        
-        /// <summary>
-        /// cbAllowCustomersToSetTimeZone control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox cbAllowCustomersToSetTimeZone;
-        
-        /// <summary>
-        /// lblCurrentTimeZoneInfo control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblCurrentTimeZoneInfo;
-        
-        /// <summary>
-        /// lblCurrentTimeZone control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblCurrentTimeZone;
-        
-        /// <summary>
-        /// lblDefaultStoreTimeZone control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblDefaultStoreTimeZone;
-        
-        /// <summary>
-        /// ddlDefaultStoreTimeZone control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlDefaultStoreTimeZone;
-        
-        /// <summary>
-        /// lblffGenderEnabled control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblffGenderEnabled;
-        
-        /// <summary>
-        /// cbffGenderEnabled control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox cbffGenderEnabled;
-        
-        /// <summary>
-        /// lblffDateOfBirthEnabled control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblffDateOfBirthEnabled;
-        
-        /// <summary>
-        /// cbffDateOfBirthEnabled control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox cbffDateOfBirthEnabled;
-        
-        /// <summary>
-        /// lblffCompanyEnabled control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblffCompanyEnabled;
-        
-        /// <summary>
-        /// cbffCompanyEnabled control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox cbffCompanyEnabled;
-        
-        /// <summary>
-        /// lblffCompanyRequired control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblffCompanyRequired;
-        
-        /// <summary>
-        /// cbffCompanyRequired control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox cbffCompanyRequired;
-        
-        /// <summary>
-        /// lblffStreetAddressEnabled control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblffStreetAddressEnabled;
-        
-        /// <summary>
-        /// cbffStreetAddressEnabled control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox cbffStreetAddressEnabled;
-        
-        /// <summary>
-        /// lblffStreetAddressRequired control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblffStreetAddressRequired;
-        
-        /// <summary>
-        /// cbffStreetAddressRequired control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox cbffStreetAddressRequired;
-        
-        /// <summary>
-        /// lblffStreetAddress2Enabled control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblffStreetAddress2Enabled;
-        
-        /// <summary>
-        /// cbffStreetAddress2Enabled control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox cbffStreetAddress2Enabled;
-        
-        /// <summary>
-        /// lblffStreetAddress2Required control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblffStreetAddress2Required;
-        
-        /// <summary>
-        /// cbffStreetAddress2Required control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox cbffStreetAddress2Required;
-        
-        /// <summary>
-        /// lblffPostCodeEnabled control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblffPostCodeEnabled;
-        
-        /// <summary>
-        /// cbffPostCodeEnabled control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox cbffPostCodeEnabled;
-        
-        /// <summary>
-        /// lblffPostCodeRequired control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblffPostCodeRequired;
-        
-        /// <summary>
-        /// cbffPostCodeRequired control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox cbffPostCodeRequired;
-        
-        /// <summary>
-        /// lblffCityEnabled control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblffCityEnabled;
-        
-        /// <summary>
-        /// cbffCityEnabled control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox cbffCityEnabled;
-        
-        /// <summary>
-        /// lblffCityRequired control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblffCityRequired;
-        
-        /// <summary>
-        /// cbffCityRequired control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox cbffCityRequired;
-        
-        /// <summary>
-        /// lblffCountryEnabled control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblffCountryEnabled;
-        
-        /// <summary>
-        /// cbffCountryEnabled control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox cbffCountryEnabled;
-        
-        /// <summary>
-        /// lblffStateEnabled control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblffStateEnabled;
-        
-        /// <summary>
-        /// cbffStateEnabled control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox cbffStateEnabled;
-        
-        /// <summary>
-        /// lblffPhoneEnabled control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblffPhoneEnabled;
-        
-        /// <summary>
-        /// cbffPhoneEnabled control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox cbffPhoneEnabled;
-        
-        /// <summary>
-        /// lblffPhoneRequired control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblffPhoneRequired;
-        
-        /// <summary>
-        /// cbffPhoneRequired control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox cbffPhoneRequired;
-        
-        /// <summary>
-        /// lblffFaxEnabled control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblffFaxEnabled;
-        
-        /// <summary>
-        /// cbffFaxEnabled control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox cbffFaxEnabled;
-        
-        /// <summary>
-        /// lblffFaxRequired control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblffFaxRequired;
-        
-        /// <summary>
-        /// cbffFaxRequired control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox cbffFaxRequired;
-        
-        /// <summary>
-        /// lblffNewsletterBoxEnabled control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblffNewsletterBoxEnabled;
-        
-        /// <summary>
-        /// cbffNewsletterBoxEnabled control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox cbffNewsletterBoxEnabled;
-        
-        /// <summary>
         /// pnlOther control.
         /// </summary>
         /// <remarks>
@@ -1831,24 +2236,6 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         protected global::System.Web.UI.WebControls.CheckBox cbAllowNavigationOnlyRegisteredCustomers;
         
         /// <summary>
-        /// lblHidePricesForNonRegistered control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblHidePricesForNonRegistered;
-        
-        /// <summary>
-        /// cbHidePricesForNonRegistered control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox cbHidePricesForNonRegistered;
-        
-        /// <summary>
         /// lblMinOrderAmount control.
         /// </summary>
         /// <remarks>
@@ -1903,166 +2290,22 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         protected global::System.Web.UI.WebControls.CheckBox cbShowGiftCardBox;
         
         /// <summary>
-        /// lblShowSKU control.
+        /// lblShowMiniShoppingCart control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblShowSKU;
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblShowMiniShoppingCart;
         
         /// <summary>
-        /// cbShowSKU control.
+        /// cbShowMiniShoppingCart control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox cbShowSKU;
-        
-        /// <summary>
-        /// lblDisplayCartAfterAddingProduct control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblDisplayCartAfterAddingProduct;
-        
-        /// <summary>
-        /// cbDisplayCartAfterAddingProduct control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox cbDisplayCartAfterAddingProduct;
-        
-        /// <summary>
-        /// lblEnableDynamicPriceUpdate control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblEnableDynamicPriceUpdate;
-        
-        /// <summary>
-        /// cbEnableDynamicPriceUpdate control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox cbEnableDynamicPriceUpdate;
-        
-        /// <summary>
-        /// lblAllowProductSorting control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblAllowProductSorting;
-        
-        /// <summary>
-        /// cbAllowProductSorting control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox cbAllowProductSorting;
-        
-        /// <summary>
-        /// lblShowShareButton control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblShowShareButton;
-        
-        /// <summary>
-        /// cbShowShareButton control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox cbShowShareButton;
-        
-        /// <summary>
-        /// lblDownloadableProductsTab control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblDownloadableProductsTab;
-        
-        /// <summary>
-        /// cbDownloadableProductsTab control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox cbDownloadableProductsTab;
-        
-        /// <summary>
-        /// lblUseImagesForLanguageSelection control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblUseImagesForLanguageSelection;
-        
-        /// <summary>
-        /// cbUseImagesForLanguageSelection control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox cbUseImagesForLanguageSelection;
-        
-        /// <summary>
-        /// lblCompareProducts control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblCompareProducts;
-        
-        /// <summary>
-        /// cbEnableCompareProducts control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox cbEnableCompareProducts;
-        
-        /// <summary>
-        /// lblWishList control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblWishList;
-        
-        /// <summary>
-        /// cbEnableWishlist control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox cbEnableWishlist;
+        protected global::System.Web.UI.WebControls.CheckBox cbShowMiniShoppingCart;
         
         /// <summary>
         /// lblReOrderAllowed control.
@@ -2083,40 +2326,22 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         protected global::System.Web.UI.WebControls.CheckBox cbIsReOrderAllowed;
         
         /// <summary>
-        /// lblEmailAFriend control.
+        /// lblUseImagesForLanguageSelection control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblEmailAFriend;
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblUseImagesForLanguageSelection;
         
         /// <summary>
-        /// cbEnableEmailAFriend control.
+        /// cbUseImagesForLanguageSelection control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox cbEnableEmailAFriend;
-        
-        /// <summary>
-        /// lblShowMiniShoppingCart control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblShowMiniShoppingCart;
-        
-        /// <summary>
-        /// cbShowMiniShoppingCart control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox cbShowMiniShoppingCart;
+        protected global::System.Web.UI.WebControls.CheckBox cbUseImagesForLanguageSelection;
         
         /// <summary>
         /// lblHideNewsletterBox control.
@@ -2137,58 +2362,22 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         protected global::System.Web.UI.WebControls.CheckBox cbHideNewsletterBox;
         
         /// <summary>
-        /// lblNotifyAboutNewProductReviews control.
+        /// lblEmailAFriend control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblNotifyAboutNewProductReviews;
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblEmailAFriend;
         
         /// <summary>
-        /// cbNotifyAboutNewProductReviews control.
+        /// cbEnableEmailAFriend control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox cbNotifyAboutNewProductReviews;
-        
-        /// <summary>
-        /// lblProductReviewsMustBeApproved control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblProductReviewsMustBeApproved;
-        
-        /// <summary>
-        /// cbProductReviewsMustBeApproved control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox cbProductReviewsMustBeApproved;
-        
-        /// <summary>
-        /// lblAllowAnonymousUsersToReviewProduct control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblAllowAnonymousUsersToReviewProduct;
-        
-        /// <summary>
-        /// cbAllowAnonymousUsersToReviewProduct control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox cbAllowAnonymousUsersToReviewProduct;
+        protected global::System.Web.UI.WebControls.CheckBox cbEnableEmailAFriend;
         
         /// <summary>
         /// lblAllowAnonymousUsersToEmailAFriend control.
@@ -2207,185 +2396,5 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox cbAllowAnonymousUsersToEmailAFriend;
-        
-        /// <summary>
-        /// lblAllowAnonymousUsersToSetProductRatings control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblAllowAnonymousUsersToSetProductRatings;
-        
-        /// <summary>
-        /// cbAllowAnonymousUsersToSetProductRatings control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox cbAllowAnonymousUsersToSetProductRatings;
-        
-        /// <summary>
-        /// lblRecentlyViewedProductsEnabled control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblRecentlyViewedProductsEnabled;
-        
-        /// <summary>
-        /// cbRecentlyViewedProductsEnabled control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox cbRecentlyViewedProductsEnabled;
-        
-        /// <summary>
-        /// lblRecentlyViewedProductsNumber control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblRecentlyViewedProductsNumber;
-        
-        /// <summary>
-        /// txtRecentlyViewedProductsNumber control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.NumericTextBox txtRecentlyViewedProductsNumber;
-        
-        /// <summary>
-        /// lblRecentlyAddedProductsEnabled control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblRecentlyAddedProductsEnabled;
-        
-        /// <summary>
-        /// cbRecentlyAddedProductsEnabled control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox cbRecentlyAddedProductsEnabled;
-        
-        /// <summary>
-        /// lblRecentlyAddedProductsNumber control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblRecentlyAddedProductsNumber;
-        
-        /// <summary>
-        /// txtRecentlyAddedProductsNumber control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.NumericTextBox txtRecentlyAddedProductsNumber;
-        
-        /// <summary>
-        /// lblShowBestsellersOnHomePage control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblShowBestsellersOnHomePage;
-        
-        /// <summary>
-        /// cbShowBestsellersOnHomePage control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox cbShowBestsellersOnHomePage;
-        
-        /// <summary>
-        /// lblShowBestsellersOnHomePageNumber control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblShowBestsellersOnHomePageNumber;
-        
-        /// <summary>
-        /// txtShowBestsellersOnHomePageNumber control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.NumericTextBox txtShowBestsellersOnHomePageNumber;
-        
-        /// <summary>
-        /// lblProductsAlsoPurchased control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblProductsAlsoPurchased;
-        
-        /// <summary>
-        /// cbProductsAlsoPurchased control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox cbProductsAlsoPurchased;
-        
-        /// <summary>
-        /// lblProductsAlsoPurchasedNumber control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblProductsAlsoPurchasedNumber;
-        
-        /// <summary>
-        /// txtProductsAlsoPurchasedNumber control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.NumericTextBox txtProductsAlsoPurchasedNumber;
-        
-        /// <summary>
-        /// lblCrossSellsNumber control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblCrossSellsNumber;
-        
-        /// <summary>
-        /// txtCrossSellsNumber control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.NumericTextBox txtCrossSellsNumber;
     }
 }

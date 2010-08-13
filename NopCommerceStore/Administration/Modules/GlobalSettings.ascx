@@ -187,6 +187,560 @@
                 </table>
             </ContentTemplate>
         </ajaxToolkit:TabPanel>
+        <ajaxToolkit:TabPanel runat="server" ID="pnlProducts" HeaderText="<% $NopResources:Admin.GlobalSettings.Products.Title %>">
+            <ContentTemplate>
+                <table class="adminContent">
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ID="lblHidePricesForNonRegistered" Text="<% $NopResources:Admin.GlobalSettings.Products.HidePricesForNonRegistered %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Products.HidePricesForNonRegistered.Tooltip %>"
+                                ToolTipImage="~/Administration/Common/ico-help.gif" />
+                        </td>
+                        <td class="adminData">
+                            <asp:CheckBox runat="server" ID="cbHidePricesForNonRegistered"></asp:CheckBox>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
+                                ID="lblShowSKU" Text="<% $NopResources:Admin.GlobalSettings.Products.ShowSKU %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Products.ShowSKU.Tooltip %>" />
+                        </td>
+                        <td class="adminData">
+                            <asp:CheckBox runat="server" ID="cbShowSKU"></asp:CheckBox>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
+                                ID="lblDisplayCartAfterAddingProduct" Text="<% $NopResources:Admin.GlobalSettings.Products.DisplayCartAfterAddingProduct %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Products.DisplayCartAfterAddingProduct.Tooltip %>" />
+                        </td>
+                        <td class="adminData">
+                            <asp:CheckBox runat="server" ID="cbDisplayCartAfterAddingProduct"></asp:CheckBox>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ID="lblEnableDynamicPriceUpdate" Text="<% $NopResources:Admin.GlobalSettings.Products.EnableDynamicPriceUpdate %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Products.EnableDynamicPriceUpdate.Tooltip %>"
+                                ToolTipImage="~/Administration/Common/ico-help.gif" />
+                        </td>
+                        <td class="adminData">
+                            <asp:CheckBox runat="server" ID="cbEnableDynamicPriceUpdate"></asp:CheckBox>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ID="lblAllowProductSorting" Text="<% $NopResources:Admin.GlobalSettings.Products.AllowProductSorting %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Products.AllowProductSorting.Tooltip %>"
+                                ToolTipImage="~/Administration/Common/ico-help.gif" />
+                        </td>
+                        <td class="adminData">
+                            <asp:CheckBox runat="server" ID="cbAllowProductSorting"></asp:CheckBox>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
+                                ID="lblShowShareButton" Text="<% $NopResources:Admin.GlobalSettings.Products.ShowShareButton %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Products.ShowShareButton.Tooltip %>" />
+                        </td>
+                        <td class="adminData">
+                            <asp:CheckBox runat="server" ID="cbShowShareButton"></asp:CheckBox>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
+                                ID="lblDownloadableProductsTab" Text="<% $NopResources:Admin.GlobalSettings.Products.DownloadableProductsTab %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Products.DownloadableProductsTab.Tooltip %>" />
+                        </td>
+                        <td class="adminData">
+                            <asp:CheckBox runat="server" ID="cbDownloadableProductsTab"></asp:CheckBox>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
+                                ID="lblCompareProducts" Text="<% $NopResources:Admin.GlobalSettings.Products.CompareProducts %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Products.CompareProducts.Tooltip %>" />
+                        </td>
+                        <td class="adminData">
+                            <asp:CheckBox runat="server" ID="cbEnableCompareProducts"></asp:CheckBox>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
+                                ID="lblWishList" Text="<% $NopResources:Admin.GlobalSettings.Products.WishList %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Products.WishList.Tooltip %>" />
+                        </td>
+                        <td class="adminData">
+                            <asp:CheckBox runat="server" ID="cbEnableWishlist"></asp:CheckBox>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ID="lblNotifyAboutNewProductReviews" Text="<% $NopResources:Admin.GlobalSettings.Products.NotifyNewProductReviews %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Products.NotifyNewProductReviews.Tooltip %>"
+                                ToolTipImage="~/Administration/Common/ico-help.gif" />
+                        </td>
+                        <td class="adminData">
+                            <asp:CheckBox runat="server" ID="cbNotifyAboutNewProductReviews"></asp:CheckBox>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ID="lblProductReviewsMustBeApproved" Text="<% $NopResources:Admin.GlobalSettings.Products.ProductReviewsMustBeApproved %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Products.ProductReviewsMustBeApproved.Tooltip %>"
+                                ToolTipImage="~/Administration/Common/ico-help.gif" />
+                        </td>
+                        <td class="adminData">
+                            <asp:CheckBox runat="server" ID="cbProductReviewsMustBeApproved"></asp:CheckBox>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ID="lblAllowAnonymousUsersToReviewProduct"
+                                Text="<% $NopResources:Admin.GlobalSettings.Products.AllowAnonymousUsersToReviewProduct %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Products.AllowAnonymousUsersToReviewProduct.Tooltip %>"
+                                ToolTipImage="~/Administration/Common/ico-help.gif" />
+                        </td>
+                        <td class="adminData">
+                            <asp:CheckBox runat="server" ID="cbAllowAnonymousUsersToReviewProduct"></asp:CheckBox>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ID="lblAllowAnonymousUsersToSetProductRatings"
+                                Text="<% $NopResources:Admin.GlobalSettings.Products.AllowAnonymousUsersToSetProductRatings %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Products.AllowAnonymousUsersToSetProductRatings.Tooltip %>"
+                                ToolTipImage="~/Administration/Common/ico-help.gif" />
+                        </td>
+                        <td class="adminData">
+                            <asp:CheckBox runat="server" ID="cbAllowAnonymousUsersToSetProductRatings"></asp:CheckBox>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
+                                ID="lblRecentlyViewedProductsEnabled" Text="<% $NopResources:Admin.GlobalSettings.Products.RecentlyViewedProducts %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Products.RecentlyViewedProducts.Tooltip %>" />
+                        </td>
+                        <td class="adminData">
+                            <asp:CheckBox runat="server" ID="cbRecentlyViewedProductsEnabled"></asp:CheckBox>
+                        </td>
+                    </tr>
+                    <tr id="pnlRecentlyViewedProductsNumber">
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
+                                ID="lblRecentlyViewedProductsNumber" Text="<% $NopResources:Admin.GlobalSettings.Products.RecentlyViewedProductsNumber %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Products.RecentlyViewedProductsNumber.Tooltip %>" />
+                        </td>
+                        <td class="adminData">
+                            <nopCommerce:NumericTextBox runat="server" CssClass="adminInput" ID="txtRecentlyViewedProductsNumber"
+                                RequiredErrorMessage="<% $NopResources:Admin.GlobalSettings.Products.RecentlyViewedProductsNumber.RequiredErrorMessage %>"
+                                MinimumValue="1" MaximumValue="999999" RangeErrorMessage="<% $NopResources:Admin.GlobalSettings.Products.RecentlyViewedProductsNumber.RangeErrorMessage %>"
+                                Width="50px" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
+                                ID="lblRecentlyAddedProductsEnabled" Text="<% $NopResources:Admin.GlobalSettings.Products.RecentlyAddedProducts %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Products.RecentlyAddedProducts.Tooltip %>" />
+                        </td>
+                        <td class="adminData">
+                            <asp:CheckBox runat="server" ID="cbRecentlyAddedProductsEnabled"></asp:CheckBox>
+                        </td>
+                    </tr>
+                    <tr id="pnlRecentlyAddedProductsNumber">
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
+                                ID="lblRecentlyAddedProductsNumber" Text="<% $NopResources:Admin.GlobalSettings.Products.RecentlyAddedProductsNumber %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Products.RecentlyAddedProductsNumber.Tooltip %>" />
+                        </td>
+                        <td class="adminData">
+                            <nopCommerce:NumericTextBox runat="server" CssClass="adminInput" ID="txtRecentlyAddedProductsNumber"
+                                RequiredErrorMessage="<% $NopResources:Admin.GlobalSettings.Products.RecentlyAddedProductsNumber.RequiredErrorMessage %>"
+                                MinimumValue="1" MaximumValue="999999" RangeErrorMessage="<% $NopResources:Admin.GlobalSettings.Products.RecentlyAddedProductsNumber.RangeErrorMessage %>"
+                                Width="50px" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
+                                ID="lblShowBestsellersOnHomePage" Text="<% $NopResources:Admin.GlobalSettings.Products.ShowBestsellersOnHomePage %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Products.ShowBestsellersOnHomePage.Tooltip %>" />
+                        </td>
+                        <td class="adminData">
+                            <asp:CheckBox runat="server" ID="cbShowBestsellersOnHomePage"></asp:CheckBox>
+                        </td>
+                    </tr>
+                    <tr id="pnlShowBestsellersOnHomePageNumber">
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
+                                ID="lblShowBestsellersOnHomePageNumber" Text="<% $NopResources:Admin.GlobalSettings.Products.ShowBestsellersOnHomePageNumber %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Products.ShowBestsellersOnHomePageNumber.Tooltip %>" />
+                        </td>
+                        <td class="adminData">
+                            <nopCommerce:NumericTextBox runat="server" CssClass="adminInput" ID="txtShowBestsellersOnHomePageNumber"
+                                RequiredErrorMessage="<% $NopResources:Admin.GlobalSettings.Products.ShowBestsellersOnHomePageNumber.RequiredErrorMessage %>"
+                                MinimumValue="1" MaximumValue="999999" RangeErrorMessage="<% $NopResources:Admin.GlobalSettings.Products.ShowBestsellersOnHomePageNumber.RangeErrorMessage %>"
+                                Width="50px" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
+                                ID="lblProductsAlsoPurchased" Text="<% $NopResources:Admin.GlobalSettings.Products.AlsoPurchased %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Products.AlsoPurchased.Tooltip %>" />
+                        </td>
+                        <td class="adminData">
+                            <asp:CheckBox runat="server" ID="cbProductsAlsoPurchased"></asp:CheckBox>
+                        </td>
+                    </tr>
+                    <tr id="pnlProductsAlsoPurchasedNumber">
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
+                                ID="lblProductsAlsoPurchasedNumber" Text="<% $NopResources:Admin.GlobalSettings.Products.AlsoPurchasedNumber %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Products.AlsoPurchasedNumber.Tooltip %>" />
+                        </td>
+                        <td class="adminData">
+                            <nopCommerce:NumericTextBox runat="server" CssClass="adminInput" ID="txtProductsAlsoPurchasedNumber"
+                                RequiredErrorMessage="<% $NopResources:Admin.GlobalSettings.Products.AlsoPurchasedNumber.RequiredErrorMessage %>"
+                                MinimumValue="1" MaximumValue="999999" RangeErrorMessage="<% $NopResources:Admin.GlobalSettings.Products.AlsoPurchasedNumber.RangeErrorMessage %>"
+                                Width="50px" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
+                                ID="lblCrossSellsNumber" Text="<% $NopResources:Admin.GlobalSettings.Products.CrossSellsNumber %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Products.CrossSellsNumber.Tooltip %>" />
+                        </td>
+                        <td class="adminData">
+                            <nopCommerce:NumericTextBox runat="server" CssClass="adminInput" ID="txtCrossSellsNumber"
+                                RequiredErrorMessage="<% $NopResources:Admin.GlobalSettings.Products.CrossSellsNumber.RequiredErrorMessage %>"
+                                MinimumValue="0" MaximumValue="999999" RangeErrorMessage="<% $NopResources:Admin.GlobalSettings.Products.CrossSellsNumber.RangeErrorMessage %>"
+                                Width="50px" />
+                        </td>
+                    </tr>
+                </table>
+            </ContentTemplate>
+        </ajaxToolkit:TabPanel>
+        <ajaxToolkit:TabPanel runat="server" ID="pnlCustomerProfiles" HeaderText="<% $NopResources:Admin.GlobalSettings.Profiles.Title %>">
+            <ContentTemplate>
+                <table class="adminContent">
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ID="lblCustomerNameFormat" Text="<% $NopResources:Admin.GlobalSettings.Profiles.NameFormat %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Profiles.NameFormat.Tooltip %>"
+                                ToolTipImage="~/Administration/Common/ico-help.gif" />
+                        </td>
+                        <td class="adminData">
+                            <asp:DropDownList ID="ddlCustomerNameFormat" runat="server" CssClass="adminInput">
+                            </asp:DropDownList>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ID="lblCustomersAllowedToUploadAvatars"
+                                Text="<% $NopResources:Admin.GlobalSettings.Profiles.AllowedAvatars %>" ToolTip="<% $NopResources:Admin.GlobalSettings.Profiles.AllowedAvatars.Tooltip %>"
+                                ToolTipImage="~/Administration/Common/ico-help.gif" />
+                        </td>
+                        <td class="adminData">
+                            <asp:CheckBox ID="cbCustomersAllowedToUploadAvatars" runat="server"></asp:CheckBox>
+                        </td>
+                    </tr>
+                    <tr id="pnlDefaultAvatarEnabled">
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ID="lblDefaultAvatarEnabled" Text="<% $NopResources:Admin.GlobalSettings.Profiles.DefaultAvatar %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Profiles.DefaultAvatar.Tooltip %>"
+                                ToolTipImage="~/Administration/Common/ico-help.gif" />
+                        </td>
+                        <td class="adminData">
+                            <asp:CheckBox ID="cbDefaultAvatarEnabled" runat="server"></asp:CheckBox>
+                        </td>
+                    </tr>
+                    <tr class="adminSeparator">
+                        <td colspan="2">
+                            <hr />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ID="lblAllowViewingProfiles" Text="<% $NopResources:Admin.GlobalSettings.Profiles.ViewingProfiles %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Profiles.ViewingProfiles.Tooltip %>"
+                                ToolTipImage="~/Administration/Common/ico-help.gif" />
+                        </td>
+                        <td class="adminData">
+                            <asp:CheckBox ID="cbAllowViewingProfiles" runat="server"></asp:CheckBox>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ID="lblShowCustomersLocation" Text="<% $NopResources:Admin.GlobalSettings.Profiles.ShowLocation %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Profiles.ShowLocation.Tooltip %>"
+                                ToolTipImage="~/Administration/Common/ico-help.gif" />
+                        </td>
+                        <td class="adminData">
+                            <asp:CheckBox ID="cbShowCustomersLocation" runat="server"></asp:CheckBox>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ID="lblShowCustomersJoinDate" Text="<% $NopResources:Admin.GlobalSettings.Profiles.ShowJoinDate %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Profiles.ShowJoinDate.Tooltip %>"
+                                ToolTipImage="~/Administration/Common/ico-help.gif" />
+                        </td>
+                        <td class="adminData">
+                            <asp:CheckBox ID="cbShowCustomersJoinDate" runat="server"></asp:CheckBox>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ID="lblAllowPM" Text="<% $NopResources:Admin.GlobalSettings.Profiles.AllowPM %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Profiles.AllowPM.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
+                        </td>
+                        <td class="adminData">
+                            <asp:CheckBox ID="cbAllowPM" runat="server"></asp:CheckBox>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ID="lblAllowCustomersToSetTimeZone" Text="<% $NopResources:Admin.GlobalSettings.Profiles.AllowToSetTimeZone %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Profiles.AllowToSetTimeZone.Tooltip %>"
+                                ToolTipImage="~/Administration/Common/ico-help.gif" />
+                        </td>
+                        <td class="adminData">
+                            <asp:CheckBox runat="server" ID="cbAllowCustomersToSetTimeZone"></asp:CheckBox>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ID="lblCurrentTimeZoneInfo" Text="<% $NopResources:Admin.GlobalSettings.Profiles.CurrentTimeZone %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Profiles.CurrentTimeZone.Tooltip %>"
+                                ToolTipImage="~/Administration/Common/ico-help.gif" />
+                        </td>
+                        <td class="adminData">
+                            <asp:Label runat="server" ID="lblCurrentTimeZone">
+                            </asp:Label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ID="lblDefaultStoreTimeZone" Text="<% $NopResources:Admin.GlobalSettings.Profiles.DefaultTimeZone %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Profiles.DefaultTimeZone.Tooltip %>"
+                                ToolTipImage="~/Administration/Common/ico-help.gif" />
+                        </td>
+                        <td class="adminData">
+                            <asp:DropDownList runat="server" ID="ddlDefaultStoreTimeZone" CssClass="adminInputNoWidth">
+                            </asp:DropDownList>
+                        </td>
+                    </tr>
+                    <tr class="adminSeparator">
+                        <td colspan="2">
+                            <hr />
+                            <strong><%=GetLocaleResourceString("Admin.GlobalSettings.Profiles.FormFields.Title")%></strong>
+                            <br />
+                            <i><%=GetLocaleResourceString("Admin.GlobalSettings.Profiles.FormFields.Description")%></i>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ID="lblffGenderEnabled" Text="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.GenderEnabled %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.GenderEnabled.Tooltip %>"
+                                ToolTipImage="~/Administration/Common/ico-help.gif" />
+                        </td>
+                        <td class="adminData">
+                            <asp:CheckBox ID="cbffGenderEnabled" runat="server"></asp:CheckBox>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ID="lblffDateOfBirthEnabled" Text="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.DateOfBirthEnabled %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.DateOfBirthEnabled.Tooltip %>"
+                                ToolTipImage="~/Administration/Common/ico-help.gif" />
+                        </td>
+                        <td class="adminData">
+                            <asp:CheckBox ID="cbffDateOfBirthEnabled" runat="server"></asp:CheckBox>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ID="lblffCompanyEnabled" Text="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.CompanyEnabled %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.CompanyEnabled.Tooltip %>"
+                                ToolTipImage="~/Administration/Common/ico-help.gif" />
+                        </td>
+                        <td class="adminData">
+                            <asp:CheckBox ID="cbffCompanyEnabled" runat="server"></asp:CheckBox>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ID="lblffCompanyRequired" Text="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.CompanyRequired %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.CompanyRequired.Tooltip %>"
+                                ToolTipImage="~/Administration/Common/ico-help.gif" />
+                        </td>
+                        <td class="adminData">
+                            <asp:CheckBox ID="cbffCompanyRequired" runat="server"></asp:CheckBox>
+                        </td>
+                    </tr>                  
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ID="lblffStreetAddressEnabled" Text="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.StreetAddressEnabled %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.StreetAddressEnabled.Tooltip %>"
+                                ToolTipImage="~/Administration/Common/ico-help.gif" />
+                        </td>
+                        <td class="adminData">
+                            <asp:CheckBox ID="cbffStreetAddressEnabled" runat="server"></asp:CheckBox>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ID="lblffStreetAddressRequired" Text="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.StreetAddressRequired %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.StreetAddressRequired.Tooltip %>"
+                                ToolTipImage="~/Administration/Common/ico-help.gif" />
+                        </td>
+                        <td class="adminData">
+                            <asp:CheckBox ID="cbffStreetAddressRequired" runat="server"></asp:CheckBox>
+                        </td>
+                    </tr>        
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ID="lblffStreetAddress2Enabled" Text="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.StreetAddress2Enabled %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.StreetAddress2Enabled.Tooltip %>"
+                                ToolTipImage="~/Administration/Common/ico-help.gif" />
+                        </td>
+                        <td class="adminData">
+                            <asp:CheckBox ID="cbffStreetAddress2Enabled" runat="server"></asp:CheckBox>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ID="lblffStreetAddress2Required" Text="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.StreetAddress2Required %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.StreetAddress2Required.Tooltip %>"
+                                ToolTipImage="~/Administration/Common/ico-help.gif" />
+                        </td>
+                        <td class="adminData">
+                            <asp:CheckBox ID="cbffStreetAddress2Required" runat="server"></asp:CheckBox>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ID="lblffPostCodeEnabled" Text="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.PostCodeEnabled %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.PostCodeEnabled.Tooltip %>"
+                                ToolTipImage="~/Administration/Common/ico-help.gif" />
+                        </td>
+                        <td class="adminData">
+                            <asp:CheckBox ID="cbffPostCodeEnabled" runat="server"></asp:CheckBox>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ID="lblffPostCodeRequired" Text="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.PostCodeRequired %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.PostCodeRequired.Tooltip %>"
+                                ToolTipImage="~/Administration/Common/ico-help.gif" />
+                        </td>
+                        <td class="adminData">
+                            <asp:CheckBox ID="cbffPostCodeRequired" runat="server"></asp:CheckBox>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ID="lblffCityEnabled" Text="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.CityEnabled %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.CityEnabled.Tooltip %>"
+                                ToolTipImage="~/Administration/Common/ico-help.gif" />
+                        </td>
+                        <td class="adminData">
+                            <asp:CheckBox ID="cbffCityEnabled" runat="server"></asp:CheckBox>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ID="lblffCityRequired" Text="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.CityRequired %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.CityRequired.Tooltip %>"
+                                ToolTipImage="~/Administration/Common/ico-help.gif" />
+                        </td>
+                        <td class="adminData">
+                            <asp:CheckBox ID="cbffCityRequired" runat="server"></asp:CheckBox>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ID="lblffCountryEnabled" Text="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.CountryEnabled %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.CountryEnabled.Tooltip %>"
+                                ToolTipImage="~/Administration/Common/ico-help.gif" />
+                        </td>
+                        <td class="adminData">
+                            <asp:CheckBox ID="cbffCountryEnabled" runat="server"></asp:CheckBox>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ID="lblffStateEnabled" Text="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.StateEnabled %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.StateEnabled.Tooltip %>"
+                                ToolTipImage="~/Administration/Common/ico-help.gif" />
+                        </td>
+                        <td class="adminData">
+                            <asp:CheckBox ID="cbffStateEnabled" runat="server"></asp:CheckBox>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ID="lblffPhoneEnabled" Text="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.PhoneEnabled %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.PhoneEnabled.Tooltip %>"
+                                ToolTipImage="~/Administration/Common/ico-help.gif" />
+                        </td>
+                        <td class="adminData">
+                            <asp:CheckBox ID="cbffPhoneEnabled" runat="server"></asp:CheckBox>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ID="lblffPhoneRequired" Text="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.PhoneRequired %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.PhoneRequired.Tooltip %>"
+                                ToolTipImage="~/Administration/Common/ico-help.gif" />
+                        </td>
+                        <td class="adminData">
+                            <asp:CheckBox ID="cbffPhoneRequired" runat="server"></asp:CheckBox>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ID="lblffFaxEnabled" Text="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.FaxEnabled %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.FaxEnabled.Tooltip %>"
+                                ToolTipImage="~/Administration/Common/ico-help.gif" />
+                        </td>
+                        <td class="adminData">
+                            <asp:CheckBox ID="cbffFaxEnabled" runat="server"></asp:CheckBox>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ID="lblffFaxRequired" Text="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.FaxRequired %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.FaxRequired.Tooltip %>"
+                                ToolTipImage="~/Administration/Common/ico-help.gif" />
+                        </td>
+                        <td class="adminData">
+                            <asp:CheckBox ID="cbffFaxRequired" runat="server"></asp:CheckBox>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ID="lblffNewsletterBoxEnabled" Text="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.NewsletterBoxEnabled %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.NewsletterBoxEnabled.Tooltip %>"
+                                ToolTipImage="~/Administration/Common/ico-help.gif" />
+                        </td>
+                        <td class="adminData">
+                            <asp:CheckBox ID="cbffNewsletterBoxEnabled" runat="server"></asp:CheckBox>
+                        </td>
+                    </tr>
+                </table>
+            </ContentTemplate>
+        </ajaxToolkit:TabPanel>
         <ajaxToolkit:TabPanel runat="server" ID="pnlSEODisplay" HeaderText="<% $NopResources:Admin.GlobalSettings.SEODisplay.Title %>">
             <ContentTemplate>
                 <table class="adminContent">
@@ -944,318 +1498,7 @@
                     </tr>
                 </table>
             </ContentTemplate>
-        </ajaxToolkit:TabPanel>
-        <ajaxToolkit:TabPanel runat="server" ID="pnlCustomerProfiles" HeaderText="<% $NopResources:Admin.GlobalSettings.Profiles.Title %>">
-            <ContentTemplate>
-                <table class="adminContent">
-                    <tr>
-                        <td class="adminTitle">
-                            <nopCommerce:ToolTipLabel runat="server" ID="lblCustomerNameFormat" Text="<% $NopResources:Admin.GlobalSettings.Profiles.NameFormat %>"
-                                ToolTip="<% $NopResources:Admin.GlobalSettings.Profiles.NameFormat.Tooltip %>"
-                                ToolTipImage="~/Administration/Common/ico-help.gif" />
-                        </td>
-                        <td class="adminData">
-                            <asp:DropDownList ID="ddlCustomerNameFormat" runat="server" CssClass="adminInput">
-                            </asp:DropDownList>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="adminTitle">
-                            <nopCommerce:ToolTipLabel runat="server" ID="lblCustomersAllowedToUploadAvatars"
-                                Text="<% $NopResources:Admin.GlobalSettings.Profiles.AllowedAvatars %>" ToolTip="<% $NopResources:Admin.GlobalSettings.Profiles.AllowedAvatars.Tooltip %>"
-                                ToolTipImage="~/Administration/Common/ico-help.gif" />
-                        </td>
-                        <td class="adminData">
-                            <asp:CheckBox ID="cbCustomersAllowedToUploadAvatars" runat="server"></asp:CheckBox>
-                        </td>
-                    </tr>
-                    <tr id="pnlDefaultAvatarEnabled">
-                        <td class="adminTitle">
-                            <nopCommerce:ToolTipLabel runat="server" ID="lblDefaultAvatarEnabled" Text="<% $NopResources:Admin.GlobalSettings.Profiles.DefaultAvatar %>"
-                                ToolTip="<% $NopResources:Admin.GlobalSettings.Profiles.DefaultAvatar.Tooltip %>"
-                                ToolTipImage="~/Administration/Common/ico-help.gif" />
-                        </td>
-                        <td class="adminData">
-                            <asp:CheckBox ID="cbDefaultAvatarEnabled" runat="server"></asp:CheckBox>
-                        </td>
-                    </tr>
-                    <tr class="adminSeparator">
-                        <td colspan="2">
-                            <hr />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="adminTitle">
-                            <nopCommerce:ToolTipLabel runat="server" ID="lblAllowViewingProfiles" Text="<% $NopResources:Admin.GlobalSettings.Profiles.ViewingProfiles %>"
-                                ToolTip="<% $NopResources:Admin.GlobalSettings.Profiles.ViewingProfiles.Tooltip %>"
-                                ToolTipImage="~/Administration/Common/ico-help.gif" />
-                        </td>
-                        <td class="adminData">
-                            <asp:CheckBox ID="cbAllowViewingProfiles" runat="server"></asp:CheckBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="adminTitle">
-                            <nopCommerce:ToolTipLabel runat="server" ID="lblShowCustomersLocation" Text="<% $NopResources:Admin.GlobalSettings.Profiles.ShowLocation %>"
-                                ToolTip="<% $NopResources:Admin.GlobalSettings.Profiles.ShowLocation.Tooltip %>"
-                                ToolTipImage="~/Administration/Common/ico-help.gif" />
-                        </td>
-                        <td class="adminData">
-                            <asp:CheckBox ID="cbShowCustomersLocation" runat="server"></asp:CheckBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="adminTitle">
-                            <nopCommerce:ToolTipLabel runat="server" ID="lblShowCustomersJoinDate" Text="<% $NopResources:Admin.GlobalSettings.Profiles.ShowJoinDate %>"
-                                ToolTip="<% $NopResources:Admin.GlobalSettings.Profiles.ShowJoinDate.Tooltip %>"
-                                ToolTipImage="~/Administration/Common/ico-help.gif" />
-                        </td>
-                        <td class="adminData">
-                            <asp:CheckBox ID="cbShowCustomersJoinDate" runat="server"></asp:CheckBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="adminTitle">
-                            <nopCommerce:ToolTipLabel runat="server" ID="lblAllowPM" Text="<% $NopResources:Admin.GlobalSettings.Profiles.AllowPM %>"
-                                ToolTip="<% $NopResources:Admin.GlobalSettings.Profiles.AllowPM.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
-                        </td>
-                        <td class="adminData">
-                            <asp:CheckBox ID="cbAllowPM" runat="server"></asp:CheckBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="adminTitle">
-                            <nopCommerce:ToolTipLabel runat="server" ID="lblAllowCustomersToSetTimeZone" Text="<% $NopResources:Admin.GlobalSettings.Profiles.AllowToSetTimeZone %>"
-                                ToolTip="<% $NopResources:Admin.GlobalSettings.Profiles.AllowToSetTimeZone.Tooltip %>"
-                                ToolTipImage="~/Administration/Common/ico-help.gif" />
-                        </td>
-                        <td class="adminData">
-                            <asp:CheckBox runat="server" ID="cbAllowCustomersToSetTimeZone"></asp:CheckBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="adminTitle">
-                            <nopCommerce:ToolTipLabel runat="server" ID="lblCurrentTimeZoneInfo" Text="<% $NopResources:Admin.GlobalSettings.Profiles.CurrentTimeZone %>"
-                                ToolTip="<% $NopResources:Admin.GlobalSettings.Profiles.CurrentTimeZone.Tooltip %>"
-                                ToolTipImage="~/Administration/Common/ico-help.gif" />
-                        </td>
-                        <td class="adminData">
-                            <asp:Label runat="server" ID="lblCurrentTimeZone">
-                            </asp:Label>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="adminTitle">
-                            <nopCommerce:ToolTipLabel runat="server" ID="lblDefaultStoreTimeZone" Text="<% $NopResources:Admin.GlobalSettings.Profiles.DefaultTimeZone %>"
-                                ToolTip="<% $NopResources:Admin.GlobalSettings.Profiles.DefaultTimeZone.Tooltip %>"
-                                ToolTipImage="~/Administration/Common/ico-help.gif" />
-                        </td>
-                        <td class="adminData">
-                            <asp:DropDownList runat="server" ID="ddlDefaultStoreTimeZone" CssClass="adminInputNoWidth">
-                            </asp:DropDownList>
-                        </td>
-                    </tr>
-                    <tr class="adminSeparator">
-                        <td colspan="2">
-                            <hr />
-                            <strong><%=GetLocaleResourceString("Admin.GlobalSettings.Profiles.FormFields.Title")%></strong>
-                            <br />
-                            <i><%=GetLocaleResourceString("Admin.GlobalSettings.Profiles.FormFields.Description")%></i>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="adminTitle">
-                            <nopCommerce:ToolTipLabel runat="server" ID="lblffGenderEnabled" Text="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.GenderEnabled %>"
-                                ToolTip="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.GenderEnabled.Tooltip %>"
-                                ToolTipImage="~/Administration/Common/ico-help.gif" />
-                        </td>
-                        <td class="adminData">
-                            <asp:CheckBox ID="cbffGenderEnabled" runat="server"></asp:CheckBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="adminTitle">
-                            <nopCommerce:ToolTipLabel runat="server" ID="lblffDateOfBirthEnabled" Text="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.DateOfBirthEnabled %>"
-                                ToolTip="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.DateOfBirthEnabled.Tooltip %>"
-                                ToolTipImage="~/Administration/Common/ico-help.gif" />
-                        </td>
-                        <td class="adminData">
-                            <asp:CheckBox ID="cbffDateOfBirthEnabled" runat="server"></asp:CheckBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="adminTitle">
-                            <nopCommerce:ToolTipLabel runat="server" ID="lblffCompanyEnabled" Text="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.CompanyEnabled %>"
-                                ToolTip="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.CompanyEnabled.Tooltip %>"
-                                ToolTipImage="~/Administration/Common/ico-help.gif" />
-                        </td>
-                        <td class="adminData">
-                            <asp:CheckBox ID="cbffCompanyEnabled" runat="server"></asp:CheckBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="adminTitle">
-                            <nopCommerce:ToolTipLabel runat="server" ID="lblffCompanyRequired" Text="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.CompanyRequired %>"
-                                ToolTip="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.CompanyRequired.Tooltip %>"
-                                ToolTipImage="~/Administration/Common/ico-help.gif" />
-                        </td>
-                        <td class="adminData">
-                            <asp:CheckBox ID="cbffCompanyRequired" runat="server"></asp:CheckBox>
-                        </td>
-                    </tr>                  
-                    <tr>
-                        <td class="adminTitle">
-                            <nopCommerce:ToolTipLabel runat="server" ID="lblffStreetAddressEnabled" Text="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.StreetAddressEnabled %>"
-                                ToolTip="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.StreetAddressEnabled.Tooltip %>"
-                                ToolTipImage="~/Administration/Common/ico-help.gif" />
-                        </td>
-                        <td class="adminData">
-                            <asp:CheckBox ID="cbffStreetAddressEnabled" runat="server"></asp:CheckBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="adminTitle">
-                            <nopCommerce:ToolTipLabel runat="server" ID="lblffStreetAddressRequired" Text="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.StreetAddressRequired %>"
-                                ToolTip="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.StreetAddressRequired.Tooltip %>"
-                                ToolTipImage="~/Administration/Common/ico-help.gif" />
-                        </td>
-                        <td class="adminData">
-                            <asp:CheckBox ID="cbffStreetAddressRequired" runat="server"></asp:CheckBox>
-                        </td>
-                    </tr>        
-                    <tr>
-                        <td class="adminTitle">
-                            <nopCommerce:ToolTipLabel runat="server" ID="lblffStreetAddress2Enabled" Text="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.StreetAddress2Enabled %>"
-                                ToolTip="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.StreetAddress2Enabled.Tooltip %>"
-                                ToolTipImage="~/Administration/Common/ico-help.gif" />
-                        </td>
-                        <td class="adminData">
-                            <asp:CheckBox ID="cbffStreetAddress2Enabled" runat="server"></asp:CheckBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="adminTitle">
-                            <nopCommerce:ToolTipLabel runat="server" ID="lblffStreetAddress2Required" Text="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.StreetAddress2Required %>"
-                                ToolTip="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.StreetAddress2Required.Tooltip %>"
-                                ToolTipImage="~/Administration/Common/ico-help.gif" />
-                        </td>
-                        <td class="adminData">
-                            <asp:CheckBox ID="cbffStreetAddress2Required" runat="server"></asp:CheckBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="adminTitle">
-                            <nopCommerce:ToolTipLabel runat="server" ID="lblffPostCodeEnabled" Text="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.PostCodeEnabled %>"
-                                ToolTip="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.PostCodeEnabled.Tooltip %>"
-                                ToolTipImage="~/Administration/Common/ico-help.gif" />
-                        </td>
-                        <td class="adminData">
-                            <asp:CheckBox ID="cbffPostCodeEnabled" runat="server"></asp:CheckBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="adminTitle">
-                            <nopCommerce:ToolTipLabel runat="server" ID="lblffPostCodeRequired" Text="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.PostCodeRequired %>"
-                                ToolTip="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.PostCodeRequired.Tooltip %>"
-                                ToolTipImage="~/Administration/Common/ico-help.gif" />
-                        </td>
-                        <td class="adminData">
-                            <asp:CheckBox ID="cbffPostCodeRequired" runat="server"></asp:CheckBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="adminTitle">
-                            <nopCommerce:ToolTipLabel runat="server" ID="lblffCityEnabled" Text="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.CityEnabled %>"
-                                ToolTip="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.CityEnabled.Tooltip %>"
-                                ToolTipImage="~/Administration/Common/ico-help.gif" />
-                        </td>
-                        <td class="adminData">
-                            <asp:CheckBox ID="cbffCityEnabled" runat="server"></asp:CheckBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="adminTitle">
-                            <nopCommerce:ToolTipLabel runat="server" ID="lblffCityRequired" Text="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.CityRequired %>"
-                                ToolTip="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.CityRequired.Tooltip %>"
-                                ToolTipImage="~/Administration/Common/ico-help.gif" />
-                        </td>
-                        <td class="adminData">
-                            <asp:CheckBox ID="cbffCityRequired" runat="server"></asp:CheckBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="adminTitle">
-                            <nopCommerce:ToolTipLabel runat="server" ID="lblffCountryEnabled" Text="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.CountryEnabled %>"
-                                ToolTip="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.CountryEnabled.Tooltip %>"
-                                ToolTipImage="~/Administration/Common/ico-help.gif" />
-                        </td>
-                        <td class="adminData">
-                            <asp:CheckBox ID="cbffCountryEnabled" runat="server"></asp:CheckBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="adminTitle">
-                            <nopCommerce:ToolTipLabel runat="server" ID="lblffStateEnabled" Text="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.StateEnabled %>"
-                                ToolTip="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.StateEnabled.Tooltip %>"
-                                ToolTipImage="~/Administration/Common/ico-help.gif" />
-                        </td>
-                        <td class="adminData">
-                            <asp:CheckBox ID="cbffStateEnabled" runat="server"></asp:CheckBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="adminTitle">
-                            <nopCommerce:ToolTipLabel runat="server" ID="lblffPhoneEnabled" Text="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.PhoneEnabled %>"
-                                ToolTip="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.PhoneEnabled.Tooltip %>"
-                                ToolTipImage="~/Administration/Common/ico-help.gif" />
-                        </td>
-                        <td class="adminData">
-                            <asp:CheckBox ID="cbffPhoneEnabled" runat="server"></asp:CheckBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="adminTitle">
-                            <nopCommerce:ToolTipLabel runat="server" ID="lblffPhoneRequired" Text="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.PhoneRequired %>"
-                                ToolTip="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.PhoneRequired.Tooltip %>"
-                                ToolTipImage="~/Administration/Common/ico-help.gif" />
-                        </td>
-                        <td class="adminData">
-                            <asp:CheckBox ID="cbffPhoneRequired" runat="server"></asp:CheckBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="adminTitle">
-                            <nopCommerce:ToolTipLabel runat="server" ID="lblffFaxEnabled" Text="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.FaxEnabled %>"
-                                ToolTip="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.FaxEnabled.Tooltip %>"
-                                ToolTipImage="~/Administration/Common/ico-help.gif" />
-                        </td>
-                        <td class="adminData">
-                            <asp:CheckBox ID="cbffFaxEnabled" runat="server"></asp:CheckBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="adminTitle">
-                            <nopCommerce:ToolTipLabel runat="server" ID="lblffFaxRequired" Text="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.FaxRequired %>"
-                                ToolTip="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.FaxRequired.Tooltip %>"
-                                ToolTipImage="~/Administration/Common/ico-help.gif" />
-                        </td>
-                        <td class="adminData">
-                            <asp:CheckBox ID="cbffFaxRequired" runat="server"></asp:CheckBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="adminTitle">
-                            <nopCommerce:ToolTipLabel runat="server" ID="lblffNewsletterBoxEnabled" Text="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.NewsletterBoxEnabled %>"
-                                ToolTip="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.NewsletterBoxEnabled.Tooltip %>"
-                                ToolTipImage="~/Administration/Common/ico-help.gif" />
-                        </td>
-                        <td class="adminData">
-                            <asp:CheckBox ID="cbffNewsletterBoxEnabled" runat="server"></asp:CheckBox>
-                        </td>
-                    </tr>
-                </table>
-            </ContentTemplate>
-        </ajaxToolkit:TabPanel>
+        </ajaxToolkit:TabPanel>        
         <ajaxToolkit:TabPanel runat="server" ID="pnlOther" HeaderText="<% $NopResources:Admin.GlobalSettings.Other.Title %>">
             <ContentTemplate>
                 <table class="adminContent">
@@ -1293,16 +1536,6 @@
                     </tr>
                     <tr>
                         <td class="adminTitle">
-                            <nopCommerce:ToolTipLabel runat="server" ID="lblHidePricesForNonRegistered" Text="<% $NopResources:Admin.GlobalSettings.Other.HidePricesForNonRegistered %>"
-                                ToolTip="<% $NopResources:Admin.GlobalSettings.Other.HidePricesForNonRegistered.Tooltip %>"
-                                ToolTipImage="~/Administration/Common/ico-help.gif" />
-                        </td>
-                        <td class="adminData">
-                            <asp:CheckBox runat="server" ID="cbHidePricesForNonRegistered"></asp:CheckBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="adminTitle">
                             <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
                                 ID="lblMinOrderAmount" Text="<% $NopResources:Admin.GlobalSettings.Other.MinOrderAmount %>"
                                 ToolTip="<% $NopResources:Admin.GlobalSettings.Other.MinOrderAmount.Tooltip %>" />
@@ -1312,11 +1545,6 @@
                                 RequiredErrorMessage="<% $NopResources:Admin.GlobalSettings.Other.MinOrderAmount.RequiredErrorMessage %>"
                                 MinimumValue="0" MaximumValue="100000000" RangeErrorMessage="<% $NopResources:Admin.GlobalSettings.Other.MinOrderAmount.RangeErrorMessage %>" />
                             <%=CurrencyManager.PrimaryStoreCurrency.CurrencyCode%>
-                        </td>
-                    </tr>
-                    <tr class="adminSeparator">
-                        <td colspan="2">
-                            <hr />
                         </td>
                     </tr>
                     <tr>
@@ -1342,91 +1570,11 @@
                     <tr>
                         <td class="adminTitle">
                             <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
-                                ID="lblShowSKU" Text="<% $NopResources:Admin.GlobalSettings.Other.ShowSKU %>"
-                                ToolTip="<% $NopResources:Admin.GlobalSettings.Other.ShowSKU.Tooltip %>" />
+                                ID="lblShowMiniShoppingCart" Text="<% $NopResources:Admin.GlobalSettings.Other.ShowMiniShoppingCart %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Other.ShowMiniShoppingCart.Tooltip %>" />
                         </td>
                         <td class="adminData">
-                            <asp:CheckBox runat="server" ID="cbShowSKU"></asp:CheckBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="adminTitle">
-                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
-                                ID="lblDisplayCartAfterAddingProduct" Text="<% $NopResources:Admin.GlobalSettings.Other.DisplayCartAfterAddingProduct %>"
-                                ToolTip="<% $NopResources:Admin.GlobalSettings.Other.DisplayCartAfterAddingProduct.Tooltip %>" />
-                        </td>
-                        <td class="adminData">
-                            <asp:CheckBox runat="server" ID="cbDisplayCartAfterAddingProduct"></asp:CheckBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="adminTitle">
-                            <nopCommerce:ToolTipLabel runat="server" ID="lblEnableDynamicPriceUpdate" Text="<% $NopResources:Admin.GlobalSettings.Other.EnableDynamicPriceUpdate %>"
-                                ToolTip="<% $NopResources:Admin.GlobalSettings.Other.EnableDynamicPriceUpdate.Tooltip %>"
-                                ToolTipImage="~/Administration/Common/ico-help.gif" />
-                        </td>
-                        <td class="adminData">
-                            <asp:CheckBox runat="server" ID="cbEnableDynamicPriceUpdate"></asp:CheckBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="adminTitle">
-                            <nopCommerce:ToolTipLabel runat="server" ID="lblAllowProductSorting" Text="<% $NopResources:Admin.GlobalSettings.Other.AllowProductSorting %>"
-                                ToolTip="<% $NopResources:Admin.GlobalSettings.Other.AllowProductSorting.Tooltip %>"
-                                ToolTipImage="~/Administration/Common/ico-help.gif" />
-                        </td>
-                        <td class="adminData">
-                            <asp:CheckBox runat="server" ID="cbAllowProductSorting"></asp:CheckBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="adminTitle">
-                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
-                                ID="lblShowShareButton" Text="<% $NopResources:Admin.GlobalSettings.Other.ShowShareButton %>"
-                                ToolTip="<% $NopResources:Admin.GlobalSettings.Other.ShowShareButton.Tooltip %>" />
-                        </td>
-                        <td class="adminData">
-                            <asp:CheckBox runat="server" ID="cbShowShareButton"></asp:CheckBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="adminTitle">
-                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
-                                ID="lblDownloadableProductsTab" Text="<% $NopResources:Admin.GlobalSettings.Other.DownloadableProductsTab %>"
-                                ToolTip="<% $NopResources:Admin.GlobalSettings.Other.DownloadableProductsTab.Tooltip %>" />
-                        </td>
-                        <td class="adminData">
-                            <asp:CheckBox runat="server" ID="cbDownloadableProductsTab"></asp:CheckBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="adminTitle">
-                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
-                                ID="lblUseImagesForLanguageSelection" Text="<% $NopResources:Admin.GlobalSettings.Other.UseImagesForLanguageSelection %>"
-                                ToolTip="<% $NopResources:Admin.GlobalSettings.Other.UseImagesForLanguageSelection.Tooltip %>" />
-                        </td>
-                        <td class="adminData">
-                            <asp:CheckBox runat="server" ID="cbUseImagesForLanguageSelection" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="adminTitle">
-                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
-                                ID="lblCompareProducts" Text="<% $NopResources:Admin.GlobalSettings.Other.CompareProducts %>"
-                                ToolTip="<% $NopResources:Admin.GlobalSettings.Other.CompareProducts.Tooltip %>" />
-                        </td>
-                        <td class="adminData">
-                            <asp:CheckBox runat="server" ID="cbEnableCompareProducts"></asp:CheckBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="adminTitle">
-                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
-                                ID="lblWishList" Text="<% $NopResources:Admin.GlobalSettings.Other.WishList %>"
-                                ToolTip="<% $NopResources:Admin.GlobalSettings.Other.WishList.Tooltip %>" />
-                        </td>
-                        <td class="adminData">
-                            <asp:CheckBox runat="server" ID="cbEnableWishlist"></asp:CheckBox>
+                            <asp:CheckBox runat="server" ID="cbShowMiniShoppingCart"></asp:CheckBox>
                         </td>
                     </tr>
                     <tr>
@@ -1442,21 +1590,11 @@
                     <tr>
                         <td class="adminTitle">
                             <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
-                                ID="lblEmailAFriend" Text="<% $NopResources:Admin.GlobalSettings.Other.EmailAFriend %>"
-                                ToolTip="<% $NopResources:Admin.GlobalSettings.Other.EmailAFriend.Tooltip %>" />
+                                ID="lblUseImagesForLanguageSelection" Text="<% $NopResources:Admin.GlobalSettings.Other.UseImagesForLanguageSelection %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Other.UseImagesForLanguageSelection.Tooltip %>" />
                         </td>
                         <td class="adminData">
-                            <asp:CheckBox runat="server" ID="cbEnableEmailAFriend"></asp:CheckBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="adminTitle">
-                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
-                                ID="lblShowMiniShoppingCart" Text="<% $NopResources:Admin.GlobalSettings.Other.ShowMiniShoppingCart %>"
-                                ToolTip="<% $NopResources:Admin.GlobalSettings.Other.ShowMiniShoppingCart.Tooltip %>" />
-                        </td>
-                        <td class="adminData">
-                            <asp:CheckBox runat="server" ID="cbShowMiniShoppingCart"></asp:CheckBox>
+                            <asp:CheckBox runat="server" ID="cbUseImagesForLanguageSelection" />
                         </td>
                     </tr>
                     <tr>
@@ -1472,33 +1610,12 @@
                     </tr>
                     <tr>
                         <td class="adminTitle">
-                            <nopCommerce:ToolTipLabel runat="server" ID="lblNotifyAboutNewProductReviews" Text="<% $NopResources:Admin.GlobalSettings.Other.NotifyNewProductReviews %>"
-                                ToolTip="<% $NopResources:Admin.GlobalSettings.Other.NotifyNewProductReviews.Tooltip %>"
-                                ToolTipImage="~/Administration/Common/ico-help.gif" />
+                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
+                                ID="lblEmailAFriend" Text="<% $NopResources:Admin.GlobalSettings.Other.EmailAFriend %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Other.EmailAFriend.Tooltip %>" />
                         </td>
                         <td class="adminData">
-                            <asp:CheckBox runat="server" ID="cbNotifyAboutNewProductReviews"></asp:CheckBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="adminTitle">
-                            <nopCommerce:ToolTipLabel runat="server" ID="lblProductReviewsMustBeApproved" Text="<% $NopResources:Admin.GlobalSettings.Other.ProductReviewsMustBeApproved %>"
-                                ToolTip="<% $NopResources:Admin.GlobalSettings.Other.ProductReviewsMustBeApproved.Tooltip %>"
-                                ToolTipImage="~/Administration/Common/ico-help.gif" />
-                        </td>
-                        <td class="adminData">
-                            <asp:CheckBox runat="server" ID="cbProductReviewsMustBeApproved"></asp:CheckBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="adminTitle">
-                            <nopCommerce:ToolTipLabel runat="server" ID="lblAllowAnonymousUsersToReviewProduct"
-                                Text="<% $NopResources:Admin.GlobalSettings.Other.AllowAnonymousUsersToReviewProduct %>"
-                                ToolTip="<% $NopResources:Admin.GlobalSettings.Other.AllowAnonymousUsersToReviewProduct.Tooltip %>"
-                                ToolTipImage="~/Administration/Common/ico-help.gif" />
-                        </td>
-                        <td class="adminData">
-                            <asp:CheckBox runat="server" ID="cbAllowAnonymousUsersToReviewProduct"></asp:CheckBox>
+                            <asp:CheckBox runat="server" ID="cbEnableEmailAFriend"></asp:CheckBox>
                         </td>
                     </tr>
                     <tr>
@@ -1510,147 +1627,6 @@
                         </td>
                         <td class="adminData">
                             <asp:CheckBox runat="server" ID="cbAllowAnonymousUsersToEmailAFriend"></asp:CheckBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="adminTitle">
-                            <nopCommerce:ToolTipLabel runat="server" ID="lblAllowAnonymousUsersToSetProductRatings"
-                                Text="<% $NopResources:Admin.GlobalSettings.Other.AllowAnonymousUsersToSetProductRatings %>"
-                                ToolTip="<% $NopResources:Admin.GlobalSettings.Other.AllowAnonymousUsersToSetProductRatings.Tooltip %>"
-                                ToolTipImage="~/Administration/Common/ico-help.gif" />
-                        </td>
-                        <td class="adminData">
-                            <asp:CheckBox runat="server" ID="cbAllowAnonymousUsersToSetProductRatings"></asp:CheckBox>
-                        </td>
-                    </tr>
-                    <tr class="adminSeparator">
-                        <td colspan="2">
-                            <hr />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="adminTitle">
-                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
-                                ID="lblRecentlyViewedProductsEnabled" Text="<% $NopResources:Admin.GlobalSettings.Other.RecentlyViewedProducts %>"
-                                ToolTip="<% $NopResources:Admin.GlobalSettings.Other.RecentlyViewedProducts.Tooltip %>" />
-                        </td>
-                        <td class="adminData">
-                            <asp:CheckBox runat="server" ID="cbRecentlyViewedProductsEnabled"></asp:CheckBox>
-                        </td>
-                    </tr>
-                    <tr id="pnlRecentlyViewedProductsNumber">
-                        <td class="adminTitle">
-                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
-                                ID="lblRecentlyViewedProductsNumber" Text="<% $NopResources:Admin.GlobalSettings.Other.RecentlyViewedProductsNumber %>"
-                                ToolTip="<% $NopResources:Admin.GlobalSettings.Other.RecentlyViewedProductsNumber.Tooltip %>" />
-                        </td>
-                        <td class="adminData">
-                            <nopCommerce:NumericTextBox runat="server" CssClass="adminInput" ID="txtRecentlyViewedProductsNumber"
-                                RequiredErrorMessage="<% $NopResources:Admin.GlobalSettings.Other.RecentlyViewedProductsNumber.RequiredErrorMessage %>"
-                                MinimumValue="1" MaximumValue="999999" RangeErrorMessage="<% $NopResources:Admin.GlobalSettings.Other.RecentlyViewedProductsNumber.RangeErrorMessage %>"
-                                Width="50px" />
-                        </td>
-                    </tr>
-                    <tr class="adminSeparator">
-                        <td colspan="2">
-                            <hr />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="adminTitle">
-                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
-                                ID="lblRecentlyAddedProductsEnabled" Text="<% $NopResources:Admin.GlobalSettings.Other.RecentlyAddedProducts %>"
-                                ToolTip="<% $NopResources:Admin.GlobalSettings.Other.RecentlyAddedProducts.Tooltip %>" />
-                        </td>
-                        <td class="adminData">
-                            <asp:CheckBox runat="server" ID="cbRecentlyAddedProductsEnabled"></asp:CheckBox>
-                        </td>
-                    </tr>
-                    <tr id="pnlRecentlyAddedProductsNumber">
-                        <td class="adminTitle">
-                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
-                                ID="lblRecentlyAddedProductsNumber" Text="<% $NopResources:Admin.GlobalSettings.Other.RecentlyAddedProductsNumber %>"
-                                ToolTip="<% $NopResources:Admin.GlobalSettings.Other.RecentlyAddedProductsNumber.Tooltip %>" />
-                        </td>
-                        <td class="adminData">
-                            <nopCommerce:NumericTextBox runat="server" CssClass="adminInput" ID="txtRecentlyAddedProductsNumber"
-                                RequiredErrorMessage="<% $NopResources:Admin.GlobalSettings.Other.RecentlyAddedProductsNumber.RequiredErrorMessage %>"
-                                MinimumValue="1" MaximumValue="999999" RangeErrorMessage="<% $NopResources:Admin.GlobalSettings.Other.RecentlyAddedProductsNumber.RangeErrorMessage %>"
-                                Width="50px" />
-                        </td>
-                    </tr>
-                    <tr class="adminSeparator">
-                        <td colspan="2">
-                            <hr />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="adminTitle">
-                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
-                                ID="lblShowBestsellersOnHomePage" Text="<% $NopResources:Admin.GlobalSettings.Other.ShowBestsellersOnHomePage %>"
-                                ToolTip="<% $NopResources:Admin.GlobalSettings.Other.ShowBestsellersOnHomePage.Tooltip %>" />
-                        </td>
-                        <td class="adminData">
-                            <asp:CheckBox runat="server" ID="cbShowBestsellersOnHomePage"></asp:CheckBox>
-                        </td>
-                    </tr>
-                    <tr id="pnlShowBestsellersOnHomePageNumber">
-                        <td class="adminTitle">
-                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
-                                ID="lblShowBestsellersOnHomePageNumber" Text="<% $NopResources:Admin.GlobalSettings.Other.ShowBestsellersOnHomePageNumber %>"
-                                ToolTip="<% $NopResources:Admin.GlobalSettings.Other.ShowBestsellersOnHomePageNumber.Tooltip %>" />
-                        </td>
-                        <td class="adminData">
-                            <nopCommerce:NumericTextBox runat="server" CssClass="adminInput" ID="txtShowBestsellersOnHomePageNumber"
-                                RequiredErrorMessage="<% $NopResources:Admin.GlobalSettings.Other.ShowBestsellersOnHomePageNumber.RequiredErrorMessage %>"
-                                MinimumValue="1" MaximumValue="999999" RangeErrorMessage="<% $NopResources:Admin.GlobalSettings.Other.ShowBestsellersOnHomePageNumber.RangeErrorMessage %>"
-                                Width="50px" />
-                        </td>
-                    </tr>
-                    <tr class="adminSeparator">
-                        <td colspan="2">
-                            <hr />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="adminTitle">
-                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
-                                ID="lblProductsAlsoPurchased" Text="<% $NopResources:Admin.GlobalSettings.Other.AlsoPurchased %>"
-                                ToolTip="<% $NopResources:Admin.GlobalSettings.Other.AlsoPurchased.Tooltip %>" />
-                        </td>
-                        <td class="adminData">
-                            <asp:CheckBox runat="server" ID="cbProductsAlsoPurchased"></asp:CheckBox>
-                        </td>
-                    </tr>
-                    <tr id="pnlProductsAlsoPurchasedNumber">
-                        <td class="adminTitle">
-                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
-                                ID="lblProductsAlsoPurchasedNumber" Text="<% $NopResources:Admin.GlobalSettings.Other.AlsoPurchasedNumber %>"
-                                ToolTip="<% $NopResources:Admin.GlobalSettings.Other.AlsoPurchasedNumber.Tooltip %>" />
-                        </td>
-                        <td class="adminData">
-                            <nopCommerce:NumericTextBox runat="server" CssClass="adminInput" ID="txtProductsAlsoPurchasedNumber"
-                                RequiredErrorMessage="<% $NopResources:Admin.GlobalSettings.Other.AlsoPurchasedNumber.RequiredErrorMessage %>"
-                                MinimumValue="1" MaximumValue="999999" RangeErrorMessage="<% $NopResources:Admin.GlobalSettings.Other.AlsoPurchasedNumber.RangeErrorMessage %>"
-                                Width="50px" />
-                        </td>
-                    </tr>
-                    <tr class="adminSeparator">
-                        <td colspan="2">
-                            <hr />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="adminTitle">
-                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
-                                ID="lblCrossSellsNumber" Text="<% $NopResources:Admin.GlobalSettings.Other.CrossSellsNumber %>"
-                                ToolTip="<% $NopResources:Admin.GlobalSettings.Other.CrossSellsNumber.Tooltip %>" />
-                        </td>
-                        <td class="adminData">
-                            <nopCommerce:NumericTextBox runat="server" CssClass="adminInput" ID="txtCrossSellsNumber"
-                                RequiredErrorMessage="<% $NopResources:Admin.GlobalSettings.Other.CrossSellsNumber.RequiredErrorMessage %>"
-                                MinimumValue="0" MaximumValue="999999" RangeErrorMessage="<% $NopResources:Admin.GlobalSettings.Other.CrossSellsNumber.RangeErrorMessage %>"
-                                Width="50px" />
                         </td>
                     </tr>
                 </table>
