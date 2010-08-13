@@ -471,6 +471,25 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             string customerEmail, OrderStatusEnum? os, PaymentStatusEnum? ps, 
             ShippingStatusEnum? ss)
         {
+            return SearchOrders(startTime, endTime,
+             customerEmail, os, ps, ss, string.Empty);
+        }
+
+        /// <summary>
+        /// Search orders
+        /// </summary>
+        /// <param name="startTime">Order start time; null to load all orders</param>
+        /// <param name="endTime">Order end time; null to load all orders</param>
+        /// <param name="customerEmail">Customer email</param>
+        /// <param name="os">Order status; null to load all orders</param>
+        /// <param name="ps">Order payment status; null to load all orders</param>
+        /// <param name="ss">Order shippment status; null to load all orders</param>
+        /// <param name="orderGuid">Search by order GUID (Global unique identifier) or part of GUID. Leave empty to load all orders.</param>
+        /// <returns>Order collection</returns>
+        public static List<Order> SearchOrders(DateTime? startTime, DateTime? endTime,
+            string customerEmail, OrderStatusEnum? os, PaymentStatusEnum? ps,
+            ShippingStatusEnum? ss, string orderGuid)
+        {
             int? orderStatusId = null;
             if (os.HasValue)
                 orderStatusId = (int)os.Value;
@@ -496,8 +515,15 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                         !o.Deleted
                         orderby o.CreatedOn descending
                         select o;
-            
+
             var orders = query.ToList();
+            
+            //filter by GUID. Filter in BLL because EF doesn't support casting of GUID to string
+            if (!String.IsNullOrEmpty(orderGuid))
+            {
+                orders = orders.FindAll(o => o.OrderGuid.ToString().ToLowerInvariant().Contains(orderGuid.ToLowerInvariant()));
+            }
+
             return orders;
         }
 

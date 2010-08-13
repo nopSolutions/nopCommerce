@@ -78,6 +78,16 @@
             </asp:DropDownList>
         </td>
     </tr>
+    
+    <tr>
+        <td class="adminTitle">
+            <nopCommerce:ToolTipLabel runat="server" ID="lblOrderGuid" Text="<% $NopResources:Admin.Orders.OrderGuid %>"
+                ToolTip="<% $NopResources:Admin.Orders.OrderGuid.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
+        </td>
+        <td class="adminData">
+            <asp:TextBox ID="txtOrderGuid" CssClass="adminInput" runat="server"></asp:TextBox>
+        </td>
+    </tr>
     <tr>
         <td class="adminTitle">
             <nopCommerce:ToolTipLabel runat="server" ID="lblGoDirectlyToOrderNumber" Text="<% $NopResources:Admin.Orders.GoDirectly %>"

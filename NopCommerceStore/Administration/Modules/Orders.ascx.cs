@@ -76,7 +76,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             if (shippingStatusId > 0)
                 shippingStatus = (ShippingStatusEnum)Enum.ToObject(typeof(ShippingStatusEnum), shippingStatusId);
 
-            var orders = OrderManager.SearchOrders(startDate, endDate, txtCustomerEmail.Text, orderStatus, paymentStatus, shippingStatus);
+            string orderGuid = txtOrderGuid.Text.Trim();
+
+            var orders = OrderManager.SearchOrders(startDate, endDate,
+                txtCustomerEmail.Text, orderStatus, paymentStatus, shippingStatus, orderGuid);
             return orders;
         }
 

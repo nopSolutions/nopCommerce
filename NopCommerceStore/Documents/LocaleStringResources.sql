@@ -2123,6 +2123,12 @@ set @resources='
   <LocaleResource Name="Admin.ConfigurationHome.EmailAccounts.Description">
     <Value>Manage email accounts and settings</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.OrderGuid">
+    <Value>Order GUID:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.OrderGuid.Tooltip">
+    <Value>Search by order GUID (Global unique identifier) or part of GUID. Leave empty to load all orders.</Value>
+  </LocaleResource>
 </Language>
 '
 

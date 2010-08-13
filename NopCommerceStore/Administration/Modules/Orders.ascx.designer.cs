@@ -157,6 +157,24 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         protected global::System.Web.UI.WebControls.DropDownList ddlShippingStatus;
         
         /// <summary>
+        /// lblOrderGuid control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblOrderGuid;
+        
+        /// <summary>
+        /// txtOrderGuid control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtOrderGuid;
+        
+        /// <summary>
         /// lblGoDirectlyToOrderNumber control.
         /// </summary>
         /// <remarks>
