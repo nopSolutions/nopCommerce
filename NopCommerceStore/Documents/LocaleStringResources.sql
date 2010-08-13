@@ -2459,6 +2459,9 @@ set @resources='
   <LocaleResource Name="Admin.GlobalSettings.Products.CrossSellsNumber.RangeErrorMessage">
     <Value>The number of ''Cross-Sells'' must be from 0 to 999999.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.CheckoutAttributeDetails.Edit">
+    <Value>Edit Checkout Attribute</Value>
+  </LocaleResource>
 </Language>
 '
 

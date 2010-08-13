@@ -183,13 +183,13 @@
                 <nopCommerce:ToolTipLabel runat="server" ID="lblPriceAdjustment" Text="<% $NopResources:Admin.CheckoutAttributeValues.New.PriceAdjustment %>"
                     ToolTip="<% $NopResources:Admin.CheckoutAttributeValues.New.PriceAdjustment.Tooltip %>"
                     ToolTipImage="~/Administration/Common/ico-help.gif" />
-                [<%=CurrencyManager.PrimaryStoreCurrency.CurrencyCode%>]:
             </td>
             <td class="adminData">
                 <nopCommerce:DecimalTextBox runat="server" CssClass="adminInput" ID="txtNewPriceAdjustment"
                     Value="0" RequiredErrorMessage="<% $NopResources:Admin.CheckoutAttributeValues.New.PriceAdjustment.RequiredErrorMessage %>"
                     MinimumValue="0" MaximumValue="100000000" RangeErrorMessage="<% $NopResources:Admin.CheckoutAttributeValues.New.PriceAdjustment.RangeErrorMessage %>"
                     ValidationGroup="NewCheckoutAttributeValue"></nopCommerce:DecimalTextBox>
+                [<%=CurrencyManager.PrimaryStoreCurrency.CurrencyCode%>]
             </td>
         </tr>
         <tr>
@@ -197,13 +197,13 @@
                 <nopCommerce:ToolTipLabel runat="server" ID="lblWeightAdjustment" Text="<% $NopResources:Admin.CheckoutAttributeValues.New.WeightAdjustment %>"
                     ToolTip="<% $NopResources:Admin.CheckoutAttributeValues.New.WeightAdjustment.Tooltip %>"
                     ToolTipImage="~/Administration/Common/ico-help.gif" />
-                [<%=MeasureManager.BaseWeightIn.Name%>]:
             </td>
             <td class="adminData">
                 <nopCommerce:DecimalTextBox runat="server" CssClass="adminInput" ID="txtNewWeightAdjustment"
                     Value="0" RequiredErrorMessage="<% $NopResources:Admin.CheckoutAttributeValues.New.WeightAdjustment.RequiredErrorMessage %>"
                     MinimumValue="0" MaximumValue="999999" RangeErrorMessage="<% $NopResources:Admin.CheckoutAttributeValues.New.WeightAdjustment.RangeErrorMessage %>"
                     ValidationGroup="NewCheckoutAttributeValue"></nopCommerce:DecimalTextBox>
+                [<%=MeasureManager.BaseWeightIn.Name%>]
             </td>
         </tr>
         <tr>

@@ -7,7 +7,6 @@
 <%@ Register TagPrefix="nopCommerce" TagName="DatePicker" Src="DatePicker.ascx" %>
 <%@ Register Assembly="NopCommerceStore" Namespace="NopSolutions.NopCommerce.Web.Controls"
     TagPrefix="nopCommerce" %>
-    
 <script type="text/javascript">
     $(document).ready(function () {
         toggleGiftCard();
@@ -37,7 +36,7 @@
             $('#pnlMaximumCustomerEnteredPrice').hide();
         }
     }
-    
+
     function toggleDownloadableProduct() {
         if (getE('<%=cbIsDownload.ClientID %>').checked) {
 
@@ -154,7 +153,7 @@
         else if (selectedManageInventoryMethodId == 1) {
             $('#pnlStockQuantity').show();
             $('#pnlDisplayStockAvailability').show();
-            
+
             if (getE('<%=cbDisplayStockAvailability.ClientID %>').checked) {
                 $('#pnlDisplayStockQuantity').show();
             }
@@ -178,7 +177,6 @@
         }
     }
 </script>
-
 <%if (this.HasLocalizableContent)
   { %>
 <div id="localizablecontentpanel" class="tabcontainer-usual">
@@ -372,39 +370,39 @@
         <td class="adminTitle">
             <nopCommerce:ToolTipLabel runat="server" ID="lblPrice" Text="<% $NopResources:Admin.ProductInfo.Price %>"
                 ToolTip="<% $NopResources:Admin.ProductInfo.Price.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
-            [<%=CurrencyManager.PrimaryStoreCurrency.CurrencyCode%>]:
         </td>
         <td class="adminData">
             <nopCommerce:DecimalTextBox runat="server" CssClass="adminInput" ID="txtPrice" Value="0"
                 RequiredErrorMessage="<% $NopResources:Admin.ProductInfo.Price.RequiredErrorMessage %>"
                 MinimumValue="0" MaximumValue="100000000" RangeErrorMessage="<% $NopResources:Admin.ProductInfo.Price.RangeErrorMessage %>">
             </nopCommerce:DecimalTextBox>
+            [<%=CurrencyManager.PrimaryStoreCurrency.CurrencyCode%>]
         </td>
     </tr>
     <tr>
         <td class="adminTitle">
             <nopCommerce:ToolTipLabel runat="server" ID="lblOldPrice" Text="<% $NopResources:Admin.ProductInfo.OldPrice %>"
                 ToolTip="<% $NopResources:Admin.ProductInfo.OldPrice.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
-            [<%=CurrencyManager.PrimaryStoreCurrency.CurrencyCode%>]:
         </td>
         <td class="adminData">
             <nopCommerce:DecimalTextBox runat="server" CssClass="adminInput" ID="txtOldPrice"
                 Value="0" RequiredErrorMessage="<% $NopResources:Admin.ProductInfo.OldPrice.RequiredErrorMessage%>"
                 MinimumValue="0" MaximumValue="100000000" RangeErrorMessage="<% $NopResources:Admin.ProductInfo.OldPrice.RangeErrorMessage %>">
             </nopCommerce:DecimalTextBox>
+            [<%=CurrencyManager.PrimaryStoreCurrency.CurrencyCode%>]
         </td>
     </tr>
     <tr>
         <td class="adminTitle">
             <nopCommerce:ToolTipLabel runat="server" ID="lblProductCost" Text="<% $NopResources:Admin.ProductInfo.ProductCost %>"
                 ToolTip="<% $NopResources:Admin.ProductInfo.ProductCost.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
-            [<%=CurrencyManager.PrimaryStoreCurrency.CurrencyCode%>]:
         </td>
         <td class="adminData">
             <nopCommerce:DecimalTextBox runat="server" CssClass="adminInput" ID="txtProductCost"
                 Value="0" RequiredErrorMessage="<% $NopResources:Admin.ProductInfo.ProductCost.RequiredErrorMessage %>"
                 MinimumValue="0" MaximumValue="100000000" RangeErrorMessage="<% $NopResources:Admin.ProductInfo.ProductCost.RangeErrorMessage %>">
             </nopCommerce:DecimalTextBox>
+            [<%=CurrencyManager.PrimaryStoreCurrency.CurrencyCode%>]
         </td>
     </tr>
     <tr>
@@ -437,27 +435,29 @@
     <tr id="pnlMinimumCustomerEnteredPrice">
         <td class="adminTitle">
             <nopCommerce:ToolTipLabel runat="server" ID="lblMinimumCustomerEnteredPrice" Text="<% $NopResources:Admin.ProductInfo.MinimumCustomerEnteredPrice %>"
-                ToolTip="<% $NopResources:Admin.ProductInfo.MinimumCustomerEnteredPrice.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
-            [<%=CurrencyManager.PrimaryStoreCurrency.CurrencyCode%>]:
+                ToolTip="<% $NopResources:Admin.ProductInfo.MinimumCustomerEnteredPrice.Tooltip %>"
+                ToolTipImage="~/Administration/Common/ico-help.gif" />
         </td>
         <td class="adminData">
             <nopCommerce:NumericTextBox runat="server" CssClass="adminInput" ID="txtMinimumCustomerEnteredPrice"
                 Value="0" RequiredErrorMessage="<% $NopResources:Admin.ProductInfo.MinimumCustomerEnteredPrice.RequiredErrorMessage%>"
                 MinimumValue="0" MaximumValue="100000000" RangeErrorMessage="<% $NopResources:Admin.ProductInfo.MinimumCustomerEnteredPrice.RangeErrorMessage %>">
             </nopCommerce:NumericTextBox>
+            [<%=CurrencyManager.PrimaryStoreCurrency.CurrencyCode%>]
         </td>
     </tr>
     <tr id="pnlMaximumCustomerEnteredPrice">
         <td class="adminTitle">
             <nopCommerce:ToolTipLabel runat="server" ID="lblMaximumCustomerEnteredPrice" Text="<% $NopResources:Admin.ProductInfo.MaximumCustomerEnteredPrice %>"
-                ToolTip="<% $NopResources:Admin.ProductInfo.MaximumCustomerEnteredPrice.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
-            [<%=CurrencyManager.PrimaryStoreCurrency.CurrencyCode%>]:
+                ToolTip="<% $NopResources:Admin.ProductInfo.MaximumCustomerEnteredPrice.Tooltip %>"
+                ToolTipImage="~/Administration/Common/ico-help.gif" />
         </td>
         <td class="adminData">
             <nopCommerce:NumericTextBox runat="server" CssClass="adminInput" ID="txtMaximumCustomerEnteredPrice"
                 Value="1000" RequiredErrorMessage="<% $NopResources:Admin.ProductInfo.MaximumCustomerEnteredPrice.RequiredErrorMessage%>"
                 MinimumValue="0" MaximumValue="100000000" RangeErrorMessage="<% $NopResources:Admin.ProductInfo.MaximumCustomerEnteredPrice.RangeErrorMessage %>">
             </nopCommerce:NumericTextBox>
+            [<%=CurrencyManager.PrimaryStoreCurrency.CurrencyCode%>]
         </td>
     </tr>
     <tr>
@@ -724,65 +724,64 @@
             <nopCommerce:ToolTipLabel runat="server" ID="lblAdditionalShippingCharge" Text="<% $NopResources: Admin.ProductInfo.AdditionalShippingCharge%>"
                 ToolTip="<% $NopResources:Admin.ProductInfo.AdditionalShippingCharge.Tooltip %>"
                 ToolTipImage="~/Administration/Common/ico-help.gif" />
-            [<%=CurrencyManager.PrimaryStoreCurrency.CurrencyCode%>]:
         </td>
         <td class="adminData">
             <nopCommerce:DecimalTextBox runat="server" CssClass="adminInput" ID="txtAdditionalShippingCharge"
                 Value="0" RequiredErrorMessage="<% $NopResources:Admin.ProductInfo.AdditionalShippingCharge.RequiredErrorMessage %>"
                 MinimumValue="0" MaximumValue="100000000" RangeErrorMessage="<% $NopResources:Admin.ProductInfo.AdditionalShippingCharge.RangeErrorMessage %>">
             </nopCommerce:DecimalTextBox>
+            [<%=CurrencyManager.PrimaryStoreCurrency.CurrencyCode%>]
         </td>
     </tr>
     <tr id="pnlWeight">
         <td class="adminTitle">
             <nopCommerce:ToolTipLabel runat="server" ID="lblWeight" Text="<% $NopResources:Admin.ProductInfo.Weight %>"
                 ToolTip="<% $NopResources:Admin.ProductInfo.Weight.ToolTip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
-            [<%=MeasureManager.BaseWeightIn.Name%>]:
         </td>
         <td class="adminData">
             <nopCommerce:DecimalTextBox runat="server" CssClass="adminInput" ID="txtWeight" Value="0"
                 RequiredErrorMessage="<% $NopResources:Admin.ProductInfo.Weight.RequiredErrorMessage %>"
                 MinimumValue="0" MaximumValue="999999" RangeErrorMessage="<% $NopResources:Admin.ProductInfo.Weight.RangeErrorMessage %>">
-            </nopCommerce:DecimalTextBox>
+            </nopCommerce:DecimalTextBox> [<%=MeasureManager.BaseWeightIn.Name%>]
         </td>
     </tr>
     <tr id="pnlLength">
         <td class="adminTitle">
             <nopCommerce:ToolTipLabel runat="server" ID="lblLength" Text="<% $NopResources:Admin.ProductInfo.Length %>"
                 ToolTip="<% $NopResources:Admin.ProductInfo.Length.ToolTip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
-            [<%=MeasureManager.BaseDimensionIn.Name%>]:
         </td>
         <td class="adminData">
             <nopCommerce:DecimalTextBox runat="server" CssClass="adminInput" ID="txtLength" Value="0"
                 RequiredErrorMessage="<% $NopResources:Admin.ProductInfo.Length.RequiredErrorMessage %>"
                 MinimumValue="0" MaximumValue="999999" RangeErrorMessage="<% $NopResources:Admin.ProductInfo.Length.RangeErrorMessage %>">
             </nopCommerce:DecimalTextBox>
+            [<%=MeasureManager.BaseDimensionIn.Name%>]
         </td>
     </tr>
     <tr id="pnlWidth">
         <td class="adminTitle">
             <nopCommerce:ToolTipLabel runat="server" ID="lblWidth" Text="<% $NopResources:Admin.ProductInfo.Width %>"
                 ToolTip="<% $NopResources:Admin.ProductInfo.Width.ToolTip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
-            [<%=MeasureManager.BaseDimensionIn.Name%>]:
         </td>
         <td class="adminData">
             <nopCommerce:DecimalTextBox runat="server" CssClass="adminInput" ID="txtWidth" Value="0"
                 RequiredErrorMessage="<% $NopResources:Admin.ProductInfo.Width.RequiredErrorMessage %>"
                 MinimumValue="0" MaximumValue="999999" RangeErrorMessage="<% $NopResources:Admin.ProductInfo.Width.RangeErrorMessage %>">
             </nopCommerce:DecimalTextBox>
+            [<%=MeasureManager.BaseDimensionIn.Name%>]
         </td>
     </tr>
     <tr id="pnlHeight">
         <td class="adminTitle">
             <nopCommerce:ToolTipLabel runat="server" ID="lblHeight" Text="<% $NopResources:Admin.ProductInfo.Height %>"
                 ToolTip="<% $NopResources:Admin.ProductInfo.Height.ToolTip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
-            [<%=MeasureManager.BaseDimensionIn.Name%>]:
         </td>
         <td class="adminData">
             <nopCommerce:DecimalTextBox runat="server" CssClass="adminInput" ID="txtHeight" Value="0"
                 RequiredErrorMessage="<% $NopResources:Admin.ProductInfo.Height.RequiredErrorMessage %>"
                 MinimumValue="0" MaximumValue="999999" RangeErrorMessage="<% $NopResources:Admin.ProductInfo.Height.RangeErrorMessage %>">
             </nopCommerce:DecimalTextBox>
+            [<%=MeasureManager.BaseDimensionIn.Name%>]
         </td>
     </tr>
     <tr class="adminSeparator">
@@ -901,13 +900,14 @@
     <tr id="pnlBackorders">
         <td class="adminTitle">
             <nopCommerce:ToolTipLabel runat="server" ID="lblBackorders" Text="<% $NopResources:Admin.ProductInfo.Backorders %>"
-                ToolTip="<% $NopResources:Admin.ProductInfo.Backorders.Tooltip %>"
-                ToolTipImage="~/Administration/Common/ico-help.gif" />
+                ToolTip="<% $NopResources:Admin.ProductInfo.Backorders.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
         </td>
         <td class="adminData">
             <asp:DropDownList ID="ddlBackorders" CssClass="adminInput" runat="server">
-                <asp:ListItem Text="<% $NopResources:Admin.ProductBackorderMode.NoBackorders %>" Value="0"></asp:ListItem>
-                <asp:ListItem Text="<% $NopResources:Admin.ProductBackorderMode.AllowQtyBelow0 %>" Value="1"></asp:ListItem>
+                <asp:ListItem Text="<% $NopResources:Admin.ProductBackorderMode.NoBackorders %>"
+                    Value="0"></asp:ListItem>
+                <asp:ListItem Text="<% $NopResources:Admin.ProductBackorderMode.AllowQtyBelow0 %>"
+                    Value="1"></asp:ListItem>
                 <asp:ListItem Text="<% $NopResources:Admin.ProductBackorderMode.AllowQtyBelow0AndNotifyCustomer %>"
                     Value="2"></asp:ListItem>
             </asp:DropDownList>

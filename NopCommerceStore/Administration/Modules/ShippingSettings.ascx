@@ -27,13 +27,12 @@
         <td class="adminTitle">
             <nopCommerce:ToolTipLabel runat="server" ID="lblValueOfX" Text="<% $NopResources:Admin.ShippingSettings.ValueOfX %>"
                 ToolTip="<% $NopResources:Admin.ShippingSettings.ValueOfX.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
-            [<%=CurrencyManager.PrimaryStoreCurrency.CurrencyCode%>]:
-        </td>
+            </td>
         <td class="adminData">
             <nopCommerce:DecimalTextBox runat="server" CssClass="adminInput" ID="txtFreeShippingOverX"
                 Value="0" RequiredErrorMessage="<% $NopResources:Admin.ShippingSettings.ValueOfX.RequiredErrorMessage %>"
                 MinimumValue="0" MaximumValue="100000000" RangeErrorMessage="<% $NopResources:Admin.ShippingSettings.ValueOfX.RangeErrorMessage %>">
-            </nopCommerce:DecimalTextBox>
+            </nopCommerce:DecimalTextBox> [<%=CurrencyManager.PrimaryStoreCurrency.CurrencyCode%>]
         </td>
     </tr>
     <tr class="adminSeparator">

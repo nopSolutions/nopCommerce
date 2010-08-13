@@ -30,13 +30,13 @@
                     <td class="adminTitle">
                         <nopCommerce:ToolTipLabel runat="server" ID="lblInitialValue" Text="<% $NopResources:Admin.GiftCardInfo.InitialValue %>"
                             ToolTip="<% $NopResources:Admin.GiftCardInfo.InitialValue.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
-                        [<%=CurrencyManager.PrimaryStoreCurrency.CurrencyCode%>]:
                     </td>
                     <td class="adminData">
                         <nopCommerce:DecimalTextBox runat="server" CssClass="adminInput" ID="txtInitialValue"
                             Value="0" RequiredErrorMessage="<% $NopResources:Admin.GiftCardInfo.InitialValue.RequiredErrorMessage %>"
                             MinimumValue="0" MaximumValue="100000000" RangeErrorMessage="<% $NopResources:Admin.GiftCardInfo.InitialValue.RangeErrorMessage %>">
                         </nopCommerce:DecimalTextBox>
+                        [<%=CurrencyManager.PrimaryStoreCurrency.CurrencyCode%>]
                     </td>
                 </tr>
                 <tr>

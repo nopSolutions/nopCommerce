@@ -19,14 +19,15 @@
             <nopCommerce:ToolTipLabel runat="server" ID="lblAmountToRefund" Text="<% $NopResources:Admin.OrderPartialRefund.AmountToRefund %>"
                 ToolTip="<% $NopResources:Admin.OrderPartialRefund.AmountToRefund.Tooltip %>"
                 ToolTipImage="~/Administration/Common/ico-help.gif" />
-            [<%=CurrencyManager.PrimaryStoreCurrency.CurrencyCode%>]:
         </td>
         <td class="adminData">
             <nopCommerce:DecimalTextBox runat="server" CssClass="adminInput" ID="txtAmountToRefund"
                 Value="0" RequiredErrorMessage="<% $NopResources:Admin.OrderPartialRefund.AmountToRefund.RequiredErrorMessage%>"
-                MinimumValue="0" MaximumValue="100000000" RangeErrorMessage="<% $NopResources:Admin.OrderPartialRefund.AmountToRefund.RangeErrorMessage %>" Width="100px">
-            </nopCommerce:DecimalTextBox>
-            &nbsp;&nbsp;&nbsp;<asp:Label runat="server" ID="lblMaxAmountToRefund" />
+                MinimumValue="0" MaximumValue="100000000" RangeErrorMessage="<% $NopResources:Admin.OrderPartialRefund.AmountToRefund.RangeErrorMessage %>"
+                Width="100px"></nopCommerce:DecimalTextBox>
+            [<%=CurrencyManager.PrimaryStoreCurrency.CurrencyCode%>] &nbsp;&nbsp;&nbsp; <span
+                style="white-space: nowrap">
+                <asp:Label runat="server" ID="lblMaxAmountToRefund" /></span>
         </td>
     </tr>
 </table>

@@ -90,13 +90,13 @@
                         <nopCommerce:ToolTipLabel runat="server" ID="lblRequirementSpentAmount" Text="<% $NopResources:Admin.DiscountInfo.RequirementSpentAmount %>"
                             ToolTip="<% $NopResources:Admin.DiscountInfo.RequirementSpentAmount.Tooltip %>"
                             ToolTipImage="~/Administration/Common/ico-help.gif" />
-                        [<%=CurrencyManager.PrimaryStoreCurrency.CurrencyCode%>]:
                     </td>
                     <td class="adminData">
                         <nopCommerce:DecimalTextBox runat="server" CssClass="adminInput" ID="txtRequirementSpentAmount"
                             Value="0" RequiredErrorMessage="<% $NopResources:Admin.DiscountInfo.RequirementSpentAmount.RequiredErrorMessage %>"
                             MinimumValue="0" MaximumValue="100000000" RangeErrorMessage="<% $NopResources:Admin.DiscountInfo.RequirementSpentAmount.RangeErrorMessage %>">
                         </nopCommerce:DecimalTextBox>
+                        [<%=CurrencyManager.PrimaryStoreCurrency.CurrencyCode%>]
                     </td>
                 </tr>                
                 <tr runat="server" id="pnlRequirementBillingCountryIs">
@@ -177,13 +177,13 @@
                     <td class="adminTitle">
                         <nopCommerce:ToolTipLabel runat="server" ID="lblDiscountAmount" Text="<% $NopResources:Admin.DiscountInfo.DiscountAmount %>"
                             ToolTip="<% $NopResources:Admin.DiscountInfo.DiscountAmount.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
-                        [<%=CurrencyManager.PrimaryStoreCurrency.CurrencyCode%>]:
-                    </td>
+                       </td>
                     <td class="adminData">
                         <nopCommerce:DecimalTextBox runat="server" CssClass="adminInput" ID="txtDiscountAmount"
                             Value="0" RequiredErrorMessage="<% $NopResources:Admin.DiscountInfo.DiscountAmount.RequiredErrorMessage %>"
                             MinimumValue="0" MaximumValue="100000000" RangeErrorMessage="<% $NopResources:Admin.DiscountInfo.DiscountAmount.RangeErrorMessage %>">
                         </nopCommerce:DecimalTextBox>
+                        [<%=CurrencyManager.PrimaryStoreCurrency.CurrencyCode%>]
                     </td>
                 </tr>
                 <tr>
