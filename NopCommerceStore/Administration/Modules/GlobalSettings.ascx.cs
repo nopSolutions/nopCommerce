@@ -70,6 +70,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             txtDefaulSEOTitle.Text = SettingManager.GetSettingValue("SEO.DefaultTitle");
             txtDefaulSEODescription.Text = SettingManager.GetSettingValue("SEO.DefaultMetaDescription");
             txtDefaulSEOKeywords.Text = SettingManager.GetSettingValue("SEO.DefaultMetaKeywords");
+            cbConvertNonWesternChars.Checked = SettingManager.GetSettingValueBoolean("SEONames.ConvertNonWesternChars");
             if (File.Exists(HttpContext.Current.Request.PhysicalApplicationPath + "favicon.ico"))
             {
                 imgFavicon.ImageUrl = CommonHelper.GetStoreLocation() + "favicon.ico";
@@ -327,6 +328,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     SettingManager.SetParam("SEO.DefaultTitle", txtDefaulSEOTitle.Text);
                     SettingManager.SetParam("SEO.DefaultMetaDescription", txtDefaulSEODescription.Text);
                     SettingManager.SetParam("SEO.DefaultMetaKeywords", txtDefaulSEOKeywords.Text);
+                    SettingManager.SetParam("SEONames.ConvertNonWesternChars", cbConvertNonWesternChars.Checked.ToString());
+
                     SettingManager.SetParam("Display.PublicStoreTheme", ctrlThemeSelector.SelectedTheme);
                     if (fileFavicon.HasFile)
                     {

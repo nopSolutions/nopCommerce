@@ -792,6 +792,16 @@
                     </tr>
                     <tr>
                         <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ID="lblConvertNonWesternChars" Text="<% $NopResources:Admin.GlobalSettings.SEODisplay.ConvertNonWesternChars %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.SEODisplay.ConvertNonWesternChars.Tooltip %>"
+                                ToolTipImage="~/Administration/Common/ico-help.gif" />
+                        </td>
+                        <td class="adminData">
+                            <asp:CheckBox runat="server" ID="cbConvertNonWesternChars"></asp:CheckBox>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
                             <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
                                 ID="lblPublicStoreTheme" Text="<% $NopResources:Admin.GlobalSettings.SEODisplay.PublicStoreTheme %>"
                                 ToolTip="<% $NopResources:Admin.GlobalSettings.SEODisplay.PublicStoreTheme.Tooltip %>" />

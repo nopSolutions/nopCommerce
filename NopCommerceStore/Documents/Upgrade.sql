@@ -2870,3 +2870,12 @@ BEGIN
 END
 GO
 
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[Nop_Setting]
+		WHERE [Name] = N'SEONames.ConvertNonWesternChars')
+BEGIN
+	INSERT [dbo].[Nop_Setting] ([Name], [Value], [Description])
+	VALUES (N'SEONames.ConvertNonWesternChars', N'True', N'')
+END
+GO

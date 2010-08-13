@@ -2462,6 +2462,12 @@ set @resources='
   <LocaleResource Name="Admin.CheckoutAttributeDetails.Edit">
     <Value>Edit Checkout Attribute</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.SEODisplay.ConvertNonWesternChars">
+    <Value>Convert non-western chars:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.SEODisplay.ConvertNonWesternChars.Tooltip">
+    <Value>Check to take out the accent marks in the letters of SEO names while keeping the letter.</Value>
+  </LocaleResource>
 </Language>
 '
 
