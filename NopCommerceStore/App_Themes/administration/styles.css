@@ -219,6 +219,7 @@ td.adminTitle
 {
 	text-align: left;
 	vertical-align: middle;
+	white-space:nowrap;
 	width: 175px;
 }
 
