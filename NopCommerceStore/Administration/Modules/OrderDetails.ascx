@@ -1092,7 +1092,7 @@
                         </asp:UpdateProgress>
                         <div style="padding-top: 15px;">
                             <img alt="google maps" src="<%=CommonHelper.GetStoreLocation()%>images/GoogleMaps.gif" />
-                            <asp:HyperLink ID="hlShippingAddressGoogle" runat="server" Text="<% $NopResources:Admin.OrderDetails.ShippingAddress.Google %>"></asp:HyperLink>
+                            <asp:HyperLink ID="hlShippingAddressGoogle" runat="server" Text="<% $NopResources:Admin.OrderDetails.ShippingAddress.Google %>" Target="_blank"></asp:HyperLink>
                         </div>
                     </td>
                 </tr>
