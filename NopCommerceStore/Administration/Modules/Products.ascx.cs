@@ -265,7 +265,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     var pv = ProductManager.GetProductVariantBySKU(sku);
                     if (pv != null)
                     {
-                        string url = string.Format("{0}ProductDetails.aspx?ProductID={1}", CommonHelper.GetStoreAdminLocation(), pv.ProductId);
+                        string url = string.Format("{0}ProductVariantDetails.aspx?ProductVariantId={1}", CommonHelper.GetStoreAdminLocation(), pv.ProductVariantId);
                         Response.Redirect(url);
                     }
                 }
