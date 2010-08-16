@@ -2879,3 +2879,14 @@ BEGIN
 	VALUES (N'SEONames.ConvertNonWesternChars', N'True', N'')
 END
 GO
+
+--CCAvenue payment module
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[Nop_PaymentMethod]
+		WHERE [ClassName] = N'NopSolutions.NopCommerce.Payment.Methods.CCAvenue.CCAvenuePaymentProcessor, Nop.Payment.CCAvenue')
+BEGIN
+	INSERT [dbo].[Nop_PaymentMethod] ([Name], [VisibleName], [Description], [ConfigureTemplatePath], [UserTemplatePath], [ClassName], [SystemKeyword], [IsActive], [DisplayOrder]) 
+	VALUES (N'CCAvenue', N'CCAvenue', N'', N'Payment\CCAvenue\ConfigurePaymentMethod.ascx', N'~\Templates\Payment\CCAvenue\PaymentModule.ascx', N'NopSolutions.NopCommerce.Payment.Methods.CCAvenue.CCAvenuePaymentProcessor, Nop.Payment.CCAvenue', N'CCAVENUE', 0, 290)
+END
+GO

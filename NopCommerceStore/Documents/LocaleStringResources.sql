@@ -2474,6 +2474,9 @@ set @resources='
   <LocaleResource Name="Admin.GlobalSettings.SEODisplay.FaviconRemove.Tooltip">
     <Value>Click to delete favicon file.</Value>
   </LocaleResource>
+  <LocaleResource Name="CCAvenuePaymentModule.Message">
+    <Value>You will be redirected to CCAvenue site to complete the order.</Value>
+  </LocaleResource>
 </Language>
 '
 

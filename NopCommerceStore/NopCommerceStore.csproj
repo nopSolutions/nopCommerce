@@ -491,6 +491,13 @@
     <Compile Include="Administration\Modules\ReturnRequestInfo.ascx.designer.cs">
       <DependentUpon>ReturnRequestInfo.ascx</DependentUpon>
     </Compile>
+    <Compile Include="Administration\Payment\CCAvenue\ConfigurePaymentMethod.ascx.cs">
+      <DependentUpon>ConfigurePaymentMethod.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Administration\Payment\CCAvenue\ConfigurePaymentMethod.ascx.designer.cs">
+      <DependentUpon>ConfigurePaymentMethod.ascx</DependentUpon>
+    </Compile>
     <Compile Include="Administration\ReturnRequestDetails.aspx.cs">
       <DependentUpon>ReturnRequestDetails.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -3817,6 +3824,13 @@
     <Compile Include="Category.aspx.designer.cs">
       <DependentUpon>Category.aspx</DependentUpon>
     </Compile>
+    <Compile Include="CCAvenueReturn.aspx.cs">
+      <DependentUpon>CCAvenueReturn.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CCAvenueReturn.aspx.designer.cs">
+      <DependentUpon>CCAvenueReturn.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Checkout.aspx.designer.cs">
       <DependentUpon>Checkout.aspx</DependentUpon>
     </Compile>
@@ -4184,6 +4198,13 @@
     </Compile>
     <Compile Include="Templates\Payment\Alipay\HostedPayment.ascx.designer.cs">
       <DependentUpon>HostedPayment.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Templates\Payment\CCAvenue\PaymentModule.ascx.cs">
+      <DependentUpon>PaymentModule.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Templates\Payment\CCAvenue\PaymentModule.ascx.designer.cs">
+      <DependentUpon>PaymentModule.ascx</DependentUpon>
     </Compile>
     <Compile Include="Templates\Payment\QuickPay\PaymentModule.ascx.cs">
       <DependentUpon>PaymentModule.ascx</DependentUpon>
@@ -5653,6 +5674,10 @@
       <Project>{9E28F403-67DD-430E-BF7E-5DC59CF78E14}</Project>
       <Name>Nop.Payment.CashOnDelivery</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Payment\Nop.Payment.CCAvenue\Nop.Payment.CCAvenue.csproj">
+      <Project>{2BD730CA-42B9-4BEE-8D89-963CA55BB74B}</Project>
+      <Name>Nop.Payment.CCAvenue</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Payment\Nop.Payment.CDGcommerce\Nop.Payment.CDGcommerce.csproj">
       <Project>{23121FD0-FF0B-452C-85F5-47AF5CBD586C}</Project>
       <Name>Nop.Payment.CDGcommerce</Name>
@@ -5856,6 +5881,7 @@
     <Content Include="Administration\Modules\OnlineCustomers.ascx" />
     <Content Include="Administration\OnlineCustomers.aspx" />
     <Content Include="Administration\Modules\ReturnRequestInfo.ascx" />
+    <Content Include="Administration\Payment\CCAvenue\ConfigurePaymentMethod.ascx" />
     <Content Include="Administration\ReturnRequestDetails.aspx" />
     <Content Include="Administration\Modules\ReturnRequestDetails.ascx" />
     <Content Include="Administration\ReturnRequests.aspx" />
@@ -6083,6 +6109,7 @@
     <Content Include="BlogRSS.aspx" />
     <Content Include="CaptchaImage.aspx" />
     <Content Include="Category.aspx" />
+    <Content Include="CCAvenueReturn.aspx" />
     <Content Include="Checkout.aspx" />
     <Content Include="CheckoutBillingAddress.aspx" />
     <Content Include="CheckoutCompleted.aspx" />
@@ -6241,6 +6268,7 @@
     <Content Include="Templates\Payment\CashOnDelivery\PaymentModule.ascx" />
     <Content Include="Templates\Payment\CDGcommerce\PaymentModule.ascx" />
     <Content Include="Templates\Payment\Check\PaymentModule.ascx" />
+    <Content Include="Templates\Payment\CCAvenue\PaymentModule.ascx" />
     <Content Include="Templates\Payment\eWay\PaymentModule.ascx" />
     <Content Include="Templates\Payment\Manual\PaymentModule.ascx" />
     <Content Include="Templates\Payment\Moneybookers\PaymentModule.ascx" />

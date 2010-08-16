@@ -138,9 +138,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.PriceGrabber", "Librari
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Become", "Libraries\Nop.Become\Nop.Become.csproj", "{B91A4CB2-D8AF-4784-BED3-CF166FA5B7AD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Payment.CCAvenue", "Payment\Nop.Payment.CCAvenue\Nop.Payment.CCAvenue.csproj", "{2BD730CA-42B9-4BEE-8D89-963CA55BB74B}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 58
+		SccNumberOfProjects = 59
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs05
 		SccLocalPath0 = .
@@ -371,6 +373,10 @@ Global
 		SccProjectTopLevelParentUniqueName57 = NopCommerce.sln
 		SccProjectName57 = Tax/Nop.Tax.StrikeIron
 		SccLocalPath57 = Tax\\Nop.Tax.StrikeIron
+		SccProjectUniqueName58 = Payment\\Nop.Payment.CCAvenue\\Nop.Payment.CCAvenue.csproj
+		SccProjectTopLevelParentUniqueName58 = NopCommerce.sln
+		SccProjectName58 = Payment/Nop.Payment.CCAvenue
+		SccLocalPath58 = Payment\\Nop.Payment.CCAvenue
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|.NET = Debug|.NET
@@ -951,6 +957,16 @@ Global
 		{B91A4CB2-D8AF-4784-BED3-CF166FA5B7AD}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B91A4CB2-D8AF-4784-BED3-CF166FA5B7AD}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{B91A4CB2-D8AF-4784-BED3-CF166FA5B7AD}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{2BD730CA-42B9-4BEE-8D89-963CA55BB74B}.Debug|.NET.ActiveCfg = Debug|Any CPU
+		{2BD730CA-42B9-4BEE-8D89-963CA55BB74B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2BD730CA-42B9-4BEE-8D89-963CA55BB74B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2BD730CA-42B9-4BEE-8D89-963CA55BB74B}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{2BD730CA-42B9-4BEE-8D89-963CA55BB74B}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{2BD730CA-42B9-4BEE-8D89-963CA55BB74B}.Release|.NET.ActiveCfg = Release|Any CPU
+		{2BD730CA-42B9-4BEE-8D89-963CA55BB74B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2BD730CA-42B9-4BEE-8D89-963CA55BB74B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2BD730CA-42B9-4BEE-8D89-963CA55BB74B}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{2BD730CA-42B9-4BEE-8D89-963CA55BB74B}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -989,6 +1005,7 @@ Global
 		{F7F08A65-1412-4FF7-B869-5B0407AE6915} = {4CFBCFAB-08CD-4F5B-99FA-5BA79252B520}
 		{834E2826-C5D8-4C3F-8B79-51CB2BE462CA} = {4CFBCFAB-08CD-4F5B-99FA-5BA79252B520}
 		{7116F638-B9B6-454D-A12D-A81118023DFB} = {4CFBCFAB-08CD-4F5B-99FA-5BA79252B520}
+		{2BD730CA-42B9-4BEE-8D89-963CA55BB74B} = {4CFBCFAB-08CD-4F5B-99FA-5BA79252B520}
 		{DB0E4C93-A1E6-43DA-A068-8FDEAC9F30BE} = {07C16165-F4BA-4344-AEDE-A1DA33CEDB4C}
 		{FF0437D2-EA6D-4451-BE7A-666C7675B9EC} = {07C16165-F4BA-4344-AEDE-A1DA33CEDB4C}
 		{4383BA85-3EF8-4B18-9CA1-5D5A9A93135A} = {07C16165-F4BA-4344-AEDE-A1DA33CEDB4C}
