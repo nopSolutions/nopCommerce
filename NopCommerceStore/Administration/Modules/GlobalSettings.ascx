@@ -817,6 +817,9 @@
                         </td>
                         <td class="adminData">
                             <asp:Image runat="server" ID="imgFavicon" AlternateText="favicon" />
+                            <asp:Button ID="btnFaviconRemove" CssClass="adminInput" CausesValidation="false"
+                                runat="server" Text="<% $NopResources:Admin.GlobalSettings.SEODisplay.FaviconRemove %>"
+                                OnClick="btnFaviconRemove_OnClick" Visible="false" ToolTip="<% $NopResources:Admin.GlobalSettings.SEODisplay.FaviconRemove.Tooltip %>" />
                             <asp:FileUpload runat="server" ID="fileFavicon" />
                         </td>
                     </tr>
@@ -1116,11 +1119,9 @@
                         </td>
                         <td class="adminData">
                             <asp:Image runat="server" ID="imgPdfLogoPreview" AlternateText="Logo preview" />
-                            <br />
                             <asp:Button ID="btnPdfLogoRemove" CssClass="adminInput" CausesValidation="false"
                                 runat="server" Text="<% $NopResources:Admin.GlobalSettings.Media.PdfLogoRemove %>"
                                 OnClick="BtnPdfLogoRemove_OnClick" Visible="false" ToolTip="<% $NopResources:Admin.GlobalSettings.Media.PdfLogoRemove.Tooltip %>" />
-                            <br />
                             <asp:FileUpload runat="server" ID="uplPdfLogo" />
                         </td>
                     </tr>

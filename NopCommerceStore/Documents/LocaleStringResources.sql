@@ -2468,6 +2468,12 @@ set @resources='
   <LocaleResource Name="Admin.GlobalSettings.SEODisplay.ConvertNonWesternChars.Tooltip">
     <Value>Check to take out the accent marks in the letters of SEO names while keeping the letter.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.SEODisplay.FaviconRemove">
+    <Value>Delete favicon</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.SEODisplay.FaviconRemove.Tooltip">
+    <Value>Click to delete favicon file.</Value>
+  </LocaleResource>
 </Language>
 '
 

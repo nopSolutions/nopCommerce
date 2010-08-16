@@ -74,10 +74,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             if (File.Exists(HttpContext.Current.Request.PhysicalApplicationPath + "favicon.ico"))
             {
                 imgFavicon.ImageUrl = CommonHelper.GetStoreLocation() + "favicon.ico";
+                imgFavicon.Visible = true;
+                btnFaviconRemove.Visible = true;
             }
             else
             {
                 imgFavicon.Visible = false;
+                btnFaviconRemove.Visible = false;
             }
             cbShowWelcomeMessage.Checked = SettingManager.GetSettingValueBoolean("Display.ShowWelcomeMessageOnMainPage");
             cbShowNewsHeaderRssURL.Checked = SettingManager.GetSettingValueBoolean("Display.ShowNewsHeaderRssURL");
@@ -559,6 +562,20 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             }
         }
 
+        protected void btnFaviconRemove_OnClick(object sender, EventArgs e)
+        {
+            try
+            {
+                File.Delete(HttpContext.Current.Request.PhysicalApplicationPath + "favicon.ico");
+                imgFavicon.Visible = false;
+                btnFaviconRemove.Visible = false;
+            }
+            catch (Exception ex)
+            {
+                ShowError(ex.Message);
+            }
+        }
+        
         protected void btnChangeEncryptionPrivateKey_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
