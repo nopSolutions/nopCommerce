@@ -1197,6 +1197,14 @@
             <ContentTemplate>
                 <table class="adminContent">
                     <tr>
+                        <td class="adminContent" colspan="2">
+                            AdSense is an ad serving application run by Google Inc. Website owners can enroll
+                            in this program to enable text, image, and video advertisements on their websites.
+                            These advertisements are administered by Google and generate revenue on either a
+                            per-click or per-impression basis.
+                        </td>
+                    </tr>
+                    <tr>
                         <td class="adminTitle">
                             <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
                                 ID="lblGoogleAdsenseEnabled" Text="<% $NopResources:Admin.GlobalSettings.GoogleAdsense.Enabled %>"
