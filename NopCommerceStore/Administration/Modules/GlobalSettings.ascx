@@ -464,11 +464,6 @@
                             <asp:CheckBox ID="cbDefaultAvatarEnabled" runat="server"></asp:CheckBox>
                         </td>
                     </tr>
-                    <tr class="adminSeparator">
-                        <td colspan="2">
-                            <hr />
-                        </td>
-                    </tr>
                     <tr>
                         <td class="adminTitle">
                             <nopCommerce:ToolTipLabel runat="server" ID="lblAllowViewingProfiles" Text="<% $NopResources:Admin.GlobalSettings.Profiles.ViewingProfiles %>"
