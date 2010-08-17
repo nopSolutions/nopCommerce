@@ -2477,6 +2477,15 @@ set @resources='
   <LocaleResource Name="CCAvenuePaymentModule.Message">
     <Value>You will be redirected to CCAvenue site to complete the order.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.PollInfo.ShowOnHomePage">
+    <Value>Show on home page:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.PollInfo.StartDate">
+    <Value>Start date:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.PollInfo.EndDate">
+    <Value>End date:</Value>
+  </LocaleResource>
 </Language>
 '
 
