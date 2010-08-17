@@ -1225,6 +1225,9 @@
                 <table class="adminContent">
                     <tr>
                         <td class="adminTitle" colspan="2">
+                            Google Analytics is a free website stats tool from Google. It keeps track of statistics
+                            about the visitors and ecommerce conversion on your website.
+                            <br /><br />
                             Follow the next steps to enable Google Analytics integration:
                             <ul>
                                 <li><a href="http://www.google.com/analytics/" target="_blank">Create a Google Analytics
