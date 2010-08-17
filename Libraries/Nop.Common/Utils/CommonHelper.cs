@@ -207,6 +207,55 @@ namespace NopSolutions.NopCommerce.Common.Utils
             }
             return tmpS;
         }
+        
+        public static void BindJQuery(Page page)
+        {
+            BindJQuery(page, false);
+        }
+
+        public static void BindJQuery(Page page, bool useHosted)
+        {
+            if (page == null)
+                throw new ArgumentNullException("page");
+
+            //update version if required (e.g. 1.4)
+            string jQueryUrl = string.Empty;
+            if (useHosted)
+            {
+                jQueryUrl = "http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js";
+                if (CommonHelper.IsCurrentConnectionSecured())
+                {
+                    jQueryUrl = jQueryUrl.Replace("http://", "https://");
+                }
+            }
+            else
+            {
+                jQueryUrl = CommonHelper.GetStoreLocation() + "Scripts/jquery-1.4.min.js";
+            }
+
+            jQueryUrl = string.Format("<script type=\"text/javascript\" src=\"{0}\" ></script>", jQueryUrl);
+
+            if (page.Header != null)
+            {
+                //we have a header
+                if (HttpContext.Current.Items["JQueryRegistered"] == null ||
+                    !Convert.ToBoolean(HttpContext.Current.Items["JQueryRegistered"]))
+                {
+                    Literal script = new Literal() { Text = jQueryUrl };
+                    Control control = page.Header.FindControl("SCRIPTS");
+                    if (control != null)
+                        control.Controls.AddAt(0, script);
+                    else
+                        page.Header.Controls.AddAt(0, script);
+                }
+                HttpContext.Current.Items["JQueryRegistered"] = true;
+            }
+            else
+            {
+                //no header found
+                page.ClientScript.RegisterClientScriptInclude(jQueryUrl, jQueryUrl);
+            }
+        }
 
         /// <summary>
         /// Gets a value indicating whether requested page is an admin page

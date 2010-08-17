@@ -44,8 +44,7 @@ namespace NopSolutions.NopCommerce.Web
 
         protected virtual void BindJQuery()
         {
-            string jquery = CommonHelper.GetStoreLocation() + "Scripts/jquery-1.4.min.js";
-            Page.ClientScript.RegisterClientScriptInclude(jquery, jquery);
+            CommonHelper.BindJQuery(this.Page);
         }
 
         protected virtual void BindJQueryIdTabs()
