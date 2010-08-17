@@ -350,8 +350,10 @@ namespace NopSolutions.NopCommerce.Web.Install
                 dirsToCheck.Add(rootDir);
                 dirsToCheck.Add(rootDir + "Administration\\backups");
                 dirsToCheck.Add(rootDir + "files");
+                dirsToCheck.Add(rootDir + "files\\become");
                 dirsToCheck.Add(rootDir + "files\\ExportImport");
                 dirsToCheck.Add(rootDir + "files\\froogle");
+                dirsToCheck.Add(rootDir + "files\\pricegrabber");
                 dirsToCheck.Add(rootDir + "Google");
                 dirsToCheck.Add(rootDir + "images");
                 dirsToCheck.Add(rootDir + "images\\thumbs");
