@@ -101,6 +101,7 @@
             </ItemTemplate>
         </asp:TemplateField>
     </Columns>
+    <PagerSettings PageButtonCount="50" Position="TopAndBottom" />
 </asp:GridView>
 <br />
 <asp:Label runat="server" ID="lblNoProductsFound" Text="<% $NopResources:Admin.AddCategoryProduct.NoProductsFound %>"
