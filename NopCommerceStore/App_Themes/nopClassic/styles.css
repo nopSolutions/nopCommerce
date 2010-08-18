@@ -995,8 +995,7 @@ ul.languagelist li .selected
 {
 }
 
-
-.block-popular-tags li, .block-blog-archive li
+.block-popular-tags li, .block-popular-blogtags li
 {
     display:inline !important;
 }

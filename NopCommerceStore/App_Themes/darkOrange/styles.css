@@ -1052,7 +1052,7 @@ ul.languagelist li .selected
 	color: #ff9933;
 }
 
-.block-popular-tags li, .block-blog-archive li
+.block-popular-tags li, .block-popular-blogtags li
 {
     display:inline !important;
 }

@@ -1,6 +1,6 @@
 <%@ Control Language="C#" AutoEventWireup="true" Inherits="NopSolutions.NopCommerce.Web.Modules.BlogPopularTagsControl"
     CodeBehind="BlogPopularTags.ascx.cs" %>
-<div class="block block-blog-archive">
+<div class="block block-popular-blogtags">
     <div class="title">
         <%=GetLocaleResourceString("Blog.TagsCloud.Title")%>
     </div>

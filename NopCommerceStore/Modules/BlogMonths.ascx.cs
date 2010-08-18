@@ -47,7 +47,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
                 while (DateTime.SpecifyKind(first, DateTimeKind.Utc) <= DateTime.UtcNow.AddMonths(1))
                 {
-                    var list = blogPosts.GetPostsByDate(first, new DateTime(first.Year, first.Month, 1).AddMonths(1).AddSeconds(-1));
+                    var list = blogPosts.GetPostsByDate(new DateTime(first.Year, first.Month, 1), new DateTime(first.Year, first.Month, 1).AddMonths(1).AddSeconds(-1));
                     if (list.Count > 0)
                     {
                         DateTime date = new DateTime(first.Year, first.Month, 1);
