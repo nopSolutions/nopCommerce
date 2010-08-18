@@ -11,7 +11,7 @@
             <tr>
                 <td class="adminTitle">
                     <nopCommerce:ToolTipLabel runat="server" ID="lblLimitMethodsToCreated" Text="Limit shipping methods to configured ones:"
-                        ToolTip="If you check this option, then your customers will be limited to configured (created) shipping options. Otherwise, they'll be able to choose any existing shipping options even they're not configured here (zero price in this case)."
+                        ToolTip="If you check this option, then your customers will be limited to shipping options configured here. Otherwise, they'll be able to choose any existing shipping options even they've not configured here (zero shipping fee in this case)."
                         ToolTipImage="~/Administration/Common/ico-help.gif" />
                 </td>
                 <td class="adminData">
