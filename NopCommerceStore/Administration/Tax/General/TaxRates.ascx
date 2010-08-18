@@ -56,7 +56,7 @@
                 <table class="adminContent">
                     <tr>
                         <td class="adminTitle" colspan="2">
-                            Adding new tax rate
+                            <b>Adding new tax rate</b>
                         </td>
                     </tr>
                     <tr>
@@ -103,7 +103,8 @@
                     </tr>
                     <tr>
                         <td class="adminTitle">
-                            Percentage:
+                             <nopCommerce:ToolTipLabel runat="server" ID="lblPercentage" Text="Percentage:" ToolTip="The tax rate."
+                                ToolTipImage="~/Administration/Common/ico-help.gif" />
                         </td>
                         <td class="adminData">
                             <nopCommerce:DecimalTextBox runat="server" CssClass="adminInput" ID="txtPercentage"
