@@ -44,11 +44,11 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             if (product != null)
             {
                 var existingProductCategoryCollection = product.ProductCategories;
-                productCategoryMappings = GetProductCategoryMappings(0, string.Empty, existingProductCategoryCollection);
+                productCategoryMappings = GetProductCategoryMappings(existingProductCategoryCollection);
             }
             else
             {
-                productCategoryMappings = GetProductCategoryMappings(0, string.Empty, null);
+                productCategoryMappings = GetProductCategoryMappings(null);
             }
             
             gvCategoryMappings.DataSource = productCategoryMappings;
@@ -95,14 +95,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             this.BindData();
         }
        
-        private List<ProductCategoryMappingHelperClass> GetProductCategoryMappings(int forParentCategoryId,
-            string prefix, List<ProductCategory> existingProductCategoryCollection)
+        private List<ProductCategoryMappingHelperClass> GetProductCategoryMappings(List<ProductCategory> existingProductCategoryCollection)
         {
-            var categoryCollection = CategoryManager.GetAllCategories(forParentCategoryId);
+            var categories = CategoryManager.GetAllCategories();
             List<ProductCategoryMappingHelperClass> result = new List<ProductCategoryMappingHelperClass>();
-            for (int i = 0; i < categoryCollection.Count; i++)
+            for (int i = 0; i < categories.Count; i++)
             {
-                Category category = categoryCollection[i];
+                Category category = categories[i];
                 ProductCategory existingProductCategory = null;
                 if (existingProductCategoryCollection != null)
                     existingProductCategory = existingProductCategoryCollection.FindProductCategory(this.ProductId, category.CategoryId);
@@ -119,15 +118,32 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     pcm.DisplayOrder = 1;
                 }
                 pcm.CategoryId = category.CategoryId;
-                pcm.CategoryInfo = prefix + category.Name;
+                pcm.CategoryInfo = GetCategoryFullName(category);
 
                 MapState(category.CategoryId, pcm);
 
                 result.Add(pcm);
-                if (CategoryManager.GetAllCategories(category.CategoryId).Count > 0)
-                    result.AddRange(GetProductCategoryMappings(category.CategoryId, prefix + "--", existingProductCategoryCollection));
             }
 
+            return result;
+        }
+
+        protected string GetCategoryFullName(Category category)
+        {
+            string result = string.Empty;
+
+            while (category != null && !category.Deleted)
+            {
+                if (String.IsNullOrEmpty(result))
+                {
+                    result = category.Name;
+                }
+                else
+                {
+                    result = category.Name + " >> " + result;
+                }
+                category = category.ParentCategory;
+            }
             return result;
         }
 

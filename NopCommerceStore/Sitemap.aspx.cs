@@ -70,7 +70,7 @@ namespace NopSolutions.NopCommerce.Web
             if (SettingManager.GetSettingValueBoolean("Sitemap.IncludeCategories", true))
             {
                 //root categories only here
-                var categories = CategoryManager.GetAllCategories(0);
+                var categories = CategoryManager.GetAllCategoriesByParentCategoryId(0);
                 if (categories.Count > 0)
                 {
                     dlCategories.DataSource = categories;

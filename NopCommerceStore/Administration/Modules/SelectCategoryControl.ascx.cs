@@ -27,24 +27,38 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             ddlCategories.Items.Clear();
             ddlCategories.Items.Add(new ListItem(this.EmptyItemText, "0"));
-            BindData(0, "--");
-        }
 
-        public void BindData(int forParentEntityId, string prefix)
-        {
-            var categoryCollection = CategoryManager.GetAllCategories(forParentEntityId);
-
-            foreach (Category category in categoryCollection)
+            var categories = CategoryManager.GetAllCategories();
+            foreach (var category in categories)
             {
-                ListItem item = new ListItem(prefix + category.Name, category.CategoryId.ToString());
+                string catName = GetCategoryFullName(category);
+                ListItem item = new ListItem(catName, category.CategoryId.ToString());
                 this.ddlCategories.Items.Add(item);
+
                 if (category.CategoryId == this.selectedCategoryId)
                     item.Selected = true;
-                if (CategoryManager.GetAllCategories(category.CategoryId).Count > 0)
-                    BindData(category.CategoryId, prefix + "--");
             }
 
             this.ddlCategories.DataBind();
+        }
+
+        protected string GetCategoryFullName(Category category)
+        {
+            string result = string.Empty;
+
+            while (category != null && !category.Deleted)
+            {
+                if (String.IsNullOrEmpty(result))
+                {
+                    result = category.Name;
+                }
+                else
+                {
+                    result = "--" + result;
+                }
+                category = category.ParentCategory;
+            }
+            return result;
         }
 
         protected void Page_Load(object sender, EventArgs e)

@@ -18,7 +18,7 @@
         <Columns>
             <asp:TemplateField HeaderText="<% $NopResources:Admin.Categories.Name %>" ItemStyle-Width="55%">
                 <ItemTemplate>
-                    <%# GetCategoryFullName((Category)Container.DataItem)%>
+                    <%# Server.HtmlEncode(GetCategoryFullName((Category)Container.DataItem))%>
                     <asp:HiddenField ID="hfCategoryId" runat="server" Value='<%# Eval("CategoryId") %>' />
                 </ItemTemplate>
             </asp:TemplateField>

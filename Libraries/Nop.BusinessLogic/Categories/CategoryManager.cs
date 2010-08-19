@@ -33,7 +33,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
     public partial class CategoryManager
     {
         #region Constants
-        private const string CATEGORIES_ALL_KEY = "Nop.category.all-{0}-{1}";
         private const string CATEGORIES_BY_ID_KEY = "Nop.category.id-{0}";
         private const string PRODUCTCATEGORIES_ALLBYCATEGORYID_KEY = "Nop.productcategory.allbycategoryid-{0}-{1}";
         private const string PRODUCTCATEGORIES_ALLBYPRODUCTID_KEY = "Nop.productcategory.allbyproductid-{0}-{1}";
@@ -83,30 +82,56 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
         /// <summary>
         /// Gets all categories
         /// </summary>
-        /// <param name="parentCategoryId">Parent category identifier</param>
-        /// <returns>Category collection</returns>
-        public static List<Category> GetAllCategories(int parentCategoryId)
+        /// <returns>Categories</returns>
+        public static List<Category> GetAllCategories()
         {
             bool showHidden = NopContext.Current.IsAdmin;
-            return GetAllCategories(parentCategoryId, showHidden);
+            return GetAllCategories(showHidden);
+        }
+
+
+        /// <summary>
+        /// Gets all categories
+        /// </summary>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <returns>Categories</returns>
+        public static List<Category> GetAllCategories(bool showHidden)
+        {
+            var context = ObjectContextHelper.CurrentObjectContext;
+            var query = from c in context.Categories
+                        orderby c.ParentCategoryId, c.DisplayOrder
+                        where (showHidden || c.Published) &&
+                        !c.Deleted
+                        select c;
+            var unsortedCategories = query.ToList();
+
+            //sort categories
+            //TODO sort categories on database layer
+            var sortedCategories = unsortedCategories.SortCategoriesForTree(0);
+
+            return sortedCategories;
         }
         
         /// <summary>
-        /// Gets all categories
+        /// Gets all categories by parent category identifier
+        /// </summary>
+        /// <param name="parentCategoryId">Parent category identifier</param>
+        /// <returns>Category collection</returns>
+        public static List<Category> GetAllCategoriesByParentCategoryId(int parentCategoryId)
+        {
+            bool showHidden = NopContext.Current.IsAdmin;
+            return GetAllCategoriesByParentCategoryId(parentCategoryId, showHidden);
+        }
+        
+        /// <summary>
+        /// Gets all categories filtered by parent category identifier
         /// </summary>
         /// <param name="parentCategoryId">Parent category identifier</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Category collection</returns>
-        public static List<Category> GetAllCategories(int parentCategoryId,
+        public static List<Category> GetAllCategoriesByParentCategoryId(int parentCategoryId,
             bool showHidden)
         {
-            string key = string.Format(CATEGORIES_ALL_KEY, showHidden, parentCategoryId);
-            object obj2 = NopRequestCache.Get(key);
-            if (CategoryManager.CategoriesCacheEnabled && (obj2 != null))
-            {
-                return (List<Category>)obj2;
-            }
-
             var context = ObjectContextHelper.CurrentObjectContext;
             var query = from c in context.Categories
                         orderby c.DisplayOrder
@@ -115,11 +140,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
                         c.ParentCategoryId == parentCategoryId
                         select c;
             var categories = query.ToList();
-
-            if (CategoryManager.CategoriesCacheEnabled)
-            {
-                NopRequestCache.Add(key, categories);
-            }
             return categories;
         }
         

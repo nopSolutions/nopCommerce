@@ -48,10 +48,10 @@ namespace NopSolutions.NopCommerce.Web.Templates.Categories
             lName.Text = Server.HtmlEncode(category.LocalizedName);
             lDescription.Text = category.LocalizedDescription;
 
-            var subCategoryCollection = CategoryManager.GetAllCategories(this.CategoryId);
-            if (subCategoryCollection.Count > 0)
+            var subCategories = CategoryManager.GetAllCategoriesByParentCategoryId(this.CategoryId);
+            if (subCategories.Count > 0)
             {
-                rptrSubCategories.DataSource = subCategoryCollection;
+                rptrSubCategories.DataSource = subCategories;
                 rptrSubCategories.DataBind();
             }
             else

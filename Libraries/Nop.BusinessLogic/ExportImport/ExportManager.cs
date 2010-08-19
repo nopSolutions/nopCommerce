@@ -49,7 +49,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
 
         private static void WriteCategories(XmlWriter xmlWriter, int parentCategoryId)
         {
-            var categories = CategoryManager.GetAllCategories(parentCategoryId);
+            var categories = CategoryManager.GetAllCategoriesByParentCategoryId(parentCategoryId);
             if (categories.Count > 0)
             {
                 foreach (var category in categories)

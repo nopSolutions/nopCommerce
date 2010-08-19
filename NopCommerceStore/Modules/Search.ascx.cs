@@ -154,41 +154,55 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void BindCategories()
         {
-            ddlCategories.Items.Clear();
-            ddlCategories.Items.Add(new ListItem(GetLocaleResourceString("Search.AllCategories"), "0"));
-            BindCategories(0, "--");
-        }
+            var categories = CategoryManager.GetAllCategories();
 
-        public void BindCategories(int forParentEntityId, string prefix)
-        {
-            var categories = CategoryManager.GetAllCategories(forParentEntityId);
-
-            foreach (var category in categories)
+            if (categories.Count > 0)
             {
-                ListItem item = new ListItem(prefix + category.LocalizedName, category.CategoryId.ToString());
-                this.ddlCategories.Items.Add(item);
-                if (CategoryManager.GetAllCategories(category.CategoryId).Count > 0)
-                    BindCategories(category.CategoryId, prefix + "--");
-            }
+                this.ddlCategories.Items.Clear();
+                this.ddlCategories.Items.Add(new ListItem(GetLocaleResourceString("Search.AllCategories"), "0"));
 
-            if (ddlCategories.Items.Count > 1)
-            {
+                foreach (var category in categories)
+                {
+                    string catName = GetCategoryFullName(category);
+                    ListItem item = new ListItem(catName, category.CategoryId.ToString());
+                    this.ddlCategories.Items.Add(item);
+                }
+
                 this.ddlCategories.DataBind();
             }
             else
             {
-                trCategories.Visible = false;
+                this.trCategories.Visible = false;
             }
+        }
+        
+        protected string GetCategoryFullName(Category category)
+        {
+            string result = string.Empty;
+
+            while (category != null && !category.Deleted)
+            {
+                if (String.IsNullOrEmpty(result))
+                {
+                    result = category.LocalizedName;
+                }
+                else
+                {
+                    result = "--" + result;
+                }
+                category = category.ParentCategory;
+            }
+            return result;
         }
 
         protected void BindManufacturers()
         {
-            this.ddlManufacturers.Items.Clear();
-            ListItem itemEmptyManufacturer = new ListItem(GetLocaleResourceString("Search.AllManufacturers"), "0");
-            this.ddlManufacturers.Items.Add(itemEmptyManufacturer);
             var manufacturers = ManufacturerManager.GetAllManufacturers();
             if (manufacturers.Count > 0)
             {
+                this.ddlManufacturers.Items.Clear();
+                this.ddlManufacturers.Items.Add(new ListItem(GetLocaleResourceString("Search.AllManufacturers"), "0"));
+
                 foreach (var manufacturer in manufacturers)
                 {
                     ListItem item2 = new ListItem(manufacturer.LocalizedName, manufacturer.ManufacturerId.ToString());
@@ -197,7 +211,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             }
             else
             {
-                trManufacturers.Visible = false;
+                this.trManufacturers.Visible = false;
             }
         }
 

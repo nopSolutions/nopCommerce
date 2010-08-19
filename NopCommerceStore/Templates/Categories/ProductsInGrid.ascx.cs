@@ -81,7 +81,7 @@ namespace NopSolutions.NopCommerce.Web.Templates.Categories
             lDescription.Text = category.LocalizedDescription;
 
             //subcategories
-            var subCategories = CategoryManager.GetAllCategories(category.CategoryId);
+            var subCategories = CategoryManager.GetAllCategoriesByParentCategoryId(category.CategoryId);
             if (subCategories.Count > 0)
             {
                 dlSubCategories.DataSource = subCategories;

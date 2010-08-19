@@ -40,5 +40,23 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
                     return productCategory;
             return null;
         }
+
+        /// <summary>
+        /// Sort categories for tree representation
+        /// </summary>
+        /// <param name="source">Source</param>
+        /// <returns>Sorted categories</returns>
+        public static List<Category> SortCategoriesForTree(this List<Category> source, int parentId)
+        {
+            var result = new List<Category>();
+
+            var temp = source.FindAll(c => c.ParentCategoryId == parentId);
+            foreach (var cat in temp)
+            {
+                result.Add(cat);
+                result.AddRange(SortCategoriesForTree(source, cat.CategoryId));
+            }
+            return result;
+        }
     }
 }

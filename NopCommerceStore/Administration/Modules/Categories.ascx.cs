@@ -53,7 +53,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         private void BindGrid()
         {
-            var categories = GetAllCategories(0);
+            var categories = CategoryManager.GetAllCategories();
             gvCategories.DataSource = categories;
             gvCategories.DataBind();
         }
@@ -74,25 +74,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 }
                 category = category.ParentCategory;
             }
-            return Server.HtmlEncode(result);
+            return result;
         }
 
         protected void gvCategories_PageIndexChanging(object sender, GridViewPageEventArgs e)
         {
             gvCategories.PageIndex = e.NewPageIndex;
             BindGrid();
-        }
-
-        protected List<Category> GetAllCategories(int forParentEntityId)
-        {
-            var result = new List<Category>();
-            var categories = CategoryManager.GetAllCategories(forParentEntityId);
-            foreach (var category in categories)
-            {
-                result.Add(category);
-                result.AddRange(GetAllCategories(category.CategoryId));
-            }
-            return result;
         }
 
         protected void btnExportXML_Click(object sender, EventArgs e)

@@ -136,7 +136,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
         protected void CreateChildMenu(List<Category> breadCrumb, int rootCategoryId, Category currentCategory, int level)
         {
             int padding = level++ * 15;
-            foreach (var category in CategoryManager.GetAllCategories(rootCategoryId))
+            foreach (var category in CategoryManager.GetAllCategoriesByParentCategoryId(rootCategoryId))
             {
                 var link = new NopCommerceLi();
                 phCategories.Controls.Add(link);
