@@ -194,11 +194,25 @@ namespace NopSolutions.NopCommerce.Payment.Methods.PayPal
             else
                 builder.AppendFormat("&no_shipping=1", new object[0]);
             builder.AppendFormat("&return={0}&cancel_return={1}", HttpUtility.UrlEncode(returnURL), HttpUtility.UrlEncode(cancel_returnURL));
+            //TODO move this param [address_override] to settings (PayPal configuration page)
+            builder.AppendFormat("&address_override=1");
             builder.AppendFormat("&first_name={0}", HttpUtility.UrlEncode(order.BillingFirstName));
             builder.AppendFormat("&last_name={0}", HttpUtility.UrlEncode(order.BillingLastName));
             builder.AppendFormat("&address1={0}", HttpUtility.UrlEncode(order.BillingAddress1));
             builder.AppendFormat("&address2={0}", HttpUtility.UrlEncode(order.BillingAddress2));
             builder.AppendFormat("&city={0}", HttpUtility.UrlEncode(order.BillingCity));
+            builder.AppendFormat("&zip={0}", HttpUtility.UrlEncode(order.BillingZipPostalCode));
+            //if (!String.IsNullOrEmpty(order.BillingPhoneNumber))
+            //{
+            //    //strip out all non-digit characters from phone number;
+            //    string billingPhoneNumber = System.Text.RegularExpressions.Regex.Replace(order.BillingPhoneNumber, @"\D", string.Empty);
+            //    if (billingPhoneNumber.Length >= 10)
+            //    {
+            //        builder.AppendFormat("&night_phone_a={0}", HttpUtility.UrlEncode(billingPhoneNumber.Substring(0, 3)));
+            //        builder.AppendFormat("&night_phone_b={0}", HttpUtility.UrlEncode(billingPhoneNumber.Substring(3, 3)));
+            //        builder.AppendFormat("&night_phone_c={0}", HttpUtility.UrlEncode(billingPhoneNumber.Substring(6, 4)));
+            //    }
+            //}
             StateProvince billingStateProvince = StateProvinceManager.GetStateProvinceById(order.BillingStateProvinceId);
             if (billingStateProvince != null)
                 builder.AppendFormat("&state={0}", HttpUtility.UrlEncode(billingStateProvince.Abbreviation));
@@ -209,7 +223,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.PayPal
                 builder.AppendFormat("&country={0}", HttpUtility.UrlEncode(billingCountry.TwoLetterIsoCode));
             else
                 builder.AppendFormat("&country={0}", HttpUtility.UrlEncode(order.BillingCountry));
-            builder.AppendFormat("&Email={0}", HttpUtility.UrlEncode(order.BillingEmail));
+            builder.AppendFormat("&email={0}", HttpUtility.UrlEncode(order.BillingEmail));
             HttpContext.Current.Response.Redirect(builder.ToString());
             return string.Empty;
         }
