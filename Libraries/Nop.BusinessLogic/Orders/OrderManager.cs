@@ -882,7 +882,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             billingAddress2 = CommonHelper.EnsureMaximumLength(billingAddress2, 100);
             billingCity = CommonHelper.EnsureMaximumLength(billingCity, 100);
             billingStateProvince = CommonHelper.EnsureMaximumLength(billingStateProvince, 100);
-            billingZipPostalCode = CommonHelper.EnsureMaximumLength(billingZipPostalCode, 10);
+            billingZipPostalCode = CommonHelper.EnsureMaximumLength(billingZipPostalCode, 30);
             billingCountry = CommonHelper.EnsureMaximumLength(billingCountry, 100);
             shippingFirstName = CommonHelper.EnsureMaximumLength(shippingFirstName, 100);
             shippingLastName = CommonHelper.EnsureMaximumLength(shippingLastName, 100);
@@ -894,7 +894,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             shippingAddress2 = CommonHelper.EnsureMaximumLength(shippingAddress2, 100);
             shippingCity = CommonHelper.EnsureMaximumLength(shippingCity, 100);
             shippingStateProvince = CommonHelper.EnsureMaximumLength(shippingStateProvince, 100);
-            shippingZipPostalCode = CommonHelper.EnsureMaximumLength(shippingZipPostalCode, 10);
+            shippingZipPostalCode = CommonHelper.EnsureMaximumLength(shippingZipPostalCode, 30);
             shippingCountry = CommonHelper.EnsureMaximumLength(shippingCountry, 100);
             shippingMethod = CommonHelper.EnsureMaximumLength(shippingMethod, 100);
             trackingNumber = CommonHelper.EnsureMaximumLength(trackingNumber, 100);
@@ -1222,7 +1222,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             billingAddress2 = CommonHelper.EnsureMaximumLength(billingAddress2, 100);
             billingCity = CommonHelper.EnsureMaximumLength(billingCity, 100);
             billingStateProvince = CommonHelper.EnsureMaximumLength(billingStateProvince, 100);
-            billingZipPostalCode = CommonHelper.EnsureMaximumLength(billingZipPostalCode, 10);
+            billingZipPostalCode = CommonHelper.EnsureMaximumLength(billingZipPostalCode, 30);
             billingCountry = CommonHelper.EnsureMaximumLength(billingCountry, 100);
             shippingFirstName = CommonHelper.EnsureMaximumLength(shippingFirstName, 100);
             shippingLastName = CommonHelper.EnsureMaximumLength(shippingLastName, 100);
@@ -1234,7 +1234,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             shippingAddress2 = CommonHelper.EnsureMaximumLength(shippingAddress2, 100);
             shippingCity = CommonHelper.EnsureMaximumLength(shippingCity, 100);
             shippingStateProvince = CommonHelper.EnsureMaximumLength(shippingStateProvince, 100);
-            shippingZipPostalCode = CommonHelper.EnsureMaximumLength(shippingZipPostalCode, 10);
+            shippingZipPostalCode = CommonHelper.EnsureMaximumLength(shippingZipPostalCode, 30);
             shippingCountry = CommonHelper.EnsureMaximumLength(shippingCountry, 100);
             shippingMethod = CommonHelper.EnsureMaximumLength(shippingMethod, 100);
             trackingNumber = CommonHelper.EnsureMaximumLength(trackingNumber, 100);

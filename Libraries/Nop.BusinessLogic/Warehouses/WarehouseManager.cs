@@ -111,7 +111,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Warehouses
             address2 = CommonHelper.EnsureMaximumLength(address2, 100);
             city = CommonHelper.EnsureMaximumLength(city, 100);
             stateProvince = CommonHelper.EnsureMaximumLength(stateProvince, 100);
-            zipPostalCode = CommonHelper.EnsureMaximumLength(zipPostalCode, 10);
+            zipPostalCode = CommonHelper.EnsureMaximumLength(zipPostalCode, 30);
 
             var context = ObjectContextHelper.CurrentObjectContext;
 
@@ -168,7 +168,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Warehouses
             address2 = CommonHelper.EnsureMaximumLength(address2, 100);
             city = CommonHelper.EnsureMaximumLength(city, 100);
             stateProvince = CommonHelper.EnsureMaximumLength(stateProvince, 100);
-            zipPostalCode = CommonHelper.EnsureMaximumLength(zipPostalCode, 10);
+            zipPostalCode = CommonHelper.EnsureMaximumLength(zipPostalCode, 30);
 
             var warehouse = GetWarehouseById(warehouseId);
             if (warehouse == null)

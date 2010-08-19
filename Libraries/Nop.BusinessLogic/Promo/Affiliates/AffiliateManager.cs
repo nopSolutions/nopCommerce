@@ -117,7 +117,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Affiliates
             address2 = CommonHelper.EnsureMaximumLength(address2, 100);
             city = CommonHelper.EnsureMaximumLength(city, 100);
             stateProvince = CommonHelper.EnsureMaximumLength(stateProvince, 100);
-            zipPostalCode = CommonHelper.EnsureMaximumLength(zipPostalCode, 10);
+            zipPostalCode = CommonHelper.EnsureMaximumLength(zipPostalCode, 30);
 
             var context = ObjectContextHelper.CurrentObjectContext;
 
@@ -180,7 +180,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Affiliates
             address2 = CommonHelper.EnsureMaximumLength(address2, 100);
             city = CommonHelper.EnsureMaximumLength(city, 100);
             stateProvince = CommonHelper.EnsureMaximumLength(stateProvince, 100);
-            zipPostalCode = CommonHelper.EnsureMaximumLength(zipPostalCode, 10);
+            zipPostalCode = CommonHelper.EnsureMaximumLength(zipPostalCode, 30);
 
             var affiliate = GetAffiliateById(affiliateId);
             if (affiliate == null)

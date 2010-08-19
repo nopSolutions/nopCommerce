@@ -2890,3 +2890,18 @@ BEGIN
 	VALUES (N'CCAvenue', N'CCAvenue', N'', N'Payment\CCAvenue\ConfigurePaymentMethod.ascx', N'~\Templates\Payment\CCAvenue\PaymentModule.ascx', N'NopSolutions.NopCommerce.Payment.Methods.CCAvenue.CCAvenuePaymentProcessor, Nop.Payment.CCAvenue', N'CCAVENUE', 0, 290)
 END
 GO
+
+ALTER TABLE [dbo].[Nop_Address] ALTER COLUMN [ZipPostalCode] nvarchar(30) NOT NULL
+GO
+
+ALTER TABLE [dbo].[Nop_Affiliate] ALTER COLUMN [ZipPostalCode] nvarchar(30) NOT NULL
+GO
+
+ALTER TABLE [dbo].[Nop_Order] ALTER COLUMN [BillingZipPostalCode] nvarchar(30) NOT NULL
+GO
+
+ALTER TABLE [dbo].[Nop_Order] ALTER COLUMN [ShippingZipPostalCode] nvarchar(30) NOT NULL
+GO
+
+ALTER TABLE [dbo].[Nop_Warehouse] ALTER COLUMN [ZipPostalCode] nvarchar(30) NOT NULL
+GO

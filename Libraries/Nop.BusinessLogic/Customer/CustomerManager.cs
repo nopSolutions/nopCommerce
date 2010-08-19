@@ -185,7 +185,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             address1 = CommonHelper.EnsureMaximumLength(address1, 100);
             address2 = CommonHelper.EnsureMaximumLength(address2, 100);
             city = CommonHelper.EnsureMaximumLength(city, 100);
-            zipPostalCode = CommonHelper.EnsureMaximumLength(zipPostalCode, 10);
+            zipPostalCode = CommonHelper.EnsureMaximumLength(zipPostalCode, 30);
 
             var context = ObjectContextHelper.CurrentObjectContext;
             var address = context.Addresses.CreateObject();
@@ -278,7 +278,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             address1 = CommonHelper.EnsureMaximumLength(address1, 100);
             address2 = CommonHelper.EnsureMaximumLength(address2, 100);
             city = CommonHelper.EnsureMaximumLength(city, 100);
-            zipPostalCode = CommonHelper.EnsureMaximumLength(zipPostalCode, 10);
+            zipPostalCode = CommonHelper.EnsureMaximumLength(zipPostalCode, 30);
 
             var address = GetAddressById(addressId);
             if (address == null)

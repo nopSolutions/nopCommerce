@@ -658,7 +658,7 @@
           <Property Name="Address2" Type="nvarchar" Nullable="false" MaxLength="100" />
           <Property Name="City" Type="nvarchar" Nullable="false" MaxLength="100" />
           <Property Name="StateProvinceID" Type="int" Nullable="false" />
-          <Property Name="ZipPostalCode" Type="nvarchar" Nullable="false" MaxLength="10" />
+          <Property Name="ZipPostalCode" Type="nvarchar" Nullable="false" MaxLength="30" />
           <Property Name="CountryID" Type="int" Nullable="false" />
           <Property Name="CreatedOn" Type="datetime" Nullable="false" />
           <Property Name="UpdatedOn" Type="datetime" Nullable="false" />
@@ -679,7 +679,7 @@
           <Property Name="Address2" Type="nvarchar" Nullable="false" MaxLength="100" />
           <Property Name="City" Type="nvarchar" Nullable="false" MaxLength="100" />
           <Property Name="StateProvince" Type="nvarchar" Nullable="false" MaxLength="100" />
-          <Property Name="ZipPostalCode" Type="nvarchar" Nullable="false" MaxLength="10" />
+          <Property Name="ZipPostalCode" Type="nvarchar" Nullable="false" MaxLength="30" />
           <Property Name="CountryId" Type="int" Nullable="false" />
           <Property Name="Active" Type="bit" Nullable="false" />
           <Property Name="Deleted" Type="bit" Nullable="false" />
@@ -1422,7 +1422,7 @@
           <Property Name="BillingCity" Type="nvarchar" Nullable="false" MaxLength="100" />
           <Property Name="BillingStateProvince" Type="nvarchar" Nullable="false" MaxLength="100" />
           <Property Name="BillingStateProvinceID" Type="int" Nullable="false" />
-          <Property Name="BillingZipPostalCode" Type="nvarchar" Nullable="false" MaxLength="10" />
+          <Property Name="BillingZipPostalCode" Type="nvarchar" Nullable="false" MaxLength="30" />
           <Property Name="BillingCountry" Type="nvarchar" Nullable="false" MaxLength="100" />
           <Property Name="BillingCountryID" Type="int" Nullable="false" />
           <Property Name="ShippingStatusID" Type="int" Nullable="false" />
@@ -1437,7 +1437,7 @@
           <Property Name="ShippingCity" Type="nvarchar" Nullable="false" MaxLength="100" />
           <Property Name="ShippingStateProvince" Type="nvarchar" Nullable="false" MaxLength="100" />
           <Property Name="ShippingStateProvinceID" Type="int" Nullable="false" />
-          <Property Name="ShippingZipPostalCode" Type="nvarchar" Nullable="false" MaxLength="10" />
+          <Property Name="ShippingZipPostalCode" Type="nvarchar" Nullable="false" MaxLength="30" />
           <Property Name="ShippingCountry" Type="nvarchar" Nullable="false" MaxLength="100" />
           <Property Name="ShippingCountryID" Type="int" Nullable="false" />
           <Property Name="ShippingMethod" Type="nvarchar" Nullable="false" MaxLength="100" />
@@ -2226,7 +2226,7 @@
           <Property Name="Address2" Type="nvarchar" Nullable="false" MaxLength="100" />
           <Property Name="City" Type="nvarchar" Nullable="false" MaxLength="100" />
           <Property Name="StateProvince" Type="nvarchar" Nullable="false" MaxLength="100" />
-          <Property Name="ZipPostalCode" Type="nvarchar" Nullable="false" MaxLength="10" />
+          <Property Name="ZipPostalCode" Type="nvarchar" Nullable="false" MaxLength="30" />
           <Property Name="CountryId" Type="int" Nullable="false" />
           <Property Name="Deleted" Type="bit" Nullable="false" />
           <Property Name="CreatedOn" Type="datetime" Nullable="false" />
@@ -5259,7 +5259,7 @@
           <Property Type="String" Name="Address2" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="City" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="StateProvince" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="ZipPostalCode" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="ZipPostalCode" Nullable="false" MaxLength="30" FixedLength="false" Unicode="true" />
           <Property Type="Int32" Name="CountryId" Nullable="false" />
           <Property Type="Boolean" Name="Active" Nullable="false" />
           <Property Type="Boolean" Name="Deleted" Nullable="false" />
@@ -5337,7 +5337,7 @@
           <Property Type="String" Name="Address2" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="City" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="StateProvince" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="ZipPostalCode" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="ZipPostalCode" Nullable="false" MaxLength="30" FixedLength="false" Unicode="true" />
           <Property Type="Int32" Name="CountryId" Nullable="false" />
           <Property Type="Boolean" Name="Deleted" Nullable="false" />
           <Property Type="DateTime" Name="CreatedOn" Nullable="false" />
@@ -5810,7 +5810,7 @@
           <Property Type="String" Name="Address2" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="City" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Type="Int32" Name="StateProvinceId" Nullable="false" />
-          <Property Type="String" Name="ZipPostalCode" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="ZipPostalCode" Nullable="false" MaxLength="30" FixedLength="false" Unicode="true" />
           <Property Type="Int32" Name="CountryId" Nullable="false" />
           <Property Type="DateTime" Name="CreatedOn" Nullable="false" />
           <Property Type="DateTime" Name="UpdatedOn" Nullable="false" />
@@ -7568,7 +7568,7 @@
           <Property Type="String" Name="BillingCity" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="BillingStateProvince" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Type="Int32" Name="BillingStateProvinceId" Nullable="false" />
-          <Property Type="String" Name="BillingZipPostalCode" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="BillingZipPostalCode" Nullable="false" MaxLength="30" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="BillingCountry" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Type="Int32" Name="BillingCountryId" Nullable="false" />
           <Property Type="Int32" Name="ShippingStatusId" Nullable="false" />
@@ -7583,7 +7583,7 @@
           <Property Type="String" Name="ShippingCity" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="ShippingStateProvince" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Type="Int32" Name="ShippingStateProvinceId" Nullable="false" />
-          <Property Type="String" Name="ShippingZipPostalCode" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="ShippingZipPostalCode" Nullable="false" MaxLength="30" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="ShippingCountry" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Type="Int32" Name="ShippingCountryId" Nullable="false" />
           <Property Type="String" Name="ShippingMethod" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
