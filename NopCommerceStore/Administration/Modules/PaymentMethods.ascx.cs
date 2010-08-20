@@ -44,6 +44,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             try
             {
                 ctrlPaymentMethodsFilterControl.SaveInfo();
+
+                Response.Redirect("PaymentMethods.aspx");
             }
             catch(Exception ex)
             {

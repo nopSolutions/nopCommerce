@@ -210,36 +210,26 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public void SaveInfo()
         {
-            if(Page.IsValid)
+            var shippingMethods = ShippingMethodManager.GetAllShippingMethods();
+            foreach (GridViewRow row in gvShippingMethodCountryMap.Rows)
             {
-                try
+                foreach (ShippingMethod shippingMethod in shippingMethods)
                 {
-                    var shippingMethodCollection = ShippingMethodManager.GetAllShippingMethods();
-                    foreach(GridViewRow row in gvShippingMethodCountryMap.Rows)
+                    CheckBox cbRestrict = row.FindControl(String.Format("cbRestrict_{0}", shippingMethod.ShippingMethodId)) as CheckBox;
+                    HiddenField hfCountryId = row.FindControl(String.Format("hfCountryId_{0}", shippingMethod.ShippingMethodId)) as HiddenField;
+                    if (cbRestrict == null || hfCountryId == null)
+                        return;
+
+                    int countryId = Int32.Parse(hfCountryId.Value);
+
+                    if (cbRestrict.Checked)
                     {
-                        foreach(ShippingMethod shippingMethod in shippingMethodCollection)
-                        {
-                            CheckBox cbRestrict = row.FindControl(String.Format("cbRestrict_{0}", shippingMethod.ShippingMethodId)) as CheckBox;
-                            HiddenField hfCountryId = row.FindControl(String.Format("hfCountryId_{0}", shippingMethod.ShippingMethodId)) as HiddenField;
-
-                            int countryId = Int32.Parse(hfCountryId.Value);
-
-                            if(cbRestrict.Checked)
-                            {
-                                ShippingMethodManager.CreateShippingMethodCountryMapping(shippingMethod.ShippingMethodId, countryId);
-                            }
-                            else
-                            {
-                                ShippingMethodManager.DeleteShippingMethodCountryMapping(shippingMethod.ShippingMethodId, countryId);
-                            }
-                        }
+                        ShippingMethodManager.CreateShippingMethodCountryMapping(shippingMethod.ShippingMethodId, countryId);
                     }
-
-                    Response.Redirect("ShippingMethods.aspx");
-                }
-                catch(Exception exc)
-                {
-                    ProcessException(exc);
+                    else
+                    {
+                        ShippingMethodManager.DeleteShippingMethodCountryMapping(shippingMethod.ShippingMethodId, countryId);
+                    }
                 }
             }
         }

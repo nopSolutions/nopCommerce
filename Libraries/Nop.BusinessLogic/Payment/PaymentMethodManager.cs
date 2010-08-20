@@ -281,14 +281,18 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
         {
             var context = ObjectContextHelper.CurrentObjectContext;
 
-            var query = from pm in context.PaymentMethods
-                        from c in pm.NpRestrictedCountries
-                        where pm.PaymentMethodId == paymentMethodId &&
-                        c.CountryId == countryId
-                        select pm;
-
-            bool result = query.Count() > 0;
+            var pm = GetPaymentMethodById(paymentMethodId);
+            bool result = pm.NpRestrictedCountries.ToList().Find(c => c.CountryId == countryId) != null;
             return result;
+
+            //var query = from pm in context.PaymentMethods
+            //            from c in pm.NpRestrictedCountries
+            //            where pm.PaymentMethodId == paymentMethodId &&
+            //            c.CountryId == countryId
+            //            select pm;
+
+            //bool result = query.Count() > 0;
+            //return result;
         }
 
         /// <summary>

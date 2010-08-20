@@ -230,36 +230,26 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public void SaveInfo()
         {
-            if(Page.IsValid)
+            var paymentMethods = PaymentMethodManager.GetAllPaymentMethods(null, false);
+            foreach (GridViewRow row in gvPaymentMethodCountryMap.Rows)
             {
-                try
+                foreach (PaymentMethod paymentMethod in paymentMethods)
                 {
-                    var paymentMethodCollection = PaymentMethodManager.GetAllPaymentMethods(null, false);
-                    foreach(GridViewRow row in gvPaymentMethodCountryMap.Rows)
+                    CheckBox cbRestrict = row.FindControl(String.Format("cbRestrict_{0}", paymentMethod.PaymentMethodId)) as CheckBox;
+                    HiddenField hfCountryId = row.FindControl(String.Format("hfCountryId_{0}", paymentMethod.PaymentMethodId)) as HiddenField;
+                    if (cbRestrict == null || hfCountryId == null)
+                        return;
+
+                    int countryId = Int32.Parse(hfCountryId.Value);
+
+                    if (cbRestrict.Checked)
                     {
-                        foreach(PaymentMethod paymentMethod in paymentMethodCollection)
-                        {
-                            CheckBox cbRestrict = row.FindControl(String.Format("cbRestrict_{0}", paymentMethod.PaymentMethodId)) as CheckBox;
-                            HiddenField hfCountryId = row.FindControl(String.Format("hfCountryId_{0}", paymentMethod.PaymentMethodId)) as HiddenField;
-
-                            int countryId = Int32.Parse(hfCountryId.Value);
-
-                            if(cbRestrict.Checked)
-                            {
-                                PaymentMethodManager.CreatePaymentMethodCountryMapping(paymentMethod.PaymentMethodId, countryId);
-                            }
-                            else
-                            {
-                                PaymentMethodManager.DeletePaymentMethodCountryMapping(paymentMethod.PaymentMethodId, countryId);
-                            }
-                        }
+                        PaymentMethodManager.CreatePaymentMethodCountryMapping(paymentMethod.PaymentMethodId, countryId);
                     }
-
-                    Response.Redirect("PaymentMethods.aspx");
-                }
-                catch(Exception exc)
-                {
-                    ProcessException(exc);
+                    else
+                    {
+                        PaymentMethodManager.DeletePaymentMethodCountryMapping(paymentMethod.PaymentMethodId, countryId);
+                    }
                 }
             }
         }

@@ -212,14 +212,18 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         {
             var context = ObjectContextHelper.CurrentObjectContext;
 
-            var query = from sm in context.ShippingMethods
-                        from c in sm.NpRestrictedCountries
-                        where sm.ShippingMethodId == shippingMethodId &&
-                        c.CountryId == countryId
-                        select sm;
-
-            bool result = query.Count() > 0;
+            var sm = GetShippingMethodById(shippingMethodId);
+            bool result = sm.NpRestrictedCountries.ToList().Find(c => c.CountryId == countryId) != null;
             return result;
+
+            //var query = from sm in context.ShippingMethods
+            //            from c in sm.NpRestrictedCountries
+            //            where sm.ShippingMethodId == shippingMethodId &&
+            //            c.CountryId == countryId
+            //            select sm;
+
+            //bool result = query.Count() > 0;
+            //return result;
         }
 
         /// <summary>

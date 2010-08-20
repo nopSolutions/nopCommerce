@@ -44,6 +44,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             try
             {
                 ctrlShippingMethodsFilterControl.SaveInfo();
+
+                Response.Redirect("ShippingMethods.aspx");
             }
             catch(Exception ex)
             {
