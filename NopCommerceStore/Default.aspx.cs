@@ -48,8 +48,6 @@ namespace NopSolutions.NopCommerce.Web
 
         protected void BindData()
         {
-            ctrlBestSellers.Visible = SettingManager.GetSettingValueBoolean("Display.ShowBestsellersOnMainPage");
-
             bool showWelcomeMessageOnMainPage = SettingManager.GetSettingValueBoolean("Display.ShowWelcomeMessageOnMainPage");
             if (!showWelcomeMessageOnMainPage)
             {

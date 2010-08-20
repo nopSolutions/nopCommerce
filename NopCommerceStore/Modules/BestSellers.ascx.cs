@@ -46,37 +46,44 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         private void BindData()
         {
-            int number = SettingManager.GetSettingValueInteger("Display.ShowBestsellersOnMainPageNumber");
-            var report = OrderManager.BestSellersReport(720, number, 1);
-            if (report.Count > 0)
+            if (SettingManager.GetSettingValueBoolean("Display.ShowBestsellersOnMainPage"))
             {
-                List<Product> productList = new List<Product>();
-                foreach(BestSellersReportLine line in report)
+                int number = SettingManager.GetSettingValueInteger("Display.ShowBestsellersOnMainPageNumber");
+                var report = OrderManager.BestSellersReport(720, number, 1);
+                if (report.Count > 0)
                 {
-                    var productVariant = ProductManager.GetProductVariantById(line.ProductVariantId);
-                    if(productVariant != null)
+                    List<Product> productList = new List<Product>();
+                    foreach (BestSellersReportLine line in report)
                     {
-                        var product = productVariant.Product;
-                        if(product != null)
+                        var productVariant = ProductManager.GetProductVariantById(line.ProductVariantId);
+                        if (productVariant != null)
                         {
-                            bool contains = false;
-                            foreach(Product p in productList)
+                            var product = productVariant.Product;
+                            if (product != null)
                             {
-                                if(p.ProductId == product.ProductId)
+                                bool contains = false;
+                                foreach (Product p in productList)
                                 {
-                                    contains = true;
-                                    break;
+                                    if (p.ProductId == product.ProductId)
+                                    {
+                                        contains = true;
+                                        break;
+                                    }
                                 }
-                            }
-                            if(!contains)
-                            {
-                                productList.Add(product);
+                                if (!contains)
+                                {
+                                    productList.Add(product);
+                                }
                             }
                         }
                     }
+                    dlCatalog.DataSource = productList;
+                    dlCatalog.DataBind();
                 }
-                dlCatalog.DataSource = productList;
-                dlCatalog.DataBind();
+                else
+                {
+                    this.Visible = false;
+                }
             }
             else
             {

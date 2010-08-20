@@ -7184,7 +7184,7 @@
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>8738</DevelopmentServerPort>
+          <DevelopmentServerPort>8242</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://localhost/NopCommerceStore</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>

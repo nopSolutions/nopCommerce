@@ -55,7 +55,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             }
         }
 
-        protected void dlRelatedProducts_ItemDataBound(object sender, DataListItemEventArgs e)
+        protected void dlCatalog_ItemDataBound(object sender, DataListItemEventArgs e)
         {
             if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
             {

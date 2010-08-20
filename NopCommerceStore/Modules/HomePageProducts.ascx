@@ -7,7 +7,7 @@
     <div class="clear">
     </div>
     <asp:DataList ID="dlCatalog" runat="server" RepeatColumns="2" RepeatDirection="Horizontal"
-        RepeatLayout="Table" OnItemDataBound="dlRelatedProducts_ItemDataBound" ItemStyle-CssClass="item-box" EnableViewState="false">
+        RepeatLayout="Table" OnItemDataBound="dlCatalog_ItemDataBound" ItemStyle-CssClass="item-box" EnableViewState="false">
         <ItemTemplate>
             <div class="product-item">
                 <h2 class="product-title">
