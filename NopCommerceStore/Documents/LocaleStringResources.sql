@@ -2486,6 +2486,9 @@ set @resources='
   <LocaleResource Name="Admin.PollInfo.EndDate">
     <Value>End date:</Value>
   </LocaleResource>
+  <LocaleResource Name="PDFInvoice.ShippingMethod">
+    <Value>Shipping method: {0}</Value>
+  </LocaleResource>
 </Language>
 '
 

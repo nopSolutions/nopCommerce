@@ -126,7 +126,6 @@ namespace NopSolutions.NopCommerce.Web.Modules
         protected override void OnPreRender(EventArgs e)
         {
             BindData();
-            BindJQuery();
 
             base.OnPreRender(e);
         }

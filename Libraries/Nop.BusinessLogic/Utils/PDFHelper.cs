@@ -266,6 +266,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Utils
                 row.Cells[1].AddParagraph("   " + String.Format("{0}, {1}", order.ShippingCountry, order.ShippingStateProvince));
                 row.Cells[1].AddParagraph("   " + String.Format("{0}, {1}", order.ShippingCity, order.ShippingZipPostalCode));
                 row.Cells[1].AddParagraph();
+                row.Cells[1].AddParagraph("   " + String.Format(LocalizationManager.GetLocaleResourceString("PDFInvoice.ShippingMethod", languageId), order.ShippingMethod));
+                row.Cells[1].AddParagraph();
             }
 
             sec.AddParagraph();
@@ -546,15 +548,16 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Utils
                 p1.Format.Font.Bold = true;
                 p1.Format.Font.Color = Colors.Black;
                 p1.Format.Font.Underline = Underline.None;
-
                 section.AddParagraph();
 
                 section.AddParagraph(order.ShippingFullName);
                 section.AddParagraph(order.ShippingAddress1);
                 section.AddParagraph(String.Format("{0}, {1}", order.ShippingCity, order.ShippingZipPostalCode));
-
                 section.AddParagraph();
 
+                section.AddParagraph(String.Format(LocalizationManager.GetLocaleResourceString("PDFInvoice.ShippingMethod"), order.ShippingMethod));
+                section.AddParagraph();
+                
                 Table productTable = section.AddTable();
                 productTable.Borders.Visible = true;
                 productTable.AddColumn(Unit.FromCentimeter(4));
