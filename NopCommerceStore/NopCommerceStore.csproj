@@ -6121,6 +6121,7 @@
     <Content Include="CompareProducts.aspx" />
     <Content Include="ConditionsInfo.aspx" />
     <Content Include="ContactUs.aspx" />
+    <None Include="Install\Scripts\1.80\nopCommerce_upgrade.sql" />
     <Content Include="Modules\BlogMonths.ascx" />
     <Content Include="Modules\BlogPopularTags.ascx" />
     <Content Include="Modules\DecimalTextBox.ascx" />
