@@ -1626,6 +1626,9 @@ INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID],
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (4093, 7, N'Wishlist.YourWishlist', N'Your wishlist')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (4094, 7, N'Wishlist.YourWishlistURL', N'Your wishlist URL for sharing: ')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (4095, 7, N'WorldpayPaymentModule.Message', N'You will be redirected to Worldpay site to complete the order.')
+SET IDENTITY_INSERT [dbo].[Nop_LocaleStringResource] OFF
+GO
+SET IDENTITY_INSERT [dbo].[Nop_LocaleStringResource] ON
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (6876, 7, N'Pager.First', N'First')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (6877, 7, N'Pager.Last', N'Last')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (6878, 7, N'Pager.Next', N'Next')
@@ -2038,6 +2041,9 @@ INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID],
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (7297, 7, N'Admin.LocationHome.Currencies.Title', N'Manage Currencies')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (7298, 7, N'Admin.LocationHome.Currencies.TitleDescription', N'Manage currencies.')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (7299, 7, N'Admin.LocationHome.Currencies.Description', N'Manage the currrencies that are available to purchasing customers of your store. Set the exchange the rates for each currency for automatic order calculation during checkout for your customers'' selected currency.')
+SET IDENTITY_INSERT [dbo].[Nop_LocaleStringResource] OFF
+GO
+SET IDENTITY_INSERT [dbo].[Nop_LocaleStringResource] ON
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (7300, 7, N'Admin.LocationHome.Warehouses.Title', N'Manage Warehouses')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (7301, 7, N'Admin.LocationHome.Warehouses.TitleDescription', N'Manage warehouses.')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (7302, 7, N'Admin.LocationHome.Warehouses.Description', N'Manage your warehouses. Products can be assigned to a specific warehouse for better stock management.')
@@ -2236,6 +2242,9 @@ INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID],
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (7497, 7, N'Admin.ProductInfo.UseSampleDownloadURL', N'Use download URL:')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (7498, 7, N'Admin.ProductInfo.UseSampleDownloadURL.Tooltip', N'Use file URL to download sample file.')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (7499, 7, N'Admin.ProductInfo.SampleDownloadURL', N'Download URL:')
+SET IDENTITY_INSERT [dbo].[Nop_LocaleStringResource] OFF
+GO
+SET IDENTITY_INSERT [dbo].[Nop_LocaleStringResource] ON
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (7500, 7, N'Admin.ProductInfo.SampleDownloadURL.Tooltip', N'The URL that will be used to download sample file.')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (7501, 7, N'Admin.ProductInfo.SampleDownloadFile', N'Sample download file:')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (7502, 7, N'Admin.ProductInfo.SampleDownloadFile.Tooltip', N'The sample download file.')
@@ -2712,6 +2721,9 @@ INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID],
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (7997, 7, N'Admin.Manufacturers.Edit', N'Edit')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (7998, 7, N'Admin.Manufacturers.Edit.Tooltip', N'Edit manufacturer')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (7999, 7, N'Admin.Manufacturers.Published', N'Published')
+SET IDENTITY_INSERT [dbo].[Nop_LocaleStringResource] OFF
+GO
+SET IDENTITY_INSERT [dbo].[Nop_LocaleStringResource] ON
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (8000, 7, N'Admin.ManufacturerAdd.Title', N'Add a new manufacturer')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (8001, 7, N'Admin.ManufacturerAdd.BackToManufacturers', N'back to manufacturer list')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (8002, 7, N'Admin.ManufacturerAdd.SaveButton.Text', N'Save')
@@ -3212,6 +3224,9 @@ INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID],
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (8497, 7, N'Admin.DiscountInfo.DiscountPercentage.RequiredErrorMessage', N'Discount percentage is required')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (8498, 7, N'Admin.DiscountInfo.DiscountPercentage.RangeErrorMessage', N'The value must be from 0 to 100')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (8499, 7, N'Admin.DiscountInfo.DiscountAmount', N'Discount amount:')
+SET IDENTITY_INSERT [dbo].[Nop_LocaleStringResource] OFF
+GO
+SET IDENTITY_INSERT [dbo].[Nop_LocaleStringResource] ON
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (8500, 7, N'Admin.DiscountInfo.DiscountAmount.Tooltip', N'The discount amount to apply to the order/SKUs.')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (8501, 7, N'Admin.DiscountInfo.DiscountAmount.RequiredErrorMessage', N'Discount amount is required')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (8502, 7, N'Admin.DiscountInfo.DiscountAmount.RangeErrorMessage', N'The amount must be from 0 to 100000000')
@@ -3679,6 +3694,9 @@ INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID],
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (8996, 7, N'Admin.ManufacturerTemplateInfo.UpdatedOn', N'Updated on:')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (8997, 7, N'Admin.ManufacturerTemplateInfo.UpdatedOn.Tooltip', N'The date/time the template was updated.')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (8998, 7, N'Admin.MessageTemplates.Title', N'Manage Message Templates')
+SET IDENTITY_INSERT [dbo].[Nop_LocaleStringResource] OFF
+GO
+SET IDENTITY_INSERT [dbo].[Nop_LocaleStringResource] ON
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (9001, 7, N'Admin.MessageTemplates.Name', N'Name')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (9002, 7, N'Admin.MessageTemplates.Edit', N'Edit')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (9003, 7, N'Admin.MessageTemplates.Edit.Tooltip', N'Edit message template')
@@ -4133,6 +4151,9 @@ INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID],
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (9497, 7, N'Admin.ShippingRateComputationMethodAdd.Title', N'Add a new shipping rate computation method')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (9498, 7, N'Admin.ShippingRateComputationMethodAdd.BackToMethods', N'back to shipping rate computation methods list')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (9499, 7, N'Admin.ShippingRateComputationMethodAdd.SaveButton.Text', N'Save')
+SET IDENTITY_INSERT [dbo].[Nop_LocaleStringResource] OFF
+GO
+SET IDENTITY_INSERT [dbo].[Nop_LocaleStringResource] ON
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (9500, 7, N'Admin.ShippingRateComputationMethodAdd.SaveButton.Tooltip', N'Save shipping rate computation method')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (9501, 7, N'Admin.ShippingRateComputationMethodDetails.Title', N'Edit shipping rate computation method')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (9502, 7, N'Admin.ShippingRateComputationMethodDetails.BackToMethods', N'back to shipping rate computation methods list')
@@ -4633,6 +4654,9 @@ INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID],
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (9997, 7, N'Admin.AddManufacturerProduct.Manufacturer.Tooltip', N'Search by a specific manufacturer.')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (9998, 7, N'Admin.AddManufacturerProduct.SearchButton.Text', N'Search')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (9999, 7, N'Admin.AddManufacturerProduct.SearchButton.Tooltip', N'Search for products based on the criteria below')
+SET IDENTITY_INSERT [dbo].[Nop_LocaleStringResource] OFF
+GO
+SET IDENTITY_INSERT [dbo].[Nop_LocaleStringResource] ON
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (10000, 7, N'Admin.AddManufacturerProduct.ProductColumn', N'Name')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (10001, 7, N'Admin.AddManufacturerProduct.ProductColumn.Tooltip', N'Add this product to the manufacturer')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (10002, 7, N'Admin.AddManufacturerProduct.PublishedColumn', N'Published')
@@ -5107,6 +5131,9 @@ INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID],
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (10497, 7, N'Admin.ActivityLogHome.ActivityTypes.Description', N'Use this page to view list of customer activity types and turn on/off some of the activities.')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (10498, 7, N'Admin.ActivityLogHome.ActivityLog.TitleDescription', N'View Customer Activity Log.')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (10499, 7, N'Admin.ActivityLogHome.ActivityLog.Title', N'View Activity Log')
+SET IDENTITY_INSERT [dbo].[Nop_LocaleStringResource] OFF
+GO
+SET IDENTITY_INSERT [dbo].[Nop_LocaleStringResource] ON
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (10500, 7, N'Admin.ActivityLogHome.ActivityLog.Description', N'Use this page to view customer activity logs.')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (10501, 7, N'Admin.ActivityLogType.Title', N'Activity Types')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (10502, 7, N'Admin.ActivityLogType.SaveButton.Text', N'Save')
@@ -5590,6 +5617,9 @@ INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID],
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (10997, 7, N'Admin.CheckoutAttributeInfo.TaxCategory', N'Tax category:')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (10998, 7, N'Admin.CheckoutAttributeInfo.TaxCategory.Tooltip', N'The tax classification for this option. You can manage tax classifications from Configuration : Tax : Tax Classes')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (10999, 7, N'Admin.CheckoutAttributeInfo.ControlType', N'Control Type:')
+SET IDENTITY_INSERT [dbo].[Nop_LocaleStringResource] OFF
+GO
+SET IDENTITY_INSERT [dbo].[Nop_LocaleStringResource] ON
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (11000, 7, N'Admin.CheckoutAttributeInfo.ControlType.Tooltip', N'Choose how to display your attribute values.')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (11001, 7, N'Admin.CheckoutAttributeInfo.DisplayOrder', N'Display order')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (11002, 7, N'Admin.CheckoutAttributeInfo.DisplayOrder.Tooltip', N'The product attribute display order. 1 represents the first item in the list.')
@@ -6081,6 +6111,9 @@ INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID],
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (11497, 7, N'Admin.TopicInfo.SystemName.Tooltip', N'System name of this topic.')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (11498, 7, N'Admin.Polls.ShowOnHomePage', N'Show On Home Page')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (11499, 7, N'Admin.PollInfo.ShowOnHomePage', N'Show on home page:')
+SET IDENTITY_INSERT [dbo].[Nop_LocaleStringResource] OFF
+GO
+SET IDENTITY_INSERT [dbo].[Nop_LocaleStringResource] ON
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (11500, 7, N'Admin.PollInfo.ShowOnHomePage.Tooltip', N'Check if you want to show poll on home page')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (11501, 7, N'Admin.PollInfo.StartDate', N'Start date:')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (11502, 7, N'Admin.PollInfo.StartDate.Tooltip', N'Set the poll start date or leave empty')
@@ -6569,6 +6602,9 @@ INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID],
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (11997, 7, N'Admin.Customers.DateOfBirth.Tooltip', N'Filter by date of birth. Don''t select any value to load all records')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (11998, 7, N'Admin.Customers.DateOfBirth.Month', N'Month')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (11999, 7, N'Admin.Customers.DateOfBirth.Day', N'Day')
+SET IDENTITY_INSERT [dbo].[Nop_LocaleStringResource] OFF
+GO
+SET IDENTITY_INSERT [dbo].[Nop_LocaleStringResource] ON
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12000, 7, N'Admin.MessageQueueDetails.EmailAccount', N'Email account:')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12001, 7, N'Admin.MessageQueueDetails.EmailAccount.Tooltip', N'The email account that will be used to send this email.')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12002, 7, N'Admin.MessageTemplateDetails.EmailAccount', N'Email account:')
