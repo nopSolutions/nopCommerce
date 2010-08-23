@@ -72,10 +72,27 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
             if (category != null)
             {
-                foreach (Discount discount in DiscountManager.GetDiscountsByCategoryId(category.CategoryId))
-                    DiscountManager.RemoveDiscountFromCategory(category.CategoryId, discount.DiscountId);
-                foreach (int discountId in DiscountMappingControl.SelectedDiscountIds)
-                    DiscountManager.AddDiscountToCategory(category.CategoryId, discountId);
+                List<int> selectedDiscountIds = this.DiscountMappingControl.SelectedDiscountIds;
+                var existingDiscounts = DiscountManager.GetDiscountsByCategoryId(category.CategoryId);
+
+                var allDiscounts = DiscountManager.GetAllDiscounts(DiscountTypeEnum.AssignedToCategories);
+                foreach (Discount discount in allDiscounts)
+                {
+                    if (selectedDiscountIds.Contains(discount.DiscountId))
+                    {
+                        if (existingDiscounts.Find(d => d.DiscountId == discount.DiscountId) == null)
+                        {
+                            DiscountManager.AddDiscountToCategory(category.CategoryId, discount.DiscountId);
+                        }
+                    }
+                    else
+                    {
+                        if (existingDiscounts.Find(d => d.DiscountId == discount.DiscountId) != null)
+                        {
+                            DiscountManager.RemoveDiscountFromCategory(category.CategoryId, discount.DiscountId);
+                        }
+                    }
+                }
             }
         }
 

@@ -72,10 +72,27 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             ProductVariant productVariant = ProductManager.GetProductVariantById(pvId);
             if (productVariant != null)
             {
-                foreach (Discount discount in DiscountManager.GetDiscountsByProductVariantId(productVariant.ProductVariantId))
-                    DiscountManager.RemoveDiscountFromProductVariant(productVariant.ProductVariantId, discount.DiscountId);
-                foreach (int discountId in DiscountMappingControl.SelectedDiscountIds)
-                    DiscountManager.AddDiscountToProductVariant(productVariant.ProductVariantId, discountId);
+                List<int> selectedDiscountIds = this.DiscountMappingControl.SelectedDiscountIds;
+                var existingDiscounts = DiscountManager.GetDiscountsByProductVariantId(productVariant.ProductVariantId);
+
+                var allDiscounts = DiscountManager.GetAllDiscounts(DiscountTypeEnum.AssignedToSKUs);
+                foreach (Discount discount in allDiscounts)
+                {
+                    if (selectedDiscountIds.Contains(discount.DiscountId))
+                    {
+                        if (existingDiscounts.Find(d => d.DiscountId == discount.DiscountId) == null)
+                        {
+                            DiscountManager.AddDiscountToProductVariant(productVariant.ProductVariantId, discount.DiscountId);
+                        }
+                    }
+                    else
+                    {
+                        if (existingDiscounts.Find(d => d.DiscountId == discount.DiscountId) != null)
+                        {
+                            DiscountManager.RemoveDiscountFromProductVariant(productVariant.ProductVariantId, discount.DiscountId);
+                        }
+                    }
+                }
             }
         }
 
