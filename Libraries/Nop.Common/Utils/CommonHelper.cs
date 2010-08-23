@@ -39,6 +39,7 @@ namespace NopSolutions.NopCommerce.Common.Utils
     public partial class CommonHelper
     {
         #region Methods
+
         /// <summary>
         /// Verifies that a string is in valid e-mail format
         /// </summary>
@@ -165,6 +166,36 @@ namespace NopSolutions.NopCommerce.Common.Utils
             }
         }
 
+        /// <summary>
+        /// Finds a control recursive
+        /// </summary>
+        /// <typeparam name="T">Control class</typeparam>
+        /// <param name="Controls">Input control collection</param>
+        /// <returns>Found control</returns>
+        public static T FindControlRecursive<T>(ControlCollection controls) where T : class
+        {
+            T found = default(T);
+
+            if (controls != null && controls.Count > 0)
+            {
+                for (int i = 0; i < controls.Count; i++)
+                {
+                    if (controls[i] is T)
+                    {
+                        found = controls[i] as T;
+                        break;
+                    }
+                    else
+                    {
+                        found = FindControlRecursive<T>(controls[i].Controls);
+                        if (found != null)
+                            break;
+                    }
+                }
+            }
+
+            return found;
+        }
         /// <summary>
         /// Selects item
         /// </summary>

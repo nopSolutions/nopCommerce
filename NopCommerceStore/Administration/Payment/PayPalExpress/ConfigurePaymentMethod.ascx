@@ -10,7 +10,6 @@
             <b>If you're using this gateway ensure that your primary store currency is supported
                 by Paypal.</b>
                 <br />
-            <b>Reward points are not supported.</b>
             <br />
             <br />
             1. Log into your PayPal account.

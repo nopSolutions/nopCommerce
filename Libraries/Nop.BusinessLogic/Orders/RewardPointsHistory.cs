@@ -53,7 +53,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         public int CustomerId { get; set; }
 
         /// <summary>
-        /// Gets or sets the order identifier
+        /// Gets or sets the order identifier (order for which points were used as a payment)
         /// </summary>
         public int OrderId { get; set; }
 

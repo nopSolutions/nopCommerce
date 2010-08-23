@@ -65,7 +65,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             if (Page.IsValid)
             {
                 //reward points
-                NopContext.Current.User.UseRewardPointsDuringCheckout = cbUseRewardPoints.Checked;
+                ApplyRewardPoints();
 
                 //payment methods
                 int paymentMethodId = this.SelectedPaymentMethodId;
@@ -117,6 +117,12 @@ namespace NopSolutions.NopCommerce.Web.Modules
             {
                 handler(this, e);
             }
+        }
+
+        public void ApplyRewardPoints()
+        {
+            //reward points
+            NopContext.Current.User.UseRewardPointsDuringCheckout = cbUseRewardPoints.Checked;
         }
 
         public void BindData()

@@ -84,8 +84,14 @@ namespace NopSolutions.NopCommerce.Web.Modules
             var ppePaymentMethod = PaymentMethodManager.GetPaymentMethodBySystemKeyword("PayPalExpress");
             if (ppePaymentMethod != null && ppePaymentMethod.IsActive)
             {
+                //aply reward points
+                CheckoutPaymentMethodControl checkoutPaymentMethodControl = CommonHelper.FindControlRecursive<CheckoutPaymentMethodControl>(this.Page.Controls);
+                if (checkoutPaymentMethodControl != null)
+                    checkoutPaymentMethodControl.ApplyRewardPoints();
+
+                //payment
                 decimal? cartTotal = ShoppingCartManager.GetShoppingCartTotal(cart, 
-                    ppePaymentMethod.PaymentMethodId, NopContext.Current.User, false);
+                    ppePaymentMethod.PaymentMethodId, NopContext.Current.User);
                 if (cartTotal.HasValue)
                 {
                     string expressCheckoutURL = payPalExpress.SetExpressCheckout(cartTotal.Value,
