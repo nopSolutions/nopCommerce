@@ -228,7 +228,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     }
                     else
                     {
-                        ShippingMethodManager.DeleteShippingMethodCountryMapping(shippingMethod.ShippingMethodId, countryId);
+                        if (ShippingMethodManager.DoesShippingMethodCountryMappingExist(shippingMethod.ShippingMethodId, countryId))
+                        {
+                            ShippingMethodManager.DeleteShippingMethodCountryMapping(shippingMethod.ShippingMethodId, countryId);
+                        }
                     }
                 }
             }

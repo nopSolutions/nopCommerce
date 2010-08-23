@@ -248,7 +248,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     }
                     else
                     {
-                        PaymentMethodManager.DeletePaymentMethodCountryMapping(paymentMethod.PaymentMethodId, countryId);
+                        if (PaymentMethodManager.DoesPaymentMethodCountryMappingExist(paymentMethod.PaymentMethodId, countryId))
+                        {
+                            PaymentMethodManager.DeletePaymentMethodCountryMapping(paymentMethod.PaymentMethodId, countryId);
+                        }
                     }
                 }
             }
