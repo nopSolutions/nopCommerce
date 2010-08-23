@@ -7,16 +7,12 @@
                 <Columns>
                     <asp:TemplateField HeaderText="Email" ItemStyle-Width="45%">
                         <ItemTemplate>
-                            <a href="CustomerDetails.aspx?CustomerID=<%#Eval("CustomerId")%>" title="View customer details">
-                                <%#Server.HtmlEncode(Eval("Email").ToString())%>
-                            </a>
+                            <%#Server.HtmlEncode(Eval("Email").ToString())%>
                         </ItemTemplate>
                     </asp:TemplateField>
                     <asp:TemplateField HeaderText="Name" ItemStyle-Width="45%">
                         <ItemTemplate>
-                            <a href="CustomerDetails.aspx?CustomerID=<%#Eval("CustomerId")%>" title="View customer details">
-                                <%#Server.HtmlEncode(Eval("FullName").ToString())%>
-                            </a>
+                            <%#Server.HtmlEncode(Eval("FullName").ToString())%>
                         </ItemTemplate>
                     </asp:TemplateField>
                     <asp:TemplateField HeaderText="View" HeaderStyle-HorizontalAlign="Center" ItemStyle-Width="10%"

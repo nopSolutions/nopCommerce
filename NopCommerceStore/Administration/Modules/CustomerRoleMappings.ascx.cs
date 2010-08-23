@@ -69,10 +69,27 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
             if (customer != null)
             {
-                foreach (CustomerRole customerRole in customer.CustomerRoles)
-                    CustomerManager.RemoveCustomerFromRole(customer.CustomerId, customerRole.CustomerRoleId);
-                foreach (int customerRoleId in CustomerRoleMappingControl.SelectedCustomerRoleIds)
-                    CustomerManager.AddCustomerToRole(customer.CustomerId, customerRoleId);
+                List<int> selectedCustomerRoleIds = this.CustomerRoleMappingControl.SelectedCustomerRoleIds;
+                var existingCustomerRoles = customer.CustomerRoles;
+
+                var allCustomerRoles = CustomerManager.GetAllCustomerRoles();
+                foreach (CustomerRole customerRole in allCustomerRoles)
+                {
+                    if (selectedCustomerRoleIds.Contains(customerRole.CustomerRoleId))
+                    {
+                        if (existingCustomerRoles.Find(cr => cr.CustomerRoleId == customerRole.CustomerRoleId) == null)
+                        {
+                            CustomerManager.AddCustomerToRole(customer.CustomerId, customerRole.CustomerRoleId);
+                        }
+                    }
+                    else
+                    {
+                        if (existingCustomerRoles.Find(cr => cr.CustomerRoleId == customerRole.CustomerRoleId) != null)
+                        {
+                            CustomerManager.RemoveCustomerFromRole(customer.CustomerId, customerRole.CustomerRoleId);
+                        }
+                    }
+                }
             }
         }
 
