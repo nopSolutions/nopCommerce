@@ -141,6 +141,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
             if ((exception != null) && (exception is System.Threading.ThreadAbortException))
                 return null;
 
+            if (message == null)
+                message = string.Empty;
+
             if (IPAddress == null)
                 IPAddress = string.Empty;
 

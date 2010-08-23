@@ -369,7 +369,17 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.FedEx
                     }
                     else
                     {
-                        error = "Could not get reply from shipping server";
+                        if (reply!=null && 
+                            reply.Notifications != null && 
+                            reply.Notifications.Length > 0 &&
+                            !String.IsNullOrEmpty(reply.Notifications[0].Message))
+                        {
+                            error = string.Format("{0} (code: {1})", reply.Notifications[0].Message, reply.Notifications[0].Code);
+                        }
+                        else
+                        {
+                            error = "Could not get reply from shipping server";
+                        }
                     }
                 }
                 else
