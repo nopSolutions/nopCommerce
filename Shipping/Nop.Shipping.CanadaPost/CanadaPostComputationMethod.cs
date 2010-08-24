@@ -231,12 +231,21 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.CanadaPost
                 item.Quantity = sci.Quantity;
                 //Canada Post uses kg(s)
                 decimal unitWeight = sci.TotalWeight / sci.Quantity;
-                item.Weight = Convert.ToInt32(Math.Ceiling(MeasureManager.ConvertWeight(unitWeight, MeasureManager.BaseWeightIn, usedMeasureWeight)));
+                item.Weight = MeasureManager.ConvertWeight(unitWeight, MeasureManager.BaseWeightIn, usedMeasureWeight);
+                item.Weight = Math.Round(item.Weight, 2);
+                if (item.Weight == decimal.Zero)
+                    item.Weight = 0.01M;
                 
                 //Canada Post uses centimeters                
                 item.Length = Convert.ToInt32(Math.Ceiling(MeasureManager.ConvertDimension(pv.Length, MeasureManager.BaseDimensionIn, usedMeasureDimension) * 100));
+                if (item.Length == decimal.Zero)
+                    item.Length = 1;
                 item.Width = Convert.ToInt32(Math.Ceiling(MeasureManager.ConvertDimension(pv.Width, MeasureManager.BaseDimensionIn, usedMeasureDimension) * 100));
+                if (item.Width == decimal.Zero)
+                    item.Width = 1;
                 item.Height = Convert.ToInt32(Math.Ceiling(MeasureManager.ConvertDimension(pv.Height, MeasureManager.BaseDimensionIn, usedMeasureDimension) * 100));
+                if (item.Height == decimal.Zero)
+                    item.Height = 1;
                 result.Add(item);
             }
 

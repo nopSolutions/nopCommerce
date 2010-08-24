@@ -46,13 +46,13 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.CanadaPost
             // Quantity (mandatory)
             xmlString.AppendLine("<quantity> " + this.Quantity + "</quantity>");
             // Weight (mandatory)
-            xmlString.AppendLine("<weight> " + this.Weight + "</weight>");
+            xmlString.AppendLine("<weight> " + this.Weight.ToString("0.00", CultureInfo.InvariantCulture) + "</weight>");
             // Length (mandatory)
-            xmlString.AppendLine("<length> " + this.Length + "</length>");
+            xmlString.AppendLine("<length> " + this.Length.ToString("0.00", CultureInfo.InvariantCulture) + "</length>");
             // Width (mandatory)
-            xmlString.AppendLine("<width> " + this.Width + "</width>");
+            xmlString.AppendLine("<width> " + this.Width.ToString("0.00", CultureInfo.InvariantCulture) + "</width>");
             // Height (mandatory)
-            xmlString.AppendLine("<height> " + this.Height + "</height>");
+            xmlString.AppendLine("<height> " + this.Height.ToString("0.00", CultureInfo.InvariantCulture) + "</height>");
             // Description (mandatory)
             xmlString.AppendLine("<description> " + this.Description + "</description>");
             if (this.ReadyToShip == true)
@@ -91,28 +91,28 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.CanadaPost
         /// </summary>
         /// <value>The weight.</value>
         [DataMember]
-        public double Weight { get; set; }
+        public decimal Weight { get; set; }
 
         /// <summary>
         /// Gets or sets the length (cm).
         /// </summary>
         /// <value>The length.</value>
         [DataMember]
-        public double Length { get; set; }
+        public decimal Length { get; set; }
 
         /// <summary>
         /// Gets or sets the width (cm).
         /// </summary>
         /// <value>The width.</value>
         [DataMember]
-        public double Width { get; set; }
+        public decimal Width { get; set; }
 
         /// <summary>
         /// Gets or sets the height (cm).
         /// </summary>
         /// <value>The height.</value>
         [DataMember]
-        public double Height { get; set; }
+        public decimal Height { get; set; }
 
         /// <summary>
         /// Gets or sets the description.
