@@ -2,8 +2,8 @@
 declare @resources xml
 set @resources='
 <Language LanguageID="7">
-  <LocaleResource Name="">
-    <Value></Value>
+  <LocaleResource Name="MessageToken.OrderProducts.SKU">
+    <Value>SKU: {0}</Value>
   </LocaleResource>
 </Language>
 '

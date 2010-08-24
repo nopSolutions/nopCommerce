@@ -125,8 +125,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
                     continue;
 
                 sb.AppendLine(string.Format("<tr style=\"background-color: {0};text-align: center;\">", color2));
-
+                //product name
                 sb.AppendLine("<td style=\"padding: 0.6em 0.4em;text-align: left;\">" + HttpUtility.HtmlEncode(productVariant.GetLocalizedFullProductName(languageId)));
+                //download link
                 if (OrderManager.IsDownloadAllowed(opv))
                 {
                     string downloadUrl = string.Format("<a class=\"link\" href=\"{0}\" >{1}</a>", DownloadManager.GetDownloadUrl(opv), LocalizationManager.GetLocaleResourceString("Order.Download", languageId));
@@ -134,10 +135,21 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
                     sb.AppendLine(downloadUrl);
                     sb.AppendLine(")");
                 }
+                //attributes
                 if (!String.IsNullOrEmpty(opv.AttributeDescription))
                 {
                     sb.AppendLine("<br />");
                     sb.AppendLine(opv.AttributeDescription);
+                }
+                //sku
+                if (SettingManager.GetSettingValueBoolean("Display.Products.ShowSKU"))
+                {
+                    if (!String.IsNullOrEmpty(opv.ProductVariant.SKU))
+                    {
+                        sb.AppendLine("<br />");
+                        string sku = string.Format(LocalizationManager.GetLocaleResourceString("MessageToken.OrderProducts.SKU", languageId), HttpUtility.HtmlEncode(opv.ProductVariant.SKU));
+                        sb.AppendLine(sku);
+                    }
                 }
                 sb.AppendLine("</td>");
 
