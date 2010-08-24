@@ -217,13 +217,19 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
             Address billAddr = customer.BillingAddress;
             if (billAddr != null)
             {
-                elCustomerAdd.AppendChild(CreateAddressNode(xml, "BillAddress", billAddr.Address1, billAddr.Address2, billAddr.City, billAddr.StateProvince.Name, billAddr.ZipPostalCode, billAddr.Country.Name));
+                string stateprovince = string.Empty;
+                if (billAddr.StateProvince != null)
+                    stateprovince = billAddr.StateProvince.Name;
+                elCustomerAdd.AppendChild(CreateAddressNode(xml, "BillAddress", billAddr.Address1, billAddr.Address2, billAddr.City, stateprovince, billAddr.ZipPostalCode, billAddr.Country.Name));
             }
 
             Address shipAddr = customer.ShippingAddress;
             if (shipAddr != null)
             {
-                elCustomerAdd.AppendChild(CreateAddressNode(xml, "ShipAddress", shipAddr.Address1, shipAddr.Address2, shipAddr.City, shipAddr.StateProvince.Name, shipAddr.ZipPostalCode, shipAddr.Country.Name));
+                string stateprovince = string.Empty;
+                if (shipAddr.StateProvince != null)
+                    stateprovince = shipAddr.StateProvince.Name;
+                elCustomerAdd.AppendChild(CreateAddressNode(xml, "ShipAddress", shipAddr.Address1, shipAddr.Address2, shipAddr.City, stateprovince, shipAddr.ZipPostalCode, shipAddr.Country.Name));
             }
 
             elCustomerAdd.AppendChild(CreateStrTypeNode(xml, "Phone", customer.PhoneNumber));
