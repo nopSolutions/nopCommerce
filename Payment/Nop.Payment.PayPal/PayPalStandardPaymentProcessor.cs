@@ -182,18 +182,61 @@ namespace NopSolutions.NopCommerce.Payment.Methods.PayPal
             string returnURL = CommonHelper.GetStoreLocation(false) + "PaypalPDTHandler.aspx";
             string cancel_returnURL = CommonHelper.GetStoreLocation(false) + "PaypalCancel.aspx";
             builder.Append(GetPaypalUrl());
-            builder.AppendFormat("?cmd=_xclick&business={0}", HttpUtility.UrlEncode(businessEmail));
-            builder.AppendFormat("&item_name=Order Number {0}", order.OrderId);
+            string cmd = string.Empty;
+            if (SettingManager.GetSettingValueBoolean("PaymentMethod.PaypalStandard.PassProductNamesAndTotals"))
+            {
+                cmd = "_cart";
+            }
+            else
+            {
+                cmd = "_xclick";
+            }
+            builder.AppendFormat("?cmd={0}&business={1}", cmd, HttpUtility.UrlEncode(businessEmail));
+            if (SettingManager.GetSettingValueBoolean("PaymentMethod.PaypalStandard.PassProductNamesAndTotals"))
+            {
+                builder.AppendFormat("&upload=1");
+
+                //get the items in the cart
+                var cartItems = order.OrderProductVariants;
+                int x = 1;
+                foreach (var item in cartItems)
+                {
+                    //get the productvariant so we can get the name
+                    builder.AppendFormat("&item_name_" + x + "={0}", HttpUtility.UrlEncode(item.ProductVariant.FullProductName));
+                    builder.AppendFormat("&amount_" + x + "={0}", item.UnitPriceExclTax.ToString("0.00", CultureInfo.InvariantCulture));
+                    builder.AppendFormat("&quantity_" + x + "={0}", item.Quantity);
+                    x++;
+                }
+
+                //order totals
+                if (order.OrderShippingExclTax > decimal.Zero)
+                    builder.AppendFormat("&shipping_1={0}", order.OrderShippingExclTax.ToString("0.00", CultureInfo.InvariantCulture));
+                if (order.OrderTax > decimal.Zero)
+                    builder.AppendFormat("&tax_1={0}", order.OrderTax.ToString("0.00", CultureInfo.InvariantCulture));
+
+                //can use "handling" for extra charges - will be added to "shipping & handling"
+                if (order.PaymentMethodAdditionalFeeExclTax > decimal.Zero)
+                    builder.AppendFormat("&handling_1={0}", order.PaymentMethodAdditionalFeeExclTax.ToString("0.00", CultureInfo.InvariantCulture));
+           
+            }
+            else
+            {
+                builder.AppendFormat("&item_name=Order Number {0}", order.OrderId);
+                builder.AppendFormat("&amount={0}", order.OrderTotal.ToString("0.00", CultureInfo.InvariantCulture));
+            }
+
             builder.AppendFormat("&custom={0}", order.OrderGuid);
-            builder.AppendFormat("&amount={0}", order.OrderTotal.ToString("N", new CultureInfo("en-us")));
             builder.Append(string.Format("&no_note=1&currency_code={0}", HttpUtility.UrlEncode(CurrencyManager.PrimaryStoreCurrency.CurrencyCode)));
             builder.AppendFormat("&invoice={0}", order.OrderId);
             builder.AppendFormat("&rm=2", new object[0]);
             if (order.ShippingStatus != ShippingStatusEnum.ShippingNotRequired)
                 builder.AppendFormat("&no_shipping=2", new object[0]);
             else
-                builder.AppendFormat("&no_shipping=1", new object[0]);
+                builder.AppendFormat("&no_shipping=1", new object[0]);           
             builder.AppendFormat("&return={0}&cancel_return={1}", HttpUtility.UrlEncode(returnURL), HttpUtility.UrlEncode(cancel_returnURL));
+
+
+            //address
             //TODO move this param [address_override] to settings (PayPal configuration page)
             builder.AppendFormat("&address_override=1");
             builder.AppendFormat("&first_name={0}", HttpUtility.UrlEncode(order.BillingFirstName));
@@ -201,7 +244,6 @@ namespace NopSolutions.NopCommerce.Payment.Methods.PayPal
             builder.AppendFormat("&address1={0}", HttpUtility.UrlEncode(order.BillingAddress1));
             builder.AppendFormat("&address2={0}", HttpUtility.UrlEncode(order.BillingAddress2));
             builder.AppendFormat("&city={0}", HttpUtility.UrlEncode(order.BillingCity));
-            builder.AppendFormat("&zip={0}", HttpUtility.UrlEncode(order.BillingZipPostalCode));
             //if (!String.IsNullOrEmpty(order.BillingPhoneNumber))
             //{
             //    //strip out all non-digit characters from phone number;
@@ -223,6 +265,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.PayPal
                 builder.AppendFormat("&country={0}", HttpUtility.UrlEncode(billingCountry.TwoLetterIsoCode));
             else
                 builder.AppendFormat("&country={0}", HttpUtility.UrlEncode(order.BillingCountry));
+            builder.AppendFormat("&zip={0}", HttpUtility.UrlEncode(order.BillingZipPostalCode));
             builder.AppendFormat("&email={0}", HttpUtility.UrlEncode(order.BillingEmail));
             HttpContext.Current.Response.Redirect(builder.ToString());
             return string.Empty;

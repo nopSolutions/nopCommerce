@@ -136,19 +136,19 @@ namespace NopSolutions.NopCommerce.Payment.Methods.iDeal
             }
 
             // Add additional handling fee
-            if (iDealBasicPaymentSettings.AdditionalFee > 0)
+            if (order.PaymentMethodAdditionalFeeExclTax > 0)
             {
-                price += (int)(iDealBasicPaymentSettings.AdditionalFee * 100);
+                price += (int)(order.PaymentMethodAdditionalFeeExclTax * 100);
 
                 remotePostHelper.Add("itemNumber" + i, "administratiekosten");
                 remotePostHelper.Add("itemDescription" + i, "Administratiekosten");
                 remotePostHelper.Add("itemQuantity" + i, "1");
-                remotePostHelper.Add("itemPrice" + i, ((int)(iDealBasicPaymentSettings.AdditionalFee * 100)).ToString());
+                remotePostHelper.Add("itemPrice" + i, ((int)(order.PaymentMethodAdditionalFeeExclTax * 100)).ToString());
 
                 hasString.Append("administratiekosten");
                 hasString.Append("Administratiekosten");
                 hasString.Append(1);
-                hasString.Append(((int)(iDealBasicPaymentSettings.AdditionalFee * 100)).ToString());
+                hasString.Append(((int)(order.PaymentMethodAdditionalFeeExclTax * 100)).ToString());
                 aantal++;
                 i++;
             }

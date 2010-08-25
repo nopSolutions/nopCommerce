@@ -93,4 +93,15 @@
             </nopCommerce:DecimalTextBox>
         </td>
     </tr>
+    <tr>
+        <td class="adminTitle">
+            Pass product names and order totals to PayPal:
+            <br />
+            <i>Note: Discounts, gift cards, reward points and checkout attributes are not supported
+            <br />when this option is enabled</i>
+        </td>
+        <td class="adminData">
+            <asp:CheckBox ID="cbPassProductNamesAndTotals" runat="server"></asp:CheckBox>
+        </td>
+    </tr>
 </table>

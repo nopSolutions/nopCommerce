@@ -41,6 +41,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Payment.PayPalStandard
             cbUseSandbox.Checked = SettingManager.GetSettingValueBoolean("PaymentMethod.PaypalStandard.UseSandbox");
             txtBusinessEmail.Text = SettingManager.GetSettingValue("PaymentMethod.PaypalStandard.BusinessEmail");
             txtPTIIdentityToken.Text = SettingManager.GetSettingValue("PaymentMethod.PaypalStandard.PTIIdentityToken");
+            cbPassProductNamesAndTotals.Checked = SettingManager.GetSettingValueBoolean("PaymentMethod.PaypalStandard.PassProductNamesAndTotals");
             txtAdditionalFee.Value = SettingManager.GetSettingValueDecimalNative("PaymentMethod.PaypalStandard.AdditionalFee");
         }
 
@@ -49,6 +50,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Payment.PayPalStandard
             SettingManager.SetParam("PaymentMethod.PaypalStandard.UseSandbox", cbUseSandbox.Checked.ToString());
             SettingManager.SetParam("PaymentMethod.PaypalStandard.BusinessEmail", txtBusinessEmail.Text);
             SettingManager.SetParam("PaymentMethod.PaypalStandard.PTIIdentityToken", txtPTIIdentityToken.Text);
+            SettingManager.SetParam("PaymentMethod.PaypalStandard.PassProductNamesAndTotals", cbPassProductNamesAndTotals.Checked.ToString());
             SettingManager.SetParamNative("PaymentMethod.PaypalStandard.AdditionalFee", txtAdditionalFee.Value);
         }
     }
