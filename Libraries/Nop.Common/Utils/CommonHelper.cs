@@ -415,11 +415,25 @@ namespace NopSolutions.NopCommerce.Common.Utils
             {
                 if (!String.IsNullOrEmpty(ConfigurationManager.AppSettings["SharedSSL"]))
                 {
+                    //shared SSL
                     result = ConfigurationManager.AppSettings["SharedSSL"];
                 }
                 else
                 {
+                    //SSL
                     result = result.Replace("http:/", "https:/");
+                }
+            }
+            else
+            {
+                if (!String.IsNullOrEmpty(ConfigurationManager.AppSettings["SharedSSL"]))
+                {
+                    //shared SSL
+                    /* UNDONE we need to set store URL here (SettingManager.StoreUrl property)
+                     * but we cannot reference Nop.BusinessLogic.dll assembly.
+                     * So just hard-code it here if you're using shared SSL
+                     * result = "http://www.yourStore.com";
+                     */
                 }
             }
 
