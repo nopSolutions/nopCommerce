@@ -2491,6 +2491,9 @@ set @resources='
   <LocaleResource Name="PDFInvoice.ShippingMethod">
     <Value>Shipping method: {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="MessageToken.OrderProducts.SKU">
+    <Value>SKU: {0}</Value>
+  </LocaleResource>
 </Language>
 '
 

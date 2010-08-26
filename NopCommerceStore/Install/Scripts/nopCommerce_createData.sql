@@ -6715,6 +6715,7 @@ INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID],
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12107, 7, N'Admin.GlobalSettings.SEODisplay.FaviconRemove.Tooltip', N'Click to delete favicon file.')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12108, 7, N'CCAvenuePaymentModule.Message', N'You will be redirected to CCAvenue site to complete the order.')
 INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12109, 7, N'PDFInvoice.ShippingMethod', N'Shipping method: {0}')
+INSERT [dbo].[Nop_LocaleStringResource] ([LocaleStringResourceID], [LanguageID], [ResourceName], [ResourceValue]) VALUES (12110, 7, N'MessageToken.OrderProducts.SKU', N'SKU: {0}')
 SET IDENTITY_INSERT [dbo].[Nop_LocaleStringResource] OFF
 GO
 
