@@ -2312,7 +2312,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
             }
             else
             {
-                isDeletedByAuthorParameter = new ObjectParameter("isDeletedByAuthor", typeof(decimal));
+                isDeletedByAuthorParameter = new ObjectParameter("isDeletedByAuthor", typeof(bool));
             }
 
             ObjectParameter isDeletedByRecipientParameter;
