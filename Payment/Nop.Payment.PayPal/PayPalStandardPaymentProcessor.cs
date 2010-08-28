@@ -25,7 +25,9 @@ using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.Payment;
+using NopSolutions.NopCommerce.BusinessLogic.Products.Attributes;
 using NopSolutions.NopCommerce.BusinessLogic.Shipping;
+using NopSolutions.NopCommerce.BusinessLogic.Tax;
 using NopSolutions.NopCommerce.BusinessLogic.Utils;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
@@ -197,6 +199,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.PayPal
                 builder.AppendFormat("&upload=1");
 
                 //get the items in the cart
+                decimal cartTotal = decimal.Zero;
                 var cartItems = order.OrderProductVariants;
                 int x = 1;
                 foreach (var item in cartItems)
@@ -206,21 +209,68 @@ namespace NopSolutions.NopCommerce.Payment.Methods.PayPal
                     builder.AppendFormat("&amount_" + x + "={0}", item.UnitPriceExclTax.ToString("0.00", CultureInfo.InvariantCulture));
                     builder.AppendFormat("&quantity_" + x + "={0}", item.Quantity);
                     x++;
+                    cartTotal += item.PriceExclTax;
+                }
+
+                //the checkout attributes that have a dollar value and send them to Paypal as items to be paid for
+                var caValues = CheckoutAttributeHelper.ParseCheckoutAttributeValues(order.CheckoutAttributesXml);
+                foreach (var val in caValues)
+                {
+                    var attPrice = TaxManager.GetCheckoutAttributePrice(val, false, order.Customer);
+                    if (attPrice > 0) //if it has a price
+                    {
+                        var ca = val.CheckoutAttribute;
+                        if (ca != null)
+                        {
+                            var attName = ca.LocalizedName; //set the name
+                            builder.AppendFormat("&item_name_" + x + "={0}", HttpUtility.UrlEncode(attName)); //name
+                            builder.AppendFormat("&amount_" + x + "={0}", attPrice.ToString("0.00", CultureInfo.InvariantCulture)); //amount
+                            builder.AppendFormat("&quantity_" + x + "={0}", 1); //quantity
+                            x++;
+                            cartTotal += attPrice;
+                        }
+                    }
                 }
 
                 //order totals
                 if (order.OrderShippingExclTax > decimal.Zero)
+                {
                     builder.AppendFormat("&shipping_1={0}", order.OrderShippingExclTax.ToString("0.00", CultureInfo.InvariantCulture));
-                if (order.OrderTax > decimal.Zero)
-                    builder.AppendFormat("&tax_1={0}", order.OrderTax.ToString("0.00", CultureInfo.InvariantCulture));
-
+                    cartTotal += order.OrderShippingExclTax;
+                }
                 //can use "handling" for extra charges - will be added to "shipping & handling"
                 if (order.PaymentMethodAdditionalFeeExclTax > decimal.Zero)
+                {
                     builder.AppendFormat("&handling_1={0}", order.PaymentMethodAdditionalFeeExclTax.ToString("0.00", CultureInfo.InvariantCulture));
-           
+                    cartTotal += order.PaymentMethodAdditionalFeeExclTax;
+                }
+                //tax
+                if (order.OrderTax > decimal.Zero)
+                {
+                    //builder.AppendFormat("&tax_1={0}", order.OrderTax.ToString("0.00", CultureInfo.InvariantCulture));
+
+                    //add tax as item
+                    builder.AppendFormat("&item_name_" + x + "={0}", HttpUtility.UrlEncode("Sales Tax")); //name
+                    builder.AppendFormat("&amount_" + x + "={0}", order.OrderTax.ToString("0.00", CultureInfo.InvariantCulture)); //amount
+                    builder.AppendFormat("&quantity_" + x + "={0}", 1); //quantity
+
+                    cartTotal += order.OrderTax;
+                    x++;
+                }
+
+                if (cartTotal > order.OrderTotal && cartTotal != order.OrderTotal)
+                {
+                    /* Take the difference between what the order total is and what it should be and use that as the "discount".
+                     * The difference equals the amount of the gift card and/or reward points used. 
+                     */
+                    decimal discountTotal = cartTotal - order.OrderTotal;
+                    //gift card or rewared point amount applied to cart in nopCommerce - shows in Paypal as "discount"
+                    builder.AppendFormat("&discount_amount_cart={0}", discountTotal.ToString("0.00", CultureInfo.InvariantCulture));
+                }
             }
             else
             {
+                //pass order total
                 builder.AppendFormat("&item_name=Order Number {0}", order.OrderId);
                 builder.AppendFormat("&amount={0}", order.OrderTotal.ToString("0.00", CultureInfo.InvariantCulture));
             }
@@ -232,7 +282,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.PayPal
             if (order.ShippingStatus != ShippingStatusEnum.ShippingNotRequired)
                 builder.AppendFormat("&no_shipping=2", new object[0]);
             else
-                builder.AppendFormat("&no_shipping=1", new object[0]);           
+                builder.AppendFormat("&no_shipping=1", new object[0]);
             builder.AppendFormat("&return={0}&cancel_return={1}", HttpUtility.UrlEncode(returnURL), HttpUtility.UrlEncode(cancel_returnURL));
 
 
