@@ -9,7 +9,7 @@
 // The Initial Developer of the Original Code is NopSolutions.
 // All Rights Reserved.
 // 
-// Contributor(s): _______. 
+// Contributor(s): Barry Franklin_______. 
 //------------------------------------------------------------------------------
 
 using System;
