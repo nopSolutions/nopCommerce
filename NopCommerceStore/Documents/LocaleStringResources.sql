@@ -14,6 +14,9 @@ set @resources='
   <LocaleResource Name="Admin.OnlineCustomers.Total.Tooltip">
     <Value>See how many customers (total) you got on your site in this moment.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.OnlineCustomers.Total.Value">
+    <Value>{0} (maximum: {1})</Value>
+  </LocaleResource>
 </Language>
 '
 

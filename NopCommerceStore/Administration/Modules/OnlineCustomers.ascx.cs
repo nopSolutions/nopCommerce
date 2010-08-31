@@ -81,7 +81,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                 lblGuests.Text = guests.Count.ToString();
                 lblRegistered.Text = registeredUsers.Count.ToString();
-                lblTotal.Text = allUsers.Count.ToString();
+                lblTotal.Text = string.Format(GetLocaleResourceString("Admin.OnlineCustomers.Total.Value"), allUsers.Count.ToString(), OnlineUserManager.MaximumOnlineCustomers);
                 gvCustomers.DataSource = allUsers;
                 gvCustomers.DataBind();
             }

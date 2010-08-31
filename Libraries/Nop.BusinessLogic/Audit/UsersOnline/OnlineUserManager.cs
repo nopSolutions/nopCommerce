@@ -221,6 +221,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit.UsersOnline
                         HttpContext.Current.Response.Cookies.Remove(TRACKINGCOOKIENAME);
                         HttpContext.Current.Response.Cookies.Add(cookie);
                     }
+
+                    //maximum online customers
+                    int currentVisitors = GetAnonymousUserList().Count() + GetRegisteredUserList().Count();
+                    if (currentVisitors > OnlineUserManager.MaximumOnlineCustomers)
+                    {
+                        OnlineUserManager.MaximumOnlineCustomers = currentVisitors;
+                    }
                 }
             }
             catch (NopException exc)
@@ -335,7 +342,21 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit.UsersOnline
                 SettingManager.SetParam("OnlineUserManager.Enabled", value.ToString());
             }
         }
-
+        
+        /// <summary>
+        /// Gets a maximum online customer number
+        /// </summary>
+        public static int MaximumOnlineCustomers
+        {
+            get
+            {
+                return SettingManager.GetSettingValueInteger("OnlineUserManager.MaximumOnlineCustomers", 0);
+            }
+            set
+            {
+                SettingManager.SetParam("OnlineUserManager.MaximumOnlineCustomers", value.ToString());
+            }
+        }
         #endregion
     }
 }
