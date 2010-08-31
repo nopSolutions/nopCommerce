@@ -1,6 +1,6 @@
 ﻿SET IDENTITY_INSERT [dbo].[Nop_SMSProvider] ON
-INSERT [dbo].[Nop_SMSProvider] ([SMSProviderId], [Name], [ClassName], [SystemKeyword], [IsActive]) VALUES (1, N'Clickatell', N'NopSolutions.NopCommerce.BusinessLogic.Messages.ClickatellSMSProvider, Nop.BusinessLogic', N'SMSPROVIDERS_CLICKATELL', 0)
-INSERT [dbo].[Nop_SMSProvider] ([SMSProviderId], [Name], [ClassName], [SystemKeyword], [IsActive]) VALUES (2, N'Verizon', N'NopSolutions.NopCommerce.BusinessLogic.Messages.VerizonSMSProvider, Nop.BusinessLogic', N'SMSPROVIDERS_VERIZON', 0)
+INSERT [dbo].[Nop_SMSProvider] ([SMSProviderId], [Name], [ClassName], [SystemKeyword], [IsActive]) VALUES (1, N'Clickatell', N'NopSolutions.NopCommerce.BusinessLogic.Messages.SMS.ClickatellSMSProvider, Nop.BusinessLogic', N'SMSPROVIDERS_CLICKATELL', 0)
+INSERT [dbo].[Nop_SMSProvider] ([SMSProviderId], [Name], [ClassName], [SystemKeyword], [IsActive]) VALUES (2, N'Verizon', N'NopSolutions.NopCommerce.BusinessLogic.Messages.SMS.VerizonSMSProvider, Nop.BusinessLogic', N'SMSPROVIDERS_VERIZON', 0)
 SET IDENTITY_INSERT [dbo].[Nop_SMSProvider] OFF
 GO
 

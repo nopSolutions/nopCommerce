@@ -3679,10 +3679,10 @@ GO
 IF NOT EXISTS (
 		SELECT 1
 		FROM [dbo].[Nop_SMSProvider]
-		WHERE [ClassName] = N'NopSolutions.NopCommerce.BusinessLogic.Messages.ClickatellSMSProvider, Nop.BusinessLogic')
+		WHERE [ClassName] = N'NopSolutions.NopCommerce.BusinessLogic.Messages.SMS.ClickatellSMSProvider, Nop.BusinessLogic')
 BEGIN
 	INSERT [dbo].[Nop_SMSProvider] ([Name], [ClassName], [SystemKeyword], [IsActive]) 
-	VALUES (N'Clickatell', N'NopSolutions.NopCommerce.BusinessLogic.Messages.ClickatellSMSProvider, Nop.BusinessLogic', N'SMSPROVIDERS_CLICKATELL', 0)
+	VALUES (N'Clickatell', N'NopSolutions.NopCommerce.BusinessLogic.Messages.SMS.ClickatellSMSProvider, Nop.BusinessLogic', N'SMSPROVIDERS_CLICKATELL', 0)
 END
 GO
 
@@ -3732,10 +3732,10 @@ GO
 IF NOT EXISTS (
 		SELECT 1
 		FROM [dbo].[Nop_SMSProvider]
-		WHERE [ClassName] = N'NopSolutions.NopCommerce.BusinessLogic.Messages.VerizonSMSProvider, Nop.BusinessLogic')
+		WHERE [ClassName] = N'NopSolutions.NopCommerce.BusinessLogic.Messages.SMS.VerizonSMSProvider, Nop.BusinessLogic')
 BEGIN
 	INSERT [dbo].[Nop_SMSProvider] ([Name], [ClassName], [SystemKeyword], [IsActive]) 
-	VALUES (N'Verizon', N'NopSolutions.NopCommerce.BusinessLogic.Messages.VerizonSMSProvider, Nop.BusinessLogic', N'SMSPROVIDERS_VERIZON', 0)
+	VALUES (N'Verizon', N'NopSolutions.NopCommerce.BusinessLogic.Messages.SMS.VerizonSMSProvider, Nop.BusinessLogic', N'SMSPROVIDERS_VERIZON', 0)
 END
 GO
 
