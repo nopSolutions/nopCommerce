@@ -127,6 +127,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
 
             cbUsernamesEnabled.Checked = CustomerManager.UsernamesEnabled;
+            cbAllowCustomersToChangeUsernames.Checked = CustomerManager.AllowCustomersToChangeUsernames;            
             CommonHelper.SelectListItem(this.ddlRegistrationMethod, (int)CustomerManager.CustomerRegistrationType);
             cbAllowNavigationOnlyRegisteredCustomers.Checked = CustomerManager.AllowNavigationOnlyRegisteredCustomers;
             cbHideNewsletterBox.Checked = SettingManager.GetSettingValueBoolean("Display.HideNewsletterBox");
@@ -301,6 +302,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             this.cbLiveChatEnabled.Attributes.Add("onclick", "toggleLiveChat();");
             this.cbGoogleAdsenseEnabled.Attributes.Add("onclick", "toggleGoogleAdsense();");
             this.cbGoogleAnalyticsEnabled.Attributes.Add("onclick", "toggleGoogleAnalytics();");
+            this.cbUsernamesEnabled.Attributes.Add("onclick", "toggleUsernames();");
+            
 
             base.OnPreRender(e);
         }
@@ -393,6 +396,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
 
                     CustomerManager.UsernamesEnabled = cbUsernamesEnabled.Checked;
+                    CustomerManager.AllowCustomersToChangeUsernames = cbAllowCustomersToChangeUsernames.Checked;
                     CustomerManager.CustomerRegistrationType = (CustomerRegistrationTypeEnum)Enum.ToObject(typeof(CustomerRegistrationTypeEnum), int.Parse(this.ddlRegistrationMethod.SelectedItem.Value));
                     CustomerManager.AllowNavigationOnlyRegisteredCustomers = cbAllowNavigationOnlyRegisteredCustomers.Checked;
                     SettingManager.SetParam("Display.HideNewsletterBox", cbHideNewsletterBox.Checked.ToString());

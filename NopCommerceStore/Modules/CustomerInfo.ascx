@@ -53,15 +53,15 @@
                     </td>
                 </tr>
                 <asp:PlaceHolder runat="server" ID="phDateOfBirth">
-                <tr class="row">
-                    <td class="item-name">
-                        <%=GetLocaleResourceString("Account.DateOfBirth")%>:
-                    </td>
-                    <td class="item-value">
-                        <nopCommerce:NopDatePicker runat="server" ID="dtDateOfBirth" DayText="<% $NopResources:DatePicker2.Day %>"
-                            MonthText="<% $NopResources:DatePicker2.Month %>" YearText="<% $NopResources:DatePicker2.Year %>" />
-                    </td>
-                </tr>
+                    <tr class="row">
+                        <td class="item-name">
+                            <%=GetLocaleResourceString("Account.DateOfBirth")%>:
+                        </td>
+                        <td class="item-value">
+                            <nopCommerce:NopDatePicker runat="server" ID="dtDateOfBirth" DayText="<% $NopResources:DatePicker2.Day %>"
+                                MonthText="<% $NopResources:DatePicker2.Month %>" YearText="<% $NopResources:DatePicker2.Year %>" />
+                        </td>
+                    </tr>
                 </asp:PlaceHolder>
                 <tr class="row">
                     <td class="item-name">
@@ -77,6 +77,19 @@
                             ValidationExpression="[\w\.-]+(\+[\w-]*)?@([\w-]+\.)+[\w-]+" ValidationGroup="CustomerInfo">*</asp:RegularExpressionValidator>
                     </td>
                 </tr>
+                <asp:PlaceHolder runat="server" ID="phUsername">
+                <tr class="row">
+                    <td class="item-name">
+                        <%=GetLocaleResourceString("Account.Username")%>:
+                    </td>
+                    <td class="item-value">
+                        <asp:TextBox ID="txtUsername" runat="server" MaxLength="40"></asp:TextBox>
+                        <asp:RequiredFieldValidator ID="rfvUsername" runat="server" ControlToValidate="txtUsername"
+                            ErrorMessage="<% $NopResources:Account.UsernameRequired %>" ToolTip="<% $NopResources:Account.UsernameRequired %>"
+                            Display="Dynamic" ValidationGroup="CustomerInfo">*</asp:RequiredFieldValidator>
+                    </td>
+                </tr>
+                </asp:PlaceHolder>
             </tbody>
         </table>
     </div>

@@ -44,6 +44,21 @@ set @resources='
   <LocaleResource Name="Products.ManufacturerPartNumber">
     <Value>Part number:</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.AllowCustomersToChangeUsernames">
+    <Value>Allow customers to change their usernames:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.AllowCustomersToChangeUsernames.Tooltip">
+    <Value>A value indicating whether customers are allowed to change their usernames.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CustomerInfo.Username.Tooltip">
+    <Value>The username of the customer.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Username">
+    <Value>Username</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.UsernameRequired">
+    <Value>Username is required</Value>
+  </LocaleResource>
 </Language>
 '
 

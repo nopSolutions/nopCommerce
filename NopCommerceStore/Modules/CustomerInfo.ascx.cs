@@ -43,6 +43,9 @@ namespace NopSolutions.NopCommerce.Web.Modules
     {
         protected override void OnInit(EventArgs e)
         {
+            phUsername.Visible = CustomerManager.UsernamesEnabled &&
+                CustomerManager.AllowCustomersToChangeUsernames;
+
             phGender.Visible = CustomerManager.FormFieldGenderEnabled;
             phDateOfBirth.Visible = CustomerManager.FormFieldDateOfBirthEnabled;
 
@@ -114,6 +117,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             var customer = NopContext.Current.User;
 
             txtEmail.Text = customer.Email;
+            txtUsername.Text = customer.Username;
 
             if (String.IsNullOrEmpty(customer.Gender) || 
                 customer.Gender.ToLower() == "m")
@@ -169,11 +173,24 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 try
                 {
                     var customer = NopContext.Current.User;
-                    if (customer.Email.ToLower() != txtEmail.Text.ToLower().Trim())
+
+                    //email
+                    if (customer.Email.ToLowerInvariant() != txtEmail.Text.ToLowerInvariant().Trim())
                     {
                         customer = CustomerManager.SetEmail(customer.CustomerId, txtEmail.Text.Trim());
                     }
 
+                    //username
+                    if (CustomerManager.UsernamesEnabled &&
+                       CustomerManager.AllowCustomersToChangeUsernames)
+                    {
+                        if (customer.Username.ToLowerInvariant() != txtUsername.Text.ToLowerInvariant().Trim())
+                        {
+                            customer = CustomerManager.ChangeCustomerUsername(customer.CustomerId, txtUsername.Text.Trim());
+                        }
+                    }
+
+                    //form fields
                     if (CustomerManager.FormFieldGenderEnabled)
                     {
                         if (rbGenderM.Checked)

@@ -47,21 +47,29 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 this.txtEmail.Text = customer.Email;
 
+                this.txtUsername.Text = customer.Username;
+                this.lblUsername.Text = customer.Username;
                 if (CustomerManager.UsernamesEnabled)
                 {
-                    txtUsername.Visible = false;
-                    lblUsername.Visible = true;
-                    txtUsername.Text = customer.Username;
-                    lblUsername.Text = customer.Username;
+                    if (CustomerManager.AllowCustomersToChangeUsernames)
+                    {
+                        this.txtUsername.Visible = true;
+                        this.lblUsername.Visible = false;
+                    }
+                    else
+                    {
+                        this.txtUsername.Visible = false;
+                        this.lblUsername.Visible = true;
+                    }
                 }
 
                 if (CustomerManager.FormFieldGenderEnabled)
                 {
                     if (String.IsNullOrEmpty(customer.Gender) ||
                         customer.Gender.ToLower() == "m")
-                        rbGenderM.Checked = true;
+                        this.rbGenderM.Checked = true;
                     else
-                        rbGenderF.Checked = true;
+                        this.rbGenderF.Checked = true;
                 }
 
                 txtFirstName.Text = customer.FirstName;
@@ -229,6 +237,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             Customer customer = CustomerManager.GetCustomerById(this.CustomerId);
 
+            string username = txtUsername.Text;
             string email = txtEmail.Text.Trim();
             int affiliateId = int.Parse(this.ddlAffiliate.SelectedItem.Value);
             bool isTaxExempt=cbIsTaxExempt.Checked;
@@ -239,6 +248,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
             if (customer != null)
             {
+                //username 
+                if (CustomerManager.UsernamesEnabled &&
+                    CustomerManager.AllowCustomersToChangeUsernames)
+                {
+                    customer = CustomerManager.ChangeCustomerUsername(customer.CustomerId, username);
+                }
+
                 customer = CustomerManager.SetEmail(customer.CustomerId, email);
 
                 customer = CustomerManager.UpdateCustomer(customer.CustomerId, customer.CustomerGuid,
@@ -255,7 +271,6 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             }
             else
             {
-                string username = txtUsername.Text;
                 string password = txtPassword.Text;
                 if (String.IsNullOrEmpty(password))
                     throw new NopException(GetLocaleResourceString("Customer.PasswordIsRequired"));

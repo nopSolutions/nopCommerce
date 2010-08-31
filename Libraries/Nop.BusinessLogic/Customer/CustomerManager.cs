@@ -605,6 +605,52 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             }
             return customer;
         }
+        
+        /// <summary>
+        /// Sets a customer username
+        /// </summary>
+        /// <param name="customerId">Customer identifier</param>
+        /// <param name="newUsername">New Username</param>
+        /// <returns>Customer</returns>
+        public static Customer ChangeCustomerUsername(int customerId, string newUsername)
+        {
+            if (!CustomerManager.UsernamesEnabled)
+                throw new NopException("Usernames are disabled");
+
+            if (!CustomerManager.AllowCustomersToChangeUsernames)
+                throw new NopException("Chnaging usernames is not allowed");
+
+            if (newUsername == null)
+                newUsername = string.Empty;
+            newUsername = newUsername.Trim();
+
+            var customer = GetCustomerById(customerId);
+            if (customer != null)
+            {
+                var cust2 = GetCustomerByUsername(newUsername);
+                if (cust2 != null && customer.CustomerId != cust2.CustomerId)
+                {
+                    throw new NopException("This username is already in use.");
+                }
+
+                if (newUsername.Length > 40)
+                {
+                    throw new NopException("Username is too long.");
+                }
+
+                customer = UpdateCustomer(customer.CustomerId, customer.CustomerGuid, customer.Email,
+                    newUsername, customer.PasswordHash, customer.SaltKey, customer.AffiliateId,
+                    customer.BillingAddressId, customer.ShippingAddressId, customer.LastPaymentMethodId,
+                    customer.LastAppliedCouponCode, customer.GiftCardCouponCodes,
+                    customer.CheckoutAttributes, customer.LanguageId,
+                    customer.CurrencyId, customer.TaxDisplayType,
+                    customer.IsTaxExempt, customer.IsAdmin,
+                    customer.IsGuest, customer.IsForumModerator, customer.TotalForumPosts,
+                    customer.Signature, customer.AdminComment, customer.Active, customer.Deleted,
+                    customer.RegistrationDate, customer.TimeZoneId, customer.AvatarId, customer.DateOfBirth);
+            }
+            return customer;
+        }
 
         /// <summary>
         /// Sets a customer sugnature
@@ -1234,6 +1280,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                         return customer;
                     }
                 }
+
                 if (CustomerManager.UsernamesEnabled)
                 {
                     if (GetCustomerByUsername(username) != null)
@@ -2604,6 +2651,22 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             set
             {
                 SettingManager.SetParam("Customer.UsernamesEnabled", value.ToString());
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether customers are allowed to change their usernames
+        /// </summary>
+        public static bool AllowCustomersToChangeUsernames
+        {
+            get
+            {
+                bool result = SettingManager.GetSettingValueBoolean("Customer.AllowCustomersToChangeUsernames");
+                return result;
+            }
+            set
+            {
+                SettingManager.SetParam("Customer.AllowCustomersToChangeUsernames", value.ToString());
             }
         }
 

@@ -2263,6 +2263,24 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         protected global::System.Web.UI.WebControls.CheckBox cbUsernamesEnabled;
         
         /// <summary>
+        /// lblAllowCustomersToChangeUsernames control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblAllowCustomersToChangeUsernames;
+        
+        /// <summary>
+        /// cbAllowCustomersToChangeUsernames control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbAllowCustomersToChangeUsernames;
+        
+        /// <summary>
         /// lblTaxDisplayType control.
         /// </summary>
         /// <remarks>

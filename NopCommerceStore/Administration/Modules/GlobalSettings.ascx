@@ -29,6 +29,7 @@
             toggleLiveChat();
             toggleGoogleAdsense();
             toggleGoogleAnalytics();
+            toggleUsernames();
         });
 
         function toggleUrlRewriting() {
@@ -115,6 +116,16 @@
                 $('#pnlShowBestsellersOnHomePageNumber').hide();
             }
         }
+
+        function toggleUsernames() {
+            if (getE('<%=cbUsernamesEnabled.ClientID %>').checked) {
+                $('#pnlAllowCustomersToChangeUsernames').show();
+            }
+            else {
+                $('#pnlAllowCustomersToChangeUsernames').hide();
+            }
+        }
+
     </script>
 
     <ajaxToolkit:TabContainer runat="server" ID="CommonSettingsTabs" ActiveTabIndex="0">
@@ -1550,6 +1561,16 @@
                         </td>
                         <td class="adminData">
                             <asp:CheckBox runat="server" ID="cbUsernamesEnabled"></asp:CheckBox>
+                        </td>
+                    </tr>
+                    <tr id="pnlAllowCustomersToChangeUsernames">
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
+                                ID="lblAllowCustomersToChangeUsernames" Text="<% $NopResources:Admin.GlobalSettings.Other.AllowCustomersToChangeUsernames %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Other.AllowCustomersToChangeUsernames.Tooltip %>" />
+                        </td>
+                        <td class="adminData">
+                            <asp:CheckBox runat="server" ID="cbAllowCustomersToChangeUsernames"></asp:CheckBox>
                         </td>
                     </tr>
                     <tr>
