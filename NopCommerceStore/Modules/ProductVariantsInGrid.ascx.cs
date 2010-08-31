@@ -195,6 +195,8 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 var lblStockAvailablity = e.Item.FindControl("lblStockAvailablity") as Label;
                 var phSKU = e.Item.FindControl("phSKU") as PlaceHolder;
                 var lSKU = e.Item.FindControl("lSKU") as Literal;
+                var phManufacturerPartNumber = e.Item.FindControl("phManufacturerPartNumber") as PlaceHolder;
+                var lManufacturerPartNumber = e.Item.FindControl("lManufacturerPartNumber") as Literal;
                 var txtCustomerEnteredPrice = e.Item.FindControl("txtCustomerEnteredPrice") as DecimalTextBox;
                 var txtQuantity = e.Item.FindControl("txtQuantity") as NumericTextBox;
                 var btnAddToCart = e.Item.FindControl("btnAddToCart") as Button;
@@ -238,6 +240,18 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 else
                 {
                     phSKU.Visible = false;
+                }
+
+                //manufacturer part number
+                if (SettingManager.GetSettingValueBoolean("Display.Products.ShowManufacturerPartNumber") &&
+                    !String.IsNullOrEmpty(productVariant.ManufacturerPartNumber))
+                {
+                    phManufacturerPartNumber.Visible = true;
+                    lManufacturerPartNumber.Text = Server.HtmlEncode(productVariant.ManufacturerPartNumber);
+                }
+                else
+                {
+                    phManufacturerPartNumber.Visible = false;
                 }
                 
                 //price entered by a customer

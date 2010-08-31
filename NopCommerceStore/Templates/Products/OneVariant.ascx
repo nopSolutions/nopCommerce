@@ -73,8 +73,14 @@
                 <div class="clear">
                 </div>
                 <div class="sku">
-                    <%=GetLocaleResourceString("Products.SKU")%>
-                    <asp:Literal runat="server" ID="lSKU" />
+                    <%=GetLocaleResourceString("Products.SKU")%> <asp:Literal runat="server" ID="lSKU" />
+                </div>
+            </asp:PlaceHolder>
+            <asp:PlaceHolder runat="server" ID="phManufacturerPartNumber">
+                <div class="clear">
+                </div>
+                <div class="manufacturerpartnumber">
+                    <%=GetLocaleResourceString("Products.ManufacturerPartNumber")%> <asp:Literal runat="server" ID="lManufacturerPartNumber" />
                 </div>
             </asp:PlaceHolder>
             <div class="clear">

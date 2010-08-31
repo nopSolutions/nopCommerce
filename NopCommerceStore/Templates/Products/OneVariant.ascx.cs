@@ -124,6 +124,18 @@ namespace NopSolutions.NopCommerce.Web.Templates.Products
                 phSKU.Visible = false;
             }
 
+            //manufacturer part number
+            if (SettingManager.GetSettingValueBoolean("Display.Products.ShowManufacturerPartNumber") &&
+                !String.IsNullOrEmpty(productVariant.ManufacturerPartNumber))
+            {
+                phManufacturerPartNumber.Visible = true;
+                lManufacturerPartNumber.Text = Server.HtmlEncode(productVariant.ManufacturerPartNumber);
+            }
+            else
+            {
+                phManufacturerPartNumber.Visible = false;
+            }
+
             ctrlTierPrices.ProductVariantId = productVariant.ProductVariantId;
             ctrlProductAttributes.ProductVariantId = productVariant.ProductVariantId;
             ctrlGiftCardAttributes.ProductVariantId = productVariant.ProductVariantId;

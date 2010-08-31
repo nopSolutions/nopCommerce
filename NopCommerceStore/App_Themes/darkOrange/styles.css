@@ -3642,7 +3642,7 @@ ul.languagelist li .selected
 }
 
 .product-details-info .overview .shortdescription, .product-details-info .overview .manufacturers,
-.product-details-info .overview .sku
+.product-details-info .overview .sku, .product-details-info .overview .manufacturerpartnumber
 {
 	color: #555;
 	margin-bottom: 0.3em;
@@ -3767,7 +3767,8 @@ ul.languagelist li .selected
 {
 }
 
-.product-variant-line .stock, .product-variant-line .sku 
+.product-variant-line .stock, .product-variant-line .sku,
+.product-variant-line .manufacturerpartnumber  
 {
 }
 

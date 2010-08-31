@@ -213,6 +213,16 @@
                     <tr>
                         <td class="adminTitle">
                             <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
+                                ID="lblShowManufacturerPartNumber" Text="<% $NopResources:Admin.GlobalSettings.Products.ShowManufacturerPartNumber %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Products.ShowManufacturerPartNumber.Tooltip %>" />
+                        </td>
+                        <td class="adminData">
+                            <asp:CheckBox runat="server" ID="cbShowManufacturerPartNumber"></asp:CheckBox>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
                                 ID="lblDisplayCartAfterAddingProduct" Text="<% $NopResources:Admin.GlobalSettings.Products.DisplayCartAfterAddingProduct %>"
                                 ToolTip="<% $NopResources:Admin.GlobalSettings.Products.DisplayCartAfterAddingProduct.Tooltip %>" />
                         </td>

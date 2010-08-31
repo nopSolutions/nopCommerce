@@ -135,6 +135,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             cbShowDiscountCouponBox.Checked = SettingManager.GetSettingValueBoolean("Display.Checkout.DiscountCouponBox");
             cbShowGiftCardBox.Checked = SettingManager.GetSettingValueBoolean("Display.Checkout.GiftCardBox");
             cbShowSKU.Checked = SettingManager.GetSettingValueBoolean("Display.Products.ShowSKU");
+            cbShowManufacturerPartNumber.Checked = SettingManager.GetSettingValueBoolean("Display.Products.ShowManufacturerPartNumber");
             cbDisplayCartAfterAddingProduct.Checked = SettingManager.GetSettingValueBoolean("Display.Products.DisplayCartAfterAddingProduct");
             cbEnableDynamicPriceUpdate.Checked = SettingManager.GetSettingValueBoolean("ProductAttribute.EnableDynamicPriceUpdate");
             cbAllowProductSorting.Checked = SettingManager.GetSettingValueBoolean("Common.AllowProductSorting");
@@ -400,6 +401,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     SettingManager.SetParam("Display.Checkout.DiscountCouponBox", cbShowDiscountCouponBox.Checked.ToString());
                     SettingManager.SetParam("Display.Checkout.GiftCardBox", cbShowGiftCardBox.Checked.ToString());
                     SettingManager.SetParam("Display.Products.ShowSKU", cbShowSKU.Checked.ToString());
+                    SettingManager.SetParam("Display.Products.ShowManufacturerPartNumber", cbShowManufacturerPartNumber.Checked.ToString());
                     SettingManager.SetParam("Display.Products.DisplayCartAfterAddingProduct", cbDisplayCartAfterAddingProduct.Checked.ToString());
                     SettingManager.SetParam("ProductAttribute.EnableDynamicPriceUpdate", cbEnableDynamicPriceUpdate.Checked.ToString());
                     SettingManager.SetParam("Common.AllowProductSorting", cbAllowProductSorting.Checked.ToString());

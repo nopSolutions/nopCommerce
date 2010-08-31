@@ -35,6 +35,15 @@ set @resources='
   <LocaleResource Name="Admin.GlobalSettings.Other.DisplayPageExecutionTime.Tooltip">
     <Value>Display page execution time at the bottom of all pages in public store (this option should be disabled in production environment).</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.ShowManufacturerPartNumber">
+    <Value>Show manufacturer part number:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.ShowManufacturerPartNumber.Tooltip">
+    <Value>Check to show manufacturer part numbers in public store.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.ManufacturerPartNumber">
+    <Value>Part number:</Value>
+  </LocaleResource>
 </Language>
 '
 
