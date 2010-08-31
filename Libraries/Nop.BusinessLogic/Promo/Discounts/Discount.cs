@@ -148,7 +148,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         {
             if (this.RequiresCouponCode && !String.IsNullOrEmpty(this.CouponCode))
             {
-                if (couponCodeToValidate != this.CouponCode)
+                if (!this.CouponCode.Equals(couponCodeToValidate,StringComparison.InvariantCultureIgnoreCase))
                     return false;
             }
             DateTime _now = DateTime.UtcNow;
