@@ -1,4 +1,6 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" MasterPageFile="~/MasterPages/OneColumn.master" CodeBehind="SveaHostedPaymentReturn.aspx.cs" Inherits="NopSolutions.NopCommerce.Web.SveaHostedPaymentReturn" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" MasterPageFile="~/MasterPages/OneColumn.master"
+    CodeBehind="SveaHostedPaymentReturn.aspx.cs" Inherits="NopSolutions.NopCommerce.Web.SveaHostedPaymentReturn"
+    ValidateRequest="false" %>
 
 <asp:Content ContentPlaceHolderID="cph1" runat="Server">
     Svea hosted payment success return handler

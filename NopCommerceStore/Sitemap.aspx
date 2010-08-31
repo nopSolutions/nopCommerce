@@ -1,5 +1,6 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" MasterPageFile="~/MasterPages/OneColumn.master"
-    CodeBehind="Sitemap.aspx.cs" Inherits="NopSolutions.NopCommerce.Web.Sitemap" %>
+    CodeBehind="Sitemap.aspx.cs" Inherits="NopSolutions.NopCommerce.Web.Sitemap"
+    ValidateRequest="false" %>
 
 <asp:Content runat="server" ContentPlaceHolderID="cph1">
     <div class="sitemap-page">

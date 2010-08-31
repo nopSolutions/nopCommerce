@@ -1,5 +1,6 @@
 <%@ Page Language="C#" MasterPageFile="~/MasterPages/TwoColumn.master" AutoEventWireup="true"
-    Inherits="NopSolutions.NopCommerce.Web.RecentlyViewedProductsPage" Codebehind="RecentlyViewedProducts.aspx.cs" %>
+    Inherits="NopSolutions.NopCommerce.Web.RecentlyViewedProductsPage" CodeBehind="RecentlyViewedProducts.aspx.cs"
+    ValidateRequest="false" %>
 
 <%@ Register TagPrefix="nopCommerce" TagName="RecentlyViewedProducts" Src="~/Modules/RecentlyViewedProducts.ascx" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="cph1" runat="Server">

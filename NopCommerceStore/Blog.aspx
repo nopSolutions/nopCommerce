@@ -1,5 +1,5 @@
 <%@ Page Language="C#" MasterPageFile="~/MasterPages/TwoColumn.master" AutoEventWireup="true"
-    Inherits="NopSolutions.NopCommerce.Web.BlogPage" Codebehind="Blog.aspx.cs" %>
+    Inherits="NopSolutions.NopCommerce.Web.BlogPage" CodeBehind="Blog.aspx.cs" ValidateRequest="false" %>
 
 <%@ Register TagPrefix="nopCommerce" TagName="Blog" Src="~/Modules/Blog.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="BlogMonths" Src="~/Modules/BlogMonths.ascx" %>

@@ -1,5 +1,6 @@
 <%@ Page Language="C#" MasterPageFile="~/MasterPages/TwoColumn.master" AutoEventWireup="true"
-    Inherits="NopSolutions.NopCommerce.Web.CCAvenueReturnPage" Codebehind="CCAvenueReturn.aspx.cs" %>
+    Inherits="NopSolutions.NopCommerce.Web.CCAvenueReturnPage" CodeBehind="CCAvenueReturn.aspx.cs"
+    ValidateRequest="false" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="cph1" runat="Server">
 <table width="100%" cellpadding="0" cellspacing="0">

@@ -1,5 +1,6 @@
 <%@ Page Language="C#" MasterPageFile="~/MasterPages/TwoColumn.master" AutoEventWireup="true"
-    Inherits="NopSolutions.NopCommerce.Web.MoneybookersReturnPage" Codebehind="MoneybookersReturn.aspx.cs" %>
+    Inherits="NopSolutions.NopCommerce.Web.MoneybookersReturnPage" CodeBehind="MoneybookersReturn.aspx.cs"
+    ValidateRequest="false" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="cph1" runat="Server">
    Moneybookers success return handler

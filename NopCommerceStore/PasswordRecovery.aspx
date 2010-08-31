@@ -1,5 +1,6 @@
 <%@ Page Language="C#" MasterPageFile="~/MasterPages/TwoColumn.master" AutoEventWireup="true"
-    Inherits="NopSolutions.NopCommerce.Web.PasswordRecoveryPage" Codebehind="PasswordRecovery.aspx.cs" %>
+    Inherits="NopSolutions.NopCommerce.Web.PasswordRecoveryPage" CodeBehind="PasswordRecovery.aspx.cs"
+    ValidateRequest="false" %>
 
 <%@ Register TagPrefix="nopCommerce" TagName="PasswordRecovery" Src="~/Modules/CustomerPasswordRecovery.ascx" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="cph1" runat="Server">

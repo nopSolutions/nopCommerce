@@ -1,5 +1,6 @@
 <%@ Page Language="C#" MasterPageFile="~/MasterPages/TwoColumn.master" AutoEventWireup="true"
-    Inherits="NopSolutions.NopCommerce.Web.PrivacyInfoPage" Codebehind="PrivacyInfo.aspx.cs" %>
+    Inherits="NopSolutions.NopCommerce.Web.PrivacyInfoPage" CodeBehind="PrivacyInfo.aspx.cs"
+    ValidateRequest="false" %>
 
 <%@ Register TagPrefix="nopCommerce" TagName="Topic" Src="~/Modules/Topic.ascx" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="cph1" runat="Server">

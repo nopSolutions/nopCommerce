@@ -1,5 +1,6 @@
 <%@ Page Language="C#" MasterPageFile="~/MasterPages/OneColumn.master" AutoEventWireup="true"
-    Inherits="NopSolutions.NopCommerce.Web.CheckoutPaymentMethodPage" CodeBehind="CheckoutPaymentMethod.aspx.cs" %>
+    Inherits="NopSolutions.NopCommerce.Web.CheckoutPaymentMethodPage" CodeBehind="CheckoutPaymentMethod.aspx.cs"
+    ValidateRequest="false" %>
 
 <%@ Register Src="~/Modules/OrderProgress.ascx" TagName="OrderProgress" TagPrefix="nopCommerce" %>
 <%@ Register TagPrefix="nopCommerce" TagName="CheckoutPaymentMethod" Src="~/Modules/CheckoutPaymentMethod.ascx" %>

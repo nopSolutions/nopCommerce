@@ -1,5 +1,6 @@
 <%@ Page Language="C#" MasterPageFile="~/MasterPages/OneColumn.master" AutoEventWireup="true"
-    Inherits="NopSolutions.NopCommerce.Web.PrivateMessagesPage" CodeBehind="PrivateMessages.aspx.cs" %>
+    Inherits="NopSolutions.NopCommerce.Web.PrivateMessagesPage" CodeBehind="PrivateMessages.aspx.cs"
+    ValidateRequest="false" %>
 
 <%@ Register TagPrefix="nopCommerce" TagName="PrivateMessagesInbox" Src="~/Modules/PrivateMessagesInbox.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="PrivateMessagesSentItems" Src="~/Modules/PrivateMessagesSentItems.ascx" %>

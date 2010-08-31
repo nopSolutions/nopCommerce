@@ -1,5 +1,6 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" MasterPageFile="~/MasterPages/TwoColumn.master"
-    CodeBehind="Manufacturers.aspx.cs" Inherits="NopSolutions.NopCommerce.Web.ManufacturersPage" %>
+    CodeBehind="Manufacturers.aspx.cs" Inherits="NopSolutions.NopCommerce.Web.ManufacturersPage"
+    ValidateRequest="false" %>
 
 <%@ Register TagPrefix="nopCommerce" TagName="MiniShoppingCartBox" Src="~/Modules/MiniShoppingCartBox.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="CategoryNavigation" Src="~/Modules/CategoryNavigation.ascx" %>
