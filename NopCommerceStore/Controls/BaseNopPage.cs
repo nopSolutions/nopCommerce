@@ -46,6 +46,7 @@ namespace NopSolutions.NopCommerce.Web
         #endregion
 
         #region Ctor
+
         public BaseNopPage()
         {
             showExecutionTimer = SettingManager.GetSettingValueBoolean("Display.PageExecutionTimeInfoEnabled");
@@ -54,38 +55,10 @@ namespace NopSolutions.NopCommerce.Web
                 executionTimer = new Stopwatch();
             }
         }
+
         #endregion
 
         #region Overrides
-        protected override void OnInit(EventArgs e)
-        {
-            if (showExecutionTimer)
-            {
-                executionTimer.Start();
-            }
-
-            base.OnInit(e);
-
-            if (showExecutionTimer)
-            {
-                executionTimer.Stop();
-            }
-        }
-
-        protected override void OnLoad(EventArgs e)
-        {
-            if (showExecutionTimer)
-            {
-                executionTimer.Start();
-            }
-
-            base.OnLoad(e);
-
-            if (showExecutionTimer)
-            {
-                executionTimer.Stop();
-            }
-        }
 
         protected override void OnPreInit(EventArgs e)
         {
@@ -139,12 +112,43 @@ namespace NopSolutions.NopCommerce.Web
             base.OnPreInit(e);
         }
 
+        protected override void OnInit(EventArgs e)
+        {
+            if (showExecutionTimer)
+            {
+                executionTimer.Start();
+            }
+
+            base.OnInit(e);
+
+            if (showExecutionTimer)
+            {
+                executionTimer.Stop();
+            }
+        }
+
+        protected override void OnLoad(EventArgs e)
+        {
+            if (showExecutionTimer)
+            {
+                executionTimer.Start();
+            }
+
+            base.OnLoad(e);
+
+            if (showExecutionTimer)
+            {
+                executionTimer.Stop();
+            }
+        }
+
         protected override void CreateChildControls()
         {
             if (showExecutionTimer)
             {
                 executionTimer.Start();
             }
+
             base.CreateChildControls();
 
             if (showExecutionTimer)
@@ -155,11 +159,11 @@ namespace NopSolutions.NopCommerce.Web
 
         protected override void Render(HtmlTextWriter writer)
         {
-
             if (showExecutionTimer)
             {
                 executionTimer.Start();
             }
+
             base.Render(writer);
 
             if (showExecutionTimer)

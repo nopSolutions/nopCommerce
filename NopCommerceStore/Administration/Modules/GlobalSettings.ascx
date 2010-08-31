@@ -1659,6 +1659,17 @@
                             <asp:CheckBox runat="server" ID="cbAllowAnonymousUsersToEmailAFriend"></asp:CheckBox>
                         </td>
                     </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ID="lblDisplayPageExecutionTime"
+                                Text="<% $NopResources:Admin.GlobalSettings.Other.DisplayPageExecutionTime %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Other.DisplayPageExecutionTime.Tooltip %>"
+                                ToolTipImage="~/Administration/Common/ico-help.gif" />
+                        </td>
+                        <td class="adminData">
+                            <asp:CheckBox runat="server" ID="cbDisplayPageExecutionTime"></asp:CheckBox>
+                        </td>
+                    </tr>
                 </table>
             </ContentTemplate>
         </ajaxToolkit:TabPanel>

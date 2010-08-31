@@ -29,6 +29,12 @@ set @resources='
   <LocaleResource Name="Admin.GlobalSettings.Products.SearchPageProductsPerPage.RangeErrorMessage">
     <Value>The number of ''Search page. Products per page'' must be from 1 to 999999.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.DisplayPageExecutionTime">
+    <Value>Display page execution time:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.DisplayPageExecutionTime.Tooltip">
+    <Value>Display page execution time at the bottom of all pages in public store (this option should be disabled in production environment).</Value>
+  </LocaleResource>
 </Language>
 '
 
