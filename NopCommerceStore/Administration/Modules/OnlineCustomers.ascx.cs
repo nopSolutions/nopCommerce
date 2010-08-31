@@ -80,6 +80,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 var allUsers = OnlineUserManager.GetAllUserList();
 
                 lblGuests.Text = guests.Count.ToString();
+                lblRegistered.Text = registeredUsers.Count.ToString();
+                lblTotal.Text = allUsers.Count.ToString();
                 gvCustomers.DataSource = allUsers;
                 gvCustomers.DataBind();
             }

@@ -77,5 +77,23 @@
                 <asp:Label runat="server" ID="lblGuests" />
             </td>
         </tr>
+        <tr>
+            <td class="adminTitle">
+                <nopCommerce:ToolTipLabel runat="server" ID="lblRegisteredTitle" Text="<% $NopResources:Admin.OnlineCustomers.Registered %>"
+                    ToolTip="<% $NopResources:Admin.OnlineCustomers.Registered.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
+            </td>
+            <td class="adminData">
+                <asp:Label runat="server" ID="lblRegistered" />
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                <nopCommerce:ToolTipLabel runat="server" ID="lblTotalTitle" Text="<% $NopResources:Admin.OnlineCustomers.Total %>"
+                    ToolTip="<% $NopResources:Admin.OnlineCustomers.Total.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
+            </td>
+            <td class="adminData">
+                <asp:Label runat="server" ID="lblTotal" />
+            </td>
+        </tr>
     </table>
 </asp:PlaceHolder>

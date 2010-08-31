@@ -2,8 +2,17 @@
 declare @resources xml
 set @resources='
 <Language LanguageID="7">
-  <LocaleResource Name="">
-    <Value></Value>
+  <LocaleResource Name="Admin.OnlineCustomers.Registered">
+    <Value>Members:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.OnlineCustomers.Registered.Tooltip">
+    <Value>See how many registered customers you got on your site in this moment.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.OnlineCustomers.Total">
+    <Value>Total:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.OnlineCustomers.Total.Tooltip">
+    <Value>See how many customers (total) you got on your site in this moment.</Value>
   </LocaleResource>
 </Language>
 '
