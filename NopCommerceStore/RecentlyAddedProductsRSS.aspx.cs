@@ -52,5 +52,16 @@ namespace NopSolutions.NopCommerce.Web
                 rptrRecentlyAddedProducts.Visible = false;
             }
         }
+
+        /// <summary>
+        /// Gets a value indicating whether this page is tracked by 'Online Customers' module
+        /// </summary>
+        public override bool TrackedByOnlineCustomersModule
+        {
+            get
+            {
+                return false;
+            }
+        }
     }
 }

@@ -59,5 +59,16 @@ namespace NopSolutions.NopCommerce.Web
                 return CommonHelper.QueryStringInt("LanguageId");
             }
         }
+
+        /// <summary>
+        /// Gets a value indicating whether this page is tracked by 'Online Customers' module
+        /// </summary>
+        public override bool TrackedByOnlineCustomersModule
+        {
+            get
+            {
+                return false;
+            }
+        }
     }
 }

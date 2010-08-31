@@ -223,9 +223,6 @@ namespace NopSolutions.NopCommerce.HttpModules
                     {
                         NopContext.Current.SessionSaveToClient();
                     }
-
-                    //online user tracking
-                    OnlineUserManager.TrackCurrentUser();
                 }
                 catch (Exception exc)
                 {

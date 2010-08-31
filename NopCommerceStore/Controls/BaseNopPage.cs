@@ -33,6 +33,8 @@ using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.BusinessLogic.Localization;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.Installation;
+using NopSolutions.NopCommerce.BusinessLogic.Audit.UsersOnline;
 
 namespace NopSolutions.NopCommerce.Web
 {
@@ -169,8 +171,15 @@ namespace NopSolutions.NopCommerce.Web
         
         protected override void OnPreRender(EventArgs e)
         {
+            //java-script
             string publicJS = CommonHelper.GetStoreLocation() + "Scripts/public.js";
             Page.ClientScript.RegisterClientScriptInclude(publicJS, publicJS);
+
+            //online user tracking
+            if (this.TrackedByOnlineCustomersModule)
+            {
+                OnlineUserManager.TrackCurrentUser();
+            }
 
             base.OnPreRender(e);
         }
@@ -197,6 +206,7 @@ namespace NopSolutions.NopCommerce.Web
         #endregion
 
         #region Properties
+
         /// <summary>
         /// Gets a value indicating whether this page is SSL protected
         /// </summary>
@@ -218,7 +228,18 @@ namespace NopSolutions.NopCommerce.Web
                 return false;
             }
         }
-                
+
+        /// <summary>
+        /// Gets a value indicating whether this page is tracked by 'Online Customers' module
+        /// </summary>
+        public virtual bool TrackedByOnlineCustomersModule
+        {
+            get
+            {
+                return true;
+            }
+        }
+  
         #endregion
     }
 }

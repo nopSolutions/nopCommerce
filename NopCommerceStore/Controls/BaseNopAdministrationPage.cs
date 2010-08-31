@@ -33,16 +33,23 @@ using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
 using System.Collections.Generic;
 using AjaxControlToolkit;
+using NopSolutions.NopCommerce.BusinessLogic.Audit.UsersOnline;
 
 
 namespace NopSolutions.NopCommerce.Web
 {
     public partial class BaseNopAdministrationPage : Page
     {
+        #region Ctor
+
         public BaseNopAdministrationPage()
         {
 
         }
+
+        #endregion
+
+        #region Methods
 
         protected void SelectTab(TabContainer tabContainer, string tabId)
         {
@@ -143,9 +150,16 @@ namespace NopSolutions.NopCommerce.Web
 
         protected override void OnPreRender(EventArgs e)
         {
+            //java-script
             string adminJS = CommonHelper.GetStoreLocation() + "Scripts/admin.js";
             Page.ClientScript.RegisterClientScriptInclude(adminJS, adminJS);
-            
+
+            //online user tracking
+            if (this.TrackedByOnlineCustomersModule)
+            {
+                OnlineUserManager.TrackCurrentUser();
+            }
+
             base.OnPreRender(e);
         }
        
@@ -202,6 +216,10 @@ namespace NopSolutions.NopCommerce.Web
             Language language = NopContext.Current.WorkingLanguage;
             return LocalizationManager.GetLocaleResourceString(resourceName, language.LanguageId);
         }
+                
+        #endregion
+
+        #region Properties
 
         protected virtual bool AdministratorSecurityValidationEnabled
         {
@@ -218,5 +236,18 @@ namespace NopSolutions.NopCommerce.Web
                 return true;
             }
         }
+
+        /// <summary>
+        /// Gets a value indicating whether this page is tracked by 'Online Customers' module
+        /// </summary>
+        public virtual bool TrackedByOnlineCustomersModule
+        {
+            get
+            {
+                return true;
+            }
+        }
+        
+        #endregion
     }
 }

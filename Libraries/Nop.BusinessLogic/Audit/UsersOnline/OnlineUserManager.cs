@@ -15,14 +15,15 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Web;
 using NopSolutions.NopCommerce.BusinessLogic.Caching;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
+using NopSolutions.NopCommerce.BusinessLogic.Installation;
 using NopSolutions.NopCommerce.Common;
-using System.Diagnostics;
 using NopSolutions.NopCommerce.Common.Utils;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Audit.UsersOnline
@@ -135,7 +136,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit.UsersOnline
         {
             try
             {
-                if (!OnlineUserManager.Enabled || HttpContext.Current == null)
+                if (!OnlineUserManager.Enabled || 
+                    !InstallerHelper.ConnectionStringIsSet() ||
+                    HttpContext.Current == null)
                     return;
 
                 lock (s_lock)
