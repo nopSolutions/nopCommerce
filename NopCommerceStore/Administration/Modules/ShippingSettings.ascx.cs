@@ -45,7 +45,15 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 BindData();
             }
         }
+        
+        protected override void OnPreRender(EventArgs e)
+        {
+            BindJQuery();
 
+            this.cbFreeShippingOverX.Attributes.Add("onclick", "toggleFreeShippingOverX();");
+
+            base.OnPreRender(e);
+        }
 
         protected void FillCountryDropDowns()
         {

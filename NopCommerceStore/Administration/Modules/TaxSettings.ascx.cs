@@ -50,7 +50,6 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         protected override void OnPreRender(EventArgs e)
         {
             BindJQuery();
-            BindJQueryIdTabs();
 
             this.cbAllowCustomersToSelectTaxDisplayType.Attributes.Add("onclick", "toggleTaxDisplayType();");
             this.cbShippingIsTaxable.Attributes.Add("onclick", "toggleShipping();");

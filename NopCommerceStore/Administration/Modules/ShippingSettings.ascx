@@ -2,6 +2,25 @@
     CodeBehind="ShippingSettings.ascx.cs" %>
 <%@ Register TagPrefix="nopCommerce" TagName="DecimalTextBox" Src="DecimalTextBox.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="ToolTipLabel" Src="ToolTipLabelControl.ascx" %>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        toggleFreeShippingOverX();
+    });
+
+    function toggleFreeShippingOverX() {
+        if (getE('<%=cbFreeShippingOverX.ClientID %>').checked) {
+            $('#pnlValueOfX').show();
+        }
+        else {
+            $('#pnlValueOfX').hide();
+        }
+    }
+
+</script>
+
+
 <div class="section-header">
     <div class="title">
         <img src="Common/ico-configuration.png" alt="<%=GetLocaleResourceString("Admin.ShippingSettings.Title")%>" />
@@ -23,7 +42,7 @@
             <asp:CheckBox runat="server" ID="cbFreeShippingOverX" Checked="false"></asp:CheckBox>
         </td>
     </tr>
-    <tr>
+    <tr id="pnlValueOfX">
         <td class="adminTitle">
             <nopCommerce:ToolTipLabel runat="server" ID="lblValueOfX" Text="<% $NopResources:Admin.ShippingSettings.ValueOfX %>"
                 ToolTip="<% $NopResources:Admin.ShippingSettings.ValueOfX.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
