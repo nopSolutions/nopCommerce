@@ -11,7 +11,7 @@
                     <ContentTemplate>
                         <asp:GridView ID="gvRewardPointsHistory" runat="server" AutoGenerateColumns="False"
                             Width="100%" OnPageIndexChanging="gvRewardPointsHistory_PageIndexChanging" AllowPaging="true"
-                            PageSize="15">
+                            PageSize="10">
                             <Columns>
                                 <asp:TemplateField HeaderText="<% $NopResources:Admin.CustomerRewardPoints.Grid.Points %>"
                                     ItemStyle-Width="20%">
@@ -39,6 +39,7 @@
                                 </asp:TemplateField>
                             </Columns>
                         </asp:GridView>
+                        <pagersettings pagebuttoncount="50" position="TopAndBottom" />
                     </ContentTemplate>
                 </asp:UpdatePanel>
                 <asp:UpdateProgress ID="up1" runat="server" AssociatedUpdatePanelID="upPoints">

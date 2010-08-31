@@ -26,7 +26,7 @@
                                     </ItemTemplate>
                                 </asp:TemplateField>
                             </Columns>
-                            <PagerSettings Position="Bottom" />
+                            <PagerSettings PageButtonCount="50" Position="TopAndBottom" />
                         </asp:GridView>
                     </ContentTemplate>
                 </asp:UpdatePanel>
