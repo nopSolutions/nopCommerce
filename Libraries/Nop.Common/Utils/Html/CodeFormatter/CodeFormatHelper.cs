@@ -161,23 +161,6 @@ namespace NopSolutions.NopCommerce.Common.Utils.Html.CodeFormatter
         #endregion
 
         #region Methods
-        /// <summary>
-        /// Formats the text
-        /// </summary>
-        /// <param name="Text">Text</param>
-        /// <returns>Formatted text</returns>
-        //public static string FormatText(string Text)
-        //{
-        //    if (String.IsNullOrEmpty(Text))
-        //        return string.Empty;
-
-        //    if (Text.Contains("[/code]"))
-        //    {
-        //        Text = regexCode1.Replace(Text, new MatchEvaluator(CodeEvaluator));
-        //    }
-
-        //    return Text;
-        //}
 
         /// <summary>
         /// Formats the text

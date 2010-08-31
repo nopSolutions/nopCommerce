@@ -96,16 +96,15 @@ namespace NopSolutions.NopCommerce.Common.Utils.Html
                 text = regexUrl2.Replace(text, "<a href=\"$1\" rel=\"nofollow\">$1</a>");
             }
 
-            if (replaceCode)
+            if (replaceQuote)
             {
-                //Text = CodeFormatHelper.FormatText(Text);
-                text = CodeFormatHelper.FormatTextSimple(text);
+                while (regexQuote.IsMatch(text))
+                    text = regexQuote.Replace(text, "<b>$1 wrote:</b><div class=\"quote\">$2</div>");
             }
 
-            if(replaceQuote)
+            if (replaceCode)
             {
-                while(regexQuote.IsMatch(text))
-                    text = regexQuote.Replace(text, "<b>$1 wrote:</b><p class=\"quote\">$2</p>");
+                text = CodeFormatHelper.FormatTextSimple(text);
             }
 
             return text;
