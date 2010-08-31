@@ -553,6 +553,24 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         protected global::NopSolutions.NopCommerce.Web.Administration.Modules.NumericTextBox txtCrossSellsNumber;
         
         /// <summary>
+        /// lblSearchPageProductsPerPage control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblSearchPageProductsPerPage;
+        
+        /// <summary>
+        /// txtSearchPageProductsPerPage control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.NumericTextBox txtSearchPageProductsPerPage;
+        
+        /// <summary>
         /// pnlCustomerProfiles control.
         /// </summary>
         /// <remarks>

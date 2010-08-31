@@ -3815,6 +3815,22 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         }
 
         /// <summary>
+        /// Gets or sets a number of products per page on search products page
+        /// </summary>
+        public static int SearchPageProductsPerPage
+        {
+            get
+            {
+                int result = SettingManager.GetSettingValueInteger("SearchPage.ProductsPerPage", 10);
+                return result;
+            }
+            set
+            {
+                SettingManager.SetParam("SearchPage.ProductsPerPage", value.ToString());
+            }
+        }
+
+        /// <summary>
         /// Gets or sets a value indicating whether to displays a button from AddThis.com on your product pages
         /// </summary>
         public static bool ShowShareButton

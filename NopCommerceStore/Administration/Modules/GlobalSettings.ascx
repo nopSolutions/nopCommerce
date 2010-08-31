@@ -427,6 +427,19 @@
                                 Width="50px" />
                         </td>
                     </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
+                                ID="lblSearchPageProductsPerPage" Text="<% $NopResources:Admin.GlobalSettings.Products.SearchPageProductsPerPage %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Products.SearchPageProductsPerPage.Tooltip %>" />
+                        </td>
+                        <td class="adminData">
+                            <nopCommerce:NumericTextBox runat="server" CssClass="adminInput" ID="txtSearchPageProductsPerPage"
+                                RequiredErrorMessage="<% $NopResources:Admin.GlobalSettings.Products.SearchPageProductsPerPage.RequiredErrorMessage %>"
+                                MinimumValue="1" MaximumValue="999999" RangeErrorMessage="<% $NopResources:Admin.GlobalSettings.Products.SearchPageProductsPerPage.RangeErrorMessage %>"
+                                Width="50px" />
+                        </td>
+                    </tr>
                 </table>
             </ContentTemplate>
         </ajaxToolkit:TabPanel>

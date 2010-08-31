@@ -57,6 +57,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             try
             {
                 string keywords = txtSearchTerm.Text.Trim();
+                pagerProducts.PageSize = ProductManager.SearchPageProductsPerPage;
 
                 if (!String.IsNullOrEmpty(keywords))
                 {

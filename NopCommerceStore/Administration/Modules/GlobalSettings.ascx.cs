@@ -160,6 +160,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             cbProductsAlsoPurchased.Checked = ProductManager.ProductsAlsoPurchasedEnabled;
             txtProductsAlsoPurchasedNumber.Value = ProductManager.ProductsAlsoPurchasedNumber;
             txtCrossSellsNumber.Value = ProductManager.CrossSellsNumber;
+            txtSearchPageProductsPerPage.Value = ProductManager.SearchPageProductsPerPage;
             cbLiveChatEnabled.Checked = SettingManager.GetSettingValueBoolean("LiveChat.Enabled", false);
             txtLiveChatBtnCode.Text = SettingManager.GetSettingValue("LiveChat.BtnCode");
             txtLiveChatMonCode.Text = SettingManager.GetSettingValue("LiveChat.MonCode");
@@ -422,6 +423,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     ProductManager.ProductsAlsoPurchasedEnabled = cbProductsAlsoPurchased.Checked;
                     ProductManager.ProductsAlsoPurchasedNumber = txtProductsAlsoPurchasedNumber.Value;
                     ProductManager.CrossSellsNumber = txtCrossSellsNumber.Value;
+                    ProductManager.SearchPageProductsPerPage = txtSearchPageProductsPerPage.Value;
 
                     SettingManager.SetParam("LiveChat.Enabled", cbLiveChatEnabled.Checked.ToString());
                     SettingManager.SetParam("LiveChat.BtnCode", txtLiveChatBtnCode.Text);

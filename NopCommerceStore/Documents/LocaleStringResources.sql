@@ -17,6 +17,18 @@ set @resources='
   <LocaleResource Name="Admin.OnlineCustomers.Total.Value">
     <Value>{0} (maximum: {1})</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.SearchPageProductsPerPage">
+    <Value>Search page. Products per page:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.SearchPageProductsPerPage.Tooltip">
+    <Value>Set the page size for products on ''Search'' page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.SearchPageProductsPerPage.RequiredErrorMessage">
+    <Value>Number of ''Search page. Products per page'' is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.SearchPageProductsPerPage.RangeErrorMessage">
+    <Value>The number of ''Search page. Products per page'' must be from 1 to 999999.</Value>
+  </LocaleResource>
 </Language>
 '
 
