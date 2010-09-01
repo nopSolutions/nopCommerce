@@ -149,6 +149,12 @@
                                                     <asp:TextBox ID="txtVatNumber" runat="server" />
                                                 </td>
                                             </tr>
+                                            <tr class="row">
+                                                <td colspan="2">
+                                                    <i>
+                                                        <%=GetLocaleResourceString("VAT.EnteredWithoutCountryCode")%></i>
+                                                </td>
+                                            </tr>
                                         </asp:PlaceHolder>
                                     </tbody>
                                 </table>

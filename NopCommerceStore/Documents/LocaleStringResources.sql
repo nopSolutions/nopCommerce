@@ -59,6 +59,12 @@ set @resources='
   <LocaleResource Name="Account.UsernameRequired">
     <Value>Username is required</Value>
   </LocaleResource>
+  <LocaleResource Name="VAT.EnteredWithoutCountryCode">
+    <Value>NOTE: Enter VAT number without country code</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CustomerInfo.VatNumber.Tooltip">
+    <Value>Enter company VAT number (NOTE: Enter VAT number without country code)</Value>
+  </LocaleResource>
 </Language>
 '
 
