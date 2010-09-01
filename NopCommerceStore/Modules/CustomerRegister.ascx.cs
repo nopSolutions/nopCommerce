@@ -375,6 +375,12 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     shippingAddress.ZipPostalCode, shippingAddress.CountryId, DateTime.UtcNow, DateTime.UtcNow);
                 customer = CustomerManager.SetDefaultShippingAddress(customer.CustomerId, shippingAddress.AddressId);
             }
+
+            //notification
+            if (CustomerManager.NotifyNewCustomerRegistration)
+            {
+                MessageManager.SendNewCustomerNotificationMessage(customer, LocalizationManager.DefaultAdminLanguage.LanguageId);
+            }
         }
 
         public void CreatingUser(object sender, LoginCancelEventArgs e)

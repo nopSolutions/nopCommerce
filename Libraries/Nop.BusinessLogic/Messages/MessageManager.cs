@@ -1345,6 +1345,34 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         }
 
         /// <summary>
+        /// Sends 'New customer' notification message to a store owner
+        /// </summary>
+        /// <param name="customer">Customer instance</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        public static int SendNewCustomerNotificationMessage(Customer customer, int languageId)
+        {
+            if (customer == null)
+                throw new ArgumentNullException("customer");
+
+            string templateName = "NewCustomer.Notification";
+            var localizedMessageTemplate = MessageManager.GetLocalizedMessageTemplate(templateName, languageId);
+            if (localizedMessageTemplate == null || !localizedMessageTemplate.IsActive)
+                return 0;
+
+            var emailAccount = localizedMessageTemplate.EmailAccount;
+
+            string subject = ReplaceMessageTemplateTokens(customer, localizedMessageTemplate.Subject);
+            string body = ReplaceMessageTemplateTokens(customer, localizedMessageTemplate.Body);
+            string bcc = localizedMessageTemplate.BccEmailAddresses;
+            var from = new MailAddress(emailAccount.Email, emailAccount.DisplayName);
+            var to = new MailAddress(emailAccount.Email, emailAccount.DisplayName);
+            var queuedEmail = InsertQueuedEmail(5, from, to, string.Empty, bcc, subject, body,
+                DateTime.UtcNow, 0, null, emailAccount.EmailAccountId);
+            return queuedEmail.QueuedEmailId;
+        }
+
+        /// <summary>
         /// Sends a "new VAt sumitted" notification to a store owner
         /// </summary>
         /// <param name="customer">Customer</param>

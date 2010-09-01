@@ -92,6 +92,12 @@ set @resources='
   <LocaleResource Name="Admin.GlobalSettings.Profiles.NotifyAboutPrivateMessages.Tooltip">
     <Value>Notify customers when new a private messages is sent.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.NotifyAboutNewCustomerRegistration">
+    <Value>Notify about new customer registration:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.NotifyAboutNewCustomerRegistration.Tooltip">
+    <Value>Notify the store owner when a new customer is registered.</Value>
+  </LocaleResource>
 </Language>
 '
 

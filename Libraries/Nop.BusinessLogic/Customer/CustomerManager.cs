@@ -2862,6 +2862,21 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         }
 
         /// <summary>
+        /// Gets or sets a value indicating whether 'New customer' notification message should be sent to a store owner
+        /// </summary>
+        public static bool NotifyNewCustomerRegistration
+        {
+            get
+            {
+                return SettingManager.GetSettingValueBoolean("Common.NotifyNewCustomerRegistration", false);
+            }
+            set
+            {
+                SettingManager.SetParam("Common.NotifyNewCustomerRegistration", value.ToString());
+            }
+        }
+
+        /// <summary>
         /// Gets or sets a value indicating whether 'Gender' is enabled
         /// </summary>
         public static bool FormFieldGenderEnabled
@@ -3148,8 +3163,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                 SettingManager.SetParam("FormField.FaxRequired", value.ToString());
             }
         }
-
-
+        
         /// <summary>
         /// Gets or sets a value indicating whether 'Newsletter' is enabled
         /// </summary>

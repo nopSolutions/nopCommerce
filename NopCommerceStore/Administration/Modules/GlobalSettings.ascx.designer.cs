@@ -2299,13 +2299,31 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         protected global::System.Web.UI.WebControls.CheckBox cbAllowCustomersToChangeUsernames;
         
         /// <summary>
-        /// lblTaxDisplayType control.
+        /// lblNotifyAboutNewCustomerRegistration control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblTaxDisplayType;
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblNotifyAboutNewCustomerRegistration;
+        
+        /// <summary>
+        /// cbNotifyAboutNewCustomerRegistration control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbNotifyAboutNewCustomerRegistration;
+        
+        /// <summary>
+        /// lblRegistrationMethod control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblRegistrationMethod;
         
         /// <summary>
         /// ddlRegistrationMethod control.

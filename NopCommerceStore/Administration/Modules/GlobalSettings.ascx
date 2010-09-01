@@ -1594,7 +1594,17 @@
                     </tr>
                     <tr>
                         <td class="adminTitle">
-                            <nopCommerce:ToolTipLabel runat="server" ID="lblTaxDisplayType" Text="<% $NopResources:Admin.GlobalSettings.Other.RegistrationMethod %>"
+                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
+                                ID="lblNotifyAboutNewCustomerRegistration" Text="<% $NopResources:Admin.GlobalSettings.Other.NotifyAboutNewCustomerRegistration %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Other.NotifyAboutNewCustomerRegistration.Tooltip %>" />
+                        </td>
+                        <td class="adminData">
+                            <asp:CheckBox runat="server" ID="cbNotifyAboutNewCustomerRegistration"></asp:CheckBox>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ID="lblRegistrationMethod" Text="<% $NopResources:Admin.GlobalSettings.Other.RegistrationMethod %>"
                                 ToolTip="<% $NopResources:Admin.GlobalSettings.RegistrationMethod.Other.Tooltip %>"
                                 ToolTipImage="~/Administration/Common/ico-help.gif" />
                         </td>
