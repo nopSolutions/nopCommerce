@@ -65,6 +65,27 @@ set @resources='
   <LocaleResource Name="Admin.CustomerInfo.VatNumber.Tooltip">
     <Value>Enter company VAT number (NOTE: Enter VAT number without country code)</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Products.ProductVariants">
+    <Value>Product variants</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Products.ProductVariants.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Products.ProductVariants.Unnamed">
+    <Value>Unnamed</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Products.ProductVariants.Price">
+    <Value>Price</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Products.ProductVariants.Published">
+    <Value>Published</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Products.ProductVariants.SKU">
+    <Value>SKU</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Products.Image">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 

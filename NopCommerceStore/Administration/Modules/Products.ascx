@@ -90,11 +90,22 @@
         cbRowItem.bind("click", function() { if ($(this).checked == false) cbHeader[0].checked = false; });
     });
     
+    function ChildBlock(img, obj) {
+        if (obj.style.display == 'none') {
+            obj.style.display = '';
+            img.src = "<%=CommonHelper.GetStoreLocation()%>images/collapse.png";
+        }
+        else {
+            obj.style.display = 'none';
+            img.src = "<%=CommonHelper.GetStoreLocation()%>images/expand.png";
+        }
+    }
 </script>
 <asp:GridView ID="gvProducts" runat="server" AutoGenerateColumns="False" Width="100%"
-    OnPageIndexChanging="gvProducts_PageIndexChanging" AllowPaging="true" PageSize="15">
+    OnPageIndexChanging="gvProducts_PageIndexChanging" AllowPaging="true" PageSize="15"
+    OnRowDataBound="gvProducts_RowDataBound">
     <Columns>
-        <asp:TemplateField ItemStyle-Width="10%" ItemStyle-HorizontalAlign="Center">
+        <asp:TemplateField ItemStyle-Width="5%" ItemStyle-HorizontalAlign="Center">
             <HeaderTemplate>
                 <asp:CheckBox ID="cbSelectAll" runat="server" CssClass="cbHeader" />
             </HeaderTemplate>
@@ -103,25 +114,55 @@
                 <asp:HiddenField ID="hfProductId" runat="server" Value='<%# Eval("ProductId") %>' />
             </ItemTemplate>
         </asp:TemplateField>
-        <asp:TemplateField HeaderText="<% $NopResources:Admin.Products.Image %>">
+        <asp:TemplateField HeaderText="<% $NopResources:Admin.Products.Name %>" ItemStyle-Width="35%">
             <ItemTemplate>
-                <asp:Image runat="server" ID="imgProduct" ImageUrl='<%#GetProductImageUrl((Product)Container.DataItem)%>' />
+                <asp:Image runat="server" ID="imgProduct" style="margin-right:10px;" /><%#Server.HtmlEncode(Eval("Name").ToString())%>
             </ItemTemplate>
         </asp:TemplateField>
-        <asp:TemplateField HeaderText="<% $NopResources:Admin.Products.Name %>" ItemStyle-Width="60%">
+        <asp:TemplateField HeaderText="<% $NopResources:Admin.Products.ProductVariants %>"
+            HeaderStyle-HorizontalAlign="Center" ItemStyle-Width="40%" ItemStyle-HorizontalAlign="Center">
             <ItemTemplate>
-                <%#Server.HtmlEncode(Eval("Name").ToString())%>
+                <asp:Panel runat="server" ID="pnlVariants" style="text-align:left" >
+                    <img src='<%#Page.ResolveUrl("~/images/expand.png") %>' alt="variants" onclick="ChildBlock(this,document.getElementById('pvGrid<%#Eval("ProductId") %>'));" />
+                    <div id='pvGrid<%#Eval("ProductId") %>' style="display: none">
+                        <asp:GridView runat="server" ID="gvVariants" DataKeyNames="ProductVariantId" AutoGenerateColumns="false" Width="100%">
+                            <Columns>
+                                <asp:TemplateField HeaderText="<% $NopResources:Admin.Products.ProductVariants.Name %>"
+                                    ItemStyle-Width="40%">
+                                    <ItemTemplate>
+                                        <a href="ProductVariantDetails.aspx?ProductVariantID=<%#Eval("ProductVariantId")%>">
+                                            <%#Server.HtmlEncode(GetProductVariantName(Container.DataItem as ProductVariant))%>
+                                        </a>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:BoundField DataField="SKU" HeaderText="<% $NopResources:Admin.Products.ProductVariants.SKU %>"
+                                    HeaderStyle-HorizontalAlign="Center" ItemStyle-Width="20%" ItemStyle-HorizontalAlign="Center">
+                                </asp:BoundField>
+                                <asp:BoundField DataField="Price" HeaderText="<% $NopResources:Admin.Products.ProductVariants.Price %>"
+                                    HeaderStyle-HorizontalAlign="Center" ItemStyle-Width="20%" ItemStyle-HorizontalAlign="Center" DataFormatString="{0:G}">
+                                </asp:BoundField>
+                                <asp:TemplateField HeaderText="<% $NopResources:Admin.Products.ProductVariants.Published %>"
+                                    HeaderStyle-HorizontalAlign="Center" ItemStyle-Width="20%" ItemStyle-HorizontalAlign="Center">
+                                    <ItemTemplate>
+                                        <nopCommerce:ImageCheckBox runat="server" ID="cbPublished" Checked='<%# Eval("Published") %>'>
+                                        </nopCommerce:ImageCheckBox>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                            </Columns>
+                        </asp:GridView>
+                    </div>
+                </asp:Panel>
             </ItemTemplate>
         </asp:TemplateField>
         <asp:TemplateField HeaderText="<% $NopResources:Admin.Products.Published %>" HeaderStyle-HorizontalAlign="Center"
-            ItemStyle-Width="15%" ItemStyle-HorizontalAlign="Center">
+            ItemStyle-Width="10%" ItemStyle-HorizontalAlign="Center">
             <ItemTemplate>
                 <nopCommerce:ImageCheckBox runat="server" ID="cbPublished" Checked='<%# Eval("Published") %>'>
                 </nopCommerce:ImageCheckBox>
             </ItemTemplate>
         </asp:TemplateField>
         <asp:TemplateField HeaderText="<% $NopResources:Admin.Products.Edit %>" HeaderStyle-HorizontalAlign="Center"
-            ItemStyle-Width="15%" ItemStyle-HorizontalAlign="Center">
+            ItemStyle-Width="10%" ItemStyle-HorizontalAlign="Center">
             <ItemTemplate>
                 <a href="ProductDetails.aspx?ProductId=<%#Eval("ProductId")%>" title="<%#GetLocaleResourceString("Admin.Products.Edit.Tooltip")%>">
                     <%#GetLocaleResourceString("Admin.Products.Edit")%>

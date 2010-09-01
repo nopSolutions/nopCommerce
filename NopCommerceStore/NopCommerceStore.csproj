@@ -6122,6 +6122,10 @@
     <Content Include="ConditionsInfo.aspx" />
     <Content Include="ContactUs.aspx" />
     <None Include="Install\Scripts\1.80\nopCommerce_upgrade.sql" />
+    <Content Include="images\collapse.ico" />
+    <Content Include="images\collapse.png" />
+    <Content Include="images\expand.ico" />
+    <Content Include="images\expand.png" />
     <Content Include="Modules\BlogMonths.ascx" />
     <Content Include="Modules\BlogPopularTags.ascx" />
     <Content Include="Modules\DecimalTextBox.ascx" />

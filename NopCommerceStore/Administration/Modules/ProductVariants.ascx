@@ -18,7 +18,7 @@
                         HeaderStyle-HorizontalAlign="Center" ItemStyle-Width="15%" ItemStyle-HorizontalAlign="Center">
                     </asp:BoundField>
                     <asp:BoundField DataField="Price" HeaderText="<% $NopResources:Admin.Product.ProductVariants.Price %>"
-                        HeaderStyle-HorizontalAlign="Center" ItemStyle-Width="10%" ItemStyle-HorizontalAlign="Center">
+                        HeaderStyle-HorizontalAlign="Center" ItemStyle-Width="10%" ItemStyle-HorizontalAlign="Center" DataFormatString="{0:G}">
                     </asp:BoundField>
                     <asp:TemplateField HeaderText="<% $NopResources:Admin.Product.ProductVariants.StockQuantity %>"
                         HeaderStyle-HorizontalAlign="Center" ItemStyle-Width="10%" ItemStyle-HorizontalAlign="Center">

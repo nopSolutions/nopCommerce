@@ -62,6 +62,46 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             BindGrid();
         }
 
+        protected void gvProducts_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                Product product = (Product)e.Row.DataItem;
+
+                Image imgProduct = e.Row.FindControl("imgProduct") as Image;
+                if (imgProduct != null &&
+                    SettingManager.GetSettingValueBoolean("Display.ShowAdminProductImages"))
+                {
+                    imgProduct.ImageUrl = GetProductImageUrl(product);
+                }
+                else
+                {
+                    imgProduct.Visible = false;
+                }
+
+
+                Panel pnlVariants = e.Row.FindControl("pnlVariants") as Panel;
+                if (pnlVariants != null)
+                {
+                    //product variants
+                    var productVariants = product.ProductVariants;
+                    if (productVariants.Count == 0)
+                    {
+                        pnlVariants.Visible = false;
+                    }
+                    else
+                    {
+                        GridView gvVariants = e.Row.FindControl("gvVariants") as GridView;
+                        if (gvVariants != null)
+                        {
+                            gvVariants.DataSource = productVariants;
+                            gvVariants.DataBind();
+                        }
+                    }
+                }
+            }
+        }
+
         protected override void OnPreRender(EventArgs e)
         {
             BindJQuery();
@@ -106,7 +146,6 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 this.gvProducts.Visible = true;
                 this.lblNoProductsFound.Visible = false;
-                this.gvProducts.Columns[1].Visible = SettingManager.GetSettingValueBoolean("Display.ShowAdminProductImages");
                 this.gvProducts.DataSource = products;
                 this.gvProducts.DataBind();
             }
@@ -274,6 +313,17 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     ProcessException(exc);
                 }
             }
+        }
+
+        protected string GetProductVariantName(ProductVariant productVariant)
+        {
+            string variantName = string.Empty;
+            if (!String.IsNullOrEmpty(productVariant.Name))
+                variantName = productVariant.Name;
+            else
+                variantName = GetLocaleResourceString("Admin.Products.ProductVariants.Unnamed");
+
+            return variantName;
         }
     }
 }

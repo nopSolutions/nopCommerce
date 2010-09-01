@@ -196,6 +196,7 @@ namespace NopSolutions.NopCommerce.Common.Utils
 
             return found;
         }
+
         /// <summary>
         /// Selects item
         /// </summary>
