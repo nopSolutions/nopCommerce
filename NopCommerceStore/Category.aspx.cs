@@ -65,6 +65,7 @@ namespace NopSolutions.NopCommerce.Web
             if (category == null || category.Deleted || !category.Published)
                 Response.Redirect(CommonHelper.GetStoreLocation());
 
+            //title, meta
             string title = string.Empty;
             if (!string.IsNullOrEmpty(category.LocalizedMetaTitle))
                 title = category.LocalizedMetaTitle;
@@ -73,6 +74,31 @@ namespace NopSolutions.NopCommerce.Web
             SEOHelper.RenderTitle(this, title, true);
             SEOHelper.RenderMetaTag(this, "description", category.LocalizedMetaDescription, true);
             SEOHelper.RenderMetaTag(this, "keywords", category.LocalizedMetaKeywords, true);
+
+            //canonical URL
+            if (SEOHelper.EnableUrlRewriting &&
+                SettingManager.GetSettingValueBoolean("SEO.CanonicalURLs.Category.Enabled"))
+            {
+                if (!this.SEName.Equals(SEOHelper.GetCategorySEName(category)))
+                {
+                    string canonicalUrl = SEOHelper.GetCategoryUrl(category);
+                    if (this.Request.QueryString != null)
+                    {
+                        for (int i = 0; i < this.Request.QueryString.Count; i++)
+                        {
+                            string key = Request.QueryString.GetKey(i);
+                            if (!String.IsNullOrEmpty(key) &&
+                                (key.ToLowerInvariant() != "categoryid") && 
+                                (key.ToLowerInvariant() != "sename"))
+                            {
+                                canonicalUrl = CommonHelper.ModifyQueryString(canonicalUrl, key + "=" + Request.QueryString[i], null);
+                            }
+                        }
+                    }
+
+                    SEOHelper.RenderCanonicalTag(Page, canonicalUrl);
+                }
+            }
 
             if (!Page.IsPostBack)
             {
@@ -85,6 +111,14 @@ namespace NopSolutions.NopCommerce.Web
             get
             {
                 return CommonHelper.QueryStringInt("CategoryId");
+            }
+        }
+
+        public string SEName
+        {
+            get
+            {
+                return CommonHelper.QueryString("SEName");
             }
         }
 

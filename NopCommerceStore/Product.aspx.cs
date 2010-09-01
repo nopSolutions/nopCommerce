@@ -64,6 +64,7 @@ namespace NopSolutions.NopCommerce.Web
             if (product == null || product.Deleted)
                 Response.Redirect(CommonHelper.GetStoreLocation());
             
+            //title, meta
             string title = string.Empty;
             if (!string.IsNullOrEmpty(product.LocalizedMetaTitle))
                 title = product.LocalizedMetaTitle;
@@ -72,6 +73,18 @@ namespace NopSolutions.NopCommerce.Web
             SEOHelper.RenderTitle(this, title, true);
             SEOHelper.RenderMetaTag(this, "description", product.LocalizedMetaDescription, true);
             SEOHelper.RenderMetaTag(this, "keywords", product.LocalizedMetaKeywords, true);
+
+            //canonical URL
+            if (SEOHelper.EnableUrlRewriting &&
+                SettingManager.GetSettingValueBoolean("SEO.CanonicalURLs.Products.Enabled"))
+            {
+                if (!this.SEName.Equals(SEOHelper.GetProductSEName(product)))
+                {
+                    string canonicalUrl = SEOHelper.GetProductUrl(product);
+
+                    SEOHelper.RenderCanonicalTag(Page, canonicalUrl);
+                }
+            }
 
             if (!Page.IsPostBack)
             {
@@ -84,6 +97,14 @@ namespace NopSolutions.NopCommerce.Web
             get
             {
                 return CommonHelper.QueryStringInt("ProductId");
+            }
+        }
+
+        public string SEName
+        {
+            get
+            {
+                return CommonHelper.QueryString("SEName");
             }
         }
 

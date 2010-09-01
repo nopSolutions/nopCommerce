@@ -1381,6 +1381,15 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         protected global::NopSolutions.NopCommerce.Web.Administration.Modules.SimpleTextBox txtProductUrlRewriteFormat;
         
         /// <summary>
+        /// cbProductCanonicalUrl control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbProductCanonicalUrl;
+        
+        /// <summary>
         /// lblCategoryUrlRewriteFormat control.
         /// </summary>
         /// <remarks>
@@ -1399,6 +1408,15 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         protected global::NopSolutions.NopCommerce.Web.Administration.Modules.SimpleTextBox txtCategoryUrlRewriteFormat;
         
         /// <summary>
+        /// cbCategoryCanonicalUrl control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbCategoryCanonicalUrl;
+        
+        /// <summary>
         /// lblManufacturerUrlRewriteFormat control.
         /// </summary>
         /// <remarks>
@@ -1415,6 +1433,15 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::NopSolutions.NopCommerce.Web.Administration.Modules.SimpleTextBox txtManufacturerUrlRewriteFormat;
+        
+        /// <summary>
+        /// cbManufacturerCanonicalUrl control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbManufacturerCanonicalUrl;
         
         /// <summary>
         /// lblNewsUrlRewriteFormat control.

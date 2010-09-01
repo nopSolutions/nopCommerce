@@ -1043,6 +1043,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO
         #endregion
 
         #region Methods
+
         /// <summary>
         /// Renders page meta tag
         /// </summary>
@@ -1137,6 +1138,29 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO
             link.Attributes.Add("rel", "alternate");
             link.Attributes.Add("title", title);
             page.Header.Controls.Add(link);
+        }
+
+        /// <summary>
+        /// Renders 'canonical' tag
+        /// </summary>
+        /// <param name="page">Page instance</param>
+        /// <param name="url">URL</param>
+        public static void RenderCanonicalTag(Page page, string url)
+        {
+            if (page == null || page.Header == null)
+                return;
+
+            if (String.IsNullOrEmpty(url))
+                return;
+
+            Literal canonical = new Literal();
+            canonical.Text = string.Format("<link rel=\"canonical\" href=\"{0}\" />", url);
+            page.Header.Controls.Add(canonical);
+
+            //HtmlLink canonical = new HtmlLink();
+            //canonical.Attributes["rel"] = "canonical";
+            //canonical.Href = url;
+            //page.Header.Controls.Add(canonical);
         }
 
         /// <summary>
@@ -1302,6 +1326,23 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO
         }
 
         /// <summary>
+        /// Gets product SE (search engine) name
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <returns>Product SE (search engine) name</returns>
+        public static string GetProductSEName(Product product)
+        {
+            if (product == null)
+                throw new ArgumentNullException("product");
+            string seName = GetSEName(product.SEName);
+            if (String.IsNullOrEmpty(seName))
+            {
+                seName = GetSEName(product.Name);
+            }
+            return seName;
+        }
+
+        /// <summary>
         /// Gets product URL
         /// </summary>
         /// <param name="productId">Product identifier</param>
@@ -1321,11 +1362,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO
         {
             if (product == null)
                 throw new ArgumentNullException("product");
-            string seName = GetSEName(product.SEName);
-            if (String.IsNullOrEmpty(seName))
-            {
-                seName = GetSEName(product.Name);
-            }
+            string seName = GetProductSEName(product);
+
             string url2 = SEOHelper.EnableUrlRewriting ? SettingManager.GetSettingValue("SEO.Product.UrlRewriteFormat") : "{0}Product.aspx?ProductID={1}";
             string url = string.Format(url2, CommonHelper.GetStoreLocation(), product.ProductId, seName);
             return url.ToLowerInvariant();
@@ -1340,6 +1378,23 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO
         {
             string url = string.Format("{0}ProductEmailAFriend.aspx?ProductId={1}", CommonHelper.GetStoreLocation(), productId);
             return url.ToLowerInvariant();
+        }
+
+        /// <summary>
+        /// Gets manufacturer SE (search engine) name
+        /// </summary>
+        /// <param name="manufacturer">Manufacturer</param>
+        /// <returns>Manufacturer SE (search engine) name</returns>
+        public static string GetManufacturerSEName(Manufacturer manufacturer)
+        {
+            if (manufacturer == null)
+                throw new ArgumentNullException("manufacturer");
+            string seName = GetSEName(manufacturer.SEName);
+            if (String.IsNullOrEmpty(seName))
+            {
+                seName = GetSEName(manufacturer.Name);
+            }
+            return seName;
         }
 
         /// <summary>
@@ -1362,15 +1417,28 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO
         {
             if (manufacturer == null)
                 throw new ArgumentNullException("manufacturer");
-            string seName = GetSEName(manufacturer.SEName);
-            if (String.IsNullOrEmpty(seName))
-            {
-                seName = GetSEName(manufacturer.Name);
-            }
+            string seName = GetManufacturerSEName(manufacturer);
 
             string url2 = SEOHelper.EnableUrlRewriting ? SettingManager.GetSettingValue("SEO.Manufacturer.UrlRewriteFormat") : "{0}Manufacturer.aspx?ManufacturerID={1}";
             string url = string.Format(url2, CommonHelper.GetStoreLocation(), manufacturer.ManufacturerId, seName);
             return url.ToLowerInvariant();
+        }
+
+        /// <summary>
+        /// Gets category SE (search engine) name
+        /// </summary>
+        /// <param name="category">Category</param>
+        /// <returns>Category SE (search engine) name</returns>
+        public static string GetCategorySEName(Category category)
+        {
+            if (category == null)
+                throw new ArgumentNullException("category");
+            string seName = GetSEName(category.SEName);
+            if (String.IsNullOrEmpty(seName))
+            {
+                seName = GetSEName(category.Name);
+            }
+            return seName;
         }
 
         /// <summary>
@@ -1392,12 +1460,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO
         public static string GetCategoryUrl(Category category)
         {
             if (category == null)
-                throw new ArgumentNullException("category"); 
-            string seName = GetSEName(category.SEName);
-            if (String.IsNullOrEmpty(seName))
-            {
-                seName = GetSEName(category.Name);
-            }
+                throw new ArgumentNullException("category");
+            string seName = GetCategorySEName(category);
+
             string url2 = SEOHelper.EnableUrlRewriting ? SettingManager.GetSettingValue("SEO.Category.UrlRewriteFormat") : "{0}Category.aspx?CategoryID={1}";
             string url = string.Format(url2, CommonHelper.GetStoreLocation(), category.CategoryId, seName);
             return url.ToLowerInvariant();

@@ -113,6 +113,15 @@ set @resources='
   <LocaleResource Name="Admin.Sitemap.WarningsDescription">
     <Value>Warnings</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.SEODisplay.ProductCanonicalURL">
+    <Value>enable canonical URL</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.SEODisplay.CategoryCanonicalURL">
+    <Value>enable canonical URL</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.SEODisplay.ManufacturerCanonicalURL">
+    <Value>enable canonical URL</Value>
+  </LocaleResource>
 </Language>
 '
 

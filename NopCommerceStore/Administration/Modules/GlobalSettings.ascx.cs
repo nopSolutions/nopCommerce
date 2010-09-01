@@ -87,8 +87,11 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             cbShowBlogHeaderRssURL.Checked = SettingManager.GetSettingValueBoolean("Display.ShowBlogHeaderRssURL");
             cbEnableUrlRewriting.Checked = SEOHelper.EnableUrlRewriting;
             txtProductUrlRewriteFormat.Text = SettingManager.GetSettingValue("SEO.Product.UrlRewriteFormat");
+            cbProductCanonicalUrl.Checked = SettingManager.GetSettingValueBoolean("SEO.CanonicalURLs.Products.Enabled");
             txtCategoryUrlRewriteFormat.Text = SettingManager.GetSettingValue("SEO.Category.UrlRewriteFormat");
+            cbCategoryCanonicalUrl.Checked = SettingManager.GetSettingValueBoolean("SEO.CanonicalURLs.Category.Enabled");
             txtManufacturerUrlRewriteFormat.Text = SettingManager.GetSettingValue("SEO.Manufacturer.UrlRewriteFormat");
+            cbManufacturerCanonicalUrl.Checked = SettingManager.GetSettingValueBoolean("SEO.CanonicalURLs.Manufacturer.Enabled");
             txtNewsUrlRewriteFormat.Text = SettingManager.GetSettingValue("SEO.News.UrlRewriteFormat");
             txtBlogUrlRewriteFormat.Text = SettingManager.GetSettingValue("SEO.Blog.UrlRewriteFormat");
             txtTopicUrlRewriteFormat.Text = SettingManager.GetSettingValue("SEO.Topic.UrlRewriteFormat");
@@ -359,8 +362,11 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     SettingManager.SetParam("Display.ShowBlogHeaderRssURL", cbShowBlogHeaderRssURL.Checked.ToString());
                     SEOHelper.EnableUrlRewriting = cbEnableUrlRewriting.Checked;
                     SettingManager.SetParam("SEO.Product.UrlRewriteFormat", txtProductUrlRewriteFormat.Text);
+                    SettingManager.SetParam("SEO.CanonicalURLs.Products.Enabled", cbProductCanonicalUrl.Checked.ToString());
                     SettingManager.SetParam("SEO.Category.UrlRewriteFormat", txtCategoryUrlRewriteFormat.Text);
+                    SettingManager.SetParam("SEO.CanonicalURLs.Category.Enabled", cbCategoryCanonicalUrl.Checked.ToString());
                     SettingManager.SetParam("SEO.Manufacturer.UrlRewriteFormat", txtManufacturerUrlRewriteFormat.Text);
+                    SettingManager.SetParam("SEO.CanonicalURLs.Manufacturer.Enabled", cbManufacturerCanonicalUrl.Checked.ToString());
                     SettingManager.SetParam("SEO.News.UrlRewriteFormat", txtNewsUrlRewriteFormat.Text);
                     SettingManager.SetParam("SEO.Blog.UrlRewriteFormat", txtBlogUrlRewriteFormat.Text);
                     SettingManager.SetParam("SEO.Topic.UrlRewriteFormat", txtTopicUrlRewriteFormat.Text);

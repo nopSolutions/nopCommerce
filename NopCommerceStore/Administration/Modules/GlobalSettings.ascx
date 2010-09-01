@@ -934,7 +934,7 @@
                         </td>
                         <td class="adminData">
                             <nopCommerce:SimpleTextBox runat="server" ID="txtProductUrlRewriteFormat" CssClass="adminInput"
-                                ErrorMessage="<% $NopResources:Admin.GlobalSettings.SEODisplay.ProductUrl.ErrorMessage %>" />
+                                ErrorMessage="<% $NopResources:Admin.GlobalSettings.SEODisplay.ProductUrl.ErrorMessage %>" /><asp:CheckBox runat="server" ID="cbProductCanonicalUrl" Text="<% $NopResources:Admin.GlobalSettings.SEODisplay.ProductCanonicalURL %>" />
                         </td>
                     </tr>
                     <tr>
@@ -945,7 +945,7 @@
                         </td>
                         <td class="adminData">
                             <nopCommerce:SimpleTextBox runat="server" ID="txtCategoryUrlRewriteFormat" CssClass="adminInput"
-                                ErrorMessage="<% $NopResources:Admin.GlobalSettings.SEODisplay.CategoryUrl.ErrorMessage %>" />
+                                ErrorMessage="<% $NopResources:Admin.GlobalSettings.SEODisplay.CategoryUrl.ErrorMessage %>" /><asp:CheckBox runat="server" ID="cbCategoryCanonicalUrl" Text="<% $NopResources:Admin.GlobalSettings.SEODisplay.CategoryCanonicalURL %>" />
                         </td>
                     </tr>
                     <tr>
@@ -956,7 +956,7 @@
                         </td>
                         <td class="adminData">
                             <nopCommerce:SimpleTextBox runat="server" ID="txtManufacturerUrlRewriteFormat" CssClass="adminInput"
-                                ErrorMessage="<% $NopResources:Admin.GlobalSettings.SEODisplay.ManufacturerUrl.ErrorMessage %>" />
+                                ErrorMessage="<% $NopResources:Admin.GlobalSettings.SEODisplay.ManufacturerUrl.ErrorMessage %>" /><asp:CheckBox runat="server" ID="cbManufacturerCanonicalUrl" Text="<% $NopResources:Admin.GlobalSettings.SEODisplay.ManufacturerCanonicalURL %>" />
                         </td>
                     </tr>
                     <tr>

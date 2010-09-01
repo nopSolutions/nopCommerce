@@ -64,7 +64,8 @@ namespace NopSolutions.NopCommerce.Web
         {
             if (manufacturer == null || manufacturer.Deleted || !manufacturer.Published)
                 Response.Redirect(CommonHelper.GetStoreLocation());
-            
+
+            //title, meta
             string title = string.Empty;
             if (!string.IsNullOrEmpty(manufacturer.LocalizedMetaTitle))
                 title = manufacturer.LocalizedMetaTitle;
@@ -73,6 +74,31 @@ namespace NopSolutions.NopCommerce.Web
             SEOHelper.RenderTitle(this, title, true);
             SEOHelper.RenderMetaTag(this, "description", manufacturer.LocalizedMetaDescription, true);
             SEOHelper.RenderMetaTag(this, "keywords", manufacturer.LocalizedMetaKeywords, true);
+
+            //canonical URL
+            if (SEOHelper.EnableUrlRewriting &&
+                SettingManager.GetSettingValueBoolean("SEO.CanonicalURLs.Manufacturer.Enabled"))
+            {
+                if (!this.SEName.Equals(SEOHelper.GetManufacturerSEName(manufacturer)))
+                {
+                    string canonicalUrl = SEOHelper.GetManufacturerUrl(manufacturer);
+                    if (this.Request.QueryString != null)
+                    {
+                        for (int i = 0; i < this.Request.QueryString.Count; i++)
+                        {
+                            string key = Request.QueryString.GetKey(i);
+                            if (!String.IsNullOrEmpty(key) &&
+                                (key.ToLowerInvariant() != "manufacturerid") &&
+                                (key.ToLowerInvariant() != "sename"))
+                            {
+                                canonicalUrl = CommonHelper.ModifyQueryString(canonicalUrl, key + "=" + Request.QueryString[i], null);
+                            }
+                        }
+                    }
+
+                    SEOHelper.RenderCanonicalTag(Page, canonicalUrl);
+                }
+            }
 
             if (!Page.IsPostBack)
             {
@@ -85,6 +111,14 @@ namespace NopSolutions.NopCommerce.Web
             get
             {
                 return CommonHelper.QueryStringInt("ManufacturerId");
+            }
+        }
+
+        public string SEName
+        {
+            get
+            {
+                return CommonHelper.QueryString("SEName");
             }
         }
 
