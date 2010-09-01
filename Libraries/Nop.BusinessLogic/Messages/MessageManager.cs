@@ -1648,6 +1648,39 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         }
 
         /// <summary>
+        /// Sends a private message notification
+        /// </summary>
+        /// <param name="privateMessage">Private message</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        public static int SendPrivateMessageNotification(PrivateMessage privateMessage, int languageId)
+        {
+            if (privateMessage == null)
+                throw new ArgumentNullException("privateMessage");
+
+            string templateName = "Customer.NewPM";
+            var localizedMessageTemplate = MessageManager.GetLocalizedMessageTemplate(templateName, languageId);
+            if (localizedMessageTemplate == null || !localizedMessageTemplate.IsActive)
+                return 0;
+
+            var emailAccount = localizedMessageTemplate.EmailAccount;
+
+            string subject = ReplaceMessageTemplateTokens(privateMessage, localizedMessageTemplate.Subject);
+            string body = ReplaceMessageTemplateTokens(privateMessage, localizedMessageTemplate.Body);
+            string bcc = localizedMessageTemplate.BccEmailAddresses;
+            var from = new MailAddress(emailAccount.Email, emailAccount.DisplayName);
+
+            var recipient = privateMessage.ToUser;
+            if (recipient == null)
+                return 0;
+
+            var to = new MailAddress(recipient.Email, recipient.FullName);
+            var queuedEmail = InsertQueuedEmail(5, from, to, string.Empty, bcc, subject, body,
+                DateTime.UtcNow, 0, null, emailAccount.EmailAccountId);
+            return queuedEmail.QueuedEmailId;
+        }
+
+        /// <summary>
         /// Sends an email
         /// </summary>
         /// <param name="subject">Subject</param>
@@ -1801,6 +1834,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             allowedTokens.Add("%Forums.ForumName%");
             allowedTokens.Add("%Forums.PostAuthor%");
             allowedTokens.Add("%Forums.PostBody%");
+            allowedTokens.Add("%PrivateMessage.Subject%");
+            allowedTokens.Add("%PrivateMessage.Text%");
             
             return allowedTokens.ToArray();
         }
@@ -2139,6 +2174,31 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             tokens.Add("ProductReview.ProductName", HttpUtility.HtmlEncode(productReview.Product.Name));
 
             foreach(string token in tokens.Keys)
+            {
+                template = Replace(template, String.Format(@"%{0}%", token), tokens[token]);
+            }
+
+            return template;
+        }
+
+        /// <summary>
+        /// Replaces a message template tokens
+        /// </summary>
+        /// <param name="privateMessage">Private message</param>
+        /// <param name="template">Template</param>
+        /// <returns>New template</returns>
+        public static string ReplaceMessageTemplateTokens(PrivateMessage privateMessage,
+            string template)
+        {
+            var tokens = new NameValueCollection();
+            tokens.Add("Store.Name", SettingManager.StoreName);
+            tokens.Add("Store.URL", SettingManager.StoreUrl);
+            tokens.Add("Store.Email", MessageManager.DefaultEmailAccount.Email);
+
+            tokens.Add("PrivateMessage.Subject", HttpUtility.HtmlEncode(privateMessage.Subject));
+            tokens.Add("PrivateMessage.Text", ForumManager.FormatPrivateMessageText(privateMessage.Text));
+
+            foreach (string token in tokens.Keys)
             {
                 template = Replace(template, String.Format(@"%{0}%", token), tokens[token]);
             }

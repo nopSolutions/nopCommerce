@@ -86,6 +86,12 @@ set @resources='
   <LocaleResource Name="Admin.Products.Image">
     <Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Profiles.NotifyAboutPrivateMessages">
+    <Value>Notify about new private messages:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Profiles.NotifyAboutPrivateMessages.Tooltip">
+    <Value>Notify customers when new a private messages is sent.</Value>
+  </LocaleResource>
 </Language>
 '
 

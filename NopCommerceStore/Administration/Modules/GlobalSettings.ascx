@@ -22,6 +22,7 @@
         $(document).ready(function () {
             toggleUrlRewriting();
             toggleCustomersAllowedToUploadAvatars();
+            togglePM();
             toggleProductsAlsoPurchased();
             toggleRecentlyViewedProducts();
             toggleRecentlyAddedProducts();
@@ -47,6 +48,15 @@
             }
             else {
                 $('#pnlDefaultAvatarEnabled').hide();
+            }
+        }
+
+        function togglePM() {
+            if (getE('<%=cbAllowPM.ClientID %>').checked) {
+                $('#pnlNotifyAboutPrivateMessages').show();
+            }
+            else {
+                $('#pnlNotifyAboutPrivateMessages').hide();
             }
         }
 
@@ -535,6 +545,15 @@
                         </td>
                         <td class="adminData">
                             <asp:CheckBox ID="cbAllowPM" runat="server"></asp:CheckBox>
+                        </td>
+                    </tr>
+                    <tr id="pnlNotifyAboutPrivateMessages">
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ID="lblNotifyAboutPrivateMessages" Text="<% $NopResources:Admin.GlobalSettings.Profiles.NotifyAboutPrivateMessages %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Profiles.NotifyAboutPrivateMessages.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
+                        </td>
+                        <td class="adminData">
+                            <asp:CheckBox ID="cbNotifyAboutPrivateMessages" runat="server"></asp:CheckBox>
                         </td>
                     </tr>
                     <tr>

@@ -116,6 +116,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             cbShowCustomersLocation.Checked = CustomerManager.ShowCustomersLocation;
             cbShowCustomersJoinDate.Checked = CustomerManager.ShowCustomersJoinDate;
             cbAllowPM.Checked = ForumManager.AllowPrivateMessages;
+            cbNotifyAboutPrivateMessages.Checked = ForumManager.NotifyAboutPrivateMessages;
             cbAllowViewingProfiles.Checked = CustomerManager.AllowViewingProfiles;
             cbCustomersAllowedToUploadAvatars.Checked = CustomerManager.AllowCustomersToUploadAvatars;
             cbDefaultAvatarEnabled.Checked = CustomerManager.DefaultAvatarEnabled;
@@ -295,6 +296,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
             this.cbEnableUrlRewriting.Attributes.Add("onclick", "toggleUrlRewriting();");
             this.cbCustomersAllowedToUploadAvatars.Attributes.Add("onclick", "toggleCustomersAllowedToUploadAvatars();");
+            this.cbAllowPM.Attributes.Add("onclick", "togglePM();");
             this.cbProductsAlsoPurchased.Attributes.Add("onclick", "toggleProductsAlsoPurchased();");
             this.cbRecentlyViewedProductsEnabled.Attributes.Add("onclick", "toggleRecentlyViewedProducts();");
             this.cbRecentlyAddedProductsEnabled.Attributes.Add("onclick", "toggleRecentlyAddedProducts();");
@@ -387,6 +389,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     CustomerManager.ShowCustomersLocation = cbShowCustomersLocation.Checked;
                     CustomerManager.ShowCustomersJoinDate = cbShowCustomersJoinDate.Checked;
                     ForumManager.AllowPrivateMessages = cbAllowPM.Checked;
+                    ForumManager.NotifyAboutPrivateMessages = cbNotifyAboutPrivateMessages.Checked;
                     CustomerManager.AllowViewingProfiles = cbAllowViewingProfiles.Checked;
                     CustomerManager.AllowCustomersToUploadAvatars = cbCustomersAllowedToUploadAvatars.Checked;
                     CustomerManager.DefaultAvatarEnabled = cbDefaultAvatarEnabled.Checked;

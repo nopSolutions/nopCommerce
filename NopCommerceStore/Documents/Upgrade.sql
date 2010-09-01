@@ -24,3 +24,27 @@ BEGIN
 	VALUES (N'SearchPage.ProductsPerPage', N'10', N'')
 END
 GO
+
+
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[Nop_MessageTemplate]
+		WHERE [Name] = N'Customer.NewPM')
+BEGIN
+	INSERT [dbo].[Nop_MessageTemplate] ([Name])
+	VALUES (N'Customer.NewPM')
+
+	DECLARE @MessageTemplateID INT 
+	SELECT @MessageTemplateID =	mt.MessageTemplateID FROM Nop_MessageTemplate mt
+							WHERE mt.Name = N'Customer.NewPM' 
+
+	IF (@MessageTemplateID > 0)
+	BEGIN
+		INSERT [dbo].[Nop_MessageTemplateLocalized] ([MessageTemplateID], [LanguageID], [BCCEmailAddresses], [Subject], [Body]) 
+		VALUES (@MessageTemplateID, 7, N'', N'%Store.Name%. You have received a new private message',  N'<p><a href="%Store.URL%">%Store.Name%</a> <br />
+<br />
+You have received a new private message.
+</p>')
+	END
+END
+GO

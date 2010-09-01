@@ -1075,8 +1075,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
             context.PrivateMessages.AddObject(privateMessage);
             context.SaveChanges();
             
-            //notifications
+            //UI notification
             customerTo.NotifiedAboutNewPrivateMessages = false;
+            //Email notification
+            if (ForumManager.NotifyAboutPrivateMessages)
+            {
+                MessageManager.SendPrivateMessageNotification(privateMessage, NopContext.Current.WorkingLanguage.LanguageId);
+            }
 
             return privateMessage;
         }
@@ -1662,8 +1667,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         {
             get
             {
-                bool forumsEnabled = SettingManager.GetSettingValueBoolean("Forums.ForumsEnabled");
-                return forumsEnabled;
+                bool result = SettingManager.GetSettingValueBoolean("Forums.ForumsEnabled");
+                return result;
             }
             set
             {
@@ -1678,8 +1683,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         {
             get
             {
-                bool allowCustomersToEditPosts = SettingManager.GetSettingValueBoolean("Forums.CustomersAllowedToEditPosts");
-                return allowCustomersToEditPosts;
+                bool result = SettingManager.GetSettingValueBoolean("Forums.CustomersAllowedToEditPosts");
+                return result;
             }
             set
             {
@@ -1739,8 +1744,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         {
             get
             {
-                bool allowCustomersToDeletePosts = SettingManager.GetSettingValueBoolean("Forums.CustomersAllowedToDeletePosts");
-                return allowCustomersToDeletePosts;
+                bool result = SettingManager.GetSettingValueBoolean("Forums.CustomersAllowedToDeletePosts");
+                return result;
             }
             set
             {
@@ -1755,8 +1760,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         {
             get
             {
-                int topicSubjectMaxLength = SettingManager.GetSettingValueInteger("Forums.TopicSubjectMaxLength");
-                return topicSubjectMaxLength;
+                int result = SettingManager.GetSettingValueInteger("Forums.TopicSubjectMaxLength");
+                return result;
             }
             set
             {
@@ -1771,8 +1776,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         {
             get
             {
-                int postMaxLength = SettingManager.GetSettingValueInteger("Forums.PostMaxLength");
-                return postMaxLength;
+                int result = SettingManager.GetSettingValueInteger("Forums.PostMaxLength");
+                return result;
             }
             set
             {
@@ -1787,8 +1792,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         {
             get
             {
-                int topicsPageSize = SettingManager.GetSettingValueInteger("Forums.TopicsPageSize");
-                return topicsPageSize;
+                int result = SettingManager.GetSettingValueInteger("Forums.TopicsPageSize");
+                return result;
             }
             set
             {
@@ -1803,8 +1808,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         {
             get
             {
-                int postsPageSize = SettingManager.GetSettingValueInteger("Forums.PostsPageSize");
-                return postsPageSize;
+                int result = SettingManager.GetSettingValueInteger("Forums.PostsPageSize");
+                return result;
             }
             set
             {
@@ -1819,8 +1824,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         {
             get
             {
-                int searchResultsPageSize = SettingManager.GetSettingValueInteger("Forums.SearchResultsPageSize");
-                return searchResultsPageSize;
+                int result = SettingManager.GetSettingValueInteger("Forums.SearchResultsPageSize");
+                return result;
             }
             set
             {
@@ -1835,8 +1840,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         {
             get
             {
-                int latestUserPostsPageSize = SettingManager.GetSettingValueInteger("Forums.LatestUserPostsPageSize");
-                return latestUserPostsPageSize;
+                int result = SettingManager.GetSettingValueInteger("Forums.LatestUserPostsPageSize");
+                return result;
             }
             set
             {
@@ -1851,8 +1856,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         {
             get
             {
-                bool showCustomersPostCount = SettingManager.GetSettingValueBoolean("Forums.ShowCustomersPostCount");
-                return showCustomersPostCount;
+                bool result = SettingManager.GetSettingValueBoolean("Forums.ShowCustomersPostCount");
+                return result;
             }
             set
             {
@@ -1883,8 +1888,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         {
             get
             {
-                bool signaturesEnabled = SettingManager.GetSettingValueBoolean("Forums.SignatureEnabled");
-                return signaturesEnabled;
+                bool result = SettingManager.GetSettingValueBoolean("Forums.SignatureEnabled");
+                return result;
             }
             set
             {
@@ -1899,12 +1904,28 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         {
             get
             {
-                bool forumsEnabled = SettingManager.GetSettingValueBoolean("Messaging.AllowPM");
-                return forumsEnabled;
+                bool result = SettingManager.GetSettingValueBoolean("Messaging.AllowPM");
+                return result;
             }
             set
             {
                 SettingManager.SetParam("Messaging.AllowPM", value.ToString());
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether a customer should be notified about new private messages
+        /// </summary>
+        public static bool NotifyAboutPrivateMessages
+        {
+            get
+            {
+                bool result = SettingManager.GetSettingValueBoolean("Messaging.NotifyAboutPrivateMessages");
+                return result;
+            }
+            set
+            {
+                SettingManager.SetParam("Messaging.NotifyAboutPrivateMessages", value.ToString());
             }
         }
 
@@ -1915,8 +1936,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         {
             get
             {
-                int pmSubjectMaxLength = SettingManager.GetSettingValueInteger("Messaging.PMSubjectMaxLength");
-                return pmSubjectMaxLength;
+                int result = SettingManager.GetSettingValueInteger("Messaging.PMSubjectMaxLength");
+                return result;
             }
             set
             {
@@ -1931,8 +1952,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         {
             get
             {
-                int pmTextMaxLength = SettingManager.GetSettingValueInteger("Messaging.PMTextMaxLength");
-                return pmTextMaxLength;
+                int result = SettingManager.GetSettingValueInteger("Messaging.PMTextMaxLength");
+                return result;
             }
             set
             {
