@@ -379,6 +379,13 @@
     <Compile Include="Administration\BulkEditProducts.aspx.designer.cs">
       <DependentUpon>BulkEditProducts.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Administration\Warnings.aspx.cs">
+      <DependentUpon>Warnings.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Administration\Warnings.aspx.designer.cs">
+      <DependentUpon>Warnings.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Administration\EmailAccountAdd.aspx.cs">
       <DependentUpon>EmailAccountAdd.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -5865,6 +5872,7 @@
     <Content Include="Administration\CategoryTemplateAdd.aspx" />
     <Content Include="Administration\CategoryTemplateDetails.aspx" />
     <Content Include="Administration\CategoryTemplates.aspx" />
+    <Content Include="Administration\Warnings.aspx" />
     <Content Include="Administration\EmailAccountAdd.aspx" />
     <Content Include="Administration\EmailAccountDetails.aspx" />
     <Content Include="Administration\EmailAccounts.aspx" />
@@ -6022,6 +6030,10 @@
     <Content Include="Administration\WarehouseAdd.aspx" />
     <Content Include="Administration\WarehouseDetails.aspx" />
     <Content Include="Administration\Warehouses.aspx" />
+    <Content Include="App_Themes\administration\images\warnings-ajax-loader.gif" />
+    <Content Include="App_Themes\administration\images\warnings-cross.png" />
+    <Content Include="App_Themes\administration\images\warnings-tick.png" />
+    <Content Include="App_Themes\administration\images\warnings-warning.png" />
     <Content Include="App_Themes\darkOrange\images\bgTextBox.gif" />
     <Content Include="App_Themes\darkOrange\images\bg_body.gif" />
     <Content Include="App_Themes\darkOrange\images\bg_maincolumn.gif" />

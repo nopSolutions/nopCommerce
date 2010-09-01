@@ -45,6 +45,17 @@
                     </p>
                 </div>
             </li>
+            <li>
+                <div class="title">
+                    <a href="warnings.aspx" title="<%=GetLocaleResourceString("Admin.SystemHome.Warnings.TitleDescription")%>">
+                        <%=GetLocaleResourceString("Admin.SystemHome.Warnings.Title")%></a>
+                </div>
+                <div class="description">
+                    <p>
+                        <%=GetLocaleResourceString("Admin.SystemHome.Warnings.Description")%>
+                    </p>
+                </div>
+            </li>
         </ul>
     </div>
 </div>

@@ -60,10 +60,5 @@
                 <nopCommerce:nopCommerceNews runat="server" ID="ctrlNews" />
             </td>
         </tr>
-        <tr>
-            <td colspan="2" class="basecol">
-                <nopCommerce:Warnings runat="server" ID="ctrlWarnings" />
-            </td>
-        </tr>
     </table>
 </asp:Content>

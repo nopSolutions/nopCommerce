@@ -98,6 +98,21 @@ set @resources='
   <LocaleResource Name="Admin.GlobalSettings.Other.NotifyAboutNewCustomerRegistration.Tooltip">
     <Value>Notify the store owner when a new customer is registered.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.SystemHome.Warnings.TitleDescription">
+    <Value>System warnings</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SystemHome.Warnings.Title">
+    <Value>Warnings</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SystemHome.Warnings.Description">
+    <Value>A self-diagnostics page that runs through the store settings and confirms all of them are correct,</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Sitemap.WarningsTitle">
+    <Value>Warnings</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Sitemap.WarningsDescription">
+    <Value>Warnings</Value>
+  </LocaleResource>
 </Language>
 '
 

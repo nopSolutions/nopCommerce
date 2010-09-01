@@ -872,14 +872,6 @@ table.stats td.searchterms
 	vertical-align: top;	
 }
 
-table.dashboard td.basecol .warnings
-{
-	padding: 10px;
-}
-
-
-
-
 .statisticsTitle
 {
 	text-align: left;
@@ -1052,4 +1044,57 @@ table.order-edit td
 {
 	padding: 1px 5px 1px 5px;
 	border: medium none;
+}
+
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*
+
+	WARNINGS
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+.system-warnings .inprogress, .system-warnings .pass, .system-warnings .fail, .system-warnings .warning
+{
+    padding-left: 35px;
+    display: block;
+    min-height: 35px;
+    font-size: 120%;
+    vertical-align: middle;
+    }
+    
+.system-warnings .inprogress
+{
+    background: transparent url("images/warnings-ajax-loader.gif") no-repeat;        
+}
+
+.system-warnings .pass 
+{
+    background: transparent url("images/warnings-tick.png") no-repeat;
+}
+
+.system-warnings .fail
+{
+    background: transparent url("images/warnings-cross.png") no-repeat;        
+}
+    
+.system-warnings .warning 
+{
+    background: transparent url("images/warnings-warning.png") no-repeat;        
+}
+
+.system-warnings .error
+{
+    color: Red;
+}
+    
+.system-warnings .suggestion
+{
+    color: Red;
+    font-style: italic;
+    font-size: 120%;
+}
+  
+.system-warnings ul
+{      
+    list-style: none;
 }
