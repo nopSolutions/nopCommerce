@@ -8,7 +8,7 @@
         </td>
         <td>
             <asp:TextBox runat="server" ID="txtPONumber" ValidationGroup="PONumber"
-                Width="250px" AutoCompleteType="Disabled"></asp:TextBox>
+                Width="250px" autocomplete="off"></asp:TextBox>
         </td>
     </tr>
 </table>

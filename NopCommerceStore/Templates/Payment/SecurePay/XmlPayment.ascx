@@ -21,7 +21,7 @@
             <%=GetLocaleResourceString("Payment.CardholderName")%>:<br />
         </td>
         <td>
-            <asp:TextBox ID="creditCardName" runat="server" Width="165px" AutoCompleteType="Disabled"></asp:TextBox>
+            <asp:TextBox ID="creditCardName" runat="server" Width="165px" autocomplete="off"></asp:TextBox>
             <asp:RequiredFieldValidator runat="server" ID="CCNameValidator" ControlToValidate="creditCardName"
                 ErrorMessage="*" EnableClientScript="False" Display="Dynamic"></asp:RequiredFieldValidator>
         </td>
