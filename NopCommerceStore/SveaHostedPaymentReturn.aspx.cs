@@ -22,7 +22,6 @@ namespace NopSolutions.NopCommerce.Web
 
             if(!Page.IsPostBack)
             {
-
                 Order order = OrderManager.GetOrderById(CommonHelper.QueryStringInt("OrderId"));
                 if(order == null)
                 {
@@ -37,6 +36,23 @@ namespace NopSolutions.NopCommerce.Web
 
                 if(String.IsNullOrEmpty(md5) || !md5.Equals(HostedPaymentHelper.CalcMd5Hash(String.Format("{0}SveaHostedPaymentReturn.aspx{1}{2}", CommonHelper.GetStoreHost(false), Regex.Replace(Request.Url.Query, "&MD5=.*", String.Empty), HostedPaymentSettings.Password))))
                 {
+                    Response.Redirect(CommonHelper.GetStoreLocation());
+                }
+
+
+
+                bool success = CommonHelper.QueryStringBool("Success");
+                if (!success)
+                {
+                    string error = "Return page. Success parameter is false. ";
+                    string errorCode = CommonHelper.QueryString("ErrorCode");
+                    if (!String.IsNullOrEmpty(errorCode))
+                    {
+                        error += string.Format("Svea error code: {0}.", errorCode);
+                    }
+
+                    OrderManager.InsertOrderNote(order.OrderId, error, DateTime.UtcNow);
+
                     Response.Redirect(CommonHelper.GetStoreLocation());
                 }
 
