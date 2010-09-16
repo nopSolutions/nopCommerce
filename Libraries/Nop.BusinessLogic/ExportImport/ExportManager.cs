@@ -1061,7 +1061,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                     sb.Append(decimalQuoter); sb.Append(order.OrderTotalInCustomerCurrency); sb.Append(decimalQuoter); sb.Append(",");
                     sb.Append(decimalQuoter); sb.Append(order.OrderDiscountInCustomerCurrency); sb.Append(decimalQuoter); sb.Append(",");
                     sb.Append('"'); sb.Append(order.CustomerCurrencyCode.Replace('"', '\'')); sb.Append("\",");
-                    sb.Append(order.OrderWeight); sb.Append(",");
+                    sb.Append(decimalQuoter); sb.Append(order.OrderWeight); sb.Append(decimalQuoter); sb.Append(",");
                     sb.Append(order.AffiliateId); sb.Append(",");
                     sb.Append(order.OrderStatusId); sb.Append(",");
                     sb.Append(order.PaymentMethodId); sb.Append(",");

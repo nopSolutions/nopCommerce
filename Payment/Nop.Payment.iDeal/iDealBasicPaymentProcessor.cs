@@ -9,7 +9,7 @@
 // The Initial Developer of the Original Code is NopSolutions.
 // All Rights Reserved.
 // 
-// Contributor(s): Philip van Heijningen, _______. 
+// Contributor(s): Warnar Boekkooi, Philip van Heijningen, _______. 
 //------------------------------------------------------------------------------
 
 using System;
