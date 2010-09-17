@@ -471,6 +471,32 @@
                                 Width="50px" />
                         </td>
                     </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
+                                ID="lblMaxShoppingCartItems" Text="<% $NopResources:Admin.GlobalSettings.Products.MaxShoppingCartItems %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Products.MaxShoppingCartItems.Tooltip %>" />
+                        </td>
+                        <td class="adminData">
+                            <nopCommerce:NumericTextBox runat="server" CssClass="adminInput" ID="txtMaxShoppingCartItems"
+                                RequiredErrorMessage="<% $NopResources:Admin.GlobalSettings.Products.MaxShoppingCartItems.RequiredErrorMessage %>"
+                                MinimumValue="1" MaximumValue="999999" RangeErrorMessage="<% $NopResources:Admin.GlobalSettings.Products.MaxShoppingCartItems.RangeErrorMessage %>"
+                                Width="50px" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
+                                ID="lblMaxWishlistItems" Text="<% $NopResources:Admin.GlobalSettings.Products.MaxWishlistItems %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Products.MaxWishlistItems.Tooltip %>" />
+                        </td>
+                        <td class="adminData">
+                            <nopCommerce:NumericTextBox runat="server" CssClass="adminInput" ID="txtMaxWishlistItems"
+                                RequiredErrorMessage="<% $NopResources:Admin.GlobalSettings.Products.MaxWishlistItems.RequiredErrorMessage %>"
+                                MinimumValue="1" MaximumValue="999999" RangeErrorMessage="<% $NopResources:Admin.GlobalSettings.Products.MaxWishlistItems.RangeErrorMessage %>"
+                                Width="50px" />
+                        </td>
+                    </tr>
                 </table>
             </ContentTemplate>
         </ajaxToolkit:TabPanel>

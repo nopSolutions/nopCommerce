@@ -122,6 +122,30 @@ set @resources='
   <LocaleResource Name="Admin.GlobalSettings.SEODisplay.ManufacturerCanonicalURL">
     <Value>enable canonical URL</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.MaxShoppingCartItems">
+    <Value>Maximum shopping cart items:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.MaxShoppingCartItems.Tooltip">
+    <Value>Maximum number of products allowed in a shopping cart.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.MaxShoppingCartItems.RequiredErrorMessage">
+    <Value>The value must be from 1 to 999999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.MaxShoppingCartItems.RangeErrorMessage">
+    <Value>Enter a maximum number of products allowed in a shopping cart</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.MaxWishlistItems">
+    <Value>Maximum wishlist items:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.MaxWishlistItems.Tooltip">
+    <Value>Maximum number of products allowed in a wishlist.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.MaxWishlistItems.RequiredErrorMessage">
+    <Value>The value must be from 1 to 999999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.MaxWishlistItems.RangeErrorMessage">
+    <Value>Enter a maximum number of products allowed in a wishlist</Value>
+  </LocaleResource>
 </Language>
 '
 

@@ -1163,12 +1163,16 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                     if (shoppingCartType == ShoppingCartTypeEnum.ShoppingCart)
                     {
                         if (cart.Count >= SettingManager.GetSettingValueInteger("Common.MaximumShoppingCartItems", 1000))
+                        {
                             return warnings;
+                        }
                     }
                     else if (shoppingCartType == ShoppingCartTypeEnum.Wishlist)
                     {
                         if (cart.Count >= SettingManager.GetSettingValueInteger("Common.MaximumWishlistItems", 1000))
+                        {
                             return warnings;
+                        }
                     }
 
                     //insert item

@@ -168,6 +168,9 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             txtProductsAlsoPurchasedNumber.Value = ProductManager.ProductsAlsoPurchasedNumber;
             txtCrossSellsNumber.Value = ProductManager.CrossSellsNumber;
             txtSearchPageProductsPerPage.Value = ProductManager.SearchPageProductsPerPage;
+            txtMaxShoppingCartItems.Value = SettingManager.GetSettingValueInteger("Common.MaximumShoppingCartItems");
+            txtMaxWishlistItems.Value = SettingManager.GetSettingValueInteger("Common.MaximumWishlistItems");
+
             cbLiveChatEnabled.Checked = SettingManager.GetSettingValueBoolean("LiveChat.Enabled", false);
             txtLiveChatBtnCode.Text = SettingManager.GetSettingValue("LiveChat.BtnCode");
             txtLiveChatMonCode.Text = SettingManager.GetSettingValue("LiveChat.MonCode");
@@ -443,7 +446,9 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     ProductManager.ProductsAlsoPurchasedNumber = txtProductsAlsoPurchasedNumber.Value;
                     ProductManager.CrossSellsNumber = txtCrossSellsNumber.Value;
                     ProductManager.SearchPageProductsPerPage = txtSearchPageProductsPerPage.Value;
-
+                    SettingManager.SetParam("Common.MaximumShoppingCartItems", txtMaxShoppingCartItems.Value.ToString());
+                    SettingManager.SetParam("Common.MaximumWishlistItems", txtMaxWishlistItems.Value.ToString());
+                    
                     SettingManager.SetParam("LiveChat.Enabled", cbLiveChatEnabled.Checked.ToString());
                     SettingManager.SetParam("LiveChat.BtnCode", txtLiveChatBtnCode.Text);
                     SettingManager.SetParam("LiveChat.MonCode", txtLiveChatMonCode.Text);

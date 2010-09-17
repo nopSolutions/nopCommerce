@@ -589,6 +589,42 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         protected global::NopSolutions.NopCommerce.Web.Administration.Modules.NumericTextBox txtSearchPageProductsPerPage;
         
         /// <summary>
+        /// lblMaxShoppingCartItems control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblMaxShoppingCartItems;
+        
+        /// <summary>
+        /// txtMaxShoppingCartItems control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.NumericTextBox txtMaxShoppingCartItems;
+        
+        /// <summary>
+        /// lblMaxWishlistItems control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblMaxWishlistItems;
+        
+        /// <summary>
+        /// txtMaxWishlistItems control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.NumericTextBox txtMaxWishlistItems;
+        
+        /// <summary>
         /// pnlCustomerProfiles control.
         /// </summary>
         /// <remarks>
