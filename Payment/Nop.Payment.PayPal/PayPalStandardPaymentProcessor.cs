@@ -204,7 +204,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.PayPal
                 int x = 1;
                 foreach (var item in cartItems)
                 {
-                    //get the productvariant so we can get the name
+                    //get the product variant so we can get the name
                     builder.AppendFormat("&item_name_" + x + "={0}", HttpUtility.UrlEncode(item.ProductVariant.FullProductName));
                     builder.AppendFormat("&amount_" + x + "={0}", item.UnitPriceExclTax.ToString("0.00", CultureInfo.InvariantCulture));
                     builder.AppendFormat("&quantity_" + x + "={0}", item.Quantity);
@@ -217,7 +217,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.PayPal
                 foreach (var val in caValues)
                 {
                     var attPrice = TaxManager.GetCheckoutAttributePrice(val, false, order.Customer);
-                    if (attPrice > 0) //if it has a price
+                    if (attPrice > decimal.Zero) //if it has a price
                     {
                         var ca = val.CheckoutAttribute;
                         if (ca != null)
@@ -233,17 +233,27 @@ namespace NopSolutions.NopCommerce.Payment.Methods.PayPal
                 }
 
                 //order totals
+
+                //shipping
                 if (order.OrderShippingExclTax > decimal.Zero)
                 {
-                    builder.AppendFormat("&shipping_1={0}", order.OrderShippingExclTax.ToString("0.00", CultureInfo.InvariantCulture));
+                    builder.AppendFormat("&item_name_" + x + "={0}", "Shipping fee");
+                    builder.AppendFormat("&amount_" + x + "={0}", order.OrderShippingExclTax.ToString("0.00", CultureInfo.InvariantCulture));
+                    builder.AppendFormat("&quantity_" + x + "={0}", 1);
+                    x++;
                     cartTotal += order.OrderShippingExclTax;
                 }
-                //can use "handling" for extra charges - will be added to "shipping & handling"
+
+                //payment method additional fee
                 if (order.PaymentMethodAdditionalFeeExclTax > decimal.Zero)
                 {
-                    builder.AppendFormat("&handling_1={0}", order.PaymentMethodAdditionalFeeExclTax.ToString("0.00", CultureInfo.InvariantCulture));
+                    builder.AppendFormat("&item_name_" + x + "={0}", "Payment method fee");
+                    builder.AppendFormat("&amount_" + x + "={0}", order.PaymentMethodAdditionalFeeExclTax.ToString("0.00", CultureInfo.InvariantCulture));
+                    builder.AppendFormat("&quantity_" + x + "={0}", 1);
+                    x++;
                     cartTotal += order.PaymentMethodAdditionalFeeExclTax;
                 }
+
                 //tax
                 if (order.OrderTax > decimal.Zero)
                 {
