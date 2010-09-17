@@ -1,7 +1,7 @@
 <%@ Control Language="C#" AutoEventWireup="true" Inherits="NopSolutions.NopCommerce.Web.Modules.ProductAttributesControl" Codebehind="ProductAttributes.ascx.cs" %>
 
-<% if(SettingManager.GetSettingValueBoolean("ProductAttribute.EnableDynamicPriceUpdate")) { %>
-<script type="text/javascript">
+<asp:PlaceHolder runat="server" ID="phDynPrice">
+    <script type="text/javascript">
     // Adjustment table
     var <%=AdjustmentTableName%> = new Array();
     // Adjustment table initialize
@@ -29,6 +29,6 @@
         <%=AdjustmentFuncName%>();
         <asp:Literal runat="server" ID="lblAttributeScripts" />
     });
-</script>
-<%} %>
+    </script>
+</asp:PlaceHolder>
 <asp:PlaceHolder runat="server" ID="phAttributes" />

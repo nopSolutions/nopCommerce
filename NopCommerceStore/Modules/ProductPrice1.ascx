@@ -1,6 +1,5 @@
-<%@ Control Language="C#" AutoEventWireup="true"
-    Inherits="NopSolutions.NopCommerce.Web.Modules.ProductPrice1Control" Codebehind="ProductPrice1.ascx.cs" %>
-   
+<%@ Control Language="C#" AutoEventWireup="true" Inherits="NopSolutions.NopCommerce.Web.Modules.ProductPrice1Control"
+    CodeBehind="ProductPrice1.ascx.cs" %>
 <asp:PlaceHolder runat="server" ID="phOldPrice">
     <%=GetLocaleResourceString("Products.OldPrice")%>&nbsp;
     <asp:Label ID="lblOldPrice" runat="server" CssClass="oldProductPrice" />

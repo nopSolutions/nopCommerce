@@ -47,7 +47,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 {
     public partial class PaypalExpressButton : BaseNopUserControl
     {
-        protected void Page_Load(object sender, EventArgs e)
+        protected override void OnPreRender(EventArgs e)
         {
             //validate payment method availablity
             var ppePaymentMethod = PaymentMethodManager.GetPaymentMethodBySystemKeyword("PayPalExpress");
@@ -80,6 +80,8 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 this.Visible = false;
                 return;
             }
+
+            base.OnPreRender(e);
         }
         
         protected void btnPaypalExpress_Click(object sender, EventArgs e)

@@ -50,7 +50,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 {
     public partial class GoogleCheckoutButton : BaseNopUserControl
     {
-        protected void Page_Load(object sender, EventArgs e)
+        protected override void OnPreRender(EventArgs e)
         {
             var gcPaymentMethod = PaymentMethodManager.GetPaymentMethodBySystemKeyword("GoogleCheckout");
             if (gcPaymentMethod == null || !gcPaymentMethod.IsActive)
@@ -73,6 +73,8 @@ namespace NopSolutions.NopCommerce.Web.Modules
             }
 
             GCheckoutButton1.UseHttps = CommonHelper.IsCurrentConnectionSecured();
+
+            base.OnPreRender(e);
         }
 
         protected void PostCartToGoogle(object sender, ImageClickEventArgs e)

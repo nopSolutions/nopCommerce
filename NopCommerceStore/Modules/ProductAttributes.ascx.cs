@@ -110,20 +110,32 @@ namespace NopSolutions.NopCommerce.Web.Modules
                                     ddlAttributes.ID = controlId;
                                     divAttribute.Controls.Add(ddlAttributes);
                                     ddlAttributes.Items.Clear();
-
+                                    
+                                    //dynamic price update
+                                    if (SettingManager.GetSettingValueBoolean("ProductAttribute.EnableDynamicPriceUpdate"))
+                                    {
+                                        adjustmentTableScripts.AppendFormat("{0}['{1}'] = new Array(", AdjustmentTableName, ddlAttributes.ClientID);
+                                        attributeScripts.AppendFormat("$('#{0}').change(function(){{{1}();}});\n", ddlAttributes.ClientID, AdjustmentFuncName);
+                                    }
+                                    
                                     if (!attribute.IsRequired)
                                     {
                                         ddlAttributes.Items.Add(new ListItem("---", "0"));
+                                        //dynamic price update
+                                        if (SettingManager.GetSettingValueBoolean("ProductAttribute.EnableDynamicPriceUpdate"))
+                                        {
+                                            adjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "{0},", decimal.Zero);
+                                        }
                                     }
                                     var pvaValues = attribute.ProductVariantAttributeValues;
 
-                                    adjustmentTableScripts.AppendFormat("{0}['{1}'] = new Array(", AdjustmentTableName, ddlAttributes.ClientID);
-                                    attributeScripts.AppendFormat("$('#{0}').change(function(){{{1}();}});\n", ddlAttributes.ClientID, AdjustmentFuncName);
-
+                                    //values
                                     bool preSelectedSet = false;
                                     foreach (var pvaValue in pvaValues)
                                     {
                                         string pvaValueName = pvaValue.LocalizedName;
+
+                                        //display price if allowed
                                         if (!this.HidePrices &&
                                             (!SettingManager.GetSettingValueBoolean("Common.HidePricesForNonRegistered") ||
                                             (NopContext.Current.User != null &&
@@ -132,12 +144,18 @@ namespace NopSolutions.NopCommerce.Web.Modules
                                             decimal taxRate = decimal.Zero;
                                             decimal priceAdjustmentBase = TaxManager.GetPrice(productVariant, pvaValue.PriceAdjustment, out taxRate);
                                             decimal priceAdjustment = CurrencyManager.ConvertCurrency(priceAdjustmentBase, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
-                                            if(priceAdjustmentBase > decimal.Zero)
+                                            if (priceAdjustmentBase > decimal.Zero)
                                             {
                                                 pvaValueName += string.Format(" [+{0}]", PriceHelper.FormatPrice(priceAdjustment, false, false));
                                             }
-                                            adjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "{0},", (float)priceAdjustment);
+
+                                            //dynamic price update
+                                            if (SettingManager.GetSettingValueBoolean("ProductAttribute.EnableDynamicPriceUpdate"))
+                                            {
+                                                adjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "{0},", (float)priceAdjustment);
+                                            }
                                         }
+                                        
                                         var pvaValueItem = new ListItem(pvaValueName, pvaValue.ProductVariantAttributeValueId.ToString());
                                         if (!preSelectedSet && pvaValue.IsPreSelected)
                                         {
@@ -146,8 +164,13 @@ namespace NopSolutions.NopCommerce.Web.Modules
                                         }
                                         ddlAttributes.Items.Add(pvaValueItem);
                                     }
-                                    adjustmentTableScripts.Length -= 1;
-                                    adjustmentTableScripts.Append(");\n");
+
+                                    //dynamic price update
+                                    if (SettingManager.GetSettingValueBoolean("ProductAttribute.EnableDynamicPriceUpdate"))
+                                    {
+                                        adjustmentTableScripts.Length -= 1;
+                                        adjustmentTableScripts.Append(");\n");
+                                    }
                                 }
                                 break;
                             case AttributeControlTypeEnum.RadioList:
@@ -162,6 +185,8 @@ namespace NopSolutions.NopCommerce.Web.Modules
                                     foreach (var pvaValue in pvaValues)
                                     {
                                         string pvaValueName = pvaValue.LocalizedName;
+
+                                        //display price if allowed
                                         if (!this.HidePrices &&
                                             (!SettingManager.GetSettingValueBoolean("Common.HidePricesForNonRegistered") ||
                                             (NopContext.Current.User != null &&
@@ -170,13 +195,19 @@ namespace NopSolutions.NopCommerce.Web.Modules
                                             decimal taxRate = decimal.Zero;
                                             decimal priceAdjustmentBase = TaxManager.GetPrice(productVariant, pvaValue.PriceAdjustment, out taxRate);
                                             decimal priceAdjustment = CurrencyManager.ConvertCurrency(priceAdjustmentBase, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
-                                            if(priceAdjustmentBase > decimal.Zero)
+                                            if (priceAdjustmentBase > decimal.Zero)
                                             {
                                                 pvaValueName += string.Format(" [+{0}]", PriceHelper.FormatPrice(priceAdjustment, false, false));
                                             }
-                                            adjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "{0}['{1}_{2}'] = {3};\n", AdjustmentTableName, rblAttributes.ClientID, rblAttributes.Items.Count, (float)priceAdjustment);
-                                            attributeScripts.AppendFormat("$('#{0}_{1}').click(function(){{{2}();}});\n", rblAttributes.ClientID, rblAttributes.Items.Count, AdjustmentFuncName);
+
+                                            //dynamic price update
+                                            if (SettingManager.GetSettingValueBoolean("ProductAttribute.EnableDynamicPriceUpdate"))
+                                            {
+                                                adjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "{0}['{1}_{2}'] = {3};\n", AdjustmentTableName, rblAttributes.ClientID, rblAttributes.Items.Count, (float)priceAdjustment);
+                                                attributeScripts.AppendFormat("$('#{0}_{1}').click(function(){{{2}();}});\n", rblAttributes.ClientID, rblAttributes.Items.Count, AdjustmentFuncName);
+                                            }
                                         }
+
                                         var pvaValueItem = new ListItem(Server.HtmlEncode(pvaValueName), pvaValue.ProductVariantAttributeValueId.ToString());
                                         if (!preSelectedSet && pvaValue.IsPreSelected)
                                         {
@@ -194,10 +225,13 @@ namespace NopSolutions.NopCommerce.Web.Modules
                                     divAttribute.Controls.Add(cblAttributes);
                                     cblAttributes.Items.Clear();
 
+                                    //values
                                     var pvaValues = attribute.ProductVariantAttributeValues;
                                     foreach (var pvaValue in pvaValues)
                                     {
                                         string pvaValueName = pvaValue.LocalizedName;
+
+                                        //display price if allowed
                                         if (!this.HidePrices &&
                                             (!SettingManager.GetSettingValueBoolean("Common.HidePricesForNonRegistered") ||
                                             (NopContext.Current.User != null &&
@@ -207,10 +241,18 @@ namespace NopSolutions.NopCommerce.Web.Modules
                                             decimal priceAdjustmentBase = TaxManager.GetPrice(productVariant, pvaValue.PriceAdjustment, out taxRate);
                                             decimal priceAdjustment = CurrencyManager.ConvertCurrency(priceAdjustmentBase, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
                                             if (priceAdjustmentBase > decimal.Zero)
+                                            {
                                                 pvaValueName += string.Format(" [+{0}]", PriceHelper.FormatPrice(priceAdjustment, false, false));
-                                            adjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "{0}['{1}_{2}'] = {3};\n", AdjustmentTableName, cblAttributes.ClientID, cblAttributes.Items.Count, (float)priceAdjustment);
-                                            attributeScripts.AppendFormat("$('#{0}_{1}').click(function(){{{2}();}});\n", cblAttributes.ClientID, cblAttributes.Items.Count, AdjustmentFuncName);
+                                            }
+
+                                            //dynamic price update
+                                            if (SettingManager.GetSettingValueBoolean("ProductAttribute.EnableDynamicPriceUpdate"))
+                                            {
+                                                adjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "{0}['{1}_{2}'] = {3};\n", AdjustmentTableName, cblAttributes.ClientID, cblAttributes.Items.Count, (float)priceAdjustment);
+                                                attributeScripts.AppendFormat("$('#{0}_{1}').click(function(){{{2}();}});\n", cblAttributes.ClientID, cblAttributes.Items.Count, AdjustmentFuncName);
+                                            }
                                         }
+
                                         var pvaValueItem = new ListItem(Server.HtmlEncode(pvaValueName), pvaValue.ProductVariantAttributeValueId.ToString());
                                         pvaValueItem.Selected = pvaValue.IsPreSelected;
                                         cblAttributes.Items.Add(pvaValueItem);
@@ -250,9 +292,30 @@ namespace NopSolutions.NopCommerce.Web.Modules
                         }
                         
                     }
-                 
-                    lblAdjustmentTableScripts.Text = adjustmentTableScripts.ToString();
-                    lblAttributeScripts.Text = attributeScripts.ToString();
+
+
+                    //display price if allowed
+                    if (!this.HidePrices &&
+                        (!SettingManager.GetSettingValueBoolean("Common.HidePricesForNonRegistered") ||
+                        (NopContext.Current.User != null &&
+                        !NopContext.Current.User.IsGuest)))
+                    {
+                        //dynamic price update
+                        if (SettingManager.GetSettingValueBoolean("ProductAttribute.EnableDynamicPriceUpdate"))
+                        {
+                            lblAdjustmentTableScripts.Text = adjustmentTableScripts.ToString();
+                            lblAttributeScripts.Text = attributeScripts.ToString();
+                            phDynPrice.Visible = true;
+                        }
+                        else
+                        {
+                            phDynPrice.Visible = false;
+                        }
+                    }
+                    else
+                    {
+                        phDynPrice.Visible = false;
+                    }
                 }
                 else
                 {
