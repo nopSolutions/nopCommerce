@@ -94,7 +94,11 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected override void OnPreRender(EventArgs e)
         {
-            PreviewButton.OnClientClick = string.Format("javascript:OpenWindow('{0}', 800, 600, true); return false;", SEOHelper.GetManufacturerUrl(this.ManufacturerId));
+            Manufacturer manufacturer = ManufacturerManager.GetManufacturerById(this.ManufacturerId);
+            if (manufacturer != null)
+            {
+                PreviewButton.OnClientClick = string.Format("javascript:OpenWindow('{0}', 800, 600, true); return false;", SEOHelper.GetManufacturerUrl(manufacturer.ManufacturerId));
+            }
 
             base.OnPreRender(e);
         }

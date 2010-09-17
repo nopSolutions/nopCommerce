@@ -95,11 +95,17 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             }
         }
 
-        protected override void OnPreRender(EventArgs e)
+        protected override void OnLoad(EventArgs e)
         {
-            PreviewButton.OnClientClick = string.Format("javascript:OpenWindow('{0}', 800, 600, true); return false;", SEOHelper.GetCategoryUrl(this.CategoryId));
-
-            base.OnPreRender(e);
+            Category category = CategoryManager.GetCategoryById(this.CategoryId);
+            if (category != null)
+            {
+                PreviewButton.OnClientClick = string.Format("javascript:OpenWindow('{0}', 800, 600, true); return false;", SEOHelper.GetCategoryUrl(category.CategoryId));
+            }
+            else
+            {
+            }
+            base.OnLoad(e);
         }
 
         public int CategoryId
