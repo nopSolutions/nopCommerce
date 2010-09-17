@@ -1,6 +1,6 @@
 <%@ Page Language="C#" MasterPageFile="~/MasterPages/TwoColumn.master" AutoEventWireup="true"
     Inherits="NopSolutions.NopCommerce.Web.PaypalExpressReturnPage" CodeBehind="PaypalExpressReturn.aspx.cs"
-    ValidateRequest="false" %>
+     %>
 
 <%@ Register TagPrefix="nopCommerce" TagName="OrderSummary" Src="~/Modules/OrderSummary.ascx" %>
 <%@ Register Src="~/Modules/OrderProgress.ascx" TagName="OrderProgress" TagPrefix="nopCommerce" %>

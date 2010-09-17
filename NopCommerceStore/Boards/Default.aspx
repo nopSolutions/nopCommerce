@@ -1,6 +1,6 @@
 <%@ Page Language="C#" MasterPageFile="~/MasterPages/OneColumn.master" AutoEventWireup="true"
     Inherits="NopSolutions.NopCommerce.Web.Boards.DefaultPage" CodeBehind="Default.aspx.cs"
-    ValidateRequest="false" %>
+     %>
 
 <%@ Register TagPrefix="nopCommerce" TagName="ForumGroups" Src="~/Modules/ForumGroups.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="ForumSearchBox" Src="~/Modules/ForumSearchBox.ascx" %>

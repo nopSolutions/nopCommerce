@@ -1,5 +1,5 @@
 <%@ Page Language="C#" MasterPageFile="~/MasterPages/OneColumn.master" AutoEventWireup="true"
-    Inherits="NopSolutions.NopCommerce.Web.ProfilePage" CodeBehind="Profile.aspx.cs" ValidateRequest="false"  %>
+    Inherits="NopSolutions.NopCommerce.Web.ProfilePage" CodeBehind="Profile.aspx.cs"   %>
 
 <%@ Register TagPrefix="nopCommerce" TagName="ProfileInfo" Src="~/Modules/ProfileInfo.ascx" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="cph1" runat="Server">

@@ -1,6 +1,6 @@
 <%@ Page Language="C#" MasterPageFile="~/Administration/main.master" AutoEventWireup="true"
     Inherits="NopSolutions.NopCommerce.Web.Administration.Administration_CustomerDetails"
-    CodeBehind="CustomerDetails.aspx.cs" ValidateRequest="false" %>
+    CodeBehind="CustomerDetails.aspx.cs"  %>
 
 <%@ Register TagPrefix="nopCommerce" TagName="CustomerDetails" Src="Modules/CustomerDetails.ascx" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="cph1" runat="server">

@@ -1,5 +1,5 @@
 <%@ Page Language="C#" MasterPageFile="~/MasterPages/OneColumn.master" AutoEventWireup="true"
-    Inherits="NopSolutions.NopCommerce.Web.Boards.SearchPage" ValidateRequest="false"
+    Inherits="NopSolutions.NopCommerce.Web.Boards.SearchPage" 
     CodeBehind="Search.aspx.cs" %>
 
 <%@ Register TagPrefix="nopCommerce" TagName="ForumSearch" Src="~/Modules/ForumSearch.ascx" %>

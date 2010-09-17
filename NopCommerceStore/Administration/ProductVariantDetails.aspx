@@ -1,6 +1,6 @@
 <%@ Page Language="C#" AutoEventWireup="true" MasterPageFile="~/Administration/main.master"
     Inherits="NopSolutions.NopCommerce.Web.Administration.Administration_ProductVariantDetails"
-    CodeBehind="ProductVariantDetails.aspx.cs" ValidateRequest="false" %>
+    CodeBehind="ProductVariantDetails.aspx.cs"  %>
 
 <%@ Register TagPrefix="nopCommerce" TagName="ProductVariantDetails" Src="Modules/ProductVariantDetails.ascx" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="cph1" runat="server">

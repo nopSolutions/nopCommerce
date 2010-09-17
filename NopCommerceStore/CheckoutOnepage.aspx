@@ -1,6 +1,6 @@
 <%@ Page Language="C#" MasterPageFile="~/MasterPages/OneColumn.master" AutoEventWireup="true"
     Inherits="NopSolutions.NopCommerce.Web.CheckoutOnepagePage" CodeBehind="CheckoutOnepage.aspx.cs"
-    EnableEventValidation="false" ValidateRequest="false" %>
+    EnableEventValidation="false"  %>
 
 <%@ Register TagPrefix="nopCommerce" TagName="CheckoutOnePage" Src="~/Modules/CheckoutOnePage.ascx" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="cph1" runat="Server">

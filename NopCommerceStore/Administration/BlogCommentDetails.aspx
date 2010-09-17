@@ -1,5 +1,5 @@
 <%@ Page Language="C#" MasterPageFile="~/Administration/main.master" AutoEventWireup="true"
-    ValidateRequest="false" Inherits="NopSolutions.NopCommerce.Web.Administration.Administration_BlogCommentDetails"
+     Inherits="NopSolutions.NopCommerce.Web.Administration.Administration_BlogCommentDetails"
     CodeBehind="BlogCommentDetails.aspx.cs" %>
 
 <%@ Register TagPrefix="nopCommerce" TagName="BlogCommentDetails" Src="Modules/BlogCommentDetails.ascx" %>

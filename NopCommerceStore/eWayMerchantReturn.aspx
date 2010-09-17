@@ -1,6 +1,6 @@
 <%@ Page Language="C#" MasterPageFile="~/MasterPages/TwoColumn.master" AutoEventWireup="true"
     Inherits="NopSolutions.NopCommerce.Web.eWayMerchantReturnPage" CodeBehind="eWayMerchantReturn.aspx.cs"
-    ValidateRequest="false" %>
+     %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="cph1" runat="Server">
   <div id="divAuthorised" style="display:none" runat="server">

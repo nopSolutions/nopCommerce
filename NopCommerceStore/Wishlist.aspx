@@ -1,6 +1,6 @@
 <%@ Page Language="C#" MasterPageFile="~/MasterPages/OneColumn.master" AutoEventWireup="true"
     Inherits="NopSolutions.NopCommerce.Web.WishlistPage" CodeBehind="Wishlist.aspx.cs"
-    ValidateRequest="false" %>
+     %>
 
 <%@ Register TagPrefix="nopCommerce" TagName="Wishlist" Src="~/Modules/Wishlist.ascx" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="cph1" runat="Server">

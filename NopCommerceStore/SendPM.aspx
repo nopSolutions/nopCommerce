@@ -1,4 +1,4 @@
-<%@ Page Language="C#" MasterPageFile="~/MasterPages/OneColumn.master" ValidateRequest="false"
+<%@ Page Language="C#" MasterPageFile="~/MasterPages/OneColumn.master" 
     AutoEventWireup="true" Inherits="NopSolutions.NopCommerce.Web.SendPMPage" CodeBehind="SendPM.aspx.cs" %>
 
 <%@ Register TagPrefix="nopCommerce" TagName="PrivateMessagesSend" Src="~/Modules/PrivateMessagesSend.ascx" %>

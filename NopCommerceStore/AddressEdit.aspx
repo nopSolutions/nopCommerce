@@ -1,6 +1,6 @@
 <%@ Page Language="C#" MasterPageFile="~/MasterPages/TwoColumn.master" AutoEventWireup="true"
     Inherits="NopSolutions.NopCommerce.Web.AddressEditPage" CodeBehind="AddressEdit.aspx.cs"
-    ValidateRequest="false" %>
+     %>
 
 <%@ Register TagPrefix="nopCommerce" TagName="AddressEdit" Src="~/Modules/AddressEdit.ascx" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="cph1" runat="Server">

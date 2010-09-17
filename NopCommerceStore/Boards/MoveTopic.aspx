@@ -1,6 +1,6 @@
 <%@ Page Language="C#" MasterPageFile="~/MasterPages/OneColumn.master" AutoEventWireup="true"
     Title="Edit Post" Inherits="NopSolutions.NopCommerce.Web.Boards.MoveTopicPage"
-    CodeBehind="MoveTopic.aspx.cs" ValidateRequest="false" %>
+    CodeBehind="MoveTopic.aspx.cs"  %>
 
 <%@ Register TagPrefix="nopCommerce" TagName="MoveForumTopic" Src="~/Modules/MoveForumTopic.ascx" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="cph1" runat="Server">

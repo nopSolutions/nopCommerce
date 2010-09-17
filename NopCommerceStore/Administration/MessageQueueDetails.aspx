@@ -1,5 +1,5 @@
 <%@ Page Language="C#" MasterPageFile="~/Administration/main.master" AutoEventWireup="true"
-    ValidateRequest="false" Inherits="NopSolutions.NopCommerce.Web.Administration.Administration_MessageQueueDetails"
+     Inherits="NopSolutions.NopCommerce.Web.Administration.Administration_MessageQueueDetails"
     CodeBehind="MessageQueueDetails.aspx.cs" %>
 
 <%@ Register TagPrefix="nopCommerce" TagName="MessageQueueDetails" Src="Modules/MessageQueueDetails.ascx" %>

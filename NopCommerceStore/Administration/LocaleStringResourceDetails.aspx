@@ -1,5 +1,5 @@
 <%@ Page Language="C#" MasterPageFile="~/Administration/main.master" AutoEventWireup="true"
-    ValidateRequest="false" Inherits="NopSolutions.NopCommerce.Web.Administration.Administration_LocaleStringResourceDetails"
+     Inherits="NopSolutions.NopCommerce.Web.Administration.Administration_LocaleStringResourceDetails"
     CodeBehind="LocaleStringResourceDetails.aspx.cs" %>
 
 <%@ Register TagPrefix="nopCommerce" TagName="LocaleStringResourceDetails" Src="Modules/LocaleStringResourceDetails.ascx" %>

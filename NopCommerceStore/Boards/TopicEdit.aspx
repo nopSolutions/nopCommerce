@@ -1,6 +1,6 @@
 <%@ Page Language="C#" MasterPageFile="~/MasterPages/OneColumn.master" AutoEventWireup="true"
     Title="Topic Edit" Inherits="NopSolutions.NopCommerce.Web.Boards.TopicEditPage"
-    CodeBehind="TopicEdit.aspx.cs" ValidateRequest="false" %>
+    CodeBehind="TopicEdit.aspx.cs"  %>
 
 <%@ Register TagPrefix="nopCommerce" TagName="ForumPostEdit" Src="~/Modules/ForumPostEdit.ascx" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="cph1" runat="Server">

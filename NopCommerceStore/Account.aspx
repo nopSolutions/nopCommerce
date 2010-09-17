@@ -1,5 +1,5 @@
 <%@ Page Language="C#" MasterPageFile="~/MasterPages/OneColumn.master" AutoEventWireup="true"
-    Inherits="NopSolutions.NopCommerce.Web.AccountPage" CodeBehind="Account.aspx.cs" ValidateRequest="false" %>
+    Inherits="NopSolutions.NopCommerce.Web.AccountPage" CodeBehind="Account.aspx.cs"  %>
 
 <%@ Register TagPrefix="nopCommerce" TagName="CustomerInfo" Src="~/Modules/CustomerInfo.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="CustomerAddresses" Src="~/Modules/CustomerAddresses.ascx" %>

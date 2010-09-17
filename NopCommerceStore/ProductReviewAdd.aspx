@@ -1,6 +1,6 @@
 <%@ Page Language="C#" MasterPageFile="~/MasterPages/TwoColumn.master" AutoEventWireup="true"
     Inherits="NopSolutions.NopCommerce.Web.ProductReviewAddPage" CodeBehind="ProductReviewAdd.aspx.cs"
-    ValidateRequest="false" %>
+     %>
 
 <%@ Register TagPrefix="nopCommerce" TagName="ProductCategoryBreadcrumb" Src="~/Modules/ProductCategoryBreadcrumb.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="ProductWriteReview" Src="~/Modules/ProductWriteReview.ascx" %>

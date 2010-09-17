@@ -1,4 +1,4 @@
-<%@ Page Language="C#" AutoEventWireup="true" ValidateRequest="false" MasterPageFile="~/Administration/main.master"
+<%@ Page Language="C#" AutoEventWireup="true"  MasterPageFile="~/Administration/main.master"
     Inherits="NopSolutions.NopCommerce.Web.Administration.Administration_NewsDetails"
     CodeBehind="NewsDetails.aspx.cs" %>
 

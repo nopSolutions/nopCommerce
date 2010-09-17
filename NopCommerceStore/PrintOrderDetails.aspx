@@ -1,5 +1,5 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" Inherits="NopSolutions.NopCommerce.Web.PrintOrderDetails"
-    Theme="Print" CodeBehind="PrintOrderDetails.aspx.cs" ValidateRequest="false" %>
+    Theme="Print" CodeBehind="PrintOrderDetails.aspx.cs"  %>
 <%@ Register TagPrefix="nopCommerce" TagName="OrderDetails" Src="~/Modules/OrderDetails.ascx" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
