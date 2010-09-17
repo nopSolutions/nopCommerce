@@ -8,6 +8,15 @@
     <div class="clear">
     </div>
     <div class="htmlcontent-body">
+        <asp:PlaceHolder runat="server" ID="phPassword">
+            <%=GetLocaleResourceString("TopicPage.EnterPassword")%>
+            <br />
+            <asp:TextBox runat="server" ID="txtPassword" />
+            <asp:Button runat="server" ID="btnPassword" OnClick="btnPassword_OnClick" Text="<% $NopResources:TopicPage.btnPassword.Text %>"
+                CssClass="useragreementbutton" />
+            <br />
+            <asp:Literal runat="server" ID="lError" EnableViewState="false" />
+        </asp:PlaceHolder>
         <asp:Literal runat="server" ID="lBody" EnableViewState="false"></asp:Literal>
     </div>
 </div>

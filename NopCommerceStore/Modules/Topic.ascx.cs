@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections;
+using System.ComponentModel;
 using System.Configuration;
 using System.Data;
 using System.Linq;
@@ -27,76 +28,128 @@ using System.Xml.Linq;
 using NopSolutions.NopCommerce.BusinessLogic;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Content.Topics;
-using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
-using System.ComponentModel;
+using NopSolutions.NopCommerce.Common.Utils;
 
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
     public partial class TopicControl : BaseNopUserControl
     {
+        private bool ValidatePassword()
+        {
+            bool passwordOK = true;
+            if (this.Topic != null)
+            {
+                if (this.Topic.IsPasswordProtected &&
+                    !this.Topic.Password.Equals(this.EnteredPassword))
+                {
+                    passwordOK = false;
+                }
+            }
+            return passwordOK;
+        }
+
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
 
             this.BindData();
 
-            if (this.Topic != null)
+            if (this.LocalizedTopic != null)
             {
                 if (this.OverrideSEO)
                 {
                     //title
-                    string title = this.Topic.MetaTitle;
+                    string title = this.LocalizedTopic.MetaTitle;
                     if (String.IsNullOrEmpty(title))
-                        title = this.Topic.Title;
+                        title = this.LocalizedTopic.Title;
                     if (!string.IsNullOrEmpty(title))
                         SEOHelper.RenderTitle(this.Page, title, true);
 
                     //meta
-                    if (!String.IsNullOrEmpty(this.Topic.MetaDescription))
-                        SEOHelper.RenderMetaTag(this.Page, "description", this.Topic.MetaDescription, true);
-                    if (!String.IsNullOrEmpty(this.Topic.MetaKeywords))
-                        SEOHelper.RenderMetaTag(this.Page, "keywords", this.Topic.MetaKeywords, true);
+                    if (!String.IsNullOrEmpty(this.LocalizedTopic.MetaDescription))
+                        SEOHelper.RenderMetaTag(this.Page, "description", this.LocalizedTopic.MetaDescription, true);
+                    if (!String.IsNullOrEmpty(this.LocalizedTopic.MetaKeywords))
+                        SEOHelper.RenderMetaTag(this.Page, "keywords", this.LocalizedTopic.MetaKeywords, true);
                 }
             }
+        }
+
+        protected void btnPassword_OnClick(object sender, EventArgs e)
+        {
+            this.EnteredPassword = txtPassword.Text;
+            bool passwordOK = ValidatePassword();
+            if (!passwordOK)
+            {
+                lError.Text = GetLocaleResourceString("TopicPage.WrongPassword");
+            }
+            BindData();
         }
 
         private void BindData()
         {
-            if (this.Topic != null)
+            if (this.LocalizedTopic != null)
             {
-                if (!string.IsNullOrEmpty(this.Topic.Title))
+                bool passwordOK = ValidatePassword();
+                if (passwordOK)
                 {
-                    lTitle.Text = Server.HtmlEncode(this.Topic.Title);
+                    phPassword.Visible = false;
+                    lTitle.Visible = true;
+                    lBody.Visible = true;
+
+                    if (!string.IsNullOrEmpty(this.LocalizedTopic.Title))
+                    {
+                        lTitle.Text = Server.HtmlEncode(this.LocalizedTopic.Title);
+                    }
+                    else
+                    {
+                        lTitle.Visible = false;
+                    }
+                    if (!string.IsNullOrEmpty(this.LocalizedTopic.Body))
+                    {
+                        lBody.Text = this.LocalizedTopic.Body;
+                    }
+                    else
+                    {
+                        lBody.Visible = false;
+                    }
                 }
                 else
                 {
+                    phPassword.Visible = true;
                     lTitle.Visible = false;
-                }
-                if (!string.IsNullOrEmpty(this.Topic.Body))
-                {
-                    lBody.Text = this.Topic.Body;
-                }
-                else
-                {
                     lBody.Visible = false;
                 }
             }
             else
+            {
                 this.Visible = false;
+            }
         }
 
-        private LocalizedTopic topic = null;
-        public LocalizedTopic Topic
+        private LocalizedTopic localizedTopic = null;
+        public LocalizedTopic LocalizedTopic
         {
             get
             {
-                if (topic == null)
+                if (localizedTopic == null)
                 {
-                    topic = TopicManager.GetLocalizedTopic(this.TopicName, NopContext.Current.WorkingLanguage.LanguageId);
+                    localizedTopic = TopicManager.GetLocalizedTopic(this.TopicName, NopContext.Current.WorkingLanguage.LanguageId);
                 }
-                return topic;
+                return localizedTopic;
+            }
+        }
+
+        private Topic topic = null;
+        public Topic Topic
+        {
+            get
+            {
+                if (this.LocalizedTopic != null)
+                    return this.LocalizedTopic.Topic;
+                else
+                    return null;
             }
         }
 
@@ -131,6 +184,22 @@ namespace NopSolutions.NopCommerce.Web.Modules
             set
             {
                 this.ViewState["OverrideSEO"] = value;
+            }
+        }
+
+        public string EnteredPassword
+        {
+            get
+            {
+                object obj2 = this.ViewState["EnteredPassword"];
+                if (obj2 != null)
+                    return (string)obj2;
+                else
+                    return string.Empty;
+            }
+            set
+            {
+                this.ViewState["EnteredPassword"] = value;
             }
         }
     }

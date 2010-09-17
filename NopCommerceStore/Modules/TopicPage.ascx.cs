@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections;
+using System.ComponentModel;
 using System.Configuration;
 using System.Data;
 using System.Linq;
@@ -29,7 +30,6 @@ using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Content.Topics;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
-using System.ComponentModel;
 
 
 namespace NopSolutions.NopCommerce.Web.Modules
