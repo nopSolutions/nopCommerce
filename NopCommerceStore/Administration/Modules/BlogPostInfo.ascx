@@ -2,8 +2,8 @@
     CodeBehind="BlogPostInfo.ascx.cs" %>
 <%@ Register TagPrefix="nopCommerce" TagName="ToolTipLabel" Src="ToolTipLabelControl.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="SimpleTextBox" Src="SimpleTextBox.ascx" %>
-<%@ Register Assembly="NopCommerceStore" Namespace="NopSolutions.NopCommerce.Web.Controls"
-    TagPrefix="nopCommerce" %>
+<%@ Register Assembly="FredCK.FCKeditorV2" Namespace="FredCK.FCKeditorV2" TagPrefix="FCKeditorV2" %>
+
     
 <table class="adminContent">
     <tr>
@@ -32,7 +32,8 @@
                 ToolTip="<% $NopResources:Admin.BlogPostInfo.Body.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
         </td>
         <td class="adminData">
-            <nopCommerce:NopHTMLEditor ID="txtBlogPostBody" runat="server" Height="350" />
+            <FCKeditorV2:FCKeditor ID="txtBlogPostBody" runat="server" AutoDetectLanguage="false"
+                Height="350" Width="800px" />
         </td>
     </tr>
     <tr>

@@ -24,6 +24,7 @@ using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
+using FredCK.FCKeditorV2;
 using NopSolutions.NopCommerce.BusinessLogic;
 using NopSolutions.NopCommerce.BusinessLogic.ExportImport;
 using NopSolutions.NopCommerce.BusinessLogic.Media;
@@ -31,8 +32,8 @@ using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.BusinessLogic.Products.Attributes;
 using NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts;
 using NopSolutions.NopCommerce.BusinessLogic.Tax;
-using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.Warehouses;
+using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Web.Administration.Modules;
 
 
@@ -61,7 +62,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                 this.txtName.Text = productVariant.Name;
                 this.txtSKU.Text = productVariant.SKU;
-                this.txtDescription.Content = productVariant.Description;
+                this.txtDescription.Value = productVariant.Description;
                 this.txtAdminComment.Text = productVariant.AdminComment;
                 this.txtManufacturerPartNumber.Text = productVariant.ManufacturerPartNumber;
 
@@ -102,10 +103,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     this.txtDownloadExpirationDays.Text = productVariant.DownloadExpirationDays.Value.ToString();
                 CommonHelper.SelectListItem(this.ddlDownloadActivationType, productVariant.DownloadActivationType);
                 this.cbHasUserAgreement.Checked = productVariant.HasUserAgreement;
-                if (productVariant.HasUserAgreement)
-                {
-                    this.txtUserAgreementText.Content = productVariant.UserAgreementText;
-                }
+                this.txtUserAgreementText.Value = productVariant.UserAgreementText;
+                
 
                 this.cbHasSampleDownload.Checked = productVariant.HasSampleDownload;
                 Download productVariantSampleDownload = productVariant.SampleDownload;
@@ -285,7 +284,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
             string name = txtName.Text.Trim();
             string sku = txtSKU.Text.Trim();
-            string description = txtDescription.Content;
+            string description = txtDescription.Value;
             string adminComment = txtAdminComment.Text.Trim();
             string manufacturerPartNumber = txtManufacturerPartNumber.Text.Trim();
             bool isGiftCard = cbIsGiftCard.Checked;
@@ -298,7 +297,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 downloadExpirationDays = int.Parse(txtDownloadExpirationDays.Text.Trim());
             DownloadActivationTypeEnum downloadActivationType = (DownloadActivationTypeEnum)Enum.ToObject(typeof(DownloadActivationTypeEnum), int.Parse(this.ddlDownloadActivationType.SelectedItem.Value));
             bool hasUserAgreement = cbHasUserAgreement.Checked;
-            string userAgreementText = txtUserAgreementText.Content;
+            string userAgreementText = txtUserAgreementText.Value;
             bool hasSampleDownload = cbHasSampleDownload.Checked;
 
             bool isRecurring = cbIsRecurring.Checked;
@@ -579,12 +578,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 if (item.ItemType == ListItemType.Item || item.ItemType == ListItemType.AlternatingItem)
                 {
                     var txtLocalizedName = (TextBox)item.FindControl("txtLocalizedName");
-                    var txtLocalizedDescription = (AjaxControlToolkit.HTMLEditor.Editor)item.FindControl("txtLocalizedDescription");
+                    var txtLocalizedDescription = (FCKeditor)item.FindControl("txtLocalizedDescription");
                     var lblLanguageId = (Label)item.FindControl("lblLanguageId");
 
                     int languageId = int.Parse(lblLanguageId.Text);
                     string name = txtLocalizedName.Text;
-                    string description = txtLocalizedDescription.Content;
+                    string description = txtLocalizedDescription.Value;
 
                     bool allFieldsAreEmpty = (string.IsNullOrEmpty(name) && string.IsNullOrEmpty(description));
 
@@ -615,7 +614,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
             {
                 var txtLocalizedName = (TextBox)e.Item.FindControl("txtLocalizedName");
-                var txtLocalizedDescription = (AjaxControlToolkit.HTMLEditor.Editor)e.Item.FindControl("txtLocalizedDescription");
+                var txtLocalizedDescription = (FCKeditor)e.Item.FindControl("txtLocalizedDescription");
                 var lblLanguageId = (Label)e.Item.FindControl("lblLanguageId");
 
                 int languageId = int.Parse(lblLanguageId.Text);
@@ -625,7 +624,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 if (content != null)
                 {
                     txtLocalizedName.Text = content.Name;
-                    txtLocalizedDescription.Content = content.Description;
+                    txtLocalizedDescription.Value = content.Description;
                 }
             }
         }

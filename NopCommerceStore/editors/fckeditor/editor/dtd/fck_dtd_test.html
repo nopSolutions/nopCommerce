@@ -1,0 +1,41 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>DTD Test Page</title>
+	<script type="text/javascript">
+
+	// Define an object for this test page, so the assignment to FCK.DTD works
+	var FCK = {} ;
+	</script>
+	<script type="text/javascript" src="../_source/internals/fcktools.js"></script>
+	<script type="text/javascript" src="fck_xhtml10transitional.js"></script>
+</head>
+<body>
+	<h1>
+		DTD Contents
+	</h1>
+	<table border="1">
+		<script type="text/javascript">
+
+for ( var p in FCK.DTD )
+{
+	document.write( '<tr><td><b>' + p + '</b></td><td>' ) ;
+
+	var isFirst = true ;
+
+	for ( var c in FCK.DTD[p] )
+	{
+		if ( !isFirst )
+			document.write( ', ' ) ;
+		isFirst = false ;
+
+		document.write( c ) ;
+	}
+
+
+	document.write( '</td></tr>' ) ;
+}
+		</script>
+	</table>
+</body>
+</html>

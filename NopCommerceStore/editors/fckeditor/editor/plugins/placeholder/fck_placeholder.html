@@ -1,0 +1,105 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!--
+ * FCKeditor - The text editor for Internet - http://www.fckeditor.net
+ * Copyright (C) 2003-2010 Frederico Caldeira Knabben
+ *
+ * == BEGIN LICENSE ==
+ *
+ * Licensed under the terms of any of the following licenses at your
+ * choice:
+ *
+ *  - GNU General Public License Version 2 or later (the "GPL")
+ *    http://www.gnu.org/licenses/gpl.html
+ *
+ *  - GNU Lesser General Public License Version 2.1 or later (the "LGPL")
+ *    http://www.gnu.org/licenses/lgpl.html
+ *
+ *  - Mozilla Public License Version 1.1 or later (the "MPL")
+ *    http://www.mozilla.org/MPL/MPL-1.1.html
+ *
+ * == END LICENSE ==
+ *
+ * Placeholder Plugin.
+-->
+<html>
+	<head>
+		<title>Placeholder Properties</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<meta content="noindex, nofollow" name="robots">
+		<script src="../../dialog/common/fck_dialog_common.js" type="text/javascript"></script>
+		<script language="javascript">
+
+var dialog = window.parent ;
+var oEditor = dialog.InnerDialogLoaded() ;
+var FCKLang = oEditor.FCKLang ;
+var FCKPlaceholders = oEditor.FCKPlaceholders ;
+
+window.onload = function ()
+{
+	// First of all, translate the dialog box texts
+	oEditor.FCKLanguageManager.TranslatePage( document ) ;
+
+	LoadSelected() ;
+
+	// Show the "Ok" button.
+	dialog.SetOkButton( true ) ;
+
+	// Select text field on load.
+	SelectField( 'txtName' ) ;
+}
+
+var eSelected = dialog.Selection.GetSelectedElement() ;
+
+function LoadSelected()
+{
+	if ( !eSelected )
+		return ;
+
+	if ( eSelected.tagName == 'SPAN' && eSelected._fckplaceholder )
+		document.getElementById('txtName').value = eSelected._fckplaceholder ;
+	else
+		eSelected == null ;
+}
+
+function Ok()
+{
+	var sValue = document.getElementById('txtName').value ;
+
+	if ( eSelected && eSelected._fckplaceholder == sValue )
+		return true ;
+
+	if ( sValue.length == 0 )
+	{
+		alert( FCKLang.PlaceholderErrNoName ) ;
+		return false ;
+	}
+
+	if ( FCKPlaceholders.Exist( sValue ) )
+	{
+		alert( FCKLang.PlaceholderErrNameInUse ) ;
+		return false ;
+	}
+
+	FCKPlaceholders.Add( sValue ) ;
+	return true ;
+}
+
+		</script>
+	</head>
+	<body scroll="no" style="OVERFLOW: hidden">
+		<table height="100%" cellSpacing="0" cellPadding="0" width="100%" border="0">
+			<tr>
+				<td>
+					<table cellSpacing="0" cellPadding="0" align="center" border="0">
+						<tr>
+							<td>
+								<span fckLang="PlaceholderDlgName">Placeholder Name</span><br>
+								<input id="txtName" type="text">
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+	</body>
+</html>

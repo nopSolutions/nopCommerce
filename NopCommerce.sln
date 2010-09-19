@@ -4,6 +4,7 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dependencies", "Dependencies", "{3AB03A71-3059-48C7-87D2-77AC5C7A89E4}"
 	ProjectSection(SolutionItems) = preProject
 		Dependencies\AjaxControlToolkit.dll = Dependencies\AjaxControlToolkit.dll
+		Dependencies\FredCK.FCKeditorV2.dll = Dependencies\FredCK.FCKeditorV2.dll
 		Dependencies\GCheckout.dll = Dependencies\GCheckout.dll
 		Dependencies\Ionic.Zip.dll = Dependencies\Ionic.Zip.dll
 		Dependencies\MigraDoc.DocumentObjectModel.dll = Dependencies\MigraDoc.DocumentObjectModel.dll

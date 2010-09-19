@@ -45,7 +45,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 this.txtCc.Text = queuedEmail.CC;
                 this.txtBcc.Text = queuedEmail.Bcc;
                 this.txtSubject.Text = queuedEmail.Subject;
-                this.txtBody.Content = queuedEmail.Body;
+                this.txtBody.Value = queuedEmail.Body;
                 this.lblCreatedOn.Text = DateTimeHelper.ConvertToUserTime(queuedEmail.CreatedOn, DateTimeKind.Utc).ToString();
                 this.txtSendTries.Value = queuedEmail.SendTries;
                 this.lblSentOn.Text = GetSentOnInfo(queuedEmail);
@@ -75,7 +75,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         QueuedEmail requeuedEmail = MessageManager.InsertQueuedEmail(txtPriority.Value, 
                             txtFrom.Text, txtFromName.Text,
                             txtTo.Text, txtToName.Text, txtCc.Text, txtBcc.Text,
-                            txtSubject.Text, txtBody.Content, DateTime.UtcNow,
+                            txtSubject.Text, txtBody.Value, DateTime.UtcNow,
                             0, null, queuedEmail.EmailAccountId);
                         Response.Redirect("MessageQueueDetails.aspx?QueuedEmailID=" + requeuedEmail.QueuedEmailId.ToString());
                     }
@@ -101,7 +101,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         queuedEmail = MessageManager.UpdateQueuedEmail(queuedEmail.QueuedEmailId,
                            txtPriority.Value, txtFrom.Text, txtFromName.Text,
                            txtTo.Text, txtToName.Text, txtCc.Text, txtBcc.Text,
-                           txtSubject.Text, txtBody.Content, queuedEmail.CreatedOn,
+                           txtSubject.Text, txtBody.Value, queuedEmail.CreatedOn,
                            txtSendTries.Value, queuedEmail.SentOn, queuedEmail.EmailAccountId);
                         Response.Redirect("MessageQueueDetails.aspx?QueuedEmailID=" + queuedEmail.QueuedEmailId.ToString());
                     }

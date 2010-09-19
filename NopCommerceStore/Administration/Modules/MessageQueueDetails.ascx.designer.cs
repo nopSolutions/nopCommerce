@@ -199,7 +199,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Controls.NopHTMLEditor txtBody;
+        protected global::FredCK.FCKeditorV2.FCKeditor txtBody;
         
         /// <summary>
         /// lblCreatedOnTitle control.

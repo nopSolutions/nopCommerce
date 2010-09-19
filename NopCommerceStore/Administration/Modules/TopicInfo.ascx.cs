@@ -22,6 +22,7 @@ using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
+using FredCK.FCKeditorV2;
 using NopSolutions.NopCommerce.BusinessLogic.Content.Topics;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
@@ -74,7 +75,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
             {
                 var txtTitle = (TextBox)e.Item.FindControl("txtTitle");
-                var txtBody = (AjaxControlToolkit.HTMLEditor.Editor)e.Item.FindControl("txtBody");
+                var txtBody = (FCKeditor)e.Item.FindControl("txtBody");
                 var pnlUrl = (HtmlTableRow)e.Item.FindControl("pnlUrl");
                 var hlUrl = (HyperLink)e.Item.FindControl("hlUrl");
 
@@ -88,7 +89,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     if (content != null)
                     {
                         txtTitle.Text = content.Title;
-                        txtBody.Content = content.Body;
+                        txtBody.Value = content.Body;
                         pnlUrl.Visible = true;
                         string url = SEOHelper.GetTopicUrl(content.TopicId, content.Title);
                         hlUrl.Text = url;
@@ -153,12 +154,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 if (item.ItemType == ListItemType.Item || item.ItemType == ListItemType.AlternatingItem)
                 {
                     var txtTitle = (TextBox)item.FindControl("txtTitle");
-                    var txtBody = (AjaxControlToolkit.HTMLEditor.Editor)item.FindControl("txtBody");
+                    var txtBody = (FCKeditor)item.FindControl("txtBody");
                     var lblLanguageId = (Label)item.FindControl("lblLanguageId");
 
                     int languageId = int.Parse(lblLanguageId.Text);
                     string title = txtTitle.Text;
-                    string body = txtBody.Content;
+                    string body = txtBody.Value;
 
                     var content = TopicManager.GetLocalizedTopic(topic.Name, languageId);
                     if (content == null)

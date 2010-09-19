@@ -51,7 +51,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 CommonHelper.SelectListItem(this.ddlLanguage, blogPost.LanguageId);
                 this.txtBlogPostTitle.Text = blogPost.BlogPostTitle;
-                this.txtBlogPostBody.Content = blogPost.BlogPostBody;
+                this.txtBlogPostBody.Value = blogPost.BlogPostBody;
                 this.cbBlogPostAllowComments.Checked = blogPost.BlogPostAllowComments;
                 this.txtTags.Text = blogPost.Tags;
 
@@ -90,13 +90,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             if (blogPost != null)
             {
                 blogPost = BlogManager.UpdateBlogPost(this.BlogPostId, int.Parse(this.ddlLanguage.SelectedItem.Value),
-                    txtBlogPostTitle.Text, txtBlogPostBody.Content,
+                    txtBlogPostTitle.Text, txtBlogPostBody.Value,
                     cbBlogPostAllowComments.Checked, txtTags.Text.Trim(), blogPost.CreatedById, blogPost.CreatedOn);
             }
             else
             {
                 blogPost = BlogManager.InsertBlogPost(int.Parse(this.ddlLanguage.SelectedItem.Value),
-                   txtBlogPostTitle.Text, txtBlogPostBody.Content,
+                   txtBlogPostTitle.Text, txtBlogPostBody.Value,
                    cbBlogPostAllowComments.Checked, txtTags.Text.Trim(), NopContext.Current.User.CustomerId, DateTime.UtcNow);
             }
             return blogPost;

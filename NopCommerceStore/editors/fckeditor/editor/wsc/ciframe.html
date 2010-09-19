@@ -1,0 +1,65 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!--
+ * FCKeditor - The text editor for Internet - http://www.fckeditor.net
+ * Copyright (C) 2003-2010 Frederico Caldeira Knabben
+ *
+ * == BEGIN LICENSE ==
+ *
+ * Licensed under the terms of any of the following licenses at your
+ * choice:
+ *
+ *  - GNU General Public License Version 2 or later (the "GPL")
+ *    http://www.gnu.org/licenses/gpl.html
+ *
+ *  - GNU Lesser General Public License Version 2.1 or later (the "LGPL")
+ *    http://www.gnu.org/licenses/lgpl.html
+ *
+ *  - Mozilla Public License Version 1.1 or later (the "MPL")
+ *    http://www.mozilla.org/MPL/MPL-1.1.html
+ *
+ * == END LICENSE ==
+-->
+<html>
+<head>
+	<title></title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<script type="text/javascript">
+
+function gup( name )
+{
+	name = name.replace( /[\[]/, '\\\[' ).replace( /[\]]/, '\\\]' ) ;
+	var regexS = '[\\?&]' + name + '=([^&#]*)' ;
+	var regex = new RegExp( regexS ) ;
+	var results = regex.exec( window.location.href ) ;
+
+	if( results == null )
+		return '' ;
+	else
+		return results[ 1 ] ;
+}
+
+function sendData2Master()
+{
+	var destination = parent.parent ;
+	try
+	{
+		if ( destination.XDTMaster )
+		{
+			var t = destination.XDTMaster.read( [ gup( 'cmd' ), gup( 'data' ) ] ) ;
+			window.clearInterval( interval ) ;
+		}
+	}
+	catch (e) {}
+}
+
+function onLoad()
+{
+	interval = window.setInterval( sendData2Master, 100 );
+}
+
+        </script>
+</head>
+<body onload="onLoad()">
+	<p></p>
+</body>
+</html>

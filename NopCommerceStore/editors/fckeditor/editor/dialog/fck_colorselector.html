@@ -1,0 +1,172 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >
+<!--
+ * FCKeditor - The text editor for Internet - http://www.fckeditor.net
+ * Copyright (C) 2003-2010 Frederico Caldeira Knabben
+ *
+ * == BEGIN LICENSE ==
+ *
+ * Licensed under the terms of any of the following licenses at your
+ * choice:
+ *
+ *  - GNU General Public License Version 2 or later (the "GPL")
+ *    http://www.gnu.org/licenses/gpl.html
+ *
+ *  - GNU Lesser General Public License Version 2.1 or later (the "LGPL")
+ *    http://www.gnu.org/licenses/lgpl.html
+ *
+ *  - Mozilla Public License Version 1.1 or later (the "MPL")
+ *    http://www.mozilla.org/MPL/MPL-1.1.html
+ *
+ * == END LICENSE ==
+ *
+ * Color Selection dialog window.
+-->
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="robots" content="noindex, nofollow" />
+		<style TYPE="text/css">
+			#ColorTable		{ cursor: pointer ; cursor: hand ; }
+			#hicolor		{ height: 74px ; width: 74px ; border-width: 1px ; border-style: solid ; }
+			#hicolortext	{ width: 75px ; text-align: right ; margin-bottom: 7px ; }
+			#selhicolor		{ height: 20px ; width: 74px ; border-width: 1px ; border-style: solid ; }
+			#selcolor		{ width: 75px ; height: 20px ; margin-top: 0px ; margin-bottom: 7px ; }
+			#btnClear		{ width: 75px ; height: 22px ; margin-bottom: 6px ; }
+			.ColorCell		{ height: 15px ; width: 15px ; }
+		</style>
+		<script src="common/fck_dialog_common.js" type="text/javascript"></script>
+		<script type="text/javascript">
+
+var oEditor = window.parent.InnerDialogLoaded() ;
+
+function OnLoad()
+{
+	// First of all, translate the dialog box texts
+	oEditor.FCKLanguageManager.TranslatePage(document) ;
+
+	CreateColorTable() ;
+
+	window.parent.SetOkButton( true ) ;
+	window.parent.SetAutoSize( true ) ;
+}
+
+function CreateColorTable()
+{
+	// Get the target table.
+	var oTable = document.getElementById('ColorTable') ;
+
+	// Create the base colors array.
+	var aColors = ['00','33','66','99','cc','ff'] ;
+
+	// This function combines two ranges of three values from the color array into a row.
+	function AppendColorRow( rangeA, rangeB )
+	{
+		for ( var i = rangeA ; i < rangeA + 3 ; i++ )
+		{
+			var oRow = oTable.insertRow(-1) ;
+
+			for ( var j = rangeB ; j < rangeB + 3 ; j++ )
+			{
+				for ( var n = 0 ; n < 6 ; n++ )
+				{
+					AppendColorCell( oRow, '#' + aColors[j] + aColors[n] + aColors[i] ) ;
+				}
+			}
+		}
+	}
+
+	// This function create a single color cell in the color table.
+	function AppendColorCell( targetRow, color )
+	{
+		var oCell = targetRow.insertCell(-1) ;
+		oCell.className = 'ColorCell' ;
+		oCell.bgColor = color ;
+
+		oCell.onmouseover = function()
+		{
+			document.getElementById('hicolor').style.backgroundColor = this.bgColor ;
+			document.getElementById('hicolortext').innerHTML = this.bgColor ;
+		}
+
+		oCell.onclick = function()
+		{
+			document.getElementById('selhicolor').style.backgroundColor = this.bgColor ;
+			document.getElementById('selcolor').value = this.bgColor ;
+		}
+	}
+
+	AppendColorRow( 0, 0 ) ;
+	AppendColorRow( 3, 0 ) ;
+	AppendColorRow( 0, 3 ) ;
+	AppendColorRow( 3, 3 ) ;
+
+	// Create the last row.
+	var oRow = oTable.insertRow(-1) ;
+
+	// Create the gray scale colors cells.
+	for ( var n = 0 ; n < 6 ; n++ )
+	{
+		AppendColorCell( oRow, '#' + aColors[n] + aColors[n] + aColors[n] ) ;
+	}
+
+	// Fill the row with black cells.
+	for ( var i = 0 ; i < 12 ; i++ )
+	{
+		AppendColorCell( oRow, '#000000' ) ;
+	}
+}
+
+function Clear()
+{
+	document.getElementById('selhicolor').style.backgroundColor = '' ;
+	document.getElementById('selcolor').value = '' ;
+}
+
+function ClearActual()
+{
+	document.getElementById('hicolor').style.backgroundColor = '' ;
+	document.getElementById('hicolortext').innerHTML = '&nbsp;' ;
+}
+
+function UpdateColor()
+{
+	try		  { document.getElementById('selhicolor').style.backgroundColor = document.getElementById('selcolor').value ; }
+	catch (e) { Clear() ; }
+}
+
+function Ok()
+{
+	if ( typeof(window.parent.Args().CustomValue) == 'function' )
+		window.parent.Args().CustomValue( document.getElementById('selcolor').value ) ;
+
+	return true ;
+}
+		</script>
+	</head>
+	<body onload="OnLoad()" scroll="no" style="OVERFLOW: hidden">
+		<table cellpadding="0" cellspacing="0" border="0" width="100%" height="100%">
+			<tr>
+				<td align="center" valign="middle">
+					<table border="0" cellspacing="5" cellpadding="0" width="100%">
+						<tr>
+							<td valign="top" align="center" nowrap width="100%">
+								<table id="ColorTable" border="0" cellspacing="0" cellpadding="0" width="270" onmouseout="ClearActual();">
+								</table>
+							</td>
+							<td valign="top" align="left" nowrap>
+								<span fckLang="DlgColorHighlight">Highlight</span>
+								<div id="hicolor"></div>
+								<div id="hicolortext">&nbsp;</div>
+								<span fckLang="DlgColorSelected">Selected</span>
+								<div id="selhicolor"></div>
+								<input id="selcolor" type="text" maxlength="20" onchange="UpdateColor();">
+								<br>
+								<input id="btnClear" type="button" fckLang="DlgColorBtnClear" value="Clear" onclick="Clear();" />
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+	</body>
+</html>

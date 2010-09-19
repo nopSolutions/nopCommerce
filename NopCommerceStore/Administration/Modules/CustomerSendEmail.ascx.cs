@@ -61,13 +61,11 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         var from = new MailAddress(emailAccount.Email, emailAccount.DisplayName);
                         var to = new MailAddress(customer.Email, customer.FullName);
                         var subject = txtSubject.Text;
-                        var body = txtBody.Content;
+                        var body = txtBody.Value;
 
                         var email = MessageManager.InsertQueuedEmail(5, from, to, string.Empty,
                             string.Empty, subject, body, DateTime.UtcNow, 0, null, emailAccount.EmailAccountId);
                     }
-
-                    Response.Redirect(string.Format("CustomerDetails.aspx?CustomerID={0}", CustomerId));
                 }
                 catch (Exception exc)
                 {

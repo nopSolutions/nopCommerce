@@ -1,0 +1,120 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >
+<!--
+ * FCKeditor - The text editor for Internet - http://www.fckeditor.net
+ * Copyright (C) 2003-2010 Frederico Caldeira Knabben
+ *
+ * == BEGIN LICENSE ==
+ *
+ * Licensed under the terms of any of the following licenses at your
+ * choice:
+ *
+ *  - GNU General Public License Version 2 or later (the "GPL")
+ *    http://www.gnu.org/licenses/gpl.html
+ *
+ *  - GNU Lesser General Public License Version 2.1 or later (the "LGPL")
+ *    http://www.gnu.org/licenses/lgpl.html
+ *
+ *  - Mozilla Public License Version 1.1 or later (the "MPL")
+ *    http://www.mozilla.org/MPL/MPL-1.1.html
+ *
+ * == END LICENSE ==
+ *
+ * Bulleted List dialog window.
+-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title></title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta content="noindex, nofollow" name="robots" />
+	<script src="common/fck_dialog_common.js" type="text/javascript"></script>
+	<script type="text/javascript">
+
+var dialog	= window.parent ;
+var oEditor = dialog.InnerDialogLoaded() ;
+
+// Gets the document DOM
+var oDOM = oEditor.FCK.EditorDocument ;
+var sListType = ( location.search == '?OL' ? 'OL' : 'UL' ) ;
+
+var oActiveEl = dialog.Selection.GetSelection().MoveToAncestorNode( sListType ) ;
+var oActiveSel ;
+
+window.onload = function()
+{
+	// First of all, translate the dialog box texts
+	oEditor.FCKLanguageManager.TranslatePage(document) ;
+
+	if ( sListType == 'UL' )
+		oActiveSel = GetE('selBulleted') ;
+	else
+	{
+		if ( oActiveEl )
+		{
+			oActiveSel = GetE('selNumbered') ;
+			GetE('eStart').style.display = '' ;
+			GetE('txtStartPosition').value	= GetAttribute( oActiveEl, 'start' ) ;
+		}
+	}
+
+	oActiveSel.style.display = '' ;
+
+	if ( oActiveEl )
+	{
+		if ( oActiveEl.getAttribute('type') )
+			oActiveSel.value = oActiveEl.getAttribute('type') ;
+	}
+
+	dialog.SetOkButton( true ) ;
+	dialog.SetAutoSize( true ) ;
+
+	SelectField( sListType == 'OL' ? 'txtStartPosition' : 'selBulleted' ) ;
+}
+
+function Ok()
+{
+	if ( oActiveEl ){
+		SetAttribute( oActiveEl, 'type'	, oActiveSel.value ) ;
+		if(oActiveEl.tagName == 'OL')
+			SetAttribute( oActiveEl, 'start', GetE('txtStartPosition').value ) ;
+	}
+
+	return true ;
+}
+
+	</script>
+</head>
+<body style="overflow: hidden">
+	<table width="100%" style="height: 100%">
+		<tr>
+			<td style="text-align:center">
+				<table cellspacing="0" cellpadding="0" border="0" style="margin-left: auto; margin-right: auto;">
+					<tr>
+						<td id="eStart" style="display: none; padding-right: 5px; padding-left: 5px">
+							<span fcklang="DlgLstStart">Start</span><br />
+							<input type="text" id="txtStartPosition" size="5" />
+						</td>
+						<td style="padding-right: 5px; padding-left: 5px">
+							<span fcklang="DlgLstType">List Type</span><br />
+							<select id="selBulleted" style="display: none">
+								<option value="" selected="selected"></option>
+								<option value="circle" fcklang="DlgLstTypeCircle">Circle</option>
+								<option value="disc" fcklang="DlgLstTypeDisc">Disc</option>
+								<option value="square" fcklang="DlgLstTypeSquare">Square</option>
+							</select>
+							<select id="selNumbered" style="display: none">
+								<option value="" selected="selected"></option>
+								<option value="1" fcklang="DlgLstTypeNumbers">Numbers (1, 2, 3)</option>
+								<option value="a" fcklang="DlgLstTypeLCase">Lowercase Letters (a, b, c)</option>
+								<option value="A" fcklang="DlgLstTypeUCase">Uppercase Letters (A, B, C)</option>
+								<option value="i" fcklang="DlgLstTypeSRoman">Small Roman Numerals (i, ii, iii)</option>
+								<option value="I" fcklang="DlgLstTypeLRoman">Large Roman Numerals (I, II, III)</option>
+							</select>
+							&nbsp;
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+</body>
+</html>

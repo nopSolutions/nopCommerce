@@ -38,6 +38,13 @@ ____________________________________________________________________
 PdfSharp and MigraDoc
 
 We use PdfSharp and MigraDoc projects under the terms of the MIT License
+____________________________________________________________________
+FCKeditor
+
+We use FCKeditor project under the terms of the MPL License
+
+
+
 
 
 

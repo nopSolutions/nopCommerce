@@ -24,6 +24,7 @@ using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
+using FredCK.FCKeditorV2;
 using NopSolutions.NopCommerce.BusinessLogic.Manufacturers;
 using NopSolutions.NopCommerce.BusinessLogic.Media;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
@@ -51,7 +52,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             if (manufacturer != null)
             {
                 this.txtName.Text = manufacturer.Name;
-                this.txtDescription.Content = manufacturer.Description;
+                this.txtDescription.Value = manufacturer.Description;
                 CommonHelper.SelectListItem(this.ddlTemplate, manufacturer.TemplateId);
 
                 var manufacturerPicture = manufacturer.Picture;
@@ -120,7 +121,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     manufacturerPictureId = manufacturerPicture.PictureId;
 
                 manufacturer = ManufacturerManager.UpdateManufacturer(manufacturer.ManufacturerId, txtName.Text,
-                    txtDescription.Content, int.Parse(this.ddlTemplate.SelectedItem.Value),
+                    txtDescription.Value, int.Parse(this.ddlTemplate.SelectedItem.Value),
                     manufacturer.MetaKeywords, manufacturer.MetaDescription,
                     manufacturer.MetaTitle, manufacturer.SEName,
                     manufacturerPictureId, manufacturer.PageSize, txtPriceRanges.Text,
@@ -141,7 +142,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     manufacturerPictureId = manufacturerPicture.PictureId;
 
                 DateTime nowDt = DateTime.UtcNow;
-                manufacturer = ManufacturerManager.InsertManufacturer(txtName.Text, txtDescription.Content,
+                manufacturer = ManufacturerManager.InsertManufacturer(txtName.Text, txtDescription.Value,
                     int.Parse(this.ddlTemplate.SelectedItem.Value),
                     string.Empty, string.Empty, string.Empty, string.Empty,
                     manufacturerPictureId, 10, txtPriceRanges.Text, cbPublished.Checked, false, txtDisplayOrder.Value, nowDt, nowDt);
@@ -165,12 +166,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 if (item.ItemType == ListItemType.Item || item.ItemType == ListItemType.AlternatingItem)
                 {
                     var txtLocalizedName = (TextBox)item.FindControl("txtLocalizedName");
-                    var txtLocalizedDescription = (AjaxControlToolkit.HTMLEditor.Editor)item.FindControl("txtLocalizedDescription");
+                    var txtLocalizedDescription = (FCKeditor)item.FindControl("txtLocalizedDescription");
                     var lblLanguageId = (Label)item.FindControl("lblLanguageId");
 
                     int languageId = int.Parse(lblLanguageId.Text);
                     string name = txtLocalizedName.Text;
-                    string description = txtLocalizedDescription.Content;
+                    string description = txtLocalizedDescription.Value;
 
                     bool allFieldsAreEmpty = (string.IsNullOrEmpty(name) && string.IsNullOrEmpty(description));
 
@@ -204,7 +205,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
             {
                 var txtLocalizedName = (TextBox)e.Item.FindControl("txtLocalizedName");
-                var txtLocalizedDescription = (AjaxControlToolkit.HTMLEditor.Editor)e.Item.FindControl("txtLocalizedDescription");
+                var txtLocalizedDescription = (FCKeditor)e.Item.FindControl("txtLocalizedDescription");
                 var lblLanguageId = (Label)e.Item.FindControl("lblLanguageId");
 
                 int languageId = int.Parse(lblLanguageId.Text);
@@ -214,7 +215,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 if (content != null)
                 {
                     txtLocalizedName.Text = content.Name;
-                    txtLocalizedDescription.Content = content.Description;
+                    txtLocalizedDescription.Value = content.Description;
                 }
 
             }

@@ -4,8 +4,8 @@
 <%@ Register TagPrefix="nopCommerce" TagName="NumericTextBox" Src="NumericTextBox.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="SimpleTextBox" Src="SimpleTextBox.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="ConfirmationBox" Src="ConfirmationBox.ascx" %>
-<%@ Register Assembly="NopCommerceStore" Namespace="NopSolutions.NopCommerce.Web.Controls"
-    TagPrefix="nopCommerce" %>
+<%@ Register Assembly="FredCK.FCKeditorV2" Namespace="FredCK.FCKeditorV2" TagPrefix="FCKeditorV2" %>
+
 <div class="section-header">
     <div class="title">
         <img src="Common/ico-promotions.png" alt="<%=GetLocaleResourceString("Admin.MessageQueueDetails.Title")%>" />
@@ -106,7 +106,8 @@
                 ToolTip="<% $NopResources:Admin.MessageQueueDetails.Body.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
         </td>
         <td class="adminData">
-            <nopCommerce:NopHTMLEditor ID="txtBody" runat="server" Height="350" />
+            <FCKeditorV2:FCKeditor ID="txtBody" runat="server" AutoDetectLanguage="false" Height="350"
+                Width="800px" />
         </td>
     </tr>
     <tr>

@@ -4,8 +4,9 @@
 <%@ Register TagPrefix="nopCommerce" TagName="DecimalTextBox" Src="DecimalTextBox.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="ToolTipLabel" Src="ToolTipLabelControl.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="DatePicker" Src="DatePicker.ascx" %>
-<%@ Register Assembly="NopCommerceStore" Namespace="NopSolutions.NopCommerce.Web.Controls"
-    TagPrefix="nopCommerce" %>
+<%@ Register Assembly="FredCK.FCKeditorV2" Namespace="FredCK.FCKeditorV2" TagPrefix="FCKeditorV2" %>
+
+
 <script type="text/javascript">
     $(document).ready(function () {
         toggleGiftCard();
@@ -221,7 +222,8 @@
                         tooltip="<% $NopResources:Admin.ProductVariantInfo.Description.Tooltip %>" tooltipimage="~/Administration/Common/ico-help.gif" />
                 </td>
                 <td class="adminData">
-                    <nopcommerce:nophtmleditor id="txtDescription" runat="server" height="350" />
+                    <FCKeditorV2:FCKeditor ID="txtDescription" runat="server" AutoDetectLanguage="false"
+                        Height="350" Width="800px" />
                 </td>
             </tr>
         </table>
@@ -250,7 +252,8 @@
                                 tooltip="<% $NopResources:Admin.ProductVariantInfo.Description.Tooltip %>" tooltipimage="~/Administration/Common/ico-help.gif" />
                         </td>
                         <td class="adminData">
-                            <nopcommerce:nophtmleditor id="txtLocalizedDescription" runat="server" height="350" />
+                            <FCKeditorV2:FCKeditor ID="txtLocalizedDescription" runat="server" AutoDetectLanguage="false"
+                                Height="350" Width="800px" />
                         </td>
                     </tr>
                 </table>
@@ -560,7 +563,8 @@
             :
         </td>
         <td class="adminData">
-            <nopcommerce:nophtmleditor runat="server" id="txtUserAgreementText" height="350" />
+            <FCKeditorV2:FCKeditor ID="txtUserAgreementText" runat="server" AutoDetectLanguage="false"
+                Height="350" Width="800px" />
         </td>
     </tr>
     <tr id="pnlHasSampleDownload">

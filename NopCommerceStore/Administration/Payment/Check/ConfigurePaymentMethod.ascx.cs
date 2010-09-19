@@ -39,13 +39,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Payment.Check
 
         private void BindData()
         {
-            txtInfo.Content = SettingManager.GetSettingValue("PaymentMethod.Check.Info");
+            txtInfo.Value = SettingManager.GetSettingValue("PaymentMethod.Check.Info");
             txtAdditionalFee.Value = SettingManager.GetSettingValueDecimalNative("PaymentMethod.Check.AdditionalFee");
         }
 
         public void Save()
         {
-            SettingManager.SetParam("PaymentMethod.Check.Info", txtInfo.Content);
+            SettingManager.SetParam("PaymentMethod.Check.Info", txtInfo.Value);
             SettingManager.SetParamNative("PaymentMethod.Check.AdditionalFee", txtAdditionalFee.Value);
         }
     }

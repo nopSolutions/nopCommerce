@@ -1,0 +1,293 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >
+<!--
+ * FCKeditor - The text editor for Internet - http://www.fckeditor.net
+ * Copyright (C) 2003-2010 Frederico Caldeira Knabben
+ *
+ * == BEGIN LICENSE ==
+ *
+ * Licensed under the terms of any of the following licenses at your
+ * choice:
+ *
+ *  - GNU General Public License Version 2 or later (the "GPL")
+ *    http://www.gnu.org/licenses/gpl.html
+ *
+ *  - GNU Lesser General Public License Version 2.1 or later (the "LGPL")
+ *    http://www.gnu.org/licenses/lgpl.html
+ *
+ *  - Mozilla Public License Version 1.1 or later (the "MPL")
+ *    http://www.mozilla.org/MPL/MPL-1.1.html
+ *
+ * == END LICENSE ==
+ *
+ * Cell properties dialog window.
+-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>Table Cell Properties</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="noindex, nofollow" />
+	<script src="common/fck_dialog_common.js" type="text/javascript"></script>
+	<script type="text/javascript">
+
+var dialog	= window.parent ;
+var oEditor = dialog.InnerDialogLoaded() ;
+
+var FCKDomTools = oEditor.FCKDomTools ;
+
+// Array of selected Cells
+var aCells = oEditor.FCKTableHandler.GetSelectedCells() ;
+
+window.onload = function()
+{
+	// First of all, translate the dialog box texts
+	oEditor.FCKLanguageManager.TranslatePage( document ) ;
+
+	SetStartupValue() ;
+
+	dialog.SetOkButton( true ) ;
+	dialog.SetAutoSize( true ) ;
+	SelectField( 'txtWidth' ) ;
+}
+
+function SetStartupValue()
+{
+	if ( aCells.length > 0 )
+	{
+		var oCell = aCells[0] ;
+		var iWidth = GetAttribute( oCell, 'width' ) ;
+
+		if ( iWidth.indexOf && iWidth.indexOf( '%' ) >= 0 )
+		{
+			iWidth = iWidth.substr( 0, iWidth.length - 1 ) ;
+			GetE('selWidthType').value = 'percent' ;
+		}
+
+		if ( oCell.attributes['noWrap'] != null && oCell.attributes['noWrap'].specified )
+			GetE('selWordWrap').value = !oCell.noWrap ;
+
+		GetE('txtWidth').value			= iWidth ;
+		GetE('txtHeight').value			= GetAttribute( oCell, 'height' ) ;
+		GetE('selHAlign').value			= GetAttribute( oCell, 'align' ) ;
+		GetE('selVAlign').value			= GetAttribute( oCell, 'vAlign' ) ;
+		GetE('txtRowSpan').value		= GetAttribute( oCell, 'rowSpan' ) ;
+		GetE('txtCollSpan').value		= GetAttribute( oCell, 'colSpan' ) ;
+		GetE('txtBackColor').value		= GetAttribute( oCell, 'bgColor' ) ;
+		GetE('txtBorderColor').value	= GetAttribute( oCell, 'borderColor' ) ;
+		GetE('selCellType').value     = oCell.nodeName.toLowerCase() ;
+	}
+}
+
+// Fired when the user press the OK button
+function Ok()
+{
+	oEditor.FCKUndo.SaveUndoStep() ;
+
+	for( i = 0 ; i < aCells.length ; i++ )
+	{
+		if ( GetE('txtWidth').value.length > 0 )
+			aCells[i].width	= GetE('txtWidth').value + ( GetE('selWidthType').value == 'percent' ? '%' : '') ;
+		else
+			aCells[i].removeAttribute( 'width', 0 ) ;
+
+		if ( GetE('selWordWrap').value == 'false' )
+			SetAttribute( aCells[i], 'noWrap', 'nowrap' ) ;
+		else
+			aCells[i].removeAttribute( 'noWrap' ) ;
+
+		SetAttribute( aCells[i], 'height'		, GetE('txtHeight').value ) ;
+		SetAttribute( aCells[i], 'align'		, GetE('selHAlign').value ) ;
+		SetAttribute( aCells[i], 'vAlign'		, GetE('selVAlign').value ) ;
+		SetAttribute( aCells[i], 'rowSpan'		, GetE('txtRowSpan').value ) ;
+		SetAttribute( aCells[i], 'colSpan'		, GetE('txtCollSpan').value ) ;
+		SetAttribute( aCells[i], 'bgColor'		, GetE('txtBackColor').value ) ;
+		SetAttribute( aCells[i], 'borderColor'	, GetE('txtBorderColor').value ) ;
+
+		var cellType = GetE('selCellType').value ;
+		if ( aCells[i].nodeName.toLowerCase() != cellType )
+			aCells[i] = RenameNode( aCells[i], cellType ) ;
+	}
+
+	// The cells need to be reselected, otherwise the caret will appear inside the table borders (Gecko)
+	// or sent back to the beginning of the document (Opera and Safari).
+	// Strangely, IE works ok so no change is needed for IE.
+	if ( !oEditor.FCKBrowserInfo.IsIE )
+	{
+		var selection = oEditor.FCK.EditorWindow.getSelection() ;
+		selection.removeAllRanges() ;
+		for ( var i = 0 ; i < aCells.length ; i++ )
+		{
+			var range = oEditor.FCK.EditorDocument.createRange() ;
+			range.selectNode( aCells[i] ) ;
+			selection.addRange( range ) ;
+		}
+	}
+
+	return true ;
+}
+
+function SelectBackColor( color )
+{
+	if ( color && color.length > 0 )
+		GetE('txtBackColor').value = color ;
+}
+
+function SelectBorderColor( color )
+{
+	if ( color && color.length > 0 )
+		GetE('txtBorderColor').value = color ;
+}
+
+function SelectColor( wich )
+{
+	oEditor.FCKDialog.OpenDialog( 'FCKDialog_Color', oEditor.FCKLang.DlgColorTitle, 'dialog/fck_colorselector.html', 410, 320, wich == 'Back' ? SelectBackColor : SelectBorderColor ) ;
+}
+
+	</script>
+</head>
+<body scroll="no" style="overflow: hidden">
+	<table cellspacing="0" cellpadding="0" width="100%" border="0" height="100%">
+		<tr>
+			<td>
+				<table cellspacing="1" cellpadding="1" width="100%" border="0">
+					<tr>
+						<td>
+							<table cellspacing="0" cellpadding="0" border="0">
+								<tr>
+									<td nowrap="nowrap">
+										<span fcklang="DlgCellWidth">Width</span>:</td>
+									<td>
+										&nbsp;<input onkeypress="return IsDigit(event);" id="txtWidth" type="text" maxlength="4"
+											size="3" />&nbsp;<select id="selWidthType">
+												<option fcklang="DlgCellWidthPx" value="pixels" selected="selected">pixels</option>
+												<option fcklang="DlgCellWidthPc" value="percent">percent</option>
+											</select></td>
+								</tr>
+								<tr>
+									<td nowrap="nowrap">
+										<span fcklang="DlgCellHeight">Height</span>:</td>
+									<td>
+										&nbsp;<input id="txtHeight" type="text" maxlength="4" size="3" onkeypress="return IsDigit(event);" />&nbsp;<span
+											fcklang="DlgCellWidthPx">pixels</span></td>
+								</tr>
+								<tr>
+									<td>
+										&nbsp;</td>
+									<td>
+										&nbsp;</td>
+								</tr>
+								<tr>
+									<td nowrap="nowrap">
+										<span fcklang="DlgCellWordWrap">Word Wrap</span>:</td>
+									<td>
+										&nbsp;<select id="selWordWrap">
+											<option fcklang="DlgCellWordWrapYes" value="true" selected="selected">Yes</option>
+											<option fcklang="DlgCellWordWrapNo" value="false">No</option>
+										</select></td>
+								</tr>
+								<tr>
+									<td>
+										&nbsp;</td>
+									<td>
+										&nbsp;</td>
+								</tr>
+								<tr>
+									<td nowrap="nowrap">
+										<span fcklang="DlgCellHorAlign">Horizontal Alignment</span>:</td>
+									<td>
+										&nbsp;<select id="selHAlign">
+											<option fcklang="DlgCellHorAlignNotSet" value="" selected>&lt;Not set&gt;</option>
+											<option fcklang="DlgCellHorAlignLeft" value="left">Left</option>
+											<option fcklang="DlgCellHorAlignCenter" value="center">Center</option>
+											<option fcklang="DlgCellHorAlignRight" value="right">Right</option>
+										</select></td>
+								</tr>
+								<tr>
+									<td nowrap="nowrap">
+										<span fcklang="DlgCellVerAlign">Vertical Alignment</span>:</td>
+									<td>
+										&nbsp;<select id="selVAlign">
+											<option fcklang="DlgCellVerAlignNotSet" value="" selected>&lt;Not set&gt;</option>
+											<option fcklang="DlgCellVerAlignTop" value="top">Top</option>
+											<option fcklang="DlgCellVerAlignMiddle" value="middle">Middle</option>
+											<option fcklang="DlgCellVerAlignBottom" value="bottom">Bottom</option>
+											<option fcklang="DlgCellVerAlignBaseline" value="baseline">Baseline</option>
+										</select></td>
+								</tr>
+							</table>
+						</td>
+						<td>
+							&nbsp;&nbsp;&nbsp;</td>
+						<td align="right">
+							<table cellspacing="0" cellpadding="0" border="0">
+								<tr>
+									<td nowrap="nowrap">
+									 <span fcklang="DlgCellType">Cell Type</span>:</td>
+									<td colspan="2">
+										&nbsp; <select id="selCellType">
+											<option fcklang="DlgCellTypeData" value="td">Data</option>
+											<option fcklang="DlgCellTypeHeader" value="th">Header</option>
+										</select>
+								</tr>
+								<tr>
+									<td>
+										&nbsp;</td>
+									<td>
+										&nbsp;</td>
+									<td>
+										&nbsp;</td>
+								</tr>
+								<tr>
+									<td nowrap="nowrap">
+										<span fcklang="DlgCellRowSpan">Rows Span</span>:</td>
+									<td>
+										&nbsp;
+										<input onkeypress="return IsDigit(event);" id="txtRowSpan" type="text" maxlength="3" size="2"
+											></td>
+									<td>
+									</td>
+								</tr>
+								<tr>
+									<td nowrap="nowrap">
+										<span fcklang="DlgCellCollSpan">Columns Span</span>:</td>
+									<td>
+										&nbsp;
+										<input onkeypress="return IsDigit(event);" id="txtCollSpan" type="text" maxlength="2"
+											size="2"></td>
+									<td>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										&nbsp;</td>
+									<td>
+										&nbsp;</td>
+									<td>
+										&nbsp;</td>
+								</tr>
+								<tr>
+									<td nowrap="nowrap">
+										<span fcklang="DlgCellBackColor">Background Color</span>:</td>
+									<td>
+										&nbsp;<input id="txtBackColor" type="text" size="8" /></td>
+									<td>
+										&nbsp;
+										<input type="button" fcklang="DlgCellBtnSelect" value="Select..." onclick="SelectColor( 'Back' )"></td>
+								</tr>
+								<tr>
+									<td nowrap="nowrap">
+										<span fcklang="DlgCellBorderColor">Border Color</span>:</td>
+									<td>
+										&nbsp;<input id="txtBorderColor" type="text" size="8" /></td>
+									<td>
+										&nbsp;
+										<input type="button" fcklang="DlgCellBtnSelect" value="Select..." onclick="SelectColor( 'Border' )" /></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+</body>
+</html>

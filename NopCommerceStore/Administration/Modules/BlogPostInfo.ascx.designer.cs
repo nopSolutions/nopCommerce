@@ -64,7 +64,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Controls.NopHTMLEditor txtBlogPostBody;
+        protected global::FredCK.FCKeditorV2.FCKeditor txtBlogPostBody;
         
         /// <summary>
         /// lblAllowComments control.

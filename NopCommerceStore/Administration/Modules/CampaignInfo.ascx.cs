@@ -53,7 +53,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                 this.txtName.Text = campaign.Name;
                 this.txtSubject.Text = campaign.Subject;
-                this.txtBody.Content = campaign.Body;
+                this.txtBody.Value = campaign.Body;
 
                 this.pnlCreatedOn.Visible = true;
                 this.lblCreatedOn.Text = DateTimeHelper.ConvertToUserTime(campaign.CreatedOn, DateTimeKind.Utc).ToString();
@@ -81,12 +81,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             if (campaign != null)
             {
                 campaign = CampaignManager.UpdateCampaign(campaign.CampaignId,
-                    txtName.Text, txtSubject.Text, txtBody.Content, campaign.CreatedOn);
+                    txtName.Text, txtSubject.Text, txtBody.Value, campaign.CreatedOn);
             }
             else
             {
                 campaign = CampaignManager.InsertCampaign(txtName.Text,
-                       txtSubject.Text, txtBody.Content, DateTime.UtcNow);
+                       txtSubject.Text, txtBody.Value, DateTime.UtcNow);
             }
 
             return campaign;

@@ -3,8 +3,8 @@
 <%@ Register TagPrefix="nopCommerce" TagName="SimpleTextBox" Src="SimpleTextBox.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="EmailTextBox" Src="EmailTextBox.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="ToolTipLabel" Src="ToolTipLabelControl.ascx" %>
-<%@ Register Assembly="NopCommerceStore" Namespace="NopSolutions.NopCommerce.Web.Controls"
-    TagPrefix="nopCommerce" %>
+<%@ Register Assembly="FredCK.FCKeditorV2" Namespace="FredCK.FCKeditorV2" TagPrefix="FCKeditorV2" %>
+
     
     <div runat="server" id="pnlSendCampaign">
     <table class="adminContent">
@@ -88,7 +88,8 @@
                 ID="lblBody" Text="<% $NopResources:Admin.CampaignInfo.Body %>" ToolTip="<% $NopResources:Admin.CampaignInfo.Body.Tooltip %>" />
         </td>
         <td class="adminData">
-            <nopCommerce:NopHTMLEditor ID="txtBody" runat="server" Height="350" />
+            <FCKeditorV2:FCKeditor ID="txtBody" runat="server" AutoDetectLanguage="false" Height="350"
+                Width="800px" />
         </td>
     </tr>
     <tr runat="server" id="pnlCreatedOn">

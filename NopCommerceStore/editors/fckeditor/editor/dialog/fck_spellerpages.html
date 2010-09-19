@@ -1,0 +1,70 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >
+<!--
+ * FCKeditor - The text editor for Internet - http://www.fckeditor.net
+ * Copyright (C) 2003-2010 Frederico Caldeira Knabben
+ *
+ * == BEGIN LICENSE ==
+ *
+ * Licensed under the terms of any of the following licenses at your
+ * choice:
+ *
+ *  - GNU General Public License Version 2 or later (the "GPL")
+ *    http://www.gnu.org/licenses/gpl.html
+ *
+ *  - GNU Lesser General Public License Version 2.1 or later (the "LGPL")
+ *    http://www.gnu.org/licenses/lgpl.html
+ *
+ *  - Mozilla Public License Version 1.1 or later (the "MPL")
+ *    http://www.mozilla.org/MPL/MPL-1.1.html
+ *
+ * == END LICENSE ==
+ *
+ * Spell Check dialog window.
+-->
+<html>
+	<head>
+		<title>Spell Check</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<meta content="noindex, nofollow" name="robots">
+		<script src="common/fck_dialog_common.js" type="text/javascript"></script>
+		<script src="fck_spellerpages/spellerpages/spellChecker.js"></script>
+		<script type="text/javascript">
+
+var oEditor = window.parent.InnerDialogLoaded() ;
+var FCKLang = oEditor.FCKLang ;
+
+window.onload = function()
+{
+	document.getElementById('txtHtml').value = oEditor.FCK.EditorDocument.body.innerHTML ;
+
+	var oSpeller = new spellChecker( document.getElementById('txtHtml') ) ;
+	oSpeller.spellCheckScript = oEditor.FCKConfig.SpellerPagesServerScript || 'server-scripts/spellchecker.php' ;
+	oSpeller.OnFinished = oSpeller_OnFinished ;
+	oSpeller.openChecker() ;
+}
+
+function OnSpellerControlsLoad( controlsWindow )
+{
+	// Translate the dialog box texts
+	oEditor.FCKLanguageManager.TranslatePage( controlsWindow.document ) ;
+}
+
+function oSpeller_OnFinished( numberOCorrections )
+{
+	if ( numberOCorrections > 0 )
+	{
+		oEditor.FCKUndo.SaveUndoStep() ;
+		oEditor.FCK.EditorDocument.body.innerHTML = document.getElementById('txtHtml').value ;
+		if ( oEditor.FCKBrowserInfo.IsIE )
+			oEditor.FCKSelection.Collapse( true ) ;
+	}
+	window.parent.Cancel() ;
+}
+
+		</script>
+	</head>
+	<body style="OVERFLOW: hidden" scroll="no" style="padding:0px;">
+		<input type="hidden" id="txtHtml" value="">
+		<iframe id="frmSpell" src="javascript:void(0)" name="spellchecker" width="100%" height="100%" frameborder="0"></iframe>
+	</body>
+</html>

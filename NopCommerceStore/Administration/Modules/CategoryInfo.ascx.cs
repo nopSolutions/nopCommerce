@@ -24,6 +24,7 @@ using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
+using FredCK.FCKeditorV2;
 using NopSolutions.NopCommerce.BusinessLogic.Categories;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.BusinessLogic.Media;
@@ -54,7 +55,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             if (category != null)
             {
                 this.txtName.Text = category.Name;
-                this.txtDescription.Content = category.Description;
+                this.txtDescription.Value = category.Description;
                 CommonHelper.SelectListItem(this.ddlTemplate, category.TemplateId);
                 ParentCategory.SelectedCategoryId = category.ParentCategoryId;
 
@@ -128,7 +129,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 if (categoryPicture != null)
                     categoryPictureId = categoryPicture.PictureId;
 
-                category = CategoryManager.UpdateCategory(category.CategoryId, txtName.Text, txtDescription.Content, int.Parse(this.ddlTemplate.SelectedItem.Value),
+                category = CategoryManager.UpdateCategory(category.CategoryId, txtName.Text, txtDescription.Value, int.Parse(this.ddlTemplate.SelectedItem.Value),
                      category.MetaKeywords, category.MetaDescription, category.MetaTitle, category.SEName, ParentCategory.SelectedCategoryId,
                     categoryPictureId, category.PageSize, txtPriceRanges.Text, cbShowOnHomePage.Checked, cbPublished.Checked, category.Deleted, 
                     txtDisplayOrder.Value, category.CreatedOn, DateTime.UtcNow);
@@ -147,7 +148,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     categoryPictureId = categoryPicture.PictureId;
 
                 DateTime nowDT = DateTime.UtcNow;
-                category = CategoryManager.InsertCategory(txtName.Text, txtDescription.Content, int.Parse(this.ddlTemplate.SelectedItem.Value),
+                category = CategoryManager.InsertCategory(txtName.Text, txtDescription.Value, int.Parse(this.ddlTemplate.SelectedItem.Value),
                          string.Empty, string.Empty, string.Empty, string.Empty, ParentCategory.SelectedCategoryId,
                          categoryPictureId, 10, txtPriceRanges.Text, cbShowOnHomePage.Checked, cbPublished.Checked, false, txtDisplayOrder.Value, nowDT, nowDT);
             }
@@ -170,12 +171,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 if (item.ItemType == ListItemType.Item || item.ItemType == ListItemType.AlternatingItem)
                 {
                     var txtLocalizedCategoryName = (TextBox)item.FindControl("txtLocalizedCategoryName");
-                    var txtLocalizedDescription = (AjaxControlToolkit.HTMLEditor.Editor)item.FindControl("txtLocalizedDescription");
+                    var txtLocalizedDescription = (FCKeditor)item.FindControl("txtLocalizedDescription");
                     var lblLanguageId = (Label)item.FindControl("lblLanguageId");
 
                     int languageId = int.Parse(lblLanguageId.Text);
                     string name = txtLocalizedCategoryName.Text;
-                    string description = txtLocalizedDescription.Content;
+                    string description = txtLocalizedDescription.Value;
 
                     bool allFieldsAreEmpty = (string.IsNullOrEmpty(name) && string.IsNullOrEmpty(description));
 
@@ -209,7 +210,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
             {
                 var txtLocalizedCategoryName = (TextBox)e.Item.FindControl("txtLocalizedCategoryName");
-                var txtLocalizedDescription = (AjaxControlToolkit.HTMLEditor.Editor)e.Item.FindControl("txtLocalizedDescription");
+                var txtLocalizedDescription = (FCKeditor)e.Item.FindControl("txtLocalizedDescription");
                 var lblLanguageId = (Label)e.Item.FindControl("lblLanguageId");
 
                 int languageId = int.Parse(lblLanguageId.Text);
@@ -219,7 +220,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 if (content != null)
                 {
                     txtLocalizedCategoryName.Text = content.Name;
-                    txtLocalizedDescription.Content = content.Description;
+                    txtLocalizedDescription.Value = content.Description;
                 }
 
             }

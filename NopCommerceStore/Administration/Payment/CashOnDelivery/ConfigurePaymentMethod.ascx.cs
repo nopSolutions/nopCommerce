@@ -39,13 +39,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Payment.CashOnDelivery
 
         private void BindData()
         {
-            txtInfo.Content = SettingManager.GetSettingValue("PaymentMethod.CashOnDelivery.Info");
+            txtInfo.Value = SettingManager.GetSettingValue("PaymentMethod.CashOnDelivery.Info");
             txtAdditionalFee.Value = SettingManager.GetSettingValueDecimalNative("PaymentMethod.CashOnDelivery.AdditionalFee");
         }
 
         public void Save()
         {
-            SettingManager.SetParam("PaymentMethod.CashOnDelivery.Info", txtInfo.Content);
+            SettingManager.SetParam("PaymentMethod.CashOnDelivery.Info", txtInfo.Value);
             SettingManager.SetParamNative("PaymentMethod.CashOnDelivery.AdditionalFee", txtAdditionalFee.Value);
         }
     }

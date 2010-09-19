@@ -84,8 +84,6 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         customer.CustomerId, subject, message,
                         false, false, false, DateTime.UtcNow);
                 }
-
-                Response.Redirect(string.Format("CustomerDetails.aspx?CustomerID={0}", CustomerId));
             }
             catch (Exception exc)
             {

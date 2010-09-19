@@ -24,6 +24,7 @@ using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
+using FredCK.FCKeditorV2;
 using NopSolutions.NopCommerce.BusinessLogic.Categories;
 using NopSolutions.NopCommerce.BusinessLogic.Manufacturers;
 using NopSolutions.NopCommerce.BusinessLogic.Media;
@@ -54,7 +55,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 this.txtName.Text = product.Name;
                 this.txtShortDescription.Text = product.ShortDescription;
-                this.txtFullDescription.Content = product.FullDescription;
+                this.txtFullDescription.Value = product.FullDescription;
                 this.txtAdminComment.Text = product.AdminComment;
                 CommonHelper.SelectListItem(this.ddlTemplate, product.TemplateId);
                 this.cbShowOnHomePage.Checked = product.ShowOnHomePage;
@@ -139,7 +140,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             Product product = ProductManager.GetProductById(this.ProductId);
             if (product != null)
             {
-                product = ProductManager.UpdateProduct(product.ProductId, txtName.Text, txtShortDescription.Text, txtFullDescription.Content, txtAdminComment.Text,
+                product = ProductManager.UpdateProduct(product.ProductId, txtName.Text, 
+                    txtShortDescription.Text, txtFullDescription.Value, txtAdminComment.Text,
                      int.Parse(this.ddlTemplate.SelectedItem.Value),
                      cbShowOnHomePage.Checked, product.MetaKeywords, product.MetaDescription,
                      product.MetaTitle, product.SEName, cbAllowCustomerReviews.Checked,
@@ -189,13 +191,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 {
                     var txtLocalizedName = (TextBox)item.FindControl("txtLocalizedName");
                     var txtLocalizedShortDescription = (TextBox)item.FindControl("txtLocalizedShortDescription");
-                    var txtLocalizedFullDescription = (AjaxControlToolkit.HTMLEditor.Editor)item.FindControl("txtLocalizedFullDescription");
+                    var txtLocalizedFullDescription = (FCKeditor)item.FindControl("txtLocalizedFullDescription");
                     var lblLanguageId = (Label)item.FindControl("lblLanguageId");
 
                     int languageId = int.Parse(lblLanguageId.Text);
                     string name = txtLocalizedName.Text;
                     string shortDescription = txtLocalizedShortDescription.Text;
-                    string fullDescription = txtLocalizedFullDescription.Content;
+                    string fullDescription = txtLocalizedFullDescription.Value;
 
                     bool allFieldsAreEmpty = (string.IsNullOrEmpty(name) &&
                         string.IsNullOrEmpty(shortDescription) &&
@@ -232,7 +234,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 var txtLocalizedName = (TextBox)e.Item.FindControl("txtLocalizedName");
                 var txtLocalizedShortDescription = (TextBox)e.Item.FindControl("txtLocalizedShortDescription");
-                var txtLocalizedFullDescription = (AjaxControlToolkit.HTMLEditor.Editor)e.Item.FindControl("txtLocalizedFullDescription");
+                var txtLocalizedFullDescription = (FCKeditor)e.Item.FindControl("txtLocalizedFullDescription");
                 var lblLanguageId = (Label)e.Item.FindControl("lblLanguageId");
 
                 int languageId = int.Parse(lblLanguageId.Text);
@@ -242,7 +244,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 {
                     txtLocalizedName.Text = content.Name;
                     txtLocalizedShortDescription.Text = content.ShortDescription;
-                    txtLocalizedFullDescription.Content = content.FullDescription;
+                    txtLocalizedFullDescription.Value = content.FullDescription;
                 }
             }
         }

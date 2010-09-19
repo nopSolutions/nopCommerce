@@ -19,7 +19,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Payment.CashOnDelivery {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Controls.NopHTMLEditor txtInfo;
+        protected global::FredCK.FCKeditorV2.FCKeditor txtInfo;
         
         /// <summary>
         /// txtAdditionalFee control.

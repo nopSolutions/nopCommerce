@@ -13,20 +13,21 @@
 //------------------------------------------------------------------------------
 
 using System;
-using System.Data;
-using System.Configuration;
 using System.Collections;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
+using System.Text;
 using System.Web;
 using System.Web.Security;
 using System.Web.UI;
+using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
-using System.Web.UI.HtmlControls;
-using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.Messages;
+using FredCK.FCKeditorV2;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
-using System.Collections.Generic;
-using System.Text;
+using NopSolutions.NopCommerce.BusinessLogic.Messages;
+using NopSolutions.NopCommerce.Common.Utils;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -82,7 +83,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 var ddlEmailAccount = (DropDownList)e.Item.FindControl("ddlEmailAccount");
                 var txtBCCEmailAddresses = (TextBox)e.Item.FindControl("txtBCCEmailAddresses");
                 var txtSubject = (TextBox)e.Item.FindControl("txtSubject");
-                var txtBody = (AjaxControlToolkit.HTMLEditor.Editor)e.Item.FindControl("txtBody");
+                var txtBody = (FCKeditor)e.Item.FindControl("txtBody");
                 var cbActive = (CheckBox)e.Item.FindControl("cbActive");
                 var lblLanguageId = (Label)e.Item.FindControl("lblLanguageId");
                 
@@ -102,7 +103,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     CommonHelper.SelectListItem(ddlEmailAccount, content.EmailAccount.EmailAccountId);
                     txtBCCEmailAddresses.Text = content.BccEmailAddresses;
                     txtSubject.Text = content.Subject;
-                    txtBody.Content = content.Body;
+                    txtBody.Value = content.Body;
                     cbActive.Checked = content.IsActive;
                 }
                 else
@@ -128,7 +129,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                                 var ddlEmailAccount = (DropDownList)item.FindControl("ddlEmailAccount");
                                 var txtBCCEmailAddresses = (TextBox)item.FindControl("txtBCCEmailAddresses");
                                 var txtSubject = (TextBox)item.FindControl("txtSubject");
-                                var txtBody = (AjaxControlToolkit.HTMLEditor.Editor)item.FindControl("txtBody");
+                                var txtBody = (FCKeditor)item.FindControl("txtBody");
                                 var cbActive = (CheckBox)item.FindControl("cbActive");
                                 var lblLanguageId = (Label)item.FindControl("lblLanguageId");
 
@@ -136,7 +137,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                                 int languageId = int.Parse(lblLanguageId.Text);
                                 string BCCEmailAddresses = txtBCCEmailAddresses.Text;
                                 string subject = txtSubject.Text;
-                                string body = txtBody.Content;
+                                string body = txtBody.Value;
                                 bool active = cbActive.Checked;
 
                                 var content = MessageManager.GetLocalizedMessageTemplate(this.MessageTemplate.Name, languageId);

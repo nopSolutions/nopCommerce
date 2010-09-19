@@ -1,0 +1,15 @@
+<public:component lightweight="true">
+
+<script language="javascript">
+
+function CancelEvent()
+{
+	return false ;
+}
+
+this.onresizestart = CancelEvent ;
+this.onbeforeeditfocus = CancelEvent ;
+
+</script>
+
+</public:component>

@@ -1,0 +1,109 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >
+<!--
+ * FCKeditor - The text editor for Internet - http://www.fckeditor.net
+ * Copyright (C) 2003-2010 Frederico Caldeira Knabben
+ *
+ * == BEGIN LICENSE ==
+ *
+ * Licensed under the terms of any of the following licenses at your
+ * choice:
+ *
+ *  - GNU General Public License Version 2 or later (the "GPL")
+ *    http://www.gnu.org/licenses/gpl.html
+ *
+ *  - GNU Lesser General Public License Version 2.1 or later (the "LGPL")
+ *    http://www.gnu.org/licenses/lgpl.html
+ *
+ *  - Mozilla Public License Version 1.1 or later (the "MPL")
+ *    http://www.mozilla.org/MPL/MPL-1.1.html
+ *
+ * == END LICENSE ==
+ *
+ * Form dialog window.
+-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title></title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta content="noindex, nofollow" name="robots" />
+	<script src="common/fck_dialog_common.js" type="text/javascript"></script>
+	<script type="text/javascript">
+
+var dialog	= window.parent ;
+var oEditor = dialog.InnerDialogLoaded() ;
+
+// Gets the document DOM
+var oDOM = oEditor.FCK.EditorDocument ;
+
+var oActiveEl = dialog.Selection.GetSelection().MoveToAncestorNode( 'FORM' ) ;
+
+window.onload = function()
+{
+	// First of all, translate the dialog box texts
+	oEditor.FCKLanguageManager.TranslatePage(document) ;
+
+	if ( oActiveEl )
+	{
+		GetE('txtName').value	= oActiveEl.name ;
+		GetE('txtAction').value	= oActiveEl.getAttribute( 'action', 2 ) ;
+		GetE('txtMethod').value	= oActiveEl.method ;
+	}
+	else
+		oActiveEl = null ;
+
+	dialog.SetOkButton( true ) ;
+	dialog.SetAutoSize( true ) ;
+	SelectField( 'txtName' ) ;
+}
+
+function Ok()
+{
+	if ( !oActiveEl )
+	{
+		oActiveEl = oEditor.FCK.InsertElement( 'form' ) ;
+
+		if ( oEditor.FCKBrowserInfo.IsGeckoLike )
+			oEditor.FCKTools.AppendBogusBr( oActiveEl ) ;
+	}
+
+	oActiveEl.name = GetE('txtName').value ;
+	SetAttribute( oActiveEl, 'action', GetE('txtAction').value ) ;
+	oActiveEl.method = GetE('txtMethod').value ;
+
+	return true ;
+}
+
+	</script>
+</head>
+<body style="overflow: hidden">
+	<table width="100%" style="height: 100%">
+		<tr>
+			<td align="center">
+				<table cellspacing="0" cellpadding="0" width="80%" border="0">
+					<tr>
+						<td>
+							<span fcklang="DlgFormName">Name</span><br />
+							<input style="width: 100%" type="text" id="txtName" />
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<span fcklang="DlgFormAction">Action</span><br />
+							<input style="width: 100%" type="text" id="txtAction" />
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<span fcklang="DlgFormMethod">Method</span><br />
+							<select id="txtMethod">
+								<option value="get" selected="selected">GET</option>
+								<option value="post">POST</option>
+							</select>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+</body>
+</html>

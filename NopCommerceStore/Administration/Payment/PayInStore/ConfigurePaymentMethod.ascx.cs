@@ -39,13 +39,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Payment.PayInStore
 
         private void BindData()
         {
-            txtInfo.Content = SettingManager.GetSettingValue("PaymentMethod.PayInStore.Info");
+            txtInfo.Value = SettingManager.GetSettingValue("PaymentMethod.PayInStore.Info");
             txtAdditionalFee.Value = SettingManager.GetSettingValueDecimalNative("PaymentMethod.PayInStore.AdditionalFee");
         }
 
         public void Save()
         {
-            SettingManager.SetParam("PaymentMethod.PayInStore.Info", txtInfo.Content);
+            SettingManager.SetParam("PaymentMethod.PayInStore.Info", txtInfo.Value);
             SettingManager.SetParamNative("PaymentMethod.PayInStore.AdditionalFee", txtAdditionalFee.Value);
         }
     }

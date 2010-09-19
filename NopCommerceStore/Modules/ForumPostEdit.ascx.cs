@@ -194,7 +194,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                             break;
                         case EditorTypeEnum.HtmlEditor:
                             {
-                                txtTopicBodyHtml.Content = firstPost.Text;
+                                txtTopicBodyHtml.Value = firstPost.Text;
                             }
                             break;
                         default:
@@ -262,7 +262,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                             txtTopicBodyBBCode.Text = String.Format("[quote={0}]{1}[/quote]", CustomerManager.FormatUserName(quotePost.User), BBCodeHelper.RemoveQuotes(quotePost.Text));
                             break;
                         case EditorTypeEnum.HtmlEditor:
-                            txtTopicBodyHtml.Content = String.Format("<b>{0}:</b><p style=\"padding: 5px 5px 5px 5px; border: dashed 1px black; background-color: #ffffff;\">{1}</p>", CustomerManager.FormatUserName(quotePost.User), quotePost.Text);
+                            txtTopicBodyHtml.Value = String.Format("<b>{0}:</b><p style=\"padding: 5px 5px 5px 5px; border: dashed 1px black; background-color: #ffffff;\">{1}</p>", CustomerManager.FormatUserName(quotePost.User), quotePost.Text);
                             break;
                     }
                 }
@@ -331,7 +331,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                         break;
                     case EditorTypeEnum.HtmlEditor:
                         {
-                            txtTopicBodyHtml.Content = forumPost.Text;
+                            txtTopicBodyHtml.Value = forumPost.Text;
                         }
                         break;
                     default:
@@ -379,7 +379,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                         break;
                     case EditorTypeEnum.HtmlEditor:
                         {
-                            text = txtTopicBodyHtml.Content;
+                            text = txtTopicBodyHtml.Value;
                         }
                         break;
                     default:

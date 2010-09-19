@@ -51,7 +51,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 CommonHelper.SelectListItem(this.ddlLanguage, news.LanguageId);
                 this.txtTitle.Text = news.Title;
                 this.txtShort.Text = news.Short;
-                this.txtFull.Content = news.Full;
+                this.txtFull.Value = news.Full;
                 this.cbPublished.Checked = news.Published;
                 this.cbAllowComments.Checked = news.AllowComments;
 
@@ -90,13 +90,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             if (news != null)
             {
                 news = NewsManager.UpdateNews(NewsId, int.Parse(this.ddlLanguage.SelectedItem.Value),
-                    txtTitle.Text, txtShort.Text, txtFull.Content,
+                    txtTitle.Text, txtShort.Text, txtFull.Value,
                     cbPublished.Checked, cbAllowComments.Checked, news.CreatedOn);
             }
             else
             {
                 news = NewsManager.InsertNews(int.Parse(this.ddlLanguage.SelectedItem.Value),
-                   txtTitle.Text, txtShort.Text, txtFull.Content,
+                   txtTitle.Text, txtShort.Text, txtFull.Value,
                    cbPublished.Checked, cbAllowComments.Checked, DateTime.UtcNow);
             }
             return news;

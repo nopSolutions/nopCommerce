@@ -3,8 +3,8 @@
 <%@ Register TagPrefix="nopCommerce" TagName="ToolTipLabel" Src="ToolTipLabelControl.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="SimpleTextBox" Src="SimpleTextBox.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="ConfirmationBox" Src="ConfirmationBox.ascx" %>
-<%@ Register Assembly="NopCommerceStore" Namespace="NopSolutions.NopCommerce.Web.Controls"
-    TagPrefix="nopCommerce" %>
+<%@ Register Assembly="FredCK.FCKeditorV2" Namespace="FredCK.FCKeditorV2" TagPrefix="FCKeditorV2" %>
+
 <div class="section-header">
     <div class="title">
         <img src="Common/ico-content.png" alt="<%=GetLocaleResourceString("Admin.MessageTemplateDetails.Title")%>" />
@@ -96,7 +96,8 @@
                                 tooltip="<% $NopResources:Admin.MessageTemplateDetails.Body.Tooltip %>" tooltipimage="~/Administration/Common/ico-help.gif" />
                         </td>
                         <td class="adminData">
-                            <nopcommerce:nophtmleditor id="txtBody" runat="server" height="350" />
+                            <FCKeditorV2:FCKeditor ID="txtBody" runat="server" AutoDetectLanguage="false" Height="350"
+                                Width="800px" />
                         </td>
                     </tr>
                     <tr>

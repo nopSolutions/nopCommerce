@@ -1,0 +1,242 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!--
+ * FCKeditor - The text editor for Internet - http://www.fckeditor.net
+ * Copyright (C) 2003-2010 Frederico Caldeira Knabben
+ *
+ * == BEGIN LICENSE ==
+ *
+ * Licensed under the terms of any of the following licenses at your
+ * choice:
+ *
+ *  - GNU General Public License Version 2 or later (the "GPL")
+ *    http://www.gnu.org/licenses/gpl.html
+ *
+ *  - GNU Lesser General Public License Version 2.1 or later (the "LGPL")
+ *    http://www.gnu.org/licenses/lgpl.html
+ *
+ *  - Mozilla Public License Version 1.1 or later (the "MPL")
+ *    http://www.mozilla.org/MPL/MPL-1.1.html
+ *
+ * == END LICENSE ==
+ *
+ * Template selection dialog window.
+-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title></title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="noindex, nofollow" />
+	<style type="text/css">
+			.TplList
+			{
+				border: #dcdcdc 2px solid;
+				background-color: #ffffff;
+				overflow: auto;
+				width: 90%;
+			}
+
+			.TplItem
+			{
+				margin: 5px;
+				padding: 7px;
+				border: #eeeeee 1px solid;
+			}
+
+			.TplItem TABLE
+			{
+				display: inline;
+			}
+
+			.TplTitle
+			{
+				font-weight: bold;
+			}
+		</style>
+	<script src="common/fck_dialog_common.js" type="text/javascript"></script>
+	<script type="text/javascript">
+
+var oEditor		= window.parent.InnerDialogLoaded() ;
+var FCK			= oEditor.FCK ;
+var FCKLang		= oEditor.FCKLang ;
+var FCKConfig	= oEditor.FCKConfig ;
+
+window.onload = function()
+{
+	// Set the right box height (browser dependent).
+	GetE('eList').style.height = document.all ? '100%' : '295px' ;
+
+	// Translate the dialog box texts.
+	oEditor.FCKLanguageManager.TranslatePage(document) ;
+
+	GetE('xChkReplaceAll').checked = ( FCKConfig.TemplateReplaceAll !== false ) ;
+
+	if ( FCKConfig.TemplateReplaceCheckbox !== false )
+		GetE('xReplaceBlock').style.display = '' ;
+
+	window.parent.SetAutoSize( true ) ;
+
+	LoadTemplatesXml() ;
+}
+
+function LoadTemplatesXml()
+{
+	var oTemplate ;
+
+	if ( !FCK._Templates )
+	{
+		GetE('eLoading').style.display = '' ;
+
+		// Create the Templates array.
+		FCK._Templates = new Array() ;
+
+		// Load the XML file.
+		var oXml = new oEditor.FCKXml() ;
+		oXml.LoadUrl( FCKConfig.TemplatesXmlPath ) ;
+
+		// Get the Images Base Path.
+		var oAtt = oXml.SelectSingleNode( 'Templates/@imagesBasePath' ) ;
+		var sImagesBasePath = oAtt ? oAtt.value : '' ;
+
+		// Get the "Template" nodes defined in the XML file.
+		var aTplNodes = oXml.SelectNodes( 'Templates/Template' ) ;
+
+		for ( var i = 0 ; i < aTplNodes.length ; i++ )
+		{
+			var oNode = aTplNodes[i] ;
+
+			oTemplate = new Object() ;
+
+			var oPart ;
+
+			// Get the Template Title.
+			if ( (oPart = oNode.attributes.getNamedItem('title')) )
+				oTemplate.Title = oPart.value ;
+			else
+				oTemplate.Title = 'Template ' + ( i + 1 ) ;
+
+			// Get the Template Description.
+			if ( (oPart = oXml.SelectSingleNode( 'Description', oNode )) )
+				oTemplate.Description = oPart.text ? oPart.text : oPart.textContent ;
+
+			// Get the Template Image.
+			if ( (oPart = oNode.attributes.getNamedItem('image')) )
+				oTemplate.Image = sImagesBasePath + oPart.value ;
+
+			// Get the Template HTML.
+			if ( (oPart = oXml.SelectSingleNode( 'Html', oNode )) )
+				oTemplate.Html = oPart.text ? oPart.text : oPart.textContent ;
+			else
+			{
+				alert( 'No HTML defined for template index ' + i + '. Please review the "' + FCKConfig.TemplatesXmlPath + '" file.' ) ;
+				continue ;
+			}
+
+			FCK._Templates[ FCK._Templates.length ] = oTemplate ;
+		}
+
+		GetE('eLoading').style.display = 'none' ;
+	}
+
+	if ( FCK._Templates.length == 0 )
+		GetE('eEmpty').style.display = '' ;
+	else
+	{
+		for ( var j = 0 ; j < FCK._Templates.length ; j++ )
+		{
+			oTemplate = FCK._Templates[j] ;
+
+			var oItemDiv = GetE('eList').appendChild( document.createElement( 'DIV' ) ) ;
+			oItemDiv.TplIndex = j ;
+			oItemDiv.className = 'TplItem' ;
+
+			// Build the inner HTML of our new item DIV.
+			var sInner = '<table><tr>' ;
+
+			if ( oTemplate.Image )
+				sInner += '<td valign="top"><img src="' + oTemplate.Image + '"><\/td>' ;
+
+			sInner += '<td valign="top"><div class="TplTitle">' + oTemplate.Title + '<\/div>' ;
+
+			if ( oTemplate.Description )
+				sInner += '<div>' + oTemplate.Description + '<\/div>' ;
+
+			sInner += '<\/td><\/tr><\/table>' ;
+
+			oItemDiv.innerHTML = sInner ;
+
+			oItemDiv.onmouseover = ItemDiv_OnMouseOver ;
+			oItemDiv.onmouseout = ItemDiv_OnMouseOut ;
+			oItemDiv.onclick = ItemDiv_OnClick ;
+		}
+	}
+}
+
+function ItemDiv_OnMouseOver()
+{
+	this.className += ' PopupSelectionBox' ;
+}
+
+function ItemDiv_OnMouseOut()
+{
+	this.className = this.className.replace( /\s*PopupSelectionBox\s*/, '' ) ;
+}
+
+function ItemDiv_OnClick()
+{
+	SelectTemplate( this.TplIndex ) ;
+}
+
+function SelectTemplate( index )
+{
+	oEditor.FCKUndo.SaveUndoStep() ;
+
+	if ( GetE('xChkReplaceAll').checked )
+		FCK.SetData( FCK._Templates[index].Html ) ;
+	else
+		FCK.InsertHtml( FCK._Templates[index].Html ) ;
+
+	window.parent.Cancel( true ) ;
+}
+
+	</script>
+</head>
+<body style="overflow: hidden">
+	<table width="100%" style="height: 100%">
+		<tr>
+			<td align="center">
+				<span fcklang="DlgTemplatesSelMsg">Please select the template to open in the editor<br />
+					(the actual contents will be lost):</span>
+			</td>
+		</tr>
+		<tr>
+			<td height="100%" align="center">
+				<div id="eList" align="left" class="TplList">
+					<div id="eLoading" align="center" style="display: none">
+						<br />
+						<span fcklang="DlgTemplatesLoading">Loading templates list. Please wait...</span>
+					</div>
+					<div id="eEmpty" align="center" style="display: none">
+						<br />
+						<span fcklang="DlgTemplatesNoTpl">(No templates defined)</span>
+					</div>
+				</div>
+			</td>
+		</tr>
+		<tr id="xReplaceBlock" style="display: none">
+			<td>
+				<table cellpadding="0" cellspacing="0">
+					<tr>
+						<td>
+							<input id="xChkReplaceAll" type="checkbox" /></td>
+						<td>
+							&nbsp;</td>
+						<td>
+							<label for="xChkReplaceAll" fcklang="DlgTemplatesReplace">
+								Replace actual contents</label></td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+</body>
+</html>

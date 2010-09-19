@@ -2,6 +2,8 @@
     CodeBehind="ForumPostEdit.ascx.cs" %>
 <%@ Register TagPrefix="nopCommerce" TagName="ForumBreadcrumb" Src="~/Modules/ForumBreadcrumb.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="SimpleTextBox" Src="~/Modules/SimpleTextBox.ascx" %>
+<%@ Register Assembly="FredCK.FCKeditorV2" Namespace="FredCK.FCKeditorV2" TagPrefix="FCKeditorV2" %>
+
 <div class="postedit">
     
     <nopCommerce:ForumBreadcrumb ID="ctrlForumBreadcrumb" runat="server" />
@@ -60,10 +62,8 @@
                         ValidationGroup="Submit">*</asp:RequiredFieldValidator>
                     <%if (ForumManager.ForumEditor == EditorTypeEnum.HtmlEditor)
                       {%>
-                    <ajaxToolkit:ToolkitScriptManager runat="Server" EnableScriptGlobalization="true"
-                        EnableScriptLocalization="true" ID="sm1" ScriptMode="Release" CompositeScript-ScriptMode="Release" />
-                    <HTMLEditor:Editor ID="txtTopicBodyHtml" runat="server" Height="300" Visible="false"
-                        NoScript="true" />
+                    <FCKeditorV2:FCKeditor ID="txtTopicBodyHtml" runat="server" AutoDetectLanguage="false"
+                        Height="300" Visible="false" />
                     <%} %>
                 </td>
             </tr>

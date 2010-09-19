@@ -1,8 +1,8 @@
 <%@ Control Language="C#" AutoEventWireup="true" Inherits="NopSolutions.NopCommerce.Web.Administration.Payment.CashOnDelivery.ConfigurePaymentMethod"
     CodeBehind="ConfigurePaymentMethod.ascx.cs" %>
 <%@ Register TagPrefix="nopCommerce" TagName="DecimalTextBox" Src="../../Modules/DecimalTextBox.ascx" %>
-<%@ Register Assembly="NopCommerceStore" Namespace="NopSolutions.NopCommerce.Web.Controls"
-    TagPrefix="nopCommerce" %>
+<%@ Register Assembly="FredCK.FCKeditorV2" Namespace="FredCK.FCKeditorV2" TagPrefix="FCKeditorV2" %>
+
     
 <table class="adminContent">
     <tr>
@@ -12,7 +12,8 @@
     </tr>
     <tr>
         <td colspan="2">
-            <nopCommerce:NopHTMLEditor ID="txtInfo" runat="server" Height="350" />
+            <FCKeditorV2:FCKeditor ID="txtInfo" runat="server" AutoDetectLanguage="false" Height="350"
+                Width="800px" />
         </td>
     </tr>
     <tr>

@@ -1,0 +1,227 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!--
+ * FCKeditor - The text editor for Internet - http://www.fckeditor.net
+ * Copyright (C) 2003-2010 Frederico Caldeira Knabben
+ *
+ * == BEGIN LICENSE ==
+ *
+ * Licensed under the terms of any of the following licenses at your
+ * choice:
+ *
+ *  - GNU General Public License Version 2 or later (the "GPL")
+ *    http://www.gnu.org/licenses/gpl.html
+ *
+ *  - GNU Lesser General Public License Version 2.1 or later (the "LGPL")
+ *    http://www.gnu.org/licenses/lgpl.html
+ *
+ *  - Mozilla Public License Version 1.1 or later (the "MPL")
+ *    http://www.mozilla.org/MPL/MPL-1.1.html
+ *
+ * == END LICENSE ==
+-->
+<html>
+<head>
+	<title></title>
+	<style>
+		#wsc_frames , #errorMessage{
+			position:absolute;
+			top:0px;
+			left:0px;
+			width:500px;
+			height:395px;
+			margin:0px;
+			padding:0px;
+			border:0px;
+			display:block;
+			overflow: hidden;
+		}
+		#wsc_frames   { z-index:10;}
+		#errorMessage {
+			color:red;
+			display:none;
+			font-size:16px;
+			font-weight:bold;
+			padding-top:160px;
+			text-align:center;
+			z-index:11;
+		}
+		#errorMessage p {
+			color:#000;
+			font-size:11px;
+			text-align:left;
+			font-weight: normal;
+			padding-left:80px;
+		}
+
+	</style>
+	<script type="text/javascript">
+
+var oEditor = window.parent.InnerDialogLoaded() ;
+var FCKConfig = oEditor.FCKConfig;
+
+function doLoadScript(url)
+{
+	if (!url)
+		return false ;
+
+	var s = document.createElement('script') ;
+	s.type = 'text/javascript' ;
+	s.src = url ;
+
+	document.getElementsByTagName('head')[0].appendChild(s) ;
+
+	return true ;
+}
+
+function Ok()
+{
+	return window.parent.Cancel() ;
+}
+
+function _callOnCancel( dT )
+{
+	window.parent.Cancel() ;
+}
+
+function _callOnFinish( dT )
+{
+	oEditor.FCK.SetData( dT.value ) ;
+	window.parent.CloseDialog( true ) ;
+}
+
+function _cancelOnError(m)
+{
+	var _conId = 'errorMessage' ;
+	var message = m || 'Sorry, but service is unavailable now.' ;
+
+	if ( typeof( WSC_Error ) == 'undefined' )
+	{
+		var _con = document.createElement( 'div' ) ;
+		_con.setAttribute( 'id', _conId ) ;
+		document.body.appendChild( _con ) ;
+		dom_con = document.getElementById( _conId ) ;
+		dom_con.innerHTML = message ;
+		dom_con.style.display = 'block' ;
+	}
+	//return Ok() ;
+}
+
+function URL_abs2full( uri )
+{
+	return uri.match( 'http' )
+		? uri
+		: document.location.protocol + '//' + document.location.host + uri ;
+}
+
+function clearErrorUsermessage()
+{
+	// empty error container
+	var _con = document.getElementById( 'errorMessage' ) ;
+
+	if ( !_con )
+		return ;
+
+	_con.innerHTML = '' ;
+	_con.style.display = 'none' ;
+}
+
+var gInterval ;
+
+function onLoad()
+{
+	clearErrorUsermessage() ;
+	var _errorMessage = 'The SpellChecker Service is currently unavailable.' ;
+	if ( 'undefined' != typeof( oEditor.FCK.Config.WSChLoaderScript ) )
+	    _errorMessage = '<div>The SpellChecker Service is currently unavailable.</div><p>Error loading application<br>service host: ' + oEditor.FCK.Config.WSChLoaderScript + '</p>';
+
+	var burnSpelling = function( oName, _eMessage )
+	{
+		var i = 0 ;
+
+		return function ()
+		{
+			if ( typeof( window[oName] ) == 'function' )
+				initAndSpell() ;
+			else if ( i++ == 180 )
+				_cancelOnError( _eMessage ) ;
+		}
+	}
+
+	gInterval = window.setInterval( burnSpelling( 'doSpell', _errorMessage ), 250 ) ;
+
+	// WSC CORE init section
+	var protocol = document.location.protocol || 'http:' ;
+	var baseUrl = protocol + '//loader.spellchecker.net/sproxy_fck/sproxy.php' ;
+	var plugin = "fck2" ;
+	var customerid = oEditor.FCK.Config.WSCnCustomerId
+		|| "1:ua3xw1-2XyGJ3-GWruD3-6OFNT1-oXcuB1-nR6Bp4-hgQHc-EcYng3-sdRXG3-NOfFk" ;
+	var wscCoreUrl = oEditor.FCK.Config.WSChLoaderScript
+		|| ( baseUrl + '?'
+			+ 'plugin='    + plugin + '&'
+			+ 'customerid='+ customerid + '&'
+			+ 'cmd=script&doc=wsc&schema=22' ) ;
+
+	// load WSC core
+	doLoadScript( wscCoreUrl ) ;
+}
+
+function initAndSpell()
+{
+	//xall from window.setInteval expected at once
+	if ( typeof( gInterval ) == 'undefined' )
+		return null ;
+	window.clearInterval( gInterval ) ;
+
+	// global var is used in FCK specific core
+	// change on equal var used in fckplugin.js
+	gFCKPluginName = 'wsc' ;
+
+	// get the data to be checked
+	var sData = oEditor.FCK.GetData() ;
+
+	// prepare content
+	var ctrlId =  'myEditor' ;
+	var dCurT = document.getElementById( ctrlId ) ;
+	dCurT.value = sData ;
+
+	// service paths corecting/preparing
+	var sPath2Scin = URL_abs2full( oEditor.FCK.Config.SkinDialogCSS ) ;
+	var sPathCiframe = FCKConfig.BasePath + 'wsc/ciframe.html' ;
+	var sPathFrameset = FCKConfig.BasePath + 'wsc/tmpFrameset.html' ;
+
+	// language abbr standarts comparer
+	var LangComparer = new _SP_FCK_LangCompare() ;
+	LangComparer.setDefaulLangCode( oEditor.FCK.Language.DefaultLanguage ) ;
+
+	// clear user message console (if application was loaded more then after 2 seconds)
+	clearErrorUsermessage() ;
+
+	doSpell( {
+		ctrl : ctrlId,
+		lang : LangComparer.getSPLangCode( oEditor.FCK.Language.GetActiveLanguage() ),
+		winType : 'wsc_frames',// if not defined app will run on winpopup
+
+		// callback binding section
+		onCancel :window._callOnCancel,
+		onFinish :window._callOnFinish,
+
+		// @TODO: basePath assingning
+
+		// some manipulations with client static pages
+		framesetPath : sPathFrameset,
+		iframePath : sPathCiframe,
+
+		// styles defining
+		schemaURI : sPath2Scin
+	} ) ;
+
+	return true ;
+}
+
+	</script>
+</head>
+<body onload="onLoad()" style="padding: 0px; overflow: hidden;">
+	<textarea style="display: none;" id="myEditor" rows="10" cols="40"></textarea>
+	<iframe src="" name="wsc_frames" id="wsc_frames"></iframe>
+</body>
+</html>

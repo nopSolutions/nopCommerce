@@ -1,0 +1,113 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!--
+ * FCKeditor - The text editor for Internet - http://www.fckeditor.net
+ * Copyright (C) 2003-2010 Frederico Caldeira Knabben
+ *
+ * == BEGIN LICENSE ==
+ *
+ * Licensed under the terms of any of the following licenses at your
+ * choice:
+ *
+ *  - GNU General Public License Version 2 or later (the "GPL")
+ *    http://www.gnu.org/licenses/gpl.html
+ *
+ *  - GNU Lesser General Public License Version 2.1 or later (the "LGPL")
+ *    http://www.gnu.org/licenses/lgpl.html
+ *
+ *  - Mozilla Public License Version 1.1 or later (the "MPL")
+ *    http://www.mozilla.org/MPL/MPL-1.1.html
+ *
+ * == END LICENSE ==
+ *
+ * Preview shown in the "Document Properties" dialog window.
+-->
+<html>
+	<head>
+		<title>Document Properties - Preview</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<meta name="robots" content="noindex, nofollow">
+		<script type="text/javascript">
+
+var eBase = parent.FCK.EditorDocument.getElementsByTagName( 'BASE' ) ;
+if ( eBase.length > 0 && eBase[0].href.length > 0 )
+{
+	document.write( '<base href="' + eBase[0].href + '">' ) ;
+}
+
+window.onload = function()
+{
+	if ( typeof( parent.OnPreviewLoad ) == 'function' )
+		parent.OnPreviewLoad( window, document.body ) ;
+}
+
+function SetBaseHRef( baseHref )
+{
+	var eBase = document.createElement( 'BASE' ) ;
+	eBase.href = baseHref ;
+
+	var eHead = document.getElementsByTagName( 'HEAD' )[0] ;
+	eHead.appendChild( eBase ) ;
+}
+
+function SetLinkColor( color )
+{
+	if ( color && color.length > 0 )
+		document.getElementById('eLink').style.color = color ;
+	else
+		document.getElementById('eLink').style.color = window.document.linkColor ;
+}
+
+function SetVisitedColor( color )
+{
+	if ( color && color.length > 0 )
+		document.getElementById('eVisited').style.color = color ;
+	else
+		document.getElementById('eVisited').style.color = window.document.vlinkColor ;
+}
+
+function SetActiveColor( color )
+{
+	if ( color && color.length > 0 )
+		document.getElementById('eActive').style.color = color ;
+	else
+		document.getElementById('eActive').style.color = window.document.alinkColor ;
+}
+		</script>
+	</head>
+	<body>
+		<table width="100%" height="100%" cellpadding="0" cellspacing="0" border="0">
+			<tr>
+				<td align="center" valign="middle">
+					Normal Text
+				</td>
+				<td id="eLink" align="center" valign="middle">
+					<u>Link Text</u>
+				</td>
+			</tr>
+			<tr>
+				<td id="eVisited" valign="middle" align="center">
+					<u>Visited Link</u>
+				</td>
+				<td id="eActive" valign="middle" align="center">
+					<u>Active Link</u>
+				</td>
+			</tr>
+		</table>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+	</body>
+</html>
