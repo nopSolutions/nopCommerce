@@ -117,14 +117,17 @@ namespace NopSolutions.NopCommerce.Web.Modules
                                         adjustmentTableScripts.AppendFormat("{0}['{1}'] = new Array(", AdjustmentTableName, ddlAttributes.ClientID);
                                         attributeScripts.AppendFormat("$('#{0}').change(function(){{{1}();}});\n", ddlAttributes.ClientID, AdjustmentFuncName);
                                     }
-                                    
+
+                                    int numberOfJsArrayItems = 0;
                                     if (!attribute.IsRequired)
                                     {
                                         ddlAttributes.Items.Add(new ListItem("---", "0"));
+
                                         //dynamic price update
                                         if (SettingManager.GetSettingValueBoolean("ProductAttribute.EnableDynamicPriceUpdate"))
                                         {
                                             adjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "{0},", decimal.Zero);
+                                            numberOfJsArrayItems++;
                                         }
                                     }
                                     var pvaValues = attribute.ProductVariantAttributeValues;
@@ -153,9 +156,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
                                             if (SettingManager.GetSettingValueBoolean("ProductAttribute.EnableDynamicPriceUpdate"))
                                             {
                                                 adjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "{0},", (float)priceAdjustment);
+                                                numberOfJsArrayItems++;
                                             }
                                         }
-                                        
+
                                         var pvaValueItem = new ListItem(pvaValueName, pvaValue.ProductVariantAttributeValueId.ToString());
                                         if (!preSelectedSet && pvaValue.IsPreSelected)
                                         {
@@ -163,6 +167,17 @@ namespace NopSolutions.NopCommerce.Web.Modules
                                             preSelectedSet = true;
                                         }
                                         ddlAttributes.Items.Add(pvaValueItem);
+                                    }
+                                    
+                                    //dynamic price update
+                                    if (SettingManager.GetSettingValueBoolean("ProductAttribute.EnableDynamicPriceUpdate"))
+                                    {
+                                        //If you create an array with a single numeric parameter, that number is used for specifying the number of elements in this array.
+                                        //so have a little hack here (we need at least two elements)
+                                        if (numberOfJsArrayItems == 1)
+                                        {
+                                            adjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "{0},", decimal.Zero);
+                                        }
                                     }
 
                                     //dynamic price update
