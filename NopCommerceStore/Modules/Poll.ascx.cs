@@ -25,12 +25,11 @@ using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using System.Xml.Linq;
 using NopSolutions.NopCommerce.BusinessLogic;
+using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Content.Polls;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
- 
- 
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -45,8 +44,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 var customer = NopContext.Current.User;
                 bool showResults = false;
                 if (customer != null)
+                {
                     showResults = PollManager.PollVotingRecordExists(this.PollId, customer.CustomerId);
-            
+                }
+
                 BindData(showResults);
             }
         }
@@ -82,19 +83,28 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void btnSubmitVoteRecord_Click(object sender, EventArgs e)
         {
-            var customer = NopContext.Current.User;
-            if (rblPollAnswers.SelectedItem != null && customer != null && !customer.IsGuest)
+            if (rblPollAnswers.SelectedItem == null)
+                return;
+
+            //create anonymous user if required
+            if (NopContext.Current.User == null && SettingManager.GetSettingValueBoolean("Common.AllowAnonymousUsersToVotePolls"))
             {
-                int pollAnswerId = Convert.ToInt32(rblPollAnswers.SelectedItem.Value);
-                if (!PollManager.PollVotingRecordExists(this.PollId, customer.CustomerId))
-                    PollManager.CreatePollVotingRecord(pollAnswerId, customer.CustomerId);
-                BindData(true);
+                CustomerManager.CreateAnonymousUser();
             }
-            else
+
+            if (NopContext.Current.User == null || (NopContext.Current.User.IsGuest && !SettingManager.GetSettingValueBoolean("Common.AllowAnonymousUsersToVotePolls")))
             {
                 string loginURL = SEOHelper.GetLoginPageUrl(true);
                 Response.Redirect(loginURL);
             }
+
+            if (!PollManager.PollVotingRecordExists(this.PollId, NopContext.Current.User.CustomerId))
+            {
+                int pollAnswerId = Convert.ToInt32(rblPollAnswers.SelectedItem.Value);
+                PollManager.CreatePollVotingRecord(pollAnswerId, NopContext.Current.User.CustomerId);
+            }
+
+            BindData(true);
         }
 
         protected void dlResults_ItemDataBound(object sender, DataListItemEventArgs e)

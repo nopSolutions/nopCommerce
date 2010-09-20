@@ -1757,6 +1757,17 @@
                     </tr>
                     <tr>
                         <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ID="lblAllowAnonymousUsersToVotePolls"
+                                Text="<% $NopResources:Admin.GlobalSettings.Other.AllowAnonymousUsersToVotePolls %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Other.AllowAnonymousUsersToVotePolls.Tooltip %>"
+                                ToolTipImage="~/Administration/Common/ico-help.gif" />
+                        </td>
+                        <td class="adminData">
+                            <asp:CheckBox runat="server" ID="cbAllowAnonymousUsersToVotePolls"></asp:CheckBox>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
                             <nopCommerce:ToolTipLabel runat="server" ID="lblDisplayPageExecutionTime"
                                 Text="<% $NopResources:Admin.GlobalSettings.Other.DisplayPageExecutionTime %>"
                                 ToolTip="<% $NopResources:Admin.GlobalSettings.Other.DisplayPageExecutionTime.Tooltip %>"

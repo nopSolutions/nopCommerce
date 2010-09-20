@@ -91,12 +91,12 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     var product = ProductManager.GetProductById(this.ProductId);
                     if (product != null)
                     {
-                        if(NopContext.Current.User == null && CustomerManager.AllowAnonymousUsersToEmailAFriend)
+                        if (NopContext.Current.User == null && CustomerManager.AllowAnonymousUsersToEmailAFriend)
                         {
                             CustomerManager.CreateAnonymousUser();
                         }
 
-                        if(NopContext.Current.User == null || (NopContext.Current.User.IsGuest && !CustomerManager.AllowAnonymousUsersToEmailAFriend))
+                        if (NopContext.Current.User == null || (NopContext.Current.User.IsGuest && !CustomerManager.AllowAnonymousUsersToEmailAFriend))
                         {
                             lblEmailAFriend.Text = GetLocaleResourceString("Products.OnlyRegisteredUsersCanEmailAFriend");
                             return;
@@ -115,7 +115,9 @@ namespace NopSolutions.NopCommerce.Web.Modules
                         lblEmailAFriend.Text = GetLocaleResourceString("Products.EmailAFriend.YourMessageHasBeenSent");
                     }
                     else
+                    {
                         Response.Redirect(CommonHelper.GetStoreLocation());
+                    }
                 }
                 catch (Exception exc)
                 {

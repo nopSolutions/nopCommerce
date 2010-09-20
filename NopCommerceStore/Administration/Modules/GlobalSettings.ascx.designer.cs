@@ -2596,6 +2596,24 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         protected global::System.Web.UI.WebControls.CheckBox cbAllowAnonymousUsersToEmailAFriend;
         
         /// <summary>
+        /// lblAllowAnonymousUsersToVotePolls control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblAllowAnonymousUsersToVotePolls;
+        
+        /// <summary>
+        /// cbAllowAnonymousUsersToVotePolls control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbAllowAnonymousUsersToVotePolls;
+        
+        /// <summary>
         /// lblDisplayPageExecutionTime control.
         /// </summary>
         /// <remarks>

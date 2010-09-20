@@ -152,6 +152,12 @@ set @resources='
   <LocaleResource Name="Admin.GlobalSettings.Products.ShowCategoryProductNumber.Tooltip">
     <Value>Check to show the number of products besides each category (category navigation block)</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.AllowAnonymousUsersToVotePolls">
+    <Value>Allow anonymous users to vote on polls:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.AllowAnonymousUsersToVotePolls.Tooltip">
+    <Value>Check to allow anonymous users to vote on polls.</Value>
+  </LocaleResource>
 </Language>
 '
 

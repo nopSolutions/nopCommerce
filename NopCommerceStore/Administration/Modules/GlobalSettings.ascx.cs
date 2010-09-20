@@ -163,6 +163,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             cbProductReviewsMustBeApproved.Checked = CustomerManager.ProductReviewsMustBeApproved;
             cbAllowAnonymousUsersToReviewProduct.Checked = CustomerManager.AllowAnonymousUsersToReviewProduct;
             cbAllowAnonymousUsersToEmailAFriend.Checked = CustomerManager.AllowAnonymousUsersToEmailAFriend;
+            cbAllowAnonymousUsersToVotePolls.Checked = SettingManager.GetSettingValueBoolean("Common.AllowAnonymousUsersToVotePolls");
+
             cbAllowAnonymousUsersToSetProductRatings.Checked = CustomerManager.AllowAnonymousUsersToSetProductRatings;
             cbShowBestsellersOnHomePage.Checked = SettingManager.GetSettingValueBoolean("Display.ShowBestsellersOnMainPage");
             txtShowBestsellersOnHomePageNumber.Value = SettingManager.GetSettingValueInteger("Display.ShowBestsellersOnMainPageNumber");
@@ -443,6 +445,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     CustomerManager.ProductReviewsMustBeApproved = cbProductReviewsMustBeApproved.Checked;
                     CustomerManager.AllowAnonymousUsersToReviewProduct = cbAllowAnonymousUsersToReviewProduct.Checked;
                     CustomerManager.AllowAnonymousUsersToEmailAFriend = cbAllowAnonymousUsersToEmailAFriend.Checked;
+                    SettingManager.SetParam("Common.AllowAnonymousUsersToVotePolls", cbAllowAnonymousUsersToVotePolls.Checked.ToString());
+
                     CustomerManager.AllowAnonymousUsersToSetProductRatings = cbAllowAnonymousUsersToSetProductRatings.Checked;
                     SettingManager.SetParam("Display.ShowBestsellersOnMainPage", cbShowBestsellersOnHomePage.Checked.ToString());
                     SettingManager.SetParam("Display.ShowBestsellersOnMainPageNumber", txtShowBestsellersOnHomePageNumber.Value.ToString());
