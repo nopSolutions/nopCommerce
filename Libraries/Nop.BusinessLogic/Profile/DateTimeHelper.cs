@@ -87,7 +87,19 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Profile
         public static DateTime ConvertToUserTime(DateTime dt, TimeZoneInfo sourceTimeZone)
         {
             var currentUserTimeZoneInfo = DateTimeHelper.CurrentTimeZone;
-            return TimeZoneInfo.ConvertTime(dt, sourceTimeZone, currentUserTimeZoneInfo);
+            return ConvertToUserTime(dt, sourceTimeZone, currentUserTimeZoneInfo);
+        }
+
+        /// <summary>
+        /// Converts the date and time to current user date and time
+        /// </summary>
+        /// <param name="dt">The date and time to convert.</param>
+        /// <param name="sourceTimeZone">The time zone of dateTime.</param>
+        /// <param name="destinationTimeZone">The time zone to convert dateTime to.</param>
+        /// <returns>A DateTime value that represents time that corresponds to the dateTime parameter in customer time zone.</returns>
+        public static DateTime ConvertToUserTime(DateTime dt, TimeZoneInfo sourceTimeZone, TimeZoneInfo destinationTimeZone)
+        {
+            return TimeZoneInfo.ConvertTime(dt, sourceTimeZone, destinationTimeZone);
         }
 
         /// <summary>
@@ -122,6 +134,40 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Profile
         {
             return TimeZoneInfo.ConvertTimeToUtc(dt, sourceTimeZone);
         }
+
+        /// <summary>
+        /// Gets a customer time zone
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <returns>Customer time zone; if customer is null, then default store time zone</returns>
+        public static TimeZoneInfo GetCustomerTimeZone(Customer customer)
+        {
+            //registered user
+            TimeZoneInfo timeZoneInfo = null;
+            if (DateTimeHelper.AllowCustomersToSetTimeZone)
+            {
+                string timeZoneId = string.Empty;
+                if (customer != null)
+                    timeZoneId = customer.TimeZoneId;
+
+                try
+                {
+                    if (!String.IsNullOrEmpty(timeZoneId))
+                        timeZoneInfo = DateTimeHelper.FindTimeZoneById(timeZoneId);
+                }
+                catch (Exception exc)
+                {
+                    Debug.Write(exc.ToString());
+                }
+            }
+
+            //default timezone
+            if (timeZoneInfo == null)
+                timeZoneInfo = DateTimeHelper.DefaultStoreTimeZone;
+
+            return timeZoneInfo;
+        }
+
         #endregion
 
         #region Properties
@@ -168,34 +214,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Profile
         {
             get
             {
-                //registered user only
-                TimeZoneInfo timeZoneInfo = null;
-                if (DateTimeHelper.AllowCustomersToSetTimeZone)
-                {
-                    string timeZoneId = string.Empty;
-                    Customer customer = NopContext.Current.User;
-                    if (customer != null)
-                        timeZoneId = customer.TimeZoneId;
-                    
-                    try
-                    {
-                        timeZoneInfo = DateTimeHelper.FindTimeZoneById(timeZoneId);
-                    }
-                    catch (Exception exc)
-                    {
-                        Debug.Write(exc.ToString());
-                    }
-                }
-
-                if (timeZoneInfo == null)
-                    timeZoneInfo = DateTimeHelper.DefaultStoreTimeZone;
-
-                return timeZoneInfo;
+                return GetCustomerTimeZone(NopContext.Current.User);
             }
             set
             {
                 //registered user only
-
                 if (!DateTimeHelper.AllowCustomersToSetTimeZone)
                     return;
 
@@ -220,8 +243,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Profile
         {
             get
             {
-                bool allowCustomersToSetTimeZone = SettingManager.GetSettingValueBoolean("Common.AllowCustomersToSetTimeZone");
-                return allowCustomersToSetTimeZone;
+                return SettingManager.GetSettingValueBoolean("Common.AllowCustomersToSetTimeZone");
             }
             set
             {

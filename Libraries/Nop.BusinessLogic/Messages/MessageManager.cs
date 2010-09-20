@@ -1939,12 +1939,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             tokens.Add("Order.Product(s)", ProductListToHtmlTable(order, languageId));
 
             var language = LanguageManager.GetLanguageById(languageId);
-            //UNDONE use time zone
-            //1. Add new token for store owner
-            //2. Convert the date and time according to time zone
             if (language != null && !String.IsNullOrEmpty(language.LanguageCulture))
             {
-                tokens.Add("Order.CreatedOn", order.CreatedOn.ToString("D", new CultureInfo(language.LanguageCulture)));
+                DateTime createdOn = DateTimeHelper.ConvertToUserTime(order.CreatedOn, TimeZoneInfo.Utc, DateTimeHelper.GetCustomerTimeZone(order.Customer));
+                tokens.Add("Order.CreatedOn", createdOn.ToString("D", new CultureInfo(language.LanguageCulture)));
             }
             else
             {
