@@ -624,6 +624,12 @@ div.login-block table.login-table-container
 	margin: 120px 20px 0px 70px;
 }
 
+.login-table-container .forgot-password a
+{
+	font-weight: bold;
+	color: #FFFFFF;
+}
+
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*
 

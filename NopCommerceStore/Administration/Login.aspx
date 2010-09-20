@@ -54,6 +54,12 @@
                             </td>
                         </tr>
                         <tr class="row">
+                            <td class="forgot-password">
+                                <asp:HyperLink ID="hlForgotPassword" runat="server" NavigateUrl="~/passwordrecovery.aspx"
+                                    Text="<% $NopResources:Login.ForgotPassword %>"></asp:HyperLink>
+                            </td>
+                        </tr>
+                        <tr class="row">
                             <td>
                                 <div class="buttons">
                                     <asp:Button ID="LoginButton" runat="server" CommandName="Login" Text="<% $NopResources:Login.LoginButton %>"
