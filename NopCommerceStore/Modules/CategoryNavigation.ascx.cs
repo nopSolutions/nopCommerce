@@ -29,6 +29,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Categories;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -147,7 +148,21 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 else
                     link.CssClass = "inactive";
                 link.HyperLink.NavigateUrl = categoryURL;
-                link.HyperLink.Text = Server.HtmlEncode(category.LocalizedName);
+                string catName = string.Empty;
+                if (SettingManager.GetSettingValueBoolean("Display.Products.ShowCategoryProductNumber"))
+                {
+                    int numberOfProducts = 0;
+                    var productCollection = ProductManager.GetAllProducts(category.CategoryId,
+                        0, 0, null, null, null, string.Empty, false, 1, 0, 
+                        null, ProductSortingEnum.Position, out numberOfProducts);
+
+                    catName = string.Format("{0} ({1})", category.LocalizedName, numberOfProducts);
+                }
+                else
+                {
+                    catName = category.LocalizedName;
+                }
+                link.HyperLink.Text = Server.HtmlEncode(catName);
                 if (padding > 0)
                     link.LiLeftMargin = padding.ToString();
 

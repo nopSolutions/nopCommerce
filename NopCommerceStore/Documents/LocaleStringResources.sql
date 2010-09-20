@@ -146,6 +146,12 @@ set @resources='
   <LocaleResource Name="Admin.GlobalSettings.Products.MaxWishlistItems.RangeErrorMessage">
     <Value>Enter a maximum number of products allowed in a wishlist</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.ShowCategoryProductNumber">
+    <Value>Show the number of products besides each category:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.ShowCategoryProductNumber.Tooltip">
+    <Value>Check to show the number of products besides each category (category navigation block)</Value>
+  </LocaleResource>
 </Language>
 '
 

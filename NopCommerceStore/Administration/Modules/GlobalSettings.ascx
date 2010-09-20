@@ -213,6 +213,16 @@
                 <table class="adminContent">
                     <tr>
                         <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
+                                ID="lblShowCategoryProductNumber" Text="<% $NopResources:Admin.GlobalSettings.Products.ShowCategoryProductNumber %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Products.ShowCategoryProductNumber.Tooltip %>" />
+                        </td>
+                        <td class="adminData">
+                            <asp:CheckBox runat="server" ID="cbShowCategoryProductNumber"></asp:CheckBox>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
                             <nopCommerce:ToolTipLabel runat="server" ID="lblHidePricesForNonRegistered" Text="<% $NopResources:Admin.GlobalSettings.Products.HidePricesForNonRegistered %>"
                                 ToolTip="<% $NopResources:Admin.GlobalSettings.Products.HidePricesForNonRegistered.Tooltip %>"
                                 ToolTipImage="~/Administration/Common/ico-help.gif" />

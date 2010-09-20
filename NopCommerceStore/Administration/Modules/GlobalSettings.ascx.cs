@@ -136,6 +136,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             CommonHelper.SelectListItem(this.ddlRegistrationMethod, (int)CustomerManager.CustomerRegistrationType);
             cbAllowNavigationOnlyRegisteredCustomers.Checked = CustomerManager.AllowNavigationOnlyRegisteredCustomers;
             cbHideNewsletterBox.Checked = SettingManager.GetSettingValueBoolean("Display.HideNewsletterBox");
+
+            cbShowCategoryProductNumber.Checked = SettingManager.GetSettingValueBoolean("Display.Products.ShowCategoryProductNumber");
             cbHidePricesForNonRegistered.Checked = SettingManager.GetSettingValueBoolean("Common.HidePricesForNonRegistered");
             txtMinOrderAmount.Value = OrderManager.MinOrderAmount;
             cbShowDiscountCouponBox.Checked = SettingManager.GetSettingValueBoolean("Display.Checkout.DiscountCouponBox");
@@ -414,6 +416,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     CustomerManager.CustomerRegistrationType = (CustomerRegistrationTypeEnum)Enum.ToObject(typeof(CustomerRegistrationTypeEnum), int.Parse(this.ddlRegistrationMethod.SelectedItem.Value));
                     CustomerManager.AllowNavigationOnlyRegisteredCustomers = cbAllowNavigationOnlyRegisteredCustomers.Checked;
                     SettingManager.SetParam("Display.HideNewsletterBox", cbHideNewsletterBox.Checked.ToString());
+
+                    SettingManager.SetParam("Display.Products.ShowCategoryProductNumber", cbShowCategoryProductNumber.Checked.ToString());
                     SettingManager.SetParam("Common.HidePricesForNonRegistered", cbHidePricesForNonRegistered.Checked.ToString());
                     OrderManager.MinOrderAmount = txtMinOrderAmount.Value;
                     SettingManager.SetParam("Display.Checkout.DiscountCouponBox", cbShowDiscountCouponBox.Checked.ToString());
