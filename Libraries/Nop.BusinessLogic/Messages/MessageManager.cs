@@ -375,7 +375,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
 
             return collection;
         }
-
+         
         /// <summary>
         /// Gets a localized message template by identifier
         /// </summary>
