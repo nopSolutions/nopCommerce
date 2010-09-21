@@ -240,11 +240,20 @@ namespace NopSolutions.NopCommerce.Common.Utils
             return tmpS;
         }
         
+        /// <summary>
+        /// Bind jQuery
+        /// </summary>
+        /// <param name="page">Page</param>
         public static void BindJQuery(Page page)
         {
             BindJQuery(page, false);
         }
 
+        /// <summary>
+        /// Bind jQuery
+        /// </summary>
+        /// <param name="page">Page</param>
+        /// <param name="useHosted">Use hosted jQuery</param>
         public static void BindJQuery(Page page, bool useHosted)
         {
             if (page == null)
@@ -411,30 +420,50 @@ namespace NopSolutions.NopCommerce.Common.Utils
             string result = "http://" + ServerVariables("HTTP_HOST");
             if (!result.EndsWith("/"))
                 result += "/";
-
             if (useSsl)
             {
-                if (!String.IsNullOrEmpty(ConfigurationManager.AppSettings["SharedSSL"]))
+                //shared SSL certificate URL
+                string sharedSSLUrl = string.Empty;
+                if (!String.IsNullOrEmpty(ConfigurationManager.AppSettings["SharedSSLUrl"]))
+                    sharedSSLUrl = ConfigurationManager.AppSettings["SharedSSLUrl"].Trim();
+
+                if (!String.IsNullOrEmpty(sharedSSLUrl))
                 {
                     //shared SSL
-                    result = ConfigurationManager.AppSettings["SharedSSL"];
+                    result = sharedSSLUrl;
                 }
                 else
                 {
-                    //SSL
+                    //standard SSL
                     result = result.Replace("http:/", "https:/");
                 }
             }
             else
             {
-                if (!String.IsNullOrEmpty(ConfigurationManager.AppSettings["SharedSSL"]))
+                if (!String.IsNullOrEmpty(ConfigurationManager.AppSettings["UseSSL"])
+                    && Convert.ToBoolean(ConfigurationManager.AppSettings["UseSSL"])) ;
                 {
-                    //shared SSL
-                    /* UNDONE we need to set store URL here (SettingManager.StoreUrl property)
-                     * but we cannot reference Nop.BusinessLogic.dll assembly.
-                     * So just hard-code it here if you're using shared SSL
-                     * result = "http://www.yourStore.com";
-                     */
+                    //SSL is enabled
+                    
+                    //get shared SSL certificate URL
+                    string sharedSSLUrl = string.Empty;
+                    if (!String.IsNullOrEmpty(ConfigurationManager.AppSettings["SharedSSLUrl"]))
+                        sharedSSLUrl = ConfigurationManager.AppSettings["SharedSSLUrl"].Trim();
+                    if (!String.IsNullOrEmpty(sharedSSLUrl))
+                    {
+                        //shared SSL
+
+                        /* we need to set a store URL here (SettingManager.StoreUrl property)
+                         * but we cannot reference Nop.BusinessLogic.dll assembly.
+                         * So we are using one more app config settings - <add key="NonSharedSSLUrl" value="http://www.yourStore.com" />
+                         */
+                        string nonSharedSSLUrl = string.Empty;
+                        if (!String.IsNullOrEmpty(ConfigurationManager.AppSettings["NonSharedSSLUrl"]))
+                            nonSharedSSLUrl = ConfigurationManager.AppSettings["NonSharedSSLUrl"].Trim();
+                        if (string.IsNullOrEmpty(nonSharedSSLUrl))
+                            throw new Exception("NonSharedSSLUrl app config setting is not empty");
+                        result = nonSharedSSLUrl;
+                    }
                 }
             }
 
@@ -979,7 +1008,6 @@ namespace NopSolutions.NopCommerce.Common.Utils
 
             return true;
         }
-
 
         #endregion
     }
