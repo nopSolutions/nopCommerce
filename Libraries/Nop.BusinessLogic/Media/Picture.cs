@@ -63,10 +63,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
         /// <summary>
         /// Gets the loaded picture binary depending on picture storage settings
         /// </summary>
-        public byte[] LoadPictureBinary()
+        /// <param name="fromDB">Load from database; otherwise, from file system</param>
+        /// <returns>Picture binary</returns>
+        public byte[] LoadPictureBinary(bool fromDB)
         {
             byte[] result = null;
-            if (PictureManager.StoreInDB)
+            if (fromDB)
             {
                 result = this.PictureBinary;
             }
@@ -75,6 +77,15 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
                 result = PictureManager.LoadPictureFromFile(this.PictureId, this.Extension);
             }
             return result;
+        }
+
+        /// <summary>
+        /// Gets the loaded picture binary depending on picture storage settings
+        /// </summary>
+        /// <returns>Picture binary</returns>
+        public byte[] LoadPictureBinary()
+        {
+            return LoadPictureBinary(PictureManager.StoreInDB);
         }
 
         #endregion

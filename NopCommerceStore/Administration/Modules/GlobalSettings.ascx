@@ -1070,6 +1070,20 @@
                     <tr>
                         <td class="adminTitle">
                             <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
+                                ID="lblStoreImagesInDB" Text="<% $NopResources:Admin.GlobalSettings.Media.StoreImagesInDB %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Media.StoreImagesInDB.Tooltip %>" />
+                        </td>
+                        <td class="adminData">
+                            <asp:Literal runat="server" ID="lStoreImagesInDBStorage" />
+                            <asp:Button ID="btnStoreImagesInDBToggle" CssClass="adminInput" CausesValidation="false"
+                                runat="server" Text="<% $NopResources:Admin.GlobalSettings.Media.StoreImagesInDB.Change %>"
+                                OnClick="btnStoreImagesInDBToggle_OnClick" />
+                            
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
                                 ID="lblMaxImageSize" Text="<% $NopResources:Admin.GlobalSettings.Media.MaxImageSize %>"
                                 ToolTip="<% $NopResources:Admin.GlobalSettings.Media.MaxImageSize.Tooltip %>" />
                         </td>

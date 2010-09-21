@@ -100,6 +100,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             txtForumTopicUrlRewriteFormat.Text = SettingManager.GetSettingValue("SEO.ForumTopic.UrlRewriteFormat");
 
 
+            lStoreImagesInDBStorage.Text = PictureManager.StoreInDB ? GetLocaleResourceString("Admin.GlobalSettings.Media.StoreImagesInDB.DB") : GetLocaleResourceString("Admin.GlobalSettings.Media.StoreImagesInDB.FS");
             txtMaxImageSize.Value = SettingManager.GetSettingValueInteger("Media.MaximumImageSize");
             txtProductThumbSize.Value = SettingManager.GetSettingValueInteger("Media.Product.ThumbnailImageSize");
             txtProductDetailSize.Value = SettingManager.GetSettingValueInteger("Media.Product.DetailImageSize");
@@ -317,7 +318,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             this.cbGoogleAnalyticsEnabled.Attributes.Add("onclick", "toggleGoogleAnalytics();");
             this.cbUsernamesEnabled.Attributes.Add("onclick", "toggleUsernames();");
             
-
+            this.btnStoreImagesInDBToggle.Attributes.Add("onclick", "this.disabled = true;" + Page.ClientScript.GetPostBackEventReference(this.btnStoreImagesInDBToggle, ""));
+            
             base.OnPreRender(e);
         }
 
@@ -394,7 +396,6 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     SettingManager.SetParam("Display.ShowAdminProductImages", cbShowAdminProductImages.Checked.ToString());
 
                     SettingManager.SetParam("Security.AdminAreaAllowedIP", ipList);
-
                     SettingManager.SetParam("Common.LoginCaptchaImageEnabled", cbEnableLoginCaptchaImage.Checked.ToString());
                     SettingManager.SetParam("Common.RegisterCaptchaImageEnabled", cbEnableRegisterCaptchaImage.Checked.ToString());
 
@@ -585,6 +586,20 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             }
         }
 
+        protected void btnStoreImagesInDBToggle_OnClick(object sender, EventArgs e)
+        {
+            try
+            {
+                PictureManager.StoreInDB = !PictureManager.StoreInDB;
+
+                Response.Redirect(string.Format("GlobalSettings.aspx?TabID={0}", this.GetActiveTabId(this.CommonSettingsTabs)));
+            }
+            catch (Exception ex)
+            {
+                ProcessException(ex);
+            }
+        }
+
         protected void BtnPdfLogoRemove_OnClick(object sender, EventArgs e)
         {
             try
@@ -595,7 +610,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             }
             catch(Exception ex)
             {
-                ShowError(ex.Message);
+                ProcessException(ex);
             }
         }
 
@@ -609,7 +624,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             }
             catch (Exception ex)
             {
-                ShowError(ex.Message);
+                ProcessException(ex);
             }
         }
         

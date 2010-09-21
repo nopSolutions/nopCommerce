@@ -442,10 +442,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
                         select p;
             var picture = query.SingleOrDefault();
 
-            
-
-             
-        
             return picture;
         }
 
@@ -698,7 +694,27 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
             }
             set
             {
-                SettingManager.SetParam("Media.Images.StoreInDB", value.ToString());
+                //check whether it's a new value
+                if (PictureManager.StoreInDB != value)
+                {
+                    //save the nwe setting value
+                    SettingManager.SetParam("Media.Images.StoreInDB", value.ToString());
+
+                    //update all picture objects
+                    int totalRecords = 0;
+                    var pictures = PictureManager.GetPictures(int.MaxValue, 0, out totalRecords);
+                    for (int i = 0; i < pictures.Count; i++)
+                    {
+                        var picture = pictures[i];
+
+                        //just update a picture (all required logic is in UpdatePicture method)
+                        var pictureBinary = picture.LoadPictureBinary(!value);
+                        picture = UpdatePicture(picture.PictureId,
+                            pictureBinary,
+                            picture.Extension,
+                            true);
+                    }
+                }
             }
         }
         #endregion

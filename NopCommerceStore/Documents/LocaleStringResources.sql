@@ -158,6 +158,21 @@ set @resources='
   <LocaleResource Name="Admin.GlobalSettings.Other.AllowAnonymousUsersToVotePolls.Tooltip">
     <Value>Check to allow anonymous users to vote on polls.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Media.StoreImagesInDB">
+    <Value>Pictures are stored into... :</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Media.StoreImagesInDB.Tooltip">
+    <Value>A value indicationing whether pictures are stored into database or filesystem.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Media.StoreImagesInDB.DB">
+    <Value>database</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Media.StoreImagesInDB.FS">
+    <Value>file system</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Media.StoreImagesInDB.Change">
+    <Value>Change</Value>
+  </LocaleResource>
 </Language>
 '
 
