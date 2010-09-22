@@ -32,6 +32,7 @@ using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Payment.Methods.PayPal;
 using NopSolutions.NopCommerce.BusinessLogic.Payment;
 using NopSolutions.NopCommerce.BusinessLogic.Audit;
+using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 namespace NopSolutions.NopCommerce.Web
 {
     public partial class PaypalPDTHandlerPage : BaseNopPage
@@ -67,7 +68,7 @@ namespace NopSolutions.NopCommerce.Web
                         }
                         catch (Exception exc)
                         {
-                            LogManager.InsertLog(LogTypeEnum.OrderError, "PayPal IPN. Error getting orderGUID", exc);
+                            LogManager.InsertLog(LogTypeEnum.OrderError, "PayPal PDT. Error getting mc_gross", exc);
                         }
 
                         string payer_status = string.Empty;
@@ -106,11 +107,22 @@ namespace NopSolutions.NopCommerce.Web
                         sb.AppendLine("payment_fee: " + payment_fee);
 
                         OrderManager.InsertOrderNote(order.OrderId, sb.ToString(), false, DateTime.UtcNow);
+
+                        //validate order total
+                        bool validateOrderTotal = SettingManager.GetSettingValueBoolean("PaymentMethod.PaypalStandard.ValidateOrderTotal", true);
+                        if (validateOrderTotal &&
+                            !total.Equals(order.OrderTotal))
+                        {
+                            string errorStr = string.Format("PayPal PDT. Returned order total {0} doesn't equal order total {1}", total, order.OrderTotal);
+                            LogManager.InsertLog(LogTypeEnum.OrderError, errorStr, errorStr);
+                            Response.Redirect(CommonHelper.GetStoreLocation());
+                        }
+                        
+                        //mark order as paid
                         if (OrderManager.CanMarkOrderAsPaid(order))
                         {
                             OrderManager.MarkOrderAsPaid(order.OrderId);
                         }
-                    
                     }
                     Response.Redirect("~/checkoutcompleted.aspx");
                 }

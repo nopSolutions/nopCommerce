@@ -72,3 +72,15 @@ BEGIN
 	END
 END
 GO
+
+
+
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[Nop_Setting]
+		WHERE [Name] = N'PaymentMethod.PaypalStandard.ValidateOrderTotal')
+BEGIN
+	INSERT [dbo].[Nop_Setting] ([Name], [Value], [Description])
+	VALUES (N'PaymentMethod.PaypalStandard.ValidateOrderTotal', N'true', N'')
+END
+GO
