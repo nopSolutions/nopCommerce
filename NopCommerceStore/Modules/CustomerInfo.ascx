@@ -68,7 +68,7 @@
                         <%=GetLocaleResourceString("Account.E-Mail")%>:
                     </td>
                     <td class="item-value">
-                        <asp:TextBox ID="txtEmail" runat="server" MaxLength="40"></asp:TextBox>
+                        <asp:TextBox ID="txtEmail" runat="server" MaxLength="100"></asp:TextBox>
                         <asp:RequiredFieldValidator ID="rfvEmail" runat="server" ControlToValidate="txtEmail"
                             ErrorMessage="<% $NopResources:Account.E-MailRequired %>" ToolTip="<% $NopResources:Account.E-MailRequired %>"
                             Display="Dynamic" ValidationGroup="CustomerInfo">*</asp:RequiredFieldValidator>
@@ -83,7 +83,7 @@
                         <%=GetLocaleResourceString("Account.Username")%>:
                     </td>
                     <td class="item-value">
-                        <asp:TextBox ID="txtUsername" runat="server" MaxLength="40"></asp:TextBox>
+                        <asp:TextBox ID="txtUsername" runat="server" MaxLength="100"></asp:TextBox>
                         <asp:RequiredFieldValidator ID="rfvUsername" runat="server" ControlToValidate="txtUsername"
                             ErrorMessage="<% $NopResources:Account.UsernameRequired %>" ToolTip="<% $NopResources:Account.UsernameRequired %>"
                             Display="Dynamic" ValidationGroup="CustomerInfo">*</asp:RequiredFieldValidator>

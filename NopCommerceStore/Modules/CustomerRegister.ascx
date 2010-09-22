@@ -88,7 +88,7 @@
                                             <%=GetLocaleResourceString("Account.E-Mail")%>:
                                         </td>
                                         <td class="item-value">
-                                            <asp:TextBox ID="Email" runat="server" MaxLength="40"></asp:TextBox>
+                                            <asp:TextBox ID="Email" runat="server" MaxLength="100"></asp:TextBox>
                                             <asp:RequiredFieldValidator ID="EmailRequired" runat="server" ControlToValidate="Email"
                                                 ErrorMessage="Email is required" ToolTip="Email is required" Display="Dynamic"
                                                 ValidationGroup="CreateUserForm">*</asp:RequiredFieldValidator>
@@ -104,7 +104,7 @@
                                             <asp:Literal runat="server" ID="lUsernameOrEmail" Text="E-Mail" />:
                                         </td>
                                         <td class="item-value">
-                                            <asp:TextBox ID="UserName" runat="server" MaxLength="40"></asp:TextBox>
+                                            <asp:TextBox ID="UserName" runat="server" MaxLength="100"></asp:TextBox>
                                             <asp:RequiredFieldValidator ID="UserNameOrEmailRequired" runat="server" ControlToValidate="UserName"
                                                 ErrorMessage="Username is required" ToolTip="Username is required" Display="Dynamic"
                                                 ValidationGroup="CreateUserForm">*</asp:RequiredFieldValidator>

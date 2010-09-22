@@ -587,7 +587,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                     throw new NopException("The e-mail address is already in use.");
                 }
 
-                if (newEmail.Length > 40)
+                if (newEmail.Length > 100)
                 {
                     throw new NopException("E-mail address is too long.");
                 }
@@ -633,7 +633,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                     throw new NopException("This username is already in use.");
                 }
 
-                if (newUsername.Length > 40)
+                if (newUsername.Length > 100)
                 {
                     throw new NopException("Username is too long.");
                 }
@@ -1289,7 +1289,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                         return customer;
                     }
 
-                    if (username.Length > 40)
+                    if (username.Length > 100)
                     {
                         status = MembershipCreateStatus.InvalidUserName;
                         return customer;
@@ -1308,7 +1308,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                     return customer;
                 }
 
-                if (email.Length > 40)
+                if (email.Length > 100)
                 {
                     status = MembershipCreateStatus.InvalidEmail;
                     return customer;
