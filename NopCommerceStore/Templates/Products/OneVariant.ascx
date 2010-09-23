@@ -61,9 +61,9 @@
             </asp:ListView>
         </div>
         <div class="overview">
-            <h3 class="productname">
+            <h1 class="productname">
                 <asp:Literal ID="lProductName" runat="server" />
-            </h3>
+            </h1>
             <div class="clear">
             </div>
             <div class="shortdescription">

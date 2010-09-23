@@ -16,9 +16,9 @@
         </a>
     </div>
     <div class="overview">
-        <h3 class="productname">
+        <h1 class="productname">
             <asp:Literal ID="lProductName" runat="server" />
-        </h3>
+        </h1>
         <br />
         <div class="shortdescription">
             <asp:Literal ID="lShortDescription" runat="server" />
