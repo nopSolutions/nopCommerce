@@ -43,17 +43,41 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
         #region Utilities
 
         /// <summary>
-        /// Returns the first ImageCodeInfo instance with the specified mime type. Some people try to get the ImageCodeInfo instance by index - sounds rather fragile to me.
+        /// Returns the first ImageCodecInfo instance with the specified mime type.
         /// </summary>
-        /// <param name="mimeType"></param>
-        /// <returns></returns>
-        private static ImageCodecInfo getImageCodeInfo(string mimeType)
+        /// <param name="mimeType">Mime type</param>
+        /// <returns>ImageCodecInfo</returns>
+        private static ImageCodecInfo GetImageCodecInfoFromMimeType(string mimeType)
         {
             var info = ImageCodecInfo.GetImageEncoders();
             foreach (var ici in info)
                 if (ici.MimeType.Equals(mimeType, StringComparison.OrdinalIgnoreCase)) 
                     return ici;
             return null;
+        }
+
+        /// <summary>
+        /// Returns the first ImageCodecInfo instance with the specified extension.
+        /// </summary>
+        /// <param name="fileExt">File extension</param>
+        /// <returns>ImageCodecInfo</returns>
+        private static ImageCodecInfo GetImageCodecInfoFromExtension(string fileExt)
+        {
+            fileExt = fileExt.TrimStart(".".ToCharArray()).ToLower().Trim();
+            switch (fileExt)
+            {
+                case "jpg":
+                case "jpeg":
+                    return GetImageCodecInfoFromMimeType("image/jpeg");
+                case "png":
+                    return GetImageCodecInfoFromMimeType("image/png");
+                case "gif":
+                    //use png codec for gif to preserve transparency
+                    //return GetImageCodecInfoFromMimeType("image/gif");
+                    return GetImageCodecInfoFromMimeType("image/png");
+                default:
+                    return GetImageCodecInfoFromMimeType("image/jpeg");
+            }
         }
 
         private static void SavePictureInFile(int PictureId, byte[] pictureBinary, string extension)
@@ -127,10 +151,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
                 string filePath = Path.Combine(LocalImagePath, defaultImageName);
                 if (File.Exists(filePath))
                 {
+                    string fileExtension = Path.GetExtension(filePath);
                     string fname = string.Format("{0}_{1}{2}",
                         Path.GetFileNameWithoutExtension(filePath),
                         targetSize,
-                        Path.GetExtension(filePath));
+                        fileExtension);
                     if (!File.Exists(Path.Combine(LocalThumbImagePath, fname)))
                     {
                         var b = new Bitmap(filePath);
@@ -151,7 +176,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
                         g.DrawImage(b, 0, 0, newSize.Width, newSize.Height);
                         var ep = new EncoderParameters();
                         ep.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, PictureManager.ImageQuality);
-                        newBitMap.Save(Path.Combine(LocalThumbImagePath, fname), getImageCodeInfo("image/jpeg"), ep);
+                        ImageCodecInfo ici = GetImageCodecInfoFromExtension(fileExtension);
+                        if (ici == null)
+                            ici = GetImageCodecInfoFromMimeType("image/jpeg");
+                        newBitMap.Save(Path.Combine(LocalThumbImagePath, fname), ici, ep);
                         newBitMap.Dispose();
                         b.Dispose();
                     }
@@ -373,7 +401,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
                             g.DrawImage(b, 0, 0, newSize.Width, newSize.Height);
                             var ep = new EncoderParameters();
                             ep.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, PictureManager.ImageQuality);
-                            newBitMap.Save(Path.Combine(PictureManager.LocalThumbImagePath, localFilename), getImageCodeInfo("image/jpeg"), ep);
+                            ImageCodecInfo ici = GetImageCodecInfoFromExtension(lastPart);
+                            if (ici == null)
+                                ici = GetImageCodecInfoFromMimeType("image/jpeg");
+                            newBitMap.Save(Path.Combine(PictureManager.LocalThumbImagePath, localFilename), ici, ep);
                             newBitMap.Dispose();
                             b.Dispose();
                         }
@@ -471,8 +502,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
         /// Validates input picture dimensions
         /// </summary>
         /// <param name="pictureBinary">Picture binary</param>
+        /// <param name="mimeType">MIME type</param>
         /// <returns>Picture binary or throws an exception</returns>
-        public static byte[] ValidatePicture(byte[] pictureBinary)
+        public static byte[] ValidatePicture(byte[] pictureBinary, string mimeType)
         {
             using (MemoryStream stream = new MemoryStream(pictureBinary))
             {
@@ -493,7 +525,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
                     var m = new MemoryStream();
                     var ep = new EncoderParameters();
                     ep.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, PictureManager.ImageQuality);
-                    newBitMap.Save(m, getImageCodeInfo("image/jpeg"), ep);
+                    ImageCodecInfo ici = GetImageCodecInfoFromMimeType(mimeType);
+                    if (ici == null)
+                        ici = GetImageCodecInfoFromMimeType("image/jpeg");
+                    newBitMap.Save(m, ici, ep);
                     newBitMap.Dispose();
                     b.Dispose();
 
@@ -579,8 +614,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
         public static Picture InsertPicture(byte[] pictureBinary, string extension, bool isNew)
         {
             extension = CommonHelper.EnsureMaximumLength(extension, 20);
-            
-            pictureBinary = ValidatePicture(pictureBinary);
+
+            pictureBinary = ValidatePicture(pictureBinary, extension);
 
             var context = ObjectContextHelper.CurrentObjectContext;
             var picture = context.Pictures.CreateObject();
@@ -610,8 +645,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
             string extension, bool isNew)
         {
             extension = CommonHelper.EnsureMaximumLength(extension, 20);
-            
-            ValidatePicture(pictureBinary);
+
+            ValidatePicture(pictureBinary, extension);
 
             var picture = GetPictureById(pictureId);
             if (picture == null)
