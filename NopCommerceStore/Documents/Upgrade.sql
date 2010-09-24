@@ -125,3 +125,8 @@ BEGIN
 	ADD [OrderSubTotalDiscountExclTaxInCustomerCurrency] money NOT NULL CONSTRAINT [DF_Nop_Order_OrderSubTotalDiscountExclTaxInCustomerCurrency] DEFAULT ((0))
 END
 GO
+
+UPDATE [Nop_DiscountType]
+SET [DiscountTypeID] = 20
+WHERE [DiscountTypeID] = 0
+GO
