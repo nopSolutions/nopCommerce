@@ -66,13 +66,14 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Svea
                 sb.AppendFormat("Row{0}VATPercentage={1}&", rowNumber, (int)TaxManager.GetTaxRate(pv, customer, ref errStr));
             }
 
-            //discount
-            if (order.OrderDiscount != Decimal.Zero)
+            //discount (applied to order subtotal)
+            if (order.OrderSubTotalDiscountExclTax != Decimal.Zero)
             {
-                sb.AppendFormat("Row{0}AmountExVAT={1}&", rowNumber, -order.OrderDiscount);
+                sb.AppendFormat("Row{0}AmountExVAT={1}&", rowNumber, -order.OrderSubTotalDiscountExclTax);
                 sb.AppendFormat("Row{0}Description=Discount&", rowNumber);
                 sb.AppendFormat("Row{0}Quantity=1&", rowNumber);
-                sb.AppendFormat("Row{0}VATPercentage=0&", rowNumber);
+                 int taxRate = (int)(((order.OrderSubTotalDiscountInclTax - order.OrderSubTotalDiscountExclTax) / order.OrderSubTotalDiscountExclTax) * 100);
+                 sb.AppendFormat("Row{0}VATPercentage={1}&", rowNumber, taxRate);
 
                 rowNumber++;
             }
@@ -83,7 +84,8 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Svea
                 sb.AppendFormat("Row{0}AmountExVAT={1}&", rowNumber, order.OrderShippingExclTax);
                 sb.AppendFormat("Row{0}Description=Shipping&", rowNumber);
                 sb.AppendFormat("Row{0}Quantity=1&", rowNumber);
-                sb.AppendFormat("Row{0}VATPercentage={1}&", rowNumber, (int)(((order.OrderShippingInclTax - order.OrderShippingExclTax) / order.OrderShippingExclTax) * 100));
+                int taxRate = (int)(((order.OrderShippingInclTax - order.OrderShippingExclTax) / order.OrderShippingExclTax) * 100);
+                sb.AppendFormat("Row{0}VATPercentage={1}&", rowNumber, taxRate);
 
                 rowNumber++;
             }
@@ -94,7 +96,19 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Svea
                 sb.AppendFormat("Row{0}AmountExVAT={1}&", rowNumber, order.PaymentMethodAdditionalFeeExclTax);
                 sb.AppendFormat("Row{0}Description=Additional&", rowNumber);
                 sb.AppendFormat("Row{0}Quantity=1&", rowNumber);
-                sb.AppendFormat("Row{0}VATPercentage={1}&", rowNumber, (int)(((order.PaymentMethodAdditionalFeeInclTax - order.PaymentMethodAdditionalFeeExclTax) / order.PaymentMethodAdditionalFeeExclTax) * 100));
+                int taxRate = (int)(((order.PaymentMethodAdditionalFeeInclTax - order.PaymentMethodAdditionalFeeExclTax) / order.PaymentMethodAdditionalFeeExclTax) * 100);                
+                sb.AppendFormat("Row{0}VATPercentage={1}&", rowNumber, taxRate);
+
+                rowNumber++;
+            }
+
+            //discount (applied to order total)
+            if (order.OrderDiscount != Decimal.Zero)
+            {
+                sb.AppendFormat("Row{0}AmountExVAT={1}&", rowNumber, -order.OrderDiscount);
+                sb.AppendFormat("Row{0}Description=Discount&", rowNumber);
+                sb.AppendFormat("Row{0}Quantity=1&", rowNumber);
+                sb.AppendFormat("Row{0}VATPercentage=0&", rowNumber);
 
                 rowNumber++;
             }

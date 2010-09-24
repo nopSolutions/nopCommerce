@@ -578,6 +578,27 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         /// </summary>
         /// <param name="price">Price</param>
         /// <param name="showCurrency">A value indicating whether to show a currency</param>
+        /// <param name="currencyCode">Currency code</param>
+        /// <param name="language">Language</param>
+        /// <param name="priceIncludesTax">A value indicating whether price includes tax</param>
+        /// <returns>Price</returns>
+        public static string FormatPrice(decimal price, bool showCurrency,
+            string currencyCode, Language language, bool priceIncludesTax)
+        {
+            var currency = CurrencyManager.GetCurrencyByCode(currencyCode);
+            if (currency == null)
+            {
+                currency = new Currency();
+                currency.CurrencyCode = currencyCode;
+            }
+            return FormatPrice(price, showCurrency, currency, language, priceIncludesTax);
+        }
+
+        /// <summary>
+        /// Formats the price
+        /// </summary>
+        /// <param name="price">Price</param>
+        /// <param name="showCurrency">A value indicating whether to show a currency</param>
         /// <param name="targetCurrency">Target currency</param>
         /// <param name="language">Language</param>
         /// <param name="priceIncludesTax">A value indicating whether price includes tax</param>
@@ -631,27 +652,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             {
                 return currencyString;
             }
-        }
-
-        /// <summary>
-        /// Formats the price
-        /// </summary>
-        /// <param name="price">Price</param>
-        /// <param name="showCurrency">A value indicating whether to show a currency</param>
-        /// <param name="currencyCode">Currency code</param>
-        /// <param name="language">Language</param>
-        /// <param name="priceIncludesTax">A value indicating whether price includes tax</param>
-        /// <returns>Price</returns>
-        public static string FormatPrice(decimal price, bool showCurrency, string currencyCode, 
-            Language language, bool priceIncludesTax)
-        {
-            var currency = CurrencyManager.GetCurrencyByCode(currencyCode);
-            if (currency == null)
-            {
-                currency = new Currency();
-                currency.CurrencyCode = currencyCode;
-            }
-            return FormatPrice(price, showCurrency, currency, language, priceIncludesTax);
         }
 
 

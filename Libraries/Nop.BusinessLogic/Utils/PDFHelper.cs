@@ -386,6 +386,27 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Utils
             {
                 p6.Format.Alignment = ParagraphAlignment.Right;
             }
+            //discount (applied to order subtotal)
+            if (order.OrderSubTotalDiscountExclTaxInCustomerCurrency > decimal.Zero)
+            {
+                switch (order.CustomerTaxDisplayType)
+                {
+                    case TaxDisplayTypeEnum.ExcludingTax:
+                        {
+                            string orderSubTotalDiscountInCustomerCurrencyStr = PriceHelper.FormatPrice(-order.OrderSubTotalDiscountExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, false);
+                            Paragraph p6a = sec.AddParagraph(String.Format("{0} {1}", LocalizationManager.GetLocaleResourceString("PDFInvoice.Discount", languageId), orderSubTotalDiscountInCustomerCurrencyStr));
+                            p6a.Format.Alignment = ParagraphAlignment.Right;
+                        }
+                        break;
+                    case TaxDisplayTypeEnum.IncludingTax:
+                        {
+                            string orderSubTotalDiscountInCustomerCurrencyStr = PriceHelper.FormatPrice(-order.OrderSubTotalDiscountInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, true);
+                            Paragraph p6a = sec.AddParagraph(String.Format("{0} {1}", LocalizationManager.GetLocaleResourceString("PDFInvoice.Discount", languageId), orderSubTotalDiscountInCustomerCurrencyStr));
+                            p6a.Format.Alignment = ParagraphAlignment.Right;
+                        }
+                        break;
+                }
+            }
 
             //shipping
             if(order.ShippingStatus != ShippingStatusEnum.ShippingNotRequired)
@@ -481,7 +502,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Utils
                 }
             }
 
-            //discount
+            //discount (applied to order total)
             if (order.OrderDiscountInCustomerCurrency > decimal.Zero)
             {
                 string orderDiscountInCustomerCurrencyStr = PriceHelper.FormatPrice(-order.OrderDiscountInCustomerCurrency, true, order.CustomerCurrencyCode, false);

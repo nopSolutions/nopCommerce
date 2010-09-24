@@ -173,6 +173,24 @@ set @resources='
   <LocaleResource Name="Admin.GlobalSettings.Media.StoreImagesInDB.Change">
     <Value>Change</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.OrderDetails.SubtotalDiscountInclTax">
+    <Value>Order subtotal discount (incl tax):</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.OrderDetails.SubtotalDiscountInclTax.Tooltip">
+    <Value>The subtotal discount of this order (including tax).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.OrderDetails.SubtotalDiscountExclTax">
+    <Value>Order subtotal discount (excl tax):</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.OrderDetails.SubtotalDiscountExclTax.Tooltip">
+    <Value>The subtotal discount of this order (excluding tax).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.OrderDetails.EditOrderTotals.SubtotalDiscount.InPrimaryCurrency">
+    <Value>Subtotal discount in primary currency - {0}:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.OrderDetails.EditOrderTotals.SubtotalDiscount.InCustomerCurrency">
+    <Value>Subtotal discount in customer currency - {0}:</Value>
+  </LocaleResource>
 </Language>
 '
 

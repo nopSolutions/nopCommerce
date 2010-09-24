@@ -22,6 +22,24 @@ namespace NopSolutions.NopCommerce.Web.Modules {
         protected global::System.Web.UI.WebControls.Label lblSubTotalAmount;
         
         /// <summary>
+        /// phOrderSubTotalDiscount control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.PlaceHolder phOrderSubTotalDiscount;
+        
+        /// <summary>
+        /// lblOrderSubTotalDiscountAmount control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblOrderSubTotalDiscountAmount;
+        
+        /// <summary>
         /// lblShippingAmount control.
         /// </summary>
         /// <remarks>
@@ -76,22 +94,22 @@ namespace NopSolutions.NopCommerce.Web.Modules {
         protected global::System.Web.UI.WebControls.Label lblTaxAmount;
         
         /// <summary>
-        /// phDiscount control.
+        /// phOrderTotalDiscount control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.PlaceHolder phDiscount;
+        protected global::System.Web.UI.WebControls.PlaceHolder phOrderTotalDiscount;
         
         /// <summary>
-        /// lblDiscountAmount control.
+        /// lblOrderTotalDiscountAmount control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblDiscountAmount;
+        protected global::System.Web.UI.WebControls.Label lblOrderTotalDiscountAmount;
         
         /// <summary>
         /// rptrGiftCards control.

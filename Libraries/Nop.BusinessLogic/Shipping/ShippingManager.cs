@@ -43,6 +43,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         {
             if (customer != null)
             {
+                //check whether customer is in a customer role with free shipping applied
                 var customerRoles = customer.CustomerRoles;
                 foreach (var customerRole in customerRoles)
                     if (customerRole.FreeShipping)
@@ -53,16 +54,24 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
             if (!shoppingCartRequiresShipping)
                 return true;
 
-            decimal orderSubTotalBase = decimal.Zero;
+            //check whether we have subtotal enough to have free shipping
+            decimal subTotalBase = decimal.Zero;
+            decimal orderSubTotalDiscountAmount = decimal.Zero;
+            Discount orderSubTotalAppliedDiscount = null;
+            decimal subTotalWithoutDiscountBase = decimal.Zero; 
+            decimal subTotalWithDiscountBase = decimal.Zero;
             string SubTotalError = ShoppingCartManager.GetShoppingCartSubTotal(cart,
-                customer, out orderSubTotalBase);
+                customer, out orderSubTotalDiscountAmount, out orderSubTotalAppliedDiscount,
+                out subTotalWithoutDiscountBase, out subTotalWithDiscountBase);
+            subTotalBase = subTotalWithDiscountBase;
             if (SettingManager.GetSettingValueBoolean("Shipping.FreeShippingOverX.Enabled"))
             {
                 decimal freeShippingOverX = SettingManager.GetSettingValueDecimalNative("Shipping.FreeShippingOverX.Value");
-                if (orderSubTotalBase > freeShippingOverX)
+                if (subTotalBase > freeShippingOverX)
                     return true;
             }
 
+            //check whether all shopping cart items are marked as free shipping
             bool allItemsAreFreeShipping = true;
             foreach (var sc in cart)
                 if (!sc.IsFreeShipping)
@@ -73,6 +82,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
             if (allItemsAreFreeShipping)
                 return true;
 
+            //otherwise, return false
             return false;
         }
 

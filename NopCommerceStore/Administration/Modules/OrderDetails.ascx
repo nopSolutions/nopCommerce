@@ -324,6 +324,24 @@
                         <asp:Label ID="lblOrderSubtotalExclTax" runat="server"></asp:Label>
                     </td>
                 </tr>
+                <tr runat="server" id="pnlOrderSubtotalDiscountInclTax">
+                    <td class="adminTitle">
+                        <nopCommerce:ToolTipLabel runat="server" ID="lblOrderSubtotalDiscountInclTaxTitle" Text="<% $NopResources:Admin.OrderDetails.SubtotalDiscountInclTax %>"
+                            ToolTip="<% $NopResources:Admin.OrderDetails.SubtotalDiscountInclTax.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
+                    </td>
+                    <td class="adminData">
+                        <asp:Label ID="lblOrderSubtotalDiscountInclTax" runat="server"></asp:Label>
+                    </td>
+                </tr>
+                <tr runat="server" id="pnlOrderSubtotalDiscountExclTax">
+                    <td class="adminTitle">
+                        <nopCommerce:ToolTipLabel runat="server" ID="lblOrderSubtotalDiscountExclTaxTitle" Text="<% $NopResources: Admin.OrderDetails.SubtotalDiscountExclTax%>"
+                            ToolTip="<% $NopResources:Admin.OrderDetails.SubtotalDiscountExclTax.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
+                    </td>
+                    <td class="adminData">
+                        <asp:Label ID="lblOrderSubtotalDiscountExclTax" runat="server"></asp:Label>
+                    </td>
+                </tr>
                 <tr runat="server" id="pnlOrderShippingInclTax">
                     <td class="adminTitle">
                         <nopCommerce:ToolTipLabel runat="server" ID="lblOrderShippingInclTaxTitle" Text="<% $NopResources:Admin.OrderDetails.ShippingInclTax %>"
@@ -465,6 +483,32 @@
                                 <td>
                                     <%=GetLocaleResourceString("Admin.OrderDetails.EditOrderTotals.ExclTax")%>
                                     <asp:TextBox ID="txtOrderSubtotalInCustomerCurrencyExclTax" runat="server" CssClass="adminInput" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <asp:Label runat="server" ID="lblOrderSubtotalDiscountInPrimaryCurrencyTitle"></asp:Label>
+                                </td>
+                                <td>
+                                    <%=GetLocaleResourceString("Admin.OrderDetails.EditOrderTotals.InclTax")%>
+                                    <asp:TextBox ID="txtOrderSubtotalDiscountInPrimaryCurrencyInclTax" runat="server" CssClass="adminInput" />
+                                </td>
+                                <td>
+                                    <%=GetLocaleResourceString("Admin.OrderDetails.EditOrderTotals.ExclTax")%>
+                                    <asp:TextBox ID="txtOrderSubtotalDiscountInPrimaryCurrencyExclTax" runat="server" CssClass="adminInput" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <asp:Label runat="server" ID="lblOrderSubtotalDiscountInCustomerCurrencyTitle"></asp:Label>
+                                </td>
+                                <td>
+                                    <%=GetLocaleResourceString("Admin.OrderDetails.EditOrderTotals.InclTax")%>
+                                    <asp:TextBox ID="txtOrderSubtotalDiscountInCustomerCurrencyInclTax" runat="server" CssClass="adminInput" />
+                                </td>
+                                <td>
+                                    <%=GetLocaleResourceString("Admin.OrderDetails.EditOrderTotals.ExclTax")%>
+                                    <asp:TextBox ID="txtOrderSubtotalDiscountInCustomerCurrencyExclTax" runat="server" CssClass="adminInput" />
                                 </td>
                             </tr>
                             <tr>

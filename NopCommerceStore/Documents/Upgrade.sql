@@ -84,3 +84,44 @@ BEGIN
 	VALUES (N'PaymentMethod.PaypalStandard.ValidateOrderTotal', N'true', N'')
 END
 GO
+
+
+--new discount type
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[Nop_DiscountType]
+		WHERE [DiscountTypeID] = 0)
+BEGIN
+	INSERT [dbo].[Nop_DiscountType] ([DiscountTypeID], [Name])
+	VALUES (0, N'Assigned to order subtotal')
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[Nop_Order]') and NAME='OrderSubTotalDiscountInclTax')
+BEGIN
+	ALTER TABLE [dbo].[Nop_Order] 
+	ADD [OrderSubTotalDiscountInclTax] money NOT NULL CONSTRAINT [DF_Nop_Order_OrderSubTotalDiscountInclTax] DEFAULT ((0))
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[Nop_Order]') and NAME='OrderSubTotalDiscountInclTaxInCustomerCurrency')
+BEGIN
+	ALTER TABLE [dbo].[Nop_Order] 
+	ADD [OrderSubTotalDiscountInclTaxInCustomerCurrency] money NOT NULL CONSTRAINT [DF_Nop_Order_OrderSubTotalDiscountInclTaxInCustomerCurrency] DEFAULT ((0))
+END
+GO
+
+
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[Nop_Order]') and NAME='OrderSubTotalDiscountExclTax')
+BEGIN
+	ALTER TABLE [dbo].[Nop_Order] 
+	ADD [OrderSubTotalDiscountExclTax] money NOT NULL CONSTRAINT [DF_Nop_Order_OrderSubTotalDiscountExclTax] DEFAULT ((0))
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[Nop_Order]') and NAME='OrderSubTotalDiscountExclTaxInCustomerCurrency')
+BEGIN
+	ALTER TABLE [dbo].[Nop_Order] 
+	ADD [OrderSubTotalDiscountExclTaxInCustomerCurrency] money NOT NULL CONSTRAINT [DF_Nop_Order_OrderSubTotalDiscountExclTaxInCustomerCurrency] DEFAULT ((0))
+END
+GO

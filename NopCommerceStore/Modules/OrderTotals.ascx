@@ -14,6 +14,19 @@
                     </span>
                 </td>
             </tr>
+            <asp:PlaceHolder runat="server" ID="phOrderSubTotalDiscount" Visible="false">
+                <tr>
+                    <td class="cart_total_left">
+                        <strong>
+                            <%=GetLocaleResourceString("ShoppingCart.OrderDiscount")%>:</strong>
+                    </td>
+                    <td class="cart_total_right">
+                        <span style="white-space: nowrap;">
+                            <asp:Label ID="lblOrderSubTotalDiscountAmount" runat="server" CssClass="productPrice" />
+                        </span>
+                    </td>
+                </tr>
+            </asp:PlaceHolder>
             <tr>
                 <td class="cart_total_left">
                     <strong>
@@ -66,7 +79,7 @@
                     </td>
                 </tr>
             </asp:PlaceHolder>
-            <asp:PlaceHolder runat="server" ID="phDiscount" Visible="false">
+            <asp:PlaceHolder runat="server" ID="phOrderTotalDiscount" Visible="false">
                 <tr>
                     <td class="cart_total_left">
                         <strong>
@@ -74,7 +87,7 @@
                     </td>
                     <td class="cart_total_right">
                         <span style="white-space: nowrap;">
-                            <asp:Label ID="lblDiscountAmount" runat="server" CssClass="productPrice" />
+                            <asp:Label ID="lblOrderTotalDiscountAmount" runat="server" CssClass="productPrice" />
                         </span>
                     </td>
                 </tr>

@@ -726,9 +726,9 @@
           <Property Name="BlogPostTitle" Type="nvarchar" Nullable="false" MaxLength="200" />
           <Property Name="BlogPostBody" Type="nvarchar(max)" Nullable="false" />
           <Property Name="BlogPostAllowComments" Type="bit" Nullable="false" />
+          <Property Name="Tags" Type="nvarchar" Nullable="false" />
           <Property Name="CreatedByID" Type="int" Nullable="false" />
           <Property Name="CreatedOn" Type="datetime" Nullable="false" />
-          <Property Name="Tags" Type="nvarchar" Nullable="false" />
         </EntityType>
         <EntityType Name="Nop_Campaign">
           <Key>
@@ -853,9 +853,9 @@
           <Property Name="TwoLetterISOCode" Type="nvarchar" Nullable="false" MaxLength="2" />
           <Property Name="ThreeLetterISOCode" Type="nvarchar" Nullable="false" MaxLength="3" />
           <Property Name="NumericISOCode" Type="int" Nullable="false" />
+          <Property Name="SubjectToVAT" Type="bit" Nullable="false" />
           <Property Name="Published" Type="bit" Nullable="false" />
           <Property Name="DisplayOrder" Type="int" Nullable="false" />
-          <Property Name="SubjectToVAT" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Nop_CreditCardType">
           <Key>
@@ -995,7 +995,11 @@
           <Property Name="DiscountID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="DiscountTypeID" Type="int" Nullable="false" />
           <Property Name="DiscountRequirementID" Type="int" Nullable="false" />
+          <Property Name="RequirementSpentAmount" Type="money" Nullable="false" />
+          <Property Name="RequirementBillingCountryIs" Type="int" Nullable="false" />
+          <Property Name="RequirementShippingCountryIs" Type="int" Nullable="false" />
           <Property Name="DiscountLimitationID" Type="int" Nullable="false" />
+          <Property Name="LimitationTimes" Type="int" Nullable="false" />
           <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="100" />
           <Property Name="UsePercentage" Type="bit" Nullable="false" />
           <Property Name="DiscountPercentage" Type="decimal" Nullable="false" Scale="4" />
@@ -1005,10 +1009,6 @@
           <Property Name="RequiresCouponCode" Type="bit" Nullable="false" />
           <Property Name="CouponCode" Type="nvarchar" Nullable="false" MaxLength="100" />
           <Property Name="Deleted" Type="bit" Nullable="false" />
-          <Property Name="RequirementSpentAmount" Type="money" Nullable="false" />
-          <Property Name="LimitationTimes" Type="int" Nullable="false" />
-          <Property Name="RequirementBillingCountryIs" Type="int" Nullable="false" />
-          <Property Name="RequirementShippingCountryIs" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Nop_DiscountLimitation">
           <Key>
@@ -1374,8 +1374,10 @@
           <Property Name="OrderShippingExclTax" Type="money" Nullable="false" />
           <Property Name="PaymentMethodAdditionalFeeInclTax" Type="money" Nullable="false" />
           <Property Name="PaymentMethodAdditionalFeeExclTax" Type="money" Nullable="false" />
+          <Property Name="TaxRates" Type="nvarchar" Nullable="false" />
           <Property Name="OrderTax" Type="money" Nullable="false" />
           <Property Name="OrderTotal" Type="money" Nullable="false" />
+          <Property Name="RefundedAmount" Type="money" Nullable="false" />
           <Property Name="OrderDiscount" Type="money" Nullable="false" />
           <Property Name="OrderSubtotalInclTaxInCustomerCurrency" Type="money" Nullable="false" />
           <Property Name="OrderSubtotalExclTaxInCustomerCurrency" Type="money" Nullable="false" />
@@ -1383,6 +1385,7 @@
           <Property Name="OrderShippingExclTaxInCustomerCurrency" Type="money" Nullable="false" />
           <Property Name="PaymentMethodAdditionalFeeInclTaxInCustomerCurrency" Type="money" Nullable="false" />
           <Property Name="PaymentMethodAdditionalFeeExclTaxInCustomerCurrency" Type="money" Nullable="false" />
+          <Property Name="TaxRatesInCustomerCurrency" Type="nvarchar" Nullable="false" />
           <Property Name="OrderTaxInCustomerCurrency" Type="money" Nullable="false" />
           <Property Name="OrderTotalInCustomerCurrency" Type="money" Nullable="false" />
           <Property Name="OrderDiscountInCustomerCurrency" Type="money" Nullable="false" />
@@ -1445,12 +1448,13 @@
           <Property Name="ShippedDate" Type="datetime" />
           <Property Name="TrackingNumber" Type="nvarchar" Nullable="false" MaxLength="100" />
           <Property Name="DeliveryDate" Type="datetime" />
+          <Property Name="VatNumber" Type="nvarchar" Nullable="false" MaxLength="100" />
           <Property Name="Deleted" Type="bit" Nullable="false" />
           <Property Name="CreatedOn" Type="datetime" Nullable="false" />
-          <Property Name="VatNumber" Type="nvarchar" Nullable="false" MaxLength="100" />
-          <Property Name="TaxRates" Type="nvarchar" Nullable="false" />
-          <Property Name="TaxRatesInCustomerCurrency" Type="nvarchar" Nullable="false" />
-          <Property Name="RefundedAmount" Type="money" Nullable="false" />
+          <Property Name="OrderSubTotalDiscountExclTax" Type="money" Nullable="false" />
+          <Property Name="OrderSubTotalDiscountExclTaxInCustomerCurrency" Type="money" Nullable="false" />
+          <Property Name="OrderSubTotalDiscountInclTax" Type="money" Nullable="false" />
+          <Property Name="OrderSubTotalDiscountInclTaxInCustomerCurrency" Type="money" Nullable="false" />
         </EntityType>
         <EntityType Name="Nop_OrderNote">
           <Key>
@@ -1761,6 +1765,7 @@
           <Property Name="AdminComment" Type="nvarchar" Nullable="false" />
           <Property Name="ManufacturerPartNumber" Type="nvarchar" Nullable="false" MaxLength="100" />
           <Property Name="IsGiftCard" Type="bit" Nullable="false" />
+          <Property Name="GiftCardType" Type="int" Nullable="false" />
           <Property Name="IsDownload" Type="bit" Nullable="false" />
           <Property Name="DownloadID" Type="int" Nullable="false" />
           <Property Name="UnlimitedDownloads" Type="bit" Nullable="false" />
@@ -1783,13 +1788,16 @@
           <Property Name="ManageInventory" Type="int" Nullable="false" />
           <Property Name="StockQuantity" Type="int" Nullable="false" />
           <Property Name="DisplayStockAvailability" Type="bit" Nullable="false" />
+          <Property Name="DisplayStockQuantity" Type="bit" Nullable="false" />
           <Property Name="MinStockQuantity" Type="int" Nullable="false" />
           <Property Name="LowStockActivityID" Type="int" Nullable="false" />
           <Property Name="NotifyAdminForQuantityBelow" Type="int" Nullable="false" />
+          <Property Name="Backorders" Type="int" Nullable="false" />
           <Property Name="OrderMinimumQuantity" Type="int" Nullable="false" />
           <Property Name="OrderMaximumQuantity" Type="int" Nullable="false" />
           <Property Name="WarehouseID" Type="int" Nullable="false" />
           <Property Name="DisableBuyButton" Type="bit" Nullable="false" />
+          <Property Name="CallForPrice" Type="bit" Nullable="false" />
           <Property Name="Price" Type="money" Nullable="false" />
           <Property Name="OldPrice" Type="money" Nullable="false" />
           <Property Name="ProductCost" Type="money" Nullable="false" />
@@ -1808,10 +1816,6 @@
           <Property Name="DisplayOrder" Type="int" Nullable="false" />
           <Property Name="CreatedOn" Type="datetime" Nullable="false" />
           <Property Name="UpdatedOn" Type="datetime" Nullable="false" />
-          <Property Name="DisplayStockQuantity" Type="bit" Nullable="false" />
-          <Property Name="Backorders" Type="int" Nullable="false" />
-          <Property Name="GiftCardType" Type="int" Nullable="false" />
-          <Property Name="CallForPrice" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Nop_ProductVariant_Discount_Mapping">
           <Key>
@@ -7597,6 +7601,10 @@
           <NavigationProperty Name="NpOrderNotes" Relationship="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_OrderNote_Nop_Order" FromRole="Nop_Order" ToRole="Nop_OrderNote" />
           <NavigationProperty Name="NpOrderProductVariants" Relationship="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_OrderProductVariant_Nop_Order" FromRole="Nop_Order" ToRole="Nop_OrderProductVariant" />
           <NavigationProperty Name="NpDiscountUsageHistory" Relationship="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_DiscountUsageHistory_Nop_Order" FromRole="Nop_Order" ToRole="Nop_DiscountUsageHistory" />
+          <Property Type="Decimal" Name="OrderSubTotalDiscountExclTax" Nullable="false" Precision="19" Scale="4" />
+          <Property Type="Decimal" Name="OrderSubTotalDiscountExclTaxInCustomerCurrency" Nullable="false" Precision="19" Scale="4" />
+          <Property Type="Decimal" Name="OrderSubTotalDiscountInclTax" Nullable="false" Precision="19" Scale="4" />
+          <Property Type="Decimal" Name="OrderSubTotalDiscountInclTaxInCustomerCurrency" Nullable="false" Precision="19" Scale="4" />
         </EntityType>
         <EntityType Name="OrderNote">
           <Key>
@@ -9552,6 +9560,10 @@
           <EntitySetMapping Name="Orders">
             <EntityTypeMapping TypeName="NopSolutions.NopCommerce.BusinessLogic.Data.Order">
               <MappingFragment StoreEntitySet="Nop_Order">
+                <ScalarProperty Name="OrderSubTotalDiscountInclTaxInCustomerCurrency" ColumnName="OrderSubTotalDiscountInclTaxInCustomerCurrency" />
+                <ScalarProperty Name="OrderSubTotalDiscountInclTax" ColumnName="OrderSubTotalDiscountInclTax" />
+                <ScalarProperty Name="OrderSubTotalDiscountExclTaxInCustomerCurrency" ColumnName="OrderSubTotalDiscountExclTaxInCustomerCurrency" />
+                <ScalarProperty Name="OrderSubTotalDiscountExclTax" ColumnName="OrderSubTotalDiscountExclTax" />
                 <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
                 <ScalarProperty Name="Deleted" ColumnName="Deleted" />
                 <ScalarProperty Name="VatNumber" ColumnName="VatNumber" />

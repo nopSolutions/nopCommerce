@@ -61,13 +61,31 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 //subtotal
                 //don't include checkout attributes on shopping cart page
                 decimal subtotalBase = decimal.Zero;
+                decimal orderSubTotalDiscountAmountBase = decimal.Zero;
+                Discount orderSubTotalAppliedDiscount = null;
+                decimal subTotalWithoutDiscountBase = decimal.Zero;
+                decimal subTotalWithDiscountBase = decimal.Zero;
                 string SubTotalError = ShoppingCartManager.GetShoppingCartSubTotal(cart,
-                    NopContext.Current.User, out subtotalBase);
+                    NopContext.Current.User, out orderSubTotalDiscountAmountBase, out orderSubTotalAppliedDiscount,
+                out subTotalWithoutDiscountBase, out subTotalWithDiscountBase);
+                subtotalBase = subTotalWithoutDiscountBase;
                 if (String.IsNullOrEmpty(SubTotalError))
                 {
                     decimal subtotal = CurrencyManager.ConvertCurrency(subtotalBase, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
                     lblSubTotalAmount.Text = PriceHelper.FormatPrice(subtotal);
                     lblSubTotalAmount.CssClass = "productPrice";
+
+                    //order subtotal discount
+                    if (orderSubTotalDiscountAmountBase > decimal.Zero)
+                    {
+                        decimal orderSubTotalDiscountAmount = CurrencyManager.ConvertCurrency(orderSubTotalDiscountAmountBase, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                        lblOrderSubTotalDiscountAmount.Text = PriceHelper.FormatPrice(-orderSubTotalDiscountAmount);
+                        phOrderSubTotalDiscount.Visible = true;
+                    }
+                    else
+                    {
+                        phOrderSubTotalDiscount.Visible = false;
+                    }
                 }
                 else
                 {
@@ -158,8 +176,8 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 phTaxTotal.Visible = displayTax;
 
                 //total
-                decimal discountAmountBase = decimal.Zero;
-                Discount appliedDiscount = null;
+                decimal orderTotalDiscountAmountBase = decimal.Zero;
+                Discount orderTotalAppliedDiscount = null;
                 List<AppliedGiftCard> appliedGiftCards = null;
                 int redeemedRewardPoints = 0;
                 decimal redeemedRewardPointsAmount = decimal.Zero;
@@ -168,7 +186,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     useRewardPoints = NopContext.Current.User.UseRewardPointsDuringCheckout;
                 decimal? shoppingCartTotalBase = ShoppingCartManager.GetShoppingCartTotal(cart,
                     paymentMethodId, NopContext.Current.User,
-                    out discountAmountBase, out appliedDiscount, 
+                    out orderTotalDiscountAmountBase, out orderTotalAppliedDiscount, 
                     out appliedGiftCards, useRewardPoints,
                     out redeemedRewardPoints, out redeemedRewardPointsAmount);
                 if (shoppingCartTotalBase.HasValue)
@@ -184,15 +202,15 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 }
 
                 //discount
-                if (discountAmountBase > decimal.Zero)
+                if (orderTotalDiscountAmountBase > decimal.Zero)
                 {
-                    decimal discountAmount = CurrencyManager.ConvertCurrency(discountAmountBase, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
-                    lblDiscountAmount.Text = PriceHelper.FormatPrice(-discountAmount, true, false);
-                    phDiscount.Visible = true;
+                    decimal orderTotalDiscountAmount = CurrencyManager.ConvertCurrency(orderTotalDiscountAmountBase, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                    lblOrderTotalDiscountAmount.Text = PriceHelper.FormatPrice(-orderTotalDiscountAmount, true, false);
+                    phOrderTotalDiscount.Visible = true;
                 }
                 else
                 {
-                    phDiscount.Visible = false;
+                    phOrderTotalDiscount.Visible = false;
                 }
 
                 //gift cards

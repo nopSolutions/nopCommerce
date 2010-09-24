@@ -481,6 +481,24 @@ namespace NopSolutions.NopCommerce.Web.Modules {
         protected global::System.Web.UI.WebControls.Label lblOrderSubtotal;
         
         /// <summary>
+        /// phOrderSubTotalDiscount control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.PlaceHolder phOrderSubTotalDiscount;
+        
+        /// <summary>
+        /// lblOrderSubTotalDiscount control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblOrderSubTotalDiscount;
+        
+        /// <summary>
         /// pnlShippingTotal control.
         /// </summary>
         /// <remarks>
@@ -544,22 +562,22 @@ namespace NopSolutions.NopCommerce.Web.Modules {
         protected global::System.Web.UI.WebControls.Label lblOrderTax;
         
         /// <summary>
-        /// phDiscount control.
+        /// phOrderTotalDiscount control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.PlaceHolder phDiscount;
+        protected global::System.Web.UI.WebControls.PlaceHolder phOrderTotalDiscount;
         
         /// <summary>
-        /// lblDiscount control.
+        /// lblOrderTotalDiscount control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblDiscount;
+        protected global::System.Web.UI.WebControls.Label lblOrderTotalDiscount;
         
         /// <summary>
         /// rptrGiftCards control.

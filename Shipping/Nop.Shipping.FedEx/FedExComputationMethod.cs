@@ -75,15 +75,21 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.FedEx
             // Insert the Carriers you would like to see the rates for
             request.CarrierCodes[0] = CarrierCodeType.FDXE;
             request.CarrierCodes[1] = CarrierCodeType.FDXG;
-            
-            decimal subtotal = decimal.Zero;
+
+            decimal subtotalBase = decimal.Zero;
+            decimal orderSubTotalDiscountAmount = decimal.Zero;
+            Discount orderSubTotalAppliedDiscount = null;
+            decimal subTotalWithoutDiscountBase = decimal.Zero;
+            decimal subTotalWithDiscountBase = decimal.Zero;
             ShoppingCartManager.GetShoppingCartSubTotal(ShipmentPackage.Items,
-                ShipmentPackage.Customer, out subtotal);
-            SetShipmentDetails(request, ShipmentPackage, subtotal);
+                ShipmentPackage.Customer, out orderSubTotalDiscountAmount, out orderSubTotalAppliedDiscount,
+                out subTotalWithoutDiscountBase, out subTotalWithDiscountBase);
+            subtotalBase = subTotalWithDiscountBase;
+            SetShipmentDetails(request, ShipmentPackage, subtotalBase);
             SetOrigin(request);
             SetDestination(request, ShipmentPackage);
             SetPayment(request, ShipmentPackage);
-            SetIndividualPackageLineItems(request, ShipmentPackage, subtotal);
+            SetIndividualPackageLineItems(request, ShipmentPackage, subtotalBase);
 
             return request;
         }

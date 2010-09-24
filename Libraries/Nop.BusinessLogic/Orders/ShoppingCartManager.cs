@@ -325,8 +325,15 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
 
             //subtotal without tax
             decimal subtotalBase = decimal.Zero;
+            decimal orderSubTotalDiscountAmount = decimal.Zero;
+            Discount orderSubTotalAppliedDiscount = null;
+            decimal subTotalWithoutDiscountBase = decimal.Zero;
+            decimal subTotalWithDiscountBase = decimal.Zero;
             subTotalError = ShoppingCartManager.GetShoppingCartSubTotal(cart,
-                customer, false, out subtotalBase);
+                customer, false, out orderSubTotalDiscountAmount, out orderSubTotalAppliedDiscount,
+                out subTotalWithoutDiscountBase, out subTotalWithDiscountBase);
+            //subtotal with discount
+            subtotalBase = subTotalWithDiscountBase;
 
             //shipping without tax
             decimal? shoppingCartShipping = ShippingManager.GetShoppingCartShippingTotal(cart, customer, false, ref shippingError);
@@ -356,7 +363,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
 
             #region Discount
 
-            discountAmount = GetOrderDiscount(customer, resultTemp, out appliedDiscount);
+            discountAmount = GetOrderTotalDiscount(customer, resultTemp, out appliedDiscount);
 
             //sub totals with discount        
             if (resultTemp < discountAmount)
@@ -459,10 +466,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// </summary>
         /// <param name="cart">Cart</param>
         /// <param name="customer">Customer</param>
-        /// <param name="subTotal">Sub total</param>
+        /// <param name="discountAmount">Applied discount amount</param>
+        /// <param name="appliedDiscount">Applied discount</param>
+        /// <param name="subTotalWithoutDiscount">Sub total (without discount)</param>
+        /// <param name="subTotalWithDiscount">Sub total (with discount)</param>
         /// <returns>Error</returns>
         public static string GetShoppingCartSubTotal(ShoppingCart cart, 
-            Customer customer, out decimal subTotal)
+            Customer customer, out decimal discountAmount, out Discount appliedDiscount,
+            out decimal subTotalWithoutDiscount, out decimal subTotalWithDiscount)
         {
             bool includingTax = false;
             switch (NopContext.Current.TaxDisplayType)
@@ -474,7 +485,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                     includingTax = true;
                     break;
             }
-            return GetShoppingCartSubTotal(cart, customer, includingTax, out subTotal);
+            return GetShoppingCartSubTotal(cart, customer, includingTax,
+                out discountAmount, out appliedDiscount,
+                out subTotalWithoutDiscount, out subTotalWithDiscount);
         }
 
         /// <summary>
@@ -483,25 +496,79 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="cart">Cart</param>
         /// <param name="customer">Customer</param>
         /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
-        /// <param name="subTotal">Sub total</param>
+        /// <param name="discountAmount">Applied discount amount</param>
+        /// <param name="appliedDiscount">Applied discount</param>
+        /// <param name="subTotalWithoutDiscount">Sub total (without discount)</param>
+        /// <param name="subTotalWithDiscount">Sub total (with discount)</param>
         /// <returns>Error</returns>
         public static string GetShoppingCartSubTotal(ShoppingCart cart,
-            Customer customer, bool includingTax, out decimal subTotal)
+            Customer customer, bool includingTax,
+            out decimal discountAmount, out Discount appliedDiscount,
+            out decimal subTotalWithoutDiscount, out decimal subTotalWithDiscount)
         {
+            SortedDictionary<decimal, decimal> taxRates = null;
+            return GetShoppingCartSubTotal(cart,
+            customer, includingTax, out discountAmount, out appliedDiscount,
+            out subTotalWithoutDiscount, out subTotalWithDiscount, out taxRates);
+        }
+
+        /// <summary>
+        /// Gets shopping cart subtotal
+        /// </summary>
+        /// <param name="cart">Cart</param>
+        /// <param name="customer">Customer</param>
+        /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
+        /// <param name="discountAmount">Applied discount amount</param>
+        /// <param name="appliedDiscount">Applied discount</param>
+        /// <param name="subTotalWithoutDiscount">Sub total (without discount)</param>
+        /// <param name="subTotalWithDiscount">Sub total (with discount)</param>
+        /// <param name="taxRates">Tax rates (of order sub total)</param>
+        /// <returns>Error</returns>
+        public static string GetShoppingCartSubTotal(ShoppingCart cart,
+            Customer customer, bool includingTax,
+            out decimal discountAmount, out Discount appliedDiscount,
+            out decimal subTotalWithoutDiscount, out decimal subTotalWithDiscount,
+            out SortedDictionary<decimal, decimal> taxRates)
+        {
+            discountAmount = decimal.Zero;
+            appliedDiscount = null;
+            subTotalWithoutDiscount = decimal.Zero;
+            subTotalWithDiscount = decimal.Zero;
+            taxRates = new SortedDictionary<decimal, decimal>();
+
             string error = string.Empty;
 
             //sub totals
-            decimal subTotalTmp = decimal.Zero;
+            decimal subTotalExclTaxWithoutDiscount = decimal.Zero;
+            decimal subTotalInclTaxWithoutDiscount = decimal.Zero;
             foreach (var shoppingCartItem in cart)
             {
                 decimal taxRate = decimal.Zero;
                 string error2 = string.Empty;
+                string error3 = string.Empty;
                 decimal sciSubTotal = PriceHelper.GetSubTotal(shoppingCartItem, customer, true);
 
-                subTotalTmp += TaxManager.GetPrice(shoppingCartItem.ProductVariant, sciSubTotal, includingTax, customer, out taxRate, ref error2);
+                decimal sciExclTax = TaxManager.GetPrice(shoppingCartItem.ProductVariant, sciSubTotal, false, customer, out taxRate, ref error2);
+                decimal sciInclTax = TaxManager.GetPrice(shoppingCartItem.ProductVariant, sciSubTotal, true, customer, out taxRate, ref error2);
+                subTotalExclTaxWithoutDiscount += sciExclTax;
+                subTotalInclTaxWithoutDiscount += sciInclTax;
                 if (!String.IsNullOrEmpty(error2))
                 {
                     error = error2;
+                }
+                
+                //tax rates
+                decimal sciTax = sciInclTax - sciExclTax;
+                if (taxRate > decimal.Zero && sciTax > decimal.Zero)
+                {
+                    if (!taxRates.ContainsKey(taxRate))
+                    {
+                        taxRates.Add(taxRate, sciTax);
+                    }
+                    else
+                    {
+                        taxRates[taxRate] = taxRates[taxRate] + sciTax;
+                    }
                 }
             }
 
@@ -512,33 +579,148 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 foreach (var caValue in caValues)
                 {
                     decimal taxRate = decimal.Zero;
-                    string error3 = string.Empty;
-                    subTotalTmp += TaxManager.GetCheckoutAttributePrice(caValue, includingTax, customer, out taxRate, ref error3);
-                    if (!String.IsNullOrEmpty(error3))
+                    string error2 = string.Empty;
+
+                    decimal caExclTax= TaxManager.GetCheckoutAttributePrice(caValue, false, customer, out taxRate, ref error2);
+                    decimal caInclTax = TaxManager.GetCheckoutAttributePrice(caValue, true, customer, out taxRate, ref error2);
+                    subTotalExclTaxWithoutDiscount += caExclTax;
+                    subTotalInclTaxWithoutDiscount += caInclTax;
+                    if (!String.IsNullOrEmpty(error2))
                     {
-                        error = error3;
+                        error = error2;
                     }
 
+                    //tax rates
+                    decimal caTax = caInclTax - caExclTax;
+                    if (taxRate > decimal.Zero && caTax > decimal.Zero)
+                    {
+                        if (!taxRates.ContainsKey(taxRate))
+                        {
+                            taxRates.Add(taxRate, caTax);
+                        }
+                        else
+                        {
+                            taxRates[taxRate] = taxRates[taxRate] + caTax;
+                        }
+                    }
                 }
             }
 
-            subTotal = subTotalTmp;
+            //subtotal without discount
+            if (includingTax)
+                subTotalWithoutDiscount = subTotalInclTaxWithoutDiscount;
+            else
+                subTotalWithoutDiscount = subTotalExclTaxWithoutDiscount;
+            if (subTotalWithoutDiscount < decimal.Zero)
+                subTotalWithoutDiscount = decimal.Zero;
+            subTotalWithoutDiscount = Math.Round(subTotalWithoutDiscount, 2);
 
-            if (subTotal < decimal.Zero)
-                subTotal = decimal.Zero;
-            subTotal = Math.Round(subTotal, 2);
+            /*We calculate discount amount on order subtotal excl tax (discount first)*/            
+            //calculate discount amount ('Applied to order subtotal' discount)
+            decimal discountAmountExclTax = GetOrderSubtotalDiscount(customer, subTotalExclTaxWithoutDiscount, out appliedDiscount);
+            if (subTotalExclTaxWithoutDiscount < discountAmountExclTax)
+                discountAmountExclTax = subTotalExclTaxWithoutDiscount;
+            decimal discountAmountInclTax = discountAmountExclTax;
+            //subtotal with discount (excl tax)
+            decimal subTotalExclTaxWithDiscount = subTotalExclTaxWithoutDiscount - discountAmountExclTax;
+            decimal subTotalInclTaxWithDiscount = subTotalExclTaxWithDiscount;
+            
+            //add tax for shopping items & checkout attributes
+            Dictionary<decimal, decimal> tempTaxRates = new Dictionary<decimal, decimal>(taxRates);
+            foreach (KeyValuePair<decimal, decimal> kvp in tempTaxRates)
+            {
+                decimal taxRate = kvp.Key;
+                decimal taxValue = kvp.Value;
+
+                //discount the tax amount that applies to subtotal items
+                if (subTotalExclTaxWithoutDiscount > decimal.Zero)
+                {
+                    decimal discountTax = taxRates[taxRate] * (discountAmountExclTax / subTotalExclTaxWithoutDiscount);
+                    discountAmountInclTax += discountTax;
+                    taxValue = taxRates[taxRate] - discountTax;
+                    taxValue = Math.Round(taxValue, 2);
+                    taxRates[taxRate] = taxValue;
+                }
+
+                //subtotal with discount (incl tax)
+                subTotalInclTaxWithDiscount += taxValue;
+            }
+            discountAmountInclTax = Math.Round(discountAmountInclTax, 2);            
+
+            if (includingTax)
+            {
+                subTotalWithDiscount = subTotalInclTaxWithDiscount;
+                discountAmount = discountAmountInclTax;
+            }
+            else
+            {
+                subTotalWithDiscount = subTotalExclTaxWithDiscount;
+                discountAmount = discountAmountExclTax;
+            }
+
+            //round
+            if (subTotalWithDiscount < decimal.Zero)
+                subTotalWithDiscount = decimal.Zero;
+            subTotalWithDiscount = Math.Round(subTotalWithDiscount, 2);
 
             return error;
         }
 
         /// <summary>
-        /// Gets an order discount
+        /// Gets an order discount (applied to order subtotal)
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="orderSubTotal">Order subtotal</param>
+        /// <param name="appliedDiscount">Applied discount</param>
+        /// <returns>Order discount</returns>
+        public static decimal GetOrderSubtotalDiscount(Customer customer,
+            decimal orderSubTotal, out Discount appliedDiscount)
+        {
+            decimal discountAmount = decimal.Zero;
+
+            string customerCouponCode = string.Empty;
+            if (customer != null)
+                customerCouponCode = customer.LastAppliedCouponCode;
+
+            var allDiscounts = DiscountManager.GetAllDiscounts(DiscountTypeEnum.AssignedToOrderSubTotal);
+            var allowedDiscounts = new List<Discount>();
+            foreach (var _discount in allDiscounts)
+            {
+                if (_discount.IsActive(customerCouponCode) &&
+                    _discount.DiscountType == DiscountTypeEnum.AssignedToOrderSubTotal &&
+                    !allowedDiscounts.ContainsDiscount(_discount.Name))
+                {
+                    //discount requirements
+                    if (_discount.CheckDiscountRequirements(customer)
+                        && _discount.CheckDiscountLimitations(customer))
+                    {
+                        allowedDiscounts.Add(_discount);
+                    }
+                }
+            }
+
+            appliedDiscount = DiscountManager.GetPreferredDiscount(allowedDiscounts, orderSubTotal);
+            if (appliedDiscount != null)
+            {
+                discountAmount = appliedDiscount.GetDiscountAmount(orderSubTotal);
+            }
+
+            if (discountAmount < decimal.Zero)
+                discountAmount = decimal.Zero;
+
+            discountAmount = Math.Round(discountAmount, 2);
+
+            return discountAmount;
+        }
+
+        /// <summary>
+        /// Gets an order discount (applied to order total)
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="orderTotal">Order total</param>
         /// <param name="appliedDiscount">Applied discount</param>
         /// <returns>Order discount</returns>
-        public static decimal GetOrderDiscount(Customer customer, 
+        public static decimal GetOrderTotalDiscount(Customer customer, 
             decimal orderTotal, out Discount appliedDiscount)
         {
             decimal discountAmount = decimal.Zero;

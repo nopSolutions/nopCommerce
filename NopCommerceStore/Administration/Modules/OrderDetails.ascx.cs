@@ -415,12 +415,34 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             //subtotal
             string orderSubtotalInclTaxStr = PriceHelper.FormatPrice(order.OrderSubtotalInclTax, true, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingLanguage, true);
             string orderSubtotalExclTaxStr = PriceHelper.FormatPrice(order.OrderSubtotalExclTax, true, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingLanguage, false);
+            string orderSubtotalDiscountInclTaxStr = PriceHelper.FormatPrice(order.OrderSubTotalDiscountInclTax, true, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingLanguage, true);
+            string orderSubtotalDiscountExclTaxStr = PriceHelper.FormatPrice(order.OrderSubTotalDiscountExclTax, true, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingLanguage, false);            
             if (TaxManager.AllowCustomersToSelectTaxDisplayType)
             {
+                //subtotal
                 this.lblOrderSubtotalInclTax.Text = orderSubtotalInclTaxStr;
                 this.lblOrderSubtotalExclTax.Text = orderSubtotalExclTaxStr;
                 this.pnlOrderSubtotalInclTax.Visible = true;
                 this.pnlOrderSubtotalExclTax.Visible = true;
+                //discount (applied to order subtotal)
+                if (order.OrderSubTotalDiscountInclTax > decimal.Zero)
+                {
+                    this.lblOrderSubtotalDiscountInclTax.Text = orderSubtotalDiscountInclTaxStr;
+                    this.pnlOrderSubtotalDiscountInclTax.Visible = true;
+                }
+                else
+                {
+                    this.pnlOrderSubtotalDiscountInclTax.Visible = false;
+                }
+                if (order.OrderSubTotalDiscountExclTax > decimal.Zero)
+                {
+                    this.lblOrderSubtotalDiscountExclTax.Text = orderSubtotalDiscountExclTaxStr;
+                    this.pnlOrderSubtotalDiscountExclTax.Visible = true;
+                }
+                else
+                {
+                    this.pnlOrderSubtotalDiscountExclTax.Visible = false;
+                }
             }
             else
             {
@@ -428,22 +450,51 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 {
                     case TaxDisplayTypeEnum.ExcludingTax:
                         {
+                            //subtotal
                             this.lblOrderSubtotalExclTax.Text = orderSubtotalExclTaxStr;
                             this.pnlOrderSubtotalInclTax.Visible = false;
                             this.pnlOrderSubtotalExclTax.Visible = true;
+                            //discount (applied to order subtotal)
+                            this.pnlOrderSubtotalDiscountInclTax.Visible = false;
+                            if (order.OrderSubTotalDiscountExclTax > decimal.Zero)
+                            {
+                                this.lblOrderSubtotalDiscountExclTax.Text = orderSubtotalDiscountExclTaxStr;
+                                this.pnlOrderSubtotalDiscountExclTax.Visible = true;
+                            }
+                            else
+                            {
+                                this.pnlOrderSubtotalDiscountExclTax.Visible = false;
+                            }
+                
                         }
                         break;
                     case TaxDisplayTypeEnum.IncludingTax:
                         {
+                            //subtotal
                             this.lblOrderSubtotalInclTax.Text = orderSubtotalInclTaxStr;
                             this.pnlOrderSubtotalInclTax.Visible = true;
                             this.pnlOrderSubtotalExclTax.Visible = false;
+                            //discount (applied to order subtotal)
+                            this.pnlOrderSubtotalDiscountExclTax.Visible = false;
+                            if (order.OrderSubTotalDiscountInclTax > decimal.Zero)
+                            {
+                                this.lblOrderSubtotalDiscountInclTax.Text = orderSubtotalDiscountInclTaxStr;
+                                this.pnlOrderSubtotalDiscountInclTax.Visible = true;
+                            }
+                            else
+                            {
+                                this.pnlOrderSubtotalDiscountInclTax.Visible = false;
+                            }                
                         }
                         break;
                     default:
                         {
+                            //subtotal
                             this.pnlOrderSubtotalInclTax.Visible = false;
                             this.pnlOrderSubtotalExclTax.Visible = false;
+                            //discount (applied to order subtotal)
+                            this.pnlOrderSubtotalDiscountInclTax.Visible = false;
+                            this.pnlOrderSubtotalDiscountExclTax.Visible = false;
                         }
                         break;
                 }
@@ -643,6 +694,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             this.lblRefundedAmount.Text = PriceHelper.FormatPrice(order.RefundedAmount, true, false);
 
             //edit order
+            //subtotal
             this.lblOrderSubtotalInPrimaryCurrencyTitle.Text = string.Format(GetLocaleResourceString("Admin.OrderDetails.EditOrderTotals.Subtotal.InPrimaryCurrency"), CurrencyManager.PrimaryStoreCurrency.CurrencyCode);
             this.txtOrderSubtotalInPrimaryCurrencyInclTax.Text = order.OrderSubtotalInclTax.ToString();
             this.txtOrderSubtotalInPrimaryCurrencyExclTax.Text = order.OrderSubtotalExclTax.ToString();
@@ -650,11 +702,15 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             this.txtOrderSubtotalInCustomerCurrencyInclTax.Text = order.OrderSubtotalInclTaxInCustomerCurrency.ToString();
             this.txtOrderSubtotalInCustomerCurrencyExclTax.Text = order.OrderSubtotalExclTaxInCustomerCurrency.ToString();
 
-            this.lblOrderDiscountInPrimaryCurrencyTitle.Text = string.Format(GetLocaleResourceString("Admin.OrderDetails.EditOrderTotals.Discount.InPrimaryCurrency"), CurrencyManager.PrimaryStoreCurrency.CurrencyCode);
-            this.txtOrderDiscountInPrimaryCurrency.Text = order.OrderDiscount.ToString();
-            this.lblOrderDiscountInCustomerCurrencyTitle.Text = string.Format(GetLocaleResourceString("Admin.OrderDetails.EditOrderTotals.Discount.InCustomerCurrency"), order.CustomerCurrencyCode);
-            this.txtOrderDiscountInCustomerCurrency.Text = order.OrderDiscountInCustomerCurrency.ToString();
+            //discount (applied to order subtotal)
+            this.lblOrderSubtotalDiscountInPrimaryCurrencyTitle.Text = string.Format(GetLocaleResourceString("Admin.OrderDetails.EditOrderTotals.SubtotalDiscount.InPrimaryCurrency"), CurrencyManager.PrimaryStoreCurrency.CurrencyCode);
+            this.txtOrderSubtotalDiscountInPrimaryCurrencyInclTax.Text = order.OrderSubTotalDiscountInclTax.ToString();
+            this.txtOrderSubtotalDiscountInPrimaryCurrencyExclTax.Text = order.OrderSubTotalDiscountExclTax.ToString();
+            this.lblOrderSubtotalDiscountInCustomerCurrencyTitle.Text = string.Format(GetLocaleResourceString("Admin.OrderDetails.EditOrderTotals.SubtotalDiscount.InCustomerCurrency"), order.CustomerCurrencyCode);
+            this.txtOrderSubtotalDiscountInCustomerCurrencyInclTax.Text = order.OrderSubTotalDiscountInclTaxInCustomerCurrency.ToString();
+            this.txtOrderSubtotalDiscountInCustomerCurrencyExclTax.Text = order.OrderSubTotalDiscountExclTaxInCustomerCurrency.ToString();
 
+            //shipping
             this.lblOrderShippingInPrimaryCurrencyTitle.Text = string.Format(GetLocaleResourceString("Admin.OrderDetails.EditOrderTotals.Shipping.InPrimaryCurrency"), CurrencyManager.PrimaryStoreCurrency.CurrencyCode);
             this.txtOrderShippingInPrimaryCurrencyInclTax.Text = order.OrderShippingInclTax.ToString();
             this.txtOrderShippingInPrimaryCurrencyExclTax.Text = order.OrderShippingExclTax.ToString();
@@ -662,6 +718,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             this.txtOrderShippingInCustomerCurrencyInclTax.Text = order.OrderShippingInclTaxInCustomerCurrency.ToString();
             this.txtOrderShippingInCustomerCurrencyExclTax.Text = order.OrderShippingExclTaxInCustomerCurrency.ToString();
 
+            //payment method additional fee
             this.lblOrderPaymentMethodAdditionalFeeInPrimaryCurrencyTitle.Text = string.Format(GetLocaleResourceString("Admin.OrderDetails.EditOrderTotals.PaymentMethodAdditionalFee.InPrimaryCurrency"), CurrencyManager.PrimaryStoreCurrency.CurrencyCode);
             this.txtOrderPaymentMethodAdditionalFeeInPrimaryCurrencyInclTax.Text = order.PaymentMethodAdditionalFeeInclTax.ToString();
             this.txtOrderPaymentMethodAdditionalFeeInPrimaryCurrencyExclTax.Text = order.PaymentMethodAdditionalFeeExclTax.ToString();
@@ -669,6 +726,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             this.txtOrderPaymentMethodAdditionalFeeInCustomerCurrencyInclTax.Text = order.PaymentMethodAdditionalFeeInclTaxInCustomerCurrency.ToString();
             this.txtOrderPaymentMethodAdditionalFeeInCustomerCurrencyExclTax.Text = order.PaymentMethodAdditionalFeeExclTaxInCustomerCurrency.ToString();
 
+            //tax rates
             this.lblOrderTaxRatesInPrimaryCurrencyTitle.Text = string.Format(GetLocaleResourceString("Admin.OrderDetails.EditOrderTotals.TaxRates.InPrimaryCurrency"), CurrencyManager.PrimaryStoreCurrency.CurrencyCode);
             this.txtOrderTaxRatesInPrimaryCurrency.Text = order.TaxRates;
             this.lblOrderTaxRatesInCustomerCurrencyTitle.Text = string.Format(GetLocaleResourceString("Admin.OrderDetails.EditOrderTotals.TaxRates.InCustomerCurrency"), order.CustomerCurrencyCode);
@@ -678,6 +736,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             this.lblOrderTaxInCustomerCurrencyTitle.Text = string.Format(GetLocaleResourceString("Admin.OrderDetails.EditOrderTotals.Tax.InCustomerCurrency"), order.CustomerCurrencyCode);
             this.txtOrderTaxInCustomerCurrency.Text = order.OrderTaxInCustomerCurrency.ToString();
 
+            //discount (applied to order total)
+            this.lblOrderDiscountInPrimaryCurrencyTitle.Text = string.Format(GetLocaleResourceString("Admin.OrderDetails.EditOrderTotals.Discount.InPrimaryCurrency"), CurrencyManager.PrimaryStoreCurrency.CurrencyCode);
+            this.txtOrderDiscountInPrimaryCurrency.Text = order.OrderDiscount.ToString();
+            this.lblOrderDiscountInCustomerCurrencyTitle.Text = string.Format(GetLocaleResourceString("Admin.OrderDetails.EditOrderTotals.Discount.InCustomerCurrency"), order.CustomerCurrencyCode);
+            this.txtOrderDiscountInCustomerCurrency.Text = order.OrderDiscountInCustomerCurrency.ToString();
+
+            //total
             this.lblOrderTotalInPrimaryCurrencyTitle.Text = string.Format(GetLocaleResourceString("Admin.OrderDetails.EditOrderTotals.Total.InPrimaryCurrency"), CurrencyManager.PrimaryStoreCurrency.CurrencyCode);
             this.txtOrderTotalInPrimaryCurrency.Text = order.OrderTotal.ToString();
             this.lblOrderTotalInCustomerCurrencyTitle.Text = string.Format(GetLocaleResourceString("Admin.OrderDetails.EditOrderTotals.Total.InCustomerCurrency"), order.CustomerCurrencyCode);
@@ -847,12 +912,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     order = OrderManager.UpdateOrder(order.OrderId, order.OrderGuid,
                         order.CustomerId, order.CustomerLanguageId,
                         order.CustomerTaxDisplayType, order.CustomerIP,
-                        order.OrderSubtotalInclTax, order.OrderSubtotalExclTax,
+                        order.OrderSubtotalInclTax, order.OrderSubtotalExclTax, 
+                        order.OrderSubTotalDiscountInclTax, order.OrderSubTotalDiscountExclTax,
                         order.OrderShippingInclTax, order.OrderShippingExclTax,
                         order.PaymentMethodAdditionalFeeInclTax, order.PaymentMethodAdditionalFeeExclTax,
                        order.TaxRates, order.OrderTax, order.OrderTotal,
                        order.RefundedAmount, order.OrderDiscount,
                        order.OrderSubtotalInclTaxInCustomerCurrency, order.OrderSubtotalExclTaxInCustomerCurrency,
+                       order.OrderSubTotalDiscountInclTaxInCustomerCurrency, order.OrderSubTotalDiscountExclTaxInCustomerCurrency,
                        order.OrderShippingInclTaxInCustomerCurrency, order.OrderShippingExclTaxInCustomerCurrency,
                        order.PaymentMethodAdditionalFeeInclTaxInCustomerCurrency, order.PaymentMethodAdditionalFeeExclTaxInCustomerCurrency,
                        order.TaxRatesInCustomerCurrency, order.OrderTaxInCustomerCurrency,
@@ -958,13 +1025,15 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                     order = OrderManager.UpdateOrder(order.OrderId, order.OrderGuid,
                         order.CustomerId, order.CustomerLanguageId,
-                        order.CustomerTaxDisplayType, order.CustomerIP, 
-                        order.OrderSubtotalInclTax, order.OrderSubtotalExclTax, 
+                        order.CustomerTaxDisplayType, order.CustomerIP,
+                        order.OrderSubtotalInclTax, order.OrderSubtotalExclTax,
+                        order.OrderSubTotalDiscountInclTax, order.OrderSubTotalDiscountExclTax,
                         order.OrderShippingInclTax, order.OrderShippingExclTax, 
                         order.PaymentMethodAdditionalFeeInclTax, order.PaymentMethodAdditionalFeeExclTax,
                        order.TaxRates, order.OrderTax, order.OrderTotal,
                        order.RefundedAmount, order.OrderDiscount,
                        order.OrderSubtotalInclTaxInCustomerCurrency, order.OrderSubtotalExclTaxInCustomerCurrency,
+                       order.OrderSubTotalDiscountInclTaxInCustomerCurrency, order.OrderSubTotalDiscountExclTaxInCustomerCurrency,
                        order.OrderShippingInclTaxInCustomerCurrency, order.OrderShippingExclTaxInCustomerCurrency,
                        order.PaymentMethodAdditionalFeeInclTaxInCustomerCurrency, order.PaymentMethodAdditionalFeeExclTaxInCustomerCurrency,
                        order.TaxRatesInCustomerCurrency, order.OrderTaxInCustomerCurrency,
@@ -1037,11 +1106,15 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     string shippingZipPostalCode = this.txtShippingZipPostalCode.Text;
 
                     order = OrderManager.UpdateOrder(order.OrderId, order.OrderGuid, order.CustomerId, order.CustomerLanguageId,
-                        order.CustomerTaxDisplayType, order.CustomerIP, order.OrderSubtotalInclTax, order.OrderSubtotalExclTax, order.OrderShippingInclTax,
-                       order.OrderShippingExclTax, order.PaymentMethodAdditionalFeeInclTax, order.PaymentMethodAdditionalFeeExclTax,
+                        order.CustomerTaxDisplayType, order.CustomerIP,
+                        order.OrderSubtotalInclTax, order.OrderSubtotalExclTax,
+                        order.OrderSubTotalDiscountInclTax, order.OrderSubTotalDiscountExclTax,
+                        order.OrderShippingInclTax, order.OrderShippingExclTax, 
+                        order.PaymentMethodAdditionalFeeInclTax, order.PaymentMethodAdditionalFeeExclTax,
                        order.TaxRates, order.OrderTax, order.OrderTotal,
                        order.RefundedAmount, order.OrderDiscount,
                        order.OrderSubtotalInclTaxInCustomerCurrency, order.OrderSubtotalExclTaxInCustomerCurrency,
+                       order.OrderSubTotalDiscountInclTaxInCustomerCurrency, order.OrderSubTotalDiscountExclTaxInCustomerCurrency,
                        order.OrderShippingInclTaxInCustomerCurrency, order.OrderShippingExclTaxInCustomerCurrency,
                        order.PaymentMethodAdditionalFeeInclTaxInCustomerCurrency, order.PaymentMethodAdditionalFeeExclTaxInCustomerCurrency,
                        order.TaxRatesInCustomerCurrency, order.OrderTaxInCustomerCurrency,
@@ -1136,8 +1209,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     decimal orderSubtotalExclTax = order.OrderSubtotalExclTax;
                     decimal orderSubtotalInclTaxInCustomerCurrency = order.OrderSubtotalInclTaxInCustomerCurrency;
                     decimal orderSubtotalExclTaxInCustomerCurrency = order.OrderSubtotalExclTaxInCustomerCurrency;
-                    decimal orderDiscount = order.OrderDiscount;
-                    decimal orderDiscountInCustomerCurrency = order.OrderDiscountInCustomerCurrency;
+                    decimal orderSubtotalDiscountInclTax = order.OrderSubTotalDiscountInclTax;
+                    decimal orderSubtotalDiscountExclTax = order.OrderSubTotalDiscountExclTax;
+                    decimal orderSubtotalDiscountInclTaxInCustomerCurrency = order.OrderSubTotalDiscountInclTaxInCustomerCurrency;
+                    decimal orderSubtotalDiscountExclTaxInCustomerCurrency = order.OrderSubTotalDiscountExclTaxInCustomerCurrency;
                     decimal orderShippingInclTax = order.OrderShippingInclTax;
                     decimal orderShippingExclTax = order.OrderShippingExclTax;
                     decimal orderShippingInclTaxInCustomerCurrency = order.OrderShippingInclTaxInCustomerCurrency;
@@ -1150,6 +1225,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     string taxRatesInCustomerCurrency = order.TaxRatesInCustomerCurrency;
                     decimal orderTax = order.OrderTax;
                     decimal orderTaxInCustomerCurrency = order.OrderTaxInCustomerCurrency;
+                    decimal orderDiscount = order.OrderDiscount;
+                    decimal orderDiscountInCustomerCurrency = order.OrderDiscountInCustomerCurrency;
                     decimal orderTotal = order.OrderTotal;
                     decimal orderTotalInCustomerCurrency = order.OrderTotalInCustomerCurrency;
 
@@ -1157,8 +1234,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     orderSubtotalExclTax = decimal.Parse(txtOrderSubtotalInPrimaryCurrencyExclTax.Text);
                     orderSubtotalInclTaxInCustomerCurrency = decimal.Parse(txtOrderSubtotalInCustomerCurrencyInclTax.Text);
                     orderSubtotalExclTaxInCustomerCurrency = decimal.Parse(txtOrderSubtotalInCustomerCurrencyExclTax.Text);
-                    orderDiscount = decimal.Parse(txtOrderDiscountInPrimaryCurrency.Text);
-                    orderDiscountInCustomerCurrency = decimal.Parse(txtOrderDiscountInCustomerCurrency.Text);
+                    orderSubtotalDiscountInclTax = decimal.Parse(txtOrderSubtotalDiscountInPrimaryCurrencyInclTax.Text);
+                    orderSubtotalDiscountExclTax = decimal.Parse(txtOrderSubtotalDiscountInPrimaryCurrencyExclTax.Text);
+                    orderSubtotalDiscountInclTaxInCustomerCurrency = decimal.Parse(txtOrderSubtotalDiscountInCustomerCurrencyInclTax.Text);
+                    orderSubtotalDiscountExclTaxInCustomerCurrency = decimal.Parse(txtOrderSubtotalDiscountInCustomerCurrencyExclTax.Text);
                     orderShippingInclTax = decimal.Parse(txtOrderShippingInPrimaryCurrencyInclTax.Text);
                     orderShippingExclTax = decimal.Parse(txtOrderShippingInPrimaryCurrencyExclTax.Text);
                     orderShippingInclTaxInCustomerCurrency = decimal.Parse(txtOrderShippingInCustomerCurrencyInclTax.Text);
@@ -1171,17 +1250,21 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     taxRatesInCustomerCurrency = txtOrderTaxRatesInCustomerCurrency.Text.Trim();
                     orderTax = decimal.Parse(txtOrderTaxInPrimaryCurrency.Text);
                     orderTaxInCustomerCurrency = decimal.Parse(txtOrderTaxInCustomerCurrency.Text);
+                    orderDiscount = decimal.Parse(txtOrderDiscountInPrimaryCurrency.Text);
+                    orderDiscountInCustomerCurrency = decimal.Parse(txtOrderDiscountInCustomerCurrency.Text);
                     orderTotal = decimal.Parse(txtOrderTotalInPrimaryCurrency.Text);
                     orderTotalInCustomerCurrency = decimal.Parse(txtOrderTotalInCustomerCurrency.Text);
 
                     OrderManager.UpdateOrder(order.OrderId, order.OrderGuid, order.CustomerId, order.CustomerLanguageId,
                         order.CustomerTaxDisplayType, order.CustomerIP,
-                        orderSubtotalInclTax, orderSubtotalExclTax, 
+                        orderSubtotalInclTax, orderSubtotalExclTax,
+                        orderSubtotalDiscountInclTax, orderSubtotalDiscountExclTax,
                         orderShippingInclTax, orderShippingExclTax, 
                         paymentMethodAdditionalFeeInclTax, paymentMethodAdditionalFeeExclTax,
                         taxRates, orderTax, orderTotal,
                         order.RefundedAmount, orderDiscount,
                         orderSubtotalInclTaxInCustomerCurrency, orderSubtotalExclTaxInCustomerCurrency,
+                        orderSubtotalDiscountInclTaxInCustomerCurrency, orderSubtotalDiscountExclTaxInCustomerCurrency,
                         orderShippingInclTaxInCustomerCurrency, orderShippingExclTaxInCustomerCurrency,
                         paymentMethodAdditionalFeeInclTaxInCustomerCurrency, paymentMethodAdditionalFeeExclTaxInCustomerCurrency,
                         taxRatesInCustomerCurrency, orderTaxInCustomerCurrency,

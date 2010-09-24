@@ -458,9 +458,6 @@ namespace NopSolutions.NopCommerce.Payment.Methods.GoogleCheckout
                 }
             }
 
-            //decimal subtotalBase = decimal.Zero;
-            //string subTotalError = ShoppingCartManager.GetShoppingCartSubTotal(cart,
-            //    NopContext.Current.User, out subtotalBase);
 
             bool shoppingCartRequiresShipping = ShippingManager.ShoppingCartRequiresShipping(cart);
             if (shoppingCartRequiresShipping)

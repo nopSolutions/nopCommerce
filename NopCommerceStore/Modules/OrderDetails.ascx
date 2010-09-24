@@ -255,6 +255,19 @@
                         </span>
                     </td>
                 </tr>
+                <asp:PlaceHolder runat="server" ID="phOrderSubTotalDiscount">
+                    <tr>
+                        <td width="100%" align="right">
+                            <b>
+                                <%=GetLocaleResourceString("Order.Discount")%>:</b>
+                        </td>
+                        <td align="right">
+                            <span style="white-space: nowrap;">
+                                <asp:Label ID="lblOrderSubTotalDiscount" runat="server"></asp:Label>
+                            </span>
+                        </td>
+                    </tr>
+                </asp:PlaceHolder>
                 <tr runat="server" id="pnlShippingTotal">
                     <td width="100%" align="right">
                         <b>
@@ -307,7 +320,7 @@
                         </td>
                     </tr>
                 </asp:PlaceHolder>
-                <asp:PlaceHolder runat="server" ID="phDiscount">
+                <asp:PlaceHolder runat="server" ID="phOrderTotalDiscount">
                     <tr>
                         <td width="100%" align="right">
                             <b>
@@ -315,7 +328,7 @@
                         </td>
                         <td align="right">
                             <span style="white-space: nowrap;">
-                                <asp:Label ID="lblDiscount" runat="server"></asp:Label>
+                                <asp:Label ID="lblOrderTotalDiscount" runat="server"></asp:Label>
                             </span>
                         </td>
                     </tr>

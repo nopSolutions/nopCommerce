@@ -197,6 +197,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             #region Totals
 
             string CusSubTotal = string.Empty;
+            bool dislaySubTotalDiscount = false;
+            string CusSubTotalDiscount = string.Empty;
             string CusShipTotal = string.Empty;
             string CusPaymentMethodAdditionalFee = string.Empty;
             SortedDictionary<decimal, decimal> taxRates = new SortedDictionary<decimal, decimal>();
@@ -208,15 +210,33 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             {
                 case TaxDisplayTypeEnum.ExcludingTax:
                     {
+                        //subtotal
                         CusSubTotal = PriceHelper.FormatPrice(order.OrderSubtotalExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, language, false);
+                        //discount (applied to order subtotal)
+                        if (order.OrderSubTotalDiscountExclTaxInCustomerCurrency > decimal.Zero)
+                        {
+                            CusSubTotalDiscount = PriceHelper.FormatPrice(-order.OrderSubTotalDiscountExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, language, false);
+                            dislaySubTotalDiscount = true;
+                        }
+                        //shipping
                         CusShipTotal = PriceHelper.FormatShippingPrice(order.OrderShippingExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, language, false);
+                        //payment method additional fee
                         CusPaymentMethodAdditionalFee = PriceHelper.FormatPaymentMethodAdditionalFee(order.PaymentMethodAdditionalFeeExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, language, false);
                     }
                     break;
                 case TaxDisplayTypeEnum.IncludingTax:
                     {
+                        //subtotal
                         CusSubTotal = PriceHelper.FormatPrice(order.OrderSubtotalInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, language, true);
+                        //discount (applied to order subtotal)
+                        if (order.OrderSubTotalDiscountInclTaxInCustomerCurrency > decimal.Zero)
+                        {
+                            CusSubTotalDiscount = PriceHelper.FormatPrice(-order.OrderSubTotalDiscountInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, language, true);
+                            dislaySubTotalDiscount = true;
+                        }
+                        //shipping
                         CusShipTotal = PriceHelper.FormatShippingPrice(order.OrderShippingInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, language, true);
+                        //payment method additional fee
                         CusPaymentMethodAdditionalFee = PriceHelper.FormatPaymentMethodAdditionalFee(order.PaymentMethodAdditionalFeeInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, language, true);
                     }
                     break;
@@ -276,6 +296,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             //subtotal
             sb.AppendLine(string.Format("<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{1}</strong></td> <td style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{2}</strong></td></tr>", color3, LocalizationManager.GetLocaleResourceString("Order.Sub-Total", languageId), CusSubTotal));
             
+            //discount (applied to order subtotal)
+            if (dislaySubTotalDiscount)
+            {
+                sb.AppendLine(string.Format("<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{1}</strong></td> <td style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{2}</strong></td></tr>", color3, LocalizationManager.GetLocaleResourceString("Order.Discount", languageId), CusSubTotalDiscount));
+            }
+            
+
             //shipping
             if (dislayShipping)
             {

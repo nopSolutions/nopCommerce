@@ -310,6 +310,60 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         protected global::System.Web.UI.WebControls.Label lblOrderSubtotalExclTax;
         
         /// <summary>
+        /// pnlOrderSubtotalDiscountInclTax control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlTableRow pnlOrderSubtotalDiscountInclTax;
+        
+        /// <summary>
+        /// lblOrderSubtotalDiscountInclTaxTitle control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblOrderSubtotalDiscountInclTaxTitle;
+        
+        /// <summary>
+        /// lblOrderSubtotalDiscountInclTax control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblOrderSubtotalDiscountInclTax;
+        
+        /// <summary>
+        /// pnlOrderSubtotalDiscountExclTax control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlTableRow pnlOrderSubtotalDiscountExclTax;
+        
+        /// <summary>
+        /// lblOrderSubtotalDiscountExclTaxTitle control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblOrderSubtotalDiscountExclTaxTitle;
+        
+        /// <summary>
+        /// lblOrderSubtotalDiscountExclTax control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblOrderSubtotalDiscountExclTax;
+        
+        /// <summary>
         /// pnlOrderShippingInclTax control.
         /// </summary>
         /// <remarks>
@@ -614,6 +668,60 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtOrderSubtotalInCustomerCurrencyExclTax;
+        
+        /// <summary>
+        /// lblOrderSubtotalDiscountInPrimaryCurrencyTitle control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblOrderSubtotalDiscountInPrimaryCurrencyTitle;
+        
+        /// <summary>
+        /// txtOrderSubtotalDiscountInPrimaryCurrencyInclTax control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtOrderSubtotalDiscountInPrimaryCurrencyInclTax;
+        
+        /// <summary>
+        /// txtOrderSubtotalDiscountInPrimaryCurrencyExclTax control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtOrderSubtotalDiscountInPrimaryCurrencyExclTax;
+        
+        /// <summary>
+        /// lblOrderSubtotalDiscountInCustomerCurrencyTitle control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblOrderSubtotalDiscountInCustomerCurrencyTitle;
+        
+        /// <summary>
+        /// txtOrderSubtotalDiscountInCustomerCurrencyInclTax control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtOrderSubtotalDiscountInCustomerCurrencyInclTax;
+        
+        /// <summary>
+        /// txtOrderSubtotalDiscountInCustomerCurrencyExclTax control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtOrderSubtotalDiscountInCustomerCurrencyExclTax;
         
         /// <summary>
         /// lblOrderShippingInPrimaryCurrencyTitle control.

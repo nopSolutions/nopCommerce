@@ -128,6 +128,16 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         public decimal OrderSubtotalExclTax { get; set; }
 
         /// <summary>
+        /// Gets or sets the order subtotal discount (incl tax)
+        /// </summary>
+        public decimal OrderSubTotalDiscountInclTax { get; set; }
+
+        /// <summary>
+        /// Gets or sets the order subtotal discount (excl tax)
+        /// </summary>
+        public decimal OrderSubTotalDiscountExclTax { get; set; }
+
+        /// <summary>
         /// Gets or sets the order shipping (incl tax)
         /// </summary>
         public decimal OrderShippingInclTax { get; set; }
@@ -168,7 +178,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         public decimal RefundedAmount { get; set; }
 
         /// <summary>
-        /// Gets or sets the order discount
+        /// Gets or sets the order discount (applied to order total)
         /// </summary>
         public decimal OrderDiscount { get; set; }
 
@@ -181,6 +191,16 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// Gets or sets the order subtotal excl tax (customer currency)
         /// </summary>
         public decimal OrderSubtotalExclTaxInCustomerCurrency { get; set; }
+
+        /// <summary>
+        /// Gets or sets the order subtotal discount incl tax (customer currency)
+        /// </summary>
+        public decimal OrderSubTotalDiscountInclTaxInCustomerCurrency { get; set; }
+
+        /// <summary>
+        /// Gets or sets the order subtotal discount excl tax (customer currency)
+        /// </summary>
+        public decimal OrderSubTotalDiscountExclTaxInCustomerCurrency { get; set; }
 
         /// <summary>
         /// Gets or sets the order shipping incl tax (customer currency)
@@ -218,7 +238,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         public decimal OrderTotalInCustomerCurrency { get; set; }
 
         /// <summary>
-        /// Gets or sets the order discount (customer currency)
+        /// Gets or sets the order discount (customer currency) (applied to order total)
         /// </summary>
         public decimal OrderDiscountInCustomerCurrency { get; set; }
 

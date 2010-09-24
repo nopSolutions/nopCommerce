@@ -156,15 +156,43 @@ namespace NopSolutions.NopCommerce.Web.Modules
             {
                 case TaxDisplayTypeEnum.ExcludingTax:
                     {
+                        //order subtotal
                         this.lblOrderSubtotal.Text = PriceHelper.FormatPrice(order.OrderSubtotalExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, NopContext.Current.WorkingLanguage, false);
+                        //discount (applied to order subtotal)
+                        if (order.OrderSubTotalDiscountExclTaxInCustomerCurrency > decimal.Zero)
+                        {
+                            phOrderSubTotalDiscount.Visible = true;
+                            string discountStr = PriceHelper.FormatPrice(-order.OrderSubTotalDiscountExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, NopContext.Current.WorkingLanguage, false);
+                            this.lblOrderSubTotalDiscount.Text = discountStr;
+                        }
+                        else
+                        {
+                            phOrderSubTotalDiscount.Visible = false;
+                        }
+                        //order shipping
                         this.lblOrderShipping.Text = PriceHelper.FormatShippingPrice(order.OrderShippingExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, NopContext.Current.WorkingLanguage, false);
+                        //payment method additional fee
                         this.lblPaymentMethodAdditionalFee.Text = PriceHelper.FormatPaymentMethodAdditionalFee(order.PaymentMethodAdditionalFeeExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, NopContext.Current.WorkingLanguage, false);
                     }
                     break;
                 case TaxDisplayTypeEnum.IncludingTax:
                     {
+                        //order subtotal
                         this.lblOrderSubtotal.Text = PriceHelper.FormatPrice(order.OrderSubtotalInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, NopContext.Current.WorkingLanguage, true);
+                        //discount (applied to order subtotal)
+                        if (order.OrderSubTotalDiscountInclTaxInCustomerCurrency > decimal.Zero)
+                        {
+                            phOrderSubTotalDiscount.Visible = true;
+                            string discountStr = PriceHelper.FormatPrice(-order.OrderSubTotalDiscountInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, NopContext.Current.WorkingLanguage, true);
+                            this.lblOrderSubTotalDiscount.Text = discountStr;
+                        }
+                        else
+                        {
+                            phOrderSubTotalDiscount.Visible = false;
+                        }
+                        //order shipping
                         this.lblOrderShipping.Text = PriceHelper.FormatShippingPrice(order.OrderShippingInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, NopContext.Current.WorkingLanguage, true);
+                        //payment method additional fee
                         this.lblPaymentMethodAdditionalFee.Text = PriceHelper.FormatPaymentMethodAdditionalFee(order.PaymentMethodAdditionalFeeInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, NopContext.Current.WorkingLanguage, true);
                     }
                     break;
@@ -208,16 +236,16 @@ namespace NopSolutions.NopCommerce.Web.Modules
             rptrTaxRates.Visible = displayTaxRates;
             phTaxTotal.Visible = displayTax;
 
-            //discount
+            //discount (applied to order total)
             if (order.OrderDiscountInCustomerCurrency > decimal.Zero)
             {
-                phDiscount.Visible = true;
+                phOrderTotalDiscount.Visible = true;
                 string discountStr = PriceHelper.FormatPrice(-order.OrderDiscountInCustomerCurrency, true, order.CustomerCurrencyCode, false);
-                this.lblDiscount.Text = discountStr;
+                this.lblOrderTotalDiscount.Text = discountStr;
             }
             else
             {
-                phDiscount.Visible = false;
+                phOrderTotalDiscount.Visible = false;
             }
 
             //gift cards

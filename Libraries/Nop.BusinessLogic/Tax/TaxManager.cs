@@ -1,4 +1,4 @@
-//------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------
 // The contents of this file are subject to the nopCommerce Public License Version 1.0 ("License"); you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at  http://www.nopCommerce.com/License.aspx. 
 // 
@@ -26,6 +26,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.Payment;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.BusinessLogic.Products.Attributes;
+using NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts;
 using NopSolutions.NopCommerce.BusinessLogic.Shipping;
 using NopSolutions.NopCommerce.Common;
 
@@ -271,82 +272,32 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
             decimal taxTotal = decimal.Zero;
             taxRates = new SortedDictionary<decimal, decimal>();
 
-            //items
-            decimal itemsTaxTotal = decimal.Zero;
-            foreach (var shoppingCartItem in cart)
+            //order sub total (items + checkout attributes)
+            decimal subTotalTaxTotal = decimal.Zero;
+            decimal orderSubTotalDiscountAmount = decimal.Zero;
+            Discount orderSubTotalAppliedDiscount = null;
+            decimal subTotalWithoutDiscountBase = decimal.Zero;
+            decimal subTotalWithDiscountBase = decimal.Zero;
+            SortedDictionary<decimal, decimal> orderSubTotalTaxRates = null;
+            string SubTotalError = ShoppingCartManager.GetShoppingCartSubTotal(cart,
+                customer, false, out orderSubTotalDiscountAmount, out orderSubTotalAppliedDiscount,
+                out subTotalWithoutDiscountBase, out subTotalWithDiscountBase, out orderSubTotalTaxRates);
+            foreach (KeyValuePair<decimal,decimal> kvp in orderSubTotalTaxRates)
             {
-                decimal taxRate = decimal.Zero;
-                string error1 = string.Empty;
-                string error2 = string.Empty;
+                decimal taxRate = kvp.Key;
+                decimal taxValue = kvp.Value;
+                subTotalTaxTotal += taxValue;
 
-                decimal subTotalExclTax = GetPrice(shoppingCartItem.ProductVariant, PriceHelper.GetSubTotal(shoppingCartItem, customer, true), false, customer, out taxRate, ref error1);
-                decimal subTotalInclTax = GetPrice(shoppingCartItem.ProductVariant, PriceHelper.GetSubTotal(shoppingCartItem, customer, true), true, customer, out taxRate, ref error2);
-                if (!String.IsNullOrEmpty(error1))
-                {
-                    error = error1;
-                }
-                if (!String.IsNullOrEmpty(error2))
-                {
-                    error = error2;
-                }
-
-                decimal shoppingCartItemTax = subTotalInclTax - subTotalExclTax;
-
-                //tax rates
-                if (taxRate > decimal.Zero && shoppingCartItemTax > decimal.Zero)
+                if (taxRate > decimal.Zero && taxValue > decimal.Zero)
                 {
                     if (!taxRates.ContainsKey(taxRate))
                     {
-                        taxRates.Add(taxRate, shoppingCartItemTax);
+                        taxRates.Add(taxRate, taxValue);
                     }
                     else
                     {
-                        taxRates[taxRate] = taxRates[taxRate] + shoppingCartItemTax;
+                        taxRates[taxRate] = taxRates[taxRate] + taxValue;
                     }
-                }
-
-                //tax total
-                itemsTaxTotal += shoppingCartItemTax;
-            }
-
-            //checkout attributes
-            decimal checkoutAttributesTax = decimal.Zero;
-            if (customer != null)
-            {
-                var caValues = CheckoutAttributeHelper.ParseCheckoutAttributeValues(customer.CheckoutAttributes);
-                foreach (var caValue in caValues)
-                {
-                    decimal taxRate = decimal.Zero;
-                    string error1 = string.Empty;
-                    string error2 = string.Empty;
-
-                    decimal caExclTax = TaxManager.GetCheckoutAttributePrice(caValue, false, customer, out taxRate, ref error1);
-                    decimal caInclTax = TaxManager.GetCheckoutAttributePrice(caValue, true, customer, out taxRate, ref error2);
-                    if (!String.IsNullOrEmpty(error1))
-                    {
-                        error = error1;
-                    }
-                    if (!String.IsNullOrEmpty(error2))
-                    {
-                        error = error2;
-                    }
-
-                    decimal caTax = caInclTax - caExclTax;
-
-                    //tax rates
-                    if (taxRate > decimal.Zero && caTax > decimal.Zero)
-                    {
-                        if (!taxRates.ContainsKey(taxRate))
-                        {
-                            taxRates.Add(taxRate, caTax);
-                        }
-                        else
-                        {
-                            taxRates[taxRate] = taxRates[taxRate] + caTax;
-                        }
-                    }
-
-                    checkoutAttributesTax += caTax;
                 }
             }
 
@@ -430,7 +381,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
                 taxRates.Add(decimal.Zero, decimal.Zero);
 
             //summarize taxes
-            taxTotal = itemsTaxTotal + checkoutAttributesTax + shippingTax + paymentMethodAdditionalFeeTax;
+            taxTotal = subTotalTaxTotal + shippingTax + paymentMethodAdditionalFeeTax;
             taxTotal = Math.Round(taxTotal, 2);
             return taxTotal;
         }
