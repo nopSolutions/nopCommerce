@@ -130,3 +130,14 @@ UPDATE [Nop_DiscountType]
 SET [DiscountTypeID] = 20
 WHERE [DiscountTypeID] = 0
 GO
+
+
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[Nop_Setting]
+		WHERE [Name] = N'Common.StoreClosed.AllowAdminAccess')
+BEGIN
+	INSERT [dbo].[Nop_Setting] ([Name], [Value], [Description])
+	VALUES (N'Common.StoreClosed.AllowAdminAccess', N'True', N'')
+END
+GO

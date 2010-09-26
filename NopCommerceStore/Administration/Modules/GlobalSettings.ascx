@@ -20,6 +20,7 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
+            toggleStoreClosed();
             toggleUrlRewriting();
             toggleCustomersAllowedToUploadAvatars();
             togglePM();
@@ -32,6 +33,15 @@
             toggleGoogleAnalytics();
             toggleUsernames();
         });
+
+        function toggleStoreClosed() {
+            if (getE('<%=cbStoreClosed.ClientID %>').checked) {
+                $('#pnlStoreClosedForAdmins').show();
+            }
+            else {
+                $('#pnlStoreClosedForAdmins').hide();
+            }
+        }
 
         function toggleUrlRewriting() {
             if (getE('<%=cbEnableUrlRewriting.ClientID %>').checked) {
@@ -173,6 +183,16 @@
                         </td>
                         <td class="adminData">
                             <asp:CheckBox runat="server" ID="cbStoreClosed"></asp:CheckBox>
+                        </td>
+                    </tr>
+                    <tr id="pnlStoreClosedForAdmins">
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ID="lblStoreClosedForAdmins" Text="<% $NopResources:Admin.GlobalSettings.General.StoreClosedForAdmins %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.General.StoreClosedForAdmins.Tooltip %>"
+                                ToolTipImage="~/Administration/Common/ico-help.gif" />
+                        </td>
+                        <td class="adminData">
+                            <asp:CheckBox runat="server" ID="cbStoreClosedForAdmins"></asp:CheckBox>
                         </td>
                     </tr>
                     <tr>

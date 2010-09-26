@@ -94,6 +94,24 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         protected global::System.Web.UI.WebControls.CheckBox cbStoreClosed;
         
         /// <summary>
+        /// lblStoreClosedForAdmins control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblStoreClosedForAdmins;
+        
+        /// <summary>
+        /// cbStoreClosedForAdmins control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbStoreClosedForAdmins;
+        
+        /// <summary>
         /// lblAnonymousCheckout control.
         /// </summary>
         /// <remarks>

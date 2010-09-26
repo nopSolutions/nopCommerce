@@ -191,6 +191,12 @@ set @resources='
   <LocaleResource Name="Admin.OrderDetails.EditOrderTotals.SubtotalDiscount.InCustomerCurrency">
     <Value>Subtotal discount in customer currency - {0}:</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.General.StoreClosedForAdmins">
+    <Value>Allow an admin to view the closed store:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.General.StoreClosedForAdmins.Tooltip">
+    <Value>Check to allow a user with admin access to view the store while it is set to closed.</Value>
+  </LocaleResource>
 </Language>
 '
 

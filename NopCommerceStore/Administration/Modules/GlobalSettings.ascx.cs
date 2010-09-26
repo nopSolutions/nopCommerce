@@ -62,6 +62,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             txtStoreName.Text = SettingManager.StoreName;
             txtStoreURL.Text = SettingManager.StoreUrl;
             cbStoreClosed.Checked = SettingManager.GetSettingValueBoolean("Common.StoreClosed");
+            cbStoreClosedForAdmins.Checked = SettingManager.GetSettingValueBoolean("Common.StoreClosed.AllowAdminAccess");
             cbAnonymousCheckoutAllowed.Checked = CustomerManager.AnonymousCheckoutAllowed;
             cbUseOnePageCheckout.Checked = SettingManager.GetSettingValueBoolean("Checkout.UseOnePageCheckout");
             cbCheckoutTermsOfService.Checked = SettingManager.GetSettingValueBoolean("Checkout.TermsOfServiceEnabled");
@@ -306,6 +307,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             BindJQuery();
 
+
+            this.cbStoreClosed.Attributes.Add("onclick", "toggleStoreClosed();");
             this.cbEnableUrlRewriting.Attributes.Add("onclick", "toggleUrlRewriting();");
             this.cbCustomersAllowedToUploadAvatars.Attributes.Add("onclick", "toggleCustomersAllowedToUploadAvatars();");
             this.cbAllowPM.Attributes.Add("onclick", "togglePM();");
@@ -345,6 +348,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     SettingManager.StoreName = txtStoreName.Text;
                     SettingManager.StoreUrl = txtStoreURL.Text;
                     SettingManager.SetParam("Common.StoreClosed", cbStoreClosed.Checked.ToString());
+                    SettingManager.SetParam("Common.StoreClosed.AllowAdminAccess", cbStoreClosedForAdmins.Checked.ToString());
                     CustomerManager.AnonymousCheckoutAllowed = cbAnonymousCheckoutAllowed.Checked;
                     SettingManager.SetParam("Checkout.UseOnePageCheckout", cbUseOnePageCheckout.Checked.ToString());
                     SettingManager.SetParam("Checkout.TermsOfServiceEnabled", cbCheckoutTermsOfService.Checked.ToString());

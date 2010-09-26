@@ -65,7 +65,16 @@ namespace NopSolutions.NopCommerce.Web
             //store is closed
             if (SettingManager.GetSettingValueBoolean("Common.StoreClosed"))
             {
-                Response.Redirect("~/StoreClosed.htm");
+                if (NopContext.Current.User != null &&
+                    NopContext.Current.User.IsAdmin &&
+                    SettingManager.GetSettingValueBoolean("Common.StoreClosed.AllowAdminAccess"))
+                {
+                    //do nothing - allow admin access
+                }
+                else
+                {
+                    Response.Redirect("~/StoreClosed.htm");
+                }
             }
 
             //SSL
