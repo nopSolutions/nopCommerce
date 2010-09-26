@@ -52,6 +52,8 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Svea
 
             int rowNumber = 1;
 
+            //TODO why do we pass VATPercentage a integer value - what about decimal tax rates?
+
             //items
             for(int i = 0; i < opvCollection.Count; i++, rowNumber++)
             {
