@@ -50,7 +50,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             if (SettingManager.GetSettingValueBoolean("Common.ShowMiniShoppingCart"))
             {
                 var shoppingCart = ShoppingCartManager.GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
-                if (shoppingCart.Count == 0)
+                if (shoppingCart.TotalProducts == 0)
                 {
                     phCheckoutInfo.Visible = false;
                     lShoppingCart.Text = GetLocaleResourceString("MiniShoppingCartBox.NoItems");
@@ -60,13 +60,13 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 else
                 {
                     phCheckoutInfo.Visible = true;
-                    if (shoppingCart.Count == 1)
+                    if (shoppingCart.TotalProducts == 1)
                     {
                         lShoppingCart.Text = string.Format(GetLocaleResourceString("MiniShoppingCartBox.OneItemText"), string.Format("<a href=\"{0}\" class=\"items\">{1}</a>", SEOHelper.GetShoppingCartUrl(), GetLocaleResourceString("MiniShoppingCartBox.OneItem")));
                     }
                     else
                     {
-                        lShoppingCart.Text = string.Format(GetLocaleResourceString("MiniShoppingCartBox.SeveralItemsText"), string.Format("<a href=\"{0}\" class=\"items\">{1}</a>", SEOHelper.GetShoppingCartUrl(), string.Format(GetLocaleResourceString("MiniShoppingCartBox.SeveralItems"), shoppingCart.Count)));
+                        lShoppingCart.Text = string.Format(GetLocaleResourceString("MiniShoppingCartBox.SeveralItemsText"), string.Format("<a href=\"{0}\" class=\"items\">{1}</a>", SEOHelper.GetShoppingCartUrl(), string.Format(GetLocaleResourceString("MiniShoppingCartBox.SeveralItems"), shoppingCart.TotalProducts)));
                     }
 
                     lblOrderSubtotal.Text = GetLocaleResourceString("MiniShoppingCartBox.OrderSubtotal", GetOrderSubtotal(shoppingCart));

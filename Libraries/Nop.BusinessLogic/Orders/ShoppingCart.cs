@@ -47,5 +47,22 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 return false;
             }
         }
+
+        /// <summary>
+        /// Gets a number of product in the cart
+        /// </summary>
+        public int TotalProducts
+        {
+            get
+            {
+                int result = 0;
+                foreach (ShoppingCartItem sci in this)
+                {
+                    result += sci.Quantity;
+                }
+
+                return result;
+            }
+        }
     }
 }

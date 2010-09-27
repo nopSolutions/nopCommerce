@@ -126,28 +126,28 @@ set @resources='
     <Value>Maximum shopping cart items:</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.GlobalSettings.Products.MaxShoppingCartItems.Tooltip">
-    <Value>Maximum number of products allowed in a shopping cart.</Value>
+    <Value>Maximum number of distinct products allowed in a shopping cart.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.GlobalSettings.Products.MaxShoppingCartItems.RequiredErrorMessage">
     <Value>The value must be from 1 to 999999</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.GlobalSettings.Products.MaxShoppingCartItems.RangeErrorMessage">
-    <Value>Enter a maximum number of products allowed in a shopping cart</Value>
+    <Value>Enter a maximum number of distinct products allowed in a shopping cart</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.GlobalSettings.Products.MaxWishlistItems">
     <Value>Maximum wishlist items:</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.GlobalSettings.Products.MaxWishlistItems.Tooltip">
-    <Value>Maximum number of products allowed in a wishlist.</Value>
+    <Value>Maximum number of distinct products allowed in a wishlist.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.GlobalSettings.Products.MaxWishlistItems.RequiredErrorMessage">
     <Value>The value must be from 1 to 999999</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.GlobalSettings.Products.MaxWishlistItems.RangeErrorMessage">
-    <Value>Enter a maximum number of products allowed in a wishlist</Value>
+    <Value>Enter a maximum number of distinct products allowed in a wishlist</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.GlobalSettings.Products.ShowCategoryProductNumber">
-    <Value>Show the number of products besides each category:</Value>
+    <Value>Show the number of distinct products besides each category:</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.GlobalSettings.Products.ShowCategoryProductNumber.Tooltip">
     <Value>Check to show the number of products besides each category (category navigation block)</Value>
