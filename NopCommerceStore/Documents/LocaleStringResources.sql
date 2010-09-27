@@ -203,6 +203,15 @@ set @resources='
   <LocaleResource Name="Admin.Maintenance.DownloadButton.Text">
     <Value>Download</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.SEODisplay.AllowCustomerSelectTheme">
+    <Value>Allow customers to select a theme:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.SEODisplay.AllowCustomerSelectTheme.Tooltip">
+    <Value>Check to allow customers to select a store theme.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Common.SelectStoreTheme">
+    <Value>Select store theme:</Value>
+  </LocaleResource>
 </Language>
 '
 

@@ -25,14 +25,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             string[] systemThemes = SettingManager.GetSettingValue("Display.SystemThemes").Split(',');
       
             var themes = from f in Directory.GetDirectories(Server.MapPath("~/App_Themes"))
-                       where  (!systemThemes.Contains(Path.GetFileName(f).ToLower()))
-                       select Path.GetFileName(f);
+                         where  (!systemThemes.Contains(Path.GetFileName(f).ToLower()))
+                         select Path.GetFileName(f);
             
             ddlThemes.DataSource = themes;
             ddlThemes.DataBind();
 
-            CommonHelper.SelectListItem(this.ddlThemes, 
-                SettingManager.GetSettingValue("Display.PublicStoreTheme"));
+            CommonHelper.SelectListItem(this.ddlThemes, SettingManager.GetSettingValue("Display.PublicStoreTheme"));
         }
         
         public string SelectedTheme

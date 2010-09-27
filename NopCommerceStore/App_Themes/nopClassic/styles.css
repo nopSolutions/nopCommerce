@@ -414,6 +414,13 @@ a.logo
 	font-size: 11px;
 }
 
+.footer-storetheme
+{
+	float: right;
+	margin: 0px 100px 0px 10px;
+	font-size: 11px;
+}
+
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*
 
 	MISC. CLASSES
@@ -856,6 +863,11 @@ ul.languagelist li .selected
 }
 
 .taxdisplaytypelist
+{
+	border: solid 1px #E3E3E3;
+}
+
+.storethemelist
 {
 	border: solid 1px #E3E3E3;
 }

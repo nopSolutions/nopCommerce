@@ -14,6 +14,7 @@
 
 using System;
 using System.Globalization;
+using System.Linq;
 using System.Threading;
 using System.Web;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration;
@@ -437,6 +438,44 @@ namespace NopSolutions.NopCommerce.BusinessLogic
                 }
 
                 CommonHelper.SetCookie("Nop.CustomerLanguage", value.LanguageId.ToString(), new TimeSpan(365, 0, 0, 0, 0));
+            }
+        }
+
+        /// <summary>
+        /// Get or set current theme (e.g. darkOrange)
+        /// </summary>
+        public string WorkingTheme
+        {
+            get
+            {
+                if (SettingManager.GetSettingValueBoolean("Display.AllowCustomerSelectTheme"))
+                {
+                    string themeCookie = CommonHelper.GetCookieString("Nop.WorkingTheme", false);
+                    if (!String.IsNullOrEmpty(themeCookie))
+                    {
+                        //validate whether folder theme physically exists
+                        string[] systemThemes = SettingManager.GetSettingValue("Display.SystemThemes").Split(',');
+                        var tmp1 = from f in System.IO.Directory.GetDirectories(HttpContext.Current.Request.PhysicalApplicationPath + "App_Themes")
+                                        where !systemThemes.Contains(System.IO.Path.GetFileName(f).ToLower())
+                                        && themeCookie.Equals(System.IO.Path.GetFileName(f), StringComparison.InvariantCultureIgnoreCase)
+                                        select System.IO.Path.GetFileName(f);
+                        if (tmp1.ToList().Count > 0)
+                            return themeCookie;
+                    }
+                }
+                string defaultTheme = SettingManager.GetSettingValue("Display.PublicStoreTheme");
+                if (!String.IsNullOrEmpty(defaultTheme))
+                {
+                    return defaultTheme;
+                }
+                return string.Empty;
+            }
+            set
+            {
+                if (!SettingManager.GetSettingValueBoolean("Display.AllowCustomerSelectTheme"))
+                    return;
+
+                CommonHelper.SetCookie("Nop.WorkingTheme", value.Trim(), new TimeSpan(365, 0, 0, 0, 0));
             }
         }
 

@@ -3953,6 +3953,13 @@
     <Compile Include="Modules\BlogPopularTags.ascx.designer.cs">
       <DependentUpon>BlogPopularTags.ascx</DependentUpon>
     </Compile>
+    <Compile Include="Modules\StoreThemeSelector.ascx.cs">
+      <DependentUpon>StoreThemeSelector.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\StoreThemeSelector.ascx.designer.cs">
+      <DependentUpon>StoreThemeSelector.ascx</DependentUpon>
+    </Compile>
     <Compile Include="Modules\DecimalTextBox.ascx.cs">
       <DependentUpon>DecimalTextBox.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -6560,6 +6567,7 @@
     <Content Include="images\expand.png" />
     <Content Include="Modules\BlogMonths.ascx" />
     <Content Include="Modules\BlogPopularTags.ascx" />
+    <Content Include="Modules\StoreThemeSelector.ascx" />
     <Content Include="Modules\DecimalTextBox.ascx" />
     <Content Include="Modules\EstimateShipping.ascx" />
     <Content Include="Modules\CustomerReturnRequests.ascx" />

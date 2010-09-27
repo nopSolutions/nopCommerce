@@ -10,15 +10,15 @@
 namespace NopSolutions.NopCommerce.Web.Modules {
     
     
-    public partial class FooterControl {
+    public partial class StoreThemeSelectorControl {
         
         /// <summary>
-        /// ctrlStoreTheme control.
+        /// ddlTheme control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Modules.StoreThemeSelectorControl ctrlStoreTheme;
+        protected global::System.Web.UI.WebControls.DropDownList ddlTheme;
     }
 }

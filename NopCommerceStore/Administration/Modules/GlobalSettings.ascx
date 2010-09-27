@@ -916,6 +916,16 @@
                     </tr>
                     <tr>
                         <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
+                                ID="lblAllowCustomerSelectTheme" Text="<% $NopResources:Admin.GlobalSettings.SEODisplay.AllowCustomerSelectTheme %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.SEODisplay.AllowCustomerSelectTheme.Tooltip %>" />
+                        </td>
+                        <td class="adminData">
+                            <asp:CheckBox runat="server" ID="cbAllowCustomerSelectTheme"></asp:CheckBox>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
                             <nopCommerce:ToolTipLabel ID="lblFavicon" runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
                                 Text="<% $NopResources:Admin.GlobalSettings.SEODisplay.Favicon %>" ToolTip="<% $NopResources:Admin.GlobalSettings.SEODisplay.Favicon.Tooltip %>" />
                         </td>

@@ -112,11 +112,9 @@ namespace NopSolutions.NopCommerce.Web
             }
 
             //theme
-            string publicStoreTheme = SettingManager.GetSettingValue("Display.PublicStoreTheme");
-            if (!String.IsNullOrEmpty(publicStoreTheme))
+            if (!String.IsNullOrEmpty(NopContext.Current.WorkingTheme))
             {
-                //TODO validate whether folder exists (physically)
-                this.Theme = publicStoreTheme;
+                this.Theme = NopContext.Current.WorkingTheme;
             }
             base.OnPreInit(e);
         }
