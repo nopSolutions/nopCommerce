@@ -197,6 +197,12 @@ set @resources='
   <LocaleResource Name="Admin.GlobalSettings.General.StoreClosedForAdmins.Tooltip">
     <Value>Check to allow a user with admin access to view the store while it is set to closed.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Maintenance.DownloadColumn">
+    <Value>Download</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Maintenance.DownloadButton.Text">
+    <Value>Download</Value>
+  </LocaleResource>
 </Language>
 '
 

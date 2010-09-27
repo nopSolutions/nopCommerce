@@ -12,29 +12,35 @@
     </div>
 </div>
 <asp:GridView ID="gvBackups" runat="server" AutoGenerateColumns="False" Width="100%"
-    OnPageIndexChanging="gvBackups_PageIndexChanging" AllowPaging="true" PageSize="15">
+    OnPageIndexChanging="gvBackups_PageIndexChanging" OnRowDataBound="gvBackups_RowDataBound" AllowPaging="true" PageSize="15">
     <Columns>
         <asp:TemplateField HeaderText="<% $NopResources:Admin.Maintenance.FileNameColumn %>" ItemStyle-Width="40%">
             <ItemTemplate>
                 <%#Server.HtmlEncode(Eval("FileName").ToString())%>
             </ItemTemplate>
         </asp:TemplateField>
-        <asp:TemplateField HeaderText="<% $NopResources:Admin.Maintenance.FileSizeColumn %>" ItemStyle-Width="20%">
+        <asp:TemplateField HeaderText="<% $NopResources:Admin.Maintenance.FileSizeColumn %>" ItemStyle-Width="15%">
             <ItemTemplate>
                 <%# GetFileSizeInfo( (long)(Eval("FileSize")))%>
             </ItemTemplate>
         </asp:TemplateField>
+        <asp:TemplateField HeaderText="<% $NopResources:Admin.Maintenance.DownloadColumn %>"
+            HeaderStyle-HorizontalAlign="Center" ItemStyle-Width="15%" ItemStyle-HorizontalAlign="Center">
+            <ItemTemplate>
+                <asp:HyperLink ID="hlDownload" runat="server" Text="<% $NopResources:Admin.Maintenance.DownloadButton.Text %>"
+                    CausesValidation="false" />
+            </ItemTemplate>
+        </asp:TemplateField>
         <asp:TemplateField HeaderText="<% $NopResources:Admin.Maintenance.RestoreColumn %>" HeaderStyle-HorizontalAlign="Center"
-            ItemStyle-Width="20%" ItemStyle-HorizontalAlign="Center">
+            ItemStyle-Width="15%" ItemStyle-HorizontalAlign="Center">
             <ItemTemplate>
                 <asp:Button ID="RestoreButton" runat="server" CssClass="adminButton" CommandName="RestoreBackup"
                     Text="<% $NopResources:Admin.Maintenance.RestoreButton.Text %>" CommandArgument='<%#Eval("FullFileName")%>'
                     OnCommand="RestoreButton_OnCommand" CausesValidation="false" ToolTip="<% $NopResources:Admin.Maintenance.RestoreButton.Tooltip %>" />
             </ItemTemplate>
-        </asp:TemplateField>
-        
+        </asp:TemplateField>        
         <asp:TemplateField HeaderText="<% $NopResources:Admin.Maintenance.DeleteColumn %>" HeaderStyle-HorizontalAlign="Center"
-            ItemStyle-Width="20%" ItemStyle-HorizontalAlign="Center">
+            ItemStyle-Width="15%" ItemStyle-HorizontalAlign="Center">
             <ItemTemplate>
                 <asp:Button ID="DeleteButton" runat="server" CssClass="adminButton" CommandName="DeleteBackup"
                     Text="<% $NopResources:Admin.Maintenance.DeleteButton.Text %>" CommandArgument='<%#Eval("FullFileName")%>'

@@ -127,15 +127,15 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Maintenance
         /// Gets all backup files
         /// </summary>
         /// <returns>Backup file collection</returns>
-        public static BackupFileCollection GetAllBackupFiles()
+        public static List<BackupFile> GetAllBackupFiles()
         {
-            var collection = new BackupFileCollection();
+            var collection = new List<BackupFile>();
 
             string path = string.Format("{0}Administration\\backups\\", HttpContext.Current.Request.PhysicalApplicationPath);
             foreach (var fullFileName in System.IO.Directory.GetFiles(path))
             {
                 var fileName = Path.GetFileName(fullFileName);
-                if (fileName == "Index.htm")
+                if (fileName.Equals("index.htm", StringComparison.InvariantCultureIgnoreCase))
                     continue;
 
                 var info = new FileInfo(fullFileName);

@@ -22,9 +22,10 @@ using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
+using NopSolutions.NopCommerce.BusinessLogic.Audit;
 using NopSolutions.NopCommerce.BusinessLogic.Maintenance;
 using NopSolutions.NopCommerce.BusinessLogic.Media;
-using NopSolutions.NopCommerce.BusinessLogic.Audit;
+using NopSolutions.NopCommerce.Common.Utils;
  
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -41,8 +42,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected void BindGrid()
         {
-            BackupFileCollection collection = MaintenanceManager.GetAllBackupFiles();
-            gvBackups.DataSource = collection;
+            var backups = MaintenanceManager.GetAllBackupFiles();
+            gvBackups.DataSource = backups;
             gvBackups.DataBind();
         }
 
@@ -50,6 +51,22 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             gvBackups.PageIndex = e.NewPageIndex;
             BindGrid();
+        }
+
+        protected void gvBackups_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                BackupFile backupFile = (BackupFile)e.Row.DataItem;
+
+                //download
+                HyperLink hlDownload = e.Row.FindControl("hlDownload") as HyperLink;
+                if (hlDownload != null)
+                {
+                    string url = string.Format("{0}backups/{1}", CommonHelper.GetStoreAdminLocation(), backupFile.FileName);
+                    hlDownload.NavigateUrl = url;
+                }
+            }
         }
 
         protected void BackupButton_Click(object sender, EventArgs e)

@@ -171,7 +171,6 @@
     <Compile Include="Installation\NopSqlDataHelper.cs" />
     <Compile Include="Localization\NopResourceExpressionBuilder.cs" />
     <Compile Include="Maintenance\BackupFile.cs" />
-    <Compile Include="Maintenance\BackupFileCollection.cs" />
     <Compile Include="Maintenance\MaintenanceManager.cs" />
     <Compile Include="Maintenance\DatabaseMaintanceTask.cs" />
     <Compile Include="Manufacturers\Extensions.cs" />
