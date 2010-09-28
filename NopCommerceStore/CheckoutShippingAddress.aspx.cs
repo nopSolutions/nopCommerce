@@ -26,6 +26,7 @@ using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
+using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.Payment;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
@@ -49,6 +50,11 @@ namespace NopSolutions.NopCommerce.Web
             string title = GetLocaleResourceString("PageTitle.CheckoutShippingAddress");
             SEOHelper.RenderTitle(this, title, true);
 
+            if ((NopContext.Current.User == null) || (NopContext.Current.User.IsGuest && !CustomerManager.AnonymousCheckoutAllowed))
+            {
+                string loginURL = SEOHelper.GetLoginPageUrl(true);
+                Response.Redirect(loginURL);
+            }
 
             if (!Page.IsPostBack)
             {

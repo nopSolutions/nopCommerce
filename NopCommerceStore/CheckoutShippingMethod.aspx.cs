@@ -48,7 +48,12 @@ namespace NopSolutions.NopCommerce.Web
 
             string title = GetLocaleResourceString("PageTitle.CheckoutShippingMethod");
             SEOHelper.RenderTitle(this, title, true);
-
+            
+            if ((NopContext.Current.User == null) || (NopContext.Current.User.IsGuest && !CustomerManager.AnonymousCheckoutAllowed))
+            {
+                string loginURL = SEOHelper.GetLoginPageUrl(true);
+                Response.Redirect(loginURL);
+            }
 
             if (!Page.IsPostBack)
             {

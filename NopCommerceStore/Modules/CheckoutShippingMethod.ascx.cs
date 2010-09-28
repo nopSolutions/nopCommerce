@@ -87,6 +87,28 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 }
                 return shippingOption;
             }
+            set
+            {
+                foreach (DataListItem item in this.dlShippingOptions.Items)
+                {
+                    var rdShippingOption = (RadioButton)item.FindControl("rdShippingOption");
+                    var hfName = (HiddenField)item.FindControl("hfName");
+
+                    if (value == null)
+                    {
+                        rdShippingOption.Checked = false;
+                    }
+                    else
+                    {
+                        string name = hfName.Value;
+                        if (name == value.Name)
+                        {
+                            rdShippingOption.Checked = true;
+                            break;
+                        }
+                    }
+                }
+            }
         }
         
         protected virtual void OnCheckoutStepChanged(CheckoutStepEventArgs e)
@@ -126,6 +148,27 @@ namespace NopSolutions.NopCommerce.Web.Modules
                         phSelectShippingMethod.Visible = true;
                         dlShippingOptions.DataSource = shippingOptions;
                         dlShippingOptions.DataBind();
+
+                        //select a default shipping option
+                        if (dlShippingOptions.Items.Count > 0)
+                        {
+                            if (NopContext.Current.User != null &&
+                                NopContext.Current.User.LastShippingOption != null)
+                            {
+                                //already selected shipping option
+                                this.SelectedShippingOption = NopContext.Current.User.LastShippingOption;
+                            }
+                            else
+                            {
+                                //otherwise, the first shipping option
+                                var tmp1 = dlShippingOptions.Items[0];
+                                var rdShippingOption = tmp1.FindControl("rdShippingOption") as RadioButton;
+                                if (rdShippingOption != null)
+                                {
+                                    rdShippingOption.Checked = true;
+                                }
+                            }
+                        }
                     }
                     else
                     {

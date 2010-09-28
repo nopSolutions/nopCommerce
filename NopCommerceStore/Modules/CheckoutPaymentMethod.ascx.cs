@@ -109,6 +109,30 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 }
                 return selectedPaymentMethodId;
             }
+            set
+            {
+                foreach (DataListItem item in this.dlPaymentMethod.Items)
+                {
+                    RadioButton rdPaymentMethod = (RadioButton)item.FindControl("rdPaymentMethod");
+
+                    if (value == null)
+                    {
+                        rdPaymentMethod.Checked = false;
+                    }
+                    else
+                    {
+                        int paymentMethodId = 0;
+                        if (int.TryParse(this.dlPaymentMethod.DataKeys[item.ItemIndex].ToString(), out paymentMethodId))
+                        {
+                            if (paymentMethodId == value)
+                            {
+                                rdPaymentMethod.Checked = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         protected virtual void OnCheckoutStepChanged(CheckoutStepEventArgs e)
@@ -211,6 +235,19 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 pnlPaymentMethodsError.Visible = false;
                 dlPaymentMethod.DataSource = boundPaymentMethods;
                 dlPaymentMethod.DataBind();
+
+                //select a default payment method
+                if (dlPaymentMethod.Items.Count > 0)
+                {
+                    var tmp1 = dlPaymentMethod.Items[0];
+                    var rdPaymentMethod = tmp1.FindControl("rdPaymentMethod") as RadioButton;
+                    if (rdPaymentMethod != null)
+                    {
+                        rdPaymentMethod.Checked = true;
+                    }
+                    //or you can select it and go to the next step of checkout
+                    //but it this case a customer will not be able apply a reward point a select a "button" payment metho
+                }
             }
             else
             {
@@ -218,6 +255,27 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 pnlPaymentMethodsError.Visible = false;
                 dlPaymentMethod.DataSource = boundPaymentMethods;
                 dlPaymentMethod.DataBind();
+                
+                //select a default payment method
+                if (dlPaymentMethod.Items.Count > 0)
+                {
+                    if (NopContext.Current.User != null &&
+                        NopContext.Current.User.LastPaymentMethod != null)
+                    {
+                        //already selected payment method
+                        this.SelectedPaymentMethodId = NopContext.Current.User.LastPaymentMethod.PaymentMethodId;
+                    }
+                    else
+                    {
+                        //otherwise, the first payment method
+                        var tmp1 = dlPaymentMethod.Items[0];
+                        var rdPaymentMethod = tmp1.FindControl("rdPaymentMethod") as RadioButton;
+                        if (rdPaymentMethod != null)
+                        {
+                            rdPaymentMethod.Checked = true;
+                        }
+                    }
+                }
             }
         }
 
