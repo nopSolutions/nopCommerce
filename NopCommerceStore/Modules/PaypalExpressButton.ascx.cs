@@ -30,6 +30,7 @@ using System.Web.UI.WebControls.WebParts;
 using System.Xml;
 using NopSolutions.NopCommerce.BusinessLogic;
 using NopSolutions.NopCommerce.BusinessLogic.Audit;
+using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.BusinessLogic.Localization;
@@ -79,6 +80,17 @@ namespace NopSolutions.NopCommerce.Web.Modules
             {
                 this.Visible = false;
                 return;
+            }
+
+            //use postback if we're on one-page checkout page
+            //we need it to properly process redirects (hosted payment methods)
+            if (SettingManager.GetSettingValueBoolean("Checkout.UseOnePageCheckout"))
+            {
+                var sm = ScriptManager.GetCurrent(this.Page);
+                if (sm != null)
+                {
+                    sm.RegisterPostBackControl(btnPaypalExpress);
+                }
             }
 
             base.OnPreRender(e);

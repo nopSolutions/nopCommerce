@@ -37,6 +37,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.BusinessLogic.Shipping;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
  
 
 namespace NopSolutions.NopCommerce.Web.Modules
@@ -112,6 +113,17 @@ namespace NopSolutions.NopCommerce.Web.Modules
         protected override void OnPreRender(EventArgs e)
         {
             this.btnNextStep.Attributes.Add("onclick", "this.disabled = true;" + Page.ClientScript.GetPostBackEventReference(this.btnNextStep, ""));
+
+            //use postback if we're on one-page checkout page
+            //we need it to properly process redirects (hosted payment methods)
+            if (SettingManager.GetSettingValueBoolean("Checkout.UseOnePageCheckout"))
+            {
+                var sm = ScriptManager.GetCurrent(this.Page);
+                if (sm != null)
+                {
+                    sm.RegisterPostBackControl(btnNextStep);
+                }
+            }
 
             base.OnPreRender(e);
         }

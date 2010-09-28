@@ -19,8 +19,8 @@
         <ajaxToolkit:ToolkitScriptManager runat="Server" EnableScriptGlobalization="true"
             EnableScriptLocalization="true" ID="sm1" ScriptMode="Release" CompositeScript-ScriptMode="Release"
             CombineScripts="false" />
-        <%--<asp:UpdatePanel ID="upCheckout" runat="server">
-            <ContentTemplate>--%>
+        <asp:UpdatePanel ID="upCheckout" runat="server">
+            <ContentTemplate>
         <!-- ShippingAddress -->
                 <div runat="server" id="pnlShippingAddress" class="checkoutstep">
                     <div class="steptitle">
@@ -120,7 +120,7 @@
                         </div>
                     </asp:Panel>
                 </div>
-            <%--</ContentTemplate>
+            </ContentTemplate>
         </asp:UpdatePanel>
         <asp:UpdateProgress ID="uProgressCheckout" runat="server" AssociatedUpdatePanelID="upCheckout">
             <ProgressTemplate>
@@ -129,6 +129,6 @@
                     <%=GetLocaleResourceString("Admin.Common.Wait...")%>
                 </div>
             </ProgressTemplate>
-        </asp:UpdateProgress>--%>
+        </asp:UpdateProgress>
     </div>
 </div>
