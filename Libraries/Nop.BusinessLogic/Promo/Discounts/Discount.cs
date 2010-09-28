@@ -192,6 +192,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
                     {
                         return true;
                     }
+                    break;
                 case DiscountRequirementEnum.MustBeAssignedToCustomerRole:
                     {
                         if (customer != null)
@@ -207,6 +208,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
                                     }
                                 }
                         }
+                    }
+                    break;
+                case DiscountRequirementEnum.MustBeRegistered:
+                    {
+                        bool result = customer != null && !customer.IsGuest;
+                        return result;
                     }
                     break;
                 case DiscountRequirementEnum.HadPurchasedAllOfTheseProductVariants:

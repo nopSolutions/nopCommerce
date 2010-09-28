@@ -32,6 +32,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         /// </summary>
         MustBeAssignedToCustomerRole = 2,
         /// <summary>
+        /// Must be registered
+        /// </summary>
+        MustBeRegistered = 5,
+        /// <summary>
         /// Customer had purchased all of these product variants
         /// </summary>
         HadPurchasedAllOfTheseProductVariants = 10,

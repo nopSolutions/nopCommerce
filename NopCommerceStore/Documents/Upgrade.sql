@@ -141,3 +141,14 @@ BEGIN
 	VALUES (N'Common.StoreClosed.AllowAdminAccess', N'True', N'')
 END
 GO
+
+
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[Nop_DiscountRequirement]
+		WHERE [DiscountRequirementID] = 5)
+BEGIN
+	INSERT [dbo].[Nop_DiscountRequirement] ([DiscountRequirementID], [Name])
+	VALUES (5, N'Must be registered')
+END
+GO
