@@ -317,7 +317,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 }
                 else
                 {
-                    customerInfo = string.Format("<a href=\"CustomerDetails.aspx?CustomerId={0}\">{1}</a>", customer.CustomerId, Server.HtmlEncode(customer.FullName));
+                    customerInfo = string.Format("{0} (<a href=\"CustomerDetails.aspx?CustomerID={1}\">{2}</a>)", Server.HtmlEncode(customer.FullName), customer.CustomerId, Server.HtmlEncode(customer.Email));
                 }
             }
             return customerInfo;
@@ -335,7 +335,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 }
                 else
                 {
-                    customerName = Server.HtmlEncode(customer.FullName);
+                    customerName = string.Format("{0} ({1})", Server.HtmlEncode(customer.FullName), Server.HtmlEncode(customer.Email));
                 }
             }
             return customerName;
