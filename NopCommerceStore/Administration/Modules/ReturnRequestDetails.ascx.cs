@@ -24,11 +24,13 @@ using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic;
+using NopSolutions.NopCommerce.BusinessLogic.Audit;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
+using NopSolutions.NopCommerce.BusinessLogic.Localization;
+using NopSolutions.NopCommerce.BusinessLogic.Messages;
+using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.Orders;
-using NopSolutions.NopCommerce.BusinessLogic.Audit;
  
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -79,7 +81,25 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             }
         }
 
-
+        protected void NotifyCustomerButton_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+            {
+                try
+                {
+                    ReturnRequest rr = OrderManager.GetReturnRequestById(this.ReturnRequestId);
+                    if (rr != null)
+                    {
+                        MessageManager.SendReturnRequestStatusChangedCustomerNotification(rr, LocalizationManager.DefaultAdminLanguage.LanguageId);
+                    }
+                }
+                catch (Exception exc)
+                {
+                    ProcessException(exc);
+                }
+            }
+        }
+        
         public int ReturnRequestId
         {
             get

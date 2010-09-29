@@ -134,7 +134,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                                     quantity, NopContext.Current.User.CustomerId,
                                     ddlReturnReason.SelectedValue, ddlReturnAction.SelectedValue,
                                     txtComments.Text, string.Empty, ReturnStatusEnum.Pending,
-                                    dtNow, dtNow);
+                                    dtNow, dtNow, true);
                                 count++; 
                             }
                         }

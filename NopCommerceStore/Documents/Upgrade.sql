@@ -152,3 +152,66 @@ BEGIN
 	VALUES (5, N'Must be registered')
 END
 GO
+
+--return requets message templates
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[Nop_MessageTemplate]
+		WHERE [Name] = N'NewReturnRequest.StoreOwnerNotification')
+BEGIN
+	INSERT [dbo].[Nop_MessageTemplate] ([Name])
+	VALUES (N'NewReturnRequest.StoreOwnerNotification')
+
+	DECLARE @MessageTemplateID INT 
+	SELECT @MessageTemplateID =	mt.MessageTemplateID FROM Nop_MessageTemplate mt
+							WHERE mt.Name = N'NewReturnRequest.StoreOwnerNotification' 
+
+	IF (@MessageTemplateID > 0)
+	BEGIN
+		INSERT [dbo].[Nop_MessageTemplateLocalized] ([MessageTemplateID], [LanguageID], [BCCEmailAddresses], [Subject], [Body]) 
+		VALUES (@MessageTemplateID, 7, N'', N'%Store.Name%. New return request.',  N'<p><a href="%Store.URL%">%Store.Name%</a> <br />
+<br />
+%Customer.FullName% (%Customer.Email%) has just submitted a new return request. Details are below:
+<br />
+Request ID: %ReturnRequest.ID%
+<br />
+Product: %ReturnRequest.Product.Quantity% x Product: %ReturnRequest.Product.Name%
+<br />
+Reason for return: %ReturnRequest.Reason%
+<br />
+Requested action: %ReturnRequest.RequestedAction%
+<br />
+Customer comments:
+<br />
+%ReturnRequest.CustomerComment%
+</p>')
+	END
+END
+GO
+
+
+
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[Nop_MessageTemplate]
+		WHERE [Name] = N'ReturnRequestStatusChanged.CustomerNotification')
+BEGIN
+	INSERT [dbo].[Nop_MessageTemplate] ([Name])
+	VALUES (N'ReturnRequestStatusChanged.CustomerNotification')
+
+	DECLARE @MessageTemplateID INT 
+	SELECT @MessageTemplateID =	mt.MessageTemplateID FROM Nop_MessageTemplate mt
+							WHERE mt.Name = N'ReturnRequestStatusChanged.CustomerNotification' 
+
+	IF (@MessageTemplateID > 0)
+	BEGIN
+		INSERT [dbo].[Nop_MessageTemplateLocalized] ([MessageTemplateID], [LanguageID], [BCCEmailAddresses], [Subject], [Body]) 
+		VALUES (@MessageTemplateID, 7, N'', N'%Store.Name%. Return request status was changed.',  N'<p><a href="%Store.URL%">%Store.Name%</a> <br />
+<br />
+Hello %Customer.FullName%,
+<br />
+Your return request #%ReturnRequest.ID% status has been changed.
+</p>')
+	END
+END
+GO

@@ -10,6 +10,11 @@
             (<%=GetLocaleResourceString("Admin.ReturnRequestDetails.BackToReturnRequests")%>)</a>
     </div>
     <div class="options">
+        <asp:Button ID="NotifyCustomerButton" runat="server" CssClass="adminButtonBlue" Text="<% $NopResources:Admin.ReturnRequestDetails.NotifyCustomerButton.Text %>"
+            OnClick="NotifyCustomerButton_Click" ToolTip="<% $NopResources:Admin.ReturnRequestDetails.NotifyCustomerButton.Tooltip %>" />
+            <nopCommerce:ConfirmationBox runat="server" ID="cbNotify" TargetControlID="NotifyCustomerButton"
+            YesText="<% $NopResources:Admin.Common.Yes %>" NoText="<% $NopResources:Admin.Common.No %>"
+            ConfirmText="<% $NopResources:Admin.Common.AreYouSure %>" />
         <asp:Button ID="SaveButton" runat="server" CssClass="adminButtonBlue" Text="<% $NopResources:Admin.ReturnRequestDetails.SaveButton.Text %>"
             OnClick="SaveButton_Click" ToolTip="<% $NopResources:Admin.ReturnRequestDetails.SaveButton.Tooltip %>" />
         <asp:Button ID="DeleteButton" runat="server" CssClass="adminButtonBlue" Text="<% $NopResources:Admin.ReturnRequestDetails.DeleteButton.Text %>"

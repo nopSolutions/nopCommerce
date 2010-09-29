@@ -1736,85 +1736,62 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         }
 
         /// <summary>
-        /// Sends an email
+        /// Sends 'New Return Request' message to a store owner
         /// </summary>
-        /// <param name="subject">Subject</param>
-        /// <param name="body">Body</param>
-        /// <param name="from">From</param>
-        /// <param name="to">To</param>
-        /// <param name="emailAccount">Email account to use</param>
-        public static void SendEmail(string subject, string body, string from, string to, EmailAccount emailAccount)
+        /// <param name="returnRequest">Return request</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        public static int SendNewReturnRequestStoreOwnerNotification(ReturnRequest returnRequest, int languageId)
         {
-            SendEmail(subject, body, new MailAddress(from), new MailAddress(to), 
-                new List<String>(), new List<String>(), emailAccount);
+            if (returnRequest == null)
+                throw new ArgumentNullException("returnRequest");
+
+            string templateName = "NewReturnRequest.StoreOwnerNotification";
+            var localizedMessageTemplate = MessageManager.GetLocalizedMessageTemplate(templateName, languageId);
+            if (localizedMessageTemplate == null || !localizedMessageTemplate.IsActive)
+                return 0;
+
+            var emailAccount = localizedMessageTemplate.EmailAccount;
+
+            string subject = ReplaceMessageTemplateTokens(returnRequest, localizedMessageTemplate.Subject);
+            string body = ReplaceMessageTemplateTokens(returnRequest, localizedMessageTemplate.Body);
+            string bcc = localizedMessageTemplate.BccEmailAddresses;
+            var from = new MailAddress(emailAccount.Email, emailAccount.DisplayName);
+            var to = new MailAddress(emailAccount.Email, emailAccount.DisplayName);
+            var queuedEmail = InsertQueuedEmail(5, from, to, string.Empty, bcc, subject, body,
+                DateTime.UtcNow, 0, null, emailAccount.EmailAccountId);
+            return queuedEmail.QueuedEmailId;
         }
 
         /// <summary>
-        /// Sends an email
+        /// Sends 'Return Request status changed' message to a customer
         /// </summary>
-        /// <param name="subject">Subject</param>
-        /// <param name="body">Body</param>
-        /// <param name="from">From</param>
-        /// <param name="to">To</param>
-        /// <param name="emailAccount">Email account to use</param>
-        public static void SendEmail(string subject, string body, MailAddress from,
-            MailAddress to, EmailAccount emailAccount)
+        /// <param name="returnRequest">Return request</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        public static int SendReturnRequestStatusChangedCustomerNotification(ReturnRequest returnRequest, int languageId)
         {
-            SendEmail(subject, body, from, to, new List<String>(), new List<String>(), emailAccount);
-        }
+            if (returnRequest == null)
+                throw new ArgumentNullException("returnRequest");
 
-        /// <summary>
-        /// Sends an email
-        /// </summary>
-        /// <param name="subject">Subject</param>
-        /// <param name="body">Body</param>
-        /// <param name="from">From</param>
-        /// <param name="to">To</param>
-        /// <param name="bcc">BCC</param>
-        /// <param name="cc">CC</param>
-        /// <param name="emailAccount">Email account to use</param>
-        public static void SendEmail(string subject, string body,
-            MailAddress from, MailAddress to, List<string> bcc, List<string> cc, EmailAccount emailAccount)
-        {
-            var message = new MailMessage();
-            message.From = from;
-            message.To.Add(to);
-            if (null != bcc)
-                foreach (string address in bcc)
-                {
-                    if (address != null)
-                    {
-                        if (!String.IsNullOrEmpty(address.Trim()))
-                        {
-                            message.Bcc.Add(address.Trim());
-                        }
-                    }
-                }
-            if (null != cc)
-                foreach (string address in cc)
-                {
-                    if (address != null)
-                    {
-                        if (!String.IsNullOrEmpty(address.Trim()))
-                        {
-                            message.CC.Add(address.Trim());
-                        }
-                    }
-                }
-            message.Subject = subject;
-            message.Body = body;
-            message.IsBodyHtml = true;
+            if (returnRequest.Customer == null)
+                throw new NopException("Customer of return request could not be loaded");
 
-            var smtpClient = new SmtpClient();
-            smtpClient.UseDefaultCredentials = emailAccount.UseDefaultCredentials;
-            smtpClient.Host = emailAccount.Host;
-            smtpClient.Port = emailAccount.Port;
-            smtpClient.EnableSsl = emailAccount.EnableSSL;
-            if (emailAccount.UseDefaultCredentials)
-                smtpClient.Credentials = CredentialCache.DefaultNetworkCredentials;
-            else
-                smtpClient.Credentials = new NetworkCredential(emailAccount.Username, emailAccount.Password);
-            smtpClient.Send(message);
+            string templateName = "ReturnRequestStatusChanged.CustomerNotification";
+            var localizedMessageTemplate = MessageManager.GetLocalizedMessageTemplate(templateName, languageId);
+            if (localizedMessageTemplate == null || !localizedMessageTemplate.IsActive)
+                return 0;
+
+            var emailAccount = localizedMessageTemplate.EmailAccount;
+
+            string subject = ReplaceMessageTemplateTokens(returnRequest, localizedMessageTemplate.Subject);
+            string body = ReplaceMessageTemplateTokens(returnRequest, localizedMessageTemplate.Body);
+            string bcc = localizedMessageTemplate.BccEmailAddresses;
+            var from = new MailAddress(emailAccount.Email, emailAccount.DisplayName);
+            var to = new MailAddress(returnRequest.Customer.Email, returnRequest.Customer.FullName);
+            var queuedEmail = InsertQueuedEmail(5, from, to, string.Empty, bcc, subject, body,
+                DateTime.UtcNow, 0, null, emailAccount.EmailAccountId);
+            return queuedEmail.QueuedEmailId;
         }
 
         /// <summary>
@@ -1824,9 +1801,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         public static string[] GetListOfAllowedTokens()
         {
             var allowedTokens = new List<string>();
+
             allowedTokens.Add("%Store.Name%");
             allowedTokens.Add("%Store.URL%");
             allowedTokens.Add("%Store.Email%");
+
             allowedTokens.Add("%Order.OrderNumber%");
             allowedTokens.Add("%Order.CustomerFullName%");
             allowedTokens.Add("%Order.CustomerEmail%");
@@ -1860,22 +1839,27 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             allowedTokens.Add("%Order.Product(s)%");
             allowedTokens.Add("%Order.CreatedOn%");
             allowedTokens.Add("%Order.OrderURLForCustomer%");
+
             allowedTokens.Add("%Customer.Email%");
             allowedTokens.Add("%Customer.Username%");
             allowedTokens.Add("%Customer.PasswordRecoveryURL%");
             allowedTokens.Add("%Customer.AccountActivationURL%");
             allowedTokens.Add("%Customer.FullName%");
             allowedTokens.Add("%Customer.VatNumber%");
+
             allowedTokens.Add("%Product.Name%");
             allowedTokens.Add("%Product.ShortDescription%");
             allowedTokens.Add("%Product.ProductURLForCustomer%");
             allowedTokens.Add("%ProductVariant.FullProductName%");
             allowedTokens.Add("%ProductVariant.StockQuantity%");
+
             allowedTokens.Add("%NewsComment.NewsTitle%");
             allowedTokens.Add("%BlogComment.BlogPostTitle%");
+
             allowedTokens.Add("%NewsLetterSubscription.Email%");
             allowedTokens.Add("%NewsLetterSubscription.ActivationUrl%");
             allowedTokens.Add("%NewsLetterSubscription.DeactivationUrl%");
+
             allowedTokens.Add("%GiftCard.SenderName%");
             allowedTokens.Add("%GiftCard.SenderEmail%");
             allowedTokens.Add("%GiftCard.RecipientName%");
@@ -1883,14 +1867,23 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             allowedTokens.Add("%GiftCard.Amount%");
             allowedTokens.Add("%GiftCard.CouponCode%");
             allowedTokens.Add("%GiftCard.Message%");
+
             allowedTokens.Add("%Forums.TopicURL%");
             allowedTokens.Add("%Forums.TopicName%");
             allowedTokens.Add("%Forums.ForumURL%");
             allowedTokens.Add("%Forums.ForumName%");
             allowedTokens.Add("%Forums.PostAuthor%");
             allowedTokens.Add("%Forums.PostBody%");
+
             allowedTokens.Add("%PrivateMessage.Subject%");
             allowedTokens.Add("%PrivateMessage.Text%");
+
+            allowedTokens.Add("%ReturnRequest.ID%");
+            allowedTokens.Add("%ReturnRequest.Product.Quantity%");
+            allowedTokens.Add("%ReturnRequest.Product.Name%");
+            allowedTokens.Add("%ReturnRequest.Reason%");
+            allowedTokens.Add("%ReturnRequest.RequestedAction%");
+            allowedTokens.Add("%ReturnRequest.CustomerComment%");
             
             return allowedTokens.ToArray();
         }
@@ -2287,6 +2280,38 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
 
             return template;
         }
+        
+        /// <summary>
+        /// Replaces a message template tokens
+        /// </summary>
+        /// <param name="returnRequest">Return request</param>
+        /// <param name="template">Template</param>
+        /// <returns>New template</returns>
+        public static string ReplaceMessageTemplateTokens(ReturnRequest returnRequest,
+            string template)
+        {
+            var tokens = new NameValueCollection();
+            tokens.Add("Store.Name", SettingManager.StoreName);
+            tokens.Add("Store.URL", SettingManager.StoreUrl);
+            tokens.Add("Store.Email", MessageManager.DefaultEmailAccount.Email);
+
+            tokens.Add("Customer.Email", HttpUtility.HtmlEncode(returnRequest.Customer.Email));
+            tokens.Add("Customer.FullName", HttpUtility.HtmlEncode(returnRequest.Customer.FullName));
+            
+            tokens.Add("ReturnRequest.ID", returnRequest.ReturnRequestId.ToString());
+            tokens.Add("ReturnRequest.Product.Quantity", returnRequest.Quantity.ToString());
+            tokens.Add("ReturnRequest.Product.Name", HttpUtility.HtmlEncode(returnRequest.OrderProductVariant.ProductVariant.FullProductName));
+            tokens.Add("ReturnRequest.Reason", HttpUtility.HtmlEncode(returnRequest.ReasonForReturn));
+            tokens.Add("ReturnRequest.RequestedAction", HttpUtility.HtmlEncode(returnRequest.RequestedAction));
+            tokens.Add("ReturnRequest.CustomerComment", OrderManager.FormatReturnRequestCommentsText(returnRequest.CustomerComments));
+            
+            foreach (string token in tokens.Keys)
+            {
+                template = Replace(template, String.Format(@"%{0}%", token), tokens[token]);
+            }
+
+            return template;
+        }
 
         /// <summary>
         /// Formats the contact us form text
@@ -2301,6 +2326,89 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             text = HtmlHelper.FormatText(text, false, true, false, false, false, false);
             return text;
         }
+
+        /// <summary>
+        /// Sends an email
+        /// </summary>
+        /// <param name="subject">Subject</param>
+        /// <param name="body">Body</param>
+        /// <param name="from">From</param>
+        /// <param name="to">To</param>
+        /// <param name="emailAccount">Email account to use</param>
+        public static void SendEmail(string subject, string body, string from, string to, EmailAccount emailAccount)
+        {
+            SendEmail(subject, body, new MailAddress(from), new MailAddress(to),
+                new List<String>(), new List<String>(), emailAccount);
+        }
+
+        /// <summary>
+        /// Sends an email
+        /// </summary>
+        /// <param name="subject">Subject</param>
+        /// <param name="body">Body</param>
+        /// <param name="from">From</param>
+        /// <param name="to">To</param>
+        /// <param name="emailAccount">Email account to use</param>
+        public static void SendEmail(string subject, string body, MailAddress from,
+            MailAddress to, EmailAccount emailAccount)
+        {
+            SendEmail(subject, body, from, to, new List<String>(), new List<String>(), emailAccount);
+        }
+
+        /// <summary>
+        /// Sends an email
+        /// </summary>
+        /// <param name="subject">Subject</param>
+        /// <param name="body">Body</param>
+        /// <param name="from">From</param>
+        /// <param name="to">To</param>
+        /// <param name="bcc">BCC</param>
+        /// <param name="cc">CC</param>
+        /// <param name="emailAccount">Email account to use</param>
+        public static void SendEmail(string subject, string body,
+            MailAddress from, MailAddress to, List<string> bcc, List<string> cc, EmailAccount emailAccount)
+        {
+            var message = new MailMessage();
+            message.From = from;
+            message.To.Add(to);
+            if (null != bcc)
+                foreach (string address in bcc)
+                {
+                    if (address != null)
+                    {
+                        if (!String.IsNullOrEmpty(address.Trim()))
+                        {
+                            message.Bcc.Add(address.Trim());
+                        }
+                    }
+                }
+            if (null != cc)
+                foreach (string address in cc)
+                {
+                    if (address != null)
+                    {
+                        if (!String.IsNullOrEmpty(address.Trim()))
+                        {
+                            message.CC.Add(address.Trim());
+                        }
+                    }
+                }
+            message.Subject = subject;
+            message.Body = body;
+            message.IsBodyHtml = true;
+
+            var smtpClient = new SmtpClient();
+            smtpClient.UseDefaultCredentials = emailAccount.UseDefaultCredentials;
+            smtpClient.Host = emailAccount.Host;
+            smtpClient.Port = emailAccount.Port;
+            smtpClient.EnableSsl = emailAccount.EnableSSL;
+            if (emailAccount.UseDefaultCredentials)
+                smtpClient.Credentials = CredentialCache.DefaultNetworkCredentials;
+            else
+                smtpClient.Credentials = new NetworkCredential(emailAccount.Username, emailAccount.Password);
+            smtpClient.Send(message);
+        }
+
 
         #endregion
 

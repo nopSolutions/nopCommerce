@@ -2962,12 +2962,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="returnStatus">Return status</param>
         /// <param name="createdOn">The date and time of entity creation</param>
         /// <param name="updatedOn">The date and time of entity update</param>
+        /// <param name="notifyStoreOwner">A value indicating whether to notify the store owner</param>
         /// <returns>Return request</returns>
         public static ReturnRequest InsertReturnRequest(int orderProductVariantId,
             int quantity, int customerId, string reasonForReturn, 
             string requestedAction, string customerComments, 
             string staffNotes, ReturnStatusEnum returnStatus,
-            DateTime createdOn, DateTime updatedOn)
+            DateTime createdOn, DateTime updatedOn, bool notifyStoreOwner)
         {
             reasonForReturn = CommonHelper.EnsureMaximumLength(reasonForReturn, 400);
             requestedAction = CommonHelper.EnsureMaximumLength(requestedAction, 400);
@@ -2988,10 +2989,15 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
 
             context.ReturnRequests.AddObject(returnRequest);
             context.SaveChanges();
+
+            if (notifyStoreOwner)
+            {
+                MessageManager.SendNewReturnRequestStoreOwnerNotification(returnRequest, LocalizationManager.DefaultAdminLanguage.LanguageId);
+            }
+
             return returnRequest;
         }
-
-
+        
         /// <summary>
         /// Updates the return request
         /// </summary>

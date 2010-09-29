@@ -13,6 +13,24 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
     public partial class ReturnRequestDetailsControl {
         
         /// <summary>
+        /// NotifyCustomerButton control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button NotifyCustomerButton;
+        
+        /// <summary>
+        /// cbNotify control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ConfirmationBox cbNotify;
+        
+        /// <summary>
         /// SaveButton control.
         /// </summary>
         /// <remarks>

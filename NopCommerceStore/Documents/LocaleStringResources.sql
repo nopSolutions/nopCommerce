@@ -212,6 +212,12 @@ set @resources='
   <LocaleResource Name="Common.SelectStoreTheme">
     <Value>Select store theme:</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequestDetails.NotifyCustomerButton.Text">
+    <Value>Notify customer about status change</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequestDetails.NotifyCustomerButton.Tooltip">
+    <Value>Click to notify the customer about status change of this return request (save return request first)</Value>
+  </LocaleResource>
 </Language>
 '
 
