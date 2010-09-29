@@ -41,8 +41,13 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected override void OnPreRender(EventArgs e)
         {
+            //default button
             this.txtSearchTerms.Attributes.Add("onfocus", string.Format("if(this.value=='{0}')this.value=''", GetLocaleResourceString("Forum.SearchForumsTooltip")));
-            txtSearchTerms.Attributes.Add("onkeydown", "if(event.which || event.keyCode){if ((event.which == 13) || (event.keyCode == 13)) {document.getElementById('" + btnSearch.ClientID + "').click();return false;}} else {return true}; ");
+            this.txtSearchTerms.Attributes.Add("onkeydown", "if(event.which || event.keyCode){if ((event.which == 13) || (event.keyCode == 13)) {document.getElementById('" + btnSearch.ClientID + "').click();return false;}} else {return true}; ");
+            
+            //advanced search
+            this.hlAdvSearch.NavigateUrl = SEOHelper.GetForumAdvancedSearchUrl();
+
             base.OnPreRender(e);
         }
     }

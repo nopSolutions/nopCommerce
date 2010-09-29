@@ -4353,11 +4353,12 @@ ul.languagelist li .selected
 .forumsmain .forumsmainheader
 {
 	border-bottom: solid 1px #f3f3f3;
-	height: 20px;
+	height: 35px;
 }
 
 .forumsmain .forumsmainheader .currenttime
 {
+    padding-top: 20px;
 	font-size: 0.9em;
 	color: #555;
 	float: left;
@@ -5033,6 +5034,7 @@ ul.languagelist li .selected
 
 .forumsearchbox
 {
+    font-size:0.9em;
 }
 
 .forumsearch

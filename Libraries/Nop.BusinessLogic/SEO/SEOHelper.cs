@@ -1715,6 +1715,17 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO
         }
 
         /// <summary>
+        /// Gets forum advanced search URL
+        /// </summary>
+        /// <returns>Forum URL</returns>
+        public static string GetForumAdvancedSearchUrl()
+        {
+            string url = string.Format("{0}Boards/Search.aspx", CommonHelper.GetStoreLocation());
+            url = CommonHelper.ModifyQueryString(url, "adv=true", string.Empty);
+            return url.ToLowerInvariant();
+        }
+
+        /// <summary>
         /// Gets forum topic URL
         /// </summary>
         /// <param name="topicId">Forum topic identifier</param>

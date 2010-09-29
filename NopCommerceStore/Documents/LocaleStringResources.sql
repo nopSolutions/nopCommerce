@@ -263,6 +263,9 @@ set @resources='
   <LocaleResource Name="Checkout.MinOrderSubtotalAmount">
     <Value>Minimum order sub-total amount is {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="Forum.AdvancedSearch">
+    <Value>Advanced search</Value>
+  </LocaleResource>
 </Language>
 '
 

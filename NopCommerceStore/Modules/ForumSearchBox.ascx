@@ -4,4 +4,7 @@
     <asp:TextBox ID="txtSearchTerms" runat="server" SkinID="ForumSearchBoxText" Text="<% $NopResources:Forum.SearchForumsTooltip %>" />&nbsp;
     <asp:Button runat="server" ID="btnSearch" OnClick="btnSearch_Click" Text="<% $NopResources:Forum.SearchButton %>"
         CssClass="forumsearchboxbutton" />
+    <br />
+    <asp:HyperLink runat="server" ID="hlAdvSearch" Text="<% $NopResources:Forum.AdvancedSearch %>"
+        ToolTip="<% $NopResources:Forum.AdvancedSearch %>" />
 </div>
