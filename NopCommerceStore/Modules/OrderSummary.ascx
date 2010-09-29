@@ -183,9 +183,17 @@
                 }
             </script>
             <div class="terms-of-service">
-                <asp:CheckBox runat="server" ID="cbTermsOfService" /> <asp:Literal runat="server" ID="lTermsOfService" />
+                <asp:CheckBox runat="server" ID="cbTermsOfService" />
+                <asp:Literal runat="server" ID="lTermsOfService" />
             </div>
             <%} %>
+            <div class="clear">
+            </div><div class="terms-of-service">
+                <asp:Label runat="server" ID="lMinOrderSubtotalAmount" />
+            </div>
+
+            <div class="clear">
+            </div>
             <div class="common-buttons">
                 <asp:Button ID="btnUpdate" OnClick="btnUpdate_Click" runat="server" Text="<% $NopResources:ShoppingCart.UpdateCart %>"
                     CssClass="updatecartbutton" />

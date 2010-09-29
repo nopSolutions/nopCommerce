@@ -59,7 +59,6 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     paymentMethodId = NopContext.Current.User.LastPaymentMethodId;
 
                 //subtotal
-                //don't include checkout attributes on shopping cart page
                 decimal subtotalBase = decimal.Zero;
                 decimal orderSubTotalDiscountAmountBase = decimal.Zero;
                 Discount orderSubTotalAppliedDiscount = null;

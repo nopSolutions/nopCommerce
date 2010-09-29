@@ -218,6 +218,51 @@ set @resources='
   <LocaleResource Name="Admin.ReturnRequestDetails.NotifyCustomerButton.Tooltip">
     <Value>Click to notify the customer about status change of this return request (save return request first)</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.MinOrderAmount">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.MinOrderAmount.Tooltip">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.MinOrderAmount.RequiredErrorMessage">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.MinOrderAmount.RangeErrorMessage">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Checkout.MinOrderAmount">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.MinOrderTotalAmount">
+    <Value>Min order total amount:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.MinOrderTotalAmount.Tooltip">
+    <Value>Enter minimum order total amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.MinOrderTotalAmount.RequiredErrorMessage">
+    <Value>Minimum order total amount is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.MinOrderTotalAmount.RangeErrorMessage">
+    <Value>The minimum total order amount must be from 0 to 100000000</Value>
+  </LocaleResource>
+  <LocaleResource Name="Checkout.MinOrderTotalAmount">
+    <Value>Minimum order total amount is {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.MinOrderSubtotalAmount">
+    <Value>Min order sub-total amount:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.MinOrderSubtotalAmount.Tooltip">
+    <Value>Enter minimum order sub-total amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.MinOrderSubtotalAmount.RequiredErrorMessage">
+    <Value>Minimum order sub-total amount is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Other.MinOrderSubtotalAmount.RangeErrorMessage">
+    <Value>The minimum sub-total order amount must be from 0 to 100000000</Value>
+  </LocaleResource>
+  <LocaleResource Name="Checkout.MinOrderSubtotalAmount">
+    <Value>Minimum order sub-total amount is {0}</Value>
+  </LocaleResource>
 </Language>
 '
 

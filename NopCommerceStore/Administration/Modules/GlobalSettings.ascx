@@ -1707,13 +1707,26 @@
                     <tr>
                         <td class="adminTitle">
                             <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
-                                ID="lblMinOrderAmount" Text="<% $NopResources:Admin.GlobalSettings.Other.MinOrderAmount %>"
-                                ToolTip="<% $NopResources:Admin.GlobalSettings.Other.MinOrderAmount.Tooltip %>" />
+                                ID="lblMinOrderSubtotalAmount" Text="<% $NopResources:Admin.GlobalSettings.Other.MinOrderSubtotalAmount %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Other.MinOrderSubtotalAmount.Tooltip %>" />
                         </td>
                         <td class="adminData">
-                            <nopCommerce:DecimalTextBox runat="server" CssClass="adminInput" Width="50px" ID="txtMinOrderAmount"
-                                RequiredErrorMessage="<% $NopResources:Admin.GlobalSettings.Other.MinOrderAmount.RequiredErrorMessage %>"
-                                MinimumValue="0" MaximumValue="100000000" RangeErrorMessage="<% $NopResources:Admin.GlobalSettings.Other.MinOrderAmount.RangeErrorMessage %>" />
+                            <nopCommerce:DecimalTextBox runat="server" CssClass="adminInput" Width="50px" ID="txtMinOrderSubtotalAmount"
+                                RequiredErrorMessage="<% $NopResources:Admin.GlobalSettings.Other.MinOrderSubtotalAmount.RequiredErrorMessage %>"
+                                MinimumValue="0" MaximumValue="100000000" RangeErrorMessage="<% $NopResources:Admin.GlobalSettings.Other.MinOrderSubtotalAmount.RangeErrorMessage %>" />
+                            <%=CurrencyManager.PrimaryStoreCurrency.CurrencyCode%>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
+                                ID="lblMinOrderTotalAmount" Text="<% $NopResources:Admin.GlobalSettings.Other.MinOrderTotalAmount %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Other.MinOrderTotalAmount.Tooltip %>" />
+                        </td>
+                        <td class="adminData">
+                            <nopCommerce:DecimalTextBox runat="server" CssClass="adminInput" Width="50px" ID="txtMinOrderTotalAmount"
+                                RequiredErrorMessage="<% $NopResources:Admin.GlobalSettings.Other.MinOrderTotalAmount.RequiredErrorMessage %>"
+                                MinimumValue="0" MaximumValue="100000000" RangeErrorMessage="<% $NopResources:Admin.GlobalSettings.Other.MinOrderTotalAmount.RangeErrorMessage %>" />
                             <%=CurrencyManager.PrimaryStoreCurrency.CurrencyCode%>
                         </td>
                     </tr>

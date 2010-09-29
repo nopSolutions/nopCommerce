@@ -2497,22 +2497,40 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         protected global::System.Web.UI.WebControls.CheckBox cbAllowNavigationOnlyRegisteredCustomers;
         
         /// <summary>
-        /// lblMinOrderAmount control.
+        /// lblMinOrderSubtotalAmount control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblMinOrderAmount;
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblMinOrderSubtotalAmount;
         
         /// <summary>
-        /// txtMinOrderAmount control.
+        /// txtMinOrderSubtotalAmount control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.DecimalTextBox txtMinOrderAmount;
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.DecimalTextBox txtMinOrderSubtotalAmount;
+        
+        /// <summary>
+        /// lblMinOrderTotalAmount control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblMinOrderTotalAmount;
+        
+        /// <summary>
+        /// txtMinOrderTotalAmount control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.DecimalTextBox txtMinOrderTotalAmount;
         
         /// <summary>
         /// lblShowDiscountCouponBox control.

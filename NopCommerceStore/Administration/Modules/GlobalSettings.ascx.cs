@@ -143,7 +143,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
             cbShowCategoryProductNumber.Checked = SettingManager.GetSettingValueBoolean("Display.Products.ShowCategoryProductNumber");
             cbHidePricesForNonRegistered.Checked = SettingManager.GetSettingValueBoolean("Common.HidePricesForNonRegistered");
-            txtMinOrderAmount.Value = OrderManager.MinOrderAmount;
+            txtMinOrderSubtotalAmount.Value = OrderManager.MinOrderSubtotalAmount;
+            txtMinOrderTotalAmount.Value = OrderManager.MinOrderTotalAmount;
             cbShowDiscountCouponBox.Checked = SettingManager.GetSettingValueBoolean("Display.Checkout.DiscountCouponBox");
             cbShowGiftCardBox.Checked = SettingManager.GetSettingValueBoolean("Display.Checkout.GiftCardBox");
             cbShowSKU.Checked = SettingManager.GetSettingValueBoolean("Display.Products.ShowSKU");
@@ -430,7 +431,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                     SettingManager.SetParam("Display.Products.ShowCategoryProductNumber", cbShowCategoryProductNumber.Checked.ToString());
                     SettingManager.SetParam("Common.HidePricesForNonRegistered", cbHidePricesForNonRegistered.Checked.ToString());
-                    OrderManager.MinOrderAmount = txtMinOrderAmount.Value;
+                    OrderManager.MinOrderSubtotalAmount = txtMinOrderSubtotalAmount.Value;
+                    OrderManager.MinOrderTotalAmount = txtMinOrderTotalAmount.Value;
                     SettingManager.SetParam("Display.Checkout.DiscountCouponBox", cbShowDiscountCouponBox.Checked.ToString());
                     SettingManager.SetParam("Display.Checkout.GiftCardBox", cbShowGiftCardBox.Checked.ToString());
                     SettingManager.SetParam("Display.Products.ShowSKU", cbShowSKU.Checked.ToString());

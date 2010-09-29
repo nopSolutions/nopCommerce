@@ -184,6 +184,15 @@ namespace NopSolutions.NopCommerce.Web.Modules {
         protected global::System.Web.UI.WebControls.Literal lTermsOfService;
         
         /// <summary>
+        /// lMinOrderSubtotalAmount control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lMinOrderSubtotalAmount;
+        
+        /// <summary>
         /// btnUpdate control.
         /// </summary>
         /// <remarks>

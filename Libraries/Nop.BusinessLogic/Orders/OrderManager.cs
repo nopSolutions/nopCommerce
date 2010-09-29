@@ -5507,6 +5507,86 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             return result;
         }
 
+        /// <summary>
+        /// Valdiate minimum order sub-total amount
+        /// </summary>
+        /// <param name="cart">Shopping cart</param>
+        /// <param name="customer">Customer</param>
+        /// <returns>true - OK; false - minimum order sub-total amount is not reached</returns>
+        public static bool ValidateMinOrderSubtotalAmount(ShoppingCart cart, Customer customer)
+        {
+            bool result = true;
+            //min order amount sub-total validation
+            if (cart.Count > 0 &&
+                OrderManager.MinOrderSubtotalAmount > decimal.Zero)
+            {
+                //subtotal
+                decimal subtotalBase = decimal.Zero;
+                decimal orderSubTotalDiscountAmountBase = decimal.Zero;
+                Discount orderSubTotalAppliedDiscount = null;
+                decimal subTotalWithoutDiscountBase = decimal.Zero;
+                decimal subTotalWithDiscountBase = decimal.Zero;
+                string SubTotalError = ShoppingCartManager.GetShoppingCartSubTotal(cart,
+                    customer, out orderSubTotalDiscountAmountBase, out orderSubTotalAppliedDiscount,
+                out subTotalWithoutDiscountBase, out subTotalWithDiscountBase);
+                subtotalBase = subTotalWithoutDiscountBase;
+                if (String.IsNullOrEmpty(SubTotalError))
+                {
+                    if (subtotalBase < OrderManager.MinOrderSubtotalAmount)
+                    {
+                        result = false;
+                    }
+                }
+                else
+                {
+                    //do nothing (subtotal could not be calculated)
+                    //result = false;
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Valdiate minimum order total amount
+        /// </summary>
+        /// <param name="cart">Shopping cart</param>
+        /// <param name="customer">Customer</param>
+        /// <returns>true - OK; false - minimum order total amount is not reached</returns>
+        public static bool ValidateMinOrderTotalAmount(ShoppingCart cart, Customer customer)
+        {
+            bool result = true;
+            //min order amount validation
+            if (cart.Count > 0 && OrderManager.MinOrderTotalAmount > decimal.Zero)
+            {
+                int paymentMethodId = 0;
+                if (customer != null)
+                    paymentMethodId = customer.LastPaymentMethodId;
+
+                decimal discountAmountBase = decimal.Zero;
+                Discount appliedDiscount = null;
+                List<AppliedGiftCard> appliedGiftCards = null;
+                int redeemedRewardPoints = 0;
+                decimal redeemedRewardPointsAmount = decimal.Zero;
+                bool useRewardPoints = false;
+                if (customer != null)
+                    useRewardPoints = customer.UseRewardPointsDuringCheckout;
+                decimal? shoppingCartTotalBase = ShoppingCartManager.GetShoppingCartTotal(cart,
+                    paymentMethodId, customer,
+                    out discountAmountBase, out appliedDiscount,
+                    out appliedGiftCards, useRewardPoints,
+                    out redeemedRewardPoints, out redeemedRewardPointsAmount);
+                if (shoppingCartTotalBase.HasValue)
+                {
+                    if (shoppingCartTotalBase.Value < OrderManager.MinOrderTotalAmount)
+                    {
+                        result = false;
+                    }
+                }
+            }
+
+            return result;
+        }
         #endregion
 
         #endregion
@@ -5705,9 +5785,24 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         }
 
         /// <summary>
-        /// Gets or sets a minimum order amount
+        /// Gets or sets a minimum order subtotal amount
         /// </summary>
-        public static decimal MinOrderAmount
+        public static decimal MinOrderSubtotalAmount
+        {
+            get
+            {
+                return SettingManager.GetSettingValueDecimalNative("Order.MinOrderSubtotalAmount", decimal.Zero);
+            }
+            set
+            {
+                SettingManager.SetParamNative("Order.MinOrderSubtotalAmount", value);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a minimum order total amount
+        /// </summary>
+        public static decimal MinOrderTotalAmount
         {
             get
             {

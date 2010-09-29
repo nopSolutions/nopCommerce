@@ -139,37 +139,18 @@ namespace NopSolutions.NopCommerce.Web.Modules
         public void BindData()
         {
             //min order amount validation
-            int paymentMethodId = 0;
-            if (NopContext.Current.User != null)
-                paymentMethodId = NopContext.Current.User.LastPaymentMethodId;
-
-            decimal discountAmountBase = decimal.Zero;
-            Discount appliedDiscount = null;
-            List<AppliedGiftCard> appliedGiftCards = null;
-            int redeemedRewardPoints = 0;
-            decimal redeemedRewardPointsAmount = decimal.Zero;
-            bool useRewardPoints = false;
-            if (NopContext.Current.User != null)
-                useRewardPoints = NopContext.Current.User.UseRewardPointsDuringCheckout;
-            decimal? shoppingCartTotalBase = ShoppingCartManager.GetShoppingCartTotal(this.Cart,
-                paymentMethodId, NopContext.Current.User,
-                out discountAmountBase, out appliedDiscount,
-                out appliedGiftCards, useRewardPoints,
-                out redeemedRewardPoints, out redeemedRewardPointsAmount);
-            if (shoppingCartTotalBase.HasValue)
+            bool minOrderTotalAmountOK = OrderManager.ValidateMinOrderTotalAmount(this.Cart, NopContext.Current.User);
+            if (minOrderTotalAmountOK)
             {
-                if (shoppingCartTotalBase.Value < OrderManager.MinOrderAmount)
-                {
-                    decimal minOrderAmount = CurrencyManager.ConvertCurrency(OrderManager.MinOrderAmount, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
-                    lMinOrderAmount.Text = string.Format(GetLocaleResourceString("Checkout.MinOrderAmount"), PriceHelper.FormatPrice(minOrderAmount, true, false));
-                    lMinOrderAmount.Visible = true;
-                    btnNextStep.Visible = false;
-                }
-                else
-                {
-                    lMinOrderAmount.Visible = false;
-                    btnNextStep.Visible = true;
-                }
+                lMinOrderTotalAmount.Visible = false;
+                btnNextStep.Visible = true;
+            }
+            else
+            {
+                decimal minOrderTotalAmount = CurrencyManager.ConvertCurrency(OrderManager.MinOrderTotalAmount, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                lMinOrderTotalAmount.Text = string.Format(GetLocaleResourceString("Checkout.MinOrderTotalAmount"), PriceHelper.FormatPrice(minOrderTotalAmount, true, false));
+                lMinOrderTotalAmount.Visible = true;
+                btnNextStep.Visible = false;
             }
         }
 

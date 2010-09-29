@@ -79,6 +79,21 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 rptShoppingCart.DataSource = cart;
                 rptShoppingCart.DataBind();
 
+                //minimum order subtotal
+                bool minOrderSubtotalAmountOK = OrderManager.ValidateMinOrderSubtotalAmount(cart, NopContext.Current.User);
+                if (minOrderSubtotalAmountOK)
+                {
+                    lMinOrderSubtotalAmount.Visible = false;
+                    btnCheckout.Visible = true;
+                }
+                else
+                {
+                    decimal minOrderSubtotalAmount = CurrencyManager.ConvertCurrency(OrderManager.MinOrderSubtotalAmount, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                    lMinOrderSubtotalAmount.Text = string.Format(GetLocaleResourceString("Checkout.MinOrderSubtotalAmount"), PriceHelper.FormatPrice(minOrderSubtotalAmount, true, false));
+                    lMinOrderSubtotalAmount.Visible = true;
+                    btnCheckout.Visible = false;
+                }
+
                 //cross-sells
                 var crossSells = ProductManager.GetCrosssellProductsByShoppingCart(cart);
                 if (crossSells.Count > 0)
