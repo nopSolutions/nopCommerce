@@ -47,9 +47,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
         public byte[] PictureBinary { get; set; }
 
         /// <summary>
-        /// Gets or sets the picture extension
+        /// Gets or sets the picture mime type
         /// </summary>
-        public string Extension { get; set; }
+        public string MimeType { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the picture is new
@@ -74,7 +74,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
             }
             else
             {
-                result = PictureManager.LoadPictureFromFile(this.PictureId, this.Extension);
+                result = PictureManager.LoadPictureFromFile(this.PictureId, this.MimeType);
             }
             return result;
         }

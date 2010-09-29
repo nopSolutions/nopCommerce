@@ -1535,7 +1535,7 @@
           </Key>
           <Property Name="PictureID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="PictureBinary" Type="varbinary(max)" Nullable="false" />
-          <Property Name="Extension" Type="nvarchar" Nullable="false" MaxLength="20" />
+          <Property Name="MimeType" Type="nvarchar" Nullable="false" MaxLength="20" />
           <Property Name="IsNew" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Nop_Poll">
@@ -5527,7 +5527,7 @@
           </Key>
           <Property Type="Int32" Name="PictureId" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
           <Property Type="Binary" Name="PictureBinary" Nullable="false" MaxLength="Max" FixedLength="false" />
-          <Property Type="String" Name="Extension" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="MimeType" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Type="Boolean" Name="IsNew" Nullable="false" />
           <NavigationProperty Name="NpProductPictures" Relationship="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_ProductPicture_Nop_Picture" FromRole="Picture" ToRole="Nop_ProductPicture" />
         </EntityType>
@@ -8486,7 +8486,7 @@
             <EntityTypeMapping TypeName="NopSolutions.NopCommerce.BusinessLogic.Data.Picture">
               <MappingFragment StoreEntitySet="Nop_Picture">
                 <ScalarProperty Name="IsNew" ColumnName="IsNew" />
-                <ScalarProperty Name="Extension" ColumnName="Extension" />
+                <ScalarProperty Name="MimeType" ColumnName="MimeType" />
                 <ScalarProperty Name="PictureBinary" ColumnName="PictureBinary" />
                 <ScalarProperty Name="PictureId" ColumnName="PictureID" />
               </MappingFragment>

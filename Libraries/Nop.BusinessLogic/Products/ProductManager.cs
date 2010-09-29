@@ -1127,7 +1127,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                     {
                         var picture = productPicture.Picture;
                         var pictureCopy = PictureManager.InsertPicture(picture.PictureBinary,
-                            picture.Extension,
+                            picture.MimeType,
                             picture.IsNew);
                         InsertProductPicture(productCopy.ProductId,
                             pictureCopy.PictureId,
@@ -1182,7 +1182,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                         var picture = productVariant.Picture;
                         if (picture != null)
                         {
-                            var pictureCopy = PictureManager.InsertPicture(picture.PictureBinary, picture.Extension, picture.IsNew);
+                            var pictureCopy = PictureManager.InsertPicture(picture.PictureBinary, picture.MimeType, picture.IsNew);
                             pictureId = pictureCopy.PictureId;
                         }
                     }

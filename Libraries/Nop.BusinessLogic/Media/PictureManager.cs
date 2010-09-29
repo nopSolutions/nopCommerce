@@ -80,9 +80,15 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
             }
         }
 
-        private static void SavePictureInFile(int PictureId, byte[] pictureBinary, string extension)
+        /// <summary>
+        /// Save picture on file system
+        /// </summary>
+        /// <param name="PictureId">Picture identifier</param>
+        /// <param name="pictureBinary">Picture binary</param>
+        /// <param name="mimeType">MIME type</param>
+        private static void SavePictureInFile(int PictureId, byte[] pictureBinary, string mimeType)
         {
-            string[] parts = extension.Split('/');
+            string[] parts = mimeType.Split('/');
             string lastPart = parts[parts.Length - 1];
             switch(lastPart)
             {
@@ -193,11 +199,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
         /// Loads a cpiture from file
         /// </summary>
         /// <param name="pictureId">Picture identifier</param>
-        /// <param name="extension">Extension</param>
+        /// <param name="mimeType">MIME type</param>
         /// <returns>Picture binary</returns>
-        public static byte[] LoadPictureFromFile(int pictureId, string extension)
+        public static byte[] LoadPictureFromFile(int pictureId, string mimeType)
         {
-            string[] parts = extension.Split('/');
+            string[] parts = mimeType.Split('/');
             string lastPart = parts[parts.Length - 1];
             switch (lastPart)
             {
@@ -333,7 +339,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
                 return url;
             }
 
-            string[] parts = picture.Extension.Split('/');
+            string[] parts = picture.MimeType.Split('/');
             string lastPart = parts[parts.Length - 1];
             switch (lastPart)
             {
@@ -356,7 +362,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
                 foreach (string currentFileName in currentFiles)
                     File.Delete(Path.Combine(PictureManager.LocalThumbImagePath, currentFileName));
 
-                picture = UpdatePicture(picture.PictureId, picture.LoadPictureBinary(), picture.Extension, false);
+                picture = UpdatePicture(picture.PictureId, picture.LoadPictureBinary(), picture.MimeType, false);
             }
             lock (s_lock)
             {
@@ -608,19 +614,19 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
         /// Inserts a picture
         /// </summary>
         /// <param name="pictureBinary">The picture binary</param>
-        /// <param name="extension">The picture extension</param>
+        /// <param name="mimeType">The picture MIME type</param>
         /// <param name="isNew">A value indicating whether the picture is new</param>
         /// <returns>Picture</returns>
-        public static Picture InsertPicture(byte[] pictureBinary, string extension, bool isNew)
+        public static Picture InsertPicture(byte[] pictureBinary, string mimeType, bool isNew)
         {
-            extension = CommonHelper.EnsureMaximumLength(extension, 20);
+            mimeType = CommonHelper.EnsureMaximumLength(mimeType, 20);
 
-            pictureBinary = ValidatePicture(pictureBinary, extension);
+            pictureBinary = ValidatePicture(pictureBinary, mimeType);
 
             var context = ObjectContextHelper.CurrentObjectContext;
             var picture = context.Pictures.CreateObject();
             picture.PictureBinary = (PictureManager.StoreInDB ? pictureBinary : new byte[0]);
-            picture.Extension = extension;
+            picture.MimeType = mimeType;
             picture.IsNew = isNew;
 
             context.Pictures.AddObject(picture);
@@ -628,7 +634,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
 
             if(!PictureManager.StoreInDB && picture != null)
             {
-                SavePictureInFile(picture.PictureId, pictureBinary, extension);
+                SavePictureInFile(picture.PictureId, pictureBinary, mimeType);
             }
             return picture;
         }
@@ -638,15 +644,15 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
         /// </summary>
         /// <param name="pictureId">The picture identifier</param>
         /// <param name="pictureBinary">The picture binary</param>
-        /// <param name="extension">The picture extension</param>
+        /// <param name="mimeType">The picture MIME type</param>
         /// <param name="isNew">A value indicating whether the picture is new</param>
         /// <returns>Picture</returns>
         public static Picture UpdatePicture(int pictureId, byte[] pictureBinary,
-            string extension, bool isNew)
+            string mimeType, bool isNew)
         {
-            extension = CommonHelper.EnsureMaximumLength(extension, 20);
+            mimeType = CommonHelper.EnsureMaximumLength(mimeType, 20);
 
-            ValidatePicture(pictureBinary, extension);
+            ValidatePicture(pictureBinary, mimeType);
 
             var picture = GetPictureById(pictureId);
             if (picture == null)
@@ -657,13 +663,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
                 context.Pictures.Attach(picture);
 
             picture.PictureBinary = (PictureManager.StoreInDB ? pictureBinary : new byte[0]);
-            picture.Extension = extension;
+            picture.MimeType = mimeType;
             picture.IsNew = isNew;
             context.SaveChanges();
 
             if(!PictureManager.StoreInDB && picture != null)
             {
-                SavePictureInFile(picture.PictureId, pictureBinary, extension);
+                SavePictureInFile(picture.PictureId, pictureBinary, mimeType);
             }
             return picture;
         }
@@ -746,7 +752,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
                         var pictureBinary = picture.LoadPictureBinary(!value);
                         picture = UpdatePicture(picture.PictureId,
                             pictureBinary,
-                            picture.Extension,
+                            picture.MimeType,
                             true);
                     }
                 }
