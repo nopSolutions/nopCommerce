@@ -26,6 +26,7 @@ END
 GO
 
 
+
 IF NOT EXISTS (
 		SELECT 1
 		FROM [dbo].[Nop_MessageTemplate]
@@ -40,12 +41,29 @@ BEGIN
 
 	IF (@MessageTemplateID > 0)
 	BEGIN
+
+	--do it for each existing language
+	DECLARE @ExistingLanguageID int
+	DECLARE cur_existinglanguage CURSOR FOR
+	SELECT LanguageID
+	FROM [Nop_Language]
+	OPEN cur_existinglanguage
+	FETCH NEXT FROM cur_existinglanguage INTO @ExistingLanguageID
+	WHILE @@FETCH_STATUS = 0
+	BEGIN
+		--insert localized message template
 		INSERT [dbo].[Nop_MessageTemplateLocalized] ([MessageTemplateID], [LanguageID], [BCCEmailAddresses], [Subject], [Body]) 
-		VALUES (@MessageTemplateID, 7, N'', N'%Store.Name%. You have received a new private message',  N'<p><a href="%Store.URL%">%Store.Name%</a> <br />
-<br />
-You have received a new private message.
-</p>')
+		VALUES (@MessageTemplateID, @ExistingLanguageID, N'', N'%Store.Name%. You have received a new private message',  N'<p><a href="%Store.URL%">%Store.Name%</a> <br />
+		<br />
+		You have received a new private message.
+		</p>')
+
+		--fetch next language identifier
+		FETCH NEXT FROM cur_existinglanguage INTO @ExistingLanguageID
+		END
 	END
+	CLOSE cur_existinglanguage
+	DEALLOCATE cur_existinglanguage
 END
 GO
 
@@ -63,13 +81,29 @@ BEGIN
 
 	IF (@MessageTemplateID > 0)
 	BEGIN
+		--do it for each existing language
+		DECLARE @ExistingLanguageID int
+		DECLARE cur_existinglanguage CURSOR FOR
+		SELECT LanguageID
+		FROM [Nop_Language]
+		OPEN cur_existinglanguage
+		FETCH NEXT FROM cur_existinglanguage INTO @ExistingLanguageID
+		WHILE @@FETCH_STATUS = 0
+		BEGIN
+
 		INSERT [dbo].[Nop_MessageTemplateLocalized] ([MessageTemplateID], [LanguageID], [BCCEmailAddresses], [Subject], [Body]) 
-		VALUES (@MessageTemplateID, 7, N'', N'New customer registration',  N'<p><a href="%Store.URL%">%Store.Name%</a> <br />
-<br />A new customer registered with your store. Below are the customer''s details:
-<br />Full name: %Customer.FullName%
-<br />Email: %Customer.Email%
-</p>')
+		VALUES (@MessageTemplateID, @ExistingLanguageID, N'', N'New customer registration',  N'<p><a href="%Store.URL%">%Store.Name%</a> <br />
+		<br />A new customer registered with your store. Below are the customer''s details:
+		<br />Full name: %Customer.FullName%
+		<br />Email: %Customer.Email%
+		</p>')
+
+		--fetch next language identifier
+		FETCH NEXT FROM cur_existinglanguage INTO @ExistingLanguageID
+		END
 	END
+	CLOSE cur_existinglanguage
+	DEALLOCATE cur_existinglanguage
 END
 GO
 
@@ -126,9 +160,15 @@ BEGIN
 END
 GO
 
-UPDATE [Nop_DiscountType]
-SET [DiscountTypeID] = 20
-WHERE [DiscountTypeID] = 0
+IF NOT EXISTS (
+    SELECT 1
+    FROM [dbo].[Nop_DiscountType]
+    WHERE [DiscountTypeID] = 0)
+BEGIN
+	UPDATE [Nop_DiscountType]
+	SET [DiscountTypeID] = 20
+	WHERE [DiscountTypeID] = 0
+END
 GO
 
 
@@ -168,24 +208,40 @@ BEGIN
 
 	IF (@MessageTemplateID > 0)
 	BEGIN
+		--do it for each existing language
+		DECLARE @ExistingLanguageID int
+		DECLARE cur_existinglanguage CURSOR FOR
+		SELECT LanguageID
+		FROM [Nop_Language]
+		OPEN cur_existinglanguage
+		FETCH NEXT FROM cur_existinglanguage INTO @ExistingLanguageID
+		WHILE @@FETCH_STATUS = 0
+		BEGIN
+
 		INSERT [dbo].[Nop_MessageTemplateLocalized] ([MessageTemplateID], [LanguageID], [BCCEmailAddresses], [Subject], [Body]) 
-		VALUES (@MessageTemplateID, 7, N'', N'%Store.Name%. New return request.',  N'<p><a href="%Store.URL%">%Store.Name%</a> <br />
-<br />
-%Customer.FullName% (%Customer.Email%) has just submitted a new return request. Details are below:
-<br />
-Request ID: %ReturnRequest.ID%
-<br />
-Product: %ReturnRequest.Product.Quantity% x Product: %ReturnRequest.Product.Name%
-<br />
-Reason for return: %ReturnRequest.Reason%
-<br />
-Requested action: %ReturnRequest.RequestedAction%
-<br />
-Customer comments:
-<br />
-%ReturnRequest.CustomerComment%
-</p>')
+		VALUES (@MessageTemplateID, @ExistingLanguageID, N'', N'%Store.Name%. New return request.',  N'<p><a href="%Store.URL%">%Store.Name%</a> <br />
+		<br />
+		%Customer.FullName% (%Customer.Email%) has just submitted a new return request. Details are below:
+		<br />
+		Request ID: %ReturnRequest.ID%
+		<br />
+		Product: %ReturnRequest.Product.Quantity% x Product: %ReturnRequest.Product.Name%
+		<br />
+		Reason for return: %ReturnRequest.Reason%
+		<br />
+		Requested action: %ReturnRequest.RequestedAction%
+		<br />
+		Customer comments:
+		<br />
+		%ReturnRequest.CustomerComment%
+		</p>')
+
+		--fetch next language identifier
+		FETCH NEXT FROM cur_existinglanguage INTO @ExistingLanguageID
+		END
 	END
+	CLOSE cur_existinglanguage
+	DEALLOCATE cur_existinglanguage
 END
 GO
 
@@ -205,14 +261,30 @@ BEGIN
 
 	IF (@MessageTemplateID > 0)
 	BEGIN
+		--do it for each existing language
+		DECLARE @ExistingLanguageID int
+		DECLARE cur_existinglanguage CURSOR FOR
+		SELECT LanguageID
+		FROM [Nop_Language]
+		OPEN cur_existinglanguage
+		FETCH NEXT FROM cur_existinglanguage INTO @ExistingLanguageID
+		WHILE @@FETCH_STATUS = 0
+		BEGIN
+
 		INSERT [dbo].[Nop_MessageTemplateLocalized] ([MessageTemplateID], [LanguageID], [BCCEmailAddresses], [Subject], [Body]) 
-		VALUES (@MessageTemplateID, 7, N'', N'%Store.Name%. Return request status was changed.',  N'<p><a href="%Store.URL%">%Store.Name%</a> <br />
-<br />
-Hello %Customer.FullName%,
-<br />
-Your return request #%ReturnRequest.ID% status has been changed.
-</p>')
+		VALUES (@MessageTemplateID, @ExistingLanguageID, N'', N'%Store.Name%. Return request status was changed.',  N'<p><a href="%Store.URL%">%Store.Name%</a> <br />
+		<br />
+		Hello %Customer.FullName%,
+		<br />
+		Your return request #%ReturnRequest.ID% status has been changed.
+		</p>')
+
+		--fetch next language identifier
+		FETCH NEXT FROM cur_existinglanguage INTO @ExistingLanguageID
+		END
 	END
+	CLOSE cur_existinglanguage
+	DEALLOCATE cur_existinglanguage
 END
 GO
 
