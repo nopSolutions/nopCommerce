@@ -74,7 +74,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
             //check whether all shopping cart items are marked as free shipping
             bool allItemsAreFreeShipping = true;
             foreach (var sc in cart)
-                if (!sc.IsFreeShipping)
+                if (sc.IsShipEnabled && !sc.IsFreeShipping)
                 {
                     allItemsAreFreeShipping = false;
                     break;
