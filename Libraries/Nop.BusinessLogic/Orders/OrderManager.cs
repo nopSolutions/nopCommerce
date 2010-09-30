@@ -4129,7 +4129,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                         //raise event             
                         EventContext.Current.OnOrderPlaced(null,
                             new OrderEventArgs() { Order = order });
-            
+
+                        //raise event         
+                        if (order.PaymentStatus == PaymentStatusEnum.Paid)
+                        {
+                            EventContext.Current.OnOrderPaid(null,
+                                new OrderEventArgs() { Order = order });
+                        }
                     }
                 }
             }
@@ -4730,6 +4736,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
 
                 }
                 order = CheckOrderStatus(order.OrderId);
+                
+                //raise event         
+                if (order.PaymentStatus == PaymentStatusEnum.Paid)
+                {
+                    EventContext.Current.OnOrderPaid(null,
+                        new OrderEventArgs() { Order = order });
+                }
             }
             catch (Exception exc)
             {
@@ -4822,6 +4835,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             InsertOrderNote(order.OrderId, string.Format("Order has been marked as paid"), false, DateTime.UtcNow);
 
             order = CheckOrderStatus(order.OrderId);
+
+            //raise event         
+            if (order.PaymentStatus == PaymentStatusEnum.Paid)
+            {
+                EventContext.Current.OnOrderPaid(null,
+                    new OrderEventArgs() { Order = order });
+            }
 
             return order;
         }

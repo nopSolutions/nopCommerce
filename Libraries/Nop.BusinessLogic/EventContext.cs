@@ -132,6 +132,16 @@ namespace NopSolutions.NopCommerce.BusinessLogic
             if (this.OrderUpdated != null)
                 this.OrderUpdated(source, e);
         }
+        /// <summary>
+        /// Raise order paid event
+        /// </summary>
+        /// <param name="source">Source</param>
+        /// <param name="e">Arguments</param>
+        public virtual void OnOrderPaid(object source, OrderEventArgs e)
+        {
+            if (this.OrderPaid != null)
+                this.OrderPaid(source, e);
+        }
 
         /// <summary>
         /// Raise product created event
@@ -228,6 +238,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic
         /// Order updated event
         /// </summary>
         public event OrderEventHandler OrderUpdated;
+        /// <summary>
+        /// Order paid event
+        /// </summary>
+        public event OrderEventHandler OrderPaid;
 
         /// <summary>
         /// Product created event
