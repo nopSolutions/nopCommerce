@@ -102,13 +102,39 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
                     lastPart = "ico";
                     break;
             }
-            string localFilename = string.Empty;
-            localFilename = string.Format("{0}_0.{1}", PictureId.ToString("0000000"), lastPart);
-            if(!File.Exists(Path.Combine(LocalImagePath, localFilename)) && !System.IO.Directory.Exists(LocalImagePath))
-            {
-                System.IO.Directory.CreateDirectory(LocalImagePath);
-            }
+            string localFilename = string.Format("{0}_0.{1}", PictureId.ToString("0000000"), lastPart);            
             File.WriteAllBytes(Path.Combine(LocalImagePath, localFilename), pictureBinary);
+        }
+
+        /// <summary>
+        /// Delete a picture on file system
+        /// </summary>
+        /// <param name="picture">Picture</param>
+        private static void DeletePictureOnFileSystem(Picture picture)
+        {
+            if (picture == null)
+                throw new ArgumentNullException("picture");
+
+            string[] parts = picture.MimeType.Split('/');
+            string lastPart = parts[parts.Length - 1];
+            switch (lastPart)
+            {
+                case "pjpeg":
+                    lastPart = "jpg";
+                    break;
+                case "x-png":
+                    lastPart = "png";
+                    break;
+                case "x-icon":
+                    lastPart = "ico";
+                    break;
+            }
+            string localFilename = string.Format("{0}_0.{1}", picture.PictureId.ToString("0000000"), lastPart);
+            string localFilepath = Path.Combine(LocalImagePath, localFilename);
+            if (File.Exists(localFilepath))
+            {
+                File.Delete(localFilepath);
+            }
         }
 
         #endregion
@@ -488,15 +514,23 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
         /// <param name="pictureId">Picture identifier</param>
         public static void DeletePicture(int pictureId)
         {
-            string filter = string.Format("{0}*.*", pictureId.ToString("0000000"));
-            string[] currentFiles = System.IO.Directory.GetFiles(PictureManager.LocalThumbImagePath, filter);
-            foreach (string currentFileName in currentFiles)
-                File.Delete(Path.Combine(PictureManager.LocalThumbImagePath, currentFileName));
-
             var picture = GetPictureById(pictureId);
             if (picture == null)
                 return;
 
+            //delete thumbs
+            string filter = string.Format("{0}*.*", pictureId.ToString("0000000"));
+            string[] currentFiles = System.IO.Directory.GetFiles(PictureManager.LocalThumbImagePath, filter);
+            foreach (string currentFileName in currentFiles)
+                File.Delete(Path.Combine(PictureManager.LocalThumbImagePath, currentFileName));
+            
+            //delete from file system
+            if (!PictureManager.StoreInDB)
+            {
+                DeletePictureOnFileSystem(picture);
+            }
+
+            //delete from database
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(picture))
                 context.Pictures.Attach(picture);
@@ -747,9 +781,15 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
                     for (int i = 0; i < pictures.Count; i++)
                     {
                         var picture = pictures[i];
+                        var pictureBinary = picture.LoadPictureBinary(!value);
+                        
+                        //delete from file system
+                        if (value)
+                        {
+                            DeletePictureOnFileSystem(picture);
+                        }
 
                         //just update a picture (all required logic is in UpdatePicture method)
-                        var pictureBinary = picture.LoadPictureBinary(!value);
                         picture = UpdatePicture(picture.PictureId,
                             pictureBinary,
                             picture.MimeType,
