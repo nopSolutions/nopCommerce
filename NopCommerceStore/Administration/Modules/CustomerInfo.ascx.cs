@@ -240,10 +240,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             string username = txtUsername.Text;
             string email = txtEmail.Text.Trim();
             int affiliateId = int.Parse(this.ddlAffiliate.SelectedItem.Value);
-            bool isTaxExempt=cbIsTaxExempt.Checked;
-            bool isAdmin=cbIsAdmin.Checked;
-            bool isForumModerator=cbIsForumModerator.Checked;
-            bool active= cbActive.Checked;
+            bool isTaxExempt = cbIsTaxExempt.Checked;
+            bool isAdmin = cbIsAdmin.Checked;
+            bool isForumModerator = cbIsForumModerator.Checked;
+            bool active = cbActive.Checked;
             string adminComment = txtAdminComment.Text.Trim();
 
             if (customer != null)
@@ -280,7 +280,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     password, affiliateId,
                     0, 0, 0, string.Empty, string.Empty, string.Empty,
                     NopContext.Current.WorkingLanguage.LanguageId,
-                    NopContext.Current.WorkingCurrency.CurrencyId, 
+                    NopContext.Current.WorkingCurrency.CurrencyId,
                     NopContext.Current.TaxDisplayType,
                     isTaxExempt, isAdmin,
                     false, isForumModerator,
@@ -320,7 +320,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             if (CustomerManager.FormFieldStreetAddress2Enabled)
             {
                 customer.StreetAddress2 = txtStreetAddress2.Text;
-            } 
+            }
             if (CustomerManager.FormFieldPostCodeEnabled)
             {
                 customer.ZipPostalCode = txtZipPostalCode.Text;
@@ -333,7 +333,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 customer.CountryId = int.Parse(ddlCountry.SelectedItem.Value);
             }
-            if (CustomerManager.FormFieldCountryEnabled && 
+            if (CustomerManager.FormFieldCountryEnabled &&
                 CustomerManager.FormFieldStateEnabled)
             {
                 customer.StateProvinceId = int.Parse(ddlStateProvince.SelectedItem.Value);
@@ -383,8 +383,9 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 CustomerManager.ModifyPassword(CustomerId, txtPassword.Text);
                 txtPassword.Text = String.Empty;
+                ShowMessage(GetLocaleResourceString("Admin.CustomerInfo.PasswordChanged"));
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 ProcessException(ex);
             }
@@ -398,7 +399,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 customer.VatNumberStatus = VatNumberStatusEnum.Valid;
                 BindData();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 ProcessException(ex);
             }
@@ -412,13 +413,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 customer.VatNumberStatus = VatNumberStatusEnum.Invalid;
                 BindData();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 ProcessException(ex);
             }
         }
-        
-            
+
         public int CustomerId
         {
             get

@@ -266,6 +266,9 @@ set @resources='
   <LocaleResource Name="Forum.AdvancedSearch">
     <Value>Advanced search</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.CustomerInfo.PasswordChanged">
+    <Value>Password successfully changed</Value>
+  </LocaleResource>
 </Language>
 '
 

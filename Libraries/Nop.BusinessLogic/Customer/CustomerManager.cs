@@ -1634,8 +1634,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// <param name="newPassword">New password</param>
         public static void ModifyPassword(int customerId, string newPassword)
         {
-            if (String.IsNullOrEmpty(newPassword))
+            if (String.IsNullOrWhiteSpace(newPassword))
                 throw new NopException(LocalizationManager.GetLocaleResourceString("Customer.PasswordIsRequired"));
+            newPassword = newPassword.Trim();
+
             var customer = GetCustomerById(customerId);
             if (customer != null)
             {
