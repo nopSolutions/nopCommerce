@@ -7478,7 +7478,9 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Nop_ProductVariantAttributeValue_Nop_ProductVariant_ProductAttribute_Mapping">
-          <End Type="NopSolutions.NopCommerce.BusinessLogic.Data.ProductVariantAttribute" Role="Nop_ProductVariant_ProductAttribute_Mapping" Multiplicity="1" />
+          <End Type="NopSolutions.NopCommerce.BusinessLogic.Data.ProductVariantAttribute" Role="Nop_ProductVariant_ProductAttribute_Mapping" Multiplicity="1" >
+            <OnDelete Action="Cascade" />
+          </End>
           <End Type="NopSolutions.NopCommerce.BusinessLogic.Data.ProductVariantAttributeValue" Role="Nop_ProductVariantAttributeValue" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Nop_ProductVariant_ProductAttribute_Mapping">
