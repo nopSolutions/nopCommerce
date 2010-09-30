@@ -13,13 +13,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
     public partial class MaintenanceControl {
         
         /// <summary>
-        /// BackupButton control.
+        /// btnBackupButton control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button BackupButton;
+        protected global::System.Web.UI.WebControls.Button btnBackupButton;
         
         /// <summary>
         /// btnBackupPictures control.
@@ -29,6 +29,15 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnBackupPictures;
+        
+        /// <summary>
+        /// btnDeleteOldExportedFiles control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnDeleteOldExportedFiles;
         
         /// <summary>
         /// gvBackups control.

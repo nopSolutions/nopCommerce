@@ -81,6 +81,32 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Maintenance
         }
 
         /// <summary>
+        /// Delete files in \files\ExportImport folder (PDF, Excel etc)
+        /// </summary>
+        /// <param name="hours">Files to delete older than specified hours value</param>
+        /// <returns>Number of deleted files</returns>
+        public static int DeleteOldExportImportFiles(int hours)
+        {
+            int num = 0;
+
+            string path = string.Format("{0}\\files\\ExportImport\\", HttpContext.Current.Request.PhysicalApplicationPath);
+            foreach (var fullPath in System.IO.Directory.GetFiles(path))
+            {
+                var fileName = Path.GetFileName(fullPath);
+                if (fileName.Equals("index.htm", StringComparison.InvariantCultureIgnoreCase))
+                    continue;
+
+                var info = new FileInfo(fullPath);
+                if (Math.Abs((DateTime.UtcNow - info.CreationTimeUtc).TotalHours) >= hours)
+                {
+                    File.Delete(fullPath);
+                    num++;
+                }
+            }
+            return num;
+        }
+
+        /// <summary>
         /// Restore database
         /// </summary>
         /// <param name="fileName">Backup file name</param>
@@ -132,16 +158,16 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Maintenance
             var collection = new List<BackupFile>();
 
             string path = string.Format("{0}Administration\\backups\\", HttpContext.Current.Request.PhysicalApplicationPath);
-            foreach (var fullFileName in System.IO.Directory.GetFiles(path))
+            foreach (var fullPath in System.IO.Directory.GetFiles(path))
             {
-                var fileName = Path.GetFileName(fullFileName);
+                var fileName = Path.GetFileName(fullPath);
                 if (fileName.Equals("index.htm", StringComparison.InvariantCultureIgnoreCase))
                     continue;
 
-                var info = new FileInfo(fullFileName);
+                var info = new FileInfo(fullPath);
                 collection.Add(new BackupFile()
                 {
-                    FullFileName = fullFileName,
+                    FullFileName = fullPath,
                     FileName = fileName,
                     FileSize = info.Length
                 });

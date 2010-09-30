@@ -290,6 +290,18 @@ set @resources='
   <LocaleResource Name="Admin.LocaleStringResources.ResourceValue.Tooltip">
     <Value>Filter results by resource value or part of resource value. Leave empty to load all resources.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Maintenance.DeleteOldExportedFilesButton.Text">
+    <Value>Delete old exported files</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Maintenance.DeleteOldExportedFilesButton.Tooltip">
+    <Value>Delete old exported files in \files\ExportImport folder (PDF, Excel etc)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Maintenance.DeleteOldExportedFiles.Success">
+    <Value>{0} files were successfully deleted</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Maintenance.DeleteOldExportedFiles.NoFilesToDelete">
+    <Value>No files found to delete</Value>
+  </LocaleResource>
 </Language>
 '
 

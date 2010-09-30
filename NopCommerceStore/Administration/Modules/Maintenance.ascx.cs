@@ -69,7 +69,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             }
         }
 
-        protected void BackupButton_Click(object sender, EventArgs e)
+        protected string GetFileSizeInfo(long byteCount)
+        {
+            return string.Format("{0:F2} Mb", byteCount / 1024f / 1024f);
+        }
+
+        protected void btnBackupButton_Click(object sender, EventArgs e)
         {
             try
             {
@@ -89,9 +94,39 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             }
         }
 
-        protected string GetFileSizeInfo(long byteCount)
+        protected void btnBackupPictures_Click(object sender, EventArgs e)
         {
-            return string.Format("{0:F2} Mb", byteCount / 1024f / 1024f);  
+            try
+            {
+                MaintenanceManager.BackupPictures();
+                BindGrid();
+            }
+            catch (Exception exc)
+            {
+                ProcessException(exc);
+            }
+        }
+
+        protected void btnDeleteOldExportedFiles_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                //delete old files for the last 1 hour
+                int hours = 1;
+                int num = MaintenanceManager.DeleteOldExportImportFiles(hours);
+                if (num > 0)
+                {
+                    ShowMessage(string.Format(GetLocaleResourceString("Admin.Maintenance.DeleteOldExportedFiles.Success"), num));
+                }
+                else
+                {
+                    ShowMessage(string.Format(GetLocaleResourceString("Admin.Maintenance.DeleteOldExportedFiles.NoFilesToDelete"), num));
+                }
+            }
+            catch (Exception exc)
+            {
+                ProcessException(exc);
+            }
         }
 
         protected void RestoreButton_OnCommand(object sender, CommandEventArgs e)
@@ -127,19 +162,6 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 {
                     ProcessException(exc);
                 }
-            }
-        }
-
-        protected void BtnBackupPictures_OnClick(object sender, EventArgs e)
-        {
-            try
-            {
-                MaintenanceManager.BackupPictures();
-                BindGrid();
-            }
-            catch(Exception exc)
-            {
-                ProcessException(exc);
             }
         }
     }

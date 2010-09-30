@@ -6576,9 +6576,7 @@
     <Content Include="ErrorPage.htm" />
     <Content Include="FileNotFound.htm" />
     <Content Include="files\become\Index.htm" />
-    <Content Include="files\become\placeholder.txt" />
     <Content Include="files\pricegrabber\Index.htm" />
-    <Content Include="files\pricegrabber\placeholder.txt" />
     <Content Include="Global.asax" />
     <Content Include="GooglePostHandler.aspx" />
     <Content Include="Google\google_log.txt" />
@@ -7544,8 +7542,6 @@
     <Content Include="images\defaultAvatar.jpg" />
     <Content Include="Modules\CustomerAvatar.ascx" />
     <Content Include="Topic.aspx" />
-    <Content Include="files\ExportImport\placeholder.txt" />
-    <Content Include="files\froogle\placeholder.txt" />
     <Content Include="GetDownload.ashx" />
     <None Include="Install\Scripts\1.50\nopCommerce_upgrade.sql" />
     <None Include="Install\Scripts\1.60\nopCommerce_upgrade.sql" />

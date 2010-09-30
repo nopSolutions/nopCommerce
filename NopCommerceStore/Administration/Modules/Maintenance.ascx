@@ -6,9 +6,13 @@
         <%=GetLocaleResourceString("Admin.Maintenance.Title")%>
     </div>
     <div class="options">
-        <asp:Button ID="BackupButton" runat="server" CssClass="adminButtonBlue" Text="<% $NopResources:Admin.Maintenance.BackupButton.Text %>"
-            OnClick="BackupButton_Click" CausesValidation="false" ToolTip="<% $NopResources:Admin.Maintenance.BackupButton.Tooltip %>" />
-        <asp:Button ID="btnBackupPictures" runat="server" CssClass="adminButtonBlue" Text="<% $NopResources:Admin.Maintenance.BtnBackupPictures.Text %>" OnClick="BtnBackupPictures_OnClick" CausesValidation="false" ToolTip="<% $NopResources:Admin.Maintenance.BtnBackupPictures.Tooltip %>" />
+        <asp:Button ID="btnBackupButton" runat="server" CssClass="adminButtonBlue" Text="<% $NopResources:Admin.Maintenance.BackupButton.Text %>"
+            OnClick="btnBackupButton_Click" CausesValidation="false" ToolTip="<% $NopResources:Admin.Maintenance.BackupButton.Tooltip %>" />
+        <asp:Button ID="btnBackupPictures" runat="server" CssClass="adminButtonBlue" Text="<% $NopResources:Admin.Maintenance.BtnBackupPictures.Text %>"
+            OnClick="btnBackupPictures_Click" CausesValidation="false" ToolTip="<% $NopResources:Admin.Maintenance.BtnBackupPictures.Tooltip %>" />
+        <asp:Button ID="btnDeleteOldExportedFiles" runat="server" CssClass="adminButtonBlue"
+            Text="<% $NopResources:Admin.Maintenance.DeleteOldExportedFilesButton.Text %>" OnClick="btnDeleteOldExportedFiles_Click"
+            CausesValidation="false" ToolTip="<% $NopResources:Admin.Maintenance.DeleteOldExportedFilesButton.Tooltip %>" />
     </div>
 </div>
 <asp:GridView ID="gvBackups" runat="server" AutoGenerateColumns="False" Width="100%"
