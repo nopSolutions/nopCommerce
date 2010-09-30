@@ -269,6 +269,27 @@ set @resources='
   <LocaleResource Name="Admin.CustomerInfo.PasswordChanged">
     <Value>Password successfully changed</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.LocaleStringResources.SelectLanguage">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.LocaleStringResources.Language.Tooltip">
+    <Value>Filter results by language</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.LocaleStringResources.SearchButton.Text">
+    <Value>Search</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.LocaleStringResources.ResourceName">
+    <Value>Resource name:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.LocaleStringResources.ResourceName.Tooltip">
+    <Value>Filter results by resource name or part of resource name. Leave empty to load all resources.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.LocaleStringResources.ResourceValue">
+    <Value>Resource value:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.LocaleStringResources.ResourceValue.Tooltip">
+    <Value>Filter results by resource value or part of resource value. Leave empty to load all resources.</Value>
+  </LocaleResource>
 </Language>
 '
 

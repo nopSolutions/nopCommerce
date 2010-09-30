@@ -22,7 +22,7 @@
                 Currencies</h3>
             <ul>
                 <li>
-                    <asp:Label CssClass="inprogress" ID="lblPrimaryExchangeRateCurrency" Text="Primary exchange rate currency is not set"
+                    <asp:Label CssClass="inprogress" ID="lblPrimaryExchangeRateCurrency" Text="Primary exchange rate currency is set"
                         runat="server" /></li>
                 <li>
                     <asp:Label CssClass="inprogress" ID="lblPrimaryStoreCurrency" Text="Primary store currency is set"

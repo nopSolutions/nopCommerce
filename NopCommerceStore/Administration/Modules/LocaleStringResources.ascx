@@ -1,11 +1,14 @@
 <%@ Control Language="C#" AutoEventWireup="true" Inherits="NopSolutions.NopCommerce.Web.Administration.Modules.LocaleStringResourcesControl"
     CodeBehind="LocaleStringResources.ascx.cs" %>
+<%@ Register TagPrefix="nopCommerce" TagName="ToolTipLabel" Src="ToolTipLabelControl.ascx" %>
 <div class="section-header">
     <div class="title">
         <img src="Common/ico-content.png" alt="<%=GetLocaleResourceString("Admin.LocaleStringResources.Title")%>" />
         <%=GetLocaleResourceString("Admin.LocaleStringResources.Title")%>
     </div>
     <div class="options">
+    <asp:Button runat="server" ID="btnSearch" CssClass="adminButtonBlue" Text="<% $NopResources:Admin.LocaleStringResources.SearchButton.Text %>"
+            OnClick="btnSearch_Click" />
         <asp:Button runat="server" ID="btnAddNew" CssClass="adminButtonBlue" Text="<% $NopResources:Admin.LocaleStringResources.AddNewButton.Text %>"
             OnClick="btnAddNew_Click" ToolTip="<% $NopResources:Admin.LocaleStringResources.AddNewButton.Tooltip %>" />
     </div>
@@ -13,12 +16,30 @@
 <table>
     <tr>
         <td class="adminTitle">
-            <%=GetLocaleResourceString("Admin.LocaleStringResources.Language")%>
+            <nopCommerce:ToolTipLabel runat="server" ID="lblLanguage" Text="<% $NopResources:Admin.LocaleStringResources.Language %>"
+                ToolTip="<% $NopResources:Admin.LocaleStringResources.Language.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
         </td>
         <td class="adminData">
-            <asp:DropDownList ID="ddlLanguage" runat="server" AutoPostBack="true" CssClass="adminInput"
-                OnSelectedIndexChanged="ddlLanguage_SelectedIndexChanged">
+            <asp:DropDownList ID="ddlLanguage" runat="server" CssClass="adminInput">
             </asp:DropDownList>
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            <nopCommerce:ToolTipLabel runat="server" ID="lblResourceName" Text="<% $NopResources:Admin.LocaleStringResources.ResourceName %>"
+                ToolTip="<% $NopResources:Admin.LocaleStringResources.ResourceName.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
+        </td>
+        <td class="adminData">
+            <asp:TextBox ID="txtResourceName" runat="server" CssClass="adminInput" />
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            <nopCommerce:ToolTipLabel runat="server" ID="lblResourceValue" Text="<% $NopResources:Admin.LocaleStringResources.ResourceValue %>"
+                ToolTip="<% $NopResources:Admin.LocaleStringResources.ResourceValue.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
+        </td>
+        <td class="adminData">
+            <asp:TextBox ID="txtResourceValue" runat="server" CssClass="adminInput" />
         </td>
     </tr>
 </table>

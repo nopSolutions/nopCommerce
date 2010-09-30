@@ -36,8 +36,6 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         private void FillDropDowns()
         {
             this.ddlLanguage.Items.Clear();
-            ListItem ddlLanguageItem = new ListItem(GetLocaleResourceString("Admin.LocaleStringResources.SelectLanguage"), "0");
-            this.ddlLanguage.Items.Add(ddlLanguageItem);
             var languageCollection = LanguageManager.GetAllLanguages();
             foreach (Language language in languageCollection)
             {
@@ -57,32 +55,50 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             }
         }
 
-        void BindGrid()
+        private void BindGrid()
         {
+            if (this.ddlLanguage.SelectedItem == null)
+                return;
+
             Language language = LanguageManager.GetLanguageById(int.Parse(this.ddlLanguage.SelectedItem.Value));
             if (language != null)
             {
-                var resourceDictionary = language.LocaleStringResources;
-                List<LocaleStringResource> resources = new List<LocaleStringResource>();
-                foreach (KeyValuePair<string, LocaleStringResource> kvp in resourceDictionary)
+                var allResources = language.LocaleStringResources;
+                var filteredResources = new List<LocaleStringResource>();
+
+                string filterByResourceName = txtResourceName.Text.Trim();
+                string filterByResourceValue = txtResourceValue.Text.Trim();
+                foreach (KeyValuePair<string, LocaleStringResource> kvp in allResources)
                 {
                     if (kvp.Value != null)
-                        resources.Add(kvp.Value);
+                    {
+                        //filter by resource name
+                        bool resourceNameOK = false;
+                        
+                        if (String.IsNullOrWhiteSpace(filterByResourceName) ||
+                            kvp.Value.ResourceName.IndexOf(filterByResourceName, StringComparison.InvariantCultureIgnoreCase) >= 0)
+                        {
+                            resourceNameOK = true;
+                        }
+                        //filter by resource value
+                        bool resourceValueOK = false;
+                        if (String.IsNullOrWhiteSpace(filterByResourceValue) ||
+                            kvp.Value.ResourceValue.IndexOf(filterByResourceValue, StringComparison.InvariantCultureIgnoreCase) >= 0)
+                        {
+                            resourceValueOK = true;
+                        }
+
+                        if (resourceNameOK && resourceValueOK)
+                        {
+                            filteredResources.Add(kvp.Value);
+                        }
+                    }
                 }
-                gvLocaleStringResources.DataSource = resources;
+                gvLocaleStringResources.DataSource = filteredResources;
                 gvLocaleStringResources.DataBind();
             }
 
             btnAddNew.Visible = this.ddlLanguage.SelectedIndex > 0;
-        }
-
-        protected void ddlLanguage_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            Language language = LanguageManager.GetLanguageById(int.Parse(this.ddlLanguage.SelectedItem.Value));
-            if (language != null)
-                Response.Redirect("LocaleStringResources.aspx?LanguageID=" + language.LanguageId);
-            else
-                Response.Redirect("LocaleStringResources.aspx");
         }
 
         protected void btnAddNew_Click(object sender, EventArgs e)
@@ -91,9 +107,27 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 try
                 {
-                    Language language = LanguageManager.GetLanguageById(int.Parse(this.ddlLanguage.SelectedItem.Value));
-                    if (language != null)
-                        Response.Redirect("LocaleStringResourceAdd.aspx?LanguageID=" + language.LanguageId);
+                    if (this.ddlLanguage.SelectedItem != null)
+                    {
+                        Language language = LanguageManager.GetLanguageById(int.Parse(this.ddlLanguage.SelectedItem.Value));
+                        if (language != null)
+                            Response.Redirect("LocaleStringResourceAdd.aspx?LanguageID=" + language.LanguageId);
+                    }
+                }
+                catch (Exception exc)
+                {
+                    ProcessException(exc);
+                }
+            }
+        }
+
+        protected void btnSearch_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+            {
+                try
+                {
+                    BindGrid();
                 }
                 catch (Exception exc)
                 {
