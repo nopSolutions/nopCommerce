@@ -44,7 +44,12 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 NopContext.Current.OriginalUser != null)
             {
                 NopContext.Current.OriginalUser.ImpersonatedCustomerGuid = Guid.Empty;
-                Response.Redirect(CommonHelper.GetStoreLocation());
+                string returnUrl = CommonHelper.GetStoreAdminLocation();
+                if (NopContext.Current.User != null)
+                {
+                    returnUrl = string.Format("{0}CustomerDetails.aspx?CustomerID={1}&TabID={2}", returnUrl, NopContext.Current.User.CustomerId, "pnlCustomerPlaceOrder");
+                }
+                Response.Redirect(returnUrl);
             }
         }
         
