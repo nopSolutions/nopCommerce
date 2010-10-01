@@ -302,6 +302,12 @@ set @resources='
   <LocaleResource Name="Admin.Maintenance.DeleteOldExportedFiles.NoFilesToDelete">
     <Value>No files found to delete</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ProductVariantAttributeValues.PriceAdjustment.RangeErrorMessage">
+    <Value>The price must be from -100000000 to 100000000</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductVariantAttributeValues.New.PriceAdjustment.RangeErrorMessage">
+    <Value>The price must be from -100000000 to 100000000</Value>
+  </LocaleResource>
 </Language>
 '
 

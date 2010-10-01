@@ -632,18 +632,21 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 decimal taxRate = kvp.Key;
                 decimal taxValue = kvp.Value;
 
-                //discount the tax amount that applies to subtotal items
-                if (subTotalExclTaxWithoutDiscount > decimal.Zero)
+                if (taxValue != decimal.Zero)
                 {
-                    decimal discountTax = taxRates[taxRate] * (discountAmountExclTax / subTotalExclTaxWithoutDiscount);
-                    discountAmountInclTax += discountTax;
-                    taxValue = taxRates[taxRate] - discountTax;
-                    taxValue = Math.Round(taxValue, 2);
-                    taxRates[taxRate] = taxValue;
-                }
+                    //discount the tax amount that applies to subtotal items
+                    if (subTotalExclTaxWithoutDiscount > decimal.Zero)
+                    {
+                        decimal discountTax = taxRates[taxRate] * (discountAmountExclTax / subTotalExclTaxWithoutDiscount);
+                        discountAmountInclTax += discountTax;
+                        taxValue = taxRates[taxRate] - discountTax;
+                        taxValue = Math.Round(taxValue, 2);
+                        taxRates[taxRate] = taxValue;
+                    }
 
-                //subtotal with discount (incl tax)
-                subTotalInclTaxWithDiscount += taxValue;
+                    //subtotal with discount (incl tax)
+                    subTotalInclTaxWithDiscount += taxValue;
+                }
             }
             discountAmountInclTax = Math.Round(discountAmountInclTax, 2);            
 

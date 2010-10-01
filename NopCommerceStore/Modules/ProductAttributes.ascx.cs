@@ -151,6 +151,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
                                             {
                                                 pvaValueName += string.Format(" [+{0}]", PriceHelper.FormatPrice(priceAdjustment, false, false));
                                             }
+                                            else if (priceAdjustmentBase < decimal.Zero)
+                                            {
+                                                pvaValueName += string.Format(" [-{0}]", PriceHelper.FormatPrice(-priceAdjustment, false, false));
+                                            }
 
                                             //dynamic price update
                                             if (SettingManager.GetSettingValueBoolean("ProductAttribute.EnableDynamicPriceUpdate"))
@@ -212,7 +216,11 @@ namespace NopSolutions.NopCommerce.Web.Modules
                                             decimal priceAdjustment = CurrencyManager.ConvertCurrency(priceAdjustmentBase, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
                                             if (priceAdjustmentBase > decimal.Zero)
                                             {
-                                                pvaValueName += string.Format(" [+{0}]", PriceHelper.FormatPrice(priceAdjustment, false, false));
+                                                pvaValueName += string.Format(" [+{0}]",PriceHelper.FormatPrice(priceAdjustment, false, false));
+                                            }
+                                            else if (priceAdjustmentBase < decimal.Zero)
+                                            {
+                                                pvaValueName += string.Format(" [-{0}]", PriceHelper.FormatPrice(-priceAdjustment, false, false));
                                             }
 
                                             //dynamic price update
@@ -258,6 +266,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
                                             if (priceAdjustmentBase > decimal.Zero)
                                             {
                                                 pvaValueName += string.Format(" [+{0}]", PriceHelper.FormatPrice(priceAdjustment, false, false));
+                                            }
+                                            else if (priceAdjustmentBase < decimal.Zero)
+                                            {
+                                                pvaValueName += string.Format(" [-{0}]", PriceHelper.FormatPrice(-priceAdjustment, false, false));
                                             }
 
                                             //dynamic price update

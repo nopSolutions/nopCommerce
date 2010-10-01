@@ -519,6 +519,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                                         string priceAdjustmentStr = PriceHelper.FormatPrice(priceAdjustment, false, false);
                                         pvaAttribute += string.Format(" [+{0}]", priceAdjustmentStr);
                                     }
+                                    else if (priceAdjustmentBase < decimal.Zero)
+                                    {
+                                        string priceAdjustmentStr = PriceHelper.FormatPrice(-priceAdjustment, false, false);
+                                        pvaAttribute += string.Format(" [-{0}]", priceAdjustmentStr);
+                                    }
                                 }
                             }
                         }
