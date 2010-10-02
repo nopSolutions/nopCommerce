@@ -408,7 +408,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO
                     seoCharacterTable.Add(ToUnichar("01BB"), "2");	// LATIN LETTER TWO WITH STROKE -- no decomposition
                     seoCharacterTable.Add(ToUnichar("01BC"), "5");	// LATIN CAPITAL LETTER TONE FIVE -- no decomposition
                     seoCharacterTable.Add(ToUnichar("01BD"), "5");	// LATIN SMALL LETTER TONE FIVE -- no decomposition
-                    seoCharacterTable.Add(ToUnichar("01BE"), "´");	// LATIN LETTER INVERTED GLOTTAL STOP WITH STROKE -- no decomposition
+                    //seoCharacterTable.Add(ToUnichar("01BE"), "´");	// LATIN LETTER INVERTED GLOTTAL STOP WITH STROKE -- no decomposition
                     seoCharacterTable.Add(ToUnichar("01BF"), "w");	// LATIN LETTER WYNN -- no decomposition
                     seoCharacterTable.Add(ToUnichar("01C0"), "!");	// LATIN LETTER DENTAL CLICK -- no decomposition
                     seoCharacterTable.Add(ToUnichar("01C1"), "!");	// LATIN LETTER LATERAL CLICK -- no decomposition
@@ -601,7 +601,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO
                     seoCharacterTable.Add(ToUnichar("0295"), "'");	// LATIN LETTER PHARYNGEAL VOICED FRICATIVE -- no decomposition
                     seoCharacterTable.Add(ToUnichar("0296"), "'");	// LATIN LETTER INVERTED GLOTTAL STOP -- no decomposition
                     seoCharacterTable.Add(ToUnichar("0297"), "C");	// LATIN LETTER STRETCHED C -- no decomposition
-                    seoCharacterTable.Add(ToUnichar("0298"), "O˜");	// LATIN LETTER BILABIAL CLICK -- no decomposition
+                    //seoCharacterTable.Add(ToUnichar("0298"), "O˜");	// LATIN LETTER BILABIAL CLICK -- no decomposition
                     seoCharacterTable.Add(ToUnichar("0299"), "B");	// LATIN LETTER SMALL CAPITAL B -- no decomposition
                     seoCharacterTable.Add(ToUnichar("029A"), "e");	// LATIN SMALL LETTER CLOSED OPEN E -- no decomposition
                     seoCharacterTable.Add(ToUnichar("029B"), "G");	// LATIN LETTER SMALL CAPITAL G WITH HOOK -- no decomposition
