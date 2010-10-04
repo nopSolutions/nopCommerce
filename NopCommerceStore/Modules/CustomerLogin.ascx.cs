@@ -35,16 +35,16 @@ namespace NopSolutions.NopCommerce.Web.Modules
     {
         private void ApplyLocalization()
         {
-            var lUsernameOrEmail = LoginForm.FindControl("lUsernameOrEmail") as Literal;
-            if (lUsernameOrEmail != null)
+            var lblUsernameOrEmail = LoginForm.FindControl("lblUsernameOrEmail") as Label;
+            if (lblUsernameOrEmail != null)
             {
                 if (CustomerManager.UsernamesEnabled)
                 {
-                    lUsernameOrEmail.Text = GetLocaleResourceString("Login.Username");
+                    lblUsernameOrEmail.Text = GetLocaleResourceString("Login.Username");
                 }
                 else
                 {
-                    lUsernameOrEmail.Text = GetLocaleResourceString("Login.E-MailAddress");
+                    lblUsernameOrEmail.Text = GetLocaleResourceString("Login.E-MailAddress");
                 }
             }
             var UserNameOrEmailRequired = LoginForm.FindControl("UserNameOrEmailRequired") as RequiredFieldValidator;

@@ -9,7 +9,7 @@
 <%@ Register TagPrefix="nopCommerce" TagName="NewsLetterSubscriptionBoxControl" Src="~/Modules/NewsLetterSubscriptionBoxControl.ascx" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="cph1" runat="server">
-    <div class="master-wrapper-side">
+    <div class="master-wrapper-side-2">
         <asp:ContentPlaceHolder ID="cph2" runat="server">
             <nopCommerce:LiveChatBlock ID="ctrlLiveChatBlock" runat="server" />
             <div class="clear">
@@ -21,22 +21,19 @@
             <div class="clear">
             </div>
             <nopCommerce:ManufacturerNavigation ID="ctrlManufacturerNavigation" runat="server" />
-            <div class="clear">
+           <%-- <div class="clear">
             </div>
-            <nopCommerce:PopularTags ID="ctrlPopularTags" runat="server" />
+            <nopCommerce:PopularTags ID="ctrlPopularTags" runat="server" />--%>
             <div class="clear">
             </div>
             <nopCommerce:NewsLetterSubscriptionBoxControl runat="server" ID="ctrlNewsLetterSubscriptionBoxControl" />
-            <div class="clear">
+            <%--<div class="clear">
             </div>
-            <nopCommerce:RecentlyViewedProducts ID="ctrlRecentlyViewedProducts" runat="server" />
-            <div class="clear">
-            </div>
-            <nopCommerce:InfoBlock ID="ctrlInfoBlock" runat="server" />
+            <nopCommerce:InfoBlock ID="ctrlInfoBlock" runat="server" />--%>
         </asp:ContentPlaceHolder>
     </div>
-    <div class="master-wrapper-center">
-        <div class="master-wrapper-cph">
+    <div class="master-wrapper-center-2">
+        <div class="master-wrapper-cph-2">
             <asp:ContentPlaceHolder ID="cph1" runat="server">
             </asp:ContentPlaceHolder>
         </div>

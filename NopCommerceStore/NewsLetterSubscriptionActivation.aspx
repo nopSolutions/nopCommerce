@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" MasterPageFile="~/MasterPages/TwoColumn.master"
+﻿<%@ Page Language="C#" AutoEventWireup="true" MasterPageFile="~/MasterPages/ThreeColumn.master"
     CodeBehind="NewsLetterSubscriptionActivation.aspx.cs" Inherits="NopSolutions.NopCommerce.Web.NewsLetterSubscriptionActivationPage"
      %>
 <%@ Register TagPrefix="nopCommerce" TagName="NewsLetterSubscriptionActivationControl" Src="~/Modules/NewsLetterSubscriptionActivationControl.ascx" %>

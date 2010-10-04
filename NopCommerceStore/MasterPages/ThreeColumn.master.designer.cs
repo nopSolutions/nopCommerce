@@ -49,6 +49,24 @@ namespace NopSolutions.NopCommerce.Web.MasterPages {
         protected global::NopSolutions.NopCommerce.Web.Modules.PopularTagsControl ctrlPopularTags;
         
         /// <summary>
+        /// ctrlInfoBlock control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Modules.InfoBlockControl ctrlInfoBlock;
+        
+        /// <summary>
+        /// ctrlPollLeft control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Modules.PollBlockControl ctrlPollLeft;
+        
+        /// <summary>
         /// cph1 control.
         /// </summary>
         /// <remarks>
@@ -67,15 +85,6 @@ namespace NopSolutions.NopCommerce.Web.MasterPages {
         protected global::System.Web.UI.WebControls.ContentPlaceHolder cph3;
         
         /// <summary>
-        /// ctrlLiveChatBlock control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Modules.LiveChatBlockControl ctrlLiveChatBlock;
-        
-        /// <summary>
         /// ctrlMiniShoppingCartBox control.
         /// </summary>
         /// <remarks>
@@ -83,6 +92,15 @@ namespace NopSolutions.NopCommerce.Web.MasterPages {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::NopSolutions.NopCommerce.Web.Modules.MiniShoppingCartBoxControl ctrlMiniShoppingCartBox;
+        
+        /// <summary>
+        /// ctrlLiveChatBlock control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Modules.LiveChatBlockControl ctrlLiveChatBlock;
         
         /// <summary>
         /// ctrlNewsLetterSubscriptionBoxControl control.
@@ -103,12 +121,12 @@ namespace NopSolutions.NopCommerce.Web.MasterPages {
         protected global::NopSolutions.NopCommerce.Web.Modules.RecentlyViewedProductsBoxControl ctrlRecentlyViewedProducts;
         
         /// <summary>
-        /// ctrlInfoBlock control.
+        /// ctrlPollRight control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Modules.InfoBlockControl ctrlInfoBlock;
+        protected global::NopSolutions.NopCommerce.Web.Modules.PollBlockControl ctrlPollRight;
     }
 }

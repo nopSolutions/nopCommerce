@@ -58,15 +58,6 @@ namespace NopSolutions.NopCommerce.Web.MasterPages {
         protected global::NopSolutions.NopCommerce.Web.Modules.ManufacturerNavigation ctrlManufacturerNavigation;
         
         /// <summary>
-        /// ctrlPopularTags control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Modules.PopularTagsControl ctrlPopularTags;
-        
-        /// <summary>
         /// ctrlNewsLetterSubscriptionBoxControl control.
         /// </summary>
         /// <remarks>
@@ -74,24 +65,6 @@ namespace NopSolutions.NopCommerce.Web.MasterPages {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::NopSolutions.NopCommerce.Web.Modules.NewsLetterSubscriptionBoxControl ctrlNewsLetterSubscriptionBoxControl;
-        
-        /// <summary>
-        /// ctrlRecentlyViewedProducts control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Modules.RecentlyViewedProductsBoxControl ctrlRecentlyViewedProducts;
-        
-        /// <summary>
-        /// ctrlInfoBlock control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Modules.InfoBlockControl ctrlInfoBlock;
         
         /// <summary>
         /// cph1 control.

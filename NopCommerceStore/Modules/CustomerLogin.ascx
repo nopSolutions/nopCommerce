@@ -72,7 +72,7 @@
                             <tbody>
                                 <tr class="row">
                                     <td class="item-name">
-                                        <asp:Literal runat="server" ID="lUsernameOrEmail" Text="E-Mail" />:
+                                        <asp:Label runat="server" ID="lblUsernameOrEmail" Text="E-Mail" AssociatedControlID="UserName" />:
                                     </td>
                                     <td class="item-value">
                                         <asp:TextBox ID="UserName" runat="server"></asp:TextBox>
@@ -82,7 +82,8 @@
                                 </tr>
                                 <tr class="row">
                                     <td class="item-name">
-                                        <asp:Literal runat="server" ID="lPassword" Text="<% $NopResources:Login.Password %>" />:
+                                        <asp:Label runat="server" ID="lblPassword" Text="<% $NopResources:Login.Password %>"
+                                            AssociatedControlID="Password" />:
                                     </td>
                                     <td class="item-value">
                                         <asp:TextBox ID="Password" TextMode="Password" runat="server" MaxLength="50"></asp:TextBox>

@@ -77,6 +77,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
         /// <returns>Poll</returns>
         public static Poll GetPollBySystemKeyword(string systemKeyword)
         {
+            if (String.IsNullOrWhiteSpace(systemKeyword))
+                return null;
+
             var context = ObjectContextHelper.CurrentObjectContext;
             var query = from p in context.Polls
                         where p.SystemKeyword == systemKeyword
@@ -182,10 +185,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
         /// <param name="endDate">The poll end date and time</param>
         /// <returns>Poll</returns>
         public static Poll InsertPoll(int languageId, string name, string systemKeyword,
-            bool published, bool showOnHomePage, int displayOrder, DateTime? startDate, DateTime? endDate)
+            bool published, bool showOnHomePage, int displayOrder, 
+            DateTime? startDate, DateTime? endDate)
         {
             name = CommonHelper.EnsureMaximumLength(name, 400);
             systemKeyword = CommonHelper.EnsureMaximumLength(systemKeyword, 400);
+            systemKeyword = systemKeyword.Trim();
 
             var context = ObjectContextHelper.CurrentObjectContext;
 
@@ -225,10 +230,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
         /// <param name="endDate">The poll end date and time</param>
         /// <returns>Poll</returns>
         public static Poll UpdatePoll(int pollId, int languageId, string name,
-            string systemKeyword, bool published, bool showOnHomePage, int displayOrder, DateTime? startDate, DateTime? endDate)
+            string systemKeyword, bool published, bool showOnHomePage, int displayOrder, 
+            DateTime? startDate, DateTime? endDate)
         {
             name = CommonHelper.EnsureMaximumLength(name, 400);
             systemKeyword = CommonHelper.EnsureMaximumLength(systemKeyword, 400);
+            systemKeyword = systemKeyword.Trim();
 
             var poll = GetPollById(pollId);
             if (poll == null)

@@ -1,10 +1,10 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" Inherits="NopSolutions.NopCommerce.Web.Modules.PollControl"
     CodeBehind="Poll.ascx.cs" %>
-<div class="poll-block">
+<div class="poll-item">
     <asp:Label ID="lblPollName" runat="server" CssClass="poll-display-text"></asp:Label>
     <asp:Panel ID="pnlTakePoll" runat="server" CssClass="poll-take-poll">
-        <asp:RadioButtonList ID="rblPollAnswers" runat="server" DataTextField="Name" DataValueField="PollAnswerId">
-        </asp:RadioButtonList>
+        <asp:RadioButtonList ID="rblPollAnswers" runat="server" DataTextField="Name" DataValueField="PollAnswerId"
+            CssClass="poll-answers" />
         <asp:Button ID="btnSubmitVoteRecord" runat="server" OnClick="btnSubmitVoteRecord_Click"
             Text="<% $NopResources:Polls.SubmitVoteRecordButton %>" CssClass="submitpollvotebutton" />
         <asp:RequiredFieldValidator ID="rfvPollAnswers" runat="server" ControlToValidate="rblPollAnswers"
@@ -15,15 +15,12 @@
             <ItemTemplate>
                 <%# Eval("Name") %>
                 (<%# Eval("Count") %>
-                <%=GetLocaleResourceString("Polls.votes")%>)<br />
-                <asp:Image ID="imgPercentage" runat="server" Height="7px" ImageUrl="~/images/PollPercentage.jpg"
-                    AlternateText="Votes" />
-                <asp:Label ID="lblPercentage" runat="server"></asp:Label><br />
+                <%=GetLocaleResourceString("Polls.votes")%>
+                -
+                <asp:Literal ID="lPercentage" runat="server" />)
                 <br />
             </ItemTemplate>
         </asp:DataList>
-        <br />
-        <br />
         <asp:Label runat="server" ID="lblTotalVotes" CssClass="poll-total-votes"></asp:Label>
     </asp:Panel>
 </div>

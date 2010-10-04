@@ -97,7 +97,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 var priceRow = new HtmlTableRow();
                 var cell = new HtmlTableCell();
                 cell.InnerText = GetLocaleResourceString("Products.CompareProductsPrice");
-                cell.Align = "center";
+                cell.Align = "left";
                 priceRow.Cells.Add(cell);
 
                 var specificationAttributeIds = new List<int>();
@@ -113,6 +113,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 {
                     var headerCell = new HtmlTableCell();
                     var headerCellDiv = new HtmlGenericControl("div");
+
+                    var productImagePanel = new HtmlGenericControl("p");
+                    productImagePanel.Attributes.Add("align", "center");
+                    
                     var btnRemoveFromList = new Button();
                     btnRemoveFromList.ToolTip = GetLocaleResourceString("Products.CompareProductsRemoveFromList");
                     btnRemoveFromList.Text = GetLocaleResourceString("Products.CompareProductsRemoveFromList");
@@ -122,10 +126,8 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     btnRemoveFromList.CausesValidation = false;
                     btnRemoveFromList.CssClass = "remove-button";
                     btnRemoveFromList.ID = "btnRemoveFromList" + product.ProductId.ToString();
-                    headerCellDiv.Controls.Add(btnRemoveFromList);
-
-                    var productImagePanel = new HtmlGenericControl("p");
-                    productImagePanel.Attributes.Add("align", "center");
+                    productImagePanel.Controls.Add(btnRemoveFromList);
+                    productImagePanel.Controls.Add(new HtmlGenericControl("br"));
 
                     var productImage = new HtmlImage();
                     productImage.Border = 0;
@@ -141,6 +143,8 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     
                     headerCell.Controls.Add(headerCellDiv);
                     headerRow.Cells.Add(headerCell);
+                    this.tblCompareProducts.Rows.Add(headerRow);
+
                     var productNameCell = new HtmlTableCell();
                     var productLink = new HyperLink();
                     productLink.Text = Server.HtmlEncode(product.LocalizedName);
@@ -164,7 +168,6 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 }
                 productNameRow.Attributes.Add("class", "product-name");
                 priceRow.Attributes.Add("class", "productPrice");
-                this.tblCompareProducts.Rows.Add(headerRow);
                 this.tblCompareProducts.Rows.Add(productNameRow);
                 if (!SettingManager.GetSettingValueBoolean("Common.HidePricesForNonRegistered") ||
                     (NopContext.Current.User != null &&

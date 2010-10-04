@@ -283,7 +283,7 @@ INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES 
 INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (225, N'Forums.StrippedTopicMaxLength', N'45', N'')
 INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (226, N'Blog.AllowNotRegisteredUsersToLeaveComments', N'true', N'Determines whether not registered user can leave blog comments')
 INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (227, N'News.AllowNotRegisteredUsersToLeaveComments', N'true', N'Determines whether not registered user can leave news comments')
-INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (228, N'Display.RecentlyViewedProductsEnabled', N'False', N'Determines whether "Recently viewed products" feature is enabled')
+INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (228, N'Display.RecentlyViewedProductsEnabled', N'True', N'Determines whether "Recently viewed products" feature is enabled')
 INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (229, N'Display.RecentlyAddedProductsEnabled', N'True', N'Determines whether "Recently added products" feature is enabled')
 INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (231, N'SEO.Sitemaps.OtherPages', N'', N'Comma separated page list')
 INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (232, N'Customer.NewCustomerRegistrationDisabled', N'false', N'Determines whether new customer registration is not allowed')
@@ -301,7 +301,7 @@ INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES 
 INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (244, N'Common.AllowNavigationOnlyRegisteredCustomers', N'False', N'Determines whether to allow navigation only for registered users')
 INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (245, N'Common.HideAdvertisementsOnAdminArea', N'false', N'Determines whether to hide advertisements on admin dashboard')
 INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (246, N'Display.ListOfProductsAlsoPurchasedEnabled', N'True', N'Determines whether "List of products purchased by other customers who purchased the above" option is enable')
-INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (247, N'Display.ListOfProductsAlsoPurchasedNumberToDisplay', N'2', N'Determines number of products also purchased by other customers to display')
+INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (247, N'Display.ListOfProductsAlsoPurchasedNumberToDisplay', N'3', N'Determines number of products also purchased by other customers to display')
 INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (248, N'News.NotifyAboutNewNewsComments', N'false', N'Determines whether to notify about new news comments')
 INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (249, N'Blog.NotifyAboutNewBlogComments', N'false', N'Determines whether to notify about new blog comments')
 INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (250, N'Product.NotifyAboutNewProductReviews', N'False', N'Determines whether to notify about new product reviews')
@@ -342,7 +342,7 @@ INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES 
 INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (286, N'PaymentMethod.TwoCheckout.SecretWord', N'', N'')
 INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (287, N'ACL.Enabled', N'False', N'Determines the ACL feature is enabled')
 INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (288, N'Cache.ACLManager.CacheEnabled', N'true', N'')
-INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (289, N'Display.ShowBestsellersOnMainPageNumber', N'4', N'Number of best sellers on home page')
+INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (289, N'Display.ShowBestsellersOnMainPageNumber', N'3', N'Number of best sellers on home page')
 INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (290, N'Display.RecentlyViewedProductsNumber', N'4', N'Number of Recently viewed products')
 INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (291, N'Display.RecentlyAddedProductsNumber', N'4', N'Number of Recently added products')
 INSERT [dbo].[Nop_Setting] ([SettingID], [Name], [Value], [Description]) VALUES (292, N'Common.ProductReviewsMustBeApproved', N'True', N'Product reviews must be approved by administrator')
@@ -7001,4 +7001,20 @@ INSERT [dbo].[Nop_ACL] ([ACLID], [CustomerActionID], [CustomerRoleID], [Allow]) 
 INSERT [dbo].[Nop_ACL] ([ACLID], [CustomerActionID], [CustomerRoleID], [Allow]) VALUES (123, 31, 1, 1)
 INSERT [dbo].[Nop_ACL] ([ACLID], [CustomerActionID], [CustomerRoleID], [Allow]) VALUES (124, 31, 2, 0)
 SET IDENTITY_INSERT [dbo].[Nop_ACL] OFF
+GO
+
+
+
+SET IDENTITY_INSERT [dbo].[Nop_Poll] ON
+INSERT [dbo].[Nop_Poll] ([PollID], [LanguageID], [Name], [SystemKeyword], [Published], [ShowOnHomePage], [DisplayOrder], [StartDate], [EndDate]) VALUES (2, 7, N'Do you like nopCommerce?', N'RightColumnPoll', 1, 0, 1, NULL, NULL)
+SET IDENTITY_INSERT [dbo].[Nop_Poll] OFF
+GO
+
+
+SET IDENTITY_INSERT [dbo].[Nop_PollAnswer] ON
+INSERT [dbo].[Nop_PollAnswer] ([PollAnswerID], [PollID], [Name], [Count], [DisplayOrder]) VALUES (7, 2, N'Excellent', 0, 1)
+INSERT [dbo].[Nop_PollAnswer] ([PollAnswerID], [PollID], [Name], [Count], [DisplayOrder]) VALUES (8, 2, N'Good', 0, 2)
+INSERT [dbo].[Nop_PollAnswer] ([PollAnswerID], [PollID], [Name], [Count], [DisplayOrder]) VALUES (9, 2, N'Poor', 0, 3)
+INSERT [dbo].[Nop_PollAnswer] ([PollAnswerID], [PollID], [Name], [Count], [DisplayOrder]) VALUES (10, 2, N'Very bad', 0, 4)
+SET IDENTITY_INSERT [dbo].[Nop_PollAnswer] OFF
 GO

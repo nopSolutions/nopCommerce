@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" MasterPageFile="~/MasterPages/TwoColumn.master"
+﻿<%@ Page Language="C#" AutoEventWireup="true" MasterPageFile="~/MasterPages/ThreeColumn.master"
     CodeBehind="Manufacturers.aspx.cs" Inherits="NopSolutions.NopCommerce.Web.ManufacturersPage"
      %>
 
@@ -6,20 +6,6 @@
 <%@ Register TagPrefix="nopCommerce" TagName="CategoryNavigation" Src="~/Modules/CategoryNavigation.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="ManufacturerNavigation" Src="~/Modules/ManufacturerNavigation.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="RecentlyViewedProducts" Src="~/Modules/RecentlyViewedProductsBox.ascx" %>
-<%--<asp:Content ID="Content2" ContentPlaceHolderID="cph2" runat="server">
-    <nopCommerce:MiniShoppingCartBox ID="ctrlMiniShoppingCartBox" runat="server" />
-    <div class="clear">
-    </div>
-    <nopCommerce:CategoryNavigation ID="ctrlCategoryNavigation" runat="server" />
-    <div class="clear">
-    </div>
-    <nopCommerce:ManufacturerNavigation ID="ctrlManufacturerNavigation" runat="server" />
-    <div class="clear">
-    </div>
-    <nopCommerce:RecentlyViewedProducts ID="ctrlRecentlyViewedProducts" runat="server" />
-    <div class="clear">
-    </div>
-</asp:Content>--%>
 <asp:Content runat="server" ContentPlaceHolderID="cph1">
     <div class="manufacturerlist-page">
         <div class="page-title">

@@ -1,4 +1,4 @@
-<%@ Page Language="C#" MasterPageFile="~/MasterPages/TwoColumn.master" AutoEventWireup="true"
+<%@ Page Language="C#" MasterPageFile="~/MasterPages/ThreeColumn.master" AutoEventWireup="true"
     Inherits="NopSolutions.NopCommerce.Web.CCAvenueReturnPage" CodeBehind="CCAvenueReturn.aspx.cs"
      %>
 

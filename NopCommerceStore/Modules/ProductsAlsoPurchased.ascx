@@ -6,7 +6,7 @@
     </div>
     <div class="clear">
     </div>
-    <asp:DataList ID="dlAlsoPurchasedProducts" runat="server" RepeatColumns="2" RepeatDirection="Horizontal"
+    <asp:DataList ID="dlAlsoPurchasedProducts" runat="server" RepeatColumns="3" RepeatDirection="Horizontal"
         RepeatLayout="Table" OnItemDataBound="dlAlsoPurchasedProducts_ItemDataBound"
         ItemStyle-CssClass="item-box">
         <ItemTemplate>

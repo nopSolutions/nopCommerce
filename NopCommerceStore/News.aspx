@@ -1,4 +1,4 @@
-<%@ Page Language="C#" MasterPageFile="~/MasterPages/OneColumn.master" AutoEventWireup="true"
+<%@ Page Language="C#" MasterPageFile="~/MasterPages/TwoColumn.master" AutoEventWireup="true"
     Inherits="NopSolutions.NopCommerce.Web.NewsPage" CodeBehind="News.aspx.cs"  %>
 
 <%@ Register TagPrefix="nopCommerce" TagName="NewsItem" Src="~/Modules/NewsItem.ascx" %>

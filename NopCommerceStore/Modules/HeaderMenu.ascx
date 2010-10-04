@@ -6,7 +6,7 @@
         <nopCommerce:SearchBox runat="server" ID="ctrlSearchBox">
         </nopCommerce:SearchBox>
     </div>
-    <ul>
+    <ul class="topmenu">
         <li><a href="<%=CommonHelper.GetStoreLocation()%>">
             <%=GetLocaleResourceString("Content.HomePage")%></a> </li>
         <% if (ProductManager.RecentlyAddedProductsEnabled)

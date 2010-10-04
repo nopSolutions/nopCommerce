@@ -9,6 +9,7 @@
 <%@ Register TagPrefix="nopCommerce" TagName="RecentlyViewedProducts" Src="~/Modules/RecentlyViewedProductsBox.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="NewsLetterSubscriptionBoxControl" Src="~/Modules/NewsLetterSubscriptionBoxControl.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="PopularTags" Src="~/Modules/PopularTags.ascx" %>
+<%@ Register TagPrefix="nopCommerce" TagName="PollBlock" Src="~/Modules/PollBlock.ascx" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="cph1" runat="server">
     <div class="master-wrapper-leftside-3">
         <asp:ContentPlaceHolder ID="cph2" runat="server">
@@ -18,7 +19,13 @@
             <nopCommerce:ManufacturerNavigation ID="ctrlManufacturerNavigation" runat="server" />
             <div class="clear">
             </div>
-            <nopCommerce:PopularTags ID="ctrlPopularTags" runat="server" />            
+            <nopCommerce:PopularTags ID="ctrlPopularTags" runat="server" /> 
+            <div class="clear">
+            </div>
+            <nopCommerce:InfoBlock ID="ctrlInfoBlock" runat="server" />
+            <div class="clear">
+            </div>
+            <nopCommerce:PollBlock ID="ctrlPollLeft" runat="server" SystemKeyword="LeftColumnPoll" />           
         </asp:ContentPlaceHolder>
     </div>
     <div class="master-wrapper-center-3">
@@ -29,10 +36,10 @@
     </div>
     <div class="master-wrapper-rightside-3">
         <asp:ContentPlaceHolder ID="cph3" runat="server">
-            <nopCommerce:LiveChatBlock ID="ctrlLiveChatBlock" runat="server" />
+            <nopCommerce:MiniShoppingCartBox ID="ctrlMiniShoppingCartBox" runat="server" />
             <div class="clear">
             </div>
-            <nopCommerce:MiniShoppingCartBox ID="ctrlMiniShoppingCartBox" runat="server" />
+            <nopCommerce:LiveChatBlock ID="ctrlLiveChatBlock" runat="server" />
             <div class="clear">
             </div>
             <nopCommerce:NewsLetterSubscriptionBoxControl ID="ctrlNewsLetterSubscriptionBoxControl"
@@ -42,7 +49,7 @@
             <nopCommerce:RecentlyViewedProducts ID="ctrlRecentlyViewedProducts" runat="server" />
             <div class="clear">
             </div>
-            <nopCommerce:InfoBlock ID="ctrlInfoBlock" runat="server" />
+            <nopCommerce:PollBlock ID="ctrlPollRight" runat="server" SystemKeyword="RightColumnPoll" />
         </asp:ContentPlaceHolder>
     </div>
 </asp:Content>

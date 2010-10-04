@@ -3953,6 +3953,13 @@
     <Compile Include="Modules\BlogPopularTags.ascx.designer.cs">
       <DependentUpon>BlogPopularTags.ascx</DependentUpon>
     </Compile>
+    <Compile Include="Modules\PollBlock.ascx.cs">
+      <DependentUpon>PollBlock.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\PollBlock.ascx.designer.cs">
+      <DependentUpon>PollBlock.ascx</DependentUpon>
+    </Compile>
     <Compile Include="Modules\StoreThemeSelector.ascx.cs">
       <DependentUpon>StoreThemeSelector.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -6042,7 +6049,8 @@
     <Content Include="App_Themes\administration\images\warnings-warning.png" />
     <Content Include="App_Themes\darkOrange\images\bgTextBox.gif" />
     <Content Include="App_Themes\darkOrange\images\bg_body.gif" />
-    <Content Include="App_Themes\darkOrange\images\bg_maincolumn.gif" />
+    <Content Include="App_Themes\darkOrange\images\bg_maincolumn_2.gif" />
+    <Content Include="App_Themes\darkOrange\images\bg_maincolumn_3.gif" />
     <Content Include="App_Themes\darkOrange\images\bg_sidebar_block.gif" />
     <Content Include="App_Themes\darkOrange\images\bg_sidebar_title.gif" />
     <Content Include="App_Themes\darkOrange\images\closelabel.gif" />
@@ -6086,22 +6094,12 @@
     <Content Include="App_Themes\Install\images\topright.gif" />
     <Content Include="App_Themes\Install\style.css" />
     <Content Include="App_Themes\nopClassic\images\bgTextBox.gif" />
-    <Content Include="App_Themes\nopClassic\images\bg_body.gif" />
-    <Content Include="App_Themes\nopClassic\images\bg_container.gif" />
-    <Content Include="App_Themes\nopClassic\images\bg_maincolumn.gif" />
-    <Content Include="App_Themes\nopClassic\images\bg_sidebar_block.gif" />
-    <Content Include="App_Themes\nopClassic\images\bg_sidebar_title.gif" />
     <Content Include="App_Themes\nopClassic\images\cart_line_x.gif" />
     <Content Include="App_Themes\nopClassic\images\cart_line_y.gif" />
     <Content Include="App_Themes\nopClassic\images\closelabel.gif" />
-    <Content Include="App_Themes\nopClassic\images\deal_box_hl.gif" />
-    <Content Include="App_Themes\nopClassic\images\deal_box_hr.gif" />
     <Content Include="App_Themes\nopClassic\images\EmptyStar.png" />
-    <Content Include="App_Themes\nopClassic\images\fb_s_bg.gif" />
     <Content Include="App_Themes\nopClassic\images\FilledStar.png" />
     <Content Include="App_Themes\nopClassic\images\grey_button_bg.gif" />
-    <Content Include="App_Themes\nopClassic\images\home-cat-bg.gif" />
-    <Content Include="App_Themes\nopClassic\images\home-cat-title.gif" />
     <Content Include="App_Themes\nopClassic\images\ico-account.gif" />
     <Content Include="App_Themes\nopClassic\images\ico-admin.gif" />
     <Content Include="App_Themes\nopClassic\images\ico-arrow-r.gif" />
@@ -6113,14 +6111,10 @@
     <Content Include="App_Themes\nopClassic\images\loading.gif" />
     <Content Include="App_Themes\nopClassic\images\nextlabel.gif" />
     <Content Include="App_Themes\nopClassic\images\orange_button_bg.gif" />
-    <Content Include="App_Themes\nopClassic\images\pb_s_bg.gif" />
     <Content Include="App_Themes\nopClassic\images\prevlabel.gif" />
-    <Content Include="App_Themes\nopClassic\images\prod_grid_box_bg.gif" />
     <Content Include="App_Themes\nopClassic\images\SavedStar.png" />
     <Content Include="App_Themes\nopClassic\images\tab-line.png" />
-    <Content Include="App_Themes\nopClassic\images\tab-line_1.png" />
     <Content Include="App_Themes\nopClassic\images\tab.png" />
-    <Content Include="App_Themes\nopClassic\images\tab_1.png" />
     <Content Include="App_Themes\Print\styles.css" />
     <Content Include="Blog.aspx" />
     <Content Include="BlogPost.aspx" />
@@ -6567,6 +6561,7 @@
     <Content Include="images\expand.png" />
     <Content Include="Modules\BlogMonths.ascx" />
     <Content Include="Modules\BlogPopularTags.ascx" />
+    <Content Include="Modules\PollBlock.ascx" />
     <Content Include="Modules\StoreThemeSelector.ascx" />
     <Content Include="Modules\DecimalTextBox.ascx" />
     <Content Include="Modules\EstimateShipping.ascx" />
@@ -6597,7 +6592,6 @@
     <Content Include="images\noDefaultImage7.gif" />
     <Content Include="images\noDefaultImage8.gif" />
     <Content Include="images\noDefaultImage9.gif" />
-    <Content Include="images\PollPercentage.jpg" />
     <Content Include="images\sp.gif" />
     <Content Include="images\UpdateProgress.gif" />
     <Content Include="Install\install.aspx" />
@@ -7116,7 +7110,7 @@
     <Content Include="App_Themes\darkOrange\images\ico-inbox.gif" />
     <Content Include="App_Themes\darkOrange\images\grid-bg.gif" />
     <Content Include="App_Themes\darkOrange\images\bg_container.gif" />
-    <Content Include="App_Themes\darkOrange\images\bg_maincolumn_single.gif" />
+    <Content Include="App_Themes\darkOrange\images\bg_maincolumn_1.gif" />
     <Content Include="App_Themes\darkOrange\images\btn_download_bg.gif" />
     <Content Include="App_Themes\darkOrange\images\cart-footer-bg.gif" />
     <Content Include="App_Themes\darkOrange\images\cart-header-bg.gif" />
@@ -7143,7 +7137,6 @@
     <Content Include="App_Themes\nopClassic\styles.css" />
     <Content Include="App_Themes\nopClassic\images\bbeditor-button-bg.gif" />
     <Content Include="App_Themes\nopClassic\images\btn_download_bg.gif" />
-    <Content Include="App_Themes\nopClassic\images\grid-bg.gif" />
     <Content Include="App_Themes\nopClassic\images\grid_header_back.png" />
     <Content Include="App_Themes\nopClassic\images\ico-delete.gif" />
     <Content Include="App_Themes\nopClassic\images\ico-edit.gif" />

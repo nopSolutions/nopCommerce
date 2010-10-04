@@ -308,6 +308,9 @@ set @resources='
   <LocaleResource Name="Admin.ProductVariantAttributeValues.New.PriceAdjustment.RangeErrorMessage">
     <Value>The price must be from -100000000 to 100000000</Value>
   </LocaleResource>
+  <LocaleResource Name="PollBlock.Title">
+    <Value>Community Poll</Value>
+  </LocaleResource>
 </Language>
 '
 

@@ -1,4 +1,4 @@
-<%@ Page Language="C#" MasterPageFile="~/MasterPages/TwoColumn.master" AutoEventWireup="true"
+<%@ Page Language="C#" MasterPageFile="~/MasterPages/OneColumn.master" AutoEventWireup="true"
     Inherits="NopSolutions.NopCommerce.Web.PaypalExpressReturnPage" CodeBehind="PaypalExpressReturn.aspx.cs"
      %>
 

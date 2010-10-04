@@ -39,43 +39,55 @@ namespace NopSolutions.NopCommerce.Web.Modules
         {
             if (!Page.IsPostBack)
             {
-                rfvPollAnswers.ValidationGroup = string.Format("Poll.{0}", this.PollId);
-                btnSubmitVoteRecord.ValidationGroup = string.Format("Poll.{0}", this.PollId);
+                BindData();
+            }
+        }
+
+        protected void BindData()
+        {
+            //get poll
+            var poll = PollManager.GetPollById(this.PollId);
+            if (poll == null && !String.IsNullOrEmpty(this.SystemKeyword))
+                poll = PollManager.GetPollBySystemKeyword(this.SystemKeyword);
+
+            if (poll != null && poll.Published)
+            {
+                //bind data
+                rfvPollAnswers.ValidationGroup = string.Format("Poll.{0}.{1}", poll.PollId, this.ClientID);
+                btnSubmitVoteRecord.ValidationGroup = string.Format("Poll.{0}.{1}", poll.PollId, this.ClientID);
+
+                //info
+                lblPollName.Text = Server.HtmlEncode(poll.Name);
+                lblTotalVotes.Text = string.Format(GetLocaleResourceString("Polls.TotalVotes"), poll.TotalVotes);
+
+                //has customer already voted?
                 var customer = NopContext.Current.User;
                 bool showResults = false;
                 if (customer != null)
                 {
-                    showResults = PollManager.PollVotingRecordExists(this.PollId, customer.CustomerId);
+                    showResults = PollManager.PollVotingRecordExists(poll.PollId, customer.CustomerId);
                 }
 
-                BindData(showResults);
-            }
-        }
-
-        protected void BindData(bool showResults)
-        {
-            var poll = PollManager.GetPollById(this.PollId);
-            if (poll != null && poll.Published)
-            {
-                lblPollName.Text = Server.HtmlEncode(poll.Name);
-                lblTotalVotes.Text = string.Format(GetLocaleResourceString("Polls.TotalVotes"), poll.TotalVotes);
-
+                //bind info (answers or results)
                 var pollAnswers = poll.PollAnswers;
                 pnlTakePoll.Visible = !showResults;
                 pnlPollResults.Visible = showResults;
                 if (showResults)
                 {
+                    //bind results
                     dlResults.DataSource = pollAnswers;
                     dlResults.DataBind();
                 }
                 else
                 {
+                    //bind answers
                     rblPollAnswers.DataSource = pollAnswers;
                     rblPollAnswers.DataBind();
                 }
             }
             else
             {
+                //poll is not loaded
                 pnlTakePoll.Visible = false;
                 pnlPollResults.Visible = false;
             }
@@ -98,21 +110,28 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 Response.Redirect(loginURL);
             }
 
-            if (!PollManager.PollVotingRecordExists(this.PollId, NopContext.Current.User.CustomerId))
+            var poll = PollManager.GetPollById(this.PollId);
+            if (poll == null&& !String.IsNullOrEmpty(this.SystemKeyword))
+                poll = PollManager.GetPollBySystemKeyword(this.SystemKeyword);
+            if (poll != null)
             {
-                int pollAnswerId = Convert.ToInt32(rblPollAnswers.SelectedItem.Value);
-                PollManager.CreatePollVotingRecord(pollAnswerId, NopContext.Current.User.CustomerId);
+                if (!PollManager.PollVotingRecordExists(poll.PollId, NopContext.Current.User.CustomerId))
+                {
+                    int pollAnswerId = Convert.ToInt32(rblPollAnswers.SelectedItem.Value);
+                    PollManager.CreatePollVotingRecord(pollAnswerId, NopContext.Current.User.CustomerId);
+                }
             }
-
-            BindData(true);
+            BindData();
         }
 
         protected void dlResults_ItemDataBound(object sender, DataListItemEventArgs e)
         {
-            var imgPercentage = (Image)e.Item.FindControl("imgPercentage");
-            var lblPercentage = (Label)e.Item.FindControl("lblPercentage");
+            //var imgPercentage = (Image)e.Item.FindControl("imgPercentage");
+            var lPercentage = (Literal)e.Item.FindControl("lPercentage");
 
             var poll = PollManager.GetPollById(this.PollId);
+            if (poll == null && !String.IsNullOrEmpty(this.SystemKeyword))
+                poll = PollManager.GetPollBySystemKeyword(this.SystemKeyword);
             if (poll != null)
             {
                 int pollAnswerVoteCount = (int)DataBinder.Eval(e.Item.DataItem, "Count");
@@ -120,13 +139,13 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 if (pollTotalVoteCount > 0)
                 {
                     double pct = (Convert.ToDouble(pollAnswerVoteCount) / Convert.ToDouble(pollTotalVoteCount)) * Convert.ToDouble(100);
-                    lblPercentage.Text = pct.ToString("0.0") + "%";
-                    imgPercentage.Width = Unit.Percentage(pct);
+                    lPercentage.Text = pct.ToString("0.0") + "%";
+                    //imgPercentage.Width = Unit.Percentage(pct);
                 }
                 else
                 {
-                    lblPercentage.Text = "0%";
-                    imgPercentage.Visible = false;
+                    lPercentage.Text = "0%";
+                    //imgPercentage.Visible = false;
                 }
             }
         }
@@ -141,6 +160,22 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     return (int)ViewState["PollId"];
             }
             set { ViewState["PollId"] = value; }
+        }
+
+        public string SystemKeyword
+        {
+            get
+            {
+                object obj2 = this.ViewState["SystemKeyword"];
+                if (obj2 != null)
+                    return (string)obj2;
+                else
+                    return string.Empty;
+            }
+            set
+            {
+                this.ViewState["SystemKeyword"] = value;
+            }
         }
     }
 }
