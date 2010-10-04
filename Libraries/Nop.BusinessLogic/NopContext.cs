@@ -396,7 +396,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic
             get
             {
                 var customer = NopContext.Current.User;
-                var publishedLanguages = LanguageManager.GetAllLanguages(false);
                 if (customer != null)
                 {
                     var customerLanguage = customer.Language;
@@ -410,6 +409,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic
                         if (customerLanguage != null && customerLanguage.Published)
                             return customerLanguage;
                 }
+                var publishedLanguages = LanguageManager.GetAllLanguages(false);
                 foreach (var _language in publishedLanguages)
                     return _language;
 
