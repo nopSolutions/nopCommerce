@@ -354,3 +354,14 @@ BEGIN
 
 END
 GO
+
+
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[Nop_Setting]
+		WHERE [Name] = N'Display.Products.ShowCategoryProductNumber.IncludeSubCategories')
+BEGIN
+	INSERT [dbo].[Nop_Setting] ([Name], [Value], [Description])
+	VALUES (N'Display.Products.ShowCategoryProductNumber.IncludeSubCategories', N'True', N'')
+END
+GO

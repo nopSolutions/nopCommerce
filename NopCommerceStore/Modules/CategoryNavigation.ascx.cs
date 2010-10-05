@@ -90,14 +90,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             }
         }
         #endregion
-
-        #region Handlers
-        protected void Page_Load(object sender, EventArgs e)
-        {
-
-        }
-        #endregion
-
+        
         #region Overrides
         protected override void CreateChildControls()
         {
@@ -111,6 +104,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
         #endregion
 
         #region Utilities
+
         protected void CreateMenu()
         {
             List<Category> breadCrumb = null;
@@ -134,6 +128,25 @@ namespace NopSolutions.NopCommerce.Web.Modules
             CreateChildMenu(breadCrumb, 0, currentCategory, 0);
         }
 
+        protected int GetNumberOfProducts(Category category, bool includeSubCategories)
+        {
+            int numberOfProducts = 0;
+            var products = ProductManager.GetAllProducts(category.CategoryId,
+                        0, 0, null, null, null, string.Empty, false, 1, 0,
+                        null, ProductSortingEnum.Position, out numberOfProducts);
+
+            if (includeSubCategories)
+            {
+                var subCategories = CategoryManager.GetAllCategoriesByParentCategoryId(category.CategoryId);
+                foreach (var subCategory in subCategories)
+                {
+                    int tmp1 = GetNumberOfProducts(subCategory, includeSubCategories);
+                    numberOfProducts += tmp1;
+                }
+            }
+            return numberOfProducts;
+        }
+
         protected void CreateChildMenu(List<Category> breadCrumb, int rootCategoryId, Category currentCategory, int level)
         {
             int padding = level++ * 15;
@@ -151,15 +164,13 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 string catName = string.Empty;
                 if (SettingManager.GetSettingValueBoolean("Display.Products.ShowCategoryProductNumber"))
                 {
-                    int numberOfProducts = 0;
-                    var productCollection = ProductManager.GetAllProducts(category.CategoryId,
-                        0, 0, null, null, null, string.Empty, false, 1, 0, 
-                        null, ProductSortingEnum.Position, out numberOfProducts);
-
+                    //display category name with assigned products number
+                    int numberOfProducts = GetNumberOfProducts(category, SettingManager.GetSettingValueBoolean("Display.Products.ShowCategoryProductNumber.IncludeSubCategories"));
                     catName = string.Format("{0} ({1})", category.LocalizedName, numberOfProducts);
                 }
                 else
                 {
+                    //display only category name
                     catName = category.LocalizedName;
                 }
                 link.HyperLink.Text = Server.HtmlEncode(catName);
@@ -171,6 +182,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                         CreateChildMenu(breadCrumb, category.CategoryId, currentCategory, level);
             }
         }
+        
         #endregion
     }
 }
