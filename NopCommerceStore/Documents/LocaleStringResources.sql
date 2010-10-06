@@ -311,6 +311,15 @@ set @resources='
   <LocaleResource Name="PollBlock.Title">
     <Value>Community Poll</Value>
   </LocaleResource>
+  <LocaleResource Name="PDFInvoice.OrderNotes">
+    <Value>Order notes:</Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFInvoice.OrderNotes.CreatedOn">
+    <Value>Created on</Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFInvoice.OrderNotes.Note">
+    <Value>Note</Value>
+  </LocaleResource>
 </Language>
 '
 

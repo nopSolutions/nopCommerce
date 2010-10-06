@@ -537,6 +537,44 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Utils
             p12.Format.Font.Color = Colors.Black;
             p12.Format.Alignment = ParagraphAlignment.Right;
 
+            //order notes
+            bool printOrderNotesToPDF = SettingManager.GetSettingValueBoolean("PDFInvoice.RenderOrderNotes");
+            if (printOrderNotesToPDF)
+            {
+                var orderNotes = OrderManager.GetOrderNoteByOrderId(order.OrderId, false);
+                if (orderNotes.Count > 0)
+                {
+                    Paragraph p14 = sec.AddParagraph(LocalizationManager.GetLocaleResourceString("PDFInvoice.OrderNotes", languageId));
+                    p14.Format.Font.Bold = true;
+                    p14.Format.Font.Color = Colors.Black;
+
+                    sec.AddParagraph();
+
+                    var tbl1 = sec.AddTable();
+
+                    tbl1.Borders.Visible = true;
+                    tbl1.Borders.Width = 1;
+
+                    tbl1.AddColumn(Unit.FromCentimeter(6));
+                    tbl1.AddColumn(Unit.FromCentimeter(12));
+
+                    Row header1 = tbl1.AddRow();
+
+                    header1.Cells[0].AddParagraph(LocalizationManager.GetLocaleResourceString("PDFInvoice.OrderNotes.CreatedOn", languageId));
+                    header1.Cells[0].Format.Alignment = ParagraphAlignment.Center;
+
+                    header1.Cells[1].AddParagraph(LocalizationManager.GetLocaleResourceString("PDFInvoice.OrderNotes.Note", languageId));
+                    header1.Cells[1].Format.Alignment = ParagraphAlignment.Center;
+
+                    foreach (var orderNote in orderNotes)
+                    {
+                        Row noteRow = tbl1.AddRow();
+
+                        noteRow.Cells[0].AddParagraph(DateTimeHelper.ConvertToUserTime(orderNote.CreatedOn, DateTimeKind.Utc).ToString());
+                        noteRow.Cells[1].AddParagraph(HtmlHelper.ConvertHtmlToPlainText(OrderManager.FormatOrderNoteText(orderNote.Note)).ToString());
+                    }
+                }
+            }
 
             PdfDocumentRenderer renderer = new PdfDocumentRenderer(true, PdfSharp.Pdf.PdfFontEmbedding.Always);
             renderer.Document = doc;

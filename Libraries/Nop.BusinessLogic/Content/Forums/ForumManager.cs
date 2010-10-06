@@ -1600,12 +1600,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         {
             if (String.IsNullOrEmpty(subject))
                 return subject;
-            int StrippedTopicMaxLength = SettingManager.GetSettingValueInteger("Forums.StrippedTopicMaxLength", 45);
-            if (StrippedTopicMaxLength > 0)
+            int strippedTopicMaxLength = SettingManager.GetSettingValueInteger("Forums.StrippedTopicMaxLength", 45);
+            if (strippedTopicMaxLength > 0)
             {
-                if (subject.Length > StrippedTopicMaxLength)
+                if (subject.Length > strippedTopicMaxLength)
                 {
-                    int index = subject.IndexOf(" ", StrippedTopicMaxLength);
+                    int index = subject.IndexOf(" ", strippedTopicMaxLength);
                     if (index > 0)
                     {
                         subject = subject.Substring(0, index);
