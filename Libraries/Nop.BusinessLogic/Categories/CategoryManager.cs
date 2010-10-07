@@ -23,6 +23,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Caching;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Data;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
+using NopSolutions.NopCommerce.BusinessLogic.Security;
 using NopSolutions.NopCommerce.Common.Utils;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Categories
@@ -41,8 +42,34 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
         private const string PRODUCTCATEGORIES_PATTERN_KEY = "Nop.productcategory.";
 
         #endregion
-        
+
         #region Methods
+
+        /// <summary>
+        /// Is access denied
+        /// </summary>
+        /// <param name="category">Category</param>
+        /// <returns>true - access is denied; otherwise, false</returns>
+        public static bool IsCategoryAccessDenied(Category category)
+        {
+            var context = ObjectContextHelper.CurrentObjectContext;
+            return IsCategoryAccessDenied(category, context);
+        }
+
+        /// <summary>
+        /// Is access denied
+        /// </summary>
+        /// <param name="category">Category</param>
+        /// <param name="context">context</param>
+        /// <returns>true - access is denied; otherwise, false</returns>
+        public static bool IsCategoryAccessDenied(Category category, NopObjectContext context)
+        {
+            if (category == null)
+                throw new ArgumentNullException("category");
+
+            return category.IsAccessDenied(context);
+        }
+
         /// <summary>
         /// Marks category as deleted
         /// </summary>
@@ -88,8 +115,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
             bool showHidden = NopContext.Current.IsAdmin;
             return GetAllCategories(showHidden);
         }
-
-
+        
         /// <summary>
         /// Gets all categories
         /// </summary>
@@ -103,6 +129,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
                         where (showHidden || c.Published) &&
                         !c.Deleted
                         select c;
+
+            //filter by access control list (public store)
+            if (!showHidden)
+            {
+                query = query.WhereAclPerObjectNotDenied(context);
+            }
             var unsortedCategories = query.ToList();
 
             //sort categories
@@ -139,6 +171,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
                         !c.Deleted && 
                         c.ParentCategoryId == parentCategoryId
                         select c;
+
+            //filter by access control list (public store)
+            if (!showHidden)
+            {
+                query = query.WhereAclPerObjectNotDenied(context);
+            }
+
             var categories = query.ToList();
             return categories;
         }
@@ -156,6 +195,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
                         orderby c.DisplayOrder
                         where (showHidden || c.Published) && !c.Deleted && c.ShowOnHomePage
                         select c;
+
+            //filter by access control list (public store)
+            if (!showHidden)
+            {
+                query = query.WhereAclPerObjectNotDenied(context);
+            }
+
             var categories = query.ToList();
             return categories;
         }
@@ -176,13 +222,20 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
             {
                 return (Category)obj2;
             }
+            
+            bool showHidden = NopContext.Current.IsAdmin;
 
             var context = ObjectContextHelper.CurrentObjectContext;
             var query = from c in context.Categories
                         where c.CategoryId == categoryId
                         select c;
             var category = query.SingleOrDefault();
-
+            
+            //filter by access control list (public store)
+            if (!showHidden && IsCategoryAccessDenied(category))
+            {
+                category = null;
+            }
             if (CategoryManager.CategoriesCacheEnabled)
             {
                 NopRequestCache.Add(key, category);
@@ -198,8 +251,15 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
         public static List<Category> GetBreadCrumb(int categoryId)
         {
             var breadCrumb = new List<Category>();
+
             var category = GetCategoryById(categoryId);
-            while (category != null && !category.Deleted && category.Published)
+
+            bool showHidden = NopContext.Current.IsAdmin;
+
+            while (category != null && //category is not null
+                !category.Deleted && //category is not deleted
+                category.Published && //category is published
+                (showHidden || !IsCategoryAccessDenied(category))) //access is allowed (in public store)
             {
                 breadCrumb.Add(category);
                 category = category.ParentCategory;

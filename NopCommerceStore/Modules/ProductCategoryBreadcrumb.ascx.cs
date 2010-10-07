@@ -51,11 +51,15 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 var productCategories = product.ProductCategories;
                 if (productCategories.Count > 0)
                 {
-                    var breadCrumb = CategoryManager.GetBreadCrumb(productCategories[0].CategoryId);
-                    if (breadCrumb.Count > 0)
+                    var category = productCategories[0].Category;
+                    if (category != null)
                     {
-                        rptrCategoryBreadcrumb.DataSource = breadCrumb;
-                        rptrCategoryBreadcrumb.DataBind();
+                        var breadCrumb = CategoryManager.GetBreadCrumb(category.CategoryId);
+                        if (breadCrumb.Count > 0)
+                        {
+                            rptrCategoryBreadcrumb.DataSource = breadCrumb;
+                            rptrCategoryBreadcrumb.DataBind();
+                        }
                     }
                 }
 

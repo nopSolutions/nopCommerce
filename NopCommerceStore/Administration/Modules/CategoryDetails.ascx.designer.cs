@@ -121,6 +121,24 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         protected global::NopSolutions.NopCommerce.Web.Administration.Modules.CategoryDiscountControl ctrlCategoryDiscount;
         
         /// <summary>
+        /// pnlACL control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::AjaxControlToolkit.TabPanel pnlACL;
+        
+        /// <summary>
+        /// ctrlCategoryACL control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.CategoryACLControl ctrlCategoryACL;
+        
+        /// <summary>
         /// cbDelete control.
         /// </summary>
         /// <remarks>

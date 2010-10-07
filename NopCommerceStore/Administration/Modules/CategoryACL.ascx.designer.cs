@@ -10,15 +10,15 @@
 namespace NopSolutions.NopCommerce.Web.Administration.Modules {
     
     
-    public partial class CategoryDiscountControl {
+    public partial class CategoryACLControl {
         
         /// <summary>
-        /// DiscountMappingControl control.
+        /// ctrlRoles control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.SelectDiscountsControl DiscountMappingControl;
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.SelectCustomerRolesControl ctrlRoles;
     }
 }

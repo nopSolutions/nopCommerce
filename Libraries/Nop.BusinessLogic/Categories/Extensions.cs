@@ -16,6 +16,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using NopSolutions.NopCommerce.BusinessLogic.Data;
+using NopSolutions.NopCommerce.BusinessLogic.Security;
 
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Categories
@@ -56,6 +58,69 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
                 result.Add(cat);
                 result.AddRange(SortCategoriesForTree(source, cat.CategoryId));
             }
+            return result;
+        }
+
+        /// <summary>
+        /// Filter query results by ACL per object
+        /// </summary>
+        /// <param name="query">Source query</param>
+        /// <param name="context">context</param>
+        /// <returns>Result</returns>
+        public static IQueryable<Category> WhereAclPerObjectNotDenied(this IQueryable<Category> query, NopObjectContext context)
+        {
+            List<int> customerRoleIds = new List<int>();
+            if (NopContext.Current.User != null)
+            {
+                //customer roles
+                var crQuery = from cr in NopContext.Current.User.CustomerRoles
+                              orderby cr.CustomerRoleId
+                              select cr.CustomerRoleId;
+
+                //ACL query
+                query = query.Where(c => (from acl in context.ACLPerObject
+                                          where acl.ObjectId == c.CategoryId &&
+                                          acl.ObjectTypeId == (int)ObjectTypeEnum.Category &&
+                                          acl.Deny == true &&
+                                          //crQuery.Count > 0 &&
+                                          crQuery.Contains(acl.CustomerRoleId)
+                                          select acl.CustomerRoleId).Count() == 0);
+            }
+
+            return query;
+        }
+
+        /// <summary>
+        /// Is access denied
+        /// </summary>
+        /// <param name="category">Category</param>
+        /// <param name="context">context</param>
+        /// <returns>true - access is denied; otherwise, false</returns>
+        public static bool IsAccessDenied(this Category category, NopObjectContext context)
+        {
+            if (category == null)
+                throw new ArgumentNullException("category");
+
+            bool result = false;
+            if (NopContext.Current.User != null)
+            {
+                //customer roles
+                var crQuery = from cr in NopContext.Current.User.CustomerRoles
+                              orderby cr.CustomerRoleId
+                              select cr.CustomerRoleId;
+
+                //ACL query
+                var query = from acl in context.ACLPerObject
+                            where acl.ObjectId == category.CategoryId &&
+                            acl.ObjectTypeId == (int)ObjectTypeEnum.Category &&
+                            acl.Deny == true &&
+                            //crQuery.Count > 0 &&
+                            crQuery.Contains(acl.CustomerRoleId)
+                            select acl.CustomerRoleId;
+
+                result = query.ToList().Count > 0;
+            }
+
             return result;
         }
     }

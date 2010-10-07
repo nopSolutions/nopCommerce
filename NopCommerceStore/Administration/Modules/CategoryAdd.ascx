@@ -3,6 +3,7 @@
 <%@ Register TagPrefix="nopCommerce" TagName="CategoryInfo" Src="CategoryInfo.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="CategorySEO" Src="CategorySEO.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="CategoryDiscount" Src="CategoryDiscount.ascx" %>
+<%@ Register TagPrefix="nopCommerce" TagName="CategoryACL" Src="CategoryACL.ascx" %>
 <div class="section-header">
     <div class="title">
         <img src="Common/ico-catalog.png" alt="<%=GetLocaleResourceString("Admin.CategoryAdd.AddNewCategory")%>" />
@@ -29,6 +30,11 @@
     <ajaxToolkit:TabPanel runat="server" ID="pnlDiscountMappings" HeaderText="<% $NopResources:Admin.CategoryAdd.Discounts %>">
         <ContentTemplate>
             <nopCommerce:CategoryDiscount ID="ctrlCategoryDiscount" runat="server" />
+        </ContentTemplate>
+    </ajaxToolkit:TabPanel>
+    <ajaxToolkit:TabPanel runat="server" ID="pnlACL" HeaderText="<% $NopResources:Admin.CategoryAdd.ACL %>">
+        <ContentTemplate>
+            <nopCommerce:CategoryACL ID="ctrlCategoryACL" runat="server" />
         </ContentTemplate>
     </ajaxToolkit:TabPanel>
 </ajaxToolkit:TabContainer>

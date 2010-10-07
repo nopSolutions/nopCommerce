@@ -378,3 +378,35 @@ END
 GO
 
 
+
+--ACL per object
+IF NOT EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[dbo].[Nop_ACLPerObject]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+BEGIN
+CREATE TABLE [dbo].[Nop_ACLPerObject](
+	[ACLPerObjectId] int IDENTITY(1,1) NOT NULL,
+	[ObjectId] int NOT NULL,
+	[ObjectTypeId] int NOT NULL,
+	[CustomerRoleId] int NOT NULL,
+	[Deny] bit NOT NULL,
+ CONSTRAINT [PK_ACLPerObject] PRIMARY KEY CLUSTERED 
+(
+	[ACLPerObjectId] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 80) ON [PRIMARY]
+) ON [PRIMARY]
+END
+GO
+
+
+IF EXISTS (SELECT 1
+           FROM   sysobjects
+           WHERE  name = 'FK_Nop_ACLPerObject_Nop_CustomerRole'
+           AND parent_obj = Object_id('Nop_ACLPerObject')
+           AND Objectproperty(id,N'IsForeignKey') = 1)
+ALTER TABLE dbo.Nop_ACLPerObject
+DROP CONSTRAINT FK_Nop_ACLPerObject_Nop_CustomerRole
+GO
+ALTER TABLE [dbo].[Nop_ACLPerObject]  WITH CHECK ADD  CONSTRAINT [FK_Nop_ACLPerObject_Nop_CustomerRole] FOREIGN KEY([CustomerRoleId])
+REFERENCES [dbo].[Nop_CustomerRole] ([CustomerRoleId])
+ON UPDATE CASCADE
+ON DELETE CASCADE
+GO

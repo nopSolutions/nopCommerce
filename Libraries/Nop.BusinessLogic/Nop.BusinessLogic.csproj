@@ -283,6 +283,8 @@
     <Compile Include="QuickBooks\SynStateEnum.cs" />
     <Compile Include="Security\BannedIpAddress.cs" />
     <Compile Include="Security\ACL.cs" />
+    <Compile Include="Security\ACLPerObject.cs" />
+    <Compile Include="Security\ObjectTypeEnum.cs" />
     <Compile Include="Security\CustomerAction.cs" />
     <Compile Include="Security\ACLManager.cs" />
     <Compile Include="Security\IpBlacklistManager.cs" />

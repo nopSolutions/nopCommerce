@@ -320,6 +320,18 @@ set @resources='
   <LocaleResource Name="PDFInvoice.OrderNotes.Note">
     <Value>Note</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.CategoryAdd.ACL">
+    <Value>Access control</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CategoryDetails.ACL">
+    <Value>Access control</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CategoryACL.Note">
+    <Value>NOTE: ACL rules applied to public store.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CategoryACL.MarkRequired">
+    <Value>Mark all customer roles you want to restrict access to this category</Value>
+  </LocaleResource>
 </Language>
 '
 

@@ -116,7 +116,9 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 {
                     var productCategories = product.ProductCategories;
                     if (productCategories.Count > 0)
+                    {
                         currentCategory = productCategories[0].Category;
+                    }
                 }
             }
 

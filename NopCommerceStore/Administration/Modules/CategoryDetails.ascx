@@ -4,6 +4,7 @@
 <%@ Register TagPrefix="nopCommerce" TagName="CategorySEO" Src="CategorySEO.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="CategoryProduct" Src="CategoryProduct.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="CategoryDiscount" Src="CategoryDiscount.ascx" %>
+<%@ Register TagPrefix="nopCommerce" TagName="CategoryACL" Src="CategoryACL.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="ConfirmationBox" Src="ConfirmationBox.ascx" %>
 
 <div class="section-header">
@@ -41,6 +42,11 @@
     <ajaxToolkit:TabPanel runat="server" ID="pnlDiscountMappings" HeaderText="<% $NopResources:Admin.CategoryDetails.Discounts %>">
         <ContentTemplate>
             <nopCommerce:CategoryDiscount ID="ctrlCategoryDiscount" runat="server" />
+        </ContentTemplate>
+    </ajaxToolkit:TabPanel>
+    <ajaxToolkit:TabPanel runat="server" ID="pnlACL" HeaderText="<% $NopResources:Admin.CategoryDetails.ACL %>">
+        <ContentTemplate>
+            <nopCommerce:CategoryACL ID="ctrlCategoryACL" runat="server" />
         </ContentTemplate>
     </ajaxToolkit:TabPanel>
 </ajaxToolkit:TabContainer>

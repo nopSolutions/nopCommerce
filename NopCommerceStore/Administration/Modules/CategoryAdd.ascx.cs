@@ -50,6 +50,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     Category category = ctrlCategoryInfo.SaveInfo();
                     ctrlCategorySEO.SaveInfo(category.CategoryId);
                     ctrlCategoryDiscount.SaveInfo(category.CategoryId);
+                    ctrlCategoryACL.SaveInfo(category.CategoryId);
 
                     CustomerActivityManager.InsertActivity(
                         "AddNewCategory",

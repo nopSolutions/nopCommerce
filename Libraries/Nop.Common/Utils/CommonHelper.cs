@@ -441,7 +441,7 @@ namespace NopSolutions.NopCommerce.Common.Utils
             else
             {
                 if (!String.IsNullOrEmpty(ConfigurationManager.AppSettings["UseSSL"])
-                    && Convert.ToBoolean(ConfigurationManager.AppSettings["UseSSL"])) ;
+                    && Convert.ToBoolean(ConfigurationManager.AppSettings["UseSSL"]));
                 {
                     //SSL is enabled
                     

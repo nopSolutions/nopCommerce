@@ -69,6 +69,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             var productCategories = CategoryManager.GetProductCategoriesByProductId(productVariant.ProductId);
             foreach (var _productCategory in productCategories)
             {
+                //UNDONE should we filter categories by ACL here?
                 var _categoryDiscounts = DiscountManager.GetDiscountsByCategoryId(_productCategory.CategoryId);
                 foreach (var _discount in _categoryDiscounts)
                 {

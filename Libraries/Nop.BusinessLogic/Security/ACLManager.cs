@@ -45,6 +45,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
 
         #region Methods
 
+        #region ACL
+
         /// <summary>
         /// Deletes a customer action
         /// </summary>
@@ -195,7 +197,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
 
             return customerAction;
         }
-        
+
         /// <summary>
         /// Deletes an ACL
         /// </summary>
@@ -330,7 +332,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
         {
             if (!ACLManager.Enabled)
                 return true;
-            
+
             var context = ObjectContextHelper.CurrentObjectContext;
 
             var query = from c in context.Customers
@@ -347,6 +349,130 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
             bool result = query.Count() > 0;
             return result;
         }
+
+        #endregion
+
+        #region ACL per object
+
+        /// <summary>
+        /// Deletes an ACL per object entry
+        /// </summary>
+        /// <param name="aclPerObjectId">ACL per object entry identifier</param>
+        public static void DeleteAclPerObject(int aclPerObjectId)
+        {
+            var aclPerObject = GetAclPerObjectById(aclPerObjectId);
+            if (aclPerObject == null)
+                return;
+
+            var context = ObjectContextHelper.CurrentObjectContext;
+            if (!context.IsAttached(aclPerObject))
+                context.ACLPerObject.Attach(aclPerObject);
+            context.DeleteObject(aclPerObject);
+            context.SaveChanges();
+        }
+
+        /// <summary>
+        /// Gets an ACL per object entry by identifier
+        /// </summary>
+        /// <param name="aclId">ACL per object entry identifier</param>
+        /// <returns>ACL per object entry</returns>
+        public static ACLPerObject GetAclPerObjectById(int aclPerObjectId)
+        {
+            if (aclPerObjectId == 0)
+                return null;
+
+            var context = ObjectContextHelper.CurrentObjectContext;
+            var query = from a in context.ACLPerObject
+                        where a.ACLPerObjectId == aclPerObjectId
+                        select a;
+            var aclPerObject = query.SingleOrDefault();
+            return aclPerObject;
+        }
+
+        /// <summary>
+        /// Gets all ACL per object entries
+        /// </summary>
+        /// <param name="objectId">Object identifier; 0 to load all records</param>
+        /// <param name="objectTypeId">Object type identifier; 0 to load all records</param>
+        /// <param name="customerRoleId">Customer role identifier; 0 to load all records</param>
+        /// <param name="deny">Value indicating whether action is denied; null to load all records</param>
+        /// <returns>ACL per object entries</returns>
+        public static List<ACLPerObject> GetAllAclPerObject(int objectId, int objectTypeId,
+            int customerRoleId, bool? deny)
+        {
+            var context = ObjectContextHelper.CurrentObjectContext;
+            var query = (IQueryable<ACLPerObject>)context.ACLPerObject;
+            if (objectId > 0)
+                query = query.Where(a => a.ObjectId == objectId);
+            if (objectTypeId > 0)
+                query = query.Where(a => a.ObjectTypeId == objectTypeId);
+            if (customerRoleId > 0)
+                query = query.Where(a => a.CustomerRoleId == customerRoleId);
+            if (deny.HasValue)
+                query = query.Where(a => a.Deny == deny.Value);
+            query = query.OrderByDescending(a => a.ACLPerObjectId);
+
+            var aclCollection = query.ToList();
+
+            return aclCollection;
+        }
+
+        /// <summary>
+        /// Inserts an ACL per object entry
+        /// </summary>
+        /// <param name="objectId">The object identifier</param>
+        /// <param name="objectType">The object type</param>
+        /// <param name="customerRoleId">The customer role identifier</param>
+        /// <param name="deny">The value indicating whether action is not allowed</param>
+        /// <returns>An ACL per object entry</returns>
+        public static ACLPerObject InsertAclPerObject(int objectId, ObjectTypeEnum objectType,
+            int customerRoleId, bool deny)
+        {
+            var context = ObjectContextHelper.CurrentObjectContext;
+
+            var aclPerObject = context.ACLPerObject.CreateObject();
+            aclPerObject.ObjectId = objectId;
+            aclPerObject.ObjectTypeId = (int)objectType;
+            aclPerObject.CustomerRoleId = customerRoleId;
+            aclPerObject.Deny = deny;
+
+            context.ACLPerObject.AddObject(aclPerObject);
+            context.SaveChanges();
+
+            return aclPerObject;
+        }
+
+        /// <summary>
+        /// Updates the ACL per object entry
+        /// </summary>
+        /// <param name="aclPerObjectId">The ACL per object entry identifier</param>
+        /// <param name="objectId">The object identifier</param>
+        /// <param name="objectType">The object type</param>
+        /// <param name="customerRoleId">The customer role identifier</param>
+        /// <param name="deny">The value indicating whether action is not allowed</param>
+        /// <returns>An ACL per object entry</returns>
+        public static ACLPerObject UpdateAclPerObject(int aclPerObjectId, int objectId,
+            ObjectTypeEnum objectType, int customerRoleId, bool deny)
+        {
+            var aclPerObject = GetAclPerObjectById(aclPerObjectId);
+            if (aclPerObject == null)
+                return null;
+
+            var context = ObjectContextHelper.CurrentObjectContext;
+            if (!context.IsAttached(aclPerObject))
+                context.ACLPerObject.Attach(aclPerObject);
+
+            aclPerObject.ObjectId = objectId;
+            aclPerObject.ObjectTypeId = (int)objectType;
+            aclPerObject.CustomerRoleId = customerRoleId;
+            aclPerObject.Deny = deny;
+            context.SaveChanges();
+
+            return aclPerObject;
+        }
+
+
+        #endregion
 
         #endregion
 

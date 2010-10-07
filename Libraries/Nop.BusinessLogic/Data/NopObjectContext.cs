@@ -122,6 +122,22 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         private ObjectSet<ACL> _acl;
 
         /// <summary>
+        /// Gets an ACLPerObject instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// </summary>
+        public ObjectSet<ACLPerObject> ACLPerObject
+        {
+            get
+            {
+                if ((_aclPerObject == null))
+                {
+                    _aclPerObject = CreateObjectSet<ACLPerObject>();
+                }
+                return _aclPerObject;
+            }
+        }
+        private ObjectSet<ACLPerObject> _aclPerObject;
+
+        /// <summary>
         /// Gets an ActivityLog instance that is used to query, add, modify, and delete objects of the specified entity type.
         /// </summary>
         public ObjectSet<ActivityLog> ActivityLog

@@ -58,6 +58,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     ctrlCategorySEO.SaveInfo();
                     ctrlCategoryProduct.SaveInfo();
                     ctrlCategoryDiscount.SaveInfo();
+                    ctrlCategoryACL.SaveInfo();
 
                     CustomerActivityManager.InsertActivity(
                         "EditCategory",
