@@ -385,7 +385,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 lTaxRateTitle.Text = String.Format(GetLocaleResourceString("Order.Totals.TaxRate"), TaxManager.FormatTaxRate(item.Key));
 
                 var lTaxRateValue = e.Item.FindControl("lTaxRateValue") as Literal;
-                lTaxRateValue.Text = PriceHelper.FormatPrice(item.Value, true, false);
+                lTaxRateValue.Text = PriceHelper.FormatPrice(item.Value, true, order.CustomerCurrencyCode, false);
             }
         }
 

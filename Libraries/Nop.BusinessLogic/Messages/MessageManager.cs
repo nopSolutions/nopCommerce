@@ -326,7 +326,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
                 foreach (var item in taxRates)
                 {
                     string taxRate = String.Format(LocalizationManager.GetLocaleResourceString("Order.Totals.TaxRate"), TaxManager.FormatTaxRate(item.Key));
-                    string taxValue = PriceHelper.FormatPrice(item.Value, true, false);
+                    string taxValue = PriceHelper.FormatPrice(item.Value, true, order.CustomerCurrencyCode, false);
                     sb.AppendLine(string.Format("<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{1}</strong></td> <td style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{2}</strong></td></tr>", color3, taxRate, taxValue));
                 }
             }
