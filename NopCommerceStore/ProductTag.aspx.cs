@@ -37,8 +37,20 @@ namespace NopSolutions.NopCommerce.Web
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            string title = GetLocaleResourceString("PageTitle.ProductTags");
-            SEOHelper.RenderTitle(this.Page, title, true);
+            var productTag = ProductManager.GetProductTagById(this.ProductTagId);
+            if (productTag != null)
+            {
+                string title = string.Format(GetLocaleResourceString("PageTitle.ProductTags"), productTag.Name);
+                SEOHelper.RenderTitle(this.Page, title, true);
+            }
+        }
+
+        public int ProductTagId
+        {
+            get
+            {
+                return CommonHelper.QueryStringInt("tagid");
+            }
         }
     }
 }

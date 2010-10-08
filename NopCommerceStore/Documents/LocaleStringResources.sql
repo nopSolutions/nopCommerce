@@ -332,6 +332,9 @@ set @resources='
   <LocaleResource Name="Admin.CategoryACL.MarkRequired">
     <Value>Mark all customer roles you want to restrict access to this category</Value>
   </LocaleResource>
+  <LocaleResource Name="PageTitle.ProductTags">
+    <Value>Products tagged with ''{0}''</Value>
+  </LocaleResource>
 </Language>
 '
 
