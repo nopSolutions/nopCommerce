@@ -51,11 +51,19 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         private void BindData()
         {
+            //froogle
             cbAllowPublicFroogleAccess.Checked = SettingManager.GetSettingValueBoolean("Froogle.AllowPublicFroogleAccess");
+            txtFroogleProductThumbSize.Value = SettingManager.GetSettingValueInteger("PromotionProvider.Froogle.ProductThumbnailImageSize");
             txtFroogleFTPHostname.Text = SettingManager.GetSettingValue("Froogle.FTPHostname");
             txtFroogleFTPFilename.Text = SettingManager.GetSettingValue("Froogle.FTPFilename");
             txtFroogleFTPUsername.Text = SettingManager.GetSettingValue("Froogle.FTPUsername");
             txtFroogleFTPPassword.Text = SettingManager.GetSettingValue("Froogle.FTPPassword");
+
+            //price grabber
+            txtPriceGrabberProductThumbSize.Value = SettingManager.GetSettingValueInteger("PromotionProvider.PriceGrabber.ProductThumbnailImageSize");
+
+            //become.com
+            txtBecomeProductThumbSize.Value = SettingManager.GetSettingValueInteger("PromotionProvider.BecomeCom.ProductThumbnailImageSize");
         }
 
         private void FillDropDowns()
@@ -75,14 +83,24 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 try
                 {
+                    //froogle
                     SettingManager.SetParam("Froogle.AllowPublicFroogleAccess", cbAllowPublicFroogleAccess.Checked.ToString());
+                    SettingManager.SetParam("PromotionProvider.Froogle.ProductThumbnailImageSize", txtFroogleProductThumbSize.Value.ToString());
                     SettingManager.SetParam("Froogle.FTPHostname", txtFroogleFTPHostname.Text);
                     SettingManager.SetParam("Froogle.FTPFilename", txtFroogleFTPFilename.Text);
                     SettingManager.SetParam("Froogle.FTPUsername", txtFroogleFTPUsername.Text);
                     SettingManager.SetParam("Froogle.FTPPassword", txtFroogleFTPPassword.Text);
+                    
+                    //price grabber
+                    SettingManager.SetParam("PromotionProvider.PriceGrabber.ProductThumbnailImageSize", txtPriceGrabberProductThumbSize.Value.ToString());
 
+                    //become.com
+                    SettingManager.SetParam("PromotionProvider.BecomeCom.ProductThumbnailImageSize", txtBecomeProductThumbSize.Value.ToString());
+                    
+                    //activity log
                     CustomerActivityManager.InsertActivity("EditPromotionProviders", GetLocaleResourceString("ActivityLog.EditPromotionProviders"));
 
+                    //redirect
                     Response.Redirect(string.Format("PromotionProviders.aspx?TabID={0}", GetActiveTabId(PromotionProvidersTabs)));
                 }
                 catch (Exception exc)

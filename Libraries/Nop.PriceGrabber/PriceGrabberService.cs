@@ -41,9 +41,9 @@ namespace NopSolutions.NopCommerce.PriceGrabber
                         string imageUrl = string.Empty;
                         var pictures = PictureManager.GetPicturesByProductId(p.ProductId, 1);
                         if (pictures.Count > 0)
-                            imageUrl = PictureManager.GetPictureUrl(pictures[0], SettingManager.GetSettingValueInteger("Media.Product.ThumbnailImageSize"), true);
+                            imageUrl = PictureManager.GetPictureUrl(pictures[0], SettingManager.GetSettingValueInteger("PromotionProvider.PriceGrabber.ProductThumbnailImageSize"), true);
                         else
-                            imageUrl = PictureManager.GetDefaultPictureUrl(PictureTypeEnum.Entity, SettingManager.GetSettingValueInteger("Media.Product.ThumbnailImageSize"));
+                            imageUrl = PictureManager.GetDefaultPictureUrl(PictureTypeEnum.Entity, SettingManager.GetSettingValueInteger("PromotionProvider.PriceGrabber.ProductThumbnailImageSize"));
 
                         string description = pv.Description;
                         string price = pv.Price.ToString(new CultureInfo("en-US", false).NumberFormat);

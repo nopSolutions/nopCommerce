@@ -87,7 +87,7 @@ namespace NopSolutions.NopCommerce.Froogle
                         string imageUrl = string.Empty;
                         var pictures = PictureManager.GetPicturesByProductId(product.ProductId, 1);
                         if (pictures.Count > 0)
-                            imageUrl = PictureManager.GetPictureUrl(pictures[0], SettingManager.GetSettingValueInteger("Media.Product.ThumbnailImageSize"), true);
+                            imageUrl = PictureManager.GetPictureUrl(pictures[0], SettingManager.GetSettingValueInteger("PromotionProvider.Froogle.ProductThumbnailImageSize"), true);
                         writer.WriteElementString("g", "image_link", googleBaseNamespace, imageUrl);
                         decimal price = productVariant.Price;
                         writer.WriteElementString("g", "price", googleBaseNamespace, price.ToString(new CultureInfo("en-US", false).NumberFormat));

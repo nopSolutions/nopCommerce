@@ -410,3 +410,33 @@ REFERENCES [dbo].[Nop_CustomerRole] ([CustomerRoleId])
 ON UPDATE CASCADE
 ON DELETE CASCADE
 GO
+
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[Nop_Setting]
+		WHERE [Name] = N'PromotionProvider.BecomeCom.ProductThumbnailImageSize')
+BEGIN
+	INSERT [dbo].[Nop_Setting] ([Name], [Value], [Description])
+	VALUES (N'PromotionProvider.BecomeCom.ProductThumbnailImageSize', N'125', N'')
+END
+GO
+
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[Nop_Setting]
+		WHERE [Name] = N'PromotionProvider.Froogle.ProductThumbnailImageSize')
+BEGIN
+	INSERT [dbo].[Nop_Setting] ([Name], [Value], [Description])
+	VALUES (N'PromotionProvider.Froogle.ProductThumbnailImageSize', N'125', N'')
+END
+GO
+
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[Nop_Setting]
+		WHERE [Name] = N'PromotionProvider.PriceGrabber.ProductThumbnailImageSize')
+BEGIN
+	INSERT [dbo].[Nop_Setting] ([Name], [Value], [Description])
+	VALUES (N'PromotionProvider.PriceGrabber.ProductThumbnailImageSize', N'125', N'')
+END
+GO

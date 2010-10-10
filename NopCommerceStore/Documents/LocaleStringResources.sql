@@ -335,6 +335,42 @@ set @resources='
   <LocaleResource Name="PageTitle.ProductTags">
     <Value>Products tagged with ''{0}''</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.PromotionProviders.Froogle.ProductThumbSize">
+    <Value>Product thumbnail image size:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.PromotionProviders.Froogle.ProductThumbSize.Tooltip">
+    <Value>The default size (pixels) for product thumbnail images.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.PromotionProviders.Froogle.ProductThumbSize.RequiredErrorMessage">
+    <Value>Enter a product thumbnail image size</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.PromotionProviders.Froogle.ProductThumbSize.RangeErrorMessage">
+    <Value>The product thumbnail image size must be from 0 to 999999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.PromotionProviders.PriceGrabber.ProductThumbSize">
+    <Value>Product thumbnail image size:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.PromotionProviders.PriceGrabber.ProductThumbSize.Tooltip">
+    <Value>The default size (pixels) for product thumbnail images.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.PromotionProviders.PriceGrabber.ProductThumbSize.RequiredErrorMessage">
+    <Value>Enter a product thumbnail image size</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.PromotionProviders.PriceGrabber.ProductThumbSize.RangeErrorMessage">
+    <Value>The product thumbnail image size must be from 0 to 999999</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.PromotionProviders.Become.ProductThumbSize">
+    <Value>Product thumbnail image size:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.PromotionProviders.Become.ProductThumbSize.Tooltip">
+    <Value>The default size (pixels) for product thumbnail images.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.PromotionProviders.Become.ProductThumbSize.RequiredErrorMessage">
+    <Value>Enter a product thumbnail image size</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.PromotionProviders.Become.ProductThumbSize.RangeErrorMessage">
+    <Value>The product thumbnail image size must be from 0 to 999999</Value>
+  </LocaleResource>
 </Language>
 '
 

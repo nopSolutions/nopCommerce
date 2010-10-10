@@ -38,6 +38,20 @@
                         </td>
                     </tr>
                     <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
+                                ID="lblFroogleProductThumbSize" Text="<% $NopResources:Admin.PromotionProviders.Froogle.ProductThumbSize %>"
+                                ToolTip="<% $NopResources:Admin.PromotionProviders.Froogle.ProductThumbSize.Tooltip %>" />
+                        </td>
+                        <td class="adminData">
+                            <nopCommerce:NumericTextBox runat="server" CssClass="adminInput" ID="txtFroogleProductThumbSize"
+                                RequiredErrorMessage="<% $NopResources:Admin.PromotionProviders.Froogle.ProductThumbSize.RequiredErrorMessage %>"
+                                MinimumValue="0" MaximumValue="999999" RangeErrorMessage="<% $NopResources:Admin.PromotionProviders.Froogle.ProductThumbSize.RangeErrorMessage %>"
+                                Width="50px" />
+                            pixels
+                        </td>
+                    </tr>
+                    <tr>
                         <td colspan="2">
                             <asp:Button runat="server" Text="<% $NopResources:Admin.PromotionProviders.Froogle.GenerateButton.Text %>"
                                 CssClass="adminButtonBlue" ID="btnFroogleGenerate" CausesValidation="false" 
@@ -122,6 +136,20 @@
             <ContentTemplate>
                 <table class="adminContent">
                     <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
+                                ID="lblPriceGrabberProductThumbSize" Text="<% $NopResources:Admin.PromotionProviders.PriceGrabber.ProductThumbSize %>"
+                                ToolTip="<% $NopResources:Admin.PromotionProviders.PriceGrabber.ProductThumbSize.Tooltip %>" />
+                        </td>
+                        <td class="adminData">
+                            <nopCommerce:NumericTextBox runat="server" CssClass="adminInput" ID="txtPriceGrabberProductThumbSize"
+                                RequiredErrorMessage="<% $NopResources:Admin.PromotionProviders.PriceGrabber.ProductThumbSize.RequiredErrorMessage %>"
+                                MinimumValue="0" MaximumValue="999999" RangeErrorMessage="<% $NopResources:Admin.PromotionProviders.PriceGrabber.ProductThumbSize.RangeErrorMessage %>"
+                                Width="50px" />
+                            pixels
+                        </td>
+                    </tr>
+                    <tr>
                         <td colspan="2">
                             <asp:Button runat="server" Text="<% $NopResources:Admin.PromotionProviders.PriceGrabber.GenerateButton.Text %>"
                                 CssClass="adminButtonBlue" ID="btnPriceGrabberGenerate" CausesValidation="false" 
@@ -134,6 +162,20 @@
         <ajaxToolkit:TabPanel runat="server" ID="pnlBecome" HeaderText="<% $NopResources:Admin.PromotionProviders.Become.Title %>">
             <ContentTemplate>
                 <table class="adminContent">
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
+                                ID="lblBecomeProductThumbSize" Text="<% $NopResources:Admin.PromotionProviders.Become.ProductThumbSize %>"
+                                ToolTip="<% $NopResources:Admin.PromotionProviders.Become.ProductThumbSize.Tooltip %>" />
+                        </td>
+                        <td class="adminData">
+                            <nopCommerce:NumericTextBox runat="server" CssClass="adminInput" ID="txtBecomeProductThumbSize"
+                                RequiredErrorMessage="<% $NopResources:Admin.PromotionProviders.Become.ProductThumbSize.RequiredErrorMessage %>"
+                                MinimumValue="0" MaximumValue="999999" RangeErrorMessage="<% $NopResources:Admin.PromotionProviders.Become.ProductThumbSize.RangeErrorMessage %>"
+                                Width="50px" />
+                            pixels
+                        </td>
+                    </tr>
                     <tr>
                         <td colspan="2">
                             <asp:Button runat="server" Text="<% $NopResources:Admin.PromotionProviders.Become.GenerateButton.Text %>"

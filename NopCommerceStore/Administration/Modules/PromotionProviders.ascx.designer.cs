@@ -58,6 +58,24 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         protected global::System.Web.UI.WebControls.CheckBox cbAllowPublicFroogleAccess;
         
         /// <summary>
+        /// lblFroogleProductThumbSize control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblFroogleProductThumbSize;
+        
+        /// <summary>
+        /// txtFroogleProductThumbSize control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.NumericTextBox txtFroogleProductThumbSize;
+        
+        /// <summary>
         /// btnFroogleGenerate control.
         /// </summary>
         /// <remarks>
@@ -193,6 +211,24 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         protected global::AjaxControlToolkit.TabPanel pnlPriceGrabber;
         
         /// <summary>
+        /// lblPriceGrabberProductThumbSize control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblPriceGrabberProductThumbSize;
+        
+        /// <summary>
+        /// txtPriceGrabberProductThumbSize control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.NumericTextBox txtPriceGrabberProductThumbSize;
+        
+        /// <summary>
         /// btnPriceGrabberGenerate control.
         /// </summary>
         /// <remarks>
@@ -209,6 +245,24 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::AjaxControlToolkit.TabPanel pnlBecome;
+        
+        /// <summary>
+        /// lblBecomeProductThumbSize control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblBecomeProductThumbSize;
+        
+        /// <summary>
+        /// txtBecomeProductThumbSize control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.NumericTextBox txtBecomeProductThumbSize;
         
         /// <summary>
         /// btnBecomeGenerate control.
