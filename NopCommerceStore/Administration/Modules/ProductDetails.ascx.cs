@@ -43,6 +43,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             if (!Page.IsPostBack)
             {
+                Product product = ProductManager.GetProductById(this.ProductId);
+                if (product != null)
+                {
+                    lblTitle.Text = Server.HtmlEncode(product.Name);
+                }
+
                 this.SelectTab(this.ProductTabs, this.TabId);
             }
         }

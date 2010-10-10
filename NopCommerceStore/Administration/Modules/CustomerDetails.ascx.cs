@@ -40,7 +40,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             if (!Page.IsPostBack)
             {
+                Customer customer = CustomerManager.GetCustomerById(this.CustomerId);
+                if (customer != null)
+                {
+                    lblTitle.Text = Server.HtmlEncode(customer.Email);
+                }
+
                 this.SelectTab(this.CustomerTabs, this.TabId);
+
                 pnlCustomerAvatar.Visible = CustomerManager.AllowCustomersToUploadAvatars;
                 pnlCustomerForumSubscriptions.Visible = ForumManager.AllowCustomersToManageSubscriptions;
             }

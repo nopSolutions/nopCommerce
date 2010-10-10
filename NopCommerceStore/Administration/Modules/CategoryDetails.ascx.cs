@@ -44,6 +44,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             if (!Page.IsPostBack)
             {
+                Category category = CategoryManager.GetCategoryById(this.CategoryId);
+                if (category != null)
+                {
+                    lblTitle.Text = Server.HtmlEncode(category.Name);
+                }
+
                 this.SelectTab(this.CategoryTabs, this.TabId);
             }
         }

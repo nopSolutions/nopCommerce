@@ -13,6 +13,15 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
     public partial class ProductDetailsControl {
         
         /// <summary>
+        /// lblTitle control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblTitle;
+        
+        /// <summary>
         /// PreviewButton control.
         /// </summary>
         /// <remarks>

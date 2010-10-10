@@ -10,7 +10,7 @@
 <div class="section-header">
     <div class="title">
         <img src="Common/ico-catalog.png" alt="<%=GetLocaleResourceString("Admin.CategoryDetails.EditCategoryDetails")%>" />
-        <%=GetLocaleResourceString("Admin.CategoryDetails.EditCategoryDetails")%>
+        <%=GetLocaleResourceString("Admin.CategoryDetails.EditCategoryDetails")%> - <asp:Label runat="server" ID="lblTitle" />
         <a href="Categories.aspx" title="<%=GetLocaleResourceString("Admin.CategoryDetails.BackToCategoryList")%>">
             (<%=GetLocaleResourceString("Admin.CategoryDetails.BackToCategoryList")%>)</a>
     </div>

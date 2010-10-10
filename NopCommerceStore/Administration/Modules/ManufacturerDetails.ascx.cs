@@ -42,6 +42,11 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             if (!Page.IsPostBack)
             {
+                Manufacturer manufacturer = ManufacturerManager.GetManufacturerById(this.ManufacturerId);
+                if (manufacturer != null)
+                {
+                    lblTitle.Text = Server.HtmlEncode(manufacturer.Name);
+                }
                 this.SelectTab(this.ManufacturerTabs, this.TabId);
             }
         }

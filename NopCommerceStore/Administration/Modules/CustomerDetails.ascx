@@ -17,7 +17,7 @@
 <div class="section-header">
     <div class="title">
         <img src="Common/ico-customers.png" alt="<%=GetLocaleResourceString("Admin.CustomerDetails.Title")%>" />
-        <%=GetLocaleResourceString("Admin.CustomerDetails.Title")%>
+        <%=GetLocaleResourceString("Admin.CustomerDetails.Title")%> - <asp:Label runat="server" ID="lblTitle" />
         <a href="Customers.aspx" title="<%=GetLocaleResourceString("Admin.CustomerDetails.BackToCustomers")%>">
             (<%=GetLocaleResourceString("Admin.CustomerDetails.BackToCustomers")%>)</a>
     </div>
