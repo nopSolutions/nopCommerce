@@ -36,7 +36,6 @@ using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
 
 
-
 namespace NopSolutions.NopCommerce.Web.Templates.Categories
 {
     public partial class ProductsInLines1 : BaseNopUserControl
@@ -187,7 +186,6 @@ namespace NopSolutions.NopCommerce.Web.Templates.Categories
             ctrlProductSpecificationFilter.ReservedQueryStringParams += ctrlPriceRangeFilter.QueryStringProperty;
             ctrlProductSpecificationFilter.ReservedQueryStringParams += ",";
             ctrlProductSpecificationFilter.ReservedQueryStringParams += catalogPager.QueryStringProperty;
-        
         }
 
         protected override void OnPreRender(EventArgs e)

@@ -40,6 +40,60 @@ namespace NopSolutions.NopCommerce.Web.Templates.Categories {
         protected global::System.Web.UI.WebControls.Repeater rptrSubCategories;
         
         /// <summary>
+        /// pnlSorting control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlSorting;
+        
+        /// <summary>
+        /// ddlSorting control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlSorting;
+        
+        /// <summary>
+        /// pnlFilters control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlFilters;
+        
+        /// <summary>
+        /// lblProductFilterTitle control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblProductFilterTitle;
+        
+        /// <summary>
+        /// ctrlPriceRangeFilter control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Modules.PriceRangeFilterControl ctrlPriceRangeFilter;
+        
+        /// <summary>
+        /// ctrlProductSpecificationFilter control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Modules.ProductSpecificationFilterControl ctrlProductSpecificationFilter;
+        
+        /// <summary>
         /// lvCatalog control.
         /// </summary>
         /// <remarks>

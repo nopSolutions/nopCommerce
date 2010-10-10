@@ -1,5 +1,9 @@
 <%@ Control Language="C#" AutoEventWireup="true"
     Inherits="NopSolutions.NopCommerce.Web.Templates.Categories.ProductsInLines2" Codebehind="ProductsInLines2.ascx.cs" %>
+    
+<%@ Register TagPrefix="nopCommerce" TagName="PriceRangeFilter" Src="~/Modules/PriceRangeFilter.ascx" %>
+<%@ Register TagPrefix="nopCommerce" TagName="ProductSpecificationFilter" Src="~/Modules/ProductSpecificationFilter.ascx" %>
+
 <div class="category-page">
     <div class="page-title">
         <h1><asp:Literal runat="server" ID="lName"></asp:Literal></h1>
@@ -21,6 +25,28 @@
             </SeparatorTemplate>
         </asp:Repeater>
     </div>
+    <div class="clear">
+    </div>
+    <asp:Panel runat="server" ID="pnlSorting" CssClass="product-sorting">
+        <%=GetLocaleResourceString("ProductSorting.SortBy")%>
+        <asp:DropDownList ID="ddlSorting" runat="server" OnSelectedIndexChanged="ddlSorting_SelectedIndexChanged"
+            AutoPostBack="true" />
+    </asp:Panel>
+    <div class="clear">
+    </div>
+    <asp:Panel runat="server" ID="pnlFilters" CssClass="product-filters">
+        <div class="filter-title">
+            <asp:Label runat="server" ID="lblProductFilterTitle">
+                <%=GetLocaleResourceString("Products.FilterOptionsTitle")%>
+            </asp:Label>
+        </div>
+        <div class="filter-item">
+            <nopcommerce:pricerangefilter id="ctrlPriceRangeFilter" runat="server" />
+        </div>
+        <div class="filter-item">
+            <nopcommerce:productspecificationfilter id="ctrlProductSpecificationFilter" runat="server" />
+        </div>
+    </asp:Panel>
     <div class="clear">
     </div>
     <div class="product-list2">
