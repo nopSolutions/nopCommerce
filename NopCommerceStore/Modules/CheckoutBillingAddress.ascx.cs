@@ -31,6 +31,7 @@ using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
+using NopSolutions.NopCommerce.BusinessLogic.Shipping;
 using NopSolutions.NopCommerce.BusinessLogic.Tax;
 using NopSolutions.NopCommerce.Common.Utils;
 
@@ -134,8 +135,16 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         public void BindData()
         {
-            var shippingAddress = NopContext.Current.User.ShippingAddress;
-            pnlTheSameAsShippingAddress.Visible = CustomerManager.CanUseAddressAsBillingAddress(shippingAddress);
+            bool shoppingCartRequiresShipping = ShippingManager.ShoppingCartRequiresShipping(Cart);
+            if (shoppingCartRequiresShipping)
+            {
+                var shippingAddress = NopContext.Current.User.ShippingAddress;
+                pnlTheSameAsShippingAddress.Visible = CustomerManager.CanUseAddressAsBillingAddress(shippingAddress);
+            }
+            else
+            {
+                pnlTheSameAsShippingAddress.Visible = false;
+            }
 
             var addresses = GetAllowedBillingAddresses(NopContext.Current.User);
 
@@ -151,7 +160,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 pnlSelectBillingAddress.Visible = false;
                 lEnterBillingAddress.Text = GetLocaleResourceString("Checkout.EnterBillingAddress");
             }
-        }
+            }
 
         protected void btnSelect_Command(object sender, CommandEventArgs e)
         {
@@ -174,8 +183,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
         {
             if (Page.IsValid)
             {
-                var billingAddress = this.BillingAddress;
-                SelectAddress(billingAddress);
+                SelectAddress(this.BillingAddress);
             }
         }
 
@@ -215,6 +223,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 billingAddress.CreatedOn = shippingAddress.CreatedOn;
 
                 ctrlBillingAddress.Address = billingAddress;
+
+                //automatically select the address for the user and move to next step. Rather than copying values then having to click next.
+                //comment the line below to force a customer to click 'Next'
+                SelectAddress(this.BillingAddress);
             }
             else
             {
