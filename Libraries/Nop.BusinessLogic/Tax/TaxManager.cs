@@ -113,6 +113,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// <returns>A value from the VatNumberStatusEnum enumeration</returns>
         protected static VatNumberStatusEnum DoVatCheck(string countryCode, string vatNumber, out string name, out string address, out Exception exception)
         {
+            name = string.Empty;
+            address = string.Empty;
+
             NopSolutions.NopCommerce.BusinessLogic.EuropaCheckVatService.checkVatService s = null;
 
             try
@@ -133,6 +136,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
             }
             finally
             {
+                if (name == null)
+                    name = string.Empty;
+
+                if (address == null)
+                    address = string.Empty;
+
                 if (s != null)
                     s.Dispose();
             }
@@ -909,13 +918,32 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         public static VatNumberStatusEnum GetVatNumberStatus(Country country,
             string vatNumber)
         {
+            string name = string.Empty;
+            string address = string.Empty;
+            return GetVatNumberStatus(country, vatNumber, out name, out address);
+        }
+        
+        /// <summary>
+        /// Gets VAT Number status
+        /// </summary>
+        /// <param name="country">Country</param>
+        /// <param name="vatNumber">VAT number</param>
+        /// <param name="name">Name (if received)</param>
+        /// <param name="address">Address (if received)</param>
+        /// <returns>VAT Number status</returns>
+        public static VatNumberStatusEnum GetVatNumberStatus(Country country,
+            string vatNumber, out string name, out string address)
+        {
+            name = string.Empty;
+            address = string.Empty;
+
             if (vatNumber == null)
                 vatNumber = string.Empty;
-
             vatNumber = vatNumber.Trim();
 
             if (String.IsNullOrEmpty(vatNumber))
                 return VatNumberStatusEnum.Empty;
+
 
             if (country == null)
                 return VatNumberStatusEnum.Unknown;
@@ -927,8 +955,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
             //UNDONE
             try
             {
-                string name = string.Empty;
-                string address = string.Empty;
                 Exception exception = null;
                 return DoVatCheck(country.TwoLetterIsoCode, vatNumber, out name, out address, out exception);
             }
@@ -937,7 +963,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
                 Debug.WriteLine(exc.ToString());
                 return VatNumberStatusEnum.Unknown;
             }
-
         }
 
         /// <summary>

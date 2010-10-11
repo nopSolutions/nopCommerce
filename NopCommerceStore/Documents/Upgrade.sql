@@ -510,3 +510,51 @@ BEGIN
 	VALUES (8, N'Has one of these product variants in the cart')
 END
 GO
+
+--update NewVATSubmitted.StoreOwnerNotification message template
+IF EXISTS (
+		SELECT 1
+		FROM [dbo].[Nop_MessageTemplate]
+		WHERE [Name] = N'NewVATSubmitted.StoreOwnerNotification')
+BEGIN
+	DECLARE @MessageTemplateID INT 
+	SELECT @MessageTemplateID =	mt.MessageTemplateID FROM Nop_MessageTemplate mt
+							WHERE mt.Name = N'NewVATSubmitted.StoreOwnerNotification' 
+
+	IF (@MessageTemplateID > 0)
+	BEGIN
+
+	--do it for each existing language
+	DECLARE @ExistingLanguageID int
+	DECLARE cur_existinglanguage CURSOR FOR
+	SELECT LanguageID
+	FROM [Nop_Language]
+	OPEN cur_existinglanguage
+	FETCH NEXT FROM cur_existinglanguage INTO @ExistingLanguageID
+	WHILE @@FETCH_STATUS = 0
+	BEGIN
+		--update localized message template
+		UPDATE [Nop_MessageTemplateLocalized]
+		SET [Body] = N'<p><a href="%Store.URL%">%Store.Name%</a> <br />
+<br />
+%Customer.FullName% (%Customer.Email%) has just submitted a new VAT number. Details are below:
+<br />
+VAT number: %Customer.VatNumber%
+<br />
+VAT number status: %Customer.VatNumberStatus%
+<br />
+Received name: %VatValidationResult.Name%
+<br />
+Received address: %VatValidationResult.Address%
+</p>'
+		WHERE [MessageTemplateID] = @MessageTemplateID and
+			  [LanguageID] = @ExistingLanguageID
+
+		--fetch next language identifier
+		FETCH NEXT FROM cur_existinglanguage INTO @ExistingLanguageID
+		END
+	END
+	CLOSE cur_existinglanguage
+	DEALLOCATE cur_existinglanguage
+END
+GO

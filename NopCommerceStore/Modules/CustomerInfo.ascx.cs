@@ -254,12 +254,16 @@ namespace NopSolutions.NopCommerce.Web.Modules
                         //set VAT number status
                         if (!txtVatNumber.Text.Trim().Equals(prevVatNumber))
                         {
-                            customer.VatNumberStatus = TaxManager.GetVatNumberStatus(CountryManager.GetCountryById(customer.CountryId), customer.VatNumber);
+                            string vatName = string.Empty;
+                            string vatAddress = string.Empty;
+                            customer.VatNumberStatus = TaxManager.GetVatNumberStatus(CountryManager.GetCountryById(customer.CountryId), 
+                                customer.VatNumber, out vatName, out vatAddress);
 
                             //admin notification
                             if (!String.IsNullOrEmpty(customer.VatNumber) && TaxManager.EUVatEmailAdminWhenNewVATSubmitted)
                             {
-                                MessageManager.SendNewVATSubmittedStoreOwnerNotification(customer, LocalizationManager.DefaultAdminLanguage.LanguageId);
+                                MessageManager.SendNewVATSubmittedStoreOwnerNotification(customer,
+                                    vatName, vatAddress, LocalizationManager.DefaultAdminLanguage.LanguageId);
                             }
                         }
                     }

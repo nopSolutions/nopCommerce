@@ -307,12 +307,17 @@ namespace NopSolutions.NopCommerce.Web.Modules
             //set VAT number after country is saved
             if (TaxManager.EUVatEnabled)
             {
+                string vatName = string.Empty;
+                string vatAddress = string.Empty;
+
                 customer.VatNumber = txtVatNumber.Text;
-                customer.VatNumberStatus = TaxManager.GetVatNumberStatus(CountryManager.GetCountryById(customer.CountryId), customer.VatNumber);
+                customer.VatNumberStatus = TaxManager.GetVatNumberStatus(CountryManager.GetCountryById(customer.CountryId),
+                    customer.VatNumber, out vatName, out vatAddress);
                 //admin notification
                 if (!String.IsNullOrEmpty(customer.VatNumber) && TaxManager.EUVatEmailAdminWhenNewVATSubmitted)
                 {
-                    MessageManager.SendNewVATSubmittedStoreOwnerNotification(customer, LocalizationManager.DefaultAdminLanguage.LanguageId);
+                    MessageManager.SendNewVATSubmittedStoreOwnerNotification(customer, 
+                        vatName, vatAddress, LocalizationManager.DefaultAdminLanguage.LanguageId);
                 }
             }
 

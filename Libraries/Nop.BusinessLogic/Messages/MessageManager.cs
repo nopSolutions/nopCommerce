@@ -1400,12 +1400,15 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         }
 
         /// <summary>
-        /// Sends a "new VAt sumitted" notification to a store owner
+        /// Sends a "new VAT sumitted" notification to a store owner
         /// </summary>
         /// <param name="customer">Customer</param>
+        /// <param name="vatName">Received VAT name</param>
+        /// <param name="vatAddress">Received VAT address</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public static int SendNewVATSubmittedStoreOwnerNotification(Customer customer, int languageId)
+        public static int SendNewVATSubmittedStoreOwnerNotification(Customer customer, 
+            string vatName, string vatAddress, int languageId)
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");
@@ -1416,9 +1419,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
                 return 0;
 
             var emailAccount = localizedMessageTemplate.EmailAccount;
-
-            string subject = ReplaceMessageTemplateTokens(customer, localizedMessageTemplate.Subject);
-            string body = ReplaceMessageTemplateTokens(customer, localizedMessageTemplate.Body);
+            var additinalKeys = new NameValueCollection();
+            additinalKeys.Add("VatValidationResult.Name", vatName);
+            additinalKeys.Add("VatValidationResult.Address", vatAddress);
+            string subject = ReplaceMessageTemplateTokens(customer, localizedMessageTemplate.Subject, additinalKeys);
+            string body = ReplaceMessageTemplateTokens(customer, localizedMessageTemplate.Body, additinalKeys);
             string bcc = localizedMessageTemplate.BccEmailAddresses;
             var from = new MailAddress(emailAccount.Email, emailAccount.DisplayName);
             var to = new MailAddress(emailAccount.Email, emailAccount.DisplayName);
@@ -1883,12 +1888,15 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             allowedTokens.Add("%Customer.AccountActivationURL%");
             allowedTokens.Add("%Customer.FullName%");
             allowedTokens.Add("%Customer.VatNumber%");
+            allowedTokens.Add("%Customer.VatNumberStatus%");
 
             allowedTokens.Add("%Product.Name%");
             allowedTokens.Add("%Product.ShortDescription%");
             allowedTokens.Add("%Product.ProductURLForCustomer%");
             allowedTokens.Add("%ProductVariant.FullProductName%");
             allowedTokens.Add("%ProductVariant.StockQuantity%");
+
+            allowedTokens.Add("%Wishlist.URLForCustomer%");
 
             allowedTokens.Add("%NewsComment.NewsTitle%");
             allowedTokens.Add("%BlogComment.BlogPostTitle%");
@@ -1921,7 +1929,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             allowedTokens.Add("%ReturnRequest.Reason%");
             allowedTokens.Add("%ReturnRequest.RequestedAction%");
             allowedTokens.Add("%ReturnRequest.CustomerComment%");
-            
+
+            allowedTokens.Add("%Wishlist.URLForCustomer%");
+
+            allowedTokens.Add("%VatValidationResult.Name%");
+            allowedTokens.Add("%VatValidationResult.Address%");
+
             return allowedTokens.ToArray();
         }
 
@@ -2056,6 +2069,19 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         public static string ReplaceMessageTemplateTokens(Customer customer, 
             string template)
         {
+            return ReplaceMessageTemplateTokens(customer, template, null);
+        }
+
+        /// <summary>
+        /// Replaces a message template tokens
+        /// </summary>
+        /// <param name="customer">Customer instance</param>
+        /// <param name="template">Template</param>
+        /// <param name="additinalKeys">Additinal keys</param>
+        /// <returns>New template</returns>
+        public static string ReplaceMessageTemplateTokens(Customer customer,
+            string template, NameValueCollection additinalKeys)
+        {
             var tokens = new NameValueCollection();
             tokens.Add("Store.Name", SettingManager.StoreName);
             tokens.Add("Store.URL", SettingManager.StoreUrl);
@@ -2065,18 +2091,27 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             tokens.Add("Customer.Username", HttpUtility.HtmlEncode(customer.Username));
             tokens.Add("Customer.FullName", HttpUtility.HtmlEncode(customer.FullName));
             tokens.Add("Customer.VatNumber", HttpUtility.HtmlEncode(customer.VatNumber));
+            tokens.Add("Customer.VatNumberStatus", HttpUtility.HtmlEncode(customer.VatNumberStatus.ToString()));
 
             string passwordRecoveryUrl = string.Empty;
             passwordRecoveryUrl = string.Format("{0}passwordrecovery.aspx?prt={1}&email={2}", SettingManager.StoreUrl, customer.PasswordRecoveryToken, customer.Email);
             tokens.Add("Customer.PasswordRecoveryURL", passwordRecoveryUrl);
-            
+
             string accountActivationUrl = string.Empty;
             accountActivationUrl = string.Format("{0}accountactivation.aspx?act={1}&email={2}", SettingManager.StoreUrl, customer.AccountActivationToken, customer.Email);
             tokens.Add("Customer.AccountActivationURL", accountActivationUrl);
 
-            foreach(string token in tokens.Keys)
+            foreach (string token in tokens.Keys)
             {
                 template = Replace(template, String.Format(@"%{0}%", token), tokens[token]);
+            }
+            
+            if (additinalKeys != null)
+            {
+                foreach (string token in additinalKeys.Keys)
+                {
+                    template = Replace(template, String.Format(@"%{0}%", token), additinalKeys[token]);
+                }
             }
 
             return template;
@@ -2102,6 +2137,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             tokens.Add("Customer.Username", HttpUtility.HtmlEncode(customer.Username));
             tokens.Add("Customer.FullName", HttpUtility.HtmlEncode(customer.FullName));
             tokens.Add("Customer.VatNumber", HttpUtility.HtmlEncode(customer.VatNumber));
+            tokens.Add("Customer.VatNumberStatus", HttpUtility.HtmlEncode(customer.VatNumberStatus.ToString()));
 
             tokens.Add("Product.Name", HttpUtility.HtmlEncode(product.Name));
             tokens.Add("Product.ShortDescription", product.ShortDescription);
@@ -2112,9 +2148,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
                 template = Replace(template, String.Format(@"%{0}%", token), tokens[token]);
             }
 
-            foreach(string token in additinalKeys.Keys)
+            if (additinalKeys != null)
             {
-                template = Replace(template, String.Format(@"%{0}%", token), additinalKeys[token]);
+                foreach (string token in additinalKeys.Keys)
+                {
+                    template = Replace(template, String.Format(@"%{0}%", token), additinalKeys[token]);
+                }
             }
 
             return template;
@@ -2140,6 +2179,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             tokens.Add("Customer.Username", HttpUtility.HtmlEncode(customer.Username));
             tokens.Add("Customer.FullName", HttpUtility.HtmlEncode(customer.FullName));
             tokens.Add("Customer.VatNumber", HttpUtility.HtmlEncode(customer.VatNumber));
+            tokens.Add("Customer.VatNumberStatus", HttpUtility.HtmlEncode(customer.VatNumberStatus.ToString()));
 
             tokens.Add("Wishlist.URLForCustomer", SEOHelper.GetWishlistUrl(customer.CustomerGuid));
             //UNDONE add a wishlist content token
@@ -2149,9 +2189,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
                 template = Replace(template, String.Format(@"%{0}%", token), tokens[token]);
             }
 
-            foreach (string token in additinalKeys.Keys)
+            if (additinalKeys != null)
             {
-                template = Replace(template, String.Format(@"%{0}%", token), additinalKeys[token]);
+                foreach (string token in additinalKeys.Keys)
+                {
+                    template = Replace(template, String.Format(@"%{0}%", token), additinalKeys[token]);
+                }
             }
 
             return template;
@@ -2178,6 +2221,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             tokens.Add("Customer.Username", HttpUtility.HtmlEncode(customer.Username));
             tokens.Add("Customer.FullName", HttpUtility.HtmlEncode(customer.FullName));
             tokens.Add("Customer.VatNumber", HttpUtility.HtmlEncode(customer.VatNumber));
+            tokens.Add("Customer.VatNumberStatus", HttpUtility.HtmlEncode(customer.VatNumberStatus.ToString()));
 
             if (forumPost != null)
             {
