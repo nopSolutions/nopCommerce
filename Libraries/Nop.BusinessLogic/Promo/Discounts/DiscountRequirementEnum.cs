@@ -36,6 +36,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         /// </summary>
         MustBeRegistered = 5,
         /// <summary>
+        /// Customer has all of these product variants in the cart
+        /// </summary>
+        HasAllOfTheseProductVariantsInTheCart = 7,
+        /// <summary>
+        /// Customer has one of these product variants in the cart
+        /// </summary>
+        HasOneOfTheseProductVariantsInTheCart = 8,
+        /// <summary>
         /// Customer had purchased all of these product variants
         /// </summary>
         HadPurchasedAllOfTheseProductVariants = 10,

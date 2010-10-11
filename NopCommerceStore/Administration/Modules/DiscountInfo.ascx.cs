@@ -177,10 +177,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             DiscountRequirementEnum discountRequirement = (DiscountRequirementEnum)int.Parse(this.ddlDiscountRequirement.SelectedItem.Value);
 
             pnlCustomerRoles.Visible = discountRequirement == DiscountRequirementEnum.MustBeAssignedToCustomerRole;
-            pnlRestrictedProductVariants.Visible = (discountRequirement == DiscountRequirementEnum.HadPurchasedAllOfTheseProductVariants ||discountRequirement == DiscountRequirementEnum.HadPurchasedOneOfTheseProductVariants );
-            pnlRequirementSpentAmount.Visible = (discountRequirement == DiscountRequirementEnum.HadSpentAmount);
-            pnlRequirementBillingCountryIs.Visible = (discountRequirement == DiscountRequirementEnum.BillingCountryIs);
-            pnlRequirementShippingCountryIs.Visible = (discountRequirement == DiscountRequirementEnum.ShippingCountryIs);
+            pnlRestrictedProductVariants.Visible = discountRequirement == DiscountRequirementEnum.HasAllOfTheseProductVariantsInTheCart ||
+                discountRequirement == DiscountRequirementEnum.HasOneOfTheseProductVariantsInTheCart ||
+                discountRequirement == DiscountRequirementEnum.HadPurchasedAllOfTheseProductVariants ||
+                discountRequirement == DiscountRequirementEnum.HadPurchasedOneOfTheseProductVariants;
+            pnlRequirementSpentAmount.Visible = discountRequirement == DiscountRequirementEnum.HadSpentAmount;
+            pnlRequirementBillingCountryIs.Visible = discountRequirement == DiscountRequirementEnum.BillingCountryIs;
+            pnlRequirementShippingCountryIs.Visible = discountRequirement == DiscountRequirementEnum.ShippingCountryIs;
         }
 
         private void SetDefaultValues()
@@ -198,7 +201,11 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             DiscountRequirementEnum discountRequirement = (DiscountRequirementEnum)int.Parse(this.ddlDiscountRequirement.SelectedItem.Value);
             
             int[] restrictedProductVariantIds = new int[0];
-            if (discountRequirement == DiscountRequirementEnum.HadPurchasedAllOfTheseProductVariants || discountRequirement == DiscountRequirementEnum.HadPurchasedOneOfTheseProductVariants)
+            
+            if (discountRequirement == DiscountRequirementEnum.HasAllOfTheseProductVariantsInTheCart || 
+                discountRequirement == DiscountRequirementEnum.HasOneOfTheseProductVariantsInTheCart||
+                discountRequirement == DiscountRequirementEnum.HadPurchasedAllOfTheseProductVariants || 
+                discountRequirement == DiscountRequirementEnum.HadPurchasedOneOfTheseProductVariants)
                 restrictedProductVariantIds = ParseListOfRestrictedProductVariants(txtRestrictedProductVariants.Text);
             decimal requirementSpentAmount = txtRequirementSpentAmount.Value;
 

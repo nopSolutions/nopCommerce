@@ -124,10 +124,10 @@ GO
 IF NOT EXISTS (
 		SELECT 1
 		FROM [dbo].[Nop_DiscountType]
-		WHERE [DiscountTypeID] = 0)
+		WHERE [DiscountTypeID] = 20)
 BEGIN
 	INSERT [dbo].[Nop_DiscountType] ([DiscountTypeID], [Name])
-	VALUES (0, N'Assigned to order subtotal')
+	VALUES (20, N'Assigned to order subtotal')
 END
 GO
 
@@ -157,17 +157,6 @@ IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[Nop_Order]') 
 BEGIN
 	ALTER TABLE [dbo].[Nop_Order] 
 	ADD [OrderSubTotalDiscountExclTaxInCustomerCurrency] money NOT NULL CONSTRAINT [DF_Nop_Order_OrderSubTotalDiscountExclTaxInCustomerCurrency] DEFAULT ((0))
-END
-GO
-
-IF NOT EXISTS (
-    SELECT 1
-    FROM [dbo].[Nop_DiscountType]
-    WHERE [DiscountTypeID] = 0)
-BEGIN
-	UPDATE [Nop_DiscountType]
-	SET [DiscountTypeID] = 20
-	WHERE [DiscountTypeID] = 0
 END
 GO
 
@@ -498,5 +487,26 @@ For more info click <a target="_blank" href="%Wishlist.URLForCustomer%">here</a>
 	END
 	CLOSE cur_existinglanguage
 	DEALLOCATE cur_existinglanguage
+END
+GO
+
+--new discount requirements
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[Nop_DiscountRequirement]
+		WHERE [DiscountRequirementID] = 7)
+BEGIN
+	INSERT [dbo].[Nop_DiscountRequirement] ([DiscountRequirementID], [Name])
+	VALUES (7, N'Has all of these product variants in the cart')
+END
+GO
+
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[Nop_DiscountRequirement]
+		WHERE [DiscountRequirementID] = 8)
+BEGIN
+	INSERT [dbo].[Nop_DiscountRequirement] ([DiscountRequirementID], [Name])
+	VALUES (8, N'Has one of these product variants in the cart')
 END
 GO

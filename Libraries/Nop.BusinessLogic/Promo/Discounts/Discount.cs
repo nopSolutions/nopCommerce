@@ -216,6 +216,77 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
                         return result;
                     }
                     break;
+                case DiscountRequirementEnum.HasAllOfTheseProductVariantsInTheCart:
+                    {
+                        if (customer != null)
+                        {
+                            CustomerSession customerSession = CustomerManager.GetCustomerSessionByCustomerId(customer.CustomerId);
+                            if (customerSession != null)
+                            {
+                                var restrictedProductVariants = ProductManager.GetProductVariantsRestrictedByDiscountId(this.DiscountId);
+                                var cart = ShoppingCartManager.GetShoppingCartByCustomerSessionGuid(ShoppingCartTypeEnum.ShoppingCart, customerSession.CustomerSessionGuid);
+
+                                bool allFound = true;
+                                foreach (ProductVariant restrictedPV in restrictedProductVariants)
+                                {
+                                    bool found1 = false;
+                                    foreach (ShoppingCartItem sci in cart)
+                                    {
+                                        if (restrictedPV.ProductVariantId == sci.ProductVariantId)
+                                        {
+                                            found1 = true;
+                                            break;
+                                        }
+                                    }
+
+                                    if (!found1)
+                                    {
+                                        allFound = false;
+                                        break;
+                                    }
+                                }
+
+                                if (allFound)
+                                    return true;
+
+                            }
+                        }
+                    }
+                    break;
+                case DiscountRequirementEnum.HasOneOfTheseProductVariantsInTheCart:
+                    {
+                        if (customer != null)
+                        {
+                            CustomerSession customerSession = CustomerManager.GetCustomerSessionByCustomerId(customer.CustomerId);
+                            if (customerSession != null)
+                            {
+                                var restrictedProductVariants = ProductManager.GetProductVariantsRestrictedByDiscountId(this.DiscountId);
+                                var cart = ShoppingCartManager.GetShoppingCartByCustomerSessionGuid(ShoppingCartTypeEnum.ShoppingCart, customerSession.CustomerSessionGuid);
+
+                                bool found = false;
+                                foreach (ProductVariant restrictedPV in restrictedProductVariants)
+                                {
+                                    foreach (ShoppingCartItem sci in cart)
+                                    {
+                                        if (restrictedPV.ProductVariantId == sci.ProductVariantId)
+                                        {
+                                            found = true;
+                                            break;
+                                        }
+                                    }
+
+                                    if (found)
+                                    {
+                                        break;
+                                    }
+                                }
+
+                                if (found)
+                                    return true;
+                            }
+                        }
+                    }
+                    break;
                 case DiscountRequirementEnum.HadPurchasedAllOfTheseProductVariants:
                     {
                         if (customer != null)
