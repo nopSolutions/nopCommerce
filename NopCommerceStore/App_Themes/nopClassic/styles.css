@@ -939,7 +939,7 @@ ul.languagelist li .selected
 .block li.separator
 {
 	height: 1px;
-	background: rgb(232, 230, 210);
+	background: #E8E6D2;
 	width: 140px;
 	margin: 5px 0 5px 0;
 }
@@ -1069,7 +1069,7 @@ ul.languagelist li .selected
 	padding: 10px 10px 10px 10px;
 	font-size: 11px;
 	color: #555;
-	background: rgb(247, 245, 232);
+	background: #F7F5E8;
 	margin-bottom: 10px;
 	border: dotted 1px #d3d3d3;
 }
@@ -1266,7 +1266,7 @@ ul.languagelist li .selected
 	padding: 10px 10px 10px 10px;
 	font-size: 11px;
 	color: #555;
-	background: rgb(247, 245, 232);
+	background: #F7F5E8;
 	margin-bottom: 10px;
 	border: dotted 1px #d3d3d3;
 }
@@ -1274,7 +1274,7 @@ ul.languagelist li .selected
 {
 	text-align: left;
 	margin: 10px 10px 10px 10px;
-	border: 1px solid rgb(232, 230, 210);
+	border: 1px solid #E8E6D2;
 	height: auto;
 }
 .estimate-shipping .shipping-options .shipping-option-item
@@ -1368,7 +1368,7 @@ ul.languagelist li .selected
 {
 	text-align: center;
 	margin: 10px 10px 10px 10px;
-	border: 1px solid rgb(232, 230, 210);
+	border: 1px solid #E8E6D2;
 	height: auto;
 }
 
@@ -1396,7 +1396,7 @@ ul.languagelist li .selected
 {
 	text-align: center;
 	margin: 10px 10px 10px 10px;
-	border: 1px solid rgb(232, 230, 210);
+	border: 1px solid #E8E6D2;
 	width: 200px;
 	height: auto;
 }
@@ -1450,7 +1450,7 @@ ul.languagelist li .selected
 {
 	text-align: left;
 	margin: 10px 10px 10px 10px;
-	border: 1px solid rgb(232, 230, 210);
+	border: 1px solid #E8E6D2;
 	height: auto;
 }
 
@@ -1489,7 +1489,7 @@ ul.languagelist li .selected
 	padding: 10px 10px 10px 10px;
 	font-size: 11px;
 	color: #555;
-	background: rgb(247, 245, 232);
+	background: #F7F5E8;
 	margin-bottom: 10px;
 	border: dotted 1px #d3d3d3;
 }	
@@ -1498,7 +1498,7 @@ ul.languagelist li .selected
 {
 	text-align: left;
 	margin: 10px 10px 10px 10px;
-	border: 1px solid rgb(232, 230, 210);
+	border: 1px solid #E8E6D2;
 	height: auto;
 }
 
@@ -1527,7 +1527,7 @@ ul.languagelist li .selected
 {
 	text-align: left;
 	margin: 10px 10px 10px 10px;
-	border: 1px solid rgb(232, 230, 210);
+	border: 1px solid #E8E6D2;
 	height: auto;
 }
 
@@ -1548,7 +1548,7 @@ ul.languagelist li .selected
 {
 	text-align: left;
 	margin: 10px 10px 10px 10px;
-	border: 1px solid rgb(232, 230, 210);
+	border: 1px solid #E8E6D2;
 	height: auto;
 }
 
@@ -1568,7 +1568,7 @@ ul.languagelist li .selected
 {
 	text-align: left;
 	margin: 10px 10px 10px 10px;
-	border: 1px solid rgb(232, 230, 210);
+	border: 1px solid #E8E6D2;
 	height: auto;
 }
 
@@ -1596,7 +1596,7 @@ ul.languagelist li .selected
 }
 .order-details .info
 {
-	border: 1px solid rgb(232, 230, 210);
+	border: 1px solid #E8E6D2;
 	padding: 10px;
 }
 .order-details .section-title
@@ -1614,14 +1614,14 @@ ul.languagelist li .selected
 {
 	text-align: left;
 	padding: 10px;
-	border: 1px solid rgb(232, 230, 210);
+	border: 1px solid #E8E6D2;
 	height: auto;
 }
 .order-details .products-box, .order-details .ordernotes-box
 {
 	text-align: left;
 	padding: 10px;
-	border: 1px solid rgb(232, 230, 210);
+	border: 1px solid #E8E6D2;
 	height: auto;
 }
 .order-details .checkout-attributes
@@ -1650,7 +1650,7 @@ ul.languagelist li .selected
 {
 	text-align: left;
 	padding: 10px;
-	border: 1px solid rgb(232, 230, 210);
+	border: 1px solid #E8E6D2;
 	height: auto;
 }
 
@@ -1709,7 +1709,7 @@ ul.languagelist li .selected
 {
 	text-align: left;
 	padding: 10px;
-	border: 1px solid rgb(232, 230, 210);
+	border: 1px solid #E8E6D2;
 	height: auto;
 }
 .return-request .why
@@ -1743,7 +1743,7 @@ ul.languagelist li .selected
 	text-align: left;
 	margin-bottom: 10px;
 	padding: 10px;
-	border: 1px solid rgb(232, 230, 210);
+	border: 1px solid #E8E6D2;
 	height: auto;
 }
 
@@ -1826,7 +1826,7 @@ ul.languagelist li .selected
 	margin: 10px 10px 10px 10px;
 	width: 150px;
 	height: auto;
-	border: 1px solid rgb(232, 230, 210);
+	border: 1px solid #E8E6D2;
 }
 
 .home-page-category-grid .category-item .title
@@ -1921,7 +1921,7 @@ ul.languagelist li .selected
 	text-align: center;
 	margin: 10px 5px 10px 5px;
 	width: 250px;
-	border: 1px solid rgb(232, 230, 210);
+	border: 1px solid #E8E6D2;
 }
 
 .product-grid .product-item .product-title
@@ -1952,7 +1952,7 @@ ul.languagelist li .selected
 	margin: 5px 5px 0 5px;
 	text-align: center;
 	padding: 10px 5px 10px 5px;
-	border-top: solid 1px rgb(232, 230, 210);
+	border-top: solid 1px #E8E6D2;
 	color: #555;
 	height: 50px;
 }
@@ -1964,7 +1964,7 @@ ul.languagelist li .selected
 	width: 250px;
 	height: 85px;
 	position: relative;
-	background: rgb(247, 245, 232);
+	background: #F7F5E8;
 }
 
 .product-grid .product-item .add-info .prices
@@ -2021,7 +2021,7 @@ ul.languagelist li .selected
 	width: 520px;
 	height: 177px;
 	margin-top: 10px;
-	border: 1px solid rgb(232, 230, 210);
+	border: 1px solid #E8E6D2;
 	position: relative;
 }
 
@@ -2053,7 +2053,7 @@ ul.languagelist li .selected
 	padding: 0px 0 0 10px;
 	margin: 10px 150px 0px 140px;
 	text-align: left;
-	border-left: solid 1px rgb(232, 230, 210);
+	border-left: solid 1px #E8E6D2;
 	color: #555;
 }
 
@@ -2136,7 +2136,7 @@ ul.languagelist li .selected
 	text-align: center;
 	margin: 10px 5px 10px 5px;
 	width: 250px;
-	border: solid 1px rgb(232, 230, 210);
+	border: solid 1px #E8E6D2;
 }
 
 .featured-product-grid .product-item .product-title
@@ -2167,7 +2167,7 @@ ul.languagelist li .selected
 	margin: 5px 5px 0 5px;
 	text-align: center;
 	padding: 10px 5px 10px 5px;
-	border-top: solid 1px rgb(232, 230, 210);
+	border-top: solid 1px #E8E6D2;
 	color: #555;
 	height: 50px;
 }
@@ -2281,7 +2281,7 @@ ul.languagelist li .selected
 	margin: 10px 10px 10px 10px;
 	width: 150px;
 	height: auto;
-	border: 1px solid rgb(232, 230, 210);
+	border: 1px solid #E8E6D2;
 }
 
 .sub-category-grid .sub-category-item .category-title, .manufacturer-grid .manufacturer-item .man-title
@@ -2317,8 +2317,8 @@ ul.languagelist li .selected
 {
 	width: 520px;
 	margin: 0 auto 0 auto;
-	border: 1px solid rgb(232, 230, 210);
-	background: rgb(247, 245, 232);
+	border: 1px solid #E8E6D2;
+	background: #F7F5E8;
 }
 
 .product-filters .filter-title
@@ -2488,7 +2488,7 @@ ul.languagelist li .selected
 	text-align: center;
 	margin: 10px 10px 10px 10px;
 	padding: 15px 5px 5px 5px;
-	border: 1px solid rgb(232, 230, 210);
+	border: 1px solid #E8E6D2;
 	min-height: 240px;
 	vertical-align: top;
 }
@@ -2498,7 +2498,7 @@ ul.languagelist li .selected
 	text-align: left;
 	margin: 10px 10px 10px 10px;
 	padding: 15px 5px 5px 5px;
-	border: 1px solid rgb(232, 230, 210);
+	border: 1px solid #E8E6D2;
 	min-height: 240px;
 	vertical-align: top;
 }
@@ -2526,7 +2526,7 @@ ul.languagelist li .selected
 	text-align: left;
 	margin: 10px 10px 10px 10px;
 	padding: 15px 5px 5px 5px;
-	border: 1px solid rgb(232, 230, 210);
+	border: 1px solid #E8E6D2;
 	min-height: 240px;
 }
 
@@ -2602,7 +2602,7 @@ ul.languagelist li .selected
 {
 	text-align: left;
 	padding: 10px;
-	border: 1px solid rgb(232, 230, 210);
+	border: 1px solid #E8E6D2;
 	height: auto;
 }
 
@@ -2696,7 +2696,7 @@ ul.languagelist li .selected
 
 .search-panel .search-input
 {
-	border: 1px solid rgb(232, 230, 210);
+	border: 1px solid #E8E6D2;
 	padding: 10px;
 }
 
@@ -2941,7 +2941,7 @@ ul.languagelist li .selected
 
 .newscomment .commentinfo .userinfo .avatar .avatar-img
 {
-	border: solid 2px rgb(206, 219, 225) !important;
+	border: solid 2px #CEDBE1 !important;
 }
 
 .newscomment .commentinfo .userinfo .userstats
@@ -3148,7 +3148,7 @@ ul.languagelist li .selected
 
 .blogcomment .commentinfo .userinfo .avatar .avatar-img
 {
-	border: solid 2px rgb(206, 219, 225) !important;
+	border: solid 2px #CEDBE1 !important;
 }
 
 .blogcomment .commentinfo .userinfo .userstats
@@ -3265,7 +3265,7 @@ ul.languagelist li .selected
 
 .emailafriend-box .send-email
 {
-	border: 1px solid rgb(232, 230, 210);
+	border: 1px solid #E8E6D2;
 	margin-top: 10px;
 	padding: 0 0 10px 10px;
 }
@@ -3375,7 +3375,7 @@ ul.languagelist li .selected
 {
 	text-align: left;
 	padding: 10px;
-	border: 1px solid rgb(232, 230, 210);
+	border: 1px solid #E8E6D2;
 	height: auto;
 }
 
@@ -3412,7 +3412,7 @@ ul.languagelist li .selected
 	text-align: left;
 	margin-bottom: 10px;
 	padding: 10px;
-	border: 1px solid rgb(232, 230, 210);
+	border: 1px solid #E8E6D2;
 	height: auto;
 }
 
@@ -3452,7 +3452,7 @@ ul.languagelist li .selected
 {
 	text-align: left;
 	padding: 10px;
-	border: 1px solid rgb(232, 230, 210);
+	border: 1px solid #E8E6D2;
 	height: auto;
 }
 
@@ -3465,7 +3465,7 @@ ul.languagelist li .selected
 	text-align: left;
 	margin-bottom: 10px;
 	padding: 10px;
-	border: 1px solid rgb(232, 230, 210);
+	border: 1px solid #E8E6D2;
 	height: auto;
 }
 
@@ -3504,7 +3504,7 @@ ul.languagelist li .selected
 {
 	text-align: left;
 	padding: 10px;
-	border: 1px solid rgb(232, 230, 210);
+	border: 1px solid #E8E6D2;
 	height: auto;
 }
 
@@ -3571,7 +3571,7 @@ ul.languagelist li .selected
 
 .product-details-info .fulldescription
 {
-	border-top: 1px solid rgb(232, 230, 210);
+	border-top: 1px solid #E8E6D2;
 	clear: both;
 	color: #555;
 	margin-bottom: 0.3em;
@@ -3681,7 +3681,7 @@ ul.languagelist li .selected
 .product-variant-line .add-info
 {
 	padding: 10px 10px 10px 10px;
-	background: rgb(247, 245, 232);
+	background: #F7F5E8;
 	min-height: 17px;
 }
 
@@ -3780,7 +3780,7 @@ ul.languagelist li .selected
 {
 	text-align: center;
 	margin: 10px 10px 10px 10px;
-	border: 1px solid rgb(232, 230, 210);
+	border: 1px solid #E8E6D2;
 	width: 200px;
 	height: 200px;
 }
@@ -3817,7 +3817,7 @@ ul.languagelist li .selected
 
 .product-review-list .product-review-item
 {
-	border: 1px solid rgb(232, 230, 210);
+	border: 1px solid #E8E6D2;
 	margin-top: 10px;
 	padding: 10px;
 	clear: both;
@@ -4429,7 +4429,7 @@ ul.languagelist li .selected
 {
 	text-align: left;
 	padding: 10px;
-	border: 1px solid rgb(232, 230, 210);
+	border: 1px solid #E8E6D2;
 	height: auto;
 }
 
@@ -4860,7 +4860,7 @@ ul.languagelist li .selected
 
 .postinfo .userinfo .avatar .avatar-img
 {
-	border: solid 2px rgb(206, 219, 225) !important;
+	border: solid 2px #CEDBE1 !important;
 }
 
 .postinfo .userinfo .userstats
@@ -5197,7 +5197,7 @@ ul.languagelist li .selected
 
 .profile-page .body .profileInfoBox .userDetails .avatar .avatar-img
 {
-	border: solid 2px rgb(206, 219, 225) !important;
+	border: solid 2px #CEDBE1 !important;
 }
 
 .profile-page .body .profileInfoBox .userStats

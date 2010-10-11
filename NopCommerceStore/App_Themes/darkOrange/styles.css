@@ -812,8 +812,8 @@ textarea
 
 .searchboxbutton
 {
-	background: url(images/orange_button_bg.gif) no-repeat 25% 50% rgb(255, 136, 0);
-	border: 1px solid rgb(255, 136, 0);
+	background: url(images/orange_button_bg.gif) no-repeat 25% 50% #FF8800;
+	border: 1px solid #FF8800;
 	color: #FFF;
 	height: 18px;
 	padding: 0 5px 0 5px;
@@ -823,8 +823,8 @@ textarea
 
 .productlistproductdetailbutton, .productgridproductdetailbutton
 {
-	background: url(images/orange_button_bg.gif) no-repeat 25% 50% rgb(255, 136, 0);
-	border: 1px solid rgb(255, 136, 0);
+	background: url(images/orange_button_bg.gif) no-repeat 25% 50% #FF8800;
+	border: 1px solid #FF8800;
 	margin-bottom: 3px;
 	color: #FFF;
 	height: 20px;
@@ -845,8 +845,8 @@ textarea
 .deleteselectedpmbutton, .reorderbutton, .minicartcheckoutbutton, .newsletterbox-subscribebutton, 
 .useragreementbutton, .deleteselectedfsbutton, .submitreturnrequestbutton
 {
-	background: url(images/orange_button_bg.gif) no-repeat 25% 50% rgb(255, 136, 0);
-	border: 1px solid rgb(255, 136, 0);
+	background: url(images/orange_button_bg.gif) no-repeat 25% 50% #FF8800;
+	border: 1px solid #FF8800;
 	color: #FFF;
 	height: 20px;
 	padding: 0 5px 0 5px;
@@ -1148,7 +1148,7 @@ ul.languagelist li .selected
 	padding: 10px 10px 10px 10px;
 	font-size: 11px;
 	color: #555;
-	background: rgb(247, 245, 232);
+	background: #F7F5E8;
 	margin-bottom: 10px;
 	border: dotted 1px #d3d3d3;
 }
@@ -1346,7 +1346,7 @@ ul.languagelist li .selected
 	padding: 10px 10px 10px 10px;
 	font-size: 11px;
 	color: #555;
-	background: rgb(247, 245, 232);
+	background: #F7F5E8;
 	margin-bottom: 10px;
 	border: dotted 1px #d3d3d3;
 }
@@ -1570,7 +1570,7 @@ ul.languagelist li .selected
 	padding: 10px 10px 10px 10px;
 	font-size: 11px;
 	color: #555;
-	background: rgb(247, 245, 232);
+	background: #F7F5E8;
 	margin-bottom: 10px;
 	border: dotted 1px #d3d3d3;
 }
@@ -3041,7 +3041,7 @@ ul.languagelist li .selected
 
 .newscomment .commentinfo .userinfo .avatar .avatar-img
 {
-	border: solid 2px rgb(206, 219, 225) !important;
+	border: solid 2px #CEDBE1 !important;
 }
 
 .newscomment .commentinfo .userinfo .userstats
@@ -3260,7 +3260,7 @@ ul.languagelist li .selected
 
 .blogcomment .commentinfo .userinfo .avatar .avatar-img
 {
-	border: solid 2px rgb(206, 219, 225) !important;
+	border: solid 2px #CEDBE1 !important;
 }
 
 .blogcomment .commentinfo .userinfo .userstats
@@ -4976,7 +4976,7 @@ ul.languagelist li .selected
 
 .postinfo .userinfo .avatar .avatar-img
 {
-	border: solid 2px rgb(206, 219, 225) !important;
+	border: solid 2px #CEDBE1 !important;
 }
 
 .postinfo .userinfo .userstats
@@ -5314,7 +5314,7 @@ ul.languagelist li .selected
 
 .profile-page .body .profileInfoBox .userDetails .avatar .avatar-img
 {
-	border: solid 2px rgb(206, 219, 225) !important;
+	border: solid 2px #CEDBE1 !important;
 }
 
 .profile-page .body .profileInfoBox .userStats
