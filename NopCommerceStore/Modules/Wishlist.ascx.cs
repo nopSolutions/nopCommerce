@@ -58,10 +58,14 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 pnlEmptyCart.Visible = false;
                 pnlCart.Visible = true;
 
+                //bind data
                 rptShoppingCart.DataSource = cart;
                 rptShoppingCart.DataBind();
                 ValidateWishlist();
                 ValidateWishlistItems();
+
+                //'email wishlist' buttton
+                btnEmailWishlist.Visible = SettingManager.GetSettingValueBoolean("Common.EmailWishlist");
             }
             else
             {
@@ -359,6 +363,12 @@ namespace NopSolutions.NopCommerce.Web.Modules
             Response.Redirect(SEOHelper.GetShoppingCartUrl());
         }
 
+        protected void btnEmailWishlist_Click(object sender, EventArgs e)
+        {
+            string url = SEOHelper.GetWishlistEmailAFriendUrl();
+            Response.Redirect(url);
+        }
+        
         [DefaultValue(false)]
         public bool IsEditable
         {

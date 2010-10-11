@@ -69,10 +69,9 @@ namespace NopSolutions.NopCommerce.Web
                         lblYourWishlistURL.Visible = true;
                         lnkWishListUrl.Visible = true;
                         lblYourWishlistURL.Text = GetLocaleResourceString("Wishlist.YourWishlistURL");
-                        string wishListUrl = SEOHelper.GetWishlistUrl();
-                        wishListUrl = CommonHelper.ModifyQueryString(wishListUrl, "CustomerGUID=" + NopContext.Current.User.CustomerGuid.ToString(), null);
+                        string wishListUrl= SEOHelper.GetWishlistUrl(NopContext.Current.User.CustomerGuid);
                         lnkWishListUrl.NavigateUrl = wishListUrl;
-                        lnkWishListUrl.Text = wishListUrl;                      
+                        lnkWishListUrl.Text = wishListUrl;
                     }
                 }
             }

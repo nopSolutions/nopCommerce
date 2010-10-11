@@ -1436,7 +1436,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// <param name="friendsEmail">Friend's email</param>
         /// <param name="personalMessage">Personal message</param>
         /// <returns>Queued email identifier</returns>
-        public static int SendEmailAFriendMessage(Customer customer, int languageId, 
+        public static int SendProductEmailAFriendMessage(Customer customer, int languageId, 
             Product product, string friendsEmail, string personalMessage)
         {
             if (customer == null)
@@ -1455,6 +1455,43 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             additinalKeys.Add("EmailAFriend.PersonalMessage", personalMessage);
             string subject = ReplaceMessageTemplateTokens(customer, product, localizedMessageTemplate.Subject, additinalKeys);
             string body = ReplaceMessageTemplateTokens(customer, product, localizedMessageTemplate.Body, additinalKeys);
+            string bcc = localizedMessageTemplate.BccEmailAddresses;
+            var from = new MailAddress(emailAccount.Email, emailAccount.DisplayName);
+            var to = new MailAddress(friendsEmail);
+            var queuedEmail = InsertQueuedEmail(5, from, to, string.Empty, bcc, subject, body,
+                DateTime.UtcNow, 0, null, emailAccount.EmailAccountId);
+            return queuedEmail.QueuedEmailId;
+        }
+
+        /// <summary>
+        /// Sends wishlist "email a friend" message
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="cart">Shopping cart</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <param name="friendsEmail">Friend's email</param>
+        /// <param name="personalMessage">Personal message</param>
+        /// <returns>Queued email identifier</returns>
+        public static int SendWishlistEmailAFriendMessage(Customer customer, 
+            ShoppingCart cart, int languageId,
+            string friendsEmail, string personalMessage)
+        {
+            if (customer == null)
+                throw new ArgumentNullException("customer");
+            if (cart == null)
+                throw new ArgumentNullException("cart");
+
+            string templateName = "Wishlist.EmailAFriend";
+            var localizedMessageTemplate = MessageManager.GetLocalizedMessageTemplate(templateName, languageId);
+            if (localizedMessageTemplate == null || !localizedMessageTemplate.IsActive)
+                return 0;
+
+            var emailAccount = localizedMessageTemplate.EmailAccount;
+
+            var additinalKeys = new NameValueCollection();
+            additinalKeys.Add("EmailAFriend.PersonalMessage", personalMessage);
+            string subject = ReplaceMessageTemplateTokens(customer, cart, localizedMessageTemplate.Subject, additinalKeys);
+            string body = ReplaceMessageTemplateTokens(customer, cart, localizedMessageTemplate.Body, additinalKeys);
             string bcc = localizedMessageTemplate.BccEmailAddresses;
             var from = new MailAddress(emailAccount.Email, emailAccount.DisplayName);
             var to = new MailAddress(friendsEmail);
@@ -1911,8 +1948,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// <param name="template">Template</param>
         /// <param name="languageId">Language identifier</param>
         /// <returns>New template</returns>
-        public static string ReplaceMessageTemplateTokens(Order order, string template, 
-            int languageId)
+        public static string ReplaceMessageTemplateTokens(Order order, 
+            string template, int languageId)
         {
             var tokens = new NameValueCollection();
             tokens.Add("Store.Name", SettingManager.StoreName);
@@ -2016,7 +2053,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// <param name="customer">Customer instance</param>
         /// <param name="template">Template</param>
         /// <returns>New template</returns>
-        public static string ReplaceMessageTemplateTokens(Customer customer, string template)
+        public static string ReplaceMessageTemplateTokens(Customer customer, 
+            string template)
         {
             var tokens = new NameValueCollection();
             tokens.Add("Store.Name", SettingManager.StoreName);
@@ -2085,6 +2123,43 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// <summary>
         /// Replaces a message template tokens
         /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="cart">Shopping cart</param>
+        /// <param name="template">Template</param>
+        /// <param name="additinalKeys">Additinal keys</param>
+        /// <returns>New template</returns>
+        public static string ReplaceMessageTemplateTokens(Customer customer, 
+            ShoppingCart cart, string template, NameValueCollection additinalKeys)
+        {
+            var tokens = new NameValueCollection();
+            tokens.Add("Store.Name", SettingManager.StoreName);
+            tokens.Add("Store.URL", SettingManager.StoreUrl);
+            tokens.Add("Store.Email", MessageManager.DefaultEmailAccount.Email);
+
+            tokens.Add("Customer.Email", HttpUtility.HtmlEncode(customer.Email));
+            tokens.Add("Customer.Username", HttpUtility.HtmlEncode(customer.Username));
+            tokens.Add("Customer.FullName", HttpUtility.HtmlEncode(customer.FullName));
+            tokens.Add("Customer.VatNumber", HttpUtility.HtmlEncode(customer.VatNumber));
+
+            tokens.Add("Wishlist.URLForCustomer", SEOHelper.GetWishlistUrl(customer.CustomerGuid));
+            //UNDONE add a wishlist content token
+
+            foreach (string token in tokens.Keys)
+            {
+                template = Replace(template, String.Format(@"%{0}%", token), tokens[token]);
+            }
+
+            foreach (string token in additinalKeys.Keys)
+            {
+                template = Replace(template, String.Format(@"%{0}%", token), additinalKeys[token]);
+            }
+
+            return template;
+        }
+
+        /// <summary>
+        /// Replaces a message template tokens
+        /// </summary>
         /// <param name="customer">Customer instance</param>
         /// <param name="forumPost">Forum post</param>
         /// <param name="forumTopic">Forum topic</param>
@@ -2092,8 +2167,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// <param name="template">Template</param>
         /// <returns>New template</returns>
         public static string ReplaceMessageTemplateTokens(Customer customer,
-            ForumPost forumPost, ForumTopic forumTopic, Forum forum, 
-            string template)
+            ForumPost forumPost, ForumTopic forumTopic, Forum forum, string template)
         {
             var tokens = new NameValueCollection();
             tokens.Add("Store.Name", SettingManager.StoreName);
@@ -2258,7 +2332,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// <param name="giftCard">Gift card</param>
         /// <param name="template">Template</param>
         /// <returns>New template</returns>
-        public static string ReplaceMessageTemplateTokens(GiftCard giftCard, string template)
+        public static string ReplaceMessageTemplateTokens(GiftCard giftCard, 
+            string template)
         {
             var tokens = new NameValueCollection();
             tokens.Add("Store.Name", SettingManager.StoreName);
@@ -2314,20 +2389,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         }
 
         /// <summary>
-        /// Formats the contact us form text
-        /// </summary>
-        /// <param name="text">Text</param>
-        /// <returns>Formatted text</returns>
-        public static string FormatContactUsFormText(string text)
-        {
-            if (String.IsNullOrEmpty(text))
-                return string.Empty;
-
-            text = HtmlHelper.FormatText(text, false, true, false, false, false, false);
-            return text;
-        }
-
-        /// <summary>
         /// Sends an email
         /// </summary>
         /// <param name="subject">Subject</param>
@@ -2335,7 +2396,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// <param name="from">From</param>
         /// <param name="to">To</param>
         /// <param name="emailAccount">Email account to use</param>
-        public static void SendEmail(string subject, string body, string from, string to, EmailAccount emailAccount)
+        public static void SendEmail(string subject, string body, string from, string to, 
+            EmailAccount emailAccount)
         {
             SendEmail(subject, body, new MailAddress(from), new MailAddress(to),
                 new List<String>(), new List<String>(), emailAccount);
@@ -2366,7 +2428,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// <param name="cc">CC</param>
         /// <param name="emailAccount">Email account to use</param>
         public static void SendEmail(string subject, string body,
-            MailAddress from, MailAddress to, List<string> bcc, List<string> cc, EmailAccount emailAccount)
+            MailAddress from, MailAddress to, List<string> bcc, 
+            List<string> cc, EmailAccount emailAccount)
         {
             var message = new MailMessage();
             message.From = from;
@@ -2409,6 +2472,19 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             smtpClient.Send(message);
         }
 
+        /// <summary>
+        /// Formats the contact us form text
+        /// </summary>
+        /// <param name="text">Text</param>
+        /// <returns>Formatted text</returns>
+        public static string FormatContactUsFormText(string text)
+        {
+            if (String.IsNullOrEmpty(text))
+                return string.Empty;
+
+            text = HtmlHelper.FormatText(text, false, true, false, false, false, false);
+            return text;
+        }
 
         #endregion
 

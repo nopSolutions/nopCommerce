@@ -111,4 +111,9 @@
     <%} %>
     <asp:Button ID="btnAddToCart" OnClick="btnAddToCart_Click" runat="server" Text="<% $NopResources:Wishlist.AddToCartButton %>"
         CssClass="updatewishlistbutton" />
+    <%if (IsEditable)
+      { %>
+    <asp:Button ID="btnEmailWishlist" OnClick="btnEmailWishlist_Click" runat="server"
+        Text="<% $NopResources:Wishlist.EmailButton %>" CssClass="updatewishlistbutton" />
+    <%} %>
 </asp:Panel>

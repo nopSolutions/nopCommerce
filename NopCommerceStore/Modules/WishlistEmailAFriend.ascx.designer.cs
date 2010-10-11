@@ -10,78 +10,87 @@
 namespace NopSolutions.NopCommerce.Web.Modules {
     
     
-    public partial class WishlistControl {
+    public partial class WishlistEmailAFriendControl {
         
         /// <summary>
-        /// pnlEmptyCart control.
+        /// lblDescription control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnlEmptyCart;
+        protected global::System.Web.UI.WebControls.Label lblDescription;
         
         /// <summary>
-        /// pnlCart control.
+        /// lblEmailAFriend control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnlCart;
+        protected global::System.Web.UI.WebControls.Label lblEmailAFriend;
         
         /// <summary>
-        /// pnlCommonWarnings control.
+        /// pnlFriendsEmail control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnlCommonWarnings;
+        protected global::System.Web.UI.HtmlControls.HtmlTableRow pnlFriendsEmail;
         
         /// <summary>
-        /// lblCommonWarning control.
+        /// txtFriendsEmail control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblCommonWarning;
+        protected global::NopSolutions.NopCommerce.Web.Modules.EmailTextBox txtFriendsEmail;
         
         /// <summary>
-        /// rptShoppingCart control.
+        /// pnlFrom control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater rptShoppingCart;
+        protected global::System.Web.UI.HtmlControls.HtmlTableRow pnlFrom;
         
         /// <summary>
-        /// btnUpdate control.
+        /// lblFrom control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnUpdate;
+        protected global::System.Web.UI.WebControls.Label lblFrom;
         
         /// <summary>
-        /// btnAddToCart control.
+        /// pnlPersonalMessage control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnAddToCart;
+        protected global::System.Web.UI.HtmlControls.HtmlTableRow pnlPersonalMessage;
         
         /// <summary>
-        /// btnEmailWishlist control.
+        /// txtPersonalMessage control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnEmailWishlist;
+        protected global::System.Web.UI.WebControls.TextBox txtPersonalMessage;
+        
+        /// <summary>
+        /// btnEmail control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnEmail;
     }
 }

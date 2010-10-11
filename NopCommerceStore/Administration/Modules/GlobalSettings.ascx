@@ -21,6 +21,7 @@
     <script type="text/javascript">
         $(document).ready(function () {
             toggleStoreClosed();
+            toggleWishlist();
             toggleUrlRewriting();
             toggleCustomersAllowedToUploadAvatars();
             togglePM();
@@ -40,6 +41,15 @@
             }
             else {
                 $('#pnlStoreClosedForAdmins').hide();
+            }
+        }
+
+        function toggleWishlist() {
+            if (getE('<%=cbEnableWishlist.ClientID %>').checked) {
+                $('#pnlEmailWishlist').show();
+            }
+            else {
+                $('#pnlEmailWishlist').hide();
             }
         }
 
@@ -334,11 +344,21 @@
                     <tr>
                         <td class="adminTitle">
                             <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
-                                ID="lblWishList" Text="<% $NopResources:Admin.GlobalSettings.Products.WishList %>"
+                                ID="lblEnableWishList" Text="<% $NopResources:Admin.GlobalSettings.Products.WishList %>"
                                 ToolTip="<% $NopResources:Admin.GlobalSettings.Products.WishList.Tooltip %>" />
                         </td>
                         <td class="adminData">
                             <asp:CheckBox runat="server" ID="cbEnableWishlist"></asp:CheckBox>
+                        </td>
+                    </tr>
+                    <tr id="pnlEmailWishlist">
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
+                                ID="lblEmailWishList" Text="<% $NopResources:Admin.GlobalSettings.Products.EmailWishList %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Products.EmailWishList.Tooltip %>" />
+                        </td>
+                        <td class="adminData">
+                            <asp:CheckBox runat="server" ID="cbEmailWishlist"></asp:CheckBox>
                         </td>
                     </tr>
                     <tr>

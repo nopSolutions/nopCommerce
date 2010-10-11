@@ -440,3 +440,63 @@ BEGIN
 	VALUES (N'PromotionProvider.PriceGrabber.ProductThumbnailImageSize', N'125', N'')
 END
 GO
+
+
+
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[Nop_Setting]
+		WHERE [Name] = N'Common.EmailWishlist')
+BEGIN
+	INSERT [dbo].[Nop_Setting] ([Name], [Value], [Description])
+	VALUES (N'Common.EmailWishlist', N'True', N'')
+END
+GO
+
+
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[Nop_MessageTemplate]
+		WHERE [Name] = N'Wishlist.EmailAFriend')
+BEGIN
+	INSERT [dbo].[Nop_MessageTemplate] ([Name])
+	VALUES (N'Wishlist.EmailAFriend')
+
+	DECLARE @MessageTemplateID INT 
+	SELECT @MessageTemplateID =	mt.MessageTemplateID FROM Nop_MessageTemplate mt
+							WHERE mt.Name = N'Wishlist.EmailAFriend' 
+
+	IF (@MessageTemplateID > 0)
+	BEGIN
+
+	--do it for each existing language
+	DECLARE @ExistingLanguageID int
+	DECLARE cur_existinglanguage CURSOR FOR
+	SELECT LanguageID
+	FROM [Nop_Language]
+	OPEN cur_existinglanguage
+	FETCH NEXT FROM cur_existinglanguage INTO @ExistingLanguageID
+	WHILE @@FETCH_STATUS = 0
+	BEGIN
+		--insert localized message template
+		INSERT [dbo].[Nop_MessageTemplateLocalized] ([MessageTemplateID], [LanguageID], [BCCEmailAddresses], [Subject], [Body]) 
+		VALUES (@MessageTemplateID, @ExistingLanguageID, N'', N'%Store.Name%. Wishlist',  N'<p><a href="%Store.URL%"> %Store.Name%</a> <br />
+<br />
+%Customer.Email% was shopping on %Store.Name% and wanted to share a wishlist with you. <br />
+<br />
+<br />
+For more info click <a target="_blank" href="%Wishlist.URLForCustomer%">here</a> <br />
+<br />
+<br />
+%EmailAFriend.PersonalMessage%<br />
+<br />
+%Store.Name%</p>')
+
+		--fetch next language identifier
+		FETCH NEXT FROM cur_existinglanguage INTO @ExistingLanguageID
+		END
+	END
+	CLOSE cur_existinglanguage
+	DEALLOCATE cur_existinglanguage
+END
+GO

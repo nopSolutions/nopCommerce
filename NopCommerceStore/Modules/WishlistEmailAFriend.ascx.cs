@@ -34,14 +34,16 @@ using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.Utils.Html;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
+using NopSolutions.NopCommerce.BusinessLogic.Orders;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
-    public partial class ProductEmailAFriend : BaseNopUserControl
+    public partial class WishlistEmailAFriendControl : BaseNopUserControl
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!SettingManager.GetSettingValueBoolean("Common.EnableEmailAFirend"))
+            if (!SettingManager.GetSettingValueBoolean("Common.EnableWishlist") || 
+                !SettingManager.GetSettingValueBoolean("Common.EmailWishlist"))
                 Response.Redirect(CommonHelper.GetStoreLocation());
 
             if (!Page.IsPostBack)
@@ -50,21 +52,19 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void BindData()
         {
-            var product = ProductManager.GetProductById(this.ProductId);
-            if (product != null)
+            //load wishlist
+            if (NopContext.Current.Session == null)
             {
-                hlProduct.NavigateUrl = SEOHelper.GetProductUrl(product);
-                hlProduct.Text = Server.HtmlEncode(product.LocalizedName);
-                lShortDescription.Text = product.LocalizedShortDescription;
+                Response.Redirect(CommonHelper.GetStoreLocation());
+            }
+            var cart = ShoppingCartManager.GetShoppingCartByCustomerSessionGuid(ShoppingCartTypeEnum.Wishlist, NopContext.Current.Session.CustomerSessionGuid);
+            if (cart.Count > 0)
+            {
+                lblDescription.Text = string.Format(GetLocaleResourceString("EmailWishlist.Description"), cart.TotalProducts);
 
-                if(NopContext.Current.User == null && CustomerManager.AllowAnonymousUsersToEmailAFriend)
+                if(NopContext.Current.User == null || NopContext.Current.User.IsGuest)
                 {
-                    CustomerManager.CreateAnonymousUser();
-                }
-
-                if(NopContext.Current.User == null || (NopContext.Current.User.IsGuest && !CustomerManager.AllowAnonymousUsersToEmailAFriend))
-                {
-                    lblEmailAFriend.Text = GetLocaleResourceString("Products.OnlyRegisteredUsersCanEmailAFriend");
+                    lblEmailAFriend.Text = GetLocaleResourceString("EmailWishlist.OnlyRegisteredUsersCanEmailAFriend");
                     pnlFriendsEmail.Visible = false;
                     pnlFrom.Visible = false;
                     pnlPersonalMessage.Visible = false;
@@ -90,49 +90,40 @@ namespace NopSolutions.NopCommerce.Web.Modules
             {
                 try
                 {
-                    var product = ProductManager.GetProductById(this.ProductId);
-                    if (product != null)
-                    {
-                        if (NopContext.Current.User == null && CustomerManager.AllowAnonymousUsersToEmailAFriend)
-                        {
-                            CustomerManager.CreateAnonymousUser();
-                        }
-
-                        if (NopContext.Current.User == null || (NopContext.Current.User.IsGuest && !CustomerManager.AllowAnonymousUsersToEmailAFriend))
-                        {
-                            lblEmailAFriend.Text = GetLocaleResourceString("Products.OnlyRegisteredUsersCanEmailAFriend");
-                            return;
-                        }
-
-                        string friendsEmail = txtFriendsEmail.Text.Trim();
-                        string personalMessage = txtPersonalMessage.Text.Trim();
-                        personalMessage = ProductManager.FormatEmailAFriendText(personalMessage);
-
-                        MessageManager.SendProductEmailAFriendMessage(NopContext.Current.User,
-                            NopContext.Current.WorkingLanguage.LanguageId, product,
-                            friendsEmail, personalMessage);
-
-                        txtFriendsEmail.Text = string.Empty;
-                        txtPersonalMessage.Text = string.Empty;
-                        lblEmailAFriend.Text = GetLocaleResourceString("Products.EmailAFriend.YourMessageHasBeenSent");
-                    }
-                    else
+                    //load wishlist
+                    if (NopContext.Current.Session == null)
                     {
                         Response.Redirect(CommonHelper.GetStoreLocation());
                     }
+                    var cart = ShoppingCartManager.GetShoppingCartByCustomerSessionGuid(ShoppingCartTypeEnum.Wishlist, NopContext.Current.Session.CustomerSessionGuid);
+                    if (cart.Count == 0)
+                    {
+                        Response.Redirect(CommonHelper.GetStoreLocation());
+                    }
+
+                    //email it
+                    if (NopContext.Current.User == null || NopContext.Current.User.IsGuest)
+                    {
+                        lblEmailAFriend.Text = GetLocaleResourceString("EmailWishlist.OnlyRegisteredUsersCanEmailAFriend");
+                        return;
+                    }
+
+                    string friendsEmail = txtFriendsEmail.Text.Trim();
+                    string personalMessage = txtPersonalMessage.Text.Trim();
+                    personalMessage = ProductManager.FormatEmailAFriendText(personalMessage);
+
+                    MessageManager.SendWishlistEmailAFriendMessage(NopContext.Current.User,
+                        cart, NopContext.Current.WorkingLanguage.LanguageId,
+                        friendsEmail, personalMessage);
+
+                    txtFriendsEmail.Text = string.Empty;
+                    txtPersonalMessage.Text = string.Empty;
+                    lblEmailAFriend.Text = GetLocaleResourceString("EmailWishlist.YourMessageHasBeenSent");
                 }
                 catch (Exception exc)
                 {
                     lblEmailAFriend.Text = exc.Message;
                 }
-            }
-        }
-
-        public int ProductId
-        {
-            get
-            {
-                return CommonHelper.QueryStringInt("ProductId");
             }
         }
     }

@@ -1263,6 +1263,18 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO
         }
 
         /// <summary>
+        /// Gets wishlistt URL
+        /// </summary>
+        /// <param name="customerGuid">Customer Guid</param>
+        /// <returns>Wishlist URL</returns>
+        public static string GetWishlistUrl(Guid customerGuid)
+        {
+            string url = SEOHelper.GetWishlistUrl();
+            url = CommonHelper.ModifyQueryString(url, "CustomerGUID=" + customerGuid.ToString(), null);
+            return url.ToLowerInvariant();
+        }
+
+        /// <summary>
         /// Gets login page URL
         /// </summary>
         /// <returns>Login page URL</returns>
@@ -1396,6 +1408,16 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO
         public static string GetProductEmailAFriendUrl(int productId)
         {
             string url = string.Format("{0}ProductEmailAFriend.aspx?ProductId={1}", CommonHelper.GetStoreLocation(), productId);
+            return url.ToLowerInvariant();
+        }
+
+        /// <summary>
+        /// Gets wishlist email a friend URL
+        /// </summary>
+        /// <returns>Wishlist email a friend URL</returns>
+        public static string GetWishlistEmailAFriendUrl()
+        {
+            string url = string.Format("{0}WishlistEmailAFriend.aspx", CommonHelper.GetStoreLocation());
             return url.ToLowerInvariant();
         }
 

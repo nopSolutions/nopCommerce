@@ -371,6 +371,42 @@ set @resources='
   <LocaleResource Name="Admin.PromotionProviders.Become.ProductThumbSize.RangeErrorMessage">
     <Value>The product thumbnail image size must be from 0 to 999999</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.EmailWishList">
+    <Value>Allow customers to email their wishlists:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Products.EmailWishList.Tooltip">
+    <Value>Check to allow customers to email their wishlists to friends. NOTE: This option is available only for registered customers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Wishlist.EmailButton">
+    <Value>Email a friend</Value>
+  </LocaleResource>
+  <LocaleResource Name="PageTitle.WishlistEmailAFriend">
+    <Value>Email wishlist to a friend</Value>
+  </LocaleResource>
+  <LocaleResource Name="EmailWishlist.EmailAFriend">
+    <Value>Email wishlist to a friend</Value>
+  </LocaleResource>
+  <LocaleResource Name="EmailWishlist.FriendEmail">
+    <Value>Friend''s Email:</Value>
+  </LocaleResource>
+  <LocaleResource Name="EmailWishlist.YourEmailAddress">
+    <Value>Your Email address:</Value>
+  </LocaleResource>
+  <LocaleResource Name="EmailWishlist.PersonalMessage">
+    <Value>Personal Message:</Value>
+  </LocaleResource>
+  <LocaleResource Name="EmailWishlist.EmailAFriendButton">
+    <Value>Send email</Value>
+  </LocaleResource>
+  <LocaleResource Name="EmailWishlist.Description">
+    <Value>{0} products in the wishlist</Value>
+  </LocaleResource>
+  <LocaleResource Name="EmailWishlist.OnlyRegisteredUsersCanEmailAFriend">
+    <Value>Only registered customers can use email a friend feature</Value>
+  </LocaleResource>
+  <LocaleResource Name="EmailWishlist.YourMessageHasBeenSent">
+    <Value>Your message has been sent.</Value>
+  </LocaleResource>
 </Language>
 '
 

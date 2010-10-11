@@ -157,6 +157,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             cbUseImagesForLanguageSelection.Checked = SettingManager.GetSettingValueBoolean("Common.UseImagesForLanguageSelection", false);
             cbEnableCompareProducts.Checked = ProductManager.CompareProductsEnabled;
             cbEnableWishlist.Checked = SettingManager.GetSettingValueBoolean("Common.EnableWishlist");
+            cbEmailWishlist.Checked = SettingManager.GetSettingValueBoolean("Common.EmailWishlist");
             cbIsReOrderAllowed.Checked = OrderManager.IsReOrderAllowed;
             cbEnableEmailAFriend.Checked = SettingManager.GetSettingValueBoolean("Common.EnableEmailAFirend");
             cbShowMiniShoppingCart.Checked = SettingManager.GetSettingValueBoolean("Common.ShowMiniShoppingCart");
@@ -309,9 +310,9 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         protected override void OnPreRender(EventArgs e)
         {
             BindJQuery();
-
-
+            
             this.cbStoreClosed.Attributes.Add("onclick", "toggleStoreClosed();");
+            this.cbEnableWishlist.Attributes.Add("onclick", "toggleWishlist();");            
             this.cbEnableUrlRewriting.Attributes.Add("onclick", "toggleUrlRewriting();");
             this.cbCustomersAllowedToUploadAvatars.Attributes.Add("onclick", "toggleCustomersAllowedToUploadAvatars();");
             this.cbAllowPM.Attributes.Add("onclick", "togglePM();");
@@ -445,6 +446,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     SettingManager.SetParam("Common.UseImagesForLanguageSelection", cbUseImagesForLanguageSelection.Checked.ToString());
                     ProductManager.CompareProductsEnabled = cbEnableCompareProducts.Checked;
                     SettingManager.SetParam("Common.EnableWishlist", cbEnableWishlist.Checked.ToString());
+                    SettingManager.SetParam("Common.EmailWishlist", cbEmailWishlist.Checked.ToString());
                     OrderManager.IsReOrderAllowed = cbIsReOrderAllowed.Checked;
                     SettingManager.SetParam("Common.EnableEmailAFirend", cbEnableEmailAFriend.Checked.ToString());
                     SettingManager.SetParam("Common.ShowMiniShoppingCart", cbShowMiniShoppingCart.Checked.ToString());

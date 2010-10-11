@@ -3946,6 +3946,13 @@
     <Compile Include="Alipay_Return.aspx.designer.cs">
       <DependentUpon>Alipay_Return.aspx</DependentUpon>
     </Compile>
+    <Compile Include="WishlistEmailAFriend.aspx.cs">
+      <DependentUpon>WishlistEmailAFriend.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WishlistEmailAFriend.aspx.designer.cs">
+      <DependentUpon>WishlistEmailAFriend.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Modules\BlogMonths.ascx.cs">
       <DependentUpon>BlogMonths.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -3959,6 +3966,13 @@
     </Compile>
     <Compile Include="Modules\BlogPopularTags.ascx.designer.cs">
       <DependentUpon>BlogPopularTags.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\WishlistEmailAFriend.ascx.cs">
+      <DependentUpon>WishlistEmailAFriend.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\WishlistEmailAFriend.ascx.designer.cs">
+      <DependentUpon>WishlistEmailAFriend.ascx</DependentUpon>
     </Compile>
     <Compile Include="Modules\PollBlock.ascx.cs">
       <DependentUpon>PollBlock.ascx</DependentUpon>
@@ -6146,6 +6160,7 @@
     <None Include="editors\fckeditor\editor\dialog\fck_spellerpages\spellerpages\server-scripts\spellchecker.pl" />
     <None Include="editors\fckeditor\fckutils.cfm" />
     <None Include="Install\Scripts\1.80\nopCommerce_upgrade.sql" />
+    <Content Include="WishlistEmailAFriend.aspx" />
     <Content Include="editors\fckeditor\editor\css\behaviors\disablehandles.htc" />
     <Content Include="editors\fckeditor\editor\css\behaviors\showtableborders.htc" />
     <Content Include="editors\fckeditor\editor\css\fck_editorarea.css" />
@@ -6569,6 +6584,7 @@
     <Content Include="images\expand.png" />
     <Content Include="Modules\BlogMonths.ascx" />
     <Content Include="Modules\BlogPopularTags.ascx" />
+    <Content Include="Modules\WishlistEmailAFriend.ascx" />
     <Content Include="Modules\PollBlock.ascx" />
     <Content Include="Modules\StoreThemeSelector.ascx" />
     <Content Include="Modules\DecimalTextBox.ascx" />

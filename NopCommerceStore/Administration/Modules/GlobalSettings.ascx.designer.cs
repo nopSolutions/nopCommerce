@@ -355,13 +355,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         protected global::System.Web.UI.WebControls.CheckBox cbEnableCompareProducts;
         
         /// <summary>
-        /// lblWishList control.
+        /// lblEnableWishList control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblWishList;
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblEnableWishList;
         
         /// <summary>
         /// cbEnableWishlist control.
@@ -371,6 +371,24 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox cbEnableWishlist;
+        
+        /// <summary>
+        /// lblEmailWishList control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblEmailWishList;
+        
+        /// <summary>
+        /// cbEmailWishlist control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbEmailWishlist;
         
         /// <summary>
         /// lblNotifyAboutNewProductReviews control.
