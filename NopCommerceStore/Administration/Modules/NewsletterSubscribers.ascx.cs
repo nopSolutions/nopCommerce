@@ -46,6 +46,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             return newsLetterSubscriptions;
         }
 
+        protected List<NewsLetterSubscription> GetNewsletterSubscribers(bool onlyActive)
+        {
+            string email = txtEmail.Text.Trim();
+            var newsLetterSubscriptions = MessageManager.GetAllNewsLetterSubscriptions(email, !onlyActive);
+            return newsLetterSubscriptions;
+        }
+
         protected void BindGrid()
         {
             var newsLetterSubscriptions = GetNewsletterSubscribers();
@@ -62,7 +69,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     string fileName = String.Format("newsletter_emails_{0}_{1}.txt", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), CommonHelper.GenerateRandomDigitCode(4));
 
                     StringBuilder sb = new StringBuilder();
-                    var newsLetterSubscriptions = GetNewsletterSubscribers();
+                    var newsLetterSubscriptions = GetNewsletterSubscribers(rbExportCVSActive.Checked);
                     if (newsLetterSubscriptions.Count == 0)
                     {
                         throw new NopException("No emails to export");

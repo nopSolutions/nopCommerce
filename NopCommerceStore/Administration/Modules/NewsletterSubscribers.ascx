@@ -11,11 +11,9 @@
         <asp:Button ID="SearchButton" runat="server" Text="<% $NopResources:Admin.NewsletterSubscribers.SearchButton.Text %>"
             CssClass="adminButtonBlue" OnClick="SearchButton_Click" />
         <asp:Button runat="server" Text="<% $NopResources:Admin.NewsletterSubscribers.ImportEmailsButton.Text %>"
-            CssClass="adminButtonBlue" ID="btnImportCSV" OnClick="btnImportCSV_Click" 
-            ToolTip="<% $NopResources:Admin.NewsletterSubscribers.ImportEmailsButton.Tooltip %>" />
-       <asp:Button runat="server" Text="<% $NopResources:Admin.NewsletterSubscribers.ExportEmailsButton.Text %>"
-            CssClass="adminButtonBlue" ID="btnExportCVS" OnClick="btnExportCVS_Click"
-            ToolTip="<% $NopResources:Admin.NewsletterSubscribers.ExportEmailsButton.Tooltip %>" />
+            CssClass="adminButtonBlue" ID="btnImportCSV" OnClick="btnImportCSV_Click" ToolTip="<% $NopResources:Admin.NewsletterSubscribers.ImportEmailsButton.Tooltip %>" />
+        <asp:Button runat="server" Text="<% $NopResources:Admin.NewsletterSubscribers.ExportEmailsButton.Text %>"
+            CssClass="adminButtonBlue" ID="btnExportCVS" OnClick="btnExportCVS_Click" ToolTip="<% $NopResources:Admin.NewsletterSubscribers.ExportEmailsButton.Tooltip %>" />
         <asp:Button runat="server" Text="<% $NopResources:Admin.NewsletterSubscribers.DeleteButton.Text %>"
             CssClass="adminButtonBlue" ID="btnDelete" OnClick="btnDelete_Click" />
         <nopCommerce:ConfirmationBox runat="server" ID="cbDelete" TargetControlID="btnDelete"
@@ -83,6 +81,7 @@
     </Columns>
     <PagerSettings PageButtonCount="50" Position="TopAndBottom" />
 </asp:GridView>
+<%--import--%>
 <ajaxToolkit:ConfirmButtonExtender ID="cbeImportCSV" runat="server" TargetControlID="btnImportCSV"
     DisplayModalPopupID="mpeImportCSV" />
 <ajaxToolkit:ModalPopupExtender runat="server" ID="mpeImportCSV" TargetControlID="btnImportCSV"
@@ -97,6 +96,34 @@
         <asp:Button ID="btnImportCSVOk" runat="server" Text="<% $NopResources:Admin.Common.OK %>"
             CssClass="adminButton" CausesValidation="false" />
         <asp:Button ID="btnImportCSVCancel" runat="server" Text="<% $NopResources:Admin.Common.Cancel %>"
+            CssClass="adminButton" CausesValidation="false" />
+    </div>
+</asp:Panel>
+<%--export--%>
+<ajaxToolkit:ConfirmButtonExtender ID="cbeExportCVS" runat="server" DisplayModalPopupID="mpeExportCVS"
+    TargetControlID="btnExportCVS" />
+<ajaxToolkit:ModalPopupExtender ID="mpeExportCVS" runat="server" TargetControlID="btnExportCVS"
+    PopupControlID="pnlExportCVSPopup" OkControlID="btnExportCVSOk" CancelControlID="btnExportCVSCancel"
+    BackgroundCssClass="modalBackground" />
+<asp:Panel ID="pnlExportCVSPopup" runat="server" Style="display: none; width: 250px;
+    background-color: White; border-width: 2px; border-color: Black; border-style: solid;
+    padding: 20px;">
+    <div style="text-align: center;">
+        <table style="text-align: left;">
+            <tr>
+                <td colspan="2">
+                    <asp:RadioButton runat="server" ID="rbExportCVSAll" GroupName="ExportCVS" Checked="true"
+                        Text="<% $NopResources:Admin.NewsletterSubscribers.ImportEmails.All %>" />
+                    <br />
+                    <asp:RadioButton runat="server" ID="rbExportCVSActive" GroupName="ExportCVS" Text="<% $NopResources:Admin.NewsletterSubscribers.ImportEmails.Confirmed %>" />
+                </td>
+            </tr>
+        </table>
+        <p>
+        </p>
+        <asp:Button ID="btnExportCVSOk" runat="server" Text="<% $NopResources:Admin.Common.Yes %>"
+            CssClass="adminButton" CausesValidation="false" />
+        <asp:Button ID="btnExportCVSCancel" runat="server" Text="<% $NopResources:Admin.Common.No %>"
             CssClass="adminButton" CausesValidation="false" />
     </div>
 </asp:Panel>

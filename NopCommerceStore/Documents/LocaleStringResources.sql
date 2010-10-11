@@ -407,6 +407,12 @@ set @resources='
   <LocaleResource Name="EmailWishlist.YourMessageHasBeenSent">
     <Value>Your message has been sent.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.NewsletterSubscribers.ImportEmails.All">
+    <Value>Export all</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.NewsletterSubscribers.ImportEmails.Confirmed">
+    <Value>Export only active (confirmed)</Value>
+  </LocaleResource>
 </Language>
 '
 
