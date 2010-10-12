@@ -4,7 +4,7 @@
 <div class="producttags-box">
     <asp:Repeater ID="rptrProductTags" runat="server">
         <ItemTemplate>
-            <a href="<%#CommonHelper.GetStoreLocation()%>producttag.aspx?tagid=<%#Eval("ProductTagId")%>"
+            <a href="<%# SEOHelper.GetProductTagUrl((ProductTag)(Container.DataItem)) %>"
                 class="producttag">
                 <%#Server.HtmlEncode((string)Eval("Name"))%></a><%-- (<%#Eval("ProductCount")%>)--%></ItemTemplate>
         <SeparatorTemplate>

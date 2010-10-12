@@ -558,3 +558,15 @@ Received address: %VatValidationResult.Address%
 	DEALLOCATE cur_existinglanguage
 END
 GO
+
+
+--product tag URL rewrites
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[Nop_Setting]
+		WHERE [Name] = N'SEO.ProductTags.UrlRewriteFormat')
+BEGIN
+	INSERT [dbo].[Nop_Setting] ([Name], [Value], [Description])
+	VALUES (N'SEO.ProductTags.UrlRewriteFormat', N'{0}producttag/{1}-{2}.aspx', N'')
+END
+GO

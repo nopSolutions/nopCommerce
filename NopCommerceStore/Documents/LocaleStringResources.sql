@@ -413,6 +413,15 @@ set @resources='
   <LocaleResource Name="Admin.NewsletterSubscribers.ImportEmails.Confirmed">
     <Value>Export only active (confirmed)</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.SEODisplay.ProductTagUrl">
+    <Value>Product tag url rewrite format:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.SEODisplay.ProductTagUrl.Tooltip">
+    <Value>The format for product tag urls. Must have 3 arguments i.e. ''{0}producttag/{1}-{2}.aspx''</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.SEODisplay.ProductTagUrl.ErrorMessage">
+    <Value>You must enter a valid rewrite format string.</Value>
+  </LocaleResource>
 </Language>
 '
 

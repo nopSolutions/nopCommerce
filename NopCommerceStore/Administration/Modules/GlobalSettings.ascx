@@ -1048,6 +1048,17 @@
                     <tr>
                         <td class="adminTitle">
                             <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
+                                ID="lblProductTagUrlRewriteFormat" Text="<% $NopResources:Admin.GlobalSettings.SEODisplay.ProductTagUrl %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.SEODisplay.ProductTagUrl.Tooltip %>" />
+                        </td>
+                        <td class="adminData">
+                            <nopCommerce:SimpleTextBox runat="server" ID="txtProductTagUrlRewriteFormat" CssClass="adminInput"
+                                ErrorMessage="<% $NopResources:Admin.GlobalSettings.SEODisplay.ProductTagUrl.ErrorMessage %>" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
                                 ID="lblNewsUrlRewriteFormat" Text="<% $NopResources:Admin.GlobalSettings.SEODisplay.NewsUrl %>"
                                 ToolTip="<% $NopResources:Admin.GlobalSettings.SEODisplay.NewsUrl.Tooltip %>" />
                         </td>

@@ -1510,6 +1510,33 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO
         }
 
         /// <summary>
+        /// Gets product tag URL
+        /// </summary>
+        /// <param name="productTagId">Product tag identifier</param>
+        /// <returns>product tag URL</returns>
+        public static string GetProductTagUrl(int productTagId)
+        {
+            var productTag = ProductManager.GetProductTagById(productTagId);
+            return GetProductTagUrl(productTag);
+        }
+
+        /// <summary>
+        /// Gets product tag URL
+        /// </summary>
+        /// <param name="productTag">Product tag</param>
+        /// <returns>Product tag URL</returns>
+        public static string GetProductTagUrl(ProductTag productTag)
+        {
+            if (productTag == null)
+                throw new ArgumentNullException("productTag");
+            string seName = GetSEName(productTag.Name);
+
+            string url2 = SEOHelper.EnableUrlRewriting ? SettingManager.GetSettingValue("SEO.ProductTags.UrlRewriteFormat") : "{0}ProductTag.aspx?tagid={1}";
+            string url = string.Format(url2, CommonHelper.GetStoreLocation(), productTag.ProductTagId, seName);
+            return url.ToLowerInvariant();
+        }
+
+        /// <summary>
         /// Gets blog URL
         /// </summary>
         /// <param name="tag">Blog tag</param>

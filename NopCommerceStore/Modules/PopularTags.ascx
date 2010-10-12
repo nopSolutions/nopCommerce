@@ -16,7 +16,7 @@
                 </div>
             </LayoutTemplate>
             <ItemTemplate>
-                <li><a style='font-size: <%# GetFontSize((int)Eval("ProductCount")) %>%' href="<%#CommonHelper.GetStoreLocation()%>producttag.aspx?tagid=<%#Eval("ProductTagId")%>">
+                <li><a style='font-size: <%# GetFontSize((int)Eval("ProductCount")) %>%' href="<%# SEOHelper.GetProductTagUrl((ProductTag)(Container.DataItem)) %>">
                     <%#Server.HtmlEncode((string)Eval("Name"))%></a>&nbsp;&nbsp;</li>
             </ItemTemplate>
         </asp:ListView>

@@ -95,6 +95,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             cbCategoryCanonicalUrl.Checked = SettingManager.GetSettingValueBoolean("SEO.CanonicalURLs.Category.Enabled");
             txtManufacturerUrlRewriteFormat.Text = SettingManager.GetSettingValue("SEO.Manufacturer.UrlRewriteFormat");
             cbManufacturerCanonicalUrl.Checked = SettingManager.GetSettingValueBoolean("SEO.CanonicalURLs.Manufacturer.Enabled");
+            txtProductTagUrlRewriteFormat.Text = SettingManager.GetSettingValue("SEO.ProductTags.UrlRewriteFormat");
             txtNewsUrlRewriteFormat.Text = SettingManager.GetSettingValue("SEO.News.UrlRewriteFormat");
             txtBlogUrlRewriteFormat.Text = SettingManager.GetSettingValue("SEO.Blog.UrlRewriteFormat");
             txtTopicUrlRewriteFormat.Text = SettingManager.GetSettingValue("SEO.Topic.UrlRewriteFormat");
@@ -386,6 +387,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     SettingManager.SetParam("SEO.CanonicalURLs.Category.Enabled", cbCategoryCanonicalUrl.Checked.ToString());
                     SettingManager.SetParam("SEO.Manufacturer.UrlRewriteFormat", txtManufacturerUrlRewriteFormat.Text);
                     SettingManager.SetParam("SEO.CanonicalURLs.Manufacturer.Enabled", cbManufacturerCanonicalUrl.Checked.ToString());
+                    SettingManager.SetParam("SEO.ProductTags.UrlRewriteFormat", txtProductTagUrlRewriteFormat.Text);
                     SettingManager.SetParam("SEO.News.UrlRewriteFormat", txtNewsUrlRewriteFormat.Text);
                     SettingManager.SetParam("SEO.Blog.UrlRewriteFormat", txtBlogUrlRewriteFormat.Text);
                     SettingManager.SetParam("SEO.Topic.UrlRewriteFormat", txtTopicUrlRewriteFormat.Text);
