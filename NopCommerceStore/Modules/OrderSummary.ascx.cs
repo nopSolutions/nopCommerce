@@ -270,7 +270,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             ApplyCheckoutAttributes();
             if (NopContext.Current.User == null || NopContext.Current.User.IsGuest)
             {
-                string loginURL = SEOHelper.GetLoginPageUrl(true, true);
+                string loginURL = SEOHelper.GetLoginPageUrl(true, CustomerManager.AnonymousCheckoutAllowed);
                 Response.Redirect(loginURL);
             }
             else

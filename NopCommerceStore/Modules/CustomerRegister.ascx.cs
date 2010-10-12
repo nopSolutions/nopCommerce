@@ -239,7 +239,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             var ddlStateProvince = (DropDownList)CreateUserWizardStep1.ContentTemplateContainer.FindControl("ddlStateProvince");
             var cbNewsletter = (CheckBox)CreateUserWizardStep1.ContentTemplateContainer.FindControl("cbNewsletter");
             var dtDateOfBirth = (NopDatePicker)CreateUserWizardStep1.ContentTemplateContainer.FindControl("dtDateOfBirth");
-            
+
             Customer customer = null;
             if (CustomerManager.UsernamesEnabled)
             {
@@ -316,7 +316,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 //admin notification
                 if (!String.IsNullOrEmpty(customer.VatNumber) && TaxManager.EUVatEmailAdminWhenNewVATSubmitted)
                 {
-                    MessageManager.SendNewVATSubmittedStoreOwnerNotification(customer, 
+                    MessageManager.SendNewVATSubmittedStoreOwnerNotification(customer,
                         vatName, vatAddress, LocalizationManager.DefaultAdminLanguage.LanguageId);
                 }
             }
@@ -414,7 +414,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 }
             }
         }
-        
+
         private void FillCountryDropDowns()
         {
             var ddlCountry = (DropDownList)CreateUserWizardStep1.ContentTemplateContainer.FindControl("ddlCountry");
@@ -500,6 +500,17 @@ namespace NopSolutions.NopCommerce.Web.Modules
             {
                 CaptchaCtrl.Visible = SettingManager.GetSettingValueBoolean("Common.RegisterCaptchaImageEnabled");
             }
+        }
+
+        protected override void OnPreRender(EventArgs e)
+        {
+            string returnUrl = CommonHelper.QueryString("ReturnUrl");
+            if (!String.IsNullOrEmpty(returnUrl))
+            {
+                this.CreateUserForm.ContinueDestinationPageUrl = returnUrl;
+            }
+
+            base.OnPreRender(e);
         }
     }
 }

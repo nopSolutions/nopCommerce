@@ -120,11 +120,11 @@ namespace NopSolutions.NopCommerce.Web.Modules
         protected void btnRegister_Click(object sender, EventArgs e)
         {
             string url = CommonHelper.GetStoreLocation() + "register.aspx";
-            //string returnURL = CommonHelper.QueryString("ReturnURL");
-            //if (!String.IsNullOrEmpty(returnURL))
-            //{
-            //    url += "?ReturnUrl=" + returnURL;
-            //}
+            string returnUrl = CommonHelper.QueryString("ReturnUrl");
+            if (!String.IsNullOrEmpty(returnUrl))
+            {
+                url = CommonHelper.ModifyQueryString(url, "ReturnUrl=" + returnUrl, null);
+            }
             Response.Redirect(url);
         }
 
