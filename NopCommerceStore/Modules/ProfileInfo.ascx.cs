@@ -180,6 +180,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             {
                 ForumPost forumPost = (ForumPost)e.Row.DataItem;
 
+                //topic info
                 HyperLink hlTopic = e.Row.FindControl("hlTopic") as HyperLink;
                 if (hlTopic != null)
                 {
@@ -191,12 +192,20 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     }
                 }
 
+                //post date
                 Label lblPosted = e.Row.FindControl("lblPosted") as Label;
                 if (lblPosted != null)
                 {
-                    lblPosted.Text = DateTimeHelper.ConvertToUserTime(forumPost.CreatedOn, DateTimeKind.Utc).ToString("f");
+                    string dateStr = string.Empty;
+                    if (ForumManager.RelativeDateTimeFormattingEnabled)
+                        dateStr = forumPost.CreatedOn.RelativeFormat(true, "f");
+                    else
+                        dateStr = DateTimeHelper.ConvertToUserTime(forumPost.CreatedOn, DateTimeKind.Utc).ToString("f");
+
+                    lblPosted.Text = dateStr;
                 }
 
+                //forum post
                 Label lblPost = e.Row.FindControl("lblPost") as Label;
                 if (lblPost != null)
                 {

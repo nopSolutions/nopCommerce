@@ -422,6 +422,12 @@ set @resources='
   <LocaleResource Name="Admin.GlobalSettings.SEODisplay.ProductTagUrl.ErrorMessage">
     <Value>You must enter a valid rewrite format string.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ForumsSettings.RelativeDateTimeFormattingEnabled">
+    <Value>Relative date and time formatting:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ForumsSettings.RelativeDateTimeFormattingEnabled.Tooltip">
+    <Value>Click to enable relative date and time formatting (e.g. 2 hours ago, a month ago)</Value>
+  </LocaleResource>
 </Language>
 '
 

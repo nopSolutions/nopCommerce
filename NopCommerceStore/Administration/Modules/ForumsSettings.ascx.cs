@@ -52,6 +52,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         protected void BindData()
         {
             cbForumsEnabled.Checked = ForumManager.ForumsEnabled;
+            cbRelativeDateTimeFormattingEnabled.Checked = ForumManager.RelativeDateTimeFormattingEnabled;
             cbShowCustomersPostCount.Checked = ForumManager.ShowCustomersPostCount;
             cbGuestsAllowedToCreatePosts.Checked = ForumManager.AllowGuestsToCreatePosts;
             cbGuestsAllowedToCreateTopics.Checked = ForumManager.AllowGuestsToCreateTopics;
@@ -86,6 +87,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 try
                 {
                     ForumManager.ForumsEnabled = cbForumsEnabled.Checked;
+                    ForumManager.RelativeDateTimeFormattingEnabled = cbRelativeDateTimeFormattingEnabled.Checked;
                     ForumManager.ShowCustomersPostCount = cbShowCustomersPostCount.Checked;
                     ForumManager.AllowGuestsToCreatePosts = cbGuestsAllowedToCreatePosts.Checked;
                     ForumManager.AllowGuestsToCreateTopics = cbGuestsAllowedToCreateTopics.Checked;

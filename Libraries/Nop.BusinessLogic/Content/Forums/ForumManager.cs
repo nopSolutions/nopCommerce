@@ -1677,6 +1677,22 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         }
 
         /// <summary>
+        /// Gets or sets a value indicating whether relative date and time formatting is enabled  (e.g. 2 hours ago, a month ago)
+        /// </summary>
+        public static bool RelativeDateTimeFormattingEnabled
+        {
+            get
+            {
+                bool result = SettingManager.GetSettingValueBoolean("Forums.RelativeDateTimeFormattingEnabled", false);
+                return result;
+            }
+            set
+            {
+                SettingManager.SetParam("Forums.RelativeDateTimeFormattingEnabled", value.ToString());
+            }
+        }
+
+        /// <summary>
         /// Gets or sets a value indicating whether customers are allowed to edit posts that they created.
         /// </summary>
         public static bool AllowCustomersToEditPosts

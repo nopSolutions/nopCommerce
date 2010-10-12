@@ -259,6 +259,7 @@
     <Compile Include="Products\PriceRange.cs" />
     <Compile Include="Products\PriceHelper.cs" />
     <Compile Include="Profile\DateTimeHelper.cs" />
+    <Compile Include="Profile\Extensions.cs" />
     <Compile Include="Promo\Campaigns\Campaign.cs" />
     <Compile Include="Promo\Discounts\DiscountLimitation.cs" />
     <Compile Include="Promo\Discounts\DiscountLimitationEnum.cs" />

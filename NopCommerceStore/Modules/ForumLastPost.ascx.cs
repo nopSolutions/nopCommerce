@@ -53,7 +53,16 @@ namespace NopSolutions.NopCommerce.Web.Modules
         {
             if (forumPost != null)
             {
-                lblLastPostDate.Text = DateTimeHelper.ConvertToUserTime(forumPost.CreatedOn, DateTimeKind.Utc).ToString("f");
+                //post date
+                string dateStr = string.Empty;
+                if (ForumManager.RelativeDateTimeFormattingEnabled)
+                    dateStr = forumPost.CreatedOn.RelativeFormat(true, "f");
+                else
+                    dateStr = DateTimeHelper.ConvertToUserTime(forumPost.CreatedOn, DateTimeKind.Utc).ToString("f");
+
+                lblLastPostDate.Text = dateStr;
+
+                //topic
                 var forumTopic = forumPost.Topic;
                 if (forumTopic != null)
                 {
@@ -61,6 +70,8 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     hlTopic.ToolTip = Server.HtmlEncode(forumTopic.Subject);
                     hlTopic.NavigateUrl = SEOHelper.GetForumTopicUrl(forumTopic);
                 }
+
+                //customer
                 var customer = forumPost.User;
                 if(customer != null)
                 {

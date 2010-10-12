@@ -27,6 +27,15 @@
     </tr>
     <tr>
         <td class="adminTitle">
+            <nopCommerce:ToolTipLabel runat="server" ID="lblRelativeDateTimeFormattingEnabled" Text="<% $NopResources:Admin.ForumsSettings.RelativeDateTimeFormattingEnabled %>"
+                ToolTip="<% $NopResources:Admin.ForumsSettings.RelativeDateTimeFormattingEnabled.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
+        </td>
+        <td class="adminData">
+            <asp:CheckBox runat="server" ID="cbRelativeDateTimeFormattingEnabled"></asp:CheckBox>
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
             <nopCommerce:ToolTipLabel runat="server" ID="lblShowCustomersPostCount" Text="<% $NopResources:Admin.ForumsSettings.ShowPostCount %>"
                 ToolTip="<% $NopResources:Admin.ForumsSettings.ShowPostCount.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
         </td>
