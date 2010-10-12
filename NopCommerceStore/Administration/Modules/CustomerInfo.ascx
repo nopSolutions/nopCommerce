@@ -32,7 +32,7 @@
                 ToolTip="<% $NopResources:Admin.CustomerInfo.Password.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
         </td>
         <td class="adminData">
-            <asp:TextBox runat="server" ID="txtPassword" CssClass="adminInput" />
+            <asp:TextBox runat="server" ID="txtPassword" CssClass="adminInput" TextMode="Password" />
             <asp:Button runat="server" ID="btnChangePassword" CssClass="adminButtonBlue" Text="<% $NopResources:Admin.CustomerInfo.BtnChangePassword.Text %>"
                 OnClick="BtnChangePassword_OnClick" />
         </td>

@@ -50,32 +50,6 @@ namespace NopSolutions.NopCommerce.Web.Modules
             return passwordOK;
         }
 
-        protected override void OnLoad(EventArgs e)
-        {
-            base.OnLoad(e);
-
-            this.BindData();
-
-            if (this.LocalizedTopic != null)
-            {
-                if (this.OverrideSEO)
-                {
-                    //title
-                    string title = this.LocalizedTopic.MetaTitle;
-                    if (String.IsNullOrEmpty(title))
-                        title = this.LocalizedTopic.Title;
-                    if (!string.IsNullOrEmpty(title))
-                        SEOHelper.RenderTitle(this.Page, title, true);
-
-                    //meta
-                    if (!String.IsNullOrEmpty(this.LocalizedTopic.MetaDescription))
-                        SEOHelper.RenderMetaTag(this.Page, "description", this.LocalizedTopic.MetaDescription, true);
-                    if (!String.IsNullOrEmpty(this.LocalizedTopic.MetaKeywords))
-                        SEOHelper.RenderMetaTag(this.Page, "keywords", this.LocalizedTopic.MetaKeywords, true);
-                }
-            }
-        }
-
         protected void btnPassword_OnClick(object sender, EventArgs e)
         {
             this.EnteredPassword = txtPassword.Text;
@@ -126,6 +100,40 @@ namespace NopSolutions.NopCommerce.Web.Modules
             {
                 this.Visible = false;
             }
+        }
+        
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+
+            this.BindData();
+
+            if (this.LocalizedTopic != null)
+            {
+                if (this.OverrideSEO)
+                {
+                    //title
+                    string title = this.LocalizedTopic.MetaTitle;
+                    if (String.IsNullOrEmpty(title))
+                        title = this.LocalizedTopic.Title;
+                    if (!string.IsNullOrEmpty(title))
+                        SEOHelper.RenderTitle(this.Page, title, true);
+
+                    //meta
+                    if (!String.IsNullOrEmpty(this.LocalizedTopic.MetaDescription))
+                        SEOHelper.RenderMetaTag(this.Page, "description", this.LocalizedTopic.MetaDescription, true);
+                    if (!String.IsNullOrEmpty(this.LocalizedTopic.MetaKeywords))
+                        SEOHelper.RenderMetaTag(this.Page, "keywords", this.LocalizedTopic.MetaKeywords, true);
+                }
+            }
+        }
+
+        protected override void OnPreRender(EventArgs e)
+        {
+            //default button
+            this.txtPassword.Attributes.Add("onkeydown", "if(event.which || event.keyCode){if ((event.which == 13) || (event.keyCode == 13)) {document.getElementById('" + btnPassword.ClientID + "').click();return false;}} else {return true}; ");
+
+            base.OnPreRender(e);
         }
 
         private LocalizedTopic localizedTopic = null;

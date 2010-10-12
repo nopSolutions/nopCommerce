@@ -47,7 +47,7 @@
                             ToolTip="<% $NopResources:Admin.TopicInfo.Password.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
                     </td>
                     <td class="adminData">
-                        <asp:TextBox runat="server" ID="txtPassword" CssClass="adminInput" />
+                        <asp:TextBox runat="server" ID="txtPassword" CssClass="adminInput" TextMode="Password" />
                     </td>
                 </tr>
                 <tr>

@@ -11,7 +11,7 @@
         <asp:PlaceHolder runat="server" ID="phPassword">
             <%=GetLocaleResourceString("TopicPage.EnterPassword")%>
             <br />
-            <asp:TextBox runat="server" ID="txtPassword" />
+            <asp:TextBox runat="server" ID="txtPassword" TextMode="Password" />
             <asp:Button runat="server" ID="btnPassword" OnClick="btnPassword_OnClick" Text="<% $NopResources:TopicPage.btnPassword.Text %>"
                 CssClass="useragreementbutton" />
             <br />
