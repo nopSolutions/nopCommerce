@@ -252,6 +252,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
         /// <param name="cancelPaymentResult">Cancel payment result</param>
         public static void CancelRecurringPayment(Order order, ref CancelPaymentResult cancelPaymentResult)
         {
+            if (order.OrderTotal == decimal.Zero)
+                return;
+
             var paymentMethod = PaymentMethodManager.GetPaymentMethodById(order.PaymentMethodId);
             if (paymentMethod == null)
                 throw new NopException("Payment method couldn't be loaded");

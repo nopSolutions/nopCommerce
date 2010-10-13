@@ -83,11 +83,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
         public string SystemKeyword { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether customers should provide their payment information with zero total orders
-        /// </summary>
-        public bool HidePaymentInfoForZeroOrders { get; set; }
-
-        /// <summary>
         /// Gets or sets a value indicating whether the payment method is active
         /// </summary>
         public bool IsActive { get; set; }

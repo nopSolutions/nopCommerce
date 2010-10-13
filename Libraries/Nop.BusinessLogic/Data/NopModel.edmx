@@ -1525,7 +1525,6 @@
           <Property Name="UserTemplatePath" Type="nvarchar" Nullable="false" MaxLength="500" />
           <Property Name="ClassName" Type="nvarchar" Nullable="false" MaxLength="500" />
           <Property Name="SystemKeyword" Type="nvarchar" Nullable="false" MaxLength="500" />
-          <Property Name="HidePaymentInfoForZeroOrders" Type="bit" Nullable="false" />
           <Property Name="IsActive" Type="bit" Nullable="false" />
           <Property Name="DisplayOrder" Type="int" Nullable="false" />
         </EntityType>
@@ -5466,7 +5465,6 @@
           <Property Type="String" Name="UserTemplatePath" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="ClassName" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="SystemKeyword" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Type="Boolean" Name="HidePaymentInfoForZeroOrders" Nullable="false" />
           <Property Type="Boolean" Name="IsActive" Nullable="false" />
           <Property Type="Int32" Name="DisplayOrder" Nullable="false" />
           <NavigationProperty Name="NpRestrictedCountries" Relationship="NopSolutions.NopCommerce.BusinessLogic.Data.Nop_PaymentMethod_RestrictedCountries" FromRole="PaymentMethod" ToRole="Country" />          
@@ -8447,7 +8445,6 @@
           <EntitySetMapping Name="PaymentMethods">
             <EntityTypeMapping TypeName="NopSolutions.NopCommerce.BusinessLogic.Data.PaymentMethod">
               <MappingFragment StoreEntitySet="Nop_PaymentMethod">
-                <ScalarProperty Name="HidePaymentInfoForZeroOrders" ColumnName="HidePaymentInfoForZeroOrders" />
                 <ScalarProperty Name="DisplayOrder" ColumnName="DisplayOrder" />
                 <ScalarProperty Name="IsActive" ColumnName="IsActive" />
                 <ScalarProperty Name="SystemKeyword" ColumnName="SystemKeyword" />

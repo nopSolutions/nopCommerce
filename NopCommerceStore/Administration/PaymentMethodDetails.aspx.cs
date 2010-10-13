@@ -50,7 +50,6 @@ namespace NopSolutions.NopCommerce.Web.Administration
                 this.txtUserTemplatePath.Text = paymentMethod.UserTemplatePath;
                 this.txtClassName.Text = paymentMethod.ClassName;
                 this.txtSystemKeyword.Text = paymentMethod.SystemKeyword;
-                this.cbHidePaymentInfoForZeroOrders.Checked = paymentMethod.HidePaymentInfoForZeroOrders;
                 this.cbActive.Checked = paymentMethod.IsActive;
                 this.txtDisplayOrder.Value = paymentMethod.DisplayOrder;
                 try
@@ -128,8 +127,7 @@ namespace NopSolutions.NopCommerce.Web.Administration
                         paymentMethod = PaymentMethodManager.UpdatePaymentMethod(paymentMethod.PaymentMethodId,
                             txtName.Text, txtVisibleName.Text, txtDescription.Text, 
                             txtConfigureTemplatePath.Text, txtUserTemplatePath.Text, txtClassName.Text,
-                            txtSystemKeyword.Text, cbHidePaymentInfoForZeroOrders.Checked,
-                            cbActive.Checked, txtDisplayOrder.Value);
+                            txtSystemKeyword.Text, cbActive.Checked, txtDisplayOrder.Value);
 
                         var configureModule = GetConfigureModule();
                         if (configureModule != null)

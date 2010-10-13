@@ -428,6 +428,12 @@ set @resources='
   <LocaleResource Name="Admin.ForumsSettings.RelativeDateTimeFormattingEnabled.Tooltip">
     <Value>Click to enable relative date and time formatting (e.g. 2 hours ago, a month ago)</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.PaymentMethodInfo.HidePaymentInfoForZeroOrders">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.PaymentMethodInfo.HidePaymentInfoForZeroOrders.Tooltip">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 

@@ -44,7 +44,7 @@ namespace NopSolutions.NopCommerce.Web.Administration
                     PaymentMethod paymentMethod = PaymentMethodManager.InsertPaymentMethod(txtName.Text,
                         txtVisibleName.Text, txtDescription.Text, txtConfigureTemplatePath.Text,
                         txtUserTemplatePath.Text, txtClassName.Text,
-                        txtSystemKeyword.Text, cbHidePaymentInfoForZeroOrders.Checked,
+                        txtSystemKeyword.Text,
                         cbActive.Checked, txtDisplayOrder.Value);
                     Response.Redirect("PaymentMethodDetails.aspx?PaymentMethodID=" + paymentMethod.PaymentMethodId.ToString());
                 }

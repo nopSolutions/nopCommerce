@@ -570,3 +570,10 @@ BEGIN
 	VALUES (N'SEO.ProductTags.UrlRewriteFormat', N'{0}producttag/{1}-{2}.aspx', N'')
 END
 GO
+
+IF EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[Nop_PaymentMethod]') and NAME='HidePaymentInfoForZeroOrders')
+BEGIN
+	ALTER TABLE [dbo].[Nop_PaymentMethod] DROP CONSTRAINT [DF_Nop_PaymentMethod_HidePaymentInfoForZeroOrders]
+	ALTER TABLE [dbo].[Nop_PaymentMethod] DROP COLUMN HidePaymentInfoForZeroOrders
+END
+GO

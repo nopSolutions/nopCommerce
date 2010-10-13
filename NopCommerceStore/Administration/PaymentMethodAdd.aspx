@@ -92,16 +92,6 @@
         </tr>
         <tr>
             <td class="adminTitle">
-                <nopCommerce:ToolTipLabel runat="server" ID="lblHidePaymentInfoForZeroOrders" Text="<% $NopResources:Admin.PaymentMethodInfo.HidePaymentInfoForZeroOrders %>"
-                    ToolTip="<% $NopResources:Admin.PaymentMethodInfo.HidePaymentInfoForZeroOrders.Tooltip %>"
-                    ToolTipImage="~/Administration/Common/ico-help.gif" />
-            </td>
-            <td class="adminData">
-                <asp:CheckBox ID="cbHidePaymentInfoForZeroOrders" runat="server"></asp:CheckBox>
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
                 <nopCommerce:ToolTipLabel runat="server" ID="lblActive" Text="<% $NopResources:Admin.PaymentMethodInfo.Active %>"
                     ToolTip="<% $NopResources:Admin.PaymentMethodInfo.Active.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
             </td>

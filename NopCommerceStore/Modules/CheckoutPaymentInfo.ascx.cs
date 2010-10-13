@@ -44,26 +44,31 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         public void LoadPaymentControl()
         {
-            PaymentMethod paymentMethod = null;
-            if (NopContext.Current.User != null)
+            //Check whether payment workflow is required
+            bool isPaymentWorkflowRequired = IsPaymentWorkflowRequired();
+            if (isPaymentWorkflowRequired)
             {
-                paymentMethod = NopContext.Current.User.LastPaymentMethod;
-            }
-            if (paymentMethod != null && paymentMethod.IsActive)
-            {
-                if (paymentControlLoaded)
+                PaymentMethod paymentMethod = null;
+                if (NopContext.Current.User != null)
                 {
-                    this.PaymentInfoPlaceHolder.Controls.Clear();
+                    paymentMethod = NopContext.Current.User.LastPaymentMethod;
                 }
-                Control child = null;
-                child = base.LoadControl(paymentMethod.UserTemplatePath);
-                this.PaymentInfoPlaceHolder.Controls.Add(child);
-                paymentControlLoaded = true;
-            }
-            else
-            {
-                if (!this.OnePageCheckout)
-                    Response.Redirect("~/checkoutpaymentmethod.aspx");
+                if (paymentMethod != null && paymentMethod.IsActive)
+                {
+                    if (paymentControlLoaded)
+                    {
+                        this.PaymentInfoPlaceHolder.Controls.Clear();
+                    }
+                    Control child = null;
+                    child = base.LoadControl(paymentMethod.UserTemplatePath);
+                    this.PaymentInfoPlaceHolder.Controls.Add(child);
+                    paymentControlLoaded = true;
+                }
+                else
+                {
+                    if (!this.OnePageCheckout)
+                        Response.Redirect("~/checkoutpaymentmethod.aspx");
+                }
             }
         }
 
@@ -109,30 +114,35 @@ namespace NopSolutions.NopCommerce.Web.Modules
             }
         }
 
-        public void BindData()
+        public bool IsPaymentWorkflowRequired()
         {
-            //validate whether we need to display this control
-            PaymentMethod paymentMethod = null;
+            bool result = true;
+
+            //check whether order total equals zero
             if (NopContext.Current.User != null)
             {
-                paymentMethod = NopContext.Current.User.LastPaymentMethod;
-            }
-            if (paymentMethod != null &&
-                paymentMethod.IsActive &&
-                paymentMethod.HidePaymentInfoForZeroOrders)
-            {
-
                 decimal? shoppingCartTotalBase = ShoppingCartManager.GetShoppingCartTotal(this.Cart,
                 NopContext.Current.User.LastPaymentMethodId, NopContext.Current.User);
 
                 if (shoppingCartTotalBase.HasValue && shoppingCartTotalBase.Value == decimal.Zero)
                 {
-                    this.PaymentInfo = this.GetPaymentInfo();
-                    var args1 = new CheckoutStepEventArgs() { PaymentInfoEntered = true };
-                    OnCheckoutStepChanged(args1);
-                    if (!this.OnePageCheckout)
-                        Response.Redirect("~/checkoutconfirm.aspx");
+                    result = false;
                 }
+            }
+            return result;
+        }
+
+        public void BindData()
+        {
+            //Check whether payment workflow is required
+            bool isPaymentWorkflowRequired = IsPaymentWorkflowRequired();
+            if (!isPaymentWorkflowRequired)
+            {
+                this.PaymentInfo = new PaymentInfo();
+                var args1 = new CheckoutStepEventArgs() { PaymentInfoEntered = true };
+                OnCheckoutStepChanged(args1);
+                if (!this.OnePageCheckout)
+                    Response.Redirect("~/checkoutconfirm.aspx");
             }
         }
 

@@ -50,6 +50,12 @@ namespace NopSolutions.NopCommerce.Web.Modules
     {
         protected override void OnPreRender(EventArgs e)
         {
+            BindData();
+            base.OnPreRender(e);
+        }
+
+        public void BindData()
+        {
             //validate payment method availablity
             var ppePaymentMethod = PaymentMethodManager.GetPaymentMethodBySystemKeyword("PayPalExpress");
             if (ppePaymentMethod == null || !ppePaymentMethod.IsActive)
@@ -92,10 +98,8 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     sm.RegisterPostBackControl(btnPaypalExpress);
                 }
             }
-
-            base.OnPreRender(e);
         }
-        
+
         protected void btnPaypalExpress_Click(object sender, EventArgs e)
         {
             if ((NopContext.Current.User == null) || (NopContext.Current.User.IsGuest && !CustomerManager.AnonymousCheckoutAllowed))

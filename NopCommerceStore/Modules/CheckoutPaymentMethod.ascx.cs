@@ -69,14 +69,17 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
                 //payment methods
                 int paymentMethodId = this.SelectedPaymentMethodId;
-                var paymentMethod = PaymentMethodManager.GetPaymentMethodById(paymentMethodId);
-                if (paymentMethod != null && paymentMethod.IsActive)
+                if (paymentMethodId > 0)
                 {
-                    NopContext.Current.User = CustomerManager.SetLastPaymentMethodId(NopContext.Current.User.CustomerId, paymentMethodId);
-                    var args1 = new CheckoutStepEventArgs() { PaymentMethodSelected = true };
-                    OnCheckoutStepChanged(args1);
-                    if (!this.OnePageCheckout)
-                        Response.Redirect("~/checkoutpaymentinfo.aspx");
+                    var paymentMethod = PaymentMethodManager.GetPaymentMethodById(paymentMethodId);
+                    if (paymentMethod != null && paymentMethod.IsActive)
+                    {
+                        NopContext.Current.User = CustomerManager.SetLastPaymentMethodId(NopContext.Current.User.CustomerId, paymentMethodId);
+                        var args1 = new CheckoutStepEventArgs() { PaymentMethodSelected = true };
+                        OnCheckoutStepChanged(args1);
+                        if (!this.OnePageCheckout)
+                            Response.Redirect("~/checkoutpaymentinfo.aspx");
+                    }
                 }
             }
         }
@@ -143,14 +146,57 @@ namespace NopSolutions.NopCommerce.Web.Modules
             }
         }
 
+        public bool IsPaymentWorkflowRequired()
+        {
+            bool result = true;
+
+            //check whether order total equals zero
+            if (NopContext.Current.User != null)
+            {
+                decimal? shoppingCartTotalBase = ShoppingCartManager.GetShoppingCartTotal(this.Cart,
+                NopContext.Current.User.LastPaymentMethodId, NopContext.Current.User);
+
+                if (shoppingCartTotalBase.HasValue && shoppingCartTotalBase.Value == decimal.Zero)
+                {
+                    result = false;
+                }
+            }
+            return result;
+        }
+
         public void ApplyRewardPoints()
         {
             //reward points
-            NopContext.Current.User.UseRewardPointsDuringCheckout = cbUseRewardPoints.Checked;
+            if (NopContext.Current.User != null)
+            {
+                NopContext.Current.User.UseRewardPointsDuringCheckout = cbUseRewardPoints.Checked;
+            }
+
+            //Check whether payment workflow is required
+            bool isPaymentWorkflowRequired = IsPaymentWorkflowRequired();
+            if (!isPaymentWorkflowRequired)
+            {
+                NopContext.Current.User = CustomerManager.SetLastPaymentMethodId(NopContext.Current.User.CustomerId, 0);
+                var args1 = new CheckoutStepEventArgs() { PaymentMethodSelected = true };
+                OnCheckoutStepChanged(args1);
+                if (!this.OnePageCheckout)
+                    Response.Redirect("~/checkoutpaymentinfo.aspx");
+            }
         }
 
         public void BindData()
         {
+            //Check whether payment workflow is required
+            bool isPaymentWorkflowRequired = IsPaymentWorkflowRequired();
+            if (!isPaymentWorkflowRequired)
+            {
+                NopContext.Current.User = CustomerManager.SetLastPaymentMethodId(NopContext.Current.User.CustomerId, 0);
+                var args1 = new CheckoutStepEventArgs() { PaymentMethodSelected = true };
+                OnCheckoutStepChanged(args1);
+                if (!this.OnePageCheckout)
+                    Response.Redirect("~/checkoutpaymentinfo.aspx");
+            }
+
             //reward points
             if (OrderManager.RewardPointsEnabled && !this.Cart.IsRecurring)
             {

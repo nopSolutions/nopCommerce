@@ -130,12 +130,14 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     break;
 
                 case CheckoutStepEnum.PaymentInfo:
+                    bool isPaymentWorkflowRequired = IsPaymentWorkflowRequired();
                     PaymentMethod paymentMethod = null;
                     if(NopContext.Current.User != null)
                     {
                         paymentMethod = NopContext.Current.User.LastPaymentMethod;
                     }
-                    if(paymentMethod != null && paymentMethod.IsActive)
+                    if ((paymentMethod != null && paymentMethod.IsActive) || //validate payment method
+                        !isPaymentWorkflowRequired) //or payment workflow is not required
                     {
                         btnModifyShippingAddress.Enabled = true;
                         btnModifyBillingAddress.Enabled = true;
@@ -170,6 +172,24 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 default:
                     throw new NopException("Not supported checkout step");
             }
+        }
+
+        public bool IsPaymentWorkflowRequired()
+        {
+            bool result = true;
+
+            //check whether order total equals zero
+            if (NopContext.Current.User != null)
+            {
+                decimal? shoppingCartTotalBase = ShoppingCartManager.GetShoppingCartTotal(this.Cart,
+                NopContext.Current.User.LastPaymentMethodId, NopContext.Current.User);
+
+                if (shoppingCartTotalBase.HasValue && shoppingCartTotalBase.Value == decimal.Zero)
+                {
+                    result = false;
+                }
+            }
+            return result;
         }
 
         protected void Page_Load(object sender, EventArgs e)

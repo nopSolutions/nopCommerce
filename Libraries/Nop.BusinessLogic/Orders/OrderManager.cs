@@ -3227,13 +3227,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                     paymentInfo.PaymentMethodId = initialOrder.PaymentMethodId;
                 }
 
-                var paymentMethod = PaymentMethodManager.GetPaymentMethodById(paymentInfo.PaymentMethodId);
-                if (paymentMethod == null)
-                    throw new NopException("Payment method couldn't be loaded");
-
-                if (!paymentMethod.IsActive)
-                    throw new NopException("Payment method is not active");
-
                 if (paymentInfo.CreditCardCvv2 == null)
                     paymentInfo.CreditCardCvv2 = string.Empty;
                 
@@ -3553,6 +3546,30 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 }
                 paymentInfo.OrderTotal = orderTotal.Value;
 
+                //skip payment workflow if order total equals zero
+                bool skipPaymentWorkflow = false;
+                if (orderTotal.Value == decimal.Zero)
+                {
+                    skipPaymentWorkflow = true;
+                }
+                PaymentMethod paymentMethod = null;
+                string paymentMethodName = string.Empty;
+                if (!skipPaymentWorkflow)
+                {
+                    paymentMethod = PaymentMethodManager.GetPaymentMethodById(paymentInfo.PaymentMethodId);
+                    if (paymentMethod == null)
+                        throw new NopException("Payment method couldn't be loaded");
+
+                    if (!paymentMethod.IsActive)
+                        throw new NopException("Payment method is not active");
+
+                    paymentMethodName = paymentMethod.Name;
+                }
+                else
+                {
+                    paymentInfo.PaymentMethodId = 0;
+                }
+
                 string customerCurrencyCode = string.Empty;
                 if (!paymentInfo.IsRecurringPayment)
                 {
@@ -3739,55 +3756,62 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 {
                     isRecurringShoppingCart = true;
                 }
-                
-                //process payment
-                if (!paymentInfo.IsRecurringPayment)
+
+                if (!skipPaymentWorkflow)
                 {
-                    if (isRecurringShoppingCart)
+                    //process payment
+                    if (!paymentInfo.IsRecurringPayment)
                     {
-                        //recurring cart
-                        var recurringPaymentType = PaymentManager.SupportRecurringPayments(paymentMethod.PaymentMethodId);
-                        switch (recurringPaymentType)
+                        if (isRecurringShoppingCart)
                         {
-                            case RecurringPaymentTypeEnum.NotSupported:
-                                throw new NopException("Recurring payments are not supported by selected payment method");
-                            case RecurringPaymentTypeEnum.Manual:
-                            case RecurringPaymentTypeEnum.Automatic:
-                                PaymentManager.ProcessRecurringPayment(paymentInfo, customer, orderGuid, ref processPaymentResult);
-                                break;
-                            default:
-                                throw new NopException("Not supported recurring payment type");
+                            //recurring cart
+                            var recurringPaymentType = PaymentManager.SupportRecurringPayments(paymentInfo.PaymentMethodId);
+                            switch (recurringPaymentType)
+                            {
+                                case RecurringPaymentTypeEnum.NotSupported:
+                                    throw new NopException("Recurring payments are not supported by selected payment method");
+                                case RecurringPaymentTypeEnum.Manual:
+                                case RecurringPaymentTypeEnum.Automatic:
+                                    PaymentManager.ProcessRecurringPayment(paymentInfo, customer, orderGuid, ref processPaymentResult);
+                                    break;
+                                default:
+                                    throw new NopException("Not supported recurring payment type");
+                            }
+                        }
+                        else
+                        {
+                            //standard cart
+                            PaymentManager.ProcessPayment(paymentInfo, customer, orderGuid, ref processPaymentResult);
                         }
                     }
                     else
                     {
-                        //standard cart
-                        PaymentManager.ProcessPayment(paymentInfo, customer, orderGuid, ref processPaymentResult);
+                        if (isRecurringShoppingCart)
+                        {
+                            var recurringPaymentType = PaymentManager.SupportRecurringPayments(paymentInfo.PaymentMethodId);
+                            switch (recurringPaymentType)
+                            {
+                                case RecurringPaymentTypeEnum.NotSupported:
+                                    throw new NopException("Recurring payments are not supported by selected payment method");
+                                case RecurringPaymentTypeEnum.Manual:
+                                    PaymentManager.ProcessRecurringPayment(paymentInfo, customer, orderGuid, ref processPaymentResult);
+                                    break;
+                                case RecurringPaymentTypeEnum.Automatic:
+                                    //payment is processed on payment gateway site
+                                    break;
+                                default:
+                                    throw new NopException("Not supported recurring payment type");
+                            }
+                        }
+                        else
+                        {
+                            throw new NopException("No recurring products");
+                        }
                     }
                 }
                 else
                 {
-                    if (isRecurringShoppingCart)
-                    {
-                        var recurringPaymentType = PaymentManager.SupportRecurringPayments(paymentMethod.PaymentMethodId);
-                        switch (recurringPaymentType)
-                        {
-                            case RecurringPaymentTypeEnum.NotSupported:
-                                throw new NopException("Recurring payments are not supported by selected payment method");
-                            case RecurringPaymentTypeEnum.Manual:
-                                PaymentManager.ProcessRecurringPayment(paymentInfo, customer, orderGuid, ref processPaymentResult);
-                                break;
-                            case RecurringPaymentTypeEnum.Automatic:
-                                //payment is processed on payment gateway site
-                                break;
-                            default:
-                                throw new NopException("Not supported recurring payment type");
-                        }
-                    }
-                    else
-                    {
-                        throw new NopException("No recurring products");
-                    }
+                    processPaymentResult.PaymentStatus = PaymentStatusEnum.Paid;
                 }
 
                 //process order
@@ -3846,8 +3870,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                              processPaymentResult.AllowStoringCreditCardNumber ? SecurityHelper.Encrypt(paymentInfo.CreditCardCvv2) : string.Empty,
                              processPaymentResult.AllowStoringCreditCardNumber ? SecurityHelper.Encrypt(paymentInfo.CreditCardExpireMonth.ToString()) : string.Empty,
                              processPaymentResult.AllowStoringCreditCardNumber ? SecurityHelper.Encrypt(paymentInfo.CreditCardExpireYear.ToString()) : string.Empty,
-                             paymentMethod.PaymentMethodId,
-                             paymentMethod.Name,
+                             paymentInfo.PaymentMethodId,
+                             paymentMethodName,
                              processPaymentResult.AuthorizationTransactionId,
                              processPaymentResult.AuthorizationTransactionCode,
                              processPaymentResult.AuthorizationTransactionResult,
@@ -4060,7 +4084,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                                     true, false, DateTime.UtcNow);
 
 
-                                var recurringPaymentType = PaymentManager.SupportRecurringPayments(paymentMethod.PaymentMethodId);
+                                var recurringPaymentType = PaymentManager.SupportRecurringPayments(paymentInfo.PaymentMethodId);
                                 switch (recurringPaymentType)
                                 {
                                     case RecurringPaymentTypeEnum.NotSupported:
@@ -4265,6 +4289,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                     cancelPaymentResult.CaptureTransactionId = initialOrder.CaptureTransactionId;
                     cancelPaymentResult.SubscriptionTransactionId = initialOrder.SubscriptionTransactionId;
                     cancelPaymentResult.Amount = initialOrder.OrderTotal;
+
                     PaymentManager.CancelRecurringPayment(initialOrder, ref cancelPaymentResult);
                     if (String.IsNullOrEmpty(cancelPaymentResult.Error))
                     {
