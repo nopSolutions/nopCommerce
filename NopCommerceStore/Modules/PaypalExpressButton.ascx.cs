@@ -50,44 +50,6 @@ namespace NopSolutions.NopCommerce.Web.Modules
     {
         protected override void OnPreRender(EventArgs e)
         {
-            BindData();
-            base.OnPreRender(e);
-        }
-
-        public void BindData()
-        {
-            //validate payment method availablity
-            var ppePaymentMethod = PaymentMethodManager.GetPaymentMethodBySystemKeyword("PayPalExpress");
-            if (ppePaymentMethod == null || !ppePaymentMethod.IsActive)
-            {
-                this.Visible = false;
-                return;
-            }
-
-            //cart validation
-            var cart = ShoppingCartManager.GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
-            if (cart.Count == 0)
-            {
-                this.Visible = false;
-                return;
-            }
-
-            //order total validation
-            decimal? cartTotal = ShoppingCartManager.GetShoppingCartTotal(cart,
-                ppePaymentMethod.PaymentMethodId, NopContext.Current.User);
-            if (!cartTotal.HasValue || cartTotal.Value == decimal.Zero)
-            {
-                this.Visible = false;
-                return;
-            }
-
-            //recurring order support
-            if (cart.IsRecurring && PaymentManager.SupportRecurringPayments(ppePaymentMethod.PaymentMethodId) == RecurringPaymentTypeEnum.NotSupported)
-            {
-                this.Visible = false;
-                return;
-            }
-
             //use postback if we're on one-page checkout page
             //we need it to properly process redirects (hosted payment methods)
             if (SettingManager.GetSettingValueBoolean("Checkout.UseOnePageCheckout"))
@@ -98,6 +60,53 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     sm.RegisterPostBackControl(btnPaypalExpress);
                 }
             }
+            
+            base.OnPreRender(e);
+        }
+
+        public void BindData()
+        {
+            bool displayButton = true;
+
+            //validate payment method availablity
+            var ppePaymentMethod = PaymentMethodManager.GetPaymentMethodBySystemKeyword("PayPalExpress");
+            if (ppePaymentMethod == null || !ppePaymentMethod.IsActive)
+            {
+                displayButton = false;
+            }
+
+            //cart validation
+            ShoppingCart cart = null;
+            if (displayButton)
+            {
+                cart = ShoppingCartManager.GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
+                if (cart.Count == 0)
+                {
+                    displayButton = false;
+                }
+            }
+
+            //order total validation
+            if (displayButton)
+            {
+                decimal? cartTotal = ShoppingCartManager.GetShoppingCartTotal(cart,
+                    ppePaymentMethod.PaymentMethodId, NopContext.Current.User);
+                if (!cartTotal.HasValue || cartTotal.Value == decimal.Zero)
+                {
+                    displayButton = false;
+                }
+            }
+
+            //recurring order support
+            if (displayButton)
+            {
+                if (cart.IsRecurring && PaymentManager.SupportRecurringPayments(ppePaymentMethod.PaymentMethodId) == RecurringPaymentTypeEnum.NotSupported)
+                {
+                    displayButton = false;
+                }
+            }
+
+            this.Visible = displayButton;
         }
 
         protected void btnPaypalExpress_Click(object sender, EventArgs e)
@@ -119,7 +128,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
                 //payment
                 var cart = ShoppingCartManager.GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
-                decimal? cartTotal = ShoppingCartManager.GetShoppingCartTotal(cart, 
+                decimal? cartTotal = ShoppingCartManager.GetShoppingCartTotal(cart,
                     ppePaymentMethod.PaymentMethodId, NopContext.Current.User);
                 if (cartTotal.HasValue && cartTotal.Value > decimal.Zero)
                 {

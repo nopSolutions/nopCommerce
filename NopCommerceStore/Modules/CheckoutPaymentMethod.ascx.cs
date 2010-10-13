@@ -246,7 +246,11 @@ namespace NopSolutions.NopCommerce.Web.Modules
                             if (pm.SystemKeyword == "PayPalExpress")
                             {
                                 if (!Cart.IsRecurring || PaymentManager.SupportRecurringPayments(pm.PaymentMethodId) != RecurringPaymentTypeEnum.NotSupported)
+                                {
+                                    //bind PayPal Express button
+                                    btnPaypalExpressButton.BindData();
                                     hasButtonMethods = true;
+                                }
                             }
                         }
                         break;
