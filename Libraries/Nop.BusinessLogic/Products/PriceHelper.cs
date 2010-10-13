@@ -111,8 +111,22 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         protected static Discount GetPreferredDiscount(ProductVariant productVariant, 
             Customer customer, decimal additionalCharge)
         {
+            return GetPreferredDiscount(productVariant, customer, additionalCharge, 1);
+        }
+
+        /// <summary>
+        /// Gets a preferred discount
+        /// </summary>
+        /// <param name="productVariant">Product variant</param>
+        /// <param name="customer">Customer</param>
+        /// <param name="additionalCharge">Additional charge</param>
+        /// <param name="quantity">Product quantity</param>
+        /// <returns>Preferred discount</returns>
+        protected static Discount GetPreferredDiscount(ProductVariant productVariant,
+            Customer customer, decimal additionalCharge, int quantity)
+        {
             var allowedDiscounts = GetAllowedDiscounts(productVariant, customer);
-            decimal finalPriceWithoutDiscount = GetFinalPrice(productVariant, customer, additionalCharge, false);
+            decimal finalPriceWithoutDiscount = GetFinalPrice(productVariant, customer, additionalCharge, false, quantity);
             var preferredDiscount = DiscountManager.GetPreferredDiscount(allowedDiscounts, finalPriceWithoutDiscount);
             return preferredDiscount;
         }
@@ -264,7 +278,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             //discount + additional charge
             if (includeDiscounts)
             {
-                decimal discountAmount = GetDiscountAmount(productVariant, customer, additionalCharge);
+                Discount appliedDiscount = null;
+                decimal discountAmount = GetDiscountAmount(productVariant, customer, additionalCharge, quantity, out appliedDiscount);
                 result = initialPrice + additionalCharge - discountAmount;
             }
             else
@@ -403,6 +418,21 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         public static decimal GetDiscountAmount(ProductVariant productVariant, Customer customer,
             decimal additionalCharge, out Discount appliedDiscount)
         {
+            return GetDiscountAmount(productVariant, customer, additionalCharge, 1, out appliedDiscount);
+        }
+
+        /// <summary>
+        /// Gets discount amount
+        /// </summary>
+        /// <param name="productVariant">Product variant</param>
+        /// <param name="customer">The customer</param>
+        /// <param name="additionalCharge">Additional charge</param>
+        /// <param name="quantity">Product quantity</param>
+        /// <param name="appliedDiscount">Applied discount</param>
+        /// <returns>Discount amount</returns>
+        public static decimal GetDiscountAmount(ProductVariant productVariant, Customer customer,
+            decimal additionalCharge, int quantity, out Discount appliedDiscount)
+        {
             decimal appliedDiscountAmount = decimal.Zero;
 
             //we don't apply discounts to products with price entered by a customer
@@ -412,10 +442,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                 return appliedDiscountAmount;
             }
 
-            appliedDiscount = GetPreferredDiscount(productVariant, customer, additionalCharge);
+            appliedDiscount = GetPreferredDiscount(productVariant, customer, additionalCharge, quantity);
             if (appliedDiscount != null)
             {
-                decimal finalPriceWithoutDiscount = GetFinalPrice(productVariant, customer, additionalCharge, false);
+                decimal finalPriceWithoutDiscount = GetFinalPrice(productVariant, customer, additionalCharge, false, quantity);
                 appliedDiscountAmount = appliedDiscount.GetDiscountAmount(finalPriceWithoutDiscount);
             }
 
