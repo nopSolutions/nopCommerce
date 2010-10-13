@@ -500,7 +500,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                     attributesTotalPrice += pvaValue.PriceAdjustment;
                 }
 
-                decimal productVariantDiscountAmount = GetDiscountAmount(productVariant, customer, attributesTotalPrice, out appliedDiscount);
+                decimal productVariantDiscountAmount = GetDiscountAmount(productVariant, customer, attributesTotalPrice, shoppingCartItem.Quantity, out appliedDiscount);
                 discountAmount = productVariantDiscountAmount * shoppingCartItem.Quantity;
             }
 
