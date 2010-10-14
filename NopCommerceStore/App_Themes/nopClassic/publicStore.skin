@@ -25,7 +25,7 @@ Default skin template. The following skins are provided as examples only.
 <asp:TextBox runat="server" SkinID="NumericTextBoxText" CssClass="numerictextboxtext" />
 <asp:TextBox runat="server" SkinID="ShoppingCartQuantityText" CssClass="shoppingcartquantitytext" />
 <asp:TextBox runat="server" SkinID="WishListQuantityText" CssClass="wishlistquantitytext" />
-<asp:TextBox runat="server" SkinID="ContactUsEnquiryText" Height="150px" Width="500px"/>
+<asp:TextBox runat="server" SkinID="ContactUsEnquiryText" Height="150px" Width="400px"/>
 <asp:TextBox runat="server" SkinID="ReturnRequestCommentsText" Height="150px" Width="500px"/>
 <asp:TextBox runat="server" SkinID="ForumTopicTitleText" CssClass="forumtopictitletext"/>
 <asp:TextBox runat="server" SkinID="PMSubjectText" CssClass="privatemessagesubjecttext"/>
