@@ -41,9 +41,16 @@ namespace NopSolutions.NopCommerce.Web.Administration
             {
                 try
                 {
-                    ShippingRateComputationMethod shippingRateComputationMethod = ShippingRateComputationMethodManager.InsertShippingRateComputationMethod(txtName.Text,
-                        txtDescription.Text, txtConfigureTemplatePath.Text, 
-                        txtClassName.Text, cbActive.Checked, txtDisplayOrder.Value);
+                    var shippingRateComputationMethod = new ShippingRateComputationMethod()
+                    {
+                        Name = txtName.Text,
+                        Description = txtDescription.Text,
+                        ConfigureTemplatePath = txtConfigureTemplatePath.Text,
+                        ClassName = txtClassName.Text,
+                        IsActive = cbActive.Checked,
+                        DisplayOrder = txtDisplayOrder.Value
+                    };
+                    ShippingRateComputationMethodManager.InsertShippingRateComputationMethod(shippingRateComputationMethod);
 
                     Response.Redirect("ShippingRateComputationMethodDetails.aspx?ShippingRateComputationMethodID=" + shippingRateComputationMethod.ShippingRateComputationMethodId.ToString());
                 }

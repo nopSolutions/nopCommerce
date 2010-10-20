@@ -112,26 +112,20 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
         /// <summary>
         /// Inserts an IP address
         /// </summary>
-        /// <param name="address">IP address</param>
-        /// <param name="comment">Reason why the IP was banned</param>
-        /// <param name="createdOn">When the record was inserted</param>
-        /// <param name="updatedOn">When the record was last updated</param>
+        /// <param name="ipAddress">IP address</param>
         /// <returns>IP Address</returns>
-        public static BannedIpAddress InsertBannedIpAddress(string address, string comment,
-            DateTime createdOn, DateTime updatedOn)
+        public static void InsertBannedIpAddress(BannedIpAddress ipAddress)
         {
-            address = address.Trim();
-
-            address = CommonHelper.EnsureMaximumLength(address, 50);
-            comment = CommonHelper.EnsureMaximumLength(comment, 500);
+            if (ipAddress == null)
+                throw new ArgumentNullException("ipAddress");
+            
+            ipAddress.Address = CommonHelper.EnsureNotNull(ipAddress.Address);
+            ipAddress.Address = ipAddress.Address.Trim();
+            ipAddress.Address = CommonHelper.EnsureMaximumLength(ipAddress.Address, 50);
+            ipAddress.Comment = CommonHelper.EnsureNotNull(ipAddress.Comment);
+            ipAddress.Comment = CommonHelper.EnsureMaximumLength(ipAddress.Comment, 500);
 
             var context = ObjectContextHelper.CurrentObjectContext;
-
-            var ipAddress = context.BannedIpAddresses.CreateObject();
-            ipAddress.Address = address;
-            ipAddress.Comment = comment;
-            ipAddress.CreatedOn = createdOn;
-            ipAddress.UpdatedOn = updatedOn;
 
             context.BannedIpAddresses.AddObject(ipAddress);
             context.SaveChanges();
@@ -140,45 +134,34 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
             {
                 NopRequestCache.RemoveByPattern(BLACKLIST_IP_PATTERN_KEY);
             }
-            return ipAddress;
         }
 
         /// <summary>
         /// Updates an IP address
         /// </summary>
-        /// <param name="ipAddressId">IP address unique identifier</param>
-        /// <param name="address">IP address</param>
-        /// <param name="comment">Reason why the IP was banned</param>
-        /// <param name="createdOn">When the record was inserted</param>
-        /// <param name="updatedOn">When the record was last updated</param>
+        /// <param name="ipAddress">IP address</param>
         /// <returns>IP address</returns>
-        public static BannedIpAddress UpdateBannedIpAddress(int ipAddressId, string address, 
-            string comment, DateTime createdOn, DateTime updatedOn)
+        public static void UpdateBannedIpAddress(BannedIpAddress ipAddress)
         {
-            address = address.Trim();
-
-            address = CommonHelper.EnsureMaximumLength(address, 50);
-            comment = CommonHelper.EnsureMaximumLength(comment, 500);
-
-            var ipAddress = GetBannedIpAddressById(ipAddressId);
             if (ipAddress == null)
-                return null;
+                throw new ArgumentNullException("ipAddress");
+            
+            ipAddress.Address = CommonHelper.EnsureNotNull(ipAddress.Address);
+            ipAddress.Address = ipAddress.Address.Trim();
+            ipAddress.Address = CommonHelper.EnsureMaximumLength(ipAddress.Address, 50);
+            ipAddress.Comment = CommonHelper.EnsureNotNull(ipAddress.Comment);
+            ipAddress.Comment = CommonHelper.EnsureMaximumLength(ipAddress.Comment, 500);
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(ipAddress))
                 context.BannedIpAddresses.Attach(ipAddress);
 
-            ipAddress.Address = address;
-            ipAddress.Comment = comment;
-            ipAddress.CreatedOn = createdOn;
-            ipAddress.UpdatedOn = updatedOn;
             context.SaveChanges();
 
             if (IpBlacklistManager.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(BLACKLIST_IP_PATTERN_KEY);
             }
-            return ipAddress;
         }
 
         /// <summary>
@@ -251,34 +234,24 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
         /// <summary>
         /// Inserts an IP network
         /// </summary>
-        /// <param name="startAddress">First IP address in the range</param>
-        /// <param name="endAddress">Last IP address in the range </param>
-        /// <param name="comment">Reason why the IP network was banned</param>
-        /// <param name="ipException">Exception IPs in the range</param>
-        /// <param name="createdOn">When the record was inserted</param>
-        /// <param name="updatedOn">When the record was last updated</param>
-        /// <returns></returns>
-        public static BannedIpNetwork InsertBannedIpNetwork(string startAddress, 
-            string endAddress, string comment, string ipException, DateTime createdOn, 
-            DateTime updatedOn)
+        /// <param name="ipNetwork">IP network</param>
+        public static void InsertBannedIpNetwork(BannedIpNetwork ipNetwork)
         {
-            startAddress = startAddress.Trim();
-            endAddress = endAddress.Trim();
-
-            startAddress = CommonHelper.EnsureMaximumLength(startAddress, 50);
-            endAddress = CommonHelper.EnsureMaximumLength(endAddress, 50);
-            comment = CommonHelper.EnsureMaximumLength(comment, 500);
+            if (ipNetwork == null)
+                throw new ArgumentNullException("ipNetwork");
+            
+            ipNetwork.StartAddress = CommonHelper.EnsureNotNull(ipNetwork.StartAddress);
+            ipNetwork.StartAddress = ipNetwork.StartAddress.Trim();
+            ipNetwork.StartAddress = CommonHelper.EnsureMaximumLength(ipNetwork.StartAddress, 50);
+            ipNetwork.EndAddress = CommonHelper.EnsureNotNull(ipNetwork.EndAddress);
+            ipNetwork.EndAddress = ipNetwork.EndAddress.Trim();
+            ipNetwork.EndAddress = CommonHelper.EnsureMaximumLength(ipNetwork.EndAddress, 50);
+            ipNetwork.Comment = CommonHelper.EnsureNotNull(ipNetwork.Comment);
+            ipNetwork.Comment = CommonHelper.EnsureMaximumLength(ipNetwork.Comment, 500);
+            ipNetwork.IpException = CommonHelper.EnsureNotNull(ipNetwork.IpException);
 
             var context = ObjectContextHelper.CurrentObjectContext;
-
-            var ipNetwork = context.BannedIpNetworks.CreateObject();
-            ipNetwork.StartAddress = startAddress;
-            ipNetwork.EndAddress = endAddress;
-            ipNetwork.Comment = comment;
-            ipNetwork.IpException = ipException;
-            ipNetwork.CreatedOn = createdOn;
-            ipNetwork.UpdatedOn = updatedOn;
-
+            
             context.BannedIpNetworks.AddObject(ipNetwork);
             context.SaveChanges();
 
@@ -286,52 +259,37 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
             {
                 NopRequestCache.RemoveByPattern(BLACKLIST_NETWORK_PATTERN_KEY);
             }
-            return ipNetwork;
         }
 
         /// <summary>
         /// Updates an IP network
         /// </summary>
-        /// <param name="bannedIpNetworkId">IP network unique identifier</param>
-        /// <param name="startAddress">First IP address in the range</param>
-        /// <param name="endAddress">Last IP address in the range</param>
-        /// <param name="comment">Reason why the IP network was banned</param>
-        /// <param name="ipException">Exception IPs in the range</param>
-        /// <param name="createdOn">When the record was created</param>
-        /// <param name="updatedOn">When the record was last updated</param>
-        /// <returns></returns>
-        public static BannedIpNetwork UpdateBannedIpNetwork(int bannedIpNetworkId, 
-            string startAddress, string endAddress, string comment, string ipException,
-            DateTime createdOn, DateTime updatedOn)
+        /// <param name="ipNetwork">IP network</param>
+        public static void UpdateBannedIpNetwork(BannedIpNetwork ipNetwork)
         {
-            startAddress = startAddress.Trim();
-            endAddress = endAddress.Trim();
-
-            startAddress = CommonHelper.EnsureMaximumLength(startAddress, 50);
-            endAddress = CommonHelper.EnsureMaximumLength(endAddress, 50);
-            comment = CommonHelper.EnsureMaximumLength(comment, 500);
-
-            var ipNetwork = GetBannedIpNetworkById(bannedIpNetworkId);
             if (ipNetwork == null)
-                return null;
+                throw new ArgumentNullException("ipNetwork");
+
+            ipNetwork.StartAddress = CommonHelper.EnsureNotNull(ipNetwork.StartAddress);
+            ipNetwork.StartAddress = ipNetwork.StartAddress.Trim();
+            ipNetwork.StartAddress = CommonHelper.EnsureMaximumLength(ipNetwork.StartAddress, 50);
+            ipNetwork.EndAddress = CommonHelper.EnsureNotNull(ipNetwork.EndAddress);
+            ipNetwork.EndAddress = ipNetwork.EndAddress.Trim();
+            ipNetwork.EndAddress = CommonHelper.EnsureMaximumLength(ipNetwork.EndAddress, 50);
+            ipNetwork.Comment = CommonHelper.EnsureNotNull(ipNetwork.Comment);
+            ipNetwork.Comment = CommonHelper.EnsureMaximumLength(ipNetwork.Comment, 500);
+            ipNetwork.IpException = CommonHelper.EnsureNotNull(ipNetwork.IpException);
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(ipNetwork))
                 context.BannedIpNetworks.Attach(ipNetwork);
 
-            ipNetwork.StartAddress = startAddress;
-            ipNetwork.EndAddress = endAddress;
-            ipNetwork.Comment = comment;
-            ipNetwork.IpException = ipException;
-            ipNetwork.CreatedOn = createdOn;
-            ipNetwork.UpdatedOn = updatedOn;
             context.SaveChanges();
 
             if (IpBlacklistManager.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(BLACKLIST_NETWORK_PATTERN_KEY);
             }
-            return ipNetwork;
         }
 
         /// <summary>

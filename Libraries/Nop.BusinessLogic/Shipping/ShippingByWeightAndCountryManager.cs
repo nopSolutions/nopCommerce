@@ -83,69 +83,32 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         /// <summary>
         /// Inserts a ShippingByWeightAndCountry
         /// </summary>
-        /// <param name="shippingMethodId">The shipping method identifier</param>
-        /// <param name="countryId">The country identifier</param>
-        /// <param name="from">The "from" value</param>
-        /// <param name="to">The "to" value</param>
-        /// <param name="usePercentage">A value indicating whether to use percentage</param>
-        /// <param name="shippingChargePercentage">The shipping charge percentage</param>
-        /// <param name="shippingChargeAmount">The shipping charge amount</param>
-        /// <returns>ShippingByWeightAndCountry</returns>
-        public static ShippingByWeightAndCountry InsertShippingByWeightAndCountry(int shippingMethodId,
-            int countryId, decimal from, decimal to, bool usePercentage,
-            decimal shippingChargePercentage, decimal shippingChargeAmount)
+        /// <param name="shippingByWeightAndCountry">ShippingByWeightAndCountry</param>
+        public static void InsertShippingByWeightAndCountry(ShippingByWeightAndCountry shippingByWeightAndCountry)
         {
+            if (shippingByWeightAndCountry == null)
+                throw new ArgumentNullException("shippingByWeightAndCountry");
+
             var context = ObjectContextHelper.CurrentObjectContext;
-
-            var shippingByWeightAndCountry = context.ShippingByWeightAndCountry.CreateObject();
-            shippingByWeightAndCountry.ShippingMethodId = shippingMethodId;
-            shippingByWeightAndCountry.CountryId = countryId;
-            shippingByWeightAndCountry.From = from;
-            shippingByWeightAndCountry.To = to;
-            shippingByWeightAndCountry.UsePercentage = usePercentage;
-            shippingByWeightAndCountry.ShippingChargePercentage = shippingChargePercentage;
-            shippingByWeightAndCountry.ShippingChargeAmount = shippingChargeAmount;
-
+            
             context.ShippingByWeightAndCountry.AddObject(shippingByWeightAndCountry);
             context.SaveChanges();
-
-            return shippingByWeightAndCountry;
         }
 
         /// <summary>
         /// Updates the ShippingByWeightAndCountry
         /// </summary>
-        /// <param name="shippingByWeightAndCountryId">The ShippingByWeightAndCountry identifier</param>
-        /// <param name="shippingMethodId">The shipping method identifier</param>
-        /// <param name="countryId">The country identifier</param>
-        /// <param name="from">The "from" value</param>
-        /// <param name="to">The "to" value</param>
-        /// <param name="usePercentage">A value indicating whether to use percentage</param>
-        /// <param name="shippingChargePercentage">The shipping charge percentage</param>
-        /// <param name="shippingChargeAmount">The shipping charge amount</param>
-        /// <returns>ShippingByWeightAndCountry</returns>
-        public static ShippingByWeightAndCountry UpdateShippingByWeightAndCountry(int shippingByWeightAndCountryId,
-            int shippingMethodId, int countryId, decimal from, decimal to, bool usePercentage,
-            decimal shippingChargePercentage, decimal shippingChargeAmount)
+        /// <param name="shippingByWeightAndCountry">ShippingByWeightAndCountry</param>
+        public static void UpdateShippingByWeightAndCountry(ShippingByWeightAndCountry shippingByWeightAndCountry)
         {
-            var shippingByWeightAndCountry = GetById(shippingByWeightAndCountryId);
             if (shippingByWeightAndCountry == null)
-                return null;
+                throw new ArgumentNullException("shippingByWeightAndCountry");
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(shippingByWeightAndCountry))
                 context.ShippingByWeightAndCountry.Attach(shippingByWeightAndCountry);
 
-            shippingByWeightAndCountry.ShippingMethodId = shippingMethodId;
-            shippingByWeightAndCountry.CountryId = countryId;
-            shippingByWeightAndCountry.From = from;
-            shippingByWeightAndCountry.To = to;
-            shippingByWeightAndCountry.UsePercentage = usePercentage;
-            shippingByWeightAndCountry.ShippingChargePercentage = shippingChargePercentage;
-            shippingByWeightAndCountry.ShippingChargeAmount = shippingChargeAmount;
             context.SaveChanges();
-
-            return shippingByWeightAndCountry;
         }
 
         /// <summary>

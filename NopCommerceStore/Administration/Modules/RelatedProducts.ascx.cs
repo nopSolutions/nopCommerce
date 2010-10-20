@@ -125,7 +125,16 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     if (relatedProductId > 0 && !cbProductInfo2.Checked)
                         ProductManager.DeleteRelatedProduct(relatedProductId);
                     if (relatedProductId > 0 && cbProductInfo2.Checked)
-                        ProductManager.UpdateRelatedProduct(relatedProductId, product.ProductId, productId2, displayOrder);
+                    {
+                        var rp = ProductManager.GetRelatedProductById(relatedProductId);
+                        if (rp!=null)
+                        {
+                            rp.ProductId1 = product.ProductId;
+                            rp.ProductId2 = productId2;
+                            rp.DisplayOrder = displayOrder;
+                            ProductManager.UpdateRelatedProduct(rp);
+                        }
+                    }
                 }
             }
         }

@@ -171,8 +171,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings
         /// <returns>Setting</returns>
         public static Setting AddSetting(string name, string value, string description)
         {
+            name = CommonHelper.EnsureNotNull(name);
             name = CommonHelper.EnsureMaximumLength(name, 200);
+            value = CommonHelper.EnsureNotNull(value);
             value = CommonHelper.EnsureMaximumLength(value, 2000);
+            description = CommonHelper.EnsureNotNull(description);
 
             var context = ObjectContextHelper.CurrentObjectContext;
 
@@ -202,8 +205,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings
         /// <returns>Setting</returns>
         public static Setting UpdateSetting(int settingId, string name, string value, string description)
         {
+            name = CommonHelper.EnsureNotNull(name);
             name = CommonHelper.EnsureMaximumLength(name, 200);
+            value = CommonHelper.EnsureNotNull(value);
             value = CommonHelper.EnsureMaximumLength(value, 2000);
+            description = CommonHelper.EnsureNotNull(description);
 
             var setting = GetSettingById(settingId);
             if (setting == null)

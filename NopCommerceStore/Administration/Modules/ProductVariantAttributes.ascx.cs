@@ -148,9 +148,16 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                     AttributeControlTypeEnum attributeControlType = (AttributeControlTypeEnum)Enum.ToObject(typeof(AttributeControlTypeEnum), int.Parse(this.ddlAttributeControlType.SelectedItem.Value));
 
-                    ProductVariantAttribute productVariantAttribute = ProductAttributeManager.InsertProductVariantAttribute(productVariant.ProductVariantId,
-                        productAttributeId, txtNewTextPrompt.Text, cbNewProductVariantAttributeIsRequired.Checked, 
-                        attributeControlType, txtNewProductVariantAttributeDisplayOrder.Value);
+                    var productVariantAttribute = new ProductVariantAttribute()
+                    {
+                        ProductVariantId = productVariant.ProductVariantId,
+                        ProductAttributeId = productAttributeId,
+                        TextPrompt = txtNewTextPrompt.Text,
+                        IsRequired = cbNewProductVariantAttributeIsRequired.Checked,
+                        AttributeControlTypeId = (int)attributeControlType,
+                        DisplayOrder = txtNewProductVariantAttributeDisplayOrder.Value
+                    };
+                    ProductAttributeManager.InsertProductVariantAttribute(productVariantAttribute);
 
                     BindAttributes();
                     BindCombinations();
@@ -189,9 +196,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 ProductVariantAttribute productVariantAttribute = ProductAttributeManager.GetProductVariantAttributeById(productVariantAttributeId);
 
                 if (productVariantAttribute != null)
-                    ProductAttributeManager.UpdateProductVariantAttribute(productVariantAttribute.ProductVariantAttributeId,
-                       productVariantAttribute.ProductVariantId, productAttributeId, textPrompt,
-                       isRequired, attributeControlType, displayOrder);
+                {
+                    productVariantAttribute.ProductAttributeId = productAttributeId;
+                    productVariantAttribute.TextPrompt = textPrompt;
+                    productVariantAttribute.IsRequired = isRequired;
+                    productVariantAttribute.AttributeControlTypeId = (int)attributeControlType;
+                    productVariantAttribute.DisplayOrder = displayOrder;
+                    ProductAttributeManager.UpdateProductVariantAttribute(productVariantAttribute);
+                }
 
                 BindAttributes();
                 BindCombinations();
@@ -290,10 +302,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     }
                     else
                     {
-                        var combination = ProductAttributeManager.InsertProductVariantAttributeCombination(productVariant.ProductVariantId,
-                            attributes,
-                            stockQuantity,
-                            allowOutOfStockOrders);
+                        var combination = new ProductVariantAttributeCombination()
+                        {
+                            ProductVariantId = productVariant.ProductVariantId,
+                            AttributesXml = attributes,
+                            StockQuantity = stockQuantity,
+                            AllowOutOfStockOrders = allowOutOfStockOrders
+                        };
+                        ProductAttributeManager.InsertProductVariantAttributeCombination(combination);
                     }
                     BindCombinations();
                 }
@@ -324,9 +340,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 var combination = ProductAttributeManager.GetProductVariantAttributeCombinationById(productVariantAttributeCombinationId);
 
                 if (combination != null)
-                    ProductAttributeManager.UpdateProductVariantAttributeCombination(combination.ProductVariantAttributeCombinationId,
-                       combination.ProductVariantId, combination.AttributesXml,
-                       stockQuantity, allowOutOfStockOrders);
+                {
+                    combination.StockQuantity = stockQuantity;
+                    combination.AllowOutOfStockOrders = allowOutOfStockOrders;
+
+                    ProductAttributeManager.UpdateProductVariantAttributeCombination(combination);
+                }
 
                 BindCombinations();
             }

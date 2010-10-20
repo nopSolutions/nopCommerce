@@ -36,6 +36,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
         #endregion
 
         #region Properties
+
         /// <summary>
         /// Gets or sets the ProductManufacturer identifier
         /// </summary>
@@ -60,6 +61,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
         /// Gets or sets the display order
         /// </summary>
         public int DisplayOrder { get; set; }
+
         #endregion 
 
         #region Custom Properties

@@ -78,15 +78,31 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             var emailAccount = MessageManager.GetEmailAccountById(this.EmailAccountId);
             if (emailAccount != null)
             {
-                emailAccount = MessageManager.UpdateEmailAccount(emailAccount.EmailAccountId,
-                    email, displayName, host, port, username,
-                    password, enableSSL, useDefaultCredentials);
+                emailAccount.Email = email;
+                emailAccount.DisplayName = displayName;
+                emailAccount.Host = host;
+                emailAccount.Port = port;
+                emailAccount.Username = username;
+                emailAccount.Password = password;
+                emailAccount.EnableSSL = enableSSL;
+                emailAccount.UseDefaultCredentials = useDefaultCredentials;
+
+                MessageManager.UpdateEmailAccount(emailAccount);
             }
             else
             {
-                emailAccount = MessageManager.InsertEmailAccount(email, 
-                    displayName, host, port, username,
-                    password, enableSSL, useDefaultCredentials);
+                emailAccount = new EmailAccount()
+                {
+                    Email = email,
+                    DisplayName = displayName,
+                    Host = host,
+                    Port = port,
+                    Username = username,
+                    Password = password,
+                    EnableSSL = enableSSL,
+                    UseDefaultCredentials = useDefaultCredentials
+                };
+                MessageManager.InsertEmailAccount(emailAccount);
             }
 
             return emailAccount;

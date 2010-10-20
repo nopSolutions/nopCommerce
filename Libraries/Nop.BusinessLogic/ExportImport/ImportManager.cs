@@ -124,13 +124,31 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                         if (!customer.IsGuest)
                         {
                             //customer is not a guest
-                            customer = CustomerManager.UpdateCustomer(customer.CustomerId, customer.CustomerGuid,
-                                email, username, passwordHash, saltKey, affiliateId, billingAddressId,
-                                shippingAddressId, lastPaymentMethodId, lastAppliedCouponCode,
-                                string.Empty, string.Empty, languageId, currencyId,
-                                (TaxDisplayTypeEnum)taxDisplayTypeId, isTaxExempt, isAdmin, isGuest,
-                                isForumModerator, totalForumPosts, signature, adminComment,
-                                active, deleted, registrationDate, timeZoneId, avatarId, customer.DateOfBirth);
+                            customer.Email = email;
+                            customer.Username = username;
+                            customer.PasswordHash = passwordHash;
+                            customer.SaltKey = saltKey;
+                            customer.AffiliateId = affiliateId;
+                            customer.BillingAddressId = billingAddressId;
+                            customer.ShippingAddressId = shippingAddressId;
+                            customer.LastPaymentMethodId = lastPaymentMethodId;
+                            customer.LastAppliedCouponCode = lastAppliedCouponCode;
+                            customer.LanguageId = languageId;
+                            customer.CurrencyId = currencyId;
+                            customer.TaxDisplayTypeId = taxDisplayTypeId;
+                            customer.IsTaxExempt = isTaxExempt;
+                            customer.IsAdmin = isAdmin;
+                            customer.IsGuest = isGuest;
+                            customer.IsForumModerator = isForumModerator;
+                            customer.TotalForumPosts= totalForumPosts;
+                            customer.Signature = signature;
+                            customer.AdminComment = adminComment;
+                            customer.Active = active;
+                            customer.Deleted = deleted;
+                            customer.RegistrationDate = registrationDate;
+                            customer.TimeZoneId = timeZoneId;
+                            customer.AvatarId = avatarId;
+                            CustomerManager.UpdateCustomer(customer);
                         }
                         else
                         {
@@ -148,13 +166,32 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                             }
                             else
                             {
-                                customer = CustomerManager.UpdateCustomer(customer.CustomerId, customer.CustomerGuid,
-                                    email, username, passwordHash, saltKey, affiliateId, billingAddressId,
-                                    shippingAddressId, lastPaymentMethodId, lastAppliedCouponCode,
-                                    string.Empty, string.Empty, languageId, currencyId,
-                                    (TaxDisplayTypeEnum)taxDisplayTypeId, isTaxExempt, isAdmin, isGuest,
-                                    isForumModerator, totalForumPosts, signature, adminComment,
-                                    active, deleted, registrationDate, timeZoneId, avatarId, customer.DateOfBirth);
+                                customer.Email = email;
+                                customer.Username = username;
+                                customer.PasswordHash = passwordHash;
+                                customer.SaltKey = saltKey;
+                                customer.AffiliateId = affiliateId;
+                                customer.BillingAddressId = billingAddressId;
+                                customer.ShippingAddressId = shippingAddressId;
+                                customer.LastPaymentMethodId = lastPaymentMethodId;
+                                customer.LastAppliedCouponCode = lastAppliedCouponCode;
+                                customer.LanguageId = languageId;
+                                customer.CurrencyId = currencyId;
+                                customer.TaxDisplayTypeId = taxDisplayTypeId;
+                                customer.IsTaxExempt = isTaxExempt;
+                                customer.IsAdmin = isAdmin;
+                                customer.IsGuest = isGuest;
+                                customer.IsForumModerator = isForumModerator;
+                                customer.TotalForumPosts = totalForumPosts;
+                                customer.Signature = signature;
+                                customer.AdminComment = adminComment;
+                                customer.Active = active;
+                                customer.Deleted = deleted;
+                                customer.RegistrationDate = registrationDate;
+                                customer.TimeZoneId = timeZoneId;
+                                customer.AvatarId = avatarId;
+
+                                CustomerManager.UpdateCustomer(customer);
                             }
                         }
                     }
@@ -268,56 +305,145 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                     if (productVariant != null)
                     {
                         var product = ProductManager.GetProductById(productVariant.ProductId);
-                        product = ProductManager.UpdateProduct(product.ProductId, Name, ShortDescription,
-                            FullDescription, product.AdminComment,
-                            TemplateId, ShowOnHomePage, MetaKeywords, MetaDescription,
-                            MetaTitle, product.SEName, AllowCustomerReviews, AllowCustomerRatings,
-                            product.RatingSum, product.TotalRatingVotes,
-                            Published, product.Deleted, CreatedOn, DateTime.UtcNow);
+                        product.Name = Name;
+                        product.ShortDescription = ShortDescription;
+                        product.FullDescription = FullDescription;
+                        product.TemplateId = TemplateId;
+                        product.ShowOnHomePage = ShowOnHomePage;
+                        product.MetaKeywords = MetaKeywords;
+                        product.MetaDescription = MetaDescription;
+                        product.MetaTitle = MetaTitle;
+                        product.AllowCustomerReviews = AllowCustomerReviews;
+                        product.AllowCustomerRatings = AllowCustomerRatings;
+                        product.Published = Published;
+                        product.CreatedOn = CreatedOn;
+                        product.UpdatedOn = DateTime.UtcNow;
 
-                        productVariant = ProductManager.UpdateProductVariant(productVariant.ProductVariantId,
-                            productVariant.ProductId, productVariant.Name, SKU,
-                            productVariant.Description, productVariant.AdminComment,
-                            ManufacturerPartNumber, IsGiftCard, GiftCardType, IsDownload, DownloadId,
-                            UnlimitedDownloads, MaxNumberOfDownloads, productVariant.DownloadExpirationDays,
-                            (DownloadActivationTypeEnum)DownloadActivationType, HasSampleDownload,
-                            SampleDownloadId, HasUserAgreement, UserAgreementText, IsRecurring,
-                            CycleLength, CyclePeriod, TotalCycles, IsShipEnabled,
-                            IsFreeShipping, AdditionalShippingCharge, IsTaxExempt,
-                            TaxCategoryId, ManageInventory, StockQuantity,
-                            DisplayStockAvailability, DisplayStockQuantity, MinStockQuantity,
-                            (LowStockActivityEnum)LowStockActivityId, NotifyAdminForQuantityBelow,
-                            Backorders, OrderMinimumQuantity,
-                            OrderMaximumQuantity, productVariant.WarehouseId, DisableBuyButton,
-                            CallForPrice, Price, OldPrice, ProductCost, CustomerEntersPrice, 
-                            MinimumCustomerEnteredPrice, MaximumCustomerEnteredPrice,
-                            Weight, Length, Width, Height,
-                            productVariant.PictureId, productVariant.AvailableStartDateTime,
-                            productVariant.AvailableEndDateTime, productVariant.Published,
-                            productVariant.Deleted, productVariant.DisplayOrder, CreatedOn, DateTime.UtcNow);
+                        ProductManager.UpdateProduct(product);
+                        
+                        productVariant.SKU = SKU;
+                        productVariant.ManufacturerPartNumber = ManufacturerPartNumber;
+                        productVariant.IsGiftCard = IsGiftCard;
+                        productVariant.GiftCardType = GiftCardType;
+                        productVariant.IsDownload = IsDownload;
+                        productVariant.DownloadId = DownloadId;
+                        productVariant.UnlimitedDownloads = UnlimitedDownloads;
+                        productVariant.MaxNumberOfDownloads = MaxNumberOfDownloads;
+                        productVariant.DownloadActivationType = DownloadActivationType;
+                        productVariant.HasSampleDownload = HasSampleDownload;
+                        productVariant.SampleDownloadId = SampleDownloadId;
+                        productVariant.HasUserAgreement = HasUserAgreement;
+                        productVariant.UserAgreementText = UserAgreementText;
+                        productVariant.IsRecurring = IsRecurring;
+                        productVariant.CycleLength = CycleLength;
+                        productVariant.CyclePeriod = CyclePeriod;
+                        productVariant.TotalCycles = TotalCycles;
+                        productVariant.IsShipEnabled = IsShipEnabled;
+                        productVariant.IsFreeShipping = IsFreeShipping;
+                        productVariant.AdditionalShippingCharge = AdditionalShippingCharge;
+                        productVariant.IsTaxExempt = IsTaxExempt;
+                        productVariant.TaxCategoryId = TaxCategoryId;
+                        productVariant.ManageInventory = ManageInventory;
+                        productVariant.StockQuantity = StockQuantity;
+                        productVariant.DisplayStockAvailability = DisplayStockAvailability;
+                        productVariant.DisplayStockQuantity = DisplayStockQuantity;
+                        productVariant.MinStockQuantity = MinStockQuantity;
+                        productVariant.LowStockActivityId = LowStockActivityId;
+                        productVariant.NotifyAdminForQuantityBelow = NotifyAdminForQuantityBelow;
+                        productVariant.Backorders = Backorders;
+                        productVariant.OrderMinimumQuantity = OrderMinimumQuantity;
+                        productVariant.OrderMaximumQuantity = OrderMaximumQuantity;
+                        productVariant.DisableBuyButton = DisableBuyButton;
+                        productVariant.CallForPrice = CallForPrice;
+                        productVariant.Price = Price;
+                        productVariant.OldPrice = OldPrice;
+                        productVariant.ProductCost = ProductCost;
+                        productVariant.CustomerEntersPrice = CustomerEntersPrice;
+                        productVariant.MinimumCustomerEnteredPrice = MinimumCustomerEnteredPrice;
+                        productVariant.MaximumCustomerEnteredPrice = MaximumCustomerEnteredPrice;
+                        productVariant.Weight = Weight;
+                        productVariant.Length = Length;
+                        productVariant.Width = Width;
+                        productVariant.Height = Height;
+                        productVariant.Published = Published;
+                        productVariant.CreatedOn = CreatedOn;
+                        productVariant.UpdatedOn = DateTime.UtcNow;
+
+                        ProductManager.UpdateProductVariant(productVariant);
                     }
                     else
                     {
-                        var product = ProductManager.InsertProduct(Name, ShortDescription, FullDescription,
-                            string.Empty, TemplateId, ShowOnHomePage, MetaKeywords, MetaDescription,
-                            MetaTitle, string.Empty, AllowCustomerReviews, AllowCustomerRatings, 0, 0,
-                            Published, false, CreatedOn, DateTime.UtcNow);
+                        var product = new Product()
+                        {
+                            Name = Name,
+                            ShortDescription = ShortDescription,
+                            FullDescription = FullDescription,
+                            TemplateId = TemplateId,
+                            ShowOnHomePage = ShowOnHomePage,
+                            MetaKeywords = MetaKeywords,
+                            MetaDescription = MetaDescription,
+                            MetaTitle = MetaTitle,
+                            AllowCustomerReviews = AllowCustomerReviews,
+                            AllowCustomerRatings = AllowCustomerRatings,
+                            Published = Published,
+                            CreatedOn = CreatedOn,
+                            UpdatedOn = DateTime.UtcNow
+                        };
+                        ProductManager.InsertProduct(product);
 
-                        productVariant = ProductManager.InsertProductVariant(product.ProductId,
-                            string.Empty, SKU, string.Empty, string.Empty, ManufacturerPartNumber,
-                            IsGiftCard, GiftCardType, IsDownload, DownloadId,
-                            UnlimitedDownloads, MaxNumberOfDownloads, null, (DownloadActivationTypeEnum)DownloadActivationType,
-                            HasSampleDownload, SampleDownloadId, HasUserAgreement, UserAgreementText, IsRecurring, CycleLength, CyclePeriod, TotalCycles,
-                            IsShipEnabled, IsFreeShipping, AdditionalShippingCharge, IsTaxExempt,
-                            TaxCategoryId, ManageInventory, StockQuantity,
-                            DisplayStockAvailability, DisplayStockQuantity, MinStockQuantity,
-                            (LowStockActivityEnum)LowStockActivityId, NotifyAdminForQuantityBelow,
-                            Backorders, OrderMinimumQuantity,
-                            OrderMaximumQuantity, 0, DisableBuyButton, CallForPrice,
-                            Price, OldPrice, ProductCost, CustomerEntersPrice,
-                            MinimumCustomerEnteredPrice, MaximumCustomerEnteredPrice, 
-                            Weight, Length, Width, Height, 0, null, null,
-                            true, false, 1, CreatedOn, DateTime.UtcNow);
+                        productVariant = new ProductVariant()
+                        {
+                            ProductId = product.ProductId,
+                            SKU = SKU,
+                            ManufacturerPartNumber = ManufacturerPartNumber,
+                            IsGiftCard = IsGiftCard,
+                            GiftCardType = GiftCardType,
+                            IsDownload = IsDownload,
+                            DownloadId = DownloadId,
+                            UnlimitedDownloads = UnlimitedDownloads,
+                            MaxNumberOfDownloads = MaxNumberOfDownloads,
+                            DownloadActivationType = DownloadActivationType,
+                            HasSampleDownload = HasSampleDownload,
+                            SampleDownloadId = SampleDownloadId,
+                            HasUserAgreement = HasUserAgreement,
+                            UserAgreementText = UserAgreementText,
+                            IsRecurring = IsRecurring,
+                            CycleLength = CycleLength,
+                            CyclePeriod = CyclePeriod,
+                            TotalCycles = TotalCycles,
+                            IsShipEnabled = IsShipEnabled,
+                            IsFreeShipping = IsFreeShipping,
+                            AdditionalShippingCharge = AdditionalShippingCharge,
+                            IsTaxExempt = IsTaxExempt,
+                            TaxCategoryId = TaxCategoryId,
+                            ManageInventory = ManageInventory,
+                            StockQuantity = StockQuantity,
+                            DisplayStockAvailability = DisplayStockAvailability,
+                            DisplayStockQuantity = DisplayStockQuantity,
+                            MinStockQuantity = MinStockQuantity,
+                            LowStockActivityId = LowStockActivityId,
+                            NotifyAdminForQuantityBelow = NotifyAdminForQuantityBelow,
+                            Backorders = Backorders,
+                            OrderMinimumQuantity = OrderMinimumQuantity,
+                            OrderMaximumQuantity = OrderMaximumQuantity,
+                            DisableBuyButton = DisableBuyButton,
+                            CallForPrice = CallForPrice,
+                            Price = Price,
+                            OldPrice = OldPrice,
+                            ProductCost = ProductCost,
+                            CustomerEntersPrice = CustomerEntersPrice,
+                            MinimumCustomerEnteredPrice = MinimumCustomerEnteredPrice,
+                            MaximumCustomerEnteredPrice = MaximumCustomerEnteredPrice,
+                            Weight = Weight,
+                            Length = Length,
+                            Width = Width,
+                            Height = Height,
+                            Published = Published,
+                            CreatedOn = CreatedOn,
+                            UpdatedOn = DateTime.UtcNow
+                        };
+
+                        ProductManager.InsertProductVariant(productVariant);
                     }
                 }
             }

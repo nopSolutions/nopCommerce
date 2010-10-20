@@ -134,25 +134,17 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// <summary>
         /// Inserts a forum group
         /// </summary>
-        /// <param name="name">The language name</param>
-        /// <param name="description">The description</param>
-        /// <param name="displayOrder">The display order</param>        
-        /// <param name="createdOn">The date and time of instance creation</param>
-        /// <param name="updatedOn">The date and time of instance update</param>
-        /// <returns>Forum group</returns>
-        public static ForumGroup InsertForumGroup(string name, string description,
-            int displayOrder, DateTime createdOn, DateTime updatedOn)
+        /// <param name="forumGroup">Forum group</param>
+        public static void InsertForumGroup(ForumGroup forumGroup)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 200);
+            if (forumGroup == null)
+                throw new ArgumentNullException("forumGroup");
+
+            forumGroup.Name = CommonHelper.EnsureNotNull(forumGroup.Name);
+            forumGroup.Name = CommonHelper.EnsureMaximumLength(forumGroup.Name, 200);
+            forumGroup.Description = CommonHelper.EnsureNotNull(forumGroup.Description);
 
             var context = ObjectContextHelper.CurrentObjectContext;
-
-            var forumGroup = context.ForumGroups.CreateObject();
-            forumGroup.Name = name;
-            forumGroup.Description = description;
-            forumGroup.DisplayOrder = displayOrder;
-            forumGroup.CreatedOn = createdOn;
-            forumGroup.UpdatedOn = updatedOn;
 
             context.ForumGroups.AddObject(forumGroup);
             context.SaveChanges();
@@ -162,39 +154,25 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
                 NopRequestCache.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(FORUM_PATTERN_KEY);
             }
-
-            return forumGroup;
         }
 
         /// <summary>
         /// Updates the forum group
         /// </summary>
-        /// <param name="forumGroupId">The forum group identifier</param>
-        /// <param name="name">The language name</param>
-        /// <param name="description">The description</param>
-        /// <param name="displayOrder">The display order</param>        
-        /// <param name="createdOn">The date and time of instance creation</param>
-        /// <param name="updatedOn">The date and time of instance update</param>
-        /// <returns>Forum group</returns>
-        public static ForumGroup UpdateForumGroup(int forumGroupId,
-            string name, string description, int displayOrder,
-            DateTime createdOn, DateTime updatedOn)
+        /// <param name="forumGroup">Forum group</param>
+        public static void UpdateForumGroup(ForumGroup forumGroup)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 200);
-
-            var forumGroup = GetForumGroupById(forumGroupId);
             if (forumGroup == null)
-                return null;
+                throw new ArgumentNullException("forumGroup");
+
+            forumGroup.Name = CommonHelper.EnsureNotNull(forumGroup.Name);
+            forumGroup.Name = CommonHelper.EnsureMaximumLength(forumGroup.Name, 200);
+            forumGroup.Description = CommonHelper.EnsureNotNull(forumGroup.Description);
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(forumGroup))
                 context.ForumGroups.Attach(forumGroup);
 
-            forumGroup.Name = name;
-            forumGroup.Description = description;
-            forumGroup.DisplayOrder = displayOrder;
-            forumGroup.CreatedOn = createdOn;
-            forumGroup.UpdatedOn = updatedOn;
             context.SaveChanges();
 
             if (ForumManager.CacheEnabled)
@@ -202,8 +180,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
                 NopRequestCache.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(FORUM_PATTERN_KEY);
             }
-
-            return forumGroup;
         }
 
         /// <summary>
@@ -286,42 +262,17 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// <summary>
         /// Inserts a forum
         /// </summary>
-        /// <param name="forumGroupId">The forum group identifier</param>
-        /// <param name="name">The language name</param>
-        /// <param name="description">The description</param>
-        /// <param name="numTopics">The number of topics</param>
-        /// <param name="numPosts">The number of posts</param>
-        /// <param name="lastTopicId">The last topic identifier</param>
-        /// <param name="lastPostId">The last post identifier</param>
-        /// <param name="lastPostUserId">The last post user identifier</param>
-        /// <param name="lastPostTime">The last post date and time</param>
-        /// <param name="displayOrder">The display order</param>        
-        /// <param name="createdOn">The date and time of instance creation</param>
-        /// <param name="updatedOn">The date and time of instance update</param>
-        /// <returns>Forum</returns>
-        public static Forum InsertForum(int forumGroupId,
-            string name, string description,
-            int numTopics, int numPosts, int lastTopicId, int lastPostId,
-            int lastPostUserId, DateTime? lastPostTime, int displayOrder,
-            DateTime createdOn, DateTime updatedOn)
+        /// <param name="forum">Forum</param>
+        public static void InsertForum(Forum forum)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 200);
+            if (forum == null)
+                throw new ArgumentNullException("forum");
+
+            forum.Name = CommonHelper.EnsureNotNull(forum.Name);
+            forum.Name = CommonHelper.EnsureMaximumLength(forum.Name, 200);
+            forum.Description = CommonHelper.EnsureNotNull(forum.Description);
 
             var context = ObjectContextHelper.CurrentObjectContext;
-
-            var forum = context.Forums.CreateObject();
-            forum.ForumGroupId = forumGroupId;
-            forum.Name = name;
-            forum.Description = description;
-            forum.NumTopics = numTopics;
-            forum.NumPosts = numPosts;
-            forum.LastTopicId = lastTopicId;
-            forum.LastPostId = lastPostId;
-            forum.LastPostUserId = lastPostUserId;
-            forum.LastPostTime = lastPostTime;
-            forum.DisplayOrder = displayOrder;
-            forum.CreatedOn = createdOn;
-            forum.UpdatedOn = updatedOn;
 
             context.Forums.AddObject(forum);
             context.SaveChanges();
@@ -331,54 +282,24 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
                 NopRequestCache.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(FORUM_PATTERN_KEY);
             }
-
-            return forum;
         }
 
         /// <summary>
         /// Updates the forum
         /// </summary>
-        /// <param name="forumId">The forum identifier</param>
-        /// <param name="forumGroupId">The forum group identifier</param>
-        /// <param name="name">The language name</param>
-        /// <param name="description">The description</param>
-        /// <param name="numTopics">The number of topics</param>
-        /// <param name="numPosts">The number of posts</param>
-        /// <param name="lastTopicId">The last topic identifier</param>
-        /// <param name="lastPostId">The last post identifier</param>
-        /// <param name="lastPostUserId">The last post user identifier</param>
-        /// <param name="lastPostTime">The last post date and time</param>
-        /// <param name="displayOrder">The display order</param>        
-        /// <param name="createdOn">The date and time of instance creation</param>
-        /// <param name="updatedOn">The date and time of instance update</param>
-        /// <returns>Forum</returns>
-        public static Forum UpdateForum(int forumId,
-            int forumGroupId, string name, string description,
-            int numTopics, int numPosts, int lastTopicId, int lastPostId,
-            int lastPostUserId, DateTime? lastPostTime, int displayOrder,
-            DateTime createdOn, DateTime updatedOn)
+        /// <param name="forum">Forum</param>
+        public static void UpdateForum(Forum forum)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 200);
-
-            var forum = GetForumById(forumId);
             if (forum == null)
-                return null;
+                throw new ArgumentNullException("forum");
+
+            forum.Name = CommonHelper.EnsureNotNull(forum.Name);
+            forum.Name = CommonHelper.EnsureMaximumLength(forum.Name, 200);
+            forum.Description = CommonHelper.EnsureNotNull(forum.Description);
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(forum))
                 context.Forums.Attach(forum);
-            forum.ForumGroupId = forumGroupId;
-            forum.Name = name;
-            forum.Description = description;
-            forum.NumTopics = numTopics;
-            forum.NumPosts = numPosts;
-            forum.LastTopicId = lastTopicId;
-            forum.LastPostId = lastPostId;
-            forum.LastPostUserId = lastPostUserId;
-            forum.LastPostTime = lastPostTime;
-            forum.DisplayOrder = displayOrder;
-            forum.CreatedOn = createdOn;
-            forum.UpdatedOn = updatedOn;
             context.SaveChanges();
 
             if (ForumManager.CacheEnabled)
@@ -386,8 +307,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
                 NopRequestCache.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(FORUM_PATTERN_KEY);
             }
-
-            return forum;
         }
 
         /// <summary>
@@ -464,11 +383,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
 
             if (increaseViews)
             {
-                forumTopic = UpdateTopic(forumTopic.ForumTopicId, forumTopic.ForumId,
-                    forumTopic.UserId, forumTopic.TopicType, forumTopic.Subject,
-                    forumTopic.NumPosts, ++forumTopic.Views, forumTopic.LastPostId,
-                    forumTopic.LastPostUserId, forumTopic.LastPostTime,
-                    forumTopic.CreatedOn, forumTopic.UpdatedOn);
+                forumTopic.Views = ++forumTopic.Views;
+                UpdateTopic(forumTopic);
             }
 
             return forumTopic;
@@ -531,56 +447,29 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// <summary>
         /// Inserts a topic
         /// </summary>
-        /// <param name="forumId">The forum identifier</param>
-        /// <param name="userId">The user identifier</param>
-        /// <param name="topicType">The topic type</param>
-        /// <param name="subject">The subject</param>
-        /// <param name="numPosts">The number of posts</param>
-        /// <param name="views">The number of views</param>
-        /// <param name="lastPostId">The last post identifier</param>
-        /// <param name="lastPostUserId">The last post user identifier</param>
-        /// <param name="lastPostTime">The last post date and time</param>
-        /// <param name="createdOn">The date and time of instance creation</param>
-        /// <param name="updatedOn">The date and time of instance update</param>
+        /// <param name="forumTopic">Forum topic</param>
         /// <param name="sendNotifications">A value indicating whether to send notifications to users</param>
-        /// <returns>Topic</returns>
-        public static ForumTopic InsertTopic(int forumId, int userId,
-            ForumTopicTypeEnum topicType, string subject,
-            int numPosts, int views, int lastPostId,
-            int lastPostUserId, DateTime? lastPostTime,
-            DateTime createdOn, DateTime updatedOn, bool sendNotifications)
+        public static void InsertTopic(ForumTopic forumTopic, bool sendNotifications)
         {
-            if (subject == null)
-                subject = string.Empty;
+            if (forumTopic == null)
+                throw new ArgumentNullException("forumTopic");
 
-            subject = subject.Trim();
+            forumTopic.Subject = CommonHelper.EnsureNotNull(forumTopic.Subject);
+            forumTopic.Subject = forumTopic.Subject.Trim();
 
-            if (String.IsNullOrEmpty(subject))
+            if (String.IsNullOrEmpty(forumTopic.Subject))
                 throw new NopException("Topic subject cannot be empty");
 
             if (ForumManager.TopicSubjectMaxLength > 0)
             {
-                if (subject.Length > ForumManager.TopicSubjectMaxLength)
-                    subject = subject.Substring(0, ForumManager.TopicSubjectMaxLength);
+                if (forumTopic.Subject.Length > ForumManager.TopicSubjectMaxLength)
+                    forumTopic.Subject = forumTopic.Subject.Substring(0, ForumManager.TopicSubjectMaxLength);
             }
 
-            subject = CommonHelper.EnsureMaximumLength(subject, 450);
+            forumTopic.Subject = CommonHelper.EnsureMaximumLength(forumTopic.Subject, 450);
 
             var context = ObjectContextHelper.CurrentObjectContext;
-
-            var forumTopic = context.ForumTopics.CreateObject();
-            forumTopic.ForumId = forumId;
-            forumTopic.UserId = userId;
-            forumTopic.TopicTypeId = (int)topicType;
-            forumTopic.Subject = subject;
-            forumTopic.NumPosts = numPosts;
-            forumTopic.Views = views;
-            forumTopic.LastPostId = lastPostId;
-            forumTopic.LastPostUserId = lastPostUserId;
-            forumTopic.LastPostTime = lastPostTime;
-            forumTopic.CreatedOn = createdOn;
-            forumTopic.UpdatedOn = updatedOn;
-
+            
             context.ForumTopics.AddObject(forumTopic);
             context.SaveChanges();
 
@@ -597,73 +486,42 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
 
                 foreach (var subscription in subscriptions)
                 {
-                    if (subscription.UserId == userId)
+                    if (subscription.UserId == forumTopic.UserId)
                         continue;
 
                     MessageManager.SendNewForumTopicMessage(subscription.User, 
                         forumTopic, forum, NopContext.Current.WorkingLanguage.LanguageId);
                 }
             }
-
-            return forumTopic;
         }
 
         /// <summary>
         /// Updates the topic
         /// </summary>
-        /// <param name="forumTopicId">The forum topic identifier</param>
-        /// <param name="forumId">The forum identifier</param>
-        /// <param name="userId">The user identifier</param>
-        /// <param name="topicType">The topic type</param>
-        /// <param name="subject">The subject</param>
-        /// <param name="numPosts">The number of posts</param>
-        /// <param name="views">The number of views</param>
-        /// <param name="lastPostId">The last post identifier</param>
-        /// <param name="lastPostUserId">The last post user identifier</param>
-        /// <param name="lastPostTime">The last post date and time</param>
-        /// <param name="createdOn">The date and time of instance creation</param>
-        /// <param name="updatedOn">The date and time of instance update</param>
-        /// <returns>Topic</returns>
-        public static ForumTopic UpdateTopic(int forumTopicId, int forumId, 
-            int userId, ForumTopicTypeEnum topicType, string subject,
-            int numPosts, int views, int lastPostId, int lastPostUserId, 
-            DateTime? lastPostTime, DateTime createdOn, DateTime updatedOn)
+        /// <param name="forumTopic">Forum topic</param>
+        public static void UpdateTopic(ForumTopic forumTopic)
         {
-            if (subject == null)
-                subject = string.Empty;
+            if (forumTopic == null)
+                throw new ArgumentNullException("forumTopic");
 
-            subject = subject.Trim();
+            forumTopic.Subject = CommonHelper.EnsureNotNull(forumTopic.Subject);
+            forumTopic.Subject = forumTopic.Subject.Trim();
 
-            if (String.IsNullOrEmpty(subject))
+            if (String.IsNullOrEmpty(forumTopic.Subject))
                 throw new NopException("Topic subject cannot be empty");
 
             if (ForumManager.TopicSubjectMaxLength > 0)
             {
-                if (subject.Length > ForumManager.TopicSubjectMaxLength)
-                    subject = subject.Substring(0, ForumManager.TopicSubjectMaxLength);
+                if (forumTopic.Subject.Length > ForumManager.TopicSubjectMaxLength)
+                    forumTopic.Subject = forumTopic.Subject.Substring(0, ForumManager.TopicSubjectMaxLength);
             }
 
-            subject = CommonHelper.EnsureMaximumLength(subject, 450);
+            forumTopic.Subject = CommonHelper.EnsureMaximumLength(forumTopic.Subject, 450);
             
-            var forumTopic = GetTopicById(forumTopicId);
-            if (forumTopic == null)
-                return null;
-
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(forumTopic))
                 context.ForumTopics.Attach(forumTopic);
             
-            forumTopic.ForumId = forumId;
-            forumTopic.UserId = userId;
-            forumTopic.TopicTypeId = (int)topicType;
-            forumTopic.Subject = subject;
-            forumTopic.NumPosts = numPosts;
-            forumTopic.Views = views;
-            forumTopic.LastPostId = lastPostId;
-            forumTopic.LastPostUserId = lastPostUserId;
-            forumTopic.LastPostTime = lastPostTime;
-            forumTopic.CreatedOn = createdOn;
-            forumTopic.UpdatedOn = updatedOn;
             context.SaveChanges();
             
             if (ForumManager.CacheEnabled)
@@ -671,8 +529,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
                 NopRequestCache.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(FORUM_PATTERN_KEY);
             }
-
-            return forumTopic;
         }
 
         /// <summary>
@@ -696,10 +552,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
                 {
                     if (previousForumId != newForumId)
                     {
-                        forumTopic = UpdateTopic(forumTopic.ForumTopicId, newForum.ForumId,
-                            forumTopic.UserId, forumTopic.TopicType, forumTopic.Subject, forumTopic.NumPosts,
-                            forumTopic.Views, forumTopic.LastPostId, forumTopic.LastPostUserId,
-                            forumTopic.LastPostTime, forumTopic.CreatedOn, DateTime.UtcNow);
+                        forumTopic.ForumId = newForum.ForumId;
+                        forumTopic.UpdatedOn = DateTime.UtcNow;
+                        UpdateTopic(forumTopic);
 
                         //update forum stats
                         UpdateForumStats(previousForumId);
@@ -822,43 +677,29 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// <summary>
         /// Inserts a post
         /// </summary>
-        /// <param name="forumTopicId">The forum topic identifier</param>
-        /// <param name="userId">The user identifier</param>
-        /// <param name="text">The text</param>
-        /// <param name="ipAddress">The IP address</param>
-        /// <param name="createdOn">The date and time of instance creation</param>
-        /// <param name="updatedOn">The date and time of instance update</param>
+        /// <param name="forumPost">The forum post</param>
         /// <param name="sendNotifications">A value indicating whether to send notifications to users</param>
-        /// <returns>Post</returns>
-        public static ForumPost InsertPost(int forumTopicId, int userId,
-            string text, string ipAddress, DateTime createdOn, DateTime updatedOn, 
-            bool sendNotifications)
+        public static void InsertPost(ForumPost forumPost, bool sendNotifications)
         {
-            if (text == null)
-                text = string.Empty;
+            if (forumPost == null)
+                throw new ArgumentNullException("forumPost");
 
-            text = text.Trim();
+            forumPost.Text = CommonHelper.EnsureNotNull(forumPost.Text);
+            forumPost.Text = forumPost.Text.Trim();
 
-            if (String.IsNullOrEmpty(text))
+            if (String.IsNullOrEmpty(forumPost.Text))
                 throw new NopException("Text cannot be empty");
 
             if (ForumManager.PostMaxLength > 0)
             {
-                if (text.Length > ForumManager.PostMaxLength)
-                    text = text.Substring(0, ForumManager.PostMaxLength);
+                if (forumPost.Text.Length > ForumManager.PostMaxLength)
+                    forumPost.Text = forumPost.Text.Substring(0, ForumManager.PostMaxLength);
             }
 
-            ipAddress = CommonHelper.EnsureMaximumLength(ipAddress, 100);
+            forumPost.IPAddress = CommonHelper.EnsureNotNull(forumPost.IPAddress);
+            forumPost.IPAddress = CommonHelper.EnsureMaximumLength(forumPost.IPAddress, 100);
 
             var context = ObjectContextHelper.CurrentObjectContext;
-
-            var forumPost = context.ForumPosts.CreateObject();
-            forumPost.TopicId = forumTopicId;
-            forumPost.UserId = userId;
-            forumPost.Text = text;
-            forumPost.IPAddress = ipAddress;
-            forumPost.CreatedOn = createdOn;
-            forumPost.UpdatedOn = updatedOn;
 
             context.ForumPosts.AddObject(forumPost);
             context.SaveChanges();
@@ -878,7 +719,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
                 
                 foreach (ForumSubscription subscription in subscriptions)
                 {
-                    if (subscription.UserId == userId)
+                    if (subscription.UserId == forumPost.UserId)
                         continue;
 
                     MessageManager.SendNewForumPostMessage(subscription.User,
@@ -886,54 +727,36 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
                         NopContext.Current.WorkingLanguage.LanguageId);
                 }
             }
-
-            return forumPost;
         }
 
         /// <summary>
         /// Updates the post
         /// </summary>
-        /// <param name="forumPostId">The forum post identifier</param>
-        /// <param name="forumTopicId">The forum topic identifier</param>
-        /// <param name="userId">The user identifier</param>
-        /// <param name="text">The text</param>
-        /// <param name="ipAddress">The IP address</param>
-        /// <param name="createdOn">The date and time of instance creation</param>
-        /// <param name="updatedOn">The date and time of instance update</param>
-        /// <returns>Post</returns>
-        public static ForumPost UpdatePost(int forumPostId, int forumTopicId, int userId,
-            string text, string ipAddress, DateTime createdOn, DateTime updatedOn)
+        /// <param name="forumPost">The forum post</param>
+        public static void UpdatePost(ForumPost forumPost)
         {
-            if (text == null)
-                text = string.Empty;
+            if (forumPost == null)
+                throw new ArgumentNullException("forumPost");
+            
+            forumPost.Text = CommonHelper.EnsureNotNull(forumPost.Text);
+            forumPost.Text = forumPost.Text.Trim();
 
-            text = text.Trim();
-
-            if (String.IsNullOrEmpty(text))
+            if (String.IsNullOrEmpty(forumPost.Text))
                 throw new NopException("Text cannot be empty");
 
             if (ForumManager.PostMaxLength > 0)
             {
-                if (text.Length > ForumManager.PostMaxLength)
-                    text = text.Substring(0, ForumManager.PostMaxLength);
+                if (forumPost.Text.Length > ForumManager.PostMaxLength)
+                    forumPost.Text = forumPost.Text.Substring(0, ForumManager.PostMaxLength);
             }
 
-            ipAddress = CommonHelper.EnsureMaximumLength(ipAddress, 100);            
-
-            var forumPost = GetPostById(forumPostId);
-            if (forumPost == null)
-                return null;
+            forumPost.IPAddress = CommonHelper.EnsureNotNull(forumPost.IPAddress);
+            forumPost.IPAddress = CommonHelper.EnsureMaximumLength(forumPost.IPAddress, 100);            
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(forumPost))
                 context.ForumPosts.Attach(forumPost);
 
-            forumPost.TopicId = forumTopicId;
-            forumPost.UserId = userId;
-            forumPost.Text = text;
-            forumPost.IPAddress = ipAddress;
-            forumPost.CreatedOn = createdOn;
-            forumPost.UpdatedOn = updatedOn;
             context.SaveChanges();
 
             if (ForumManager.CacheEnabled)
@@ -941,8 +764,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
                 NopRequestCache.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(FORUM_PATTERN_KEY);
             }
-
-            return forumPost;
         }
 
         /// <summary>
@@ -1018,59 +839,40 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// <summary>
         /// Inserts a private message
         /// </summary>
-        /// <param name="fromUserId">The user identifier who sent the message</param>
-        /// <param name="toUserId">The user identifier who should receive the message</param>
-        /// <param name="subject">The subject</param>
-        /// <param name="text">The text</param>
-        /// <param name="isRead">The value indivating whether message is read</param>
-        /// <param name="isDeletedByAuthor">The value indivating whether message is deleted by author</param>
-        /// <param name="isDeletedByRecipient">The value indivating whether message is deleted by recipient</param>
-        /// <param name="createdOn">The date and time of instance creation</param>
-        /// <returns>Private message</returns>
-        public static PrivateMessage InsertPrivateMessage(int fromUserId,
-            int toUserId, string subject, string text, bool isRead,
-            bool isDeletedByAuthor, bool isDeletedByRecipient, DateTime createdOn)
+        /// <param name="privateMessage">Private message</param>
+        public static void InsertPrivateMessage(PrivateMessage privateMessage)
         {
-            if (subject == null)
-                subject = string.Empty;
-            subject = subject.Trim();
-            if (String.IsNullOrEmpty(subject))
+            if (privateMessage == null)
+                throw new ArgumentNullException("privateMessage");
+            
+            privateMessage.Subject = CommonHelper.EnsureNotNull(privateMessage.Subject);
+            privateMessage.Subject = privateMessage.Subject.Trim();
+            if (String.IsNullOrEmpty(privateMessage.Subject))
                 throw new NopException("Subject cannot be empty");
             if (ForumManager.PMSubjectMaxLength > 0)
             {
-                if (subject.Length > ForumManager.PMSubjectMaxLength)
-                    subject = subject.Substring(0, ForumManager.PMSubjectMaxLength);
+                if (privateMessage.Subject.Length > ForumManager.PMSubjectMaxLength)
+                    privateMessage.Subject = privateMessage.Subject.Substring(0, ForumManager.PMSubjectMaxLength);
             }
-
-            if (text == null)
-                text = string.Empty;
-            text = text.Trim();
-            if (String.IsNullOrEmpty(text))
+            
+            privateMessage.Text = CommonHelper.EnsureNotNull(privateMessage.Text);
+            privateMessage.Text = privateMessage.Text.Trim();
+            if (String.IsNullOrEmpty(privateMessage.Text))
                 throw new NopException("Text cannot be empty");
 
-            subject = CommonHelper.EnsureMaximumLength(subject, 450);
+            privateMessage.Subject = CommonHelper.EnsureMaximumLength(privateMessage.Subject, 450);
 
             if (ForumManager.PMTextMaxLength > 0)
             {
-                if (text.Length > ForumManager.PMTextMaxLength)
-                    text = text.Substring(0, ForumManager.PMTextMaxLength);
+                if (privateMessage.Text.Length > ForumManager.PMTextMaxLength)
+                    privateMessage.Text = privateMessage.Text.Substring(0, ForumManager.PMTextMaxLength);
             }
 
-            Customer customerTo = CustomerManager.GetCustomerById(toUserId);
+            Customer customerTo = CustomerManager.GetCustomerById(privateMessage.ToUserId);
             if (customerTo == null)
                 throw new NopException("Recipient could not be loaded");
 
             var context = ObjectContextHelper.CurrentObjectContext;
-
-            var privateMessage = context.PrivateMessages.CreateObject();
-            privateMessage.FromUserId = fromUserId;
-            privateMessage.ToUserId = toUserId;
-            privateMessage.Subject = subject;
-            privateMessage.Text = text;
-            privateMessage.IsRead = isRead;
-            privateMessage.IsDeletedByAuthor = isDeletedByAuthor;
-            privateMessage.IsDeletedByRecipient = isDeletedByRecipient;
-            privateMessage.CreatedOn = createdOn;
 
             context.PrivateMessages.AddObject(privateMessage);
             context.SaveChanges();
@@ -1082,77 +884,50 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
             {
                 MessageManager.SendPrivateMessageNotification(privateMessage, NopContext.Current.WorkingLanguage.LanguageId);
             }
-
-            return privateMessage;
         }
 
         /// <summary>
         /// Updates the private message
         /// </summary>
-        /// <param name="privateMessageId">The private message identifier</param>
-        /// <param name="fromUserId">The user identifier who sent the message</param>
-        /// <param name="toUserId">The user identifier who should receive the message</param>
-        /// <param name="subject">The subject</param>
-        /// <param name="text">The text</param>
-        /// <param name="isRead">The value indivating whether message is read</param>
-        /// <param name="isDeletedByAuthor">The value indivating whether message is deleted by author</param>
-        /// <param name="isDeletedByRecipient">The value indivating whether message is deleted by recipient</param>
-        /// <param name="createdOn">The date and time of instance creation</param>
-        /// <returns>Private message</returns>
-        public static PrivateMessage UpdatePrivateMessage(int privateMessageId,
-            int fromUserId, int toUserId, string subject, string text, bool isRead,
-            bool isDeletedByAuthor, bool isDeletedByRecipient, DateTime createdOn)
+        /// <param name="privateMessage">Private message</param>
+        public static void UpdatePrivateMessage(PrivateMessage privateMessage)
         {
-            if (subject == null)
-                subject = string.Empty;
-            subject = subject.Trim();
-            if (String.IsNullOrEmpty(subject))
+            if (privateMessage == null)
+                throw new ArgumentNullException("privateMessage");
+
+            privateMessage.Subject = CommonHelper.EnsureNotNull(privateMessage.Subject);
+            privateMessage.Subject = privateMessage.Subject.Trim();
+            if (String.IsNullOrEmpty(privateMessage.Subject))
                 throw new NopException("Subject cannot be empty");
             if (ForumManager.PMSubjectMaxLength > 0)
             {
-                if (subject.Length > ForumManager.PMSubjectMaxLength)
-                    subject = subject.Substring(0, ForumManager.PMSubjectMaxLength);
+                if (privateMessage.Subject.Length > ForumManager.PMSubjectMaxLength)
+                    privateMessage.Subject = privateMessage.Subject.Substring(0, ForumManager.PMSubjectMaxLength);
             }
 
-            if (text == null)
-                text = string.Empty;
-            text = text.Trim();
-            if (String.IsNullOrEmpty(text))
+            privateMessage.Text = CommonHelper.EnsureNotNull(privateMessage.Text);
+            privateMessage.Text = privateMessage.Text.Trim();
+            if (String.IsNullOrEmpty(privateMessage.Text))
                 throw new NopException("Text cannot be empty");
             if (ForumManager.PMTextMaxLength > 0)
             {
-                if (text.Length > ForumManager.PMTextMaxLength)
-                    text = text.Substring(0, ForumManager.PMTextMaxLength);
+                if (privateMessage.Text.Length > ForumManager.PMTextMaxLength)
+                    privateMessage.Text = privateMessage.Text.Substring(0, ForumManager.PMTextMaxLength);
             }
 
-            subject = CommonHelper.EnsureMaximumLength(subject, 450);
+            privateMessage.Subject = CommonHelper.EnsureMaximumLength(privateMessage.Subject, 450);
 
-            if (isDeletedByAuthor && isDeletedByRecipient)
+            if (privateMessage.IsDeletedByAuthor && privateMessage.IsDeletedByRecipient)
             {
-                DeletePrivateMessage(privateMessageId);
-                return null;
+                DeletePrivateMessage(privateMessage.PrivateMessageId);
             }
             else
             {
-                var privateMessage = GetPrivateMessageById(privateMessageId);
-                if (privateMessage == null)
-                    return null;
-
                 var context = ObjectContextHelper.CurrentObjectContext;
                 if (!context.IsAttached(privateMessage))
                     context.PrivateMessages.Attach(privateMessage);
 
-                privateMessage.FromUserId = fromUserId;
-                privateMessage.ToUserId = toUserId;
-                privateMessage.Subject = subject;
-                privateMessage.Text = text;
-                privateMessage.IsRead = isRead;
-                privateMessage.IsDeletedByAuthor = isDeletedByAuthor;
-                privateMessage.IsDeletedByRecipient = isDeletedByRecipient;
-                privateMessage.CreatedOn = createdOn;
                 context.SaveChanges();
-
-                return privateMessage;
             }
         }
 
@@ -1242,59 +1017,32 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// <summary>
         /// Inserts a forum subscription
         /// </summary>
-        /// <param name="subscriptionGuid">The forum subscription identifier</param>
-        /// <param name="userId">The user identifier</param>
-        /// <param name="forumId">The forum identifier</param>
-        /// <param name="topicId">The topic identifier</param>
-        /// <param name="createdOn">The date and time of instance creation</param>
-        /// <returns>Forum subscription</returns>
-        public static ForumSubscription InsertSubscription(Guid subscriptionGuid, int userId,
-            int forumId, int topicId, DateTime createdOn)
+        /// <param name="forumSubscription">Forum subscription</param>
+        public static void InsertSubscription(ForumSubscription forumSubscription)
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
+            if (forumSubscription == null)
+                throw new ArgumentNullException("forumSubscription");
 
-            var forumSubscription = context.ForumSubscriptions.CreateObject();
-            forumSubscription.SubscriptionGuid = subscriptionGuid;
-            forumSubscription.UserId = userId;
-            forumSubscription.ForumId = forumId;
-            forumSubscription.TopicId = topicId;
-            forumSubscription.CreatedOn = createdOn;
+            var context = ObjectContextHelper.CurrentObjectContext;
 
             context.ForumSubscriptions.AddObject(forumSubscription);
             context.SaveChanges();
-
-            return forumSubscription;
         }
 
         /// <summary>
         /// Updates the forum subscription
         /// </summary>
-        /// <param name="subscriptionId">The forum subscription identifier</param>
-        /// <param name="subscriptionGuid">The forum subscription identifier</param>
-        /// <param name="userId">The user identifier</param>
-        /// <param name="forumId">The forum identifier</param>
-        /// <param name="topicId">The topic identifier</param>
-        /// <param name="createdOn">The date and time of instance creation</param>
-        /// <returns>Forum subscription</returns>
-        public static ForumSubscription UpdateSubscription(int subscriptionId, 
-            Guid subscriptionGuid, int userId, int forumId, int topicId, DateTime createdOn)
+        /// <param name="forumSubscription">Forum subscription</param>
+        public static void UpdateSubscription(ForumSubscription forumSubscription)
         {
-            var forumSubscription = GetSubscriptionById(subscriptionId);
             if (forumSubscription == null)
-                return null;
+                throw new ArgumentNullException("forumSubscription");
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(forumSubscription))
                 context.ForumSubscriptions.Attach(forumSubscription);
 
-            forumSubscription.SubscriptionGuid = subscriptionGuid;
-            forumSubscription.UserId = userId;
-            forumSubscription.ForumId = forumId;
-            forumSubscription.TopicId = topicId;
-            forumSubscription.CreatedOn = createdOn;
             context.SaveChanges();
-
-            return forumSubscription;
         }
 
         /// <summary>

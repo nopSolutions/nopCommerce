@@ -80,7 +80,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     {
                         if (existingAclRules.Find(a => a.CustomerRoleId == cr.CustomerRoleId) == null)
                         {
-                            ACLManager.InsertAclPerObject(category.CategoryId, ObjectTypeEnum.Category, cr.CustomerRoleId, true);
+                            ACLManager.InsertAclPerObject(
+                                new ACLPerObject()
+                                {
+                                    ObjectId = category.CategoryId,
+                                    ObjectTypeId = (int)ObjectTypeEnum.Category,
+                                    CustomerRoleId = cr.CustomerRoleId,
+                                    Deny = true
+                                });
                         }
                     }
                     else

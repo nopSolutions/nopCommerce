@@ -111,22 +111,18 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Localization
         /// <summary>
         /// Inserts a locale string resource
         /// </summary>
-        /// <param name="languageId">The language identifier</param>
-        /// <param name="resourceName">The resource name</param>
-        /// <param name="resourceValue">The resource value</param>
-        /// <returns>Locale string resource</returns>
-        public static LocaleStringResource InsertLocaleStringResource(int languageId,
-            string resourceName, string resourceValue)
+        /// <param name="localeStringResource">Locale string resource</param>
+        public static void InsertLocaleStringResource(LocaleStringResource localeStringResource)
         {
-            resourceName = CommonHelper.EnsureMaximumLength(resourceName, 200);
+            if (localeStringResource == null)
+                throw new ArgumentNullException("localeStringResource");
+
+            localeStringResource.ResourceName = CommonHelper.EnsureNotNull(localeStringResource.ResourceName);
+            localeStringResource.ResourceName = CommonHelper.EnsureMaximumLength(localeStringResource.ResourceName, 200);
+            localeStringResource.ResourceValue = CommonHelper.EnsureNotNull(localeStringResource.ResourceValue);
 
             var context = ObjectContextHelper.CurrentObjectContext;
-
-            var localeStringResource = context.LocaleStringResources.CreateObject();
-            localeStringResource.LanguageId = languageId;
-            localeStringResource.ResourceName = resourceName;
-            localeStringResource.ResourceValue = resourceValue;
-
+            
             context.LocaleStringResources.AddObject(localeStringResource);
             context.SaveChanges();
 
@@ -134,40 +130,31 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Localization
             {
                 NopStaticCache.RemoveByPattern(LOCALSTRINGRESOURCES_PATTERN_KEY);
             }
-            return localeStringResource;
         }
 
         /// <summary>
         /// Updates the locale string resource
         /// </summary>
-        /// <param name="localeStringResourceId">The locale string resource identifier</param>
-        /// <param name="languageId">The language identifier</param>
-        /// <param name="resourceName">The resource name</param>
-        /// <param name="resourceValue">The resource value</param>
-        /// <returns>Locale string resource</returns>
-        public static LocaleStringResource UpdateLocaleStringResource(int localeStringResourceId,
-            int languageId, string resourceName, string resourceValue)
+        /// <param name="localeStringResource">Locale string resource</param>
+        public static void UpdateLocaleStringResource(LocaleStringResource localeStringResource)
         {
-            resourceName = CommonHelper.EnsureMaximumLength(resourceName, 200);
-
-            var localeStringResource = GetLocaleStringResourceById(localeStringResourceId);
             if (localeStringResource == null)
-                return null;
+                throw new ArgumentNullException("localeStringResource");
+
+            localeStringResource.ResourceName = CommonHelper.EnsureNotNull(localeStringResource.ResourceName);
+            localeStringResource.ResourceName = CommonHelper.EnsureMaximumLength(localeStringResource.ResourceName, 200);
+            localeStringResource.ResourceValue = CommonHelper.EnsureNotNull(localeStringResource.ResourceValue);
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(localeStringResource))
                 context.LocaleStringResources.Attach(localeStringResource);
 
-            localeStringResource.LanguageId = languageId;
-            localeStringResource.ResourceName = resourceName;
-            localeStringResource.ResourceValue = resourceValue;
             context.SaveChanges();
             
             if (LocaleStringResourceManager.CacheEnabled)
             {
                 NopStaticCache.RemoveByPattern(LOCALSTRINGRESOURCES_PATTERN_KEY);
             }
-            return localeStringResource;
         }
 
         /// <summary>

@@ -102,11 +102,15 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
             if (gc != null)
             {
-                gc = OrderManager.UpdateGiftCard(gc.GiftCardId,
-                    gc.PurchasedOrderProductVariantId, initialValue, isGiftCardActivated,
-                    giftCardCouponCode, recipientName, recipientEmail,
-                    senderName, senderEmail, message,
-                    gc.IsRecipientNotified, gc.CreatedOn);
+                gc.Amount = initialValue;
+                gc.IsGiftCardActivated = isGiftCardActivated;
+                gc.GiftCardCouponCode = giftCardCouponCode;
+                gc.RecipientName = recipientName;
+                gc.RecipientEmail = recipientEmail;
+                gc.SenderName = senderName;
+                gc.SenderEmail = senderEmail;
+                gc.Message = message;
+                OrderManager.UpdateGiftCard(gc);
             }
             else
             {
@@ -179,11 +183,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 int queuedEmailId = MessageManager.SendGiftCardNotification(gc, customerLang.LanguageId);
                 if (queuedEmailId > 0)
                 {
-                    gc = OrderManager.UpdateGiftCard(gc.GiftCardId,
-                        gc.PurchasedOrderProductVariantId, gc.Amount, gc.IsGiftCardActivated,
-                        gc.GiftCardCouponCode, gc.RecipientName, gc.RecipientEmail,
-                        gc.SenderName, gc.SenderEmail, gc.Message,
-                        true, gc.CreatedOn);
+                    gc.IsRecipientNotified = true;
+                    OrderManager.UpdateGiftCard(gc);
                     BindData();
                 }
             }

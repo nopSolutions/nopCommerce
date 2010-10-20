@@ -63,13 +63,22 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
             if (taxCategory != null)
             {
-                taxCategory = TaxCategoryManager.UpdateTaxCategory(taxCategory.TaxCategoryId, txtName.Text,
-                    txtDisplayOrder.Value, taxCategory.CreatedOn, DateTime.UtcNow);
+                taxCategory.Name =  txtName.Text;
+                taxCategory.DisplayOrder =  txtDisplayOrder.Value;
+                taxCategory.UpdatedOn = DateTime.UtcNow;
+                TaxCategoryManager.UpdateTaxCategory(taxCategory);
             }
             else
             {
                 DateTime now = DateTime.UtcNow;
-                taxCategory = TaxCategoryManager.InsertTaxCategory(txtName.Text, txtDisplayOrder.Value, now, now);
+                taxCategory = new TaxCategory()
+                {
+                    Name = txtName.Text,
+                    DisplayOrder = txtDisplayOrder.Value,
+                    CreatedOn = now,
+                    UpdatedOn = now
+                };
+                TaxCategoryManager.InsertTaxCategory(taxCategory);
             }
 
             return taxCategory;

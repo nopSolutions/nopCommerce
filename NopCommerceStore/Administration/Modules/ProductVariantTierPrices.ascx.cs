@@ -82,7 +82,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 {
                     decimal price = txtNewPrice.Value;
                     int quantity = txtNewQuantity.Value;
-                    TierPrice tierPrice = ProductManager.InsertTierPrice(productVariant.ProductVariantId, quantity, price);
+                    var tierPrice = new TierPrice()
+                    {
+                        ProductVariantId = productVariant.ProductVariantId,
+                        Quantity = quantity,
+                        Price = price
+                    };
+                    ProductManager.InsertTierPrice(tierPrice);
 
                     BindData();
                 }
@@ -111,8 +117,11 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 TierPrice tierPrice = ProductManager.GetTierPriceById(tierPriceId);
 
                 if (tierPrice != null)
-                    ProductManager.UpdateTierPrice(tierPrice.TierPriceId,
-                       tierPrice.ProductVariantId, quantity, price);
+                {
+                    tierPrice.Quantity = quantity;
+                    tierPrice.Price = price;
+                    ProductManager.UpdateTierPrice(tierPrice);
+                }
 
                 BindData();
             }

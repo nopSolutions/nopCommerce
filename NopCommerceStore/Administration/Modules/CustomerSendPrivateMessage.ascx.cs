@@ -79,10 +79,15 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 var customer = CustomerManager.GetCustomerById(this.CustomerId);
                 if (customer != null)
                 {
-                    var pm = ForumManager.InsertPrivateMessage(
-                        NopContext.Current.User.CustomerId, 
-                        customer.CustomerId, subject, message,
-                        false, false, false, DateTime.UtcNow);
+                    var pm = new PrivateMessage()
+                    {
+                        FromUserId = NopContext.Current.User.CustomerId,
+                        ToUserId = customer.CustomerId,
+                        Subject = subject,
+                        Text = message,
+                        CreatedOn = DateTime.UtcNow
+                    };
+                    ForumManager.InsertPrivateMessage(pm);
                 }
             }
             catch (Exception exc)

@@ -214,31 +214,19 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
         /// <summary>
         /// Inserts an blog post
         /// </summary>
-        /// <param name="languageId">The language identifier</param>
-        /// <param name="blogPostTitle">The blog post title</param>
-        /// <param name="blogPostBody">The blog post title</param>
-        /// <param name="blogPostAllowComments">A value indicating whether the blog post comments are allowed</param>
-        /// <param name="tags">The blog post tags</param>
-        /// <param name="createdById">The user identifier who created the blog post</param>
-        /// <param name="createdOn">The date and time of instance creation</param>
-        /// <returns>Blog post</returns>
-        public static BlogPost InsertBlogPost(int languageId, string blogPostTitle,
-            string blogPostBody, bool blogPostAllowComments,
-            string tags, int createdById, DateTime createdOn)
+        /// <param name="blogPost">Blog post</param>
+        public static void InsertBlogPost(BlogPost blogPost)
         {
-            blogPostTitle = CommonHelper.EnsureMaximumLength(blogPostTitle, 200);
-            tags = CommonHelper.EnsureMaximumLength(tags, 4000);
+            if (blogPost == null)
+                throw new ArgumentNullException("blogPost");
+
+            blogPost.BlogPostTitle = CommonHelper.EnsureNotNull(blogPost.BlogPostTitle);
+            blogPost.BlogPostTitle = CommonHelper.EnsureMaximumLength(blogPost.BlogPostTitle, 200);
+            blogPost.BlogPostBody = CommonHelper.EnsureNotNull(blogPost.BlogPostBody);
+            blogPost.Tags = CommonHelper.EnsureNotNull(blogPost.Tags);
+            blogPost.Tags = CommonHelper.EnsureMaximumLength(blogPost.Tags, 4000);
 
             var context = ObjectContextHelper.CurrentObjectContext;
-
-            var blogPost = context.BlogPosts.CreateObject();
-            blogPost.LanguageId = languageId;
-            blogPost.BlogPostTitle = blogPostTitle;
-            blogPost.BlogPostBody = blogPostBody;
-            blogPost.BlogPostAllowComments = blogPostAllowComments;
-            blogPost.Tags = tags;
-            blogPost.CreatedById = createdById;
-            blogPost.CreatedOn = createdOn;
 
             context.BlogPosts.AddObject(blogPost);
             context.SaveChanges();
@@ -247,53 +235,33 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
             {
                 NopRequestCache.RemoveByPattern(BLOGPOST_PATTERN_KEY);
             }
-
-            return blogPost;
         }
 
         /// <summary>
         /// Updates the blog post
         /// </summary>
-        /// <param name="blogPostId">The blog post identifier</param>
-        /// <param name="languageId">The language identifier</param>
-        /// <param name="blogPostTitle">The blog post title</param>
-        /// <param name="blogPostBody">The blog post title</param>
-        /// <param name="blogPostAllowComments">A value indicating whether the blog post comments are allowed</param>
-        /// <param name="tags">The blog post tags</param>
-        /// <param name="createdById">The user identifier who created the blog post</param>
-        /// <param name="createdOn">The date and time of instance creation</param>
-        /// <returns>Blog post</returns>
-        public static BlogPost UpdateBlogPost(int blogPostId,
-            int languageId, string blogPostTitle,
-            string blogPostBody, bool blogPostAllowComments,
-            string tags, int createdById, DateTime createdOn)
+        /// <param name="blogPost">Blog post</param>
+        public static void UpdateBlogPost(BlogPost blogPost)
         {
-            blogPostTitle = CommonHelper.EnsureMaximumLength(blogPostTitle, 200);
-            tags = CommonHelper.EnsureMaximumLength(tags, 4000);
-
-            var blogPost = GetBlogPostById(blogPostId);
             if (blogPost == null)
-                return null;
+                throw new ArgumentNullException("blogPost");
+
+            blogPost.BlogPostTitle = CommonHelper.EnsureNotNull(blogPost.BlogPostTitle);
+            blogPost.BlogPostTitle = CommonHelper.EnsureMaximumLength(blogPost.BlogPostTitle, 200);
+            blogPost.BlogPostBody = CommonHelper.EnsureNotNull(blogPost.BlogPostBody);
+            blogPost.Tags = CommonHelper.EnsureNotNull(blogPost.Tags);
+            blogPost.Tags = CommonHelper.EnsureMaximumLength(blogPost.Tags, 4000);
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(blogPost))
                 context.BlogPosts.Attach(blogPost);
 
-            blogPost.LanguageId = languageId;
-            blogPost.BlogPostTitle = blogPostTitle;
-            blogPost.BlogPostBody = blogPostBody;
-            blogPost.BlogPostAllowComments = blogPostAllowComments;
-            blogPost.Tags = tags;
-            blogPost.CreatedById = createdById;
-            blogPost.CreatedOn = createdOn;
             context.SaveChanges();
 
             if (BlogManager.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(BLOGPOST_PATTERN_KEY);
             }
-
-            return blogPost;
         }
 
         /// <summary>
@@ -405,7 +373,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
         public static BlogComment InsertBlogComment(int blogPostId,
             int customerId, string ipAddress, string commentText, DateTime createdOn, bool notify)
         {
+            ipAddress = CommonHelper.EnsureNotNull(ipAddress);
             ipAddress = CommonHelper.EnsureMaximumLength(ipAddress, 100);
+            commentText = CommonHelper.EnsureNotNull(commentText);
 
             var context = ObjectContextHelper.CurrentObjectContext;
 
@@ -430,33 +400,21 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
         /// <summary>
         /// Updates the blog comment
         /// </summary>
-        /// <param name="blogCommentId">The blog comment identifier</param>
-        /// <param name="blogPostId">The blog post identifier</param>
-        /// <param name="customerId">The customer identifier who commented the blog post</param>
-        /// <param name="ipAddress">The IP address</param>
-        /// <param name="commentText">The comment text</param>
-        /// <param name="createdOn">The date and time of instance creation</param>
-        /// <returns>Blog comment</returns>
-        public static BlogComment UpdateBlogComment(int blogCommentId, int blogPostId,
-            int customerId, string ipAddress, string commentText, DateTime createdOn)
+        /// <param name="blogComment">Blog comment</param>
+        public static void UpdateBlogComment(BlogComment blogComment)
         {
-            ipAddress = CommonHelper.EnsureMaximumLength(ipAddress, 100);
-
-            var blogComment = GetBlogCommentById(blogCommentId);
             if (blogComment == null)
-                return null;
+                throw new ArgumentNullException("activityLogType");
+
+            blogComment.IPAddress = CommonHelper.EnsureNotNull(blogComment.IPAddress);
+            blogComment.IPAddress = CommonHelper.EnsureMaximumLength(blogComment.IPAddress, 100);
+            blogComment.CommentText = CommonHelper.EnsureNotNull(blogComment.CommentText);
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(blogComment))
                 context.BlogComments.Attach(blogComment);
 
-            blogComment.BlogPostId = blogPostId;
-            blogComment.CustomerId = customerId;
-            blogComment.IPAddress = ipAddress;
-            blogComment.CommentText = commentText;
-            blogComment.CreatedOn = createdOn;
             context.SaveChanges();
-            return blogComment;
         }
         
         /// <summary>

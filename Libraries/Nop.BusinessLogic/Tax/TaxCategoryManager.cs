@@ -115,23 +115,16 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// <summary>
         /// Inserts a tax category
         /// </summary>
-        /// <param name="name">The name</param>
-        /// <param name="displayOrder">The display order</param>
-        /// <param name="createdOn">The date and time of instance creation</param>
-        /// <param name="updatedOn">The date and time of instance update</param>
-        /// <returns>Tax category</returns>
-        public static TaxCategory InsertTaxCategory(string name,
-            int displayOrder, DateTime createdOn, DateTime updatedOn)
+        /// <param name="taxCategory">Tax category</param>
+        public static void InsertTaxCategory(TaxCategory taxCategory)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 100);
+            if (taxCategory == null)
+                throw new ArgumentNullException("taxCategory");
+
+            taxCategory.Name = CommonHelper.EnsureNotNull(taxCategory.Name);
+            taxCategory.Name = CommonHelper.EnsureMaximumLength(taxCategory.Name, 100);
 
             var context = ObjectContextHelper.CurrentObjectContext;
-
-            var taxCategory = context.TaxCategories.CreateObject();
-            taxCategory.Name = name;
-            taxCategory.DisplayOrder = displayOrder;
-            taxCategory.CreatedOn = createdOn;
-            taxCategory.UpdatedOn = updatedOn;
 
             context.TaxCategories.AddObject(taxCategory);
             context.SaveChanges();
@@ -140,42 +133,30 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
             {
                 NopRequestCache.RemoveByPattern(TAXCATEGORIES_PATTERN_KEY);
             }
-            return taxCategory;
         }
 
         /// <summary>
         /// Updates the tax category
         /// </summary>
-        /// <param name="taxCategoryId">The tax category identifier</param>
-        /// <param name="name">The name</param>
-        /// <param name="displayOrder">The display order</param>
-        /// <param name="createdOn">The date and time of instance creation</param>
-        /// <param name="updatedOn">The date and time of instance update</param>
-        /// <returns>Tax category</returns>
-        public static TaxCategory UpdateTaxCategory(int taxCategoryId, string name,
-            int displayOrder, DateTime createdOn, DateTime updatedOn)
+        /// <param name="taxCategory">Tax category</param>
+        public static void UpdateTaxCategory(TaxCategory taxCategory)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 100);
-
-            var taxCategory = GetTaxCategoryById(taxCategoryId);
             if (taxCategory == null)
-                return null;
+                throw new ArgumentNullException("taxCategory");
+
+            taxCategory.Name = CommonHelper.EnsureNotNull(taxCategory.Name);
+            taxCategory.Name = CommonHelper.EnsureMaximumLength(taxCategory.Name, 100);
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(taxCategory))
                 context.TaxCategories.Attach(taxCategory);
 
-            taxCategory.Name = name;
-            taxCategory.DisplayOrder = displayOrder;
-            taxCategory.CreatedOn = createdOn;
-            taxCategory.UpdatedOn = updatedOn;
             context.SaveChanges();
             
             if (TaxCategoryManager.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(TAXCATEGORIES_PATTERN_KEY);
             }
-            return taxCategory;
         }
         #endregion
 

@@ -53,12 +53,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
             var manufacturer = GetManufacturerById(manufacturerId);
             if (manufacturer != null)
             {
-                manufacturer = UpdateManufacturer(manufacturer.ManufacturerId, manufacturer.Name, manufacturer.Description,
-                    manufacturer.TemplateId, manufacturer.MetaKeywords,
-                    manufacturer.MetaDescription, manufacturer.MetaTitle,
-                    manufacturer.SEName, manufacturer.PictureId, manufacturer.PageSize,
-                    manufacturer.PriceRanges, manufacturer.Published,
-                    true, manufacturer.DisplayOrder, manufacturer.CreatedOn, manufacturer.UpdatedOn);
+                manufacturer.Deleted = true;
+                UpdateManufacturer(manufacturer);
             }
         }
 
@@ -71,12 +67,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
             var manufacturer = GetManufacturerById(manufacturerId);
             if (manufacturer != null)
             {
-                UpdateManufacturer(manufacturer.ManufacturerId, manufacturer.Name, manufacturer.Description,
-                    manufacturer.TemplateId, manufacturer.MetaKeywords,
-                    manufacturer.MetaDescription, manufacturer.MetaTitle,
-                    manufacturer.SEName, 0, manufacturer.PageSize, manufacturer.PriceRanges,
-                    manufacturer.Published, manufacturer.Deleted, manufacturer.DisplayOrder, 
-                    manufacturer.CreatedOn, manufacturer.UpdatedOn);
+                manufacturer.PictureId = 0;
+                UpdateManufacturer(manufacturer);
             }
         }
 
@@ -152,54 +144,28 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
         /// <summary>
         /// Inserts a manufacturer
         /// </summary>
-        /// <param name="name">The name</param>
-        /// <param name="description">The description</param>
-        /// <param name="templateId">The template identifier</param>
-        /// <param name="metaKeywords">The meta keywords</param>
-        /// <param name="metaDescription">The meta description</param>
-        /// <param name="metaTitle">The meta title</param>
-        /// <param name="seName">The search-engine name</param>
-        /// <param name="pictureId">The parent picture identifier</param>
-        /// <param name="pageSize">The page size</param>
-        /// <param name="priceRanges">The price ranges</param>
-        /// <param name="published">A value indicating whether the entity is published</param>
-        /// <param name="deleted">A value indicating whether the entity has been deleted</param>
-        /// <param name="displayOrder">The display order</param>
-        /// <param name="createdOn">The date and time of instance creation</param>
-        /// <param name="updatedOn">The date and time of instance update</param>
-        /// <returns>Manufacturer</returns>
-        public static Manufacturer InsertManufacturer(string name, string description,
-            int templateId, string metaKeywords, string metaDescription, string metaTitle,
-            string seName, int pictureId, int pageSize, string priceRanges,
-            bool published, bool deleted, int displayOrder,
-            DateTime createdOn, DateTime updatedOn)
+        /// <param name="manufacturer">Manufacturer</param>
+        public static void InsertManufacturer(Manufacturer manufacturer)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 400);
-            metaKeywords = CommonHelper.EnsureMaximumLength(metaKeywords, 400);
-            metaDescription = CommonHelper.EnsureMaximumLength(metaDescription, 4000);
-            metaTitle = CommonHelper.EnsureMaximumLength(metaTitle, 400);
-            seName = CommonHelper.EnsureMaximumLength(seName, 100);
-            priceRanges = CommonHelper.EnsureMaximumLength(priceRanges, 400);
+            if (manufacturer == null)
+                throw new ArgumentNullException("manufacturer");
+            
+            manufacturer.Name = CommonHelper.EnsureNotNull(manufacturer.Name);
+            manufacturer.Name = CommonHelper.EnsureMaximumLength(manufacturer.Name, 400);
+            manufacturer.Description = CommonHelper.EnsureNotNull(manufacturer.Description);
+            manufacturer.MetaKeywords = CommonHelper.EnsureNotNull(manufacturer.MetaKeywords);
+            manufacturer.MetaKeywords = CommonHelper.EnsureMaximumLength(manufacturer.MetaKeywords, 400);
+            manufacturer.MetaDescription = CommonHelper.EnsureNotNull(manufacturer.MetaDescription);
+            manufacturer.MetaDescription = CommonHelper.EnsureMaximumLength(manufacturer.MetaDescription, 4000);
+            manufacturer.MetaTitle = CommonHelper.EnsureNotNull(manufacturer.MetaTitle);
+            manufacturer.MetaTitle = CommonHelper.EnsureMaximumLength(manufacturer.MetaTitle, 400);
+            manufacturer.SEName = CommonHelper.EnsureNotNull(manufacturer.SEName);
+            manufacturer.SEName = CommonHelper.EnsureMaximumLength(manufacturer.SEName, 100);
+            manufacturer.PriceRanges = CommonHelper.EnsureNotNull(manufacturer.PriceRanges);
+            manufacturer.PriceRanges = CommonHelper.EnsureMaximumLength(manufacturer.PriceRanges, 400);
 
             var context = ObjectContextHelper.CurrentObjectContext;
-
-            var manufacturer = context.Manufacturers.CreateObject();
-            manufacturer.Name = name;
-            manufacturer.Description = description;
-            manufacturer.TemplateId = templateId;
-            manufacturer.MetaKeywords = metaKeywords;
-            manufacturer.MetaDescription = metaDescription;
-            manufacturer.MetaTitle = metaTitle;
-            manufacturer.SEName = seName;
-            manufacturer.PictureId = pictureId;
-            manufacturer.PageSize = pageSize;
-            manufacturer.PriceRanges = priceRanges;
-            manufacturer.Published = published;
-            manufacturer.Deleted = deleted;
-            manufacturer.DisplayOrder = displayOrder;
-            manufacturer.CreatedOn = createdOn;
-            manufacturer.UpdatedOn = updatedOn;
-
+            
             context.Manufacturers.AddObject(manufacturer);
             context.SaveChanges();
 
@@ -208,67 +174,35 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
                 NopRequestCache.RemoveByPattern(MANUFACTURERS_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(PRODUCTMANUFACTURERS_PATTERN_KEY);
             }
-
-            return manufacturer;
         }
 
         /// <summary>
         /// Updates the manufacturer
         /// </summary>
-        /// <param name="manufacturerId">Manufacturer identifier</param>
-        /// <param name="name">The name</param>
-        /// <param name="description">The description</param>
-        /// <param name="templateId">The template identifier</param>
-        /// <param name="metaKeywords">The meta keywords</param>
-        /// <param name="metaDescription">The meta description</param>
-        /// <param name="metaTitle">The meta title</param>
-        /// <param name="seName">The search-engine name</param>
-        /// <param name="pictureId">The parent picture identifier</param>
-        /// <param name="pageSize">The page size</param>
-        /// <param name="priceRanges">The price ranges</param>
-        /// <param name="published">A value indicating whether the entity is published</param>
-        /// <param name="deleted">A value indicating whether the entity has been deleted</param>
-        /// <param name="displayOrder">The display order</param>
-        /// <param name="createdOn">The date and time of instance creation</param>
-        /// <param name="updatedOn">The date and time of instance update</param>
-        /// <returns>Manufacturer</returns>
-        public static Manufacturer UpdateManufacturer(int manufacturerId,
-            string name, string description,
-            int templateId, string metaKeywords, string metaDescription, string metaTitle,
-            string seName, int pictureId, int pageSize, string priceRanges,
-            bool published, bool deleted, int displayOrder,
-            DateTime createdOn, DateTime updatedOn)
+        /// <param name="manufacturer">Manufacturer</param>
+        public static void UpdateManufacturer(Manufacturer manufacturer)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 400);
-            metaKeywords = CommonHelper.EnsureMaximumLength(metaKeywords, 400);
-            metaDescription = CommonHelper.EnsureMaximumLength(metaDescription, 4000);
-            metaTitle = CommonHelper.EnsureMaximumLength(metaTitle, 400);
-            seName = CommonHelper.EnsureMaximumLength(seName, 100);
-            priceRanges = CommonHelper.EnsureMaximumLength(priceRanges, 400);
-
-            var manufacturer = GetManufacturerById(manufacturerId);
             if (manufacturer == null)
-                return null;
+                throw new ArgumentNullException("manufacturer");
+
+            manufacturer.Name = CommonHelper.EnsureNotNull(manufacturer.Name);
+            manufacturer.Name = CommonHelper.EnsureMaximumLength(manufacturer.Name, 400);
+            manufacturer.Description = CommonHelper.EnsureNotNull(manufacturer.Description);
+            manufacturer.MetaKeywords = CommonHelper.EnsureNotNull(manufacturer.MetaKeywords);
+            manufacturer.MetaKeywords = CommonHelper.EnsureMaximumLength(manufacturer.MetaKeywords, 400);
+            manufacturer.MetaDescription = CommonHelper.EnsureNotNull(manufacturer.MetaDescription);
+            manufacturer.MetaDescription = CommonHelper.EnsureMaximumLength(manufacturer.MetaDescription, 4000);
+            manufacturer.MetaTitle = CommonHelper.EnsureNotNull(manufacturer.MetaTitle);
+            manufacturer.MetaTitle = CommonHelper.EnsureMaximumLength(manufacturer.MetaTitle, 400);
+            manufacturer.SEName = CommonHelper.EnsureNotNull(manufacturer.SEName);
+            manufacturer.SEName = CommonHelper.EnsureMaximumLength(manufacturer.SEName, 100);
+            manufacturer.PriceRanges = CommonHelper.EnsureNotNull(manufacturer.PriceRanges);
+            manufacturer.PriceRanges = CommonHelper.EnsureMaximumLength(manufacturer.PriceRanges, 400);
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(manufacturer))
                 context.Manufacturers.Attach(manufacturer);
 
-            manufacturer.Name = name;
-            manufacturer.Description = description;
-            manufacturer.TemplateId = templateId;
-            manufacturer.MetaKeywords = metaKeywords;
-            manufacturer.MetaDescription = metaDescription;
-            manufacturer.MetaTitle = metaTitle;
-            manufacturer.SEName = seName;
-            manufacturer.PictureId = pictureId;
-            manufacturer.PageSize = pageSize;
-            manufacturer.PriceRanges = priceRanges;
-            manufacturer.Published = published;
-            manufacturer.Deleted = deleted;
-            manufacturer.DisplayOrder = displayOrder;
-            manufacturer.CreatedOn = createdOn;
-            manufacturer.UpdatedOn = updatedOn;
             context.SaveChanges();
 
             if (ManufacturerManager.ManufacturersCacheEnabled || ManufacturerManager.MappingsCacheEnabled)
@@ -276,8 +210,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
                 NopRequestCache.RemoveByPattern(MANUFACTURERS_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(PRODUCTMANUFACTURERS_PATTERN_KEY);
             }
-
-            return manufacturer;
         }
 
         /// <summary>
@@ -340,36 +272,25 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
         /// <summary>
         /// Inserts a localized manufacturer
         /// </summary>
-        /// <param name="manufacturerId">Manufacturer identifier</param>
-        /// <param name="languageId">Language identifier</param>
-        /// <param name="name">Name text</param>
-        /// <param name="description">Description text</param>
-        /// <param name="metaKeywords">Meta keywords text</param>
-        /// <param name="metaDescription">Meta descriptions text</param>
-        /// <param name="metaTitle">Metat title text</param>
-        /// <param name="seName">Se name text</param>
-        /// <returns>Manufacturer content</returns>
-        public static ManufacturerLocalized InsertManufacturerLocalized(int manufacturerId,
-            int languageId, string name, string description,
-            string metaKeywords, string metaDescription, string metaTitle, string seName)
+        /// <param name="manufacturerLocalized">Manufacturer content</param>
+        public static void InsertManufacturerLocalized(ManufacturerLocalized manufacturerLocalized)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 400);
-            metaKeywords = CommonHelper.EnsureMaximumLength(metaKeywords, 400);
-            metaDescription = CommonHelper.EnsureMaximumLength(metaDescription, 4000);
-            metaTitle = CommonHelper.EnsureMaximumLength(metaTitle, 400);
-            seName = CommonHelper.EnsureMaximumLength(seName, 100);
+            if (manufacturerLocalized == null)
+                throw new ArgumentNullException("manufacturerLocalized");
+
+            manufacturerLocalized.Name = CommonHelper.EnsureNotNull(manufacturerLocalized.Name);
+            manufacturerLocalized.Name = CommonHelper.EnsureMaximumLength(manufacturerLocalized.Name, 400);
+            manufacturerLocalized.Description = CommonHelper.EnsureNotNull(manufacturerLocalized.Description);
+            manufacturerLocalized.MetaKeywords = CommonHelper.EnsureNotNull(manufacturerLocalized.MetaKeywords);
+            manufacturerLocalized.MetaKeywords = CommonHelper.EnsureMaximumLength(manufacturerLocalized.MetaKeywords, 400);
+            manufacturerLocalized.MetaDescription = CommonHelper.EnsureNotNull(manufacturerLocalized.MetaDescription);
+            manufacturerLocalized.MetaDescription = CommonHelper.EnsureMaximumLength(manufacturerLocalized.MetaDescription, 4000);
+            manufacturerLocalized.MetaTitle = CommonHelper.EnsureNotNull(manufacturerLocalized.MetaTitle);
+            manufacturerLocalized.MetaTitle = CommonHelper.EnsureMaximumLength(manufacturerLocalized.MetaTitle, 400);
+            manufacturerLocalized.SEName = CommonHelper.EnsureNotNull(manufacturerLocalized.SEName);
+            manufacturerLocalized.SEName = CommonHelper.EnsureMaximumLength(manufacturerLocalized.SEName, 100);
 
             var context = ObjectContextHelper.CurrentObjectContext;
-
-            var manufacturerLocalized = context.ManufacturerLocalized.CreateObject();
-            manufacturerLocalized.ManufacturerId = manufacturerId;
-            manufacturerLocalized.LanguageId = languageId;
-            manufacturerLocalized.Name = name;
-            manufacturerLocalized.Description = description;
-            manufacturerLocalized.MetaKeywords = metaKeywords;
-            manufacturerLocalized.MetaDescription = metaDescription;
-            manufacturerLocalized.MetaTitle = metaTitle;
-            manufacturerLocalized.SEName = seName;
 
             context.ManufacturerLocalized.AddObject(manufacturerLocalized);
             context.SaveChanges();
@@ -378,43 +299,35 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
             {
                 NopRequestCache.RemoveByPattern(MANUFACTURERS_PATTERN_KEY);
             }
-
-            return manufacturerLocalized;
         }
 
         /// <summary>
         /// Update a localized manufacturer
         /// </summary>
-        /// <param name="manufacturerLocalizedId">Localized manufacturer identifier</param>
-        /// <param name="manufacturerId">Manufacturer identifier</param>
-        /// <param name="languageId">Language identifier</param>
-        /// <param name="name">Name text</param>
-        /// <param name="description">Description text</param>
-        /// <param name="metaKeywords">Meta keywords text</param>
-        /// <param name="metaDescription">Meta descriptions text</param>
-        /// <param name="metaTitle">Metat title text</param>
-        /// <param name="seName">Se name text</param>
-        /// <returns>Manufacturer content</returns>
-        public static ManufacturerLocalized UpdateManufacturerLocalized(int manufacturerLocalizedId,
-            int manufacturerId, int languageId, string name, string description,
-            string metaKeywords, string metaDescription, string metaTitle, string seName)
+        /// <param name="manufacturerLocalized">Manufacturer content</param>
+        public static void UpdateManufacturerLocalized(ManufacturerLocalized manufacturerLocalized)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 400);
-            metaKeywords = CommonHelper.EnsureMaximumLength(metaKeywords, 400);
-            metaDescription = CommonHelper.EnsureMaximumLength(metaDescription, 4000);
-            metaTitle = CommonHelper.EnsureMaximumLength(metaTitle, 400);
-            seName = CommonHelper.EnsureMaximumLength(seName, 100);
-
-            var manufacturerLocalized = GetManufacturerLocalizedById(manufacturerLocalizedId);
             if (manufacturerLocalized == null)
-                return null;
+                throw new ArgumentNullException("manufacturerLocalized");
 
-            bool allFieldsAreEmpty = string.IsNullOrEmpty(name) &&
-                string.IsNullOrEmpty(description) &&
-                string.IsNullOrEmpty(metaKeywords) &&
-                string.IsNullOrEmpty(metaDescription) &&
-                string.IsNullOrEmpty(metaTitle) &&
-                string.IsNullOrEmpty(seName);
+            manufacturerLocalized.Name = CommonHelper.EnsureNotNull(manufacturerLocalized.Name);
+            manufacturerLocalized.Name = CommonHelper.EnsureMaximumLength(manufacturerLocalized.Name, 400);
+            manufacturerLocalized.Description = CommonHelper.EnsureNotNull(manufacturerLocalized.Description);
+            manufacturerLocalized.MetaKeywords = CommonHelper.EnsureNotNull(manufacturerLocalized.MetaKeywords);
+            manufacturerLocalized.MetaKeywords = CommonHelper.EnsureMaximumLength(manufacturerLocalized.MetaKeywords, 400);
+            manufacturerLocalized.MetaDescription = CommonHelper.EnsureNotNull(manufacturerLocalized.MetaDescription);
+            manufacturerLocalized.MetaDescription = CommonHelper.EnsureMaximumLength(manufacturerLocalized.MetaDescription, 4000);
+            manufacturerLocalized.MetaTitle = CommonHelper.EnsureNotNull(manufacturerLocalized.MetaTitle);
+            manufacturerLocalized.MetaTitle = CommonHelper.EnsureMaximumLength(manufacturerLocalized.MetaTitle, 400);
+            manufacturerLocalized.SEName = CommonHelper.EnsureNotNull(manufacturerLocalized.SEName);
+            manufacturerLocalized.SEName = CommonHelper.EnsureMaximumLength(manufacturerLocalized.SEName, 100);
+
+            bool allFieldsAreEmpty = string.IsNullOrEmpty(manufacturerLocalized.Name) &&
+                string.IsNullOrEmpty(manufacturerLocalized.Description) &&
+                string.IsNullOrEmpty(manufacturerLocalized.MetaKeywords) &&
+                string.IsNullOrEmpty(manufacturerLocalized.MetaDescription) &&
+                string.IsNullOrEmpty(manufacturerLocalized.MetaTitle) &&
+                string.IsNullOrEmpty(manufacturerLocalized.SEName);
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(manufacturerLocalized))
@@ -428,14 +341,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
             }
             else
             {
-                manufacturerLocalized.ManufacturerId = manufacturerId;
-                manufacturerLocalized.LanguageId = languageId;
-                manufacturerLocalized.Name = name;
-                manufacturerLocalized.Description = description;
-                manufacturerLocalized.MetaKeywords = metaKeywords;
-                manufacturerLocalized.MetaDescription = metaDescription;
-                manufacturerLocalized.MetaTitle = metaTitle;
-                manufacturerLocalized.SEName = seName;
                 context.SaveChanges();
             }
 
@@ -443,8 +348,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
             {
                 NopRequestCache.RemoveByPattern(MANUFACTURERS_PATTERN_KEY);
             }
-
-            return manufacturerLocalized;
         }
 
         /// <summary>
@@ -576,21 +479,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
         /// <summary>
         /// Inserts a product manufacturer mapping
         /// </summary>
-        /// <param name="productId">Product identifier</param>
-        /// <param name="manufacturerId">Manufacturer identifier</param>
-        /// <param name="isFeaturedProduct">A value indicating whether the product is featured</param>
-        /// <param name="displayOrder">The display order</param>
-        /// <returns>Product manufacturer mapping </returns>
-        public static ProductManufacturer InsertProductManufacturer(int productId, 
-            int manufacturerId, bool isFeaturedProduct, int displayOrder)
+        /// <param name="productManufacturer">Product manufacturer mapping</param>
+        public static void InsertProductManufacturer(ProductManufacturer productManufacturer)
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
+            if (productManufacturer == null)
+                throw new ArgumentNullException("productManufacturer");
 
-            var productManufacturer = context.ProductManufacturers.CreateObject();
-            productManufacturer.ProductId = productId;
-            productManufacturer.ManufacturerId = manufacturerId;
-            productManufacturer.IsFeaturedProduct = isFeaturedProduct;
-            productManufacturer.DisplayOrder = displayOrder;
+            var context = ObjectContextHelper.CurrentObjectContext;
 
             context.ProductManufacturers.AddObject(productManufacturer);
             context.SaveChanges();
@@ -600,34 +495,21 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
                 NopRequestCache.RemoveByPattern(MANUFACTURERS_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(PRODUCTMANUFACTURERS_PATTERN_KEY);
             }
-
-            return productManufacturer;
         }
 
         /// <summary>
         /// Updates the product manufacturer mapping
         /// </summary>
-        /// <param name="productManufacturerId">Product manufacturer mapping identifier</param>
-        /// <param name="productId">Product identifier</param>
-        /// <param name="manufacturerId">Manufacturer identifier</param>
-        /// <param name="isFeaturedProduct">A value indicating whether the product is featured</param>
-        /// <param name="displayOrder">The display order</param>
-        /// <returns>Product manufacturer mapping </returns>
-        public static ProductManufacturer UpdateProductManufacturer(int productManufacturerId,
-            int productId, int manufacturerId, bool isFeaturedProduct, int displayOrder)
+        /// <param name="productManufacturer">Product manufacturer mapping</param>
+        public static void UpdateProductManufacturer(ProductManufacturer productManufacturer)
         {
-            var productManufacturer = GetProductManufacturerById(productManufacturerId);
             if (productManufacturer == null)
-                return null;
+                throw new ArgumentNullException("productManufacturer");
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(productManufacturer))
                 context.ProductManufacturers.Attach(productManufacturer);
 
-            productManufacturer.ProductId = productId;
-            productManufacturer.ManufacturerId = manufacturerId;
-            productManufacturer.IsFeaturedProduct = isFeaturedProduct;
-            productManufacturer.DisplayOrder = displayOrder;
             context.SaveChanges();
 
             if (ManufacturerManager.ManufacturersCacheEnabled || ManufacturerManager.MappingsCacheEnabled)
@@ -635,8 +517,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
                 NopRequestCache.RemoveByPattern(MANUFACTURERS_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(PRODUCTMANUFACTURERS_PATTERN_KEY);
             }
-
-            return productManufacturer;
         }
         #endregion
 

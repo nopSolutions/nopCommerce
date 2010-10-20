@@ -120,13 +120,15 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 if (manufacturerPicture != null)
                     manufacturerPictureId = manufacturerPicture.PictureId;
 
-                manufacturer = ManufacturerManager.UpdateManufacturer(manufacturer.ManufacturerId, txtName.Text,
-                    txtDescription.Value, int.Parse(this.ddlTemplate.SelectedItem.Value),
-                    manufacturer.MetaKeywords, manufacturer.MetaDescription,
-                    manufacturer.MetaTitle, manufacturer.SEName,
-                    manufacturerPictureId, manufacturer.PageSize, txtPriceRanges.Text,
-                    cbPublished.Checked, manufacturer.Deleted, txtDisplayOrder.Value,
-                    manufacturer.CreatedOn, DateTime.UtcNow);
+                manufacturer.Name = txtName.Text;
+                manufacturer.Description = txtDescription.Value;
+                manufacturer.TemplateId = int.Parse(this.ddlTemplate.SelectedItem.Value);
+                manufacturer.PictureId = manufacturerPictureId;
+                manufacturer.PriceRanges = txtPriceRanges.Text;
+                manufacturer.Published = cbPublished.Checked;
+                manufacturer.DisplayOrder = txtDisplayOrder.Value;
+                manufacturer.UpdatedOn = DateTime.UtcNow;
+                ManufacturerManager.UpdateManufacturer(manufacturer);
             }
             else
             {
@@ -142,10 +144,21 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     manufacturerPictureId = manufacturerPicture.PictureId;
 
                 DateTime nowDt = DateTime.UtcNow;
-                manufacturer = ManufacturerManager.InsertManufacturer(txtName.Text, txtDescription.Value,
-                    int.Parse(this.ddlTemplate.SelectedItem.Value),
-                    string.Empty, string.Empty, string.Empty, string.Empty,
-                    manufacturerPictureId, 10, txtPriceRanges.Text, cbPublished.Checked, false, txtDisplayOrder.Value, nowDt, nowDt);
+
+                manufacturer = new Manufacturer()
+                {
+                    Name = txtName.Text,
+                    Description = txtDescription.Value,
+                    TemplateId = int.Parse(this.ddlTemplate.SelectedItem.Value),
+                    PictureId = manufacturerPictureId,
+                    PageSize = 10,
+                    PriceRanges = txtPriceRanges.Text,
+                    Published = cbPublished.Checked,
+                    DisplayOrder = txtDisplayOrder.Value,
+                    CreatedOn = nowDt,
+                    UpdatedOn = nowDt
+                };
+                ManufacturerManager.InsertManufacturer(manufacturer);
             }
 
             SaveLocalizableContent(manufacturer);
@@ -181,19 +194,26 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         if (!allFieldsAreEmpty && languageId > 0)
                         {
                             //only insert if one of the fields are filled out (avoid too many empty records in db...)
-                            content = ManufacturerManager.InsertManufacturerLocalized(manufacturer.ManufacturerId,
-                                   languageId, name, description, string.Empty, string.Empty,
-                                   string.Empty, string.Empty);
+                            content = new ManufacturerLocalized()
+                            {
+                                ManufacturerId = manufacturer.ManufacturerId,
+                                LanguageId = languageId,
+                                Name = name,
+                                Description = description
+                            };
+
+                            ManufacturerManager.InsertManufacturerLocalized(content);
                         }
                     }
                     else
                     {
                         if (languageId > 0)
                         {
-                            content = ManufacturerManager.UpdateManufacturerLocalized(content.ManufacturerLocalizedId, content.ManufacturerId,
-                                languageId, name, description,
-                                content.MetaKeywords, content.MetaDescription,
-                                content.MetaTitle, content.SEName);
+                            content.LanguageId = languageId;
+                            content.Name = name;
+                            content.Description = description;
+
+                            ManufacturerManager.UpdateManufacturerLocalized(content);
                         }
                     }
                 }

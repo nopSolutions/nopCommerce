@@ -87,10 +87,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
             if (category != null)
             {
-                category = CategoryManager.UpdateCategory(category.CategoryId, category.Name, category.Description, category.TemplateId,
-                     txtMetaKeywords.Text, txtMetaDescription.Text, txtMetaTitle.Text, txtSEName.Text, category.ParentCategoryId,
-                     category.PictureId, txtPageSize.Value, category.PriceRanges, category.ShowOnHomePage, category.Published, 
-                     category.Deleted, category.DisplayOrder, category.CreatedOn, DateTime.UtcNow);
+                category.MetaKeywords = txtMetaKeywords.Text;
+                category.MetaDescription = txtMetaDescription.Text;
+                category.MetaTitle = txtMetaTitle.Text;
+                category.SEName = txtSEName.Text;
+                category.PageSize = txtPageSize.Value;
+                category.UpdatedOn = DateTime.UtcNow;
+                CategoryManager.UpdateCategory(category);
             }
 
             SaveLocalizableContent(category);
@@ -131,19 +134,30 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         if (!allFieldsAreEmpty && languageId > 0)
                         {
                             //only insert if one of the fields are filled out (avoid too many empty records in db...)
-                            content = CategoryManager.InsertCategoryLocalized(category.CategoryId,
-                                   languageId, string.Empty, string.Empty, 
-                                   metaKeywords, metaDescription, metaTitle, seName);
+                            content = new CategoryLocalized()
+                            {
+                                CategoryId = category.CategoryId,
+                                LanguageId = languageId,
+                                MetaKeywords = metaKeywords,
+                                MetaDescription = metaDescription,
+                                MetaTitle = metaTitle,
+                                SEName = seName
+                            };
+
+                            CategoryManager.InsertCategoryLocalized(content);
                         }
                     }
                     else
                     {
                         if (languageId > 0)
                         {
-                            content = CategoryManager.UpdateCategoryLocalized(content.CategoryLocalizedId, content.CategoryId,
-                                languageId, content.Name, content.Description,
-                                metaKeywords, metaDescription,
-                                metaTitle, seName);
+                            content.LanguageId = languageId;
+                            content.MetaKeywords = metaKeywords;
+                            content.MetaDescription = metaDescription;
+                            content.MetaTitle = metaTitle;
+                            content.SEName = seName;
+
+                            CategoryManager.UpdateCategoryLocalized(content);
                         }
                     }
                 }

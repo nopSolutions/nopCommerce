@@ -192,19 +192,30 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                         if (productVariantPricelist != null)
                         {
-                            productVariantPricelist = ProductManager.UpdateProductVariantPricelist(productVariantPricelistId, productVariantPricelist.ProductVariantId,
-                               productVariantPricelist.PricelistId, priceAdjustmentType, priceAdjustment, DateTime.UtcNow);
+                            productVariantPricelist.ProductVariantId = productVariantId;
+                            productVariantPricelist.PricelistId = priceListId;
+                            productVariantPricelist.PriceAdjustmentTypeId = (int)priceAdjustmentType;
+                            productVariantPricelist.PriceAdjustment = priceAdjustment;
+                            productVariantPricelist.UpdatedOn = DateTime.UtcNow;
+                            ProductManager.UpdateProductVariantPricelist(productVariantPricelist);
                         }
                         else
                         {
-                            productVariantPricelist = ProductManager.InsertProductVariantPricelist(productVariantId,
-                                priceListId, priceAdjustmentType, priceAdjustment, DateTime.UtcNow);
+                            productVariantPricelist = new ProductVariantPricelist();
+                            productVariantPricelist.ProductVariantId = productVariantId;
+                            productVariantPricelist.PricelistId = priceListId;
+                            productVariantPricelist.PriceAdjustmentTypeId = (int)priceAdjustmentType;
+                            productVariantPricelist.PriceAdjustment = priceAdjustment;
+                            productVariantPricelist.UpdatedOn = DateTime.UtcNow;
+                            ProductManager.InsertProductVariantPricelist(productVariantPricelist);
                         }
                     }
                     else
                     {
                         if (productVariantPricelist != null)
+                        {
                             ProductManager.DeleteProductVariantPricelist(productVariantPricelistId);
+                        }
                     }
                 }
             }
@@ -256,25 +267,52 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             Pricelist pricelist = ProductManager.GetPricelistById(this.PricelistId);
             if (pricelist != null)
             {
-                pricelist = ProductManager.UpdatePricelist(pricelist.PricelistId,
-                    exportMode, exportType, affiliateId, this.txtDisplayName.Text,
-                    this.txtShortName.Text, this.txtPricelistGuid.Text, this.txtCacheTime.Value,
-                    this.ddlFormatLocalization.SelectedValue, this.txtDescription.Text,
-                    this.txtAdminNotes.Text, this.txtHeader.Text, this.txtBody.Text, this.txtFooter.Text,
-                    priceAdjustmentType, this.txtPriceAdjustment.Value, this.chkOverrideIndivAdjustment.Checked,
-                    pricelist.CreatedOn, DateTime.UtcNow);
+                pricelist.ExportModeId = (int)exportMode;
+                pricelist.ExportTypeId = (int)exportType;
+                pricelist.AffiliateId = affiliateId;
+                pricelist.DisplayName = this.txtDisplayName.Text;
+                pricelist.ShortName = this.txtShortName.Text;
+                pricelist.PricelistGuid = this.txtPricelistGuid.Text;
+                pricelist.CacheTime = this.txtCacheTime.Value;
+                pricelist.FormatLocalization = this.ddlFormatLocalization.SelectedValue;
+                pricelist.Description = this.txtDescription.Text;
+                pricelist.AdminNotes = this.txtAdminNotes.Text;
+                pricelist.Header = this.txtHeader.Text;
+                pricelist.Body = this.txtBody.Text;
+                pricelist.Footer = this.txtFooter.Text;
+                pricelist.PriceAdjustmentTypeId = (int)priceAdjustmentType;
+                pricelist.PriceAdjustment = priceAdjustment;
+                pricelist.OverrideIndivAdjustment = chkOverrideIndivAdjustment.Checked;
+                pricelist.UpdatedOn = DateTime.UtcNow;
+
+                ProductManager.UpdatePricelist(pricelist);
 
                 SavePricelistChanges(pricelist.PricelistId);
 
             }
             else
             {
-                pricelist = ProductManager.InsertPricelist(
-                    exportMode, exportType, affiliateId, this.txtDisplayName.Text,
-                    this.txtShortName.Text, this.txtPricelistGuid.Text, this.txtCacheTime.Value, this.ddlFormatLocalization.SelectedValue,
-                    this.txtDescription.Text, this.txtAdminNotes.Text, this.txtHeader.Text, this.txtBody.Text, this.txtFooter.Text,
-                    priceAdjustmentType, priceAdjustment, chkOverrideIndivAdjustment.Checked,
-                    DateTime.UtcNow, DateTime.UtcNow);
+                pricelist = new Pricelist();
+                pricelist.ExportModeId = (int)exportMode;
+                pricelist.ExportTypeId = (int)exportType;
+                pricelist.AffiliateId = affiliateId;
+                pricelist.DisplayName = this.txtDisplayName.Text;
+                pricelist.ShortName = this.txtShortName.Text;
+                pricelist.PricelistGuid = this.txtPricelistGuid.Text;
+                pricelist.CacheTime = this.txtCacheTime.Value;
+                pricelist.FormatLocalization = this.ddlFormatLocalization.SelectedValue;
+                pricelist.Description = this.txtDescription.Text;
+                pricelist.AdminNotes = this.txtAdminNotes.Text;
+                pricelist.Header = this.txtHeader.Text;
+                pricelist.Body = this.txtBody.Text;
+                pricelist.Footer = this.txtFooter.Text;
+                pricelist.PriceAdjustmentTypeId = (int)priceAdjustmentType;
+                pricelist.PriceAdjustment = priceAdjustment;
+                pricelist.OverrideIndivAdjustment = chkOverrideIndivAdjustment.Checked;
+                pricelist.CreatedOn = DateTime.UtcNow;
+                pricelist.UpdatedOn = DateTime.UtcNow;
+
+                ProductManager.InsertPricelist(pricelist);
 
                 SavePricelistChanges(pricelist.PricelistId);
             }

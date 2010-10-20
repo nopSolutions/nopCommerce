@@ -89,15 +89,27 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             BlogPost blogPost = BlogManager.GetBlogPostById(this.BlogPostId);
             if (blogPost != null)
             {
-                blogPost = BlogManager.UpdateBlogPost(this.BlogPostId, int.Parse(this.ddlLanguage.SelectedItem.Value),
-                    txtBlogPostTitle.Text, txtBlogPostBody.Value,
-                    cbBlogPostAllowComments.Checked, txtTags.Text.Trim(), blogPost.CreatedById, blogPost.CreatedOn);
+                blogPost.LanguageId = int.Parse(this.ddlLanguage.SelectedItem.Value);
+                blogPost.BlogPostTitle = txtBlogPostTitle.Text;
+                blogPost.BlogPostBody = txtBlogPostBody.Value;
+                blogPost.BlogPostAllowComments = cbBlogPostAllowComments.Checked;
+                blogPost.Tags = txtTags.Text.Trim();
+
+                BlogManager.UpdateBlogPost(blogPost);
             }
             else
             {
-                blogPost = BlogManager.InsertBlogPost(int.Parse(this.ddlLanguage.SelectedItem.Value),
-                   txtBlogPostTitle.Text, txtBlogPostBody.Value,
-                   cbBlogPostAllowComments.Checked, txtTags.Text.Trim(), NopContext.Current.User.CustomerId, DateTime.UtcNow);
+                blogPost = new BlogPost()
+                {
+                    LanguageId = int.Parse(this.ddlLanguage.SelectedItem.Value),
+                    BlogPostTitle = txtBlogPostTitle.Text,
+                    BlogPostBody = txtBlogPostBody.Value,
+                    BlogPostAllowComments = cbBlogPostAllowComments.Checked,
+                    Tags = txtTags.Text.Trim(),
+                    CreatedById = NopContext.Current.User.CustomerId,
+                    CreatedOn = DateTime.UtcNow
+                };
+                BlogManager.InsertBlogPost(blogPost);
             }
             return blogPost;
         }

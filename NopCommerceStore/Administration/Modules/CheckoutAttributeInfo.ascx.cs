@@ -102,15 +102,31 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             var checkoutAttribute = CheckoutAttributeManager.GetCheckoutAttributeById(this.CheckoutAttributeId);
             if (checkoutAttribute != null)
             {
-                checkoutAttribute = CheckoutAttributeManager.UpdateCheckoutAttribute(checkoutAttribute.CheckoutAttributeId,
-                     name, textPrompt, isRequired, shippableProductRequired,
-                     isTaxExempt, taxCategoryId, attributeControlTypeId, displayOrder);
+                checkoutAttribute.Name = name;
+                checkoutAttribute.TextPrompt = textPrompt;
+                checkoutAttribute.IsRequired = isRequired;
+                checkoutAttribute.ShippableProductRequired = shippableProductRequired;
+                checkoutAttribute.IsTaxExempt = isTaxExempt;
+                checkoutAttribute.TaxCategoryId = taxCategoryId;
+                checkoutAttribute.AttributeControlTypeId = attributeControlTypeId;
+                checkoutAttribute.DisplayOrder = displayOrder;
+
+                CheckoutAttributeManager.UpdateCheckoutAttribute(checkoutAttribute);
             }
             else
             {
-                checkoutAttribute = CheckoutAttributeManager.InsertCheckoutAttribute(name,
-                    textPrompt, isRequired, shippableProductRequired,
-                    isTaxExempt, taxCategoryId, attributeControlTypeId, displayOrder);
+                checkoutAttribute = new CheckoutAttribute()
+                {
+                    Name = name,
+                    TextPrompt = textPrompt,
+                    IsRequired = isRequired,
+                    ShippableProductRequired = shippableProductRequired,
+                    IsTaxExempt = isTaxExempt,
+                    TaxCategoryId = taxCategoryId,
+                    AttributeControlTypeId = attributeControlTypeId,
+                    DisplayOrder = displayOrder
+                };
+                CheckoutAttributeManager.InsertCheckoutAttribute(checkoutAttribute);
             }
 
             SaveLocalizableContent(checkoutAttribute);
@@ -146,16 +162,24 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         if (!allFieldsAreEmpty && languageId > 0)
                         {
                             //only insert if one of the fields are filled out (avoid too many empty records in db...)
-                            content = CheckoutAttributeManager.InsertCheckoutAttributeLocalized(checkoutAttribute.CheckoutAttributeId,
-                                   languageId, name, textPrompt);
+                            content = new CheckoutAttributeLocalized()
+                            {
+                                CheckoutAttributeId = checkoutAttribute.CheckoutAttributeId,
+                                LanguageId = languageId,
+                                Name = name,
+                                TextPrompt = textPrompt
+                            };
+                            CheckoutAttributeManager.InsertCheckoutAttributeLocalized(content);
                         }
                     }
                     else
                     {
                         if (languageId > 0)
                         {
-                            content = CheckoutAttributeManager.UpdateCheckoutAttributeLocalized(content.CheckoutAttributeLocalizedId, content.CheckoutAttributeId,
-                                languageId, name, textPrompt);
+                            content.LanguageId=  languageId;
+                            content.Name=  name;
+                            content.TextPrompt=  textPrompt;
+                            CheckoutAttributeManager.UpdateCheckoutAttributeLocalized(content);
                         }
                     }
                 }

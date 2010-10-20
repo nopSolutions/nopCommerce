@@ -199,30 +199,19 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
         /// <summary>
         /// Inserts a news item
         /// </summary>
-        /// <param name="languageId">The language identifier</param>
-        /// <param name="title">The news title</param>
-        /// <param name="shortText">The short text</param>
-        /// <param name="fullText">The full text</param>
-        /// <param name="published">A value indicating whether the entity is published</param>
-        /// <param name="allowComments">A value indicating whether the entity allows comments</param>
-        /// <param name="createdOn">The date and time of instance creation</param>
-        /// <returns>News item</returns>
-        public static News InsertNews(int languageId, string title, string shortText,
-            string fullText, bool published, bool allowComments, DateTime createdOn)
+        /// <param name="news">News item</param>
+        public static void InsertNews(News news)
         {
-            title = CommonHelper.EnsureMaximumLength(title, 1000);
-            shortText = CommonHelper.EnsureMaximumLength(shortText, 4000);
+            if (news == null)
+                throw new ArgumentNullException("news");
+
+            news.Title = CommonHelper.EnsureNotNull(news.Title);
+            news.Title = CommonHelper.EnsureMaximumLength(news.Title, 1000);
+            news.Short = CommonHelper.EnsureNotNull(news.Short);
+            news.Short = CommonHelper.EnsureMaximumLength(news.Short, 4000);
+            news.Full = CommonHelper.EnsureNotNull(news.Full);
 
             var context = ObjectContextHelper.CurrentObjectContext;
-
-            var news = context.News.CreateObject();
-            news.LanguageId =languageId;
-            news.Title =title;
-            news.Short =shortText;
-            news.Full =fullText;
-            news.Published =published;
-            news.AllowComments =allowComments;
-            news.CreatedOn =createdOn;
 
             context.News.AddObject(news);
             context.SaveChanges();
@@ -231,52 +220,33 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
             {
                 NopRequestCache.RemoveByPattern(NEWS_PATTERN_KEY);
             }
-
-            return news;
         }
 
         /// <summary>
         /// Updates the news item
         /// </summary>
-        /// <param name="newsId">The news identifier</param>
-        /// <param name="languageId">The language identifier</param>
-        /// <param name="title">The news title</param>
-        /// <param name="shortText">The short text</param>
-        /// <param name="fullText">The full text</param>
-        /// <param name="published">A value indicating whether the entity is published</param>
-        /// <param name="allowComments">A value indicating whether the entity allows comments</param>
-        /// <param name="createdOn">The date and time of instance creation</param>
-        /// <returns>News item</returns>
-        public static News UpdateNews(int newsId, int languageId,
-            string title, string shortText, string fullText,
-            bool published, bool allowComments, DateTime createdOn)
+        /// <param name="news">News item</param>
+        public static void UpdateNews(News news)
         {
-            title = CommonHelper.EnsureMaximumLength(title, 1000);
-            shortText = CommonHelper.EnsureMaximumLength(shortText, 4000);
-
-            var news = GetNewsById(newsId);
             if (news == null)
-                return null;
+                throw new ArgumentNullException("news");
+
+            news.Title = CommonHelper.EnsureNotNull(news.Title);
+            news.Title = CommonHelper.EnsureMaximumLength(news.Title, 1000);
+            news.Short = CommonHelper.EnsureNotNull(news.Short);
+            news.Short = CommonHelper.EnsureMaximumLength(news.Short, 4000);
+            news.Full = CommonHelper.EnsureNotNull(news.Full);
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(news))
                 context.News.Attach(news);
 
-            news.LanguageId = languageId;
-            news.Title = title;
-            news.Short = shortText;
-            news.Full = fullText;
-            news.Published = published;
-            news.AllowComments = allowComments;
-            news.CreatedOn = createdOn;
             context.SaveChanges();
 
             if (NewsManager.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(NEWS_PATTERN_KEY);
             }
-
-            return news;
         }
 
         /// <summary>
@@ -391,8 +361,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
         public static NewsComment InsertNewsComment(int newsId, int customerId, string ipAddress,
             string title, string comment, DateTime createdOn, bool notify)
         {
+            ipAddress = CommonHelper.EnsureNotNull(ipAddress);
             ipAddress = CommonHelper.EnsureMaximumLength(ipAddress, 100);
+            title = CommonHelper.EnsureNotNull(title);
             title = CommonHelper.EnsureMaximumLength(title, 1000);
+            comment = CommonHelper.EnsureNotNull(comment);
 
             var context = ObjectContextHelper.CurrentObjectContext;
 
@@ -419,37 +392,23 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
         /// <summary>
         /// Updates the news comment
         /// </summary>
-        /// <param name="newsCommentId">The news comment identifier</param>
-        /// <param name="newsId">The news identifier</param>
-        /// <param name="customerId">The customer identifier</param>
-        /// <param name="ipAddress">The IP address</param>
-        /// <param name="title">The title</param>
-        /// <param name="comment">The comment</param>
-        /// <param name="createdOn">The date and time of instance creation</param>
-        /// <returns>News comment</returns>
-        public static NewsComment UpdateNewsComment(int newsCommentId,
-            int newsId, int customerId, string ipAddress, string title,
-            string comment, DateTime createdOn)
+        /// <param name="newsComment">News comment</param>
+        public static void UpdateNewsComment(NewsComment newsComment)
         {
-            ipAddress = CommonHelper.EnsureMaximumLength(ipAddress, 100);
-            title = CommonHelper.EnsureMaximumLength(title, 1000);
-
-            var newsComment = GetNewsCommentById(newsCommentId);
             if (newsComment == null)
-                return null;
+                throw new ArgumentNullException("newsComment");
+
+            newsComment.IPAddress = CommonHelper.EnsureNotNull(newsComment.IPAddress);
+            newsComment.IPAddress = CommonHelper.EnsureMaximumLength(newsComment.IPAddress, 100);
+            newsComment.Title = CommonHelper.EnsureNotNull(newsComment.Title);
+            newsComment.Title = CommonHelper.EnsureMaximumLength(newsComment.Title, 1000);
+            newsComment.Comment = CommonHelper.EnsureNotNull(newsComment.Comment);
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(newsComment))
                 context.NewsComments.Attach(newsComment);
 
-            newsComment.NewsId = newsId;
-            newsComment.CustomerId = customerId;
-            newsComment.IPAddress = ipAddress;
-            newsComment.Title = title;
-            newsComment.Comment = comment;
-            newsComment.CreatedOn = createdOn;
             context.SaveChanges();
-            return newsComment;
         }
 
         /// <summary>

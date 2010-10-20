@@ -39,82 +39,50 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
         /// <summary>
         /// Inserts an activity log type item
         /// </summary>
-        /// <param name="systemKeyword">The system keyword</param>
-        /// <param name="name">The display name</param>
-        /// <param name="enabled">Value indicating whether the activity log type is enabled</param>
-        /// <returns>Activity log type item</returns>
-        public static ActivityLogType InsertActivityType(string systemKeyword,
-            string name, bool enabled)
+        /// <param name="activityLogType">Activity log type item</param>
+        public static void InsertActivityType(ActivityLogType activityLogType)
         {
-            systemKeyword = CommonHelper.EnsureMaximumLength(systemKeyword, 50);
-            name = CommonHelper.EnsureMaximumLength(name, 100);
+            if (activityLogType == null)
+                throw new ArgumentNullException("activityLogType");
+
+            activityLogType.SystemKeyword = CommonHelper.EnsureNotNull(activityLogType.SystemKeyword);
+            activityLogType.SystemKeyword = CommonHelper.EnsureMaximumLength(activityLogType.SystemKeyword, 50);
+            activityLogType.Name = CommonHelper.EnsureNotNull(activityLogType.Name);            
+            activityLogType.Name = CommonHelper.EnsureMaximumLength(activityLogType.Name, 100);
 
             var context = ObjectContextHelper.CurrentObjectContext;
-
-            var activityLogType = context.ActivityLogTypes.CreateObject();
-            activityLogType.SystemKeyword = systemKeyword;
-            activityLogType.Name = name;
-            activityLogType.Enabled = enabled;
 
             context.ActivityLogTypes.AddObject(activityLogType);
             context.SaveChanges();
 
             if (NopRequestCache.IsEnabled)
                 NopRequestCache.RemoveByPattern(ACTIVITYTYPE_PATTERN_KEY);
-
-            return activityLogType;
         }
 
         /// <summary>
         /// Updates an activity log type item
         /// </summary>
-        /// <param name="activityLogTypeId">Activity log type identifier</param>
-        /// <param name="systemKeyword">The system keyword</param>
-        /// <param name="name">The display name</param>
-        /// <param name="enabled">Value indicating whether the activity log type is enabled</param>
-        /// <returns>Activity log type item</returns>
-        public static ActivityLogType UpdateActivityType(int activityLogTypeId,
-            string systemKeyword, string name, bool enabled)
+        /// <param name="activityLogType">Activity log type item</param>
+        public static void UpdateActivityType(ActivityLogType activityLogType)
         {
-            systemKeyword = CommonHelper.EnsureMaximumLength(systemKeyword, 50);
-            name = CommonHelper.EnsureMaximumLength(name, 100);
-
-            var activityLogType = GetActivityTypeById(activityLogTypeId);
             if (activityLogType == null)
-                return null;
+                throw new ArgumentNullException("activityLogType");
+
+            activityLogType.SystemKeyword = CommonHelper.EnsureNotNull(activityLogType.SystemKeyword);
+            activityLogType.SystemKeyword = CommonHelper.EnsureMaximumLength(activityLogType.SystemKeyword, 50);
+            activityLogType.Name = CommonHelper.EnsureNotNull(activityLogType.Name);
+            activityLogType.Name = CommonHelper.EnsureMaximumLength(activityLogType.Name, 100);
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(activityLogType))
                 context.ActivityLogTypes.Attach(activityLogType);
 
-            activityLogType.SystemKeyword = systemKeyword;
-            activityLogType.Name = name;
-            activityLogType.Enabled = enabled;
-
             context.SaveChanges();
 
             if (NopRequestCache.IsEnabled)
                 NopRequestCache.RemoveByPattern(ACTIVITYTYPE_PATTERN_KEY);
-
-            return activityLogType;
         }
-
-        /// <summary>
-        /// Updates an activity log type item
-        /// </summary>
-        /// <param name="activityLogTypeId">Activity log type identifier</param>
-        /// <param name="enabled">Value indicating whether the activity log type is enabled</param>
-        /// <returns>Activity log type item</returns>
-        public static ActivityLogType UpdateActivityType(int activityLogTypeId, bool enabled)
-        {
-            var activityType = GetActivityTypeById(activityLogTypeId);
-            if (activityType == null || activityType.Enabled == enabled)
-                return activityType;
-
-            return UpdateActivityType(activityType.ActivityLogTypeId, 
-                activityType.SystemKeyword, activityType.Name, enabled);
-        }
-        
+                
         /// <summary>
         /// Deletes an activity log type item
         /// </summary>
@@ -222,7 +190,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
                 return null;
 
             int customerId = NopContext.Current.User.CustomerId;
-            DateTime createdOn = DateTime.UtcNow;
+            comment = CommonHelper.EnsureNotNull(comment);
             comment = string.Format(comment, commentParams);
             comment = CommonHelper.EnsureMaximumLength(comment, 4000);
 
@@ -232,41 +200,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
             activity.ActivityLogTypeId = activityType.ActivityLogTypeId;
             activity.CustomerId = customerId;
             activity.Comment = comment;
-            activity.CreatedOn = createdOn;
+            activity.CreatedOn = DateTime.UtcNow;
 
             context.ActivityLog.AddObject(activity);
             context.SaveChanges();
 
-            return activity;
-        }
-        
-        /// <summary>
-        /// Updates an activity log 
-        /// </summary>
-        /// <param name="activityLogId">Activity log identifier</param>
-        /// <param name="activityLogTypeId">Activity log type identifier</param>
-        /// <param name="customerId">The customer identifier</param>
-        /// <param name="comment">The activity comment</param>
-        /// <param name="createdOn">The date and time of instance creation</param>
-        /// <returns>Activity log item</returns>
-        public static ActivityLog UpdateActivity(int activityLogId, int activityLogTypeId,
-            int customerId, string comment, DateTime createdOn)
-        {
-            comment = CommonHelper.EnsureMaximumLength(comment, 4000);
-
-            var activity = GetActivityById(activityLogId);
-            if (activity == null)
-                return null;
-
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(activity))
-                context.ActivityLog.Attach(activity);
-
-            activity.ActivityLogTypeId = activityLogTypeId;
-            activity.CustomerId = customerId;
-            activity.Comment = comment;
-            activity.CreatedOn = createdOn;
-            context.SaveChanges();
             return activity;
         }
         

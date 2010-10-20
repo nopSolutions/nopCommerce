@@ -141,12 +141,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
             if ((exception != null) && (exception is System.Threading.ThreadAbortException))
                 return null;
 
-            if (message == null)
-                message = string.Empty;
-
-            if (IPAddress == null)
-                IPAddress = string.Empty;
-
             string exceptionStr = exception == null ? string.Empty : exception.ToString();
 
             string referrerUrl = string.Empty;
@@ -154,16 +148,17 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
                 HttpContext.Current.Request != null &&
                 HttpContext.Current.Request.UrlReferrer != null)
                 referrerUrl = HttpContext.Current.Request.UrlReferrer.ToString();
-            if (referrerUrl == null)
-                referrerUrl = string.Empty;
-
+           
+            message = CommonHelper.EnsureNotNull(message);
             message = CommonHelper.EnsureMaximumLength(message, 1000);
+            exceptionStr = CommonHelper.EnsureNotNull(exceptionStr);
             exceptionStr = CommonHelper.EnsureMaximumLength(exceptionStr, 4000);
+            IPAddress = CommonHelper.EnsureNotNull(IPAddress);
             IPAddress = CommonHelper.EnsureMaximumLength(IPAddress, 100);
+            pageUrl = CommonHelper.EnsureNotNull(pageUrl);
             pageUrl = CommonHelper.EnsureMaximumLength(pageUrl, 100);
+            referrerUrl = CommonHelper.EnsureNotNull(referrerUrl);
             referrerUrl = CommonHelper.EnsureMaximumLength(referrerUrl, 100);
-
-            DateTime createdOn = DateTime.UtcNow;
 
             var context = ObjectContextHelper.CurrentObjectContext;
 
@@ -176,7 +171,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
             log.CustomerId = customerId;
             log.PageUrl = pageUrl;
             log.ReferrerUrl = referrerUrl;
-            log.CreatedOn = createdOn;
+            log.CreatedOn = DateTime.UtcNow;
 
             context.Log.AddObject(log);
             context.SaveChanges();

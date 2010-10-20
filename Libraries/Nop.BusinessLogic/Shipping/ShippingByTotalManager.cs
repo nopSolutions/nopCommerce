@@ -82,65 +82,32 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         /// <summary>
         /// Inserts a ShippingByTotal
         /// </summary>
-        /// <param name="shippingMethodId">The shipping method identifier</param>
-        /// <param name="from">The "from" value</param>
-        /// <param name="to">The "to" value</param>
-        /// <param name="usePercentage">A value indicating whether to use percentage</param>
-        /// <param name="shippingChargePercentage">The shipping charge percentage</param>
-        /// <param name="shippingChargeAmount">The shipping charge amount</param>
-        /// <returns>ShippingByTotal</returns>
-        public static ShippingByTotal InsertShippingByTotal(int shippingMethodId,
-            decimal from, decimal to, bool usePercentage,
-            decimal shippingChargePercentage, decimal shippingChargeAmount)
+        /// <param name="shippingByTotal">ShippingByTotal</param>
+        public static void InsertShippingByTotal(ShippingByTotal shippingByTotal)
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
+            if (shippingByTotal == null)
+                throw new ArgumentNullException("shippingByTotal");
 
-            var shippingByTotal = context.ShippingByTotal.CreateObject();
-            shippingByTotal.ShippingMethodId = shippingMethodId;
-            shippingByTotal.From = from;
-            shippingByTotal.To = to;
-            shippingByTotal.UsePercentage = usePercentage;
-            shippingByTotal.ShippingChargePercentage = shippingChargePercentage;
-            shippingByTotal.ShippingChargeAmount = shippingChargeAmount;
+            var context = ObjectContextHelper.CurrentObjectContext;
 
             context.ShippingByTotal.AddObject(shippingByTotal);
             context.SaveChanges();
-
-            return shippingByTotal;
         }
 
         /// <summary>
         /// Updates the ShippingByTotal
         /// </summary>
-        /// <param name="shippingByTotalId">The ShippingByTotal identifier</param>
-        /// <param name="shippingMethodId">The shipping method identifier</param>
-        /// <param name="from">The "from" value</param>
-        /// <param name="to">The "to" value</param>
-        /// <param name="usePercentage">A value indicating whether to use percentage</param>
-        /// <param name="shippingChargePercentage">The shipping charge percentage</param>
-        /// <param name="shippingChargeAmount">The shipping charge amount</param>
-        /// <returns>ShippingByTotal</returns>
-        public static ShippingByTotal UpdateShippingByTotal(int shippingByTotalId,
-            int shippingMethodId, decimal from, decimal to, bool usePercentage,
-            decimal shippingChargePercentage, decimal shippingChargeAmount)
+        /// <param name="shippingByTotal">ShippingByTotal</param>
+        public static void UpdateShippingByTotal(ShippingByTotal shippingByTotal)
         {
-            var shippingByTotal = GetById(shippingByTotalId);
             if (shippingByTotal == null)
-                return null;
+                throw new ArgumentNullException("shippingByTotal");
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(shippingByTotal))
                 context.ShippingByTotal.Attach(shippingByTotal);
 
-            shippingByTotal.ShippingMethodId = shippingMethodId;
-            shippingByTotal.From = from;
-            shippingByTotal.To = to;
-            shippingByTotal.UsePercentage = usePercentage;
-            shippingByTotal.ShippingChargePercentage = shippingChargePercentage;
-            shippingByTotal.ShippingChargeAmount = shippingChargeAmount;
             context.SaveChanges();
-
-            return shippingByTotal;
         }
 
         /// <summary>

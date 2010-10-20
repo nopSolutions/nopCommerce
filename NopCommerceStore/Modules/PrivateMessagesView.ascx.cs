@@ -58,8 +58,8 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
                 if (!pm.IsRead && pm.ToUserId == NopContext.Current.User.CustomerId)
                 {
-                    pm = ForumManager.UpdatePrivateMessage(pm.PrivateMessageId, pm.FromUserId, pm.ToUserId,
-                        pm.Subject, pm.Text, true, pm.IsDeletedByAuthor, pm.IsDeletedByRecipient, pm.CreatedOn);
+                    pm.IsRead = true;
+                    ForumManager.UpdatePrivateMessage(pm);
                 }
             }
             else
@@ -94,16 +94,16 @@ namespace NopSolutions.NopCommerce.Web.Modules
             {
                 if (pm.FromUserId == NopContext.Current.User.CustomerId)
                 {
-                    pm = ForumManager.UpdatePrivateMessage(pm.PrivateMessageId, pm.FromUserId, pm.ToUserId,
-                         pm.Subject, pm.Text, pm.IsRead, true, pm.IsDeletedByRecipient, pm.CreatedOn);
+                    pm.IsDeletedByAuthor = true;
+                    ForumManager.UpdatePrivateMessage(pm);
                 }
 
                 if (pm != null)
                 {
                     if (pm.ToUserId == NopContext.Current.User.CustomerId)
                     {
-                        pm = ForumManager.UpdatePrivateMessage(pm.PrivateMessageId, pm.FromUserId, pm.ToUserId,
-                             pm.Subject, pm.Text, pm.IsRead, pm.IsDeletedByAuthor, true, pm.CreatedOn);
+                        pm.IsDeletedByRecipient = true;
+                        ForumManager.UpdatePrivateMessage(pm);
                     }
                 }
             }

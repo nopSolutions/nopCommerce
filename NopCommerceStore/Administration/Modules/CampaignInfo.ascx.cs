@@ -80,13 +80,21 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
             if (campaign != null)
             {
-                campaign = CampaignManager.UpdateCampaign(campaign.CampaignId,
-                    txtName.Text, txtSubject.Text, txtBody.Value, campaign.CreatedOn);
+                campaign.Name = txtName.Text;
+                campaign.Subject = txtSubject.Text;
+                campaign.Body = txtBody.Value;
+                CampaignManager.UpdateCampaign(campaign);
             }
             else
             {
-                campaign = CampaignManager.InsertCampaign(txtName.Text,
-                       txtSubject.Text, txtBody.Value, DateTime.UtcNow);
+                campaign = new Campaign()
+                {
+                    Name = txtName.Text,
+                    Subject = txtSubject.Text,
+                    Body = txtBody.Value,
+                    CreatedOn = DateTime.UtcNow
+                };
+                CampaignManager.InsertCampaign(campaign);
             }
 
             return campaign;

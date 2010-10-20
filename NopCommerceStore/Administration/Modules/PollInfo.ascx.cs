@@ -86,8 +86,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                PollAnswer pollAnswer = PollManager.InsertPollAnswer(this.PollId,
-                    txtPollAnswerName.Text, 0, txtPollAnswerDisplayOrder.Value);
+                var pollAnswer = new PollAnswer()
+                {
+                    PollId = this.PollId,
+                    Name = txtPollAnswerName.Text,
+                    DisplayOrder = txtPollAnswerDisplayOrder.Value
+                };
+                PollManager.InsertPollAnswer(pollAnswer);
 
                 BindData();
             }
@@ -112,8 +117,11 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 PollAnswer pollAnswer = PollManager.GetPollAnswerById(pollAnswerId);
 
                 if (pollAnswer != null)
-                    pollAnswer = PollManager.UpdatePollAnswer(pollAnswer.PollAnswerId, pollAnswer.PollId,
-                       txtName.Text, pollAnswer.Count, txtDisplayOrder.Value);
+                {
+                    pollAnswer.Name = txtName.Text;
+                    pollAnswer.DisplayOrder = txtDisplayOrder.Value;
+                    PollManager.UpdatePollAnswer(pollAnswer);
+                }
 
                 BindData();
             }
@@ -165,13 +173,31 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
             if (poll != null)
             {
-                poll = PollManager.UpdatePoll(poll.PollId, int.Parse(this.ddlLanguage.SelectedItem.Value),
-                    txtName.Text, txtSystemKeyword.Text, cbPublished.Checked, cbShowOnHomePage.Checked, txtDisplayOrder.Value, startDate, endDate);
+                poll.LanguageId = int.Parse(this.ddlLanguage.SelectedItem.Value);
+                poll.Name = txtName.Text;
+                poll.SystemKeyword = txtSystemKeyword.Text;
+                poll.Published = cbPublished.Checked;
+                poll.ShowOnHomePage = cbShowOnHomePage.Checked;
+                poll.DisplayOrder = txtDisplayOrder.Value;
+                poll.StartDate = startDate;
+                poll.EndDate = endDate;
+                PollManager.UpdatePoll(poll);
             }
             else
             {
-                poll = PollManager.InsertPoll(int.Parse(this.ddlLanguage.SelectedItem.Value),
-                    txtName.Text, txtSystemKeyword.Text, cbPublished.Checked, cbShowOnHomePage.Checked, txtDisplayOrder.Value, startDate, endDate);
+                poll = new Poll()
+                {
+                    LanguageId = int.Parse(this.ddlLanguage.SelectedItem.Value),
+                    Name = txtName.Text,
+                    SystemKeyword = txtSystemKeyword.Text,
+                    Published = cbPublished.Checked,
+                    ShowOnHomePage = cbShowOnHomePage.Checked,
+                    DisplayOrder = txtDisplayOrder.Value,
+                    StartDate = startDate,
+                    EndDate = endDate
+                };
+
+                PollManager.InsertPoll(poll);
             }
             return poll;
         }

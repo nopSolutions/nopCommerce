@@ -103,9 +103,13 @@ namespace NopSolutions.NopCommerce.Web.Administration
 
                     if (shippingRateComputationMethod != null)
                     {
-                        shippingRateComputationMethod = ShippingRateComputationMethodManager.UpdateShippingRateComputationMethod(shippingRateComputationMethod.ShippingRateComputationMethodId,
-                            txtName.Text, txtDescription.Text, txtConfigureTemplatePath.Text,
-                            txtClassName.Text, cbActive.Checked, txtDisplayOrder.Value);
+                        shippingRateComputationMethod.Name =  txtName.Text;
+                        shippingRateComputationMethod.Description =  txtDescription.Text;
+                        shippingRateComputationMethod.ConfigureTemplatePath = txtConfigureTemplatePath.Text;
+                        shippingRateComputationMethod.ClassName = txtClassName.Text;
+                        shippingRateComputationMethod.IsActive = cbActive.Checked;
+                        shippingRateComputationMethod.DisplayOrder = txtDisplayOrder.Value;
+                        ShippingRateComputationMethodManager.UpdateShippingRateComputationMethod(shippingRateComputationMethod);
 
                         var configureModule = GetConfigureModule();
                         if (configureModule != null)

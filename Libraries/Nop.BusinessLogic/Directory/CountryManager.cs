@@ -241,38 +241,20 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
         /// <summary>
         /// Inserts a country
         /// </summary>
-        /// <param name="name">The name</param>
-        /// <param name="allowsRegistration">A value indicating whether registration is allowed to this country</param>
-        /// <param name="allowsBilling">A value indicating whether billing is allowed to this country</param>
-        /// <param name="allowsShipping">A value indicating whether shipping is allowed to this country</param>
-        /// <param name="twoLetterIsoCode">The two letter ISO code</param>
-        /// <param name="threeLetterIsoCode">The three letter ISO code</param>
-        /// <param name="numericIsoCode">The numeric ISO code</param>
-        /// <param name="subjectToVAT">A value indicating whether customers in this country must be charged EU VAT</param>
-        /// <param name="published">A value indicating whether the entity is published</param>
-        /// <param name="displayOrder">The display order</param>
-        /// <returns>Country</returns>
-        public static Country InsertCountry(string name,
-            bool allowsRegistration, bool allowsBilling, bool allowsShipping,
-            string twoLetterIsoCode, string threeLetterIsoCode, int numericIsoCode,
-            bool subjectToVAT, bool published, int displayOrder)
+        /// <param name="country">Country</param>
+        public static void InsertCountry(Country country)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 100);
-            twoLetterIsoCode = CommonHelper.EnsureMaximumLength(twoLetterIsoCode, 2);
-            threeLetterIsoCode = CommonHelper.EnsureMaximumLength(threeLetterIsoCode, 3);
+            if (country == null)
+                throw new ArgumentNullException("country");
+
+            country.Name = CommonHelper.EnsureNotNull(country.Name);
+            country.Name = CommonHelper.EnsureMaximumLength(country.Name, 100);
+            country.TwoLetterIsoCode = CommonHelper.EnsureNotNull(country.TwoLetterIsoCode);
+            country.TwoLetterIsoCode = CommonHelper.EnsureMaximumLength(country.TwoLetterIsoCode, 2);
+            country.ThreeLetterIsoCode = CommonHelper.EnsureNotNull(country.ThreeLetterIsoCode);
+            country.ThreeLetterIsoCode = CommonHelper.EnsureMaximumLength(country.ThreeLetterIsoCode, 3);
 
             var context = ObjectContextHelper.CurrentObjectContext;
-            var country = context.Countries.CreateObject();
-            country.Name = name;
-            country.AllowsRegistration = allowsRegistration;
-            country.AllowsBilling = allowsBilling;
-            country.AllowsShipping = allowsShipping;
-            country.TwoLetterIsoCode = twoLetterIsoCode;
-            country.ThreeLetterIsoCode = threeLetterIsoCode;
-            country.NumericIsoCode = numericIsoCode;
-            country.SubjectToVAT = subjectToVAT;
-            country.Published = published;
-            country.DisplayOrder = displayOrder;
 
             context.Countries.AddObject(country);
             context.SaveChanges();
@@ -281,59 +263,34 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
             {
                 NopRequestCache.RemoveByPattern(COUNTRIES_PATTERN_KEY);
             }
-            return country;
         }
 
         /// <summary>
         /// Updates the country
         /// </summary>
-        /// <param name="countryId">The country identifier</param>
-        /// <param name="name">The name</param>
-        /// <param name="allowsRegistration">A value indicating whether registration is allowed to this country</param>
-        /// <param name="allowsBilling">A value indicating whether billing is allowed to this country</param>
-        /// <param name="allowsShipping">A value indicating whether shipping is allowed to this country</param>
-        /// <param name="twoLetterIsoCode">The two letter ISO code</param>
-        /// <param name="threeLetterIsoCode">The three letter ISO code</param>
-        /// <param name="numericIsoCode">The numeric ISO code</param>
-        /// <param name="subjectToVAT">A value indicating whether customers in this country must be charged EU VAT</param>
-        /// <param name="published">A value indicating whether the entity is published</param>
-        /// <param name="displayOrder">The display order</param>
-        /// <returns>Country</returns>
-        public static Country UpdateCountry(int countryId, string name,
-            bool allowsRegistration, bool allowsBilling, bool allowsShipping,
-            string twoLetterIsoCode, string threeLetterIsoCode, int numericIsoCode,
-            bool subjectToVAT, bool published, int displayOrder)
+        /// <param name="country">Country</param>
+        public static void UpdateCountry(Country country)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 100);
-            twoLetterIsoCode = CommonHelper.EnsureMaximumLength(twoLetterIsoCode, 2);
-            threeLetterIsoCode = CommonHelper.EnsureMaximumLength(threeLetterIsoCode, 3);
-
-            var country = GetCountryById(countryId);
             if (country == null)
-                return null;
+                throw new ArgumentNullException("country");
+
+            country.Name = CommonHelper.EnsureNotNull(country.Name);
+            country.Name = CommonHelper.EnsureMaximumLength(country.Name, 100);
+            country.TwoLetterIsoCode = CommonHelper.EnsureNotNull(country.TwoLetterIsoCode);
+            country.TwoLetterIsoCode = CommonHelper.EnsureMaximumLength(country.TwoLetterIsoCode, 2);
+            country.ThreeLetterIsoCode = CommonHelper.EnsureNotNull(country.ThreeLetterIsoCode);
+            country.ThreeLetterIsoCode = CommonHelper.EnsureMaximumLength(country.ThreeLetterIsoCode, 3);
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(country))
                 context.Countries.Attach(country);
 
-            country.Name = name;
-            country.AllowsRegistration = allowsRegistration;
-            country.AllowsBilling = allowsBilling;
-            country.AllowsShipping = allowsShipping;
-            country.TwoLetterIsoCode = twoLetterIsoCode;
-            country.ThreeLetterIsoCode = threeLetterIsoCode;
-            country.NumericIsoCode = numericIsoCode;
-            country.SubjectToVAT = subjectToVAT;
-            country.Published = published;
-            country.DisplayOrder = displayOrder;
             context.SaveChanges();
 
             if (CountryManager.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(COUNTRIES_PATTERN_KEY);
             }
-
-            return country;
         }
         #endregion
 

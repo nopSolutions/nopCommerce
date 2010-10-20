@@ -175,35 +175,20 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
         /// <summary>
         /// Inserts a poll
         /// </summary>
-        /// <param name="languageId">The language identifier</param>
-        /// <param name="name">The name</param>
-        /// <param name="systemKeyword">The system keyword</param>
-        /// <param name="published">A value indicating whether the entity is published</param>
-        /// <param name="showOnHomePage">A value indicating whether the entity should be shown on home page</param>
-        /// <param name="displayOrder">The display order</param>
-        /// <param name="startDate">The poll start date and time</param>
-        /// <param name="endDate">The poll end date and time</param>
-        /// <returns>Poll</returns>
-        public static Poll InsertPoll(int languageId, string name, string systemKeyword,
-            bool published, bool showOnHomePage, int displayOrder, 
-            DateTime? startDate, DateTime? endDate)
+        /// <param name="poll">Poll</param>
+        public static void InsertPoll(Poll poll)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 400);
-            systemKeyword = CommonHelper.EnsureMaximumLength(systemKeyword, 400);
-            systemKeyword = systemKeyword.Trim();
+            if (poll == null)
+                throw new ArgumentNullException("poll");
+
+            poll.Name = CommonHelper.EnsureNotNull(poll.Name);
+            poll.Name = CommonHelper.EnsureMaximumLength(poll.Name, 400);
+            poll.SystemKeyword = CommonHelper.EnsureNotNull(poll.SystemKeyword);
+            poll.SystemKeyword = CommonHelper.EnsureMaximumLength(poll.SystemKeyword, 400);
+            poll.SystemKeyword = poll.SystemKeyword.Trim();
 
             var context = ObjectContextHelper.CurrentObjectContext;
-
-            var poll = context.Polls.CreateObject();
-            poll.LanguageId = languageId;
-            poll.Name = name;
-            poll.SystemKeyword = systemKeyword;
-            poll.Published = published;
-            poll.ShowOnHomePage = showOnHomePage;
-            poll.DisplayOrder = displayOrder;
-            poll.StartDate = startDate;
-            poll.EndDate = endDate;
-
+            
             context.Polls.AddObject(poll);
             context.SaveChanges();
 
@@ -212,47 +197,26 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
                 NopRequestCache.RemoveByPattern(POLLS_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(POLLANSWERS_PATTERN_KEY);
             }
-
-            return poll;
         }
 
         /// <summary>
         /// Updates the poll
         /// </summary>
-        /// <param name="pollId">The poll identifier</param>
-        /// <param name="languageId">The language identifier</param>
-        /// <param name="name">The name</param>
-        /// <param name="systemKeyword">The system keyword</param>
-        /// <param name="published">A value indicating whether the entity is published</param>
-        /// <param name="showOnHomePage">A value indicating whether the entity should be shown on home page</param>
-        /// <param name="displayOrder">The display order</param>
-        /// <param name="startDate">The poll start date and time</param>
-        /// <param name="endDate">The poll end date and time</param>
-        /// <returns>Poll</returns>
-        public static Poll UpdatePoll(int pollId, int languageId, string name,
-            string systemKeyword, bool published, bool showOnHomePage, int displayOrder, 
-            DateTime? startDate, DateTime? endDate)
+        /// <param name="poll">Poll</param>
+        public static void UpdatePoll(Poll poll)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 400);
-            systemKeyword = CommonHelper.EnsureMaximumLength(systemKeyword, 400);
-            systemKeyword = systemKeyword.Trim();
-
-            var poll = GetPollById(pollId);
             if (poll == null)
-                return null;
+                throw new ArgumentNullException("poll");
+
+            poll.Name = CommonHelper.EnsureNotNull(poll.Name);
+            poll.Name = CommonHelper.EnsureMaximumLength(poll.Name, 400);
+            poll.SystemKeyword = CommonHelper.EnsureNotNull(poll.SystemKeyword);
+            poll.SystemKeyword = CommonHelper.EnsureMaximumLength(poll.SystemKeyword, 400);
+            poll.SystemKeyword = poll.SystemKeyword.Trim();
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(poll))
                 context.Polls.Attach(poll);
-
-            poll.LanguageId = languageId;
-            poll.Name = name;
-            poll.SystemKeyword = systemKeyword;
-            poll.Published = published;
-            poll.ShowOnHomePage = showOnHomePage;
-            poll.DisplayOrder = displayOrder;
-            poll.StartDate = startDate;
-            poll.EndDate = endDate;
 
             context.SaveChanges();
 
@@ -261,8 +225,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
                 NopRequestCache.RemoveByPattern(POLLS_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(POLLANSWERS_PATTERN_KEY);
             }
-
-            return poll;
         }
 
         /// <summary>
@@ -355,23 +317,17 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
         /// <summary>
         /// Inserts a poll answer
         /// </summary>
-        /// <param name="pollId">The poll identifier</param>
-        /// <param name="name">The poll answer name</param>
-        /// <param name="count">The current count</param>
-        /// <param name="displayOrder">The display order</param>
-        /// <returns>Poll answer</returns>
-        public static PollAnswer InsertPollAnswer(int pollId,
-            string name, int count, int displayOrder)
+        /// <param name="pollAnswer">Poll answer</param>
+        public static void InsertPollAnswer(PollAnswer pollAnswer)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 400);
+            if (pollAnswer == null)
+                throw new ArgumentNullException("pollAnswer");
+
+            pollAnswer.Name = CommonHelper.EnsureNotNull(pollAnswer.Name);
+            pollAnswer.Name = CommonHelper.EnsureMaximumLength(pollAnswer.Name, 400);
 
             var context = ObjectContextHelper.CurrentObjectContext;
-            var pollAnswer = context.PollAnswers.CreateObject();
-            pollAnswer.PollId = pollId;
-            pollAnswer.Name = name;
-            pollAnswer.Count = count;
-            pollAnswer.DisplayOrder = displayOrder;
-
+           
             context.PollAnswers.AddObject(pollAnswer);
             context.SaveChanges();
 
@@ -380,36 +336,24 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
                 NopRequestCache.RemoveByPattern(POLLS_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(POLLANSWERS_PATTERN_KEY);
             }
-
-            return pollAnswer;
         }
 
         /// <summary>
         /// Updates the poll answer
         /// </summary>
-        /// <param name="pollAnswerId">The poll answer identifier</param>
-        /// <param name="pollId">The poll identifier</param>
-        /// <param name="name">The poll answer name</param>
-        /// <param name="count">The current count</param>
-        /// <param name="displayOrder">The display order</param>
-        /// <returns>Poll answer</returns>
-        public static PollAnswer UpdatePollAnswer(int pollAnswerId,
-            int pollId, string name, int count, int displayOrder)
+        /// <param name="pollAnswer">Poll answer</param>
+        public static void UpdatePollAnswer(PollAnswer pollAnswer)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 400);
-
-            var pollAnswer = GetPollAnswerById(pollAnswerId);
             if (pollAnswer == null)
-                return null;
+                throw new ArgumentNullException("pollAnswer");
+
+            pollAnswer.Name = CommonHelper.EnsureNotNull(pollAnswer.Name);
+            pollAnswer.Name = CommonHelper.EnsureMaximumLength(pollAnswer.Name, 400);
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(pollAnswer))
                 context.PollAnswers.Attach(pollAnswer);
 
-            pollAnswer.PollId = pollId;
-            pollAnswer.Name = name;
-            pollAnswer.Count = count;
-            pollAnswer.DisplayOrder = displayOrder;
             context.SaveChanges();
 
             if (PollManager.CacheEnabled)
@@ -417,8 +361,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
                 NopRequestCache.RemoveByPattern(POLLS_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(POLLANSWERS_PATTERN_KEY);
             }
-
-            return pollAnswer;
         }
 
         /// <summary>
@@ -457,11 +399,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
                                       where pvr.PollAnswerId == pollAnswerId
                                       select pvr).Count();
 
-            pollAnswer = UpdatePollAnswer(pollAnswer.PollAnswerId,
-                pollAnswer.PollId,
-                pollAnswer.Name,
-                totalVotingRecords,
-                pollAnswer.DisplayOrder);
+            pollAnswer.Count = totalVotingRecords;
+            UpdatePollAnswer(pollAnswer);
 
             if (PollManager.CacheEnabled)
             {

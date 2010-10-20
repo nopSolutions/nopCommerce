@@ -81,9 +81,17 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.ShippingByWeightA
             {
                 int shippingMethodId = int.Parse(this.ddlShippingMethod.SelectedItem.Value);
                 int countryId = int.Parse(this.ddlCountry.SelectedItem.Value);
-                ShippingByWeightAndCountry shippingByWeightAndCountry = ShippingByWeightAndCountryManager.InsertShippingByWeightAndCountry(shippingMethodId,
-                    countryId, txtFrom.Value, txtTo.Value, cbUsePercentage.Checked,
-                    txtShippingChargePercentage.Value, txtShippingChargeAmount.Value);
+                var shippingByWeightAndCountry = new ShippingByWeightAndCountry()
+                {
+                    ShippingMethodId = shippingMethodId,
+                    CountryId = countryId,
+                    From = txtFrom.Value,
+                    To = txtTo.Value,
+                    UsePercentage = cbUsePercentage.Checked,
+                    ShippingChargePercentage = txtShippingChargePercentage.Value,
+                    ShippingChargeAmount = txtShippingChargeAmount.Value
+                };
+                ShippingByWeightAndCountryManager.InsertShippingByWeightAndCountry(shippingByWeightAndCountry);
 
                 BindData();
             }
@@ -115,10 +123,17 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.ShippingByWeightA
                 ShippingByWeightAndCountry shippingByWeightAndCountry = ShippingByWeightAndCountryManager.GetById(shippingByWeightAndCountryId);
 
                 if (shippingByWeightAndCountry != null)
-                    ShippingByWeightAndCountryManager.UpdateShippingByWeightAndCountry(shippingByWeightAndCountry.ShippingByWeightAndCountryId,
-                      shippingMethodId, countryId, txtFrom.Value, txtTo.Value, cbUsePercentage.Checked,
-                      txtShippingChargePercentage.Value, txtShippingChargeAmount.Value);
+                {
+                    shippingByWeightAndCountry.ShippingMethodId = shippingMethodId;
+                    shippingByWeightAndCountry.CountryId = countryId;
+                    shippingByWeightAndCountry.From = txtFrom.Value;
+                    shippingByWeightAndCountry.To = txtTo.Value;
+                    shippingByWeightAndCountry.UsePercentage = cbUsePercentage.Checked;
+                    shippingByWeightAndCountry.ShippingChargePercentage = txtShippingChargePercentage.Value;
+                    shippingByWeightAndCountry.ShippingChargeAmount = txtShippingChargeAmount.Value;
 
+                    ShippingByWeightAndCountryManager.UpdateShippingByWeightAndCountry(shippingByWeightAndCountry);
+                }
                 BindData();
             }
         }

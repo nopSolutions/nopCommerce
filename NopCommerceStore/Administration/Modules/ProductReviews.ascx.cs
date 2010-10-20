@@ -39,9 +39,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 ProductReview productReview = ProductManager.GetProductReviewById(productReviewId);
                 if (productReview != null)
                 {
-                    ProductManager.UpdateProductReview(productReview.ProductReviewId,
-                        productReview.ProductId, productReview.CustomerId, productReview.IPAddress, productReview.Title,
-                        productReview.ReviewText, productReview.Rating, productReview.HelpfulYesTotal, productReview.HelpfulNoTotal, !productReview.IsApproved, productReview.CreatedOn);
+                    productReview.IsApproved = !productReview.IsApproved;
+                    ProductManager.UpdateProductReview(productReview);
                 }
                 BindData();
             }

@@ -141,25 +141,19 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Measures
         /// <summary>
         /// Inserts a measure dimension
         /// </summary>
-        /// <param name="name">The name</param>
-        /// <param name="systemKeyword">The system keyword</param>
-        /// <param name="ratio">The ratio</param>
-        /// <param name="displayOrder">The display order</param>
-        /// <returns>A measure dimension</returns>
-        public static MeasureDimension InsertMeasureDimension(string name,
-            string systemKeyword, decimal ratio, int displayOrder)
+        /// <param name="measure">Measure dimension</param>
+        public static void InsertMeasureDimension(MeasureDimension measure)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 100);
-            systemKeyword = CommonHelper.EnsureMaximumLength(systemKeyword, 100);
+            if (measure == null)
+                throw new ArgumentNullException("measure");
+
+            measure.Name = CommonHelper.EnsureNotNull(measure.Name);
+            measure.Name = CommonHelper.EnsureMaximumLength(measure.Name, 100);
+            measure.SystemKeyword = CommonHelper.EnsureNotNull(measure.SystemKeyword);
+            measure.SystemKeyword = CommonHelper.EnsureMaximumLength(measure.SystemKeyword, 100);
 
             var context = ObjectContextHelper.CurrentObjectContext;
-
-            var measure = context.MeasureDimensions.CreateObject();
-            measure.Name = name;
-            measure.SystemKeyword = systemKeyword;
-            measure.Ratio = ratio;
-            measure.DisplayOrder = displayOrder;
-
+            
             context.MeasureDimensions.AddObject(measure);
             context.SaveChanges();
 
@@ -167,43 +161,32 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Measures
             {
                 NopRequestCache.RemoveByPattern(MEASUREDIMENSIONS_PATTERN_KEY);
             }
-            return measure;
         }
 
         /// <summary>
         /// Updates the measure dimension
         /// </summary>
-        /// <param name="measureDimensionId">Measure dimension identifier</param>
-        /// <param name="name">The name</param>
-        /// <param name="systemKeyword">The system keyword</param>
-        /// <param name="ratio">The ratio</param>
-        /// <param name="displayOrder">The display order</param>
-        /// <returns>A measure dimension</returns>
-        public static MeasureDimension UpdateMeasureDimension(int measureDimensionId,
-            string name, string systemKeyword, decimal ratio, int displayOrder)
+        /// <param name="measure">Measure dimension</param>
+        public static void UpdateMeasureDimension(MeasureDimension measure)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 100);
-            systemKeyword = CommonHelper.EnsureMaximumLength(systemKeyword, 100);
-
-            var measure = GetMeasureDimensionById(measureDimensionId);
             if (measure == null)
-                return null;
+                throw new ArgumentNullException("measure");
+
+            measure.Name = CommonHelper.EnsureNotNull(measure.Name);
+            measure.Name = CommonHelper.EnsureMaximumLength(measure.Name, 100);
+            measure.SystemKeyword = CommonHelper.EnsureNotNull(measure.SystemKeyword);
+            measure.SystemKeyword = CommonHelper.EnsureMaximumLength(measure.SystemKeyword, 100);
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(measure))
                 context.MeasureDimensions.Attach(measure);
 
-            measure.Name = name;
-            measure.SystemKeyword = systemKeyword;
-            measure.Ratio = ratio;
-            measure.DisplayOrder = displayOrder;
             context.SaveChanges();
 
             if (MeasureManager.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(MEASUREDIMENSIONS_PATTERN_KEY);
             }
-            return measure;
         }
 
         /// <summary>
@@ -369,69 +352,52 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Measures
         /// <summary>
         /// Inserts a measure weight
         /// </summary>
-        /// <param name="name">The name</param>
-        /// <param name="systemKeyword">The system keyword</param>
-        /// <param name="ratio">The ratio</param>
-        /// <param name="displayOrder">The display order</param>
-        /// <returns>A measure weight</returns>
-        public static MeasureWeight InsertMeasureWeight(string name,
-            string systemKeyword, decimal ratio, int displayOrder)
+        /// <param name="measure">Measure weight</param>
+        public static void InsertMeasureWeight(MeasureWeight measure)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 100);
-            systemKeyword = CommonHelper.EnsureMaximumLength(systemKeyword, 100);
+            if (measure == null)
+                throw new ArgumentNullException("measure");
+
+            measure.Name = CommonHelper.EnsureNotNull(measure.Name);
+            measure.Name = CommonHelper.EnsureMaximumLength(measure.Name, 100);
+            measure.SystemKeyword = CommonHelper.EnsureNotNull(measure.SystemKeyword);
+            measure.SystemKeyword = CommonHelper.EnsureMaximumLength(measure.SystemKeyword, 100);
 
             var context = ObjectContextHelper.CurrentObjectContext;
 
-            var weight = context.MeasureWeights.CreateObject();
-            weight.Name = name;
-            weight.SystemKeyword = systemKeyword;
-            weight.Ratio = ratio;
-            weight.DisplayOrder = displayOrder;
-
-            context.MeasureWeights.AddObject(weight);
+            context.MeasureWeights.AddObject(measure);
             context.SaveChanges();
 
             if (MeasureManager.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(MEASUREWEIGHTS_PATTERN_KEY);
             }
-            return weight;
         }
 
         /// <summary>
         /// Updates the measure weight
         /// </summary>
-        /// <param name="measureWeightId">Measure weight identifier</param>
-        /// <param name="name">The name</param>
-        /// <param name="systemKeyword">The system keyword</param>
-        /// <param name="ratio">The ratio</param>
-        /// <param name="displayOrder">The display order</param>
-        /// <returns>A measure weight</returns>
-        public static MeasureWeight UpdateMeasureWeight(int measureWeightId, string name,
-            string systemKeyword, decimal ratio, int displayOrder)
+        /// <param name="measure">Measure weight</param>
+        public static void UpdateMeasureWeight(MeasureWeight measure)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 100);
-            systemKeyword = CommonHelper.EnsureMaximumLength(systemKeyword, 100);
+            if (measure == null)
+                throw new ArgumentNullException("measure");
 
-            var weight = GetMeasureWeightById(measureWeightId);
-            if (weight == null)
-                return null;
+            measure.Name = CommonHelper.EnsureNotNull(measure.Name);
+            measure.Name = CommonHelper.EnsureMaximumLength(measure.Name, 100);
+            measure.SystemKeyword = CommonHelper.EnsureNotNull(measure.SystemKeyword);
+            measure.SystemKeyword = CommonHelper.EnsureMaximumLength(measure.SystemKeyword, 100);
 
             var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(weight))
-                context.MeasureWeights.Attach(weight);
+            if (!context.IsAttached(measure))
+                context.MeasureWeights.Attach(measure);
 
-            weight.Name = name;
-            weight.SystemKeyword = systemKeyword;
-            weight.Ratio = ratio;
-            weight.DisplayOrder = displayOrder;
             context.SaveChanges();
 
             if (MeasureManager.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(MEASUREWEIGHTS_PATTERN_KEY);
             }
-            return weight;
         }
 
         /// <summary>

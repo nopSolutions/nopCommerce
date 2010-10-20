@@ -57,13 +57,22 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
             if (smsProvider != null)
             {
-                smsProvider = SMSManager.UpdateSMSProvider(smsProvider.SMSProviderId,
-                    txtName.Text, txtClassName.Text, txtSystemKeyword.Text, cbActive.Checked);
+                smsProvider.Name = txtName.Text;
+                smsProvider.ClassName = txtClassName.Text;
+                smsProvider.SystemKeyword = txtSystemKeyword.Text;
+                smsProvider.IsActive = cbActive.Checked;
+                SMSManager.UpdateSMSProvider(smsProvider);
             }
             else
             {
-                smsProvider = SMSManager.InsertSMSProvider(txtName.Text, txtClassName.Text, txtSystemKeyword.Text, 
-                    cbActive.Checked);
+                smsProvider = new SMSProvider()
+                {
+                    Name = txtName.Text,
+                    ClassName = txtClassName.Text,
+                    SystemKeyword = txtSystemKeyword.Text,
+                    IsActive = cbActive.Checked
+                };
+                SMSManager.InsertSMSProvider(smsProvider);
             }
 
             return smsProvider;

@@ -41,9 +41,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Warehouses
             var warehouse = GetWarehouseById(warehouseId);
             if (warehouse != null)
             {
-                UpdateWarehouse(warehouse.WarehouseId, warehouse.Name, warehouse.PhoneNumber,
-                    warehouse.Email, warehouse.FaxNumber, warehouse.Address1, warehouse.Address2, warehouse.City,
-                    warehouse.StateProvince, warehouse.ZipPostalCode, warehouse.CountryId, true, warehouse.CreatedOn, warehouse.UpdatedOn);
+                warehouse.Deleted = true;
+                UpdateWarehouse(warehouse);
             }
         }
 
@@ -84,115 +83,70 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Warehouses
         /// <summary>
         /// Inserts a warehouse
         /// </summary>
-        /// <param name="name">The name</param>
-        /// <param name="phoneNumber">The phone number</param>
-        /// <param name="email">The email</param>
-        /// <param name="faxNumber">The fax number</param>
-        /// <param name="address1">The address 1</param>
-        /// <param name="address2">The address 2</param>
-        /// <param name="city">The city</param>
-        /// <param name="stateProvince">The state/province</param>
-        /// <param name="zipPostalCode">The zip/postal code</param>
-        /// <param name="countryId">The country identifier</param>
-        /// <param name="deleted">A value indicating whether the entity has been deleted</param>
-        /// <param name="createdOn">The date and time of instance creation</param>
-        /// <param name="updatedOn">The date and time of instance update</param>
-        /// <returns>Warehouse</returns>
-        public static Warehouse InsertWarehouse(string name, string phoneNumber,
-            string email, string faxNumber, string address1, string address2,
-            string city, string stateProvince, string zipPostalCode, int countryId,
-            bool deleted, DateTime createdOn, DateTime updatedOn)
+        /// <param name="warehouse">Warehouse</param>
+        public static void InsertWarehouse(Warehouse warehouse)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 255);
-            phoneNumber = CommonHelper.EnsureMaximumLength(phoneNumber, 50);
-            email = CommonHelper.EnsureMaximumLength(email, 255);
-            faxNumber = CommonHelper.EnsureMaximumLength(faxNumber, 50);
-            address1 = CommonHelper.EnsureMaximumLength(address1, 100);
-            address2 = CommonHelper.EnsureMaximumLength(address2, 100);
-            city = CommonHelper.EnsureMaximumLength(city, 100);
-            stateProvince = CommonHelper.EnsureMaximumLength(stateProvince, 100);
-            zipPostalCode = CommonHelper.EnsureMaximumLength(zipPostalCode, 30);
+            if (warehouse == null)
+                throw new ArgumentNullException("warehouse");
+            
+            warehouse.Name = CommonHelper.EnsureNotNull(warehouse.Name);
+            warehouse.Name = CommonHelper.EnsureMaximumLength(warehouse.Name, 255);
+            warehouse.PhoneNumber = CommonHelper.EnsureNotNull(warehouse.PhoneNumber);
+            warehouse.PhoneNumber = CommonHelper.EnsureMaximumLength(warehouse.PhoneNumber, 50);
+            warehouse.Email = CommonHelper.EnsureNotNull(warehouse.Email);
+            warehouse.Email = CommonHelper.EnsureMaximumLength(warehouse.Email, 255);
+            warehouse.FaxNumber = CommonHelper.EnsureNotNull(warehouse.FaxNumber);
+            warehouse.FaxNumber = CommonHelper.EnsureMaximumLength(warehouse.FaxNumber, 50);
+            warehouse.Address1 = CommonHelper.EnsureNotNull(warehouse.Address1);
+            warehouse.Address1 = CommonHelper.EnsureMaximumLength(warehouse.Address1, 100);
+            warehouse.Address2 = CommonHelper.EnsureNotNull(warehouse.Address2);
+            warehouse.Address2 = CommonHelper.EnsureMaximumLength(warehouse.Address2, 100);
+            warehouse.City = CommonHelper.EnsureNotNull(warehouse.City);
+            warehouse.City = CommonHelper.EnsureMaximumLength(warehouse.City, 100);
+            warehouse.StateProvince = CommonHelper.EnsureNotNull(warehouse.StateProvince);
+            warehouse.StateProvince = CommonHelper.EnsureMaximumLength(warehouse.StateProvince, 100);
+            warehouse.ZipPostalCode = CommonHelper.EnsureNotNull(warehouse.ZipPostalCode);
+            warehouse.ZipPostalCode = CommonHelper.EnsureMaximumLength(warehouse.ZipPostalCode, 30);
 
             var context = ObjectContextHelper.CurrentObjectContext;
 
-            var warehouse = context.Warehouses.CreateObject();
-            warehouse.Name = name;
-            warehouse.PhoneNumber = phoneNumber;
-            warehouse.Email = email;
-            warehouse.FaxNumber = faxNumber;
-            warehouse.Address1 = address1;
-            warehouse.Address2 = address2;
-            warehouse.City = city;
-            warehouse.StateProvince = stateProvince;
-            warehouse.ZipPostalCode = zipPostalCode;
-            warehouse.CountryId = countryId;
-            warehouse.Deleted = deleted;
-            warehouse.CreatedOn = createdOn;
-            warehouse.UpdatedOn = updatedOn;
-
             context.Warehouses.AddObject(warehouse);
             context.SaveChanges();
-
-            return warehouse;
         }
 
         /// <summary>
         /// Updates the warehouse
         /// </summary>
-        /// <param name="warehouseId">The warehouse identifier</param>
-        /// <param name="name">The name</param>
-        /// <param name="phoneNumber">The phone number</param>
-        /// <param name="email">The email</param>
-        /// <param name="faxNumber">The fax number</param>
-        /// <param name="address1">The address 1</param>
-        /// <param name="address2">The address 2</param>
-        /// <param name="city">The city</param>
-        /// <param name="stateProvince">The state/province</param>
-        /// <param name="zipPostalCode">The zip/postal code</param>
-        /// <param name="countryId">The country identifier</param>
-        /// <param name="deleted">A value indicating whether the entity has been deleted</param>
-        /// <param name="createdOn">The date and time of instance creation</param>
-        /// <param name="updatedOn">The date and time of instance update</param>
-        /// <returns>Warehouse</returns>
-        public static Warehouse UpdateWarehouse(int warehouseId,
-            string name, string phoneNumber, string email, string faxNumber,
-            string address1, string address2, string city, string stateProvince,
-            string zipPostalCode, int countryId, bool deleted,
-            DateTime createdOn, DateTime updatedOn)
+        /// <param name="warehouse">Warehouse</param>
+        public static void UpdateWarehouse(Warehouse warehouse)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 255);
-            phoneNumber = CommonHelper.EnsureMaximumLength(phoneNumber, 50);
-            email = CommonHelper.EnsureMaximumLength(email, 255);
-            faxNumber = CommonHelper.EnsureMaximumLength(faxNumber, 50);
-            address1 = CommonHelper.EnsureMaximumLength(address1, 100);
-            address2 = CommonHelper.EnsureMaximumLength(address2, 100);
-            city = CommonHelper.EnsureMaximumLength(city, 100);
-            stateProvince = CommonHelper.EnsureMaximumLength(stateProvince, 100);
-            zipPostalCode = CommonHelper.EnsureMaximumLength(zipPostalCode, 30);
-
-            var warehouse = GetWarehouseById(warehouseId);
             if (warehouse == null)
-                return null;
+                throw new ArgumentNullException("warehouse");
+
+            warehouse.Name = CommonHelper.EnsureNotNull(warehouse.Name);
+            warehouse.Name = CommonHelper.EnsureMaximumLength(warehouse.Name, 255);
+            warehouse.PhoneNumber = CommonHelper.EnsureNotNull(warehouse.PhoneNumber);
+            warehouse.PhoneNumber = CommonHelper.EnsureMaximumLength(warehouse.PhoneNumber, 50);
+            warehouse.Email = CommonHelper.EnsureNotNull(warehouse.Email);
+            warehouse.Email = CommonHelper.EnsureMaximumLength(warehouse.Email, 255);
+            warehouse.FaxNumber = CommonHelper.EnsureNotNull(warehouse.FaxNumber);
+            warehouse.FaxNumber = CommonHelper.EnsureMaximumLength(warehouse.FaxNumber, 50);
+            warehouse.Address1 = CommonHelper.EnsureNotNull(warehouse.Address1);
+            warehouse.Address1 = CommonHelper.EnsureMaximumLength(warehouse.Address1, 100);
+            warehouse.Address2 = CommonHelper.EnsureNotNull(warehouse.Address2);
+            warehouse.Address2 = CommonHelper.EnsureMaximumLength(warehouse.Address2, 100);
+            warehouse.City = CommonHelper.EnsureNotNull(warehouse.City);
+            warehouse.City = CommonHelper.EnsureMaximumLength(warehouse.City, 100);
+            warehouse.StateProvince = CommonHelper.EnsureNotNull(warehouse.StateProvince);
+            warehouse.StateProvince = CommonHelper.EnsureMaximumLength(warehouse.StateProvince, 100);
+            warehouse.ZipPostalCode = CommonHelper.EnsureNotNull(warehouse.ZipPostalCode);
+            warehouse.ZipPostalCode = CommonHelper.EnsureMaximumLength(warehouse.ZipPostalCode, 30);
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(warehouse))
                 context.Warehouses.Attach(warehouse);
 
-            warehouse.Name = name;
-            warehouse.PhoneNumber = phoneNumber;
-            warehouse.Email = email;
-            warehouse.FaxNumber = faxNumber;
-            warehouse.Address1 = address1;
-            warehouse.Address2 = address2;
-            warehouse.City = city;
-            warehouse.StateProvince = stateProvince;
-            warehouse.ZipPostalCode = zipPostalCode;
-            warehouse.CountryId = countryId;
-            warehouse.Deleted = deleted;
-            warehouse.CreatedOn = createdOn;
-            warehouse.UpdatedOn = updatedOn;
             context.SaveChanges();
-            return warehouse;
         }
         #endregion
     }

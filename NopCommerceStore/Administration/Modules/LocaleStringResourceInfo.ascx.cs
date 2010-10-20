@@ -68,14 +68,19 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
             if (localeStringResource != null)
             {
-                localeStringResource = LocaleStringResourceManager.UpdateLocaleStringResource(localeStringResource.LocaleStringResourceId,
-                   localeStringResource.LanguageId, txtResourceName.Text, txtResourceValue.Text);
+                localeStringResource.ResourceName = txtResourceName.Text;
+                localeStringResource.ResourceValue = txtResourceValue.Text;
+                LocaleStringResourceManager.UpdateLocaleStringResource(localeStringResource);
             }
             else
             {
-                localeStringResource = LocaleStringResourceManager.InsertLocaleStringResource(
-                        this.LanguageId, txtResourceName.Text,
-                        txtResourceValue.Text);
+                localeStringResource = new LocaleStringResource()
+                {
+                    LanguageId = this.LanguageId,
+                    ResourceName = txtResourceName.Text,
+                    ResourceValue = txtResourceValue.Text
+                };
+                LocaleStringResourceManager.InsertLocaleStringResource(localeStringResource);
             }
 
             return localeStringResource;

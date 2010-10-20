@@ -61,21 +61,34 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
             if (country != null)
             {
-                country = CountryManager.UpdateCountry(country.CountryId,
-                    txtName.Text, cbAllowsRegistration.Checked,
-                    cbAllowsBilling.Checked, cbAllowsShipping.Checked,
-                    txtTwoLetterISOCode.Text, txtThreeLetterISOCode.Text,
-                    txtNumericISOCode.Value, cbSubjectToVAT.Checked, 
-                    cbPublished.Checked, txtDisplayOrder.Value);
+                country.Name = txtName.Text;
+                country.AllowsRegistration = cbAllowsRegistration.Checked;
+                country.AllowsBilling = cbAllowsBilling.Checked;
+                country.AllowsShipping= cbAllowsShipping.Checked;
+                country.TwoLetterIsoCode = txtTwoLetterISOCode.Text;
+                country.ThreeLetterIsoCode = txtThreeLetterISOCode.Text;
+                country.NumericIsoCode = txtNumericISOCode.Value;
+                country.SubjectToVAT = cbSubjectToVAT.Checked;
+                country.Published = cbPublished.Checked;
+                country.DisplayOrder = txtDisplayOrder.Value;
+                CountryManager.UpdateCountry(country);
             }
             else
             {
-                country = CountryManager.InsertCountry(txtName.Text,
-                    cbAllowsRegistration.Checked, cbAllowsBilling.Checked,
-                    cbAllowsShipping.Checked, txtTwoLetterISOCode.Text,
-                    txtThreeLetterISOCode.Text, txtNumericISOCode.Value,
-                    cbSubjectToVAT.Checked, cbPublished.Checked, 
-                    txtDisplayOrder.Value);
+                country = new Country()
+                {
+                    Name = txtName.Text,
+                    AllowsRegistration = cbAllowsRegistration.Checked,
+                    AllowsBilling = cbAllowsBilling.Checked,
+                    AllowsShipping = cbAllowsShipping.Checked,
+                    TwoLetterIsoCode = txtTwoLetterISOCode.Text,
+                    ThreeLetterIsoCode = txtThreeLetterISOCode.Text,
+                    NumericIsoCode = txtNumericISOCode.Value,
+                    SubjectToVAT = cbSubjectToVAT.Checked,
+                    Published = cbPublished.Checked,
+                    DisplayOrder = txtDisplayOrder.Value
+                };
+                CountryManager.InsertCountry(country);
             }
 
             return country;

@@ -95,9 +95,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     BlogComment blogComment = BlogManager.GetBlogCommentById(this.BlogCommentId);
                     if (blogComment != null)
                     {
-                        string comment = txtComment.Text;
-                        blogComment = BlogManager.UpdateBlogComment(blogComment.BlogCommentId, blogComment.BlogPostId,
-                            blogComment.CustomerId, blogComment.IPAddress, comment, blogComment.CreatedOn);
+                        blogComment.CommentText = txtComment.Text;
+                        BlogManager.UpdateBlogComment(blogComment);
                         Response.Redirect("BlogCommentDetails.aspx?BlogCommentID=" + blogComment.BlogCommentId.ToString());
                     }
                     else

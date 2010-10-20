@@ -64,14 +64,24 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
             if (productTemplate != null)
             {
-                productTemplate = TemplateManager.UpdateProductTemplate(productTemplate.ProductTemplateId, txtName.Text,
-                    txtTemplatePath.Text, txtDisplayOrder.Value, productTemplate.CreatedOn, DateTime.UtcNow);
+                productTemplate.Name = txtName.Text;
+                productTemplate.TemplatePath =  txtTemplatePath.Text;
+                productTemplate.DisplayOrder = txtDisplayOrder.Value;
+                productTemplate.UpdatedOn = DateTime.UtcNow;
+                TemplateManager.UpdateProductTemplate(productTemplate);
             }
             else
             {
                 DateTime now = DateTime.UtcNow;
-                productTemplate = TemplateManager.InsertProductTemplate(txtName.Text,
-                    txtTemplatePath.Text, txtDisplayOrder.Value, now, now);
+                productTemplate = new ProductTemplate()
+                {
+                    Name = txtName.Text,
+                    TemplatePath = txtTemplatePath.Text,
+                    DisplayOrder = txtDisplayOrder.Value,
+                    CreatedOn = now,
+                    UpdatedOn = now
+                };
+                TemplateManager.InsertProductTemplate(productTemplate);
 
             }
 

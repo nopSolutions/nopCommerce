@@ -63,13 +63,22 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             MeasureWeight measureWeight = MeasureManager.GetMeasureWeightById(this.MeasureWeightId);
             if (measureWeight != null)
             {
-                measureWeight = MeasureManager.UpdateMeasureWeight(measureWeight.MeasureWeightId,
-                    name, systemKeyword, ratio, displayOrder);
+                measureWeight.Name = name;
+                measureWeight.SystemKeyword = systemKeyword;
+                measureWeight.Ratio = ratio;
+                measureWeight.DisplayOrder = displayOrder;
+                MeasureManager.UpdateMeasureWeight(measureWeight);
             }
             else
             {
-                measureWeight = MeasureManager.InsertMeasureWeight(name,
-                    systemKeyword, ratio, displayOrder);
+                measureWeight = new MeasureWeight()
+                {
+                    Name = name,
+                    SystemKeyword = systemKeyword,
+                    Ratio = ratio,
+                    DisplayOrder = displayOrder
+                };
+                MeasureManager.InsertMeasureWeight(measureWeight);
             }
 
             return measureWeight;

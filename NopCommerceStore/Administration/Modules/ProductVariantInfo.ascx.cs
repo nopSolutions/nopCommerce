@@ -393,15 +393,28 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                     if (productVariantDownload != null)
                     {
-                        productVariantDownload = DownloadManager.UpdateDownload(productVariantDownload.DownloadId,
-                            useDownloadURL, downloadURL, productVariantDownloadBinary,
-                            downloadContentType, downloadFilename, downloadExtension, true);
+                        productVariantDownload.UseDownloadUrl = useDownloadURL;
+                        productVariantDownload.DownloadUrl = downloadURL;
+                        productVariantDownload.DownloadBinary = productVariantDownloadBinary;
+                        productVariantDownload.ContentType = downloadContentType;
+                        productVariantDownload.Filename = downloadFilename;
+                        productVariantDownload.Extension = downloadExtension;
+                        productVariantDownload.IsNew = true;
+                        DownloadManager.UpdateDownload(productVariantDownload);
                     }
                     else
                     {
-                        productVariantDownload = DownloadManager.InsertDownload(useDownloadURL,
-                            downloadURL, productVariantDownloadBinary, downloadContentType,
-                            downloadFilename, downloadExtension, true);
+                        productVariantDownload = new Download()
+                        {
+                            UseDownloadUrl = useDownloadURL,
+                            DownloadUrl = downloadURL,
+                            DownloadBinary = productVariantDownloadBinary,
+                            ContentType = downloadContentType,
+                            Filename = downloadFilename,
+                            Extension = downloadExtension,
+                            IsNew = true
+                        };
+                        DownloadManager.InsertDownload(productVariantDownload);
                     }
 
                     productVariantDownloadId = productVariantDownload.DownloadId;
@@ -436,37 +449,92 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                     if (productVariantSampleDownload != null)
                     {
-                        productVariantSampleDownload = DownloadManager.UpdateDownload(productVariantSampleDownload.DownloadId,
-                            useSampleDownloadURL, sampleDownloadURL, productVariantSampleDownloadBinary,
-                            sampleDownloadContentType, sampleDownloadFilename, sampleDownloadExtension, true);
+                        productVariantSampleDownload.UseDownloadUrl = useSampleDownloadURL;
+                        productVariantSampleDownload.DownloadUrl = sampleDownloadURL;
+                        productVariantSampleDownload.DownloadBinary = productVariantSampleDownloadBinary;
+                        productVariantSampleDownload.ContentType = sampleDownloadContentType;
+                        productVariantSampleDownload.Filename = sampleDownloadFilename;
+                        productVariantSampleDownload.Extension = sampleDownloadExtension;
+                        productVariantSampleDownload.IsNew = true;
+                        DownloadManager.UpdateDownload(productVariantSampleDownload);
                     }
                     else
                     {
-                        productVariantSampleDownload = DownloadManager.InsertDownload(useSampleDownloadURL,
-                            sampleDownloadURL, productVariantSampleDownloadBinary,
-                            sampleDownloadContentType, sampleDownloadFilename, sampleDownloadExtension, true);
+                        productVariantSampleDownload = new Download()
+                        {
+                            UseDownloadUrl = useSampleDownloadURL,
+                            DownloadUrl = sampleDownloadURL,
+                            DownloadBinary = productVariantSampleDownloadBinary,
+                            ContentType = sampleDownloadContentType,
+                            Filename = sampleDownloadFilename,
+                            Extension = sampleDownloadExtension,
+                            IsNew = true
+                        };
+                        DownloadManager.InsertDownload(productVariantSampleDownload);
                     }
 
                     productVariantSampleDownloadId = productVariantSampleDownload.DownloadId;
                 }
 
-                productVariant = ProductManager.UpdateProductVariant(ProductVariantId,
-                    productVariant.ProductId, name, sku, description, adminComment, manufacturerPartNumber,
-                    isGiftCard, giftCardType, isDownload, productVariantDownloadId, unlimitedDownloads,
-                    maxNumberOfDownloads, downloadExpirationDays, downloadActivationType,
-                    hasSampleDownload, productVariantSampleDownloadId, hasUserAgreement, userAgreementText,
-                    isRecurring, cycleLength, (int)cyclePeriod, totalCycles,
-                    isShipEnabled, isFreeShipping, additionalShippingCharge,
-                    isTaxExempt, taxCategoryId, manageStock, stockQuantity, 
-                    displayStockAvailability, displayStockQuantity,
-                    minStockQuantity, lowStockActivity, notifyForQuantityBelow,
-                    backorders, orderMinimumQuantity, orderMaximumQuantity,
-                    warehouseId, disableBuyButton, callForPrice, price,
-                    oldPrice, productCost, customerEntersPrice,
-                    minimumCustomerEnteredPrice, maximumCustomerEnteredPrice, 
-                    weight, length, width, height, productVariantPictureId,
-                    availableStartDateTime, availableEndDateTime, published,
-                    productVariant.Deleted, displayOrder, productVariant.CreatedOn, nowDT);
+
+                productVariant.Name = name;
+                productVariant.SKU = sku;
+                productVariant.Description = description;
+                productVariant.AdminComment = adminComment;
+                productVariant.ManufacturerPartNumber = manufacturerPartNumber;
+                productVariant.IsGiftCard = isGiftCard;
+                productVariant.GiftCardType = giftCardType;
+                productVariant.IsDownload = isDownload;
+                productVariant.DownloadId = productVariantDownloadId;
+                productVariant.UnlimitedDownloads = unlimitedDownloads;
+                productVariant.MaxNumberOfDownloads = maxNumberOfDownloads;
+                productVariant.DownloadExpirationDays = downloadExpirationDays;
+                productVariant.DownloadActivationType = (int)downloadActivationType;
+                productVariant.HasSampleDownload = hasSampleDownload;
+                productVariant.SampleDownloadId = productVariantSampleDownloadId;
+                productVariant.HasUserAgreement = hasUserAgreement;
+                productVariant.UserAgreementText = userAgreementText;
+                productVariant.IsRecurring = isRecurring;
+                productVariant.CycleLength = cycleLength;
+                productVariant.CyclePeriod = (int)cyclePeriod;
+                productVariant.TotalCycles = totalCycles;
+                productVariant.IsShipEnabled = isShipEnabled;
+                productVariant.IsFreeShipping = isFreeShipping;
+                productVariant.AdditionalShippingCharge = additionalShippingCharge;
+                productVariant.IsTaxExempt = isTaxExempt;
+                productVariant.TaxCategoryId = taxCategoryId;
+                productVariant.ManageInventory = manageStock;
+                productVariant.StockQuantity = stockQuantity;
+                productVariant.DisplayStockAvailability = displayStockAvailability;
+                productVariant.DisplayStockQuantity = displayStockQuantity;
+                productVariant.MinStockQuantity = minStockQuantity;
+                productVariant.LowStockActivityId = (int)lowStockActivity;
+                productVariant.NotifyAdminForQuantityBelow = notifyForQuantityBelow;
+                productVariant.Backorders = backorders;
+                productVariant.OrderMinimumQuantity = orderMinimumQuantity;
+                productVariant.OrderMaximumQuantity = orderMaximumQuantity;
+                productVariant.WarehouseId = warehouseId;
+                productVariant.DisableBuyButton = disableBuyButton;
+                productVariant.CallForPrice = callForPrice;
+                productVariant.Price = price;
+                productVariant.OldPrice = oldPrice;
+                productVariant.ProductCost = productCost;
+                productVariant.CustomerEntersPrice = customerEntersPrice;
+                productVariant.MinimumCustomerEnteredPrice = minimumCustomerEnteredPrice;
+                productVariant.MaximumCustomerEnteredPrice = maximumCustomerEnteredPrice;
+                productVariant.Weight = weight;
+                productVariant.Length = length;
+                productVariant.Width = width;
+                productVariant.Height = height;
+                productVariant.PictureId = productVariantPictureId;
+                productVariant.AvailableStartDateTime = availableStartDateTime;
+                productVariant.AvailableEndDateTime = availableEndDateTime;
+                productVariant.Published = published;
+                productVariant.DisplayOrder = displayOrder;
+                productVariant.UpdatedOn = nowDT;
+
+                ProductManager.UpdateProductVariant(productVariant);
+
                 #endregion
             }
             else
@@ -505,9 +573,18 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                             downloadExtension = Path.GetExtension(productVariantDownloadFile.FileName);
                         }
 
-                        Download productVariantDownload = DownloadManager.InsertDownload(useDownloadURL, downloadURL,
-                            productVariantDownloadBinary, downloadContentType,
-                            downloadFilename, downloadExtension, true);
+
+                        var productVariantDownload = new Download()
+                        {
+                            UseDownloadUrl = useDownloadURL,
+                            DownloadUrl = downloadURL,
+                            DownloadBinary = productVariantDownloadBinary,
+                            ContentType = downloadContentType,
+                            Filename = downloadFilename,
+                            Extension = downloadExtension,
+                            IsNew = true
+                        };
+                        DownloadManager.InsertDownload(productVariantDownload);
                         productVariantDownloadId = productVariantDownload.DownloadId;
                     }
 
@@ -530,28 +607,83 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                             sampleDownloadExtension = Path.GetExtension(productVariantSampleDownloadFile.FileName);
                         }
 
-                        Download productVariantSampleDownload = DownloadManager.InsertDownload(useSampleDownloadURL,
-                            sampleDownloadURL, productVariantSampleDownloadBinary,
-                            sampleDownloadContentType, sampleDownloadFilename, sampleDownloadExtension, true);
+                        var productVariantSampleDownload = new Download()
+                        {
+                            UseDownloadUrl = useSampleDownloadURL,
+                            DownloadUrl = sampleDownloadURL,
+                            DownloadBinary = productVariantSampleDownloadBinary,
+                            ContentType = sampleDownloadContentType,
+                            Filename = sampleDownloadFilename,
+                            Extension = sampleDownloadExtension,
+                            IsNew = true
+                        };
+                        DownloadManager.InsertDownload(productVariantSampleDownload);
                         productVariantSampleDownloadId = productVariantSampleDownload.DownloadId;
                     }
 
-                    productVariant = ProductManager.InsertProductVariant(product.ProductId,
-                         name, sku, description, adminComment, manufacturerPartNumber,
-                         isGiftCard, giftCardType, isDownload, productVariantDownloadId, unlimitedDownloads,
-                         maxNumberOfDownloads, downloadExpirationDays, downloadActivationType,
-                         hasSampleDownload, productVariantSampleDownloadId,
-                         hasUserAgreement, userAgreementText,
-                         isRecurring, cycleLength, (int)cyclePeriod, totalCycles,
-                         isShipEnabled, isFreeShipping, additionalShippingCharge, isTaxExempt, taxCategoryId,
-                         manageStock, stockQuantity, displayStockAvailability, displayStockQuantity,
-                         minStockQuantity, lowStockActivity, notifyForQuantityBelow,
-                         backorders, orderMinimumQuantity, orderMaximumQuantity,
-                         warehouseId, disableBuyButton, callForPrice, price, oldPrice, productCost,
-                         customerEntersPrice, minimumCustomerEnteredPrice, maximumCustomerEnteredPrice, 
-                         weight, length, width, height, productVariantPictureId,
-                         availableStartDateTime, availableEndDateTime, published,
-                         false, displayOrder, nowDT, nowDT);
+                    productVariant = new ProductVariant()
+                    {
+                        ProductId = product.ProductId,
+                        Name = name,
+                        SKU = sku,
+                        Description = description,
+                        AdminComment = adminComment,
+                        ManufacturerPartNumber = manufacturerPartNumber,
+                        IsGiftCard = isGiftCard,
+                        GiftCardType = giftCardType,
+                        IsDownload = isDownload,
+                        DownloadId = productVariantDownloadId,
+                        UnlimitedDownloads = unlimitedDownloads,
+                        MaxNumberOfDownloads = maxNumberOfDownloads,
+                        DownloadExpirationDays = downloadExpirationDays,
+                        DownloadActivationType = (int)downloadActivationType,
+                        HasSampleDownload = hasSampleDownload,
+                        SampleDownloadId = productVariantSampleDownloadId,
+                        HasUserAgreement = hasUserAgreement,
+                        UserAgreementText = userAgreementText,
+                        IsRecurring = isRecurring,
+                        CycleLength = cycleLength,
+                        CyclePeriod = (int)cyclePeriod,
+                        TotalCycles = totalCycles,
+                        IsShipEnabled = isShipEnabled,
+                        IsFreeShipping = isFreeShipping,
+                        AdditionalShippingCharge = additionalShippingCharge,
+                        IsTaxExempt = isTaxExempt,
+                        TaxCategoryId = taxCategoryId,
+                        ManageInventory = manageStock,
+                        StockQuantity = stockQuantity,
+                        DisplayStockAvailability = displayStockAvailability,
+                        DisplayStockQuantity = displayStockQuantity,
+                        MinStockQuantity = minStockQuantity,
+                        LowStockActivityId = (int)lowStockActivity,
+                        NotifyAdminForQuantityBelow = notifyForQuantityBelow,
+                        Backorders = backorders,
+                        OrderMinimumQuantity = orderMinimumQuantity,
+                        OrderMaximumQuantity = orderMaximumQuantity,
+                        WarehouseId = warehouseId,
+                        DisableBuyButton = disableBuyButton,
+                        CallForPrice = callForPrice,
+                        Price = price,
+                        OldPrice = oldPrice,
+                        ProductCost = productCost,
+                        CustomerEntersPrice = customerEntersPrice,
+                        MinimumCustomerEnteredPrice = minimumCustomerEnteredPrice,
+                        MaximumCustomerEnteredPrice = maximumCustomerEnteredPrice,
+                        Weight = weight,
+                        Length = length,
+                        Width = width,
+                        Height = height,
+                        PictureId = productVariantPictureId,
+                        AvailableStartDateTime = availableStartDateTime,
+                        AvailableEndDateTime = availableEndDateTime,
+                        Published = published,
+                        Deleted = false,
+                        DisplayOrder = displayOrder,
+                        CreatedOn = nowDT,
+                        UpdatedOn = nowDT
+                    };
+
+                    ProductManager.InsertProductVariant(productVariant);
                 }
                 else
                 {
@@ -593,16 +725,24 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         if (!allFieldsAreEmpty && languageId > 0)
                         {
                             //only insert if one of the fields are filled out (avoid too many empty records in db...)
-                            content = ProductManager.InsertProductVariantLocalized(productVariant.ProductVariantId,
-                                   languageId, name, description);
+                            content = new ProductVariantLocalized()
+                            {
+                                ProductVariantId = productVariant.ProductVariantId,
+                                LanguageId = languageId,
+                                Name = name,
+                                Description = description
+                            };
+                            ProductManager.InsertProductVariantLocalized(content);
                         }
                     }
                     else
                     {
                         if (languageId > 0)
                         {
-                            content = ProductManager.UpdateProductVariantLocalized(content.ProductVariantLocalizedId, content.ProductVariantId,
-                                languageId, name, description);
+                            content.LanguageId = languageId;
+                            content.Name = name;
+                            content.Description = description;
+                            ProductManager.UpdateProductVariantLocalized(content);
                         }
                     }
                 }
@@ -657,9 +797,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     Download download = productVariant.Download;
                     if (download != null)
                     {
-                        download = DownloadManager.UpdateDownload(download.DownloadId,
-                            download.UseDownloadUrl, download.DownloadUrl, null, string.Empty,
-                            string.Empty, string.Empty, true);
+                        download.DownloadBinary = null;
+                        download.ContentType = string.Empty;
+                        download.Filename = string.Empty;
+                        download.Extension = string.Empty;
+                        download.IsNew = true;
+                        DownloadManager.UpdateDownload(download);
                     }
                     BindData();
                 }
@@ -680,9 +823,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     Download download = productVariant.SampleDownload;
                     if (download != null)
                     {
-                        download = DownloadManager.UpdateDownload(download.DownloadId,
-                            download.UseDownloadUrl, download.DownloadUrl, null, string.Empty,
-                            string.Empty, string.Empty, true);
+                        download.DownloadBinary = null;
+                        download.ContentType = string.Empty;
+                        download.Filename = string.Empty;
+                        download.Extension = string.Empty;
+                        download.IsNew = true;
+                        DownloadManager.UpdateDownload(download);
                     }
                     BindData();
                 }

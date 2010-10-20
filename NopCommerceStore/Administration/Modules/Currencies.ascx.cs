@@ -121,9 +121,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 Currency currency = CurrencyManager.GetCurrencyByCode(lblCurrencyCode.Text);
                 if (currency != null)
                 {
-                    CurrencyManager.UpdateCurrency(currency.CurrencyId, currency.Name, currency.CurrencyCode,
-                        txtRate.Value, currency.DisplayLocale, currency.CustomFormatting, currency.Published, currency.DisplayOrder,
-                        currency.CreatedOn, DateTime.UtcNow);
+                    currency.Rate = txtRate.Value;
+                    currency.UpdatedOn = DateTime.UtcNow;
+
+                    CurrencyManager.UpdateCurrency(currency);
                     BindCurrencyGrid();
                 }
             }

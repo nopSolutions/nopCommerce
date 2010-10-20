@@ -81,16 +81,27 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
             if (forum != null)
             {
-                forum = ForumManager.UpdateForum(forum.ForumId, int.Parse(this.ddlForumGroup.SelectedItem.Value),
-                    txtName.Text, txtDescription.Text, forum.NumTopics,
-                    forum.NumPosts, forum.LastTopicId, forum.LastPostId,
-                    forum.LastPostUserId, forum.LastPostTime,
-                    txtDisplayOrder.Value, forum.CreatedOn, nowDT);
+                forum.ForumGroupId = int.Parse(this.ddlForumGroup.SelectedItem.Value);
+                forum.Name = txtName.Text;
+                forum.Description = txtDescription.Text;
+                forum.DisplayOrder = txtDisplayOrder.Value;
+                forum.UpdatedOn = nowDT;
+
+                ForumManager.UpdateForum(forum);
             }
             else
             {
-                forum = ForumManager.InsertForum(int.Parse(this.ddlForumGroup.SelectedItem.Value), txtName.Text,
-                    txtDescription.Text, 0, 0, 0, 0, 0, null, txtDisplayOrder.Value, nowDT, nowDT);
+                forum = new Forum()
+                {
+                    ForumGroupId = int.Parse(this.ddlForumGroup.SelectedItem.Value),
+                    Name = txtName.Text,
+                    Description = txtDescription.Text,
+                    DisplayOrder = txtDisplayOrder.Value,
+                    CreatedOn = nowDT,
+                    UpdatedOn = nowDT
+                };
+
+                ForumManager.InsertForum(forum);
             }
 
             return forum;

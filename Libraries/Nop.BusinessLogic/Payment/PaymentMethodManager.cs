@@ -143,41 +143,28 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
         /// <summary>
         /// Inserts a payment method
         /// </summary>
-        /// <param name="name">The name</param>
-        /// <param name="visibleName">The visible name</param>
-        /// <param name="description">The description</param>
-        /// <param name="configureTemplatePath">The configure template path</param>
-        /// <param name="userTemplatePath">The user template path</param>
-        /// <param name="className">The class name</param>
-        /// <param name="systemKeyword">The system keyword</param>
-        /// <param name="isActive">A value indicating whether the payment method is active</param>
-        /// <param name="displayOrder">The display order</param>
-        /// <returns>Payment method</returns>
-        public static PaymentMethod InsertPaymentMethod(string name,
-            string visibleName, string description, string configureTemplatePath,
-            string userTemplatePath, string className, string systemKeyword,
-            bool isActive, int displayOrder)
+        /// <param name="paymentMethod">Payment method</param>
+        public static void InsertPaymentMethod(PaymentMethod paymentMethod)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 100);
-            visibleName = CommonHelper.EnsureMaximumLength(visibleName, 100);
-            description = CommonHelper.EnsureMaximumLength(description, 4000);
-            configureTemplatePath = CommonHelper.EnsureMaximumLength(configureTemplatePath, 500);
-            userTemplatePath = CommonHelper.EnsureMaximumLength(userTemplatePath, 500);
-            className = CommonHelper.EnsureMaximumLength(className, 500);
-            systemKeyword = CommonHelper.EnsureMaximumLength(systemKeyword, 500);
+            if (paymentMethod == null)
+                throw new ArgumentNullException("paymentMethod");
+            
+            paymentMethod.Name = CommonHelper.EnsureNotNull(paymentMethod.Name);
+            paymentMethod.Name = CommonHelper.EnsureMaximumLength(paymentMethod.Name, 100);
+            paymentMethod.VisibleName = CommonHelper.EnsureNotNull(paymentMethod.VisibleName);
+            paymentMethod.VisibleName = CommonHelper.EnsureMaximumLength(paymentMethod.VisibleName, 100);
+            paymentMethod.Description = CommonHelper.EnsureNotNull(paymentMethod.Description);
+            paymentMethod.Description = CommonHelper.EnsureMaximumLength(paymentMethod.Description, 4000);
+            paymentMethod.ConfigureTemplatePath = CommonHelper.EnsureNotNull(paymentMethod.ConfigureTemplatePath);
+            paymentMethod.ConfigureTemplatePath = CommonHelper.EnsureMaximumLength(paymentMethod.ConfigureTemplatePath, 500);
+            paymentMethod.UserTemplatePath = CommonHelper.EnsureNotNull(paymentMethod.UserTemplatePath);
+            paymentMethod.UserTemplatePath = CommonHelper.EnsureMaximumLength(paymentMethod.UserTemplatePath, 500);
+            paymentMethod.ClassName = CommonHelper.EnsureNotNull(paymentMethod.ClassName);
+            paymentMethod.ClassName = CommonHelper.EnsureMaximumLength(paymentMethod.ClassName, 500);
+            paymentMethod.SystemKeyword = CommonHelper.EnsureNotNull(paymentMethod.SystemKeyword);
+            paymentMethod.SystemKeyword = CommonHelper.EnsureMaximumLength(paymentMethod.SystemKeyword, 500);
 
             var context = ObjectContextHelper.CurrentObjectContext;
-
-            var paymentMethod = context.PaymentMethods.CreateObject();
-            paymentMethod.Name = name;
-            paymentMethod.VisibleName = visibleName;
-            paymentMethod.Description = description;
-            paymentMethod.ConfigureTemplatePath = configureTemplatePath;
-            paymentMethod.UserTemplatePath = userTemplatePath;
-            paymentMethod.ClassName = className;
-            paymentMethod.SystemKeyword = systemKeyword;
-            paymentMethod.IsActive = isActive;
-            paymentMethod.DisplayOrder = displayOrder;
 
             context.PaymentMethods.AddObject(paymentMethod);
             context.SaveChanges();
@@ -186,60 +173,42 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
             {
                 NopRequestCache.RemoveByPattern(PAYMENTMETHODS_PATTERN_KEY);
             }
-            return paymentMethod;
         }
 
         /// <summary>
         /// Updates the payment method
         /// </summary>
-        /// <param name="paymentMethodId">The payment method identifer</param>
-        /// <param name="name">The name</param>
-        /// <param name="visibleName">The visible name</param>
-        /// <param name="description">The description</param>
-        /// <param name="configureTemplatePath">The configure template path</param>
-        /// <param name="userTemplatePath">The user template path</param>
-        /// <param name="className">The class name</param>
-        /// <param name="systemKeyword">The system keyword</param>
-        /// <param name="isActive">A value indicating whether the payment method is active</param>
-        /// <param name="displayOrder">The display order</param>
-        /// <returns>Payment method</returns>
-        public static PaymentMethod UpdatePaymentMethod(int paymentMethodId,
-            string name, string visibleName, string description, string configureTemplatePath,
-            string userTemplatePath, string className, string systemKeyword,
-            bool isActive, int displayOrder)
+        /// <param name="paymentMethod">Payment method</param>
+        public static void UpdatePaymentMethod(PaymentMethod paymentMethod)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 100);
-            visibleName = CommonHelper.EnsureMaximumLength(visibleName, 100);
-            description = CommonHelper.EnsureMaximumLength(description, 4000);
-            configureTemplatePath = CommonHelper.EnsureMaximumLength(configureTemplatePath, 500);
-            userTemplatePath = CommonHelper.EnsureMaximumLength(userTemplatePath, 500);
-            className = CommonHelper.EnsureMaximumLength(className, 500);
-            systemKeyword = CommonHelper.EnsureMaximumLength(systemKeyword, 500);
-
-            var paymentMethod = GetPaymentMethodById(paymentMethodId);
             if (paymentMethod == null)
-                return null;
+                throw new ArgumentNullException("paymentMethod");
+
+            paymentMethod.Name = CommonHelper.EnsureNotNull(paymentMethod.Name);
+            paymentMethod.Name = CommonHelper.EnsureMaximumLength(paymentMethod.Name, 100);
+            paymentMethod.VisibleName = CommonHelper.EnsureNotNull(paymentMethod.VisibleName);
+            paymentMethod.VisibleName = CommonHelper.EnsureMaximumLength(paymentMethod.VisibleName, 100);
+            paymentMethod.Description = CommonHelper.EnsureNotNull(paymentMethod.Description);
+            paymentMethod.Description = CommonHelper.EnsureMaximumLength(paymentMethod.Description, 4000);
+            paymentMethod.ConfigureTemplatePath = CommonHelper.EnsureNotNull(paymentMethod.ConfigureTemplatePath);
+            paymentMethod.ConfigureTemplatePath = CommonHelper.EnsureMaximumLength(paymentMethod.ConfigureTemplatePath, 500);
+            paymentMethod.UserTemplatePath = CommonHelper.EnsureNotNull(paymentMethod.UserTemplatePath);
+            paymentMethod.UserTemplatePath = CommonHelper.EnsureMaximumLength(paymentMethod.UserTemplatePath, 500);
+            paymentMethod.ClassName = CommonHelper.EnsureNotNull(paymentMethod.ClassName);
+            paymentMethod.ClassName = CommonHelper.EnsureMaximumLength(paymentMethod.ClassName, 500);
+            paymentMethod.SystemKeyword = CommonHelper.EnsureNotNull(paymentMethod.SystemKeyword);
+            paymentMethod.SystemKeyword = CommonHelper.EnsureMaximumLength(paymentMethod.SystemKeyword, 500);
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(paymentMethod))
                 context.PaymentMethods.Attach(paymentMethod);
 
-            paymentMethod.Name = name;
-            paymentMethod.VisibleName = visibleName;
-            paymentMethod.Description = description;
-            paymentMethod.ConfigureTemplatePath = configureTemplatePath;
-            paymentMethod.UserTemplatePath = userTemplatePath;
-            paymentMethod.ClassName = className;
-            paymentMethod.SystemKeyword = systemKeyword;
-            paymentMethod.IsActive = isActive;
-            paymentMethod.DisplayOrder = displayOrder;
             context.SaveChanges();
 
             if (PaymentMethodManager.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(PAYMENTMETHODS_PATTERN_KEY);
             }
-            return paymentMethod;
         }
 
         /// <summary>
@@ -263,6 +232,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
             if (!context.IsAttached(country))
                 context.Countries.Attach(country);
 
+            //ensure that navigation property is loaded
+            if (country.NpRestrictedPaymentMethods == null)
+                context.LoadProperty(country, c => c.NpRestrictedPaymentMethods);
+
             country.NpRestrictedPaymentMethods.Add(paymentMethod);
             context.SaveChanges();
         }
@@ -277,8 +250,15 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
         {
             var context = ObjectContextHelper.CurrentObjectContext;
 
-            var pm = GetPaymentMethodById(paymentMethodId);
-            bool result = pm.NpRestrictedCountries.ToList().Find(c => c.CountryId == countryId) != null;
+            var paymentMethod = GetPaymentMethodById(paymentMethodId);
+            if (paymentMethod == null)
+                return false;
+
+            //ensure that navigation property is loaded
+            if (paymentMethod.NpRestrictedCountries == null)
+                context.LoadProperty(paymentMethod, p => p.NpRestrictedCountries);
+
+            bool result = paymentMethod.NpRestrictedCountries.ToList().Find(c => c.CountryId == countryId) != null;
             return result;
 
             //var query = from pm in context.PaymentMethods
@@ -311,6 +291,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
                 context.PaymentMethods.Attach(paymentMethod);
             if (!context.IsAttached(country))
                 context.Countries.Attach(country);
+
+            //ensure that navigation property is loaded
+            if (country.NpRestrictedPaymentMethods == null)
+                context.LoadProperty(country, c => c.NpRestrictedPaymentMethods);
 
             country.NpRestrictedPaymentMethods.Remove(paymentMethod);
             context.SaveChanges();

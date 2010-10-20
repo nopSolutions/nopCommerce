@@ -117,15 +117,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
             Discount discount = GetDiscountById(discountId);
             if (discount != null)
             {
-                UpdateDiscount(discount.DiscountId, discount.DiscountType, 
-                    discount.DiscountRequirement, discount.RequirementSpentAmount,
-                    discount.RequirementBillingCountryIs,
-                    discount.RequirementShippingCountryIs,
-                    discount.DiscountLimitation, discount.LimitationTimes,
-                    discount.Name, discount.UsePercentage, discount.DiscountPercentage,
-                    discount.DiscountAmount, discount.StartDate,
-                    discount.EndDate, discount.RequiresCouponCode,
-                    discount.CouponCode, true);
+                discount.Deleted = true;
+                UpdateDiscount(discount);
             }
         }
 
@@ -179,62 +172,26 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         /// <summary>
         /// Inserts a discount
         /// </summary>
-        /// <param name="discountType">The discount type</param>
-        /// <param name="discountRequirement">The discount requirement</param>
-        /// <param name="requirementSpentAmount">The discount requirement - applies if customer has spent/purchased x.xx amount</param>
-        /// <param name="requirementBillingCountryIs">The discount requirement - customer's billing country is... (used when requirement is set to "Billing country is")</param>
-        /// <param name="requirementShippingCountryIs">The discount requirement - customer's shipping country is... (used when requirement is set to "Shipping country is")</param>
-        /// <param name="discountLimitation">The discount limitation</param>
-        /// <param name="limitationTimes">The discount limitation times (used when Limitation is set to "N Times Only" or "N Times Per Customer")</param>
-        /// <param name="name">The name</param>
-        /// <param name="usePercentage">A value indicating whether to use percentage</param>
-        /// <param name="discountPercentage">The discount percentage</param>
-        /// <param name="discountAmount">The discount amount</param>
-        /// <param name="startDate">The discount start date and time</param>
-        /// <param name="endDate">The discount end date and time</param>
-        /// <param name="requiresCouponCode">The value indicating whether discount requires coupon code</param>
-        /// <param name="couponCode">The coupon code</param>
-        /// <param name="deleted">A value indicating whether the entity has been deleted</param>
-        /// <returns>Discount</returns>
-        public static Discount InsertDiscount(DiscountTypeEnum discountType,
-            DiscountRequirementEnum discountRequirement, decimal requirementSpentAmount,
-            int requirementBillingCountryIs, int requirementShippingCountryIs,
-            DiscountLimitationEnum discountLimitation, int limitationTimes, 
-            string name, bool usePercentage, 
-            decimal discountPercentage, decimal discountAmount,
-            DateTime startDate, DateTime endDate, bool requiresCouponCode, 
-            string couponCode, bool deleted)
+        /// <param name="discount">Discount</param>
+        public static void InsertDiscount(Discount discount)
         {
-            if (startDate.CompareTo(endDate) >= 0)
+            if (discount == null)
+                throw new ArgumentNullException("discount");
+
+            if (discount.StartDate.CompareTo(discount.EndDate) >= 0)
                 throw new NopException("Start date should be less then expiration date");
 
-            if (requiresCouponCode && String.IsNullOrEmpty(couponCode))
+            if (discount.RequiresCouponCode && String.IsNullOrEmpty(discount.CouponCode))
             {
                 throw new NopException("Discount requires coupon code. Coupon code could not be empty.");
             }
 
-            name = CommonHelper.EnsureMaximumLength(name, 100);
-            couponCode = CommonHelper.EnsureMaximumLength(couponCode, 100);
+            discount.Name = CommonHelper.EnsureNotNull(discount.Name);
+            discount.Name = CommonHelper.EnsureMaximumLength(discount.Name, 100);
+            discount.CouponCode = CommonHelper.EnsureNotNull(discount.CouponCode);
+            discount.CouponCode = CommonHelper.EnsureMaximumLength(discount.CouponCode, 100);
 
             var context = ObjectContextHelper.CurrentObjectContext;
-
-            var discount = context.Discounts.CreateObject();
-            discount.DiscountTypeId = (int)discountType;
-            discount.DiscountRequirementId = (int)discountRequirement;
-            discount.RequirementSpentAmount = requirementSpentAmount;
-            discount.RequirementBillingCountryIs = requirementBillingCountryIs;
-            discount.RequirementShippingCountryIs = requirementShippingCountryIs;
-            discount.DiscountLimitationId = (int)discountLimitation;
-            discount.LimitationTimes = limitationTimes;
-            discount.Name = name;
-            discount.UsePercentage = usePercentage;
-            discount.DiscountPercentage = discountPercentage;
-            discount.DiscountAmount = discountAmount;
-            discount.StartDate = startDate;
-            discount.EndDate = endDate;
-            discount.RequiresCouponCode = requiresCouponCode;
-            discount.CouponCode = couponCode;
-            discount.Deleted = deleted;
 
             context.Discounts.AddObject(discount);
             context.SaveChanges();
@@ -243,81 +200,40 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
             {
                 NopRequestCache.RemoveByPattern(DISCOUNTS_PATTERN_KEY);
             }
-            return discount;
         }
 
         /// <summary>
         /// Updates the discount
         /// </summary>
-        /// <param name="discountId">Discount identifier</param>
-        /// <param name="discountType">The discount type</param>
-        /// <param name="discountRequirement">The discount requirement</param>
-        /// <param name="requirementSpentAmount">The discount requirement - applies if customer has spent/purchased x.xx amount</param>
-        /// <param name="requirementBillingCountryIs">The discount requirement - customer's billing country is... (used when requirement is set to "Billing country is")</param>
-        /// <param name="requirementShippingCountryIs">The discount requirement - customer's shipping country is... (used when requirement is set to "Shipping country is")</param>
-        /// <param name="discountLimitation">The discount limitation</param>
-        /// <param name="limitationTimes">The discount limitation times (used when Limitation is set to "N Times Only" or "N Times Per Customer")</param>
-        /// <param name="name">The name</param>
-        /// <param name="usePercentage">A value indicating whether to use percentage</param>
-        /// <param name="discountPercentage">The discount percentage</param>
-        /// <param name="discountAmount">The discount amount</param>
-        /// <param name="startDate">The discount start date and time</param>
-        /// <param name="endDate">The discount end date and time</param>
-        /// <param name="requiresCouponCode">The value indicating whether discount requires coupon code</param>
-        /// <param name="couponCode">The coupon code</param>
-        /// <param name="deleted">A value indicating whether the entity has been deleted</param>
-        /// <returns>Discount</returns>
-        public static Discount UpdateDiscount(int discountId, DiscountTypeEnum discountType,
-            DiscountRequirementEnum discountRequirement, decimal requirementSpentAmount,
-            int requirementBillingCountryIs, int requirementShippingCountryIs,
-            DiscountLimitationEnum discountLimitation, int limitationTimes, 
-            string name, bool usePercentage,
-            decimal discountPercentage, decimal discountAmount,
-            DateTime startDate, DateTime endDate, bool requiresCouponCode, 
-            string couponCode, bool deleted)
+        /// <param name="discount">Discount</param>
+        public static void UpdateDiscount(Discount discount)
         {
-            if (startDate.CompareTo(endDate) >= 0)
+            if (discount == null)
+                throw new ArgumentNullException("discount");
+
+            if (discount.StartDate.CompareTo(discount.EndDate) >= 0)
                 throw new NopException("Start date should be less then expiration date");
 
-            if (requiresCouponCode && String.IsNullOrEmpty(couponCode))
+            if (discount.RequiresCouponCode && String.IsNullOrEmpty(discount.CouponCode))
             {
                 throw new NopException("Discount requires coupon code. Coupon code could not be empty.");
             }
 
-            name = CommonHelper.EnsureMaximumLength(name, 100);
-            couponCode = CommonHelper.EnsureMaximumLength(couponCode, 100);
-
-            var discount = GetDiscountById(discountId);
-            if (discount == null)
-                return null;
+            discount.Name = CommonHelper.EnsureNotNull(discount.Name);
+            discount.Name = CommonHelper.EnsureMaximumLength(discount.Name, 100);
+            discount.CouponCode = CommonHelper.EnsureNotNull(discount.CouponCode);
+            discount.CouponCode = CommonHelper.EnsureMaximumLength(discount.CouponCode, 100);
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(discount))
                 context.Discounts.Attach(discount);
 
-            discount.DiscountTypeId = (int)discountType;
-            discount.DiscountRequirementId = (int)discountRequirement;
-            discount.RequirementSpentAmount = requirementSpentAmount;
-            discount.RequirementBillingCountryIs = requirementBillingCountryIs;
-            discount.RequirementShippingCountryIs = requirementShippingCountryIs;
-            discount.DiscountLimitationId = (int)discountLimitation;
-            discount.LimitationTimes = limitationTimes;
-            discount.Name = name;
-            discount.UsePercentage = usePercentage;
-            discount.DiscountPercentage = discountPercentage;
-            discount.DiscountAmount = discountAmount;
-            discount.StartDate = startDate;
-            discount.EndDate = endDate;
-            discount.RequiresCouponCode = requiresCouponCode;
-            discount.CouponCode = couponCode;
-            discount.Deleted = deleted;
             context.SaveChanges();
 
             if (DiscountManager.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(DISCOUNTS_PATTERN_KEY);
             }
-            return discount;
         }
 
         /// <summary>
@@ -340,6 +256,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
                 context.ProductVariants.Attach(productVariant);
             if (!context.IsAttached(discount))
                 context.Discounts.Attach(discount);
+
+            //ensure that navigation property is loaded
+            if (productVariant.NpDiscounts == null)
+                context.LoadProperty(productVariant, pv => pv.NpDiscounts);
 
             productVariant.NpDiscounts.Add(discount);
             context.SaveChanges();
@@ -433,6 +353,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
             if (!context.IsAttached(discount))
                 context.Discounts.Attach(discount);
 
+            //ensure that navigation property is loaded
+            if (category.NpDiscounts == null)
+                context.LoadProperty(category, c => c.NpDiscounts);
+
             category.NpDiscounts.Add(discount);
             context.SaveChanges();
             
@@ -462,6 +386,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
                 context.Categories.Attach(category);
             if (!context.IsAttached(discount))
                 context.Discounts.Attach(discount);
+
+            //ensure that navigation property is loaded
+            if (category.NpDiscounts == null)
+                context.LoadProperty(category, c => c.NpDiscounts);
 
             category.NpDiscounts.Remove(discount);
             context.SaveChanges();
@@ -525,6 +453,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
             if (!context.IsAttached(discount))
                 context.Discounts.Attach(discount);
 
+            //ensure that navigation property is loaded
+            if (discount.NpRestrictedProductVariants == null)
+                context.LoadProperty(discount, d => d.NpRestrictedProductVariants);
+
             discount.NpRestrictedProductVariants.Add(productVariant);
             context.SaveChanges();
         }
@@ -549,6 +481,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
                 context.ProductVariants.Attach(productVariant);
             if (!context.IsAttached(discount))
                 context.Discounts.Attach(discount);
+
+            //ensure that navigation property is loaded
+            if (discount.NpRestrictedProductVariants == null)
+                context.LoadProperty(discount, d => d.NpRestrictedProductVariants);
 
             discount.NpRestrictedProductVariants.Remove(productVariant);
             context.SaveChanges();
@@ -695,54 +631,32 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         /// <summary>
         /// Inserts a discount usage history entry
         /// </summary>
-        /// <param name="discountId">Discount type identifier</param>
-        /// <param name="customerId">Customer identifier</param>
-        /// <param name="orderId">Order identifier</param>
-        /// <param name="createdOn">A date and time of instance creation</param>
-        /// <returns>Discount usage history entry</returns>
-        public static DiscountUsageHistory InsertDiscountUsageHistory(int discountId,
-            int customerId, int orderId, DateTime createdOn)
+        /// <param name="discountUsageHistory">Discount usage history entry</param>
+        public static void InsertDiscountUsageHistory(DiscountUsageHistory discountUsageHistory)
         {
+            if (discountUsageHistory == null)
+                throw new ArgumentNullException("discountUsageHistory");
+
             var context = ObjectContextHelper.CurrentObjectContext;
-
-            var discountUsageHistory = context.DiscountUsageHistory.CreateObject();
-            discountUsageHistory.DiscountId = discountId;
-            discountUsageHistory.CustomerId = customerId;
-            discountUsageHistory.OrderId = orderId;
-            discountUsageHistory.CreatedOn = createdOn;
-
+            
             context.DiscountUsageHistory.AddObject(discountUsageHistory);
             context.SaveChanges();
-
-            return discountUsageHistory;
         }
 
         /// <summary>
         /// Updates the discount usage history entry
         /// </summary>
-        /// <param name="discountUsageHistoryId">discount usage history entry identifier</param>
-        /// <param name="discountId">Discount type identifier</param>
-        /// <param name="customerId">Customer identifier</param>
-        /// <param name="orderId">Order identifier</param>
-        /// <param name="createdOn">A date and time of instance creation</param>
-        /// <returns>Discount</returns>
-        public static DiscountUsageHistory UpdateDiscountUsageHistory(int discountUsageHistoryId, 
-            int discountId, int customerId, int orderId, DateTime createdOn)
+        /// <param name="discountUsageHistory">Discount usage history entry</param>
+        public static void UpdateDiscountUsageHistory(DiscountUsageHistory discountUsageHistory)
         {
-            var discountUsageHistory = GetDiscountUsageHistoryById(discountUsageHistoryId);
             if (discountUsageHistory == null)
-                return null;
+                throw new ArgumentNullException("discountUsageHistory");
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(discountUsageHistory))
                 context.DiscountUsageHistory.Attach(discountUsageHistory);
 
-            discountUsageHistory.DiscountId = discountId;
-            discountUsageHistory.CustomerId = customerId;
-            discountUsageHistory.OrderId = orderId;
-            discountUsageHistory.CreatedOn = createdOn;
             context.SaveChanges();
-            return discountUsageHistory;
         }
 
         #endregion

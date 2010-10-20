@@ -108,8 +108,8 @@ namespace NopSolutions.NopCommerce.Web.Modules
                                 {
                                     if (pm.FromUserId == NopContext.Current.User.CustomerId)
                                     {
-                                        pm = ForumManager.UpdatePrivateMessage(pm.PrivateMessageId, pm.FromUserId, pm.ToUserId,
-                                            pm.Subject, pm.Text, pm.IsRead, true, pm.IsDeletedByRecipient, pm.CreatedOn);
+                                        pm.IsDeletedByAuthor = true;
+                                        ForumManager.UpdatePrivateMessage(pm);
                                     }
                                 }
                             }

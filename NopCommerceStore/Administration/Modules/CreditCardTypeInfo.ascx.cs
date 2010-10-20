@@ -53,12 +53,20 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             CreditCardType creditCardType = CreditCardTypeManager.GetCreditCardTypeById(this.CreditCardTypeId);
             if (creditCardType != null)
             {
-                creditCardType = CreditCardTypeManager.UpdateCreditCardType(creditCardType.CreditCardTypeId, txtName.Text,
-                   txtSystemKeyword.Text, txtDisplayOrder.Value, creditCardType.Deleted);
+                creditCardType.Name = txtName.Text;
+                creditCardType.SystemKeyword = txtSystemKeyword.Text;
+                creditCardType.DisplayOrder = txtDisplayOrder.Value;
+                CreditCardTypeManager.UpdateCreditCardType(creditCardType);
             }
             else
             {
-                creditCardType = CreditCardTypeManager.InsertCreditCardType(txtName.Text, txtSystemKeyword.Text, txtDisplayOrder.Value, false);
+                creditCardType = new CreditCardType()
+                {
+                    Name = txtName.Text,
+                    SystemKeyword = txtSystemKeyword.Text,
+                    DisplayOrder = txtDisplayOrder.Value
+                };
+                CreditCardTypeManager.InsertCreditCardType(creditCardType);
             }
 
             return creditCardType;

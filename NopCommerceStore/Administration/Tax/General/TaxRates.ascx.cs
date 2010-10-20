@@ -194,13 +194,25 @@ namespace NopSolutions.NopCommerce.Web.Administration.Tax.GeneralTaxConfigure
 
                     if (taxRate != null)
                     {
-                        taxRate = TaxRateManager.UpdateTaxRate(taxRate.TaxRateId, taxCategoryId,
-                            countryId, stateProvinceId, zipPostalCode, percentage);
+                        taxRate.TaxCategoryId = taxCategoryId;
+                        taxRate.CountryId = countryId;
+                        taxRate.StateProvinceId = stateProvinceId;
+                        taxRate.Zip = zipPostalCode;
+                        taxRate.Percentage = percentage;
+
+                        TaxRateManager.UpdateTaxRate(taxRate);
                     }
                     else
                     {
-                        taxRate = TaxRateManager.InsertTaxRate(taxCategoryId,
-                            countryId, stateProvinceId, zipPostalCode, percentage);
+                        taxRate = new TaxRate()
+                        {
+                            TaxCategoryId = taxCategoryId,
+                            CountryId = countryId,
+                            StateProvinceId = stateProvinceId,
+                            Zip = zipPostalCode,
+                            Percentage = percentage
+                        };
+                        TaxRateManager.InsertTaxRate(taxRate);
                     }
 
                     BindGrid();

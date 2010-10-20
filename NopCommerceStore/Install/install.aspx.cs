@@ -510,17 +510,9 @@ namespace NopSolutions.NopCommerce.Web.Install
                         throw new NopException("Admin record does not exist.");
                     }
 
-                    admin = CustomerManager.UpdateCustomer(admin.CustomerId,
-                        admin.CustomerGuid, email, email,
-                        admin.PasswordHash, admin.SaltKey, admin.AffiliateId,
-                        admin.BillingAddressId, admin.ShippingAddressId, admin.LastPaymentMethodId,
-                        admin.LastAppliedCouponCode, admin.GiftCardCouponCodes,
-                        admin.CheckoutAttributes, admin.LanguageId,
-                        admin.CurrencyId, admin.TaxDisplayType, admin.IsTaxExempt,
-                        admin.IsAdmin, admin.IsGuest, admin.IsForumModerator,
-                        admin.TotalForumPosts, admin.Signature, admin.AdminComment,
-                        admin.Active, admin.Deleted, admin.RegistrationDate,
-                        admin.TimeZoneId, admin.AvatarId, admin.DateOfBirth);
+                    admin.Email = email;
+                    admin.Username = email;
+                    CustomerManager.UpdateCustomer(admin);
 
                     this.AdminUserEmail = admin.Email;
 

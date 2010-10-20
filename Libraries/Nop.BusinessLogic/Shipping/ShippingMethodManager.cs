@@ -115,22 +115,18 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         /// <summary>
         /// Inserts a shipping method
         /// </summary>
-        /// <param name="name">The name</param>
-        /// <param name="description">The description</param>
-        /// <param name="displayOrder">The display order</param>
-        /// <returns>Shipping method</returns>
-        public static ShippingMethod InsertShippingMethod(string name,
-            string description, int displayOrder)
+        /// <param name="shippingMethod">Shipping method</param>
+        public static void InsertShippingMethod(ShippingMethod shippingMethod)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 100);
-            description = CommonHelper.EnsureMaximumLength(description, 2000);
+            if (shippingMethod == null)
+                throw new ArgumentNullException("shippingMethod");
+
+            shippingMethod.Name = CommonHelper.EnsureNotNull(shippingMethod.Name);
+            shippingMethod.Name = CommonHelper.EnsureMaximumLength(shippingMethod.Name, 100);
+            shippingMethod.Description = CommonHelper.EnsureNotNull(shippingMethod.Description);
+            shippingMethod.Description = CommonHelper.EnsureMaximumLength(shippingMethod.Description, 2000);
 
             var context = ObjectContextHelper.CurrentObjectContext;
-
-            var shippingMethod = context.ShippingMethods.CreateObject();
-            shippingMethod.Name = name;
-            shippingMethod.Description = description;
-            shippingMethod.DisplayOrder = displayOrder;
 
             context.ShippingMethods.AddObject(shippingMethod);
             context.SaveChanges();
@@ -139,42 +135,32 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
             {
                 NopRequestCache.RemoveByPattern(SHIPPINGMETHODS_PATTERN_KEY);
             }
-            return shippingMethod;
         }
 
         /// <summary>
         /// Updates the shipping method
         /// </summary>
-        /// <param name="shippingMethodId">The shipping method identifier</param>
-        /// <param name="name">The name</param>
-        /// <param name="description">The description</param>
-        /// <param name="displayOrder">The display order</param>
-        /// <returns>Shipping method</returns>
-        public static ShippingMethod UpdateShippingMethod(int shippingMethodId,
-            string name, string description, int displayOrder)
+        /// <param name="shippingMethod">Shipping method</param>
+        public static void UpdateShippingMethod(ShippingMethod shippingMethod)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 100);
-            description = CommonHelper.EnsureMaximumLength(description, 2000);
-
-            var shippingMethod = GetShippingMethodById(shippingMethodId);
             if (shippingMethod == null)
-                return null;
+                throw new ArgumentNullException("shippingMethod");
+
+            shippingMethod.Name = CommonHelper.EnsureNotNull(shippingMethod.Name);
+            shippingMethod.Name = CommonHelper.EnsureMaximumLength(shippingMethod.Name, 100);
+            shippingMethod.Description = CommonHelper.EnsureNotNull(shippingMethod.Description);
+            shippingMethod.Description = CommonHelper.EnsureMaximumLength(shippingMethod.Description, 2000);
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(shippingMethod))
                 context.ShippingMethods.Attach(shippingMethod);
 
-            shippingMethod.Name = name;
-            shippingMethod.Description = description;
-            shippingMethod.DisplayOrder = displayOrder;
             context.SaveChanges();
 
             if (ShippingMethodManager.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(SHIPPINGMETHODS_PATTERN_KEY);
             }
-
-            return shippingMethod;
         }
 
         /// <summary>
@@ -198,6 +184,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
             if (!context.IsAttached(country))
                 context.Countries.Attach(country);
 
+            //ensure that navigation property is loaded
+            if (country.NpRestrictedShippingMethods == null)
+                context.LoadProperty(country, c => c.NpRestrictedShippingMethods);
+
             country.NpRestrictedShippingMethods.Add(shippingMethod);
             context.SaveChanges();
         }
@@ -212,8 +202,15 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         {
             var context = ObjectContextHelper.CurrentObjectContext;
 
-            var sm = GetShippingMethodById(shippingMethodId);
-            bool result = sm.NpRestrictedCountries.ToList().Find(c => c.CountryId == countryId) != null;
+            var shippingMethod = GetShippingMethodById(shippingMethodId);
+            if (shippingMethod == null)
+                return false;
+
+            //ensure that navigation property is loaded
+            if (shippingMethod.NpRestrictedCountries == null)
+                context.LoadProperty(shippingMethod, sm => sm.NpRestrictedCountries);
+
+            bool result = shippingMethod.NpRestrictedCountries.ToList().Find(c => c.CountryId == countryId) != null;
             return result;
 
             //var query = from sm in context.ShippingMethods
@@ -246,6 +243,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
                 context.ShippingMethods.Attach(shippingMethod);
             if (!context.IsAttached(country))
                 context.Countries.Attach(country);
+
+            //ensure that navigation property is loaded
+            if (country.NpRestrictedShippingMethods == null)
+                context.LoadProperty(country, c => c.NpRestrictedShippingMethods);
 
             country.NpRestrictedShippingMethods.Remove(shippingMethod);
             context.SaveChanges();

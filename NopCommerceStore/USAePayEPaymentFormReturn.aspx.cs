@@ -51,45 +51,8 @@ namespace NopSolutions.NopCommerce.Web
                 if(EPaymentFormSettings.AuthorizeOnly)
                 {
                     //set AuthorizationTransactionID
-                    order = OrderManager.UpdateOrder(order.OrderId, order.OrderGuid, order.CustomerId, order.CustomerLanguageId,
-                       order.CustomerTaxDisplayType, order.CustomerIP,
-                       order.OrderSubtotalInclTax, order.OrderSubtotalExclTax,
-                       order.OrderSubTotalDiscountInclTax, order.OrderSubTotalDiscountExclTax,
-                       order.OrderShippingInclTax, order.OrderShippingExclTax, 
-                       order.PaymentMethodAdditionalFeeInclTax, order.PaymentMethodAdditionalFeeExclTax,
-                       order.TaxRates, order.OrderTax, order.OrderTotal,
-                       order.RefundedAmount, order.OrderDiscount,
-                       order.OrderSubtotalInclTaxInCustomerCurrency, order.OrderSubtotalExclTaxInCustomerCurrency,
-                       order.OrderSubTotalDiscountInclTaxInCustomerCurrency, order.OrderSubTotalDiscountExclTaxInCustomerCurrency,
-                       order.OrderShippingInclTaxInCustomerCurrency, order.OrderShippingExclTaxInCustomerCurrency,
-                       order.PaymentMethodAdditionalFeeInclTaxInCustomerCurrency, order.PaymentMethodAdditionalFeeExclTaxInCustomerCurrency,
-                       order.TaxRatesInCustomerCurrency, order.OrderTaxInCustomerCurrency,
-                       order.OrderTotalInCustomerCurrency,
-                       order.OrderDiscountInCustomerCurrency,
-                       order.CheckoutAttributeDescription, order.CheckoutAttributesXml,
-                       order.CustomerCurrencyCode, order.OrderWeight,
-                       order.AffiliateId, order.OrderStatus, order.AllowStoringCreditCardNumber,
-                       order.CardType, order.CardName, order.CardNumber, order.MaskedCreditCardNumber,
-                       order.CardCvv2, order.CardExpirationMonth, order.CardExpirationYear,
-                       order.PaymentMethodId, order.PaymentMethodName,
-                       transactionId,
-                       order.AuthorizationTransactionCode, order.AuthorizationTransactionResult,
-                       order.CaptureTransactionId, order.CaptureTransactionResult,
-                       order.SubscriptionTransactionId, order.PurchaseOrderNumber,
-                       order.PaymentStatus, order.PaidDate,
-                       order.BillingFirstName, order.BillingLastName, order.BillingPhoneNumber,
-                       order.BillingEmail, order.BillingFaxNumber, order.BillingCompany, order.BillingAddress1,
-                       order.BillingAddress2, order.BillingCity,
-                       order.BillingStateProvince, order.BillingStateProvinceId, order.BillingZipPostalCode,
-                       order.BillingCountry, order.BillingCountryId, order.ShippingStatus,
-                       order.ShippingFirstName, order.ShippingLastName, order.ShippingPhoneNumber,
-                       order.ShippingEmail, order.ShippingFaxNumber, order.ShippingCompany,
-                       order.ShippingAddress1, order.ShippingAddress2, order.ShippingCity,
-                       order.ShippingStateProvince, order.ShippingStateProvinceId, order.ShippingZipPostalCode,
-                       order.ShippingCountry, order.ShippingCountryId,
-                       order.ShippingMethod, order.ShippingRateComputationMethodId,
-                       order.ShippedDate, order.DeliveryDate,
-                       order.TrackingNumber, order.VatNumber, order.Deleted, order.CreatedOn);
+                    order.AuthorizationTransactionId = transactionId;
+                    OrderManager.UpdateOrder(order);
 
                     if(OrderManager.CanMarkOrderAsAuthorized(order))
                     {
@@ -99,45 +62,8 @@ namespace NopSolutions.NopCommerce.Web
                 else
                 {
                     //set CaptureTransactionID
-                    order = OrderManager.UpdateOrder(order.OrderId, order.OrderGuid, order.CustomerId, order.CustomerLanguageId,
-                       order.CustomerTaxDisplayType, order.CustomerIP,
-                       order.OrderSubtotalInclTax, order.OrderSubtotalExclTax,
-                       order.OrderSubTotalDiscountInclTax, order.OrderSubTotalDiscountExclTax,
-                       order.OrderShippingInclTax, order.OrderShippingExclTax,
-                       order.PaymentMethodAdditionalFeeInclTax, order.PaymentMethodAdditionalFeeExclTax,
-                       order.TaxRates, order.OrderTax, order.OrderTotal,
-                       order.RefundedAmount, order.OrderDiscount,
-                       order.OrderSubtotalInclTaxInCustomerCurrency, order.OrderSubtotalExclTaxInCustomerCurrency,
-                       order.OrderSubTotalDiscountInclTaxInCustomerCurrency, order.OrderSubTotalDiscountExclTaxInCustomerCurrency,
-                       order.OrderShippingInclTaxInCustomerCurrency, order.OrderShippingExclTaxInCustomerCurrency,
-                       order.PaymentMethodAdditionalFeeInclTaxInCustomerCurrency, order.PaymentMethodAdditionalFeeExclTaxInCustomerCurrency,
-                       order.TaxRatesInCustomerCurrency, order.OrderTaxInCustomerCurrency,
-                       order.OrderTotalInCustomerCurrency,
-                       order.OrderDiscountInCustomerCurrency,
-                       order.CheckoutAttributeDescription, order.CheckoutAttributesXml, 
-                       order.CustomerCurrencyCode, order.OrderWeight,
-                       order.AffiliateId, order.OrderStatus, order.AllowStoringCreditCardNumber,
-                       order.CardType, order.CardName, order.CardNumber, order.MaskedCreditCardNumber,
-                       order.CardCvv2, order.CardExpirationMonth, order.CardExpirationYear,
-                       order.PaymentMethodId, order.PaymentMethodName,
-                       order.AuthorizationTransactionId,
-                       order.AuthorizationTransactionCode, order.AuthorizationTransactionResult,
-                       transactionId, order.CaptureTransactionResult,
-                       order.SubscriptionTransactionId, order.PurchaseOrderNumber,
-                       order.PaymentStatus, order.PaidDate,
-                       order.BillingFirstName, order.BillingLastName, order.BillingPhoneNumber,
-                       order.BillingEmail, order.BillingFaxNumber, order.BillingCompany, order.BillingAddress1,
-                       order.BillingAddress2, order.BillingCity,
-                       order.BillingStateProvince, order.BillingStateProvinceId, order.BillingZipPostalCode,
-                       order.BillingCountry, order.BillingCountryId, order.ShippingStatus,
-                       order.ShippingFirstName, order.ShippingLastName, order.ShippingPhoneNumber,
-                       order.ShippingEmail, order.ShippingFaxNumber, order.ShippingCompany,
-                       order.ShippingAddress1, order.ShippingAddress2, order.ShippingCity,
-                       order.ShippingStateProvince, order.ShippingStateProvinceId, order.ShippingZipPostalCode,
-                       order.ShippingCountry, order.ShippingCountryId,
-                       order.ShippingMethod, order.ShippingRateComputationMethodId,
-                       order.ShippedDate, order.DeliveryDate,
-                       order.TrackingNumber, order.VatNumber, order.Deleted, order.CreatedOn);
+                    order.CaptureTransactionId = transactionId;
+                    OrderManager.UpdateOrder(order);
 
                     if(OrderManager.CanMarkOrderAsPaid(order))
                     {

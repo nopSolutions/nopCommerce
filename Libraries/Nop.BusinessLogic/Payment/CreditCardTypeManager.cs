@@ -77,9 +77,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
             var creditCardType = GetCreditCardTypeById(creditCardTypeId);
             if (creditCardType != null)
             {
-                UpdateCreditCardType(creditCardType.CreditCardTypeId, 
-                    creditCardType.Name, creditCardType.SystemKeyword, 
-                    creditCardType.DisplayOrder, true);
+                creditCardType.Deleted = true;
+                UpdateCreditCardType(creditCardType);
             }
             if (CreditCardTypeManager.CacheEnabled)
             {
@@ -117,24 +116,18 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
         /// <summary>
         /// Inserts a credit card type
         /// </summary>
-        /// <param name="name">The name</param>
-        /// <param name="systemKeyword">The system keyword</param>
-        /// <param name="displayOrder">The display order</param>
-        /// <param name="deleted">A value indicating whether the entity has been deleted</param>
-        /// <returns>A credit card type</returns>
-        public static CreditCardType InsertCreditCardType(string name,
-            string systemKeyword, int displayOrder, bool deleted)
+        /// <param name="creditCardType">Credit card type</param>
+        public static void InsertCreditCardType(CreditCardType creditCardType)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 100);
-            systemKeyword = CommonHelper.EnsureMaximumLength(systemKeyword, 100);
+            if (creditCardType == null)
+                throw new ArgumentNullException("creditCardType");
+
+            creditCardType.Name = CommonHelper.EnsureNotNull(creditCardType.Name);
+            creditCardType.Name = CommonHelper.EnsureMaximumLength(creditCardType.Name, 100);
+            creditCardType.SystemKeyword = CommonHelper.EnsureNotNull(creditCardType.SystemKeyword);
+            creditCardType.SystemKeyword = CommonHelper.EnsureMaximumLength(creditCardType.SystemKeyword, 100);
 
             var context = ObjectContextHelper.CurrentObjectContext;
-
-            var creditCardType = context.CreditCardTypes.CreateObject();
-            creditCardType.Name = name;
-            creditCardType.SystemKeyword = systemKeyword;
-            creditCardType.DisplayOrder = displayOrder;
-            creditCardType.Deleted = deleted;
 
             context.CreditCardTypes.AddObject(creditCardType);
             context.SaveChanges();
@@ -143,43 +136,32 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
             {
                 NopRequestCache.RemoveByPattern(CREDITCARDS_PATTERN_KEY);
             }
-            return creditCardType;
         }
 
         /// <summary>
         /// Updates the credit card type
         /// </summary>
-        /// <param name="creditCardTypeId">Credit card type identifier</param>
-        /// <param name="name">The name</param>
-        /// <param name="systemKeyword">The system keyword</param>
-        /// <param name="displayOrder">The display order</param>
-        /// <param name="deleted">A value indicating whether the entity has been deleted</param>
-        /// <returns>A credit card type</returns>
-        public static CreditCardType UpdateCreditCardType(int creditCardTypeId,
-            string name, string systemKeyword, int displayOrder, bool deleted)
+        /// <param name="creditCardType">Credit card type</param>
+        public static void UpdateCreditCardType(CreditCardType creditCardType)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 100);
-            systemKeyword = CommonHelper.EnsureMaximumLength(systemKeyword, 100);
-
-            var creditCardType = GetCreditCardTypeById(creditCardTypeId);
             if (creditCardType == null)
-                return null;
+                throw new ArgumentNullException("creditCardType");
+
+            creditCardType.Name = CommonHelper.EnsureNotNull(creditCardType.Name);
+            creditCardType.Name = CommonHelper.EnsureMaximumLength(creditCardType.Name, 100);
+            creditCardType.SystemKeyword = CommonHelper.EnsureNotNull(creditCardType.SystemKeyword);
+            creditCardType.SystemKeyword = CommonHelper.EnsureMaximumLength(creditCardType.SystemKeyword, 100);
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(creditCardType))
                 context.CreditCardTypes.Attach(creditCardType);
 
-            creditCardType.Name = name;
-            creditCardType.SystemKeyword = systemKeyword;
-            creditCardType.DisplayOrder = displayOrder;
-            creditCardType.Deleted = deleted;
             context.SaveChanges();
 
             if (CreditCardTypeManager.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(CREDITCARDS_PATTERN_KEY);
             }
-            return creditCardType;
         }
         #endregion
 

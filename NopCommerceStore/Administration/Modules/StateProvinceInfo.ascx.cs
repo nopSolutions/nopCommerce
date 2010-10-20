@@ -66,15 +66,22 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             StateProvince stateProvince = StateProvinceManager.GetStateProvinceById(this.StateProvinceId);
             if (stateProvince != null)
             {
-                stateProvince = StateProvinceManager.UpdateStateProvince(stateProvince.StateProvinceId,
-                    int.Parse(this.ddlCountry.SelectedItem.Value), txtName.Text,
-                    txtAbbreviation.Text, txtDisplayOrder.Value);
-
+                stateProvince.CountryId = int.Parse(this.ddlCountry.SelectedItem.Value);
+                stateProvince.Name = txtName.Text;
+                stateProvince.Abbreviation = txtAbbreviation.Text;
+                stateProvince.DisplayOrder = txtDisplayOrder.Value;
+                StateProvinceManager.UpdateStateProvince(stateProvince);
             }
             else
             {
-                stateProvince = StateProvinceManager.InsertStateProvince(int.Parse(this.ddlCountry.SelectedItem.Value),
-                    txtName.Text, txtAbbreviation.Text, txtDisplayOrder.Value);
+                stateProvince = new StateProvince()
+                {
+                    CountryId = int.Parse(this.ddlCountry.SelectedItem.Value),
+                    Name = txtName.Text,
+                    Abbreviation = txtAbbreviation.Text,
+                    DisplayOrder = txtDisplayOrder.Value
+                };
+                StateProvinceManager.InsertStateProvince(stateProvince);
             }
             return stateProvince;
         }

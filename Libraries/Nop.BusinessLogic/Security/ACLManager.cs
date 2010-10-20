@@ -126,79 +126,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
         }
 
         /// <summary>
-        /// Inserts a customer action
-        /// </summary>
-        /// <param name="name">The name</param>
-        /// <param name="systemKeyword">The system keyword</param>
-        /// <param name="comment">The comment</param>
-        /// <param name="displayOrder">The display order</param>
-        /// <returns>A customer action</returns>
-        public static CustomerAction InsertCustomerAction(string name,
-            string systemKeyword, string comment, int displayOrder)
-        {
-            name = CommonHelper.EnsureMaximumLength(name, 100);
-            systemKeyword = CommonHelper.EnsureMaximumLength(systemKeyword, 100);
-            comment = CommonHelper.EnsureMaximumLength(comment, 1000);
-
-            var context = ObjectContextHelper.CurrentObjectContext;
-
-            var customerAction = context.CustomerActions.CreateObject();
-            customerAction.Name = name;
-            customerAction.SystemKeyword = systemKeyword;
-            customerAction.Comment = comment;
-            customerAction.DisplayOrder = displayOrder;
-
-            context.CustomerActions.AddObject(customerAction);
-            context.SaveChanges();
-
-            if (ACLManager.CacheEnabled)
-            {
-                NopRequestCache.RemoveByPattern(CUSTOMERACTIONS_PATTERN_KEY);
-            }
-
-            return customerAction;
-        }
-
-        /// <summary>
-        /// Updates the customer action
-        /// </summary>
-        /// <param name="customerActionId">The customer action identifier</param>
-        /// <param name="name">The name</param>
-        /// <param name="systemKeyword">The system keyword</param>
-        /// <param name="comment">The comment</param>
-        /// <param name="displayOrder">The display order</param>
-        /// <returns>A customer action</returns>
-        public static CustomerAction UpdateCustomerAction(int customerActionId,
-            string name, string systemKeyword, string comment, int displayOrder)
-        {
-            name = CommonHelper.EnsureMaximumLength(name, 100);
-            systemKeyword = CommonHelper.EnsureMaximumLength(systemKeyword, 100);
-            comment = CommonHelper.EnsureMaximumLength(comment, 1000);
-
-            var customerAction = GetCustomerActionById(customerActionId);
-            if (customerAction == null)
-                return null;
-
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(customerAction))
-                context.CustomerActions.Attach(customerAction);
-
-            customerAction.Name = name;
-            customerAction.SystemKeyword = systemKeyword;
-            customerAction.Comment = comment;
-            customerAction.DisplayOrder = displayOrder;
-            context.SaveChanges();
-
-
-            if (ACLManager.CacheEnabled)
-            {
-                NopRequestCache.RemoveByPattern(CUSTOMERACTIONS_PATTERN_KEY);
-            }
-
-            return customerAction;
-        }
-
-        /// <summary>
         /// Deletes an ACL
         /// </summary>
         /// <param name="aclId">ACL identifier</param>
@@ -261,51 +188,32 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
         /// <summary>
         /// Inserts an ACL
         /// </summary>
-        /// <param name="customerActionId">The customer action identifier</param>
-        /// <param name="customerRoleId">The customer role identifier</param>
-        /// <param name="allow">The value indicating whether action is allowed</param>
-        /// <returns>An ACL</returns>
-        public static ACL InsertAcl(int customerActionId,
-            int customerRoleId, bool allow)
+        /// <param name="acl">ACL</param>
+        public static void InsertAcl(ACL acl)
         {
+            if (acl == null)
+                throw new ArgumentNullException("acl");
+
             var context = ObjectContextHelper.CurrentObjectContext;
-
-            var acl = context.ACL.CreateObject();
-            acl.CustomerActionId = customerActionId;
-            acl.CustomerRoleId = customerRoleId;
-            acl.Allow = allow;
-
+            
             context.ACL.AddObject(acl);
             context.SaveChanges();
-
-            return acl;
         }
 
         /// <summary>
         /// Updates the ACL
         /// </summary>
-        /// <param name="aclId">The ACL identifier</param>
-        /// <param name="customerActionId">The customer action identifier</param>
-        /// <param name="customerRoleId">The customer role identifier</param>
-        /// <param name="allow">The value indicating whether action is allowed</param>
-        /// <returns>An ACL</returns>
-        public static ACL UpdateAcl(int aclId, int customerActionId,
-            int customerRoleId, bool allow)
+        /// <param name="acl">ACL</param>
+        public static void UpdateAcl(ACL acl)
         {
-            var acl = GetAclById(aclId);
             if (acl == null)
-                return null;
+                throw new ArgumentNullException("acl");
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(acl))
                 context.ACL.Attach(acl);
 
-            acl.CustomerActionId = customerActionId;
-            acl.CustomerRoleId = customerRoleId;
-            acl.Allow = allow;
             context.SaveChanges();
-
-            return acl;
         }
 
         /// <summary>
@@ -420,57 +328,33 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
         /// <summary>
         /// Inserts an ACL per object entry
         /// </summary>
-        /// <param name="objectId">The object identifier</param>
-        /// <param name="objectType">The object type</param>
-        /// <param name="customerRoleId">The customer role identifier</param>
-        /// <param name="deny">The value indicating whether action is not allowed</param>
-        /// <returns>An ACL per object entry</returns>
-        public static ACLPerObject InsertAclPerObject(int objectId, ObjectTypeEnum objectType,
-            int customerRoleId, bool deny)
+        /// <param name="aclPerObject">ACL per object entry</param>
+        public static void InsertAclPerObject(ACLPerObject aclPerObject)
         {
+            if (aclPerObject == null)
+                throw new ArgumentNullException("aclPerObject");
+
             var context = ObjectContextHelper.CurrentObjectContext;
-
-            var aclPerObject = context.ACLPerObject.CreateObject();
-            aclPerObject.ObjectId = objectId;
-            aclPerObject.ObjectTypeId = (int)objectType;
-            aclPerObject.CustomerRoleId = customerRoleId;
-            aclPerObject.Deny = deny;
-
+            
             context.ACLPerObject.AddObject(aclPerObject);
             context.SaveChanges();
-
-            return aclPerObject;
         }
 
         /// <summary>
         /// Updates the ACL per object entry
         /// </summary>
-        /// <param name="aclPerObjectId">The ACL per object entry identifier</param>
-        /// <param name="objectId">The object identifier</param>
-        /// <param name="objectType">The object type</param>
-        /// <param name="customerRoleId">The customer role identifier</param>
-        /// <param name="deny">The value indicating whether action is not allowed</param>
-        /// <returns>An ACL per object entry</returns>
-        public static ACLPerObject UpdateAclPerObject(int aclPerObjectId, int objectId,
-            ObjectTypeEnum objectType, int customerRoleId, bool deny)
+        /// <param name="aclPerObject">ACL per object entry</param>
+        public static void UpdateAclPerObject(ACLPerObject aclPerObject)
         {
-            var aclPerObject = GetAclPerObjectById(aclPerObjectId);
             if (aclPerObject == null)
-                return null;
+                throw new ArgumentNullException("aclPerObject");
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(aclPerObject))
                 context.ACLPerObject.Attach(aclPerObject);
 
-            aclPerObject.ObjectId = objectId;
-            aclPerObject.ObjectTypeId = (int)objectType;
-            aclPerObject.CustomerRoleId = customerRoleId;
-            aclPerObject.Deny = deny;
             context.SaveChanges();
-
-            return aclPerObject;
         }
-
 
         #endregion
 

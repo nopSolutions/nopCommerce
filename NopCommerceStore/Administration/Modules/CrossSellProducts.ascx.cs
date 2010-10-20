@@ -121,7 +121,15 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     if (crossSellProductId > 0 && !cbProductInfo2.Checked)
                         ProductManager.DeleteCrossSellProduct(crossSellProductId);
                     if (crossSellProductId > 0 && cbProductInfo2.Checked)
-                        ProductManager.UpdateCrossSellProduct(crossSellProductId, product.ProductId, productId2);
+                    {
+                        var csp = ProductManager.GetCrossSellProductById(crossSellProductId);
+                        if (csp != null)
+                        {
+                            csp.ProductId1 = product.ProductId;
+                            csp.ProductId2 = productId2;
+                            ProductManager.UpdateCrossSellProduct(csp);
+                        }
+                    }
                 }
             }
         }

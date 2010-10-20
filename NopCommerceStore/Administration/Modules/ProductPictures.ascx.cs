@@ -83,9 +83,15 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     if(fuProductPicture1.HasFile)
                     {
                         Picture picture = PictureManager.InsertPicture(fuProductPicture1.FileBytes, fuProductPicture1.PostedFile.ContentType, true);
-                        if(picture != null)
+                        if (picture != null)
                         {
-                            ProductPicture productPicture = ProductManager.InsertProductPicture(product.ProductId, picture.PictureId, txtProductPictureDisplayOrder1.Value);
+                            var productPicture = new ProductPicture()
+                            {
+                                ProductId = product.ProductId,
+                                PictureId = picture.PictureId,
+                                DisplayOrder = txtProductPictureDisplayOrder1.Value
+                            };
+                            ProductManager.InsertProductPicture(productPicture);
                         }
                     }
                     if(fuProductPicture2.HasFile)
@@ -93,7 +99,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         Picture picture = PictureManager.InsertPicture(fuProductPicture2.FileBytes, fuProductPicture2.PostedFile.ContentType, true);
                         if(picture != null)
                         {
-                            ProductPicture productPicture = ProductManager.InsertProductPicture(product.ProductId, picture.PictureId, txtProductPictureDisplayOrder2.Value);
+                            var productPicture = new ProductPicture()
+                            {
+                                ProductId = product.ProductId,
+                                PictureId = picture.PictureId,
+                                DisplayOrder = txtProductPictureDisplayOrder2.Value
+                            };
+                            ProductManager.InsertProductPicture(productPicture);
                         }
                     }
                     if(fuProductPicture3.HasFile)
@@ -101,7 +113,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         Picture picture = PictureManager.InsertPicture(fuProductPicture3.FileBytes, fuProductPicture3.PostedFile.ContentType, true);
                         if(picture != null)
                         {
-                            ProductPicture productPicture = ProductManager.InsertProductPicture(product.ProductId, picture.PictureId, txtProductPictureDisplayOrder3.Value);
+                            var productPicture = new ProductPicture()
+                            {
+                                ProductId = product.ProductId,
+                                PictureId = picture.PictureId,
+                                DisplayOrder = txtProductPictureDisplayOrder3.Value
+                            };
+                            ProductManager.InsertProductPicture(productPicture);
                         }
                     }
                     BindData();
@@ -127,8 +145,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 ProductPicture productPicture = ProductManager.GetProductPictureById(productPictureId);
 
                 if (productPicture != null)
-                    ProductManager.UpdateProductPicture(productPicture.ProductPictureId,
-                       productPicture.ProductId, productPicture.PictureId, displayOrder);
+                {
+                    productPicture.DisplayOrder = displayOrder;
+                    ProductManager.UpdateProductPicture(productPicture);
+                }
 
                 BindData();
             }

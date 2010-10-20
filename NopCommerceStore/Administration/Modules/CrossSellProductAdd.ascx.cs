@@ -139,7 +139,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         {
                             if (existingCrossSellProducts.FindCrossSellProduct(this.ProductId, productId) == null)
                             {
-                                ProductManager.InsertCrossSellProduct(this.ProductId, productId);
+                                ProductManager.InsertCrossSellProduct(
+                                    new CrossSellProduct()
+                                    {
+                                        ProductId1 = this.ProductId,
+                                        ProductId2 = productId
+                                    }
+                                    );
                             }
                         }
                     }

@@ -74,7 +74,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
 
             if (CurrencyManager.CacheEnabled)
             {
-                NopStaticCache.RemoveByPattern(CURRENCIES_PATTERN_KEY);
+                NopRequestCache.RemoveByPattern(CURRENCIES_PATTERN_KEY);
             }
         }
 
@@ -89,7 +89,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
                 return null;
 
             string key = string.Format(CURRENCIES_BY_ID_KEY, currencyId);
-            object obj2 = NopStaticCache.Get(key);
+            object obj2 = NopRequestCache.Get(key);
             if (CurrencyManager.CacheEnabled && (obj2 != null))
             {
                 return (Currency)obj2;
@@ -103,7 +103,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
 
             if (CurrencyManager.CacheEnabled)
             {
-                NopStaticCache.Max(key, currency);
+                NopRequestCache.Add(key, currency);
             }
             return currency;
         }
@@ -138,7 +138,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
         public static List<Currency> GetAllCurrencies(bool showHidden)
         {
             string key = string.Format(CURRENCIES_ALL_KEY, showHidden);
-            object obj2 = NopStaticCache.Get(key);
+            object obj2 = NopRequestCache.Get(key);
             if (CurrencyManager.CacheEnabled && (obj2 != null))
             {
                 return (List<Currency>)obj2;
@@ -153,7 +153,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
 
             if (CurrencyManager.CacheEnabled)
             {
-                NopStaticCache.Max(key, currencies);
+                NopRequestCache.Add(key, currencies);
             }
             return currencies;
         }
@@ -161,29 +161,24 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
         /// <summary>
         /// Inserts a currency
         /// </summary>
-        /// <param name="name">The name</param>
-        /// <param name="currencyCode">The currency code</param>
-        /// <param name="rate">The rate</param>
-        /// <param name="displayLocale">The display locale</param>
-        /// <param name="customFormatting">The custom formatting</param>
-        /// <param name="published">A value indicating whether the entity is published</param>
-        /// <param name="displayOrder">The display order</param>
-        /// <param name="createdOn">The date and time of instance creation</param>
-        /// <param name="updatedOn">The date and time of instance update</param>
-        /// <returns>A currency</returns>
-        public static Currency InsertCurrency(string name,
-            string currencyCode, decimal rate, string displayLocale,
-            string customFormatting, bool published, int displayOrder,
-            DateTime createdOn, DateTime updatedOn)
+        /// <param name="currency">Currency</param>
+        public static void InsertCurrency(Currency currency)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 50);
-            currencyCode = CommonHelper.EnsureMaximumLength(currencyCode, 5);
-            displayLocale = CommonHelper.EnsureMaximumLength(displayLocale, 50);
-            customFormatting = CommonHelper.EnsureMaximumLength(customFormatting, 50);
+            if (currency == null)
+                throw new ArgumentNullException("currency");
+            
+            currency.Name = CommonHelper.EnsureNotNull(currency.Name);
+            currency.Name = CommonHelper.EnsureMaximumLength(currency.Name, 50);
+            currency.CurrencyCode = CommonHelper.EnsureNotNull(currency.CurrencyCode);
+            currency.CurrencyCode = CommonHelper.EnsureMaximumLength(currency.CurrencyCode, 5);
+            currency.DisplayLocale = CommonHelper.EnsureNotNull(currency.DisplayLocale);
+            currency.DisplayLocale = CommonHelper.EnsureMaximumLength(currency.DisplayLocale, 50);
+            currency.CustomFormatting = CommonHelper.EnsureNotNull(currency.CustomFormatting);
+            currency.CustomFormatting = CommonHelper.EnsureMaximumLength(currency.CustomFormatting, 50);
 
             try
             {
-                CultureInfo ci = CultureInfo.GetCultureInfo(displayLocale);
+                CultureInfo ci = CultureInfo.GetCultureInfo(currency.DisplayLocale);
             }
             catch (Exception)
             {
@@ -191,85 +186,54 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
             }
 
             var context = ObjectContextHelper.CurrentObjectContext;
-            var currency = context.Currencies.CreateObject();
-            currency.Name = name;
-            currency.CurrencyCode = currencyCode;
-            currency.Rate = rate;
-            currency.DisplayLocale = displayLocale;
-            currency.CustomFormatting = customFormatting;
-            currency.Published = published;
-            currency.DisplayOrder = displayOrder;
-            currency.CreatedOn = createdOn;
-            currency.UpdatedOn = updatedOn;
 
             context.Currencies.AddObject(currency);
             context.SaveChanges();
 
             if (CurrencyManager.CacheEnabled)
             {
-                NopStaticCache.RemoveByPattern(CURRENCIES_PATTERN_KEY);
+                NopRequestCache.RemoveByPattern(CURRENCIES_PATTERN_KEY);
             }
-            return currency;
         }
 
         /// <summary>
         /// Updates the currency
         /// </summary>
-        /// <param name="currencyId">Currency identifier</param>
-        /// <param name="name">The name</param>
-        /// <param name="currencyCode">The currency code</param>
-        /// <param name="rate">The rate</param>
-        /// <param name="displayLocale">The display locale</param>
-        /// <param name="customFormatting">The custom formatting</param>
-        /// <param name="published">A value indicating whether the entity is published</param>
-        /// <param name="displayOrder">The display order</param>
-        /// <param name="createdOn">The date and time of instance creation</param>
-        /// <param name="updatedOn">The date and time of instance update</param>
-        /// <returns>A currency</returns>
-        public static Currency UpdateCurrency(int currencyId, string name,
-            string currencyCode, decimal rate, string displayLocale,
-            string customFormatting, bool published, int displayOrder,
-            DateTime createdOn, DateTime updatedOn)
+        /// <param name="currency">Currency</param>
+        public static void UpdateCurrency(Currency currency)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 50);
-            currencyCode = CommonHelper.EnsureMaximumLength(currencyCode, 5);
-            displayLocale = CommonHelper.EnsureMaximumLength(displayLocale, 50);
-            customFormatting = CommonHelper.EnsureMaximumLength(customFormatting, 50);
+            if (currency == null)
+                throw new ArgumentNullException("currency");
+
+            currency.Name = CommonHelper.EnsureNotNull(currency.Name);
+            currency.Name = CommonHelper.EnsureMaximumLength(currency.Name, 50);
+            currency.CurrencyCode = CommonHelper.EnsureNotNull(currency.CurrencyCode);
+            currency.CurrencyCode = CommonHelper.EnsureMaximumLength(currency.CurrencyCode, 5);
+            currency.DisplayLocale = CommonHelper.EnsureNotNull(currency.DisplayLocale);
+            currency.DisplayLocale = CommonHelper.EnsureMaximumLength(currency.DisplayLocale, 50);
+            currency.CustomFormatting = CommonHelper.EnsureNotNull(currency.CustomFormatting);
+            currency.CustomFormatting = CommonHelper.EnsureMaximumLength(currency.CustomFormatting, 50);
 
             try
             {
-                CultureInfo ci = CultureInfo.GetCultureInfo(displayLocale);
+                CultureInfo ci = CultureInfo.GetCultureInfo(currency.DisplayLocale);
             }
             catch (Exception)
             {
                 throw new NopException("Specified display locale culture is not supported");
             }
 
-            var currency = GetCurrencyById(currencyId);
-            if (currency == null)
-                return null;
-
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(currency))
                 context.Currencies.Attach(currency);
 
-            currency.Name = name;
-            currency.CurrencyCode = currencyCode;
-            currency.Rate = rate;
-            currency.DisplayLocale = displayLocale;
-            currency.CustomFormatting = customFormatting;
-            currency.Published = published;
-            currency.DisplayOrder = displayOrder;
-            currency.CreatedOn = createdOn;
-            currency.UpdatedOn = updatedOn;
             context.SaveChanges();
 
 
             if (CurrencyManager.CacheEnabled)
             {
-                NopStaticCache.RemoveByPattern(CURRENCIES_PATTERN_KEY);
+                NopRequestCache.RemoveByPattern(CURRENCIES_PATTERN_KEY);
             }
-            return currency;
         }
 
         /// <summary>

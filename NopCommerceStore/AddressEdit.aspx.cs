@@ -104,21 +104,29 @@ namespace NopSolutions.NopCommerce.Web
                 var inputedAddress = AddressEditControl.Address;
                 if (oldAddress != null)
                 {
-                    CustomerManager.UpdateAddress(oldAddress.AddressId, oldAddress.CustomerId, oldAddress.IsBillingAddress,
-                        inputedAddress.FirstName, inputedAddress.LastName,
-                        inputedAddress.PhoneNumber, inputedAddress.Email, inputedAddress.FaxNumber,
-                        inputedAddress.Company, inputedAddress.Address1, inputedAddress.Address2,
-                        inputedAddress.City, inputedAddress.StateProvinceId, inputedAddress.ZipPostalCode,
-                        inputedAddress.CountryId, oldAddress.CreatedOn, DateTime.UtcNow);
+                    oldAddress.FirstName = inputedAddress.FirstName;
+                    oldAddress.LastName = inputedAddress.LastName;
+                    oldAddress.PhoneNumber = inputedAddress.PhoneNumber;
+                    oldAddress.Email = inputedAddress.Email;
+                    oldAddress.FaxNumber = inputedAddress.FaxNumber;
+                    oldAddress.Company = inputedAddress.Company;
+                    oldAddress.Address1 = inputedAddress.Address1;
+                    oldAddress.Address2 = inputedAddress.Address2;
+                    oldAddress.City = inputedAddress.City;
+                    oldAddress.StateProvinceId = inputedAddress.StateProvinceId;
+                    oldAddress.ZipPostalCode = inputedAddress.ZipPostalCode;
+                    oldAddress.CountryId = inputedAddress.CountryId;
+                    oldAddress.UpdatedOn = DateTime.UtcNow;
+
+                    CustomerManager.UpdateAddress(oldAddress);
                 }
                 else
                 {
-                    CustomerManager.InsertAddress(NopContext.Current.User.CustomerId, this.IsBillingAddress,
-                        inputedAddress.FirstName, inputedAddress.LastName,
-                        inputedAddress.PhoneNumber, inputedAddress.Email, inputedAddress.FaxNumber,
-                        inputedAddress.Company, inputedAddress.Address1, inputedAddress.Address2,
-                        inputedAddress.City, inputedAddress.StateProvinceId, inputedAddress.ZipPostalCode,
-                        inputedAddress.CountryId, DateTime.UtcNow, DateTime.UtcNow);
+                    inputedAddress.CustomerId = NopContext.Current.User.CustomerId;
+                    inputedAddress.IsBillingAddress = this.IsBillingAddress;
+                    inputedAddress.CreatedOn = DateTime.UtcNow;
+                    inputedAddress.UpdatedOn = DateTime.UtcNow;
+                    CustomerManager.InsertAddress(inputedAddress);
                 }
                 Response.Redirect(SEOHelper.GetMyAccountUrl());
             }

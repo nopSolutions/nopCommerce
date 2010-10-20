@@ -79,12 +79,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
             if (rr != null)
             {
-                rr = OrderManager.UpdateReturnRequest(rr.ReturnRequestId,
-                    rr.OrderProductVariantId, rr.Quantity,
-                    rr.CustomerId, txtReasonForReturn.Text,
-                    txtRequestedAction.Text, txtCustomerComments.Text,
-                    txtStaffNotes.Text, (ReturnStatusEnum)int.Parse(this.ddlStatus.SelectedItem.Value),
-                    rr.CreatedOn, rr.UpdatedOn);
+                rr.ReasonForReturn = txtReasonForReturn.Text;
+                rr.RequestedAction = txtRequestedAction.Text;
+                rr.CustomerComments = txtCustomerComments.Text;
+                rr.StaffNotes = txtStaffNotes.Text;
+                rr.ReturnStatusId = (int)int.Parse(this.ddlStatus.SelectedItem.Value);
+                OrderManager.UpdateReturnRequest(rr);
             }
             else
             {

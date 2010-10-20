@@ -95,10 +95,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     NewsComment newsComment = NewsManager.GetNewsCommentById(this.NewsCommentId);
                     if (newsComment != null)
                     {
-                        string title = txtTitle.Text.Trim();
-                        string comment = txtComment.Text.Trim();
-                        newsComment = NewsManager.UpdateNewsComment(newsComment.NewsCommentId, newsComment.NewsId,
-                            newsComment.CustomerId, newsComment.IPAddress, title, comment, newsComment.CreatedOn);
+                        newsComment.Title = txtTitle.Text.Trim();
+                        newsComment.Comment = txtComment.Text.Trim();
+                        NewsManager.UpdateNewsComment(newsComment);
+
                         Response.Redirect("NewsCommentDetails.aspx?NewsCommentID=" + newsComment.NewsCommentId.ToString());
                     }
                     else

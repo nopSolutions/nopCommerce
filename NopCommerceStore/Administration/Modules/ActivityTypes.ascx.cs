@@ -66,8 +66,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         CheckBox cbEnabled = row.FindControl("cbEnabled") as CheckBox;
                             
                         int activityLogTypeId = Int32.Parse(hfActivityLogTypeId.Value);
+                        bool enable = cbEnabled.Checked;
 
-                        CustomerActivityManager.UpdateActivityType(activityLogTypeId, cbEnabled.Checked);
+                        var activityLogType = CustomerActivityManager.GetActivityTypeById(activityLogTypeId);
+                        if (activityLogType != null && activityLogType.Enabled != enable)
+                        {
+                            activityLogType.Enabled = enable;
+                            CustomerActivityManager.UpdateActivityType(activityLogType);
+                        }
                     }
                 }
                 catch (Exception exc)

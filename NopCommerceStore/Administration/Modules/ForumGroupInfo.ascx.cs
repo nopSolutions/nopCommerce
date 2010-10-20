@@ -66,13 +66,26 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             DateTime nowDT = DateTime.UtcNow;
             if (forumGroup != null)
             {
-                forumGroup = ForumManager.UpdateForumGroup(forumGroup.ForumGroupId,
-                    txtName.Text, txtDescription.Text, txtDisplayOrder.Value, forumGroup.CreatedOn, nowDT);
+                forumGroup.Name = txtName.Text;
+                forumGroup.Description = txtDescription.Text;
+                forumGroup.DisplayOrder = txtDisplayOrder.Value;
+                forumGroup.UpdatedOn = nowDT;
+
+                ForumManager.UpdateForumGroup(forumGroup);
             }
             else
             {
-                forumGroup = ForumManager.InsertForumGroup(txtName.Text,
-                    txtDescription.Text, txtDisplayOrder.Value, nowDT, nowDT);
+
+                forumGroup = new ForumGroup()
+                {
+                    Name = txtName.Text,
+                    Description = txtDescription.Text,
+                    DisplayOrder = txtDisplayOrder.Value,
+                    CreatedOn = nowDT,
+                    UpdatedOn = nowDT
+                };
+
+                ForumManager.InsertForumGroup(forumGroup);
             }
 
             return forumGroup;

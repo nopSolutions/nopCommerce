@@ -63,13 +63,22 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             MeasureDimension measureDimension = MeasureManager.GetMeasureDimensionById(this.MeasureDimensionId);
             if (measureDimension != null)
             {
-                measureDimension = MeasureManager.UpdateMeasureDimension(measureDimension.MeasureDimensionId,
-                    name, systemKeyword, ratio, displayOrder);
+                measureDimension.Name = name;
+                measureDimension.SystemKeyword =systemKeyword;
+                measureDimension.Ratio =ratio;
+                measureDimension.DisplayOrder =displayOrder;
+                MeasureManager.UpdateMeasureDimension(measureDimension);
             }
             else
             {
-                measureDimension = MeasureManager.InsertMeasureDimension(name, 
-                    systemKeyword, ratio, displayOrder);
+                measureDimension = new MeasureDimension()
+                {
+                    Name = name,
+                    SystemKeyword = systemKeyword,
+                    Ratio = ratio,
+                    DisplayOrder = displayOrder
+                };
+                MeasureManager.InsertMeasureDimension(measureDimension);
             }
 
             return measureDimension;

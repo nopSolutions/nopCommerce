@@ -415,9 +415,20 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                         xmlS.Serialize(tw, value);
                         string serialized = sb.ToString();
                         if (lastShippingOptionAttr != null)
-                            lastShippingOptionAttr = CustomerManager.UpdateCustomerAttribute(lastShippingOptionAttr.CustomerAttributeId, this.CustomerId, "LastShippingOption", serialized);
+                        {
+                            lastShippingOptionAttr.Value = serialized;
+                            CustomerManager.UpdateCustomerAttribute(lastShippingOptionAttr);
+                        }
                         else
-                            lastShippingOptionAttr = CustomerManager.InsertCustomerAttribute(this.CustomerId, "LastShippingOption", serialized);
+                        {
+                            lastShippingOptionAttr = new CustomerAttribute()
+                            {
+                                CustomerId = this.CustomerId,
+                                Key = "LastShippingOption",
+                                Value = serialized
+                            };
+                            CustomerManager.InsertCustomerAttribute(lastShippingOptionAttr);
+                        }
                     }
                 }
                 else
@@ -463,10 +474,20 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                 var customerAttributes = this.CustomerAttributes;
                 CustomerAttribute genderAttr = customerAttributes.FindAttribute("Gender", this.CustomerId);
                 if (genderAttr != null)
-                    genderAttr = CustomerManager.UpdateCustomerAttribute(genderAttr.CustomerAttributeId, genderAttr.CustomerId, "Gender", value);
+                {
+                    genderAttr.Value = value;
+                    CustomerManager.UpdateCustomerAttribute(genderAttr);
+                }
                 else
-                    genderAttr = CustomerManager.InsertCustomerAttribute(this.CustomerId, "Gender", value);
-
+                {
+                    genderAttr = new CustomerAttribute()
+                    {
+                        CustomerId = this.CustomerId,
+                        Key = "Gender",
+                        Value = value
+                    };
+                    CustomerManager.InsertCustomerAttribute(genderAttr);
+                }
                 ResetCachedValues();
             }
         }
@@ -494,10 +515,20 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                 var customerAttributes = this.CustomerAttributes;
                 CustomerAttribute firstNameAttr = customerAttributes.FindAttribute("FirstName", this.CustomerId);
                 if (firstNameAttr != null)
-                    firstNameAttr = CustomerManager.UpdateCustomerAttribute(firstNameAttr.CustomerAttributeId, firstNameAttr.CustomerId, "FirstName", value);
+                {
+                    firstNameAttr.Value = value;
+                    CustomerManager.UpdateCustomerAttribute(firstNameAttr);
+                }
                 else
-                    firstNameAttr = CustomerManager.InsertCustomerAttribute(this.CustomerId, "FirstName", value);
-
+                {
+                    firstNameAttr = new CustomerAttribute()
+                    {
+                        CustomerId = this.CustomerId,
+                        Key = "FirstName",
+                        Value = value
+                    };
+                    CustomerManager.InsertCustomerAttribute(firstNameAttr);
+                }
                 ResetCachedValues();
             }
         }
@@ -525,9 +556,20 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                 var customerAttributes = this.CustomerAttributes;
                 CustomerAttribute lastNameAttr = customerAttributes.FindAttribute("LastName", this.CustomerId);
                 if (lastNameAttr != null)
-                    lastNameAttr = CustomerManager.UpdateCustomerAttribute(lastNameAttr.CustomerAttributeId, lastNameAttr.CustomerId, "LastName", value);
+                {
+                    lastNameAttr.Value = value;
+                    CustomerManager.UpdateCustomerAttribute(lastNameAttr);
+                }
                 else
-                    lastNameAttr = CustomerManager.InsertCustomerAttribute(this.CustomerId, "LastName", value);
+                {
+                    lastNameAttr = new CustomerAttribute()
+                    {
+                        CustomerId = this.CustomerId,
+                        Key = "LastName",
+                        Value = value
+                    };
+                    CustomerManager.InsertCustomerAttribute(lastNameAttr);
+                }
 
                 ResetCachedValues();
             }
@@ -556,9 +598,20 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                 var customerAttributes = this.CustomerAttributes;
                 CustomerAttribute companyAttr = customerAttributes.FindAttribute("Company", this.CustomerId);
                 if (companyAttr != null)
-                    companyAttr = CustomerManager.UpdateCustomerAttribute(companyAttr.CustomerAttributeId, companyAttr.CustomerId, "Company", value);
+                {
+                    companyAttr.Value = value;
+                    CustomerManager.UpdateCustomerAttribute(companyAttr);
+                }
                 else
-                    companyAttr = CustomerManager.InsertCustomerAttribute(this.CustomerId, "Company", value);
+                {
+                    companyAttr = new CustomerAttribute()
+                    {
+                        CustomerId = this.CustomerId,
+                        Key = "Company",
+                        Value = value
+                    };
+                    CustomerManager.InsertCustomerAttribute(companyAttr);
+                }
                 
                 ResetCachedValues();
             }
@@ -587,9 +640,20 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                 var customerAttributes = this.CustomerAttributes;
                 CustomerAttribute vatNumberAttr = customerAttributes.FindAttribute("VatNumber", this.CustomerId);
                 if (vatNumberAttr != null)
-                    vatNumberAttr = CustomerManager.UpdateCustomerAttribute(vatNumberAttr.CustomerAttributeId, vatNumberAttr.CustomerId, "VatNumber", value);
+                {
+                    vatNumberAttr.Value = value;
+                    CustomerManager.UpdateCustomerAttribute(vatNumberAttr);
+                }
                 else
-                    vatNumberAttr = CustomerManager.InsertCustomerAttribute(this.CustomerId, "VatNumber", value);
+                {
+                    vatNumberAttr = new CustomerAttribute()
+                    {
+                        CustomerId = this.CustomerId,
+                        Key = "VatNumber",
+                        Value = value
+                    };
+                    CustomerManager.InsertCustomerAttribute(vatNumberAttr);
+                }
                 
                 ResetCachedValues();
             }
@@ -619,9 +683,20 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                 var customerAttributes = this.CustomerAttributes;
                 CustomerAttribute vatNumberStatusAttr = customerAttributes.FindAttribute("VatNumberStatus", this.CustomerId);
                 if (vatNumberStatusAttr != null)
-                    vatNumberStatusAttr = CustomerManager.UpdateCustomerAttribute(vatNumberStatusAttr.CustomerAttributeId, vatNumberStatusAttr.CustomerId, "VatNumberStatus", vatNumberStatusId.ToString());
+                {
+                    vatNumberStatusAttr.Value = vatNumberStatusId.ToString();
+                    CustomerManager.UpdateCustomerAttribute(vatNumberStatusAttr);
+                }
                 else
-                    vatNumberStatusAttr = CustomerManager.InsertCustomerAttribute(this.CustomerId, "VatNumberStatus", vatNumberStatusId.ToString());
+                {
+                    vatNumberStatusAttr = new CustomerAttribute()
+                    {
+                        CustomerId = this.CustomerId,
+                        Key = "VatNumberStatus",
+                        Value = vatNumberStatusId.ToString()
+                    };
+                    CustomerManager.InsertCustomerAttribute(vatNumberStatusAttr);
+                }
 
                 ResetCachedValues();
             }
@@ -650,10 +725,20 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                 var customerAttributes = this.CustomerAttributes;
                 CustomerAttribute streetAddressAttr = customerAttributes.FindAttribute("StreetAddress", this.CustomerId);
                 if (streetAddressAttr != null)
-                    streetAddressAttr = CustomerManager.UpdateCustomerAttribute(streetAddressAttr.CustomerAttributeId, streetAddressAttr.CustomerId, "StreetAddress", value);
+                {
+                    streetAddressAttr.Value = value;
+                    CustomerManager.UpdateCustomerAttribute(streetAddressAttr);
+                }
                 else
-                    streetAddressAttr = CustomerManager.InsertCustomerAttribute(this.CustomerId, "StreetAddress", value);
-
+                {
+                    streetAddressAttr = new CustomerAttribute()
+                    {
+                        CustomerId = this.CustomerId,
+                        Key = "StreetAddress",
+                        Value = value
+                    };
+                    CustomerManager.InsertCustomerAttribute(streetAddressAttr);
+                }
                 ResetCachedValues();
             }
         }
@@ -681,10 +766,20 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                 var customerAttributes = this.CustomerAttributes;
                 CustomerAttribute streetAddress2Attr = customerAttributes.FindAttribute("StreetAddress2", this.CustomerId);
                 if (streetAddress2Attr != null)
-                    streetAddress2Attr = CustomerManager.UpdateCustomerAttribute(streetAddress2Attr.CustomerAttributeId, streetAddress2Attr.CustomerId, "StreetAddress2", value);
+                {
+                    streetAddress2Attr.Value = value;
+                    CustomerManager.UpdateCustomerAttribute(streetAddress2Attr);
+                }
                 else
-                    streetAddress2Attr = CustomerManager.InsertCustomerAttribute(this.CustomerId, "StreetAddress2", value);
-
+                {
+                    streetAddress2Attr = new CustomerAttribute()
+                    {
+                        CustomerId = this.CustomerId,
+                        Key = "StreetAddress2",
+                        Value = value
+                    };
+                    CustomerManager.InsertCustomerAttribute(streetAddress2Attr);
+                }
                 ResetCachedValues();
             }
         }
@@ -712,10 +807,20 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                 var customerAttributes = this.CustomerAttributes;
                 CustomerAttribute zipPostalCodeAttr = customerAttributes.FindAttribute("ZipPostalCode", this.CustomerId);
                 if (zipPostalCodeAttr != null)
-                    zipPostalCodeAttr = CustomerManager.UpdateCustomerAttribute(zipPostalCodeAttr.CustomerAttributeId, zipPostalCodeAttr.CustomerId, "ZipPostalCode", value);
+                {
+                    zipPostalCodeAttr.Value = value;
+                    CustomerManager.UpdateCustomerAttribute(zipPostalCodeAttr);
+                }
                 else
-                    zipPostalCodeAttr = CustomerManager.InsertCustomerAttribute(this.CustomerId, "ZipPostalCode", value);
-
+                {
+                    zipPostalCodeAttr = new CustomerAttribute()
+                    {
+                        CustomerId = this.CustomerId,
+                        Key = "ZipPostalCode",
+                        Value = value
+                    };
+                    CustomerManager.InsertCustomerAttribute(zipPostalCodeAttr);
+                }
                 ResetCachedValues();
             }
         }
@@ -743,9 +848,20 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                 var customerAttributes = this.CustomerAttributes;
                 CustomerAttribute cityAttr = customerAttributes.FindAttribute("City", this.CustomerId);
                 if (cityAttr != null)
-                    cityAttr = CustomerManager.UpdateCustomerAttribute(cityAttr.CustomerAttributeId, cityAttr.CustomerId, "City", value);
+                {
+                    cityAttr.Value = value;
+                    CustomerManager.UpdateCustomerAttribute(cityAttr);
+                }
                 else
-                    cityAttr = CustomerManager.InsertCustomerAttribute(this.CustomerId, "City", value);
+                {
+                    cityAttr = new CustomerAttribute()
+                    {
+                        CustomerId = this.CustomerId,
+                        Key = "City",
+                        Value = value
+                    };
+                    CustomerManager.InsertCustomerAttribute(cityAttr);
+                }
 
                 ResetCachedValues();
             }
@@ -774,9 +890,20 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                 var customerAttributes = this.CustomerAttributes;
                 CustomerAttribute phoneNumberAttr = customerAttributes.FindAttribute("PhoneNumber", this.CustomerId);
                 if (phoneNumberAttr != null)
-                    phoneNumberAttr = CustomerManager.UpdateCustomerAttribute(phoneNumberAttr.CustomerAttributeId, phoneNumberAttr.CustomerId, "PhoneNumber", value);
+                {
+                    phoneNumberAttr.Value = value;
+                    CustomerManager.UpdateCustomerAttribute(phoneNumberAttr);
+                }
                 else
-                    phoneNumberAttr = CustomerManager.InsertCustomerAttribute(this.CustomerId, "PhoneNumber", value);
+                {
+                    phoneNumberAttr = new CustomerAttribute()
+                    {
+                        CustomerId = this.CustomerId,
+                        Key = "PhoneNumber",
+                        Value = value
+                    };
+                    CustomerManager.InsertCustomerAttribute(phoneNumberAttr);
+                }
 
                 ResetCachedValues();
             }
@@ -805,9 +932,20 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                 var customerAttributes = this.CustomerAttributes;
                 CustomerAttribute faxNumberAttr = customerAttributes.FindAttribute("FaxNumber", this.CustomerId);
                 if (faxNumberAttr != null)
-                    faxNumberAttr = CustomerManager.UpdateCustomerAttribute(faxNumberAttr.CustomerAttributeId, faxNumberAttr.CustomerId, "FaxNumber", value);
+                {
+                    faxNumberAttr.Value = value;
+                    CustomerManager.UpdateCustomerAttribute(faxNumberAttr);
+                }
                 else
-                    faxNumberAttr = CustomerManager.InsertCustomerAttribute(this.CustomerId, "FaxNumber", value);
+                {
+                    faxNumberAttr = new CustomerAttribute()
+                    {
+                        CustomerId = this.CustomerId,
+                        Key = "FaxNumber",
+                        Value = value
+                    };
+                    CustomerManager.InsertCustomerAttribute(faxNumberAttr);
+                }
 
                 ResetCachedValues();
             }
@@ -836,9 +974,20 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                 var customerAttributes = this.CustomerAttributes;
                 CustomerAttribute countryIdAttr = customerAttributes.FindAttribute("CountryId", this.CustomerId);
                 if (countryIdAttr != null)
-                    countryIdAttr = CustomerManager.UpdateCustomerAttribute(countryIdAttr.CustomerAttributeId, countryIdAttr.CustomerId, "CountryId", value.ToString());
+                {
+                    countryIdAttr.Value = value.ToString();
+                    CustomerManager.UpdateCustomerAttribute(countryIdAttr);
+                }
                 else
-                    countryIdAttr = CustomerManager.InsertCustomerAttribute(this.CustomerId, "CountryId", value.ToString());
+                {
+                    countryIdAttr = new CustomerAttribute()
+                    {
+                        CustomerId = this.CustomerId,
+                        Key = "CountryId",
+                        Value = value.ToString()
+                    };
+                    CustomerManager.InsertCustomerAttribute(countryIdAttr);
+                }
 
                 ResetCachedValues();
             }
@@ -867,9 +1016,20 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                 var customerAttributes = this.CustomerAttributes;
                 CustomerAttribute stateProvinceIdAttr = customerAttributes.FindAttribute("StateProvinceId", this.CustomerId);
                 if (stateProvinceIdAttr != null)
-                    stateProvinceIdAttr = CustomerManager.UpdateCustomerAttribute(stateProvinceIdAttr.CustomerAttributeId, stateProvinceIdAttr.CustomerId, "StateProvinceId", value.ToString());
+                {
+                    stateProvinceIdAttr.Value = value.ToString();
+                    CustomerManager.UpdateCustomerAttribute(stateProvinceIdAttr);
+                }
                 else
-                    stateProvinceIdAttr = CustomerManager.InsertCustomerAttribute(this.CustomerId, "StateProvinceId", value.ToString());
+                {
+                    stateProvinceIdAttr = new CustomerAttribute()
+                    {
+                        CustomerId = this.CustomerId,
+                        Key = "StateProvinceId",
+                        Value = value.ToString()
+                    };
+                   CustomerManager.InsertCustomerAttribute(stateProvinceIdAttr);
+                }
 
                 ResetCachedValues();
             }
@@ -893,7 +1053,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                 {
                     if (value)
                     {
-                        MessageManager.UpdateNewsLetterSubscription(subscription.NewsLetterSubscriptionId, subscription.Email, true);
+                        subscription.Active = true;
+                        MessageManager.UpdateNewsLetterSubscription(subscription);
                     }
                     else
                     {
@@ -904,7 +1065,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                 {
                     if (value)
                     {
-                        MessageManager.InsertNewsLetterSubscription(Email, value);
+                        var newsLetterSubscription = new NewsLetterSubscription()
+                        {
+                            NewsLetterSubscriptionGuid = Guid.NewGuid(),
+                            Email = Email,
+                            Active = value,
+                            CreatedOn = DateTime.UtcNow
+                        };
+                        MessageManager.InsertNewsLetterSubscription(newsLetterSubscription);
                     }
                 }
             }
@@ -944,7 +1112,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                 {
                     if (!String.IsNullOrEmpty(value))
                     {
-                        passwordRecoveryAttr = CustomerManager.UpdateCustomerAttribute(passwordRecoveryAttr.CustomerAttributeId, passwordRecoveryAttr.CustomerId, "PasswordRecoveryToken", value);
+                        passwordRecoveryAttr.Value = value;
+                        CustomerManager.UpdateCustomerAttribute(passwordRecoveryAttr);
                     }
                     else
                     {
@@ -955,7 +1124,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                 {
                     if (!String.IsNullOrEmpty(value))
                     {
-                        passwordRecoveryAttr = CustomerManager.InsertCustomerAttribute(this.CustomerId, "PasswordRecoveryToken", value);
+                        passwordRecoveryAttr = new CustomerAttribute()
+                        {
+                            CustomerId = this.CustomerId,
+                            Key = "PasswordRecoveryToken",
+                            Value = value
+                        };
+                        CustomerManager.InsertCustomerAttribute(passwordRecoveryAttr);
                     }
                 }
                 ResetCachedValues();
@@ -985,7 +1160,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                 {
                     if (!String.IsNullOrEmpty(value))
                     {
-                        accountActivationAttr = CustomerManager.UpdateCustomerAttribute(accountActivationAttr.CustomerAttributeId, accountActivationAttr.CustomerId, "AccountActivationToken", value);
+                        accountActivationAttr.Value = value;
+                        CustomerManager.UpdateCustomerAttribute(accountActivationAttr);
                     }
                     else
                     {
@@ -996,7 +1172,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                 {
                     if (!String.IsNullOrEmpty(value))
                     {
-                        accountActivationAttr = CustomerManager.InsertCustomerAttribute(this.CustomerId, "AccountActivationToken", value);
+                        accountActivationAttr = new CustomerAttribute()
+                        {
+                            CustomerId = this.CustomerId,
+                            Key = "AccountActivationToken",
+                            Value = value
+                        };
+                        CustomerManager.InsertCustomerAttribute(accountActivationAttr);
                     }
                 }
                 ResetCachedValues();
@@ -1059,9 +1241,20 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                 var customerAttributes = this.CustomerAttributes;
                 CustomerAttribute useRewardPointsAttr = customerAttributes.FindAttribute("UseRewardPointsDuringCheckout", this.CustomerId);
                 if (useRewardPointsAttr != null)
-                    useRewardPointsAttr = CustomerManager.UpdateCustomerAttribute(useRewardPointsAttr.CustomerAttributeId, useRewardPointsAttr.CustomerId, "UseRewardPointsDuringCheckout", value.ToString());
+                {
+                    useRewardPointsAttr.Value = value.ToString();
+                    CustomerManager.UpdateCustomerAttribute(useRewardPointsAttr);
+                }
                 else
-                    useRewardPointsAttr = CustomerManager.InsertCustomerAttribute(this.CustomerId, "UseRewardPointsDuringCheckout", value.ToString());
+                {
+                    useRewardPointsAttr = new CustomerAttribute()
+                    {
+                        CustomerId = this.CustomerId,
+                        Key = "UseRewardPointsDuringCheckout",
+                        Value = value.ToString()
+                    };
+                    CustomerManager.InsertCustomerAttribute(useRewardPointsAttr);
+                }
 
                 ResetCachedValues();
             }
@@ -1090,9 +1283,20 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                 var customerAttributes = this.CustomerAttributes;
                 CustomerAttribute attr = customerAttributes.FindAttribute("NotifiedAboutNewPrivateMessages", this.CustomerId);
                 if (attr != null)
-                    attr = CustomerManager.UpdateCustomerAttribute(attr.CustomerAttributeId, attr.CustomerId, "NotifiedAboutNewPrivateMessages", value.ToString());
+                {
+                    attr.Value = value.ToString();
+                    CustomerManager.UpdateCustomerAttribute(attr);
+                }
                 else
-                    attr = CustomerManager.InsertCustomerAttribute(this.CustomerId, "NotifiedAboutNewPrivateMessages", value.ToString());
+                {
+                    attr = new CustomerAttribute()
+                    {
+                        CustomerId = this.CustomerId,
+                        Key = "NotifiedAboutNewPrivateMessages",
+                        Value = value.ToString()
+                    };
+                    CustomerManager.InsertCustomerAttribute(attr);
+                }
 
                 ResetCachedValues();
             }
@@ -1121,10 +1325,20 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                 var customerAttributes = this.CustomerAttributes;
                 CustomerAttribute attr = customerAttributes.FindAttribute("ImpersonatedCustomerGuid", this.CustomerId);
                 if (attr != null)
-                    attr = CustomerManager.UpdateCustomerAttribute(attr.CustomerAttributeId, attr.CustomerId, "ImpersonatedCustomerGuid", value.ToString());
+                {
+                    attr.Value = value.ToString();
+                    CustomerManager.UpdateCustomerAttribute(attr);
+                }
                 else
-                    attr = CustomerManager.InsertCustomerAttribute(this.CustomerId, "ImpersonatedCustomerGuid", value.ToString());
-
+                {
+                    attr = new CustomerAttribute()
+                    {
+                        CustomerId = this.CustomerId,
+                        Key = "ImpersonatedCustomerGuid",
+                        Value = value.ToString()
+                    };
+                    CustomerManager.InsertCustomerAttribute(attr);
+                }
                 ResetCachedValues();
             }
         }

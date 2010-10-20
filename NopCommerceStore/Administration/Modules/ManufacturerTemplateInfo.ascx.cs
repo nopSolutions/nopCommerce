@@ -63,14 +63,25 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             ManufacturerTemplate manufacturerTemplate = TemplateManager.GetManufacturerTemplateById(this.ManufacturerTemplateId);
             if (manufacturerTemplate != null)
             {
-                manufacturerTemplate = TemplateManager.UpdateManufacturerTemplate(manufacturerTemplate.ManufacturerTemplateId, txtName.Text,
-                    txtTemplatePath.Text, txtDisplayOrder.Value, manufacturerTemplate.CreatedOn, DateTime.UtcNow);
+                manufacturerTemplate.Name = txtName.Text;
+                manufacturerTemplate.TemplatePath =  txtTemplatePath.Text;
+                manufacturerTemplate.DisplayOrder =  txtDisplayOrder.Value;
+                manufacturerTemplate.UpdatedOn = DateTime.UtcNow;
+
+                TemplateManager.UpdateManufacturerTemplate(manufacturerTemplate);
             }
             else
             {
                 DateTime now = DateTime.UtcNow;
-                manufacturerTemplate = TemplateManager.InsertManufacturerTemplate(txtName.Text,
-                    txtTemplatePath.Text, txtDisplayOrder.Value, now, now);
+                manufacturerTemplate = new ManufacturerTemplate()
+                {
+                    Name = txtName.Text,
+                    TemplatePath = txtTemplatePath.Text,
+                    DisplayOrder = txtDisplayOrder.Value,
+                    CreatedOn = now,
+                    UpdatedOn = now
+                };
+                TemplateManager.InsertManufacturerTemplate(manufacturerTemplate);
             }
 
             return manufacturerTemplate;

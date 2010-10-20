@@ -84,12 +84,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             Product product = ProductManager.GetProductById(prodId);
             if (product != null)
             {
-                product = ProductManager.UpdateProduct(product.ProductId, product.Name, product.ShortDescription,
-                    product.FullDescription, product.AdminComment,
-                    product.TemplateId, product.ShowOnHomePage, txtMetaKeywords.Text,
-                    txtMetaDescription.Text, txtMetaTitle.Text, txtSEName.Text,
-                    product.AllowCustomerReviews, product.AllowCustomerRatings, product.RatingSum,
-                    product.TotalRatingVotes, product.Published, product.Deleted, product.CreatedOn, DateTime.UtcNow);
+                product.MetaKeywords = txtMetaKeywords.Text;
+                product.MetaDescription = txtMetaDescription.Text;
+                product.MetaTitle = txtMetaTitle.Text;
+                product.SEName = txtSEName.Text;
+                product.UpdatedOn = DateTime.UtcNow;
+                ProductManager.UpdateProduct(product);
             }
 
             SaveLocalizableContent(product);
@@ -130,18 +130,26 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         if (!allFieldsAreEmpty && languageId > 0)
                         {
                             //only insert if one of the fields are filled out (avoid too many empty records in db...)
-                            content = ProductManager.InsertProductLocalized(product.ProductId,
-                                   languageId, string.Empty, string.Empty, string.Empty,
-                                   metaKeywords, metaDescription, metaTitle, seName);
+                            content = new ProductLocalized();
+                            content.ProductId = product.ProductId;
+                            content.LanguageId = languageId;
+                            content.MetaKeywords = metaKeywords;
+                            content.MetaDescription = metaDescription;
+                            content.MetaTitle = metaTitle;
+                            content.SEName = seName;
+                            ProductManager.InsertProductLocalized(content);
                         }
                     }
                     else
                     {
                         if (languageId > 0)
                         {
-                            content = ProductManager.UpdateProductLocalized(content.ProductLocalizedId, content.ProductId,
-                                languageId, content.Name, content.ShortDescription, content.FullDescription,
-                                metaKeywords, metaDescription, metaTitle, seName);
+                            content.LanguageId = languageId;
+                            content.MetaKeywords = metaKeywords;
+                            content.MetaDescription = metaDescription;
+                            content.MetaTitle = metaTitle;
+                            content.SEName = seName;
+                            ProductManager.UpdateProductLocalized(content);
                         }
                     }
                 }

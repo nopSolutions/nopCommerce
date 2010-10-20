@@ -137,7 +137,14 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     int customerId = 0;
                     if (NopContext.Current.User != null)
                         customerId = NopContext.Current.User.CustomerId;
-                    SearchLogManager.InsertSearchLog(txtSearchTerm.Text, customerId, DateTime.UtcNow);
+
+                    var searchLog = new SearchLog()
+                    {
+                        SearchTerm = txtSearchTerm.Text.Trim(),
+                        CustomerId = customerId,
+                        CreatedOn = DateTime.UtcNow
+                    };
+                    SearchLogManager.InsertSearchLog(searchLog);
                 }
                 else
                 {

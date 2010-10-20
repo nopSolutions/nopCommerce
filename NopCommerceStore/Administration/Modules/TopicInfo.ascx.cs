@@ -137,13 +137,24 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             Topic topic = TopicManager.GetTopicById(this.TopicId);
             if (topic != null)
             {
-                topic = TopicManager.UpdateTopic(topic.TopicId, txtSystemName.Text,
-                    cbIsPasswordProtected.Checked, txtPassword.Text.Trim(), cbIncludeInSitemap.Checked);
+                topic.Name = txtSystemName.Text;
+                topic.IsPasswordProtected = cbIsPasswordProtected.Checked;
+                topic.Password = txtPassword.Text.Trim();
+                topic.IncludeInSitemap = cbIncludeInSitemap.Checked;
+
+                TopicManager.UpdateTopic(topic);
             }
             else
             {
-                topic = TopicManager.InsertTopic(txtSystemName.Text,
-                    cbIsPasswordProtected.Checked, txtPassword.Text.Trim(), cbIncludeInSitemap.Checked);
+                topic = new Topic()
+                {
+                    Name = txtSystemName.Text,
+                    IsPasswordProtected = cbIsPasswordProtected.Checked,
+                    Password = txtPassword.Text.Trim(),
+                    IncludeInSitemap = cbIncludeInSitemap.Checked
+                };
+
+                TopicManager.InsertTopic(topic);
             }
 
 
@@ -164,16 +175,26 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     var content = TopicManager.GetLocalizedTopic(topic.Name, languageId);
                     if (content == null)
                     {
-                        content = TopicManager.InsertLocalizedTopic(topic.TopicId,
-                                   languageId, title, body, nowDT, nowDT,
-                                   string.Empty, string.Empty, string.Empty);
+                        content = new LocalizedTopic()
+                        {
+                            TopicId = topic.TopicId,
+                            LanguageId = languageId,
+                            Title = title,
+                            Body = body,
+                            CreatedOn = nowDT,
+                            UpdatedOn = nowDT
+                        };
+
+                        TopicManager.InsertLocalizedTopic(content);
                     }
                     else
                     {
-                        content = TopicManager.UpdateLocalizedTopic(content.TopicLocalizedId,
-                                   content.TopicId, content.LanguageId, title, body,
-                                   content.CreatedOn, nowDT, content.MetaKeywords,
-                                   content.MetaDescription, content.MetaTitle);
+                        content.LanguageId = languageId;
+                        content.Title = title;
+                        content.Body = body;
+                        content.UpdatedOn = nowDT;
+
+                        TopicManager.UpdateLocalizedTopic(content);
                     }
                 }
             }
@@ -194,14 +215,16 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     var content = TopicManager.GetLocalizedTopic(topic.Name, languageId);
                     if (content == null)
                     {
-                        //localized topic should be already created in previous step
+                        //localized topic should be already created on the previous step
                     }
                     else
                     {
-                        content = TopicManager.UpdateLocalizedTopic(content.TopicLocalizedId,
-                                  content.TopicId, content.LanguageId, content.Title, content.Body,
-                                  content.CreatedOn, nowDT, metaKeywords,
-                                  metaDescription, metaTitle);
+                        content.UpdatedOn = nowDT;
+                        content.MetaKeywords = metaKeywords;
+                        content.MetaDescription = metaDescription;
+                        content.MetaTitle = metaTitle;
+
+                        TopicManager.UpdateLocalizedTopic(content);
                     }
                 }
             }

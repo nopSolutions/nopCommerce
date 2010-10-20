@@ -124,10 +124,17 @@ namespace NopSolutions.NopCommerce.Web.Administration
 
                     if (paymentMethod != null)
                     {
-                        paymentMethod = PaymentMethodManager.UpdatePaymentMethod(paymentMethod.PaymentMethodId,
-                            txtName.Text, txtVisibleName.Text, txtDescription.Text, 
-                            txtConfigureTemplatePath.Text, txtUserTemplatePath.Text, txtClassName.Text,
-                            txtSystemKeyword.Text, cbActive.Checked, txtDisplayOrder.Value);
+                        paymentMethod.Name = txtName.Text;
+                        paymentMethod.VisibleName = txtVisibleName.Text;
+                        paymentMethod.Description = txtDescription.Text;
+                        paymentMethod.ConfigureTemplatePath = txtConfigureTemplatePath.Text;
+                        paymentMethod.UserTemplatePath = txtUserTemplatePath.Text;
+                        paymentMethod.ClassName = txtClassName.Text;
+                        paymentMethod.SystemKeyword = txtSystemKeyword.Text;
+                        paymentMethod.IsActive = cbActive.Checked;
+                        paymentMethod.DisplayOrder = txtDisplayOrder.Value;
+
+                        PaymentMethodManager.UpdatePaymentMethod(paymentMethod);
 
                         var configureModule = GetConfigureModule();
                         if (configureModule != null)

@@ -54,13 +54,20 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
             if (shippingMethod != null)
             {
-                shippingMethod = ShippingMethodManager.UpdateShippingMethod(shippingMethod.ShippingMethodId,
-                    txtName.Text, txtDescription.Text, txtDisplayOrder.Value);
+                shippingMethod.Name = txtName.Text;
+                shippingMethod.Description =  txtDescription.Text;
+                shippingMethod.DisplayOrder = txtDisplayOrder.Value;
+                ShippingMethodManager.UpdateShippingMethod(shippingMethod);
             }
             else
             {
-                shippingMethod = ShippingMethodManager.InsertShippingMethod(txtName.Text, 
-                    txtDescription.Text, txtDisplayOrder.Value);
+                shippingMethod = new ShippingMethod()
+                {
+                    Name = txtName.Text,
+                    Description = txtDescription.Text,
+                    DisplayOrder = txtDisplayOrder.Value
+                };
+                ShippingMethodManager.InsertShippingMethod(shippingMethod);
             }
 
             return shippingMethod;

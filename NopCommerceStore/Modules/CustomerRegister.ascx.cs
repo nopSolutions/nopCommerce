@@ -338,16 +338,12 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 StateProvinceId = customer.StateProvinceId,
                 ZipPostalCode = customer.ZipPostalCode,
                 CountryId = customer.CountryId,
-                CreatedOn = customer.RegistrationDate
+                CreatedOn = customer.RegistrationDate,
+                UpdatedOn = customer.RegistrationDate
             };
             if (CustomerManager.CanUseAddressAsBillingAddress(billingAddress))
             {
-                billingAddress = CustomerManager.InsertAddress(billingAddress.CustomerId, billingAddress.IsBillingAddress,
-                    billingAddress.FirstName, billingAddress.LastName, billingAddress.PhoneNumber,
-                    billingAddress.Email, billingAddress.FaxNumber, billingAddress.Company,
-                    billingAddress.Address1, billingAddress.Address2,
-                    billingAddress.City, billingAddress.StateProvinceId,
-                    billingAddress.ZipPostalCode, billingAddress.CountryId, DateTime.UtcNow, DateTime.UtcNow);
+                CustomerManager.InsertAddress(billingAddress);
                 customer = CustomerManager.SetDefaultBillingAddress(customer.CustomerId, billingAddress.AddressId);
             }
 
@@ -368,16 +364,12 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 StateProvinceId = customer.StateProvinceId,
                 ZipPostalCode = customer.ZipPostalCode,
                 CountryId = customer.CountryId,
-                CreatedOn = customer.RegistrationDate
+                CreatedOn = customer.RegistrationDate,
+                UpdatedOn = customer.RegistrationDate
             };
             if (CustomerManager.CanUseAddressAsShippingAddress(shippingAddress))
             {
-                shippingAddress = CustomerManager.InsertAddress(shippingAddress.CustomerId, shippingAddress.IsBillingAddress,
-                    shippingAddress.FirstName, shippingAddress.LastName, shippingAddress.PhoneNumber,
-                    shippingAddress.Email, shippingAddress.FaxNumber, shippingAddress.Company,
-                    shippingAddress.Address1, shippingAddress.Address2,
-                    shippingAddress.City, shippingAddress.StateProvinceId,
-                    shippingAddress.ZipPostalCode, shippingAddress.CountryId, DateTime.UtcNow, DateTime.UtcNow);
+                CustomerManager.InsertAddress(shippingAddress);
                 customer = CustomerManager.SetDefaultShippingAddress(customer.CustomerId, shippingAddress.AddressId);
             }
 

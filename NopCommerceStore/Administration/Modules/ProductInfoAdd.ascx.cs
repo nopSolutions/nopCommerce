@@ -181,9 +181,17 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     downloadExtension = Path.GetExtension(productVariantDownloadFile.FileName);
                 }
 
-                Download productVariantDownload = DownloadManager.InsertDownload(useDownloadURL,
-                    downloadURL, productVariantDownloadBinary, downloadContentType,
-                    downloadFilename, downloadExtension, true);
+                var productVariantDownload = new Download()
+                {
+                    UseDownloadUrl = useDownloadURL,
+                    DownloadUrl = downloadURL,
+                    DownloadBinary = productVariantDownloadBinary,
+                    ContentType = downloadContentType,
+                    Filename = downloadFilename,
+                    Extension = downloadExtension,
+                    IsNew = true
+                };
+                DownloadManager.InsertDownload(productVariantDownload);
                 productVariantDownloadId = productVariantDownload.DownloadId;
             }
 
@@ -216,9 +224,17 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     sampleDownloadExtension = Path.GetExtension(productVariantSampleDownloadFile.FileName);
                 }
 
-                Download productVariantSampleDownload = DownloadManager.InsertDownload(useSampleDownloadURL,
-                    sampleDownloadURL, productVariantSampleDownloadBinary, sampleDownloadContentType,
-                    sampleDownloadFilename, sampleDownloadExtension, true);
+                var productVariantSampleDownload = new Download()
+                {
+                    UseDownloadUrl = useSampleDownloadURL,
+                    DownloadUrl = sampleDownloadURL,
+                    DownloadBinary = productVariantSampleDownloadBinary,
+                    ContentType = sampleDownloadContentType,
+                    Filename = sampleDownloadFilename,
+                    Extension = sampleDownloadExtension,
+                    IsNew = true
+                };
+                DownloadManager.InsertDownload(productVariantSampleDownload);
                 productVariantSampleDownloadId = productVariantSampleDownload.DownloadId;
             }
 
@@ -266,27 +282,85 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 availableEndDateTime = DateTime.SpecifyKind(availableEndDateTime.Value, DateTimeKind.Utc);
             }
 
-            Product product = ProductManager.InsertProduct(name, shortDescription, fullDescription,
-                adminComment, templateId, showOnHomePage, string.Empty, string.Empty,
-                string.Empty, string.Empty, allowCustomerReviews, allowCustomerRatings, 0, 0,
-                 published, false, nowDT, nowDT);
+            //product
+            var product = new Product()
+            {
+                Name = name,
+                ShortDescription = shortDescription,
+                FullDescription = fullDescription,
+                AdminComment = adminComment,
+                TemplateId = templateId,
+                ShowOnHomePage = showOnHomePage,
+                AllowCustomerReviews = allowCustomerReviews,
+                AllowCustomerRatings = allowCustomerRatings,
+                Published = published,
+                CreatedOn = nowDT,
+                UpdatedOn = nowDT
+            };
 
-            ProductVariant productVariant = ProductManager.InsertProductVariant(product.ProductId,
-                 string.Empty, sku, string.Empty, string.Empty, manufacturerPartNumber,
-                 isGiftCard, giftCardType, isDownload, productVariantDownloadId, unlimitedDownloads,
-                 maxNumberOfDownloads, downloadExpirationDays, downloadActivationType,
-                 hasSampleDownload, productVariantSampleDownloadId,
-                 hasUserAgreement, userAgreementText,
-                 isRecurring, cycleLength, (int)cyclePeriod, totalCycles,
-                 isShipEnabled, isFreeShipping, additionalShippingCharge, isTaxExempt,
-                 taxCategoryId, manageStock, stockQuantity, 
-                 displayStockAvailability, displayStockQuantity,
-                 minStockQuantity, lowStockActivity, notifyForQuantityBelow, backorders,
-                 orderMinimumQuantity, orderMaximumQuantity, warehouseId, disableBuyButton,
-                 callForPrice, price, oldPrice, productCost, customerEntersPrice,
-                 minimumCustomerEnteredPrice, maximumCustomerEnteredPrice,
-                 weight, length, width, height, 0, availableStartDateTime, availableEndDateTime,
-                 published, false, 1, nowDT, nowDT);
+            ProductManager.InsertProduct(product);
+
+
+            //product variant
+            var productVariant = new ProductVariant()
+            {
+                ProductId = product.ProductId,
+                SKU = sku,
+                ManufacturerPartNumber = manufacturerPartNumber,
+                IsGiftCard = isGiftCard,
+                GiftCardType = giftCardType,
+                IsDownload = isDownload,
+                DownloadId = productVariantDownloadId,
+                UnlimitedDownloads = unlimitedDownloads,
+                MaxNumberOfDownloads = maxNumberOfDownloads,
+                DownloadExpirationDays = downloadExpirationDays,
+                DownloadActivationType = (int)downloadActivationType,
+                HasSampleDownload = hasSampleDownload,
+                SampleDownloadId = productVariantSampleDownloadId,
+                HasUserAgreement = hasUserAgreement,
+                UserAgreementText = userAgreementText,
+                IsRecurring = isRecurring,
+                CycleLength = cycleLength,
+                CyclePeriod = (int)cyclePeriod,
+                TotalCycles = totalCycles,
+                IsShipEnabled = isShipEnabled,
+                IsFreeShipping = isFreeShipping,
+                AdditionalShippingCharge = additionalShippingCharge,
+                IsTaxExempt = isTaxExempt,
+                TaxCategoryId = taxCategoryId,
+                ManageInventory = manageStock,
+                StockQuantity = stockQuantity,
+                DisplayStockAvailability = displayStockAvailability,
+                DisplayStockQuantity = displayStockQuantity,
+                MinStockQuantity = minStockQuantity,
+                LowStockActivityId = (int)lowStockActivity,
+                NotifyAdminForQuantityBelow = notifyForQuantityBelow,
+                Backorders = backorders,
+                OrderMinimumQuantity = orderMinimumQuantity,
+                OrderMaximumQuantity = orderMaximumQuantity,
+                WarehouseId = warehouseId,
+                DisableBuyButton = disableBuyButton,
+                CallForPrice = callForPrice,
+                Price = price,
+                OldPrice = oldPrice,
+                ProductCost = productCost,
+                CustomerEntersPrice = customerEntersPrice,
+                MinimumCustomerEnteredPrice = minimumCustomerEnteredPrice,
+                MaximumCustomerEnteredPrice = maximumCustomerEnteredPrice,
+                Weight = weight,
+                Length = length,
+                Width = width,
+                Height = height,
+                AvailableStartDateTime = availableStartDateTime,
+                AvailableEndDateTime = availableEndDateTime,
+                Published = published,
+                Deleted = false,
+                DisplayOrder = 1,
+                CreatedOn = nowDT,
+                UpdatedOn = nowDT
+            };
+
+            ProductManager.InsertProductVariant(productVariant);
 
             SaveLocalizableContent(product);
 
@@ -304,7 +378,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     productTagName);
                 if (productTags2.Count == 0)
                 {
-                    productTag = ProductManager.InsertProductTag(productTagName, 0);
+                    productTag = new ProductTag()
+                    {
+                        Name = productTagName,
+                        ProductCount = 0
+                    };
+                    ProductManager.InsertProductTag(productTag);
                 }
                 else
                 {
@@ -348,19 +427,26 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         if (!allFieldsAreEmpty && languageId > 0)
                         {
                             //only insert if one of the fields are filled out (avoid too many empty records in db...)
-                            content = ProductManager.InsertProductLocalized(product.ProductId,
-                                   languageId, name, shortDescription, fullDescription,
-                                   string.Empty, string.Empty, string.Empty, string.Empty);
+                            content = new ProductLocalized()
+                            {
+                                ProductId = product.ProductId,
+                                LanguageId = languageId,
+                                Name = name,
+                                ShortDescription = shortDescription,
+                                FullDescription = fullDescription
+                            };
+                            ProductManager.InsertProductLocalized(content);
                         }
                     }
                     else
                     {
                         if (languageId > 0)
                         {
-                            content = ProductManager.UpdateProductLocalized(content.ProductLocalizedId, content.ProductId,
-                                languageId, name, shortDescription, fullDescription,
-                                content.MetaKeywords, content.MetaDescription,
-                                content.MetaTitle, content.SEName);
+                            content.LanguageId = languageId;
+                            content.Name = name;
+                            content.ShortDescription = shortDescription;
+                            content.FullDescription = fullDescription;
+                            ProductManager.UpdateProductLocalized(content);
                         }
                     }
                 }

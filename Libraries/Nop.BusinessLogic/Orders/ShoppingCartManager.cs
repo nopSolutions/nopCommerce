@@ -134,34 +134,15 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <summary>
         /// Inserts a shopping cart item
         /// </summary>
-        /// <param name="shoppingCartType">The shopping cart type</param>
-        /// <param name="customerSessionGuid">The customer session identifier</param>
-        /// <param name="productVariantId">The product variant identifier</param>
-        /// <param name="attributesXml">The product variant attributes</param>
-        /// <param name="customerEnteredPrice">The price enter by a customer</param>
-        /// <param name="quantity">The quantity</param>
-        /// <param name="createdOn">The date and time of instance creation</param>
-        /// <param name="updatedOn">The date and time of instance update</param>
-        /// <returns>Shopping cart item</returns>
-        internal static ShoppingCartItem InsertShoppingCartItem(ShoppingCartTypeEnum shoppingCartType,
-            Guid customerSessionGuid, int productVariantId, string attributesXml,
-            decimal customerEnteredPrice, int quantity,
-            DateTime createdOn, DateTime updatedOn)
+        /// <param name="shoppingCartItem">The shopping cart item</param>
+        internal static void InsertShoppingCartItem(ShoppingCartItem shoppingCartItem)
         {
-            if (attributesXml == null)
-                attributesXml = string.Empty;
+            if (shoppingCartItem == null)
+                throw new ArgumentNullException("shoppingCartItem");
+
+            shoppingCartItem.AttributesXml  = CommonHelper.EnsureNotNull(shoppingCartItem.AttributesXml);
 
             var context = ObjectContextHelper.CurrentObjectContext;
-
-            var shoppingCartItem = context.ShoppingCartItems.CreateObject();
-            shoppingCartItem.ShoppingCartTypeId = (int)shoppingCartType;
-            shoppingCartItem.CustomerSessionGuid = customerSessionGuid;
-            shoppingCartItem.ProductVariantId = productVariantId;
-            shoppingCartItem.AttributesXml = attributesXml;
-            shoppingCartItem.CustomerEnteredPrice = customerEnteredPrice;
-            shoppingCartItem.Quantity = quantity;
-            shoppingCartItem.CreatedOn = createdOn;
-            shoppingCartItem.UpdatedOn = updatedOn;
 
             context.ShoppingCartItems.AddObject(shoppingCartItem);
             context.SaveChanges();
@@ -176,53 +157,24 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                         shoppingCartItem.ProductVariant.FullProductName);
                 }
             }
-
-            return shoppingCartItem;
         }
 
         /// <summary>
         /// Updates the shopping cart item
         /// </summary>
-        /// <param name="shoppingCartItemId">The shopping cart item identifier</param>
-        /// <param name="shoppingCartType">The shopping cart type</param>
-        /// <param name="customerSessionGuid">The customer session identifier</param>
-        /// <param name="productVariantId">The product variant identifier</param>
-        /// <param name="attributesXml">The product variant attributes</param>
-        /// <param name="customerEnteredPrice">The price enter by a customer</param>
-        /// <param name="quantity">The quantity</param>
-        /// <param name="createdOn">The date and time of instance creation</param>
-        /// <param name="updatedOn">The date and time of instance update</param>
-        /// <returns>Shopping cart item</returns>
-        internal static ShoppingCartItem UpdateShoppingCartItem(int shoppingCartItemId,
-            ShoppingCartTypeEnum shoppingCartType, Guid customerSessionGuid,
-            int productVariantId, string attributesXml, decimal customerEnteredPrice,
-            int quantity, DateTime createdOn, DateTime updatedOn)
+        /// <param name="shoppingCartItem">The shopping cart item</param>
+        internal static void UpdateShoppingCartItem(ShoppingCartItem shoppingCartItem)
         {
-            if (shoppingCartItemId == 0)
-                return null;
-
-            if (attributesXml == null)
-                attributesXml = string.Empty;
-
-            var shoppingCartItem = GetShoppingCartItemById(shoppingCartItemId);
             if (shoppingCartItem == null)
-                return null;
+                throw new ArgumentNullException("shoppingCartItem");
+
+            shoppingCartItem.AttributesXml = CommonHelper.EnsureNotNull(shoppingCartItem.AttributesXml);
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(shoppingCartItem))
                 context.ShoppingCartItems.Attach(shoppingCartItem);
 
-            shoppingCartItem.ShoppingCartTypeId = (int)shoppingCartType;
-            shoppingCartItem.CustomerSessionGuid = customerSessionGuid;
-            shoppingCartItem.ProductVariantId = productVariantId;
-            shoppingCartItem.AttributesXml = attributesXml;
-            shoppingCartItem.CustomerEnteredPrice = customerEnteredPrice;
-            shoppingCartItem.Quantity = quantity;
-            shoppingCartItem.CreatedOn = createdOn;
-            shoppingCartItem.UpdatedOn = updatedOn;
             context.SaveChanges();
-
-            return shoppingCartItem;
         }
 
         /// <summary>
@@ -1327,15 +1279,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
 
                 if (warnings.Count == 0)
                 {
-                    UpdateShoppingCartItem(shoppingCartItem.ShoppingCartItemId, 
-                        shoppingCartType,
-                        customerSessionGuid, 
-                        productVariantId, 
-                        selectedAttributes,
-                        shoppingCartItem.CustomerEnteredPrice,
-                        newQuantity,
-                        shoppingCartItem.CreatedOn, 
-                        now);
+                    shoppingCartItem.ShoppingCartTypeId = (int)shoppingCartType;
+                    shoppingCartItem.CustomerSessionGuid = customerSessionGuid;
+                    shoppingCartItem.ProductVariantId = productVariantId;
+                    shoppingCartItem.AttributesXml = selectedAttributes;
+                    shoppingCartItem.Quantity = newQuantity;
+                    shoppingCartItem.UpdatedOn = now;
+                    UpdateShoppingCartItem(shoppingCartItem);
                 }
             }
             else
@@ -1361,14 +1311,18 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                     }
 
                     //insert item
-                    InsertShoppingCartItem(shoppingCartType,
-                        customerSessionGuid, 
-                        productVariantId, 
-                        selectedAttributes,
-                        customerEnteredPrice,
-                        quantity, 
-                        now, 
-                        now);
+                    shoppingCartItem = new ShoppingCartItem()
+                    {
+                        ShoppingCartTypeId = (int)shoppingCartType,
+                        CustomerSessionGuid = customerSessionGuid,
+                        ProductVariantId = productVariantId,
+                        AttributesXml = selectedAttributes,
+                        CustomerEnteredPrice = customerEnteredPrice,
+                        Quantity = quantity,
+                        CreatedOn = now,
+                        UpdatedOn = now
+                    };
+                    InsertShoppingCartItem(shoppingCartItem);
                 }
             }
 
@@ -1404,16 +1358,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                         shoppingCartItem.CustomerEnteredPrice, newQuantity));
                     if (warnings.Count == 0)
                     {
-                        UpdateShoppingCartItem(
-                            shoppingCartItem.ShoppingCartItemId, 
-                            shoppingCartItem.ShoppingCartType, 
-                            shoppingCartItem.CustomerSessionGuid,
-                            shoppingCartItem.ProductVariantId, 
-                            shoppingCartItem.AttributesXml,
-                            shoppingCartItem.CustomerEnteredPrice,
-                            newQuantity, 
-                            shoppingCartItem.CreatedOn,
-                            DateTime.UtcNow);
+                        shoppingCartItem.Quantity = newQuantity;
+                        shoppingCartItem.UpdatedOn = DateTime.UtcNow;
+                        UpdateShoppingCartItem(shoppingCartItem);
                     }
                 }
                 else

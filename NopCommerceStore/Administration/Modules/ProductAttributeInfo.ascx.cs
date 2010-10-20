@@ -71,12 +71,18 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
             if (productAttribute != null)
             {
-                productAttribute = ProductAttributeManager.UpdateProductAttribute(productAttribute.ProductAttributeId,
-                    txtName.Text, txtDescription.Text);
+                productAttribute.Name = txtName.Text;
+                productAttribute.Description = txtDescription.Text;
+                ProductAttributeManager.UpdateProductAttribute(productAttribute);
             }
             else
             {
-                productAttribute = ProductAttributeManager.InsertProductAttribute(txtName.Text, txtDescription.Text);
+                productAttribute = new ProductAttribute()
+                {
+                    Name = txtName.Text,
+                    Description = txtDescription.Text
+                };
+                ProductAttributeManager.InsertProductAttribute(productAttribute);
             }
 
             SaveLocalizableContent(productAttribute);
@@ -112,16 +118,24 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         if (!allFieldsAreEmpty && languageId > 0)
                         {
                             //only insert if one of the fields are filled out (avoid too many empty records in db...)
-                            content = ProductAttributeManager.InsertProductAttributeLocalized(productAttribute.ProductAttributeId,
-                                   languageId, name, description);
+                            content = new ProductAttributeLocalized()
+                            {
+                                ProductAttributeId = productAttribute.ProductAttributeId,
+                                LanguageId = languageId,
+                                Name = name,
+                                Description = description
+                            };
+                            ProductAttributeManager.InsertProductAttributeLocalized(content);
                         }
                     }
                     else
                     {
                         if (languageId > 0)
                         {
-                            content = ProductAttributeManager.UpdateProductAttributeLocalized(content.ProductAttributeLocalizedId, content.ProductAttributeId,
-                                languageId, name, description);
+                            content.LanguageId = languageId;
+                            content.Name = name;
+                            content.Description = description;
+                            ProductAttributeManager.UpdateProductAttributeLocalized(content);
                         }
                     }
                 }

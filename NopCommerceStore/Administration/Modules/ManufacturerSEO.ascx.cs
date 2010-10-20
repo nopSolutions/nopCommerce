@@ -85,11 +85,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
             if (manufacturer != null)
             {
-                manufacturer = ManufacturerManager.UpdateManufacturer(manufacturer.ManufacturerId, manufacturer.Name, manufacturer.Description,
-                   manufacturer.TemplateId, txtMetaKeywords.Text, txtMetaDescription.Text,
-                   txtMetaTitle.Text, txtSEName.Text, manufacturer.PictureId, txtPageSize.Value,
-                   manufacturer.PriceRanges, manufacturer.Published,
-                   manufacturer.Deleted, manufacturer.DisplayOrder, manufacturer.CreatedOn, manufacturer.UpdatedOn);
+                manufacturer.MetaKeywords = txtMetaKeywords.Text;
+                manufacturer.MetaDescription = txtMetaDescription.Text;
+                manufacturer.MetaTitle = txtMetaTitle.Text;
+                manufacturer.SEName = txtSEName.Text;
+                manufacturer.PageSize = txtPageSize.Value;
+                ManufacturerManager.UpdateManufacturer(manufacturer);
             }
 
             SaveLocalizableContent(manufacturer);
@@ -130,19 +131,29 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         if (!allFieldsAreEmpty && languageId > 0)
                         {
                             //only insert if one of the fields are filled out (avoid too many empty records in db...)
-                            content = ManufacturerManager.InsertManufacturerLocalized(manufacturer.ManufacturerId,
-                                   languageId, string.Empty, string.Empty,
-                                   metaKeywords, metaDescription, metaTitle, seName);
+                            content = new ManufacturerLocalized()
+                            {
+                                ManufacturerId = manufacturer.ManufacturerId,
+                                LanguageId = languageId,
+                                MetaKeywords = metaKeywords,
+                                MetaDescription = metaDescription,
+                                MetaTitle = metaTitle,
+                                SEName = seName
+                            };
+
+                            ManufacturerManager.InsertManufacturerLocalized(content);
                         }
                     }
                     else
                     {
                         if (languageId > 0)
                         {
-                            content = ManufacturerManager.UpdateManufacturerLocalized(content.ManufacturerLocalizedId, content.ManufacturerId,
-                                languageId, content.Name, content.Description,
-                                metaKeywords, metaDescription,
-                                metaTitle, seName);
+                            content.LanguageId = languageId;
+                            content.MetaKeywords = metaKeywords;
+                            content.MetaDescription = metaDescription;
+                            content.MetaTitle = metaTitle;
+                            content.SEName = seName;
+                            ManufacturerManager.UpdateManufacturerLocalized(content);
                         }
                     }
                 }

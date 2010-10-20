@@ -140,13 +140,18 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             Product product = ProductManager.GetProductById(this.ProductId);
             if (product != null)
             {
-                product = ProductManager.UpdateProduct(product.ProductId, txtName.Text, 
-                    txtShortDescription.Text, txtFullDescription.Value, txtAdminComment.Text,
-                     int.Parse(this.ddlTemplate.SelectedItem.Value),
-                     cbShowOnHomePage.Checked, product.MetaKeywords, product.MetaDescription,
-                     product.MetaTitle, product.SEName, cbAllowCustomerReviews.Checked,
-                     cbAllowCustomerRatings.Checked, product.RatingSum, product.TotalRatingVotes, cbPublished.Checked,
-                     product.Deleted, product.CreatedOn, DateTime.UtcNow);
+                product.Name = txtName.Text;
+                product.ShortDescription = txtShortDescription.Text;
+                product.FullDescription = txtFullDescription.Value;
+                product.AdminComment = txtAdminComment.Text;
+                product.TemplateId = int.Parse(this.ddlTemplate.SelectedItem.Value);
+                product.ShowOnHomePage = cbShowOnHomePage.Checked;
+                product.AllowCustomerReviews = cbAllowCustomerReviews.Checked;
+                product.AllowCustomerRatings = cbAllowCustomerRatings.Checked;
+                product.Published = cbPublished.Checked;
+                product.UpdatedOn = DateTime.UtcNow;
+
+                ProductManager.UpdateProduct(product);
 
                 SaveLocalizableContent(product);
 
@@ -164,7 +169,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         productTagName);
                     if (productTags2.Count == 0)
                     {
-                        productTag = ProductManager.InsertProductTag(productTagName, 0);
+                        productTag = new ProductTag()
+                        {
+                            Name = productTagName,
+                            ProductCount = 0
+                        };
+                        ProductManager.InsertProductTag(productTag);
                     }
                     else
                     {
@@ -209,19 +219,26 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         if (!allFieldsAreEmpty && languageId > 0)
                         {
                             //only insert if one of the fields are filled out (avoid too many empty records in db...)
-                            content = ProductManager.InsertProductLocalized(product.ProductId,
-                                   languageId, name, shortDescription, fullDescription,
-                                   string.Empty, string.Empty, string.Empty, string.Empty);
+                            content = new ProductLocalized()
+                            {
+                                ProductId = product.ProductId,
+                                LanguageId = languageId,
+                                Name = name,
+                                ShortDescription = shortDescription,
+                                FullDescription = fullDescription
+                            };
+                            ProductManager.InsertProductLocalized(content);
                         }
                     }
                     else
                     {
                         if (languageId > 0)
                         {
-                            content = ProductManager.UpdateProductLocalized(content.ProductLocalizedId, content.ProductId,
-                                languageId, name, shortDescription, fullDescription,
-                                content.MetaKeywords, content.MetaDescription,
-                                content.MetaTitle, content.SEName);
+                            content.LanguageId = languageId;
+                            content.Name = name;
+                            content.ShortDescription = shortDescription;
+                            content.FullDescription = fullDescription;
+                            ProductManager.UpdateProductLocalized(content);
                         }
                     }
                 }

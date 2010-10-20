@@ -241,23 +241,22 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
             if (discount != null)
             {
-                discount = DiscountManager.UpdateDiscount(discount.DiscountId,
-                    discountType,
-                    discountRequirement,
-                    requirementSpentAmount,
-                    requirementBillingCountryIs,
-                    requirementShippingCountryIs,
-                    discountLimitation,
-                    limitationTimes,
-                    name,
-                    usePercentage,
-                    discountPercentage,
-                    discountAmount,
-                    discountStartDate,
-                    discountEndDate,
-                    requiresCouponCode,
-                    couponCode,
-                    discount.Deleted);
+                discount.DiscountTypeId = (int)discountType;
+                discount.DiscountRequirementId = (int)discountRequirement;
+                discount.RequirementSpentAmount = requirementSpentAmount;
+                discount.RequirementBillingCountryIs = requirementBillingCountryIs;
+                discount.RequirementShippingCountryIs = requirementShippingCountryIs;
+                discount.DiscountLimitationId = (int)discountLimitation;
+                discount.LimitationTimes = limitationTimes;
+                discount.Name = name;
+                discount.UsePercentage = usePercentage;
+                discount.DiscountPercentage = discountPercentage;
+                discount.DiscountAmount = discountAmount;
+                discount.StartDate = discountStartDate;
+                discount.EndDate = discountEndDate;
+                discount.RequiresCouponCode = requiresCouponCode;
+                discount.CouponCode = couponCode;
+                DiscountManager.UpdateDiscount(discount);
 
                 //discount requirements
                 foreach (CustomerRole customerRole in discount.CustomerRoles)
@@ -272,22 +271,25 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             }
             else
             {
-                discount = DiscountManager.InsertDiscount(discountType,
-                    discountRequirement,
-                    requirementSpentAmount,
-                    requirementBillingCountryIs,
-                    requirementShippingCountryIs,
-                    discountLimitation,
-                    limitationTimes,
-                    name,
-                    usePercentage,
-                    discountPercentage,
-                    discountAmount,
-                    discountStartDate,
-                    discountEndDate,
-                    requiresCouponCode,
-                    couponCode,
-                    false);
+                discount = new Discount()
+                {
+                    DiscountTypeId = (int)discountType,
+                    DiscountRequirementId = (int)discountRequirement,
+                    RequirementSpentAmount = requirementSpentAmount,
+                    RequirementBillingCountryIs = requirementBillingCountryIs,
+                    RequirementShippingCountryIs = requirementShippingCountryIs,
+                    DiscountLimitationId = (int)discountLimitation,
+                    LimitationTimes = limitationTimes,
+                    Name = name,
+                    UsePercentage = usePercentage,
+                    DiscountPercentage = discountPercentage,
+                    DiscountAmount = discountAmount,
+                    StartDate = discountStartDate,
+                    EndDate = discountEndDate,
+                    RequiresCouponCode = requiresCouponCode,
+                    CouponCode = couponCode
+                };
+                DiscountManager.InsertDiscount(discount);
 
                 //discount requirements
                 foreach (int customerRoleId in CustomerRoleMappingControl.SelectedCustomerRoleIds)

@@ -91,11 +91,12 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 }
                 else
                 {
-                    shippingAddress = CustomerManager.InsertAddress(NopContext.Current.User.CustomerId, false, shippingAddress.FirstName,
-                              shippingAddress.LastName, shippingAddress.PhoneNumber, shippingAddress.Email,
-                              shippingAddress.FaxNumber, shippingAddress.Company, shippingAddress.Address1, shippingAddress.Address2,
-                              shippingAddress.City, shippingAddress.StateProvinceId, shippingAddress.ZipPostalCode,
-                              shippingAddress.CountryId, DateTime.UtcNow, DateTime.UtcNow);
+                    shippingAddress.CustomerId = NopContext.Current.User.CustomerId;
+                    shippingAddress.IsBillingAddress = false;
+                    shippingAddress.CreatedOn = DateTime.UtcNow;
+                    shippingAddress.UpdatedOn = DateTime.UtcNow;
+
+                    CustomerManager.InsertAddress(shippingAddress);
                 }
             }
 

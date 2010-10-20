@@ -479,75 +479,44 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// <summary>
         /// Inserts a localized message template
         /// </summary>
-        /// <param name="messageTemplateId">The message template identifier</param>
-        /// <param name="languageId">The language identifier</param>
-        /// <param name="emailAccountId">The email account identifier that will be used to send this message template</param>
-        /// <param name="bccEmailAddresses">The BCC Email addresses</param>
-        /// <param name="subject">The subject</param>
-        /// <param name="body">The body</param>
-        /// <param name="isActive">A value indicating whether the message template is active</param>
-        /// <returns>Localized message template</returns>
-        public static LocalizedMessageTemplate InsertLocalizedMessageTemplate(int messageTemplateId,
-            int languageId, int emailAccountId, string bccEmailAddresses, 
-            string subject, string body, bool isActive)
+        /// <param name="localizedMessageTemplate">Localized message template</param>
+        public static void InsertLocalizedMessageTemplate(LocalizedMessageTemplate localizedMessageTemplate)
         {
-            bccEmailAddresses = CommonHelper.EnsureMaximumLength(bccEmailAddresses, 200);
-            subject = CommonHelper.EnsureMaximumLength(subject, 200);
+            if (localizedMessageTemplate == null)
+                throw new ArgumentNullException("localizedMessageTemplate");
 
+            localizedMessageTemplate.BccEmailAddresses = CommonHelper.EnsureNotNull(localizedMessageTemplate.BccEmailAddresses);
+            localizedMessageTemplate.BccEmailAddresses = CommonHelper.EnsureMaximumLength(localizedMessageTemplate.BccEmailAddresses, 200);
+            localizedMessageTemplate.Subject = CommonHelper.EnsureNotNull(localizedMessageTemplate.Subject);
+            localizedMessageTemplate.Subject = CommonHelper.EnsureMaximumLength(localizedMessageTemplate.Subject, 200);
+            localizedMessageTemplate.Body = CommonHelper.EnsureNotNull(localizedMessageTemplate.Body);
+           
             var context = ObjectContextHelper.CurrentObjectContext;
-
-            var localizedMessageTemplate = context.LocalizedMessageTemplates.CreateObject();
-            localizedMessageTemplate.MessageTemplateId = messageTemplateId;
-            localizedMessageTemplate.LanguageId = languageId;
-            localizedMessageTemplate.EmailAccountId = emailAccountId;
-            localizedMessageTemplate.BccEmailAddresses = bccEmailAddresses;
-            localizedMessageTemplate.Subject = subject;
-            localizedMessageTemplate.Body = body;
-            localizedMessageTemplate.IsActive = isActive;
 
             context.LocalizedMessageTemplates.AddObject(localizedMessageTemplate);
             context.SaveChanges();
-
-            return localizedMessageTemplate;
         }
 
         /// <summary>
         /// Updates the localized message template
         /// </summary>
-        /// <param name="messageTemplateLocalizedId">The localized message template identifier</param>
-        /// <param name="messageTemplateId">The message template identifier</param>
-        /// <param name="languageId">The language identifier</param>
-        /// <param name="emailAccountId">The email account identifier that will be used to send this message template</param>
-        /// <param name="bccEmailAddresses">The BCC Email addresses</param>
-        /// <param name="subject">The subject</param>
-        /// <param name="body">The body</param>
-        /// <param name="isActive">A value indicating whether the message template is active</param>
-        /// <returns>Localized message template</returns>
-        public static LocalizedMessageTemplate UpdateLocalizedMessageTemplate(int messageTemplateLocalizedId,
-            int messageTemplateId, int languageId, int emailAccountId,
-            string bccEmailAddresses, string subject, string body, bool isActive)
+        /// <param name="localizedMessageTemplate">Localized message template</param>
+        public static void UpdateLocalizedMessageTemplate(LocalizedMessageTemplate localizedMessageTemplate)
         {
-            bccEmailAddresses = CommonHelper.EnsureMaximumLength(bccEmailAddresses, 200);
-            subject = CommonHelper.EnsureMaximumLength(subject, 200);
-
-            var localizedMessageTemplate = GetLocalizedMessageTemplateById(messageTemplateLocalizedId);
             if (localizedMessageTemplate == null)
-                return null;
+                throw new ArgumentNullException("localizedMessageTemplate");
 
+            localizedMessageTemplate.BccEmailAddresses = CommonHelper.EnsureNotNull(localizedMessageTemplate.BccEmailAddresses);
+            localizedMessageTemplate.BccEmailAddresses = CommonHelper.EnsureMaximumLength(localizedMessageTemplate.BccEmailAddresses, 200);
+            localizedMessageTemplate.Subject = CommonHelper.EnsureNotNull(localizedMessageTemplate.Subject);
+            localizedMessageTemplate.Subject = CommonHelper.EnsureMaximumLength(localizedMessageTemplate.Subject, 200);
+            localizedMessageTemplate.Body = CommonHelper.EnsureNotNull(localizedMessageTemplate.Body);
+           
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(localizedMessageTemplate))
                 context.LocalizedMessageTemplates.Attach(localizedMessageTemplate);
 
-            localizedMessageTemplate.MessageTemplateId = messageTemplateId;
-            localizedMessageTemplate.LanguageId = languageId;
-            localizedMessageTemplate.EmailAccountId = emailAccountId;
-            localizedMessageTemplate.BccEmailAddresses = bccEmailAddresses;
-            localizedMessageTemplate.Subject = subject;
-            localizedMessageTemplate.Body = body;
-            localizedMessageTemplate.IsActive = isActive;
             context.SaveChanges();
-            
-            return localizedMessageTemplate;
         }
 
         /// <summary>
@@ -689,13 +658,21 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             string subject, string body, DateTime createdOn, int sendTries,
             DateTime? sentOn, int emailAccountId)
         {
+            from = CommonHelper.EnsureNotNull(from);
             from = CommonHelper.EnsureMaximumLength(from, 500);
+            fromName = CommonHelper.EnsureNotNull(fromName);
             fromName = CommonHelper.EnsureMaximumLength(fromName, 500);
+            to = CommonHelper.EnsureNotNull(to);
             to = CommonHelper.EnsureMaximumLength(to, 500);
+            toName = CommonHelper.EnsureNotNull(toName);
             toName = CommonHelper.EnsureMaximumLength(toName, 500);
+            cc = CommonHelper.EnsureNotNull(cc);
             cc = CommonHelper.EnsureMaximumLength(cc, 500);
+            bcc = CommonHelper.EnsureNotNull(bcc);
             bcc = CommonHelper.EnsureMaximumLength(bcc, 500);
+            subject = CommonHelper.EnsureNotNull(subject);
             subject = CommonHelper.EnsureMaximumLength(subject, 500);
+            body = CommonHelper.EnsureNotNull(body);
 
             var context = ObjectContextHelper.CurrentObjectContext;
 
@@ -723,89 +700,57 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// <summary>
         /// Updates a queued email
         /// </summary>
-        /// <param name="queuedEmailId">Email item identifier</param>
-        /// <param name="priority">The priority</param>
-        /// <param name="from">From</param>
-        /// <param name="fromName">From name</param>
-        /// <param name="to">To</param>
-        /// <param name="toName">To name</param>
-        /// <param name="cc">Cc</param>
-        /// <param name="bcc">Bcc</param>
-        /// <param name="subject">Subject</param>
-        /// <param name="body">Body</param>
-        /// <param name="createdOn">The date and time of item creation</param>
-        /// <param name="sendTries">The send tries</param>
-        /// <param name="sentOn">The sent date and time. Null if email is not sent yet</param>
-        /// <returns>Queued email</returns>
-        public static QueuedEmail UpdateQueuedEmail(int queuedEmailId,
-            int priority, string from,
-            string fromName, string to, string toName, string cc, string bcc,
-            string subject, string body, DateTime createdOn, int sendTries,
-            DateTime? sentOn, int emailAccountId)
+        /// <param name="queuedEmail">Queued email</param>
+        public static void UpdateQueuedEmail(QueuedEmail queuedEmail)
         {
-            from = CommonHelper.EnsureMaximumLength(from, 500);
-            fromName = CommonHelper.EnsureMaximumLength(fromName, 500);
-            to = CommonHelper.EnsureMaximumLength(to, 500);
-            toName = CommonHelper.EnsureMaximumLength(toName, 500);
-            cc = CommonHelper.EnsureMaximumLength(cc, 500);
-            bcc = CommonHelper.EnsureMaximumLength(bcc, 500);
-            subject = CommonHelper.EnsureMaximumLength(subject, 500);
-
-            var queuedEmail = GetQueuedEmailById(queuedEmailId);
             if (queuedEmail == null)
-                return null;
+                throw new ArgumentNullException("queuedEmail");
+            
+            queuedEmail.From = CommonHelper.EnsureNotNull(queuedEmail.From);
+            queuedEmail.From = CommonHelper.EnsureMaximumLength(queuedEmail.From, 500);
+            queuedEmail.FromName = CommonHelper.EnsureNotNull(queuedEmail.FromName);
+            queuedEmail.FromName = CommonHelper.EnsureMaximumLength(queuedEmail.FromName, 500);
+            queuedEmail.To = CommonHelper.EnsureNotNull(queuedEmail.To);
+            queuedEmail.To = CommonHelper.EnsureMaximumLength(queuedEmail.To, 500);
+            queuedEmail.ToName = CommonHelper.EnsureNotNull(queuedEmail.ToName);
+            queuedEmail.ToName = CommonHelper.EnsureMaximumLength(queuedEmail.ToName, 500);
+            queuedEmail.CC = CommonHelper.EnsureNotNull(queuedEmail.CC);
+            queuedEmail.CC = CommonHelper.EnsureMaximumLength(queuedEmail.CC, 500);
+            queuedEmail.Bcc = CommonHelper.EnsureNotNull(queuedEmail.Bcc);
+            queuedEmail.Bcc = CommonHelper.EnsureMaximumLength(queuedEmail.Bcc, 500);
+            queuedEmail.Subject = CommonHelper.EnsureNotNull(queuedEmail.Subject);
+            queuedEmail.Subject = CommonHelper.EnsureMaximumLength(queuedEmail.Subject, 500);
+            queuedEmail.Body = CommonHelper.EnsureNotNull(queuedEmail.Body);
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(queuedEmail))
                 context.QueuedEmails.Attach(queuedEmail);
 
-            queuedEmail.Priority = priority;
-            queuedEmail.From = from;
-            queuedEmail.FromName = fromName;
-            queuedEmail.To = to;
-            queuedEmail.ToName = toName;
-            queuedEmail.CC = cc;
-            queuedEmail.Bcc = bcc;
-            queuedEmail.Subject = subject;
-            queuedEmail.Body = body;
-            queuedEmail.CreatedOn = createdOn;
-            queuedEmail.SendTries = sendTries;
-            queuedEmail.SentOn = sentOn;
-            queuedEmail.EmailAccountId = emailAccountId;
             context.SaveChanges();
-
-            return queuedEmail;
         }
 
         /// <summary>
         /// Inserts the new newsletter subscription
         /// </summary>
-        /// <param name="email">The subscriber email</param>
-        /// <param name="active">A value indicating whether subscription is active</param>
-        /// <returns>NewsLetterSubscription entity</returns>
-        public static NewsLetterSubscription InsertNewsLetterSubscription(string email,
-            bool active)
+        /// <param name="newsLetterSubscription">NewsLetterSubscription entity</param>
+        public static void InsertNewsLetterSubscription(NewsLetterSubscription newsLetterSubscription)
         {
-            if(!CommonHelper.IsValidEmail(email))
+            if (newsLetterSubscription == null)
+                throw new ArgumentNullException("newsLetterSubscription");
+
+            if (!CommonHelper.IsValidEmail(newsLetterSubscription.Email))
             {
                 throw new NopException("Email is not valid.");
             }
 
-            email = email.Trim();
-            email = CommonHelper.EnsureMaximumLength(email, 255);
+            newsLetterSubscription.Email = CommonHelper.EnsureNotNull(newsLetterSubscription.Email);
+            newsLetterSubscription.Email = newsLetterSubscription.Email.Trim();
+            newsLetterSubscription.Email = CommonHelper.EnsureMaximumLength(newsLetterSubscription.Email, 255);
 
             var context = ObjectContextHelper.CurrentObjectContext;
-
-            var newsLetterSubscription = context.NewsLetterSubscriptions.CreateObject();
-            newsLetterSubscription.NewsLetterSubscriptionGuid = Guid.NewGuid();
-            newsLetterSubscription.Email = email;
-            newsLetterSubscription.Active = active;
-            newsLetterSubscription.CreatedOn = DateTime.UtcNow;
-
+            
             context.NewsLetterSubscriptions.AddObject(newsLetterSubscription);
             context.SaveChanges();
-
-            return newsLetterSubscription;
         }
 
         /// <summary>
@@ -887,20 +832,17 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// <summary>
         /// Updates the newsletter subscription
         /// </summary>
-        /// <param name="newsLetterSubscriptionId">The newsletter subscription identifier</param>
-        /// <param name="email">Email</param>
-        /// <param name="active">The value indicating whether subscription is active</param>
-        /// <returns>NewsLetterSubscription entity</returns>
-        public static NewsLetterSubscription UpdateNewsLetterSubscription(int newsLetterSubscriptionId, 
-            string email, bool active)
+        /// <param name="newsLetterSubscription">NewsLetterSubscription entity</param>
+        public static void UpdateNewsLetterSubscription(NewsLetterSubscription newsLetterSubscription)
         {
-            email = CommonHelper.EnsureMaximumLength(email, 255);
-
-            var newsLetterSubscription = GetNewsLetterSubscriptionById(newsLetterSubscriptionId);
             if (newsLetterSubscription == null)
-                return null;
+                throw new ArgumentNullException("newsLetterSubscription");
 
-            if(!CommonHelper.IsValidEmail(email))
+            newsLetterSubscription.Email = CommonHelper.EnsureNotNull(newsLetterSubscription.Email);
+            newsLetterSubscription.Email = newsLetterSubscription.Email.Trim();
+            newsLetterSubscription.Email = CommonHelper.EnsureMaximumLength(newsLetterSubscription.Email, 255);
+
+            if (!CommonHelper.IsValidEmail(newsLetterSubscription.Email))
             {
                 throw new NopException("Email is not valid.");
             }
@@ -909,11 +851,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             if (!context.IsAttached(newsLetterSubscription))
                 context.NewsLetterSubscriptions.Attach(newsLetterSubscription);
 
-            newsLetterSubscription.Email = email;
-            newsLetterSubscription.Active = active;
             context.SaveChanges();
-
-            return newsLetterSubscription;
         }
 
         /// <summary>
@@ -974,98 +912,68 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// <summary>
         /// Inserts an email account
         /// </summary>
-        /// <param name="email">The priority</param>
-        /// <param name="displayName">From</param>
-        /// <param name="host">From name</param>
-        /// <param name="port">To</param>
-        /// <param name="username">To name</param>
-        /// <param name="password">Cc</param>
-        /// <param name="enableSsl">Bcc</param>
-        /// <param name="useDefaultCredentials">Subject</param>
-        /// <returns>Email account</returns>
-        public static EmailAccount InsertEmailAccount(string email, string displayName,
-            string host, int port, string username, string password,
-            bool enableSsl, bool useDefaultCredentials)
+        /// <param name="emailAccount">Email account</param>
+        public static void InsertEmailAccount(EmailAccount emailAccount)
         {
-            email = CommonHelper.EnsureMaximumLength(email, 255);
-            displayName = CommonHelper.EnsureMaximumLength(displayName, 255);
-            host = CommonHelper.EnsureMaximumLength(host, 255);
-            username = CommonHelper.EnsureMaximumLength(username, 255);
-            password = CommonHelper.EnsureMaximumLength(password, 255);
+            if (emailAccount == null)
+                throw new ArgumentNullException("emailAccount");
 
-            email = email.Trim();
-            displayName = displayName.Trim();
-            host = host.Trim();
-            username = username.Trim();
-            password = password.Trim();
+            emailAccount.Email = CommonHelper.EnsureNotNull(emailAccount.Email);
+            emailAccount.DisplayName = CommonHelper.EnsureNotNull(emailAccount.DisplayName);
+            emailAccount.Host = CommonHelper.EnsureNotNull(emailAccount.Host);
+            emailAccount.Username = CommonHelper.EnsureNotNull(emailAccount.Username);
+            emailAccount.Password = CommonHelper.EnsureNotNull(emailAccount.Password);
+
+            emailAccount.Email = emailAccount.Email.Trim();
+            emailAccount.DisplayName = emailAccount.DisplayName.Trim();
+            emailAccount.Host = emailAccount.Host.Trim();
+            emailAccount.Username = emailAccount.Username.Trim();
+            emailAccount.Password = emailAccount.Password.Trim();
+
+            emailAccount.Email = CommonHelper.EnsureMaximumLength(emailAccount.Email, 255);
+            emailAccount.DisplayName = CommonHelper.EnsureMaximumLength(emailAccount.DisplayName, 255);
+            emailAccount.Host = CommonHelper.EnsureMaximumLength(emailAccount.Host, 255);
+            emailAccount.Username = CommonHelper.EnsureMaximumLength(emailAccount.Username, 255);
+            emailAccount.Password = CommonHelper.EnsureMaximumLength(emailAccount.Password, 255);
 
             var context = ObjectContextHelper.CurrentObjectContext;
-
-            var emailAccount = context.EmailAccounts.CreateObject();
-            emailAccount.Email = email;
-            emailAccount.DisplayName = displayName;
-            emailAccount.Host = host;
-            emailAccount.Port = port;
-            emailAccount.Username = username;
-            emailAccount.Password = password;
-            emailAccount.EnableSSL = enableSsl;
-            emailAccount.UseDefaultCredentials = useDefaultCredentials;
-
+            
             context.EmailAccounts.AddObject(emailAccount);
             context.SaveChanges();
-
-            return emailAccount;
         }
 
         /// <summary>
         /// Updates an email account
         /// </summary>
-        /// <param name="emailAccountId">Email account identifier</param>
-        /// <param name="email">The priority</param>
-        /// <param name="displayName">From</param>
-        /// <param name="host">From name</param>
-        /// <param name="port">To</param>
-        /// <param name="username">To name</param>
-        /// <param name="password">Cc</param>
-        /// <param name="enableSsl">Bcc</param>
-        /// <param name="useDefaultCredentials">Subject</param>
-        /// <returns>Email account</returns>
-        public static EmailAccount UpdateEmailAccount(int emailAccountId,
-            string email, string displayName,
-            string host, int port, string username, string password,
-            bool enableSsl, bool useDefaultCredentials)
+        /// <param name="emailAccount">Email account</param>
+        public static void UpdateEmailAccount(EmailAccount emailAccount)
         {
-            email = CommonHelper.EnsureMaximumLength(email, 255);
-            displayName = CommonHelper.EnsureMaximumLength(displayName, 255);
-            host = CommonHelper.EnsureMaximumLength(host, 255);
-            username = CommonHelper.EnsureMaximumLength(username, 255);
-            password = CommonHelper.EnsureMaximumLength(password, 255);
-
-            email = email.Trim();
-            displayName = displayName.Trim();
-            host = host.Trim();
-            username = username.Trim();
-            password = password.Trim();
-
-            var emailAccount = GetEmailAccountById(emailAccountId);
             if (emailAccount == null)
-                return null;
+                throw new ArgumentNullException("emailAccount");
+
+            emailAccount.Email = CommonHelper.EnsureNotNull(emailAccount.Email);
+            emailAccount.DisplayName = CommonHelper.EnsureNotNull(emailAccount.DisplayName);
+            emailAccount.Host = CommonHelper.EnsureNotNull(emailAccount.Host);
+            emailAccount.Username = CommonHelper.EnsureNotNull(emailAccount.Username);
+            emailAccount.Password = CommonHelper.EnsureNotNull(emailAccount.Password);
+
+            emailAccount.Email = emailAccount.Email.Trim();
+            emailAccount.DisplayName = emailAccount.DisplayName.Trim();
+            emailAccount.Host = emailAccount.Host.Trim();
+            emailAccount.Username = emailAccount.Username.Trim();
+            emailAccount.Password = emailAccount.Password.Trim();
+
+            emailAccount.Email = CommonHelper.EnsureMaximumLength(emailAccount.Email, 255);
+            emailAccount.DisplayName = CommonHelper.EnsureMaximumLength(emailAccount.DisplayName, 255);
+            emailAccount.Host = CommonHelper.EnsureMaximumLength(emailAccount.Host, 255);
+            emailAccount.Username = CommonHelper.EnsureMaximumLength(emailAccount.Username, 255);
+            emailAccount.Password = CommonHelper.EnsureMaximumLength(emailAccount.Password, 255);
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(emailAccount))
                 context.EmailAccounts.Attach(emailAccount);
 
-            emailAccount.Email = email;
-            emailAccount.DisplayName = displayName;
-            emailAccount.Host = host;
-            emailAccount.Port = port;
-            emailAccount.Username = username;
-            emailAccount.Password = password;
-            emailAccount.EnableSSL = enableSsl;
-            emailAccount.UseDefaultCredentials = useDefaultCredentials;
             context.SaveChanges();
-
-            return emailAccount;
         }
 
         /// <summary>

@@ -58,7 +58,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
 
             if (LanguageManager.CacheEnabled)
             {
-                NopStaticCache.RemoveByPattern(LANGUAGES_PATTERN_KEY);
+                NopRequestCache.RemoveByPattern(LANGUAGES_PATTERN_KEY);
             }
         }
 
@@ -80,7 +80,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
         public static List<Language> GetAllLanguages(bool showHidden)
         {
             string key = string.Format(LANGUAGES_ALL_KEY, showHidden);
-            object obj2 = NopStaticCache.Get(key);
+            object obj2 = NopRequestCache.Get(key);
             if (LanguageManager.CacheEnabled && (obj2 != null))
             {
                 return (List<Language>)obj2;
@@ -95,7 +95,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
 
             if (LanguageManager.CacheEnabled)
             {
-                NopStaticCache.Max(key, languages);
+                NopRequestCache.Add(key, languages);
             }
             return languages;
         }
@@ -111,7 +111,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
                 return null;
 
             string key = string.Format(LANGUAGES_BY_ID_KEY, languageId);
-            object obj2 = NopStaticCache.Get(key);
+            object obj2 = NopRequestCache.Get(key);
             if (LanguageManager.CacheEnabled && (obj2 != null))
             {
                 return (Language)obj2;
@@ -125,7 +125,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
 
             if (LanguageManager.CacheEnabled)
             {
-                NopStaticCache.Max(key, language);
+                NopRequestCache.Add(key, language);
             }
             return language;
         }
@@ -133,76 +133,56 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
         /// <summary>
         /// Inserts a language
         /// </summary>
-        /// <param name="name">The name</param>
-        /// <param name="languageCulture">The language culture</param>
-        /// <param name="flagImageFileName">The flag image file name</param>
-        /// <param name="published">A value indicating whether the language is published</param>
-        /// <param name="displayOrder">The display order</param>
-        /// <returns>Language</returns>
-        public static Language InsertLanguage(string name, string languageCulture,
-            string flagImageFileName, bool published, int displayOrder)
+        /// <param name="language">Language</param>
+        public static void InsertLanguage(Language language)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 100);
-            languageCulture = CommonHelper.EnsureMaximumLength(languageCulture, 20);
-            flagImageFileName = CommonHelper.EnsureMaximumLength(flagImageFileName, 50);
+            if (language == null)
+                throw new ArgumentNullException("language");
+            
+            language.Name = CommonHelper.EnsureNotNull(language.Name);
+            language.Name = CommonHelper.EnsureMaximumLength(language.Name, 100);
+            language.LanguageCulture = CommonHelper.EnsureNotNull(language.LanguageCulture);
+            language.LanguageCulture = CommonHelper.EnsureMaximumLength(language.LanguageCulture, 20);
+            language.FlagImageFileName = CommonHelper.EnsureNotNull(language.FlagImageFileName);
+            language.FlagImageFileName = CommonHelper.EnsureMaximumLength(language.FlagImageFileName, 50);
 
             var context = ObjectContextHelper.CurrentObjectContext;
-
-            var language = context.Languages.CreateObject();
-            language.Name = name;
-            language.LanguageCulture = languageCulture;
-            language.FlagImageFileName = flagImageFileName;
-            language.Published = published;
-            language.DisplayOrder = displayOrder;
 
             context.Languages.AddObject(language);
             context.SaveChanges();
 
             if (LanguageManager.CacheEnabled)
             {
-                NopStaticCache.RemoveByPattern(LANGUAGES_PATTERN_KEY);
+                NopRequestCache.RemoveByPattern(LANGUAGES_PATTERN_KEY);
             }
-            return language;
         }
 
         /// <summary>
         /// Updates a language
         /// </summary>
-        /// <param name="languageId">Language identifier</param>
-        /// <param name="name">The name</param>
-        /// <param name="languageCulture">The language culture</param>
-        /// <param name="flagImageFileName">The flag image file name</param>
-        /// <param name="published">A value indicating whether the language is published</param>
-        /// <param name="displayOrder">The display order</param>
-        /// <returns>Language</returns>
-        public static Language UpdateLanguage(int languageId,
-            string name, string languageCulture,
-            string flagImageFileName, bool published, int displayOrder)
+        /// <param name="language">Language</param>
+        public static void UpdateLanguage(Language language)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 100);
-            languageCulture = CommonHelper.EnsureMaximumLength(languageCulture, 20);
-            flagImageFileName = CommonHelper.EnsureMaximumLength(flagImageFileName, 50);
-
-            var language = GetLanguageById(languageId);
             if (language == null)
-                return null;
+                throw new ArgumentNullException("language");
+
+            language.Name = CommonHelper.EnsureNotNull(language.Name);
+            language.Name = CommonHelper.EnsureMaximumLength(language.Name, 100);
+            language.LanguageCulture = CommonHelper.EnsureNotNull(language.LanguageCulture);
+            language.LanguageCulture = CommonHelper.EnsureMaximumLength(language.LanguageCulture, 20);
+            language.FlagImageFileName = CommonHelper.EnsureNotNull(language.FlagImageFileName);
+            language.FlagImageFileName = CommonHelper.EnsureMaximumLength(language.FlagImageFileName, 50);
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(language))
                 context.Languages.Attach(language);
 
-            language.Name = name;
-            language.LanguageCulture = languageCulture;
-            language.FlagImageFileName = flagImageFileName;
-            language.Published = published;
-            language.DisplayOrder = displayOrder;
             context.SaveChanges();
 
             if (LanguageManager.CacheEnabled)
             {
-                NopStaticCache.RemoveByPattern(LANGUAGES_PATTERN_KEY);
+                NopRequestCache.RemoveByPattern(LANGUAGES_PATTERN_KEY);
             }
-            return language;
         }
         #endregion
 

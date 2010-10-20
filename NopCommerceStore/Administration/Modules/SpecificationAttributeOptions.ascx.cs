@@ -86,8 +86,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 var specificationAttribute = SpecificationAttributeManager.GetSpecificationAttributeById(this.SpecificationAttributeId);
                 if (specificationAttribute != null)
                 {
-                    var sao = SpecificationAttributeManager.InsertSpecificationAttributeOption(specificationAttribute.SpecificationAttributeId,
-                        txtNewOptionName.Text, txtNewOptionDisplayOrder.Value);
+                    var sao = new SpecificationAttributeOption()
+                    {
+                        SpecificationAttributeId= specificationAttribute.SpecificationAttributeId,
+                        Name= txtNewOptionName.Text,
+                        DisplayOrder= txtNewOptionDisplayOrder.Value
+                    };
+                    SpecificationAttributeManager.InsertSpecificationAttributeOption(sao);
 
                     SaveLocalizableContent(sao);
 
@@ -127,16 +132,22 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         if (!allFieldsAreEmpty && languageId > 0)
                         {
                             //only insert if one of the fields are filled out (avoid too many empty records in db...)
-                            content = SpecificationAttributeManager.InsertSpecificationAttributeOptionLocalized(sao.SpecificationAttributeOptionId,
-                                   languageId, name);
+                            content = new SpecificationAttributeOptionLocalized()
+                            {
+                                SpecificationAttributeOptionId = sao.SpecificationAttributeOptionId,
+                                LanguageId = languageId,
+                                Name = name
+                            };
+                            SpecificationAttributeManager.InsertSpecificationAttributeOptionLocalized(content);
                         }
                     }
                     else
                     {
                         if (languageId > 0)
                         {
-                            content = SpecificationAttributeManager.UpdateSpecificationAttributeOptionLocalized(content.SpecificationAttributeOptionLocalizedId,
-                                content.SpecificationAttributeOptionId, languageId, name);
+                            content.LanguageId = languageId;
+                            content.Name= name;
+                            SpecificationAttributeManager.UpdateSpecificationAttributeOptionLocalized(content);
                         }
                     }
                 }
@@ -178,16 +189,22 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                                     if (!allFieldsAreEmpty && languageId > 0)
                                     {
                                         //only insert if one of the fields are filled out (avoid too many empty records in db...)
-                                        content = SpecificationAttributeManager.InsertSpecificationAttributeOptionLocalized(sao.SpecificationAttributeOptionId,
-                                               languageId, name);
+                                        content = new SpecificationAttributeOptionLocalized()
+                                        {
+                                            SpecificationAttributeOptionId = sao.SpecificationAttributeOptionId,
+                                            LanguageId = languageId,
+                                            Name = name
+                                        };
+                                        SpecificationAttributeManager.InsertSpecificationAttributeOptionLocalized(content);
                                     }
                                 }
                                 else
                                 {
                                     if (languageId > 0)
                                     {
-                                        content = SpecificationAttributeManager.UpdateSpecificationAttributeOptionLocalized(content.SpecificationAttributeOptionLocalizedId,
-                                            content.SpecificationAttributeOptionId, languageId, name);
+                                        content.LanguageId = languageId;
+                                        content.Name = name;
+                                        SpecificationAttributeManager.UpdateSpecificationAttributeOptionLocalized(content);
                                     }
                                 }
                             }
@@ -238,10 +255,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 int displayOrder = txtDisplayOrder.Value;
                 int saoId = int.Parse(hfSpecificationAttributeOptionId.Value);
 
-                SpecificationAttributeOption sao = SpecificationAttributeManager.GetSpecificationAttributeOptionById(saoId);
+                var sao = SpecificationAttributeManager.GetSpecificationAttributeOptionById(saoId);
                 if (sao != null)
                 {
-                    sao = SpecificationAttributeManager.UpdateSpecificationAttributeOptions(saoId, SpecificationAttributeId, name, displayOrder);
+                    sao.Name = name;
+                    sao.DisplayOrder = displayOrder;
+                    SpecificationAttributeManager.UpdateSpecificationAttributeOptions(sao);
                     SaveLocalizableContentGrid(sao);
                 }
 

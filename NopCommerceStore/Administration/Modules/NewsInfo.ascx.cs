@@ -89,15 +89,29 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             News news = NewsManager.GetNewsById(NewsId);
             if (news != null)
             {
-                news = NewsManager.UpdateNews(NewsId, int.Parse(this.ddlLanguage.SelectedItem.Value),
-                    txtTitle.Text, txtShort.Text, txtFull.Value,
-                    cbPublished.Checked, cbAllowComments.Checked, news.CreatedOn);
+                news.LanguageId = int.Parse(this.ddlLanguage.SelectedItem.Value);
+                news.Title = txtTitle.Text;
+                news.Short = txtShort.Text;
+                news.Full = txtFull.Value;
+                news.Published = cbPublished.Checked;
+                news.AllowComments = cbAllowComments.Checked;
+                news.CreatedOn = DateTime.UtcNow;
+
+                NewsManager.UpdateNews(news);
             }
             else
             {
-                news = NewsManager.InsertNews(int.Parse(this.ddlLanguage.SelectedItem.Value),
-                   txtTitle.Text, txtShort.Text, txtFull.Value,
-                   cbPublished.Checked, cbAllowComments.Checked, DateTime.UtcNow);
+                news = new News()
+                {
+                    LanguageId = int.Parse(this.ddlLanguage.SelectedItem.Value),
+                    Title = txtTitle.Text,
+                    Short = txtShort.Text,
+                    Full = txtFull.Value,
+                    Published = cbPublished.Checked,
+                    AllowComments = cbAllowComments.Checked,
+                    CreatedOn = DateTime.UtcNow
+                };
+                NewsManager.InsertNews(news);
             }
             return news;
         }

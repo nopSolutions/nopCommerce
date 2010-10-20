@@ -23,7 +23,8 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     Response.Redirect(CommonHelper.GetStoreLocation());
                 }
 
-                subscription = MessageManager.UpdateNewsLetterSubscription(subscription.NewsLetterSubscriptionId, subscription.Email, IsActive);
+                subscription.Active = IsActive;
+               MessageManager.UpdateNewsLetterSubscription(subscription);
 
                 if(subscription.Active)
                 {

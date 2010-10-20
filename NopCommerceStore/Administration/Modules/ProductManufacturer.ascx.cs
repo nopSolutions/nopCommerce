@@ -81,9 +81,28 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     if (item.ProductManufacturerId > 0 && !item.IsMapped)
                         ManufacturerManager.DeleteProductManufacturer(item.ProductManufacturerId);
                     if (item.ProductManufacturerId > 0 && item.IsMapped)
-                        ManufacturerManager.UpdateProductManufacturer(item.ProductManufacturerId, product.ProductId, item.ManufacturerId, item.IsFeatured, item.DisplayOrder);
+                    {
+                        ProductManufacturer pm = ManufacturerManager.GetProductManufacturerById(item.ProductManufacturerId);
+                        if (pm != null)
+                        {
+                            pm.ProductId = product.ProductId;
+                            pm.ManufacturerId = item.ManufacturerId;
+                            pm.IsFeaturedProduct = item.IsFeatured;
+                            pm.DisplayOrder = item.DisplayOrder;
+                            ManufacturerManager.UpdateProductManufacturer(pm);
+                        }
+                    }
                     if (item.ProductManufacturerId == 0 && item.IsMapped)
-                        ManufacturerManager.InsertProductManufacturer(product.ProductId, item.ManufacturerId, item.IsFeatured, item.DisplayOrder);
+                    {
+                        var pm = new ProductManufacturer()
+                        {
+                            ProductId = product.ProductId,
+                            ManufacturerId = item.ManufacturerId,
+                            IsFeaturedProduct = item.IsFeatured,
+                            DisplayOrder = item.DisplayOrder
+                        };
+                        ManufacturerManager.InsertProductManufacturer(pm);
+                    }
                 }
             }
         }

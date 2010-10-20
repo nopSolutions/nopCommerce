@@ -117,16 +117,32 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             Currency currency = CurrencyManager.GetCurrencyById(this.CurrencyId);
             if (currency != null)
             {
-                currency = CurrencyManager.UpdateCurrency(currency.CurrencyId, txtName.Text, txtCurrencyCode.Text,
-                    txtRate.Value, displayLocale, txtCustomFormatting.Text, cbPublished.Checked, txtDisplayOrder.Value,
-                    currency.CreatedOn, DateTime.UtcNow);
+                currency.Name = txtName.Text;
+                currency.CurrencyCode = txtCurrencyCode.Text;
+                currency.Rate = txtRate.Value;
+                currency.DisplayLocale = displayLocale;
+                currency.CustomFormatting = txtCustomFormatting.Text;
+                currency.Published = cbPublished.Checked;
+                currency.DisplayOrder = txtDisplayOrder.Value;
+                currency.UpdatedOn = DateTime.UtcNow;
+
+                CurrencyManager.UpdateCurrency(currency);
             }
             else
             {
-                DateTime now = DateTime.UtcNow;
-                currency = CurrencyManager.InsertCurrency(txtName.Text, txtCurrencyCode.Text,
-                    txtRate.Value, displayLocale, txtCustomFormatting.Text, 
-                    cbPublished.Checked, txtDisplayOrder.Value, now, now);
+                currency = new Currency()
+                {
+                    Name = txtName.Text,
+                    CurrencyCode = txtCurrencyCode.Text,
+                    Rate = txtRate.Value,
+                    DisplayLocale = displayLocale,
+                    CustomFormatting = txtCustomFormatting.Text,
+                    Published = cbPublished.Checked,
+                    DisplayOrder = txtDisplayOrder.Value,
+                    CreatedOn = DateTime.UtcNow,
+                    UpdatedOn = DateTime.UtcNow
+                };
+                CurrencyManager.InsertCurrency(currency);
             }
 
             return currency;

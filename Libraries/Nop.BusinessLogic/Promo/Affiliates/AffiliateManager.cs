@@ -59,9 +59,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Affiliates
             var affiliate = GetAffiliateById(affiliateId);
             if (affiliate != null)
             {
-                affiliate = UpdateAffiliate(affiliate.AffiliateId, affiliate.FirstName, affiliate.LastName, affiliate.MiddleName, affiliate.PhoneNumber,
-                      affiliate.Email, affiliate.FaxNumber, affiliate.Company, affiliate.Address1, affiliate.Address2, affiliate.City,
-                      affiliate.StateProvince, affiliate.ZipPostalCode, affiliate.CountryId, true, affiliate.Active);
+                affiliate.Deleted = true;
+                UpdateAffiliate(affiliate);
             }
         }
 
@@ -84,129 +83,82 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Affiliates
         /// <summary>
         /// Inserts an affiliate
         /// </summary>
-        /// <param name="firstName">The first name</param>
-        /// <param name="lastName">The last name</param>
-        /// <param name="middleName">The middle name</param>
-        /// <param name="phoneNumber">The phone number</param>
-        /// <param name="email">The email</param>
-        /// <param name="faxNumber">The fax number</param>
-        /// <param name="company">The company</param>
-        /// <param name="address1">The address 1</param>
-        /// <param name="address2">The address 2</param>
-        /// <param name="city">The city</param>
-        /// <param name="stateProvince">The state/province</param>
-        /// <param name="zipPostalCode">The zip/postal code</param>
-        /// <param name="countryId">The country identifier</param>
-        /// <param name="deleted">A value indicating whether the entity has been deleted</param>
-        /// <param name="active">A value indicating whether the entity is active</param>
-        /// <returns>An affiliate</returns>
-        public static Affiliate InsertAffiliate(string firstName,
-            string lastName, string middleName, string phoneNumber,
-            string email, string faxNumber, string company, string address1,
-            string address2, string city, string stateProvince, string zipPostalCode,
-            int countryId, bool deleted, bool active)
+        /// <param name="affiliate">Affiliate</param>
+        public static void InsertAffiliate(Affiliate affiliate)
         {
-            firstName = CommonHelper.EnsureMaximumLength(firstName, 100);
-            lastName = CommonHelper.EnsureMaximumLength(lastName, 100);
-            middleName = CommonHelper.EnsureMaximumLength(middleName, 100);
-            phoneNumber = CommonHelper.EnsureMaximumLength(phoneNumber, 50);
-            email = CommonHelper.EnsureMaximumLength(email, 255);
-            faxNumber = CommonHelper.EnsureMaximumLength(faxNumber, 50);
-            company = CommonHelper.EnsureMaximumLength(company, 100);
-            address1 = CommonHelper.EnsureMaximumLength(address1, 100);
-            address2 = CommonHelper.EnsureMaximumLength(address2, 100);
-            city = CommonHelper.EnsureMaximumLength(city, 100);
-            stateProvince = CommonHelper.EnsureMaximumLength(stateProvince, 100);
-            zipPostalCode = CommonHelper.EnsureMaximumLength(zipPostalCode, 30);
+            if (affiliate == null)
+                throw new ArgumentNullException("affiliate");
+            
+            affiliate.FirstName = CommonHelper.EnsureNotNull(affiliate.FirstName);
+            affiliate.LastName = CommonHelper.EnsureNotNull(affiliate.LastName);
+            affiliate.FirstName = CommonHelper.EnsureMaximumLength(affiliate.FirstName, 100);
+            affiliate.LastName = CommonHelper.EnsureMaximumLength(affiliate.LastName, 100);
+            affiliate.MiddleName = CommonHelper.EnsureNotNull(affiliate.MiddleName);
+            affiliate.MiddleName = CommonHelper.EnsureMaximumLength(affiliate.MiddleName, 100);
+            affiliate.PhoneNumber = CommonHelper.EnsureNotNull(affiliate.PhoneNumber);
+            affiliate.PhoneNumber = CommonHelper.EnsureMaximumLength(affiliate.PhoneNumber, 50);
+            affiliate.Email = CommonHelper.EnsureNotNull(affiliate.Email);
+            affiliate.Email = CommonHelper.EnsureMaximumLength(affiliate.Email, 255);
+            affiliate.FaxNumber = CommonHelper.EnsureNotNull(affiliate.FaxNumber);
+            affiliate.FaxNumber = CommonHelper.EnsureMaximumLength(affiliate.FaxNumber, 50);
+            affiliate.Company = CommonHelper.EnsureNotNull(affiliate.Company);
+            affiliate.Company = CommonHelper.EnsureMaximumLength(affiliate.Company, 100);
+            affiliate.Address1 = CommonHelper.EnsureNotNull(affiliate.Address1);
+            affiliate.Address1 = CommonHelper.EnsureMaximumLength(affiliate.Address1, 100);
+            affiliate.Address2 = CommonHelper.EnsureNotNull(affiliate.Address2);
+            affiliate.Address2 = CommonHelper.EnsureMaximumLength(affiliate.Address2, 100);
+            affiliate.City = CommonHelper.EnsureNotNull(affiliate.City);
+            affiliate.City = CommonHelper.EnsureMaximumLength(affiliate.City, 100);
+            affiliate.StateProvince = CommonHelper.EnsureNotNull(affiliate.StateProvince);
+            affiliate.StateProvince = CommonHelper.EnsureMaximumLength(affiliate.StateProvince, 100);
+            affiliate.ZipPostalCode = CommonHelper.EnsureNotNull(affiliate.ZipPostalCode);
+            affiliate.ZipPostalCode = CommonHelper.EnsureMaximumLength(affiliate.ZipPostalCode, 30);
 
             var context = ObjectContextHelper.CurrentObjectContext;
 
-            var affiliate = context.Affiliates.CreateObject();
-            affiliate.FirstName = firstName;
-            affiliate.LastName = lastName;
-            affiliate.MiddleName = middleName;
-            affiliate.PhoneNumber = phoneNumber;
-            affiliate.Email = email;
-            affiliate.FaxNumber = faxNumber;
-            affiliate.Company = company;
-            affiliate.Address1 = address1;
-            affiliate.Address2 = address2;
-            affiliate.City = city;
-            affiliate.StateProvince = stateProvince;
-            affiliate.ZipPostalCode = zipPostalCode;
-            affiliate.CountryId = countryId;
-            affiliate.Deleted = deleted;
-            affiliate.Active = active;
-
             context.Affiliates.AddObject(affiliate);
             context.SaveChanges();
-            return affiliate;
         }
 
         /// <summary>
         /// Updates the affiliate
         /// </summary>
-        /// <param name="affiliateId">The affiliate identifier</param>
-        /// <param name="firstName">The first name</param>
-        /// <param name="lastName">The last name</param>
-        /// <param name="middleName">The middle name</param>
-        /// <param name="phoneNumber">The phone number</param>
-        /// <param name="email">The email</param>
-        /// <param name="faxNumber">The fax number</param>
-        /// <param name="company">The company</param>
-        /// <param name="address1">The address 1</param>
-        /// <param name="address2">The address 2</param>
-        /// <param name="city">The city</param>
-        /// <param name="stateProvince">The state/province</param>
-        /// <param name="zipPostalCode">The zip/postal code</param>
-        /// <param name="countryId">The country identifier</param>
-        /// <param name="deleted">A value indicating whether the entity has been deleted</param>
-        /// <param name="active">A value indicating whether the entity is active</param>
-        /// <returns>An affiliate</returns>
-        public static Affiliate UpdateAffiliate(int affiliateId, string firstName,
-            string lastName, string middleName, string phoneNumber,
-            string email, string faxNumber, string company, string address1,
-            string address2, string city, string stateProvince, string zipPostalCode,
-            int countryId, bool deleted, bool active)
+        /// <param name="affiliate">Affiliate</param>
+        public static void UpdateAffiliate(Affiliate affiliate)
         {
-            firstName = CommonHelper.EnsureMaximumLength(firstName, 100);
-            lastName = CommonHelper.EnsureMaximumLength(lastName, 100);
-            middleName = CommonHelper.EnsureMaximumLength(middleName, 100);
-            phoneNumber = CommonHelper.EnsureMaximumLength(phoneNumber, 50);
-            email = CommonHelper.EnsureMaximumLength(email, 255);
-            faxNumber = CommonHelper.EnsureMaximumLength(faxNumber, 50);
-            company = CommonHelper.EnsureMaximumLength(company, 100);
-            address1 = CommonHelper.EnsureMaximumLength(address1, 100);
-            address2 = CommonHelper.EnsureMaximumLength(address2, 100);
-            city = CommonHelper.EnsureMaximumLength(city, 100);
-            stateProvince = CommonHelper.EnsureMaximumLength(stateProvince, 100);
-            zipPostalCode = CommonHelper.EnsureMaximumLength(zipPostalCode, 30);
-
-            var affiliate = GetAffiliateById(affiliateId);
             if (affiliate == null)
-                return null;
+                throw new ArgumentNullException("affiliate");
+
+            affiliate.FirstName = CommonHelper.EnsureNotNull(affiliate.FirstName);
+            affiliate.LastName = CommonHelper.EnsureNotNull(affiliate.LastName);
+            affiliate.FirstName = CommonHelper.EnsureMaximumLength(affiliate.FirstName, 100);
+            affiliate.LastName = CommonHelper.EnsureMaximumLength(affiliate.LastName, 100);
+            affiliate.MiddleName = CommonHelper.EnsureNotNull(affiliate.MiddleName);
+            affiliate.MiddleName = CommonHelper.EnsureMaximumLength(affiliate.MiddleName, 100);
+            affiliate.PhoneNumber = CommonHelper.EnsureNotNull(affiliate.PhoneNumber);
+            affiliate.PhoneNumber = CommonHelper.EnsureMaximumLength(affiliate.PhoneNumber, 50);
+            affiliate.Email = CommonHelper.EnsureNotNull(affiliate.Email);
+            affiliate.Email = CommonHelper.EnsureMaximumLength(affiliate.Email, 255);
+            affiliate.FaxNumber = CommonHelper.EnsureNotNull(affiliate.FaxNumber);
+            affiliate.FaxNumber = CommonHelper.EnsureMaximumLength(affiliate.FaxNumber, 50);
+            affiliate.Company = CommonHelper.EnsureNotNull(affiliate.Company);
+            affiliate.Company = CommonHelper.EnsureMaximumLength(affiliate.Company, 100);
+            affiliate.Address1 = CommonHelper.EnsureNotNull(affiliate.Address1);
+            affiliate.Address1 = CommonHelper.EnsureMaximumLength(affiliate.Address1, 100);
+            affiliate.Address2 = CommonHelper.EnsureNotNull(affiliate.Address2);
+            affiliate.Address2 = CommonHelper.EnsureMaximumLength(affiliate.Address2, 100);
+            affiliate.City = CommonHelper.EnsureNotNull(affiliate.City);
+            affiliate.City = CommonHelper.EnsureMaximumLength(affiliate.City, 100);
+            affiliate.StateProvince = CommonHelper.EnsureNotNull(affiliate.StateProvince);
+            affiliate.StateProvince = CommonHelper.EnsureMaximumLength(affiliate.StateProvince, 100);
+            affiliate.ZipPostalCode = CommonHelper.EnsureNotNull(affiliate.ZipPostalCode);
+            affiliate.ZipPostalCode = CommonHelper.EnsureMaximumLength(affiliate.ZipPostalCode, 30);
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(affiliate))
                 context.Affiliates.Attach(affiliate);
 
-            affiliate.FirstName = firstName;
-            affiliate.LastName = lastName;
-            affiliate.MiddleName = middleName;
-            affiliate.PhoneNumber = phoneNumber;
-            affiliate.Email = email;
-            affiliate.FaxNumber = faxNumber;
-            affiliate.Company = company;
-            affiliate.Address1 = address1;
-            affiliate.Address2 = address2;
-            affiliate.City = city;
-            affiliate.StateProvince = stateProvince;
-            affiliate.ZipPostalCode = zipPostalCode;
-            affiliate.CountryId = countryId;
-            affiliate.Deleted = deleted;
-            affiliate.Active = active;
             context.SaveChanges();
-            return affiliate;
         }
         #endregion
     }

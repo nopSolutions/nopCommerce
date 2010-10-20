@@ -57,14 +57,22 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
             if (customerRole != null)
             {
-                customerRole = CustomerManager.UpdateCustomerRole(customerRole.CustomerRoleId,
-                    txtName.Text, cbFreeShipping.Checked, cbTaxExempt.Checked, cbActive.Checked, customerRole.Deleted);
+                customerRole.Name = txtName.Text;
+                customerRole.FreeShipping = cbFreeShipping.Checked;
+                customerRole.TaxExempt = cbTaxExempt.Checked;
+                customerRole.Active = cbActive.Checked;
+                CustomerManager.UpdateCustomerRole(customerRole);
             }
             else
             {
-                 customerRole = CustomerManager.InsertCustomerRole(txtName.Text,
-                     cbFreeShipping.Checked, cbTaxExempt.Checked, cbActive.Checked, false);
-
+                customerRole = new CustomerRole()
+                {
+                    Name = txtName.Text,
+                    FreeShipping = cbFreeShipping.Checked,
+                    TaxExempt = cbTaxExempt.Checked,
+                    Active = cbActive.Checked
+                };
+                CustomerManager.InsertCustomerRole(customerRole);
             }
             return customerRole;
         }

@@ -366,18 +366,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic
                 var customer = NopContext.Current.User;
                 if (customer != null)
                 {
-                    customer = CustomerManager.UpdateCustomer(customer.CustomerId, customer.CustomerGuid,
-                        customer.Email, customer.Username, customer.PasswordHash,
-                        customer.SaltKey, customer.AffiliateId,
-                        customer.BillingAddressId, customer.ShippingAddressId,
-                        customer.LastPaymentMethodId, customer.LastAppliedCouponCode,
-                        customer.GiftCardCouponCodes, customer.CheckoutAttributes,
-                        customer.LanguageId, value.CurrencyId, customer.TaxDisplayType,
-                        customer.IsTaxExempt, customer.IsAdmin, customer.IsGuest,
-                        customer.IsForumModerator, customer.TotalForumPosts,
-                        customer.Signature, customer.AdminComment, customer.Active,
-                        customer.Deleted, customer.RegistrationDate, 
-                        customer.TimeZoneId, customer.AvatarId, customer.DateOfBirth);
+                    customer.CurrencyId = value.CurrencyId;
+                    CustomerManager.UpdateCustomer(customer);
 
                     NopContext.Current.User = customer;
                 }
@@ -422,17 +412,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic
                 var customer = NopContext.Current.User;
                 if (customer != null)
                 {
-                    customer = CustomerManager.UpdateCustomer(customer.CustomerId, 
-                        customer.CustomerGuid, customer.Email, customer.Username, 
-                        customer.PasswordHash, customer.SaltKey, customer.AffiliateId,
-                        customer.BillingAddressId, customer.ShippingAddressId,
-                        customer.LastPaymentMethodId, customer.LastAppliedCouponCode,
-                        customer.GiftCardCouponCodes, customer.CheckoutAttributes, 
-                        value.LanguageId, customer.CurrencyId, customer.TaxDisplayType,
-                        customer.IsTaxExempt, customer.IsAdmin, customer.IsGuest,
-                        customer.IsForumModerator, customer.TotalForumPosts,
-                        customer.Signature, customer.AdminComment, customer.Active, customer.Deleted, customer.RegistrationDate,
-                        customer.TimeZoneId, customer.AvatarId, customer.DateOfBirth);
+                    customer.LanguageId = value.LanguageId;
+                    CustomerManager.UpdateCustomer(customer);
 
                     NopContext.Current.User = customer;
                 }
@@ -528,17 +509,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic
                 var customer = NopContext.Current.User;
                 if (customer != null)
                 {
-                    customer = CustomerManager.UpdateCustomer(customer.CustomerId, customer.CustomerGuid,
-                        customer.Email, customer.Username, customer.PasswordHash, customer.SaltKey, customer.AffiliateId,
-                        customer.BillingAddressId, customer.ShippingAddressId,
-                        customer.LastPaymentMethodId, customer.LastAppliedCouponCode,
-                        customer.GiftCardCouponCodes, customer.CheckoutAttributes, 
-                        customer.LanguageId, customer.CurrencyId, value,
-                        customer.IsTaxExempt, customer.IsAdmin, customer.IsGuest,
-                        customer.IsForumModerator, customer.TotalForumPosts,
-                        customer.Signature, customer.AdminComment,
-                        customer.Active, customer.Deleted, customer.RegistrationDate, 
-                        customer.TimeZoneId, customer.AvatarId, customer.DateOfBirth);
+                    customer.TaxDisplayTypeId = (int)value;
+                    CustomerManager.UpdateCustomer(customer);
                 }
                 if (!NopContext.Current.IsAdmin)
                 {

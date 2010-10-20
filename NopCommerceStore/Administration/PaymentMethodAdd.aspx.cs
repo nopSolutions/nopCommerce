@@ -41,11 +41,19 @@ namespace NopSolutions.NopCommerce.Web.Administration
             {
                 try
                 {
-                    PaymentMethod paymentMethod = PaymentMethodManager.InsertPaymentMethod(txtName.Text,
-                        txtVisibleName.Text, txtDescription.Text, txtConfigureTemplatePath.Text,
-                        txtUserTemplatePath.Text, txtClassName.Text,
-                        txtSystemKeyword.Text,
-                        cbActive.Checked, txtDisplayOrder.Value);
+                    var paymentMethod = new PaymentMethod()
+                    {
+                        Name = txtName.Text,
+                        VisibleName = txtVisibleName.Text,
+                        Description = txtDescription.Text,
+                        ConfigureTemplatePath = txtConfigureTemplatePath.Text,
+                        UserTemplatePath = txtUserTemplatePath.Text,
+                        ClassName = txtClassName.Text,
+                        SystemKeyword = txtSystemKeyword.Text,
+                        IsActive = cbActive.Checked,
+                        DisplayOrder = txtDisplayOrder.Value
+                    };
+                    PaymentMethodManager.InsertPaymentMethod(paymentMethod);
                     Response.Redirect("PaymentMethodDetails.aspx?PaymentMethodID=" + paymentMethod.PaymentMethodId.ToString());
                 }
                 catch (Exception exc)

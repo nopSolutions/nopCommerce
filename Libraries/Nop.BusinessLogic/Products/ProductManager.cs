@@ -77,11 +77,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             var product = GetProductById(productId);
             if (product != null)
             {
-                product = UpdateProduct(product.ProductId, product.Name, product.ShortDescription,
-                    product.FullDescription, product.AdminComment,
-                    product.TemplateId, product.ShowOnHomePage, product.MetaKeywords, product.MetaDescription,
-                    product.MetaTitle, product.SEName, product.AllowCustomerReviews, product.AllowCustomerRatings, product.RatingSum,
-                    product.TotalRatingVotes, product.Published, true, product.CreatedOn, product.UpdatedOn);
+                product.Deleted = true;
+                UpdateProduct(product);
 
                 foreach (var productVariant in product.ProductVariants)
                     MarkProductVariantAsDeleted(productVariant.ProductVariantId);
@@ -416,61 +413,28 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         /// <summary>
         /// Inserts a product
         /// </summary>
-        /// <param name="name">The name</param>
-        /// <param name="shortDescription">The short description</param>
-        /// <param name="fullDescription">The full description</param>
-        /// <param name="adminComment">The admin comment</param>
-        /// <param name="templateId">The template identifier</param>
-        /// <param name="showOnHomePage">A value indicating whether to show the product on the home page</param>
-        /// <param name="metaKeywords">The meta keywords</param>
-        /// <param name="metaDescription">The meta description</param>
-        /// <param name="metaTitle">The meta title</param>
-        /// <param name="seName">The search-engine name</param>
-        /// <param name="allowCustomerReviews">A value indicating whether the product allows customer reviews</param>
-        /// <param name="allowCustomerRatings">A value indicating whether the product allows customer ratings</param>
-        /// <param name="ratingSum">The rating sum</param>
-        /// <param name="totalRatingVotes">The total rating votes</param>
-        /// <param name="published">A value indicating whether the entity is published</param>
-        /// <param name="deleted">A value indicating whether the entity has been deleted</param>
-        /// <param name="createdOn">The date and time of product creation</param>
-        /// <param name="updatedOn">The date and time of product update</param>
-        /// <returns>Product</returns>
-        public static Product InsertProduct(string name, string shortDescription,
-            string fullDescription, string adminComment,
-            int templateId, bool showOnHomePage,
-            string metaKeywords, string metaDescription, string metaTitle,
-            string seName, bool allowCustomerReviews, bool allowCustomerRatings,
-            int ratingSum, int totalRatingVotes, bool published,
-            bool deleted, DateTime createdOn, DateTime updatedOn)
+        /// <param name="product">Product</param>
+        public static void InsertProduct(Product product)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 400);
-            metaKeywords = CommonHelper.EnsureMaximumLength(metaKeywords, 400);
-            metaDescription = CommonHelper.EnsureMaximumLength(metaDescription, 4000);
-            metaTitle = CommonHelper.EnsureMaximumLength(metaTitle, 400);
-            seName = CommonHelper.EnsureMaximumLength(seName, 100);
+            if (product == null)
+                throw new ArgumentNullException("product");
+            
+            product.Name = CommonHelper.EnsureNotNull(product.Name);
+            product.Name = CommonHelper.EnsureMaximumLength(product.Name, 400);
+            product.ShortDescription = CommonHelper.EnsureNotNull(product.ShortDescription);
+            product.FullDescription = CommonHelper.EnsureNotNull(product.FullDescription);
+            product.AdminComment = CommonHelper.EnsureNotNull(product.AdminComment);
+            product.MetaKeywords = CommonHelper.EnsureNotNull(product.MetaKeywords);
+            product.MetaKeywords = CommonHelper.EnsureMaximumLength(product.MetaKeywords, 400);
+            product.MetaDescription = CommonHelper.EnsureNotNull(product.MetaDescription);
+            product.MetaDescription = CommonHelper.EnsureMaximumLength(product.MetaDescription, 4000);
+            product.MetaTitle = CommonHelper.EnsureNotNull(product.MetaTitle);
+            product.MetaTitle = CommonHelper.EnsureMaximumLength(product.MetaTitle, 400);
+            product.SEName = CommonHelper.EnsureNotNull(product.SEName);
+            product.SEName = CommonHelper.EnsureMaximumLength(product.SEName, 100);
 
             var context = ObjectContextHelper.CurrentObjectContext;
-
-            var product = context.Products.CreateObject();
-            product.Name = name;
-            product.ShortDescription = shortDescription;
-            product.FullDescription = fullDescription;
-            product.AdminComment = adminComment;
-            product.TemplateId = templateId;
-            product.ShowOnHomePage = showOnHomePage;
-            product.MetaKeywords = metaKeywords;
-            product.MetaDescription = metaDescription;
-            product.MetaTitle = metaTitle;
-            product.SEName = seName;
-            product.AllowCustomerReviews = allowCustomerReviews;
-            product.AllowCustomerRatings = allowCustomerRatings;
-            product.RatingSum = ratingSum;
-            product.TotalRatingVotes = totalRatingVotes;
-            product.Published = published;
-            product.Deleted = deleted;
-            product.CreatedOn = createdOn;
-            product.UpdatedOn = updatedOn;
-
+            
             context.Products.AddObject(product);
             context.SaveChanges();
 
@@ -485,74 +449,35 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             //raise event             
             EventContext.Current.OnProductCreated(null,
                 new ProductEventArgs() { Product = product });
-            
-            return product;
         }
 
         /// <summary>
         /// Updates the product
         /// </summary>
-        /// <param name="productId">Product identifier</param>
-        /// <param name="name">The name</param>
-        /// <param name="shortDescription">The short description</param>
-        /// <param name="fullDescription">The full description</param>
-        /// <param name="adminComment">The admin comment</param>
-        /// <param name="templateId">The template identifier</param>
-        /// <param name="showOnHomePage">A value indicating whether to show the product on the home page</param>
-        /// <param name="metaKeywords">The meta keywords</param>
-        /// <param name="metaDescription">The meta description</param>
-        /// <param name="metaTitle">The meta title</param>
-        /// <param name="seName">The search-engine name</param>
-        /// <param name="allowCustomerReviews">A value indicating whether the product allows customer reviews</param>
-        /// <param name="allowCustomerRatings">A value indicating whether the product allows customer ratings</param>
-        /// <param name="ratingSum">The rating sum</param>
-        /// <param name="totalRatingVotes">The total rating votes</param>
-        /// <param name="published">A value indicating whether the entity is published</param>
-        /// <param name="deleted">A value indicating whether the entity has been deleted</param>
-        /// <param name="createdOn">The date and time of product creation</param>
-        /// <param name="updatedOn">The date and time of product update</param>
-        /// <returns>Product</returns>
-        public static Product UpdateProduct(int productId,
-            string name, string shortDescription,
-            string fullDescription, string adminComment,
-            int templateId, bool showOnHomePage,
-            string metaKeywords, string metaDescription, string metaTitle,
-            string seName, bool allowCustomerReviews, bool allowCustomerRatings,
-            int ratingSum, int totalRatingVotes, bool published,
-            bool deleted, DateTime createdOn, DateTime updatedOn)
+        /// <param name="product">Product</param>
+        public static void UpdateProduct(Product product)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 400);
-            metaKeywords = CommonHelper.EnsureMaximumLength(metaKeywords, 400);
-            metaDescription = CommonHelper.EnsureMaximumLength(metaDescription, 4000);
-            metaTitle = CommonHelper.EnsureMaximumLength(metaTitle, 400);
-            seName = CommonHelper.EnsureMaximumLength(seName, 100);
-
-            var product = GetProductById(productId);
             if (product == null)
-                return null;
+                throw new ArgumentNullException("product");
+
+            product.Name = CommonHelper.EnsureNotNull(product.Name);
+            product.Name = CommonHelper.EnsureMaximumLength(product.Name, 400);
+            product.ShortDescription = CommonHelper.EnsureNotNull(product.ShortDescription);
+            product.FullDescription = CommonHelper.EnsureNotNull(product.FullDescription);
+            product.AdminComment = CommonHelper.EnsureNotNull(product.AdminComment);
+            product.MetaKeywords = CommonHelper.EnsureNotNull(product.MetaKeywords);
+            product.MetaKeywords = CommonHelper.EnsureMaximumLength(product.MetaKeywords, 400);
+            product.MetaDescription = CommonHelper.EnsureNotNull(product.MetaDescription);
+            product.MetaDescription = CommonHelper.EnsureMaximumLength(product.MetaDescription, 4000);
+            product.MetaTitle = CommonHelper.EnsureNotNull(product.MetaTitle);
+            product.MetaTitle = CommonHelper.EnsureMaximumLength(product.MetaTitle, 400);
+            product.SEName = CommonHelper.EnsureNotNull(product.SEName);
+            product.SEName = CommonHelper.EnsureMaximumLength(product.SEName, 100);
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(product))
                 context.Products.Attach(product);
 
-            product.Name = name;
-            product.ShortDescription = shortDescription;
-            product.FullDescription = fullDescription;
-            product.AdminComment = adminComment;
-            product.TemplateId = templateId;
-            product.ShowOnHomePage = showOnHomePage;
-            product.MetaKeywords = metaKeywords;
-            product.MetaDescription = metaDescription;
-            product.MetaTitle = metaTitle;
-            product.SEName = seName;
-            product.AllowCustomerReviews = allowCustomerReviews;
-            product.AllowCustomerRatings = allowCustomerRatings;
-            product.RatingSum = ratingSum;
-            product.TotalRatingVotes = totalRatingVotes;
-            product.Published = published;
-            product.Deleted = deleted;
-            product.CreatedOn = createdOn;
-            product.UpdatedOn = updatedOn;
             context.SaveChanges();
 
             if (ProductManager.CacheEnabled)
@@ -566,8 +491,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             //raise event             
             EventContext.Current.OnProductUpdated(null,
                 new ProductEventArgs() { Product = product });
-            
-            return product;
         }
 
         /// <summary>
@@ -630,39 +553,26 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         /// <summary>
         /// Inserts a localized product
         /// </summary>
-        /// <param name="productId">Product identifier</param>
-        /// <param name="languageId">Language identifier</param>
-        /// <param name="name">Name text</param>
-        /// <param name="shortDescription">The short description</param>
-        /// <param name="fullDescription">The full description</param>
-        /// <param name="metaKeywords">Meta keywords text</param>
-        /// <param name="metaDescription">Meta descriptions text</param>
-        /// <param name="metaTitle">Metat title text</param>
-        /// <param name="seName">Se Name text</param>
-        /// <returns>Product content</returns>
-        public static ProductLocalized InsertProductLocalized(int productId,
-            int languageId, string name, string shortDescription, string fullDescription,
-            string metaKeywords, string metaDescription, string metaTitle,
-            string seName)
+        /// <param name="productLocalized">Product content</param>
+        public static void InsertProductLocalized(ProductLocalized productLocalized)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 400);
-            metaKeywords = CommonHelper.EnsureMaximumLength(metaKeywords, 400);
-            metaDescription = CommonHelper.EnsureMaximumLength(metaDescription, 4000);
-            metaTitle = CommonHelper.EnsureMaximumLength(metaTitle, 400);
-            seName = CommonHelper.EnsureMaximumLength(seName, 100);
+            if (productLocalized == null)
+                throw new ArgumentNullException("productLocalized");
+            
+            productLocalized.Name = CommonHelper.EnsureNotNull(productLocalized.Name);
+            productLocalized.Name = CommonHelper.EnsureMaximumLength(productLocalized.Name, 400);
+            productLocalized.ShortDescription = CommonHelper.EnsureNotNull(productLocalized.ShortDescription);
+            productLocalized.FullDescription = CommonHelper.EnsureNotNull(productLocalized.FullDescription);
+            productLocalized.MetaKeywords = CommonHelper.EnsureNotNull(productLocalized.MetaKeywords);
+            productLocalized.MetaKeywords = CommonHelper.EnsureMaximumLength(productLocalized.MetaKeywords, 400);
+            productLocalized.MetaDescription = CommonHelper.EnsureNotNull(productLocalized.MetaDescription);
+            productLocalized.MetaDescription = CommonHelper.EnsureMaximumLength(productLocalized.MetaDescription, 4000);
+            productLocalized.MetaTitle = CommonHelper.EnsureNotNull(productLocalized.MetaTitle);
+            productLocalized.MetaTitle = CommonHelper.EnsureMaximumLength(productLocalized.MetaTitle, 400);
+            productLocalized.SEName = CommonHelper.EnsureNotNull(productLocalized.SEName);
+            productLocalized.SEName = CommonHelper.EnsureMaximumLength(productLocalized.SEName, 100);
 
             var context = ObjectContextHelper.CurrentObjectContext;
-
-            var productLocalized = context.ProductLocalized.CreateObject();
-            productLocalized.ProductId = productId;
-            productLocalized.LanguageId = languageId;
-            productLocalized.Name = name;
-            productLocalized.ShortDescription = shortDescription;
-            productLocalized.FullDescription = fullDescription;
-            productLocalized.MetaKeywords = metaKeywords;
-            productLocalized.MetaDescription = metaDescription;
-            productLocalized.MetaTitle = metaTitle;
-            productLocalized.SEName = seName;
 
             context.ProductLocalized.AddObject(productLocalized);
             context.SaveChanges();
@@ -674,46 +584,37 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                 NopRequestCache.RemoveByPattern(TIERPRICES_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(CUSTOMERROLEPRICES_PATTERN_KEY);
             }
-
-            return productLocalized;
         }
 
         /// <summary>
         /// Update a localized product
         /// </summary>
-        /// <param name="productLocalizedId">Localized product identifier</param>
-        /// <param name="productId">Product identifier</param>
-        /// <param name="languageId">Language identifier</param>
-        /// <param name="name">Name text</param>
-        /// <param name="shortDescription">The short description</param>
-        /// <param name="fullDescription">The full description</param>
-        /// <param name="metaKeywords">Meta keywords text</param>
-        /// <param name="metaDescription">Meta descriptions text</param>
-        /// <param name="metaTitle">Metat title text</param>
-        /// <param name="seName">Se Name text</param>
-        /// <returns>Product content</returns>
-        public static ProductLocalized UpdateProductLocalized(int productLocalizedId,
-            int productId, int languageId, string name, string shortDescription,
-            string fullDescription, string metaKeywords, string metaDescription,
-            string metaTitle, string seName)
+        /// <param name="productLocalized">Product content</param>
+        public static void UpdateProductLocalized(ProductLocalized productLocalized)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 400);
-            metaKeywords = CommonHelper.EnsureMaximumLength(metaKeywords, 400);
-            metaDescription = CommonHelper.EnsureMaximumLength(metaDescription, 4000);
-            metaTitle = CommonHelper.EnsureMaximumLength(metaTitle, 400);
-            seName = CommonHelper.EnsureMaximumLength(seName, 100);
-
-            var productLocalized = GetProductLocalizedById(productLocalizedId);
             if (productLocalized == null)
-                return null;
+                throw new ArgumentNullException("productLocalized");
 
-            bool allFieldsAreEmpty = string.IsNullOrEmpty(name) &&
-               string.IsNullOrEmpty(shortDescription) &&
-               string.IsNullOrEmpty(fullDescription) &&
-               string.IsNullOrEmpty(metaKeywords) &&
-               string.IsNullOrEmpty(metaDescription) &&
-               string.IsNullOrEmpty(metaTitle) &&
-               string.IsNullOrEmpty(seName);
+            productLocalized.Name = CommonHelper.EnsureNotNull(productLocalized.Name);
+            productLocalized.Name = CommonHelper.EnsureMaximumLength(productLocalized.Name, 400);
+            productLocalized.ShortDescription = CommonHelper.EnsureNotNull(productLocalized.ShortDescription);
+            productLocalized.FullDescription = CommonHelper.EnsureNotNull(productLocalized.FullDescription);
+            productLocalized.MetaKeywords = CommonHelper.EnsureNotNull(productLocalized.MetaKeywords);
+            productLocalized.MetaKeywords = CommonHelper.EnsureMaximumLength(productLocalized.MetaKeywords, 400);
+            productLocalized.MetaDescription = CommonHelper.EnsureNotNull(productLocalized.MetaDescription);
+            productLocalized.MetaDescription = CommonHelper.EnsureMaximumLength(productLocalized.MetaDescription, 4000);
+            productLocalized.MetaTitle = CommonHelper.EnsureNotNull(productLocalized.MetaTitle);
+            productLocalized.MetaTitle = CommonHelper.EnsureMaximumLength(productLocalized.MetaTitle, 400);
+            productLocalized.SEName = CommonHelper.EnsureNotNull(productLocalized.SEName);
+            productLocalized.SEName = CommonHelper.EnsureMaximumLength(productLocalized.SEName, 100);
+
+            bool allFieldsAreEmpty = string.IsNullOrEmpty(productLocalized.Name) &&
+               string.IsNullOrEmpty(productLocalized.ShortDescription) &&
+               string.IsNullOrEmpty(productLocalized.FullDescription) &&
+               string.IsNullOrEmpty(productLocalized.MetaKeywords) &&
+               string.IsNullOrEmpty(productLocalized.MetaDescription) &&
+               string.IsNullOrEmpty(productLocalized.MetaTitle) &&
+               string.IsNullOrEmpty(productLocalized.SEName);
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(productLocalized))
@@ -727,15 +628,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             }
             else
             {
-                productLocalized.ProductId = productId;
-                productLocalized.LanguageId = languageId;
-                productLocalized.Name = name;
-                productLocalized.ShortDescription = shortDescription;
-                productLocalized.FullDescription = fullDescription;
-                productLocalized.MetaKeywords = metaKeywords;
-                productLocalized.MetaDescription = metaDescription;
-                productLocalized.MetaTitle = metaTitle;
-                productLocalized.SEName = seName;
                 context.SaveChanges();
             }
 
@@ -746,8 +638,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                 NopRequestCache.RemoveByPattern(TIERPRICES_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(CUSTOMERROLEPRICES_PATTERN_KEY);
             }
-
-            return productLocalized;
         }
 
         /// <summary>
@@ -1090,12 +980,26 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             //using (var scope = new System.Transactions.TransactionScope())
             {
                 // product
-                productCopy = InsertProduct(name, product.ShortDescription,
-                    product.FullDescription, product.AdminComment,
-                    product.TemplateId, product.ShowOnHomePage, product.MetaKeywords,
-                    product.MetaDescription, product.MetaTitle, product.SEName,
-                    product.AllowCustomerReviews, product.AllowCustomerRatings, 0, 0,
-                    isPublished, product.Deleted, DateTime.UtcNow, DateTime.UtcNow);
+                productCopy = new Product()
+                {
+                    Name = name,
+                    ShortDescription = product.ShortDescription,
+                    FullDescription = product.FullDescription,
+                    AdminComment = product.AdminComment,
+                    TemplateId = product.TemplateId,
+                    ShowOnHomePage = product.ShowOnHomePage,
+                    MetaKeywords = product.MetaKeywords,
+                    MetaDescription = product.MetaDescription,
+                    MetaTitle = product.MetaTitle,
+                    SEName = product.SEName,
+                    AllowCustomerReviews = product.AllowCustomerReviews,
+                    AllowCustomerRatings = product.AllowCustomerRatings,
+                    Published = isPublished,
+                    Deleted = product.Deleted,
+                    CreatedOn = DateTime.UtcNow,
+                    UpdatedOn = DateTime.UtcNow
+                };
+                InsertProduct(productCopy);
 
                 if (productCopy == null)
                     return null;
@@ -1108,15 +1012,19 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                     var productLocalized = GetProductLocalizedByProductIdAndLanguageId(product.ProductId, lang.LanguageId);
                     if (productLocalized != null)
                     {
-                        var productLocalizedCopy = InsertProductLocalized(productCopy.ProductId,
-                            productLocalized.LanguageId,
-                            productLocalized.Name,
-                            productLocalized.ShortDescription,
-                            productLocalized.FullDescription,
-                            productLocalized.MetaKeywords,
-                            productLocalized.MetaDescription,
-                            productLocalized.MetaTitle,
-                            productLocalized.SEName);
+                        var productLocalizedCopy = new ProductLocalized()
+                        {
+                            ProductId = productCopy.ProductId,
+                            LanguageId = productLocalized.LanguageId,
+                            Name = productLocalized.Name,
+                            ShortDescription = productLocalized.ShortDescription,
+                            FullDescription = productLocalized.FullDescription,
+                            MetaKeywords = productLocalized.MetaKeywords,
+                            MetaDescription = productLocalized.MetaDescription,
+                            MetaTitle = productLocalized.MetaTitle,
+                            SEName = productLocalized.SEName
+                        };
+                        InsertProductLocalized(productLocalizedCopy);
                     }
                 }
 
@@ -1126,49 +1034,72 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                     foreach (var productPicture in product.ProductPictures)
                     {
                         var picture = productPicture.Picture;
+
                         var pictureCopy = PictureManager.InsertPicture(picture.PictureBinary,
                             picture.MimeType,
                             picture.IsNew);
-                        InsertProductPicture(productCopy.ProductId,
-                            pictureCopy.PictureId,
-                            productPicture.DisplayOrder);
+
+                        InsertProductPicture(new ProductPicture()
+                        {
+                            ProductId = productCopy.ProductId,
+                            PictureId = pictureCopy.PictureId,
+                            DisplayOrder = productPicture.DisplayOrder
+                        });
                     }
                 }
 
                 // product <-> categories mappings
                 foreach (var productCategory in product.ProductCategories)
                 {
-                    CategoryManager.InsertProductCategory(productCopy.ProductId,
-                        productCategory.CategoryId,
-                        productCategory.IsFeaturedProduct,
-                        productCategory.DisplayOrder);
+                    var productCategoryCopy = new ProductCategory()
+                    {
+                        ProductId = productCopy.ProductId,
+                        CategoryId = productCategory.CategoryId,
+                        IsFeaturedProduct = productCategory.IsFeaturedProduct,
+                        DisplayOrder = productCategory.DisplayOrder
+                    };
+
+                    CategoryManager.InsertProductCategory(productCategoryCopy);
                 }
 
                 // product <-> manufacturers mappings
                 foreach (var productManufacturers in product.ProductManufacturers)
                 {
-                    ManufacturerManager.InsertProductManufacturer(productCopy.ProductId,
-                        productManufacturers.ManufacturerId,
-                        productManufacturers.IsFeaturedProduct,
-                        productManufacturers.DisplayOrder);
+                    var productManufacturerCopy = new ProductManufacturer()
+                    {
+                        ProductId = productCopy.ProductId,
+                        ManufacturerId = productManufacturers.ManufacturerId,
+                        IsFeaturedProduct = productManufacturers.IsFeaturedProduct,
+                        DisplayOrder = productManufacturers.DisplayOrder
+                    };
+
+                    ManufacturerManager.InsertProductManufacturer(productManufacturerCopy);
                 }
 
                 // product <-> releated products mappings
                 foreach (var relatedProduct in product.RelatedProducts)
                 {
-                    InsertRelatedProduct(productCopy.ProductId,
-                        relatedProduct.ProductId2,
-                        relatedProduct.DisplayOrder);
+                    InsertRelatedProduct(
+                        new RelatedProduct()
+                        {
+                            ProductId1 = productCopy.ProductId,
+                            ProductId2 = relatedProduct.ProductId2,
+                            DisplayOrder = relatedProduct.DisplayOrder
+                        });
                 }
 
                 // product specifications
                 foreach (var productSpecificationAttribute in SpecificationAttributeManager.GetProductSpecificationAttributesByProductId(product.ProductId))
                 {
-                    SpecificationAttributeManager.InsertProductSpecificationAttribute(productCopy.ProductId,
-                        productSpecificationAttribute.SpecificationAttributeOptionId,
-                        productSpecificationAttribute.AllowFiltering,
-                        productSpecificationAttribute.ShowOnProductPage,
-                        productSpecificationAttribute.DisplayOrder);
+                    var psaCopy = new ProductSpecificationAttribute()
+                    {
+                        ProductId = productCopy.ProductId,
+                        SpecificationAttributeOptionId = productSpecificationAttribute.SpecificationAttributeOptionId,
+                        AllowFiltering = productSpecificationAttribute.AllowFiltering,
+                        ShowOnProductPage = productSpecificationAttribute.ShowOnProductPage,
+                        DisplayOrder = productSpecificationAttribute.DisplayOrder
+                    };
+                    SpecificationAttributeManager.InsertProductSpecificationAttribute(psaCopy);
                 }
 
                 // product variants
@@ -1195,7 +1126,17 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                         var download = productVariant.Download;
                         if (download != null)
                         {
-                            var downloadCopy = DownloadManager.InsertDownload(download.UseDownloadUrl, download.DownloadUrl, download.DownloadBinary, download.ContentType, download.Filename, download.Extension, download.IsNew);
+                            var downloadCopy = new Download()
+                                {
+                                    UseDownloadUrl = download.UseDownloadUrl,
+                                    DownloadUrl = download.DownloadUrl,
+                                    DownloadBinary = download.DownloadBinary,
+                                    ContentType = download.ContentType,
+                                    Filename = download.Filename,
+                                    Extension = download.Extension,
+                                    IsNew = download.IsNew
+                                };
+                            DownloadManager.InsertDownload(downloadCopy);
                             downloadId = downloadCopy.DownloadId;
                         }
 
@@ -1204,37 +1145,86 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                             var sampleDownload = productVariant.SampleDownload;
                             if (sampleDownload != null)
                             {
-                                var sampleDownloadCopy = DownloadManager.InsertDownload(sampleDownload.UseDownloadUrl, sampleDownload.DownloadUrl, sampleDownload.DownloadBinary, sampleDownload.ContentType, sampleDownload.Filename, sampleDownload.Extension, sampleDownload.IsNew);
+                                var sampleDownloadCopy = new Download()
+                                {
+                                    UseDownloadUrl = sampleDownload.UseDownloadUrl,
+                                    DownloadUrl = sampleDownload.DownloadUrl,
+                                    DownloadBinary = sampleDownload.DownloadBinary,
+                                    ContentType = sampleDownload.ContentType,
+                                    Filename = sampleDownload.Filename,
+                                    Extension = sampleDownload.Extension,
+                                    IsNew = sampleDownload.IsNew
+                                };
+                                DownloadManager.InsertDownload(sampleDownloadCopy);
                                 sampleDownloadId = sampleDownloadCopy.DownloadId;
                             }
                         }
                     }
 
                     // product variant
-                    var productVariantCopy = InsertProductVariant(productCopy.ProductId, productVariant.Name,
-                        productVariant.SKU, productVariant.Description, productVariant.AdminComment, productVariant.ManufacturerPartNumber,
-                        productVariant.IsGiftCard, productVariant.GiftCardType, 
-                        productVariant.IsDownload, downloadId,
-                        productVariant.UnlimitedDownloads, productVariant.MaxNumberOfDownloads,
-                        productVariant.DownloadExpirationDays, (DownloadActivationTypeEnum)productVariant.DownloadActivationType,
-                        productVariant.HasSampleDownload, sampleDownloadId,
-                        productVariant.HasUserAgreement, productVariant.UserAgreementText,
-                        productVariant.IsRecurring, productVariant.CycleLength,
-                        productVariant.CyclePeriod, productVariant.TotalCycles,
-                        productVariant.IsShipEnabled, productVariant.IsFreeShipping, productVariant.AdditionalShippingCharge,
-                        productVariant.IsTaxExempt, productVariant.TaxCategoryId,
-                        productVariant.ManageInventory, productVariant.StockQuantity,
-                        productVariant.DisplayStockAvailability, productVariant.DisplayStockQuantity, 
-                        productVariant.MinStockQuantity, productVariant.LowStockActivity,
-                        productVariant.NotifyAdminForQuantityBelow, productVariant.Backorders,
-                        productVariant.OrderMinimumQuantity, productVariant.OrderMaximumQuantity,
-                        productVariant.WarehouseId, productVariant.DisableBuyButton,
-                        productVariant.CallForPrice, productVariant.Price, productVariant.OldPrice, 
-                        productVariant.ProductCost, productVariant.CustomerEntersPrice,
-                        productVariant.MinimumCustomerEnteredPrice, productVariant.MaximumCustomerEnteredPrice,
-                        productVariant.Weight, productVariant.Length, productVariant.Width, productVariant.Height, pictureId,
-                        productVariant.AvailableStartDateTime, productVariant.AvailableEndDateTime,
-                        productVariant.Published, productVariant.Deleted, productVariant.DisplayOrder, DateTime.UtcNow, DateTime.UtcNow);
+                    var productVariantCopy = new ProductVariant()
+                    {
+                        ProductId = productCopy.ProductId,
+                        Name = productVariant.Name,
+                        SKU = productVariant.SKU,
+                        Description = productVariant.Description,
+                        AdminComment = productVariant.AdminComment,
+                        ManufacturerPartNumber = productVariant.ManufacturerPartNumber,
+                        IsGiftCard = productVariant.IsGiftCard,
+                        GiftCardType = productVariant.GiftCardType,
+                        IsDownload = productVariant.IsDownload,
+                        DownloadId = downloadId,
+                        UnlimitedDownloads = productVariant.UnlimitedDownloads,
+                        MaxNumberOfDownloads = productVariant.MaxNumberOfDownloads,
+                        DownloadExpirationDays = productVariant.DownloadExpirationDays,
+                        DownloadActivationType = productVariant.DownloadActivationType,
+                        HasSampleDownload = productVariant.HasSampleDownload,
+                        SampleDownloadId = sampleDownloadId,
+                        HasUserAgreement = productVariant.HasUserAgreement,
+                        UserAgreementText = productVariant.UserAgreementText,
+                        IsRecurring = productVariant.IsRecurring,
+                        CycleLength = productVariant.CycleLength,
+                        CyclePeriod = productVariant.CyclePeriod,
+                        TotalCycles = productVariant.TotalCycles,
+                        IsShipEnabled = productVariant.IsShipEnabled,
+                        IsFreeShipping = productVariant.IsFreeShipping,
+                        AdditionalShippingCharge = productVariant.AdditionalShippingCharge,
+                        IsTaxExempt = productVariant.IsTaxExempt,
+                        TaxCategoryId = productVariant.TaxCategoryId,
+                        ManageInventory = productVariant.ManageInventory,
+                        StockQuantity = productVariant.StockQuantity,
+                        DisplayStockAvailability = productVariant.DisplayStockAvailability,
+                        DisplayStockQuantity = productVariant.DisplayStockQuantity,
+                        MinStockQuantity = productVariant.MinStockQuantity,
+                        LowStockActivityId = productVariant.LowStockActivityId,
+                        NotifyAdminForQuantityBelow = productVariant.NotifyAdminForQuantityBelow,
+                        Backorders = productVariant.Backorders,
+                        OrderMinimumQuantity = productVariant.OrderMinimumQuantity,
+                        OrderMaximumQuantity = productVariant.OrderMaximumQuantity,
+                        WarehouseId = productVariant.WarehouseId,
+                        DisableBuyButton = productVariant.DisableBuyButton,
+                        CallForPrice = productVariant.CallForPrice,
+                        Price = productVariant.Price,
+                        OldPrice = productVariant.OldPrice,
+                        ProductCost = productVariant.ProductCost,
+                        CustomerEntersPrice = productVariant.CustomerEntersPrice,
+                        MinimumCustomerEnteredPrice = productVariant.MinimumCustomerEnteredPrice,
+                        MaximumCustomerEnteredPrice = productVariant.MaximumCustomerEnteredPrice,
+                        Weight = productVariant.Weight,
+                        Length = productVariant.Length,
+                        Width = productVariant.Width,
+                        Height = productVariant.Height,
+                        PictureId = pictureId,
+                        AvailableStartDateTime = productVariant.AvailableStartDateTime,
+                        AvailableEndDateTime = productVariant.AvailableEndDateTime,
+                        Published = productVariant.Published,
+                        Deleted = productVariant.Deleted,
+                        DisplayOrder = productVariant.DisplayOrder,
+                        CreatedOn = DateTime.UtcNow,
+                        UpdatedOn = DateTime.UtcNow
+                    };
+
+                    InsertProductVariant(productVariantCopy);
 
                     //localization
                     foreach (var lang in languages)
@@ -1242,23 +1232,45 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                         var productVariantLocalized = GetProductVariantLocalizedByProductVariantIdAndLanguageId(productVariant.ProductVariantId, lang.LanguageId);
                         if (productVariantLocalized != null)
                         {
-                            var productVariantLocalizedCopy = InsertProductVariantLocalized(productVariantCopy.ProductVariantId,
-                                productVariantLocalized.LanguageId,
-                                productVariantLocalized.Name,
-                                productVariantLocalized.Description);
+                            var productVariantLocalizedCopy = new ProductVariantLocalized()
+                            {
+                                ProductVariantId = productVariantCopy.ProductVariantId,
+                                LanguageId = productVariantLocalized.LanguageId,
+                                Name = productVariantLocalized.Name,
+                                Description = productVariantLocalized.Description
+                            };
+                            InsertProductVariantLocalized(productVariantLocalizedCopy);
                         }
                     }
 
                     // product variant <-> attributes mappings
                     foreach (var productVariantAttribute in ProductAttributeManager.GetProductVariantAttributesByProductVariantId(productVariant.ProductVariantId))
                     {
-                        var productVariantAttributeCopy = ProductAttributeManager.InsertProductVariantAttribute(productVariantCopy.ProductVariantId, productVariantAttribute.ProductAttributeId, productVariantAttribute.TextPrompt, productVariantAttribute.IsRequired, productVariantAttribute.AttributeControlType, productVariantAttribute.DisplayOrder);
+                        var productVariantAttributeCopy = new ProductVariantAttribute()
+                        {
+                            ProductVariantId = productVariantCopy.ProductVariantId,
+                            ProductAttributeId = productVariantAttribute.ProductAttributeId,
+                            TextPrompt = productVariantAttribute.TextPrompt,
+                            IsRequired = productVariantAttribute.IsRequired,
+                            AttributeControlTypeId = productVariantAttribute.AttributeControlTypeId,
+                            DisplayOrder = productVariantAttribute.DisplayOrder
+                        };
+                        ProductAttributeManager.InsertProductVariantAttribute(productVariantAttributeCopy);
 
                         // product variant attribute values
                         var productVariantAttributeValues = ProductAttributeManager.GetProductVariantAttributeValues(productVariantAttribute.ProductVariantAttributeId);
                         foreach (var productVariantAttributeValue in productVariantAttributeValues)
                         {
-                            var pvavCopy = ProductAttributeManager.InsertProductVariantAttributeValue(productVariantAttributeCopy.ProductVariantAttributeId, productVariantAttributeValue.Name, productVariantAttributeValue.PriceAdjustment, productVariantAttributeValue.WeightAdjustment, productVariantAttributeValue.IsPreSelected, productVariantAttributeValue.DisplayOrder);
+                            var pvavCopy = new ProductVariantAttributeValue()
+                            {
+                                ProductVariantAttributeId = productVariantAttributeCopy.ProductVariantAttributeId,
+                                Name = productVariantAttributeValue.Name,
+                                PriceAdjustment = productVariantAttributeValue.PriceAdjustment,
+                                WeightAdjustment = productVariantAttributeValue.WeightAdjustment,
+                                IsPreSelected = productVariantAttributeValue.IsPreSelected,
+                                DisplayOrder = productVariantAttributeValue.DisplayOrder
+                            };
+                            ProductAttributeManager.InsertProductVariantAttributeValue(pvavCopy);
 
                             //localization
                             foreach (var lang in languages)
@@ -1266,25 +1278,39 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                                 var pvavLocalized = ProductAttributeManager.GetProductVariantAttributeValueLocalizedByProductVariantAttributeValueIdAndLanguageId(productVariantAttributeValue.ProductVariantAttributeValueId, lang.LanguageId);
                                 if (pvavLocalized != null)
                                 {
-                                    var pvavLocalizedCopy = ProductAttributeManager.InsertProductVariantAttributeValueLocalized(pvavCopy.ProductVariantAttributeValueId,
-                                        pvavLocalized.LanguageId,
-                                        pvavLocalized.Name);
+                                    var pvavLocalizedCopy = new ProductVariantAttributeValueLocalized()
+                                    {
+                                        ProductVariantAttributeValueId = pvavCopy.ProductVariantAttributeValueId,
+                                        LanguageId = pvavLocalized.LanguageId,
+                                        Name = pvavLocalized.Name
+                                    };
+                                    ProductAttributeManager.InsertProductVariantAttributeValueLocalized(pvavLocalizedCopy);
                                 }
                             }
                         }
                     }
                     foreach (var combination in ProductAttributeManager.GetAllProductVariantAttributeCombinations(productVariant.ProductVariantId))
                     {
-                        ProductAttributeManager.InsertProductVariantAttributeCombination(productVariantCopy.ProductVariantId,
-                              combination.AttributesXml,
-                              combination.StockQuantity,
-                              combination.AllowOutOfStockOrders);
+                        var combinationCopy = new ProductVariantAttributeCombination()
+                        {
+                            ProductVariantId = productVariantCopy.ProductVariantId,
+                            AttributesXml = combination.AttributesXml,
+                            StockQuantity = combination.StockQuantity,
+                            AllowOutOfStockOrders = combination.AllowOutOfStockOrders
+                        };
+                        ProductAttributeManager.InsertProductVariantAttributeCombination(combinationCopy);
                     }
 
                     // product variant tier prices
                     foreach (var tierPrice in productVariant.TierPrices)
                     {
-                        InsertTierPrice(productVariantCopy.ProductVariantId, tierPrice.Quantity, tierPrice.Price);
+                        InsertTierPrice(
+                            new TierPrice()
+                            {
+                                ProductVariantId = productVariantCopy.ProductVariantId,
+                                Quantity = tierPrice.Quantity,
+                                Price = tierPrice.Price
+                            });
                     }
 
                     // product variant <-> discounts mapping
@@ -1296,8 +1322,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                     // prices by customer role
                     foreach (var crpp in productVariant.CustomerRoleProductPrices)
                     {
-                        ProductManager.InsertCustomerRoleProductPrice(crpp.CustomerRoleId,
-                            productVariantCopy.ProductVariantId, crpp.Price);
+                        ProductManager.InsertCustomerRoleProductPrice(
+                            new CustomerRoleProductPrice()
+                            {
+                                CustomerRoleId = crpp.CustomerRoleId,
+                                ProductVariantId = productVariantCopy.ProductVariantId,
+                                Price = crpp.Price
+                            }
+                            );
                     }
                 }
 
@@ -1369,32 +1401,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             var productVariant = GetProductVariantById(productVariantId);
             if (productVariant != null)
             {
-                UpdateProductVariant(productVariant.ProductVariantId, productVariant.ProductId, productVariant.Name,
-                    productVariant.SKU, productVariant.Description, productVariant.AdminComment, productVariant.ManufacturerPartNumber,
-                    productVariant.IsGiftCard, productVariant.GiftCardType, 
-                    productVariant.IsDownload, productVariant.DownloadId,
-                    productVariant.UnlimitedDownloads, productVariant.MaxNumberOfDownloads,
-                    productVariant.DownloadExpirationDays, (DownloadActivationTypeEnum)productVariant.DownloadActivationType,
-                    productVariant.HasSampleDownload, productVariant.SampleDownloadId,
-                    productVariant.HasUserAgreement, productVariant.UserAgreementText,
-                    productVariant.IsRecurring, productVariant.CycleLength,
-                    productVariant.CyclePeriod, productVariant.TotalCycles,
-                    productVariant.IsShipEnabled, productVariant.IsFreeShipping, productVariant.AdditionalShippingCharge,
-                    productVariant.IsTaxExempt, productVariant.TaxCategoryId, productVariant.ManageInventory,
-                    productVariant.StockQuantity, productVariant.DisplayStockAvailability,
-                    productVariant.DisplayStockQuantity, productVariant.MinStockQuantity,
-                    productVariant.LowStockActivity, productVariant.NotifyAdminForQuantityBelow,
-                    productVariant.Backorders, productVariant.OrderMinimumQuantity,
-                    productVariant.OrderMaximumQuantity, productVariant.WarehouseId,
-                    productVariant.DisableBuyButton, productVariant.CallForPrice,
-                    productVariant.Price, productVariant.OldPrice, productVariant.ProductCost,
-                    productVariant.CustomerEntersPrice,
-                    productVariant.MinimumCustomerEnteredPrice, 
-                    productVariant.MaximumCustomerEnteredPrice,
-                    productVariant.Weight, productVariant.Length, productVariant.Width, productVariant.Height, 0,
-                    productVariant.AvailableStartDateTime, productVariant.AvailableEndDateTime,
-                    productVariant.Published, productVariant.Deleted,
-                    productVariant.DisplayOrder, productVariant.CreatedOn, productVariant.UpdatedOn);
+                productVariant.PictureId = 0;
+                UpdateProductVariant(productVariant);
             }
         }
 
@@ -1423,32 +1431,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             var productVariant = GetProductVariantById(productVariantId);
             if (productVariant != null)
             {
-                UpdateProductVariant(productVariant.ProductVariantId, productVariant.ProductId, productVariant.Name,
-                    productVariant.SKU, productVariant.Description, productVariant.AdminComment,
-                    productVariant.ManufacturerPartNumber, productVariant.IsGiftCard,
-                    productVariant.GiftCardType, productVariant.IsDownload, 0,
-                    productVariant.UnlimitedDownloads, productVariant.MaxNumberOfDownloads,
-                    productVariant.DownloadExpirationDays, (DownloadActivationTypeEnum)productVariant.DownloadActivationType,
-                    productVariant.HasSampleDownload, productVariant.SampleDownloadId,
-                    productVariant.HasUserAgreement, productVariant.UserAgreementText,
-                    productVariant.IsRecurring, productVariant.CycleLength,
-                    productVariant.CyclePeriod, productVariant.TotalCycles,
-                    productVariant.IsShipEnabled, productVariant.IsFreeShipping, productVariant.AdditionalShippingCharge,
-                    productVariant.IsTaxExempt, productVariant.TaxCategoryId, productVariant.ManageInventory,
-                    productVariant.StockQuantity, productVariant.DisplayStockAvailability,
-                    productVariant.DisplayStockQuantity, productVariant.MinStockQuantity,
-                    productVariant.LowStockActivity, productVariant.NotifyAdminForQuantityBelow,
-                    productVariant.Backorders, productVariant.OrderMinimumQuantity,
-                    productVariant.OrderMaximumQuantity, productVariant.WarehouseId,
-                    productVariant.DisableBuyButton, productVariant.CallForPrice, 
-                    productVariant.Price, productVariant.OldPrice, productVariant.ProductCost,
-                    productVariant.CustomerEntersPrice,
-                    productVariant.MinimumCustomerEnteredPrice, 
-                    productVariant.MaximumCustomerEnteredPrice,
-                    productVariant.Weight, productVariant.Length, productVariant.Width, productVariant.Height,
-                    productVariant.PictureId, productVariant.AvailableStartDateTime, productVariant.AvailableEndDateTime,
-                    productVariant.Published, productVariant.Deleted,
-                    productVariant.DisplayOrder, productVariant.CreatedOn, productVariant.UpdatedOn);
+                productVariant.DownloadId = 0;
+                UpdateProductVariant(productVariant);
             }
         }
 
@@ -1461,32 +1445,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             var productVariant = GetProductVariantById(productVariantId);
             if (productVariant != null)
             {
-                UpdateProductVariant(productVariant.ProductVariantId, productVariant.ProductId, productVariant.Name,
-                    productVariant.SKU, productVariant.Description, productVariant.AdminComment,
-                    productVariant.ManufacturerPartNumber, productVariant.IsGiftCard,
-                    productVariant.GiftCardType, productVariant.IsDownload, productVariant.DownloadId,
-                    productVariant.UnlimitedDownloads, productVariant.MaxNumberOfDownloads,
-                    productVariant.DownloadExpirationDays, (DownloadActivationTypeEnum)productVariant.DownloadActivationType,
-                    productVariant.HasSampleDownload, 0,
-                    productVariant.HasUserAgreement, productVariant.UserAgreementText,
-                    productVariant.IsRecurring, productVariant.CycleLength,
-                    productVariant.CyclePeriod, productVariant.TotalCycles,
-                    productVariant.IsShipEnabled, productVariant.IsFreeShipping,
-                    productVariant.AdditionalShippingCharge, productVariant.IsTaxExempt,
-                    productVariant.TaxCategoryId, productVariant.ManageInventory,
-                    productVariant.StockQuantity, productVariant.DisplayStockAvailability,
-                    productVariant.DisplayStockQuantity, productVariant.MinStockQuantity,
-                    productVariant.LowStockActivity, productVariant.NotifyAdminForQuantityBelow,
-                    productVariant.Backorders, productVariant.OrderMinimumQuantity,
-                    productVariant.OrderMaximumQuantity, productVariant.WarehouseId,
-                    productVariant.DisableBuyButton, productVariant.CallForPrice, 
-                    productVariant.Price, productVariant.OldPrice,
-                    productVariant.ProductCost, productVariant.CustomerEntersPrice,
-                    productVariant.MinimumCustomerEnteredPrice, productVariant.MaximumCustomerEnteredPrice,
-                    productVariant.Weight, productVariant.Length, productVariant.Width, productVariant.Height,
-                    productVariant.PictureId, productVariant.AvailableStartDateTime, productVariant.AvailableEndDateTime,
-                    productVariant.Published, productVariant.Deleted,
-                    productVariant.DisplayOrder, productVariant.CreatedOn, productVariant.UpdatedOn);
+                productVariant.SampleDownloadId = 0;
+                UpdateProductVariant(productVariant);
             }
         }
 
@@ -1574,163 +1534,30 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                 pageIndex, out totalRecords);
             return productVariants;
         }
-
+        
         /// <summary>
         /// Inserts a product variant
         /// </summary>
-        /// <param name="productId">The product identifier</param>
-        /// <param name="name">The name</param>
-        /// <param name="sku">The SKU</param>
-        /// <param name="description">The description</param>
-        /// <param name="adminComment">The admin comment</param>
-        /// <param name="manufacturerPartNumber">The manufacturer part number</param>
-        /// <param name="isGiftCard">A value indicating whether the product variant is gift card</param>
-        /// <param name="giftCardType">Gift card type</param>
-        /// <param name="isDownload">A value indicating whether the product variant is download</param>
-        /// <param name="downloadId">The download identifier</param>
-        /// <param name="unlimitedDownloads">The value indicating whether this downloadable product can be downloaded unlimited number of times</param>
-        /// <param name="maxNumberOfDownloads">The maximum number of downloads</param>
-        /// <param name="downloadExpirationDays">The number of days during customers keeps access to the file</param>
-        /// <param name="downloadActivationType">The download activation type</param>
-        /// <param name="hasSampleDownload">The value indicating whether the product variant has a sample download file</param>
-        /// <param name="sampleDownloadId">The sample download identifier</param>
-        /// <param name="hasUserAgreement">A value indicating whether the product variant has a user agreement</param>
-        /// <param name="userAgreementText">The text of user agreement</param>
-        /// <param name="isRecurring">A value indicating whether the product variant is recurring</param>
-        /// <param name="cycleLength">The cycle length</param>
-        /// <param name="cyclePeriod">The cycle period</param>
-        /// <param name="totalCycles">The total cycles</param>
-        /// <param name="isShipEnabled">A value indicating whether the entity is ship enabled</param>
-        /// <param name="isFreeShipping">A value indicating whether the entity is free shipping</param>
-        /// <param name="additionalShippingCharge">The additional shipping charge</param>
-        /// <param name="isTaxExempt">A value indicating whether the product variant is marked as tax exempt</param>
-        /// <param name="taxCategoryId">The tax category identifier</param>
-        /// <param name="manageInventory">The value indicating how to manage inventory</param>
-        /// <param name="stockQuantity">The stock quantity</param>
-        /// <param name="displayStockAvailability">The value indicating whether to display stock availability</param>
-        /// <param name="displayStockQuantity">The value indicating whether to display stock quantity</param>
-        /// <param name="minStockQuantity">The minimum stock quantity</param>
-        /// <param name="lowStockActivity">The low stock activity</param>
-        /// <param name="notifyAdminForQuantityBelow">The quantity when admin should be notified</param>
-        /// <param name="backorders">The backorders mode</param>
-        /// <param name="orderMinimumQuantity">The order minimum quantity</param>
-        /// <param name="orderMaximumQuantity">The order maximum quantity</param>
-        /// <param name="warehouseId">The warehouse identifier</param>
-        /// <param name="disableBuyButton">A value indicating whether to disable buy button</param>
-        /// <param name="callForPrice">A value indicating whether to show "Call for Pricing" or "Call for quote" instead of price</param>
-        /// <param name="price">The price</param>
-        /// <param name="oldPrice">The old price</param>
-        /// <param name="productCost">The product cost</param>
-        /// <param name="customerEntersPrice">The value indicating whether a customer enters price</param>
-        /// <param name="minimumCustomerEnteredPrice">The minimum price entered by a customer</param>
-        /// <param name="maximumCustomerEnteredPrice">The maximum price entered by a customer</param>
-        /// <param name="weight">The weight</param>
-        /// <param name="length">The length</param>
-        /// <param name="width">The width</param>
-        /// <param name="height">The height</param>
-        /// <param name="pictureId">The picture identifier</param>
-        /// <param name="availableStartDateTime">The available start date and time</param>
-        /// <param name="availableEndDateTime">The available end date and time</param>
-        /// <param name="published">A value indicating whether the entity is published</param>
-        /// <param name="deleted">A value indicating whether the entity has been deleted</param>
-        /// <param name="displayOrder">The display order</param>
-        /// <param name="createdOn">The date and time of instance creation</param>
-        /// <param name="updatedOn">The date and time of instance update</param>
-        /// <returns>Product variant</returns>
-        public static ProductVariant InsertProductVariant(int productId,
-            string name, string sku,
-            string description, string adminComment, string manufacturerPartNumber,
-            bool isGiftCard, int giftCardType, 
-            bool isDownload, int downloadId, bool unlimitedDownloads,
-            int maxNumberOfDownloads, int? downloadExpirationDays,
-            DownloadActivationTypeEnum downloadActivationType, bool hasSampleDownload,
-            int sampleDownloadId, bool hasUserAgreement,
-            string userAgreementText, bool isRecurring,
-            int cycleLength, int cyclePeriod, int totalCycles,
-            bool isShipEnabled, bool isFreeShipping,
-            decimal additionalShippingCharge, bool isTaxExempt, int taxCategoryId,
-            int manageInventory, int stockQuantity, bool displayStockAvailability,
-            bool displayStockQuantity, int minStockQuantity, LowStockActivityEnum lowStockActivity,
-            int notifyAdminForQuantityBelow, int backorders,
-            int orderMinimumQuantity, int orderMaximumQuantity,
-            int warehouseId, bool disableBuyButton, 
-            bool callForPrice, decimal price,
-            decimal oldPrice, decimal productCost, bool customerEntersPrice,
-            decimal minimumCustomerEnteredPrice, decimal maximumCustomerEnteredPrice,
-            decimal weight, decimal length, decimal width, decimal height, int pictureId,
-            DateTime? availableStartDateTime, DateTime? availableEndDateTime,
-            bool published, bool deleted, int displayOrder,
-            DateTime createdOn, DateTime updatedOn)
+        /// <param name="productVariant">The product variant</param>
+        public static void InsertProductVariant(ProductVariant productVariant)
         {
-            sku = sku.Trim();
+            if (productVariant == null)
+                throw new ArgumentNullException("productVariant");
 
-            name = CommonHelper.EnsureMaximumLength(name, 400);
-            sku = CommonHelper.EnsureMaximumLength(sku, 100);
-            description = CommonHelper.EnsureMaximumLength(description, 4000);
-            adminComment = CommonHelper.EnsureMaximumLength(adminComment, 4000);
-            manufacturerPartNumber = CommonHelper.EnsureMaximumLength(manufacturerPartNumber, 100);
+            productVariant.Name = CommonHelper.EnsureNotNull(productVariant.Name);
+            productVariant.Name = CommonHelper.EnsureMaximumLength(productVariant.Name, 400);
+            productVariant.SKU = CommonHelper.EnsureNotNull(productVariant.SKU);
+            productVariant.SKU = productVariant.SKU.Trim();
+            productVariant.SKU = CommonHelper.EnsureMaximumLength(productVariant.SKU, 100);
+            productVariant.Description = CommonHelper.EnsureNotNull(productVariant.Description);
+            productVariant.Description = CommonHelper.EnsureMaximumLength(productVariant.Description, 4000);
+            productVariant.AdminComment = CommonHelper.EnsureNotNull(productVariant.AdminComment);
+            productVariant.AdminComment = CommonHelper.EnsureMaximumLength(productVariant.AdminComment, 4000);
+            productVariant.ManufacturerPartNumber = CommonHelper.EnsureNotNull(productVariant.ManufacturerPartNumber);
+            productVariant.ManufacturerPartNumber = CommonHelper.EnsureMaximumLength(productVariant.ManufacturerPartNumber, 100);
+            productVariant.UserAgreementText = CommonHelper.EnsureNotNull(productVariant.UserAgreementText);
 
             var context = ObjectContextHelper.CurrentObjectContext;
-
-            var productVariant = context.ProductVariants.CreateObject();
-            productVariant.ProductId = productId;
-            productVariant.Name = name;
-            productVariant.SKU = sku;
-            productVariant.Description = description;
-            productVariant.AdminComment = adminComment;
-            productVariant.ManufacturerPartNumber = manufacturerPartNumber;
-            productVariant.IsGiftCard = isGiftCard;
-            productVariant.GiftCardType = giftCardType;
-            productVariant.IsDownload = isDownload;
-            productVariant.DownloadId = downloadId;
-            productVariant.UnlimitedDownloads = unlimitedDownloads;
-            productVariant.MaxNumberOfDownloads = maxNumberOfDownloads;
-            productVariant.DownloadExpirationDays = downloadExpirationDays;
-            productVariant.DownloadActivationType = (int)downloadActivationType;
-            productVariant.HasSampleDownload = hasSampleDownload;
-            productVariant.SampleDownloadId = sampleDownloadId;
-            productVariant.HasUserAgreement = hasUserAgreement;
-            productVariant.UserAgreementText = userAgreementText;
-            productVariant.IsRecurring = isRecurring;
-            productVariant.CycleLength = cycleLength;
-            productVariant.CyclePeriod = cyclePeriod;
-            productVariant.TotalCycles = totalCycles;
-            productVariant.IsShipEnabled = isShipEnabled;
-            productVariant.IsFreeShipping = isFreeShipping;
-            productVariant.AdditionalShippingCharge = additionalShippingCharge;
-            productVariant.IsTaxExempt = isTaxExempt;
-            productVariant.TaxCategoryId = taxCategoryId;
-            productVariant.ManageInventory = manageInventory;
-            productVariant.StockQuantity = stockQuantity;
-            productVariant.DisplayStockAvailability = displayStockAvailability;
-            productVariant.DisplayStockQuantity = displayStockQuantity;            
-            productVariant.MinStockQuantity = minStockQuantity;
-            productVariant.LowStockActivityId = (int)lowStockActivity;
-            productVariant.NotifyAdminForQuantityBelow = notifyAdminForQuantityBelow;
-            productVariant.Backorders = backorders;
-            productVariant.OrderMinimumQuantity = orderMinimumQuantity;
-            productVariant.OrderMaximumQuantity = orderMaximumQuantity;
-            productVariant.WarehouseId = warehouseId;
-            productVariant.DisableBuyButton = disableBuyButton;
-            productVariant.CallForPrice = callForPrice;
-            productVariant.Price = price;
-            productVariant.OldPrice = oldPrice;
-            productVariant.ProductCost = productCost;
-            productVariant.CustomerEntersPrice = customerEntersPrice;
-            productVariant.MinimumCustomerEnteredPrice = minimumCustomerEnteredPrice;
-            productVariant.MaximumCustomerEnteredPrice = maximumCustomerEnteredPrice;
-            productVariant.Weight = weight;
-            productVariant.Length = length;
-            productVariant.Width = width;
-            productVariant.Height = height;
-            productVariant.PictureId = pictureId;
-            productVariant.AvailableStartDateTime = availableStartDateTime;
-            productVariant.AvailableEndDateTime = availableEndDateTime;
-            productVariant.Published = published;
-            productVariant.Deleted = deleted;
-            productVariant.DisplayOrder = displayOrder;
-            productVariant.CreatedOn = createdOn;
-            productVariant.UpdatedOn = updatedOn;
 
             context.ProductVariants.AddObject(productVariant);
             context.SaveChanges();
@@ -1746,172 +1573,34 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             //raise event             
             EventContext.Current.OnProductVariantCreated(null,
                 new ProductVariantEventArgs() { ProductVariant = productVariant });
-            
-            return productVariant;
         }
 
         /// <summary>
         /// Updates the product variant
         /// </summary>
-        /// <param name="productVariantId">The product variant identifier</param>
-        /// <param name="productId">The product identifier</param>
-        /// <param name="name">The name</param>
-        /// <param name="sku">The SKU</param>
-        /// <param name="description">The description</param>
-        /// <param name="adminComment">The admin comment</param>
-        /// <param name="manufacturerPartNumber">The manufacturer part number</param>
-        /// <param name="isGiftCard">A value indicating whether the product variant is gift card</param>
-        /// <param name="giftCardType">Gift card type</param>
-        /// <param name="isDownload">A value indicating whether the product variant is download</param>
-        /// <param name="downloadId">The download identifier</param>
-        /// <param name="unlimitedDownloads">The value indicating whether this downloadable product can be downloaded unlimited number of times</param>
-        /// <param name="maxNumberOfDownloads">The maximum number of downloads</param>
-        /// <param name="downloadExpirationDays">The number of days during customers keeps access to the file</param>
-        /// <param name="downloadActivationType">The download activation type</param>
-        /// <param name="hasSampleDownload">The value indicating whether the product variant has a sample download file</param>
-        /// <param name="sampleDownloadId">The sample download identifier</param>
-        /// <param name="hasUserAgreement">A value indicating whether the product variant has a user agreement</param>
-        /// <param name="userAgreementText">The text of user agreement</param>
-        /// <param name="isRecurring">A value indicating whether the product variant is recurring</param>
-        /// <param name="cycleLength">The cycle length</param>
-        /// <param name="cyclePeriod">The cycle period</param>
-        /// <param name="totalCycles">The total cycles</param>
-        /// <param name="isShipEnabled">A value indicating whether the entity is ship enabled</param>
-        /// <param name="isFreeShipping">A value indicating whether the entity is free shipping</param>
-        /// <param name="additionalShippingCharge">The additional shipping charge</param>
-        /// <param name="isTaxExempt">A value indicating whether the product variant is marked as tax exempt</param>
-        /// <param name="taxCategoryId">The tax category identifier</param>
-        /// <param name="manageInventory">The value indicating how to manage inventory</param>
-        /// <param name="stockQuantity">The stock quantity</param>
-        /// <param name="displayStockAvailability">The value indicating whether to display stock availability</param>
-        /// <param name="displayStockQuantity">The value indicating whether to display stock quantity</param>
-        /// <param name="minStockQuantity">The minimum stock quantity</param>
-        /// <param name="lowStockActivity">The low stock activity</param>
-        /// <param name="notifyAdminForQuantityBelow">The quantity when admin should be notified</param>
-        /// <param name="backorders">The backorders mode</param>
-        /// <param name="orderMinimumQuantity">The order minimum quantity</param>
-        /// <param name="orderMaximumQuantity">The order maximum quantity</param>
-        /// <param name="warehouseId">The warehouse identifier</param>
-        /// <param name="disableBuyButton">A value indicating whether to disable buy button</param>
-        /// <param name="callForPrice">A value indicating whether to show "Call for Pricing" or "Call for quote" instead of price</param>
-        /// <param name="price">The price</param>
-        /// <param name="oldPrice">The old price</param>
-        /// <param name="productCost">The product cost</param>
-        /// <param name="customerEntersPrice">The value indicating whether a customer enters price</param>
-        /// <param name="minimumCustomerEnteredPrice">The minimum price entered by a customer</param>
-        /// <param name="maximumCustomerEnteredPrice">The maximum price entered by a customer</param>
-        /// <param name="weight">The weight</param>
-        /// <param name="length">The length</param>
-        /// <param name="width">The width</param>
-        /// <param name="height">The height</param>
-        /// <param name="pictureId">The picture identifier</param>
-        /// <param name="availableStartDateTime">The available start date and time</param>
-        /// <param name="availableEndDateTime">The available end date and time</param>
-        /// <param name="published">A value indicating whether the entity is published</param>
-        /// <param name="deleted">A value indicating whether the entity has been deleted</param>
-        /// <param name="displayOrder">The display order</param>
-        /// <param name="createdOn">The date and time of instance creation</param>
-        /// <param name="updatedOn">The date and time of instance update</param>
-        /// <returns>Product variant</returns>
-        public static ProductVariant UpdateProductVariant(int productVariantId,
-            int productId, string name, string sku,
-            string description, string adminComment, string manufacturerPartNumber,
-            bool isGiftCard, int giftCardType, 
-            bool isDownload, int downloadId, bool unlimitedDownloads,
-            int maxNumberOfDownloads, int? downloadExpirationDays,
-            DownloadActivationTypeEnum downloadActivationType, bool hasSampleDownload,
-            int sampleDownloadId, bool hasUserAgreement,
-            string userAgreementText, bool isRecurring,
-            int cycleLength, int cyclePeriod, int totalCycles,
-            bool isShipEnabled, bool isFreeShipping,
-            decimal additionalShippingCharge, bool isTaxExempt, int taxCategoryId,
-            int manageInventory, int stockQuantity, bool displayStockAvailability,
-            bool displayStockQuantity, int minStockQuantity, LowStockActivityEnum lowStockActivity,
-            int notifyAdminForQuantityBelow, int backorders,
-            int orderMinimumQuantity, int orderMaximumQuantity,
-            int warehouseId, bool disableBuyButton, 
-            bool callForPrice, decimal price,
-            decimal oldPrice, decimal productCost, bool customerEntersPrice,
-            decimal minimumCustomerEnteredPrice, decimal maximumCustomerEnteredPrice,
-            decimal weight, decimal length, decimal width, decimal height, int pictureId,
-            DateTime? availableStartDateTime, DateTime? availableEndDateTime,
-            bool published, bool deleted, int displayOrder,
-            DateTime createdOn, DateTime updatedOn)
+        /// <param name="productVariant">The product variant</param>
+        public static void UpdateProductVariant(ProductVariant productVariant)
         {
-            sku = sku.Trim();
-
-            name = CommonHelper.EnsureMaximumLength(name, 400);
-            sku = CommonHelper.EnsureMaximumLength(sku, 100);
-            description = CommonHelper.EnsureMaximumLength(description, 4000);
-            adminComment = CommonHelper.EnsureMaximumLength(adminComment, 4000);
-            manufacturerPartNumber = CommonHelper.EnsureMaximumLength(manufacturerPartNumber, 100);
-
-            var productVariant = GetProductVariantById(productVariantId);
             if (productVariant == null)
-                return null;
+                throw new ArgumentNullException("productVariant");
+            
+            productVariant.Name = CommonHelper.EnsureNotNull(productVariant.Name);
+            productVariant.Name = CommonHelper.EnsureMaximumLength(productVariant.Name, 400);
+            productVariant.SKU = CommonHelper.EnsureNotNull(productVariant.SKU);
+            productVariant.SKU = productVariant.SKU.Trim();
+            productVariant.SKU = CommonHelper.EnsureMaximumLength(productVariant.SKU, 100);
+            productVariant.Description = CommonHelper.EnsureNotNull(productVariant.Description);
+            productVariant.Description = CommonHelper.EnsureMaximumLength(productVariant.Description, 4000);
+            productVariant.AdminComment = CommonHelper.EnsureNotNull(productVariant.AdminComment);
+            productVariant.AdminComment = CommonHelper.EnsureMaximumLength(productVariant.AdminComment, 4000);
+            productVariant.ManufacturerPartNumber = CommonHelper.EnsureNotNull(productVariant.ManufacturerPartNumber);
+            productVariant.ManufacturerPartNumber = CommonHelper.EnsureMaximumLength(productVariant.ManufacturerPartNumber, 100);
+            productVariant.UserAgreementText = CommonHelper.EnsureNotNull(productVariant.UserAgreementText);
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(productVariant))
                 context.ProductVariants.Attach(productVariant);
 
-            productVariant.ProductId = productId;
-            productVariant.Name = name;
-            productVariant.SKU = sku;
-            productVariant.Description = description;
-            productVariant.AdminComment = adminComment;
-            productVariant.ManufacturerPartNumber = manufacturerPartNumber;
-            productVariant.IsGiftCard = isGiftCard;
-            productVariant.GiftCardType = giftCardType;
-            productVariant.IsDownload = isDownload;
-            productVariant.DownloadId = downloadId;
-            productVariant.UnlimitedDownloads = unlimitedDownloads;
-            productVariant.MaxNumberOfDownloads = maxNumberOfDownloads;
-            productVariant.DownloadExpirationDays = downloadExpirationDays;
-            productVariant.DownloadActivationType = (int)downloadActivationType;
-            productVariant.HasSampleDownload = hasSampleDownload;
-            productVariant.SampleDownloadId = sampleDownloadId;
-            productVariant.HasUserAgreement = hasUserAgreement;
-            productVariant.UserAgreementText = userAgreementText;
-            productVariant.IsRecurring = isRecurring;
-            productVariant.CycleLength = cycleLength;
-            productVariant.CyclePeriod = cyclePeriod;
-            productVariant.TotalCycles = totalCycles;
-            productVariant.IsShipEnabled = isShipEnabled;
-            productVariant.IsFreeShipping = isFreeShipping;
-            productVariant.AdditionalShippingCharge = additionalShippingCharge;
-            productVariant.IsTaxExempt = isTaxExempt;
-            productVariant.TaxCategoryId = taxCategoryId;
-            productVariant.ManageInventory = manageInventory;
-            productVariant.StockQuantity = stockQuantity;
-            productVariant.DisplayStockAvailability = displayStockAvailability;
-            productVariant.DisplayStockQuantity = displayStockQuantity;
-            productVariant.MinStockQuantity = minStockQuantity;
-            productVariant.LowStockActivityId = (int)lowStockActivity;
-            productVariant.NotifyAdminForQuantityBelow = notifyAdminForQuantityBelow;
-            productVariant.Backorders = backorders;
-            productVariant.OrderMinimumQuantity = orderMinimumQuantity;
-            productVariant.OrderMaximumQuantity = orderMaximumQuantity;
-            productVariant.WarehouseId = warehouseId;
-            productVariant.DisableBuyButton = disableBuyButton;
-            productVariant.CallForPrice = callForPrice;
-            productVariant.Price = price;
-            productVariant.OldPrice = oldPrice;
-            productVariant.ProductCost = productCost;
-            productVariant.CustomerEntersPrice = customerEntersPrice;
-            productVariant.MinimumCustomerEnteredPrice = minimumCustomerEnteredPrice;
-            productVariant.MaximumCustomerEnteredPrice = maximumCustomerEnteredPrice;
-            productVariant.Weight = weight;
-            productVariant.Length = length;
-            productVariant.Width = width;
-            productVariant.Height = height;
-            productVariant.PictureId = pictureId;
-            productVariant.AvailableStartDateTime = availableStartDateTime;
-            productVariant.AvailableEndDateTime = availableEndDateTime;
-            productVariant.Published = published;
-            productVariant.Deleted = deleted;
-            productVariant.DisplayOrder = displayOrder;
-            productVariant.CreatedOn = createdOn;
-            productVariant.UpdatedOn = updatedOn;
             context.SaveChanges();
 
             if (ProductManager.CacheEnabled)
@@ -1925,9 +1614,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             //raise event             
             EventContext.Current.OnProductVariantUpdated(null,
                 new ProductVariantEventArgs() { ProductVariant = productVariant });
-            
-
-            return productVariant;
         }
 
         /// <summary>
@@ -2059,23 +1745,17 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         /// <summary>
         /// Inserts a localized product variant
         /// </summary>
-        /// <param name="productVariantId">Product variant identifier</param>
-        /// <param name="languageId">Language identifier</param>
-        /// <param name="name">Name text</param>
-        /// <param name="description">Description text</param>
-        /// <returns>Product variant content</returns>
-        public static ProductVariantLocalized InsertProductVariantLocalized(int productVariantId,
-            int languageId, string name, string description)
+        /// <param name="productVariantLocalized">Localized product variant</param>
+        public static void InsertProductVariantLocalized(ProductVariantLocalized productVariantLocalized)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 400);
+            if (productVariantLocalized == null)
+                throw new ArgumentNullException("productVariantLocalized");
+
+            productVariantLocalized.Name = CommonHelper.EnsureNotNull(productVariantLocalized.Name);
+            productVariantLocalized.Name = CommonHelper.EnsureMaximumLength(productVariantLocalized.Name, 400);
+            productVariantLocalized.Description = CommonHelper.EnsureNotNull(productVariantLocalized.Description);
 
             var context = ObjectContextHelper.CurrentObjectContext;
-
-            var productVariantLocalized = context.ProductVariantLocalized.CreateObject();
-            productVariantLocalized.ProductVariantId = productVariantId;
-            productVariantLocalized.LanguageId = languageId;
-            productVariantLocalized.Name = name;
-            productVariantLocalized.Description = description;
 
             context.ProductVariantLocalized.AddObject(productVariantLocalized);
             context.SaveChanges();
@@ -2087,30 +1767,23 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                 NopRequestCache.RemoveByPattern(TIERPRICES_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(CUSTOMERROLEPRICES_PATTERN_KEY);
             }
-
-            return productVariantLocalized;
         }
 
         /// <summary>
         /// Update a localized product variant
         /// </summary>
-        /// <param name="productVariantLocalizedId">Localized product variant identifier</param>
-        /// <param name="productVariantId">Product variant identifier</param>
-        /// <param name="languageId">Language identifier</param>
-        /// <param name="name">Name text</param>
-        /// <param name="description">Description text</param>
-        /// <returns>Product variant content</returns>
-        public static ProductVariantLocalized UpdateProductVariantLocalized(int productVariantLocalizedId,
-            int productVariantId, int languageId, string name, string description)
+        /// <param name="productVariantLocalized">Localized product variant</param>
+        public static void UpdateProductVariantLocalized(ProductVariantLocalized productVariantLocalized)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 400);
-
-            var productVariantLocalized = GetProductVariantLocalizedById(productVariantLocalizedId);
             if (productVariantLocalized == null)
-                return null;
-            
-            bool allFieldsAreEmpty = string.IsNullOrEmpty(name) &&
-               string.IsNullOrEmpty(description);
+                throw new ArgumentNullException("productVariantLocalized");
+
+            productVariantLocalized.Name = CommonHelper.EnsureNotNull(productVariantLocalized.Name);
+            productVariantLocalized.Name = CommonHelper.EnsureMaximumLength(productVariantLocalized.Name, 400);
+            productVariantLocalized.Description = CommonHelper.EnsureNotNull(productVariantLocalized.Description);
+
+            bool allFieldsAreEmpty = string.IsNullOrEmpty(productVariantLocalized.Name) &&
+               string.IsNullOrEmpty(productVariantLocalized.Description);
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(productVariantLocalized))
@@ -2124,10 +1797,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             }
             else
             {
-                productVariantLocalized.ProductVariantId = productVariantId;
-                productVariantLocalized.LanguageId = languageId;
-                productVariantLocalized.Name = name;
-                productVariantLocalized.Description = description;
                 context.SaveChanges();
             }
 
@@ -2138,8 +1807,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                 NopRequestCache.RemoveByPattern(TIERPRICES_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(CUSTOMERROLEPRICES_PATTERN_KEY);
             }
-
-            return productVariantLocalized;
         }
 
         /// <summary>
@@ -2151,33 +1818,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             var productVariant = GetProductVariantById(productVariantId);
             if (productVariant != null)
             {
-                productVariant = UpdateProductVariant(productVariant.ProductVariantId, 
-                    productVariant.ProductId, productVariant.Name,
-                    productVariant.SKU, productVariant.Description, 
-                    productVariant.AdminComment, productVariant.ManufacturerPartNumber,
-                    productVariant.IsGiftCard, productVariant.GiftCardType, productVariant.IsDownload, 
-                    productVariant.DownloadId, productVariant.UnlimitedDownloads, 
-                    productVariant.MaxNumberOfDownloads,
-                    productVariant.DownloadExpirationDays, (DownloadActivationTypeEnum)productVariant.DownloadActivationType,
-                    productVariant.HasSampleDownload, productVariant.SampleDownloadId,
-                    productVariant.HasUserAgreement, productVariant.UserAgreementText,
-                    productVariant.IsRecurring, productVariant.CycleLength,
-                    productVariant.CyclePeriod, productVariant.TotalCycles,
-                    productVariant.IsShipEnabled, productVariant.IsFreeShipping,
-                    productVariant.AdditionalShippingCharge,
-                    productVariant.IsTaxExempt, productVariant.TaxCategoryId,
-                    productVariant.ManageInventory, productVariant.StockQuantity,
-                    productVariant.DisplayStockAvailability, productVariant.DisplayStockQuantity,
-                    productVariant.MinStockQuantity, productVariant.LowStockActivity,
-                    productVariant.NotifyAdminForQuantityBelow, productVariant.Backorders,
-                    productVariant.OrderMinimumQuantity, productVariant.OrderMaximumQuantity,
-                    productVariant.WarehouseId, productVariant.DisableBuyButton,
-                    productVariant.CallForPrice, productVariant.Price, productVariant.OldPrice,
-                    productVariant.ProductCost, productVariant.CustomerEntersPrice,
-                    productVariant.MinimumCustomerEnteredPrice, productVariant.MaximumCustomerEnteredPrice,
-                    productVariant.Weight, productVariant.Length, productVariant.Width, productVariant.Height, productVariant.PictureId,
-                    productVariant.AvailableStartDateTime, productVariant.AvailableEndDateTime,
-                    productVariant.Published, true, productVariant.DisplayOrder, productVariant.CreatedOn, productVariant.UpdatedOn);
+                productVariant.Deleted = true;
+                UpdateProductVariant(productVariant);
             }
         }
 
@@ -2237,33 +1879,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                             MessageManager.SendQuantityBelowStoreOwnerNotification(productVariant, LocalizationManager.DefaultAdminLanguage.LanguageId);
                         }
 
-                        productVariant = UpdateProductVariant(productVariant.ProductVariantId, productVariant.ProductId, productVariant.Name,
-                             productVariant.SKU, productVariant.Description, productVariant.AdminComment, productVariant.ManufacturerPartNumber,
-                             productVariant.IsGiftCard, productVariant.GiftCardType, 
-                             productVariant.IsDownload, productVariant.DownloadId,
-                             productVariant.UnlimitedDownloads, productVariant.MaxNumberOfDownloads,
-                             productVariant.DownloadExpirationDays, (DownloadActivationTypeEnum)productVariant.DownloadActivationType,
-                             productVariant.HasSampleDownload, productVariant.SampleDownloadId,
-                             productVariant.HasUserAgreement, productVariant.UserAgreementText,
-                             productVariant.IsRecurring, productVariant.CycleLength,
-                             productVariant.CyclePeriod, productVariant.TotalCycles,
-                             productVariant.IsShipEnabled, productVariant.IsFreeShipping, productVariant.AdditionalShippingCharge,
-                             productVariant.IsTaxExempt, productVariant.TaxCategoryId,
-                             productVariant.ManageInventory, newStockQuantity,
-                             productVariant.DisplayStockAvailability, productVariant.DisplayStockQuantity,
-                             productVariant.MinStockQuantity, productVariant.LowStockActivity,
-                             productVariant.NotifyAdminForQuantityBelow, productVariant.Backorders,
-                             productVariant.OrderMinimumQuantity, productVariant.OrderMaximumQuantity,
-                             productVariant.WarehouseId, newDisableBuyButton,
-                             productVariant.CallForPrice, productVariant.Price,
-                             productVariant.OldPrice, productVariant.ProductCost, 
-                             productVariant.CustomerEntersPrice,
-                             productVariant.MinimumCustomerEnteredPrice, 
-                             productVariant.MaximumCustomerEnteredPrice,
-                             productVariant.Weight, productVariant.Length, productVariant.Width,
-                             productVariant.Height, productVariant.PictureId,
-                             productVariant.AvailableStartDateTime, productVariant.AvailableEndDateTime,
-                             newPublished, productVariant.Deleted, productVariant.DisplayOrder, productVariant.CreatedOn, productVariant.UpdatedOn);
+                        productVariant.StockQuantity = newStockQuantity;
+                        productVariant.DisableBuyButton = newDisableBuyButton;
+                        productVariant.Published = newPublished;
+                        UpdateProductVariant(productVariant);
 
                         if (decrease)
                         {
@@ -2280,11 +1899,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
 
                             if (allProductVariantsUnpublished)
                             {
-                                UpdateProduct(product.ProductId, product.Name, product.ShortDescription,
-                                    product.FullDescription, product.AdminComment,
-                                    product.TemplateId, product.ShowOnHomePage, product.MetaKeywords, product.MetaDescription,
-                                    product.MetaTitle, product.SEName, product.AllowCustomerReviews, product.AllowCustomerRatings, product.RatingSum,
-                                    product.TotalRatingVotes, false, product.Deleted, product.CreatedOn, product.UpdatedOn);
+                                product.Published = false;
+                                UpdateProduct(product);
                             }
                         }
                     }
@@ -2300,8 +1916,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                             else
                                 newStockQuantity = combination.StockQuantity + quantity;
 
-                            combination = ProductAttributeManager.UpdateProductVariantAttributeCombination(combination.ProductVariantAttributeCombinationId,
-                                combination.ProductVariantId, combination.AttributesXml, newStockQuantity, combination.AllowOutOfStockOrders);
+                            combination.StockQuantity = newStockQuantity;
+                            ProductAttributeManager.UpdateProductVariantAttributeCombination(combination);
                         }
                     }
                     break;
@@ -2352,50 +1968,32 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         /// <summary>
         /// Inserts a product picture mapping
         /// </summary>
-        /// <param name="productId">Product identifier</param>
-        /// <param name="pictureId">Picture identifier</param>
-        /// <param name="displayOrder">The display order</param>
-        /// <returns>Product picture mapping</returns>
-        public static ProductPicture InsertProductPicture(int productId,
-            int pictureId, int displayOrder)
+        /// <param name="productPicture">Product picture mapping</param>
+        public static void InsertProductPicture(ProductPicture productPicture)
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
+            if (productPicture == null)
+                throw new ArgumentNullException("productPicture");
 
-            var productPicture = context.ProductPictures.CreateObject();
-            productPicture.ProductId = productId;
-            productPicture.PictureId = pictureId;
-            productPicture.DisplayOrder = displayOrder;
+            var context = ObjectContextHelper.CurrentObjectContext;
 
             context.ProductPictures.AddObject(productPicture);
             context.SaveChanges();
-
-            return productPicture;
         }
 
         /// <summary>
         /// Updates the product picture mapping
         /// </summary>
-        /// <param name="productPictureId">Product picture mapping identifier</param>
-        /// <param name="productId">Product identifier</param>
-        /// <param name="pictureId">Picture identifier</param>
-        /// <param name="displayOrder">The display order</param>
-        /// <returns>Product picture mapping</returns>
-        public static ProductPicture UpdateProductPicture(int productPictureId, int productId,
-            int pictureId, int displayOrder)
+        /// <param name="productPicture">Product picture mapping</param>
+        public static void UpdateProductPicture(ProductPicture productPicture)
         {
-            var productPicture = GetProductPictureById(productPictureId);
             if (productPicture == null)
-                return null;
+                throw new ArgumentNullException("productPicture");
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(productPicture))
                 context.ProductPictures.Attach(productPicture);
 
-            productPicture.ProductId = productId;
-            productPicture.PictureId = pictureId;
-            productPicture.DisplayOrder = displayOrder;
             context.SaveChanges();
-            return productPicture;
         }
 
         /// <summary>
@@ -2560,8 +2158,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             if (rating > 5)
                 rating = 5;
 
+            ipAddress = CommonHelper.EnsureNotNull(ipAddress);
             ipAddress = CommonHelper.EnsureMaximumLength(ipAddress, 100);
+            title = CommonHelper.EnsureNotNull(title);
             title = CommonHelper.EnsureMaximumLength(title, 1000);
+            reviewText = CommonHelper.EnsureNotNull(reviewText);
 
             var context = ObjectContextHelper.CurrentObjectContext;
 
@@ -2598,46 +2199,23 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         /// <summary>
         /// Updates the product review
         /// </summary>
-        /// <param name="productReviewId">The product review identifier</param>
-        /// <param name="productId">The product identifier</param>
-        /// <param name="customerId">The customer identifier</param>
-        /// <param name="ipAddress">The IP address</param>
-        /// <param name="title">The review title</param>
-        /// <param name="reviewText">The review text</param>
-        /// <param name="rating">The review rating</param>
-        /// <param name="helpfulYesTotal">Review helpful votes total</param>
-        /// <param name="helpfulNoTotal">Review not helpful votes total</param>
-        /// <param name="isApproved">A value indicating whether the product review is approved</param>
-        /// <param name="createdOn">The date and time of instance creation</param>
-        /// <returns>Product review</returns>
-        public static ProductReview UpdateProductReview(int productReviewId, int productId, int customerId, string ipAddress, string title,
-            string reviewText, int rating, int helpfulYesTotal,
-            int helpfulNoTotal, bool isApproved, DateTime createdOn)
+        /// <param name="ProductReview">Product review</param>
+        public static void UpdateProductReview(ProductReview productReview)
         {
-            ipAddress = CommonHelper.EnsureMaximumLength(ipAddress, 100);
-            title = CommonHelper.EnsureMaximumLength(title, 1000);
-
-            var productReview = GetProductReviewById(productReviewId);
             if (productReview == null)
-                return null;
+                throw new ArgumentNullException("productReview");
+
+            productReview.IPAddress = CommonHelper.EnsureNotNull(productReview.IPAddress);
+            productReview.IPAddress = CommonHelper.EnsureMaximumLength(productReview.IPAddress, 100);
+            productReview.Title = CommonHelper.EnsureNotNull(productReview.Title);
+            productReview.Title = CommonHelper.EnsureMaximumLength(productReview.Title, 1000);
+            productReview.ReviewText = CommonHelper.EnsureNotNull(productReview.ReviewText);
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(productReview))
                 context.ProductReviews.Attach(productReview);
 
-            productReview.ProductId = productId;
-            productReview.CustomerId = customerId;
-            productReview.IPAddress = ipAddress;
-            productReview.Title = title;
-            productReview.ReviewText = reviewText;
-            productReview.Rating = rating;
-            productReview.HelpfulYesTotal = helpfulYesTotal;
-            productReview.HelpfulNoTotal = helpfulNoTotal;
-            productReview.IsApproved = isApproved;
-            productReview.CreatedOn = createdOn;
             context.SaveChanges();
-
-            return productReview;
         }
 
         /// <summary>
@@ -2691,17 +2269,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                                    prh.WasHelpful == false
                                    select prh).Count();
 
-            productReview = UpdateProductReview(productReview.ProductReviewId,
-                productReview.ProductId,
-                productReview.CustomerId,
-                productReview.IPAddress,
-                productReview.Title,
-                productReview.ReviewText,
-                productReview.Rating,
-                helpfulYesTotal,
-                helpfulNoTotal,
-                productReview.IsApproved,
-                productReview.CreatedOn);
+            productReview.HelpfulYesTotal = helpfulYesTotal;
+            productReview.HelpfulNoTotal = helpfulNoTotal;
+            UpdateProductReview(productReview);
         }
         
         #endregion
@@ -2768,50 +2338,32 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         /// <summary>
         /// Inserts a related product
         /// </summary>
-        /// <param name="productId1">The first product identifier</param>
-        /// <param name="productId2">The second product identifier</param>
-        /// <param name="displayOrder">The display order</param>
-        /// <returns>Related product</returns>
-        public static RelatedProduct InsertRelatedProduct(int productId1, 
-            int productId2, int displayOrder)
+        /// <param name="relatedProduct">Related product</param>
+        public static void InsertRelatedProduct(RelatedProduct relatedProduct)
         {
+            if (relatedProduct == null)
+                throw new ArgumentNullException("relatedProduct");
+
             var context = ObjectContextHelper.CurrentObjectContext;
-            var relatedProduct = context.RelatedProducts.CreateObject();
-            relatedProduct.ProductId1 = productId1;
-            relatedProduct.ProductId2 = productId2;
-            relatedProduct.DisplayOrder = displayOrder;
 
             context.RelatedProducts.AddObject(relatedProduct);
             context.SaveChanges();
-
-            return relatedProduct;
         }
 
         /// <summary>
         /// Updates a related product
         /// </summary>
-        /// <param name="relatedProductId">The related product identifier</param>
-        /// <param name="productId1">The first product identifier</param>
-        /// <param name="productId2">The second product identifier</param>
-        /// <param name="displayOrder">The display order</param>
-        /// <returns>Related product</returns>
-        public static RelatedProduct UpdateRelatedProduct(int relatedProductId, 
-            int productId1, int productId2, int displayOrder)
+        /// <param name="relatedProduct">Related product</param>
+        public static void UpdateRelatedProduct(RelatedProduct relatedProduct)
         {
-            var relatedProduct = GetRelatedProductById(relatedProductId);
             if (relatedProduct == null)
-                return null;
+                throw new ArgumentNullException("relatedProduct");
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(relatedProduct))
                 context.RelatedProducts.Attach(relatedProduct);
 
-            relatedProduct.ProductId1 = productId1;
-            relatedProduct.ProductId2 = productId2;
-            relatedProduct.DisplayOrder = displayOrder;
             context.SaveChanges();
-
-            return relatedProduct;
         }
 
         #endregion
@@ -2878,46 +2430,32 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         /// <summary>
         /// Inserts a cross-sell product
         /// </summary>
-        /// <param name="productId1">The first product identifier</param>
-        /// <param name="productId2">The second product identifier</param>
-        /// <returns>Cross-sell product</returns>
-        public static CrossSellProduct InsertCrossSellProduct(int productId1,
-            int productId2)
+        /// <param name="crossSellProduct">Cross-sell product</param>
+        public static void InsertCrossSellProduct(CrossSellProduct crossSellProduct)
         {
+            if (crossSellProduct == null)
+                throw new ArgumentNullException("crossSellProduct");
+
             var context = ObjectContextHelper.CurrentObjectContext;
-            var crossSellProduct = context.CrossSellProducts.CreateObject();
-            crossSellProduct.ProductId1 = productId1;
-            crossSellProduct.ProductId2 = productId2;
 
             context.CrossSellProducts.AddObject(crossSellProduct);
             context.SaveChanges();
-
-            return crossSellProduct;
         }
 
         /// <summary>
         /// Updates a cross-sell product
         /// </summary>
-        /// <param name="crossSellProductId">Cross-sell product identifer</param>
-        /// <param name="productId1">The first product identifier</param>
-        /// <param name="productId2">The second product identifier</param>
-        /// <returns>Cross-sell product</returns>
-        public static CrossSellProduct UpdateCrossSellProduct(int crossSellProductId,
-            int productId1, int productId2)
+        /// <param name="crossSellProduct">Cross-sell product</param>
+        public static void UpdateCrossSellProduct(CrossSellProduct crossSellProduct)
         {
-            var crossSellProduct = GetCrossSellProductById(crossSellProductId);
             if (crossSellProduct == null)
-                return null;
+                throw new ArgumentNullException("crossSellProduct");
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(crossSellProduct))
                 context.CrossSellProducts.Attach(crossSellProduct);
 
-            crossSellProduct.ProductId1 = productId1;
-            crossSellProduct.ProductId2 = productId2;
             context.SaveChanges();
-
-            return crossSellProduct;
         }
 
         #endregion
@@ -3011,142 +2549,70 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         /// <summary>
         /// Inserts a Pricelist
         /// </summary>
-        /// <param name="exportMode">Mode of list creation (Export all, assigned only, assigned only with special price)</param>
-        /// <param name="exportType">CSV or XML</param>
-        /// <param name="affiliateId">Affiliate connected to this pricelist (optional), links will be created with AffiliateId</param>
-        /// <param name="displayName">Displayedname</param>
-        /// <param name="shortName">shortname to identify the pricelist</param>
-        /// <param name="pricelistGuid">unique identifier to get pricelist "anonymous"</param>
-        /// <param name="cacheTime">how long will the pricelist be in cached before new creation</param>
-        /// <param name="formatLocalization">what localization will be used (numeric formats, etc.) en-US, de-DE etc.</param>
-        /// <param name="description">Displayed description</param>
-        /// <param name="adminNotes">Admin can put some notes here, not displayed in public</param>
-        /// <param name="header">Headerline of the exported file (plain text)</param>
-        /// <param name="body">template for an exportet productvariant, uses delimiters and replacement strings</param>
-        /// <param name="footer">Footer line of the exportet file (plain text)</param>
-        /// <param name="priceAdjustmentType">type of price adjustment (if used) (relative or absolute)</param>
-        /// <param name="priceAdjustment">price will be adjusted by this amount (in accordance with PriceAdjustmentType)</param>
-        /// <param name="overrideIndivAdjustment">use individual adjustment, if available, or override</param>
-        /// <param name="createdOn">when was this record originally created</param>
-        /// <param name="updatedOn">last time this recordset was updated</param>
-        /// <returns>Pricelist</returns>
-        public static Pricelist InsertPricelist(PriceListExportModeEnum exportMode, 
-            PriceListExportTypeEnum exportType, int affiliateId,
-            string displayName, string shortName, string pricelistGuid, 
-            int cacheTime, string formatLocalization, string description,
-            string adminNotes, string header, string body, string footer,
-            PriceAdjustmentTypeEnum priceAdjustmentType, decimal priceAdjustment, 
-            bool overrideIndivAdjustment, DateTime createdOn, DateTime updatedOn)
+        /// <param name="pricelist">Pricelist</param>
+        public static void InsertPricelist(Pricelist pricelist)
         {
-            displayName = CommonHelper.EnsureMaximumLength(displayName, 100);
-            shortName = CommonHelper.EnsureMaximumLength(shortName, 20);
-            pricelistGuid = CommonHelper.EnsureMaximumLength(pricelistGuid, 40);
-            formatLocalization = CommonHelper.EnsureMaximumLength(formatLocalization, 5);
-            description = CommonHelper.EnsureMaximumLength(description, 500);
-            adminNotes = CommonHelper.EnsureMaximumLength(adminNotes, 500);
-            header = CommonHelper.EnsureMaximumLength(header, 500);
-            body = CommonHelper.EnsureMaximumLength(body, 500);
-            footer = CommonHelper.EnsureMaximumLength(footer, 500);
+            if (pricelist == null)
+                throw new ArgumentNullException("pricelist");
+            
+            pricelist.DisplayName = CommonHelper.EnsureNotNull(pricelist.DisplayName);
+            pricelist.DisplayName = CommonHelper.EnsureMaximumLength(pricelist.DisplayName, 100);
+            pricelist.ShortName = CommonHelper.EnsureNotNull(pricelist.ShortName);
+            pricelist.ShortName = CommonHelper.EnsureMaximumLength(pricelist.ShortName, 20);
+            pricelist.PricelistGuid = CommonHelper.EnsureNotNull(pricelist.PricelistGuid);
+            pricelist.PricelistGuid = CommonHelper.EnsureMaximumLength(pricelist.PricelistGuid, 40);
+            pricelist.FormatLocalization = CommonHelper.EnsureNotNull(pricelist.FormatLocalization);
+            pricelist.FormatLocalization = CommonHelper.EnsureMaximumLength(pricelist.FormatLocalization, 5);
+            pricelist.Description = CommonHelper.EnsureNotNull(pricelist.Description);
+            pricelist.Description = CommonHelper.EnsureMaximumLength(pricelist.Description, 500);
+            pricelist.AdminNotes = CommonHelper.EnsureNotNull(pricelist.AdminNotes);
+            pricelist.AdminNotes = CommonHelper.EnsureMaximumLength(pricelist.AdminNotes, 500);
+            pricelist.Header = CommonHelper.EnsureNotNull(pricelist.Header);
+            pricelist.Header = CommonHelper.EnsureMaximumLength(pricelist.Header, 500);
+            pricelist.Body = CommonHelper.EnsureNotNull(pricelist.Body);
+            pricelist.Body = CommonHelper.EnsureMaximumLength(pricelist.Body, 500);
+            pricelist.Footer = CommonHelper.EnsureNotNull(pricelist.Footer);
+            pricelist.Footer = CommonHelper.EnsureMaximumLength(pricelist.Footer, 500);
 
             var context = ObjectContextHelper.CurrentObjectContext;
-
-            var pricelist = context.Pricelists.CreateObject();
-            pricelist.ExportModeId = (int)exportMode;
-            pricelist.ExportTypeId = (int)exportType;
-            pricelist.AffiliateId = affiliateId;
-            pricelist.DisplayName = displayName;
-            pricelist.ShortName = shortName;
-            pricelist.PricelistGuid = pricelistGuid;
-            pricelist.CacheTime = cacheTime;
-            pricelist.FormatLocalization = formatLocalization;
-            pricelist.Description = description;
-            pricelist.AdminNotes = adminNotes;
-            pricelist.Header = header;
-            pricelist.Body = body;
-            pricelist.Footer = footer;
-            pricelist.PriceAdjustmentTypeId = (int)priceAdjustmentType;
-            pricelist.PriceAdjustment = priceAdjustment;
-            pricelist.OverrideIndivAdjustment = overrideIndivAdjustment;
-            pricelist.CreatedOn = createdOn;
-            pricelist.UpdatedOn = updatedOn;
-
+            
             context.Pricelists.AddObject(pricelist);
             context.SaveChanges();
-
-            return pricelist;
         }
 
         /// <summary>
         /// Updates the Pricelist
         /// </summary>
-        /// <param name="pricelistId">Unique Identifier</param>
-        /// <param name="exportMode">Mode of list creation (Export all, assigned only, assigned only with special price)</param>
-        /// <param name="exportType">CSV or XML</param>
-        /// <param name="affiliateId">Affiliate connected to this pricelist (optional), links will be created with AffiliateId</param>
-        /// <param name="displayName">Displayedname</param>
-        /// <param name="shortName">shortname to identify the pricelist</param>
-        /// <param name="pricelistGuid">unique identifier to get pricelist "anonymous"</param>
-        /// <param name="cacheTime">how long will the pricelist be in cached before new creation</param>
-        /// <param name="formatLocalization">what localization will be used (numeric formats, etc.) en-US, de-DE etc.</param>
-        /// <param name="description">Displayed description</param>
-        /// <param name="adminNotes">Admin can put some notes here, not displayed in public</param>
-        /// <param name="header">Headerline of the exported file (plain text)</param>
-        /// <param name="body">template for an exportet productvariant, uses delimiters and replacement strings</param>
-        /// <param name="footer">Footer line of the exportet file (plain text)</param>
-        /// <param name="priceAdjustmentType">type of price adjustment (if used) (relative or absolute)</param>
-        /// <param name="priceAdjustment">price will be adjusted by this amount (in accordance with PriceAdjustmentType)</param>
-        /// <param name="overrideIndivAdjustment">use individual adjustment, if available, or override</param>
-        /// <param name="createdOn">when was this record originally created</param>
-        /// <param name="updatedOn">last time this recordset was updated</param>
-        /// <returns>Pricelist</returns>
-        public static Pricelist UpdatePricelist(int pricelistId, 
-            PriceListExportModeEnum exportMode, PriceListExportTypeEnum exportType, 
-            int affiliateId,  string displayName, string shortName, 
-            string pricelistGuid, int cacheTime, string formatLocalization,
-            string description, string adminNotes,
-            string header, string body, string footer,
-            PriceAdjustmentTypeEnum priceAdjustmentType, decimal priceAdjustment, 
-            bool overrideIndivAdjustment, DateTime createdOn, DateTime updatedOn)
+        /// <param name="pricelist">Pricelist</param>
+        public static void UpdatePricelist(Pricelist pricelist)
         {
-            displayName = CommonHelper.EnsureMaximumLength(displayName, 100);
-            shortName = CommonHelper.EnsureMaximumLength(shortName, 20);
-            pricelistGuid = CommonHelper.EnsureMaximumLength(pricelistGuid, 40);
-            formatLocalization = CommonHelper.EnsureMaximumLength(formatLocalization, 5);
-            description = CommonHelper.EnsureMaximumLength(description, 500);
-            adminNotes = CommonHelper.EnsureMaximumLength(adminNotes, 500);
-            header = CommonHelper.EnsureMaximumLength(header, 500);
-            body = CommonHelper.EnsureMaximumLength(body, 500);
-            footer = CommonHelper.EnsureMaximumLength(footer, 500);
-
-            var pricelist = GetPricelistById(pricelistId);
             if (pricelist == null)
-                return null;
+                throw new ArgumentNullException("pricelist");
+
+            pricelist.DisplayName = CommonHelper.EnsureNotNull(pricelist.DisplayName);
+            pricelist.DisplayName = CommonHelper.EnsureMaximumLength(pricelist.DisplayName, 100);
+            pricelist.ShortName = CommonHelper.EnsureNotNull(pricelist.ShortName);
+            pricelist.ShortName = CommonHelper.EnsureMaximumLength(pricelist.ShortName, 20);
+            pricelist.PricelistGuid = CommonHelper.EnsureNotNull(pricelist.PricelistGuid);
+            pricelist.PricelistGuid = CommonHelper.EnsureMaximumLength(pricelist.PricelistGuid, 40);
+            pricelist.FormatLocalization = CommonHelper.EnsureNotNull(pricelist.FormatLocalization);
+            pricelist.FormatLocalization = CommonHelper.EnsureMaximumLength(pricelist.FormatLocalization, 5);
+            pricelist.Description = CommonHelper.EnsureNotNull(pricelist.Description);
+            pricelist.Description = CommonHelper.EnsureMaximumLength(pricelist.Description, 500);
+            pricelist.AdminNotes = CommonHelper.EnsureNotNull(pricelist.AdminNotes);
+            pricelist.AdminNotes = CommonHelper.EnsureMaximumLength(pricelist.AdminNotes, 500);
+            pricelist.Header = CommonHelper.EnsureNotNull(pricelist.Header);
+            pricelist.Header = CommonHelper.EnsureMaximumLength(pricelist.Header, 500);
+            pricelist.Body = CommonHelper.EnsureNotNull(pricelist.Body);
+            pricelist.Body = CommonHelper.EnsureMaximumLength(pricelist.Body, 500);
+            pricelist.Footer = CommonHelper.EnsureNotNull(pricelist.Footer);
+            pricelist.Footer = CommonHelper.EnsureMaximumLength(pricelist.Footer, 500);
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(pricelist))
                 context.Pricelists.Attach(pricelist);
 
-            pricelist.ExportModeId = (int)exportMode;
-            pricelist.ExportTypeId = (int)exportType;
-            pricelist.AffiliateId = affiliateId;
-            pricelist.DisplayName = displayName;
-            pricelist.ShortName = shortName;
-            pricelist.PricelistGuid = pricelistGuid;
-            pricelist.CacheTime = cacheTime;
-            pricelist.FormatLocalization = formatLocalization;
-            pricelist.Description = description;
-            pricelist.AdminNotes = adminNotes;
-            pricelist.Header = header;
-            pricelist.Body = body;
-            pricelist.Footer = footer;
-            pricelist.PriceAdjustmentTypeId = (int)priceAdjustmentType;
-            pricelist.PriceAdjustment = priceAdjustment;
-            pricelist.OverrideIndivAdjustment = overrideIndivAdjustment;
-            pricelist.CreatedOn = createdOn;
-            pricelist.UpdatedOn = updatedOn;
             context.SaveChanges();
-
-            return pricelist;
         }
 
         /// <summary>
@@ -3207,64 +2673,32 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         /// <summary>
         /// Inserts a ProductVariantPricelist
         /// </summary>
-        /// <param name="productVariantId">The product variant identifer</param>
-        /// <param name="pricelistId">The pricelist identifier</param>
-        /// <param name="priceAdjustmentType">The type of price adjustment (if used) (relative or absolute)</param>
-        /// <param name="priceAdjustment">The price will be adjusted by this amount</param>
-        /// <param name="updatedOn">The date and time of instance update</param>
-        /// <returns>ProductVariantPricelist</returns>
-        public static ProductVariantPricelist InsertProductVariantPricelist(int productVariantId, 
-            int pricelistId, PriceAdjustmentTypeEnum priceAdjustmentType,
-            decimal priceAdjustment, DateTime updatedOn)
+        /// <param name="productVariantPricelist">The product variant pricelist</param>
+        public static void InsertProductVariantPricelist(ProductVariantPricelist productVariantPricelist)
         {
+            if (productVariantPricelist == null)
+                throw new ArgumentNullException("productVariantPricelist");
+
             var context = ObjectContextHelper.CurrentObjectContext;
-
-            var productVariantPricelist = context.ProductVariantPricelists.CreateObject();
-            productVariantPricelist.ProductVariantId = productVariantId;
-            productVariantPricelist.PricelistId = pricelistId;
-            productVariantPricelist.PriceAdjustmentTypeId = (int)priceAdjustmentType;
-            productVariantPricelist.PriceAdjustment = priceAdjustment;
-            productVariantPricelist.UpdatedOn = updatedOn;
-
+            
             context.ProductVariantPricelists.AddObject(productVariantPricelist);
             context.SaveChanges();
-            return productVariantPricelist;
         }
 
         /// <summary>
         /// Updates the ProductVariantPricelist
         /// </summary>
-        /// <param name="productVariantPricelistId">The product variant pricelist identifier</param>
-        /// <param name="productVariantId">The product variant identifer</param>
-        /// <param name="pricelistId">The pricelist identifier</param>
-        /// <param name="priceAdjustmentType">The type of price adjustment (if used) (relative or absolute)</param>
-        /// <param name="priceAdjustment">The price will be adjusted by this amount</param>
-        /// <param name="updatedOn">The date and time of instance update</param>
-        /// <returns>ProductVariantPricelist</returns>
-        public static ProductVariantPricelist UpdateProductVariantPricelist(int productVariantPricelistId, 
-            int productVariantId, int pricelistId,
-            PriceAdjustmentTypeEnum priceAdjustmentType, decimal priceAdjustment,
-            DateTime updatedOn)
+        /// <param name="productVariantPricelist">The product variant pricelist</param>
+        public static void UpdateProductVariantPricelist(ProductVariantPricelist productVariantPricelist)
         {
-            if (productVariantPricelistId == 0)
-                return null;
-
-            var productVariantPricelist = GetProductVariantPricelistById(productVariantPricelistId);
             if (productVariantPricelist == null)
-                return null;
+                throw new ArgumentNullException("productVariantPricelist");
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(productVariantPricelist))
                 context.ProductVariantPricelists.Attach(productVariantPricelist);
 
-            productVariantPricelist.ProductVariantId = productVariantId;
-            productVariantPricelist.PricelistId = pricelistId;
-            productVariantPricelist.PriceAdjustmentTypeId = (int)priceAdjustmentType;
-            productVariantPricelist.PriceAdjustment = priceAdjustment;
-            productVariantPricelist.UpdatedOn = updatedOn;
             context.SaveChanges();
-
-            return productVariantPricelist;
         }
 
         #endregion
@@ -3348,20 +2782,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         /// <summary>
         /// Inserts a tier price
         /// </summary>
-        /// <param name="productVariantId">The product variant identifier</param>
-        /// <param name="quantity">The quantity</param>
-        /// <param name="price">The price</param>
-        /// <returns>Tier price</returns>
-        public static TierPrice InsertTierPrice(int productVariantId, 
-            int quantity, decimal price)
+        /// <param name="tierPrice">Tier price</param>
+        public static void InsertTierPrice(TierPrice tierPrice)
         {
+            if (tierPrice == null)
+                throw new ArgumentNullException("tierPrice");
+
             var context = ObjectContextHelper.CurrentObjectContext;
-
-            var tierPrice = context.TierPrices.CreateObject();
-            tierPrice.ProductVariantId = productVariantId;
-            tierPrice.Quantity = quantity;
-            tierPrice.Price = price;
-
+            
             context.TierPrices.AddObject(tierPrice);
             context.SaveChanges();
 
@@ -3372,31 +2800,21 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                 NopRequestCache.RemoveByPattern(TIERPRICES_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(CUSTOMERROLEPRICES_PATTERN_KEY);
             }
-            return tierPrice;
         }
 
         /// <summary>
         /// Updates the tier price
         /// </summary>
-        /// <param name="tierPriceId">The tier price identifier</param>
-        /// <param name="productVariantId">The product variant identifier</param>
-        /// <param name="quantity">The quantity</param>
-        /// <param name="price">The price</param>
-        /// <returns>Tier price</returns>
-        public static TierPrice UpdateTierPrice(int tierPriceId, int productVariantId, 
-            int quantity, decimal price)
+        /// <param name="tierPrice">Tier price</param>
+        public static void UpdateTierPrice(TierPrice tierPrice)
         {
-            var tierPrice = GetTierPriceById(tierPriceId);
             if (tierPrice == null)
-                return null;
+                throw new ArgumentNullException("tierPrice");
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(tierPrice))
                 context.TierPrices.Attach(tierPrice);
 
-            tierPrice.ProductVariantId = productVariantId;
-            tierPrice.Quantity = quantity;
-            tierPrice.Price = price;
             context.SaveChanges();
 
             if (ProductManager.CacheEnabled)
@@ -3406,8 +2824,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                 NopRequestCache.RemoveByPattern(TIERPRICES_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(CUSTOMERROLEPRICES_PATTERN_KEY);
             }
-
-            return tierPrice;
         }
 
         #endregion
@@ -3486,20 +2902,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         /// <summary>
         /// Inserts a product price by customer role
         /// </summary>
-        /// <param name="customerRoleId">The customer role identifier</param>
-        /// <param name="productVariantId">The product variant identifier</param>
-        /// <param name="price">The price</param>
-        /// <returns>A product price by customer role</returns>
-        public static CustomerRoleProductPrice InsertCustomerRoleProductPrice(int customerRoleId,
-            int productVariantId, decimal price)
+        /// <param name="customerRoleProductPrice">A product price by customer role</param>
+        public static void InsertCustomerRoleProductPrice(CustomerRoleProductPrice customerRoleProductPrice)
         {
+            if (customerRoleProductPrice == null)
+                throw new ArgumentNullException("customerRoleProductPrice");
+
             var context = ObjectContextHelper.CurrentObjectContext;
-
-            var customerRoleProductPrice = context.CustomerRoleProductPrices.CreateObject();
-            customerRoleProductPrice.CustomerRoleId = customerRoleId;
-            customerRoleProductPrice.ProductVariantId = productVariantId;
-            customerRoleProductPrice.Price = price;
-
+            
             context.CustomerRoleProductPrices.AddObject(customerRoleProductPrice);
             context.SaveChanges();
 
@@ -3510,32 +2920,21 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                 NopRequestCache.RemoveByPattern(TIERPRICES_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(CUSTOMERROLEPRICES_PATTERN_KEY);
             }
-
-            return customerRoleProductPrice;
         }
 
         /// <summary>
         /// Updates a product price by customer role
         /// </summary>
-        /// <param name="customerRoleProductPriceId">The identifier</param>
-        /// <param name="customerRoleId">The customer role identifier</param>
-        /// <param name="productVariantId">The product variant identifier</param>
-        /// <param name="price">The price</param>
-        /// <returns>A product price by customer role</returns>
-        public static CustomerRoleProductPrice UpdateCustomerRoleProductPrice(int customerRoleProductPriceId,
-            int customerRoleId, int productVariantId, decimal price)
+        /// <param name="customerRoleProductPrice">A product price by customer role</param>
+        public static void UpdateCustomerRoleProductPrice(CustomerRoleProductPrice customerRoleProductPrice)
         {
-            var customerRoleProductPrice = GetCustomerRoleProductPriceById(customerRoleProductPriceId);
             if (customerRoleProductPrice == null)
-                return null;
+                throw new ArgumentNullException("customerRoleProductPrice");
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(customerRoleProductPrice))
                 context.CustomerRoleProductPrices.Attach(customerRoleProductPrice);
 
-            customerRoleProductPrice.CustomerRoleId = customerRoleId;
-            customerRoleProductPrice.ProductVariantId = productVariantId;
-            customerRoleProductPrice.Price = price;
             context.SaveChanges();
 
             if (ProductManager.CacheEnabled)
@@ -3545,8 +2944,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                 NopRequestCache.RemoveByPattern(TIERPRICES_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(CUSTOMERROLEPRICES_PATTERN_KEY);
             }
-
-            return customerRoleProductPrice;
         }
 
         #endregion
@@ -3609,58 +3006,41 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         /// <summary>
         /// Inserts a product tag
         /// </summary>
-        /// <param name="name">Product tag name</param>
-        /// <param name="productCount">Product count</param>
-        /// <returns>Product tag</returns>
-        public static ProductTag InsertProductTag(string name, int productCount)
+        /// <param name="productTag">Product tag</param>
+        public static void InsertProductTag(ProductTag productTag)
         {
-            if (name == null)
-                name = string.Empty;
-            name = name.Trim();
+            if (productTag == null)
+                throw new ArgumentNullException("productTag");
 
-            name = CommonHelper.EnsureMaximumLength(name, 100);
+            productTag.Name = CommonHelper.EnsureNotNull(productTag.Name);
+            productTag.Name = productTag.Name.Trim();
+            productTag.Name = CommonHelper.EnsureMaximumLength(productTag.Name, 100);
 
             var context = ObjectContextHelper.CurrentObjectContext;
-
-            var productTag = context.ProductTags.CreateObject();
-            productTag.Name = name;
-            productTag.ProductCount = productCount;
-
+            
             context.ProductTags.AddObject(productTag);
             context.SaveChanges();
-
-            return productTag;
         }
 
         /// <summary>
         /// Updates a product tag
         /// </summary>
-        /// <param name="productTagId">Product tag identifier</param>
-        /// <param name="name">Product tag name</param>
-        /// <param name="productCount">Product count</param>
-        /// <returns>Product tag</returns>
-        public static ProductTag UpdateProductTag(int productTagId,
-            string name, int productCount)
+        /// <param name="productTag">Product tag</param>
+        public static void UpdateProductTag(ProductTag productTag)
         {
-            if (name == null)
-                name = string.Empty;
-            name = name.Trim();
-
-            name = CommonHelper.EnsureMaximumLength(name, 100);
-
-            var productTag = GetProductTagById(productTagId);
             if (productTag == null)
-                return null;
+                throw new ArgumentNullException("productTag");
+
+            productTag.Name = CommonHelper.EnsureNotNull(productTag.Name);
+            productTag.Name = productTag.Name.Trim();
+            productTag.Name = CommonHelper.EnsureMaximumLength(productTag.Name, 100);
+
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(productTag))
                 context.ProductTags.Attach(productTag);
 
-            productTag.Name = name;
-            productTag.ProductCount = productCount;
             context.SaveChanges();
-
-            return productTag;
         }
 
         /// <summary>

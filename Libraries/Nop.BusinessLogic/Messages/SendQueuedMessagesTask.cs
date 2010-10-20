@@ -63,19 +63,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
                        new MailAddress(queuedEmail.From, queuedEmail.FromName),
                        new MailAddress(queuedEmail.To, queuedEmail.ToName), bcc, cc, queuedEmail.EmailAccount);
 
-                    MessageManager.UpdateQueuedEmail(queuedEmail.QueuedEmailId, queuedEmail.Priority,
-                        queuedEmail.From, queuedEmail.FromName, queuedEmail.To, queuedEmail.ToName,
-                        queuedEmail.CC, queuedEmail.Bcc, queuedEmail.Subject, queuedEmail.Body,
-                        queuedEmail.CreatedOn, ++queuedEmail.SendTries, DateTime.UtcNow,
-                        queuedEmail.EmailAccountId);
+                    queuedEmail.SendTries = queuedEmail.SendTries + 1;
+                    queuedEmail.SentOn = DateTime.UtcNow;
+                    MessageManager.UpdateQueuedEmail(queuedEmail);
                 }
                 catch (Exception exc)
                 {
-                    MessageManager.UpdateQueuedEmail(queuedEmail.QueuedEmailId, queuedEmail.Priority,
-                        queuedEmail.From, queuedEmail.FromName, queuedEmail.To, queuedEmail.ToName,
-                        queuedEmail.CC, queuedEmail.Bcc, queuedEmail.Subject, queuedEmail.Body,
-                        queuedEmail.CreatedOn, ++queuedEmail.SendTries, queuedEmail.SentOn,
-                        queuedEmail.EmailAccountId);
+                    queuedEmail.SendTries = queuedEmail.SendTries + 1;
+                    MessageManager.UpdateQueuedEmail(queuedEmail);
 
                     LogManager.InsertLog(LogTypeEnum.MailError, string.Format("Error sending e-mail. {0}", exc.Message), exc);
                 }

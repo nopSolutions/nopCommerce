@@ -143,15 +143,26 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                                 var content = MessageManager.GetLocalizedMessageTemplate(this.MessageTemplate.Name, languageId);
                                 if (content == null)
                                 {
-                                    content = MessageManager.InsertLocalizedMessageTemplate(this.MessageTemplateId,
-                                        languageId, emailAccountId, BCCEmailAddresses, 
-                                        subject, body, active);
+                                    content = new LocalizedMessageTemplate()
+                                    {
+                                        MessageTemplateId = this.MessageTemplateId,
+                                        LanguageId = languageId,
+                                        EmailAccountId = emailAccountId,
+                                        BccEmailAddresses = BCCEmailAddresses,
+                                        Subject = subject,
+                                        Body = body,
+                                        IsActive = active
+                                    };
+                                    MessageManager.InsertLocalizedMessageTemplate(content);
                                 }
                                 else
                                 {
-                                    content = MessageManager.UpdateLocalizedMessageTemplate(content.MessageTemplateLocalizedId,
-                                        content.MessageTemplateId, content.LanguageId,
-                                        emailAccountId, BCCEmailAddresses, subject, body, active);
+                                    content.EmailAccountId = emailAccountId;
+                                    content.BccEmailAddresses = BCCEmailAddresses;
+                                    content.Subject = subject;
+                                    content.Body = body;
+                                    content.IsActive = active;
+                                    MessageManager.UpdateLocalizedMessageTemplate(content);
                                 }
                             }
                         }

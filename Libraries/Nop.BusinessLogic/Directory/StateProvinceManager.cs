@@ -136,25 +136,19 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
         /// <summary>
         /// Inserts a state/province
         /// </summary>
-        /// <param name="countryId">The country identifier</param>
-        /// <param name="name">The name</param>
-        /// <param name="abbreviation">The abbreviation</param>
-        /// <param name="displayOrder">The display order</param>
-        /// <returns>State/province</returns>
-        public static StateProvince InsertStateProvince(int countryId,
-            string name, string abbreviation, int displayOrder)
+        /// <param name="stateProvince">State/province</param>
+        public static void InsertStateProvince(StateProvince stateProvince)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 100);
-            abbreviation = CommonHelper.EnsureMaximumLength(abbreviation, 30);
+            if (stateProvince == null)
+                throw new ArgumentNullException("stateProvince");
 
+            stateProvince.Name = CommonHelper.EnsureNotNull(stateProvince.Name);
+            stateProvince.Name = CommonHelper.EnsureMaximumLength(stateProvince.Name, 100);
+            stateProvince.Abbreviation = CommonHelper.EnsureNotNull(stateProvince.Abbreviation);
+            stateProvince.Abbreviation = CommonHelper.EnsureMaximumLength(stateProvince.Abbreviation, 30);
+            
             var context = ObjectContextHelper.CurrentObjectContext;
-
-            var stateProvince = context.StateProvinces.CreateObject();
-            stateProvince.CountryId = countryId;
-            stateProvince.Name = name;
-            stateProvince.Abbreviation = abbreviation;
-            stateProvince.DisplayOrder = displayOrder;
-
+            
             context.StateProvinces.AddObject(stateProvince);
             context.SaveChanges();
             
@@ -162,45 +156,32 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
             {
                 NopRequestCache.RemoveByPattern(STATEPROVINCES_PATTERN_KEY);
             }
-
-            return stateProvince;
         }
 
         /// <summary>
         /// Updates a state/province
         /// </summary>
-        /// <param name="stateProvinceId">The state/province identifier</param>
-        /// <param name="countryId">The country identifier</param>
-        /// <param name="name">The name</param>
-        /// <param name="abbreviation">The abbreviation</param>
-        /// <param name="displayOrder">The display order</param>
-        /// <returns>State/province</returns>
-        public static StateProvince UpdateStateProvince(int stateProvinceId,
-            int countryId, string name, string abbreviation, int displayOrder)
+        /// <param name="stateProvince">State/province</param>
+        public static void UpdateStateProvince(StateProvince stateProvince)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 100);
-            abbreviation = CommonHelper.EnsureMaximumLength(abbreviation, 30);
-
-            var stateProvince = GetStateProvinceById(stateProvinceId);
             if (stateProvince == null)
-                return null;
+                throw new ArgumentNullException("stateProvince");
+
+            stateProvince.Name = CommonHelper.EnsureNotNull(stateProvince.Name);
+            stateProvince.Name = CommonHelper.EnsureMaximumLength(stateProvince.Name, 100);
+            stateProvince.Abbreviation = CommonHelper.EnsureNotNull(stateProvince.Abbreviation);
+            stateProvince.Abbreviation = CommonHelper.EnsureMaximumLength(stateProvince.Abbreviation, 30);
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(stateProvince))
                 context.StateProvinces.Attach(stateProvince);
 
-            stateProvince.CountryId = countryId;
-            stateProvince.Name = name;
-            stateProvince.Abbreviation = abbreviation;
-            stateProvince.DisplayOrder = displayOrder;
             context.SaveChanges();
 
             if (StateProvinceManager.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(STATEPROVINCES_PATTERN_KEY);
             }
-
-            return stateProvince;
         }
         #endregion
         

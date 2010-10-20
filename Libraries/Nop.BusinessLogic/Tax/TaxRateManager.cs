@@ -170,31 +170,18 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// <summary>
         /// Inserts a tax rate
         /// </summary>
-        /// <param name="taxCategoryId">The tax category identifier</param>
-        /// <param name="countryId">The country identifier</param>
-        /// <param name="stateProvinceId">The state/province identifier</param>
-        /// <param name="zip">The zip</param>
-        /// <param name="percentage">The percentage</param>
-        /// <returns>Tax rate</returns>
-        public static TaxRate InsertTaxRate(int taxCategoryId, int countryId,
-            int stateProvinceId, string zip, decimal percentage)
+        /// <param name="taxRate">Tax rate</param>
+        public static void InsertTaxRate(TaxRate taxRate)
         {
-            if (zip == null)
-                zip = string.Empty;
-            if (!String.IsNullOrEmpty(zip))
-                zip = zip.Trim();
+            if (taxRate == null)
+                throw new ArgumentNullException("taxRate");
 
-            zip = CommonHelper.EnsureMaximumLength(zip, 50);
+            taxRate.Zip = CommonHelper.EnsureNotNull(taxRate.Zip);
+            taxRate.Zip = taxRate.Zip.Trim();
+            taxRate.Zip = CommonHelper.EnsureMaximumLength(taxRate.Zip, 50);
 
             var context = ObjectContextHelper.CurrentObjectContext;
-
-            var taxRate = context.TaxRates.CreateObject();
-            taxRate.TaxCategoryId = taxCategoryId;
-            taxRate.CountryId = countryId;
-            taxRate.StateProvinceId = stateProvinceId;
-            taxRate.Zip = zip;
-            taxRate.Percentage = percentage;
-
+            
             context.TaxRates.AddObject(taxRate);
             context.SaveChanges();
             
@@ -202,52 +189,31 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
             {
                 NopRequestCache.RemoveByPattern(TAXRATE_PATTERN_KEY);
             }
-
-            return taxRate;
         }
 
         /// <summary>
         /// Updates the tax rate
         /// </summary>
-        /// <param name="taxRateId">The tax rate identifier</param>
-        /// <param name="taxCategoryId">The tax category identifier</param>
-        /// <param name="countryId">The country identifier</param>
-        /// <param name="stateProvinceId">The state/province identifier</param>
-        /// <param name="zip">The zip</param>
-        /// <param name="percentage">The percentage</param>
-        /// <returns>Tax rate</returns>
-        public static TaxRate UpdateTaxRate(int taxRateId,
-            int taxCategoryId, int countryId, int stateProvinceId,
-            string zip, decimal percentage)
+        /// <param name="taxRate">Tax rate</param>
+        public static void UpdateTaxRate(TaxRate taxRate)
         {
-            if (zip == null)
-                zip = string.Empty;
-            if (!String.IsNullOrEmpty(zip))
-                zip = zip.Trim();
-
-            zip = CommonHelper.EnsureMaximumLength(zip, 50);
-
-            var taxRate = GetTaxRateById(taxRateId);
             if (taxRate == null)
-                return null;
+                throw new ArgumentNullException("taxRate");
+
+            taxRate.Zip = CommonHelper.EnsureNotNull(taxRate.Zip);
+            taxRate.Zip = taxRate.Zip.Trim();
+            taxRate.Zip = CommonHelper.EnsureMaximumLength(taxRate.Zip, 50);
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(taxRate))
                 context.TaxRates.Attach(taxRate);
 
-            taxRate.TaxCategoryId = taxCategoryId;
-            taxRate.CountryId = countryId;
-            taxRate.StateProvinceId = stateProvinceId;
-            taxRate.Zip = zip;
-            taxRate.Percentage = percentage;
             context.SaveChanges();
             
             if (TaxRateManager.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(TAXRATE_PATTERN_KEY);
             }
-
-            return taxRate;
         }
         #endregion
 

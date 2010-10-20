@@ -84,20 +84,40 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
             if (warehouse != null)
             {
-                warehouse = WarehouseManager.UpdateWarehouse(warehouse.WarehouseId, txtName.Text,
-                    txtPhoneNumber.Text, txtEmail.Text, txtFaxNumber.Text,
-                    txtAddress1.Text, txtAddress2.Text, txtCity.Text, txtStateProvince.Text, txtZipPostalCode.Text,
-                    int.Parse(this.ddlCountry.SelectedItem.Value), warehouse.Deleted, warehouse.CreatedOn, DateTime.UtcNow);
+                warehouse.Name = txtName.Text;
+                warehouse.PhoneNumber = txtPhoneNumber.Text;
+                warehouse.Email = txtEmail.Text;
+                warehouse.FaxNumber = txtFaxNumber.Text;
+                warehouse.Address1 = txtAddress1.Text;
+                warehouse.Address2 = txtAddress2.Text;
+                warehouse.City = txtCity.Text;
+                warehouse.StateProvince = txtStateProvince.Text;
+                warehouse.ZipPostalCode = txtZipPostalCode.Text;
+                warehouse.CountryId = int.Parse(this.ddlCountry.SelectedItem.Value);
+                warehouse.UpdatedOn = DateTime.UtcNow;
+
+                WarehouseManager.UpdateWarehouse(warehouse);
 
             }
             else
             {
                 DateTime now = DateTime.UtcNow;
-                warehouse = WarehouseManager.InsertWarehouse(txtName.Text,
-                   txtPhoneNumber.Text, txtEmail.Text, txtFaxNumber.Text,
-                   txtAddress1.Text, txtAddress2.Text, txtCity.Text, txtStateProvince.Text, txtZipPostalCode.Text,
-                   int.Parse(this.ddlCountry.SelectedItem.Value), false, now, now);
-
+                warehouse = new Warehouse()
+                {
+                    Name = txtName.Text,
+                    PhoneNumber = txtPhoneNumber.Text,
+                    Email = txtEmail.Text,
+                    FaxNumber = txtFaxNumber.Text,
+                    Address1 = txtAddress1.Text,
+                    Address2 = txtAddress2.Text,
+                    City = txtCity.Text,
+                    StateProvince = txtStateProvince.Text,
+                    ZipPostalCode = txtZipPostalCode.Text,
+                    CountryId = int.Parse(this.ddlCountry.SelectedItem.Value),
+                    CreatedOn = now,
+                    UpdatedOn = now
+                };
+                WarehouseManager.InsertWarehouse(warehouse);
             }
 
             return warehouse;

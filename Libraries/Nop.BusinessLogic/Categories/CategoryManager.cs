@@ -79,12 +79,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
             var category = GetCategoryById(categoryId);
             if (category != null)
             {
-                category = UpdateCategory(category.CategoryId, category.Name, 
-                    category.Description, category.TemplateId, category.MetaKeywords,
-                     category.MetaDescription, category.MetaTitle, category.SEName, category.ParentCategoryId,
-                     category.PictureId, category.PageSize, category.PriceRanges, category.ShowOnHomePage, 
-                     category.Published, true, category.DisplayOrder,
-                     category.CreatedOn, category.UpdatedOn);
+                category.Deleted = true;
+                UpdateCategory(category);
             }
         }
 
@@ -97,12 +93,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
             var category = GetCategoryById(categoryId);
             if (category != null)
             {
-                UpdateCategory(category.CategoryId, category.Name, category.Description,
-                    category.TemplateId, category.MetaKeywords,
-                    category.MetaDescription, category.MetaTitle, category.SEName,
-                    category.ParentCategoryId, 0, category.PageSize, category.PriceRanges,
-                    category.ShowOnHomePage, category.Published, category.Deleted, category.DisplayOrder,
-                    category.CreatedOn, category.UpdatedOn);
+                category.PictureId = 0;
+                UpdateCategory(category);
             }
         }
 
@@ -271,57 +263,27 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
         /// <summary>
         /// Inserts category
         /// </summary>
-        /// <param name="name">The category name</param>
-        /// <param name="description">The description</param>
-        /// <param name="templateId">The template identifier</param>
-        /// <param name="metaKeywords">The meta keywords</param>
-        /// <param name="metaDescription">The meta description</param>
-        /// <param name="metaTitle">The meta title</param>
-        /// <param name="seName">The search-engine name</param>
-        /// <param name="parentCategoryId">The parent category identifier</param>
-        /// <param name="pictureId">The picture identifier</param>
-        /// <param name="pageSize">The page size</param>
-        /// <param name="priceRanges">The price ranges</param>
-        /// <param name="showOnHomePage">A value indicating whether the category will be shown on home page</param>
-        /// <param name="published">A value indicating whether the entity is published</param>
-        /// <param name="deleted">A value indicating whether the entity has been deleted</param>
-        /// <param name="displayOrder">The display order</param>
-        /// <param name="createdOn">The date and time of instance creation</param>
-        /// <param name="updatedOn">The date and time of instance update</param>
-        /// <returns>Category</returns>
-        public static Category InsertCategory(string name, string description,
-            int templateId, string metaKeywords, string metaDescription, string metaTitle,
-            string seName, int parentCategoryId, int pictureId,
-            int pageSize, string priceRanges, bool showOnHomePage, bool published, bool deleted,
-            int displayOrder, DateTime createdOn, DateTime updatedOn)
+        /// <param name="category">Category</param>
+        public static void InsertCategory(Category category)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 400);
-            metaKeywords = CommonHelper.EnsureMaximumLength(metaKeywords, 400);
-            metaDescription = CommonHelper.EnsureMaximumLength(metaDescription, 4000);
-            metaTitle = CommonHelper.EnsureMaximumLength(metaTitle, 400);
-            seName = CommonHelper.EnsureMaximumLength(seName, 100);
-            priceRanges = CommonHelper.EnsureMaximumLength(priceRanges, 400);
+            if (category == null)
+                throw new ArgumentNullException("category");
+            
+            category.Name = CommonHelper.EnsureNotNull(category.Name);
+            category.Name = CommonHelper.EnsureMaximumLength(category.Name, 400);
+            category.Description = CommonHelper.EnsureNotNull(category.Description);
+            category.MetaKeywords = CommonHelper.EnsureNotNull(category.MetaKeywords);
+            category.MetaKeywords = CommonHelper.EnsureMaximumLength(category.MetaKeywords, 400);
+            category.MetaDescription = CommonHelper.EnsureNotNull(category.MetaDescription);
+            category.MetaDescription = CommonHelper.EnsureMaximumLength(category.MetaDescription, 4000);
+            category.MetaTitle = CommonHelper.EnsureNotNull(category.MetaTitle);
+            category.MetaTitle = CommonHelper.EnsureMaximumLength(category.MetaTitle, 400);
+            category.SEName = CommonHelper.EnsureNotNull(category.SEName);
+            category.SEName = CommonHelper.EnsureMaximumLength(category.SEName, 100);
+            category.PriceRanges = CommonHelper.EnsureNotNull(category.PriceRanges);
+            category.PriceRanges = CommonHelper.EnsureMaximumLength(category.PriceRanges, 400);
 
             var context = ObjectContextHelper.CurrentObjectContext;
-
-            var category = context.Categories.CreateObject();
-            category.Name = name;
-            category.Description = description;
-            category.TemplateId = templateId;
-            category.MetaKeywords = metaKeywords;
-            category.MetaDescription = metaDescription;
-            category.MetaTitle = metaTitle;
-            category.SEName = seName;
-            category.ParentCategoryId = parentCategoryId;
-            category.PictureId = pictureId;
-            category.PageSize = pageSize;
-            category.PriceRanges = priceRanges;
-            category.ShowOnHomePage = showOnHomePage;
-            category.Published = published;
-            category.Deleted = deleted;
-            category.DisplayOrder = displayOrder;
-            category.CreatedOn = createdOn;
-            category.UpdatedOn = updatedOn;
 
             context.Categories.AddObject(category);
             context.SaveChanges();
@@ -331,82 +293,47 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
                 NopRequestCache.RemoveByPattern(CATEGORIES_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(PRODUCTCATEGORIES_PATTERN_KEY);
             }
-
-            return category;
         }
 
         /// <summary>
         /// Updates the category
         /// </summary>
-        /// <param name="categoryId">Category identifier</param>
-        /// <param name="name">The category name</param>
-        /// <param name="description">The description</param>
-        /// <param name="templateId">The template identifier</param>
-        /// <param name="metaKeywords">The meta keywords</param>
-        /// <param name="metaDescription">The meta description</param>
-        /// <param name="metaTitle">The meta title</param>
-        /// <param name="seName">The search-engine name</param>
-        /// <param name="parentCategoryId">The parent category identifier</param>
-        /// <param name="pictureId">The picture identifier</param>
-        /// <param name="pageSize">The page size</param>
-        /// <param name="priceRanges">The price ranges</param>
-        /// <param name="published">A value indicating whether the entity is published</param>
-        /// <param name="showOnHomePage">A value indicating whether the category will be shown on home page</param>
-        /// <param name="deleted">A value indicating whether the entity has been deleted</param>
-        /// <param name="displayOrder">The display order</param>
-        /// <param name="createdOn">The date and time of instance creation</param>
-        /// <param name="updatedOn">The date and time of instance update</param>
-        /// <returns>Category</returns>
-        public static Category UpdateCategory(int categoryId, string name, string description,
-            int templateId, string metaKeywords, string metaDescription, string metaTitle,
-            string seName, int parentCategoryId, int pictureId,
-            int pageSize, string priceRanges, bool showOnHomePage, bool published, bool deleted,
-            int displayOrder, DateTime createdOn, DateTime updatedOn)
+        /// <param name="category">Category</param>
+        public static void UpdateCategory(Category category)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 400);
-            metaKeywords = CommonHelper.EnsureMaximumLength(metaKeywords, 400);
-            metaDescription = CommonHelper.EnsureMaximumLength(metaDescription, 4000);
-            metaTitle = CommonHelper.EnsureMaximumLength(metaTitle, 400);
-            seName = CommonHelper.EnsureMaximumLength(seName, 100);
-            priceRanges = CommonHelper.EnsureMaximumLength(priceRanges, 400);
+            if (category == null)
+                throw new ArgumentNullException("category");
+
+            category.Name = CommonHelper.EnsureNotNull(category.Name);
+            category.Name = CommonHelper.EnsureMaximumLength(category.Name, 400);
+            category.Description = CommonHelper.EnsureNotNull(category.Description);
+            category.MetaKeywords = CommonHelper.EnsureNotNull(category.MetaKeywords);
+            category.MetaKeywords = CommonHelper.EnsureMaximumLength(category.MetaKeywords, 400);
+            category.MetaDescription = CommonHelper.EnsureNotNull(category.MetaDescription);
+            category.MetaDescription = CommonHelper.EnsureMaximumLength(category.MetaDescription, 4000);
+            category.MetaTitle = CommonHelper.EnsureNotNull(category.MetaTitle);
+            category.MetaTitle = CommonHelper.EnsureMaximumLength(category.MetaTitle, 400);
+            category.SEName = CommonHelper.EnsureNotNull(category.SEName);
+            category.SEName = CommonHelper.EnsureMaximumLength(category.SEName, 100);
+            category.PriceRanges = CommonHelper.EnsureNotNull(category.PriceRanges);
+            category.PriceRanges = CommonHelper.EnsureMaximumLength(category.PriceRanges, 400);
 
             //validate category hierarchy
-            var parentCategory = GetCategoryById(parentCategoryId);
+            var parentCategory = GetCategoryById(category.ParentCategoryId);
             while (parentCategory != null)
             {
-                if (categoryId == parentCategory.CategoryId)
+                if (category.CategoryId == parentCategory.CategoryId)
                 {
-                    parentCategoryId = 0;
+                    category.ParentCategoryId = 0;
                     break;
                 }
                 parentCategory = GetCategoryById(parentCategory.ParentCategoryId);
             }
 
-            var category = GetCategoryById(categoryId);
-            if (category == null)
-                return null;
-
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(category))
                 context.Categories.Attach(category);
 
-            category.Name = name;
-            category.Description = description;
-            category.TemplateId = templateId;
-            category.MetaKeywords = metaKeywords;
-            category.MetaDescription = metaDescription;
-            category.MetaTitle = metaTitle;
-            category.SEName = seName;
-            category.ParentCategoryId = parentCategoryId;
-            category.PictureId = pictureId;
-            category.PageSize = pageSize;
-            category.PriceRanges = priceRanges;
-            category.ShowOnHomePage = showOnHomePage;
-            category.Published = published;
-            category.Deleted = deleted;
-            category.DisplayOrder = displayOrder;
-            category.CreatedOn = createdOn;
-            category.UpdatedOn = updatedOn;
             context.SaveChanges();
 
             if (CategoryManager.CategoriesCacheEnabled || CategoryManager.MappingsCacheEnabled)
@@ -414,8 +341,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
                 NopRequestCache.RemoveByPattern(CATEGORIES_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(PRODUCTCATEGORIES_PATTERN_KEY);
             }
-
-            return category;
         }
 
         /// <summary>
@@ -478,38 +403,26 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
         /// <summary>
         /// Inserts a localized category
         /// </summary>
-        /// <param name="categoryId">Category identifier</param>
-        /// <param name="languageId">Language identifier</param>
-        /// <param name="name">Name text</param>
-        /// <param name="description">Description text</param>
-        /// <param name="metaKeywords">Meta keywords text</param>
-        /// <param name="metaDescription">Meta descriptions text</param>
-        /// <param name="metaTitle">Metat title text</param>
-        /// <param name="seName">Se Name text</param>
-        /// <returns>Category content</returns>
-        public static CategoryLocalized InsertCategoryLocalized(int categoryId,
-            int languageId, string name, string description,
-            string metaKeywords, string metaDescription, string metaTitle,
-            string seName)
+        /// <param name="categoryLocalized">Localized category</param>
+        public static void InsertCategoryLocalized(CategoryLocalized categoryLocalized)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 400);
-            metaKeywords = CommonHelper.EnsureMaximumLength(metaKeywords, 400);
-            metaDescription = CommonHelper.EnsureMaximumLength(metaDescription, 4000);
-            metaTitle = CommonHelper.EnsureMaximumLength(metaTitle, 400);
-            seName = CommonHelper.EnsureMaximumLength(seName, 100);
+            if (categoryLocalized == null)
+                throw new ArgumentNullException("categoryLocalized");
+            
+            categoryLocalized.Name = CommonHelper.EnsureNotNull(categoryLocalized.Name);
+            categoryLocalized.Name = CommonHelper.EnsureMaximumLength(categoryLocalized.Name, 400);
+            categoryLocalized.Description = CommonHelper.EnsureNotNull(categoryLocalized.Description);
+            categoryLocalized.MetaKeywords = CommonHelper.EnsureNotNull(categoryLocalized.MetaKeywords);
+            categoryLocalized.MetaKeywords = CommonHelper.EnsureMaximumLength(categoryLocalized.MetaKeywords, 400);
+            categoryLocalized.MetaDescription = CommonHelper.EnsureNotNull(categoryLocalized.MetaDescription);
+            categoryLocalized.MetaDescription = CommonHelper.EnsureMaximumLength(categoryLocalized.MetaDescription, 4000);
+            categoryLocalized.MetaTitle = CommonHelper.EnsureNotNull(categoryLocalized.MetaTitle);
+            categoryLocalized.MetaTitle = CommonHelper.EnsureMaximumLength(categoryLocalized.MetaTitle, 400);
+            categoryLocalized.SEName = CommonHelper.EnsureNotNull(categoryLocalized.SEName);
+            categoryLocalized.SEName = CommonHelper.EnsureMaximumLength(categoryLocalized.SEName, 100);
 
             var context = ObjectContextHelper.CurrentObjectContext;
-
-            var categoryLocalized = context.CategoryLocalized.CreateObject();
-            categoryLocalized.CategoryId = categoryId;
-            categoryLocalized.LanguageId = languageId;
-            categoryLocalized.Name = name;
-            categoryLocalized.Description = description;
-            categoryLocalized.MetaKeywords = metaKeywords;
-            categoryLocalized.MetaDescription = metaDescription;
-            categoryLocalized.MetaTitle = metaTitle;
-            categoryLocalized.SEName = seName;
-
+            
             context.CategoryLocalized.AddObject(categoryLocalized);
             context.SaveChanges();
 
@@ -517,44 +430,35 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
             {
                 NopRequestCache.RemoveByPattern(CATEGORIES_PATTERN_KEY);
             }
-
-            return categoryLocalized;
         }
 
         /// <summary>
         /// Update a localized category
         /// </summary>
-        /// <param name="categoryLocalizedId">Localized category identifier</param>
-        /// <param name="categoryId">Category identifier</param>
-        /// <param name="languageId">Language identifier</param>
-        /// <param name="name">Name text</param>
-        /// <param name="description">Description text</param>
-        /// <param name="metaKeywords">Meta keywords text</param>
-        /// <param name="metaDescription">Meta descriptions text</param>
-        /// <param name="metaTitle">Metat title text</param>
-        /// <param name="seName">Se Name text</param>
-        /// <returns>Category content</returns>
-        public static CategoryLocalized UpdateCategoryLocalized(int categoryLocalizedId,
-            int categoryId, int languageId, string name, string description,
-            string metaKeywords, string metaDescription, string metaTitle,
-            string seName)
+        /// <param name="categoryLocalized">Localized category</param>
+        public static void UpdateCategoryLocalized(CategoryLocalized categoryLocalized)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 400);
-            metaKeywords = CommonHelper.EnsureMaximumLength(metaKeywords, 400);
-            metaDescription = CommonHelper.EnsureMaximumLength(metaDescription, 4000);
-            metaTitle = CommonHelper.EnsureMaximumLength(metaTitle, 400);
-            seName = CommonHelper.EnsureMaximumLength(seName, 100);
-
-            var categoryLocalized = GetCategoryLocalizedById(categoryLocalizedId);
             if (categoryLocalized == null)
-                return null;
+                throw new ArgumentNullException("categoryLocalized");
 
-            bool allFieldsAreEmpty = string.IsNullOrEmpty(name) && 
-                string.IsNullOrEmpty(description) &&
-                string.IsNullOrEmpty(metaKeywords) &&
-                string.IsNullOrEmpty(metaDescription) &&
-                string.IsNullOrEmpty(metaTitle) &&
-                string.IsNullOrEmpty(seName);
+            categoryLocalized.Name = CommonHelper.EnsureNotNull(categoryLocalized.Name);
+            categoryLocalized.Name = CommonHelper.EnsureMaximumLength(categoryLocalized.Name, 400);
+            categoryLocalized.Description = CommonHelper.EnsureNotNull(categoryLocalized.Description);
+            categoryLocalized.MetaKeywords = CommonHelper.EnsureNotNull(categoryLocalized.MetaKeywords);
+            categoryLocalized.MetaKeywords = CommonHelper.EnsureMaximumLength(categoryLocalized.MetaKeywords, 400);
+            categoryLocalized.MetaDescription = CommonHelper.EnsureNotNull(categoryLocalized.MetaDescription);
+            categoryLocalized.MetaDescription = CommonHelper.EnsureMaximumLength(categoryLocalized.MetaDescription, 4000);
+            categoryLocalized.MetaTitle = CommonHelper.EnsureNotNull(categoryLocalized.MetaTitle);
+            categoryLocalized.MetaTitle = CommonHelper.EnsureMaximumLength(categoryLocalized.MetaTitle, 400);
+            categoryLocalized.SEName = CommonHelper.EnsureNotNull(categoryLocalized.SEName);
+            categoryLocalized.SEName = CommonHelper.EnsureMaximumLength(categoryLocalized.SEName, 100);
+
+            bool allFieldsAreEmpty = string.IsNullOrEmpty(categoryLocalized.Name) &&
+                string.IsNullOrEmpty(categoryLocalized.Description) &&
+                string.IsNullOrEmpty(categoryLocalized.MetaKeywords) &&
+                string.IsNullOrEmpty(categoryLocalized.MetaDescription) &&
+                string.IsNullOrEmpty(categoryLocalized.MetaTitle) &&
+                string.IsNullOrEmpty(categoryLocalized.SEName);
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(categoryLocalized))
@@ -568,14 +472,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
             }
             else
             {
-                categoryLocalized.CategoryId = categoryId;
-                categoryLocalized.LanguageId = languageId;
-                categoryLocalized.Name = name;
-                categoryLocalized.Description = description;
-                categoryLocalized.MetaKeywords = metaKeywords;
-                categoryLocalized.MetaDescription = metaDescription;
-                categoryLocalized.MetaTitle = metaTitle;
-                categoryLocalized.SEName = seName;
                 context.SaveChanges();
             }
 
@@ -583,8 +479,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
             {
                 NopRequestCache.RemoveByPattern(CATEGORIES_PATTERN_KEY);
             }
-
-            return categoryLocalized;
         }
         
         /// <summary>
@@ -716,22 +610,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
         /// <summary>
         /// Inserts a product category mapping
         /// </summary>
-        /// <param name="productId">Product identifier</param>
-        /// <param name="categoryId">Category identifier</param>
-        /// <param name="isFeaturedProduct">A value indicating whether the product is featured</param>
-        /// <param name="displayOrder">The display order</param>
-        /// <returns>Product category mapping </returns>
-        public static ProductCategory InsertProductCategory(int productId, int categoryId,
-           bool isFeaturedProduct, int displayOrder)
+        /// <param name="productCategory">>Product category mapping</param>
+        public static void InsertProductCategory(ProductCategory productCategory)
         {
+            if (productCategory == null)
+                throw new ArgumentNullException("productCategory");
+
             var context = ObjectContextHelper.CurrentObjectContext;
-
-            var productCategory = context.ProductCategories.CreateObject();
-            productCategory.ProductId = productId;
-            productCategory.CategoryId = categoryId;
-            productCategory.IsFeaturedProduct = isFeaturedProduct;
-            productCategory.DisplayOrder = displayOrder;
-
+            
             context.ProductCategories.AddObject(productCategory);
             context.SaveChanges();
 
@@ -740,33 +626,21 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
                 NopRequestCache.RemoveByPattern(CATEGORIES_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(PRODUCTCATEGORIES_PATTERN_KEY);
             }
-            return productCategory;
         }
 
         /// <summary>
         /// Updates the product category mapping 
         /// </summary>
-        /// <param name="productCategoryId">Product category mapping  identifier</param>
-        /// <param name="productId">Product identifier</param>
-        /// <param name="categoryId">Category identifier</param>
-        /// <param name="isFeaturedProduct">A value indicating whether the product is featured</param>
-        /// <param name="displayOrder">The display order</param>
-        /// <returns>Product category mapping </returns>
-        public static ProductCategory UpdateProductCategory(int productCategoryId,
-            int productId, int categoryId, bool isFeaturedProduct, int displayOrder)
+        /// <param name="productCategory">>Product category mapping</param>
+        public static void UpdateProductCategory(ProductCategory productCategory)
         {
-            var productCategory = GetProductCategoryById(productCategoryId);
             if (productCategory == null)
-                return null;
+                throw new ArgumentNullException("productCategory");
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(productCategory))
                 context.ProductCategories.Attach(productCategory);
 
-            productCategory.ProductId = productId;
-            productCategory.CategoryId = categoryId;
-            productCategory.IsFeaturedProduct = isFeaturedProduct;
-            productCategory.DisplayOrder = displayOrder;
             context.SaveChanges();
 
             if (CategoryManager.CategoriesCacheEnabled || CategoryManager.MappingsCacheEnabled)
@@ -774,7 +648,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
                 NopRequestCache.RemoveByPattern(CATEGORIES_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(PRODUCTCATEGORIES_PATTERN_KEY);
             }
-            return productCategory;
         }
         #endregion
         

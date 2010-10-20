@@ -62,9 +62,16 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.ShippingByTotalCo
             try
             {
                 int shippingMethodId = int.Parse(this.ddlShippingMethod.SelectedItem.Value);
-                ShippingByTotal shippingByTotal = ShippingByTotalManager.InsertShippingByTotal(shippingMethodId,
-                    txtFrom.Value, txtTo.Value, cbUsePercentage.Checked,
-                    txtShippingChargePercentage.Value, txtShippingChargeAmount.Value);
+                var shippingByTotal = new ShippingByTotal()
+                {
+                    ShippingMethodId = shippingMethodId,
+                    From = txtFrom.Value,
+                    To = txtTo.Value,
+                    UsePercentage = cbUsePercentage.Checked,
+                    ShippingChargePercentage = txtShippingChargePercentage.Value,
+                    ShippingChargeAmount = txtShippingChargeAmount.Value
+                };
+                ShippingByTotalManager.InsertShippingByTotal(shippingByTotal);
 
                 BindData();
             }
@@ -94,10 +101,15 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.ShippingByTotalCo
                 ShippingByTotal shippingByTotal = ShippingByTotalManager.GetById(shippingByTotalId);
 
                 if (shippingByTotal != null)
-                    ShippingByTotalManager.UpdateShippingByTotal(shippingByTotal.ShippingByTotalId,
-                      shippingMethodId, txtFrom.Value,txtTo.Value,cbUsePercentage.Checked,
-                      txtShippingChargePercentage.Value,txtShippingChargeAmount.Value);
-
+                {
+                    shippingByTotal.ShippingMethodId = shippingMethodId;
+                    shippingByTotal.From = txtFrom.Value;
+                    shippingByTotal.To = txtTo.Value;
+                    shippingByTotal.UsePercentage = cbUsePercentage.Checked;
+                    shippingByTotal.ShippingChargePercentage = txtShippingChargePercentage.Value;
+                    shippingByTotal.ShippingChargeAmount = txtShippingChargeAmount.Value;
+                    ShippingByTotalManager.UpdateShippingByTotal(shippingByTotal);
+                }
                 BindData();
             }
         }

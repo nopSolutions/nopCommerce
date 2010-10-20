@@ -115,13 +115,16 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     bool allowFiltering = chkNewAllowFiltering.Checked;
                     bool showOnProductPage = chkNewShowOnProductPage.Checked;
                     int productSpecificationAttributeDisplayOrder = txtNewProductSpecificationAttributeDisplayOrder.Value;
-                   
-                    ProductSpecificationAttribute productSpecificationAttribute = SpecificationAttributeManager.InsertProductSpecificationAttribute(
-                        product.ProductId,
-                        productSpecificationAttributeOptionId,
-                        allowFiltering,
-                        showOnProductPage,
-                        productSpecificationAttributeDisplayOrder);
+
+                    var productSpecificationAttribute = new ProductSpecificationAttribute()
+                    {
+                        ProductId = product.ProductId,
+                        SpecificationAttributeOptionId = productSpecificationAttributeOptionId,
+                        AllowFiltering = allowFiltering,
+                        ShowOnProductPage = showOnProductPage,
+                        DisplayOrder = productSpecificationAttributeDisplayOrder
+                    };
+                    SpecificationAttributeManager.InsertProductSpecificationAttribute(productSpecificationAttribute);
 
                     BindData();
                 }
@@ -153,14 +156,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 ProductSpecificationAttribute productSpecificationAttribute = SpecificationAttributeManager.GetProductSpecificationAttributeById(productSpecificationAttributeId);
 
                 if (productSpecificationAttribute != null)
-                    SpecificationAttributeManager.UpdateProductSpecificationAttribute(
-                        productSpecificationAttribute.ProductSpecificationAttributeId,
-                        productSpecificationAttribute.ProductId,
-                        saoId,
-                        chkAllowFiltering.Checked,
-                        chkShowOnProductPage.Checked,
-                        displayOrder);
-
+                {
+                    productSpecificationAttribute.SpecificationAttributeOptionId = saoId;
+                    productSpecificationAttribute.AllowFiltering = chkAllowFiltering.Checked;
+                    productSpecificationAttribute.ShowOnProductPage = chkShowOnProductPage.Checked;
+                    productSpecificationAttribute.DisplayOrder = displayOrder;
+                    SpecificationAttributeManager.UpdateProductSpecificationAttribute(productSpecificationAttribute);
+                }
                 BindData();
             }
         }

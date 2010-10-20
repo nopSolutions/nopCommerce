@@ -146,7 +146,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 ProcessException(exc);
             }
         }
-        
+
         public RecurringPayment SaveInfo()
         {
             int cycleLength = txtCycleLength.Value;
@@ -157,15 +157,11 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             RecurringPayment recurringPayment = OrderManager.GetRecurringPaymentById(this.RecurringPaymentId);
             if (recurringPayment != null)
             {
-                recurringPayment = OrderManager.UpdateRecurringPayment(recurringPayment.RecurringPaymentId,
-                    recurringPayment.InitialOrderId,
-                    cycleLength,
-                    (int)cyclePeriod,
-                    totalCycles,
-                    recurringPayment.StartDate,
-                    isActive,
-                    recurringPayment.Deleted,
-                    recurringPayment.CreatedOn);
+                recurringPayment.CycleLength = cycleLength;
+                recurringPayment.CyclePeriod = (int)cyclePeriod;
+                recurringPayment.TotalCycles = totalCycles;
+                recurringPayment.IsActive = isActive;
+                OrderManager.UpdateRecurringPayment(recurringPayment);
             }
             else
             {

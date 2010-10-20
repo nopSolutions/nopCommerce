@@ -132,31 +132,22 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         /// <summary>
         /// Inserts a shipping rate computation method
         /// </summary>
-        /// <param name="name">The name</param>
-        /// <param name="description">The description</param>
-        /// <param name="configureTemplatePath">The configure template path</param>
-        /// <param name="className">The class name</param>
-        /// <param name="isActive">The value indicating whether the method is active</param>
-        /// <param name="displayOrder">The display order</param>
-        /// <returns>Shipping rate computation method</returns>
-        public static ShippingRateComputationMethod InsertShippingRateComputationMethod(string name,
-            string description, string configureTemplatePath, string className,
-            bool isActive, int displayOrder)
+        /// <param name="shippingRateComputationMethod">Shipping rate computation method</param>
+        public static void InsertShippingRateComputationMethod(ShippingRateComputationMethod shippingRateComputationMethod)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 100);
-            description = CommonHelper.EnsureMaximumLength(description, 4000);
-            configureTemplatePath = CommonHelper.EnsureMaximumLength(configureTemplatePath, 500);
-            className = CommonHelper.EnsureMaximumLength(className, 500);
+            if (shippingRateComputationMethod == null)
+                throw new ArgumentNullException("shippingRateComputationMethod");
+                        
+            shippingRateComputationMethod.Name = CommonHelper.EnsureNotNull(shippingRateComputationMethod.Name);
+            shippingRateComputationMethod.Name = CommonHelper.EnsureMaximumLength(shippingRateComputationMethod.Name, 100);
+            shippingRateComputationMethod.Description = CommonHelper.EnsureNotNull(shippingRateComputationMethod.Description);
+            shippingRateComputationMethod.Description = CommonHelper.EnsureMaximumLength(shippingRateComputationMethod.Description, 4000);
+            shippingRateComputationMethod.ConfigureTemplatePath = CommonHelper.EnsureNotNull(shippingRateComputationMethod.ConfigureTemplatePath);
+            shippingRateComputationMethod.ConfigureTemplatePath = CommonHelper.EnsureMaximumLength(shippingRateComputationMethod.ConfigureTemplatePath, 500);
+            shippingRateComputationMethod.ClassName = CommonHelper.EnsureNotNull(shippingRateComputationMethod.ClassName);
+            shippingRateComputationMethod.ClassName = CommonHelper.EnsureMaximumLength(shippingRateComputationMethod.ClassName, 500);
 
             var context = ObjectContextHelper.CurrentObjectContext;
-
-            var shippingRateComputationMethod = context.ShippingRateComputationMethods.CreateObject();
-            shippingRateComputationMethod.Name = name;
-            shippingRateComputationMethod.Description = description;
-            shippingRateComputationMethod.ConfigureTemplatePath = configureTemplatePath;
-            shippingRateComputationMethod.ClassName = className;
-            shippingRateComputationMethod.IsActive = isActive;
-            shippingRateComputationMethod.DisplayOrder = displayOrder;
 
             context.ShippingRateComputationMethods.AddObject(shippingRateComputationMethod);
             context.SaveChanges();
@@ -165,50 +156,36 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
             {
                 NopRequestCache.RemoveByPattern(SHIPPINGRATECOMPUTATIONMETHODS_PATTERN_KEY);
             }
-            return shippingRateComputationMethod;
         }
 
         /// <summary>
         /// Updates the shipping rate computation method
         /// </summary>
-        /// <param name="shippingRateComputationMethodId">The shipping rate computation method identifier</param>
-        /// <param name="name">The name</param>
-        /// <param name="description">The description</param>
-        /// <param name="configureTemplatePath">The configure template path</param>
-        /// <param name="className">The class name</param>
-        /// <param name="isActive">The value indicating whether the method is active</param>
-        /// <param name="displayOrder">The display order</param>
-        /// <returns>Shipping rate computation method</returns>
-        public static ShippingRateComputationMethod UpdateShippingRateComputationMethod(int shippingRateComputationMethodId,
-            string name, string description, string configureTemplatePath, string className,
-            bool isActive, int displayOrder)
+        /// <param name="shippingRateComputationMethod">Shipping rate computation method</param>
+        public static void UpdateShippingRateComputationMethod(ShippingRateComputationMethod shippingRateComputationMethod)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 100);
-            description = CommonHelper.EnsureMaximumLength(description, 4000);
-            configureTemplatePath = CommonHelper.EnsureMaximumLength(configureTemplatePath, 500);
-            className = CommonHelper.EnsureMaximumLength(className, 500);
-
-            var shippingRateComputationMethod = GetShippingRateComputationMethodById(shippingRateComputationMethodId);
             if (shippingRateComputationMethod == null)
-                return null;
+                throw new ArgumentNullException("shippingRateComputationMethod");
+
+            shippingRateComputationMethod.Name = CommonHelper.EnsureNotNull(shippingRateComputationMethod.Name);
+            shippingRateComputationMethod.Name = CommonHelper.EnsureMaximumLength(shippingRateComputationMethod.Name, 100);
+            shippingRateComputationMethod.Description = CommonHelper.EnsureNotNull(shippingRateComputationMethod.Description);
+            shippingRateComputationMethod.Description = CommonHelper.EnsureMaximumLength(shippingRateComputationMethod.Description, 4000);
+            shippingRateComputationMethod.ConfigureTemplatePath = CommonHelper.EnsureNotNull(shippingRateComputationMethod.ConfigureTemplatePath);
+            shippingRateComputationMethod.ConfigureTemplatePath = CommonHelper.EnsureMaximumLength(shippingRateComputationMethod.ConfigureTemplatePath, 500);
+            shippingRateComputationMethod.ClassName = CommonHelper.EnsureNotNull(shippingRateComputationMethod.ClassName);
+            shippingRateComputationMethod.ClassName = CommonHelper.EnsureMaximumLength(shippingRateComputationMethod.ClassName, 500);
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(shippingRateComputationMethod))
                 context.ShippingRateComputationMethods.Attach(shippingRateComputationMethod);
 
-            shippingRateComputationMethod.Name = name;
-            shippingRateComputationMethod.Description = description;
-            shippingRateComputationMethod.ConfigureTemplatePath = configureTemplatePath;
-            shippingRateComputationMethod.ClassName = className;
-            shippingRateComputationMethod.IsActive = isActive;
-            shippingRateComputationMethod.DisplayOrder = displayOrder;
             context.SaveChanges();
 
             if (ShippingRateComputationMethodManager.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(SHIPPINGRATECOMPUTATIONMETHODS_PATTERN_KEY);
             }
-            return shippingRateComputationMethod;
         }
         
         /// <summary>

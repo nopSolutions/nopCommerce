@@ -84,7 +84,17 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     if (productCategoryId > 0 && !cbProductInfo.Checked)
                         CategoryManager.DeleteProductCategory(productCategoryId);
                     if (productCategoryId > 0 && cbProductInfo.Checked)
-                        CategoryManager.UpdateProductCategory(productCategoryId, productId, category.CategoryId, featured, displayOrder);
+                    {
+                        var productCategory = CategoryManager.GetProductCategoryById(productCategoryId);
+                        if (productCategory != null)
+                        {
+                            productCategory.ProductId = productId;
+                            productCategory.CategoryId = category.CategoryId;
+                            productCategory.IsFeaturedProduct = featured;
+                            productCategory.DisplayOrder = displayOrder;
+                            CategoryManager.UpdateProductCategory(productCategory);
+                        }
+                    }
                 }
             }
         }

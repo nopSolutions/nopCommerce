@@ -81,7 +81,17 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     if (productManufacturerId > 0 && !cbProductInfo.Checked)
                         ManufacturerManager.DeleteProductManufacturer(productManufacturerId);
                     if (productManufacturerId > 0 && cbProductInfo.Checked)
-                        ManufacturerManager.UpdateProductManufacturer(productManufacturerId, productId, manufacturer.ManufacturerId, featured, displayOrder);
+                    {
+                        var pm  = ManufacturerManager.GetProductManufacturerById(productManufacturerId);
+                        if (pm != null)
+                        {
+                            pm.ProductId = productId;
+                            pm.ManufacturerId = manufacturer.ManufacturerId;
+                            pm.IsFeaturedProduct = featured;
+                            pm.DisplayOrder = displayOrder;
+                            ManufacturerManager.UpdateProductManufacturer(pm);
+                        }
+                    }
                 }
             }
         }

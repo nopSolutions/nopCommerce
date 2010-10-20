@@ -128,34 +128,18 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         /// <summary>
         /// Inserts a checkout attribute
         /// </summary>
-        /// <param name="name">Name</param>
-        /// <param name="textPrompt">Text prompt</param>
-        /// <param name="isRequired">Value indicating whether the entity is required</param>
-        /// <param name="shippableProductRequired">Value indicating whether shippable products are required in order to display this attribute</param>
-        /// <param name="isTaxExempt">Value indicating whether the attribute is marked as tax exempt</param>
-        /// <param name="taxCategoryId">Tax category identifier</param>
-        /// <param name="attributeControlTypeId">Attribute control type identifier</param>
-        /// <param name="displayOrder">Display order</param>
-        /// <returns>Checkout attribute</returns>
-        public static CheckoutAttribute InsertCheckoutAttribute(string name,
-            string textPrompt, bool isRequired, bool shippableProductRequired,
-            bool isTaxExempt, int taxCategoryId, int attributeControlTypeId,
-            int displayOrder)
+        /// <param name="checkoutAttribute">Checkout attribute</param>
+        public static void InsertCheckoutAttribute(CheckoutAttribute checkoutAttribute)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 100);
-            textPrompt = CommonHelper.EnsureMaximumLength(textPrompt, 300);
+            if (checkoutAttribute == null)
+                throw new ArgumentNullException("checkoutAttribute");
+
+            checkoutAttribute.Name = CommonHelper.EnsureNotNull(checkoutAttribute.Name);
+            checkoutAttribute.Name = CommonHelper.EnsureMaximumLength(checkoutAttribute.Name, 100);
+            checkoutAttribute.TextPrompt = CommonHelper.EnsureNotNull(checkoutAttribute.TextPrompt);
+            checkoutAttribute.TextPrompt = CommonHelper.EnsureMaximumLength(checkoutAttribute.TextPrompt, 300);
 
             var context = ObjectContextHelper.CurrentObjectContext;
-
-            var checkoutAttribute = context.CheckoutAttributes.CreateObject();
-            checkoutAttribute.Name = name;
-            checkoutAttribute.TextPrompt = textPrompt;
-            checkoutAttribute.IsRequired = isRequired;
-            checkoutAttribute.ShippableProductRequired = shippableProductRequired;
-            checkoutAttribute.IsTaxExempt = isTaxExempt;
-            checkoutAttribute.TaxCategoryId = taxCategoryId;
-            checkoutAttribute.AttributeControlTypeId = attributeControlTypeId;
-            checkoutAttribute.DisplayOrder = displayOrder;
 
             context.CheckoutAttributes.AddObject(checkoutAttribute);
             context.SaveChanges();
@@ -165,46 +149,27 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                 NopRequestCache.RemoveByPattern(CHECKOUTATTRIBUTES_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(CHECKOUTATTRIBUTEVALUES_PATTERN_KEY);
             }
-            return checkoutAttribute;
         }
 
         /// <summary>
         /// Updates the checkout attribute
         /// </summary>
-        /// <param name="checkoutAttributeId">Checkout attribute identifier</param>
-        /// <param name="name">Name</param>
-        /// <param name="textPrompt">Text prompt</param>
-        /// <param name="isRequired">Value indicating whether the entity is required</param>
-        /// <param name="shippableProductRequired">Value indicating whether shippable products are required in order to display this attribute</param>
-        /// <param name="isTaxExempt">Value indicating whether the attribute is marked as tax exempt</param>
-        /// <param name="taxCategoryId">Tax category identifier</param>
-        /// <param name="attributeControlTypeId">Attribute control type identifier</param>
+        /// <param name="checkoutAttribute">Checkout attribute</param>
         /// <param name="displayOrder">Display order</param>
-        /// <returns>Checkout attribute</returns>
-        public static CheckoutAttribute UpdateCheckoutAttribute(int checkoutAttributeId,
-            string name, string textPrompt, bool isRequired, bool shippableProductRequired,
-            bool isTaxExempt, int taxCategoryId, int attributeControlTypeId,
-            int displayOrder)
+        public static void UpdateCheckoutAttribute(CheckoutAttribute checkoutAttribute)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 100);
-            textPrompt = CommonHelper.EnsureMaximumLength(textPrompt, 300);
-
-            var checkoutAttribute = GetCheckoutAttributeById(checkoutAttributeId);
             if (checkoutAttribute == null)
-                return null;
+                throw new ArgumentNullException("checkoutAttribute");
+
+            checkoutAttribute.Name = CommonHelper.EnsureNotNull(checkoutAttribute.Name);
+            checkoutAttribute.Name = CommonHelper.EnsureMaximumLength(checkoutAttribute.Name, 100);
+            checkoutAttribute.TextPrompt = CommonHelper.EnsureNotNull(checkoutAttribute.TextPrompt);
+            checkoutAttribute.TextPrompt = CommonHelper.EnsureMaximumLength(checkoutAttribute.TextPrompt, 300);
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(checkoutAttribute))
                 context.CheckoutAttributes.Attach(checkoutAttribute);
 
-            checkoutAttribute.Name = name;
-            checkoutAttribute.TextPrompt = textPrompt;
-            checkoutAttribute.IsRequired = isRequired;
-            checkoutAttribute.ShippableProductRequired = shippableProductRequired;
-            checkoutAttribute.IsTaxExempt = isTaxExempt;
-            checkoutAttribute.TaxCategoryId = taxCategoryId;
-            checkoutAttribute.AttributeControlTypeId = attributeControlTypeId;
-            checkoutAttribute.DisplayOrder = displayOrder;
             context.SaveChanges();
 
             if (CheckoutAttributeManager.CacheEnabled)
@@ -212,8 +177,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                 NopRequestCache.RemoveByPattern(CHECKOUTATTRIBUTES_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(CHECKOUTATTRIBUTEVALUES_PATTERN_KEY);
             }
-
-            return checkoutAttribute;
         }
 
         /// <summary>
@@ -276,24 +239,18 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         /// <summary>
         /// Inserts a localized checkout attribute
         /// </summary>
-        /// <param name="checkoutAttributeId">Checkout attribute identifier</param>
-        /// <param name="languageId">Language identifier</param>
-        /// <param name="name">Name text</param>
-        /// <param name="textPrompt">Text prompt</param>
-        /// <returns>Checkout attribute content</returns>
-        public static CheckoutAttributeLocalized InsertCheckoutAttributeLocalized(int checkoutAttributeId,
-            int languageId, string name, string textPrompt)
+        /// <param name="checkoutAttributeLocalized">Checkout attribute content</param>
+        public static void InsertCheckoutAttributeLocalized(CheckoutAttributeLocalized checkoutAttributeLocalized)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 100);
-            textPrompt = CommonHelper.EnsureMaximumLength(textPrompt, 300);
+            if (checkoutAttributeLocalized == null)
+                throw new ArgumentNullException("checkoutAttributeLocalized");
+
+            checkoutAttributeLocalized.Name = CommonHelper.EnsureNotNull(checkoutAttributeLocalized.Name);
+            checkoutAttributeLocalized.Name = CommonHelper.EnsureMaximumLength(checkoutAttributeLocalized.Name, 100);
+            checkoutAttributeLocalized.TextPrompt = CommonHelper.EnsureNotNull(checkoutAttributeLocalized.TextPrompt);
+            checkoutAttributeLocalized.TextPrompt = CommonHelper.EnsureMaximumLength(checkoutAttributeLocalized.TextPrompt, 300);
 
             var context = ObjectContextHelper.CurrentObjectContext;
-
-            var checkoutAttributeLocalized = context.CheckoutAttributeLocalized.CreateObject();
-            checkoutAttributeLocalized.CheckoutAttributeId = checkoutAttributeId;
-            checkoutAttributeLocalized.LanguageId = languageId;
-            checkoutAttributeLocalized.Name = name;
-            checkoutAttributeLocalized.TextPrompt = textPrompt;
 
             context.CheckoutAttributeLocalized.AddObject(checkoutAttributeLocalized);
             context.SaveChanges();
@@ -303,31 +260,24 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                 NopRequestCache.RemoveByPattern(CHECKOUTATTRIBUTES_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(CHECKOUTATTRIBUTEVALUES_PATTERN_KEY);
             }
-
-            return checkoutAttributeLocalized;
         }
 
         /// <summary>
         /// Update a localized checkout attribute
         /// </summary>
-        /// <param name="checkoutAttributeLocalizedId">Localized checkout attribute identifier</param>
-        /// <param name="checkoutAttributeId">Checkout attribute identifier</param>
-        /// <param name="languageId">Language identifier</param>
-        /// <param name="name">Name text</param>
-        /// <param name="textPrompt">Text prompt</param>
-        /// <returns>Checkout attribute content</returns>
-        public static CheckoutAttributeLocalized UpdateCheckoutAttributeLocalized(int checkoutAttributeLocalizedId,
-            int checkoutAttributeId, int languageId, string name, string textPrompt)
+        /// <param name="checkoutAttributeLocalized">Checkout attribute content</param>
+        public static void UpdateCheckoutAttributeLocalized(CheckoutAttributeLocalized checkoutAttributeLocalized)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 100);
-            textPrompt = CommonHelper.EnsureMaximumLength(textPrompt, 300);
-
-            var checkoutAttributeLocalized = GetCheckoutAttributeLocalizedById(checkoutAttributeLocalizedId);
             if (checkoutAttributeLocalized == null)
-                return null;
+                throw new ArgumentNullException("checkoutAttributeLocalized");
 
-            bool allFieldsAreEmpty = string.IsNullOrEmpty(name) &&
-                string.IsNullOrEmpty(textPrompt);
+            checkoutAttributeLocalized.Name = CommonHelper.EnsureNotNull(checkoutAttributeLocalized.Name);
+            checkoutAttributeLocalized.Name = CommonHelper.EnsureMaximumLength(checkoutAttributeLocalized.Name, 100);
+            checkoutAttributeLocalized.TextPrompt = CommonHelper.EnsureNotNull(checkoutAttributeLocalized.TextPrompt);
+            checkoutAttributeLocalized.TextPrompt = CommonHelper.EnsureMaximumLength(checkoutAttributeLocalized.TextPrompt, 300);
+
+            bool allFieldsAreEmpty = string.IsNullOrEmpty(checkoutAttributeLocalized.Name) &&
+                string.IsNullOrEmpty(checkoutAttributeLocalized.TextPrompt);
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(checkoutAttributeLocalized))
@@ -341,10 +291,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
             }
             else
             {
-                checkoutAttributeLocalized.CheckoutAttributeId = checkoutAttributeId;
-                checkoutAttributeLocalized.LanguageId = languageId;
-                checkoutAttributeLocalized.Name = name;
-                checkoutAttributeLocalized.TextPrompt = textPrompt;
                 context.SaveChanges();
             }
 
@@ -353,8 +299,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                 NopRequestCache.RemoveByPattern(CHECKOUTATTRIBUTES_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(CHECKOUTATTRIBUTEVALUES_PATTERN_KEY);
             }
-
-            return checkoutAttributeLocalized;
         }
         
         #endregion
@@ -445,28 +389,16 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         /// <summary>
         /// Inserts a checkout attribute value
         /// </summary>
-        /// <param name="checkoutAttributeId">The checkout attribute identifier</param>
-        /// <param name="name">The checkout attribute name</param>
-        /// <param name="priceAdjustment">The price adjustment</param>
-        /// <param name="weightAdjustment">The weight adjustment</param>
-        /// <param name="isPreSelected">The value indicating whether the value is pre-selected</param>
-        /// <param name="displayOrder">The display order</param>
-        /// <returns>Checkout attribute value</returns>
-        public static CheckoutAttributeValue InsertCheckoutAttributeValue(int checkoutAttributeId,
-            string name, decimal priceAdjustment, decimal weightAdjustment,
-            bool isPreSelected, int displayOrder)
+        /// <param name="checkoutAttributeValue">Checkout attribute value</param>
+        public static void InsertCheckoutAttributeValue(CheckoutAttributeValue checkoutAttributeValue)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 100);
+            if (checkoutAttributeValue == null)
+                throw new ArgumentNullException("checkoutAttributeValue");
+
+            checkoutAttributeValue.Name = CommonHelper.EnsureNotNull(checkoutAttributeValue.Name);
+            checkoutAttributeValue.Name = CommonHelper.EnsureMaximumLength(checkoutAttributeValue.Name, 100);
 
             var context = ObjectContextHelper.CurrentObjectContext;
-
-            var checkoutAttributeValue = context.CheckoutAttributeValues.CreateObject();
-            checkoutAttributeValue.CheckoutAttributeId = checkoutAttributeId;
-            checkoutAttributeValue.Name = name;
-            checkoutAttributeValue.PriceAdjustment = priceAdjustment;
-            checkoutAttributeValue.WeightAdjustment = weightAdjustment;
-            checkoutAttributeValue.IsPreSelected = isPreSelected;
-            checkoutAttributeValue.DisplayOrder = displayOrder;
 
             context.CheckoutAttributeValues.AddObject(checkoutAttributeValue);
             context.SaveChanges();
@@ -476,41 +408,24 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                 NopRequestCache.RemoveByPattern(CHECKOUTATTRIBUTES_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(CHECKOUTATTRIBUTEVALUES_PATTERN_KEY);
             }
-
-            return checkoutAttributeValue;
         }
 
         /// <summary>
         /// Updates the checkout attribute value
         /// </summary>
-        /// <param name="checkoutAttributeValueId">The checkout attribute value identifier</param>
-        /// <param name="checkoutAttributeId">The checkout attribute identifier</param>
-        /// <param name="name">The checkout attribute name</param>
-        /// <param name="priceAdjustment">The price adjustment</param>
-        /// <param name="weightAdjustment">The weight adjustment</param>
-        /// <param name="isPreSelected">The value indicating whether the value is pre-selected</param>
-        /// <param name="displayOrder">The display order</param>
-        /// <returns>Checkout attribute value</returns>
-        public static CheckoutAttributeValue UpdateCheckoutAttributeValue(int checkoutAttributeValueId,
-            int checkoutAttributeId, string name, decimal priceAdjustment, decimal weightAdjustment,
-            bool isPreSelected, int displayOrder)
+        /// <param name="checkoutAttributeValue">Checkout attribute value</param>
+        public static void UpdateCheckoutAttributeValue(CheckoutAttributeValue checkoutAttributeValue)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 100);
-
-            var checkoutAttributeValue = GetCheckoutAttributeValueById(checkoutAttributeValueId);
             if (checkoutAttributeValue == null)
-                return null;
+                throw new ArgumentNullException("checkoutAttributeValue");
+
+            checkoutAttributeValue.Name = CommonHelper.EnsureNotNull(checkoutAttributeValue.Name);
+            checkoutAttributeValue.Name = CommonHelper.EnsureMaximumLength(checkoutAttributeValue.Name, 100);
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(checkoutAttributeValue))
                 context.CheckoutAttributeValues.Attach(checkoutAttributeValue);
 
-            checkoutAttributeValue.CheckoutAttributeId = checkoutAttributeId;
-            checkoutAttributeValue.Name = name;
-            checkoutAttributeValue.PriceAdjustment = priceAdjustment;
-            checkoutAttributeValue.WeightAdjustment = weightAdjustment;
-            checkoutAttributeValue.IsPreSelected = isPreSelected;
-            checkoutAttributeValue.DisplayOrder = displayOrder;
             context.SaveChanges();
 
             if (CheckoutAttributeManager.CacheEnabled)
@@ -518,8 +433,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                 NopRequestCache.RemoveByPattern(CHECKOUTATTRIBUTES_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(CHECKOUTATTRIBUTEVALUES_PATTERN_KEY);
             }
-
-            return checkoutAttributeValue;
         }
 
         /// <summary>
@@ -582,22 +495,17 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         /// <summary>
         /// Inserts a localized checkout attribute value
         /// </summary>
-        /// <param name="checkoutAttributeValueId">Checkout attribute value identifier</param>
-        /// <param name="languageId">Language identifier</param>
-        /// <param name="name">Name text</param>
-        /// <returns>Localized checkout attribute value</returns>
-        public static CheckoutAttributeValueLocalized InsertCheckoutAttributeValueLocalized(int checkoutAttributeValueId,
-            int languageId, string name)
+        /// <param name="checkoutAttributeValueLocalized">Localized checkout attribute value</param>
+        public static void InsertCheckoutAttributeValueLocalized(CheckoutAttributeValueLocalized checkoutAttributeValueLocalized)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 100);
+            if (checkoutAttributeValueLocalized == null)
+                throw new ArgumentNullException("checkoutAttributeValueLocalized");
+
+            checkoutAttributeValueLocalized.Name = CommonHelper.EnsureNotNull(checkoutAttributeValueLocalized.Name);
+            checkoutAttributeValueLocalized.Name = CommonHelper.EnsureMaximumLength(checkoutAttributeValueLocalized.Name, 100);
 
             var context = ObjectContextHelper.CurrentObjectContext;
-
-            var checkoutAttributeValueLocalized = context.CheckoutAttributeValueLocalized.CreateObject();
-            checkoutAttributeValueLocalized.CheckoutAttributeValueId = checkoutAttributeValueId;
-            checkoutAttributeValueLocalized.LanguageId = languageId;
-            checkoutAttributeValueLocalized.Name = name;
-
+            
             context.CheckoutAttributeValueLocalized.AddObject(checkoutAttributeValueLocalized);
             context.SaveChanges();
 
@@ -606,28 +514,21 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                 NopRequestCache.RemoveByPattern(CHECKOUTATTRIBUTES_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(CHECKOUTATTRIBUTEVALUES_PATTERN_KEY);
             }
-
-            return checkoutAttributeValueLocalized;
         }
 
         /// <summary>
         /// Update a localized checkout attribute value
         /// </summary>
-        /// <param name="checkoutAttributeValueLocalizedId">Localized checkout attribute value identifier</param>
-        /// <param name="checkoutAttributeValueId">Checkout attribute value identifier</param>
-        /// <param name="languageId">Language identifier</param>
-        /// <param name="name">Name text</param>
-        /// <returns>Localized checkout attribute value</returns>
-        public static CheckoutAttributeValueLocalized UpdateCheckoutAttributeValueLocalized(int checkoutAttributeValueLocalizedId,
-            int checkoutAttributeValueId, int languageId, string name)
+        /// <param name="checkoutAttributeValueLocalized">Localized checkout attribute value</param>
+        public static void UpdateCheckoutAttributeValueLocalized(CheckoutAttributeValueLocalized checkoutAttributeValueLocalized)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 100);
-
-            var checkoutAttributeValueLocalized = GetCheckoutAttributeValueLocalizedById(checkoutAttributeValueLocalizedId);
             if (checkoutAttributeValueLocalized == null)
-                return null;
+                throw new ArgumentNullException("checkoutAttributeValueLocalized");
 
-            bool allFieldsAreEmpty = string.IsNullOrEmpty(name);
+            checkoutAttributeValueLocalized.Name = CommonHelper.EnsureNotNull(checkoutAttributeValueLocalized.Name);
+            checkoutAttributeValueLocalized.Name = CommonHelper.EnsureMaximumLength(checkoutAttributeValueLocalized.Name, 100);
+
+            bool allFieldsAreEmpty = string.IsNullOrEmpty(checkoutAttributeValueLocalized.Name);
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(checkoutAttributeValueLocalized))
@@ -641,9 +542,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
             }
             else
             {
-                checkoutAttributeValueLocalized.CheckoutAttributeValueId = checkoutAttributeValueId;
-                checkoutAttributeValueLocalized.LanguageId = languageId;
-                checkoutAttributeValueLocalized.Name = name;
                 context.SaveChanges();
             }
 
@@ -652,8 +550,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                 NopRequestCache.RemoveByPattern(CHECKOUTATTRIBUTES_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(CHECKOUTATTRIBUTEVALUES_PATTERN_KEY);
             }
-
-            return checkoutAttributeValueLocalized;
         }
         
         #endregion

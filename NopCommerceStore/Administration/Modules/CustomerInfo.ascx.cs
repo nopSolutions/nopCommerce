@@ -257,17 +257,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                 customer = CustomerManager.SetEmail(customer.CustomerId, email);
 
-                customer = CustomerManager.UpdateCustomer(customer.CustomerId, customer.CustomerGuid,
-                    customer.Email, customer.Username, customer.PasswordHash,
-                    customer.SaltKey, affiliateId,
-                    customer.BillingAddressId, customer.ShippingAddressId,
-                    customer.LastPaymentMethodId, customer.LastAppliedCouponCode,
-                    customer.GiftCardCouponCodes, customer.CheckoutAttributes,
-                    customer.LanguageId, customer.CurrencyId, customer.TaxDisplayType,
-                    isTaxExempt, isAdmin, customer.IsGuest, isForumModerator,
-                    customer.TotalForumPosts, customer.Signature, adminComment, active,
-                    customer.Deleted, customer.RegistrationDate,
-                    customer.TimeZoneId, customer.AvatarId, customer.DateOfBirth);
+                customer.AffiliateId = affiliateId;
+                customer.IsTaxExempt = isTaxExempt;
+                customer.IsAdmin = isAdmin;
+                customer.IsForumModerator = isForumModerator;
+                customer.AdminComment = adminComment;
+                customer.Active = active;
+                CustomerManager.UpdateCustomer(customer);
             }
             else
             {

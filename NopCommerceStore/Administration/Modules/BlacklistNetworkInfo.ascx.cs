@@ -81,13 +81,26 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             //if ip network is not null update
             if (ipNetwork != null)
             {
-                ipNetwork = IpBlacklistManager.UpdateBannedIpNetwork(this.BannedIpNetworkId, rangeItems[0], rangeItems[1],
-                    txtComment.Text, txtIpException.Text, ipNetwork.CreatedOn, nowDT);
+                ipNetwork.StartAddress = rangeItems[0];
+                ipNetwork.EndAddress = rangeItems[1];
+                ipNetwork.Comment = txtComment.Text;
+                ipNetwork.IpException = txtIpException.Text;
+                ipNetwork.UpdatedOn = nowDT;
+
+               IpBlacklistManager.UpdateBannedIpNetwork(ipNetwork);
             }
             else //insert
             {
-                ipNetwork = IpBlacklistManager.InsertBannedIpNetwork(rangeItems[0], rangeItems[1],
-                    txtComment.Text, txtIpException.Text, nowDT, nowDT);
+                ipNetwork = new BannedIpNetwork()
+                {
+                    StartAddress = rangeItems[0],
+                    EndAddress = rangeItems[1],
+                    Comment = txtComment.Text,
+                    IpException = txtIpException.Text,
+                    CreatedOn = nowDT,
+                    UpdatedOn = nowDT
+                };
+                IpBlacklistManager.InsertBannedIpNetwork(ipNetwork);
             }
 
             return ipNetwork;

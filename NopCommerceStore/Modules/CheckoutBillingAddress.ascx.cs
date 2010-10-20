@@ -92,11 +92,12 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 }
                 else
                 {
-                    billingAddress = CustomerManager.InsertAddress(NopContext.Current.User.CustomerId, true, billingAddress.FirstName,
-                        billingAddress.LastName, billingAddress.PhoneNumber, billingAddress.Email,
-                        billingAddress.FaxNumber, billingAddress.Company, billingAddress.Address1, billingAddress.Address2,
-                        billingAddress.City, billingAddress.StateProvinceId, billingAddress.ZipPostalCode,
-                        billingAddress.CountryId, DateTime.UtcNow, DateTime.UtcNow);
+                    billingAddress.CustomerId = NopContext.Current.User.CustomerId;
+                    billingAddress.IsBillingAddress = true;
+                    billingAddress.CreatedOn = DateTime.UtcNow;
+                    billingAddress.UpdatedOn = DateTime.UtcNow;
+
+                    CustomerManager.InsertAddress(billingAddress);
                 }
             }
 

@@ -110,9 +110,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 {
                     int customerRoleId = int.Parse(ddlNewCustomerRole.SelectedItem.Value);
                     decimal price = txtNewPrice.Value;
-                    var crpp = ProductManager.InsertCustomerRoleProductPrice(customerRoleId,
-                        productVariant.ProductVariantId,
-                        price);
+                    var crpp = new CustomerRoleProductPrice()
+                    {
+                        CustomerRoleId = customerRoleId,
+                        ProductVariantId = productVariant.ProductVariantId,
+                        Price = price
+                    };
+                    ProductManager.InsertCustomerRoleProductPrice(crpp);
 
                     BindData();
                 }
@@ -139,9 +143,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 var crpp = ProductManager.GetCustomerRoleProductPriceById(crppId);
                 if (crpp != null)
                 {
-                    ProductManager.UpdateCustomerRoleProductPrice(crpp.CustomerRoleProductPriceId,
-                       crpp.CustomerRoleId,
-                       crpp.ProductVariantId, price);
+                    crpp.Price = price;
+                    ProductManager.UpdateCustomerRoleProductPrice(crpp);
                 }
 
                 BindData();

@@ -122,14 +122,24 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
             if (language != null)
             {
-                language = LanguageManager.UpdateLanguage(language.LanguageId, name,
-                    languageCulture, flagImageFileName, published, displayOrder);
-
+                language.Name = name;
+                language.LanguageCulture = languageCulture;
+                language.FlagImageFileName = flagImageFileName;
+                language.Published = published;
+                language.DisplayOrder = displayOrder;
+                LanguageManager.UpdateLanguage(language);
             }
             else
             {
-                language = LanguageManager.InsertLanguage(name, languageCulture,
-                    flagImageFileName, published, displayOrder);
+                language = new Language()
+                {
+                    Name = name,
+                    LanguageCulture = languageCulture,
+                    FlagImageFileName = flagImageFileName,
+                    Published = published,
+                    DisplayOrder = displayOrder
+                };
+                LanguageManager.InsertLanguage(language);
 
             }
 

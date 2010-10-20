@@ -653,6 +653,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
         /// <returns>Picture</returns>
         public static Picture InsertPicture(byte[] pictureBinary, string mimeType, bool isNew)
         {
+            mimeType = CommonHelper.EnsureNotNull(mimeType);
             mimeType = CommonHelper.EnsureMaximumLength(mimeType, 20);
 
             pictureBinary = ValidatePicture(pictureBinary, mimeType);
@@ -684,6 +685,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
         public static Picture UpdatePicture(int pictureId, byte[] pictureBinary,
             string mimeType, bool isNew)
         {
+            mimeType = CommonHelper.EnsureNotNull(mimeType);
             mimeType = CommonHelper.EnsureMaximumLength(mimeType, 20);
 
             ValidatePicture(pictureBinary, mimeType);

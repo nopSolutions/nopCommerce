@@ -130,20 +130,19 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         /// <summary>
         /// Inserts a product attribute
         /// </summary>
-        /// <param name="name">The name</param>
-        /// <param name="description">The description</param>
-        /// <returns>Product attribute </returns>
-        public static ProductAttribute InsertProductAttribute(string name, string description)
+        /// <param name="productAttribute">Product attribute</param>
+        public static void InsertProductAttribute(ProductAttribute productAttribute)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 100);
-            description = CommonHelper.EnsureMaximumLength(description, 400);
+            if (productAttribute == null)
+                throw new ArgumentNullException("productAttribute");
+
+            productAttribute.Name = CommonHelper.EnsureNotNull(productAttribute.Name);
+            productAttribute.Name = CommonHelper.EnsureMaximumLength(productAttribute.Name, 100);
+            productAttribute.Description = CommonHelper.EnsureNotNull(productAttribute.Description);
+            productAttribute.Description = CommonHelper.EnsureMaximumLength(productAttribute.Description, 400);
 
             var context = ObjectContextHelper.CurrentObjectContext;
-
-            var productAttribute = context.ProductAttributes.CreateObject();
-            productAttribute.Name = name;
-            productAttribute.Description = description;
-
+            
             context.ProductAttributes.AddObject(productAttribute);
             context.SaveChanges();
 
@@ -153,32 +152,26 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                 NopRequestCache.RemoveByPattern(PRODUCTVARIANTATTRIBUTES_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(PRODUCTVARIANTATTRIBUTEVALUES_PATTERN_KEY);
             }
-            return productAttribute;
         }
 
         /// <summary>
         /// Updates the product attribute
         /// </summary>
-        /// <param name="productAttributeId">Product attribute identifier</param>
-        /// <param name="name">The name</param>
-        /// <param name="description">The description</param>
-        /// <returns>Product attribute </returns>
-        public static ProductAttribute UpdateProductAttribute(int productAttributeId,
-            string name, string description)
+        /// <param name="productAttribute">Product attribute</param>
+        public static void UpdateProductAttribute(ProductAttribute productAttribute)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 100);
-            description = CommonHelper.EnsureMaximumLength(description, 400);
-
-            var productAttribute = GetProductAttributeById(productAttributeId);
             if (productAttribute == null)
-                return null;
+                throw new ArgumentNullException("productAttribute");
+
+            productAttribute.Name = CommonHelper.EnsureNotNull(productAttribute.Name);
+            productAttribute.Name = CommonHelper.EnsureMaximumLength(productAttribute.Name, 100);
+            productAttribute.Description = CommonHelper.EnsureNotNull(productAttribute.Description);
+            productAttribute.Description = CommonHelper.EnsureMaximumLength(productAttribute.Description, 400);
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(productAttribute))
                 context.ProductAttributes.Attach(productAttribute);
 
-            productAttribute.Name = name;
-            productAttribute.Description = description;
             context.SaveChanges();
 
             if (ProductAttributeManager.CacheEnabled)
@@ -187,8 +180,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                 NopRequestCache.RemoveByPattern(PRODUCTVARIANTATTRIBUTES_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(PRODUCTVARIANTATTRIBUTEVALUES_PATTERN_KEY);
             }
-
-            return productAttribute;
         }
 
         /// <summary>
@@ -251,25 +242,19 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         /// <summary>
         /// Inserts a localized product attribute
         /// </summary>
-        /// <param name="productAttributeId">Product attribute identifier</param>
-        /// <param name="languageId">Language identifier</param>
-        /// <param name="name">Name text</param>
-        /// <param name="description">Description text</param>
-        /// <returns>Product attribute content</returns>
-        public static ProductAttributeLocalized InsertProductAttributeLocalized(int productAttributeId,
-            int languageId, string name, string description)
+        /// <param name="productAttributeLocalized">Localized product attribute</param>
+        public static void InsertProductAttributeLocalized(ProductAttributeLocalized productAttributeLocalized)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 100);
-            description = CommonHelper.EnsureMaximumLength(description, 400);
+            if (productAttributeLocalized == null)
+                throw new ArgumentNullException("productAttributeLocalized");
+
+            productAttributeLocalized.Name = CommonHelper.EnsureNotNull(productAttributeLocalized.Name);
+            productAttributeLocalized.Name = CommonHelper.EnsureMaximumLength(productAttributeLocalized.Name, 100);
+            productAttributeLocalized.Description = CommonHelper.EnsureNotNull(productAttributeLocalized.Description);
+            productAttributeLocalized.Description = CommonHelper.EnsureMaximumLength(productAttributeLocalized.Description, 400);
 
             var context = ObjectContextHelper.CurrentObjectContext;
-
-            var productAttributeLocalized = context.ProductAttributeLocalized.CreateObject();
-            productAttributeLocalized.ProductAttributeId = productAttributeId;
-            productAttributeLocalized.LanguageId = languageId;
-            productAttributeLocalized.Name = name;
-            productAttributeLocalized.Description = description;
-
+            
             context.ProductAttributeLocalized.AddObject(productAttributeLocalized);
             context.SaveChanges();
 
@@ -279,31 +264,24 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                 NopRequestCache.RemoveByPattern(PRODUCTVARIANTATTRIBUTES_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(PRODUCTVARIANTATTRIBUTEVALUES_PATTERN_KEY);
             }
-
-            return productAttributeLocalized;
         }
 
         /// <summary>
         /// Update a localized product attribute
         /// </summary>
-        /// <param name="productAttributeLocalizedId">Localized product attribute identifier</param>
-        /// <param name="productAttributeId">Product attribute identifier</param>
-        /// <param name="languageId">Language identifier</param>
-        /// <param name="name">Name text</param>
-        /// <param name="description">Description text</param>
-        /// <returns>Product attribute content</returns>
-        public static ProductAttributeLocalized UpdateProductAttributeLocalized(int productAttributeLocalizedId,
-            int productAttributeId, int languageId, string name, string description)
+        /// <param name="productAttributeLocalized">Localized product attribute</param>
+        public static void UpdateProductAttributeLocalized(ProductAttributeLocalized productAttributeLocalized)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 100);
-            description = CommonHelper.EnsureMaximumLength(description, 400);
-
-            var productAttributeLocalized = GetProductAttributeLocalizedById(productAttributeLocalizedId);
             if (productAttributeLocalized == null)
-                return null;
+                throw new ArgumentNullException("productAttributeLocalized");
 
-            bool allFieldsAreEmpty = string.IsNullOrEmpty(name) &&
-                string.IsNullOrEmpty(description);
+            productAttributeLocalized.Name = CommonHelper.EnsureNotNull(productAttributeLocalized.Name);
+            productAttributeLocalized.Name = CommonHelper.EnsureMaximumLength(productAttributeLocalized.Name, 100);
+            productAttributeLocalized.Description = CommonHelper.EnsureNotNull(productAttributeLocalized.Description);
+            productAttributeLocalized.Description = CommonHelper.EnsureMaximumLength(productAttributeLocalized.Description, 400);
+
+            bool allFieldsAreEmpty = string.IsNullOrEmpty(productAttributeLocalized.Name) &&
+                string.IsNullOrEmpty(productAttributeLocalized.Description);
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(productAttributeLocalized))
@@ -317,10 +295,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
             }
             else
             {
-                productAttributeLocalized.ProductAttributeId = productAttributeId;
-                productAttributeLocalized.LanguageId = languageId;
-                productAttributeLocalized.Name = name;
-                productAttributeLocalized.Description = description;
                 context.SaveChanges();
             }
 
@@ -330,8 +304,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                 NopRequestCache.RemoveByPattern(PRODUCTVARIANTATTRIBUTES_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(PRODUCTVARIANTATTRIBUTEVALUES_PATTERN_KEY);
             }
-
-            return productAttributeLocalized;
         }
         
         #endregion
@@ -423,28 +395,17 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         /// <summary>
         /// Inserts a product variant attribute mapping
         /// </summary>
-        /// <param name="productVariantId">The product variant identifier</param>
-        /// <param name="productAttributeId">The product attribute identifier</param>
-        /// <param name="textPrompt">The text prompt</param>
-        /// <param name="isRequired">The value indicating whether the entity is required</param>
-        /// <param name="attributeControlType">The attribute control type</param>
-        /// <param name="displayOrder">The display order</param>
-        /// <returns>Product variant attribute mapping</returns>
-        public static ProductVariantAttribute InsertProductVariantAttribute(int productVariantId,
-            int productAttributeId, string textPrompt, bool isRequired, AttributeControlTypeEnum attributeControlType, int displayOrder)
+        /// <param name="productVariantAttribute">The product variant attribute mapping</param>
+        public static void InsertProductVariantAttribute(ProductVariantAttribute productVariantAttribute)
         {
-            textPrompt = CommonHelper.EnsureMaximumLength(textPrompt, 200);
+            if (productVariantAttribute == null)
+                throw new ArgumentNullException("productVariantAttribute");
+
+            productVariantAttribute.TextPrompt = CommonHelper.EnsureNotNull(productVariantAttribute.TextPrompt);
+            productVariantAttribute.TextPrompt = CommonHelper.EnsureMaximumLength(productVariantAttribute.TextPrompt, 200);
 
             var context = ObjectContextHelper.CurrentObjectContext;
-
-            var productVariantAttribute = context.ProductVariantAttributes.CreateObject();
-            productVariantAttribute.ProductVariantId = productVariantId;
-            productVariantAttribute.ProductAttributeId = productAttributeId;
-            productVariantAttribute.TextPrompt = textPrompt;
-            productVariantAttribute.IsRequired = isRequired;
-            productVariantAttribute.AttributeControlTypeId = (int)attributeControlType;
-            productVariantAttribute.DisplayOrder = displayOrder;
-
+            
             context.ProductVariantAttributes.AddObject(productVariantAttribute);
             context.SaveChanges();
 
@@ -454,41 +415,24 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                 NopRequestCache.RemoveByPattern(PRODUCTVARIANTATTRIBUTES_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(PRODUCTVARIANTATTRIBUTEVALUES_PATTERN_KEY);
             }
-
-            return productVariantAttribute;
         }
 
         /// <summary>
         /// Updates the product variant attribute mapping
         /// </summary>
-        /// <param name="productVariantAttributeId">The product variant attribute mapping identifier</param>
-        /// <param name="productVariantId">The product variant identifier</param>
-        /// <param name="productAttributeId">The product attribute identifier</param>
-        /// <param name="textPrompt">The text prompt</param>
-        /// <param name="isRequired">The value indicating whether the entity is required</param>
-        /// <param name="attributeControlType">The attribute control type</param>
-        /// <param name="displayOrder">The display order</param>
-        /// <returns>Product variant attribute mapping</returns>
-        public static ProductVariantAttribute UpdateProductVariantAttribute(int productVariantAttributeId, 
-            int productVariantId, int productAttributeId, string textPrompt, 
-            bool isRequired, AttributeControlTypeEnum attributeControlType, int displayOrder)
+        /// <param name="productVariantAttribute">The product variant attribute mapping</param>
+        public static void UpdateProductVariantAttribute(ProductVariantAttribute productVariantAttribute)
         {
-            textPrompt = CommonHelper.EnsureMaximumLength(textPrompt, 200);
-
-            var productVariantAttribute = GetProductVariantAttributeById(productVariantAttributeId);
             if (productVariantAttribute == null)
-                return null;
+                throw new ArgumentNullException("productVariantAttribute");
+
+            productVariantAttribute.TextPrompt = CommonHelper.EnsureNotNull(productVariantAttribute.TextPrompt);
+            productVariantAttribute.TextPrompt = CommonHelper.EnsureMaximumLength(productVariantAttribute.TextPrompt, 200);
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(productVariantAttribute))
                 context.ProductVariantAttributes.Attach(productVariantAttribute);
 
-            productVariantAttribute.ProductVariantId = productVariantId;
-            productVariantAttribute.ProductAttributeId = productAttributeId;
-            productVariantAttribute.TextPrompt = textPrompt;
-            productVariantAttribute.IsRequired = isRequired;
-            productVariantAttribute.AttributeControlTypeId = (int)attributeControlType;
-            productVariantAttribute.DisplayOrder = displayOrder;
             context.SaveChanges();
 
             if (ProductAttributeManager.CacheEnabled)
@@ -497,8 +441,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                 NopRequestCache.RemoveByPattern(PRODUCTVARIANTATTRIBUTES_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(PRODUCTVARIANTATTRIBUTEVALUES_PATTERN_KEY);
             }
-
-            return productVariantAttribute;
         }
 
         #endregion
@@ -590,28 +532,16 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         /// <summary>
         /// Inserts a product variant attribute value
         /// </summary>
-        /// <param name="productVariantAttributeId">The product variant attribute mapping identifier</param>
-        /// <param name="name">The product variant attribute name</param>
-        /// <param name="priceAdjustment">The price adjustment</param>
-        /// <param name="weightAdjustment">The weight adjustment</param>
-        /// <param name="isPreSelected">The value indicating whether the value is pre-selected</param>
-        /// <param name="displayOrder">The display order</param>
-        /// <returns>Product variant attribute value</returns>
-        public static ProductVariantAttributeValue InsertProductVariantAttributeValue(int productVariantAttributeId,
-            string name, decimal priceAdjustment, decimal weightAdjustment,
-            bool isPreSelected, int displayOrder)
+        /// <param name="productVariantAttributeValue">The product variant attribute value</param>
+        public static void InsertProductVariantAttributeValue(ProductVariantAttributeValue productVariantAttributeValue)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 100);
+            if (productVariantAttributeValue == null)
+                throw new ArgumentNullException("productVariantAttributeValue");
+
+            productVariantAttributeValue.Name = CommonHelper.EnsureNotNull(productVariantAttributeValue.Name);
+            productVariantAttributeValue.Name = CommonHelper.EnsureMaximumLength(productVariantAttributeValue.Name, 100);
 
             var context = ObjectContextHelper.CurrentObjectContext;
-
-            var productVariantAttributeValue = context.ProductVariantAttributeValues.CreateObject();
-            productVariantAttributeValue.ProductVariantAttributeId = productVariantAttributeId;
-            productVariantAttributeValue.Name = name;
-            productVariantAttributeValue.PriceAdjustment = priceAdjustment;
-            productVariantAttributeValue.WeightAdjustment = weightAdjustment;
-            productVariantAttributeValue.IsPreSelected = isPreSelected;
-            productVariantAttributeValue.DisplayOrder = displayOrder;
 
             context.ProductVariantAttributeValues.AddObject(productVariantAttributeValue);
             context.SaveChanges();
@@ -622,42 +552,24 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                 NopRequestCache.RemoveByPattern(PRODUCTVARIANTATTRIBUTES_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(PRODUCTVARIANTATTRIBUTEVALUES_PATTERN_KEY);
             }
-
-            return productVariantAttributeValue;
         }
 
         /// <summary>
         /// Updates the product variant attribute value
         /// </summary>
-        /// <param name="productVariantAttributeValueId">The product variant attribute value identifier</param>
-        /// <param name="productVariantAttributeId">The product variant attribute mapping identifier</param>
-        /// <param name="name">The product variant attribute name</param>
-        /// <param name="priceAdjustment">The price adjustment</param>
-        /// <param name="weightAdjustment">The weight adjustment</param>
-        /// <param name="isPreSelected">The value indicating whether the value is pre-selected</param>
-        /// <param name="displayOrder">The display order</param>
-        /// <returns>Product variant attribute value</returns>
-        public static ProductVariantAttributeValue UpdateProductVariantAttributeValue(int productVariantAttributeValueId,
-            int productVariantAttributeId, string name,
-            decimal priceAdjustment, decimal weightAdjustment,
-            bool isPreSelected, int displayOrder)
+        /// <param name="productVariantAttributeValue">The product variant attribute value</param>
+        public static void UpdateProductVariantAttributeValue(ProductVariantAttributeValue productVariantAttributeValue)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 100);
-
-            var productVariantAttributeValue = GetProductVariantAttributeValueById(productVariantAttributeValueId);
             if (productVariantAttributeValue == null)
-                return null;
+                throw new ArgumentNullException("productVariantAttributeValue");
+
+            productVariantAttributeValue.Name = CommonHelper.EnsureNotNull(productVariantAttributeValue.Name);
+            productVariantAttributeValue.Name = CommonHelper.EnsureMaximumLength(productVariantAttributeValue.Name, 100);
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(productVariantAttributeValue))
                 context.ProductVariantAttributeValues.Attach(productVariantAttributeValue);
 
-            productVariantAttributeValue.ProductVariantAttributeId = productVariantAttributeId;
-            productVariantAttributeValue.Name = name;
-            productVariantAttributeValue.PriceAdjustment = priceAdjustment;
-            productVariantAttributeValue.WeightAdjustment = weightAdjustment;
-            productVariantAttributeValue.IsPreSelected = isPreSelected;
-            productVariantAttributeValue.DisplayOrder = displayOrder;
             context.SaveChanges();
 
             if (ProductAttributeManager.CacheEnabled)
@@ -666,8 +578,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                 NopRequestCache.RemoveByPattern(PRODUCTVARIANTATTRIBUTES_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(PRODUCTVARIANTATTRIBUTEVALUES_PATTERN_KEY);
             }
-
-            return productVariantAttributeValue;
         }
 
         /// <summary>
@@ -730,22 +640,17 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         /// <summary>
         /// Inserts a localized product variant attribute value
         /// </summary>
-        /// <param name="productVariantAttributeValueId">Product variant attribute value identifier</param>
-        /// <param name="languageId">Language identifier</param>
-        /// <param name="name">Name text</param>
-        /// <returns>Localized product variant attribute value</returns>
-        public static ProductVariantAttributeValueLocalized InsertProductVariantAttributeValueLocalized(int productVariantAttributeValueId,
-            int languageId, string name)
+        /// <param name="productVariantAttributeValueLocalized">Localized product variant attribute value</param>
+        public static void InsertProductVariantAttributeValueLocalized(ProductVariantAttributeValueLocalized productVariantAttributeValueLocalized)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 100);
+            if (productVariantAttributeValueLocalized == null)
+                throw new ArgumentNullException("productVariantAttributeValueLocalized");
+
+            productVariantAttributeValueLocalized.Name = CommonHelper.EnsureNotNull(productVariantAttributeValueLocalized.Name);
+            productVariantAttributeValueLocalized.Name = CommonHelper.EnsureMaximumLength(productVariantAttributeValueLocalized.Name, 100);
 
             var context = ObjectContextHelper.CurrentObjectContext;
-
-            var productVariantAttributeValueLocalized = context.ProductVariantAttributeValueLocalized.CreateObject();
-            productVariantAttributeValueLocalized.ProductVariantAttributeValueId = productVariantAttributeValueId;
-            productVariantAttributeValueLocalized.LanguageId = languageId;
-            productVariantAttributeValueLocalized.Name = name;
-
+            
             context.ProductVariantAttributeValueLocalized.AddObject(productVariantAttributeValueLocalized);
             context.SaveChanges();
             
@@ -755,28 +660,21 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                 NopRequestCache.RemoveByPattern(PRODUCTVARIANTATTRIBUTES_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(PRODUCTVARIANTATTRIBUTEVALUES_PATTERN_KEY);
             }
-
-            return productVariantAttributeValueLocalized;
         }
 
         /// <summary>
         /// Update a localized product variant attribute value
         /// </summary>
-        /// <param name="productVariantAttributeValueLocalizedId">Localized product variant attribute value identifier</param>
-        /// <param name="productVariantAttributeValueId">Product variant attribute value identifier</param>
-        /// <param name="languageId">Language identifier</param>
-        /// <param name="name">Name text</param>
-        /// <returns>Localized product variant attribute value</returns>
-        public static ProductVariantAttributeValueLocalized UpdateProductVariantAttributeValueLocalized(int productVariantAttributeValueLocalizedId,
-            int productVariantAttributeValueId, int languageId, string name)
+        /// <param name="productVariantAttributeValueLocalized">Localized product variant attribute value</param>
+        public static void UpdateProductVariantAttributeValueLocalized(ProductVariantAttributeValueLocalized productVariantAttributeValueLocalized)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 100);
-
-            var productVariantAttributeValueLocalized = GetProductVariantAttributeValueLocalizedById(productVariantAttributeValueLocalizedId);
             if (productVariantAttributeValueLocalized == null)
-                return null;
+                throw new ArgumentNullException("productVariantAttributeValueLocalized");
 
-            bool allFieldsAreEmpty = string.IsNullOrEmpty(name);
+            productVariantAttributeValueLocalized.Name = CommonHelper.EnsureNotNull(productVariantAttributeValueLocalized.Name);
+            productVariantAttributeValueLocalized.Name = CommonHelper.EnsureMaximumLength(productVariantAttributeValueLocalized.Name, 100);
+
+            bool allFieldsAreEmpty = string.IsNullOrEmpty(productVariantAttributeValueLocalized.Name);
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(productVariantAttributeValueLocalized))
@@ -790,9 +688,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
             }
             else
             {
-                productVariantAttributeValueLocalized.ProductVariantAttributeValueId = productVariantAttributeValueId;
-                productVariantAttributeValueLocalized.LanguageId = languageId;
-                productVariantAttributeValueLocalized.Name = name;
                 context.SaveChanges();
             }
 
@@ -802,8 +697,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                 NopRequestCache.RemoveByPattern(PRODUCTVARIANTATTRIBUTES_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(PRODUCTVARIANTATTRIBUTEVALUES_PATTERN_KEY);
             }
-
-            return productVariantAttributeValueLocalized;
         }
         
         #endregion
@@ -867,60 +760,32 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         /// <summary>
         /// Inserts a product variant attribute combination
         /// </summary>
-        /// <param name="productVariantId">The product variant identifier</param>
-        /// <param name="attributesXml">The attributes</param>
-        /// <param name="stockQuantity">The stock quantity</param>
-        /// <param name="allowOutOfStockOrders">The value indicating whether to allow orders when out of stock</param>
-        /// <returns>Product variant attribute combination</returns>
-        public static ProductVariantAttributeCombination InsertProductVariantAttributeCombination(int productVariantId,
-            string attributesXml,
-            int stockQuantity,
-            bool allowOutOfStockOrders)
+        /// <param name="combination">Product variant attribute combination</param>
+        public static void InsertProductVariantAttributeCombination(ProductVariantAttributeCombination combination)
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
+            if (combination == null)
+                throw new ArgumentNullException("combination");
 
-            var combination = context.ProductVariantAttributeCombinations.CreateObject();
-            combination.ProductVariantId = productVariantId;
-            combination.AttributesXml = attributesXml;
-            combination.StockQuantity = stockQuantity;
-            combination.AllowOutOfStockOrders = allowOutOfStockOrders;
+            var context = ObjectContextHelper.CurrentObjectContext;
 
             context.ProductVariantAttributeCombinations.AddObject(combination);
             context.SaveChanges();
-
-            return combination;
         }
 
         /// <summary>
         /// Updates a product variant attribute combination
         /// </summary>
-        /// <param name="productVariantAttributeCombinationId">Product variant attribute combination identifier</param>
-        /// <param name="productVariantId">The product variant identifier</param>
-        /// <param name="attributesXml">The attributes</param>
-        /// <param name="stockQuantity">The stock quantity</param>
-        /// <param name="allowOutOfStockOrders">The value indicating whether to allow orders when out of stock</param>
-        /// <returns>Product variant attribute combination</returns>
-        public static ProductVariantAttributeCombination UpdateProductVariantAttributeCombination(int productVariantAttributeCombinationId,
-            int productVariantId,
-            string attributesXml,
-            int stockQuantity,
-            bool allowOutOfStockOrders)
+        /// <param name="productVariantAttributeCombination">Product variant attribute combination</param>
+        public static void UpdateProductVariantAttributeCombination(ProductVariantAttributeCombination combination)
         {
-            var combination = GetProductVariantAttributeCombinationById(productVariantAttributeCombinationId);
             if (combination == null)
-                return null;
+                throw new ArgumentNullException("combination");
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(combination))
                 context.ProductVariantAttributeCombinations.Attach(combination);
 
-            combination.ProductVariantId = productVariantId;
-            combination.AttributesXml = attributesXml;
-            combination.StockQuantity = stockQuantity;
-            combination.AllowOutOfStockOrders = allowOutOfStockOrders;
             context.SaveChanges();
-
-            return combination;
         }
 
         /// <summary>

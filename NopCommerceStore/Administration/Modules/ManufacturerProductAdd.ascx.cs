@@ -142,7 +142,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         {
                             if (existingProductManufacturers.FindProductManufacturer(productId, this.ManufacturerId) == null)
                             {
-                                ManufacturerManager.InsertProductManufacturer(productId, this.ManufacturerId, false, displayOrder);
+                                var pm = new ProductManufacturer()
+                                {
+                                    ProductId = productId,
+                                    ManufacturerId = this.ManufacturerId,
+                                    IsFeaturedProduct = false,
+                                    DisplayOrder = displayOrder
+                                };
+                                ManufacturerManager.InsertProductManufacturer(pm);
                             }
                         }
                     }

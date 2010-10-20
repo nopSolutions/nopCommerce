@@ -81,77 +81,65 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
             QBEntity qbEntity = GetQBEntityByNopId(entityType, nopEntityId);
             if (qbEntity == null)
             {
-                qbEntity = CreateQBEntity(String.Empty, entityType, nopEntityId, SynStateEnum.Requested, String.Empty);
+                qbEntity = new QBEntity()
+                {
+                    QBEntityId = String.Empty,
+                    EntityTypeId = (int)entityType,
+                    NopEntityId = nopEntityId,
+                    SynStateId = (int)SynStateEnum.Requested,
+                    SeqNum = String.Empty,
+                    CreatedOn = DateTime.UtcNow,
+                    UpdatedOn = DateTime.UtcNow
+                };
+                CreateQBEntity(qbEntity);
             }
-            else if(qbEntity.SynState != SynStateEnum.Requested)
+            else if (qbEntity.SynState != SynStateEnum.Requested)
             {
-                qbEntity = UpdateQBEntity(qbEntity.EntityId, qbEntity.QBEntityId, qbEntity.EntityType, qbEntity.NopEntityId, SynStateEnum.Requested, qbEntity.SeqNum);
+                qbEntity.SynStateId = (int)SynStateEnum.Requested;
+                qbEntity.UpdatedOn = DateTime.UtcNow;
+                UpdateQBEntity(qbEntity);
             }
         }
 
         /// <summary>
         /// Creates a new QBEntity
         /// </summary>
-        /// <param name="qbEntityId">QBEntity ID</param>
-        /// <param name="entityType">Entity type</param>
-        /// <param name="nopEntityId">nopCommerce entity ID</param>
-        /// <param name="synState">Synchronization state</param>
-        /// <param name="seqNum">Edit sequence number</param>
-        /// <returns>QBEntity</returns>
-        public static QBEntity CreateQBEntity(string qbEntityId, EntityTypeEnum entityType, int nopEntityId, SynStateEnum synState, string seqNum)
+        /// <param name="entity">QBEntity</param>
+        public static void CreateQBEntity(QBEntity entity)
         {
+            if (entity == null)
+                throw new ArgumentNullException("entity");
+
+            entity.QBEntityId = CommonHelper.EnsureNotNull(entity.QBEntityId);
+            entity.QBEntityId = CommonHelper.EnsureMaximumLength(entity.QBEntityId, 50);
+            entity.SeqNum = CommonHelper.EnsureNotNull(entity.SeqNum);
+            entity.SeqNum = CommonHelper.EnsureMaximumLength(entity.SeqNum, 20);
+
             NopObjectContext context = ObjectContextHelper.CurrentObjectContext;
-            QBEntity entity = context.QBEntities.CreateObject();
-
-            entity.QBEntityId = CommonHelper.EnsureMaximumLength(qbEntityId, 50);
-            entity.EntityType = entityType;
-            entity.NopEntityId = nopEntityId;
-            entity.SynState = synState;
-            entity.SeqNum = CommonHelper.EnsureMaximumLength(seqNum, 20);
-            entity.CreatedOn = DateTime.UtcNow;
-            entity.UpdatedOn = DateTime.UtcNow;
-
+            
             context.QBEntities.AddObject(entity);
             context.SaveChanges();
-
-            return entity;
         }
 
         /// <summary>
         /// Updates QBEntity
         /// </summary>
-        /// <param name="entityId">Entity ID</param>
-        /// <param name="qbEntityId">QuickBooks entity ID</param>
-        /// <param name="entityType">Entity type</param>
-        /// <param name="nopEntityId">nopCommerce entity ID</param>
-        /// <param name="synState">Synchronization state</param>
-        /// <param name="seqNum">Edit sequence number</param>
-        /// <returns>QBEntity</returns>
-        public static QBEntity UpdateQBEntity(int entityId, string qbEntityId, EntityTypeEnum entityType, int nopEntityId, SynStateEnum synState, string seqNum)
+        /// <param name="entity">QBEntity</param>
+        public static void UpdateQBEntity(QBEntity entity)
         {
-            QBEntity entity = GetQBEntityById(entityId);
             if (entity == null)
-            {
-                return null;
-            }
+                throw new ArgumentNullException("entity");
+
+            entity.QBEntityId = CommonHelper.EnsureNotNull(entity.QBEntityId);
+            entity.QBEntityId = CommonHelper.EnsureMaximumLength(entity.QBEntityId, 50);
+            entity.SeqNum = CommonHelper.EnsureNotNull(entity.SeqNum);
+            entity.SeqNum = CommonHelper.EnsureMaximumLength(entity.SeqNum, 20);
 
             NopObjectContext context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(entity))
-            {
                 context.QBEntities.Attach(entity);
-            }
-
-            entity.QBEntityId = CommonHelper.EnsureMaximumLength(qbEntityId, 50);
-            entity.EntityType = entityType;
-            entity.NopEntityId = nopEntityId;
-            entity.SynState = synState;
-            entity.SeqNum = CommonHelper.EnsureMaximumLength(seqNum, 20);
-            entity.CreatedOn = entity.CreatedOn;
-            entity.UpdatedOn = DateTime.UtcNow;
 
             context.SaveChanges();
-
-            return entity;
         }
 
         /// <summary>

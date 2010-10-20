@@ -190,7 +190,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
                 }
 
                 int statusCode = QBXMLHelper.GetStatusCode(xml);
-                switch(statusCode)
+                switch (statusCode)
                 {
                     case 0:
                     case 530:
@@ -200,7 +200,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
                     case 570:
                         string qbId = entity.QBEntityId;
                         string seqNum = entity.SeqNum;
-                        switch(QBXMLHelper.GetResponseType(xml))
+                        switch (QBXMLHelper.GetResponseType(xml))
                         {
                             case "TxnVoidRs":
                             case "TxnDelRs":
@@ -220,14 +220,22 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
                                 seqNum = QBXMLHelper.GetSeqNum(xml);
                                 break;
                         }
-                        QBManager.UpdateQBEntity(entity.EntityId, qbId, entity.EntityType, entity.NopEntityId, SynStateEnum.Success, seqNum);
+
+                        entity.QBEntityId = qbId;
+                        entity.SynStateId = (int)SynStateEnum.Success;
+                        entity.SeqNum = seqNum;
+                        entity.UpdatedOn = DateTime.UtcNow;
+                        QBManager.UpdateQBEntity(entity);
                         break;
                     case 3175:
                         LogManager.InsertLog(LogTypeEnum.CommonError, QBXMLHelper.GetStatusMessage(xml), statusCode.ToString());
                         break;
                     default:
                         LogManager.InsertLog(LogTypeEnum.CommonError, QBXMLHelper.GetStatusMessage(xml), statusCode.ToString());
-                        QBManager.UpdateQBEntity(entity.EntityId, entity.QBEntityId, entity.EntityType, entity.NopEntityId, SynStateEnum.Failed, entity.SeqNum);
+                        
+                        entity.SynStateId = (int)SynStateEnum.Failed;
+                        entity.UpdatedOn = DateTime.UtcNow;
+                        QBManager.UpdateQBEntity(entity);
                         break;
                 }
                 return 0;

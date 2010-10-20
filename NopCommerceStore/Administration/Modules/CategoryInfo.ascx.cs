@@ -129,10 +129,18 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 if (categoryPicture != null)
                     categoryPictureId = categoryPicture.PictureId;
 
-                category = CategoryManager.UpdateCategory(category.CategoryId, txtName.Text, txtDescription.Value, int.Parse(this.ddlTemplate.SelectedItem.Value),
-                     category.MetaKeywords, category.MetaDescription, category.MetaTitle, category.SEName, ParentCategory.SelectedCategoryId,
-                    categoryPictureId, category.PageSize, txtPriceRanges.Text, cbShowOnHomePage.Checked, cbPublished.Checked, category.Deleted, 
-                    txtDisplayOrder.Value, category.CreatedOn, DateTime.UtcNow);
+                category.Name = txtName.Text.Trim();
+                category.Description = txtDescription.Value;
+                category.TemplateId = int.Parse(this.ddlTemplate.SelectedItem.Value);
+                category.ParentCategoryId = ParentCategory.SelectedCategoryId;
+                category.PictureId = categoryPictureId;
+                category.PriceRanges = txtPriceRanges.Text;
+                category. ShowOnHomePage= cbShowOnHomePage.Checked;
+                category.Published = cbPublished.Checked;
+                category.DisplayOrder = txtDisplayOrder.Value;
+                category.UpdatedOn = DateTime.UtcNow;
+
+                CategoryManager.UpdateCategory(category);
             }
             else
             {
@@ -148,9 +156,24 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     categoryPictureId = categoryPicture.PictureId;
 
                 DateTime nowDT = DateTime.UtcNow;
-                category = CategoryManager.InsertCategory(txtName.Text, txtDescription.Value, int.Parse(this.ddlTemplate.SelectedItem.Value),
-                         string.Empty, string.Empty, string.Empty, string.Empty, ParentCategory.SelectedCategoryId,
-                         categoryPictureId, 10, txtPriceRanges.Text, cbShowOnHomePage.Checked, cbPublished.Checked, false, txtDisplayOrder.Value, nowDT, nowDT);
+
+                category = new Category()
+                {
+                    Name = txtName.Text.Trim(),
+                    Description = txtDescription.Value,
+                    TemplateId = int.Parse(this.ddlTemplate.SelectedItem.Value),
+                    ParentCategoryId = ParentCategory.SelectedCategoryId,
+                    PictureId = categoryPictureId,
+                    PageSize = 10,
+                    PriceRanges = txtPriceRanges.Text,
+                    ShowOnHomePage = cbShowOnHomePage.Checked,
+                    Published = cbPublished.Checked,
+                    DisplayOrder = txtDisplayOrder.Value,
+                    CreatedOn = nowDT,
+                    UpdatedOn = nowDT
+                };
+
+                CategoryManager.InsertCategory(category);
             }
 
             SaveLocalizableContent(category);
@@ -186,19 +209,26 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         if (!allFieldsAreEmpty && languageId > 0)
                         {
                             //only insert if one of the fields are filled out (avoid too many empty records in db...)
-                            content = CategoryManager.InsertCategoryLocalized(category.CategoryId,
-                                   languageId, name, description, string.Empty, string.Empty,
-                                   string.Empty, string.Empty);
+                            content = new CategoryLocalized()
+                            {
+                                CategoryId = category.CategoryId,
+                                LanguageId = languageId,
+                                Name = name,
+                                Description = description
+                            };
+
+                            CategoryManager.InsertCategoryLocalized(content);
                         }
                     }
                     else
                     {
                         if (languageId > 0)
                         {
-                            content = CategoryManager.UpdateCategoryLocalized(content.CategoryLocalizedId, content.CategoryId,
-                                languageId, name, description,
-                                content.MetaKeywords, content.MetaDescription,
-                                content.MetaTitle, content.SEName);
+                            content.LanguageId = languageId;
+                            content.Name = name;
+                            content.Description = description;
+                            
+                            CategoryManager.UpdateCategoryLocalized(content);
                         }
                     }
                 }

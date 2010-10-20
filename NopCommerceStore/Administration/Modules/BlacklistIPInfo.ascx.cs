@@ -74,12 +74,21 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             //if ip address is not null update
             if (ipAddress != null)
             {
-                ipAddress = IpBlacklistManager.UpdateBannedIpAddress(this.BannedIpAddressId, txtBannedIP.Text,
-                    txtComment.Text, ipAddress.CreatedOn, nowDT);
+                ipAddress.Address = txtBannedIP.Text;
+                ipAddress.Comment = txtComment.Text;
+                ipAddress.UpdatedOn = nowDT;
+                IpBlacklistManager.UpdateBannedIpAddress(ipAddress);
             }
             else //insert
             {
-                ipAddress = IpBlacklistManager.InsertBannedIpAddress(txtBannedIP.Text, txtComment.Text, nowDT, nowDT);
+                ipAddress = new BannedIpAddress()
+                {
+                    Address = txtBannedIP.Text,
+                    Comment = txtComment.Text,
+                    CreatedOn = nowDT,
+                    UpdatedOn = nowDT
+                };
+                IpBlacklistManager.InsertBannedIpAddress(ipAddress);
             }
 
             return ipAddress;

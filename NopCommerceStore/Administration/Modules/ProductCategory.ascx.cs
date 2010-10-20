@@ -82,9 +82,30 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     if (item.ProductCategoryId > 0 && !item.IsMapped)
                         CategoryManager.DeleteProductCategory(item.ProductCategoryId);
                     if (item.ProductCategoryId > 0 && item.IsMapped)
-                        CategoryManager.UpdateProductCategory(item.ProductCategoryId, product.ProductId, item.CategoryId, item.IsFeatured, item.DisplayOrder);
+                    {
+                        var productCategory = CategoryManager.GetProductCategoryById(item.ProductCategoryId);
+                        if (productCategory != null)
+                        {
+                            productCategory.ProductId = product.ProductId;
+                            productCategory.CategoryId = item.CategoryId;
+                            productCategory.IsFeaturedProduct = item.IsFeatured;
+                            productCategory.DisplayOrder = item.DisplayOrder;
+
+                            CategoryManager.UpdateProductCategory(productCategory);
+                        }
+                    }
                     if (item.ProductCategoryId == 0 && item.IsMapped)
-                        CategoryManager.InsertProductCategory(product.ProductId, item.CategoryId, item.IsFeatured, item.DisplayOrder);
+                    {
+                        var productCategory = new ProductCategory()
+                        {
+                            ProductId = product.ProductId,
+                            CategoryId = item.CategoryId,
+                            IsFeaturedProduct = item.IsFeatured,
+                            DisplayOrder = item.DisplayOrder
+                        };
+
+                        CategoryManager.InsertProductCategory(productCategory);
+                    }
                 }
             }
         }

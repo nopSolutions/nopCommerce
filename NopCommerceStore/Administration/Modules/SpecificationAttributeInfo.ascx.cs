@@ -64,11 +64,18 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
             if (specificationAttribute != null)
             {
-                specificationAttribute = SpecificationAttributeManager.UpdateSpecificationAttribute(specificationAttribute.SpecificationAttributeId, txtName.Text, txtDisplayOrder.Value);
+                specificationAttribute.Name = txtName.Text;
+                specificationAttribute.DisplayOrder =  txtDisplayOrder.Value;
+                SpecificationAttributeManager.UpdateSpecificationAttribute(specificationAttribute);
             }
             else
             {
-                specificationAttribute = SpecificationAttributeManager.InsertSpecificationAttribute(txtName.Text, txtDisplayOrder.Value);
+                specificationAttribute = new SpecificationAttribute()
+                {
+                    Name = txtName.Text,
+                    DisplayOrder = txtDisplayOrder.Value
+                };
+                SpecificationAttributeManager.InsertSpecificationAttribute(specificationAttribute);
             }
 
             SaveLocalizableContent(specificationAttribute);
@@ -102,16 +109,22 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         if (!allFieldsAreEmpty && languageId > 0)
                         {
                             //only insert if one of the fields are filled out (avoid too many empty records in db...)
-                            content = SpecificationAttributeManager.InsertSpecificationAttributeLocalized(specificationAttribute.SpecificationAttributeId,
-                                   languageId, name);
+                            content = new SpecificationAttributeLocalized()
+                            {
+                                SpecificationAttributeId = specificationAttribute.SpecificationAttributeId,
+                                LanguageId = languageId,
+                                Name = name
+                            };
+                            SpecificationAttributeManager.InsertSpecificationAttributeLocalized(content);
                         }
                     }
                     else
                     {
                         if (languageId > 0)
                         {
-                            content = SpecificationAttributeManager.UpdateSpecificationAttributeLocalized(content.SpecificationAttributeLocalizedId, content.SpecificationAttributeId,
-                                languageId, name);
+                            content.LanguageId = languageId;
+                            content.Name = name;
+                            SpecificationAttributeManager.UpdateSpecificationAttributeLocalized(content);
                         }
                     }
                 }

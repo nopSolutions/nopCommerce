@@ -85,11 +85,26 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 try
                 {
-                    Address address = CustomerManager.InsertAddress(this.CustomerId, this.IsBillingAddress, txtFirstName.Text, txtLastName.Text,
-                        txtPhoneNumber.Text, txtEmail.Text, txtFaxNumber.Text, txtCompany.Text,
-                        txtAddress1.Text, txtAddress2.Text, txtCity.Text,
-                        int.Parse(this.ddlStateProvince.SelectedItem.Value), txtZipPostalCode.Text,
-                        int.Parse(this.ddlCountry.SelectedItem.Value), DateTime.UtcNow, DateTime.UtcNow);
+                    Address address = new Address()
+                    {
+                        CustomerId = this.CustomerId,
+                        IsBillingAddress = this.IsBillingAddress,
+                        FirstName = txtFirstName.Text,
+                        LastName = txtLastName.Text,
+                        PhoneNumber = txtPhoneNumber.Text,
+                        Email = txtEmail.Text,
+                        FaxNumber = txtFaxNumber.Text,
+                        Company = txtCompany.Text,
+                        Address1 = txtAddress1.Text,
+                        Address2 = txtAddress2.Text,
+                        City = txtCity.Text,
+                        StateProvinceId = int.Parse(this.ddlStateProvince.SelectedItem.Value),
+                        ZipPostalCode = txtZipPostalCode.Text,
+                        CountryId = int.Parse(this.ddlCountry.SelectedItem.Value),
+                        CreatedOn = DateTime.UtcNow,
+                        UpdatedOn = DateTime.UtcNow
+                    };
+                    CustomerManager.InsertAddress(address);
 
                     Response.Redirect("AddressDetails.aspx?AddressID=" + address.AddressId.ToString());
                 }

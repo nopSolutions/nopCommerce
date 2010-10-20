@@ -130,11 +130,20 @@ namespace NopSolutions.NopCommerce.Web.Modules
                             if (opv.Order.CustomerId == NopContext.Current.User.CustomerId)
                             {
                                 DateTime dtNow = DateTime.UtcNow;
-                                var rr = OrderManager.InsertReturnRequest(opv.OrderProductVariantId,
-                                    quantity, NopContext.Current.User.CustomerId,
-                                    ddlReturnReason.SelectedValue, ddlReturnAction.SelectedValue,
-                                    txtComments.Text, string.Empty, ReturnStatusEnum.Pending,
-                                    dtNow, dtNow, true);
+                                var rr = new ReturnRequest()
+                                {
+                                    OrderProductVariantId = opv.OrderProductVariantId,
+                                    Quantity = quantity,
+                                    CustomerId = NopContext.Current.User.CustomerId,
+                                    ReasonForReturn = ddlReturnReason.SelectedValue,
+                                    RequestedAction = ddlReturnAction.SelectedValue,
+                                    CustomerComments = txtComments.Text,
+                                    StaffNotes = string.Empty,
+                                    ReturnStatusId = (int)ReturnStatusEnum.Pending,
+                                    CreatedOn = dtNow,
+                                    UpdatedOn = dtNow
+                                };
+                                OrderManager.InsertReturnRequest(rr, true);
                                 count++; 
                             }
                         }

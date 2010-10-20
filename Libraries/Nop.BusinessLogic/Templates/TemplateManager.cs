@@ -122,26 +122,18 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
         /// <summary>
         /// Inserts a category template
         /// </summary>
-        /// <param name="name">The name</param>
-        /// <param name="templatePath">The template path</param>
-        /// <param name="displayOrder">The display order</param>
-        /// <param name="createdOn">The date and time of instance creation</param>
-        /// <param name="updatedOn">The date and time of instance update</param>
-        /// <returns>A category template</returns>
-        public static CategoryTemplate InsertCategoryTemplate(string name,
-            string templatePath, int displayOrder, DateTime createdOn, DateTime updatedOn)
+        /// <param name="categoryTemplate">Category template</param>
+        public static void InsertCategoryTemplate(CategoryTemplate categoryTemplate)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 100);
-            templatePath = CommonHelper.EnsureMaximumLength(templatePath, 200);
+            if (categoryTemplate == null)
+                throw new ArgumentNullException("categoryTemplate");
+
+            categoryTemplate.Name = CommonHelper.EnsureNotNull(categoryTemplate.Name);
+            categoryTemplate.Name = CommonHelper.EnsureMaximumLength(categoryTemplate.Name, 100);
+            categoryTemplate.TemplatePath = CommonHelper.EnsureNotNull(categoryTemplate.TemplatePath);
+            categoryTemplate.TemplatePath = CommonHelper.EnsureMaximumLength(categoryTemplate.TemplatePath, 200);
 
             var context = ObjectContextHelper.CurrentObjectContext;
-
-            var categoryTemplate = context.CategoryTemplates.CreateObject();
-            categoryTemplate.Name = name;
-            categoryTemplate.TemplatePath = templatePath;
-            categoryTemplate.DisplayOrder = displayOrder;
-            categoryTemplate.CreatedOn = createdOn;
-            categoryTemplate.UpdatedOn = updatedOn;
 
             context.CategoryTemplates.AddObject(categoryTemplate);
             context.SaveChanges();
@@ -150,48 +142,32 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
             {
                 NopRequestCache.RemoveByPattern(CATEGORYTEMPLATES_PATTERN_KEY);
             }
-
-            return categoryTemplate;
         }
 
         /// <summary>
         /// Updates the category template
         /// </summary>
-        /// <param name="categoryTemplateId">Category template identifier</param>
-        /// <param name="name">The name</param>
-        /// <param name="templatePath">The template path</param>
-        /// <param name="displayOrder">The display order</param>
-        /// <param name="createdOn">The date and time of instance creation</param>
-        /// <param name="updatedOn">The date and time of instance update</param>
-        /// <returns>A category template</returns>
-        public static CategoryTemplate UpdateCategoryTemplate(int categoryTemplateId,
-            string name, string templatePath, int displayOrder,
-            DateTime createdOn, DateTime updatedOn)
+        /// <param name="categoryTemplate">Category template</param>
+        public static void UpdateCategoryTemplate(CategoryTemplate categoryTemplate)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 100);
-            templatePath = CommonHelper.EnsureMaximumLength(templatePath, 200);
-
-            var categoryTemplate = GetCategoryTemplateById(categoryTemplateId);
             if (categoryTemplate == null)
-                return null;
+                throw new ArgumentNullException("categoryTemplate");
+
+            categoryTemplate.Name = CommonHelper.EnsureNotNull(categoryTemplate.Name);
+            categoryTemplate.Name = CommonHelper.EnsureMaximumLength(categoryTemplate.Name, 100);
+            categoryTemplate.TemplatePath = CommonHelper.EnsureNotNull(categoryTemplate.TemplatePath);
+            categoryTemplate.TemplatePath = CommonHelper.EnsureMaximumLength(categoryTemplate.TemplatePath, 200);
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(categoryTemplate))
                 context.CategoryTemplates.Attach(categoryTemplate);
 
-            categoryTemplate.Name = name;
-            categoryTemplate.TemplatePath = templatePath;
-            categoryTemplate.DisplayOrder = displayOrder;
-            categoryTemplate.CreatedOn = createdOn;
-            categoryTemplate.UpdatedOn = updatedOn;
             context.SaveChanges();
 
             if (TemplateManager.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(CATEGORYTEMPLATES_PATTERN_KEY);
             }
-
-            return categoryTemplate;
         }
         
         /// <summary>
@@ -275,27 +251,19 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
         /// <summary>
         /// Inserts a manufacturer template
         /// </summary>
-        /// <param name="name">The manufacturer template identifier</param>
-        /// <param name="templatePath">The template path</param>
-        /// <param name="displayOrder">The display order</param>
-        /// <param name="createdOn">The date and time of instance creation</param>
-        /// <param name="updatedOn">The date and time of instance update</param>
-        /// <returns>Manufacturer template</returns>
-        public static ManufacturerTemplate InsertManufacturerTemplate(string name,
-            string templatePath, int displayOrder, DateTime createdOn, DateTime updatedOn)
+        /// <param name="manufacturerTemplate">Manufacturer template</param>
+        public static void InsertManufacturerTemplate(ManufacturerTemplate manufacturerTemplate)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 100);
-            templatePath = CommonHelper.EnsureMaximumLength(templatePath, 200);
+            if (manufacturerTemplate == null)
+                throw new ArgumentNullException("manufacturerTemplate");
+
+            manufacturerTemplate.Name = CommonHelper.EnsureNotNull(manufacturerTemplate.Name);
+            manufacturerTemplate.Name = CommonHelper.EnsureMaximumLength(manufacturerTemplate.Name, 100);
+            manufacturerTemplate.TemplatePath = CommonHelper.EnsureNotNull(manufacturerTemplate.TemplatePath);
+            manufacturerTemplate.TemplatePath = CommonHelper.EnsureMaximumLength(manufacturerTemplate.TemplatePath, 200);
 
             var context = ObjectContextHelper.CurrentObjectContext;
-
-            var manufacturerTemplate = context.ManufacturerTemplates.CreateObject();
-            manufacturerTemplate.Name = name;
-            manufacturerTemplate.TemplatePath = templatePath;
-            manufacturerTemplate.DisplayOrder = displayOrder;
-            manufacturerTemplate.CreatedOn = createdOn;
-            manufacturerTemplate.UpdatedOn = updatedOn;
-
+            
             context.ManufacturerTemplates.AddObject(manufacturerTemplate);
             context.SaveChanges();
 
@@ -303,47 +271,32 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
             {
                 NopRequestCache.RemoveByPattern(MANUFACTURERTEMPLATES_PATTERN_KEY);
             }
-            return manufacturerTemplate;
         }
 
         /// <summary>
         /// Updates the manufacturer template
         /// </summary>
-        /// <param name="manufacturerTemplateId">Manufacturer template identifer</param>
-        /// <param name="name">The manufacturer template identifier</param>
-        /// <param name="templatePath">The template path</param>
-        /// <param name="displayOrder">The display order</param>
-        /// <param name="createdOn">The date and time of instance creation</param>
-        /// <param name="updatedOn">The date and time of instance update</param>
-        /// <returns>Manufacturer template</returns>
-        public static ManufacturerTemplate UpdateManufacturerTemplate(int manufacturerTemplateId,
-            string name, string templatePath, int displayOrder,
-            DateTime createdOn, DateTime updatedOn)
+        /// <param name="manufacturerTemplate">Manufacturer template</param>
+        public static void UpdateManufacturerTemplate(ManufacturerTemplate manufacturerTemplate)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 100);
-            templatePath = CommonHelper.EnsureMaximumLength(templatePath, 200);
-
-            var manufacturerTemplate = GetManufacturerTemplateById(manufacturerTemplateId);
             if (manufacturerTemplate == null)
-                return null;
+                throw new ArgumentNullException("manufacturerTemplate");
+
+            manufacturerTemplate.Name = CommonHelper.EnsureNotNull(manufacturerTemplate.Name);
+            manufacturerTemplate.Name = CommonHelper.EnsureMaximumLength(manufacturerTemplate.Name, 100);
+            manufacturerTemplate.TemplatePath = CommonHelper.EnsureNotNull(manufacturerTemplate.TemplatePath);
+            manufacturerTemplate.TemplatePath = CommonHelper.EnsureMaximumLength(manufacturerTemplate.TemplatePath, 200);
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(manufacturerTemplate))
                 context.ManufacturerTemplates.Attach(manufacturerTemplate);
 
-            manufacturerTemplate.Name = name;
-            manufacturerTemplate.TemplatePath = templatePath;
-            manufacturerTemplate.DisplayOrder = displayOrder;
-            manufacturerTemplate.CreatedOn = createdOn;
-            manufacturerTemplate.UpdatedOn = updatedOn;
             context.SaveChanges();
-
-
+            
             if (TemplateManager.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(MANUFACTURERTEMPLATES_PATTERN_KEY);
             }
-            return manufacturerTemplate;
         }
         
         /// <summary>
@@ -427,27 +380,19 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
         /// <summary>
         /// Inserts a product template
         /// </summary>
-        /// <param name="name">The name</param>
-        /// <param name="templatePath">The template path</param>
-        /// <param name="displayOrder">The display order</param>
-        /// <param name="createdOn">The date and time of instance creation</param>
-        /// <param name="updatedOn">The date and time of instance update</param>
-        /// <returns>Product template</returns>
-        public static ProductTemplate InsertProductTemplate(string name, string templatePath,
-            int displayOrder, DateTime createdOn, DateTime updatedOn)
+        /// <param name="productTemplate">Product template</param>
+        public static void InsertProductTemplate(ProductTemplate productTemplate)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 100);
-            templatePath = CommonHelper.EnsureMaximumLength(templatePath, 200);
+            if (productTemplate == null)
+                throw new ArgumentNullException("productTemplate");
+
+            productTemplate.Name = CommonHelper.EnsureNotNull(productTemplate.Name);
+            productTemplate.Name = CommonHelper.EnsureMaximumLength(productTemplate.Name, 100);
+            productTemplate.TemplatePath = CommonHelper.EnsureNotNull(productTemplate.TemplatePath);
+            productTemplate.TemplatePath = CommonHelper.EnsureMaximumLength(productTemplate.TemplatePath, 200);
 
             var context = ObjectContextHelper.CurrentObjectContext;
-
-            var productTemplate = context.ProductTemplates.CreateObject();
-            productTemplate.Name = name;
-            productTemplate.TemplatePath = templatePath;
-            productTemplate.DisplayOrder = displayOrder;
-            productTemplate.CreatedOn = createdOn;
-            productTemplate.UpdatedOn = updatedOn;
-
+            
             context.ProductTemplates.AddObject(productTemplate);
             context.SaveChanges();
 
@@ -455,49 +400,35 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
             {
                 NopRequestCache.RemoveByPattern(PRODUCTTEMPLATES_PATTERN_KEY);
             }
-
-            return productTemplate;
         }
 
         /// <summary>
         /// Updates the product template
         /// </summary>
-        /// <param name="productTemplateId">The product template identifier</param>
-        /// <param name="name">The name</param>
-        /// <param name="templatePath">The template path</param>
-        /// <param name="displayOrder">The display order</param>
-        /// <param name="createdOn">The date and time of instance creation</param>
-        /// <param name="updatedOn">The date and time of instance update</param>
+        /// <param name="productTemplate">Product template</param>
         /// <returns>Product template</returns>
-        public static ProductTemplate UpdateProductTemplate(int productTemplateId,
-            string name, string templatePath, int displayOrder,
-            DateTime createdOn, DateTime updatedOn)
+        public static void UpdateProductTemplate(ProductTemplate productTemplate)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 100);
-            templatePath = CommonHelper.EnsureMaximumLength(templatePath, 200);
-
-            var productTemplate = GetProductTemplateById(productTemplateId);
             if (productTemplate == null)
-                return null;
+                throw new ArgumentNullException("productTemplate");
+
+            productTemplate.Name = CommonHelper.EnsureNotNull(productTemplate.Name);
+            productTemplate.Name = CommonHelper.EnsureMaximumLength(productTemplate.Name, 100);
+            productTemplate.TemplatePath = CommonHelper.EnsureNotNull(productTemplate.TemplatePath);
+            productTemplate.TemplatePath = CommonHelper.EnsureMaximumLength(productTemplate.TemplatePath, 200);
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(productTemplate))
                 context.ProductTemplates.Attach(productTemplate);
 
-            productTemplate.Name = name;
-            productTemplate.TemplatePath = templatePath;
-            productTemplate.DisplayOrder = displayOrder;
-            productTemplate.CreatedOn = createdOn;
-            productTemplate.UpdatedOn = updatedOn;
             context.SaveChanges();
 
             if (TemplateManager.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(PRODUCTTEMPLATES_PATTERN_KEY);
             }
-
-            return productTemplate;
         }
+
         #endregion
 
         #region Properties

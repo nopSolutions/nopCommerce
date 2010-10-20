@@ -138,97 +138,50 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
         /// <summary>
         /// Inserts a download
         /// </summary>
-        /// <param name="useDownloadUrl">The value indicating whether DownloadURL property should be used</param>
-        /// <param name="downloadUrl">The download URL</param>
-        /// <param name="downloadBinary">The download binary</param>
-        /// <param name="contentType">The content type</param>
-        /// <param name="filename">The filename of the download</param>
-        /// <param name="extension">The extension</param>
-        /// <param name="isNew">A value indicating whether the download is new</param>
-        /// <returns>Download</returns>
-        public static Download InsertDownload(bool useDownloadUrl, string downloadUrl,
-            byte[] downloadBinary, string contentType, string filename,
-            string extension, bool isNew)
+        /// <param name="download">Download</param>
+        public static void InsertDownload(Download download)
         {
-            if (downloadUrl == null)
-                downloadUrl = string.Empty;
-            if (filename == null)
-                filename = string.Empty;
-            if (contentType == null)
-                contentType = string.Empty;
-            if (extension == null)
-                extension = string.Empty;
-
-            downloadUrl = CommonHelper.EnsureMaximumLength(downloadUrl, 400);
-            contentType = CommonHelper.EnsureMaximumLength(contentType, 20);
-            filename = CommonHelper.EnsureMaximumLength(filename, 100);
-            extension = CommonHelper.EnsureMaximumLength(extension, 20);
+            if (download == null)
+                throw new ArgumentNullException("download");
+            
+            download.DownloadUrl = CommonHelper.EnsureNotNull(download.DownloadUrl);
+            download.DownloadUrl = CommonHelper.EnsureMaximumLength(download.DownloadUrl, 400);
+            download.ContentType = CommonHelper.EnsureNotNull(download.ContentType);
+            download.ContentType = CommonHelper.EnsureMaximumLength(download.ContentType, 20);
+            download.Filename = CommonHelper.EnsureNotNull(download.Filename);
+            download.Filename = CommonHelper.EnsureMaximumLength(download.Filename, 100);
+            download.Extension = CommonHelper.EnsureNotNull(download.Extension);
+            download.Extension = CommonHelper.EnsureMaximumLength(download.Extension, 20);
 
             var context = ObjectContextHelper.CurrentObjectContext;
-            var download = context.Downloads.CreateObject();
-            download.UseDownloadUrl = useDownloadUrl;
-            download.DownloadUrl = downloadUrl;
-            download.DownloadBinary = downloadBinary;
-            download.ContentType = contentType;
-            download.Filename = filename;
-            download.Extension = extension;
-            download.IsNew = isNew;
 
             context.Downloads.AddObject(download);
             context.SaveChanges();
-
-            return download;
         }
 
         /// <summary>
         /// Updates the download
         /// </summary>
-        /// <param name="downloadId">The download identifier</param>
-        /// <param name="useDownloadUrl">The value indicating whether DownloadURL property should be used</param>
-        /// <param name="downloadUrl">The download URL</param>
-        /// <param name="downloadBinary">The download binary</param>
-        /// <param name="contentType">The content type</param>
-        /// <param name="filename">The filename of the download</param>
-        /// <param name="extension">The extension</param>
-        /// <param name="isNew">A value indicating whether the download is new</param>
-        /// <returns>Download</returns>
-        public static Download UpdateDownload(int downloadId,
-            bool useDownloadUrl, string downloadUrl,
-            byte[] downloadBinary, string contentType, string filename,
-            string extension, bool isNew)
+        /// <param name="download">Download</param>
+        public static void UpdateDownload(Download download)
         {
-            if (downloadUrl == null)
-                downloadUrl = string.Empty;
-            if (filename == null)
-                filename = string.Empty;
-            if (contentType == null)
-                contentType = string.Empty;
-            if (extension == null)
-                extension = string.Empty;
-
-            downloadUrl = CommonHelper.EnsureMaximumLength(downloadUrl, 400);
-            contentType = CommonHelper.EnsureMaximumLength(contentType, 20);
-            filename = CommonHelper.EnsureMaximumLength(filename, 100);
-            extension = CommonHelper.EnsureMaximumLength(extension, 20);
-
-            var download = GetDownloadById(downloadId);
             if (download == null)
-                return null;
+                throw new ArgumentNullException("download");
+
+            download.DownloadUrl = CommonHelper.EnsureNotNull(download.DownloadUrl);
+            download.DownloadUrl = CommonHelper.EnsureMaximumLength(download.DownloadUrl, 400);
+            download.ContentType = CommonHelper.EnsureNotNull(download.ContentType);
+            download.ContentType = CommonHelper.EnsureMaximumLength(download.ContentType, 20);
+            download.Filename = CommonHelper.EnsureNotNull(download.Filename);
+            download.Filename = CommonHelper.EnsureMaximumLength(download.Filename, 100);
+            download.Extension = CommonHelper.EnsureNotNull(download.Extension);
+            download.Extension = CommonHelper.EnsureMaximumLength(download.Extension, 20);
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(download))
                 context.Downloads.Attach(download);
 
-            download.UseDownloadUrl = useDownloadUrl;
-            download.DownloadUrl = downloadUrl;
-            download.DownloadBinary = downloadBinary;
-            download.ContentType = contentType;
-            download.Filename = filename;
-            download.Extension = extension;
-            download.IsNew = isNew;
             context.SaveChanges();
-
-            return download;
         }
 
         /// <summary>

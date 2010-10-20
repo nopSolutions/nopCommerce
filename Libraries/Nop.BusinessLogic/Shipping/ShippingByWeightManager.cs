@@ -83,65 +83,32 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         /// <summary>
         /// Inserts a ShippingByWeight
         /// </summary>
-        /// <param name="shippingMethodId">The shipping method identifier</param>
-        /// <param name="from">The "from" value</param>
-        /// <param name="to">The "to" value</param>
-        /// <param name="usePercentage">A value indicating whether to use percentage</param>
-        /// <param name="shippingChargePercentage">The shipping charge percentage</param>
-        /// <param name="shippingChargeAmount">The shipping charge amount</param>
-        /// <returns>ShippingByWeight</returns>
-        public static ShippingByWeight InsertShippingByWeight(int shippingMethodId,
-            decimal from, decimal to, bool usePercentage,
-            decimal shippingChargePercentage, decimal shippingChargeAmount)
+        /// <param name="shippingByWeight">ShippingByWeight</param>
+        public static void InsertShippingByWeight(ShippingByWeight shippingByWeight)
         {
+            if (shippingByWeight == null)
+                throw new ArgumentNullException("shippingByWeight");
+
             var context = ObjectContextHelper.CurrentObjectContext;
-
-            var shippingByWeight = context.ShippingByWeight.CreateObject();
-            shippingByWeight.ShippingMethodId = shippingMethodId;
-            shippingByWeight.From = from;
-            shippingByWeight.To = to;
-            shippingByWeight.UsePercentage = usePercentage;
-            shippingByWeight.ShippingChargePercentage = shippingChargePercentage;
-            shippingByWeight.ShippingChargeAmount = shippingChargeAmount;
-
+            
             context.ShippingByWeight.AddObject(shippingByWeight);
             context.SaveChanges();
-
-            return shippingByWeight;
         }
 
         /// <summary>
         /// Updates the ShippingByWeight
         /// </summary>
-        /// <param name="shippingByWeightId">The ShippingByWeight identifier</param>
-        /// <param name="shippingMethodId">The shipping method identifier</param>
-        /// <param name="from">The "from" value</param>
-        /// <param name="to">The "to" value</param>
-        /// <param name="usePercentage">A value indicating whether to use percentage</param>
-        /// <param name="shippingChargePercentage">The shipping charge percentage</param>
-        /// <param name="shippingChargeAmount">The shipping charge amount</param>
-        /// <returns>ShippingByWeight</returns>
-        public static ShippingByWeight UpdateShippingByWeight(int shippingByWeightId,
-            int shippingMethodId, decimal from, decimal to, bool usePercentage,
-            decimal shippingChargePercentage, decimal shippingChargeAmount)
+        /// <param name="shippingByWeight">ShippingByWeight</param>
+        public static void UpdateShippingByWeight(ShippingByWeight shippingByWeight)
         {
-            var shippingByWeight = GetById(shippingByWeightId);
             if (shippingByWeight == null)
-                return null;
+                throw new ArgumentNullException("shippingByWeight");
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(shippingByWeight))
                 context.ShippingByWeight.Attach(shippingByWeight);
 
-            shippingByWeight.ShippingMethodId = shippingMethodId;
-            shippingByWeight.From = from;
-            shippingByWeight.To = to;
-            shippingByWeight.UsePercentage = usePercentage;
-            shippingByWeight.ShippingChargePercentage = shippingChargePercentage;
-            shippingByWeight.ShippingChargeAmount = shippingChargeAmount;
             context.SaveChanges();
-
-            return shippingByWeight;
         }
 
         /// <summary>

@@ -95,9 +95,17 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 ProductVariantAttribute productVariantAttribute = ProductAttributeManager.GetProductVariantAttributeById(this.ProductVariantAttributeId);
                 if (productVariantAttribute != null)
                 {
-                    ProductVariantAttributeValue productVariantAttributeValue = ProductAttributeManager.InsertProductVariantAttributeValue(productVariantAttribute.ProductVariantAttributeId,
-                        txtNewName.Text, txtNewPriceAdjustment.Value, txtNewWeightAdjustment.Value,
-                        cbNewIsPreSelected.Checked, txtNewDisplayOrder.Value);
+                    var productVariantAttributeValue = new ProductVariantAttributeValue()
+                    {
+                        ProductVariantAttributeId = productVariantAttribute.ProductVariantAttributeId,
+                        Name = txtNewName.Text, 
+                        PriceAdjustment= txtNewPriceAdjustment.Value, 
+                        WeightAdjustment= txtNewWeightAdjustment.Value,
+                        IsPreSelected= cbNewIsPreSelected.Checked, 
+                        DisplayOrder= txtNewDisplayOrder.Value
+                    };
+
+                    ProductAttributeManager.InsertProductVariantAttributeValue(productVariantAttributeValue);
 
                     SaveLocalizableContent(productVariantAttributeValue);
 
@@ -141,16 +149,22 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         if (!allFieldsAreEmpty && languageId > 0)
                         {
                             //only insert if one of the fields are filled out (avoid too many empty records in db...)
-                            content = ProductAttributeManager.InsertProductVariantAttributeValueLocalized(pvav.ProductVariantAttributeValueId,
-                                   languageId, name);
+                            content = new ProductVariantAttributeValueLocalized()
+                            {
+                                ProductVariantAttributeValueId = pvav.ProductVariantAttributeValueId,
+                                LanguageId = languageId,
+                                Name = name
+                            };
+                            ProductAttributeManager.InsertProductVariantAttributeValueLocalized(content);
                         }
                     }
                     else
                     {
                         if (languageId > 0)
                         {
-                            content = ProductAttributeManager.UpdateProductVariantAttributeValueLocalized(content.ProductVariantAttributeValueLocalizedId, 
-                                content.ProductVariantAttributeValueId, languageId, name);
+                            content.LanguageId=languageId;
+                            content.Name=name;
+                            ProductAttributeManager.UpdateProductVariantAttributeValueLocalized(content);
                         }
                     }
                 }
@@ -192,16 +206,22 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                                     if (!allFieldsAreEmpty && languageId > 0)
                                     {
                                         //only insert if one of the fields are filled out (avoid too many empty records in db...)
-                                        content = ProductAttributeManager.InsertProductVariantAttributeValueLocalized(pvav.ProductVariantAttributeValueId,
-                                            languageId, name);
+                                        content = new ProductVariantAttributeValueLocalized()
+                                        {
+                                            ProductVariantAttributeValueId= pvav.ProductVariantAttributeValueId,
+                                            LanguageId= languageId,
+                                            Name = name
+                                        };
+                                        ProductAttributeManager.InsertProductVariantAttributeValueLocalized(content);
                                     }
                                 }
                                 else
                                 {
                                     if (languageId > 0)
                                     {
-                                        content = ProductAttributeManager.UpdateProductVariantAttributeValueLocalized(content.ProductVariantAttributeValueLocalizedId,
-                                            content.ProductVariantAttributeValueId, languageId, name);
+                                        content.LanguageId = languageId;
+                                        content.Name = name;
+                                        ProductAttributeManager.UpdateProductVariantAttributeValueLocalized(content);
                                     }
                                 }
                             }
@@ -241,9 +261,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                 if (productVariantAttributeValue != null)
                 {
-                    productVariantAttributeValue = ProductAttributeManager.UpdateProductVariantAttributeValue(productVariantAttributeValue.ProductVariantAttributeValueId,
-                        productVariantAttributeValue.ProductVariantAttributeId, name,
-                        priceAdjustment, weightAdjustment, isPreSelected, displayOrder);
+                    productVariantAttributeValue.Name = name;
+                    productVariantAttributeValue.PriceAdjustment = priceAdjustment;
+                    productVariantAttributeValue.WeightAdjustment = weightAdjustment;
+                    productVariantAttributeValue.IsPreSelected = isPreSelected;
+                    productVariantAttributeValue.DisplayOrder = displayOrder;
+                    ProductAttributeManager.UpdateProductVariantAttributeValue(productVariantAttributeValue);
 
                     SaveLocalizableContentGrid(productVariantAttributeValue);
                 }

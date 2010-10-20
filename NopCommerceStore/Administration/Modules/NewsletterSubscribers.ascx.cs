@@ -114,11 +114,20 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                                 NewsLetterSubscription subscription = MessageManager.GetNewsLetterSubscriptionByEmail(email);
                                 if (subscription != null)
                                 {
-                                    subscription = MessageManager.UpdateNewsLetterSubscription(subscription.NewsLetterSubscriptionId, email, isActive);
+                                    subscription.Email = email;
+                                    subscription.Active = isActive;
+                                    MessageManager.UpdateNewsLetterSubscription(subscription);
                                 }
                                 else
                                 {
-                                    subscription = MessageManager.InsertNewsLetterSubscription(email, isActive);
+                                    subscription = new NewsLetterSubscription()
+                                    {
+                                        NewsLetterSubscriptionGuid = Guid.NewGuid(),
+                                        Email = email,
+                                        Active = isActive,
+                                        CreatedOn = DateTime.UtcNow
+                                    };
+                                    MessageManager.InsertNewsLetterSubscription(subscription);
                                 }
                                 count++;
                             }

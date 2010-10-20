@@ -98,11 +98,18 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     QueuedEmail queuedEmail = MessageManager.GetQueuedEmailById(this.QueuedEmailId);
                     if (queuedEmail != null)
                     {
-                        queuedEmail = MessageManager.UpdateQueuedEmail(queuedEmail.QueuedEmailId,
-                           txtPriority.Value, txtFrom.Text, txtFromName.Text,
-                           txtTo.Text, txtToName.Text, txtCc.Text, txtBcc.Text,
-                           txtSubject.Text, txtBody.Value, queuedEmail.CreatedOn,
-                           txtSendTries.Value, queuedEmail.SentOn, queuedEmail.EmailAccountId);
+                        queuedEmail.Priority = txtPriority.Value;
+                        queuedEmail.From = txtFrom.Text;
+                        queuedEmail.FromName = txtFromName.Text;
+                        queuedEmail.To = txtTo.Text;
+                        queuedEmail.ToName = txtToName.Text;
+                        queuedEmail.CC = txtCc.Text;
+                        queuedEmail.Bcc = txtBcc.Text;
+                        queuedEmail.Subject = txtSubject.Text;
+                        queuedEmail.Body = txtBody.Value;
+                        queuedEmail.SendTries = txtSendTries.Value;
+
+                        MessageManager.UpdateQueuedEmail(queuedEmail);
                         Response.Redirect("MessageQueueDetails.aspx?QueuedEmailID=" + queuedEmail.QueuedEmailId.ToString());
                     }
                     else

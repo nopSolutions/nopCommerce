@@ -250,11 +250,20 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                             if (acls.Count > 0)
                             {
                                 ACL acl = acls[0];
-                                ACLManager.UpdateAcl(acl.AclId, customerActionId, cr.CustomerRoleId, allow);
+                                acl.CustomerActionId = customerActionId;
+                                acl.CustomerRoleId = cr.CustomerRoleId;
+                                acl.Allow = allow;
+                                ACLManager.UpdateAcl(acl);
                             }
                             else
                             {
-                                ACL acl = ACLManager.InsertAcl(customerActionId, cr.CustomerRoleId, allow);
+                                ACL acl = new ACL()
+                                {
+                                    CustomerActionId= customerActionId,
+                                    CustomerRoleId= cr.CustomerRoleId,
+                                    Allow= allow
+                                };
+                                ACLManager.InsertAcl(acl);
                             }
                         }
                     } 

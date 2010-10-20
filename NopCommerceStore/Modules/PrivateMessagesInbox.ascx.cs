@@ -119,8 +119,8 @@ namespace NopSolutions.NopCommerce.Web.Modules
                                 {
                                     if (pm.ToUserId == NopContext.Current.User.CustomerId)
                                     {
-                                        pm = ForumManager.UpdatePrivateMessage(pm.PrivateMessageId, pm.FromUserId, pm.ToUserId,
-                                            pm.Subject, pm.Text, pm.IsRead, pm.IsDeletedByAuthor, true, pm.CreatedOn);
+                                        pm.IsDeletedByRecipient = true;
+                                        ForumManager.UpdatePrivateMessage(pm);
                                     }
                                 }
                             }
@@ -157,8 +157,8 @@ namespace NopSolutions.NopCommerce.Web.Modules
                                 {
                                     if (pm.ToUserId == NopContext.Current.User.CustomerId)
                                     {
-                                        pm = ForumManager.UpdatePrivateMessage(pm.PrivateMessageId, pm.FromUserId, pm.ToUserId,
-                                            pm.Subject, pm.Text, false, pm.IsDeletedByAuthor, pm.IsDeletedByRecipient, pm.CreatedOn);
+                                        pm.IsRead = false;
+                                        ForumManager.UpdatePrivateMessage(pm);
                                     }
                                 }
                             }

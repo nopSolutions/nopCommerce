@@ -109,12 +109,20 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                     if (address != null)
                     {
-                        address = CustomerManager.UpdateAddress(address.AddressId, address.CustomerId, address.IsBillingAddress,
-                            txtFirstName.Text, txtLastName.Text,
-                            txtPhoneNumber.Text, txtEmail.Text, txtFaxNumber.Text, txtCompany.Text,
-                            txtAddress1.Text, txtAddress2.Text, txtCity.Text, 
-                            int.Parse(this.ddlStateProvince.SelectedItem.Value), txtZipPostalCode.Text,
-                            int.Parse(this.ddlCountry.SelectedItem.Value), address.CreatedOn, DateTime.UtcNow);
+                        address.FirstName = txtFirstName.Text;
+                        address.LastName = txtLastName.Text;
+                        address.PhoneNumber = txtPhoneNumber.Text;
+                        address.Email = txtEmail.Text;
+                        address.FaxNumber = txtFaxNumber.Text;
+                        address.Company = txtCompany.Text;
+                        address.Address1 = txtAddress1.Text;
+                        address.Address2 = txtAddress2.Text;
+                        address.City = txtCity.Text;
+                        address.StateProvinceId = int.Parse(this.ddlStateProvince.SelectedItem.Value);
+                        address.ZipPostalCode = txtZipPostalCode.Text;
+                        address.CountryId = int.Parse(this.ddlCountry.SelectedItem.Value);
+                        address.UpdatedOn = DateTime.UtcNow;
+                        CustomerManager.UpdateAddress(address);
 
                         Response.Redirect("CustomerDetails.aspx?CustomerID=" + address.CustomerId.ToString());
                     }

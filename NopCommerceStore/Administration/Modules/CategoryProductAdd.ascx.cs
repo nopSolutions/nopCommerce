@@ -149,7 +149,15 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         {
                             if (existingProductCategories.FindProductCategory(productId, this.CategoryId) == null)
                             {
-                                CategoryManager.InsertProductCategory(productId, this.CategoryId, false, displayOrder);
+                                var productCategory = new ProductCategory()
+                                {
+                                    ProductId = productId,
+                                    CategoryId = this.CategoryId,
+                                    IsFeaturedProduct = false,
+                                    DisplayOrder = displayOrder
+                                };
+
+                                CategoryManager.InsertProductCategory(productCategory);
                             }
                         }
                     }

@@ -85,25 +85,19 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
         /// <summary>
         /// Inserts a search log item
         /// </summary>
-        /// <param name="searchTerm">The search term</param>
-        /// <param name="customerId">The customer identifier</param>
-        /// <param name="createdOn">The date and time of instance creation</param>
-        /// <returns>Search log item</returns>
-        public static SearchLog InsertSearchLog(string searchTerm,
-            int customerId, DateTime createdOn)
+        /// <param name="searchLog">Search log item</param>
+        public static void InsertSearchLog(SearchLog searchLog)
         {
-            searchTerm = CommonHelper.EnsureMaximumLength(searchTerm, 100);
+            if (searchLog == null)
+                throw new ArgumentNullException("searchLog");
+
+            searchLog.SearchTerm = CommonHelper.EnsureNotNull(searchLog.SearchTerm);
+            searchLog.SearchTerm = CommonHelper.EnsureMaximumLength(searchLog.SearchTerm, 100);
 
             var context = ObjectContextHelper.CurrentObjectContext;
-
-            var searchLog = context.SearchLog.CreateObject();
-            searchLog.SearchTerm = searchTerm;
-            searchLog.CustomerId = customerId;
-            searchLog.CreatedOn = createdOn;
-
+            
             context.SearchLog.AddObject(searchLog);
             context.SaveChanges();
-            return searchLog;
         }
 
         /// <summary>

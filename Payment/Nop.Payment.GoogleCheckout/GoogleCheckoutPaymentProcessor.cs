@@ -143,23 +143,35 @@ namespace NopSolutions.NopCommerce.Payment.Methods.GoogleCheckout
                 if (billingCountry != null)
                     billingCountryID = billingCountry.CountryId;
 
-                NopSolutions.NopCommerce.BusinessLogic.CustomerManagement.Address BillingAddress = customer.BillingAddresses.FindAddress(
+                NopSolutions.NopCommerce.BusinessLogic.CustomerManagement.Address billingAddress = customer.BillingAddresses.FindAddress(
                     billingFirstName, billingLastName, billingPhoneNumber,
                     billingEmail, string.Empty, string.Empty, billingAddress1, billingAddress2, billingCity,
                     billingStateProvinceID, billingZipPostalCode, billingCountryID);
 
-                if (BillingAddress == null)
+                if (billingAddress == null)
                 {
-                    BillingAddress = CustomerManager.InsertAddress(CustomerID, true,
-                        billingFirstName, billingLastName, billingPhoneNumber, billingEmail,
-                        string.Empty, string.Empty, billingAddress1,
-                        billingAddress2, billingCity,
-                        billingStateProvinceID, billingZipPostalCode,
-                        billingCountryID, DateTime.UtcNow, DateTime.UtcNow);
+                    billingAddress = new BusinessLogic.CustomerManagement.Address()
+                    {
+                        CustomerId = CustomerID,
+                        IsBillingAddress = true,
+                        FirstName = billingFirstName,
+                        LastName = billingLastName,
+                        PhoneNumber = billingPhoneNumber,
+                        Email = billingEmail,
+                        Address1 = billingAddress1,
+                        Address2 = billingAddress2,
+                        City = billingCity,
+                        StateProvinceId = billingStateProvinceID,
+                        ZipPostalCode = billingZipPostalCode,
+                        CountryId = billingCountryID,
+                        CreatedOn = DateTime.UtcNow,
+                        UpdatedOn = DateTime.UtcNow
+                    };
+                    CustomerManager.InsertAddress(billingAddress);
                 }
-                customer = CustomerManager.SetDefaultBillingAddress(customer.CustomerId, BillingAddress.AddressId);
+                customer = CustomerManager.SetDefaultBillingAddress(customer.CustomerId, billingAddress.AddressId);
 
-                NopSolutions.NopCommerce.BusinessLogic.CustomerManagement.Address ShippingAddress = null;
+                NopSolutions.NopCommerce.BusinessLogic.CustomerManagement.Address shippingAddress = null;
                 customer.LastShippingOption = null;
                 bool shoppingCartRequiresShipping = ShippingManager.ShoppingCartRequiresShipping(Cart);
                 if (shoppingCartRequiresShipping)
@@ -184,22 +196,34 @@ namespace NopSolutions.NopCommerce.Payment.Methods.GoogleCheckout
                     if (shippingCountry != null)
                         shippingCountryID = shippingCountry.CountryId;
 
-                    ShippingAddress = customer.ShippingAddresses.FindAddress(
+                    shippingAddress = customer.ShippingAddresses.FindAddress(
                         shippingFirstName, shippingLastName, shippingPhoneNumber,
                         shippingEmail, string.Empty, string.Empty, 
                         shippingAddress1, shippingAddress2, shippingCity,
                         shippingStateProvinceID, shippingZipPostalCode, shippingCountryID);
-                    if (ShippingAddress == null)
+                    if (shippingAddress == null)
                     {
-                        ShippingAddress = CustomerManager.InsertAddress(CustomerID, false,
-                             shippingFirstName, shippingLastName, shippingPhoneNumber, shippingEmail,
-                             string.Empty, string.Empty, shippingAddress1,
-                             shippingAddress2, shippingCity, shippingStateProvinceID,
-                             shippingZipPostalCode, shippingCountryID,
-                             DateTime.UtcNow, DateTime.UtcNow);
+                        shippingAddress = new BusinessLogic.CustomerManagement.Address()
+                        {
+                            CustomerId = CustomerID,
+                            IsBillingAddress = false,
+                            FirstName = shippingFirstName,
+                            LastName = shippingLastName,
+                            PhoneNumber = shippingPhoneNumber,
+                            Email = shippingEmail,
+                            Address1 = shippingAddress1,
+                            Address2 = shippingAddress2,
+                            City = shippingCity,
+                            StateProvinceId = shippingStateProvinceID,
+                            ZipPostalCode = shippingZipPostalCode,
+                            CountryId = shippingCountryID,
+                            CreatedOn = DateTime.UtcNow,
+                            UpdatedOn = DateTime.UtcNow
+                        };
+                        CustomerManager.InsertAddress(shippingAddress);
                     }
 
-                    customer = CustomerManager.SetDefaultShippingAddress(customer.CustomerId, ShippingAddress.AddressId);
+                    customer = CustomerManager.SetDefaultShippingAddress(customer.CustomerId, shippingAddress.AddressId);
 
                     string shippingMethod = string.Empty;
                     decimal shippingCost = decimal.Zero;
@@ -225,8 +249,8 @@ namespace NopSolutions.NopCommerce.Payment.Methods.GoogleCheckout
 
                 PaymentInfo paymentInfo = new PaymentInfo();
                 paymentInfo.PaymentMethodId = googleCheckoutPaymentMethod.PaymentMethodId;
-                paymentInfo.BillingAddress = BillingAddress;
-                paymentInfo.ShippingAddress = ShippingAddress;
+                paymentInfo.BillingAddress = billingAddress;
+                paymentInfo.ShippingAddress = shippingAddress;
                 paymentInfo.CustomerLanguage = LanguageManager.GetLanguageById(CustomerLanguageID);
                 paymentInfo.CustomerCurrency = CurrencyManager.GetCurrencyById(CustomerCurrencyID);
                 paymentInfo.GoogleOrderNumber = googleOrderNumber;

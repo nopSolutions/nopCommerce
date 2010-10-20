@@ -104,9 +104,16 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 var checkoutAttribute = CheckoutAttributeManager.GetCheckoutAttributeById(this.CheckoutAttributeId);
                 if (checkoutAttribute != null)
                 {
-                    var cav = CheckoutAttributeManager.InsertCheckoutAttributeValue(checkoutAttribute.CheckoutAttributeId,
-                        txtNewName.Text, txtNewPriceAdjustment.Value, txtNewWeightAdjustment.Value,
-                        cbNewIsPreSelected.Checked, txtNewDisplayOrder.Value);
+                    var cav = new CheckoutAttributeValue()
+                    {
+                        CheckoutAttributeId = checkoutAttribute.CheckoutAttributeId,
+                        Name = txtNewName.Text,
+                        PriceAdjustment = txtNewPriceAdjustment.Value,
+                        WeightAdjustment = txtNewWeightAdjustment.Value,
+                        IsPreSelected = cbNewIsPreSelected.Checked,
+                        DisplayOrder = txtNewDisplayOrder.Value
+                    };
+                    CheckoutAttributeManager.InsertCheckoutAttributeValue(cav);
 
                     SaveLocalizableContent(cav);
 
@@ -146,16 +153,22 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         if (!allFieldsAreEmpty && languageId > 0)
                         {
                             //only insert if one of the fields are filled out (avoid too many empty records in db...)
-                            content = CheckoutAttributeManager.InsertCheckoutAttributeValueLocalized(cav.CheckoutAttributeValueId,
-                                   languageId, name);
+                            content = new CheckoutAttributeValueLocalized()
+                            {
+                                CheckoutAttributeValueId = cav.CheckoutAttributeValueId,
+                                LanguageId = languageId,
+                                Name = name
+                            };
+                            CheckoutAttributeManager.InsertCheckoutAttributeValueLocalized(content);
                         }
                     }
                     else
                     {
                         if (languageId > 0)
                         {
-                            content = CheckoutAttributeManager.UpdateCheckoutAttributeValueLocalized(content.CheckoutAttributeValueLocalizedId,
-                                content.CheckoutAttributeValueId, languageId, name);
+                            content.LanguageId = languageId;
+                            content.Name = name;
+                            CheckoutAttributeManager.UpdateCheckoutAttributeValueLocalized(content);
                         }
                     }
                 }
@@ -197,16 +210,22 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                                     if (!allFieldsAreEmpty && languageId > 0)
                                     {
                                         //only insert if one of the fields are filled out (avoid too many empty records in db...)
-                                        content = CheckoutAttributeManager.InsertCheckoutAttributeValueLocalized(cav.CheckoutAttributeValueId,
-                                            languageId, name);
+                                        content = new CheckoutAttributeValueLocalized()
+                                        {
+                                            CheckoutAttributeValueId = cav.CheckoutAttributeValueId,
+                                            LanguageId = languageId,
+                                            Name = name
+                                        };
+                                        CheckoutAttributeManager.InsertCheckoutAttributeValueLocalized(content);
                                     }
                                 }
                                 else
                                 {
                                     if (languageId > 0)
                                     {
-                                        content = CheckoutAttributeManager.UpdateCheckoutAttributeValueLocalized(content.CheckoutAttributeValueLocalizedId,
-                                            content.CheckoutAttributeValueId, languageId, name);
+                                        content.LanguageId = languageId;
+                                        content.Name = name;
+                                        CheckoutAttributeManager.UpdateCheckoutAttributeValueLocalized(content);
                                     }
                                 }
                             }
@@ -246,9 +265,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                 if (cav != null)
                 {
-                    cav = CheckoutAttributeManager.UpdateCheckoutAttributeValue(cav.CheckoutAttributeValueId,
-                        cav.CheckoutAttributeId, name,
-                        priceAdjustment, weightAdjustment, isPreSelected, displayOrder);
+                    cav. Name =  name;
+                    cav.PriceAdjustment =priceAdjustment;
+                    cav.WeightAdjustment = weightAdjustment;
+                    cav.IsPreSelected = isPreSelected;
+                    cav.DisplayOrder = displayOrder;
+                    CheckoutAttributeManager.UpdateCheckoutAttributeValue(cav);
 
                     SaveLocalizableContentGrid(cav);
                 }

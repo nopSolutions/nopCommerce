@@ -73,9 +73,16 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.ShippingByWeightC
             try
             {
                 int shippingMethodId = int.Parse(this.ddlShippingMethod.SelectedItem.Value);
-                ShippingByWeight shippingByWeight = ShippingByWeightManager.InsertShippingByWeight(shippingMethodId,
-                    txtFrom.Value, txtTo.Value, cbUsePercentage.Checked,
-                    txtShippingChargePercentage.Value, txtShippingChargeAmount.Value);
+                var shippingByWeight = new ShippingByWeight()
+                {
+                    ShippingMethodId = shippingMethodId,
+                    From = txtFrom.Value,
+                    To = txtTo.Value,
+                    UsePercentage = cbUsePercentage.Checked,
+                    ShippingChargePercentage = txtShippingChargePercentage.Value,
+                    ShippingChargeAmount = txtShippingChargeAmount.Value
+                };
+                ShippingByWeightManager.InsertShippingByWeight(shippingByWeight);
 
                 BindData();
             }
@@ -105,9 +112,16 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.ShippingByWeightC
                 ShippingByWeight shippingByWeight = ShippingByWeightManager.GetById(shippingByWeightId);
 
                 if (shippingByWeight != null)
-                    ShippingByWeightManager.UpdateShippingByWeight(shippingByWeight.ShippingByWeightId,
-                      shippingMethodId, txtFrom.Value, txtTo.Value, cbUsePercentage.Checked,
-                      txtShippingChargePercentage.Value, txtShippingChargeAmount.Value);
+                {
+                    shippingByWeight.ShippingMethodId = shippingMethodId;
+                    shippingByWeight.From = txtFrom.Value;
+                    shippingByWeight.To =  txtTo.Value;
+                    shippingByWeight.UsePercentage = cbUsePercentage.Checked;
+                    shippingByWeight.ShippingChargePercentage = txtShippingChargePercentage.Value;
+                    shippingByWeight.ShippingChargeAmount = txtShippingChargeAmount.Value;
+
+                    ShippingByWeightManager.UpdateShippingByWeight(shippingByWeight);
+                }
 
                 BindData();
             }

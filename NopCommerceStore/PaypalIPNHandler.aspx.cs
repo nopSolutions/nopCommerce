@@ -127,7 +127,13 @@ namespace NopSolutions.NopCommerce.Web
                                                     if (recurringPaymentHistory.Count == 0)
                                                     {
                                                         //first payment
-                                                        OrderManager.InsertRecurringPaymentHistory(rp.RecurringPaymentId, initialOrder.OrderId, DateTime.UtcNow);
+                                                        var rph = new RecurringPaymentHistory()
+                                                        {
+                                                            RecurringPaymentId = rp.RecurringPaymentId,
+                                                            OrderId = initialOrder.OrderId,
+                                                            CreatedOn = DateTime.UtcNow
+                                                        };
+                                                        OrderManager.InsertRecurringPaymentHistory(rph);
                                                     }
                                                     else
                                                     {

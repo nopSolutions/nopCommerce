@@ -44,7 +44,14 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 }
                 else if(rbSubscribe.Checked)
                 {
-                    subscription = MessageManager.InsertNewsLetterSubscription(txtEmail.Text, false);
+                    subscription = new NewsLetterSubscription()
+                    {
+                        NewsLetterSubscriptionGuid = Guid.NewGuid(),
+                        Email = txtEmail.Text,
+                        Active = false,
+                        CreatedOn = DateTime.UtcNow
+                    };
+                    MessageManager.InsertNewsLetterSubscription(subscription);
                     MessageManager.SendNewsLetterSubscriptionActivationMessage(subscription.NewsLetterSubscriptionId, NopContext.Current.WorkingLanguage.LanguageId);
                     lblResult.Text = GetLocaleResourceString("NewsLetterSubscriptionBox.SubscriptionCreated");
                 }

@@ -61,61 +61,42 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Topics
         /// <summary>
         /// Inserts a topic
         /// </summary>
-        /// <param name="name">The name</param>
-        /// <param name="isPasswordProtected">The value indicating whether this topic is password proceted</param>
-        /// <param name="password">The password to access the content of this topic</param>
-        /// <param name="includeInSitemap">The value indicating whether this topic should be included in sitemap</param>
-        /// <returns>Topic</returns>
-        public static Topic InsertTopic(string name, bool isPasswordProtected,
-            string password, bool includeInSitemap)
+        /// <param name="topic">Topic</param>
+        public static void InsertTopic(Topic topic)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 200);
-            password = CommonHelper.EnsureMaximumLength(password, 200);
+            if (topic == null)
+                throw new ArgumentNullException("topic");
+
+            topic.Name = CommonHelper.EnsureNotNull(topic.Name);
+            topic.Name = CommonHelper.EnsureMaximumLength(topic.Name, 200);
+            topic.Password = CommonHelper.EnsureNotNull(topic.Password);
+            topic.Password = CommonHelper.EnsureMaximumLength(topic.Password, 200);
 
             var context = ObjectContextHelper.CurrentObjectContext;
-
-            var topic = context.Topics.CreateObject();
-            topic.Name = name;
-            topic.IsPasswordProtected = isPasswordProtected;
-            topic.Password = password;
-            topic.IncludeInSitemap = includeInSitemap;
-
+            
             context.Topics.AddObject(topic);
             context.SaveChanges();
-
-            return topic;
         }
 
         /// <summary>
         /// Updates the topic
         /// </summary>
-        /// <param name="topicId">The topic identifier</param>
-        /// <param name="name">The name</param>
-        /// <param name="isPasswordProtected">The value indicating whether this topic is password proceted</param>
-        /// <param name="password">The password to access the content of this topic</param>
-        /// <param name="includeInSitemap">The value indicating whether this topic should be included in sitemap</param>
-        /// <returns>Topic</returns>
-        public static Topic UpdateTopic(int topicId, string name,
-            bool isPasswordProtected, string password, bool includeInSitemap)
+        /// <param name="topic">Topic</param>
+        public static void UpdateTopic(Topic topic)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 200);
-            password = CommonHelper.EnsureMaximumLength(password, 200);
-
-            var topic = GetTopicById(topicId);
             if (topic == null)
-                return null;
+                throw new ArgumentNullException("topic");
+
+            topic.Name = CommonHelper.EnsureNotNull(topic.Name);
+            topic.Name = CommonHelper.EnsureMaximumLength(topic.Name, 200);
+            topic.Password = CommonHelper.EnsureNotNull(topic.Password);
+            topic.Password = CommonHelper.EnsureMaximumLength(topic.Password, 200);
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(topic))
                 context.Topics.Attach(topic);
 
-            topic.Name = name;
-            topic.IsPasswordProtected = isPasswordProtected;
-            topic.Password = password;
-            topic.IncludeInSitemap = includeInSitemap;
             context.SaveChanges();
-
-            return topic;
         }
 
         /// <summary>
@@ -243,89 +224,52 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Topics
         /// <summary>
         /// Inserts a localized topic
         /// </summary>
-        /// <param name="topicId">The topic identifier</param>
-        /// <param name="languageId">The language identifier</param>
-        /// <param name="title">The title</param>
-        /// <param name="body">The body</param>
-        /// <param name="createdOn">The date and time of instance creation</param>
-        /// <param name="updatedOn">The date and time of instance update</param>
-        /// <param name="metaKeywords">The meta keywords</param>
-        /// <param name="metaDescription">The meta description</param>
-        /// <param name="metaTitle">The meta title</param>
-        /// <returns>Localized topic</returns>
-        public static LocalizedTopic InsertLocalizedTopic(int topicId,
-            int languageId, string title, string body,
-            DateTime createdOn, DateTime updatedOn,
-            string metaKeywords, string metaDescription, string metaTitle)
+        /// <param name="localizedTopic">Localized topic</param>
+        public static void InsertLocalizedTopic(LocalizedTopic localizedTopic)
         {
-            title = CommonHelper.EnsureMaximumLength(title, 200);
-            metaTitle = CommonHelper.EnsureMaximumLength(metaTitle, 400);
-            metaKeywords = CommonHelper.EnsureMaximumLength(metaKeywords, 400);
-            metaDescription = CommonHelper.EnsureMaximumLength(metaDescription, 4000);
+            if (localizedTopic == null)
+                throw new ArgumentNullException("localizedTopic");
+            
+            localizedTopic.Title = CommonHelper.EnsureNotNull(localizedTopic.Title);
+            localizedTopic.Title = CommonHelper.EnsureMaximumLength(localizedTopic.Title, 200);
+            localizedTopic.Body = CommonHelper.EnsureNotNull(localizedTopic.Body);
+            localizedTopic.MetaTitle = CommonHelper.EnsureNotNull(localizedTopic.MetaTitle);
+            localizedTopic.MetaTitle = CommonHelper.EnsureMaximumLength(localizedTopic.MetaTitle, 400);
+            localizedTopic.MetaKeywords = CommonHelper.EnsureNotNull(localizedTopic.MetaKeywords);
+            localizedTopic.MetaKeywords = CommonHelper.EnsureMaximumLength(localizedTopic.MetaKeywords, 400);
+            localizedTopic.MetaDescription = CommonHelper.EnsureNotNull(localizedTopic.MetaDescription);
+            localizedTopic.MetaDescription = CommonHelper.EnsureMaximumLength(localizedTopic.MetaDescription, 4000);
 
             var context = ObjectContextHelper.CurrentObjectContext;
 
-            var localizedTopic = context.LocalizedTopics.CreateObject();
-            localizedTopic.TopicId = topicId;
-            localizedTopic.LanguageId = languageId;
-            localizedTopic.Title = title;
-            localizedTopic.Body = body;
-            localizedTopic.CreatedOn = createdOn;
-            localizedTopic.UpdatedOn = updatedOn;
-            localizedTopic.MetaKeywords = metaKeywords;
-            localizedTopic.MetaDescription = metaDescription;
-            localizedTopic.MetaTitle = metaTitle;
-
             context.LocalizedTopics.AddObject(localizedTopic);
             context.SaveChanges();
-
-            return localizedTopic;
         }
 
         /// <summary>
         /// Updates the localized topic
         /// </summary>
-        /// <param name="topicLocalizedId">The localized topic identifier</param>
-        /// <param name="topicId">The topic identifier</param>
-        /// <param name="languageId">The language identifier</param>
-        /// <param name="title">The title</param>
-        /// <param name="body">The body</param>
-        /// <param name="createdOn">The date and time of instance creation</param>
-        /// <param name="updatedOn">The date and time of instance update</param>
-        /// <param name="metaKeywords">The meta keywords</param>
-        /// <param name="metaDescription">The meta description</param>
-        /// <param name="metaTitle">The meta title</param>
-        /// <returns>Localized topic</returns>
-        public static LocalizedTopic UpdateLocalizedTopic(int topicLocalizedId,
-            int topicId, int languageId, string title, string body,
-            DateTime createdOn, DateTime updatedOn,
-            string metaKeywords, string metaDescription, string metaTitle)
+        /// <param name="localizedTopic">Localized topic</param>
+        public static void UpdateLocalizedTopic(LocalizedTopic localizedTopic)
         {
-            title = CommonHelper.EnsureMaximumLength(title, 200);
-            metaTitle = CommonHelper.EnsureMaximumLength(metaTitle, 400);
-            metaKeywords = CommonHelper.EnsureMaximumLength(metaKeywords, 400);
-            metaDescription = CommonHelper.EnsureMaximumLength(metaDescription, 4000);
-
-            var localizedTopic = GetLocalizedTopicById(topicLocalizedId);
             if (localizedTopic == null)
-                return null;
+                throw new ArgumentNullException("localizedTopic");
+
+            localizedTopic.Title = CommonHelper.EnsureNotNull(localizedTopic.Title);
+            localizedTopic.Title = CommonHelper.EnsureMaximumLength(localizedTopic.Title, 200);
+            localizedTopic.Body = CommonHelper.EnsureNotNull(localizedTopic.Body);
+            localizedTopic.MetaTitle = CommonHelper.EnsureNotNull(localizedTopic.MetaTitle);
+            localizedTopic.MetaTitle = CommonHelper.EnsureMaximumLength(localizedTopic.MetaTitle, 400);
+            localizedTopic.MetaKeywords = CommonHelper.EnsureNotNull(localizedTopic.MetaKeywords);
+            localizedTopic.MetaKeywords = CommonHelper.EnsureMaximumLength(localizedTopic.MetaKeywords, 400);
+            localizedTopic.MetaDescription = CommonHelper.EnsureNotNull(localizedTopic.MetaDescription);
+            localizedTopic.MetaDescription = CommonHelper.EnsureMaximumLength(localizedTopic.MetaDescription, 4000);
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(localizedTopic))
                 context.LocalizedTopics.Attach(localizedTopic);
 
-            localizedTopic.TopicId = topicId;
-            localizedTopic.LanguageId = languageId;
-            localizedTopic.Title = title;
-            localizedTopic.Body = body;
-            localizedTopic.CreatedOn = createdOn;
-            localizedTopic.UpdatedOn = updatedOn;
-            localizedTopic.MetaKeywords = metaKeywords;
-            localizedTopic.MetaDescription = metaDescription;
-            localizedTopic.MetaTitle = metaTitle;
             context.SaveChanges();
-
-            return localizedTopic;
         }
 
         #endregion

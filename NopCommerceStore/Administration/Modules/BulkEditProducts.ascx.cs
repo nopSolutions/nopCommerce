@@ -146,36 +146,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         var productVariant = ProductManager.GetProductVariantById(pvId);
                         if (productVariant != null)
                         {
-                            productVariant = ProductManager.UpdateProductVariant(productVariant.ProductVariantId,
-                                productVariant.ProductId, productVariant.Name,
-                                productVariant.SKU, productVariant.Description,
-                                productVariant.AdminComment, productVariant.ManufacturerPartNumber,
-                                productVariant.IsGiftCard, productVariant.GiftCardType, 
-                                productVariant.IsDownload,
-                                productVariant.DownloadId, productVariant.UnlimitedDownloads,
-                                productVariant.MaxNumberOfDownloads,
-                                productVariant.DownloadExpirationDays, 
-                                (DownloadActivationTypeEnum)productVariant.DownloadActivationType,
-                                productVariant.HasSampleDownload, productVariant.SampleDownloadId,
-                                productVariant.HasUserAgreement, productVariant.UserAgreementText,
-                                productVariant.IsRecurring, productVariant.CycleLength,
-                                productVariant.CyclePeriod, productVariant.TotalCycles,
-                                productVariant.IsShipEnabled, productVariant.IsFreeShipping, productVariant.AdditionalShippingCharge,
-                                productVariant.IsTaxExempt, productVariant.TaxCategoryId,
-                                productVariant.ManageInventory, productVariant.StockQuantity,
-                                productVariant.DisplayStockAvailability, productVariant.DisplayStockQuantity,
-                                productVariant.MinStockQuantity, productVariant.LowStockActivity,
-                                productVariant.NotifyAdminForQuantityBelow, productVariant.Backorders,
-                                productVariant.OrderMinimumQuantity, productVariant.OrderMaximumQuantity,
-                                productVariant.WarehouseId, productVariant.DisableBuyButton,
-                                productVariant.CallForPrice, price, oldPrice,
-                                productVariant.ProductCost, productVariant.CustomerEntersPrice,
-                                productVariant.MinimumCustomerEnteredPrice, productVariant.MaximumCustomerEnteredPrice,
-                                productVariant.Weight, productVariant.Length, productVariant.Width, 
-                                productVariant.Height, productVariant.PictureId,
-                                productVariant.AvailableStartDateTime, productVariant.AvailableEndDateTime,
-                                published, productVariant.Deleted, productVariant.DisplayOrder, 
-                                productVariant.CreatedOn, productVariant.UpdatedOn);
+                            productVariant.Price = price;
+                            productVariant.OldPrice = oldPrice;
+                            productVariant.Published = published;
+                            ProductManager.UpdateProductVariant(productVariant);
                         }
                     }
                 }

@@ -64,14 +64,24 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
             if (categoryTemplate != null)
             {
-                categoryTemplate = TemplateManager.UpdateCategoryTemplate(categoryTemplate.CategoryTemplateId, txtName.Text,
-                    txtTemplatePath.Text, txtDisplayOrder.Value, categoryTemplate.CreatedOn, DateTime.UtcNow);                
+                categoryTemplate.Name = txtName.Text;
+                categoryTemplate.TemplatePath = txtTemplatePath.Text;
+                categoryTemplate.DisplayOrder = txtDisplayOrder.Value;
+                categoryTemplate.UpdatedOn = DateTime.UtcNow;
+                TemplateManager.UpdateCategoryTemplate(categoryTemplate);                
             }
             else
             {
                 DateTime now = DateTime.UtcNow;
-                categoryTemplate = TemplateManager.InsertCategoryTemplate(txtName.Text,
-                    txtTemplatePath.Text, txtDisplayOrder.Value, now, now);
+                categoryTemplate = new CategoryTemplate()
+                {
+                    Name = txtName.Text,
+                    TemplatePath = txtTemplatePath.Text,
+                    DisplayOrder = txtDisplayOrder.Value,
+                    CreatedOn = now,
+                    UpdatedOn = now
+                };
+                TemplateManager.InsertCategoryTemplate(categoryTemplate);
             }
 
             return categoryTemplate;

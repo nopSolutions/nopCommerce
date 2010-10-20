@@ -141,7 +141,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         {
                             if (existingRelatedProducts.FindRelatedProduct(this.ProductId, productId) == null)
                             {
-                                ProductManager.InsertRelatedProduct(this.ProductId, productId, displayOrder);
+                                ProductManager.InsertRelatedProduct(
+                                    new RelatedProduct()
+                                    {
+                                        ProductId1 = this.ProductId,
+                                        ProductId2 = productId,
+                                        DisplayOrder = displayOrder
+                                    });
                             }
                         }
                     }

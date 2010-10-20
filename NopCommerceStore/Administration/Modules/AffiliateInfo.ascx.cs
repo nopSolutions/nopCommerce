@@ -91,17 +91,42 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
             if (affiliate != null)
             {
-                affiliate = AffiliateManager.UpdateAffiliate(affiliate.AffiliateId, txtFirstName.Text, txtLastName.Text, txtMiddleName.Text,
-                    txtPhoneNumber.Text, txtEmail.Text, txtFaxNumber.Text, txtCompany.Text,
-                    txtAddress1.Text, txtAddress2.Text, txtCity.Text, txtStateProvince.Text, txtZipPostalCode.Text,
-                    int.Parse(this.ddlCountry.SelectedItem.Value), affiliate.Deleted, cbActive.Checked);
+                affiliate.FirstName = txtFirstName.Text;
+                affiliate.LastName = txtLastName.Text;
+                affiliate.MiddleName = txtMiddleName.Text;
+                affiliate.PhoneNumber = txtPhoneNumber.Text;
+                affiliate.Email = txtEmail.Text;
+                affiliate.FaxNumber = txtFaxNumber.Text;
+                affiliate.Company = txtCompany.Text;
+                affiliate.Address1 = txtAddress1.Text;
+                affiliate.Address2 = txtAddress2.Text;
+                affiliate.City = txtCity.Text;
+                affiliate.StateProvince = txtStateProvince.Text;
+                affiliate.ZipPostalCode =  txtZipPostalCode.Text;
+                affiliate.CountryId = int.Parse(this.ddlCountry.SelectedItem.Value);
+                affiliate.Active = cbActive.Checked;
+                AffiliateManager.UpdateAffiliate(affiliate);
             }
             else
             {
-                affiliate = AffiliateManager.InsertAffiliate(txtFirstName.Text, txtLastName.Text, txtMiddleName.Text,
-                   txtPhoneNumber.Text, txtEmail.Text, txtFaxNumber.Text, txtCompany.Text,
-                   txtAddress1.Text, txtAddress2.Text, txtCity.Text, txtStateProvince.Text, txtZipPostalCode.Text,
-                   int.Parse(this.ddlCountry.SelectedItem.Value), false, cbActive.Checked);
+                affiliate = new Affiliate()
+                {
+                    FirstName = txtFirstName.Text,
+                    LastName = txtLastName.Text,
+                    MiddleName = txtMiddleName.Text,
+                    PhoneNumber = txtPhoneNumber.Text,
+                    Email = txtEmail.Text,
+                    FaxNumber = txtFaxNumber.Text,
+                    Company = txtCompany.Text,
+                    Address1 = txtAddress1.Text,
+                    Address2 = txtAddress2.Text,
+                    City = txtCity.Text,
+                    StateProvince = txtStateProvince.Text,
+                    ZipPostalCode = txtZipPostalCode.Text,
+                    CountryId = int.Parse(this.ddlCountry.SelectedItem.Value),
+                    Active = cbActive.Checked
+                };
+                AffiliateManager.InsertAffiliate(affiliate);
             }
 
             return affiliate;

@@ -91,61 +91,41 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Campaigns
         /// <summary>
         /// Inserts a campaign
         /// </summary>
-        /// <param name="name">The name</param>
-        /// <param name="subject">The subject</param>
-        /// <param name="body">The body</param>
-        /// <param name="createdOn">The date and time of instance creation</param>
-        /// <returns>Campaign</returns>
-        public static Campaign InsertCampaign(string name,
-            string subject, string body, DateTime createdOn)
+        /// <param name="campaign">Campaign</param>
+        public static void InsertCampaign(Campaign campaign)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 200);
-            subject = CommonHelper.EnsureMaximumLength(subject, 200);
+            if (campaign == null)
+                throw new ArgumentNullException("campaign");
+
+            campaign.Name = CommonHelper.EnsureNotNull(campaign.Name);
+            campaign.Name = CommonHelper.EnsureMaximumLength(campaign.Name, 200);
+            campaign.Subject = CommonHelper.EnsureNotNull(campaign.Subject);
+            campaign.Subject = CommonHelper.EnsureMaximumLength(campaign.Subject, 200);
+            campaign.Body = CommonHelper.EnsureNotNull(campaign.Body);
 
             var context = ObjectContextHelper.CurrentObjectContext;
-
-            var campaign = context.Campaigns.CreateObject();
-            campaign.Name = name;
-            campaign.Subject = subject;
-            campaign.Body = body;
-            campaign.CreatedOn = createdOn;
-
+            
             context.Campaigns.AddObject(campaign);
             context.SaveChanges();
-
-            return campaign;
         }
 
         /// <summary>
         /// Updates the campaign
         /// </summary>
-        /// <param name="campaignId">The campaign identifier</param>
-        /// <param name="name">The name</param>
-        /// <param name="subject">The subject</param>
-        /// <param name="body">The body</param>
-        /// <param name="createdOn">The date and time of instance creation</param>
-        /// <returns>Campaign</returns>
-        public static Campaign UpdateCampaign(int campaignId,
-            string name, string subject, string body, DateTime createdOn)
+        /// <param name="campaign">Campaign</param>
+        public static void UpdateCampaign(Campaign campaign)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 200);
-            subject = CommonHelper.EnsureMaximumLength(subject, 200);
-
-            var campaign = GetCampaignById(campaignId);
-            if (campaign == null)
-                return null;
+            campaign.Name = CommonHelper.EnsureNotNull(campaign.Name);
+            campaign.Name = CommonHelper.EnsureMaximumLength(campaign.Name, 200);
+            campaign.Subject = CommonHelper.EnsureNotNull(campaign.Subject);
+            campaign.Subject = CommonHelper.EnsureMaximumLength(campaign.Subject, 200);
+            campaign.Body = CommonHelper.EnsureNotNull(campaign.Body);
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(campaign))
                 context.Campaigns.Attach(campaign);
 
-            campaign.Name = name;
-            campaign.Subject = subject;
-            campaign.Body = body;
-            campaign.CreatedOn = createdOn;
             context.SaveChanges();
-
-            return campaign;
         }
 
         /// <summary>

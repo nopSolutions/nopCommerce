@@ -91,12 +91,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     ProductReview productReview = ProductManager.GetProductReviewById(this.ProductReviewId);
                     if (productReview != null)
                     {
-                        string title = txtTitle.Text.Trim();
-                        string reviewText = txtReviewText.Text.Trim();
-                        productReview = ProductManager.UpdateProductReview(productReview.ProductReviewId, productReview.ProductId,
-                            productReview.CustomerId, productReview.IPAddress, title, reviewText,
-                            productReview.Rating, productReview.HelpfulYesTotal, productReview.HelpfulNoTotal,
-                            cbIsApproved.Checked, productReview.CreatedOn);
+                        productReview.Title = txtTitle.Text.Trim();
+                        productReview.ReviewText = txtReviewText.Text.Trim();
+                        productReview.IsApproved = cbIsApproved.Checked;
+                        ProductManager.UpdateProductReview(productReview);
                         Response.Redirect("ProductReviewDetails.aspx?ProductReviewID=" + productReview.ProductReviewId.ToString());
                     }
                     else

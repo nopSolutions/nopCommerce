@@ -115,25 +115,21 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages.SMS
         /// <summary>
         /// Inserts a SMS provider
         /// </summary>
-        /// <param name="name">The name</param>
-        /// <param name="className">The class name</param>
-        /// <param name="systemKeyword">The system keyword</param>
-        /// <param name="isActive">A value indicating whether the SMS provider is active</param>
-        /// <returns>SMS provider</returns>
-        public static SMSProvider InsertSMSProvider(string name, string className, string systemKeyword, bool isActive)
+        /// <param name="smsProvider">SMS provider</param>
+        public static void InsertSMSProvider(SMSProvider smsProvider)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 100);
-            className = CommonHelper.EnsureMaximumLength(className, 500);
-            systemKeyword = CommonHelper.EnsureMaximumLength(systemKeyword, 500);
+            if (smsProvider == null)
+                throw new ArgumentNullException("smsProvider");
+            
+            smsProvider.Name = CommonHelper.EnsureNotNull(smsProvider.Name);
+            smsProvider.Name = CommonHelper.EnsureMaximumLength(smsProvider.Name, 100);
+            smsProvider.ClassName = CommonHelper.EnsureNotNull(smsProvider.ClassName);
+            smsProvider.ClassName = CommonHelper.EnsureMaximumLength(smsProvider.ClassName, 500);
+            smsProvider.SystemKeyword = CommonHelper.EnsureNotNull(smsProvider.SystemKeyword);
+            smsProvider.SystemKeyword = CommonHelper.EnsureMaximumLength(smsProvider.SystemKeyword, 500);
 
             var context = ObjectContextHelper.CurrentObjectContext;
-
-            var smsProvider = context.SMSProviders.CreateObject();
-            smsProvider.Name = name;
-            smsProvider.ClassName = className;
-            smsProvider.SystemKeyword = systemKeyword;
-            smsProvider.IsActive = isActive;
-
+            
             context.SMSProviders.AddObject(smsProvider);
             context.SaveChanges();
 
@@ -141,43 +137,34 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages.SMS
             {
                 NopRequestCache.RemoveByPattern(SMSPROVIDERS_PATTERN_KEY);
             }
-            return smsProvider;
         }
 
         /// <summary>
         /// Updates the SMS provider
         /// </summary>
-        /// <param name="smsProviderId">The SMS provider identifer</param>
-        /// <param name="name">The name</param>
-        /// <param name="className">The class name</param>
-        /// <param name="systemKeyword">The system keyword</param>
-        /// <param name="isActive">A value indicating whether the SMS provider is active</param>
-        /// <returns>SMS provider</returns>
-        public static SMSProvider UpdateSMSProvider(int smsProviderId, string name, string className, string systemKeyword, bool isActive)
+        /// <param name="smsProvider">SMS provider</param>
+        public static void UpdateSMSProvider(SMSProvider smsProvider)
         {
-            name = CommonHelper.EnsureMaximumLength(name, 100);
-            className = CommonHelper.EnsureMaximumLength(className, 500);
-            systemKeyword = CommonHelper.EnsureMaximumLength(systemKeyword, 500);
-
-            var smsProvider = GetSMSProviderById(smsProviderId);
             if (smsProvider == null)
-                return null;
+                throw new ArgumentNullException("smsProvider");
+
+            smsProvider.Name = CommonHelper.EnsureNotNull(smsProvider.Name);
+            smsProvider.Name = CommonHelper.EnsureMaximumLength(smsProvider.Name, 100);
+            smsProvider.ClassName = CommonHelper.EnsureNotNull(smsProvider.ClassName);
+            smsProvider.ClassName = CommonHelper.EnsureMaximumLength(smsProvider.ClassName, 500);
+            smsProvider.SystemKeyword = CommonHelper.EnsureNotNull(smsProvider.SystemKeyword);
+            smsProvider.SystemKeyword = CommonHelper.EnsureMaximumLength(smsProvider.SystemKeyword, 500);
 
             var context = ObjectContextHelper.CurrentObjectContext;
             if (!context.IsAttached(smsProvider))
                 context.SMSProviders.Attach(smsProvider);
 
-            smsProvider.Name = name;
-            smsProvider.ClassName = className;
-            smsProvider.SystemKeyword = systemKeyword;
-            smsProvider.IsActive = isActive;
             context.SaveChanges();
 
             if (CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(SMSPROVIDERS_PATTERN_KEY);
             }
-            return smsProvider;
         }
 
         /// <summary>

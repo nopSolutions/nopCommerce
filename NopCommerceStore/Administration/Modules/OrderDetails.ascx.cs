@@ -909,51 +909,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     string cardExpirationMonth = this.txtCardExpirationMonth.Text.Trim();
                     string cardExpirationYear = this.txtCardExpirationYear.Text.Trim();
 
-                    order = OrderManager.UpdateOrder(order.OrderId, order.OrderGuid,
-                        order.CustomerId, order.CustomerLanguageId,
-                        order.CustomerTaxDisplayType, order.CustomerIP,
-                        order.OrderSubtotalInclTax, order.OrderSubtotalExclTax, 
-                        order.OrderSubTotalDiscountInclTax, order.OrderSubTotalDiscountExclTax,
-                        order.OrderShippingInclTax, order.OrderShippingExclTax,
-                        order.PaymentMethodAdditionalFeeInclTax, order.PaymentMethodAdditionalFeeExclTax,
-                       order.TaxRates, order.OrderTax, order.OrderTotal,
-                       order.RefundedAmount, order.OrderDiscount,
-                       order.OrderSubtotalInclTaxInCustomerCurrency, order.OrderSubtotalExclTaxInCustomerCurrency,
-                       order.OrderSubTotalDiscountInclTaxInCustomerCurrency, order.OrderSubTotalDiscountExclTaxInCustomerCurrency,
-                       order.OrderShippingInclTaxInCustomerCurrency, order.OrderShippingExclTaxInCustomerCurrency,
-                       order.PaymentMethodAdditionalFeeInclTaxInCustomerCurrency, order.PaymentMethodAdditionalFeeExclTaxInCustomerCurrency,
-                       order.TaxRatesInCustomerCurrency, order.OrderTaxInCustomerCurrency,
-                       order.OrderTotalInCustomerCurrency,
-                       order.OrderDiscountInCustomerCurrency,
-                       order.CheckoutAttributeDescription, order.CheckoutAttributesXml,
-                       order.CustomerCurrencyCode, order.OrderWeight,
-                       order.AffiliateId, order.OrderStatus, 
-                       order.AllowStoringCreditCardNumber, 
-                       SecurityHelper.Encrypt(cardType),
-                       SecurityHelper.Encrypt(cardName), 
-                       SecurityHelper.Encrypt(cardNumber),
-                       SecurityHelper.Encrypt(PaymentManager.GetMaskedCreditCardNumber(cardNumber)),
-                       SecurityHelper.Encrypt(cardCVV2), 
-                       SecurityHelper.Encrypt(cardExpirationMonth),
-                       SecurityHelper.Encrypt(cardExpirationYear),
-                        order.PaymentMethodId, order.PaymentMethodName, order.AuthorizationTransactionId,
-                        order.AuthorizationTransactionCode, order.AuthorizationTransactionResult,
-                        order.CaptureTransactionId, order.CaptureTransactionResult,
-                        order.SubscriptionTransactionId, order.PurchaseOrderNumber,
-                        order.PaymentStatus, order.PaidDate,
-                        order.BillingFirstName, order.BillingLastName, order.BillingPhoneNumber,
-                        order.BillingEmail, order.BillingFaxNumber, order.BillingCompany, order.BillingAddress1,
-                        order.BillingAddress2, order.BillingCity, order.BillingStateProvince,
-                        order.BillingStateProvinceId, order.BillingZipPostalCode, order.BillingCountry,
-                        order.BillingCountryId, order.ShippingStatus,
-                        order.ShippingFirstName, order.ShippingLastName, order.ShippingPhoneNumber,
-                        order.ShippingEmail, order.ShippingFaxNumber, order.ShippingCompany,
-                        order.ShippingAddress1, order.ShippingAddress2, order.ShippingCity,
-                        order.ShippingStateProvince, order.ShippingStateProvinceId, order.ShippingZipPostalCode,
-                        order.ShippingCountry, order.ShippingCountryId,
-                        order.ShippingMethod, order.ShippingRateComputationMethodId,
-                        order.ShippedDate, order.DeliveryDate, order.TrackingNumber,
-                        order.VatNumber, order.Deleted, order.CreatedOn);
+                    order.CardType = SecurityHelper.Encrypt(cardType);
+                    order.CardName = SecurityHelper.Encrypt(cardName);
+                    order.CardNumber = SecurityHelper.Encrypt(cardNumber);
+                    order.CardNumber = SecurityHelper.Encrypt(PaymentManager.GetMaskedCreditCardNumber(cardNumber));
+                    order.CardCvv2 = SecurityHelper.Encrypt(cardCVV2);
+                    order.CardExpirationMonth = SecurityHelper.Encrypt(cardExpirationMonth);
+                    order.CardExpirationYear = SecurityHelper.Encrypt(cardExpirationYear);
+                    OrderManager.UpdateOrder(order);
                 }
 
                 string url = string.Format("{0}OrderDetails.aspx?OrderID={1}&TabID={2}", CommonHelper.GetStoreAdminLocation(), this.OrderId, this.GetActiveTabId(this.OrderTabs));
@@ -1023,45 +986,21 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     }
                     string billingZipPostalCode = this.txtBillingZipPostalCode.Text;
 
-                    order = OrderManager.UpdateOrder(order.OrderId, order.OrderGuid,
-                        order.CustomerId, order.CustomerLanguageId,
-                        order.CustomerTaxDisplayType, order.CustomerIP,
-                        order.OrderSubtotalInclTax, order.OrderSubtotalExclTax,
-                        order.OrderSubTotalDiscountInclTax, order.OrderSubTotalDiscountExclTax,
-                        order.OrderShippingInclTax, order.OrderShippingExclTax, 
-                        order.PaymentMethodAdditionalFeeInclTax, order.PaymentMethodAdditionalFeeExclTax,
-                       order.TaxRates, order.OrderTax, order.OrderTotal,
-                       order.RefundedAmount, order.OrderDiscount,
-                       order.OrderSubtotalInclTaxInCustomerCurrency, order.OrderSubtotalExclTaxInCustomerCurrency,
-                       order.OrderSubTotalDiscountInclTaxInCustomerCurrency, order.OrderSubTotalDiscountExclTaxInCustomerCurrency,
-                       order.OrderShippingInclTaxInCustomerCurrency, order.OrderShippingExclTaxInCustomerCurrency,
-                       order.PaymentMethodAdditionalFeeInclTaxInCustomerCurrency, order.PaymentMethodAdditionalFeeExclTaxInCustomerCurrency,
-                       order.TaxRatesInCustomerCurrency, order.OrderTaxInCustomerCurrency,
-                       order.OrderTotalInCustomerCurrency,
-                       order.OrderDiscountInCustomerCurrency,
-                       order.CheckoutAttributeDescription, order.CheckoutAttributesXml,
-                       order.CustomerCurrencyCode, order.OrderWeight,
-                       order.AffiliateId, order.OrderStatus, order.AllowStoringCreditCardNumber, order.CardType,
-                       order.CardName, order.CardNumber, order.MaskedCreditCardNumber,
-                        order.CardCvv2, order.CardExpirationMonth, order.CardExpirationYear,
-                        order.PaymentMethodId, order.PaymentMethodName, order.AuthorizationTransactionId,
-                        order.AuthorizationTransactionCode, order.AuthorizationTransactionResult,
-                        order.CaptureTransactionId, order.CaptureTransactionResult,
-                        order.SubscriptionTransactionId, order.PurchaseOrderNumber,
-                        order.PaymentStatus, order.PaidDate,
-                        billingFirstName, billingLastName, billingPhoneNumber,
-                        billingEmail, billingFaxNumber, billingCompany, billingAddress1,
-                        billingAddress2, billingCity, billingStateProvinceStr,
-                        billingStateProvinceId, billingZipPostalCode, billingCountryStr,
-                        billingCountryId, order.ShippingStatus,
-                        order.ShippingFirstName, order.ShippingLastName, order.ShippingPhoneNumber,
-                        order.ShippingEmail, order.ShippingFaxNumber, order.ShippingCompany,
-                        order.ShippingAddress1, order.ShippingAddress2, order.ShippingCity,
-                        order.ShippingStateProvince, order.ShippingStateProvinceId, order.ShippingZipPostalCode,
-                        order.ShippingCountry, order.ShippingCountryId,
-                        order.ShippingMethod, order.ShippingRateComputationMethodId,
-                        order.ShippedDate, order.DeliveryDate, order.TrackingNumber, 
-                        order.VatNumber, order.Deleted, order.CreatedOn);
+                    order.BillingFirstName = billingFirstName;
+                    order.BillingLastName = billingLastName;
+                    order.BillingPhoneNumber = billingPhoneNumber;
+                    order.BillingEmail = billingEmail;
+                    order.BillingFaxNumber = billingFaxNumber;
+                    order.BillingCompany = billingCompany;
+                    order.BillingAddress1 = billingAddress1;
+                    order.BillingAddress2 = billingAddress2;
+                    order.BillingCity = billingCity;
+                    order.BillingStateProvince = billingStateProvinceStr;
+                    order.BillingStateProvinceId = billingStateProvinceId;
+                    order.BillingZipPostalCode = billingZipPostalCode;
+                    order.BillingCountry = billingCountryStr;
+                    order.BillingCountryId = billingCountryId;
+                    OrderManager.UpdateOrder(order);
                 }
 
                 string url = string.Format("{0}OrderDetails.aspx?OrderID={1}&TabID={2}", CommonHelper.GetStoreAdminLocation(), this.OrderId, this.GetActiveTabId(this.OrderTabs));
@@ -1105,44 +1044,23 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     }
                     string shippingZipPostalCode = this.txtShippingZipPostalCode.Text;
 
-                    order = OrderManager.UpdateOrder(order.OrderId, order.OrderGuid, order.CustomerId, order.CustomerLanguageId,
-                        order.CustomerTaxDisplayType, order.CustomerIP,
-                        order.OrderSubtotalInclTax, order.OrderSubtotalExclTax,
-                        order.OrderSubTotalDiscountInclTax, order.OrderSubTotalDiscountExclTax,
-                        order.OrderShippingInclTax, order.OrderShippingExclTax, 
-                        order.PaymentMethodAdditionalFeeInclTax, order.PaymentMethodAdditionalFeeExclTax,
-                       order.TaxRates, order.OrderTax, order.OrderTotal,
-                       order.RefundedAmount, order.OrderDiscount,
-                       order.OrderSubtotalInclTaxInCustomerCurrency, order.OrderSubtotalExclTaxInCustomerCurrency,
-                       order.OrderSubTotalDiscountInclTaxInCustomerCurrency, order.OrderSubTotalDiscountExclTaxInCustomerCurrency,
-                       order.OrderShippingInclTaxInCustomerCurrency, order.OrderShippingExclTaxInCustomerCurrency,
-                       order.PaymentMethodAdditionalFeeInclTaxInCustomerCurrency, order.PaymentMethodAdditionalFeeExclTaxInCustomerCurrency,
-                       order.TaxRatesInCustomerCurrency, order.OrderTaxInCustomerCurrency,
-                       order.OrderTotalInCustomerCurrency,
-                       order.OrderDiscountInCustomerCurrency,
-                       order.CheckoutAttributeDescription, order.CheckoutAttributesXml,
-                       order.CustomerCurrencyCode, order.OrderWeight,
-                       order.AffiliateId, order.OrderStatus, order.AllowStoringCreditCardNumber, order.CardType,
-                       order.CardName, order.CardNumber, order.MaskedCreditCardNumber,
-                        order.CardCvv2, order.CardExpirationMonth, order.CardExpirationYear,
-                        order.PaymentMethodId, order.PaymentMethodName, order.AuthorizationTransactionId,
-                        order.AuthorizationTransactionCode, order.AuthorizationTransactionResult,
-                        order.CaptureTransactionId, order.CaptureTransactionResult,
-                        order.SubscriptionTransactionId, order.PurchaseOrderNumber,
-                        order.PaymentStatus, order.PaidDate,
-                        order.BillingFirstName, order.BillingLastName, order.BillingPhoneNumber,
-                        order.BillingEmail, order.BillingFaxNumber, order.BillingCompany, order.BillingAddress1,
-                        order.BillingAddress2, order.BillingCity, order.BillingStateProvince,
-                        order.BillingStateProvinceId, order.BillingZipPostalCode, order.BillingCountry,
-                        order.BillingCountryId, order.ShippingStatus,
-                        shippingFirstName, shippingLastName, shippingPhoneNumber,
-                        shippingEmail, shippingFaxNumber, shippingCompany,
-                        shippingAddress1, shippingAddress2, shippingCity,
-                        shippingStateProvinceStr, shippingStateProvinceId, shippingZipPostalCode,
-                        shippingCountryStr, shippingCountryId,
-                        order.ShippingMethod, order.ShippingRateComputationMethodId,
-                        order.ShippedDate, order.DeliveryDate, order.TrackingNumber, 
-                        order.VatNumber, order.Deleted, order.CreatedOn);
+
+                    order.ShippingFirstName = shippingFirstName;
+                    order.ShippingLastName = shippingLastName;
+                    order.ShippingPhoneNumber = shippingPhoneNumber;
+                    order.ShippingEmail = shippingEmail;
+                    order.ShippingFaxNumber = shippingFaxNumber;
+                    order.ShippingCompany = shippingCompany;
+                    order.ShippingAddress1 = shippingAddress1;
+                    order.ShippingAddress2 = shippingAddress2;
+                    order.ShippingCity = shippingCity;
+                    order.ShippingStateProvince = shippingStateProvinceStr;
+                    order.ShippingStateProvinceId = shippingStateProvinceId;
+                    order.ShippingZipPostalCode = shippingZipPostalCode;
+                    order.ShippingCountry = shippingCountryStr;
+                    order.ShippingCountryId = shippingCountryId;
+
+                    OrderManager.UpdateOrder(order);
                 }
 
                 string url = string.Format("{0}OrderDetails.aspx?OrderID={1}&TabID={2}", CommonHelper.GetStoreAdminLocation(), this.OrderId, this.GetActiveTabId(this.OrderTabs));
@@ -1255,49 +1173,32 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     orderTotal = decimal.Parse(txtOrderTotalInPrimaryCurrency.Text);
                     orderTotalInCustomerCurrency = decimal.Parse(txtOrderTotalInCustomerCurrency.Text);
 
-                    OrderManager.UpdateOrder(order.OrderId, order.OrderGuid, order.CustomerId, order.CustomerLanguageId,
-                        order.CustomerTaxDisplayType, order.CustomerIP,
-                        orderSubtotalInclTax, orderSubtotalExclTax,
-                        orderSubtotalDiscountInclTax, orderSubtotalDiscountExclTax,
-                        orderShippingInclTax, orderShippingExclTax, 
-                        paymentMethodAdditionalFeeInclTax, paymentMethodAdditionalFeeExclTax,
-                        taxRates, orderTax, orderTotal,
-                        order.RefundedAmount, orderDiscount,
-                        orderSubtotalInclTaxInCustomerCurrency, orderSubtotalExclTaxInCustomerCurrency,
-                        orderSubtotalDiscountInclTaxInCustomerCurrency, orderSubtotalDiscountExclTaxInCustomerCurrency,
-                        orderShippingInclTaxInCustomerCurrency, orderShippingExclTaxInCustomerCurrency,
-                        paymentMethodAdditionalFeeInclTaxInCustomerCurrency, paymentMethodAdditionalFeeExclTaxInCustomerCurrency,
-                        taxRatesInCustomerCurrency, orderTaxInCustomerCurrency,
-                        orderTotalInCustomerCurrency,
-                        orderDiscountInCustomerCurrency, 
-                        order.CheckoutAttributeDescription, order.CheckoutAttributesXml,
-                        order.CustomerCurrencyCode, order.OrderWeight,
-                        order.AffiliateId, order.OrderStatus, 
-                        order.AllowStoringCreditCardNumber, order.CardType,
-                        order.CardName, order.CardNumber, order.MaskedCreditCardNumber,
-                        order.CardCvv2, order.CardExpirationMonth, order.CardExpirationYear,
-                        order.PaymentMethodId, order.PaymentMethodName, 
-                        order.AuthorizationTransactionId, order.AuthorizationTransactionCode, 
-                        order.AuthorizationTransactionResult, order.CaptureTransactionId, 
-                        order.CaptureTransactionResult, order.SubscriptionTransactionId,
-                        order.PurchaseOrderNumber, order.PaymentStatus, order.PaidDate,
-                        order.BillingFirstName, order.BillingLastName, order.BillingPhoneNumber,
-                        order.BillingEmail, order.BillingFaxNumber, order.BillingCompany, 
-                        order.BillingAddress1, order.BillingAddress2, order.BillingCity, 
-                        order.BillingStateProvince, order.BillingStateProvinceId,
-                        order.BillingZipPostalCode, order.BillingCountry,
-                        order.BillingCountryId, order.ShippingStatus,
-                        order.ShippingFirstName, order.ShippingLastName, 
-                        order.ShippingPhoneNumber, order.ShippingEmail, 
-                        order.ShippingFaxNumber, order.ShippingCompany,
-                        order.ShippingAddress1, order.ShippingAddress2, order.ShippingCity,
-                        order.ShippingStateProvince, order.ShippingStateProvinceId,
-                        order.ShippingZipPostalCode, order.ShippingCountry, 
-                        order.ShippingCountryId, order.ShippingMethod, 
-                        order.ShippingRateComputationMethodId, order.ShippedDate,
-                        order.DeliveryDate, order.TrackingNumber, order.VatNumber, 
-                        order.Deleted, order.CreatedOn);
+                    order.OrderSubtotalInclTax = orderSubtotalInclTax;
+                    order.OrderSubtotalExclTax = orderSubtotalExclTax;
+                    order.OrderSubTotalDiscountInclTax = orderSubtotalDiscountInclTax;
+                    order.OrderSubTotalDiscountExclTax = orderSubtotalDiscountExclTax;
+                    order.OrderShippingInclTax = orderShippingInclTax;
+                    order.OrderShippingExclTax = orderShippingExclTax;
+                    order.PaymentMethodAdditionalFeeInclTax = paymentMethodAdditionalFeeInclTax;
+                    order.PaymentMethodAdditionalFeeExclTax = paymentMethodAdditionalFeeExclTax;
+                    order.TaxRates = taxRates;
+                    order.OrderTax = orderTax;
+                    order.OrderTotal = orderTotal;
+                    order.OrderDiscount = orderDiscount;
+                    order.OrderSubtotalInclTaxInCustomerCurrency = orderSubtotalInclTaxInCustomerCurrency;
+                    order.OrderSubtotalExclTaxInCustomerCurrency = orderSubtotalExclTaxInCustomerCurrency;
+                    order.OrderSubTotalDiscountInclTaxInCustomerCurrency = orderSubtotalDiscountInclTaxInCustomerCurrency;
+                    order.OrderSubTotalDiscountExclTaxInCustomerCurrency = orderSubtotalDiscountExclTaxInCustomerCurrency;
+                    order.OrderShippingInclTaxInCustomerCurrency = orderShippingInclTaxInCustomerCurrency;
+                    order.OrderShippingExclTaxInCustomerCurrency = orderShippingExclTaxInCustomerCurrency;
+                    order.PaymentMethodAdditionalFeeInclTaxInCustomerCurrency = paymentMethodAdditionalFeeInclTaxInCustomerCurrency;
+                    order.PaymentMethodAdditionalFeeExclTaxInCustomerCurrency = paymentMethodAdditionalFeeExclTaxInCustomerCurrency;
+                    order.TaxRatesInCustomerCurrency = taxRatesInCustomerCurrency;
+                    order.OrderTaxInCustomerCurrency = orderTaxInCustomerCurrency;
+                    order.OrderTotalInCustomerCurrency = orderTotalInCustomerCurrency;
+                    order.OrderDiscountInCustomerCurrency = orderDiscountInCustomerCurrency;
 
+                    OrderManager.UpdateOrder(order);
                     BindData();
                 }
             }
@@ -1467,7 +1368,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 banItem.Address = order.CustomerIP;
                 if(!IpBlacklistManager.IsIpAddressBanned(banItem))
                 {
-                    IpBlacklistManager.InsertBannedIpAddress(order.CustomerIP, String.Empty, DateTime.UtcNow, DateTime.UtcNow);
+                    IpBlacklistManager.InsertBannedIpAddress(
+                        new BannedIpAddress()
+                        {
+                            Address = order.CustomerIP,
+                            Comment = String.Empty,
+                            CreatedOn = DateTime.UtcNow,
+                            UpdatedOn = DateTime.UtcNow
+                        });
                 }
             }
         }
@@ -1513,18 +1421,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                 if (orderProductVariant != null)
                 {
-                    orderProductVariant = OrderManager.UpdateOrderProductVariant(orderProductVariant.OrderProductVariantId,
-                        orderProductVariant.OrderProductVariantGuid, orderProductVariant.OrderId,
-                        orderProductVariant.ProductVariantId,
-                        orderProductVariant.UnitPriceInclTax, orderProductVariant.UnitPriceExclTax,
-                        orderProductVariant.PriceInclTax, orderProductVariant.PriceExclTax,
-                        orderProductVariant.UnitPriceInclTaxInCustomerCurrency, orderProductVariant.UnitPriceExclTaxInCustomerCurrency,
-                        orderProductVariant.PriceInclTaxInCustomerCurrency, orderProductVariant.PriceExclTaxInCustomerCurrency,
-                        orderProductVariant.AttributeDescription, orderProductVariant.AttributesXml,
-                        orderProductVariant.Quantity,
-                        orderProductVariant.DiscountAmountInclTax, orderProductVariant.DiscountAmountExclTax,
-                        orderProductVariant.DownloadCount, !orderProductVariant.IsDownloadActivated,
-                        orderProductVariant.LicenseDownloadId);
+                    orderProductVariant.IsDownloadActivated = !orderProductVariant.IsDownloadActivated;
+                    OrderManager.UpdateOrderProductVariant(orderProductVariant);
                 }
 
             }
@@ -1540,17 +1438,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                 if (orderProductVariant != null)
                 {
-                    orderProductVariant = OrderManager.UpdateOrderProductVariant(orderProductVariant.OrderProductVariantId,
-                        orderProductVariant.OrderProductVariantGuid, orderProductVariant.OrderId,
-                        orderProductVariant.ProductVariantId,
-                        orderProductVariant.UnitPriceInclTax, orderProductVariant.UnitPriceExclTax,
-                        orderProductVariant.PriceInclTax, orderProductVariant.PriceExclTax,
-                        orderProductVariant.UnitPriceInclTaxInCustomerCurrency, orderProductVariant.UnitPriceExclTaxInCustomerCurrency,
-                        orderProductVariant.PriceInclTaxInCustomerCurrency, orderProductVariant.PriceExclTaxInCustomerCurrency,
-                        orderProductVariant.AttributeDescription, orderProductVariant.AttributesXml, 
-                        orderProductVariant.Quantity,
-                        orderProductVariant.DiscountAmountInclTax, orderProductVariant.DiscountAmountExclTax,
-                        orderProductVariant.DownloadCount, orderProductVariant.IsDownloadActivated, 0);
+                    orderProductVariant.LicenseDownloadId = 0;
+                    OrderManager.UpdateOrderProductVariant(orderProductVariant);
                 }
             }
             else if (e.CommandName == "UploadLicenseDownload")
@@ -1573,22 +1462,22 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     string downloadFilename = Path.GetFileNameWithoutExtension(licenseDownloadFile.FileName);
                     string downloadExtension = Path.GetExtension(licenseDownloadFile.FileName);
 
-                    Download licenseDownload = DownloadManager.InsertDownload(false, string.Empty,
-                        licenseDownloadBinary, downloadContentType, downloadFilename, downloadExtension, true);
+                    var licenseDownload = new Download()
+                    {
+                        UseDownloadUrl = false,
+                        DownloadUrl = string.Empty,
+                        DownloadBinary = licenseDownloadBinary,
+                        ContentType = downloadContentType,
+                        Filename = downloadFilename,
+                        Extension = downloadExtension,
+                        IsNew = true
+                    };
+                    DownloadManager.InsertDownload(licenseDownload);
 
                     if (orderProductVariant != null)
                     {
-                        orderProductVariant = OrderManager.UpdateOrderProductVariant(orderProductVariant.OrderProductVariantId,
-                            orderProductVariant.OrderProductVariantGuid, orderProductVariant.OrderId,
-                            orderProductVariant.ProductVariantId,
-                            orderProductVariant.UnitPriceInclTax, orderProductVariant.UnitPriceExclTax,
-                            orderProductVariant.PriceInclTax, orderProductVariant.PriceExclTax,
-                            orderProductVariant.UnitPriceInclTaxInCustomerCurrency, orderProductVariant.UnitPriceExclTaxInCustomerCurrency,
-                            orderProductVariant.PriceInclTaxInCustomerCurrency, orderProductVariant.PriceExclTaxInCustomerCurrency,
-                            orderProductVariant.AttributeDescription, orderProductVariant.AttributesXml, 
-                            orderProductVariant.Quantity,
-                            orderProductVariant.DiscountAmountInclTax, orderProductVariant.DiscountAmountExclTax,
-                            orderProductVariant.DownloadCount, orderProductVariant.IsDownloadActivated, licenseDownload.DownloadId);
+                        orderProductVariant.LicenseDownloadId = licenseDownload.DownloadId;
+                        OrderManager.UpdateOrderProductVariant(orderProductVariant);
                     }
                 }
             }
@@ -1642,17 +1531,18 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                     if (quantity > 0)
                     {
-                        orderProductVariant = OrderManager.UpdateOrderProductVariant(orderProductVariant.OrderProductVariantId,
-                            orderProductVariant.OrderProductVariantGuid, orderProductVariant.OrderId,
-                            orderProductVariant.ProductVariantId,
-                            unitPriceInclTax, unitPriceExclTax,
-                            priceInclTax, priceExclTax,
-                            unitPriceInclTaxInCustomerCurrency, unitPriceExclTaxInCustomerCurrency,
-                            priceInclTaxInCustomerCurrency, priceExclTaxInCustomerCurrency,
-                            orderProductVariant.AttributeDescription, orderProductVariant.AttributesXml,
-                            quantity, discountInclTax, discountExclTax,
-                            orderProductVariant.DownloadCount, orderProductVariant.IsDownloadActivated,
-                            orderProductVariant.LicenseDownloadId);
+                        orderProductVariant.UnitPriceInclTax = unitPriceInclTax;
+                        orderProductVariant.UnitPriceExclTax = unitPriceExclTax;
+                        orderProductVariant.PriceInclTax = priceInclTax;
+                        orderProductVariant.PriceExclTax = priceExclTax;
+                        orderProductVariant.UnitPriceInclTaxInCustomerCurrency = unitPriceInclTaxInCustomerCurrency;
+                        orderProductVariant.UnitPriceExclTaxInCustomerCurrency = unitPriceExclTaxInCustomerCurrency;
+                        orderProductVariant.PriceInclTaxInCustomerCurrency = priceInclTaxInCustomerCurrency;
+                        orderProductVariant.PriceExclTaxInCustomerCurrency = priceExclTaxInCustomerCurrency;
+                        orderProductVariant.Quantity = quantity;
+                        orderProductVariant.DiscountAmountInclTax = discountInclTax;
+                        orderProductVariant.DiscountAmountExclTax = discountExclTax;
+                        OrderManager.UpdateOrderProductVariant(orderProductVariant);
                     }
                     else
                     {

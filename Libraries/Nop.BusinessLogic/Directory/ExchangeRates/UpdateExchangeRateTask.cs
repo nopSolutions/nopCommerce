@@ -51,9 +51,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory.ExchangeRates
                     Currency currency = CurrencyManager.GetCurrencyByCode(exchageRate.CurrencyCode);
                     if (currency != null)
                     {
-                        CurrencyManager.UpdateCurrency(currency.CurrencyId, currency.Name, currency.CurrencyCode,
-                            exchageRate.Rate, currency.DisplayLocale, currency.CustomFormatting, currency.Published, currency.DisplayOrder,
-                            currency.CreatedOn, DateTime.UtcNow);
+                        currency.Rate = exchageRate.Rate;
+                        currency.UpdatedOn = DateTime.UtcNow;
+                        CurrencyManager.UpdateCurrency(currency);
                     }
                 }
 

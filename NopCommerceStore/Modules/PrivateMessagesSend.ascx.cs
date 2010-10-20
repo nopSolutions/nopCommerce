@@ -119,8 +119,15 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     Response.Redirect(CommonHelper.GetStoreLocation() + "privatemessages.aspx");
                 }
 
-                var pm = ForumManager.InsertPrivateMessage(NopContext.Current.User.CustomerId, toCustomer.CustomerId,
-                    subject, message, false, false, false, DateTime.UtcNow);
+                var pm = new PrivateMessage()
+                {
+                    FromUserId = NopContext.Current.User.CustomerId,
+                    ToUserId = toCustomer.CustomerId,
+                    Subject = subject,
+                    Text = message,
+                    CreatedOn = DateTime.UtcNow
+                };
+                ForumManager.InsertPrivateMessage(pm);
 
                 Response.Redirect(CommonHelper.GetStoreLocation() + "privatemessages.aspx?tab=sent");
             }

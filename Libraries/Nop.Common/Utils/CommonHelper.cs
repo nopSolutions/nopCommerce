@@ -991,6 +991,19 @@ namespace NopSolutions.NopCommerce.Common.Utils
         }
 
         /// <summary>
+        /// Ensure that a string is not null
+        /// </summary>
+        /// <param name="str">Input string</param>
+        /// <returns>Result</returns>
+        public static string EnsureNotNull(string str)
+        {
+            if (str == null)
+                return string.Empty;
+
+            return str;
+        }
+
+        /// <summary>
         /// Get a value indicating whether content page is requested
         /// </summary>
         /// <returns>Result</returns>

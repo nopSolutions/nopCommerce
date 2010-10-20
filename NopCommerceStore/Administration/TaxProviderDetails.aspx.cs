@@ -102,9 +102,13 @@ namespace NopSolutions.NopCommerce.Web.Administration
 
                     if (taxProvider != null)
                     {
-                        taxProvider = TaxProviderManager.UpdateTaxProvider(taxProvider.TaxProviderId, txtName.Text,
-                            txtDescription.Text, txtConfigureTemplatePath.Text, txtClassName.Text,
-                          txtDisplayOrder.Value);
+                        taxProvider.Name = txtName.Text;
+                        taxProvider.Description = txtDescription.Text;
+                        taxProvider.ConfigureTemplatePath = txtConfigureTemplatePath.Text;
+                        taxProvider.ClassName = txtClassName.Text;
+                        taxProvider.DisplayOrder =  txtDisplayOrder.Value;
+
+                        TaxProviderManager.UpdateTaxProvider(taxProvider);
 
                         var configureModule = GetConfigureModule();
                         if (configureModule != null)
