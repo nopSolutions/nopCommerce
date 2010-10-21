@@ -9,7 +9,7 @@
 // The Initial Developer of the Original Code is NopSolutions.
 // All Rights Reserved.
 // 
-// Contributor(s): _______. 
+// Contributor(s): mb 10/20/2010. 
 //------------------------------------------------------------------------------
 
 using System;
@@ -279,7 +279,7 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.UPS
             switch (serviceID)
             {
                 case "01":
-                    return "UPS NextDay Air";
+                    return "UPS Next Day Air";
                 case "02":
                     return "UPS 2nd Day Air";
                 case "03":
@@ -287,7 +287,7 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.UPS
                 case "07":
                     return "UPS Worldwide Express";
                 case "08":
-                    return "UPS Worldwide Expidited";
+                    return "UPS Worldwide Expedited";
                 case "11":
                     return "UPS Standard";
                 case "12":
@@ -300,6 +300,16 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.UPS
                     return "UPS Worldwide Express Plus";
                 case "59":
                     return "UPS 2nd Day Air A.M.";
+                case "65":
+                    return "UPS Saver";
+                case "82": //82-86, for Polish Domestic Shipments
+                    return "UPS Today Standard";
+                case "83":
+                    return "UPS Today Dedicated Courier";
+                case "85":
+                    return "UPS Today Express";
+                case "86":
+                    return "UPS Today Express Saver";
                 default:
                     return "Unknown";
             }
@@ -332,6 +342,8 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.UPS
         private List<ShippingOption> ParseResponse(string response, ref string error)
         {
             var shippingOptions = new List<ShippingOption>();
+
+            string carrierServicesOffered = SettingManager.GetSettingValue("ShippingRateComputationMethod.UPS.CarrierServicesOffered", string.Empty);
 
             using (var sr = new StringReader(response))
             using (var tr = new XmlTextReader(sr))
@@ -395,6 +407,13 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.UPS
                             }
                         }
                         string service = GetServiceName(serviceCode);
+                        string serviceId = String.Format("[{0}]", serviceCode);
+
+                        // Go to the next rate if the service ID is not in the list of services to offer
+                        if (!String.IsNullOrEmpty(carrierServicesOffered) && !carrierServicesOffered.Contains(serviceId))
+                        {
+                            continue;
+                        }
 
                         //Weed out unwanted or unkown service rates
                         if (service.ToUpper() != "UNKNOWN")

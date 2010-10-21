@@ -13,6 +13,7 @@
 //------------------------------------------------------------------------------
 
 using System;
+using System.Text;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
@@ -103,6 +104,37 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.UPSConfigure
                 UPSPackagingType packagingType = (UPSPackagingType)Enum.Parse(typeof(UPSPackagingType), packagingTypeStr);
                 CommonHelper.SelectListItem(ddlUPSPackagingType, packagingType.ToString());
             }
+            
+            string carrierServicesOffered = SettingManager.GetSettingValue("ShippingRateComputationMethod.UPS.CarrierServicesOffered", string.Empty);
+            var services = new UPSServices();
+            // Load all service names
+            if (carrierServicesOffered.Length == 0)
+            {
+                foreach (string service in services.Services)
+                {
+                    this.cblCarrierServicesOffered.Items.Add(service);
+                }
+            }
+            else
+            {
+                // Load and select previously selected services
+                foreach (string service in services.Services)
+                {
+                    ListItem cblItem = new ListItem(service);
+                    string serviceId = UPSServices.GetServiceId(service);
+
+                    if (!String.IsNullOrEmpty(serviceId) && !String.IsNullOrEmpty(carrierServicesOffered))
+                    {
+                        // Add delimiters [] so that single digit IDs aren't found in multi-digit IDs
+                        serviceId = String.Format("[{0}]", serviceId);
+                        if (carrierServicesOffered.Contains(serviceId) == true)
+                        {
+                            cblItem.Selected = true;
+                        }
+                    }
+                    this.cblCarrierServicesOffered.Items.Add(cblItem);
+                }
+            }
         }
 
         public void Save()
@@ -123,6 +155,32 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.UPSConfigure
             SettingManager.SetParam("ShippingRateComputationMethod.UPS.CustomerClassification", customerClassification.ToString());
             SettingManager.SetParam("ShippingRateComputationMethod.UPS.PickupType", pickupType.ToString());
             SettingManager.SetParam("ShippingRateComputationMethod.UPS.PackagingType", packagingType.ToString());
+
+
+            var carrierServicesOffered = new StringBuilder();
+            int carrierServicesCount = 0;
+            foreach (ListItem li in cblCarrierServicesOffered.Items)
+            {
+                if (li.Selected == true)
+                {
+                    string serviceId = UPSServices.GetServiceId(li.Text);
+                    if (!String.IsNullOrEmpty(serviceId))
+                    {
+                        // Add delimiters [] so that single digit IDs aren't found in multi-digit IDs
+                        carrierServicesOffered.AppendFormat("[{0}]:", serviceId);
+                    }
+                    carrierServicesCount++;
+                }
+            }
+            // Add default options if no services were selected (Ground, 3 Day Select, Standard, and Worldwide Expedited)
+            if (carrierServicesCount == 0)
+            {
+                SettingManager.SetParam("ShippingRateComputationMethod.UPS.CarrierServicesOffered", "[03]:[12]:[11]:[08]:");
+            }
+            else
+            {
+                SettingManager.SetParam("ShippingRateComputationMethod.UPS.CarrierServicesOffered", carrierServicesOffered.ToString());
+            }
         }
     }
 }

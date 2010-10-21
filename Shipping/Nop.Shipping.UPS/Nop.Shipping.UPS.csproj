@@ -73,6 +73,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="UPSServices.cs" />
     <Compile Include="UPSPackagingType.cs" />
     <Compile Include="UPSCustomerClassification.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

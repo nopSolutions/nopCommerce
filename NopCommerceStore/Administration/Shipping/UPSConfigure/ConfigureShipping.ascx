@@ -89,4 +89,18 @@
             <asp:TextBox runat="server" ID="txtShippedFromZipPostalCode" CssClass="adminInput"></asp:TextBox>
         </td>
     </tr>
+    <tr>
+        <td class="adminTitle">
+            Carrier Services:
+            <br />
+            -select the services you want to offer to customers.
+        </td>
+        <td class="adminData">
+            <div style="height: 250px; width: 250px; overflow: auto; border: solid 1px #bbb;">
+                <asp:CheckBoxList ID="cblCarrierServicesOffered" RepeatColumns="1" RepeatDirection="Vertical"
+                    runat="server">
+                </asp:CheckBoxList>
+            </div>
+        </td>
+    </tr>
 </table>

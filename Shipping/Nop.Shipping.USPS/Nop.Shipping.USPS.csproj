@@ -73,6 +73,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="USPSServices.cs" />
     <Compile Include="USPSStrings.cs" />
     <Compile Include="USPSPackageSize.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
