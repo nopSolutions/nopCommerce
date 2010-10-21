@@ -45,4 +45,32 @@
             <asp:TextBox runat="server" ID="txtShippedFromZipPostalCode" CssClass="adminInput"></asp:TextBox>
         </td>
     </tr>
+    <tr>
+        <td class="adminTitle">
+            <b>Domestic</b> Carrier Services:
+            <br />
+            -select the services you want to offer to customers.
+        </td>
+        <td class="adminData">
+            <div style="height: 250px; width: 300px; overflow: auto; border: solid 1px #bbb;">
+                <asp:CheckBoxList ID="cblCarrierServicesOfferedDomestic" RepeatColumns="1" RepeatDirection="Vertical"
+                    runat="server">
+                </asp:CheckBoxList>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            <b>International</b> Carrier Services:
+            <br />
+            -select the services you want to offer to customers.
+        </td>
+        <td class="adminData">
+            <div style="height: 250px; width: 300px; overflow: auto; border: solid 1px #bbb;">
+                <asp:CheckBoxList ID="cblCarrierServicesOfferedInternational" RepeatColumns="1" RepeatDirection="Vertical"
+                    runat="server">
+                </asp:CheckBoxList>
+            </div>
+        </td>
+    </tr>
 </table>
