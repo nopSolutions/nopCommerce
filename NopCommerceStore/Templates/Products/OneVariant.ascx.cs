@@ -155,14 +155,16 @@ namespace NopSolutions.NopCommerce.Web.Templates.Products
             //price entered by a customer
             if (productVariant.CustomerEntersPrice)
             {
-                int minimumCustomerEnteredPrice = Convert.ToInt32(Math.Ceiling(CurrencyManager.ConvertCurrency(productVariant.MinimumCustomerEnteredPrice, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency)));
-                int maximumCustomerEnteredPrice = Convert.ToInt32(Math.Truncate(CurrencyManager.ConvertCurrency(productVariant.MaximumCustomerEnteredPrice, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency)));
+                decimal minimumCustomerEnteredPrice = CurrencyManager.ConvertCurrency(productVariant.MinimumCustomerEnteredPrice, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                decimal maximumCustomerEnteredPrice = CurrencyManager.ConvertCurrency(productVariant.MaximumCustomerEnteredPrice, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
                 txtCustomerEnteredPrice.Visible = true;
                 txtCustomerEnteredPrice.ValidationGroup = string.Format("ProductVariant{0}", productVariant.ProductVariantId);
                 txtCustomerEnteredPrice.Value = minimumCustomerEnteredPrice;
                 txtCustomerEnteredPrice.MinimumValue = minimumCustomerEnteredPrice.ToString();
                 txtCustomerEnteredPrice.MaximumValue = maximumCustomerEnteredPrice.ToString();
-                txtCustomerEnteredPrice.RangeErrorMessage = string.Format(GetLocaleResourceString("Products.CustomerEnteredPrice.Range"), minimumCustomerEnteredPrice, maximumCustomerEnteredPrice);
+                txtCustomerEnteredPrice.RangeErrorMessage = string.Format(GetLocaleResourceString("Products.CustomerEnteredPrice.Range"),
+                    PriceHelper.FormatPrice(minimumCustomerEnteredPrice, false, false),
+                        PriceHelper.FormatPrice(maximumCustomerEnteredPrice, false, false));
             }
             else
             {

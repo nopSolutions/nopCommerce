@@ -770,11 +770,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 if (customerEnteredPrice < productVariant.MinimumCustomerEnteredPrice ||
                     customerEnteredPrice > productVariant.MaximumCustomerEnteredPrice)
                 {
-                    int minimumCustomerEnteredPrice = Convert.ToInt32(Math.Ceiling(CurrencyManager.ConvertCurrency(productVariant.MinimumCustomerEnteredPrice, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency)));
-                    int maximumCustomerEnteredPrice = Convert.ToInt32(Math.Truncate(CurrencyManager.ConvertCurrency(productVariant.MaximumCustomerEnteredPrice, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency)));
-                
+                    decimal minimumCustomerEnteredPrice = CurrencyManager.ConvertCurrency(productVariant.MinimumCustomerEnteredPrice, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                    decimal maximumCustomerEnteredPrice = CurrencyManager.ConvertCurrency(productVariant.MaximumCustomerEnteredPrice, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
                     warnings.Add(string.Format(LocalizationManager.GetLocaleResourceString("ShoppingCart.CustomerEnteredPrice.RangeError"),
-                        minimumCustomerEnteredPrice, maximumCustomerEnteredPrice));
+                        PriceHelper.FormatPrice(minimumCustomerEnteredPrice, false, false),
+                        PriceHelper.FormatPrice(maximumCustomerEnteredPrice, false, false)));
                 }
             }
 
