@@ -4251,27 +4251,27 @@
             <End Role="Nop_StateProvince" EntitySet="StateProvinces" />
           </AssociationSet>
           <EntitySet Name="Topics" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Topic" />
-          <EntitySet Name="LocalizedTopic" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.LocalizedTopic" />
+          <EntitySet Name="LocalizedTopics" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.LocalizedTopic" />
           <AssociationSet Name="FK_Nop_TopicLocalized_Nop_Language" Association="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_TopicLocalized_Nop_Language">
             <End Role="Language" EntitySet="Languages" />
-            <End Role="Nop_TopicLocalized" EntitySet="LocalizedTopic" />
+            <End Role="Nop_TopicLocalized" EntitySet="LocalizedTopics" />
           </AssociationSet>
           <AssociationSet Name="FK_Nop_TopicLocalized_Nop_Topic" Association="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_TopicLocalized_Nop_Topic">
             <End Role="Nop_Topic" EntitySet="Topics" />
-            <End Role="Nop_TopicLocalized" EntitySet="LocalizedTopic" />
+            <End Role="Nop_TopicLocalized" EntitySet="LocalizedTopics" />
           </AssociationSet>
           <EntitySet Name="QueuedEmails" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.QueuedEmail" />
           <EntitySet Name="BannedIpAddresses" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.BannedIpAddress" />
           <EntitySet Name="BannedIpNetworks" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.BannedIpNetwork" />
           <EntitySet Name="MessageTemplates" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.MessageTemplate" />
-          <EntitySet Name="LocalizedMessageTemplate" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.LocalizedMessageTemplate" />
+          <EntitySet Name="LocalizedMessageTemplates" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.LocalizedMessageTemplate" />
           <AssociationSet Name="FK_Nop_MessageTemplateLocalized_Nop_Language" Association="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_MessageTemplateLocalized_Nop_Language">
             <End Role="Language" EntitySet="Languages" />
-            <End Role="Nop_MessageTemplateLocalized" EntitySet="LocalizedMessageTemplate" />
+            <End Role="Nop_MessageTemplateLocalized" EntitySet="LocalizedMessageTemplates" />
           </AssociationSet>
           <AssociationSet Name="FK_Nop_MessageTemplateLocalized_Nop_MessageTemplate" Association="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_MessageTemplateLocalized_Nop_MessageTemplate">
             <End Role="Nop_MessageTemplate" EntitySet="MessageTemplates" />
-            <End Role="Nop_MessageTemplateLocalized" EntitySet="LocalizedMessageTemplate" />
+            <End Role="Nop_MessageTemplateLocalized" EntitySet="LocalizedMessageTemplates" />
           </AssociationSet>
           <EntitySet Name="MeasureDimensions" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.MeasureDimension" />
           <EntitySet Name="MeasureWeights" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.MeasureWeight" />
@@ -4340,24 +4340,24 @@
             <End Role="Customer" EntitySet="Customers" />
             <End Role="Nop_CustomerRole" EntitySet="CustomerRoles" />
           </AssociationSet>
-          <EntitySet Name="ACLs" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.ACL" />
+          <EntitySet Name="ACL" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.ACL" />
           <AssociationSet Name="FK_Nop_ACL_Nop_CustomerAction" Association="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_ACL_Nop_CustomerAction">
             <End Role="CustomerAction" EntitySet="CustomerActions" />
-            <End Role="Nop_ACL" EntitySet="ACLs" />
+            <End Role="Nop_ACL" EntitySet="ACL" />
           </AssociationSet>
           <AssociationSet Name="FK_Nop_ACL_Nop_CustomerRole" Association="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_ACL_Nop_CustomerRole">
             <End Role="CustomerRole" EntitySet="CustomerRoles" />
-            <End Role="Nop_ACL" EntitySet="ACLs" />
+            <End Role="Nop_ACL" EntitySet="ACL" />
           </AssociationSet>
-          <EntitySet Name="ActivityLogs" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.ActivityLog" />
+          <EntitySet Name="ActivityLog" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.ActivityLog" />
           <EntitySet Name="ActivityLogTypes" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.ActivityLogType" />
           <AssociationSet Name="FK_Nop_ActivityLog_Nop_ActivityLogType" Association="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_ActivityLog_Nop_ActivityLogType">
             <End Role="Nop_ActivityLogType" EntitySet="ActivityLogTypes" />
-            <End Role="Nop_ActivityLog" EntitySet="ActivityLogs" />
+            <End Role="Nop_ActivityLog" EntitySet="ActivityLog" />
           </AssociationSet>
           <AssociationSet Name="FK_Nop_ActivityLog_Nop_Customer" Association="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_ActivityLog_Nop_Customer">
             <End Role="Customer" EntitySet="Customers" />
-            <End Role="Nop_ActivityLog" EntitySet="ActivityLogs" />
+            <End Role="Nop_ActivityLog" EntitySet="ActivityLog" />
           </AssociationSet>
           <EntitySet Name="Addresses" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Address" />
           <EntitySet Name="BlogComments" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.BlogComment" />
@@ -4544,9 +4544,9 @@
             <End Role="Nop_Manufacturer" EntitySet="Manufacturers" />
             <End Role="Nop_ManufacturerLocalized" EntitySet="ManufacturerLocalized" />
           </AssociationSet>
-          <EntitySet Name="SpecificationAttribute" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.SpecificationAttribute" />
+          <EntitySet Name="SpecificationAttributes" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.SpecificationAttribute" />
           <EntitySet Name="SpecificationAttributeLocalized" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.SpecificationAttributeLocalized" />
-          <EntitySet Name="SpecificationAttributeOption" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.SpecificationAttributeOption" />
+          <EntitySet Name="SpecificationAttributeOptions" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.SpecificationAttributeOption" />
           <EntitySet Name="SpecificationAttributeOptionLocalized" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.SpecificationAttributeOptionLocalized" />
           <AssociationSet Name="FK_Nop_SpecificationAttributeLocalized_Nop_Language" Association="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_SpecificationAttributeLocalized_Nop_Language">
             <End Role="Language" EntitySet="Languages" />
@@ -4557,15 +4557,15 @@
             <End Role="Nop_SpecificationAttributeOptionLocalized" EntitySet="SpecificationAttributeOptionLocalized" />
           </AssociationSet>
           <AssociationSet Name="FK_Nop_SpecificationAttributeLocalized_Nop_SpecificationAttribute" Association="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_SpecificationAttributeLocalized_Nop_SpecificationAttribute">
-            <End Role="Nop_SpecificationAttribute" EntitySet="SpecificationAttribute" />
+            <End Role="Nop_SpecificationAttribute" EntitySet="SpecificationAttributes" />
             <End Role="Nop_SpecificationAttributeLocalized" EntitySet="SpecificationAttributeLocalized" />
           </AssociationSet>
           <AssociationSet Name="FK_Nop_SpecificationAttributeOption_Nop_SpecificationAttribute" Association="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_SpecificationAttributeOption_Nop_SpecificationAttribute">
-            <End Role="Nop_SpecificationAttribute" EntitySet="SpecificationAttribute" />
-            <End Role="Nop_SpecificationAttributeOption" EntitySet="SpecificationAttributeOption" />
+            <End Role="Nop_SpecificationAttribute" EntitySet="SpecificationAttributes" />
+            <End Role="Nop_SpecificationAttributeOption" EntitySet="SpecificationAttributeOptions" />
           </AssociationSet>
           <AssociationSet Name="FK_Nop_SpecificationAttributeOptionLocalized_Nop_SpecificationAttributeOption" Association="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_SpecificationAttributeOptionLocalized_Nop_SpecificationAttributeOption">
-            <End Role="Nop_SpecificationAttributeOption" EntitySet="SpecificationAttributeOption" />
+            <End Role="Nop_SpecificationAttributeOption" EntitySet="SpecificationAttributeOptions" />
             <End Role="Nop_SpecificationAttributeOptionLocalized" EntitySet="SpecificationAttributeOptionLocalized" />
           </AssociationSet>
           <EntitySet Name="ProductAttributes" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.ProductAttribute" />
@@ -4675,7 +4675,7 @@
             <End Role="Nop_ProductReview" EntitySet="ProductReviews" />
           </AssociationSet>
           <AssociationSet Name="FK_Nop_Product_SpecificationAttribute_Mapping_Nop_SpecificationAttributeOption" Association="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_Product_SpecificationAttribute_Mapping_Nop_SpecificationAttributeOption">
-            <End Role="SpecificationAttributeOption" EntitySet="SpecificationAttributeOption" />
+            <End Role="SpecificationAttributeOption" EntitySet="SpecificationAttributeOptions" />
             <End Role="Nop_Product_SpecificationAttribute_Mapping" EntitySet="ProductSpecificationAttributes" />
           </AssociationSet>
           <AssociationSet Name="FK_Nop_ProductReviewHelpfulness_Nop_ProductReview" Association="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_ProductReviewHelpfulness_Nop_ProductReview">
@@ -4689,7 +4689,7 @@
           <EntitySet Name="ProductVariantPricelists" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.ProductVariantPricelist" />
           <EntitySet Name="ProductVariantAttributes" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.ProductVariantAttribute" />
           <EntitySet Name="ProductVariantAttributeCombinations" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.ProductVariantAttributeCombination" />
-          <EntitySet Name="ProductVariantAttributeValue" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.ProductVariantAttributeValue" />
+          <EntitySet Name="ProductVariantAttributeValues" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.ProductVariantAttributeValue" />
           <EntitySet Name="ProductVariantAttributeValueLocalized" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.ProductVariantAttributeValueLocalized" />
           <AssociationSet Name="FK_Nop_ProductVariantAttributeValueLocalized_Nop_Language" Association="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_ProductVariantAttributeValueLocalized_Nop_Language">
             <End Role="Language" EntitySet="Languages" />
@@ -4717,10 +4717,10 @@
           </AssociationSet>
           <AssociationSet Name="FK_Nop_ProductVariantAttributeValue_Nop_ProductVariant_ProductAttribute_Mapping" Association="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_ProductVariantAttributeValue_Nop_ProductVariant_ProductAttribute_Mapping">
             <End Role="Nop_ProductVariant_ProductAttribute_Mapping" EntitySet="ProductVariantAttributes" />
-            <End Role="Nop_ProductVariantAttributeValue" EntitySet="ProductVariantAttributeValue" />
+            <End Role="Nop_ProductVariantAttributeValue" EntitySet="ProductVariantAttributeValues" />
           </AssociationSet>
           <AssociationSet Name="FK_Nop_ProductVariantAttributeValueLocalized_Nop_ProductVariantAttributeValue" Association="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_ProductVariantAttributeValueLocalized_Nop_ProductVariantAttributeValue">
-            <End Role="Nop_ProductVariantAttributeValue" EntitySet="ProductVariantAttributeValue" />
+            <End Role="Nop_ProductVariantAttributeValue" EntitySet="ProductVariantAttributeValues" />
             <End Role="Nop_ProductVariantAttributeValueLocalized" EntitySet="ProductVariantAttributeValueLocalized" />
           </AssociationSet>
           <AssociationSet Name="Nop_ProductVariant_Discount_Mapping" Association="NopSolutions.NopCommerce.BusinessLogic.Data.Nop_ProductVariant_Discount_Mapping">
@@ -4792,7 +4792,7 @@
             <End Role="Nop_RecurringPayment" EntitySet="RecurringPayments" />
             <End Role="Nop_RecurringPaymentHistory" EntitySet="RecurringPaymentHistory" />
           </AssociationSet>
-          <FunctionImport Name="Sp_ActivityLogLoadAll" EntitySet="ActivityLogs" ReturnType="Collection(NopSolutions.NopCommerce.BusinessLogic.Data.ActivityLog)">
+          <FunctionImport Name="Sp_ActivityLogLoadAll" EntitySet="ActivityLog" ReturnType="Collection(NopSolutions.NopCommerce.BusinessLogic.Data.ActivityLog)">
             <Parameter Name="CreatedOnFrom" Mode="In" Type="DateTime" />
             <Parameter Name="CreatedOnTo" Mode="In" Type="DateTime" />
             <Parameter Name="Email" Mode="In" Type="String" />
@@ -8149,7 +8149,7 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="LocalizedTopic">
+          <EntitySetMapping Name="LocalizedTopics">
             <EntityTypeMapping TypeName="NopSolutions.NopCommerce.BusinessLogic.Data.LocalizedTopic">
               <MappingFragment StoreEntitySet="Nop_TopicLocalized">
                 <ScalarProperty Name="MetaDescription" ColumnName="MetaDescription" />
@@ -8217,7 +8217,7 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="LocalizedMessageTemplate">
+          <EntitySetMapping Name="LocalizedMessageTemplates">
             <EntityTypeMapping TypeName="NopSolutions.NopCommerce.BusinessLogic.Data.LocalizedMessageTemplate">
               <MappingFragment StoreEntitySet="Nop_MessageTemplateLocalized">
                 <ScalarProperty Name="EmailAccountId" ColumnName="EmailAccountId" />
@@ -8665,7 +8665,7 @@
               <ScalarProperty Name="CustomerId" ColumnName="CustomerID" />
             </EndProperty>
           </AssociationSetMapping>
-          <EntitySetMapping Name="ACLs">
+          <EntitySetMapping Name="ACL">
             <EntityTypeMapping TypeName="NopSolutions.NopCommerce.BusinessLogic.Data.ACL">
               <MappingFragment StoreEntitySet="Nop_ACL">
                 <ScalarProperty Name="Allow" ColumnName="Allow" />
@@ -8675,7 +8675,7 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="ActivityLogs">
+          <EntitySetMapping Name="ActivityLog">
             <EntityTypeMapping TypeName="NopSolutions.NopCommerce.BusinessLogic.Data.ActivityLog">
               <MappingFragment StoreEntitySet="Nop_ActivityLog">
                 <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
@@ -9319,7 +9319,7 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="SpecificationAttribute">
+          <EntitySetMapping Name="SpecificationAttributes">
             <EntityTypeMapping TypeName="NopSolutions.NopCommerce.BusinessLogic.Data.SpecificationAttribute">
               <MappingFragment StoreEntitySet="Nop_SpecificationAttribute">
                 <ScalarProperty Name="DisplayOrder" ColumnName="DisplayOrder" />
@@ -9338,7 +9338,7 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="SpecificationAttributeOption">
+          <EntitySetMapping Name="SpecificationAttributeOptions">
             <EntityTypeMapping TypeName="NopSolutions.NopCommerce.BusinessLogic.Data.SpecificationAttributeOption">
               <MappingFragment StoreEntitySet="Nop_SpecificationAttributeOption">
                 <ScalarProperty Name="DisplayOrder" ColumnName="DisplayOrder" />
@@ -9582,7 +9582,7 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="ProductVariantAttributeValue">
+          <EntitySetMapping Name="ProductVariantAttributeValues">
             <EntityTypeMapping TypeName="NopSolutions.NopCommerce.BusinessLogic.Data.ProductVariantAttributeValue">
               <MappingFragment StoreEntitySet="Nop_ProductVariantAttributeValue">
                 <ScalarProperty Name="DisplayOrder" ColumnName="DisplayOrder" />

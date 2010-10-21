@@ -142,6 +142,11 @@
     <Compile Include="Content\Forums\Forum.cs" />
     <Compile Include="Content\Polls\PollVotingRecord.cs" />
     <Compile Include="Customer\CustomerEventArgs.cs" />
+    <Compile Include="Data\NopObjectContext.ObjectSets.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>NopObjectContext.ObjectSets.tt</DependentUpon>
+    </Compile>
     <Compile Include="Directory\GeoCountryLookup.cs" />
     <Compile Include="Directory\ExchangeRates\UpdateExchangeRateTask.cs" />
     <Compile Include="Directory\ExchangeRates\McExchangeRateProvider.cs" />
@@ -481,6 +486,10 @@
       <SubType>Designer</SubType>
     </None>
     <EntityDeploy Include="Data\NopModel.edmx" />
+    <None Include="Data\NopObjectContext.ObjectSets.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>NopObjectContext.ObjectSets.cs</LastGenOutput>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -519,7 +528,9 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
