@@ -1,7 +1,7 @@
 ﻿--new locale resources
 declare @resources xml
 set @resources='
-<Language LanguageID="7">
+<Language>
   <LocaleResource Name="Admin.OnlineCustomers.Registered">
     <Value>Members:</Value>
   </LocaleResource>
@@ -439,58 +439,73 @@ set @resources='
 
 CREATE TABLE #LocaleStringResourceTmp
 	(
-		[LanguageID] [int] NOT NULL,
 		[ResourceName] [nvarchar](200) NOT NULL,
 		[ResourceValue] [nvarchar](max) NOT NULL
 	)
 
 
-INSERT INTO #LocaleStringResourceTmp (LanguageID, ResourceName, ResourceValue)
-SELECT	@resources.value('(/Language/@LanguageID)[1]', 'int'), nref.value('@Name', 'nvarchar(200)'), nref.value('Value[1]', 'nvarchar(MAX)')
+INSERT INTO #LocaleStringResourceTmp (ResourceName, ResourceValue)
+SELECT	nref.value('@Name', 'nvarchar(200)'), nref.value('Value[1]', 'nvarchar(MAX)')
 FROM	@resources.nodes('//Language/LocaleResource') AS R(nref)
 
-DECLARE @LanguageID int
-DECLARE @ResourceName nvarchar(200)
-DECLARE @ResourceValue nvarchar(MAX)
-DECLARE cur_localeresource CURSOR FOR
-SELECT LanguageID, ResourceName, ResourceValue
-FROM #LocaleStringResourceTmp
-OPEN cur_localeresource
-FETCH NEXT FROM cur_localeresource INTO @LanguageID, @ResourceName, @ResourceValue
+
+--do it for each existing language
+DECLARE @ExistingLanguageID int
+DECLARE cur_existinglanguage CURSOR FOR
+SELECT LanguageID
+FROM [Nop_Language]
+OPEN cur_existinglanguage
+FETCH NEXT FROM cur_existinglanguage INTO @ExistingLanguageID
 WHILE @@FETCH_STATUS = 0
 BEGIN
-	IF (EXISTS (SELECT 1 FROM Nop_LocaleStringResource WHERE LanguageID=@LanguageID AND ResourceName=@ResourceName))
+	DECLARE @ResourceName nvarchar(200)
+	DECLARE @ResourceValue nvarchar(MAX)
+	DECLARE cur_localeresource CURSOR FOR
+	SELECT ResourceName, ResourceValue
+	FROM #LocaleStringResourceTmp
+	OPEN cur_localeresource
+	FETCH NEXT FROM cur_localeresource INTO @ResourceName, @ResourceValue
+	WHILE @@FETCH_STATUS = 0
 	BEGIN
-		UPDATE [Nop_LocaleStringResource]
-		SET [ResourceValue]=@ResourceValue
-		WHERE LanguageID=@LanguageID AND ResourceName=@ResourceName
+		IF (EXISTS (SELECT 1 FROM Nop_LocaleStringResource WHERE LanguageID=@ExistingLanguageID AND ResourceName=@ResourceName))
+		BEGIN
+			UPDATE [Nop_LocaleStringResource]
+			SET [ResourceValue]=@ResourceValue
+			WHERE LanguageID=@ExistingLanguageID AND ResourceName=@ResourceName
+		END
+		ELSE 
+		BEGIN
+			INSERT INTO [Nop_LocaleStringResource]
+			(
+				[LanguageID],
+				[ResourceName],
+				[ResourceValue]
+			)
+			VALUES
+			(
+				@ExistingLanguageID,
+				@ResourceName,
+				@ResourceValue
+			)
+		END
+		
+		IF (@ResourceValue is null or @ResourceValue = '')
+		BEGIN
+			DELETE [Nop_LocaleStringResource]
+			WHERE LanguageID=@ExistingLanguageID AND ResourceName=@ResourceName
+		END
+		
+		FETCH NEXT FROM cur_localeresource INTO @ResourceName, @ResourceValue
 	END
-	ELSE 
-	BEGIN
-		INSERT INTO [Nop_LocaleStringResource]
-		(
-			[LanguageID],
-			[ResourceName],
-			[ResourceValue]
-		)
-		VALUES
-		(
-			@LanguageID,
-			@ResourceName,
-			@ResourceValue
-		)
-	END
-	
-	IF (@ResourceValue is null or @ResourceValue = '')
-	BEGIN
-		DELETE [Nop_LocaleStringResource]
-		WHERE LanguageID=@LanguageID AND ResourceName=@ResourceName
-	END
-	
-	FETCH NEXT FROM cur_localeresource INTO @LanguageID, @ResourceName, @ResourceValue
+	CLOSE cur_localeresource
+	DEALLOCATE cur_localeresource
+
+
+	--fetch next language identifier
+	FETCH NEXT FROM cur_existinglanguage INTO @ExistingLanguageID
 END
-CLOSE cur_localeresource
-DEALLOCATE cur_localeresource
+CLOSE cur_existinglanguage
+DEALLOCATE cur_existinglanguage
 
 DROP TABLE #LocaleStringResourceTmp
 GO
