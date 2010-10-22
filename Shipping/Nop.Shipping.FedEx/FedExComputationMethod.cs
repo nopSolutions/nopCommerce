@@ -9,7 +9,7 @@
 // The Initial Developer of the Original Code is NopSolutions.
 // All Rights Reserved.
 // 
-// Contributor(s): _______. 
+// Contributor(s): mb. 
 //------------------------------------------------------------------------------
 
 using System;
@@ -260,51 +260,62 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.FedEx
 
         private List<ShippingOption> ParseResponse(RateReply reply)
         {
+            var additionalFee = SettingManager.GetSettingValueDecimalNative("ShippingRateComputationMethod.FedEx.AdditionalFee", 0);
+            string carrierServicesOffered = SettingManager.GetSettingValue("ShippingRateComputationMethod.FedEx.CarrierServicesOffered");
+            bool applyDiscount = SettingManager.GetSettingValueBoolean("ShippingRateComputationMethod.FedEx.ApplyDiscounts", false);
+
             var result = new List<ShippingOption>();
 
             Debug.WriteLine("RateReply details:");
             Debug.WriteLine("**********************************************************");
             foreach (var rateDetail in reply.RateReplyDetails)
             {
-                Debug.WriteLine("ServiceType: " + rateDetail.ServiceType);
-                for (int i = 0; i < rateDetail.RatedShipmentDetails.Length; i++)
-                {
-                    var shipmentDetail = rateDetail.RatedShipmentDetails[i];
-                    Debug.WriteLine("RateType : " + shipmentDetail.ShipmentRateDetail.RateType);
-                    Debug.WriteLine("Total Billing Weight : " + shipmentDetail.ShipmentRateDetail.TotalBillingWeight.Value);
-                    Debug.WriteLine("Total Base Charge : " + shipmentDetail.ShipmentRateDetail.TotalBaseCharge.Amount);
-                    Debug.WriteLine("Total Discount : " + shipmentDetail.ShipmentRateDetail.TotalFreightDiscounts.Amount);
-                    Debug.WriteLine("Total Surcharges : " + shipmentDetail.ShipmentRateDetail.TotalSurcharges.Amount);
-                    Debug.WriteLine("Net Charge : " + shipmentDetail.ShipmentRateDetail.TotalNetCharge.Amount);
-                    Debug.WriteLine("*********");
+                var shippingOption = new ShippingOption();
+                string serviceName = FedExServices.GetServiceName(rateDetail.ServiceType.ToString());
 
-                    //take first one
-                    if (i == 0)
+                // Skip the current service if services are selected and this service hasn't been selected
+                if (!String.IsNullOrEmpty(carrierServicesOffered) && !carrierServicesOffered.Contains(rateDetail.ServiceType.ToString()))
+                {
+                    continue;
+                }
+
+                Debug.WriteLine("ServiceType: " + rateDetail.ServiceType);
+                if (!serviceName.Equals("UNKNOWN"))
+                {
+                    shippingOption.Name = serviceName;
+
+                    Debug.WriteLine("ServiceType: " + rateDetail.ServiceType);
+                    foreach (RatedShipmentDetail shipmentDetail in rateDetail.RatedShipmentDetails)
                     {
-                        var shippingOption = new ShippingOption();
-                        string userFriendlyServiceType = GetUserFriendlyEnum(rateDetail.ServiceType.ToString());
-                        shippingOption.Name = userFriendlyServiceType;
-                        shippingOption.Rate = shipmentDetail.ShipmentRateDetail.TotalNetCharge.Amount;
-                        result.Add(shippingOption);
+                        Debug.WriteLine("RateType : " + shipmentDetail.ShipmentRateDetail.RateType);
+                        Debug.WriteLine("Total Billing Weight : " + shipmentDetail.ShipmentRateDetail.TotalBillingWeight.Value);
+                        Debug.WriteLine("Total Base Charge : " + shipmentDetail.ShipmentRateDetail.TotalBaseCharge.Amount);
+                        Debug.WriteLine("Total Discount : " + shipmentDetail.ShipmentRateDetail.TotalFreightDiscounts.Amount);
+                        Debug.WriteLine("Total Surcharges : " + shipmentDetail.ShipmentRateDetail.TotalSurcharges.Amount);
+                        Debug.WriteLine("Net Charge : " + shipmentDetail.ShipmentRateDetail.TotalNetCharge.Amount);
+                        Debug.WriteLine("*********");
+
+                        // Get discounted rates if option is selected
+                        if (applyDiscount == true & shipmentDetail.ShipmentRateDetail.RateType == ReturnedRateType.PAYOR_ACCOUNT)
+                        {
+                            shippingOption.Rate = shipmentDetail.ShipmentRateDetail.TotalNetCharge.Amount + additionalFee;
+                            break;
+                        }
+                        else if (shipmentDetail.ShipmentRateDetail.RateType == ReturnedRateType.PAYOR_LIST) // Get List Rates (not discount rates)
+                        {
+                            shippingOption.Rate = shipmentDetail.ShipmentRateDetail.TotalNetCharge.Amount + additionalFee;
+                            break;
+                        }
+                        else // Skip the rate (RATED_ACCOUNT, PAYOR_MULTIWEIGHT, or RATED_LIST)
+                        {
+                            continue;
+                        }
                     }
+                    result.Add(shippingOption);
                 }
                 Debug.WriteLine("**********************************************************");
             }
 
-            return result;
-        }
-
-        private string GetUserFriendlyEnum(string s)
-        {
-            string result = string.Empty;
-            char[] letters = s.ToCharArray();
-            foreach (char c in letters)
-            {
-                if (c.ToString() == "_")
-                    result += " ";
-                else
-                    result += c.ToString();
-            }
             return result;
         }
 
