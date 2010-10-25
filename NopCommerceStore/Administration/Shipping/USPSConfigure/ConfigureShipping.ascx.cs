@@ -21,6 +21,7 @@ using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Shipping.Methods.USPS;
 using NopSolutions.NopCommerce.Web.Administration.Modules;
 using NopSolutions.NopCommerce.Web.Templates.Shipping;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Shipping.USPSConfigure
 {
@@ -36,14 +37,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.USPSConfigure
 
         private void BindData()
         {
-            txtURL.Text = SettingManager.GetSettingValue("ShippingRateComputationMethod.USPS.URL");
-            txtUsername.Text = SettingManager.GetSettingValue("ShippingRateComputationMethod.USPS.Username");
-            txtPassword.Text = SettingManager.GetSettingValue("ShippingRateComputationMethod.USPS.Password");
-            txtAdditionalHandlingCharge.Value = SettingManager.GetSettingValueDecimalNative("ShippingRateComputationMethod.USPS.AdditionalHandlingCharge");
-            txtShippedFromZipPostalCode.Text = SettingManager.GetSettingValue("ShippingRateComputationMethod.USPS.DefaultShippedFromZipPostalCode");
+            txtURL.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.USPS.URL");
+            txtUsername.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.USPS.Username");
+            txtPassword.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.USPS.Password");
+            txtAdditionalHandlingCharge.Value = IoCFactory.Resolve<ISettingManager>().GetSettingValueDecimalNative("ShippingRateComputationMethod.USPS.AdditionalHandlingCharge");
+            txtShippedFromZipPostalCode.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.USPS.DefaultShippedFromZipPostalCode");
 
 
-            string carrierServicesOfferedDomestic = SettingManager.GetSettingValue("ShippingRateComputationMethod.USPS.CarrierServicesOfferedDomestic", string.Empty);
+            string carrierServicesOfferedDomestic = IoCFactory.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.USPS.CarrierServicesOfferedDomestic", string.Empty);
             var services = new USPSServices();
             // Load Domestic service names
             if (carrierServicesOfferedDomestic.Length == 0)
@@ -73,7 +74,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.USPSConfigure
                 }
             }
 
-            string carrierServicesOfferedInternational = SettingManager.GetSettingValue("ShippingRateComputationMethod.USPS.CarrierServicesOfferedInternational", string.Empty);
+            string carrierServicesOfferedInternational = IoCFactory.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.USPS.CarrierServicesOfferedInternational", string.Empty);
             // Load International service names
             if (carrierServicesOfferedInternational.Length == 0)
             {
@@ -105,11 +106,11 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.USPSConfigure
 
         public void Save()
         {
-            SettingManager.SetParam("ShippingRateComputationMethod.USPS.URL", txtURL.Text);
-            SettingManager.SetParam("ShippingRateComputationMethod.USPS.Username", txtUsername.Text);
-            SettingManager.SetParam("ShippingRateComputationMethod.USPS.Password", txtPassword.Text);
-            SettingManager.SetParamNative("ShippingRateComputationMethod.USPS.AdditionalHandlingCharge", txtAdditionalHandlingCharge.Value);
-            SettingManager.SetParam("ShippingRateComputationMethod.USPS.DefaultShippedFromZipPostalCode", txtShippedFromZipPostalCode.Text);
+            IoCFactory.Resolve<ISettingManager>().SetParam("ShippingRateComputationMethod.USPS.URL", txtURL.Text);
+            IoCFactory.Resolve<ISettingManager>().SetParam("ShippingRateComputationMethod.USPS.Username", txtUsername.Text);
+            IoCFactory.Resolve<ISettingManager>().SetParam("ShippingRateComputationMethod.USPS.Password", txtPassword.Text);
+            IoCFactory.Resolve<ISettingManager>().SetParamNative("ShippingRateComputationMethod.USPS.AdditionalHandlingCharge", txtAdditionalHandlingCharge.Value);
+            IoCFactory.Resolve<ISettingManager>().SetParam("ShippingRateComputationMethod.USPS.DefaultShippedFromZipPostalCode", txtShippedFromZipPostalCode.Text);
 
             // Save selected Domestic services
             var carrierServicesOfferedDomestic = new StringBuilder();
@@ -130,11 +131,11 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.USPSConfigure
             // Add default options if no services were selected (Priority, Express, and Parcel Post)
             if (carrierServicesDomesticSelectedCount == 0)
             {
-                SettingManager.SetParam("ShippingRateComputationMethod.USPS.CarrierServicesOfferedDomestic", "[1]:[3]:[4]:");
+                IoCFactory.Resolve<ISettingManager>().SetParam("ShippingRateComputationMethod.USPS.CarrierServicesOfferedDomestic", "[1]:[3]:[4]:");
             }
             else
             {
-                SettingManager.SetParam("ShippingRateComputationMethod.USPS.CarrierServicesOfferedDomestic", carrierServicesOfferedDomestic.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("ShippingRateComputationMethod.USPS.CarrierServicesOfferedDomestic", carrierServicesOfferedDomestic.ToString());
             }
 
             // Save selected International services
@@ -156,11 +157,11 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.USPSConfigure
             // Add default options if no services were selected (Priority Mail International, First-Class Mail International Package, and Express Mail International)
             if (carrierServicesInternationalSelectedCount == 0)
             {
-                SettingManager.SetParam("ShippingRateComputationMethod.USPS.CarrierServicesOfferedInternational", "[2]:[15]:[1]:");
+                IoCFactory.Resolve<ISettingManager>().SetParam("ShippingRateComputationMethod.USPS.CarrierServicesOfferedInternational", "[2]:[15]:[1]:");
             }
             else
             {
-                SettingManager.SetParam("ShippingRateComputationMethod.USPS.CarrierServicesOfferedInternational", carrierServicesOfferedInternational.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("ShippingRateComputationMethod.USPS.CarrierServicesOfferedInternational", carrierServicesOfferedInternational.ToString());
             }
         }
     }

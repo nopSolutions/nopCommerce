@@ -35,6 +35,7 @@ using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.Utils.Html;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Orders;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -42,8 +43,8 @@ namespace NopSolutions.NopCommerce.Web.Modules
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!SettingManager.GetSettingValueBoolean("Common.EnableWishlist") || 
-                !SettingManager.GetSettingValueBoolean("Common.EmailWishlist"))
+            if (!IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Common.EnableWishlist") || 
+                !IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Common.EmailWishlist"))
                 Response.Redirect(CommonHelper.GetStoreLocation());
 
             if (!Page.IsPostBack)
@@ -57,7 +58,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             {
                 Response.Redirect(CommonHelper.GetStoreLocation());
             }
-            var cart = ShoppingCartManager.GetShoppingCartByCustomerSessionGuid(ShoppingCartTypeEnum.Wishlist, NopContext.Current.Session.CustomerSessionGuid);
+            var cart = IoCFactory.Resolve<IShoppingCartManager>().GetShoppingCartByCustomerSessionGuid(ShoppingCartTypeEnum.Wishlist, NopContext.Current.Session.CustomerSessionGuid);
             if (cart.Count > 0)
             {
                 lblDescription.Text = string.Format(GetLocaleResourceString("EmailWishlist.Description"), cart.TotalProducts);
@@ -95,7 +96,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     {
                         Response.Redirect(CommonHelper.GetStoreLocation());
                     }
-                    var cart = ShoppingCartManager.GetShoppingCartByCustomerSessionGuid(ShoppingCartTypeEnum.Wishlist, NopContext.Current.Session.CustomerSessionGuid);
+                    var cart = IoCFactory.Resolve<IShoppingCartManager>().GetShoppingCartByCustomerSessionGuid(ShoppingCartTypeEnum.Wishlist, NopContext.Current.Session.CustomerSessionGuid);
                     if (cart.Count == 0)
                     {
                         Response.Redirect(CommonHelper.GetStoreLocation());
@@ -110,9 +111,9 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
                     string friendsEmail = txtFriendsEmail.Text.Trim();
                     string personalMessage = txtPersonalMessage.Text.Trim();
-                    personalMessage = ProductManager.FormatEmailAFriendText(personalMessage);
+                    personalMessage = IoCFactory.Resolve<IProductManager>().FormatEmailAFriendText(personalMessage);
 
-                    MessageManager.SendWishlistEmailAFriendMessage(NopContext.Current.User,
+                    IoCFactory.Resolve<IMessageManager>().SendWishlistEmailAFriendMessage(NopContext.Current.User,
                         cart, NopContext.Current.WorkingLanguage.LanguageId,
                         friendsEmail, personalMessage);
 

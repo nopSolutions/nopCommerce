@@ -33,6 +33,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
  
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -45,14 +46,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             foreach (string status in statuses)
             {
                 int enumValue = (int)Enum.Parse(typeof(ReturnStatusEnum), status, true);
-                ListItem ddlItem = new ListItem(OrderManager.GetReturnRequestStatusName((ReturnStatusEnum)enumValue), enumValue.ToString());
+                ListItem ddlItem = new ListItem(IoCFactory.Resolve<IOrderManager>().GetReturnRequestStatusName((ReturnStatusEnum)enumValue), enumValue.ToString());
                 ddlStatus.Items.Add(ddlItem);
             }
         }
 
         private void BindData()
         {
-            ReturnRequest rr = OrderManager.GetReturnRequestById(this.ReturnRequestId);
+            ReturnRequest rr = IoCFactory.Resolve<IOrderManager>().GetReturnRequestById(this.ReturnRequestId);
             if (rr != null)
             {
                 this.lblReturnRequestId.Text = rr.ReturnRequestId.ToString();
@@ -75,7 +76,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public ReturnRequest SaveInfo()
         {
-            ReturnRequest rr = OrderManager.GetReturnRequestById(this.ReturnRequestId);
+            ReturnRequest rr = IoCFactory.Resolve<IOrderManager>().GetReturnRequestById(this.ReturnRequestId);
 
             if (rr != null)
             {
@@ -84,7 +85,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 rr.CustomerComments = txtCustomerComments.Text;
                 rr.StaffNotes = txtStaffNotes.Text;
                 rr.ReturnStatusId = (int)int.Parse(this.ddlStatus.SelectedItem.Value);
-                OrderManager.UpdateReturnRequest(rr);
+                IoCFactory.Resolve<IOrderManager>().UpdateReturnRequest(rr);
             }
             else
             {

@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Payment.Methods.CyberSource
 {
@@ -27,11 +28,11 @@ namespace NopSolutions.NopCommerce.Payment.Methods.CyberSource
         {
             get
             {
-                return SettingManager.GetSettingValue("PaymentMethod.CyberSource.HostedPayment.GatewayUrl", "https://orderpagetest.ic3.com/hop/orderform.jsp");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.CyberSource.HostedPayment.GatewayUrl", "https://orderpagetest.ic3.com/hop/orderform.jsp");
             }
             set
             {
-                SettingManager.SetParam("PaymentMethod.CyberSource.HostedPayment.GatewayUrl", value);
+                IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.CyberSource.HostedPayment.GatewayUrl", value);
             }
         }
 
@@ -39,11 +40,11 @@ namespace NopSolutions.NopCommerce.Payment.Methods.CyberSource
         {
             get
             {
-                return SettingManager.GetSettingValue("PaymentMethod.CyberSource.HostedPayment.MerchantID");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.CyberSource.HostedPayment.MerchantID");
             }
             set
             {
-                SettingManager.SetParam("PaymentMethod.CyberSource.HostedPayment.MerchantID", value);
+                IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.CyberSource.HostedPayment.MerchantID", value);
             }
         }
 
@@ -51,11 +52,11 @@ namespace NopSolutions.NopCommerce.Payment.Methods.CyberSource
         {
             get
             {
-                return SettingManager.GetSettingValue("PaymentMethod.CyberSource.HostedPayment.PublicKey");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.CyberSource.HostedPayment.PublicKey");
             }
             set
             {
-                SettingManager.SetParam("PaymentMethod.CyberSource.HostedPayment.PublicKey", value);
+                IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.CyberSource.HostedPayment.PublicKey", value);
             }
         }
 
@@ -63,11 +64,11 @@ namespace NopSolutions.NopCommerce.Payment.Methods.CyberSource
         {
             get
             {
-                return SettingManager.GetSettingValue("PaymentMethod.CyberSource.HostedPayment.SerialNumber");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.CyberSource.HostedPayment.SerialNumber");
             }
             set
             {
-                SettingManager.SetParam("PaymentMethod.CyberSource.HostedPayment.SerialNumber", value);
+                IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.CyberSource.HostedPayment.SerialNumber", value);
             }
         }
 
@@ -75,11 +76,11 @@ namespace NopSolutions.NopCommerce.Payment.Methods.CyberSource
         {
             get
             {
-                return SettingManager.GetSettingValueDecimalNative("PaymentMethod.CyberSource.HostedPayment.AdditionalFee");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.CyberSource.HostedPayment.AdditionalFee");
             }
             set
             {
-                SettingManager.SetParamNative("PaymentMethod.CyberSource.HostedPayment.AdditionalFee", value);
+                IoCFactory.Resolve<ISettingManager>().SetParamNative("PaymentMethod.CyberSource.HostedPayment.AdditionalFee", value);
             }
         }
         #endregion

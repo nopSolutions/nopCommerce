@@ -28,6 +28,7 @@ using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -75,7 +76,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         private void BindData()
         {
-            Currency currency = CurrencyManager.GetCurrencyById(this.CurrencyId);
+            Currency currency = IoCFactory.Resolve<ICurrencyManager>().GetCurrencyById(this.CurrencyId);
             if (currency != null)
             {
                 this.txtName.Text = currency.Name;
@@ -114,7 +115,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             string displayLocale = ddlDisplayLocale.SelectedItem.Value;
 
-            Currency currency = CurrencyManager.GetCurrencyById(this.CurrencyId);
+            Currency currency = IoCFactory.Resolve<ICurrencyManager>().GetCurrencyById(this.CurrencyId);
             if (currency != null)
             {
                 currency.Name = txtName.Text;
@@ -126,7 +127,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 currency.DisplayOrder = txtDisplayOrder.Value;
                 currency.UpdatedOn = DateTime.UtcNow;
 
-                CurrencyManager.UpdateCurrency(currency);
+                IoCFactory.Resolve<ICurrencyManager>().UpdateCurrency(currency);
             }
             else
             {
@@ -142,7 +143,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     CreatedOn = DateTime.UtcNow,
                     UpdatedOn = DateTime.UtcNow
                 };
-                CurrencyManager.InsertCurrency(currency);
+                IoCFactory.Resolve<ICurrencyManager>().InsertCurrency(currency);
             }
 
             return currency;

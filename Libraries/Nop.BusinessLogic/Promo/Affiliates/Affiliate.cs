@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Affiliates
@@ -125,7 +126,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Affiliates
         {
             get
             {
-                return CountryManager.GetCountryById(this.CountryId);
+                return IoCFactory.Resolve<ICountryManager>().GetCountryById(this.CountryId);
             }
         }
 

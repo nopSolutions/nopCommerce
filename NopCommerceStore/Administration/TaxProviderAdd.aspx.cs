@@ -25,6 +25,7 @@ using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.Security;
 using NopSolutions.NopCommerce.BusinessLogic.Tax;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration
 {
@@ -32,7 +33,7 @@ namespace NopSolutions.NopCommerce.Web.Administration
     {
         protected override bool ValidatePageSecurity()
         {
-            return ACLManager.IsActionAllowed("ManageTaxSettings");
+            return IoCFactory.Resolve<IACLManager>().IsActionAllowed("ManageTaxSettings");
         }
 
         protected void AddButton_Click(object sender, EventArgs e)
@@ -49,7 +50,7 @@ namespace NopSolutions.NopCommerce.Web.Administration
                         ClassName = txtClassName.Text,
                         DisplayOrder = txtDisplayOrder.Value
                     };
-                    TaxProviderManager.InsertTaxProvider(taxProvider);
+                    IoCFactory.Resolve<ITaxProviderManager>().InsertTaxProvider(taxProvider);
 
                     Response.Redirect("TaxProviderDetails.aspx?TaxProviderID=" + taxProvider.TaxProviderId.ToString());
                 }

@@ -27,6 +27,7 @@ using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts;
 using NopSolutions.NopCommerce.BusinessLogic.Security;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
  
 
 namespace NopSolutions.NopCommerce.Web.Administration
@@ -35,7 +36,7 @@ namespace NopSolutions.NopCommerce.Web.Administration
     {
         protected override bool ValidatePageSecurity()
         {
-            return ACLManager.IsActionAllowed("ManageCustomerRoles");
+            return IoCFactory.Resolve<IACLManager>().IsActionAllowed("ManageCustomerRoles");
         }
     }
 }

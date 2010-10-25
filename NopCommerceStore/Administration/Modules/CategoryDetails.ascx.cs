@@ -34,6 +34,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Templates;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Web.Administration.Modules;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
  
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
@@ -44,7 +45,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             if (!Page.IsPostBack)
             {
-                Category category = CategoryManager.GetCategoryById(this.CategoryId);
+                var category = IoCFactory.Resolve<ICategoryManager>().GetCategoryById(this.CategoryId);
                 if (category != null)
                 {
                     lblTitle.Text = Server.HtmlEncode(category.Name);
@@ -66,7 +67,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     ctrlCategoryDiscount.SaveInfo();
                     ctrlCategoryACL.SaveInfo();
 
-                    CustomerActivityManager.InsertActivity(
+                    IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
                         "EditCategory",
                         GetLocaleResourceString("ActivityLog.EditCategory"),
                         category.Name);
@@ -84,12 +85,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                Category category = CategoryManager.GetCategoryById(this.CategoryId);
+                var category = IoCFactory.Resolve<ICategoryManager>().GetCategoryById(this.CategoryId);
                 if (category != null)
                 {
-                    CategoryManager.MarkCategoryAsDeleted(category.CategoryId);
+                    IoCFactory.Resolve<ICategoryManager>().MarkCategoryAsDeleted(category.CategoryId);
 
-                    CustomerActivityManager.InsertActivity(
+                    IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
                         "DeleteCategory",
                         GetLocaleResourceString("ActivityLog.DeleteCategory"),
                         category.Name);
@@ -104,7 +105,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected override void OnLoad(EventArgs e)
         {
-            Category category = CategoryManager.GetCategoryById(this.CategoryId);
+            var category = IoCFactory.Resolve<ICategoryManager>().GetCategoryById(this.CategoryId);
             if (category != null)
             {
                 PreviewButton.OnClientClick = string.Format("javascript:OpenWindow('{0}', 800, 600, true); return false;", SEOHelper.GetCategoryUrl(category.CategoryId));

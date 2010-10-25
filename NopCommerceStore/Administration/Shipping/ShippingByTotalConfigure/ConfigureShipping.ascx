@@ -120,7 +120,7 @@
             </tr>
             <tr>
                 <td class="adminTitle">
-                    Order total from [<%=CurrencyManager.PrimaryStoreCurrency.CurrencyCode%>]:
+                    Order total from [<%=IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency.CurrencyCode%>]:
                 </td>
                 <td class="adminData">
                     <nopCommerce:DecimalTextBox runat="server" ID="txtFrom" Value="0" RequiredErrorMessage="From is required"
@@ -131,7 +131,7 @@
             </tr>
             <tr>
                 <td class="adminTitle">
-                    Order total to [<%=CurrencyManager.PrimaryStoreCurrency.CurrencyCode%>]:
+                    Order total to [<%=IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency.CurrencyCode%>]:
                 </td>
                 <td class="adminData">
                     <nopCommerce:DecimalTextBox runat="server" ID="txtTo" Value="0" RequiredErrorMessage="To is required"
@@ -161,7 +161,7 @@
             </tr>
             <tr>
                 <td class="adminTitle">
-                    Charge amount [<%=CurrencyManager.PrimaryStoreCurrency.CurrencyCode%>]:
+                    Charge amount [<%=IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency.CurrencyCode%>]:
                 </td>
                 <td class="adminData">
                     <nopCommerce:DecimalTextBox runat="server" ID="txtShippingChargeAmount" Value="0"

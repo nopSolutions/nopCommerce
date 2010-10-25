@@ -31,6 +31,7 @@ using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Media;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -46,12 +47,12 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         private void BindData()
         {
-            if (!ForumManager.ForumsEnabled)
+            if (!IoCFactory.Resolve<IForumManager>().ForumsEnabled)
             {
                 this.Visible = false;
                 return;
             }
-            var forumTopics = ForumManager.GetActiveTopics(this.ForumId, this.TopicCount);
+            var forumTopics = IoCFactory.Resolve<IForumManager>().GetActiveTopics(this.ForumId, this.TopicCount);
             if (forumTopics.Count > 0)
             {
                 rptrTopics.DataSource = forumTopics;
@@ -80,9 +81,9 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 var hlTopicStarter = e.Item.FindControl("hlTopicStarter") as HyperLink;
                 if(hlTopicStarter != null)
                 {
-                    if(customer != null && CustomerManager.AllowViewingProfiles && !customer.IsGuest)
+                    if(customer != null && IoCFactory.Resolve<ICustomerManager>().AllowViewingProfiles && !customer.IsGuest)
                     {
-                        hlTopicStarter.Text = Server.HtmlEncode(CustomerManager.FormatUserName(customer, true));
+                        hlTopicStarter.Text = Server.HtmlEncode(IoCFactory.Resolve<ICustomerManager>().FormatUserName(customer, true));
                         hlTopicStarter.NavigateUrl = SEOHelper.GetUserProfileUrl(customer.CustomerId);
                     }
                     else
@@ -94,9 +95,9 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 var lblTopicStarter = e.Item.FindControl("lblTopicStarter") as Label;
                 if(lblTopicStarter != null)
                 {
-                    if(customer != null && (!CustomerManager.AllowViewingProfiles || customer.IsGuest))
+                    if(customer != null && (!IoCFactory.Resolve<ICustomerManager>().AllowViewingProfiles || customer.IsGuest))
                     {
-                        lblTopicStarter.Text = Server.HtmlEncode(CustomerManager.FormatUserName(customer, true));
+                        lblTopicStarter.Text = Server.HtmlEncode(IoCFactory.Resolve<ICustomerManager>().FormatUserName(customer, true));
                     }
                     else
                     {
@@ -126,7 +127,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             get
             {
                 if (ViewState["TopicCount"] == null)
-                    return SettingManager.GetSettingValueInteger("Forums.ActiveDiscussions.TopicCount");
+                    return IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Forums.ActiveDiscussions.TopicCount");
                 else
                     return (int)ViewState["TopicCount"];
             }

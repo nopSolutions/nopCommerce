@@ -29,6 +29,7 @@ using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Payment;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -62,7 +63,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     }
                     else
                     {
-                        CustomerManager.ModifyPassword(NopContext.Current.User.Email, oldPassword, password);
+                        IoCFactory.Resolve<ICustomerManager>().ModifyPassword(NopContext.Current.User.Email, oldPassword, password);
                         pnlChangePasswordError.Visible = true;
                         lChangePasswordErrorMessage.Text = GetLocaleResourceString("Account.PasswordWasChanged");
                     }

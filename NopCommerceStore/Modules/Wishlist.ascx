@@ -21,13 +21,13 @@
                 <td width="10%">
                     <%=GetLocaleResourceString("Wishlist.AddToCart")%>
                 </td>
-                <%if (SettingManager.GetSettingValueBoolean("Display.Products.ShowSKU"))
+                <%if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Display.Products.ShowSKU"))
                   {%>
                 <td width="10%">
                     <%=GetLocaleResourceString("ShoppingCart.SKU")%>
                 </td>
                 <%} %>
-                <%if (SettingManager.GetSettingValueBoolean("Display.ShowProductImagesOnWishList"))
+                <%if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Display.ShowProductImagesOnWishList"))
                   {%>
                 <td class="picture">
                 </td>
@@ -57,13 +57,13 @@
                         <td width="10%">
                             <asp:CheckBox runat="server" ID="cbAddToCart" />
                         </td>
-                        <%if (SettingManager.GetSettingValueBoolean("Display.Products.ShowSKU"))
+                        <%if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Display.Products.ShowSKU"))
                           {%>
                         <td width="10%">
                             <%#Server.HtmlEncode(((ShoppingCartItem)Container.DataItem).ProductVariant.SKU)%>
                         </td>
                         <%} %>
-                        <%if (SettingManager.GetSettingValueBoolean("Display.ShowProductImagesOnWishList"))
+                        <%if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Display.ShowProductImagesOnWishList"))
                           {%>
                         <td class="productpicture">
                             <asp:Image ID="iProductVariantPicture" runat="server" ImageUrl='<%#GetProductVariantImageUrl((ShoppingCartItem)Container.DataItem)%>'

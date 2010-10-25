@@ -27,6 +27,7 @@ using System.Web.UI.WebControls.WebParts;
 using System.Xml;
 using NopSolutions.NopCommerce.BusinessLogic.Security;
 using NopSolutions.NopCommerce.BusinessLogic.Templates;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration
 {
@@ -34,7 +35,7 @@ namespace NopSolutions.NopCommerce.Web.Administration
     {
         protected override bool ValidatePageSecurity()
         {
-            return ACLManager.IsActionAllowed("ManageTemplates");
+            return IoCFactory.Resolve<IACLManager>().IsActionAllowed("ManageTemplates");
         } 
     }
 }

@@ -20,6 +20,7 @@ using NopSolutions.NopCommerce.BusinessLogic;
 using NopSolutions.NopCommerce.BusinessLogic.Shipping;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.Common;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
  
 
 namespace NopSolutions.NopCommerce.Shipping.Methods.FisedRateShippingCM
@@ -32,7 +33,7 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.FisedRateShippingCM
         #region Utilities
         protected decimal GetRate()
         {
-            decimal rate = SettingManager.GetSettingValueDecimalNative("ShippingRateComputationMethod.FixedRate.Rate");
+            decimal rate = IoCFactory.Resolve<ISettingManager>().GetSettingValueDecimalNative("ShippingRateComputationMethod.FixedRate.Rate");
             return rate;
         }
         #endregion
@@ -64,7 +65,7 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.FisedRateShippingCM
                 return shippingOptions;
             }
 
-            var shippingMethods = ShippingMethodManager.GetAllShippingMethods(shipmentPackage.ShippingAddress.CountryId);
+            var shippingMethods = IoCFactory.Resolve<IShippingMethodManager>().GetAllShippingMethods(shipmentPackage.ShippingAddress.CountryId);
             foreach (var shippingMethod in shippingMethods)
             {
                 var shippingOption = new ShippingOption();

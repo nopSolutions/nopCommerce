@@ -26,6 +26,7 @@ using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
  
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -33,7 +34,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            CustomerRole customerRole = CustomerManager.GetCustomerRoleById(this.CustomerRoleId);
+            CustomerRole customerRole = IoCFactory.Resolve<ICustomerManager>().GetCustomerRoleById(this.CustomerRoleId);
             if (customerRole != null)
             {
                 this.txtName.Text = customerRole.Name;
@@ -53,7 +54,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public CustomerRole SaveInfo()
         {
-            CustomerRole customerRole = CustomerManager.GetCustomerRoleById(this.CustomerRoleId);
+            CustomerRole customerRole = IoCFactory.Resolve<ICustomerManager>().GetCustomerRoleById(this.CustomerRoleId);
 
             if (customerRole != null)
             {
@@ -61,7 +62,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 customerRole.FreeShipping = cbFreeShipping.Checked;
                 customerRole.TaxExempt = cbTaxExempt.Checked;
                 customerRole.Active = cbActive.Checked;
-                CustomerManager.UpdateCustomerRole(customerRole);
+                IoCFactory.Resolve<ICustomerManager>().UpdateCustomerRole(customerRole);
             }
             else
             {
@@ -72,7 +73,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     TaxExempt = cbTaxExempt.Checked,
                     Active = cbActive.Checked
                 };
-                CustomerManager.InsertCustomerRole(customerRole);
+                IoCFactory.Resolve<ICustomerManager>().InsertCustomerRole(customerRole);
             }
             return customerRole;
         }

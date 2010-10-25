@@ -64,6 +64,26 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Dependencies\Ionic.Zip.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Dependencies\Microsoft.Practices.ServiceLocation.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity, Version=2.0.414.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Dependencies\Microsoft.Practices.Unity.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity.Configuration, Version=2.0.414.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Dependencies\Microsoft.Practices.Unity.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity.Interception, Version=2.0.414.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Dependencies\Microsoft.Practices.Unity.Interception.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity.Interception.Configuration, Version=2.0.414.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Dependencies\Microsoft.Practices.Unity.Interception.Configuration.dll</HintPath>
+    </Reference>
     <Reference Include="MigraDoc.DocumentObjectModel, Version=1.31.3066.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Dependencies\MigraDoc.DocumentObjectModel.dll</HintPath>
@@ -118,19 +138,27 @@
   <ItemGroup>
     <Compile Include="Audit\ActivityLog.cs" />
     <Compile Include="Audit\ActivityLogType.cs" />
+    <Compile Include="Audit\ILogManager.cs" />
+    <Compile Include="Audit\ICustomerActivityManager.cs" />
+    <Compile Include="Audit\ISearchLogManager.cs" />
     <Compile Include="Audit\SearchTermReportLine.cs" />
     <Compile Include="Audit\LogType.cs" />
     <Compile Include="Audit\CustomerActivityManager.cs" />
     <Compile Include="Audit\Extensions.cs" />
+    <Compile Include="Audit\UsersOnline\IOnlineUserManager.cs" />
     <Compile Include="Audit\UsersOnline\PurgeOnlineUsersTask.cs" />
     <Compile Include="Audit\UsersOnline\OnlineUserManager.cs" />
     <Compile Include="Audit\UsersOnline\OnlineUserInfo.cs" />
     <Compile Include="Caching\NopRequestCache.cs" />
     <Compile Include="Caching\NopStaticCache.cs" />
     <Compile Include="Categories\CategoryLocalized.cs" />
+    <Compile Include="Categories\ICategoryManager.cs" />
     <Compile Include="Categories\Extensions.cs" />
+    <Compile Include="Configuration\Settings\ISettingManager.cs" />
+    <Compile Include="Content\Blog\IBlogManager.cs" />
     <Compile Include="Content\Blog\Extensions.cs" />
     <Compile Include="Content\Blog\BlogPostTag.cs" />
+    <Compile Include="Content\Forums\IForumManager.cs" />
     <Compile Include="Content\Forums\ForumSearchTypeEnum.cs" />
     <Compile Include="Content\Forums\ForumSubscription.cs" />
     <Compile Include="Content\Forums\ForumTopicTypeEnum.cs" />
@@ -140,13 +168,21 @@
     <Compile Include="Content\Forums\ForumPost.cs" />
     <Compile Include="Content\Forums\ForumTopic.cs" />
     <Compile Include="Content\Forums\Forum.cs" />
+    <Compile Include="Content\News\INewsManager.cs" />
+    <Compile Include="Content\Polls\IPollManager.cs" />
     <Compile Include="Content\Polls\PollVotingRecord.cs" />
+    <Compile Include="Content\Topics\ITopicManager.cs" />
+    <Compile Include="Customer\ICustomerManager.cs" />
     <Compile Include="Customer\CustomerEventArgs.cs" />
     <Compile Include="Data\NopObjectContext.ObjectSets.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>NopObjectContext.ObjectSets.tt</DependentUpon>
     </Compile>
+    <Compile Include="Directory\IStateProvinceManager.cs" />
+    <Compile Include="Directory\ILanguageManager.cs" />
+    <Compile Include="Directory\ICurrencyManager.cs" />
+    <Compile Include="Directory\ICountryManager.cs" />
     <Compile Include="Directory\GeoCountryLookup.cs" />
     <Compile Include="Directory\ExchangeRates\UpdateExchangeRateTask.cs" />
     <Compile Include="Directory\ExchangeRates\McExchangeRateProvider.cs" />
@@ -174,14 +210,24 @@
     <Compile Include="ExportImport\ExcelHelper.cs" />
     <Compile Include="ExportImport\ExcelHelperReadTableMode.cs" />
     <Compile Include="Installation\NopSqlDataHelper.cs" />
+    <Compile Include="IoC\IoCFactory.cs" />
+    <Compile Include="IoC\PerExecutionContextLifetimeManager.cs" />
+    <Compile Include="Localization\ILocaleStringResourceManager.cs" />
     <Compile Include="Localization\NopResourceExpressionBuilder.cs" />
     <Compile Include="Maintenance\BackupFile.cs" />
+    <Compile Include="Maintenance\IMaintenanceManager.cs" />
     <Compile Include="Maintenance\MaintenanceManager.cs" />
     <Compile Include="Maintenance\DatabaseMaintanceTask.cs" />
+    <Compile Include="Manufacturers\IManufacturerManager.cs" />
     <Compile Include="Manufacturers\Extensions.cs" />
     <Compile Include="Manufacturers\ManufacturerLocalized.cs" />
+    <Compile Include="Measures\IMeasureManager.cs" />
+    <Compile Include="Media\IPictureManager.cs" />
+    <Compile Include="Media\IDownloadManager.cs" />
+    <Compile Include="Messages\IMessageManager.cs" />
     <Compile Include="Messages\EmailAccount.cs" />
     <Compile Include="Messages\SMS\ClickatellSMSProvider.cs" />
+    <Compile Include="Messages\SMS\ISMSManager.cs" />
     <Compile Include="Messages\SMS\VerizonSMSProvider.cs" />
     <Compile Include="Messages\SMS\ISMSProvider.cs" />
     <Compile Include="Messages\NewsLetterSubscription.cs" />
@@ -189,6 +235,8 @@
     <Compile Include="Messages\SMS\SMSManager.cs" />
     <Compile Include="Orders\BestSellersReportLine.cs" />
     <Compile Include="Orders\AppliedGiftCard.cs" />
+    <Compile Include="Orders\IShoppingCartManager.cs" />
+    <Compile Include="Orders\IOrderManager.cs" />
     <Compile Include="Orders\ReturnStatusEnum.cs" />
     <Compile Include="Orders\ReturnRequest.cs" />
     <Compile Include="Orders\OrderEventArgs.cs" />
@@ -204,6 +252,10 @@
     <Compile Include="Orders\DeleteExpiredShoppingCartsTask.cs" />
     <Compile Include="Orders\OrderAverageReportLine.cs" />
     <Compile Include="Payment\CancelPaymentResult.cs" />
+    <Compile Include="Payment\IPaymentStatusManager.cs" />
+    <Compile Include="Payment\IPaymentManager.cs" />
+    <Compile Include="Payment\IPaymentMethodManager.cs" />
+    <Compile Include="Payment\ICreditCardTypeManager.cs" />
     <Compile Include="Payment\PaymentMethodTypeEnum.cs" />
     <Compile Include="Payment\RecurringPaymentTypeEnum.cs" />
     <Compile Include="Products\Attributes\CheckoutAttribute.cs" />
@@ -212,7 +264,10 @@
     <Compile Include="Products\Attributes\CheckoutAttributeValue.cs" />
     <Compile Include="Products\Attributes\CheckoutAttributeValueLocalized.cs" />
     <Compile Include="Products\Attributes\CheckoutAttributeHelper.cs" />
+    <Compile Include="Products\Attributes\IProductAttributeManager.cs" />
+    <Compile Include="Products\Attributes\ICheckoutAttributeManager.cs" />
     <Compile Include="Products\BackordersModeEnum.cs" />
+    <Compile Include="Products\IProductManager.cs" />
     <Compile Include="Products\CrossSellProduct.cs" />
     <Compile Include="Products\GiftCardTypeEnum.cs" />
     <Compile Include="Products\ProductVariantEventArgs.cs" />
@@ -234,6 +289,7 @@
     <Compile Include="Products\ManageInventoryMethodEnum.cs" />
     <Compile Include="Products\RecurringProductCyclePeriodEnum.cs" />
     <Compile Include="Products\DownloadActivationTypeEnum.cs" />
+    <Compile Include="Products\Specs\ISpecificationAttributeManager.cs" />
     <Compile Include="Products\Specs\SpecificationAttributeOptionLocalized.cs" />
     <Compile Include="Products\Specs\SpecificationAttributeLocalized.cs" />
     <Compile Include="Products\Specs\SpecificationAttributeOption.cs" />
@@ -265,7 +321,10 @@
     <Compile Include="Products\PriceHelper.cs" />
     <Compile Include="Profile\DateTimeHelper.cs" />
     <Compile Include="Profile\Extensions.cs" />
+    <Compile Include="Promo\Affiliates\IAffiliateManager.cs" />
     <Compile Include="Promo\Campaigns\Campaign.cs" />
+    <Compile Include="Promo\Campaigns\ICampaignManager.cs" />
+    <Compile Include="Promo\Discounts\IDiscountManager.cs" />
     <Compile Include="Promo\Discounts\DiscountLimitation.cs" />
     <Compile Include="Promo\Discounts\DiscountLimitationEnum.cs" />
     <Compile Include="Promo\Discounts\DiscountUsageHistory.cs" />
@@ -278,6 +337,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="QuickBooks\IQBManager.cs" />
     <Compile Include="QuickBooks\EntityTypeEnum.cs" />
     <Compile Include="QuickBooks\QBConnector.cs">
       <SubType>Component</SubType>
@@ -290,6 +350,8 @@
     <Compile Include="Security\BannedIpAddress.cs" />
     <Compile Include="Security\ACL.cs" />
     <Compile Include="Security\ACLPerObject.cs" />
+    <Compile Include="Security\IIpBlacklistManager.cs" />
+    <Compile Include="Security\IACLManager.cs" />
     <Compile Include="Security\ObjectTypeEnum.cs" />
     <Compile Include="Security\CustomerAction.cs" />
     <Compile Include="Security\ACLManager.cs" />
@@ -298,6 +360,13 @@
     <Compile Include="SEO\Sitemaps\BaseSitemapGenerator.cs" />
     <Compile Include="SEO\Sitemaps\SitemapGenerator.cs" />
     <Compile Include="SEO\Sitemaps\UpdateFrequency.cs" />
+    <Compile Include="Shipping\IShippingStatusManager.cs" />
+    <Compile Include="Shipping\IShippingRateComputationMethodManager.cs" />
+    <Compile Include="Shipping\IShippingMethodManager.cs" />
+    <Compile Include="Shipping\IShippingManager.cs" />
+    <Compile Include="Shipping\IShippingByWeightManager.cs" />
+    <Compile Include="Shipping\IShippingByWeightAndCountryManager.cs" />
+    <Compile Include="Shipping\IShippingByTotalManager.cs" />
     <Compile Include="Shipping\ShippingRateComputationMethodTypeEnum.cs" />
     <Compile Include="Shipping\ShippingStatus.cs" />
     <Compile Include="Shipping\ShippingStatusEnum.cs" />
@@ -307,6 +376,10 @@
     <Compile Include="Tasks\TaskManager.cs" />
     <Compile Include="Tasks\TaskThread.cs" />
     <Compile Include="Tax\CalculateTaxRequest.cs" />
+    <Compile Include="Tax\ITaxRateManager.cs" />
+    <Compile Include="Tax\ITaxProviderManager.cs" />
+    <Compile Include="Tax\ITaxManager.cs" />
+    <Compile Include="Tax\ITaxCategoryManager.cs" />
     <Compile Include="Tax\VatNumberStatusEnum.cs" />
     <Compile Include="Tax\Extensions.cs" />
     <Compile Include="Tax\TaxBasedOnEnum.cs" />
@@ -374,6 +447,7 @@
     <Compile Include="Directory\Language.cs" />
     <Compile Include="Audit\Log.cs" />
     <Compile Include="Manufacturers\Manufacturer.cs" />
+    <Compile Include="Templates\ITemplateManager.cs" />
     <Compile Include="Templates\ManufacturerTemplate.cs" />
     <Compile Include="Content\News\News.cs" />
     <Compile Include="Content\News\NewsComment.cs" />
@@ -391,10 +465,10 @@
     <Compile Include="Directory\StateProvince.cs" />
     <Compile Include="Tax\TaxRate.cs" />
     <Compile Include="Tax\TaxCategory.cs" />
-    <Compile Include="Utils\SiteHelper.cs" />
     <Compile Include="Utils\PDFHelper.cs" />
     <Compile Include="Utils\Html\EditorTypeEnum.cs" />
     <Compile Include="Utils\KeepAliveTask.cs" />
+    <Compile Include="Warehouses\IWarehouseManager.cs" />
     <Compile Include="Warehouses\Warehouse.cs" />
     <Compile Include="Audit\LogTypeEnum.cs" />
     <Compile Include="Promo\Affiliates\AffiliateManager.cs" />

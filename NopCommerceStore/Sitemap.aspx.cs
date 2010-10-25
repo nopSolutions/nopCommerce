@@ -14,6 +14,7 @@ using NopSolutions.NopCommerce.BusinessLogic;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Audit;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web
 {
@@ -32,11 +33,11 @@ namespace NopSolutions.NopCommerce.Web
         {
             //topics
             var sitemapTopics = new List<SitemapTopic>();
-            var topics = TopicManager.GetAllTopics();
+            var topics = IoCFactory.Resolve<ITopicManager>().GetAllTopics();
             topics = topics.FindAll(t => t.IncludeInSitemap);
             foreach (var topic in topics)
             {
-                LocalizedTopic localizedTopic = TopicManager.GetLocalizedTopic(topic.TopicId, NopContext.Current.WorkingLanguage.LanguageId);
+                LocalizedTopic localizedTopic = IoCFactory.Resolve<ITopicManager>().GetLocalizedTopic(topic.TopicId, NopContext.Current.WorkingLanguage.LanguageId);
                 if (localizedTopic != null && !String.IsNullOrEmpty(localizedTopic.Title))
                 {
                     string topicURL = SEOHelper.GetTopicUrl(localizedTopic.TopicId, localizedTopic.Title);
@@ -47,7 +48,7 @@ namespace NopSolutions.NopCommerce.Web
             }
 
             //other pages
-            string otherPages = SettingManager.GetSettingValue("Sitemap.OtherPages");
+            string otherPages = IoCFactory.Resolve<ISettingManager>().GetSettingValue("Sitemap.OtherPages");
             if (!String.IsNullOrEmpty(otherPages))
             {
                 string[] pages = otherPages.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
@@ -67,10 +68,10 @@ namespace NopSolutions.NopCommerce.Web
             }
 
             //categories
-            if (SettingManager.GetSettingValueBoolean("Sitemap.IncludeCategories", true))
+            if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Sitemap.IncludeCategories", true))
             {
                 //root categories only here
-                var categories = CategoryManager.GetAllCategoriesByParentCategoryId(0);
+                var categories = IoCFactory.Resolve<ICategoryManager>().GetAllCategoriesByParentCategoryId(0);
                 if (categories.Count > 0)
                 {
                     dlCategories.DataSource = categories;
@@ -87,12 +88,12 @@ namespace NopSolutions.NopCommerce.Web
             }
 
             //manufacturers
-            if (SettingManager.GetSettingValueBoolean("Sitemap.IncludeManufacturers", true))
+            if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Sitemap.IncludeManufacturers", true))
             {
-                var manufacturers = ManufacturerManager.GetAllManufacturers();
+                var manufacturers = IoCFactory.Resolve<IManufacturerManager>().GetAllManufacturers();
                 if (manufacturers.Count > 0)
                 {
-                    dlManufacturers.DataSource = ManufacturerManager.GetAllManufacturers();
+                    dlManufacturers.DataSource = IoCFactory.Resolve<IManufacturerManager>().GetAllManufacturers();
                     dlManufacturers.DataBind();
                 }
                 else
@@ -106,9 +107,9 @@ namespace NopSolutions.NopCommerce.Web
             }
 
             //products
-            if (SettingManager.GetSettingValueBoolean("Sitemap.IncludeProducts", true))
+            if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Sitemap.IncludeProducts", true))
             {
-                var products = ProductManager.GetAllProducts();
+                var products = IoCFactory.Resolve<IProductManager>().GetAllProducts();
                 if (products.Count > 0)
                 {
                     dlProducts.DataSource = products;

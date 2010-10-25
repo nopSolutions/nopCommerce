@@ -13,13 +13,14 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using System.Web.UI.HtmlControls;
+using NopSolutions.NopCommerce.BusinessLogic;
 using NopSolutions.NopCommerce.BusinessLogic.Caching;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
-using NopSolutions.NopCommerce.BusinessLogic.Products;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 using NopSolutions.NopCommerce.BusinessLogic.Media;
-using NopSolutions.NopCommerce.BusinessLogic;
 using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.Payment;
+using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
 
@@ -28,27 +29,27 @@ public class GetDownload : IHttpHandler
 
     private void processOrderProductVariantDownload(HttpContext context, Guid orderProductVariantGuid)
     {
-        OrderProductVariant orderProductVariant = OrderManager.GetOrderProductVariantByGuid(orderProductVariantGuid);
+        OrderProductVariant orderProductVariant = IoCFactory.Resolve<IOrderManager>().GetOrderProductVariantByGuid(orderProductVariantGuid);
         if (orderProductVariant == null)
         {
             returnError(context, "Order product variant doesn't exist.");
             return;
         }
 
-        Order order = OrderManager.GetOrderById(orderProductVariant.OrderId);
+        Order order = IoCFactory.Resolve<IOrderManager>().GetOrderById(orderProductVariant.OrderId);
         if (order == null)
         {
             returnError(context, "Order doesn't exist.");
             return;
         }
 
-        if (!OrderManager.IsDownloadAllowed(orderProductVariant))
+        if (!IoCFactory.Resolve<IOrderManager>().IsDownloadAllowed(orderProductVariant))
         {
             returnError(context, "Downloads are not allowed");
             return;
         }
 
-        if (SettingManager.GetSettingValueBoolean("Security.DownloadableProducts.ValidateUser"))
+        if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Security.DownloadableProducts.ValidateUser"))
         {
             if (NopContext.Current.User == null)
             {
@@ -101,7 +102,7 @@ public class GetDownload : IHttpHandler
                 return;
             }
 
-            orderProductVariant = OrderManager.IncreaseOrderProductDownloadCount(orderProductVariant.OrderProductVariantId);
+            orderProductVariant = IoCFactory.Resolve<IOrderManager>().IncreaseOrderProductDownloadCount(orderProductVariant.OrderProductVariantId);
 
             context.Response.Redirect(download.DownloadUrl);
         }
@@ -146,13 +147,13 @@ public class GetDownload : IHttpHandler
                 }
             }
 
-            orderProductVariant = OrderManager.IncreaseOrderProductDownloadCount(orderProductVariant.OrderProductVariantId);
+            orderProductVariant = IoCFactory.Resolve<IOrderManager>().IncreaseOrderProductDownloadCount(orderProductVariant.OrderProductVariantId);
         }
     }
 
     private void processSampleDownloadProductVariant(HttpContext context, int productVariantId)
     {
-        ProductVariant productVariant = ProductManager.GetProductVariantById(productVariantId);
+        ProductVariant productVariant = IoCFactory.Resolve<IProductManager>().GetProductVariantById(productVariantId);
         if (productVariant == null)
         {
             returnError(context, string.Format("Product variant doesn't exist."));

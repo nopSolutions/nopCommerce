@@ -16,6 +16,7 @@ using System.Web.UI.HtmlControls;
 using NopSolutions.NopCommerce.BusinessLogic.Caching;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 using NopSolutions.NopCommerce.BusinessLogic.Payment;
 using NopSolutions.NopCommerce.BusinessLogic.Media;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
@@ -31,7 +32,7 @@ public class GetDownloadAdmin : IHttpHandler
         }
 
         int downloadId = CommonHelper.QueryStringInt("DownloadId");
-        Download download = DownloadManager.GetDownloadById(downloadId);
+        Download download = IoCFactory.Resolve<IDownloadManager>().GetDownloadById(downloadId);
         if (download == null)
         {
             returnError(context, string.Format("Download is not available any more. Download ID={0}", downloadId));

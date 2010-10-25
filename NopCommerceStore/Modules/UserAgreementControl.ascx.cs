@@ -8,6 +8,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Media;
 using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -22,13 +23,13 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     Response.Redirect(CommonHelper.GetStoreLocation());
                 }
 
-                var opv = OrderManager.GetOrderProductVariantByGuid(this.OrderProductVariantGuid.Value);
+                var opv = IoCFactory.Resolve<IOrderManager>().GetOrderProductVariantByGuid(this.OrderProductVariantGuid.Value);
                 if (opv == null)
                 {
                     Response.Redirect(CommonHelper.GetStoreLocation());
                 }
 
-                var productVariant = ProductManager.GetProductVariantById(opv.ProductVariantId);
+                var productVariant = IoCFactory.Resolve<IProductManager>().GetProductVariantById(opv.ProductVariantId);
                 if (productVariant == null || !productVariant.HasUserAgreement)
                 {
                     Response.Redirect(CommonHelper.GetStoreLocation());
@@ -54,10 +55,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     Response.Redirect(CommonHelper.GetStoreLocation());
                 }
 
-                var opv = OrderManager.GetOrderProductVariantByGuid(this.OrderProductVariantGuid.Value);
+                var opv = IoCFactory.Resolve<IOrderManager>().GetOrderProductVariantByGuid(this.OrderProductVariantGuid.Value);
                 if (opv != null)
                 {
-                    string url = DownloadManager.GetDownloadUrl(opv);
+                    string url = IoCFactory.Resolve<IDownloadManager>().GetDownloadUrl(opv);
                     url = CommonHelper.ModifyQueryString(url, "Agree=true", null);
                     Response.Redirect(url);
                 }

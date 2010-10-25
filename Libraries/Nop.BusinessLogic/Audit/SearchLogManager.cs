@@ -29,7 +29,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
     /// <summary>
     /// Search log manager
     /// </summary>
-    public partial class SearchLogManager
+    public partial class SearchLogManager : ISearchLogManager
     {
         #region Methods
 
@@ -40,7 +40,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
         /// <param name="endTime">End time; null to load all</param>
         /// <param name="count">Item count. 0 if you want to get all items</param>
         /// <returns>Result</returns>
-        public static List<SearchTermReportLine> SearchTermReport(DateTime? startTime, 
+        public List<SearchTermReportLine> SearchTermReport(DateTime? startTime, 
             DateTime? endTime, int count)
         {
             var context = ObjectContextHelper.CurrentObjectContext;
@@ -53,7 +53,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
         /// Gets all search log items
         /// </summary>
         /// <returns>Search log collection</returns>
-        public static List<SearchLog> GetAllSearchLogs()
+        public List<SearchLog> GetAllSearchLogs()
         {
             var context = ObjectContextHelper.CurrentObjectContext;
             var query = from s in context.SearchLog
@@ -69,7 +69,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
         /// </summary>
         /// <param name="searchLogId">The search log item identifier</param>
         /// <returns>Search log item</returns>
-        public static SearchLog GetSearchLogById(int searchLogId)
+        public SearchLog GetSearchLogById(int searchLogId)
         {
             if (searchLogId == 0)
                 return null;
@@ -86,7 +86,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
         /// Inserts a search log item
         /// </summary>
         /// <param name="searchLog">Search log item</param>
-        public static void InsertSearchLog(SearchLog searchLog)
+        public void InsertSearchLog(SearchLog searchLog)
         {
             if (searchLog == null)
                 throw new ArgumentNullException("searchLog");
@@ -103,7 +103,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
         /// <summary>
         /// Clear search log
         /// </summary>
-        public static void ClearSearchLog()
+        public void ClearSearchLog()
         {
             var context = ObjectContextHelper.CurrentObjectContext;
             context.Sp_SearchLogClear();

@@ -28,6 +28,7 @@ using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.Audit;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
  
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -41,7 +42,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 {
                     Discount discount = ctrlDiscountInfo.SaveInfo();
 
-                    CustomerActivityManager.InsertActivity(
+                    IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
                         "AddNewDiscount",
                         GetLocaleResourceString("ActivityLog.AddNewDiscount"),
                         discount.Name);

@@ -26,6 +26,7 @@ using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic;
 using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
  
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -51,7 +52,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                OrderManager.DeleteRecurringPayment(this.RecurringPaymentId);
+                IoCFactory.Resolve<IOrderManager>().DeleteRecurringPayment(this.RecurringPaymentId);
                 Response.Redirect("RecurringPayments.aspx");
             }
             catch (Exception exc)

@@ -26,6 +26,7 @@ using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using System.Xml;
 using NopSolutions.NopCommerce.BusinessLogic.Payment;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
  
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -55,7 +56,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         void BindGrid()
         {
-            var paymentMethods = PaymentMethodManager.GetAllPaymentMethods();
+            var paymentMethods = IoCFactory.Resolve<IPaymentMethodManager>().GetAllPaymentMethods();
             gvPaymentMethods.DataSource = paymentMethods;
             gvPaymentMethods.DataBind();
         }

@@ -30,6 +30,7 @@ using System.Xml;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.Web.Administration.Modules;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -46,19 +47,19 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected void BindSettings()
         {
-            cbCurrencyRateAutoUpdateEnabled.Checked = SettingManager.GetSettingValueBoolean("ExchangeRateProvider.AutoUpdateEnabled", false);
+            cbCurrencyRateAutoUpdateEnabled.Checked = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("ExchangeRateProvider.AutoUpdateEnabled", false);
         }
 
         protected void BindCurrencyGrid()
         {
-            var currencyCollection = CurrencyManager.GetAllCurrencies();
+            var currencyCollection = IoCFactory.Resolve<ICurrencyManager>().GetAllCurrencies();
             gvCurrencies.DataSource = currencyCollection;
             gvCurrencies.DataBind();
         }
 
         protected void BindLiveRateGrid()
         {
-            var exchangeRates = CurrencyManager.GetCurrencyLiveRates(CurrencyManager.PrimaryExchangeRateCurrency.CurrencyCode);
+            var exchangeRates = IoCFactory.Resolve<ICurrencyManager>().GetCurrencyLiveRates(IoCFactory.Resolve<ICurrencyManager>().PrimaryExchangeRateCurrency.CurrencyCode);
             gvLiveRates.DataSource = exchangeRates;
             gvLiveRates.DataBind();
         }
@@ -68,8 +69,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             try
             {
                 //save exchange rate provider settings
-                SettingManager.SetParam("ExchangeRateProvider.Current", ddlExchangeRateProviders.SelectedProvider);
-                SettingManager.SetParam("ExchangeRateProvider.AutoUpdateEnabled", cbCurrencyRateAutoUpdateEnabled.Checked.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("ExchangeRateProvider.Current", ddlExchangeRateProviders.SelectedProvider);
+                IoCFactory.Resolve<ISettingManager>().SetParam("ExchangeRateProvider.AutoUpdateEnabled", cbCurrencyRateAutoUpdateEnabled.Checked.ToString());
 
                 //save currencies
                 foreach (GridViewRow row in gvCurrencies.Rows)
@@ -80,9 +81,9 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     RadioButton rdbIsPrimaryExchangeRateCurrency = (RadioButton)row.FindControl("rdbIsPrimaryExchangeRateCurrency");
                     RadioButton rdbIsPrimaryStoreCurrency = (RadioButton)row.FindControl("rdbIsPrimaryStoreCurrency");
                     if (rdbIsPrimaryExchangeRateCurrency.Checked)
-                        CurrencyManager.PrimaryExchangeRateCurrency = CurrencyManager.GetCurrencyById(currencyId);
+                        IoCFactory.Resolve<ICurrencyManager>().PrimaryExchangeRateCurrency = IoCFactory.Resolve<ICurrencyManager>().GetCurrencyById(currencyId);
                     if (rdbIsPrimaryStoreCurrency.Checked)
-                        CurrencyManager.PrimaryStoreCurrency = CurrencyManager.GetCurrencyById(currencyId);
+                        IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency = IoCFactory.Resolve<ICurrencyManager>().GetCurrencyById(currencyId);
                 }
 
                 BindCurrencyGrid();
@@ -118,13 +119,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 Label lblCurrencyCode = row.FindControl("lblCurrencyCode") as Label;
                 DecimalTextBox txtRate = row.FindControl("txtRate") as DecimalTextBox;
 
-                Currency currency = CurrencyManager.GetCurrencyByCode(lblCurrencyCode.Text);
+                Currency currency = IoCFactory.Resolve<ICurrencyManager>().GetCurrencyByCode(lblCurrencyCode.Text);
                 if (currency != null)
                 {
                     currency.Rate = txtRate.Value;
                     currency.UpdatedOn = DateTime.UtcNow;
 
-                    CurrencyManager.UpdateCurrency(currency);
+                    IoCFactory.Resolve<ICurrencyManager>().UpdateCurrency(currency);
                     BindCurrencyGrid();
                 }
             }

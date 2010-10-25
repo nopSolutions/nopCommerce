@@ -29,6 +29,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Messages;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.BusinessLogic.Utils.Html;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web
 {
@@ -60,7 +61,7 @@ namespace NopSolutions.NopCommerce.Web
             if (NopContext.Current.User == null)
                 return new List<PrivateMessage>();
 
-            var result = ForumManager.GetAllPrivateMessages(NopContext.Current.User.CustomerId, 0, null, false, null,
+            var result = IoCFactory.Resolve<IForumManager>().GetAllPrivateMessages(NopContext.Current.User.CustomerId, 0, null, false, null,
                 string.Empty, PageSize, PageIndex, out totalRecords);
             return result;
         }
@@ -95,7 +96,7 @@ namespace NopSolutions.NopCommerce.Web
             if (NopContext.Current.User == null)
                 return new List<PrivateMessage>();
 
-            var result = ForumManager.GetAllPrivateMessages(0, NopContext.Current.User.CustomerId, null, null, false,
+            var result = IoCFactory.Resolve<IForumManager>().GetAllPrivateMessages(0, NopContext.Current.User.CustomerId, null, null, false,
                 string.Empty, PageSize, PageIndex, out totalRecords);
             return result;
         }
@@ -130,7 +131,7 @@ namespace NopSolutions.NopCommerce.Web
             if (NopContext.Current.User == null)
                 return new List<ForumSubscription>();
 
-            var result = ForumManager.GetAllSubscriptions(NopContext.Current.User.CustomerId, 0, 0, PageSize, PageIndex, out totalRecords);
+            var result = IoCFactory.Resolve<IForumManager>().GetAllSubscriptions(NopContext.Current.User.CustomerId, 0, 0, PageSize, PageIndex, out totalRecords);
             return result;
         }
         
@@ -162,11 +163,11 @@ namespace NopSolutions.NopCommerce.Web
             totalRecords = 0;
             //it's used on profile.aspx page, so we're using UserId query string parameter
             int userId = CommonHelper.QueryStringInt("UserId");
-            var user = CustomerManager.GetCustomerById(userId);
+            var user = IoCFactory.Resolve<ICustomerManager>().GetCustomerById(userId);
             if (user == null)
                 return new List<ForumPost>();
 
-            var result = ForumManager.GetAllPosts(0,
+            var result = IoCFactory.Resolve<IForumManager>().GetAllPosts(0,
                     user.CustomerId, string.Empty, false, PageSize, PageIndex, out totalRecords);
             return result;
         }

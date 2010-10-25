@@ -28,6 +28,7 @@ using AjaxControlToolkit;
 using NopSolutions.NopCommerce.BusinessLogic;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -41,7 +42,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void BindData()
         {
-            var product = ProductManager.GetProductById(this.ProductId);
+            var product = IoCFactory.Resolve<IProductManager>().GetProductById(this.ProductId);
             if (product != null)
             {
                 decimal currentRating = 0;
@@ -67,7 +68,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             }
             else
             {
-                ProductManager.SetProductRating(this.ProductId, int.Parse(e.Value));
+                IoCFactory.Resolve<IProductManager>().SetProductRating(this.ProductId, int.Parse(e.Value));
                 lblProductRatingResult.Text = GetLocaleResourceString("Products.RatingWillBeUpdatedVerySoon");
                 e.CallbackResult = "Update done. Value = " + e.Value;
             }

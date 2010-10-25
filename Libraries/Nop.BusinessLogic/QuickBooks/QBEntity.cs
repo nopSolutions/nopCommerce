@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
 {
@@ -139,9 +140,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
                     case EntityTypeEnum.Invoice:
                     case EntityTypeEnum.TxnDel:
                     case EntityTypeEnum.TxnVoid:
-                        return OrderManager.GetOrderById(NopEntityId);
+                        return IoCFactory.Resolve<IOrderManager>().GetOrderById(NopEntityId);
                     case EntityTypeEnum.Customer:
-                        return CustomerManager.GetCustomerById(NopEntityId);
+                        return IoCFactory.Resolve<ICustomerManager>().GetCustomerById(NopEntityId);
                     default:
                         return null;
                 }

@@ -34,6 +34,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Media;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.BusinessLogic.Utils;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -62,7 +63,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected List<ProductTag> GetProductTags()
         {
-            var productTags = ProductManager.GetAllProductTags(0, string.Empty);
+            var productTags = IoCFactory.Resolve<IProductManager>().GetAllProductTags(0, string.Empty);
             return productTags;
         }
 
@@ -96,7 +97,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     int productTagId = int.Parse(hfProductTagId.Value);
                     if (isChecked)
                     {
-                        ProductManager.DeleteProductTag(productTagId);
+                        IoCFactory.Resolve<IProductManager>().DeleteProductTag(productTagId);
                     }
                 }
 

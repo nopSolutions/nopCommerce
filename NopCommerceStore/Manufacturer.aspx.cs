@@ -31,6 +31,7 @@ using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.BusinessLogic.Templates;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Common;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 namespace NopSolutions.NopCommerce.Web
 {
     public partial class ManufacturerPage : BaseNopPage
@@ -39,7 +40,7 @@ namespace NopSolutions.NopCommerce.Web
 
         private void CreateChildControlsTree()
         {
-            manufacturer = ManufacturerManager.GetManufacturerById(this.ManufacturerId);
+            manufacturer = IoCFactory.Resolve<IManufacturerManager>().GetManufacturerById(this.ManufacturerId);
             if (manufacturer != null)
             {
                 Control child = null;
@@ -77,7 +78,7 @@ namespace NopSolutions.NopCommerce.Web
 
             //canonical URL
             if (SEOHelper.EnableUrlRewriting &&
-                SettingManager.GetSettingValueBoolean("SEO.CanonicalURLs.Manufacturer.Enabled"))
+                IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("SEO.CanonicalURLs.Manufacturer.Enabled"))
             {
                 if (!this.SEName.Equals(SEOHelper.GetManufacturerSEName(manufacturer)))
                 {

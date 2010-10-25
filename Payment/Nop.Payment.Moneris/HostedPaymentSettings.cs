@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Payment.Methods.Moneris
 {
@@ -30,11 +31,11 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Moneris
         {
             get
             {
-                return SettingManager.GetSettingValue("PaymentMethod.Moneris.HostedPayment.GatewayUrl", "https://esplusqa.moneris.com/DPHPP/index.php");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Moneris.HostedPayment.GatewayUrl", "https://esplusqa.moneris.com/DPHPP/index.php");
             }
             set
             {
-                SettingManager.SetParam("PaymentMethod.Moneris.HostedPayment.GatewayUrl", value);
+                IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.Moneris.HostedPayment.GatewayUrl", value);
             }
         }
 
@@ -45,11 +46,11 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Moneris
         {
             get
             {
-                return SettingManager.GetSettingValue("PaymentMethod.Moneris.HostedPayment.HppID");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Moneris.HostedPayment.HppID");
             }
             set
             {
-                SettingManager.SetParam("PaymentMethod.Moneris.HostedPayment.HppID", value);
+                IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.Moneris.HostedPayment.HppID", value);
             }
         }
 
@@ -60,11 +61,11 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Moneris
         {
             get
             {
-                return SettingManager.GetSettingValue("PaymentMethod.Moneris.HostedPayment.HppKey");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Moneris.HostedPayment.HppKey");
             }
             set
             {
-                SettingManager.SetParam("PaymentMethod.Moneris.HostedPayment.HppKey", value);
+                IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.Moneris.HostedPayment.HppKey", value);
             }
         }
 
@@ -75,11 +76,11 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Moneris
         {
             get
             {
-                return SettingManager.GetSettingValueBoolean("PaymentMethod.Moneris.HostedPayment.AuthorizeOnly", false);
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.Moneris.HostedPayment.AuthorizeOnly", false);
             }
             set
             {
-                SettingManager.SetParam("PaymentMethod.Moneris.HostedPayment.AuthorizeOnly", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.Moneris.HostedPayment.AuthorizeOnly", value.ToString());
             }
         }
 
@@ -87,11 +88,11 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Moneris
         {
             get
             {
-                return SettingManager.GetSettingValueDecimalNative("PaymentMethod.Moneris.HostedPayment.AdditionalFee");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.Moneris.HostedPayment.AdditionalFee");
             }
             set
             {
-                SettingManager.SetParamNative("PaymentMethod.Moneris.HostedPayment.AdditionalFee", value);
+                IoCFactory.Resolve<ISettingManager>().SetParamNative("PaymentMethod.Moneris.HostedPayment.AdditionalFee", value);
             }
         }
         #endregion

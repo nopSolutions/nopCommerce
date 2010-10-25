@@ -25,15 +25,16 @@ using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.Audit;
 using NopSolutions.NopCommerce.BusinessLogic.Categories;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 using NopSolutions.NopCommerce.BusinessLogic.Localization;
 using NopSolutions.NopCommerce.BusinessLogic.Manufacturers;
 using NopSolutions.NopCommerce.BusinessLogic.Media;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.BusinessLogic.Products.Specs;
+using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.BusinessLogic.Templates;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Web.Administration.Modules;
-using NopSolutions.NopCommerce.BusinessLogic.SEO;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -43,7 +44,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             if (!Page.IsPostBack)
             {
-                Product product = ProductManager.GetProductById(this.ProductId);
+                Product product = IoCFactory.Resolve<IProductManager>().GetProductById(this.ProductId);
                 if (product != null)
                 {
                     lblTitle.Text = Server.HtmlEncode(product.Name);
@@ -61,7 +62,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 txtProductCopyName.Text = "Copy of " + txtName.Text;
             }
 
-            Product product = ProductManager.GetProductById(this.ProductId);
+            Product product = IoCFactory.Resolve<IProductManager>().GetProductById(this.ProductId);
             if (product != null)
             {
                 PreviewButton.OnClientClick = string.Format("javascript:OpenWindow('{0}', 800, 600, true); return false;", SEOHelper.GetProductUrl(product.ProductId));
@@ -90,7 +91,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         ctrlProductPictures.SaveInfo();
                         ctrlProductSpecifications.SaveInfo();
 
-                        CustomerActivityManager.InsertActivity(
+                        IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
                             "EditProduct",
                             GetLocaleResourceString("ActivityLog.EditProduct"),
                             product.Name);
@@ -113,12 +114,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                Product product = ProductManager.GetProductById(this.ProductId);
+                Product product = IoCFactory.Resolve<IProductManager>().GetProductById(this.ProductId);
                 if (product != null)
                 {
-                    ProductManager.MarkProductAsDeleted(this.ProductId);
+                    IoCFactory.Resolve<IProductManager>().MarkProductAsDeleted(this.ProductId);
 
-                    CustomerActivityManager.InsertActivity(
+                    IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
                         "DeleteProduct",
                         GetLocaleResourceString("ActivityLog.DeleteProduct"),
                         product.Name);
@@ -136,10 +137,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                Product productCopy = ProductManager.DuplicateProduct(ProductId, txtProductCopyName.Text, cbIsProductCopyPublished.Checked, cbCopyImages.Checked);
+                Product productCopy = IoCFactory.Resolve<IProductManager>().DuplicateProduct(ProductId, txtProductCopyName.Text, cbIsProductCopyPublished.Checked, cbCopyImages.Checked);
                 if(productCopy != null)
                 {
-                    CustomerActivityManager.InsertActivity(
+                    IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
                         "AddNewProduct",
                         GetLocaleResourceString("ActivityLog.AddNewProduct"),
                         productCopy.Name);

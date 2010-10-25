@@ -137,19 +137,19 @@
                                 <asp:TemplateField HeaderText="<% $NopResources:Admin.RecurringPaymentInfo.History.OrderStatusColumn %>"
                                     ItemStyle-Width="10%">
                                     <ItemTemplate>
-                                        <%#OrderManager.GetOrderStatusName(((Order)(Eval("Order"))).OrderStatusId)%>
+                                        <%#IoCFactory.Resolve<IOrderManager>().GetOrderStatusName(((Order)(Eval("Order"))).OrderStatusId)%>
                                     </ItemTemplate>
                                 </asp:TemplateField>
                                 <asp:TemplateField HeaderText="<% $NopResources:Admin.RecurringPaymentInfo.History.PaymentStatusColumn %>"
                                     ItemStyle-Width="20%">
                                     <ItemTemplate>
-                                        <%#PaymentStatusManager.GetPaymentStatusName(((Order)(Eval("Order"))).PaymentStatusId)%>
+                                        <%#IoCFactory.Resolve<IPaymentStatusManager>().GetPaymentStatusName(((Order)(Eval("Order"))).PaymentStatusId)%>
                                     </ItemTemplate>
                                 </asp:TemplateField>
                                 <asp:TemplateField HeaderText="<% $NopResources:Admin.RecurringPaymentInfo.History.ShippingStatusColumn %>"
                                     ItemStyle-Width="15%">
                                     <ItemTemplate>
-                                        <%#ShippingStatusManager.GetShippingStatusName(((Order)(Eval("Order"))).ShippingStatusId)%>
+                                        <%#IoCFactory.Resolve<IShippingStatusManager>().GetShippingStatusName(((Order)(Eval("Order"))).ShippingStatusId)%>
                                     </ItemTemplate>
                                 </asp:TemplateField>
                                 <asp:TemplateField HeaderText="<% $NopResources:Admin.RecurringPaymentInfo.History.CreatedOnColumn %>"

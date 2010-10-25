@@ -19,6 +19,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.Common;
 using System.Collections.Generic;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
  
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Localization
@@ -69,7 +70,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Localization
                 }
             }
 
-            if (showCurrency && CurrencyManager.GetAllCurrencies().Count > 1)
+            if (showCurrency && IoCFactory.Resolve<ICurrencyManager>().GetAllCurrencies().Count > 1)
                 result = String.Format("{0} ({1})", result, targetCurrency.CurrencyCode);
             return result;
         }
@@ -129,7 +130,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Localization
             if (resourceKey == null)
                 resourceKey = string.Empty;
             resourceKey = resourceKey.Trim().ToLowerInvariant();
-            var resources = LocaleStringResourceManager.GetAllResourcesByLanguageId(languageId);
+            var resources = IoCFactory.Resolve<ILocaleStringResourceManager>().GetAllResourcesByLanguageId(languageId);
 
             if (resources.ContainsKey(resourceKey))
             {
@@ -141,7 +142,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Localization
             {
                 if (logIfNotFound)
                 {
-                    LogManager.InsertLog(LogTypeEnum.CommonError, "Resource string is not found", string.Format("Resource string ({0}) is not found. Language Id ={1}", resourceKey, languageId));
+                    IoCFactory.Resolve<ILogManager>().InsertLog(LogTypeEnum.CommonError, "Resource string is not found", string.Format("Resource string ({0}) is not found. Language Id ={1}", resourceKey, languageId));
                 }
 
                 if (!String.IsNullOrEmpty(defaultValue))
@@ -163,7 +164,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Localization
         /// <param name="content">XML content</param>
         public static void LanguagePackImport(int languageId, string content)
         {
-            LocaleStringResourceManager.InsertAllLocaleStringResourcesFromXml(languageId, content);
+            IoCFactory.Resolve<ILocaleStringResourceManager>().InsertAllLocaleStringResourcesFromXml(languageId, content);
         }
 
         /// <summary>
@@ -173,7 +174,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Localization
         /// <returns>XML content</returns>
         public static string LanguagePackExport(int languageId)
         {
-            return LocaleStringResourceManager.GetAllLocaleStringResourcesAsXml(languageId);
+            return IoCFactory.Resolve<ILocaleStringResourceManager>().GetAllLocaleStringResourcesAsXml(languageId);
         }
         
         #endregion
@@ -187,16 +188,16 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Localization
         {
             get
             {
-                int defaultAdminLanguageId = SettingManager.GetSettingValueInteger("Localization.DefaultAdminLanguageId");
+                int defaultAdminLanguageId = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Localization.DefaultAdminLanguageId");
 
-                var language = LanguageManager.GetLanguageById(defaultAdminLanguageId);
+                var language = IoCFactory.Resolve<ILanguageManager>().GetLanguageById(defaultAdminLanguageId);
                 if (language != null && language.Published)
                 {
                     return language;
                 }
                 else
                 {
-                    var publishedLanguages = LanguageManager.GetAllLanguages(false);
+                    var publishedLanguages = IoCFactory.Resolve<ILanguageManager>().GetAllLanguages(false);
                     foreach (Language publishedLanguage in publishedLanguages)
                         return publishedLanguage;
                 }
@@ -205,7 +206,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Localization
             set
             {
                 if (value != null)
-                    SettingManager.SetParam("Localization.DefaultAdminLanguageId", value.LanguageId.ToString());
+                    IoCFactory.Resolve<ISettingManager>().SetParam("Localization.DefaultAdminLanguageId", value.LanguageId.ToString());
             }
         }
         

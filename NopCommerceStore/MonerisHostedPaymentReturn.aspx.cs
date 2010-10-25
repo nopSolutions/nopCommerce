@@ -9,6 +9,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Payment.Methods.Moneris;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web
 {
@@ -47,7 +48,7 @@ namespace NopSolutions.NopCommerce.Web
                 {
                     Response.Redirect(CommonHelper.GetStoreLocation());
                 }
-                Order order = OrderManager.GetOrderByGuid(guid.Value);
+                Order order = IoCFactory.Resolve<IOrderManager>().GetOrderByGuid(guid.Value);
                 if(order == null)
                 {
                     Response.Redirect(CommonHelper.GetStoreLocation());
@@ -59,14 +60,14 @@ namespace NopSolutions.NopCommerce.Web
 
                 if(HostedPaymentSettings.AuthorizeOnly)
                 {
-                    if(OrderManager.CanMarkOrderAsAuthorized(order))
+                    if(IoCFactory.Resolve<IOrderManager>().CanMarkOrderAsAuthorized(order))
                     {
-                        OrderManager.MarkAsAuthorized(order.OrderId);
+                        IoCFactory.Resolve<IOrderManager>().MarkAsAuthorized(order.OrderId);
                     }
                 }
-                else if(OrderManager.CanMarkOrderAsPaid(order))
+                else if(IoCFactory.Resolve<IOrderManager>().CanMarkOrderAsPaid(order))
                 {
-                    OrderManager.MarkOrderAsPaid(order.OrderId);
+                    IoCFactory.Resolve<IOrderManager>().MarkOrderAsPaid(order.OrderId);
                 }
                 Response.Redirect("~/checkoutcompleted.aspx");
             }

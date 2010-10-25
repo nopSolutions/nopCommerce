@@ -23,13 +23,14 @@ using NopSolutions.NopCommerce.BusinessLogic.Caching;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Data;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
 {
     /// <summary>
     /// Shipping rate computation method manager
     /// </summary>
-    public partial class ShippingRateComputationMethodManager
+    public partial class ShippingRateComputationMethodManager : IShippingRateComputationMethodManager
     {
         #region Constants
         private const string SHIPPINGRATECOMPUTATIONMETHODS_ALL_KEY = "Nop.shippingratecomputationmethod.all-{0}";
@@ -43,7 +44,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         /// Deletes a shipping rate computation method
         /// </summary>
         /// <param name="shippingRateComputationMethodId">Shipping rate computation method identifier</param>
-        public static void DeleteShippingRateComputationMethod(int shippingRateComputationMethodId)
+        public void DeleteShippingRateComputationMethod(int shippingRateComputationMethodId)
         {
             var shippingRateComputationMethod = GetShippingRateComputationMethodById(shippingRateComputationMethodId);
             if (shippingRateComputationMethod == null)
@@ -55,7 +56,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
             context.DeleteObject(shippingRateComputationMethod);
             context.SaveChanges();
 
-            if (ShippingRateComputationMethodManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(SHIPPINGRATECOMPUTATIONMETHODS_PATTERN_KEY);
             }
@@ -66,14 +67,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         /// </summary>
         /// <param name="shippingRateComputationMethodId">Shipping rate computation method identifier</param>
         /// <returns>Shipping rate computation method</returns>
-        public static ShippingRateComputationMethod GetShippingRateComputationMethodById(int shippingRateComputationMethodId)
+        public ShippingRateComputationMethod GetShippingRateComputationMethodById(int shippingRateComputationMethodId)
         {
             if (shippingRateComputationMethodId == 0)
                 return null;
 
             string key = string.Format(SHIPPINGRATECOMPUTATIONMETHODS_BY_ID_KEY, shippingRateComputationMethodId);
             object obj2 = NopRequestCache.Get(key);
-            if (ShippingRateComputationMethodManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (ShippingRateComputationMethod)obj2;
             }
@@ -84,7 +85,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
                         select s;
             var shippingRateComputationMethod = query.SingleOrDefault();
 
-            if (ShippingRateComputationMethodManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, shippingRateComputationMethod);
             }
@@ -95,7 +96,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         /// Gets all shipping rate computation methods
         /// </summary>
         /// <returns>Shipping rate computation method collection</returns>
-        public static List<ShippingRateComputationMethod> GetAllShippingRateComputationMethods()
+        public List<ShippingRateComputationMethod> GetAllShippingRateComputationMethods()
         {
             bool showHidden = NopContext.Current.IsAdmin;
             return GetAllShippingRateComputationMethods(showHidden);
@@ -106,11 +107,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Shipping rate computation method collection</returns>
-        public static List<ShippingRateComputationMethod> GetAllShippingRateComputationMethods(bool showHidden)
+        public List<ShippingRateComputationMethod> GetAllShippingRateComputationMethods(bool showHidden)
         {
             string key = string.Format(SHIPPINGRATECOMPUTATIONMETHODS_ALL_KEY, showHidden);
             object obj2 = NopRequestCache.Get(key);
-            if (ShippingRateComputationMethodManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (List<ShippingRateComputationMethod>)obj2;
             }
@@ -122,7 +123,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
                         select s;
             var shippingRateComputationMethods = query.ToList();
 
-            if (ShippingRateComputationMethodManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, shippingRateComputationMethods);
             }
@@ -133,7 +134,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         /// Inserts a shipping rate computation method
         /// </summary>
         /// <param name="shippingRateComputationMethod">Shipping rate computation method</param>
-        public static void InsertShippingRateComputationMethod(ShippingRateComputationMethod shippingRateComputationMethod)
+        public void InsertShippingRateComputationMethod(ShippingRateComputationMethod shippingRateComputationMethod)
         {
             if (shippingRateComputationMethod == null)
                 throw new ArgumentNullException("shippingRateComputationMethod");
@@ -152,7 +153,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
             context.ShippingRateComputationMethods.AddObject(shippingRateComputationMethod);
             context.SaveChanges();
 
-            if (ShippingRateComputationMethodManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(SHIPPINGRATECOMPUTATIONMETHODS_PATTERN_KEY);
             }
@@ -162,7 +163,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         /// Updates the shipping rate computation method
         /// </summary>
         /// <param name="shippingRateComputationMethod">Shipping rate computation method</param>
-        public static void UpdateShippingRateComputationMethod(ShippingRateComputationMethod shippingRateComputationMethod)
+        public void UpdateShippingRateComputationMethod(ShippingRateComputationMethod shippingRateComputationMethod)
         {
             if (shippingRateComputationMethod == null)
                 throw new ArgumentNullException("shippingRateComputationMethod");
@@ -182,7 +183,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
 
             context.SaveChanges();
 
-            if (ShippingRateComputationMethodManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(SHIPPINGRATECOMPUTATIONMETHODS_PATTERN_KEY);
             }
@@ -193,7 +194,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         /// </summary>
         /// <param name="shippingRateComputationMethodId">The shipping rate computation method identifier</param>
         /// <returns>A shipping rate computation method type</returns>
-        public static ShippingRateComputationMethodTypeEnum GetShippingRateComputationMethodTypeEnum(int shippingRateComputationMethodId)
+        public ShippingRateComputationMethodTypeEnum GetShippingRateComputationMethodTypeEnum(int shippingRateComputationMethodId)
         {
             var method = GetShippingRateComputationMethodById(shippingRateComputationMethodId);
             if (method == null)
@@ -205,16 +206,18 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         #endregion
 
         #region Properties
+
         /// <summary>
         /// Gets a value indicating whether cache is enabled
         /// </summary>
-        public static bool CacheEnabled
+        public bool CacheEnabled
         {
             get
             {
-                return SettingManager.GetSettingValueBoolean("Cache.ShippingRateComputationMethodManager.CacheEnabled");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.ShippingRateComputationMethodManager.CacheEnabled");
             }
         }
+
         #endregion
     }
 }

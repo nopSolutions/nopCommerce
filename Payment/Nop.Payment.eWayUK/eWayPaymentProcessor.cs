@@ -30,6 +30,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Payment;
 using NopSolutions.NopCommerce.BusinessLogic.Utils;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Common;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Payment.Methods.eWayUK
 {
@@ -134,9 +135,9 @@ namespace NopSolutions.NopCommerce.Payment.Methods.eWayUK
         /// </summary>
         private void InitSettings()
         {
-            customerID = SettingManager.GetSettingValue("PaymentMethod.eWayUK.CustomerID");
-            username = SettingManager.GetSettingValue("PaymentMethod.eWayUK.Username");
-            paymentPage = SettingManager.GetSettingValue("PaymentMethod.eWayUK.PaymentPage");
+            customerID = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.eWayUK.CustomerID");
+            username = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.eWayUK.Username");
+            paymentPage = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.eWayUK.PaymentPage");
         }
 
         #endregion
@@ -171,7 +172,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.eWayUK
             strPost += Format("UserName", username);
             //send amounts to the generator in DOLLAR FORM. ie 10.05
             strPost += Format("Amount", order.OrderTotal.ToString("0.00", CultureInfo.InvariantCulture));
-            strPost += Format("Currency", CurrencyManager.PrimaryStoreCurrency.CurrencyCode);
+            strPost += Format("Currency", IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency.CurrencyCode);
 
 
             // supported languages: 
@@ -234,7 +235,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.eWayUK
         /// <returns>Additional handling fee</returns>
         public decimal GetAdditionalHandlingFee()
         {
-            return SettingManager.GetSettingValueDecimalNative("PaymentMethod.eWayUK.AdditionalFee");
+            return IoCFactory.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.eWayUK.AdditionalFee");
         }
 
         /// <summary>

@@ -35,6 +35,7 @@ using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.Installation;
 using NopSolutions.NopCommerce.BusinessLogic.Audit.UsersOnline;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web
 {
@@ -49,7 +50,7 @@ namespace NopSolutions.NopCommerce.Web
 
         public BaseNopPage()
         {
-            showExecutionTimer = SettingManager.GetSettingValueBoolean("Display.PageExecutionTimeInfoEnabled");
+            showExecutionTimer = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Display.PageExecutionTimeInfoEnabled");
             if (showExecutionTimer)
             {
                 executionTimer = new Stopwatch();
@@ -63,11 +64,11 @@ namespace NopSolutions.NopCommerce.Web
         protected override void OnPreInit(EventArgs e)
         {
             //store is closed
-            if (SettingManager.GetSettingValueBoolean("Common.StoreClosed"))
+            if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Common.StoreClosed"))
             {
                 if (NopContext.Current.User != null &&
                     NopContext.Current.User.IsAdmin &&
-                    SettingManager.GetSettingValueBoolean("Common.StoreClosed.AllowAdminAccess"))
+                    IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Common.StoreClosed.AllowAdminAccess"))
                 {
                     //do nothing - allow admin access
                 }
@@ -98,7 +99,7 @@ namespace NopSolutions.NopCommerce.Web
             }
 
             //allow navigation only for registered customers
-            if (CustomerManager.AllowNavigationOnlyRegisteredCustomers)
+            if (IoCFactory.Resolve<ICustomerManager>().AllowNavigationOnlyRegisteredCustomers)
             {
                 if (NopContext.Current.User == null || NopContext.Current.User.IsGuest)
                 {
@@ -189,7 +190,7 @@ namespace NopSolutions.NopCommerce.Web
             //online user tracking
             if (this.TrackedByOnlineCustomersModule)
             {
-                OnlineUserManager.TrackCurrentUser();
+                IoCFactory.Resolve<IOnlineUserManager>().TrackCurrentUser();
             }
 
             base.OnPreRender(e);

@@ -21,6 +21,7 @@ using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.Payment;
 using NopSolutions.NopCommerce.Common;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Payment.Methods.Check
 {
@@ -59,7 +60,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Check
         /// <returns>Additional handling fee</returns>
         public decimal GetAdditionalHandlingFee()
         {
-            return SettingManager.GetSettingValueDecimalNative("PaymentMethod.Check.AdditionalFee");
+            return IoCFactory.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.Check.AdditionalFee");
         }
 
         /// <summary>

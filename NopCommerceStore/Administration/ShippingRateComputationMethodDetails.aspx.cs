@@ -27,6 +27,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Security;
 using NopSolutions.NopCommerce.BusinessLogic.Shipping;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Web.Templates.Shipping;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration
 {
@@ -34,12 +35,12 @@ namespace NopSolutions.NopCommerce.Web.Administration
     {
         protected override bool ValidatePageSecurity()
         {
-            return ACLManager.IsActionAllowed("ManageShippingSettings");
+            return IoCFactory.Resolve<IACLManager>().IsActionAllowed("ManageShippingSettings");
         }
 
         private void BindData()
         {
-            ShippingRateComputationMethod shippingRateComputationMethod = ShippingRateComputationMethodManager.GetShippingRateComputationMethodById(this.ShippingRateComputationMethodId);
+            ShippingRateComputationMethod shippingRateComputationMethod = IoCFactory.Resolve<IShippingRateComputationMethodManager>().GetShippingRateComputationMethodById(this.ShippingRateComputationMethodId);
             if (shippingRateComputationMethod != null)
             {
                 this.txtName.Text = shippingRateComputationMethod.Name;
@@ -55,7 +56,7 @@ namespace NopSolutions.NopCommerce.Web.Administration
         
         private void CreateChildControlsTree()
         {
-            ShippingRateComputationMethod shippingRateComputationMethod = ShippingRateComputationMethodManager.GetShippingRateComputationMethodById(this.ShippingRateComputationMethodId);
+            ShippingRateComputationMethod shippingRateComputationMethod = IoCFactory.Resolve<IShippingRateComputationMethodManager>().GetShippingRateComputationMethodById(this.ShippingRateComputationMethodId);
             if (shippingRateComputationMethod != null)
             {
                 Control child = null;
@@ -99,7 +100,7 @@ namespace NopSolutions.NopCommerce.Web.Administration
             {
                 try
                 {
-                    var shippingRateComputationMethod = ShippingRateComputationMethodManager.GetShippingRateComputationMethodById(this.ShippingRateComputationMethodId);
+                    var shippingRateComputationMethod = IoCFactory.Resolve<IShippingRateComputationMethodManager>().GetShippingRateComputationMethodById(this.ShippingRateComputationMethodId);
 
                     if (shippingRateComputationMethod != null)
                     {
@@ -109,13 +110,13 @@ namespace NopSolutions.NopCommerce.Web.Administration
                         shippingRateComputationMethod.ClassName = txtClassName.Text;
                         shippingRateComputationMethod.IsActive = cbActive.Checked;
                         shippingRateComputationMethod.DisplayOrder = txtDisplayOrder.Value;
-                        ShippingRateComputationMethodManager.UpdateShippingRateComputationMethod(shippingRateComputationMethod);
+                        IoCFactory.Resolve<IShippingRateComputationMethodManager>().UpdateShippingRateComputationMethod(shippingRateComputationMethod);
 
                         var configureModule = GetConfigureModule();
                         if (configureModule != null)
                             configureModule.Save();
 
-                        CustomerActivityManager.InsertActivity(
+                        IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
                             "EditShippingProvider",
                             GetLocaleResourceString("ActivityLog.EditShippingProvider"),
                             shippingRateComputationMethod.Name);
@@ -136,7 +137,7 @@ namespace NopSolutions.NopCommerce.Web.Administration
         {
             try
             {
-                ShippingRateComputationMethodManager.DeleteShippingRateComputationMethod(this.ShippingRateComputationMethodId);
+                IoCFactory.Resolve<IShippingRateComputationMethodManager>().DeleteShippingRateComputationMethod(this.ShippingRateComputationMethodId);
                 Response.Redirect("ShippingRateComputationMethods.aspx");
             }
             catch (Exception exc)

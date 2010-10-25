@@ -24,6 +24,7 @@ using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.Audit;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 using NopSolutions.NopCommerce.BusinessLogic.Localization;
 using NopSolutions.NopCommerce.BusinessLogic.Media;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
@@ -38,7 +39,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            Product product = ProductManager.GetProductById(this.ProductId);
+            Product product = IoCFactory.Resolve<IProductManager>().GetProductById(this.ProductId);
             if (product == null)
                 Response.Redirect("Products.aspx");
             lblProductName.Text = Server.HtmlEncode(product.Name);
@@ -62,7 +63,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     ProductVariant productVariant = ctrlProductVariantInfo.SaveInfo();
                     ctrlProductVariantDiscounts.SaveInfo(productVariant.ProductVariantId);
 
-                    CustomerActivityManager.InsertActivity(
+                    IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
                         "AddNewProductVariant",
                         GetLocaleResourceString("ActivityLog.AddNewProductVariant"),
                         productVariant.FullProductName);

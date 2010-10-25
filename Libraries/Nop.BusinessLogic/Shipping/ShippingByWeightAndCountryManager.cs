@@ -22,21 +22,23 @@ using System.Text;
 using NopSolutions.NopCommerce.BusinessLogic.Caching;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Data;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
 {
     /// <summary>
     /// "ShippingByWeightAndCountry" manager
     /// </summary>
-    public partial class ShippingByWeightAndCountryManager
+    public partial class ShippingByWeightAndCountryManager : IShippingByWeightAndCountryManager
     {
         #region Methods
+
         /// <summary>
         /// Gets a ShippingByWeightAndCountry
         /// </summary>
         /// <param name="shippingByWeightAndCountryId">ShippingByWeightAndCountry identifier</param>
         /// <returns>ShippingByWeightAndCountry</returns>
-        public static ShippingByWeightAndCountry GetById(int shippingByWeightAndCountryId)
+        public ShippingByWeightAndCountry GetById(int shippingByWeightAndCountryId)
         {
             if (shippingByWeightAndCountryId == 0)
                 return null;
@@ -53,7 +55,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         /// Deletes a ShippingByWeightAndCountry
         /// </summary>
         /// <param name="shippingByWeightAndCountryId">ShippingByWeightAndCountry identifier</param>
-        public static void DeleteShippingByWeightAndCountry(int shippingByWeightAndCountryId)
+        public void DeleteShippingByWeightAndCountry(int shippingByWeightAndCountryId)
         {
             var shippingByWeightAndCountry = GetById(shippingByWeightAndCountryId);
             if (shippingByWeightAndCountry == null)
@@ -70,7 +72,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         /// Gets all ShippingByWeightAndCountrys
         /// </summary>
         /// <returns>ShippingByWeightAndCountry collection</returns>
-        public static List<ShippingByWeightAndCountry> GetAll()
+        public List<ShippingByWeightAndCountry> GetAll()
         {
             var context = ObjectContextHelper.CurrentObjectContext;
             var query = from swc in context.ShippingByWeightAndCountry
@@ -84,7 +86,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         /// Inserts a ShippingByWeightAndCountry
         /// </summary>
         /// <param name="shippingByWeightAndCountry">ShippingByWeightAndCountry</param>
-        public static void InsertShippingByWeightAndCountry(ShippingByWeightAndCountry shippingByWeightAndCountry)
+        public void InsertShippingByWeightAndCountry(ShippingByWeightAndCountry shippingByWeightAndCountry)
         {
             if (shippingByWeightAndCountry == null)
                 throw new ArgumentNullException("shippingByWeightAndCountry");
@@ -99,7 +101,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         /// Updates the ShippingByWeightAndCountry
         /// </summary>
         /// <param name="shippingByWeightAndCountry">ShippingByWeightAndCountry</param>
-        public static void UpdateShippingByWeightAndCountry(ShippingByWeightAndCountry shippingByWeightAndCountry)
+        public void UpdateShippingByWeightAndCountry(ShippingByWeightAndCountry shippingByWeightAndCountry)
         {
             if (shippingByWeightAndCountry == null)
                 throw new ArgumentNullException("shippingByWeightAndCountry");
@@ -117,7 +119,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         /// <param name="shippingMethodId">The shipping method identifier</param>
         /// <param name="countryId">The country identifier</param>
         /// <returns>ShippingByWeightAndCountry collection</returns>
-        public static List<ShippingByWeightAndCountry> GetAllByShippingMethodIdAndCountryId(int shippingMethodId, 
+        public List<ShippingByWeightAndCountry> GetAllByShippingMethodIdAndCountryId(int shippingMethodId, 
             int countryId)
         {
             var context = ObjectContextHelper.CurrentObjectContext;
@@ -135,16 +137,16 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         /// <summary>
         /// Gets or sets a value indicating whether to calculate per weight unit (e.g. per lb)
         /// </summary>
-        public static bool CalculatePerWeightUnit
+        public bool CalculatePerWeightUnit
         {
             get
             {
-                bool val1 = SettingManager.GetSettingValueBoolean("ShippingByWeightAndCountry.CalculatePerWeightUnit");
+                bool val1 = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("ShippingByWeightAndCountry.CalculatePerWeightUnit");
                 return val1;
             }
             set
             {
-                SettingManager.SetParam("ShippingByWeightAndCountry.CalculatePerWeightUnit", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("ShippingByWeightAndCountry.CalculatePerWeightUnit", value.ToString());
             }
         }
 

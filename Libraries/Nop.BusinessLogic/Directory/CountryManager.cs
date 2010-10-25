@@ -23,6 +23,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Caching;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Data;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Directory
@@ -30,7 +31,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
     /// <summary>
     /// Country manager
     /// </summary>
-    public partial class CountryManager
+    public partial class CountryManager : ICountryManager
     {
         #region Constants
         private const string COUNTRIES_ALL_KEY = "Nop.country.all-{0}";
@@ -42,11 +43,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
         #endregion
 
         #region Methods
+
         /// <summary>
         /// Deletes a country
         /// </summary>
         /// <param name="countryId">Country identifier</param>
-        public static void DeleteCountry(int countryId)
+        public void DeleteCountry(int countryId)
         {
             var country = GetCountryById(countryId);
             if (country == null)
@@ -58,7 +60,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
             context.DeleteObject(country);
             context.SaveChanges();
 
-            if (CountryManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(COUNTRIES_PATTERN_KEY);
             }
@@ -68,12 +70,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
         /// Gets all countries
         /// </summary>
         /// <returns>Country collection</returns>
-        public static List<Country> GetAllCountries()
+        public List<Country> GetAllCountries()
         {
             bool showHidden = NopContext.Current.IsAdmin;
             string key = string.Format(COUNTRIES_ALL_KEY, showHidden);
             object obj2 = NopRequestCache.Get(key);
-            if (CountryManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (List<Country>)obj2;
             }
@@ -85,7 +87,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
                         select c;
             var countryCollection = query.ToList();
 
-            if (CountryManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, countryCollection);
             }
@@ -96,12 +98,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
         /// Gets all countries that allow registration
         /// </summary>
         /// <returns>Country collection</returns>
-        public static List<Country> GetAllCountriesForRegistration()
+        public List<Country> GetAllCountriesForRegistration()
         {
             bool showHidden = NopContext.Current.IsAdmin;
             string key = string.Format(COUNTRIES_REGISTRATION_KEY, showHidden);
             object obj2 = NopRequestCache.Get(key);
-            if (CountryManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (List<Country>)obj2;
             }
@@ -113,7 +115,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
                         select c;
             var countryCollection = query.ToList();
 
-            if (CountryManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, countryCollection);
             }
@@ -124,12 +126,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
         /// Gets all countries that allow billing
         /// </summary>
         /// <returns>Country collection</returns>
-        public static List<Country> GetAllCountriesForBilling()
+        public List<Country> GetAllCountriesForBilling()
         {
             bool showHidden = NopContext.Current.IsAdmin;
             string key = string.Format(COUNTRIES_BILLING_KEY, showHidden);
             object obj2 = NopRequestCache.Get(key);
-            if (CountryManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (List<Country>)obj2;
             }
@@ -141,7 +143,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
                         select c;
             var countryCollection = query.ToList();
 
-            if (CountryManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, countryCollection);
             }
@@ -152,13 +154,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
         /// Gets all countries that allow shipping
         /// </summary>
         /// <returns>Country collection</returns>
-        public static List<Country> GetAllCountriesForShipping()
+        public List<Country> GetAllCountriesForShipping()
         {
 
             bool showHidden = NopContext.Current.IsAdmin;
             string key = string.Format(COUNTRIES_SHIPPING_KEY, showHidden);
             object obj2 = NopRequestCache.Get(key);
-            if (CountryManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (List<Country>)obj2;
             }
@@ -170,7 +172,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
                         select c;
             var countryCollection = query.ToList();
 
-            if (CountryManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, countryCollection);
             }
@@ -182,14 +184,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
         /// </summary>
         /// <param name="countryId">Country identifier</param>
         /// <returns>Country</returns>
-        public static Country GetCountryById(int countryId)
+        public Country GetCountryById(int countryId)
         {
             if (countryId == 0)
                 return null;
 
             string key = string.Format(COUNTRIES_BY_ID_KEY, countryId);
             object obj2 = NopRequestCache.Get(key);
-            if (CountryManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (Country)obj2;
             }
@@ -200,7 +202,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
                         select c;
             var country = query.SingleOrDefault();
 
-            if (CountryManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, country);
             }
@@ -212,7 +214,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
         /// </summary>
         /// <param name="twoLetterIsoCode">Country two letter ISO code</param>
         /// <returns>Country</returns>
-        public static Country GetCountryByTwoLetterIsoCode(string twoLetterIsoCode)
+        public Country GetCountryByTwoLetterIsoCode(string twoLetterIsoCode)
         {
             var context = ObjectContextHelper.CurrentObjectContext;
             var query = from c in context.Countries
@@ -228,7 +230,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
         /// </summary>
         /// <param name="threeLetterIsoCode">Country three letter ISO code</param>
         /// <returns>Country</returns>
-        public static Country GetCountryByThreeLetterIsoCode(string threeLetterIsoCode)
+        public Country GetCountryByThreeLetterIsoCode(string threeLetterIsoCode)
         {
             var context = ObjectContextHelper.CurrentObjectContext;
             var query = from c in context.Countries
@@ -242,7 +244,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
         /// Inserts a country
         /// </summary>
         /// <param name="country">Country</param>
-        public static void InsertCountry(Country country)
+        public void InsertCountry(Country country)
         {
             if (country == null)
                 throw new ArgumentNullException("country");
@@ -259,7 +261,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
             context.Countries.AddObject(country);
             context.SaveChanges();
 
-            if (CountryManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(COUNTRIES_PATTERN_KEY);
             }
@@ -269,7 +271,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
         /// Updates the country
         /// </summary>
         /// <param name="country">Country</param>
-        public static void UpdateCountry(Country country)
+        public void UpdateCountry(Country country)
         {
             if (country == null)
                 throw new ArgumentNullException("country");
@@ -287,24 +289,27 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
 
             context.SaveChanges();
 
-            if (CountryManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(COUNTRIES_PATTERN_KEY);
             }
         }
+
         #endregion
 
         #region Properties
+
         /// <summary>
         /// Gets a value indicating whether cache is enabled
         /// </summary>
-        public static bool CacheEnabled
+        public bool CacheEnabled
         {
             get
             {
-                return SettingManager.GetSettingValueBoolean("Cache.CountryManager.CacheEnabled");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.CountryManager.CacheEnabled");
             }
         }
+
         #endregion
     }
 }

@@ -32,6 +32,7 @@ using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Media;
 using NopSolutions.NopCommerce.Common;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -39,20 +40,20 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            Customer customer = CustomerManager.GetCustomerById(this.CustomerId);
+            Customer customer = IoCFactory.Resolve<ICustomerManager>().GetCustomerById(this.CustomerId);
             if(customer != null)
             {
                 var customerAvatar = customer.Avatar;
-                int avatarSize = SettingManager.GetSettingValueInteger("Media.Customer.AvatarSize", 85);
+                int avatarSize = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.Customer.AvatarSize", 85);
                 string pictureUrl = string.Empty;
                 if(customerAvatar != null)
                 {
-                    pictureUrl = PictureManager.GetPictureUrl(customerAvatar, avatarSize, false);
+                    pictureUrl = IoCFactory.Resolve<IPictureManager>().GetPictureUrl(customerAvatar, avatarSize, false);
                     this.btnRemoveAvatar.Visible = true;
                 }
                 else
                 {
-                    pictureUrl = PictureManager.GetDefaultPictureUrl(PictureTypeEnum.Avatar, avatarSize);
+                    pictureUrl = IoCFactory.Resolve<IPictureManager>().GetDefaultPictureUrl(PictureTypeEnum.Avatar, avatarSize);
                     this.btnRemoveAvatar.Visible = false;
                 }
                 this.imgAvatar.ImageUrl = pictureUrl;
@@ -73,7 +74,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 if(Page.IsValid)
                 {
-                    Customer customer = CustomerManager.GetCustomerById(this.CustomerId);
+                    Customer customer = IoCFactory.Resolve<ICustomerManager>().GetCustomerById(this.CustomerId);
                     if(customer != null)
                     {
                         var customerAvatar = customer.Avatar;
@@ -81,21 +82,21 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                         if((customerPictureFile != null) && (!String.IsNullOrEmpty(customerPictureFile.FileName)))
                         {
-                            int avatarMaxSize = SettingManager.GetSettingValueInteger("Media.Customer.AvatarMaxSizeBytes", 20000);
+                            int avatarMaxSize = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.Customer.AvatarMaxSizeBytes", 20000);
                             if(customerPictureFile.ContentLength > avatarMaxSize)
                                 throw new NopException(string.Format("Maximum avatar size is {0} bytes", avatarMaxSize));
 
-                            byte[] customerPictureBinary = PictureManager.GetPictureBits(customerPictureFile.InputStream, customerPictureFile.ContentLength);
+                            byte[] customerPictureBinary = IoCFactory.Resolve<IPictureManager>().GetPictureBits(customerPictureFile.InputStream, customerPictureFile.ContentLength);
                             if(customerAvatar != null)
-                                customerAvatar = PictureManager.UpdatePicture(customerAvatar.PictureId, customerPictureBinary, customerPictureFile.ContentType, true);
+                                customerAvatar = IoCFactory.Resolve<IPictureManager>().UpdatePicture(customerAvatar.PictureId, customerPictureBinary, customerPictureFile.ContentType, true);
                             else
-                                customerAvatar = PictureManager.InsertPicture(customerPictureBinary, customerPictureFile.ContentType, true);
+                                customerAvatar = IoCFactory.Resolve<IPictureManager>().InsertPicture(customerPictureBinary, customerPictureFile.ContentType, true);
                         }
                         int customerAvatarId = 0;
                         if(customerAvatar != null)
                             customerAvatarId = customerAvatar.PictureId;
 
-                        CustomerManager.SetCustomerAvatarId(customer.CustomerId, customerAvatarId);
+                        IoCFactory.Resolve<ICustomerManager>().SetCustomerAvatarId(customer.CustomerId, customerAvatarId);
 
                         BindData();
                     }
@@ -111,11 +112,11 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                Customer customer = CustomerManager.GetCustomerById(this.CustomerId);
+                Customer customer = IoCFactory.Resolve<ICustomerManager>().GetCustomerById(this.CustomerId);
                 if(customer != null)
                 {
-                    PictureManager.DeletePicture(customer.AvatarId);
-                    CustomerManager.SetCustomerAvatarId(customer.CustomerId, customer.AvatarId);
+                    IoCFactory.Resolve<IPictureManager>().DeletePicture(customer.AvatarId);
+                    IoCFactory.Resolve<ICustomerManager>().SetCustomerAvatarId(customer.CustomerId, customer.AvatarId);
                     BindData();
                 }
             }

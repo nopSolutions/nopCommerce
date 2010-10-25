@@ -19,13 +19,14 @@ using NopSolutions.NopCommerce.BusinessLogic.Caching;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Data;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Tax
 {
     /// <summary>
     /// Tax category manager
     /// </summary>
-    public partial class TaxCategoryManager
+    public partial class TaxCategoryManager : ITaxCategoryManager
     {
         #region Constants
         private const string TAXCATEGORIES_ALL_KEY = "Nop.taxcategory.all";
@@ -38,7 +39,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// Deletes a tax category
         /// </summary>
         /// <param name="taxCategoryId">The tax category identifier</param>
-        public static void DeleteTaxCategory(int taxCategoryId)
+        public void DeleteTaxCategory(int taxCategoryId)
         {
             var taxCategory = GetTaxCategoryById(taxCategoryId);
             if (taxCategory == null)
@@ -50,7 +51,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
             context.DeleteObject(taxCategory);
             context.SaveChanges();
 
-            if (TaxCategoryManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(TAXCATEGORIES_PATTERN_KEY);
             }
@@ -60,11 +61,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// Gets all tax categories
         /// </summary>
         /// <returns>Tax category collection</returns>
-        public static List<TaxCategory> GetAllTaxCategories()
+        public List<TaxCategory> GetAllTaxCategories()
         {
             string key = string.Format(TAXCATEGORIES_ALL_KEY);
             object obj2 = NopRequestCache.Get(key);
-            if (TaxCategoryManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (List<TaxCategory>)obj2;
             }
@@ -75,7 +76,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
                         select tc;
             var taxCategories = query.ToList();
 
-            if (TaxCategoryManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, taxCategories);
             }
@@ -87,14 +88,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// </summary>
         /// <param name="taxCategoryId">Tax category identifier</param>
         /// <returns>Tax category</returns>
-        public static TaxCategory GetTaxCategoryById(int taxCategoryId)
+        public TaxCategory GetTaxCategoryById(int taxCategoryId)
         {
             if (taxCategoryId == 0)
                 return null;
 
             string key = string.Format(TAXCATEGORIES_BY_ID_KEY, taxCategoryId);
             object obj2 = NopRequestCache.Get(key);
-            if (TaxCategoryManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (TaxCategory)obj2;
             }
@@ -105,7 +106,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
                         select tc;
             var taxCategory = query.SingleOrDefault();
 
-            if (TaxCategoryManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, taxCategory);
             }
@@ -116,7 +117,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// Inserts a tax category
         /// </summary>
         /// <param name="taxCategory">Tax category</param>
-        public static void InsertTaxCategory(TaxCategory taxCategory)
+        public void InsertTaxCategory(TaxCategory taxCategory)
         {
             if (taxCategory == null)
                 throw new ArgumentNullException("taxCategory");
@@ -129,7 +130,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
             context.TaxCategories.AddObject(taxCategory);
             context.SaveChanges();
 
-            if (TaxCategoryManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(TAXCATEGORIES_PATTERN_KEY);
             }
@@ -139,7 +140,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// Updates the tax category
         /// </summary>
         /// <param name="taxCategory">Tax category</param>
-        public static void UpdateTaxCategory(TaxCategory taxCategory)
+        public void UpdateTaxCategory(TaxCategory taxCategory)
         {
             if (taxCategory == null)
                 throw new ArgumentNullException("taxCategory");
@@ -153,7 +154,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
 
             context.SaveChanges();
             
-            if (TaxCategoryManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(TAXCATEGORIES_PATTERN_KEY);
             }
@@ -164,11 +165,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// <summary>
         /// Gets a value indicating whether cache is enabled
         /// </summary>
-        public static bool CacheEnabled
+        public bool CacheEnabled
         {
             get
             {
-                return SettingManager.GetSettingValueBoolean("Cache.TaxCategoryManager.CacheEnabled");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.TaxCategoryManager.CacheEnabled");
             }
         }
         #endregion

@@ -30,6 +30,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Content.Polls;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -46,9 +47,9 @@ namespace NopSolutions.NopCommerce.Web.Modules
         protected void BindData()
         {
             //get poll
-            var poll = PollManager.GetPollById(this.PollId);
+            var poll = IoCFactory.Resolve<IPollManager>().GetPollById(this.PollId);
             if (poll == null && !String.IsNullOrEmpty(this.SystemKeyword))
-                poll = PollManager.GetPollBySystemKeyword(this.SystemKeyword);
+                poll = IoCFactory.Resolve<IPollManager>().GetPollBySystemKeyword(this.SystemKeyword);
 
             if (poll != null && poll.Published)
             {
@@ -65,7 +66,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 bool showResults = false;
                 if (customer != null)
                 {
-                    showResults = PollManager.PollVotingRecordExists(poll.PollId, customer.CustomerId);
+                    showResults = IoCFactory.Resolve<IPollManager>().PollVotingRecordExists(poll.PollId, customer.CustomerId);
                 }
 
                 //bind info (answers or results)
@@ -99,26 +100,26 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 return;
 
             //create anonymous user if required
-            if (NopContext.Current.User == null && SettingManager.GetSettingValueBoolean("Common.AllowAnonymousUsersToVotePolls"))
+            if (NopContext.Current.User == null && IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Common.AllowAnonymousUsersToVotePolls"))
             {
-                CustomerManager.CreateAnonymousUser();
+                IoCFactory.Resolve<ICustomerManager>().CreateAnonymousUser();
             }
 
-            if (NopContext.Current.User == null || (NopContext.Current.User.IsGuest && !SettingManager.GetSettingValueBoolean("Common.AllowAnonymousUsersToVotePolls")))
+            if (NopContext.Current.User == null || (NopContext.Current.User.IsGuest && !IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Common.AllowAnonymousUsersToVotePolls")))
             {
                 string loginURL = SEOHelper.GetLoginPageUrl(true);
                 Response.Redirect(loginURL);
             }
 
-            var poll = PollManager.GetPollById(this.PollId);
+            var poll = IoCFactory.Resolve<IPollManager>().GetPollById(this.PollId);
             if (poll == null&& !String.IsNullOrEmpty(this.SystemKeyword))
-                poll = PollManager.GetPollBySystemKeyword(this.SystemKeyword);
+                poll = IoCFactory.Resolve<IPollManager>().GetPollBySystemKeyword(this.SystemKeyword);
             if (poll != null)
             {
-                if (!PollManager.PollVotingRecordExists(poll.PollId, NopContext.Current.User.CustomerId))
+                if (!IoCFactory.Resolve<IPollManager>().PollVotingRecordExists(poll.PollId, NopContext.Current.User.CustomerId))
                 {
                     int pollAnswerId = Convert.ToInt32(rblPollAnswers.SelectedItem.Value);
-                    PollManager.CreatePollVotingRecord(pollAnswerId, NopContext.Current.User.CustomerId);
+                    IoCFactory.Resolve<IPollManager>().CreatePollVotingRecord(pollAnswerId, NopContext.Current.User.CustomerId);
                 }
             }
             BindData();
@@ -129,9 +130,9 @@ namespace NopSolutions.NopCommerce.Web.Modules
             //var imgPercentage = (Image)e.Item.FindControl("imgPercentage");
             var lPercentage = (Literal)e.Item.FindControl("lPercentage");
 
-            var poll = PollManager.GetPollById(this.PollId);
+            var poll = IoCFactory.Resolve<IPollManager>().GetPollById(this.PollId);
             if (poll == null && !String.IsNullOrEmpty(this.SystemKeyword))
-                poll = PollManager.GetPollBySystemKeyword(this.SystemKeyword);
+                poll = IoCFactory.Resolve<IPollManager>().GetPollBySystemKeyword(this.SystemKeyword);
             if (poll != null)
             {
                 int pollAnswerVoteCount = (int)DataBinder.Eval(e.Item.DataItem, "Count");

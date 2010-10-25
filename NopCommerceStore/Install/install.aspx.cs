@@ -36,6 +36,7 @@ using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Installation;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Install
 {
@@ -501,9 +502,9 @@ namespace NopSolutions.NopCommerce.Web.Install
                     handleError("Email is not valid.");
                     return;
                 }
-                if (!SettingManager.GetSettingValueBoolean("InstallationWizard.AdminAccountChanged", false))
+                if (!IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("InstallationWizard.AdminAccountChanged", false))
                 {
-                    Customer admin = CustomerManager.GetCustomerByEmail(this.AdminUserEmail);
+                    Customer admin = IoCFactory.Resolve<ICustomerManager>().GetCustomerByEmail(this.AdminUserEmail);
 
                     if (admin == null || !admin.IsAdmin)
                     {
@@ -512,13 +513,13 @@ namespace NopSolutions.NopCommerce.Web.Install
 
                     admin.Email = email;
                     admin.Username = email;
-                    CustomerManager.UpdateCustomer(admin);
+                    IoCFactory.Resolve<ICustomerManager>().UpdateCustomer(admin);
 
                     this.AdminUserEmail = admin.Email;
 
-                    CustomerManager.ModifyPassword(admin.CustomerId, txtAdminPassword.Text);
+                    IoCFactory.Resolve<ICustomerManager>().ModifyPassword(admin.CustomerId, txtAdminPassword.Text);
 
-                    SettingManager.SetParam("InstallationWizard.AdminAccountChanged", "true");
+                    IoCFactory.Resolve<ISettingManager>().SetParam("InstallationWizard.AdminAccountChanged", "true");
 
                     lblSaveAdminResult.Visible = true;
                     lblSaveAdminResult.Text = "Admin account has been changed";

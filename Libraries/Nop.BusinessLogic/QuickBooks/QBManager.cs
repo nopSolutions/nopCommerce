@@ -10,20 +10,22 @@ using NopSolutions.NopCommerce.BusinessLogic.Data;
 using NopSolutions.NopCommerce.BusinessLogic.Payment;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
 {
     /// <summary>
     /// QuickBooks manager
     /// </summary>
-    public class QBManager
+    public partial class QBManager : IQBManager
     {
         #region Methods
+
         /// <summary>
         /// Reques order synchronization
         /// </summary>
         /// <param name="order">Order</param>
-        public static void RequestSynchronization(Order order)
+        public void RequestSynchronization(Order order)
         {
             RequestSynchronization(EntityTypeEnum.Customer, order.CustomerId);
 
@@ -61,7 +63,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
         /// Request customer syncronization
         /// </summary>
         /// <param name="customer">Customer</param>
-        public static void RequestSynchronization(Customer customer)
+        public void RequestSynchronization(Customer customer)
         {
             RequestSynchronization(EntityTypeEnum.Customer, customer.CustomerId);
         }
@@ -71,7 +73,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
         /// </summary>
         /// <param name="entityType">Entity type</param>
         /// <param name="nopEntityId">nopCommerce entity ID</param>
-        public static void RequestSynchronization(EntityTypeEnum entityType, int nopEntityId)
+        public void RequestSynchronization(EntityTypeEnum entityType, int nopEntityId)
         {
             if(!QBIsEnabled)
             {
@@ -105,7 +107,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
         /// Creates a new QBEntity
         /// </summary>
         /// <param name="entity">QBEntity</param>
-        public static void CreateQBEntity(QBEntity entity)
+        public void CreateQBEntity(QBEntity entity)
         {
             if (entity == null)
                 throw new ArgumentNullException("entity");
@@ -125,7 +127,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
         /// Updates QBEntity
         /// </summary>
         /// <param name="entity">QBEntity</param>
-        public static void UpdateQBEntity(QBEntity entity)
+        public void UpdateQBEntity(QBEntity entity)
         {
             if (entity == null)
                 throw new ArgumentNullException("entity");
@@ -147,7 +149,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
         /// </summary>
         /// <param name="entityId">Entity ID</param>
         /// <returns>QBEntity</returns>
-        public static QBEntity GetQBEntityById(int entityId)
+        public QBEntity GetQBEntityById(int entityId)
         {
             if (entityId == 0)
             {
@@ -167,7 +169,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
         /// </summary>
         /// <param name="qbEntityId">QuickBooks entity ID</param>
         /// <returns>QBEntity</returns>
-        public static QBEntity GetQBEntityByQBEntityId(string qbEntityId)
+        public QBEntity GetQBEntityByQBEntityId(string qbEntityId)
         {
             if (String.IsNullOrEmpty(qbEntityId))
             {
@@ -191,7 +193,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
         /// <param name="entityType">Entity type</param>
         /// <param name="nopEntityId">nopCommerce entity ID</param>
         /// <returns>QBEntity</returns>
-        public static QBEntity GetQBEntityByNopId(EntityTypeEnum entityType, int nopEntityId)
+        public QBEntity GetQBEntityByNopId(EntityTypeEnum entityType, int nopEntityId)
         {
             NopObjectContext context = ObjectContextHelper.CurrentObjectContext;
 
@@ -211,7 +213,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
         /// <param name="synState">Synchronization state or null</param>
         /// <param name="count">Number of records to return</param>
         /// <returns>QBEntity collection</returns>
-        public static List<QBEntity> GetAllQBEntities(EntityTypeEnum? entityType, SynStateEnum? synState, int count)
+        public List<QBEntity> GetAllQBEntities(EntityTypeEnum? entityType, SynStateEnum? synState, int count)
         {
             if (count <= 0)
             {
@@ -243,7 +245,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
         /// Gets the top entity wich are required synchronization
         /// </summary>
         /// <returns>QBEntity or null</returns>
-        public static QBEntity GetQBEntityForSynchronization()
+        public QBEntity GetQBEntityForSynchronization()
         {
             List<QBEntity> qbEntityCollection = GetAllQBEntities(null, SynStateEnum.Requested, 1);
             return (qbEntityCollection.Count == 0 ? null : qbEntityCollection.FirstOrDefault());
@@ -254,135 +256,135 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
         /// <summary>
         /// Gets or sets a value indicating when QuickBooks synchronization enabled
         /// </summary>
-        public static bool QBIsEnabled
+        public bool QBIsEnabled
         {
             get
             {
-                return SettingManager.GetSettingValueBoolean("QB.Enabled", false);
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("QB.Enabled", false);
             }
             set
             {
-                SettingManager.SetParam("QB.Enabled", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("QB.Enabled", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets the username wich will be used to connect to service
         /// </summary>
-        public static string QBUsername
+        public string QBUsername
         {
             get
             {
-                return SettingManager.GetSettingValue("QB.Username", "admin");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValue("QB.Username", "admin");
             }
             set
             {
-                SettingManager.SetParam("QB.Username", value);
+                IoCFactory.Resolve<ISettingManager>().SetParam("QB.Username", value);
             }
         }
 
         /// <summary>
         /// Gets or sets the password wich will be used to connect to service
         /// </summary>
-        public static string QBPassword
+        public string QBPassword
         {
             get
             {
-                return SettingManager.GetSettingValue("QB.Password", "admin");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValue("QB.Password", "admin");
             }
             set
             {
-                SettingManager.SetParam("QB.Password", value);
+                IoCFactory.Resolve<ISettingManager>().SetParam("QB.Password", value);
             }
         }
 
         /// <summary>
         /// Gets or sets the QuickBooks edition
         /// </summary>
-        public static QBEditionEnum QBEdition
+        public QBEditionEnum QBEdition
         {
             get
             {
-                return (QBEditionEnum)SettingManager.GetSettingValueInteger("QB.Edition", (int)QBEditionEnum.SimpleStart);
+                return (QBEditionEnum)IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("QB.Edition", (int)QBEditionEnum.SimpleStart);
             }
             set
             {
-                SettingManager.SetParam("QB.Edition", ((int)value).ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("QB.Edition", ((int)value).ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets the QuickBooks item reference
         /// </summary>
-        public static string QBItemRef
+        public string QBItemRef
         {
             get
             {
-                return SettingManager.GetSettingValue("QB.ItemRef", "Sales");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValue("QB.ItemRef", "Sales");
             }
             set
             {
-                SettingManager.SetParam("QB.ItemRef", value);
+                IoCFactory.Resolve<ISettingManager>().SetParam("QB.ItemRef", value);
             }
         }
 
         /// <summary>
         /// Gets or sets the QuickBooks dicsount account reference
         /// </summary>
-        public static string QBDiscountAccountRef
+        public string QBDiscountAccountRef
         {
             get
             {
-                return SettingManager.GetSettingValue("QB.DiscountAccountRef", "Discounts Given");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValue("QB.DiscountAccountRef", "Discounts Given");
             }
             set
             {
-                SettingManager.SetParam("QB.DiscountAccountRef", value);
+                IoCFactory.Resolve<ISettingManager>().SetParam("QB.DiscountAccountRef", value);
             }
         }
 
         /// <summary>
         /// Gets or sets the QuickBooks shipping account reference
         /// </summary>
-        public static string QBShippingAccountRef
+        public string QBShippingAccountRef
         {
             get
             {
-                return SettingManager.GetSettingValue("QB.ShippingAccountRef", "Sales");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValue("QB.ShippingAccountRef", "Sales");
             }
             set
             {
-                SettingManager.SetParam("QB.ShippingAccountRef", value);
+                IoCFactory.Resolve<ISettingManager>().SetParam("QB.ShippingAccountRef", value);
             }
         }
 
         /// <summary>
         /// Gets or sets the QuickBooks sales tax account reference
         /// </summary>
-        public static string QBSalesTaxAccountRef
+        public string QBSalesTaxAccountRef
         {
             get
             {
-                return SettingManager.GetSettingValue("QB.SalesTaxAccountRef", "Sales");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValue("QB.SalesTaxAccountRef", "Sales");
             }
             set
             {
-                SettingManager.SetParam("QB.SalesTaxAccountRef", value);
+                IoCFactory.Resolve<ISettingManager>().SetParam("QB.SalesTaxAccountRef", value);
             }
         }
 
         /// <summary>
         /// Gets or sets the QuickBooks working culture
         /// </summary>
-        public static string QBCultureName
+        public string QBCultureName
         {
             get
             {
-                return SettingManager.GetSettingValue("QB.CultureName", "en-US");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValue("QB.CultureName", "en-US");
             }
             set
             {
-                SettingManager.SetParam("QB.CultureName", value);
+                IoCFactory.Resolve<ISettingManager>().SetParam("QB.CultureName", value);
             }
         }
         #endregion

@@ -27,6 +27,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Utils;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
 using System.Collections.Generic;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.BusinessLogic
 {
@@ -66,7 +67,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic
         private CustomerSession SaveSessionToDatabase()
         {
             var sessionId = Guid.NewGuid();
-            while (CustomerManager.GetCustomerSessionByGuid(sessionId) != null)
+            while (IoCFactory.Resolve<ICustomerManager>().GetCustomerSessionByGuid(sessionId) != null)
                 sessionId = Guid.NewGuid();
             var session = new CustomerSession();
             int CustomerId = 0;
@@ -78,7 +79,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic
             session.CustomerId = CustomerId;
             session.LastAccessed = DateTime.UtcNow;
             session.IsExpired = false;
-            session = CustomerManager.SaveCustomerSession(session.CustomerSessionGuid, session.CustomerId, session.LastAccessed, session.IsExpired);
+            session = IoCFactory.Resolve<ICustomerManager>().SaveCustomerSession(session.CustomerSessionGuid, session.CustomerId, session.LastAccessed, session.IsExpired);
             return session;
         }
 
@@ -106,7 +107,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic
                 byId = (CustomerSession)obj2;
             if ((byId == null) && (sessionId.HasValue))
             {
-                byId = CustomerManager.GetCustomerSessionByGuid(sessionId.Value);
+                byId = IoCFactory.Resolve<ICustomerManager>().GetCustomerSessionByGuid(sessionId.Value);
                 return byId;
             }
             if (byId == null && createInDatabase)
@@ -118,7 +119,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic
                 customerSessionCookieValue = HttpContext.Current.Request.Cookies[CONST_CUSTOMERSESSIONCOOKIE].Value;
             if ((byId) == null && (!string.IsNullOrEmpty(customerSessionCookieValue)))
             {
-                var dbCustomerSession = CustomerManager.GetCustomerSessionByGuid(new Guid(customerSessionCookieValue));
+                var dbCustomerSession = IoCFactory.Resolve<ICustomerManager>().GetCustomerSessionByGuid(new Guid(customerSessionCookieValue));
                 byId = dbCustomerSession;
             }
             Current[CONST_CUSTOMERSESSION] = byId;
@@ -335,10 +336,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic
             {
                 if (NopContext.Current == null || NopContext.Current.IsAdmin)
                 {
-                    return CurrencyManager.PrimaryStoreCurrency;
+                    return IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency;
                 }
                 var customer = NopContext.Current.User;
-                var publishedCurrencies = CurrencyManager.GetAllCurrencies();
+                var publishedCurrencies = IoCFactory.Resolve<ICurrencyManager>().GetAllCurrencies();
                 if (customer != null)
                 {
                     var customerCurrency = customer.Currency;
@@ -349,7 +350,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic
                 }
                 else if (CommonHelper.GetCookieInt("Nop.CustomerCurrency") > 0)
                 {
-                    var customerCurrency = CurrencyManager.GetCurrencyById(CommonHelper.GetCookieInt("Nop.CustomerCurrency"));
+                    var customerCurrency = IoCFactory.Resolve<ICurrencyManager>().GetCurrencyById(CommonHelper.GetCookieInt("Nop.CustomerCurrency"));
                     if (customerCurrency != null)
                         foreach (Currency _currency in publishedCurrencies)
                             if (_currency.CurrencyId == customerCurrency.CurrencyId)
@@ -357,7 +358,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic
                 }
                 foreach (var _currency in publishedCurrencies)
                     return _currency;
-                return CurrencyManager.PrimaryStoreCurrency;
+                return IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency;
             }
             set
             {
@@ -367,7 +368,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic
                 if (customer != null)
                 {
                     customer.CurrencyId = value.CurrencyId;
-                    CustomerManager.UpdateCustomer(customer);
+                    IoCFactory.Resolve<ICustomerManager>().UpdateCustomer(customer);
 
                     NopContext.Current.User = customer;
                 }
@@ -394,12 +395,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic
                 }
                 else if (CommonHelper.GetCookieInt("Nop.CustomerLanguage") > 0)
                 {
-                    var customerLanguage = LanguageManager.GetLanguageById(CommonHelper.GetCookieInt("Nop.CustomerLanguage"));
+                    var customerLanguage = IoCFactory.Resolve<ILanguageManager>().GetLanguageById(CommonHelper.GetCookieInt("Nop.CustomerLanguage"));
                     if (customerLanguage != null)
                         if (customerLanguage != null && customerLanguage.Published)
                             return customerLanguage;
                 }
-                var publishedLanguages = LanguageManager.GetAllLanguages(false);
+                var publishedLanguages = IoCFactory.Resolve<ILanguageManager>().GetAllLanguages(false);
                 foreach (var _language in publishedLanguages)
                     return _language;
 
@@ -413,7 +414,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic
                 if (customer != null)
                 {
                     customer.LanguageId = value.LanguageId;
-                    CustomerManager.UpdateCustomer(customer);
+                    IoCFactory.Resolve<ICustomerManager>().UpdateCustomer(customer);
 
                     NopContext.Current.User = customer;
                 }
@@ -429,13 +430,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic
         {
             get
             {
-                if (SettingManager.GetSettingValueBoolean("Display.AllowCustomerSelectTheme"))
+                if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Display.AllowCustomerSelectTheme"))
                 {
                     string themeCookie = CommonHelper.GetCookieString("Nop.WorkingTheme", false);
                     if (!String.IsNullOrEmpty(themeCookie))
                     {
                         //validate whether folder theme physically exists
-                        string[] systemThemes = SettingManager.GetSettingValue("Display.SystemThemes").Split(',');
+                        string[] systemThemes = IoCFactory.Resolve<ISettingManager>().GetSettingValue("Display.SystemThemes").Split(',');
                         var tmp1 = from f in System.IO.Directory.GetDirectories(HttpContext.Current.Request.PhysicalApplicationPath + "App_Themes")
                                         where !systemThemes.Contains(System.IO.Path.GetFileName(f).ToLower())
                                         && themeCookie.Equals(System.IO.Path.GetFileName(f), StringComparison.InvariantCultureIgnoreCase)
@@ -444,7 +445,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic
                             return themeCookie;
                     }
                 }
-                string defaultTheme = SettingManager.GetSettingValue("Display.PublicStoreTheme");
+                string defaultTheme = IoCFactory.Resolve<ISettingManager>().GetSettingValue("Display.PublicStoreTheme");
                 if (!String.IsNullOrEmpty(defaultTheme))
                 {
                     return defaultTheme;
@@ -453,7 +454,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic
             }
             set
             {
-                if (!SettingManager.GetSettingValueBoolean("Display.AllowCustomerSelectTheme"))
+                if (!IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Display.AllowCustomerSelectTheme"))
                     return;
 
                 CommonHelper.SetCookie("Nop.WorkingTheme", value.Trim(), new TimeSpan(365, 0, 0, 0, 0));
@@ -468,7 +469,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic
             get
             {
                 bool showHidden = NopContext.Current.IsAdmin;
-                var languages = LanguageManager.GetAllLanguages(showHidden);
+                var languages = IoCFactory.Resolve<ILanguageManager>().GetAllLanguages(showHidden);
 
                 bool result = languages.Count > 1;
                 return result;
@@ -484,10 +485,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic
             {
                 //if (NopContext.Current.IsAdmin)
                 //{
-                //    return TaxManager.TaxDisplayType;
+                //    return IoCFactory.Resolve<ITaxManager>().TaxDisplayType;
                 //}
 
-                if (TaxManager.AllowCustomersToSelectTaxDisplayType)
+                if (IoCFactory.Resolve<ITaxManager>().AllowCustomersToSelectTaxDisplayType)
                 {
                     var customer = NopContext.Current.User;
                     if (customer != null)
@@ -499,18 +500,18 @@ namespace NopSolutions.NopCommerce.BusinessLogic
                         return (TaxDisplayTypeEnum)Enum.ToObject(typeof(TaxDisplayTypeEnum), CommonHelper.GetCookieInt("Nop.TaxDisplayTypeId"));
                     }
                 }
-                return TaxManager.TaxDisplayType;
+                return IoCFactory.Resolve<ITaxManager>().TaxDisplayType;
             }
             set
             {
-                if (!TaxManager.AllowCustomersToSelectTaxDisplayType)
+                if (!IoCFactory.Resolve<ITaxManager>().AllowCustomersToSelectTaxDisplayType)
                     return;
 
                 var customer = NopContext.Current.User;
                 if (customer != null)
                 {
                     customer.TaxDisplayTypeId = (int)value;
-                    CustomerManager.UpdateCustomer(customer);
+                    IoCFactory.Resolve<ICustomerManager>().UpdateCustomer(customer);
                 }
                 if (!NopContext.Current.IsAdmin)
                 {

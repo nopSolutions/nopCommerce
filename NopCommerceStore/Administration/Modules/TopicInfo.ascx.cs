@@ -26,6 +26,7 @@ using FredCK.FCKeditorV2;
 using NopSolutions.NopCommerce.BusinessLogic.Content.Topics;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -85,7 +86,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                 if (this.TopicId > 0)
                 {
-                    var content = TopicManager.GetLocalizedTopic(this.Topic.Name, languageId);
+                    var content = IoCFactory.Resolve<ITopicManager>().GetLocalizedTopic(this.Topic.Name, languageId);
                     if (content != null)
                     {
                         txtTitle.Text = content.Title;
@@ -120,7 +121,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 {
                     int languageId = int.Parse(lblLanguageId.Text);
 
-                    var content = TopicManager.GetLocalizedTopic(this.Topic.Name, languageId);
+                    var content = IoCFactory.Resolve<ITopicManager>().GetLocalizedTopic(this.Topic.Name, languageId);
                     if (content != null)
                     {
                         txtMetaKeywords.Text = content.MetaKeywords;
@@ -134,7 +135,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         public Topic SaveInfo()
         {
             //system info
-            Topic topic = TopicManager.GetTopicById(this.TopicId);
+            Topic topic = IoCFactory.Resolve<ITopicManager>().GetTopicById(this.TopicId);
             if (topic != null)
             {
                 topic.Name = txtSystemName.Text;
@@ -142,7 +143,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 topic.Password = txtPassword.Text.Trim();
                 topic.IncludeInSitemap = cbIncludeInSitemap.Checked;
 
-                TopicManager.UpdateTopic(topic);
+                IoCFactory.Resolve<ITopicManager>().UpdateTopic(topic);
             }
             else
             {
@@ -154,7 +155,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     IncludeInSitemap = cbIncludeInSitemap.Checked
                 };
 
-                TopicManager.InsertTopic(topic);
+                IoCFactory.Resolve<ITopicManager>().InsertTopic(topic);
             }
 
 
@@ -172,7 +173,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     string title = txtTitle.Text;
                     string body = txtBody.Value;
 
-                    var content = TopicManager.GetLocalizedTopic(topic.Name, languageId);
+                    var content = IoCFactory.Resolve<ITopicManager>().GetLocalizedTopic(topic.Name, languageId);
                     if (content == null)
                     {
                         content = new LocalizedTopic()
@@ -185,7 +186,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                             UpdatedOn = nowDT
                         };
 
-                        TopicManager.InsertLocalizedTopic(content);
+                        IoCFactory.Resolve<ITopicManager>().InsertLocalizedTopic(content);
                     }
                     else
                     {
@@ -194,7 +195,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         content.Body = body;
                         content.UpdatedOn = nowDT;
 
-                        TopicManager.UpdateLocalizedTopic(content);
+                        IoCFactory.Resolve<ITopicManager>().UpdateLocalizedTopic(content);
                     }
                 }
             }
@@ -212,7 +213,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     string metaDescription = txtMetaDescription.Text;
                     string metaTitle = txtMetaTitle.Text;
 
-                    var content = TopicManager.GetLocalizedTopic(topic.Name, languageId);
+                    var content = IoCFactory.Resolve<ITopicManager>().GetLocalizedTopic(topic.Name, languageId);
                     if (content == null)
                     {
                         //localized topic should be already created on the previous step
@@ -224,7 +225,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         content.MetaDescription = metaDescription;
                         content.MetaTitle = metaTitle;
 
-                        TopicManager.UpdateLocalizedTopic(content);
+                        IoCFactory.Resolve<ITopicManager>().UpdateLocalizedTopic(content);
                     }
                 }
             }
@@ -238,7 +239,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             get
             {
                 if (_topic == null)
-                    _topic = TopicManager.GetTopicById(this.TopicId);
+                    _topic = IoCFactory.Resolve<ITopicManager>().GetTopicById(this.TopicId);
                 return _topic;
             }
         }

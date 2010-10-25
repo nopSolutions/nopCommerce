@@ -28,6 +28,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Payment;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Payment.Methods.AuthorizeNet.net.authorize.api;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Payment.Methods.AuthorizeNET
 {
@@ -60,9 +61,9 @@ namespace NopSolutions.NopCommerce.Payment.Methods.AuthorizeNET
         /// </summary>
         private void InitSettings()
         {
-            useSandBox = SettingManager.GetSettingValueBoolean("PaymentMethod.AuthorizeNET.UseSandbox");
-            transactionKey = SettingManager.GetSettingValue("PaymentMethod.AuthorizeNET.TransactionKey");
-            loginID = SettingManager.GetSettingValue("PaymentMethod.AuthorizeNET.LoginID");
+            useSandBox = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.AuthorizeNET.UseSandbox");
+            transactionKey = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.AuthorizeNET.TransactionKey");
+            loginID = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.AuthorizeNET.LoginID");
 
             if (string.IsNullOrEmpty(transactionKey))
                 throw new NopException("Authorize.NET API transaction key is not set");
@@ -123,7 +124,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.AuthorizeNET
         public static TransactMode GetCurrentTransactionMode()
         {
             TransactMode transactionModeEnum = TransactMode.Authorize;
-            string transactionMode = SettingManager.GetSettingValue("PaymentMethod.AuthorizeNET.TransactionMode");
+            string transactionMode = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.AuthorizeNET.TransactionMode");
             if (!String.IsNullOrEmpty(transactionMode))
                 transactionModeEnum = (TransactMode)Enum.Parse(typeof(TransactMode), transactionMode);
             return transactionModeEnum;
@@ -156,7 +157,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.AuthorizeNET
             form.Add("x_version", APIVersion);
             form.Add("x_relay_response", "FALSE");
             form.Add("x_method", "CC");
-            form.Add("x_currency_code", CurrencyManager.PrimaryStoreCurrency.CurrencyCode);
+            form.Add("x_currency_code", IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency.CurrencyCode);
             if (transactionMode == TransactMode.Authorize)
                 form.Add("x_type", "AUTH_ONLY");
             else if (transactionMode == TransactMode.AuthorizeAndCapture)
@@ -240,7 +241,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.AuthorizeNET
         /// <returns>Additional handling fee</returns>
         public decimal GetAdditionalHandlingFee()
         {
-            return SettingManager.GetSettingValueDecimalNative("PaymentMethod.AuthorizeNET.AdditionalFee");
+            return IoCFactory.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.AuthorizeNET.AdditionalFee");
         }
 
         /// <summary>
@@ -267,7 +268,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.AuthorizeNET
             form.Add("x_version", APIVersion);
             form.Add("x_relay_response", "FALSE");
             form.Add("x_method", "CC");
-            form.Add("x_currency_code", CurrencyManager.PrimaryStoreCurrency.CurrencyCode);
+            form.Add("x_currency_code", IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency.CurrencyCode);
             form.Add("x_type", "PRIOR_AUTH_CAPTURE");
 
             form.Add("x_amount", order.OrderTotal.ToString("0.00", CultureInfo.InvariantCulture));
@@ -385,7 +386,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.AuthorizeNET
                 subscription.customer.phoneNumber = customer.BillingAddress.PhoneNumber;
 
                 subscription.order = new OrderType();
-                subscription.order.description = string.Format("{0} {1}", SettingManager.StoreName, "Recurring payment");
+                subscription.order.description = string.Format("{0} {1}", IoCFactory.Resolve<ISettingManager>().StoreName, "Recurring payment");
 
                 // Create a subscription that is leng of specified occurrences and interval is amount of days ad runs
 

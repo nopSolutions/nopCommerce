@@ -24,6 +24,7 @@ using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.Payment;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -31,7 +32,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            CreditCardType creditCardType = CreditCardTypeManager.GetCreditCardTypeById(this.CreditCardTypeId);
+            CreditCardType creditCardType = IoCFactory.Resolve<ICreditCardTypeManager>().GetCreditCardTypeById(this.CreditCardTypeId);
             if (creditCardType != null)
             {
                 this.txtName.Text = creditCardType.Name;
@@ -50,13 +51,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public CreditCardType SaveInfo()
         {
-            CreditCardType creditCardType = CreditCardTypeManager.GetCreditCardTypeById(this.CreditCardTypeId);
+            CreditCardType creditCardType = IoCFactory.Resolve<ICreditCardTypeManager>().GetCreditCardTypeById(this.CreditCardTypeId);
             if (creditCardType != null)
             {
                 creditCardType.Name = txtName.Text;
                 creditCardType.SystemKeyword = txtSystemKeyword.Text;
                 creditCardType.DisplayOrder = txtDisplayOrder.Value;
-                CreditCardTypeManager.UpdateCreditCardType(creditCardType);
+                IoCFactory.Resolve<ICreditCardTypeManager>().UpdateCreditCardType(creditCardType);
             }
             else
             {
@@ -66,7 +67,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     SystemKeyword = txtSystemKeyword.Text,
                     DisplayOrder = txtDisplayOrder.Value
                 };
-                CreditCardTypeManager.InsertCreditCardType(creditCardType);
+                IoCFactory.Resolve<ICreditCardTypeManager>().InsertCreditCardType(creditCardType);
             }
 
             return creditCardType;

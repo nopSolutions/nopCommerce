@@ -32,6 +32,7 @@ using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -47,10 +48,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected void BindData()
         {
-            cbEnableBlog.Checked = BlogManager.BlogEnabled;
-            cbAllowNotRegisteredUsersToLeaveComments.Checked = BlogManager.AllowNotRegisteredUsersToLeaveComments;
-            cbNotifyAboutNewBlogComments.Checked = BlogManager.NotifyAboutNewBlogComments;
-            txtPostsPageSize.Value = BlogManager.PostsPageSize;
+            cbEnableBlog.Checked = IoCFactory.Resolve<IBlogManager>().BlogEnabled;
+            cbAllowNotRegisteredUsersToLeaveComments.Checked = IoCFactory.Resolve<IBlogManager>().AllowNotRegisteredUsersToLeaveComments;
+            cbNotifyAboutNewBlogComments.Checked = IoCFactory.Resolve<IBlogManager>().NotifyAboutNewBlogComments;
+            txtPostsPageSize.Value = IoCFactory.Resolve<IBlogManager>().PostsPageSize;
         }
 
         protected void btnSave_Click(object sender, EventArgs e)
@@ -59,10 +60,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 try
                 {
-                    BlogManager.BlogEnabled = cbEnableBlog.Checked;
-                    BlogManager.AllowNotRegisteredUsersToLeaveComments = cbAllowNotRegisteredUsersToLeaveComments.Checked;
-                    BlogManager.NotifyAboutNewBlogComments = cbNotifyAboutNewBlogComments.Checked;
-                    BlogManager.PostsPageSize = txtPostsPageSize.Value;
+                    IoCFactory.Resolve<IBlogManager>().BlogEnabled = cbEnableBlog.Checked;
+                    IoCFactory.Resolve<IBlogManager>().AllowNotRegisteredUsersToLeaveComments = cbAllowNotRegisteredUsersToLeaveComments.Checked;
+                    IoCFactory.Resolve<IBlogManager>().NotifyAboutNewBlogComments = cbNotifyAboutNewBlogComments.Checked;
+                    IoCFactory.Resolve<IBlogManager>().PostsPageSize = txtPostsPageSize.Value;
 
                     Response.Redirect("BlogSettings.aspx");
                 }

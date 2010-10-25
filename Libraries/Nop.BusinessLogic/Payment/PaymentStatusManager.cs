@@ -23,13 +23,14 @@ using NopSolutions.NopCommerce.BusinessLogic.Caching;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Data;
 using NopSolutions.NopCommerce.BusinessLogic.Localization;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Payment
 {
     /// <summary>
     /// Payment status manager
     /// </summary>
-    public partial class PaymentStatusManager
+    public partial class PaymentStatusManager : IPaymentStatusManager
     {
         #region Constants
         private const string PAYMENTSTATUSES_ALL_KEY = "Nop.paymentstatus.all";
@@ -44,7 +45,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
         /// </summary>
         /// <param name="paymentStatusId">Payment status identifier</param>
         /// <returns>Payment status name</returns>
-        public static string GetPaymentStatusName(int paymentStatusId)
+        public string GetPaymentStatusName(int paymentStatusId)
         {
             var paymentStatus = GetPaymentStatusById(paymentStatusId);
             if (paymentStatus != null)
@@ -71,14 +72,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
         /// </summary>
         /// <param name="paymentStatusId">payment status identifier</param>
         /// <returns>Payment status</returns>
-        public static PaymentStatus GetPaymentStatusById(int paymentStatusId)
+        public PaymentStatus GetPaymentStatusById(int paymentStatusId)
         {
             if (paymentStatusId == 0)
                 return null;
 
             string key = string.Format(PAYMENTSTATUSES_BY_ID_KEY, paymentStatusId);
             object obj2 = NopRequestCache.Get(key);
-            if (PaymentStatusManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (PaymentStatus)obj2;
             }
@@ -89,7 +90,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
                         select ps;
             var paymentStatus = query.SingleOrDefault();
 
-            if (PaymentStatusManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, paymentStatus);
             }
@@ -100,11 +101,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
         /// Gets all payment statuses
         /// </summary>
         /// <returns>Payment status collection</returns>
-        public static List<PaymentStatus> GetAllPaymentStatuses()
+        public List<PaymentStatus> GetAllPaymentStatuses()
         {
             string key = string.Format(PAYMENTSTATUSES_ALL_KEY);
             object obj2 = NopRequestCache.Get(key);
-            if (PaymentStatusManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (List<PaymentStatus>)obj2;
             }
@@ -115,7 +116,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
                         select ps;
             var paymentStatuses = query.ToList();
 
-            if (PaymentStatusManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, paymentStatuses);
             }
@@ -128,11 +129,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
         /// <summary>
         /// Gets a value indicating whether cache is enabled
         /// </summary>
-        public static bool CacheEnabled
+        public bool CacheEnabled
         {
             get
             {
-                return SettingManager.GetSettingValueBoolean("Cache.PaymentStatusManager.CacheEnabled");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.PaymentStatusManager.CacheEnabled");
             }
         }
         #endregion

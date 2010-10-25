@@ -29,14 +29,15 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Warehouses
     /// <summary>
     /// Warehouse manager
     /// </summary>
-    public partial class WarehouseManager
+    public partial class WarehouseManager : IWarehouseManager
     {
         #region Methods
+
         /// <summary>
         /// Marks a warehouse as deleted
         /// </summary>
         /// <param name="warehouseId">The warehouse identifier</param>
-        public static void MarkWarehouseAsDeleted(int warehouseId)
+        public void MarkWarehouseAsDeleted(int warehouseId)
         {
             var warehouse = GetWarehouseById(warehouseId);
             if (warehouse != null)
@@ -50,7 +51,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Warehouses
         /// Gets all warehouses
         /// </summary>
         /// <returns>Warehouse collection</returns>
-        public static List<Warehouse> GetAllWarehouses()
+        public List<Warehouse> GetAllWarehouses()
         {
             var context = ObjectContextHelper.CurrentObjectContext;
             var query = from w in context.Warehouses
@@ -67,7 +68,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Warehouses
         /// </summary>
         /// <param name="warehouseId">The warehouse identifier</param>
         /// <returns>Warehouse</returns>
-        public static Warehouse GetWarehouseById(int warehouseId)
+        public Warehouse GetWarehouseById(int warehouseId)
         {
             if (warehouseId == 0)
                 return null;
@@ -84,7 +85,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Warehouses
         /// Inserts a warehouse
         /// </summary>
         /// <param name="warehouse">Warehouse</param>
-        public static void InsertWarehouse(Warehouse warehouse)
+        public void InsertWarehouse(Warehouse warehouse)
         {
             if (warehouse == null)
                 throw new ArgumentNullException("warehouse");
@@ -118,7 +119,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Warehouses
         /// Updates the warehouse
         /// </summary>
         /// <param name="warehouse">Warehouse</param>
-        public static void UpdateWarehouse(Warehouse warehouse)
+        public void UpdateWarehouse(Warehouse warehouse)
         {
             if (warehouse == null)
                 throw new ArgumentNullException("warehouse");
@@ -148,6 +149,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Warehouses
 
             context.SaveChanges();
         }
+
         #endregion
     }
 }

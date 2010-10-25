@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
@@ -85,7 +86,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         {
             get
             {
-                return ShippingMethodManager.GetShippingMethodById(this.ShippingMethodId);
+                return IoCFactory.Resolve<IShippingMethodManager>().GetShippingMethodById(this.ShippingMethodId);
             }
         }
 
@@ -96,7 +97,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         {
             get
             {
-                return CountryManager.GetCountryById(this.CountryId);
+                return IoCFactory.Resolve<ICountryManager>().GetCountryById(this.CountryId);
             }
         }
         #endregion

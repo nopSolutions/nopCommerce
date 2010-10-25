@@ -400,7 +400,7 @@
                         HeaderStyle-HorizontalAlign="Center">
                         <ItemTemplate>
                             <div style="padding-left: 10px; padding-right: 10px; text-align: left;">
-                                <%#OrderManager.FormatOrderNoteText((string)Eval("Note"))%>
+                                <%#IoCFactory.Resolve<IOrderManager>().FormatOrderNoteText((string)Eval("Note"))%>
                             </div>
                         </ItemTemplate>
                     </asp:TemplateField>

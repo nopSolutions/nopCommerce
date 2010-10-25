@@ -35,6 +35,7 @@ using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.Utils.Html;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.BusinessLogic.Messages;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -57,7 +58,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         private void BindData()
         {
-            if (ForumManager.AllowPrivateMessages)
+            if (IoCFactory.Resolve<IForumManager>().AllowPrivateMessages)
             {
                 pnlSendPriveteMessage.Visible = true;
                 pnlNotAllowed.Visible = false;
@@ -76,7 +77,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 string subject = txtSubject.Text.Trim();
                 string message = txtMessageBBCode.Text.Trim();
 
-                var customer = CustomerManager.GetCustomerById(this.CustomerId);
+                var customer = IoCFactory.Resolve<ICustomerManager>().GetCustomerById(this.CustomerId);
                 if (customer != null)
                 {
                     var pm = new PrivateMessage()
@@ -87,7 +88,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         Text = message,
                         CreatedOn = DateTime.UtcNow
                     };
-                    ForumManager.InsertPrivateMessage(pm);
+                    IoCFactory.Resolve<IForumManager>().InsertPrivateMessage(pm);
                 }
             }
             catch (Exception exc)

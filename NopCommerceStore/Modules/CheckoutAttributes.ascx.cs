@@ -36,6 +36,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Shipping;
 using NopSolutions.NopCommerce.BusinessLogic.Tax;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Controls;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -43,7 +44,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
     {
         protected ShoppingCart GetCart()
         {
-            return ShoppingCartManager.GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
+            return IoCFactory.Resolve<IShoppingCartManager>().GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
         }
 
         protected List<CheckoutAttribute> GetCheckoutAttributes()
@@ -52,8 +53,8 @@ namespace NopSolutions.NopCommerce.Web.Modules
             if (cart == null || cart.Count == 0)
                 return new List<CheckoutAttribute>();
 
-            bool shoppingCartRequiresShipping = ShippingManager.ShoppingCartRequiresShipping(cart);
-            var checkoutAttributes = CheckoutAttributeManager.GetAllCheckoutAttributes(!shoppingCartRequiresShipping);
+            bool shoppingCartRequiresShipping = IoCFactory.Resolve<IShippingManager>().ShoppingCartRequiresShipping(cart);
+            var checkoutAttributes = IoCFactory.Resolve<ICheckoutAttributeManager>().GetAllCheckoutAttributes(!shoppingCartRequiresShipping);
             return checkoutAttributes;
         }
 
@@ -129,8 +130,8 @@ namespace NopSolutions.NopCommerce.Web.Modules
                                     string caValueName = caValue.LocalizedName;
                                     if (!this.HidePrices)
                                     {
-                                        decimal priceAdjustmentBase = TaxManager.GetCheckoutAttributePrice(caValue);
-                                        decimal priceAdjustment = CurrencyManager.ConvertCurrency(priceAdjustmentBase, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                                        decimal priceAdjustmentBase = IoCFactory.Resolve<ITaxManager>().GetCheckoutAttributePrice(caValue);
+                                        decimal priceAdjustment = IoCFactory.Resolve<ICurrencyManager>().ConvertCurrency(priceAdjustmentBase, IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
                                         if (priceAdjustmentBase > decimal.Zero)
                                             caValueName += string.Format(" [+{0}]", PriceHelper.FormatPrice(priceAdjustment));
                                     }
@@ -183,8 +184,8 @@ namespace NopSolutions.NopCommerce.Web.Modules
                                     string caValueName = caValue.LocalizedName;
                                     if (!this.HidePrices)
                                     {
-                                        decimal priceAdjustmentBase = TaxManager.GetCheckoutAttributePrice(caValue);
-                                        decimal priceAdjustment = CurrencyManager.ConvertCurrency(priceAdjustmentBase, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                                        decimal priceAdjustmentBase = IoCFactory.Resolve<ITaxManager>().GetCheckoutAttributePrice(caValue);
+                                        decimal priceAdjustment = IoCFactory.Resolve<ICurrencyManager>().ConvertCurrency(priceAdjustmentBase, IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
                                         if (priceAdjustmentBase > decimal.Zero)
                                             caValueName += string.Format(" [+{0}]", PriceHelper.FormatPrice(priceAdjustment));
                                     }
@@ -235,8 +236,8 @@ namespace NopSolutions.NopCommerce.Web.Modules
                                     string caValueName = caValue.LocalizedName;
                                     if (!this.HidePrices)
                                     {
-                                        decimal priceAdjustmentBase = TaxManager.GetCheckoutAttributePrice(caValue);
-                                        decimal priceAdjustment = CurrencyManager.ConvertCurrency(priceAdjustmentBase, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                                        decimal priceAdjustmentBase = IoCFactory.Resolve<ITaxManager>().GetCheckoutAttributePrice(caValue);
+                                        decimal priceAdjustment = IoCFactory.Resolve<ICurrencyManager>().ConvertCurrency(priceAdjustmentBase, IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
                                         if (priceAdjustmentBase > decimal.Zero)
                                             caValueName += string.Format(" [+{0}]", PriceHelper.FormatPrice(priceAdjustment));
                                     }
@@ -276,7 +277,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                         case AttributeControlTypeEnum.TextBox:
                             {
                                 var txtAttribute = new TextBox();
-                                txtAttribute.Width = SettingManager.GetSettingValueInteger("CheckoutAttribute.Textbox.Width", 300);
+                                txtAttribute.Width = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("CheckoutAttribute.Textbox.Width", 300);
                                 txtAttribute.ID = controlId;
 
                                 //set already selected attributes
@@ -304,8 +305,8 @@ namespace NopSolutions.NopCommerce.Web.Modules
                                 var txtAttribute = new TextBox();
                                 txtAttribute.ID = controlId;
                                 txtAttribute.TextMode = TextBoxMode.MultiLine;
-                                txtAttribute.Width = SettingManager.GetSettingValueInteger("CheckoutAttribute.MultiTextbox.Width", 300);
-                                txtAttribute.Height = SettingManager.GetSettingValueInteger("CheckoutAttribute.MultiTextbox.Height", 150);
+                                txtAttribute.Width = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("CheckoutAttribute.MultiTextbox.Width", 300);
+                                txtAttribute.Height = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("CheckoutAttribute.MultiTextbox.Height", 150);
 
                                 //set already selected attributes
                                 if (NopContext.Current.User != null)

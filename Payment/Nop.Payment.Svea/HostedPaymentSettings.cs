@@ -13,6 +13,7 @@
 //------------------------------------------------------------------------------
 
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Payment.Methods.Svea
 {
@@ -28,11 +29,11 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Svea
         {
             get
             {
-                return SettingManager.GetSettingValue("PaymentMethod.Svea.HostedPayment.GatewayUrl", "https://partnerweb.sveaekonomi.se/webpayhosted2/InitiatePayment.aspx");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Svea.HostedPayment.GatewayUrl", "https://partnerweb.sveaekonomi.se/webpayhosted2/InitiatePayment.aspx");
             }
             set
             {
-                SettingManager.SetParam("PaymentMethod.Svea.HostedPayment.GatewayUrl", value);
+                IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.Svea.HostedPayment.GatewayUrl", value);
             }
         }
 
@@ -43,11 +44,11 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Svea
         {
             get
             {
-                return SettingManager.GetSettingValue("PaymentMethod.Svea.HostedPayment.PaymentMethod", "invoice");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Svea.HostedPayment.PaymentMethod", "invoice");
             }
             set
             {
-                SettingManager.SetParam("PaymentMethod.Svea.HostedPayment.PaymentMethod", value);
+                IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.Svea.HostedPayment.PaymentMethod", value);
             }
         }
 
@@ -58,11 +59,11 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Svea
         {
             get
             {
-                return SettingManager.GetSettingValueBoolean("PaymentMethod.Svea.HostedPayment.UseSandbox", true);
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.Svea.HostedPayment.UseSandbox", true);
             }
             set
             {
-                SettingManager.SetParam("PaymentMethod.Svea.HostedPayment.UseSandbox", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.Svea.HostedPayment.UseSandbox", value.ToString());
             }
         }
 
@@ -70,11 +71,11 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Svea
         {
             get
             {
-                return SettingManager.GetSettingValueDecimalNative("PaymentMethod.Svea.HostedPayment.AdditionalFee");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.Svea.HostedPayment.AdditionalFee");
             }
             set
             {
-                SettingManager.SetParamNative("PaymentMethod.Svea.HostedPayment.AdditionalFee", value);
+                IoCFactory.Resolve<ISettingManager>().SetParamNative("PaymentMethod.Svea.HostedPayment.AdditionalFee", value);
             }
         }
     }

@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Tax
@@ -76,7 +77,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         {
             get
             {
-                return TaxCategoryManager.GetTaxCategoryById(this.TaxCategoryId);
+                return IoCFactory.Resolve<ITaxCategoryManager>().GetTaxCategoryById(this.TaxCategoryId);
             }
         }
 
@@ -87,7 +88,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         {
             get
             {
-                return CountryManager.GetCountryById(this.CountryId);
+                return IoCFactory.Resolve<ICountryManager>().GetCountryById(this.CountryId);
             }
         }
 
@@ -98,7 +99,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         {
             get
             {
-                return StateProvinceManager.GetStateProvinceById(this.StateProvinceId);
+                return IoCFactory.Resolve<IStateProvinceManager>().GetStateProvinceById(this.StateProvinceId);
             }
         }
 

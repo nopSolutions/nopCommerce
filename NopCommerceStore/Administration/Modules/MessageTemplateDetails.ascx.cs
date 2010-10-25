@@ -28,6 +28,7 @@ using FredCK.FCKeditorV2;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.BusinessLogic.Messages;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -38,7 +39,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             if (this.MessageTemplate != null)
             {
                 StringBuilder allowedTokensString = new StringBuilder();
-                string[] allowedTokens = MessageManager.GetListOfAllowedTokens();
+                string[] allowedTokens = IoCFactory.Resolve<IMessageManager>().GetListOfAllowedTokens();
                 for (int i = 0; i < allowedTokens.Length; i++)
                 {
                     string token = allowedTokens[i];
@@ -89,7 +90,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 
                 int languageId = int.Parse(lblLanguageId.Text);
 
-                var emailAccounts= MessageManager.GetAllEmailAccounts();
+                var emailAccounts= IoCFactory.Resolve<IMessageManager>().GetAllEmailAccounts();
                 ddlEmailAccount.Items.Clear();
                 foreach(var emailAccount in emailAccounts)
                 {
@@ -97,7 +98,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     ddlEmailAccount.Items.Add(item);
                 }
 
-                var content = MessageManager.GetLocalizedMessageTemplate(this.MessageTemplate.Name, languageId);
+                var content = IoCFactory.Resolve<IMessageManager>().GetLocalizedMessageTemplate(this.MessageTemplate.Name, languageId);
                 if (content != null)
                 {
                     CommonHelper.SelectListItem(ddlEmailAccount, content.EmailAccount.EmailAccountId);
@@ -108,7 +109,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 }
                 else
                 {
-                    CommonHelper.SelectListItem(ddlEmailAccount, MessageManager.DefaultEmailAccount.EmailAccountId);
+                    CommonHelper.SelectListItem(ddlEmailAccount, IoCFactory.Resolve<IMessageManager>().DefaultEmailAccount.EmailAccountId);
                 }
             }
         }
@@ -119,7 +120,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 try
                 {
-                    MessageTemplate messageTemplate = MessageManager.GetMessageTemplateById(this.MessageTemplateId);
+                    MessageTemplate messageTemplate = IoCFactory.Resolve<IMessageManager>().GetMessageTemplateById(this.MessageTemplateId);
                     if (messageTemplate != null)
                     {
                         foreach (RepeaterItem item in rptrLanguageDivs.Items)
@@ -140,7 +141,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                                 string body = txtBody.Value;
                                 bool active = cbActive.Checked;
 
-                                var content = MessageManager.GetLocalizedMessageTemplate(this.MessageTemplate.Name, languageId);
+                                var content = IoCFactory.Resolve<IMessageManager>().GetLocalizedMessageTemplate(this.MessageTemplate.Name, languageId);
                                 if (content == null)
                                 {
                                     content = new LocalizedMessageTemplate()
@@ -153,7 +154,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                                         Body = body,
                                         IsActive = active
                                     };
-                                    MessageManager.InsertLocalizedMessageTemplate(content);
+                                    IoCFactory.Resolve<IMessageManager>().InsertLocalizedMessageTemplate(content);
                                 }
                                 else
                                 {
@@ -162,7 +163,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                                     content.Subject = subject;
                                     content.Body = body;
                                     content.IsActive = active;
-                                    MessageManager.UpdateLocalizedMessageTemplate(content);
+                                    IoCFactory.Resolve<IMessageManager>().UpdateLocalizedMessageTemplate(content);
                                 }
                             }
                         }
@@ -188,7 +189,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 if (_messageTemplate == null)
                 {
-                    _messageTemplate = MessageManager.GetMessageTemplateById(this.MessageTemplateId);
+                    _messageTemplate = IoCFactory.Resolve<IMessageManager>().GetMessageTemplateById(this.MessageTemplateId);
                 }
                 return _messageTemplate;
             }

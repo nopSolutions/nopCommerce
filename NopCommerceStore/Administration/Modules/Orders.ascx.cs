@@ -26,6 +26,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Shipping;
 using NopSolutions.NopCommerce.BusinessLogic.Utils;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -39,8 +40,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 SetDefaultValues();
 
                 //buttons
-                btnPrintPdfPackagingSlips.Visible = SettingManager.GetSettingValueBoolean("Features.SupportPDF");
-                btnExportXLS.Visible = SettingManager.GetSettingValueBoolean("Features.SupportExcel");
+                btnPrintPdfPackagingSlips.Visible = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Features.SupportPDF");
+                btnExportXLS.Visible = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Features.SupportExcel");
             }
         }
 
@@ -78,7 +79,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
             string orderGuid = txtOrderGuid.Text.Trim();
 
-            var orders = OrderManager.SearchOrders(startDate, endDate,
+            var orders = IoCFactory.Resolve<IOrderManager>().SearchOrders(startDate, endDate,
                 txtCustomerEmail.Text, orderStatus, paymentStatus, shippingStatus, orderGuid);
             return orders;
         }
@@ -88,30 +89,30 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             this.ddlOrderStatus.Items.Clear();
             ListItem itemOrderStatus = new ListItem(GetLocaleResourceString("Admin.Common.All"), "0");
             this.ddlOrderStatus.Items.Add(itemOrderStatus);
-            var orderStatuses = OrderManager.GetAllOrderStatuses();
+            var orderStatuses = IoCFactory.Resolve<IOrderManager>().GetAllOrderStatuses();
             foreach (OrderStatus orderStatus in orderStatuses)
             {
-                ListItem item2 = new ListItem(OrderManager.GetOrderStatusName(orderStatus.OrderStatusId), orderStatus.OrderStatusId.ToString());
+                ListItem item2 = new ListItem(IoCFactory.Resolve<IOrderManager>().GetOrderStatusName(orderStatus.OrderStatusId), orderStatus.OrderStatusId.ToString());
                 this.ddlOrderStatus.Items.Add(item2);
             }
 
             this.ddlPaymentStatus.Items.Clear();
             ListItem itemPaymentStatus = new ListItem(GetLocaleResourceString("Admin.Common.All"), "0");
             this.ddlPaymentStatus.Items.Add(itemPaymentStatus);
-            var paymentStatuses = PaymentStatusManager.GetAllPaymentStatuses();
+            var paymentStatuses = IoCFactory.Resolve<IPaymentStatusManager>().GetAllPaymentStatuses();
             foreach (PaymentStatus paymentStatus in paymentStatuses)
             {
-                ListItem item2 = new ListItem(PaymentStatusManager.GetPaymentStatusName(paymentStatus.PaymentStatusId), paymentStatus.PaymentStatusId.ToString());
+                ListItem item2 = new ListItem(IoCFactory.Resolve<IPaymentStatusManager>().GetPaymentStatusName(paymentStatus.PaymentStatusId), paymentStatus.PaymentStatusId.ToString());
                 this.ddlPaymentStatus.Items.Add(item2);
             }
 
             this.ddlShippingStatus.Items.Clear();
             ListItem itemShippingStatus = new ListItem(GetLocaleResourceString("Admin.Common.All"), "0");
             this.ddlShippingStatus.Items.Add(itemShippingStatus);
-            var shippingStatuses = ShippingStatusManager.GetAllShippingStatuses();
+            var shippingStatuses = IoCFactory.Resolve<IShippingStatusManager>().GetAllShippingStatuses();
             foreach (ShippingStatus shippingStatus in shippingStatuses)
             {
-                ListItem item2 = new ListItem(ShippingStatusManager.GetShippingStatusName(shippingStatus.ShippingStatusId), shippingStatus.ShippingStatusId.ToString());
+                ListItem item2 = new ListItem(IoCFactory.Resolve<IShippingStatusManager>().GetShippingStatusName(shippingStatus.ShippingStatusId), shippingStatus.ShippingStatusId.ToString());
                 this.ddlShippingStatus.Items.Add(item2);
             }
         }
@@ -192,7 +193,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         protected string GetCustomerInfo(int customerId)
         {
             string customerInfo = string.Empty;
-            Customer customer = CustomerManager.GetCustomerById(customerId);
+            Customer customer = IoCFactory.Resolve<ICustomerManager>().GetCustomerById(customerId);
             if (customer != null)
             {
                 if (customer.IsGuest)

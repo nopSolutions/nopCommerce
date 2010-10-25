@@ -30,6 +30,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Media;
 using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.Promo.Affiliates;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
@@ -100,14 +101,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         private void BindGrid()
         {
             int totalRecords = 0;
-            var pictures = PictureManager.GetPictures(int.MaxValue, 0, out totalRecords);
+            var pictures = IoCFactory.Resolve<IPictureManager>().GetPictures(int.MaxValue, 0, out totalRecords);
             gvPictures.DataSource = pictures;
             gvPictures.DataBind();
         }
 
         private void BindSizeRepeater(int pictureID)
         {
-            List<String> urls = PictureManager.GetPictureUrls(pictureID);
+            List<String> urls = IoCFactory.Resolve<IPictureManager>().GetPictureUrls(pictureID);
             repeaterPictureSizes.DataSource = urls;
             repeaterPictureSizes.DataBind();
         }
@@ -126,7 +127,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 Image imagePicture = e.Row.FindControl("imagePicture") as Image;
                 if (imagePicture != null)
-                    imagePicture.ImageUrl = PictureManager.GetPictureUrl(picture, 100);
+                    imagePicture.ImageUrl = IoCFactory.Resolve<IPictureManager>().GetPictureUrl(picture, 100);
 
             }
         }
@@ -146,7 +147,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             
             if (width > 10 && PictureID > 0)
             {
-                PictureManager.GetPictureUrl(PictureID, width);
+                IoCFactory.Resolve<IPictureManager>().GetPictureUrl(PictureID, width);
                 BindSizeRepeater(PictureID);
 
             }
@@ -158,9 +159,9 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
             if (!string.IsNullOrEmpty(fuNewPicture.FileName))
             {
-                byte[] categoryPictureBinary = PictureManager.GetPictureBits(categoryPictureFile.InputStream, categoryPictureFile.ContentLength);
+                byte[] categoryPictureBinary = IoCFactory.Resolve<IPictureManager>().GetPictureBits(categoryPictureFile.InputStream, categoryPictureFile.ContentLength);
 
-                Picture picture = PictureManager.InsertPicture(categoryPictureBinary,
+                Picture picture = IoCFactory.Resolve<IPictureManager>().InsertPicture(categoryPictureBinary,
                     categoryPictureFile.ContentType, true);
 
                 if (picture != null)

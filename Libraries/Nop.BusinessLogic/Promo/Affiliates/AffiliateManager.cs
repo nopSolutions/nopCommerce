@@ -28,7 +28,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Affiliates
     /// <summary>
     /// Affiliate manager
     /// </summary>
-    public partial class AffiliateManager
+    public partial class AffiliateManager : IAffiliateManager
     {
         #region Methods
         /// <summary>
@@ -36,7 +36,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Affiliates
         /// </summary>
         /// <param name="affiliateId">Affiliate identifier</param>
         /// <returns>Affiliate</returns>
-        public static Affiliate GetAffiliateById(int affiliateId)
+        public Affiliate GetAffiliateById(int affiliateId)
         {
             if (affiliateId == 0)
                 return null;
@@ -54,7 +54,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Affiliates
         /// Marks affiliate as deleted 
         /// </summary>
         /// <param name="affiliateId">Affiliate identifier</param>
-        public static void MarkAffiliateAsDeleted(int affiliateId)
+        public void MarkAffiliateAsDeleted(int affiliateId)
         {
             var affiliate = GetAffiliateById(affiliateId);
             if (affiliate != null)
@@ -68,7 +68,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Affiliates
         /// Gets all affiliates
         /// </summary>
         /// <returns>Affiliate collection</returns>
-        public static List<Affiliate> GetAllAffiliates()
+        public List<Affiliate> GetAllAffiliates()
         {
             var context = ObjectContextHelper.CurrentObjectContext;
             var query = from a in context.Affiliates
@@ -84,7 +84,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Affiliates
         /// Inserts an affiliate
         /// </summary>
         /// <param name="affiliate">Affiliate</param>
-        public static void InsertAffiliate(Affiliate affiliate)
+        public void InsertAffiliate(Affiliate affiliate)
         {
             if (affiliate == null)
                 throw new ArgumentNullException("affiliate");
@@ -124,7 +124,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Affiliates
         /// Updates the affiliate
         /// </summary>
         /// <param name="affiliate">Affiliate</param>
-        public static void UpdateAffiliate(Affiliate affiliate)
+        public void UpdateAffiliate(Affiliate affiliate)
         {
             if (affiliate == null)
                 throw new ArgumentNullException("affiliate");

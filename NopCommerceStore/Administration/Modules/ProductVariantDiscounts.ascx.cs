@@ -32,6 +32,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Tax;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.Warehouses;
 using NopSolutions.NopCommerce.Web.Administration.Modules;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -41,7 +42,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             List<int> _discountIds = new List<int>();
 
-            ProductVariant productVariant = ProductManager.GetProductVariantById(this.ProductVariantId);
+            ProductVariant productVariant = IoCFactory.Resolve<IProductManager>().GetProductVariantById(this.ProductVariantId);
             if (productVariant != null)
             {
                 var discounts = productVariant.AllDiscounts;
@@ -69,27 +70,27 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public void SaveInfo(int pvId)
         {
-            ProductVariant productVariant = ProductManager.GetProductVariantById(pvId);
+            ProductVariant productVariant = IoCFactory.Resolve<IProductManager>().GetProductVariantById(pvId);
             if (productVariant != null)
             {
                 List<int> selectedDiscountIds = this.DiscountMappingControl.SelectedDiscountIds;
-                var existingDiscounts = DiscountManager.GetDiscountsByProductVariantId(productVariant.ProductVariantId);
+                var existingDiscounts = IoCFactory.Resolve<IDiscountManager>().GetDiscountsByProductVariantId(productVariant.ProductVariantId);
 
-                var allDiscounts = DiscountManager.GetAllDiscounts(DiscountTypeEnum.AssignedToSKUs);
+                var allDiscounts = IoCFactory.Resolve<IDiscountManager>().GetAllDiscounts(DiscountTypeEnum.AssignedToSKUs);
                 foreach (Discount discount in allDiscounts)
                 {
                     if (selectedDiscountIds.Contains(discount.DiscountId))
                     {
                         if (existingDiscounts.Find(d => d.DiscountId == discount.DiscountId) == null)
                         {
-                            DiscountManager.AddDiscountToProductVariant(productVariant.ProductVariantId, discount.DiscountId);
+                            IoCFactory.Resolve<IDiscountManager>().AddDiscountToProductVariant(productVariant.ProductVariantId, discount.DiscountId);
                         }
                     }
                     else
                     {
                         if (existingDiscounts.Find(d => d.DiscountId == discount.DiscountId) != null)
                         {
-                            DiscountManager.RemoveDiscountFromProductVariant(productVariant.ProductVariantId, discount.DiscountId);
+                            IoCFactory.Resolve<IDiscountManager>().RemoveDiscountFromProductVariant(productVariant.ProductVariantId, discount.DiscountId);
                         }
                     }
                 }

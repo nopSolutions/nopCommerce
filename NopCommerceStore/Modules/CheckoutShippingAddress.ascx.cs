@@ -32,6 +32,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.BusinessLogic.Shipping;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
  
 
 namespace NopSolutions.NopCommerce.Web.Modules
@@ -48,7 +49,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 var address = ctrlShippingAddress.Address;
                 if (address.AddressId != 0 && NopContext.Current.User != null)
                 {
-                    var prevAddress = CustomerManager.GetAddressById(address.AddressId);
+                    var prevAddress = IoCFactory.Resolve<ICustomerManager>().GetAddressById(address.AddressId);
                     if (prevAddress.CustomerId != NopContext.Current.User.CustomerId)
                         return null;
                     address.CustomerId = prevAddress.CustomerId;
@@ -67,7 +68,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
         {
             if (shippingAddress == null)
             {
-                NopContext.Current.User = CustomerManager.SetDefaultShippingAddress(NopContext.Current.User.CustomerId, 0);
+                NopContext.Current.User = IoCFactory.Resolve<ICustomerManager>().SetDefaultShippingAddress(NopContext.Current.User.CustomerId, 0);
                 var args1 = new CheckoutStepEventArgs() { ShippingAddressSelected = true };
                 OnCheckoutStepChanged(args1);
                 if (!this.OnePageCheckout)
@@ -96,11 +97,11 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     shippingAddress.CreatedOn = DateTime.UtcNow;
                     shippingAddress.UpdatedOn = DateTime.UtcNow;
 
-                    CustomerManager.InsertAddress(shippingAddress);
+                    IoCFactory.Resolve<ICustomerManager>().InsertAddress(shippingAddress);
                 }
             }
 
-            NopContext.Current.User = CustomerManager.SetDefaultShippingAddress(NopContext.Current.User.CustomerId, shippingAddress.AddressId);
+            NopContext.Current.User = IoCFactory.Resolve<ICustomerManager>().SetDefaultShippingAddress(NopContext.Current.User.CustomerId, shippingAddress.AddressId);
             var args2 = new CheckoutStepEventArgs() { ShippingAddressSelected = true };
             OnCheckoutStepChanged(args2);
             if (!this.OnePageCheckout)
@@ -135,7 +136,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         public void BindData()
         {
-            bool shoppingCartRequiresShipping = ShippingManager.ShoppingCartRequiresShipping(Cart);
+            bool shoppingCartRequiresShipping = IoCFactory.Resolve<IShippingManager>().ShoppingCartRequiresShipping(Cart);
             if (!shoppingCartRequiresShipping)
             {
                 SelectAddress(null);
@@ -162,10 +163,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
             if (Page.IsValid)
             {
                 int addressId = int.Parse(e.CommandArgument.ToString());
-                var shippingAddress = CustomerManager.GetAddressById(addressId);
+                var shippingAddress = IoCFactory.Resolve<ICustomerManager>().GetAddressById(addressId);
                 if (shippingAddress != null && NopContext.Current.User != null)
                 {
-                    var prevAddress = CustomerManager.GetAddressById(shippingAddress.AddressId);
+                    var prevAddress = IoCFactory.Resolve<ICustomerManager>().GetAddressById(shippingAddress.AddressId);
                     if (prevAddress.CustomerId != NopContext.Current.User.CustomerId)
                         return;
                 }
@@ -185,7 +186,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if ((NopContext.Current.User == null) || (NopContext.Current.User.IsGuest && !CustomerManager.AnonymousCheckoutAllowed))
+            if ((NopContext.Current.User == null) || (NopContext.Current.User.IsGuest && !IoCFactory.Resolve<ICustomerManager>().AnonymousCheckoutAllowed))
             {
                 string loginURL = SEOHelper.GetLoginPageUrl(true);
                 Response.Redirect(loginURL);
@@ -213,7 +214,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             {
                 if (cart == null)
                 {
-                    cart = ShoppingCartManager.GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
+                    cart = IoCFactory.Resolve<IShoppingCartManager>().GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
                 }
                 return cart;
             }

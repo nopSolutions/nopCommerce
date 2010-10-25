@@ -27,6 +27,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
  
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -35,7 +36,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         private void FillDropDowns()
         {
             this.ddlLanguage.Items.Clear();
-            var languages = LanguageManager.GetAllLanguages();
+            var languages = IoCFactory.Resolve<ILanguageManager>().GetAllLanguages();
             foreach (Language language in languages)
             {
                 ListItem item2 = new ListItem(language.Name, language.LanguageId.ToString());
@@ -45,7 +46,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         private void BindData()
         {
-            News news = NewsManager.GetNewsById(this.NewsId);
+            News news = IoCFactory.Resolve<INewsManager>().GetNewsById(this.NewsId);
             if (news != null)
             {
                 CommonHelper.SelectListItem(this.ddlLanguage, news.LanguageId);
@@ -86,7 +87,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public News SaveInfo()
         {
-            News news = NewsManager.GetNewsById(NewsId);
+            News news = IoCFactory.Resolve<INewsManager>().GetNewsById(NewsId);
             if (news != null)
             {
                 news.LanguageId = int.Parse(this.ddlLanguage.SelectedItem.Value);
@@ -97,7 +98,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 news.AllowComments = cbAllowComments.Checked;
                 news.CreatedOn = DateTime.UtcNow;
 
-                NewsManager.UpdateNews(news);
+                IoCFactory.Resolve<INewsManager>().UpdateNews(news);
             }
             else
             {
@@ -111,7 +112,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     AllowComments = cbAllowComments.Checked,
                     CreatedOn = DateTime.UtcNow
                 };
-                NewsManager.InsertNews(news);
+                IoCFactory.Resolve<INewsManager>().InsertNews(news);
             }
             return news;
         }

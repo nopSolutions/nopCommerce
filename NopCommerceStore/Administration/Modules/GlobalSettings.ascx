@@ -1471,7 +1471,7 @@
                             <nopCommerce:DecimalTextBox runat="server" CssClass="adminInput" Width="50px" ID="txtRewardPointsRate"
                                 RequiredErrorMessage="Reward points rate is required" MinimumValue="0" MaximumValue="999999"
                                 RangeErrorMessage="The value must be from 0 to 999999"></nopCommerce:DecimalTextBox>
-                            <%=CurrencyManager.PrimaryStoreCurrency.CurrencyCode%>
+                            <%=IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency.CurrencyCode%>
                         </td>
                     </tr>
                     <tr class="adminSeparator">
@@ -1505,7 +1505,7 @@
                                 RequiredErrorMessage="<% $NopResources:Admin.GlobalSettings.RewardPoints.PointsForPurchases_Amount.RequiredErrorMessage %>"
                                 MinimumValue="0" MaximumValue="999999" RangeErrorMessage="<% $NopResources:Admin.GlobalSettings.RewardPoints.PointsForPurchases_Amount.RangeErrorMessage %>">
                             </nopCommerce:DecimalTextBox>
-                            <%=CurrencyManager.PrimaryStoreCurrency.CurrencyCode%>
+                            <%=IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency.CurrencyCode%>
                             <%=GetLocaleResourceString("Admin.GlobalSettings.RewardPoints.EarningRewardPoints.Tooltip2")%>
                             <nopCommerce:NumericTextBox runat="server" CssClass="adminInput" ID="txtRewardPointsForPurchases_Points"
                                 RequiredErrorMessage="<% $NopResources:Admin.GlobalSettings.RewardPoints.PointsForPurchases_Points.RequiredErrorMessage %>"
@@ -1745,7 +1745,7 @@
                             <nopCommerce:DecimalTextBox runat="server" CssClass="adminInput" Width="50px" ID="txtMinOrderSubtotalAmount"
                                 RequiredErrorMessage="<% $NopResources:Admin.GlobalSettings.Other.MinOrderSubtotalAmount.RequiredErrorMessage %>"
                                 MinimumValue="0" MaximumValue="100000000" RangeErrorMessage="<% $NopResources:Admin.GlobalSettings.Other.MinOrderSubtotalAmount.RangeErrorMessage %>" />
-                            <%=CurrencyManager.PrimaryStoreCurrency.CurrencyCode%>
+                            <%=IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency.CurrencyCode%>
                         </td>
                     </tr>
                     <tr>
@@ -1758,7 +1758,7 @@
                             <nopCommerce:DecimalTextBox runat="server" CssClass="adminInput" Width="50px" ID="txtMinOrderTotalAmount"
                                 RequiredErrorMessage="<% $NopResources:Admin.GlobalSettings.Other.MinOrderTotalAmount.RequiredErrorMessage %>"
                                 MinimumValue="0" MaximumValue="100000000" RangeErrorMessage="<% $NopResources:Admin.GlobalSettings.Other.MinOrderTotalAmount.RangeErrorMessage %>" />
-                            <%=CurrencyManager.PrimaryStoreCurrency.CurrencyCode%>
+                            <%=IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency.CurrencyCode%>
                         </td>
                     </tr>
                     <tr>

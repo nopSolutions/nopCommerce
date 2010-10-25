@@ -34,6 +34,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Payment;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Payment.Methods.TwoCheckout;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 namespace NopSolutions.NopCommerce.Web
 {
     public partial class TwoCheckoutINSHandlerPage : BaseNopPage
@@ -48,7 +49,7 @@ namespace NopSolutions.NopCommerce.Web
                 string nopOrderIdStr = HttpContext.Current.Request.Form["item_id_1"];
                 int nopOrderId = 0;
                 int.TryParse(nopOrderIdStr, out nopOrderId);
-                Order order = OrderManager.GetOrderById(nopOrderId);
+                Order order = IoCFactory.Resolve<IOrderManager>().GetOrderById(nopOrderId);
                 if (order != null)
                 {
                     //debug info
@@ -59,10 +60,10 @@ namespace NopSolutions.NopCommerce.Web
                         string value = HttpContext.Current.Request.Form[key];
                         sbDebug.AppendLine(key + ": " + value);
                     }
-                    OrderManager.InsertOrderNote(order.OrderId, sbDebug.ToString(), false, DateTime.UtcNow);
+                    IoCFactory.Resolve<IOrderManager>().InsertOrderNote(order.OrderId, sbDebug.ToString(), false, DateTime.UtcNow);
 
 
-                    bool useSandbox = SettingManager.GetSettingValueBoolean("PaymentMethod.TwoCheckout.UseSandbox");
+                    bool useSandbox = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.TwoCheckout.UseSandbox");
 
                     //sale id
                     string sale_id = string.Empty;
@@ -78,10 +79,10 @@ namespace NopSolutions.NopCommerce.Web
                     if (invoice_id == null)
                         invoice_id = string.Empty;
 
-                    if (SettingManager.GetSettingValueBoolean("PaymentMethod.TwoCheckout.UseMD5Hashing"))
+                    if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.TwoCheckout.UseMD5Hashing"))
                     {
-                        string vendorId = SettingManager.GetSettingValue("PaymentMethod.TwoCheckout.VendorId");
-                        string secretWord = SettingManager.GetSettingValue("PaymentMethod.TwoCheckout.SecretWord");
+                        string vendorId = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.TwoCheckout.VendorId");
+                        string secretWord = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.TwoCheckout.SecretWord");
 
                         string compareHash1 = TwoCheckoutPaymentProcessor.CalculateMD5hash(sale_id + vendorId + invoice_id + secretWord);
                         if (String.IsNullOrEmpty(compareHash1))
@@ -92,7 +93,7 @@ namespace NopSolutions.NopCommerce.Web
 
                         if (compareHash1.ToUpperInvariant() != compareHash2.ToUpperInvariant())
                         {
-                            OrderManager.InsertOrderNote(order.OrderId, "Hash validation failed", false, DateTime.UtcNow);
+                            IoCFactory.Resolve<IOrderManager>().InsertOrderNote(order.OrderId, "Hash validation failed", false, DateTime.UtcNow);
                             Response.Redirect(CommonHelper.GetStoreLocation());
                         }
                     }
@@ -120,8 +121,8 @@ namespace NopSolutions.NopCommerce.Web
                     sb.AppendLine("invoice_status: " + invoice_status);
                     sb.AppendLine("fraud_status: " + fraud_status);
                     sb.AppendLine("payment_type: " + payment_type);
-                    sb.AppendLine("New payment status: " + PaymentStatusManager.GetPaymentStatusName((int)newPaymentStatus));
-                    OrderManager.InsertOrderNote(order.OrderId, sb.ToString(), false, DateTime.UtcNow);
+                    sb.AppendLine("New payment status: " + IoCFactory.Resolve<IPaymentStatusManager>().GetPaymentStatusName((int)newPaymentStatus));
+                    IoCFactory.Resolve<IOrderManager>().InsertOrderNote(order.OrderId, sb.ToString(), false, DateTime.UtcNow);
 
                     //new payment status
                     switch (newPaymentStatus)
@@ -132,33 +133,33 @@ namespace NopSolutions.NopCommerce.Web
                             break;
                         case PaymentStatusEnum.Authorized:
                             {
-                                if (OrderManager.CanMarkOrderAsAuthorized(order))
+                                if (IoCFactory.Resolve<IOrderManager>().CanMarkOrderAsAuthorized(order))
                                 {
-                                    OrderManager.MarkAsAuthorized(order.OrderId);
+                                    IoCFactory.Resolve<IOrderManager>().MarkAsAuthorized(order.OrderId);
                                 }
                             }
                             break;
                         case PaymentStatusEnum.Paid:
                             {
-                                if (OrderManager.CanMarkOrderAsPaid(order))
+                                if (IoCFactory.Resolve<IOrderManager>().CanMarkOrderAsPaid(order))
                                 {
-                                    OrderManager.MarkOrderAsPaid(order.OrderId);
+                                    IoCFactory.Resolve<IOrderManager>().MarkOrderAsPaid(order.OrderId);
                                 }
                             }
                             break;
                         case PaymentStatusEnum.Refunded:
                             {
-                                if (OrderManager.CanRefundOffline(order))
+                                if (IoCFactory.Resolve<IOrderManager>().CanRefundOffline(order))
                                 {
-                                    OrderManager.RefundOffline(order.OrderId);
+                                    IoCFactory.Resolve<IOrderManager>().RefundOffline(order.OrderId);
                                 }
                             }
                             break;
                         case PaymentStatusEnum.Voided:
                             {
-                                if (OrderManager.CanVoidOffline(order))
+                                if (IoCFactory.Resolve<IOrderManager>().CanVoidOffline(order))
                                 {
-                                    OrderManager.VoidOffline(order.OrderId);
+                                    IoCFactory.Resolve<IOrderManager>().VoidOffline(order.OrderId);
                                 }
                             }
                             break;

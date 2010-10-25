@@ -9,6 +9,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Payment.Methods.USAePay;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web
 {
@@ -40,7 +41,7 @@ namespace NopSolutions.NopCommerce.Web
                 {
                     Response.Redirect(CommonHelper.GetStoreLocation());
                 }
-                Order order = OrderManager.GetOrderById(orderId);
+                Order order = IoCFactory.Resolve<IOrderManager>().GetOrderById(orderId);
                 if(order == null || NopContext.Current.User.CustomerId != order.CustomerId)
                 {
                     Response.Redirect(CommonHelper.GetStoreLocation());
@@ -52,22 +53,22 @@ namespace NopSolutions.NopCommerce.Web
                 {
                     //set AuthorizationTransactionID
                     order.AuthorizationTransactionId = transactionId;
-                    OrderManager.UpdateOrder(order);
+                    IoCFactory.Resolve<IOrderManager>().UpdateOrder(order);
 
-                    if(OrderManager.CanMarkOrderAsAuthorized(order))
+                    if(IoCFactory.Resolve<IOrderManager>().CanMarkOrderAsAuthorized(order))
                     {
-                        OrderManager.MarkAsAuthorized(order.OrderId);
+                        IoCFactory.Resolve<IOrderManager>().MarkAsAuthorized(order.OrderId);
                     }
                 }
                 else
                 {
                     //set CaptureTransactionID
                     order.CaptureTransactionId = transactionId;
-                    OrderManager.UpdateOrder(order);
+                    IoCFactory.Resolve<IOrderManager>().UpdateOrder(order);
 
-                    if(OrderManager.CanMarkOrderAsPaid(order))
+                    if(IoCFactory.Resolve<IOrderManager>().CanMarkOrderAsPaid(order))
                     {
-                        OrderManager.MarkOrderAsPaid(order.OrderId);
+                        IoCFactory.Resolve<IOrderManager>().MarkOrderAsPaid(order.OrderId);
                     }
                 }
 

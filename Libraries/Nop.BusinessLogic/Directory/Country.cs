@@ -18,6 +18,7 @@ using System.Text;
 using NopSolutions.NopCommerce.BusinessLogic.Payment;
 using NopSolutions.NopCommerce.BusinessLogic.Shipping;
 using NopSolutions.NopCommerce.BusinessLogic.Tax;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 
 
@@ -103,7 +104,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
         {
             get
             {
-                return StateProvinceManager.GetStateProvincesByCountryId(this.CountryId);
+                return IoCFactory.Resolve<IStateProvinceManager>().GetStateProvincesByCountryId(this.CountryId);
             }
         }
 

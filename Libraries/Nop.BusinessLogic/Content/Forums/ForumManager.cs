@@ -33,13 +33,14 @@ using NopSolutions.NopCommerce.BusinessLogic.Utils.Html;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Common.Utils.Html;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
 {
     /// <summary>
     /// Forum manager
     /// </summary>
-    public partial class ForumManager
+    public partial class ForumManager : IForumManager
     {
         #region Constants
         private const string FORUMGROUP_ALL_KEY = "Nop.forumgroup.all";
@@ -56,7 +57,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// Deletes a forum group
         /// </summary>
         /// <param name="forumGroupId">The forum group identifier</param>
-        public static void DeleteForumGroup(int forumGroupId)
+        public void DeleteForumGroup(int forumGroupId)
         {
             var forumGroup = GetForumGroupById(forumGroupId);
             if (forumGroup == null)
@@ -68,7 +69,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
             context.DeleteObject(forumGroup);
             context.SaveChanges();
 
-            if (ForumManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(FORUM_PATTERN_KEY);
@@ -80,14 +81,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// </summary>
         /// <param name="forumGroupId">The forum group identifier</param>
         /// <returns>Forum group</returns>
-        public static ForumGroup GetForumGroupById(int forumGroupId)
+        public ForumGroup GetForumGroupById(int forumGroupId)
         {
             if (forumGroupId == 0)
                 return null;
 
             string key = string.Format(FORUMGROUP_BY_ID_KEY, forumGroupId);
             object obj2 = NopRequestCache.Get(key);
-            if (ForumManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (ForumGroup)obj2;
             }
@@ -98,7 +99,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
                         select fg;
             var forumGroup = query.SingleOrDefault();
 
-            if (ForumManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, forumGroup);
             }
@@ -109,11 +110,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// Gets all forum groups
         /// </summary>
         /// <returns>Forum groups</returns>
-        public static List<ForumGroup> GetAllForumGroups()
+        public List<ForumGroup> GetAllForumGroups()
         {
             string key = string.Format(FORUMGROUP_ALL_KEY);
             object obj2 = NopRequestCache.Get(key);
-            if (ForumManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (List<ForumGroup>)obj2;
             }
@@ -124,7 +125,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
                         select fg;
             var forumGroups = query.ToList();
 
-            if (ForumManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, forumGroups);
             }
@@ -135,7 +136,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// Inserts a forum group
         /// </summary>
         /// <param name="forumGroup">Forum group</param>
-        public static void InsertForumGroup(ForumGroup forumGroup)
+        public void InsertForumGroup(ForumGroup forumGroup)
         {
             if (forumGroup == null)
                 throw new ArgumentNullException("forumGroup");
@@ -149,7 +150,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
             context.ForumGroups.AddObject(forumGroup);
             context.SaveChanges();
 
-            if (ForumManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(FORUM_PATTERN_KEY);
@@ -160,7 +161,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// Updates the forum group
         /// </summary>
         /// <param name="forumGroup">Forum group</param>
-        public static void UpdateForumGroup(ForumGroup forumGroup)
+        public void UpdateForumGroup(ForumGroup forumGroup)
         {
             if (forumGroup == null)
                 throw new ArgumentNullException("forumGroup");
@@ -175,7 +176,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
 
             context.SaveChanges();
 
-            if (ForumManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(FORUM_PATTERN_KEY);
@@ -186,7 +187,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// Deletes a forum
         /// </summary>
         /// <param name="forumId">The forum identifier</param>
-        public static void DeleteForum(int forumId)
+        public void DeleteForum(int forumId)
         {
             if (forumId == 0)
                 return;
@@ -194,7 +195,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
             var context = ObjectContextHelper.CurrentObjectContext;
             context.Sp_Forums_ForumDelete(forumId);
 
-            if (ForumManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(FORUM_PATTERN_KEY);
@@ -206,14 +207,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// </summary>
         /// <param name="forumId">The forum identifier</param>
         /// <returns>Forum</returns>
-        public static Forum GetForumById(int forumId)
+        public Forum GetForumById(int forumId)
         {
             if (forumId == 0)
                 return null;
 
             string key = string.Format(FORUM_BY_ID_KEY, forumId);
             object obj2 = NopRequestCache.Get(key);
-            if (ForumManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (Forum)obj2;
             }
@@ -224,7 +225,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
                         select f;
             var forum = query.SingleOrDefault();
 
-            if (ForumManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, forum);
             }
@@ -236,11 +237,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// </summary>
         /// <param name="forumGroupId">The forum group identifier</param>
         /// <returns>Forums</returns>
-        public static List<Forum> GetAllForumsByGroupId(int forumGroupId)
+        public List<Forum> GetAllForumsByGroupId(int forumGroupId)
         {
             string key = string.Format(FORUM_ALLBYFORUMGROUPID_KEY, forumGroupId);
             object obj2 = NopRequestCache.Get(key);
-            if (ForumManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (List<Forum>)obj2;
             }
@@ -252,7 +253,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
                         select f;
             var forums = query.ToList();
 
-            if (ForumManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, forums);
             }
@@ -263,7 +264,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// Inserts a forum
         /// </summary>
         /// <param name="forum">Forum</param>
-        public static void InsertForum(Forum forum)
+        public void InsertForum(Forum forum)
         {
             if (forum == null)
                 throw new ArgumentNullException("forum");
@@ -277,7 +278,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
             context.Forums.AddObject(forum);
             context.SaveChanges();
 
-            if (ForumManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(FORUM_PATTERN_KEY);
@@ -288,7 +289,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// Updates the forum
         /// </summary>
         /// <param name="forum">Forum</param>
-        public static void UpdateForum(Forum forum)
+        public void UpdateForum(Forum forum)
         {
             if (forum == null)
                 throw new ArgumentNullException("forum");
@@ -302,7 +303,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
                 context.Forums.Attach(forum);
             context.SaveChanges();
 
-            if (ForumManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(FORUM_PATTERN_KEY);
@@ -314,7 +315,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// </summary>
         /// <param name="forumId">The forum identifier</param>
         /// <returns>Forum</returns>
-        public static void UpdateForumStats(int forumId)
+        public void UpdateForumStats(int forumId)
         {
             if (forumId == 0)
                 return;
@@ -322,7 +323,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
             var context = ObjectContextHelper.CurrentObjectContext;
             context.Sp_Forums_ForumUpdateCounts(forumId);
 
-            if (ForumManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(FORUM_PATTERN_KEY);
@@ -333,7 +334,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// Deletes a topic
         /// </summary>
         /// <param name="forumTopicId">The topic identifier</param>
-        public static void DeleteTopic(int forumTopicId)
+        public void DeleteTopic(int forumTopicId)
         {
             var forumTopic = GetTopicById(forumTopicId);
             if (forumTopic == null)
@@ -345,7 +346,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
             context.DeleteObject(forumTopic);
             context.SaveChanges();
 
-            if (ForumManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(FORUM_PATTERN_KEY);
@@ -357,7 +358,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// </summary>
         /// <param name="forumTopicId">The topic identifier</param>
         /// <returns>Topic</returns>
-        public static ForumTopic GetTopicById(int forumTopicId)
+        public ForumTopic GetTopicById(int forumTopicId)
         {
             return GetTopicById(forumTopicId, false);
         }
@@ -368,7 +369,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// <param name="forumTopicId">The topic identifier</param>
         /// <param name="increaseViews">The value indicating whether to increase topic views</param>
         /// <returns>Topic</returns>
-        public static ForumTopic GetTopicById(int forumTopicId, bool increaseViews)
+        public ForumTopic GetTopicById(int forumTopicId, bool increaseViews)
         {
             if (forumTopicId == 0)
                 return null;
@@ -402,7 +403,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// <param name="pageIndex">Page index</param>
         /// <param name="totalRecords">Total records</param>
         /// <returns>Topics</returns>
-        public static List<ForumTopic> GetAllTopics(int forumId,
+        public List<ForumTopic> GetAllTopics(int forumId,
             int userId, string keywords, ForumSearchTypeEnum searchType,
             int limitDays, int pageSize,
             int pageIndex, out int totalRecords)
@@ -437,7 +438,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// <param name="forumId">The forum group identifier</param>
         /// <param name="topicCount">Topic count. 0 if you want to get all topics</param>
         /// <returns>Topics</returns>
-        public static List<ForumTopic> GetActiveTopics(int forumId, int topicCount)
+        public List<ForumTopic> GetActiveTopics(int forumId, int topicCount)
         {
             var context = ObjectContextHelper.CurrentObjectContext;
             var forumTopics = context.Sp_Forums_TopicLoadActive(forumId, topicCount);
@@ -449,7 +450,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// </summary>
         /// <param name="forumTopic">Forum topic</param>
         /// <param name="sendNotifications">A value indicating whether to send notifications to users</param>
-        public static void InsertTopic(ForumTopic forumTopic, bool sendNotifications)
+        public void InsertTopic(ForumTopic forumTopic, bool sendNotifications)
         {
             if (forumTopic == null)
                 throw new ArgumentNullException("forumTopic");
@@ -460,10 +461,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
             if (String.IsNullOrEmpty(forumTopic.Subject))
                 throw new NopException("Topic subject cannot be empty");
 
-            if (ForumManager.TopicSubjectMaxLength > 0)
+            if (this.TopicSubjectMaxLength > 0)
             {
-                if (forumTopic.Subject.Length > ForumManager.TopicSubjectMaxLength)
-                    forumTopic.Subject = forumTopic.Subject.Substring(0, ForumManager.TopicSubjectMaxLength);
+                if (forumTopic.Subject.Length > this.TopicSubjectMaxLength)
+                    forumTopic.Subject = forumTopic.Subject.Substring(0, this.TopicSubjectMaxLength);
             }
 
             forumTopic.Subject = CommonHelper.EnsureMaximumLength(forumTopic.Subject, 450);
@@ -473,7 +474,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
             context.ForumTopics.AddObject(forumTopic);
             context.SaveChanges();
 
-            if (ForumManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(FORUM_PATTERN_KEY);
@@ -489,7 +490,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
                     if (subscription.UserId == forumTopic.UserId)
                         continue;
 
-                    MessageManager.SendNewForumTopicMessage(subscription.User, 
+                    IoCFactory.Resolve<IMessageManager>().SendNewForumTopicMessage(subscription.User, 
                         forumTopic, forum, NopContext.Current.WorkingLanguage.LanguageId);
                 }
             }
@@ -499,7 +500,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// Updates the topic
         /// </summary>
         /// <param name="forumTopic">Forum topic</param>
-        public static void UpdateTopic(ForumTopic forumTopic)
+        public void UpdateTopic(ForumTopic forumTopic)
         {
             if (forumTopic == null)
                 throw new ArgumentNullException("forumTopic");
@@ -510,10 +511,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
             if (String.IsNullOrEmpty(forumTopic.Subject))
                 throw new NopException("Topic subject cannot be empty");
 
-            if (ForumManager.TopicSubjectMaxLength > 0)
+            if (this.TopicSubjectMaxLength > 0)
             {
-                if (forumTopic.Subject.Length > ForumManager.TopicSubjectMaxLength)
-                    forumTopic.Subject = forumTopic.Subject.Substring(0, ForumManager.TopicSubjectMaxLength);
+                if (forumTopic.Subject.Length > this.TopicSubjectMaxLength)
+                    forumTopic.Subject = forumTopic.Subject.Substring(0, this.TopicSubjectMaxLength);
             }
 
             forumTopic.Subject = CommonHelper.EnsureMaximumLength(forumTopic.Subject, 450);
@@ -524,7 +525,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
             
             context.SaveChanges();
             
-            if (ForumManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(FORUM_PATTERN_KEY);
@@ -537,13 +538,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// <param name="forumTopicId">The forum topic identifier</param>
         /// <param name="newForumId">New forum identifier</param>
         /// <returns>Moved topic</returns>
-        public static ForumTopic MoveTopic(int forumTopicId, int newForumId)
+        public ForumTopic MoveTopic(int forumTopicId, int newForumId)
         {
             var forumTopic = GetTopicById(forumTopicId);
             if (forumTopic == null)
                 return forumTopic;
 
-            if (ForumManager.IsUserAllowedToMoveTopic(NopContext.Current.User, forumTopic))
+            if (this.IsUserAllowedToMoveTopic(NopContext.Current.User, forumTopic))
             {
                 int previousForumId = forumTopic.ForumId;
                 var newForum = GetForumById(newForumId);
@@ -569,7 +570,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// Deletes a post
         /// </summary>
         /// <param name="forumPostId">The post identifier</param>
-        public static void DeletePost(int forumPostId)
+        public void DeletePost(int forumPostId)
         {
             var forumPost = GetPostById(forumPostId);
             if (forumPost == null)
@@ -579,7 +580,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
              
             //delete topic if it was the first post
             bool deleteTopic = false;
-            var forumTopic = ForumManager.GetTopicById(forumTopicId);
+            var forumTopic = this.GetTopicById(forumTopicId);
             if (forumTopic != null)
             {
                 ForumPost firstPost = forumTopic.FirstPost;
@@ -600,7 +601,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
                 DeleteTopic(forumTopicId);
             }
 
-            if (ForumManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(FORUM_PATTERN_KEY);
@@ -612,7 +613,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// </summary>
         /// <param name="forumPostId">The post identifier</param>
         /// <returns>Post</returns>
-        public static ForumPost GetPostById(int forumPostId)
+        public ForumPost GetPostById(int forumPostId)
         {
             if (forumPostId == 0)
                 return null;
@@ -636,7 +637,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// <param name="pageIndex">Page index</param>
         /// <param name="totalRecords">Total records</param>
         /// <returns>Posts</returns>
-        public static List<ForumPost> GetAllPosts(int forumTopicId,
+        public List<ForumPost> GetAllPosts(int forumTopicId,
             int userId, string keywords, int pageSize, int pageIndex, out int totalRecords)
         {
             return GetAllPosts(forumTopicId, userId, keywords, true,
@@ -654,7 +655,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// <param name="pageIndex">Page index</param>
         /// <param name="totalRecords">Total records</param>
         /// <returns>Posts</returns>
-        public static List<ForumPost> GetAllPosts(int forumTopicId, int userId,
+        public List<ForumPost> GetAllPosts(int forumTopicId, int userId,
             string keywords, bool ascSort, int pageSize, int pageIndex, out int totalRecords)
         {
             if (pageSize <= 0)
@@ -679,7 +680,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// </summary>
         /// <param name="forumPost">The forum post</param>
         /// <param name="sendNotifications">A value indicating whether to send notifications to users</param>
-        public static void InsertPost(ForumPost forumPost, bool sendNotifications)
+        public void InsertPost(ForumPost forumPost, bool sendNotifications)
         {
             if (forumPost == null)
                 throw new ArgumentNullException("forumPost");
@@ -690,10 +691,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
             if (String.IsNullOrEmpty(forumPost.Text))
                 throw new NopException("Text cannot be empty");
 
-            if (ForumManager.PostMaxLength > 0)
+            if (this.PostMaxLength > 0)
             {
-                if (forumPost.Text.Length > ForumManager.PostMaxLength)
-                    forumPost.Text = forumPost.Text.Substring(0, ForumManager.PostMaxLength);
+                if (forumPost.Text.Length > this.PostMaxLength)
+                    forumPost.Text = forumPost.Text.Substring(0, this.PostMaxLength);
             }
 
             forumPost.IPAddress = CommonHelper.EnsureNotNull(forumPost.IPAddress);
@@ -704,7 +705,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
             context.ForumPosts.AddObject(forumPost);
             context.SaveChanges();
 
-            if (ForumManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(FORUM_PATTERN_KEY);
@@ -722,7 +723,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
                     if (subscription.UserId == forumPost.UserId)
                         continue;
 
-                    MessageManager.SendNewForumPostMessage(subscription.User,
+                    IoCFactory.Resolve<IMessageManager>().SendNewForumPostMessage(subscription.User,
                         forumPost, forumTopic, forum, 
                         NopContext.Current.WorkingLanguage.LanguageId);
                 }
@@ -733,7 +734,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// Updates the post
         /// </summary>
         /// <param name="forumPost">The forum post</param>
-        public static void UpdatePost(ForumPost forumPost)
+        public void UpdatePost(ForumPost forumPost)
         {
             if (forumPost == null)
                 throw new ArgumentNullException("forumPost");
@@ -744,10 +745,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
             if (String.IsNullOrEmpty(forumPost.Text))
                 throw new NopException("Text cannot be empty");
 
-            if (ForumManager.PostMaxLength > 0)
+            if (this.PostMaxLength > 0)
             {
-                if (forumPost.Text.Length > ForumManager.PostMaxLength)
-                    forumPost.Text = forumPost.Text.Substring(0, ForumManager.PostMaxLength);
+                if (forumPost.Text.Length > this.PostMaxLength)
+                    forumPost.Text = forumPost.Text.Substring(0, this.PostMaxLength);
             }
 
             forumPost.IPAddress = CommonHelper.EnsureNotNull(forumPost.IPAddress);
@@ -759,7 +760,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
 
             context.SaveChanges();
 
-            if (ForumManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(FORUM_PATTERN_KEY);
@@ -770,7 +771,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// Deletes a private message
         /// </summary>
         /// <param name="forumPrivateMessageId">The private message identifier</param>
-        public static void DeletePrivateMessage(int forumPrivateMessageId)
+        public void DeletePrivateMessage(int forumPrivateMessageId)
         {
             var privateMessage = GetPrivateMessageById(forumPrivateMessageId);
             if (privateMessage == null)
@@ -788,7 +789,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// </summary>
         /// <param name="forumPrivateMessageId">The private message identifier</param>
         /// <returns>Private message</returns>
-        public static PrivateMessage GetPrivateMessageById(int forumPrivateMessageId)
+        public PrivateMessage GetPrivateMessageById(int forumPrivateMessageId)
         {
             if (forumPrivateMessageId == 0)
                 return null;
@@ -815,7 +816,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// <param name="pageIndex">Page index</param>
         /// <param name="totalRecords">Total records</param>
         /// <returns>Private messages</returns>
-        public static List<PrivateMessage> GetAllPrivateMessages(int fromUserId,
+        public List<PrivateMessage> GetAllPrivateMessages(int fromUserId,
             int toUserId, bool? isRead, bool? isDeletedByAuthor, bool? isDeletedByRecipient,
             string keywords, int pageSize, int pageIndex, out int totalRecords)
         {
@@ -840,7 +841,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// Inserts a private message
         /// </summary>
         /// <param name="privateMessage">Private message</param>
-        public static void InsertPrivateMessage(PrivateMessage privateMessage)
+        public void InsertPrivateMessage(PrivateMessage privateMessage)
         {
             if (privateMessage == null)
                 throw new ArgumentNullException("privateMessage");
@@ -849,10 +850,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
             privateMessage.Subject = privateMessage.Subject.Trim();
             if (String.IsNullOrEmpty(privateMessage.Subject))
                 throw new NopException("Subject cannot be empty");
-            if (ForumManager.PMSubjectMaxLength > 0)
+            if (this.PMSubjectMaxLength > 0)
             {
-                if (privateMessage.Subject.Length > ForumManager.PMSubjectMaxLength)
-                    privateMessage.Subject = privateMessage.Subject.Substring(0, ForumManager.PMSubjectMaxLength);
+                if (privateMessage.Subject.Length > this.PMSubjectMaxLength)
+                    privateMessage.Subject = privateMessage.Subject.Substring(0, this.PMSubjectMaxLength);
             }
             
             privateMessage.Text = CommonHelper.EnsureNotNull(privateMessage.Text);
@@ -862,13 +863,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
 
             privateMessage.Subject = CommonHelper.EnsureMaximumLength(privateMessage.Subject, 450);
 
-            if (ForumManager.PMTextMaxLength > 0)
+            if (this.PMTextMaxLength > 0)
             {
-                if (privateMessage.Text.Length > ForumManager.PMTextMaxLength)
-                    privateMessage.Text = privateMessage.Text.Substring(0, ForumManager.PMTextMaxLength);
+                if (privateMessage.Text.Length > this.PMTextMaxLength)
+                    privateMessage.Text = privateMessage.Text.Substring(0, this.PMTextMaxLength);
             }
 
-            Customer customerTo = CustomerManager.GetCustomerById(privateMessage.ToUserId);
+            Customer customerTo = IoCFactory.Resolve<ICustomerManager>().GetCustomerById(privateMessage.ToUserId);
             if (customerTo == null)
                 throw new NopException("Recipient could not be loaded");
 
@@ -880,9 +881,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
             //UI notification
             customerTo.NotifiedAboutNewPrivateMessages = false;
             //Email notification
-            if (ForumManager.NotifyAboutPrivateMessages)
+            if (this.NotifyAboutPrivateMessages)
             {
-                MessageManager.SendPrivateMessageNotification(privateMessage, NopContext.Current.WorkingLanguage.LanguageId);
+                IoCFactory.Resolve<IMessageManager>().SendPrivateMessageNotification(privateMessage, NopContext.Current.WorkingLanguage.LanguageId);
             }
         }
 
@@ -890,7 +891,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// Updates the private message
         /// </summary>
         /// <param name="privateMessage">Private message</param>
-        public static void UpdatePrivateMessage(PrivateMessage privateMessage)
+        public void UpdatePrivateMessage(PrivateMessage privateMessage)
         {
             if (privateMessage == null)
                 throw new ArgumentNullException("privateMessage");
@@ -899,20 +900,20 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
             privateMessage.Subject = privateMessage.Subject.Trim();
             if (String.IsNullOrEmpty(privateMessage.Subject))
                 throw new NopException("Subject cannot be empty");
-            if (ForumManager.PMSubjectMaxLength > 0)
+            if (this.PMSubjectMaxLength > 0)
             {
-                if (privateMessage.Subject.Length > ForumManager.PMSubjectMaxLength)
-                    privateMessage.Subject = privateMessage.Subject.Substring(0, ForumManager.PMSubjectMaxLength);
+                if (privateMessage.Subject.Length > this.PMSubjectMaxLength)
+                    privateMessage.Subject = privateMessage.Subject.Substring(0, this.PMSubjectMaxLength);
             }
 
             privateMessage.Text = CommonHelper.EnsureNotNull(privateMessage.Text);
             privateMessage.Text = privateMessage.Text.Trim();
             if (String.IsNullOrEmpty(privateMessage.Text))
                 throw new NopException("Text cannot be empty");
-            if (ForumManager.PMTextMaxLength > 0)
+            if (this.PMTextMaxLength > 0)
             {
-                if (privateMessage.Text.Length > ForumManager.PMTextMaxLength)
-                    privateMessage.Text = privateMessage.Text.Substring(0, ForumManager.PMTextMaxLength);
+                if (privateMessage.Text.Length > this.PMTextMaxLength)
+                    privateMessage.Text = privateMessage.Text.Substring(0, this.PMTextMaxLength);
             }
 
             privateMessage.Subject = CommonHelper.EnsureMaximumLength(privateMessage.Subject, 450);
@@ -935,7 +936,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// Deletes a forum subscription
         /// </summary>
         /// <param name="forumSubscriptionId">The forum subscription identifier</param>
-        public static void DeleteSubscription(int forumSubscriptionId)
+        public void DeleteSubscription(int forumSubscriptionId)
         {
             var forumSubscription = GetSubscriptionById(forumSubscriptionId);
             if (forumSubscription == null)
@@ -953,7 +954,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// </summary>
         /// <param name="forumSubscriptionId">The forum subscription identifier</param>
         /// <returns>Forum subscription</returns>
-        public static ForumSubscription GetSubscriptionById(int forumSubscriptionId)
+        public ForumSubscription GetSubscriptionById(int forumSubscriptionId)
         {
             if (forumSubscriptionId == 0)
                 return null;
@@ -976,7 +977,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// <param name="pageSize">Page size</param>
         /// <param name="pageIndex">Page index</param>
         /// <returns>Forum subscriptions</returns>
-        public static List<ForumSubscription> GetAllSubscriptions(int userId, 
+        public List<ForumSubscription> GetAllSubscriptions(int userId, 
             int forumId, int topicId, int pageSize, int pageIndex)
         {
             int totalRecords = 0;
@@ -994,7 +995,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// <param name="pageIndex">Page index</param>
         /// <param name="totalRecords">Total records</param>
         /// <returns>Forum subscriptions</returns>
-        public static List<ForumSubscription> GetAllSubscriptions(int userId, int forumId,
+        public List<ForumSubscription> GetAllSubscriptions(int userId, int forumId,
             int topicId, int pageSize, int pageIndex, out int totalRecords)
         {
             if (pageSize <= 0)
@@ -1018,7 +1019,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// Inserts a forum subscription
         /// </summary>
         /// <param name="forumSubscription">Forum subscription</param>
-        public static void InsertSubscription(ForumSubscription forumSubscription)
+        public void InsertSubscription(ForumSubscription forumSubscription)
         {
             if (forumSubscription == null)
                 throw new ArgumentNullException("forumSubscription");
@@ -1033,7 +1034,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// Updates the forum subscription
         /// </summary>
         /// <param name="forumSubscription">Forum subscription</param>
-        public static void UpdateSubscription(ForumSubscription forumSubscription)
+        public void UpdateSubscription(ForumSubscription forumSubscription)
         {
             if (forumSubscription == null)
                 throw new ArgumentNullException("forumSubscription");
@@ -1051,7 +1052,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// <param name="customer">Customer</param>
         /// <param name="forum">Forum</param>
         /// <returns>True if allowed, otherwise false</returns>
-        public static bool IsUserAllowedToCreateTopic(Customer customer, Forum forum)
+        public bool IsUserAllowedToCreateTopic(Customer customer, Forum forum)
         {
             if (forum == null)
                 return false;
@@ -1074,7 +1075,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// <param name="customer">Customer</param>
         /// <param name="topic">Topic</param>
         /// <returns>True if allowed, otherwise false</returns>
-        public static bool IsUserAllowedToEditTopic(Customer customer, ForumTopic topic)
+        public bool IsUserAllowedToEditTopic(Customer customer, ForumTopic topic)
         {
             if (topic == null)
                 return false;
@@ -1088,7 +1089,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
             if (customer.IsForumModerator)
                 return true;
 
-            if (ForumManager.AllowCustomersToEditPosts)
+            if (this.AllowCustomersToEditPosts)
             {
                 bool ownTopic = customer.CustomerId == topic.UserId;
                 return ownTopic;
@@ -1103,7 +1104,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// <param name="customer">Customer</param>
         /// <param name="topic">Topic</param>
         /// <returns>True if allowed, otherwise false</returns>
-        public static bool IsUserAllowedToMoveTopic(Customer customer, ForumTopic topic)
+        public bool IsUserAllowedToMoveTopic(Customer customer, ForumTopic topic)
         {
             if (topic == null)
                 return false;
@@ -1126,7 +1127,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// <param name="customer">Customer</param>
         /// <param name="topic">Topic</param>
         /// <returns>True if allowed, otherwise false</returns>
-        public static bool IsUserAllowedToDeleteTopic(Customer customer, ForumTopic topic)
+        public bool IsUserAllowedToDeleteTopic(Customer customer, ForumTopic topic)
         {
             if (topic == null)
                 return false;
@@ -1139,8 +1140,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
 
             if (customer.IsForumModerator)
                 return true;
-            
-            if (ForumManager.AllowCustomersToDeletePosts)
+
+            if (this.AllowCustomersToDeletePosts)
             {
                 bool ownTopic = customer.CustomerId == topic.UserId;
                 return ownTopic;
@@ -1155,7 +1156,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// <param name="customer">Customer</param>
         /// <param name="topic">Topic</param>
         /// <returns>True if allowed, otherwise false</returns>
-        public static bool IsUserAllowedToCreatePost(Customer customer, ForumTopic topic)
+        public bool IsUserAllowedToCreatePost(Customer customer, ForumTopic topic)
         {
             if (topic == null)
                 return false;
@@ -1178,7 +1179,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// <param name="customer">Customer</param>
         /// <param name="post">Topic</param>
         /// <returns>True if allowed, otherwise false</returns>
-        public static bool IsUserAllowedToEditPost(Customer customer, ForumPost post)
+        public bool IsUserAllowedToEditPost(Customer customer, ForumPost post)
         {
             if (post == null)
                 return false;
@@ -1191,8 +1192,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
 
             if (customer.IsForumModerator)
                 return true;
-            
-            if (ForumManager.AllowCustomersToEditPosts)
+
+            if (this.AllowCustomersToEditPosts)
             {
                 bool ownPost = customer.CustomerId == post.UserId;
                 return ownPost;
@@ -1207,7 +1208,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// <param name="customer">Customer</param>
         /// <param name="post">Topic</param>
         /// <returns>True if allowed, otherwise false</returns>
-        public static bool IsUserAllowedToDeletePost(Customer customer, ForumPost post)
+        public bool IsUserAllowedToDeletePost(Customer customer, ForumPost post)
         {
             if (post == null)
                 return false;
@@ -1221,7 +1222,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
             if (customer.IsForumModerator)
                 return true;
 
-            if (ForumManager.AllowCustomersToDeletePosts)
+            if (this.AllowCustomersToDeletePosts)
             {
                 bool ownPost = customer.CustomerId == post.UserId;
                 return ownPost;
@@ -1235,7 +1236,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <returns>True if allowed, otherwise false</returns>
-        public static bool IsUserAllowedToSetTopicPriority(Customer customer)
+        public bool IsUserAllowedToSetTopicPriority(Customer customer)
         {
             if (customer == null)
                 return false;
@@ -1254,9 +1255,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// </summary>
         /// <param name="customerId">Customer identifier</param>
         /// <returns>True if allowed, otherwise false</returns>
-        public static bool IsUserAllowedToSubscribe(int customerId)
+        public bool IsUserAllowedToSubscribe(int customerId)
         {
-            var customer = CustomerManager.GetCustomerById(customerId);
+            var customer = IoCFactory.Resolve<ICustomerManager>().GetCustomerById(customerId);
             return IsUserAllowedToSubscribe(customer);
         }
 
@@ -1265,7 +1266,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <returns>True if allowed, otherwise false</returns>
-        public static bool IsUserAllowedToSubscribe(Customer customer)
+        public bool IsUserAllowedToSubscribe(Customer customer)
         {
             if (customer == null)
                 return false;
@@ -1281,12 +1282,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// </summary>
         /// <param name="text">Text</param>
         /// <returns>Formatted text</returns>
-        public static string FormatPostText(string text)
+        public string FormatPostText(string text)
         {
             if (String.IsNullOrEmpty(text))
                 return string.Empty;
 
-            switch (ForumManager.ForumEditor)
+            switch (this.ForumEditor)
             {
                 case EditorTypeEnum.SimpleTextBox:
                     {
@@ -1315,7 +1316,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// </summary>
         /// <param name="text">Text</param>
         /// <returns>Formatted text</returns>
-        public static string FormatSignatureText(string text)
+        public string FormatSignatureText(string text)
         {
             if (String.IsNullOrEmpty(text))
                 return string.Empty;
@@ -1329,7 +1330,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// </summary>
         /// <param name="text">Text</param>
         /// <returns>Formatted text</returns>
-        public static string FormatPrivateMessageText(string text)
+        public string FormatPrivateMessageText(string text)
         {
             if (String.IsNullOrEmpty(text))
                 return string.Empty;
@@ -1344,11 +1345,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// </summary>
         /// <param name="subject">Subject</param>
         /// <returns>Formatted subject</returns>
-        public static string StripTopicSubject(string subject)
+        public string StripTopicSubject(string subject)
         {
             if (String.IsNullOrEmpty(subject))
                 return subject;
-            int strippedTopicMaxLength = SettingManager.GetSettingValueInteger("Forums.StrippedTopicMaxLength", 45);
+            int strippedTopicMaxLength = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Forums.StrippedTopicMaxLength", 45);
             if (strippedTopicMaxLength > 0)
             {
                 if (subject.Length > strippedTopicMaxLength)
@@ -1372,11 +1373,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// <param name="pageSize">Page size</param>
         /// <param name="postId">Post identifier</param>
         /// <returns>Page index</returns>
-        public static int CalculateTopicPageIndex(int forumTopicId, int pageSize, int postId)
+        public int CalculateTopicPageIndex(int forumTopicId, int pageSize, int postId)
         {
             int pageIndex = 0;
             int totalRecords = 0;
-            var forumPosts = ForumManager.GetAllPosts(forumTopicId, 0, 
+            var forumPosts = GetAllPosts(forumTopicId, 0, 
                 string.Empty, true, int.MaxValue, 0, out totalRecords);
 
             for (int i = 0; i < totalRecords; i++)
@@ -1400,328 +1401,328 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// <summary>
         /// Gets a value indicating whether cache is enabled
         /// </summary>
-        public static bool CacheEnabled
+        public bool CacheEnabled
         {
             get
             {
-                return SettingManager.GetSettingValueBoolean("Cache.ForumManager.CacheEnabled");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.ForumManager.CacheEnabled");
             }
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether forums are enabled
         /// </summary>
-        public static bool ForumsEnabled
+        public bool ForumsEnabled
         {
             get
             {
-                bool result = SettingManager.GetSettingValueBoolean("Forums.ForumsEnabled");
+                bool result = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Forums.ForumsEnabled");
                 return result;
             }
             set
             {
-                SettingManager.SetParam("Forums.ForumsEnabled", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("Forums.ForumsEnabled", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether relative date and time formatting is enabled  (e.g. 2 hours ago, a month ago)
         /// </summary>
-        public static bool RelativeDateTimeFormattingEnabled
+        public bool RelativeDateTimeFormattingEnabled
         {
             get
             {
-                bool result = SettingManager.GetSettingValueBoolean("Forums.RelativeDateTimeFormattingEnabled", false);
+                bool result = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Forums.RelativeDateTimeFormattingEnabled", false);
                 return result;
             }
             set
             {
-                SettingManager.SetParam("Forums.RelativeDateTimeFormattingEnabled", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("Forums.RelativeDateTimeFormattingEnabled", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether customers are allowed to edit posts that they created.
         /// </summary>
-        public static bool AllowCustomersToEditPosts
+        public bool AllowCustomersToEditPosts
         {
             get
             {
-                bool result = SettingManager.GetSettingValueBoolean("Forums.CustomersAllowedToEditPosts");
+                bool result = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Forums.CustomersAllowedToEditPosts");
                 return result;
             }
             set
             {
-                SettingManager.SetParam("Forums.CustomersAllowedToEditPosts", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("Forums.CustomersAllowedToEditPosts", value.ToString());
             }
         }
         
         /// <summary>
         /// Gets or sets a value indicating whether customers are allowed to manage theirs subscriptions
         /// </summary>
-        public static bool AllowCustomersToManageSubscriptions
+        public bool AllowCustomersToManageSubscriptions
         {
             get
             {
-                return SettingManager.GetSettingValueBoolean("Forums.CustomersAllowedToManageSubscriptions");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Forums.CustomersAllowedToManageSubscriptions");
             }
             set
             {
-                SettingManager.SetParam("Forums.CustomersAllowedToManageSubscriptions", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("Forums.CustomersAllowedToManageSubscriptions", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether the guests are allowed to create posts.
         /// </summary>
-        public static bool AllowGuestsToCreatePosts
+        public bool AllowGuestsToCreatePosts
         {
             get
             {
-                return SettingManager.GetSettingValueBoolean("Forums.GuestsAllowedToCreatePosts");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Forums.GuestsAllowedToCreatePosts");
             }
             set
             {
-                SettingManager.SetParam("Forums.GuestsAllowedToCreatePosts", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("Forums.GuestsAllowedToCreatePosts", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether the guests are allowed to create topics.
         /// </summary>
-        public static bool AllowGuestsToCreateTopics
+        public bool AllowGuestsToCreateTopics
         {
             get
             {
-                return SettingManager.GetSettingValueBoolean("Forums.GuestsAllowedToCreateTopics");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Forums.GuestsAllowedToCreateTopics");
             }
             set
             {
-                SettingManager.SetParam("Forums.GuestsAllowedToCreateTopics", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("Forums.GuestsAllowedToCreateTopics", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether customers are allowed to delete posts that they created.
         /// </summary>
-        public static bool AllowCustomersToDeletePosts
+        public bool AllowCustomersToDeletePosts
         {
             get
             {
-                bool result = SettingManager.GetSettingValueBoolean("Forums.CustomersAllowedToDeletePosts");
+                bool result = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Forums.CustomersAllowedToDeletePosts");
                 return result;
             }
             set
             {
-                SettingManager.SetParam("Forums.CustomersAllowedToDeletePosts", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("Forums.CustomersAllowedToDeletePosts", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets maximum length of topic subject
         /// </summary>
-        public static int TopicSubjectMaxLength
+        public int TopicSubjectMaxLength
         {
             get
             {
-                int result = SettingManager.GetSettingValueInteger("Forums.TopicSubjectMaxLength");
+                int result = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Forums.TopicSubjectMaxLength");
                 return result;
             }
             set
             {
-                SettingManager.SetParam("Forums.TopicSubjectMaxLength", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("Forums.TopicSubjectMaxLength", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets maximum length of post
         /// </summary>
-        public static int PostMaxLength
+        public int PostMaxLength
         {
             get
             {
-                int result = SettingManager.GetSettingValueInteger("Forums.PostMaxLength");
+                int result = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Forums.PostMaxLength");
                 return result;
             }
             set
             {
-                SettingManager.SetParam("Forums.PostMaxLength", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("Forums.PostMaxLength", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets the page size for topics in forums
         /// </summary>
-        public static int TopicsPageSize
+        public int TopicsPageSize
         {
             get
             {
-                int result = SettingManager.GetSettingValueInteger("Forums.TopicsPageSize");
+                int result = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Forums.TopicsPageSize");
                 return result;
             }
             set
             {
-                SettingManager.SetParam("Forums.TopicsPageSize", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("Forums.TopicsPageSize", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets the page size for posts in topics
         /// </summary>
-        public static int PostsPageSize
+        public int PostsPageSize
         {
             get
             {
-                int result = SettingManager.GetSettingValueInteger("Forums.PostsPageSize");
+                int result = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Forums.PostsPageSize");
                 return result;
             }
             set
             {
-                SettingManager.SetParam("Forums.PostsPageSize", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("Forums.PostsPageSize", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets the page size for search result
         /// </summary>
-        public static int SearchResultsPageSize
+        public int SearchResultsPageSize
         {
             get
             {
-                int result = SettingManager.GetSettingValueInteger("Forums.SearchResultsPageSize");
+                int result = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Forums.SearchResultsPageSize");
                 return result;
             }
             set
             {
-                SettingManager.SetParam("Forums.SearchResultsPageSize", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("Forums.SearchResultsPageSize", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets the page size for latest user post
         /// </summary>
-        public static int LatestUserPostsPageSize
+        public int LatestUserPostsPageSize
         {
             get
             {
-                int result = SettingManager.GetSettingValueInteger("Forums.LatestUserPostsPageSize");
+                int result = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Forums.LatestUserPostsPageSize");
                 return result;
             }
             set
             {
-                SettingManager.SetParam("Forums.LatestUserPostsPageSize", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("Forums.LatestUserPostsPageSize", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether to show customers forum post count
         /// </summary>
-        public static bool ShowCustomersPostCount
+        public bool ShowCustomersPostCount
         {
             get
             {
-                bool result = SettingManager.GetSettingValueBoolean("Forums.ShowCustomersPostCount");
+                bool result = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Forums.ShowCustomersPostCount");
                 return result;
             }
             set
             {
-                SettingManager.SetParam("Forums.ShowCustomersPostCount", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("Forums.ShowCustomersPostCount", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets a forum editor type
         /// </summary>
-        public static EditorTypeEnum ForumEditor
+        public EditorTypeEnum ForumEditor
         {
             get
             {
-                int forumEditorTypeId = SettingManager.GetSettingValueInteger("Forums.EditorType");
+                int forumEditorTypeId = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Forums.EditorType");
                 return (EditorTypeEnum)Enum.ToObject(typeof(EditorTypeEnum), forumEditorTypeId);
             }
             set
             {
-                SettingManager.SetParam("Forums.EditorType", ((int)value).ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("Forums.EditorType", ((int)value).ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether customers are allowed to specify signature.
         /// </summary>
-        public static bool SignaturesEnabled
+        public bool SignaturesEnabled
         {
             get
             {
-                bool result = SettingManager.GetSettingValueBoolean("Forums.SignatureEnabled");
+                bool result = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Forums.SignatureEnabled");
                 return result;
             }
             set
             {
-                SettingManager.SetParam("Forums.SignatureEnabled", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("Forums.SignatureEnabled", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether private messages are allowed
         /// </summary>
-        public static bool AllowPrivateMessages
+        public bool AllowPrivateMessages
         {
             get
             {
-                bool result = SettingManager.GetSettingValueBoolean("Messaging.AllowPM");
+                bool result = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Messaging.AllowPM");
                 return result;
             }
             set
             {
-                SettingManager.SetParam("Messaging.AllowPM", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("Messaging.AllowPM", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether a customer should be notified about new private messages
         /// </summary>
-        public static bool NotifyAboutPrivateMessages
+        public bool NotifyAboutPrivateMessages
         {
             get
             {
-                bool result = SettingManager.GetSettingValueBoolean("Messaging.NotifyAboutPrivateMessages");
+                bool result = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Messaging.NotifyAboutPrivateMessages");
                 return result;
             }
             set
             {
-                SettingManager.SetParam("Messaging.NotifyAboutPrivateMessages", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("Messaging.NotifyAboutPrivateMessages", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets maximum length of pm subject
         /// </summary>
-        public static int PMSubjectMaxLength
+        public int PMSubjectMaxLength
         {
             get
             {
-                int result = SettingManager.GetSettingValueInteger("Messaging.PMSubjectMaxLength");
+                int result = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Messaging.PMSubjectMaxLength");
                 return result;
             }
             set
             {
-                SettingManager.SetParam("Messaging.PMSubjectMaxLength", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("Messaging.PMSubjectMaxLength", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets maximum length of pm message
         /// </summary>
-        public static int PMTextMaxLength
+        public int PMTextMaxLength
         {
             get
             {
-                int result = SettingManager.GetSettingValueInteger("Messaging.PMTextMaxLength");
+                int result = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Messaging.PMTextMaxLength");
                 return result;
             }
             set
             {
-                SettingManager.SetParam("Messaging.PMTextMaxLength", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("Messaging.PMTextMaxLength", value.ToString());
             }
         }
 

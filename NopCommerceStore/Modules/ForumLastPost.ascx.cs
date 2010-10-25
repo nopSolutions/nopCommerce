@@ -32,6 +32,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Content.Forums;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -55,7 +56,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             {
                 //post date
                 string dateStr = string.Empty;
-                if (ForumManager.RelativeDateTimeFormattingEnabled)
+                if (IoCFactory.Resolve<IForumManager>().RelativeDateTimeFormattingEnabled)
                     dateStr = forumPost.CreatedOn.RelativeFormat(true, "f");
                 else
                     dateStr = DateTimeHelper.ConvertToUserTime(forumPost.CreatedOn, DateTimeKind.Utc).ToString("f");
@@ -66,7 +67,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 var forumTopic = forumPost.Topic;
                 if (forumTopic != null)
                 {
-                    hlTopic.Text = Server.HtmlEncode(ForumManager.StripTopicSubject(forumTopic.Subject));
+                    hlTopic.Text = Server.HtmlEncode(IoCFactory.Resolve<IForumManager>().StripTopicSubject(forumTopic.Subject));
                     hlTopic.ToolTip = Server.HtmlEncode(forumTopic.Subject);
                     hlTopic.NavigateUrl = SEOHelper.GetForumTopicUrl(forumTopic);
                 }
@@ -75,15 +76,15 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 var customer = forumPost.User;
                 if(customer != null)
                 {
-                    if(CustomerManager.AllowViewingProfiles && !customer.IsGuest)
+                    if(IoCFactory.Resolve<ICustomerManager>().AllowViewingProfiles && !customer.IsGuest)
                     {
-                        hlUser.Text = Server.HtmlEncode(CustomerManager.FormatUserName(customer, true));
+                        hlUser.Text = Server.HtmlEncode(IoCFactory.Resolve<ICustomerManager>().FormatUserName(customer, true));
                         hlUser.NavigateUrl = SEOHelper.GetUserProfileUrl(customer.CustomerId);
                         lblUser.Visible = false;
                     }
                     else
                     {
-                        lblUser.Text = Server.HtmlEncode(CustomerManager.FormatUserName(customer, true));
+                        lblUser.Text = Server.HtmlEncode(IoCFactory.Resolve<ICustomerManager>().FormatUserName(customer, true));
                         hlUser.Visible = false;
                     }
                 }

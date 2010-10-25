@@ -33,6 +33,7 @@ using NopSolutions.NopCommerce.Payment.Methods.PayPal;
 using NopSolutions.NopCommerce.BusinessLogic.Payment;
 using NopSolutions.NopCommerce.BusinessLogic.Audit;
 using NopSolutions.NopCommerce.Common;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 namespace NopSolutions.NopCommerce.Web
 {
     public partial class PaypalIPNHandlerPage : BaseNopPage
@@ -93,7 +94,7 @@ namespace NopSolutions.NopCommerce.Web
                     }
 
                     PaymentStatusEnum newPaymentStatus = PaypalHelper.GetPaymentStatus(payment_status, pending_reason);
-                    sb.AppendLine("New payment status: " + PaymentStatusManager.GetPaymentStatusName((int)newPaymentStatus));
+                    sb.AppendLine("New payment status: " + IoCFactory.Resolve<IPaymentStatusManager>().GetPaymentStatusName((int)newPaymentStatus));
 
                     switch (txn_type)
                     {
@@ -112,10 +113,10 @@ namespace NopSolutions.NopCommerce.Web
                                 {
                                 }
 
-                                Order initialOrder = OrderManager.GetOrderByGuid(orderNumberGuid);
+                                Order initialOrder = IoCFactory.Resolve<IOrderManager>().GetOrderByGuid(orderNumberGuid);
                                 if (initialOrder != null)
                                 {
-                                    var recurringPayments = OrderManager.SearchRecurringPayments(0, initialOrder.OrderId, null);
+                                    var recurringPayments = IoCFactory.Resolve<IOrderManager>().SearchRecurringPayments(0, initialOrder.OrderId, null);
                                     foreach (var rp in recurringPayments)
                                     {
                                         switch (newPaymentStatus)
@@ -133,12 +134,12 @@ namespace NopSolutions.NopCommerce.Web
                                                             OrderId = initialOrder.OrderId,
                                                             CreatedOn = DateTime.UtcNow
                                                         };
-                                                        OrderManager.InsertRecurringPaymentHistory(rph);
+                                                        IoCFactory.Resolve<IOrderManager>().InsertRecurringPaymentHistory(rph);
                                                     }
                                                     else
                                                     {
                                                         //next payments
-                                                        OrderManager.ProcessNextRecurringPayment(rp.RecurringPaymentId);
+                                                        IoCFactory.Resolve<IOrderManager>().ProcessNextRecurringPayment(rp.RecurringPaymentId);
                                                         //UNDONE change new order status according to newPaymentStatus
                                                         //UNDONE refund/void is not supported
                                                     }
@@ -147,12 +148,12 @@ namespace NopSolutions.NopCommerce.Web
                                         }
                                     }
 
-                                    //OrderManager.InsertOrderNote(newOrder.OrderId, sb.ToString(), DateTime.UtcNow);
-                                    LogManager.InsertLog(LogTypeEnum.Unknown, "PayPal IPN. Recurring info", new NopException(sb.ToString()));
+                                    //IoCFactory.Resolve<IOrderManager>().InsertOrderNote(newOrder.OrderId, sb.ToString(), DateTime.UtcNow);
+                                    IoCFactory.Resolve<ILogManager>().InsertLog(LogTypeEnum.Unknown, "PayPal IPN. Recurring info", new NopException(sb.ToString()));
                                 }
                                 else
                                 {
-                                    LogManager.InsertLog(LogTypeEnum.OrderError, "PayPal IPN. Order is not found", new NopException(sb.ToString()));
+                                    IoCFactory.Resolve<ILogManager>().InsertLog(LogTypeEnum.OrderError, "PayPal IPN. Order is not found", new NopException(sb.ToString()));
                                 }
                             }
                             #endregion
@@ -171,10 +172,10 @@ namespace NopSolutions.NopCommerce.Web
                                 {
                                 }
 
-                                Order order = OrderManager.GetOrderByGuid(orderNumberGuid);
+                                Order order = IoCFactory.Resolve<IOrderManager>().GetOrderByGuid(orderNumberGuid);
                                 if (order != null)
                                 {
-                                    OrderManager.InsertOrderNote(order.OrderId, sb.ToString(), false, DateTime.UtcNow);
+                                    IoCFactory.Resolve<IOrderManager>().InsertOrderNote(order.OrderId, sb.ToString(), false, DateTime.UtcNow);
                                     switch (newPaymentStatus)
                                     {
                                         case PaymentStatusEnum.Pending:
@@ -183,33 +184,33 @@ namespace NopSolutions.NopCommerce.Web
                                             break;
                                         case PaymentStatusEnum.Authorized:
                                             {
-                                                if (OrderManager.CanMarkOrderAsAuthorized(order))
+                                                if (IoCFactory.Resolve<IOrderManager>().CanMarkOrderAsAuthorized(order))
                                                 {
-                                                    OrderManager.MarkAsAuthorized(order.OrderId);
+                                                    IoCFactory.Resolve<IOrderManager>().MarkAsAuthorized(order.OrderId);
                                                 }
                                             }
                                             break;
                                         case PaymentStatusEnum.Paid:
                                             {
-                                                if (OrderManager.CanMarkOrderAsPaid(order))
+                                                if (IoCFactory.Resolve<IOrderManager>().CanMarkOrderAsPaid(order))
                                                 {
-                                                    OrderManager.MarkOrderAsPaid(order.OrderId);
+                                                    IoCFactory.Resolve<IOrderManager>().MarkOrderAsPaid(order.OrderId);
                                                 }
                                             }
                                             break;
                                         case PaymentStatusEnum.Refunded:
                                             {
-                                                if (OrderManager.CanRefundOffline(order))
+                                                if (IoCFactory.Resolve<IOrderManager>().CanRefundOffline(order))
                                                 {
-                                                    OrderManager.RefundOffline(order.OrderId);
+                                                    IoCFactory.Resolve<IOrderManager>().RefundOffline(order.OrderId);
                                                 }
                                             }
                                             break;
                                         case PaymentStatusEnum.Voided:
                                             {
-                                                if (OrderManager.CanVoidOffline(order))
+                                                if (IoCFactory.Resolve<IOrderManager>().CanVoidOffline(order))
                                                 {
-                                                    OrderManager.VoidOffline(order.OrderId);
+                                                    IoCFactory.Resolve<IOrderManager>().VoidOffline(order.OrderId);
                                                 }
                                             }
                                             break;
@@ -219,7 +220,7 @@ namespace NopSolutions.NopCommerce.Web
                                 }
                                 else
                                 {
-                                    LogManager.InsertLog(LogTypeEnum.OrderError, "PayPal IPN. Order is not found", new NopException(sb.ToString()));
+                                    IoCFactory.Resolve<ILogManager>().InsertLog(LogTypeEnum.OrderError, "PayPal IPN. Order is not found", new NopException(sb.ToString()));
                                 }
                             }
                             #endregion
@@ -228,7 +229,7 @@ namespace NopSolutions.NopCommerce.Web
                 }
                 else
                 {
-                    LogManager.InsertLog(LogTypeEnum.OrderError, "PayPal IPN failed.", strRequest);
+                    IoCFactory.Resolve<ILogManager>().InsertLog(LogTypeEnum.OrderError, "PayPal IPN failed.", strRequest);
                 }
             }
         }

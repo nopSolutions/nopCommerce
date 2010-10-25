@@ -30,6 +30,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Messages;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -42,14 +43,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         protected List<NewsLetterSubscription> GetNewsletterSubscribers()
         {
             string email = txtEmail.Text.Trim();
-            var newsLetterSubscriptions = MessageManager.GetAllNewsLetterSubscriptions(email, true);
+            var newsLetterSubscriptions = IoCFactory.Resolve<IMessageManager>().GetAllNewsLetterSubscriptions(email, true);
             return newsLetterSubscriptions;
         }
 
         protected List<NewsLetterSubscription> GetNewsletterSubscribers(bool onlyActive)
         {
             string email = txtEmail.Text.Trim();
-            var newsLetterSubscriptions = MessageManager.GetAllNewsLetterSubscriptions(email, !onlyActive);
+            var newsLetterSubscriptions = IoCFactory.Resolve<IMessageManager>().GetAllNewsLetterSubscriptions(email, !onlyActive);
             return newsLetterSubscriptions;
         }
 
@@ -111,12 +112,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                                 string email = tmp[0].Trim();
                                 bool isActive = Boolean.Parse(tmp[1]);
 
-                                NewsLetterSubscription subscription = MessageManager.GetNewsLetterSubscriptionByEmail(email);
+                                NewsLetterSubscription subscription = IoCFactory.Resolve<IMessageManager>().GetNewsLetterSubscriptionByEmail(email);
                                 if (subscription != null)
                                 {
                                     subscription.Email = email;
                                     subscription.Active = isActive;
-                                    MessageManager.UpdateNewsLetterSubscription(subscription);
+                                    IoCFactory.Resolve<IMessageManager>().UpdateNewsLetterSubscription(subscription);
                                 }
                                 else
                                 {
@@ -127,7 +128,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                                         Active = isActive,
                                         CreatedOn = DateTime.UtcNow
                                     };
-                                    MessageManager.InsertNewsLetterSubscription(subscription);
+                                    IoCFactory.Resolve<IMessageManager>().InsertNewsLetterSubscription(subscription);
                                 }
                                 count++;
                             }
@@ -176,7 +177,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     int newsLetterSubscriptionId = int.Parse(hfNewsLetterSubscriptionId.Value);
                     if (isChecked)
                     {
-                        MessageManager.DeleteNewsLetterSubscription(newsLetterSubscriptionId);
+                        IoCFactory.Resolve<IMessageManager>().DeleteNewsLetterSubscription(newsLetterSubscriptionId);
                     }
                 }
 

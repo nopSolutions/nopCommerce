@@ -11,7 +11,7 @@
 <asp:Panel class="order-summary-content" runat="server" ID="pnlCart">
     <%if (this.IsShoppingCart)
       { %>
-    <%if (SettingManager.GetSettingValueBoolean("Display.Checkout.DiscountCouponBox"))
+    <%if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Display.Checkout.DiscountCouponBox"))
       { %>
     <asp:Panel runat="server" ID="phCoupon" CssClass="coupon-box">
         <b>
@@ -33,7 +33,7 @@
     <%} %>
     <div class="clear">
     </div>
-    <%if (SettingManager.GetSettingValueBoolean("Display.Checkout.GiftCardBox"))
+    <%if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Display.Checkout.GiftCardBox"))
       { %>
     <asp:Panel runat="server" ID="phGiftCards" CssClass="coupon-box">
         <b>
@@ -70,13 +70,13 @@
                     <%=GetLocaleResourceString("ShoppingCart.Remove")%>
                 </td>
                 <%} %>
-                <%if (SettingManager.GetSettingValueBoolean("Display.Products.ShowSKU"))
+                <%if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Display.Products.ShowSKU"))
                   {%>
                 <td width="10%">
                     <%=GetLocaleResourceString("ShoppingCart.SKU")%>
                 </td>
                 <%} %>
-                <%if (SettingManager.GetSettingValueBoolean("Display.ShowProductImagesOnShoppingCart"))
+                <%if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Display.ShowProductImagesOnShoppingCart"))
                   {%>
                 <td class="picture">
                 </td>
@@ -103,13 +103,13 @@
                             <asp:CheckBox runat="server" ID="cbRemoveFromCart" />
                         </td>
                         <%} %>
-                        <%if (SettingManager.GetSettingValueBoolean("Display.Products.ShowSKU"))
+                        <%if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Display.Products.ShowSKU"))
                           {%>
                         <td width="10%">
                             <%#Server.HtmlEncode(((ShoppingCartItem)Container.DataItem).ProductVariant.SKU)%>
                         </td>
                         <%} %>
-                        <%if (SettingManager.GetSettingValueBoolean("Display.ShowProductImagesOnShoppingCart"))
+                        <%if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Display.ShowProductImagesOnShoppingCart"))
                           {%>
                         <td class="productpicture">
                             <asp:Image ID="iProductVariantPicture" runat="server" ImageUrl='<%#GetProductVariantImageUrl((ShoppingCartItem)Container.DataItem)%>'
@@ -169,7 +169,7 @@
         <div class="clear">
         </div>
         <div class="buttons">
-            <%if (SettingManager.GetSettingValueBoolean("Checkout.TermsOfServiceEnabled"))
+            <%if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Checkout.TermsOfServiceEnabled"))
               { %>
 
             <script language="javascript" type="text/javascript">

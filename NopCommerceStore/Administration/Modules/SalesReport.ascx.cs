@@ -32,6 +32,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using System.Web.UI.DataVisualization.Charting;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -52,10 +53,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             this.ddlOrderStatus.Items.Clear();
             ListItem itemOrderStatus = new ListItem(GetLocaleResourceString("Admin.Common.All"), "0");
             this.ddlOrderStatus.Items.Add(itemOrderStatus);
-            var orderStatuses = OrderManager.GetAllOrderStatuses();
+            var orderStatuses = IoCFactory.Resolve<IOrderManager>().GetAllOrderStatuses();
             foreach (OrderStatus orderStatus in orderStatuses)
             {
-                ListItem item2 = new ListItem(OrderManager.GetOrderStatusName(orderStatus.OrderStatusId), orderStatus.OrderStatusId.ToString());
+                ListItem item2 = new ListItem(IoCFactory.Resolve<IOrderManager>().GetOrderStatusName(orderStatus.OrderStatusId), orderStatus.OrderStatusId.ToString());
                 this.ddlOrderStatus.Items.Add(item2);
             }
 
@@ -63,10 +64,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             this.ddlPaymentStatus.Items.Clear();
             ListItem itemPaymentStatus = new ListItem(GetLocaleResourceString("Admin.Common.All"), "0");
             this.ddlPaymentStatus.Items.Add(itemPaymentStatus);
-            var paymentStatuses = PaymentStatusManager.GetAllPaymentStatuses();
+            var paymentStatuses = IoCFactory.Resolve<IPaymentStatusManager>().GetAllPaymentStatuses();
             foreach (PaymentStatus paymentStatus in paymentStatuses)
             {
-                ListItem item2 = new ListItem(PaymentStatusManager.GetPaymentStatusName(paymentStatus.PaymentStatusId), paymentStatus.PaymentStatusId.ToString());
+                ListItem item2 = new ListItem(IoCFactory.Resolve<IPaymentStatusManager>().GetPaymentStatusName(paymentStatus.PaymentStatusId), paymentStatus.PaymentStatusId.ToString());
                 this.ddlPaymentStatus.Items.Add(item2);
             }
 
@@ -74,7 +75,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             ddlBillingCountry.Items.Clear();
             ListItem itemBillingCountry = new ListItem(GetLocaleResourceString("Admin.Common.All"), "0");
             this.ddlBillingCountry.Items.Add(itemBillingCountry);
-            var countries = CountryManager.GetAllCountriesForBilling();
+            var countries = IoCFactory.Resolve<ICountryManager>().GetAllCountriesForBilling();
             foreach (var country in countries)
             {
                 ListItem ddlCountryItem2 = new ListItem(country.Name, country.CountryId.ToString());
@@ -106,7 +107,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 paymentStatus = (PaymentStatusEnum)Enum.ToObject(typeof(PaymentStatusEnum), paymentStatusId);
             int billingCountryID = int.Parse(ddlBillingCountry.SelectedItem.Value);
 
-            var report = OrderManager.OrderProductVariantReport(startDate, endDate, orderStatus, paymentStatus, billingCountryID);
+            var report = IoCFactory.Resolve<IOrderManager>().OrderProductVariantReport(startDate, endDate, orderStatus, paymentStatus, billingCountryID);
             if (report.Count == 0)
             {
                 chartOrders.Visible = false;
@@ -148,7 +149,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         public string GetProductVariantUrl(int productVariantId)
         {
             string result = string.Empty;
-            ProductVariant productVariant = ProductManager.GetProductVariantById(productVariantId);
+            ProductVariant productVariant = IoCFactory.Resolve<IProductManager>().GetProductVariantById(productVariantId);
             if (productVariant != null)
                 result = "ProductVariantDetails.aspx?ProductVariantID=" + productVariant.ProductVariantId.ToString();
             else
@@ -158,7 +159,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public string GetProductVariantName(int productVariantId)
         {
-            ProductVariant productVariant = ProductManager.GetProductVariantById(productVariantId);
+            ProductVariant productVariant = IoCFactory.Resolve<IProductManager>().GetProductVariantById(productVariantId);
             if (productVariant != null)
                 return productVariant.FullProductName;
             return "Not available. ID=" + productVariantId.ToString();

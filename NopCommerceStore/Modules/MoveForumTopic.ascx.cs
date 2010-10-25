@@ -33,6 +33,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.Utils.Html;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -50,14 +51,14 @@ namespace NopSolutions.NopCommerce.Web.Modules
         {
             pnlError.Visible = false;
 
-            var forumTopic = ForumManager.GetTopicById(this.ForumTopicId);
+            var forumTopic = IoCFactory.Resolve<IForumManager>().GetTopicById(this.ForumTopicId);
 
             if (forumTopic == null)
             {
                 Response.Redirect(SEOHelper.GetForumMainUrl());
             }
 
-            if (!ForumManager.IsUserAllowedToMoveTopic(NopContext.Current.User, forumTopic))
+            if (!IoCFactory.Resolve<IForumManager>().IsUserAllowedToMoveTopic(NopContext.Current.User, forumTopic))
             {
                 string loginURL = SEOHelper.GetLoginPageUrl(true);
                 Response.Redirect(loginURL);
@@ -74,13 +75,13 @@ namespace NopSolutions.NopCommerce.Web.Modules
         {
             try
             {
-                var forumTopic = ForumManager.GetTopicById(this.ForumTopicId);
+                var forumTopic = IoCFactory.Resolve<IForumManager>().GetTopicById(this.ForumTopicId);
                 if (forumTopic == null)
                 {
                     Response.Redirect(SEOHelper.GetForumMainUrl());
                 }
 
-                ForumManager.MoveTopic(forumTopic.ForumTopicId, ctrlForumSelector.SelectedForumId);
+                IoCFactory.Resolve<IForumManager>().MoveTopic(forumTopic.ForumTopicId, ctrlForumSelector.SelectedForumId);
                 string topicURL = SEOHelper.GetForumTopicUrl(forumTopic);
                 Response.Redirect(topicURL);
             }
@@ -95,7 +96,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
         {
             try
             {
-                var forumTopic = ForumManager.GetTopicById(this.ForumTopicId);
+                var forumTopic = IoCFactory.Resolve<IForumManager>().GetTopicById(this.ForumTopicId);
                 if (forumTopic != null)
                 {
                     string topicUrl = SEOHelper.GetForumTopicUrl(forumTopic);

@@ -25,6 +25,7 @@ using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Content.Blog;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
@@ -41,7 +42,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         private void BindGrid()
         {
-            var blogPostCollection = BlogManager.GetAllBlogPosts(0);
+            var blogPostCollection = IoCFactory.Resolve<IBlogManager>().GetAllBlogPosts(0);
             gvBlogPosts.DataSource = blogPostCollection;
             gvBlogPosts.DataBind();
         }

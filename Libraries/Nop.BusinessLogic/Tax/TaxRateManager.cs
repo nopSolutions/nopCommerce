@@ -23,13 +23,14 @@ using NopSolutions.NopCommerce.BusinessLogic.Caching;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Data;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Tax
 {
     /// <summary>
     /// Tax rate manager
     /// </summary>
-    public partial class TaxRateManager
+    public partial class TaxRateManager : ITaxRateManager
     {
         #region Constants
         private const string TAXRATE_ALL_KEY = "Nop.taxrate.all";
@@ -42,7 +43,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// Deletes a tax rate
         /// </summary>
         /// <param name="taxRateId">Tax rate identifier</param>
-        public static void DeleteTaxRate(int taxRateId)
+        public void DeleteTaxRate(int taxRateId)
         {
             var taxRate = GetTaxRateById(taxRateId);
             if (taxRate == null)
@@ -54,7 +55,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
             context.DeleteObject(taxRate);
             context.SaveChanges();
             
-            if (TaxRateManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(TAXRATE_PATTERN_KEY);
             }
@@ -65,14 +66,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// </summary>
         /// <param name="taxRateId">Tax rate identifier</param>
         /// <returns>Tax rate</returns>
-        public static TaxRate GetTaxRateById(int taxRateId)
+        public TaxRate GetTaxRateById(int taxRateId)
         {
             if (taxRateId == 0)
                 return null;
 
             string key = string.Format(TAXRATE_BY_ID_KEY, taxRateId);
             object obj2 = NopRequestCache.Get(key);
-            if (TaxRateManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (TaxRate)obj2;
             }
@@ -83,7 +84,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
                         select tr;
             var taxRate = query.SingleOrDefault();
 
-            if (TaxRateManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, taxRate);
             }
@@ -94,11 +95,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// Gets all tax rates
         /// </summary>
         /// <returns>Tax rate collection</returns>
-        public static List<TaxRate> GetAllTaxRates()
+        public List<TaxRate> GetAllTaxRates()
         {
             string key = TAXRATE_ALL_KEY;
             object obj2 = NopRequestCache.Get(key);
-            if (TaxRateManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (List<TaxRate>)obj2;
             }
@@ -106,7 +107,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
             var context = ObjectContextHelper.CurrentObjectContext;
             var collection = context.Sp_TaxRateLoadAll();
 
-            if (TaxRateManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, collection);
             } 
@@ -122,7 +123,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// <param name="stateProvinceId">The state/province identifier</param>
         /// <param name="zip">The zip</param>
         /// <returns>Tax rate collection</returns>
-        public static List<TaxRate> GetAllTaxRates(int taxCategoryId, int countryId,
+        public List<TaxRate> GetAllTaxRates(int taxCategoryId, int countryId,
             int stateProvinceId, string zip)
         {
             if (zip == null)
@@ -171,7 +172,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// Inserts a tax rate
         /// </summary>
         /// <param name="taxRate">Tax rate</param>
-        public static void InsertTaxRate(TaxRate taxRate)
+        public void InsertTaxRate(TaxRate taxRate)
         {
             if (taxRate == null)
                 throw new ArgumentNullException("taxRate");
@@ -185,7 +186,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
             context.TaxRates.AddObject(taxRate);
             context.SaveChanges();
             
-            if (TaxRateManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(TAXRATE_PATTERN_KEY);
             }
@@ -195,7 +196,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// Updates the tax rate
         /// </summary>
         /// <param name="taxRate">Tax rate</param>
-        public static void UpdateTaxRate(TaxRate taxRate)
+        public void UpdateTaxRate(TaxRate taxRate)
         {
             if (taxRate == null)
                 throw new ArgumentNullException("taxRate");
@@ -210,7 +211,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
 
             context.SaveChanges();
             
-            if (TaxRateManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(TAXRATE_PATTERN_KEY);
             }
@@ -221,11 +222,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// <summary>
         /// Gets a value indicating whether cache is enabled
         /// </summary>
-        public static bool CacheEnabled
+        public bool CacheEnabled
         {
             get
             {
-                return SettingManager.GetSettingValueBoolean("Cache.TaxRateManager.CacheEnabled");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.TaxRateManager.CacheEnabled");
             }
         }
         #endregion

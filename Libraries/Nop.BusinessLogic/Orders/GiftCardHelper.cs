@@ -19,6 +19,7 @@ using System.Text;
 using System.Web;
 using System.Xml;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Orders
 {
@@ -53,7 +54,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
 
             decimal result = GetGiftCardInitialValue(gc);
 
-            var usageHistoryCollection = OrderManager.GetAllGiftCardUsageHistoryEntries(gc.GiftCardId, null, null);
+            var usageHistoryCollection = IoCFactory.Resolve<IOrderManager>().GetAllGiftCardUsageHistoryEntries(gc.GiftCardId, null, null);
             foreach (var usageHistory in usageHistoryCollection)
             {
                 result -= usageHistory.UsedValue;
@@ -80,7 +81,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             string[] couponCodes = GetCouponCodes(customer.GiftCardCouponCodes);
             foreach (var couponCode in couponCodes)
             {
-                var _gcCollection = OrderManager.GetAllGiftCards(null, null,
+                var _gcCollection = IoCFactory.Resolve<IOrderManager>().GetAllGiftCards(null, null,
                     null, null, null, null, null, true, couponCode);
                 foreach (var _gc in _gcCollection)
                 {
@@ -119,7 +120,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             if (String.IsNullOrEmpty(giftCardCouponCode))
                 return false;
 
-            var _gcCollection = OrderManager.GetAllGiftCards(null, null,
+            var _gcCollection = IoCFactory.Resolve<IOrderManager>().GetAllGiftCards(null, null,
                     null, null, null, null, null, true, giftCardCouponCode);
             foreach (var _gc in _gcCollection)
             {

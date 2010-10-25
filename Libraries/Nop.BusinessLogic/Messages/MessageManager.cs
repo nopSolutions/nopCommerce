@@ -46,19 +46,20 @@ using NopSolutions.NopCommerce.BusinessLogic.Utils;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Common.Utils.Html;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Messages
 {
     /// <summary>
     /// Message manager
     /// </summary>
-    public partial class MessageManager
+    public partial class MessageManager : IMessageManager
     {
         #region Utilities
 
-        private static string Replace(string original, string pattern, string replacement)
+        private string Replace(string original, string pattern, string replacement)
         {
-            if (SettingManager.GetSettingValueBoolean("MessageTemplates.CaseInvariantReplacement"))
+            if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("MessageTemplates.CaseInvariantReplacement"))
             {
                 int count, position0, position1;
                 count = position0 = position1 = 0;
@@ -91,11 +92,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// <param name="order">Order</param>
         /// <param name="languageId">Language identifier</param>
         /// <returns>HTML table of products</returns>
-        private static string ProductListToHtmlTable(Order order, int languageId)
+        private string ProductListToHtmlTable(Order order, int languageId)
         {
             string result = string.Empty;
             
-            var language = LanguageManager.GetLanguageById(languageId);
+            var language = IoCFactory.Resolve<ILanguageManager>().GetLanguageById(languageId);
             if (language == null)
             {
                 language = NopContext.Current.WorkingLanguage;
@@ -104,9 +105,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
 
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("<table border=\"0\" style=\"width:100%;\">");
-            string color1 = SettingManager.GetSettingValue("MessageTemplate.Color1", "#b9babe");
-            string color2 = SettingManager.GetSettingValue("MessageTemplate.Color2", "#ebecee");
-            string color3 = SettingManager.GetSettingValue("MessageTemplate.Color3", "#dde2e6");
+            string color1 = IoCFactory.Resolve<ISettingManager>().GetSettingValue("MessageTemplate.Color1", "#b9babe");
+            string color2 = IoCFactory.Resolve<ISettingManager>().GetSettingValue("MessageTemplate.Color2", "#ebecee");
+            string color3 = IoCFactory.Resolve<ISettingManager>().GetSettingValue("MessageTemplate.Color3", "#dde2e6");
            
             #region Products
             sb.AppendLine(string.Format("<tr style=\"background-color:{0};text-align:center;\">", color1));
@@ -128,9 +129,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
                 //product name
                 sb.AppendLine("<td style=\"padding: 0.6em 0.4em;text-align: left;\">" + HttpUtility.HtmlEncode(productVariant.GetLocalizedFullProductName(languageId)));
                 //download link
-                if (OrderManager.IsDownloadAllowed(opv))
+                if (IoCFactory.Resolve<IOrderManager>().IsDownloadAllowed(opv))
                 {
-                    string downloadUrl = string.Format("<a class=\"link\" href=\"{0}\" >{1}</a>", DownloadManager.GetDownloadUrl(opv), LocalizationManager.GetLocaleResourceString("Order.Download", languageId));
+                    string downloadUrl = string.Format("<a class=\"link\" href=\"{0}\" >{1}</a>", IoCFactory.Resolve<IDownloadManager>().GetDownloadUrl(opv), LocalizationManager.GetLocaleResourceString("Order.Download", languageId));
                     sb.AppendLine("&nbsp;&nbsp;(");
                     sb.AppendLine(downloadUrl);
                     sb.AppendLine(")");
@@ -142,7 +143,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
                     sb.AppendLine(opv.AttributeDescription);
                 }
                 //sku
-                if (SettingManager.GetSettingValueBoolean("Display.Products.ShowSKU"))
+                if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Display.Products.ShowSKU"))
                 {
                     if (!String.IsNullOrEmpty(opv.ProductVariant.SKU))
                     {
@@ -255,14 +256,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             //tax
             bool displayTax = true;
             bool displayTaxRates = true;
-            if (TaxManager.HideTaxInOrderSummary && order.CustomerTaxDisplayType == TaxDisplayTypeEnum.IncludingTax)
+            if (IoCFactory.Resolve<ITaxManager>().HideTaxInOrderSummary && order.CustomerTaxDisplayType == TaxDisplayTypeEnum.IncludingTax)
             {
                 displayTax = false;
                 displayTaxRates = false;
             }
             else
             {
-                if (order.OrderTax == 0 && TaxManager.HideZeroTax)
+                if (order.OrderTax == 0 && IoCFactory.Resolve<ITaxManager>().HideZeroTax)
                 {
                     displayTax = false;
                     displayTaxRates = false;
@@ -271,7 +272,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
                 {
                     taxRates = order.TaxRatesDictionaryInCustomerCurrency;
                    
-                    displayTaxRates = TaxManager.DisplayTaxRates && taxRates.Count > 0;
+                    displayTaxRates = IoCFactory.Resolve<ITaxManager>().DisplayTaxRates && taxRates.Count > 0;
                     displayTax = !displayTaxRates;
 
                     string taxStr = PriceHelper.FormatPrice(order.OrderTaxInCustomerCurrency, true, order.CustomerCurrencyCode, false);
@@ -325,7 +326,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             {
                 foreach (var item in taxRates)
                 {
-                    string taxRate = String.Format(LocalizationManager.GetLocaleResourceString("Order.Totals.TaxRate"), TaxManager.FormatTaxRate(item.Key));
+                    string taxRate = String.Format(LocalizationManager.GetLocaleResourceString("Order.Totals.TaxRate"), IoCFactory.Resolve<ITaxManager>().FormatTaxRate(item.Key));
                     string taxValue = PriceHelper.FormatPrice(item.Value, true, order.CustomerCurrencyCode, false);
                     sb.AppendLine(string.Format("<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{1}</strong></td> <td style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{2}</strong></td></tr>", color3, taxRate, taxValue));
                 }
@@ -338,7 +339,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             }
             
             //gift cards
-            var gcuhC = OrderManager.GetAllGiftCardUsageHistoryEntries(null, null, order.OrderId);
+            var gcuhC = IoCFactory.Resolve<IOrderManager>().GetAllGiftCardUsageHistoryEntries(null, null, order.OrderId);
             foreach (var giftCardUsageHistory in gcuhC)
             {
                 string giftCardText = String.Format(LocalizationManager.GetLocaleResourceString("Order.GiftCardInfo", languageId), HttpUtility.HtmlEncode(giftCardUsageHistory.GiftCard.GiftCardCouponCode));
@@ -363,6 +364,452 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             return result;
         }
 
+        /// <summary>
+        /// Replaces a message template tokens
+        /// </summary>
+        /// <param name="order">Order instance</param>
+        /// <param name="template">Template</param>
+        /// <param name="languageId">Language identifier</param>
+        /// <returns>New template</returns>
+        public string ReplaceMessageTemplateTokens(Order order,
+            string template, int languageId)
+        {
+            var tokens = new NameValueCollection();
+            tokens.Add("Store.Name", IoCFactory.Resolve<ISettingManager>().StoreName);
+            tokens.Add("Store.URL", IoCFactory.Resolve<ISettingManager>().StoreUrl);
+            tokens.Add("Store.Email", this.DefaultEmailAccount.Email);
+
+            tokens.Add("Order.OrderNumber", order.OrderId.ToString());
+
+            tokens.Add("Order.CustomerFullName", HttpUtility.HtmlEncode(order.BillingFullName));
+            tokens.Add("Order.CustomerEmail", HttpUtility.HtmlEncode(order.BillingEmail));
+
+
+            tokens.Add("Order.BillingFirstName", HttpUtility.HtmlEncode(order.BillingFirstName));
+            tokens.Add("Order.BillingLastName", HttpUtility.HtmlEncode(order.BillingLastName));
+            tokens.Add("Order.BillingPhoneNumber", HttpUtility.HtmlEncode(order.BillingPhoneNumber));
+            tokens.Add("Order.BillingEmail", HttpUtility.HtmlEncode(order.BillingEmail.ToString()));
+            tokens.Add("Order.BillingFaxNumber", HttpUtility.HtmlEncode(order.BillingFaxNumber));
+            tokens.Add("Order.BillingCompany", HttpUtility.HtmlEncode(order.BillingCompany));
+            tokens.Add("Order.BillingAddress1", HttpUtility.HtmlEncode(order.BillingAddress1));
+            tokens.Add("Order.BillingAddress2", HttpUtility.HtmlEncode(order.BillingAddress2));
+            tokens.Add("Order.BillingCity", HttpUtility.HtmlEncode(order.BillingCity));
+            tokens.Add("Order.BillingStateProvince", HttpUtility.HtmlEncode(order.BillingStateProvince));
+            tokens.Add("Order.BillingZipPostalCode", HttpUtility.HtmlEncode(order.BillingZipPostalCode));
+            tokens.Add("Order.BillingCountry", HttpUtility.HtmlEncode(order.BillingCountry));
+
+            tokens.Add("Order.ShippingMethod", HttpUtility.HtmlEncode(order.ShippingMethod));
+
+            tokens.Add("Order.ShippingFirstName", HttpUtility.HtmlEncode(order.ShippingFirstName));
+            tokens.Add("Order.ShippingLastName", HttpUtility.HtmlEncode(order.ShippingLastName));
+            tokens.Add("Order.ShippingPhoneNumber", HttpUtility.HtmlEncode(order.ShippingPhoneNumber));
+            tokens.Add("Order.ShippingEmail", HttpUtility.HtmlEncode(order.ShippingEmail.ToString()));
+            tokens.Add("Order.ShippingFaxNumber", HttpUtility.HtmlEncode(order.ShippingFaxNumber));
+            tokens.Add("Order.ShippingCompany", HttpUtility.HtmlEncode(order.ShippingCompany));
+            tokens.Add("Order.ShippingAddress1", HttpUtility.HtmlEncode(order.ShippingAddress1));
+            tokens.Add("Order.ShippingAddress2", HttpUtility.HtmlEncode(order.ShippingAddress2));
+            tokens.Add("Order.ShippingCity", HttpUtility.HtmlEncode(order.ShippingCity));
+            tokens.Add("Order.ShippingStateProvince", HttpUtility.HtmlEncode(order.ShippingStateProvince));
+            tokens.Add("Order.ShippingZipPostalCode", HttpUtility.HtmlEncode(order.ShippingZipPostalCode));
+            tokens.Add("Order.ShippingCountry", HttpUtility.HtmlEncode(order.ShippingCountry));
+
+            tokens.Add("Order.TrackingNumber", HttpUtility.HtmlEncode(order.TrackingNumber));
+            tokens.Add("Order.VatNumber", HttpUtility.HtmlEncode(order.VatNumber));
+
+            tokens.Add("Order.Product(s)", ProductListToHtmlTable(order, languageId));
+
+            var language = IoCFactory.Resolve<ILanguageManager>().GetLanguageById(languageId);
+            if (language != null && !String.IsNullOrEmpty(language.LanguageCulture))
+            {
+                DateTime createdOn = DateTimeHelper.ConvertToUserTime(order.CreatedOn, TimeZoneInfo.Utc, DateTimeHelper.GetCustomerTimeZone(order.Customer));
+                tokens.Add("Order.CreatedOn", createdOn.ToString("D", new CultureInfo(language.LanguageCulture)));
+            }
+            else
+            {
+                tokens.Add("Order.CreatedOn", order.CreatedOn.ToString("D"));
+            }
+            tokens.Add("Order.OrderURLForCustomer", string.Format("{0}orderdetails.aspx?orderid={1}", IoCFactory.Resolve<ISettingManager>().StoreUrl, order.OrderId));
+
+            foreach (string token in tokens.Keys)
+            {
+                template = Replace(template, String.Format(@"%{0}%", token), tokens[token]);
+            }
+
+            return template;
+        }
+
+        /// <summary>
+        /// Replaces a message template tokens
+        /// </summary>
+        /// <param name="customer">Customer instance</param>
+        /// <param name="template">Template</param>
+        /// <returns>New template</returns>
+        private string ReplaceMessageTemplateTokens(Customer customer,
+            string template)
+        {
+            return ReplaceMessageTemplateTokens(customer, template, null);
+        }
+
+        /// <summary>
+        /// Replaces a message template tokens
+        /// </summary>
+        /// <param name="customer">Customer instance</param>
+        /// <param name="template">Template</param>
+        /// <param name="additinalKeys">Additinal keys</param>
+        /// <returns>New template</returns>
+        private string ReplaceMessageTemplateTokens(Customer customer,
+            string template, NameValueCollection additinalKeys)
+        {
+            var tokens = new NameValueCollection();
+            tokens.Add("Store.Name", IoCFactory.Resolve<ISettingManager>().StoreName);
+            tokens.Add("Store.URL", IoCFactory.Resolve<ISettingManager>().StoreUrl);
+            tokens.Add("Store.Email", this.DefaultEmailAccount.Email);
+
+            tokens.Add("Customer.Email", HttpUtility.HtmlEncode(customer.Email));
+            tokens.Add("Customer.Username", HttpUtility.HtmlEncode(customer.Username));
+            tokens.Add("Customer.FullName", HttpUtility.HtmlEncode(customer.FullName));
+            tokens.Add("Customer.VatNumber", HttpUtility.HtmlEncode(customer.VatNumber));
+            tokens.Add("Customer.VatNumberStatus", HttpUtility.HtmlEncode(customer.VatNumberStatus.ToString()));
+
+            string passwordRecoveryUrl = string.Empty;
+            passwordRecoveryUrl = string.Format("{0}passwordrecovery.aspx?prt={1}&email={2}", IoCFactory.Resolve<ISettingManager>().StoreUrl, customer.PasswordRecoveryToken, customer.Email);
+            tokens.Add("Customer.PasswordRecoveryURL", passwordRecoveryUrl);
+
+            string accountActivationUrl = string.Empty;
+            accountActivationUrl = string.Format("{0}accountactivation.aspx?act={1}&email={2}", IoCFactory.Resolve<ISettingManager>().StoreUrl, customer.AccountActivationToken, customer.Email);
+            tokens.Add("Customer.AccountActivationURL", accountActivationUrl);
+
+            foreach (string token in tokens.Keys)
+            {
+                template = Replace(template, String.Format(@"%{0}%", token), tokens[token]);
+            }
+
+            if (additinalKeys != null)
+            {
+                foreach (string token in additinalKeys.Keys)
+                {
+                    template = Replace(template, String.Format(@"%{0}%", token), additinalKeys[token]);
+                }
+            }
+
+            return template;
+        }
+
+        /// <summary>
+        /// Replaces a message template tokens
+        /// </summary>
+        /// <param name="customer">Customer instance</param>
+        /// <param name="product">Product instance</param>
+        /// <param name="template">Template</param>
+        /// <param name="additinalKeys">Additinal keys</param>
+        /// <returns>New template</returns>
+        private string ReplaceMessageTemplateTokens(Customer customer, Product product,
+            string template, NameValueCollection additinalKeys)
+        {
+            var tokens = new NameValueCollection();
+            tokens.Add("Store.Name", IoCFactory.Resolve<ISettingManager>().StoreName);
+            tokens.Add("Store.URL", IoCFactory.Resolve<ISettingManager>().StoreUrl);
+            tokens.Add("Store.Email", this.DefaultEmailAccount.Email);
+
+            tokens.Add("Customer.Email", HttpUtility.HtmlEncode(customer.Email));
+            tokens.Add("Customer.Username", HttpUtility.HtmlEncode(customer.Username));
+            tokens.Add("Customer.FullName", HttpUtility.HtmlEncode(customer.FullName));
+            tokens.Add("Customer.VatNumber", HttpUtility.HtmlEncode(customer.VatNumber));
+            tokens.Add("Customer.VatNumberStatus", HttpUtility.HtmlEncode(customer.VatNumberStatus.ToString()));
+
+            tokens.Add("Product.Name", HttpUtility.HtmlEncode(product.Name));
+            tokens.Add("Product.ShortDescription", product.ShortDescription);
+            tokens.Add("Product.ProductURLForCustomer", SEOHelper.GetProductUrl(product));
+
+            foreach (string token in tokens.Keys)
+            {
+                template = Replace(template, String.Format(@"%{0}%", token), tokens[token]);
+            }
+
+            if (additinalKeys != null)
+            {
+                foreach (string token in additinalKeys.Keys)
+                {
+                    template = Replace(template, String.Format(@"%{0}%", token), additinalKeys[token]);
+                }
+            }
+
+            return template;
+        }
+
+        /// <summary>
+        /// Replaces a message template tokens
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="cart">Shopping cart</param>
+        /// <param name="template">Template</param>
+        /// <param name="additinalKeys">Additinal keys</param>
+        /// <returns>New template</returns>
+        private string ReplaceMessageTemplateTokens(Customer customer,
+            ShoppingCart cart, string template, NameValueCollection additinalKeys)
+        {
+            var tokens = new NameValueCollection();
+            tokens.Add("Store.Name", IoCFactory.Resolve<ISettingManager>().StoreName);
+            tokens.Add("Store.URL", IoCFactory.Resolve<ISettingManager>().StoreUrl);
+            tokens.Add("Store.Email", this.DefaultEmailAccount.Email);
+
+            tokens.Add("Customer.Email", HttpUtility.HtmlEncode(customer.Email));
+            tokens.Add("Customer.Username", HttpUtility.HtmlEncode(customer.Username));
+            tokens.Add("Customer.FullName", HttpUtility.HtmlEncode(customer.FullName));
+            tokens.Add("Customer.VatNumber", HttpUtility.HtmlEncode(customer.VatNumber));
+            tokens.Add("Customer.VatNumberStatus", HttpUtility.HtmlEncode(customer.VatNumberStatus.ToString()));
+
+            tokens.Add("Wishlist.URLForCustomer", SEOHelper.GetWishlistUrl(customer.CustomerGuid));
+            //UNDONE add a wishlist content token
+
+            foreach (string token in tokens.Keys)
+            {
+                template = Replace(template, String.Format(@"%{0}%", token), tokens[token]);
+            }
+
+            if (additinalKeys != null)
+            {
+                foreach (string token in additinalKeys.Keys)
+                {
+                    template = Replace(template, String.Format(@"%{0}%", token), additinalKeys[token]);
+                }
+            }
+
+            return template;
+        }
+
+        /// <summary>
+        /// Replaces a message template tokens
+        /// </summary>
+        /// <param name="customer">Customer instance</param>
+        /// <param name="forumPost">Forum post</param>
+        /// <param name="forumTopic">Forum topic</param>
+        /// <param name="forum">Forum</param>
+        /// <param name="template">Template</param>
+        /// <returns>New template</returns>
+        private string ReplaceMessageTemplateTokens(Customer customer,
+            ForumPost forumPost, ForumTopic forumTopic, Forum forum, string template)
+        {
+            var tokens = new NameValueCollection();
+            tokens.Add("Store.Name", IoCFactory.Resolve<ISettingManager>().StoreName);
+            tokens.Add("Store.URL", IoCFactory.Resolve<ISettingManager>().StoreUrl);
+            tokens.Add("Store.Email", this.DefaultEmailAccount.Email);
+
+            tokens.Add("Customer.Email", HttpUtility.HtmlEncode(customer.Email));
+            tokens.Add("Customer.Username", HttpUtility.HtmlEncode(customer.Username));
+            tokens.Add("Customer.FullName", HttpUtility.HtmlEncode(customer.FullName));
+            tokens.Add("Customer.VatNumber", HttpUtility.HtmlEncode(customer.VatNumber));
+            tokens.Add("Customer.VatNumberStatus", HttpUtility.HtmlEncode(customer.VatNumberStatus.ToString()));
+
+            if (forumPost != null)
+            {
+                tokens.Add("Forums.PostAuthor", HttpUtility.HtmlEncode(IoCFactory.Resolve<ICustomerManager>().FormatUserName(forumPost.User)));
+                tokens.Add("Forums.PostBody", IoCFactory.Resolve<IForumManager>().FormatPostText(forumPost.Text));
+            }
+            if (forumTopic != null)
+            {
+                tokens.Add("Forums.TopicURL", SEOHelper.GetForumTopicUrl(forumTopic));
+                tokens.Add("Forums.TopicName", HttpUtility.HtmlEncode(forumTopic.Subject));
+            }
+            if (forum != null)
+            {
+                tokens.Add("Forums.ForumURL", SEOHelper.GetForumUrl(forum));
+                tokens.Add("Forums.ForumName", HttpUtility.HtmlEncode(forum.Name));
+            }
+            foreach (string token in tokens.Keys)
+            {
+                template = Replace(template, String.Format(@"%{0}%", token), tokens[token]);
+            }
+
+            return template;
+        }
+
+        /// <summary>
+        /// Replaces a message template tokens
+        /// </summary>
+        /// <param name="productVariant">Product variant</param>
+        /// <param name="template">Template</param>
+        /// <param name="languageId">Language identifier</param>
+        /// <returns>New template</returns>
+        private string ReplaceMessageTemplateTokens(ProductVariant productVariant,
+            string template, int languageId)
+        {
+            var tokens = new NameValueCollection();
+            tokens.Add("Store.Name", IoCFactory.Resolve<ISettingManager>().StoreName);
+            tokens.Add("Store.URL", IoCFactory.Resolve<ISettingManager>().StoreUrl);
+            tokens.Add("Store.Email", this.DefaultEmailAccount.Email);
+
+            tokens.Add("ProductVariant.ID", productVariant.ProductVariantId.ToString());
+            tokens.Add("ProductVariant.FullProductName", HttpUtility.HtmlEncode(productVariant.FullProductName));
+            tokens.Add("ProductVariant.StockQuantity", productVariant.StockQuantity.ToString());
+
+            foreach (string token in tokens.Keys)
+            {
+                template = Replace(template, String.Format(@"%{0}%", token), tokens[token]);
+            }
+
+            return template;
+        }
+
+        /// <summary>
+        /// Replaces a message template tokens
+        /// </summary>
+        /// <param name="newsComment">News comment</param>
+        /// <param name="template">Template</param>
+        /// <returns>New template</returns>
+        private string ReplaceMessageTemplateTokens(NewsComment newsComment,
+            string template)
+        {
+            var tokens = new NameValueCollection();
+            tokens.Add("Store.Name", IoCFactory.Resolve<ISettingManager>().StoreName);
+            tokens.Add("Store.URL", IoCFactory.Resolve<ISettingManager>().StoreUrl);
+            tokens.Add("Store.Email", this.DefaultEmailAccount.Email);
+
+            tokens.Add("NewsComment.NewsTitle", HttpUtility.HtmlEncode(newsComment.News.Title));
+
+            foreach (string token in tokens.Keys)
+            {
+                template = Replace(template, String.Format(@"%{0}%", token), tokens[token]);
+            }
+
+            return template;
+        }
+
+        /// <summary>
+        /// Replaces a message template tokens
+        /// </summary>
+        /// <param name="blogComment">Blog comment</param>
+        /// <param name="template">Template</param>
+        /// <returns>New template</returns>
+        private string ReplaceMessageTemplateTokens(BlogComment blogComment,
+            string template)
+        {
+            var tokens = new NameValueCollection();
+            tokens.Add("Store.Name", IoCFactory.Resolve<ISettingManager>().StoreName);
+            tokens.Add("Store.URL", IoCFactory.Resolve<ISettingManager>().StoreUrl);
+            tokens.Add("Store.Email", this.DefaultEmailAccount.Email);
+
+            tokens.Add("BlogComment.BlogPostTitle", HttpUtility.HtmlEncode(blogComment.BlogPost.BlogPostTitle));
+
+            foreach (string token in tokens.Keys)
+            {
+                template = Replace(template, String.Format(@"%{0}%", token), tokens[token]);
+            }
+
+            return template;
+        }
+
+        /// <summary>
+        /// Replaces a message template tokens
+        /// </summary>
+        /// <param name="productReview">Product review</param>
+        /// <param name="template">Template</param>
+        /// <returns>New template</returns>
+        private string ReplaceMessageTemplateTokens(ProductReview productReview,
+            string template)
+        {
+            var tokens = new NameValueCollection();
+            tokens.Add("Store.Name", IoCFactory.Resolve<ISettingManager>().StoreName);
+            tokens.Add("Store.URL", IoCFactory.Resolve<ISettingManager>().StoreUrl);
+            tokens.Add("Store.Email", this.DefaultEmailAccount.Email);
+
+            tokens.Add("ProductReview.ProductName", HttpUtility.HtmlEncode(productReview.Product.Name));
+
+            foreach (string token in tokens.Keys)
+            {
+                template = Replace(template, String.Format(@"%{0}%", token), tokens[token]);
+            }
+
+            return template;
+        }
+
+        /// <summary>
+        /// Replaces a message template tokens
+        /// </summary>
+        /// <param name="privateMessage">Private message</param>
+        /// <param name="template">Template</param>
+        /// <returns>New template</returns>
+        private string ReplaceMessageTemplateTokens(PrivateMessage privateMessage,
+            string template)
+        {
+            var tokens = new NameValueCollection();
+            tokens.Add("Store.Name", IoCFactory.Resolve<ISettingManager>().StoreName);
+            tokens.Add("Store.URL", IoCFactory.Resolve<ISettingManager>().StoreUrl);
+            tokens.Add("Store.Email", this.DefaultEmailAccount.Email);
+
+            tokens.Add("PrivateMessage.Subject", HttpUtility.HtmlEncode(privateMessage.Subject));
+            tokens.Add("PrivateMessage.Text", IoCFactory.Resolve<IForumManager>().FormatPrivateMessageText(privateMessage.Text));
+
+            foreach (string token in tokens.Keys)
+            {
+                template = Replace(template, String.Format(@"%{0}%", token), tokens[token]);
+            }
+
+            return template;
+        }
+
+        /// <summary>
+        /// Replaces a message template tokens
+        /// </summary>
+        /// <param name="giftCard">Gift card</param>
+        /// <param name="template">Template</param>
+        /// <returns>New template</returns>
+        private string ReplaceMessageTemplateTokens(GiftCard giftCard,
+            string template)
+        {
+            var tokens = new NameValueCollection();
+            tokens.Add("Store.Name", IoCFactory.Resolve<ISettingManager>().StoreName);
+            tokens.Add("Store.URL", IoCFactory.Resolve<ISettingManager>().StoreUrl);
+            tokens.Add("Store.Email", this.DefaultEmailAccount.Email);
+
+            tokens.Add("GiftCard.SenderName", HttpUtility.HtmlEncode(giftCard.SenderName));
+            tokens.Add("GiftCard.SenderEmail", HttpUtility.HtmlEncode(giftCard.SenderEmail));
+            tokens.Add("GiftCard.RecipientName", HttpUtility.HtmlEncode(giftCard.RecipientName));
+            tokens.Add("GiftCard.RecipientEmail", HttpUtility.HtmlEncode(giftCard.RecipientEmail));
+            tokens.Add("GiftCard.Amount", HttpUtility.HtmlEncode(PriceHelper.FormatPrice(giftCard.Amount, true, false)));
+            tokens.Add("GiftCard.CouponCode", HttpUtility.HtmlEncode(giftCard.GiftCardCouponCode));
+            tokens.Add("GiftCard.Message", this.FormatContactUsFormText(giftCard.Message));
+
+            foreach (string token in tokens.Keys)
+            {
+                template = Replace(template, String.Format(@"%{0}%", token), tokens[token]);
+            }
+
+            return template;
+        }
+
+        /// <summary>
+        /// Replaces a message template tokens
+        /// </summary>
+        /// <param name="returnRequest">Return request</param>
+        /// <param name="template">Template</param>
+        /// <returns>New template</returns>
+        private string ReplaceMessageTemplateTokens(ReturnRequest returnRequest,
+            string template)
+        {
+            var tokens = new NameValueCollection();
+            tokens.Add("Store.Name", IoCFactory.Resolve<ISettingManager>().StoreName);
+            tokens.Add("Store.URL", IoCFactory.Resolve<ISettingManager>().StoreUrl);
+            tokens.Add("Store.Email", this.DefaultEmailAccount.Email);
+
+            tokens.Add("Customer.Email", HttpUtility.HtmlEncode(returnRequest.Customer.Email));
+            tokens.Add("Customer.FullName", HttpUtility.HtmlEncode(returnRequest.Customer.FullName));
+
+            tokens.Add("ReturnRequest.ID", returnRequest.ReturnRequestId.ToString());
+            tokens.Add("ReturnRequest.Product.Quantity", returnRequest.Quantity.ToString());
+            tokens.Add("ReturnRequest.Product.Name", HttpUtility.HtmlEncode(returnRequest.OrderProductVariant.ProductVariant.FullProductName));
+            tokens.Add("ReturnRequest.Reason", HttpUtility.HtmlEncode(returnRequest.ReasonForReturn));
+            tokens.Add("ReturnRequest.RequestedAction", HttpUtility.HtmlEncode(returnRequest.RequestedAction));
+            tokens.Add("ReturnRequest.CustomerComment", IoCFactory.Resolve<IOrderManager>().FormatReturnRequestCommentsText(returnRequest.CustomerComments));
+
+            foreach (string token in tokens.Keys)
+            {
+                template = Replace(template, String.Format(@"%{0}%", token), tokens[token]);
+            }
+
+            return template;
+        }
+
         #endregion
 
         #region Methods
@@ -374,7 +821,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// </summary>
         /// <param name="messageTemplateId">Message template identifier</param>
         /// <returns>Message template</returns>
-        public static MessageTemplate GetMessageTemplateById(int messageTemplateId)
+        public MessageTemplate GetMessageTemplateById(int messageTemplateId)
         {
             if (messageTemplateId == 0)
                 return null;
@@ -392,7 +839,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// Gets all message templates
         /// </summary>
         /// <returns>Message template collection</returns>
-        public static List<MessageTemplate> GetAllMessageTemplates()
+        public List<MessageTemplate> GetAllMessageTemplates()
         {
             var context = ObjectContextHelper.CurrentObjectContext;
             var query = from mt in context.MessageTemplates
@@ -408,7 +855,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// </summary>
         /// <param name="localizedMessageTemplateId">Localized message template identifier</param>
         /// <returns>Localized message template</returns>
-        public static LocalizedMessageTemplate GetLocalizedMessageTemplateById(int localizedMessageTemplateId)
+        public LocalizedMessageTemplate GetLocalizedMessageTemplateById(int localizedMessageTemplateId)
         {
             if (localizedMessageTemplateId == 0)
                 return null;
@@ -428,7 +875,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// <param name="name">Message template name</param>
         /// <param name="languageId">Language identifier</param>
         /// <returns>Localized message template</returns>
-        public static LocalizedMessageTemplate GetLocalizedMessageTemplate(string name, int languageId)
+        public LocalizedMessageTemplate GetLocalizedMessageTemplate(string name, int languageId)
         {
             var context = ObjectContextHelper.CurrentObjectContext;
             var query = from lmt in context.LocalizedMessageTemplates
@@ -446,7 +893,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// Deletes a localized message template
         /// </summary>
         /// <param name="localizedMessageTemplateId">Message template identifier</param>
-        public static void DeleteLocalizedMessageTemplate(int localizedMessageTemplateId)
+        public void DeleteLocalizedMessageTemplate(int localizedMessageTemplateId)
         {
             var localizedMessageTemplate = GetLocalizedMessageTemplateById(localizedMessageTemplateId);
             if (localizedMessageTemplate == null)
@@ -464,7 +911,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// </summary>
         /// <param name="messageTemplateName">Message template name</param>
         /// <returns>Localized message template collection</returns>
-        public static List<LocalizedMessageTemplate> GetAllLocalizedMessageTemplates(string messageTemplateName)
+        public List<LocalizedMessageTemplate> GetAllLocalizedMessageTemplates(string messageTemplateName)
         {
             var context = ObjectContextHelper.CurrentObjectContext;
             var query = from lmt in context.LocalizedMessageTemplates
@@ -480,7 +927,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// Inserts a localized message template
         /// </summary>
         /// <param name="localizedMessageTemplate">Localized message template</param>
-        public static void InsertLocalizedMessageTemplate(LocalizedMessageTemplate localizedMessageTemplate)
+        public void InsertLocalizedMessageTemplate(LocalizedMessageTemplate localizedMessageTemplate)
         {
             if (localizedMessageTemplate == null)
                 throw new ArgumentNullException("localizedMessageTemplate");
@@ -501,7 +948,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// Updates the localized message template
         /// </summary>
         /// <param name="localizedMessageTemplate">Localized message template</param>
-        public static void UpdateLocalizedMessageTemplate(LocalizedMessageTemplate localizedMessageTemplate)
+        public void UpdateLocalizedMessageTemplate(LocalizedMessageTemplate localizedMessageTemplate)
         {
             if (localizedMessageTemplate == null)
                 throw new ArgumentNullException("localizedMessageTemplate");
@@ -524,7 +971,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// </summary>
         /// <param name="queuedEmailId">Email item identifier</param>
         /// <returns>Email item</returns>
-        public static QueuedEmail GetQueuedEmailById(int queuedEmailId)
+        public QueuedEmail GetQueuedEmailById(int queuedEmailId)
         {
             if (queuedEmailId == 0)
                 return null;
@@ -541,7 +988,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// Deletes a queued email
         /// </summary>
         /// <param name="queuedEmailId">Email item identifier</param>
-        public static void DeleteQueuedEmail(int queuedEmailId)
+        public void DeleteQueuedEmail(int queuedEmailId)
         {
             var queuedEmail = GetQueuedEmailById(queuedEmailId);
             if (queuedEmail == null)
@@ -561,7 +1008,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// <param name="loadNotSentItemsOnly">A value indicating whether to load only not sent emails</param>
         /// <param name="maxSendTries">Maximum send tries</param>
         /// <returns>Email item collection</returns>
-        public static List<QueuedEmail> GetAllQueuedEmails(int queuedEmailCount, 
+        public List<QueuedEmail> GetAllQueuedEmails(int queuedEmailCount, 
             bool loadNotSentItemsOnly, int maxSendTries)
         {
             return GetAllQueuedEmails(string.Empty, string.Empty, null, null, 
@@ -579,7 +1026,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// <param name="loadNotSentItemsOnly">A value indicating whether to load only not sent emails</param>
         /// <param name="maxSendTries">Maximum send tries</param>
         /// <returns>Email item collection</returns>
-        public static List<QueuedEmail> GetAllQueuedEmails(string fromEmail,
+        public List<QueuedEmail> GetAllQueuedEmails(string fromEmail,
             string toEmail, DateTime? startTime, DateTime? endTime,
             int queuedEmailCount, bool loadNotSentItemsOnly, int maxSendTries)
         {
@@ -627,7 +1074,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// <param name="sendTries">The send tries</param>
         /// <param name="sentOn">The sent date and time. Null if email is not sent yet</param>
         /// <returns>Queued email</returns>
-        public static QueuedEmail InsertQueuedEmail(int priority, MailAddress from,
+        public QueuedEmail InsertQueuedEmail(int priority, MailAddress from,
             MailAddress to, string cc, string bcc,
             string subject, string body, DateTime createdOn, int sendTries,
             DateTime? sentOn, int emailAccountId)
@@ -653,7 +1100,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// <param name="sendTries">The send tries</param>
         /// <param name="sentOn">The sent date and time. Null if email is not sent yet</param>
         /// <returns>Queued email</returns>
-        public static QueuedEmail InsertQueuedEmail(int priority, string from,
+        public QueuedEmail InsertQueuedEmail(int priority, string from,
             string fromName, string to, string toName, string cc, string bcc,
             string subject, string body, DateTime createdOn, int sendTries,
             DateTime? sentOn, int emailAccountId)
@@ -701,7 +1148,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// Updates a queued email
         /// </summary>
         /// <param name="queuedEmail">Queued email</param>
-        public static void UpdateQueuedEmail(QueuedEmail queuedEmail)
+        public void UpdateQueuedEmail(QueuedEmail queuedEmail)
         {
             if (queuedEmail == null)
                 throw new ArgumentNullException("queuedEmail");
@@ -733,7 +1180,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// Inserts the new newsletter subscription
         /// </summary>
         /// <param name="newsLetterSubscription">NewsLetterSubscription entity</param>
-        public static void InsertNewsLetterSubscription(NewsLetterSubscription newsLetterSubscription)
+        public void InsertNewsLetterSubscription(NewsLetterSubscription newsLetterSubscription)
         {
             if (newsLetterSubscription == null)
                 throw new ArgumentNullException("newsLetterSubscription");
@@ -758,7 +1205,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// </summary>
         /// <param name="newsLetterSubscriptionId">The newsletter subscription identifier</param>
         /// <returns>NewsLetterSubscription entity</returns>
-        public static NewsLetterSubscription GetNewsLetterSubscriptionById(int newsLetterSubscriptionId)
+        public NewsLetterSubscription GetNewsLetterSubscriptionById(int newsLetterSubscriptionId)
         {
             var context = ObjectContextHelper.CurrentObjectContext;
             var query = from n in context.NewsLetterSubscriptions
@@ -774,7 +1221,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// </summary>
         /// <param name="newsLetterSubscriptionGuid">The newsletter subscription GUID</param>
         /// <returns>NewsLetterSubscription entity</returns>
-        public static NewsLetterSubscription GetNewsLetterSubscriptionByGuid(Guid newsLetterSubscriptionGuid)
+        public NewsLetterSubscription GetNewsLetterSubscriptionByGuid(Guid newsLetterSubscriptionGuid)
         {
             if(newsLetterSubscriptionGuid == null || newsLetterSubscriptionGuid == Guid.Empty)
             {
@@ -796,7 +1243,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// </summary>
         /// <param name="email">The Email</param>
         /// <returns>NewsLetterSubscription entity</returns>
-        public static NewsLetterSubscription GetNewsLetterSubscriptionByEmail(string email)
+        public NewsLetterSubscription GetNewsLetterSubscriptionByEmail(string email)
         {
             if(!CommonHelper.IsValidEmail(email))
             {
@@ -821,7 +1268,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// <param name="email">E,ail to search or string.Empty to load all records</param>
         /// <param name="showHidden">A value indicating whether the not active subscriptions should be loaded</param>
         /// <returns>NewsLetterSubscription entity collection</returns>
-        public static List<NewsLetterSubscription> GetAllNewsLetterSubscriptions(string email, bool showHidden)
+        public List<NewsLetterSubscription> GetAllNewsLetterSubscriptions(string email, bool showHidden)
         {
             var context = ObjectContextHelper.CurrentObjectContext;
             var newsletterSubscriptions = context.Sp_NewsLetterSubscriptionLoadAll(email, showHidden);
@@ -833,7 +1280,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// Updates the newsletter subscription
         /// </summary>
         /// <param name="newsLetterSubscription">NewsLetterSubscription entity</param>
-        public static void UpdateNewsLetterSubscription(NewsLetterSubscription newsLetterSubscription)
+        public void UpdateNewsLetterSubscription(NewsLetterSubscription newsLetterSubscription)
         {
             if (newsLetterSubscription == null)
                 throw new ArgumentNullException("newsLetterSubscription");
@@ -858,7 +1305,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// Deletes the newsletter subscription
         /// </summary>
         /// <param name="newsLetterSubscriptionId">The newsletter subscription identifier</param>
-        public static void DeleteNewsLetterSubscription(int newsLetterSubscriptionId)
+        public void DeleteNewsLetterSubscription(int newsLetterSubscriptionId)
         {
             var newsLetterSubscription = GetNewsLetterSubscriptionById(newsLetterSubscriptionId);
             if (newsLetterSubscription == null)
@@ -876,7 +1323,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// </summary>
         /// <param name="emailAccountId">The email account identifier</param>
         /// <returns>Email account</returns>
-        public static EmailAccount GetEmailAccountById(int emailAccountId)
+        public EmailAccount GetEmailAccountById(int emailAccountId)
         {
             if (emailAccountId == 0)
                 return null;
@@ -893,7 +1340,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// Deletes the email account
         /// </summary>
         /// <param name="emailAccountId">The email account identifier</param>
-        public static void DeleteEmailAccount(int emailAccountId)
+        public void DeleteEmailAccount(int emailAccountId)
         {
             var emailAccount = GetEmailAccountById(emailAccountId);
             if (emailAccount == null)
@@ -913,7 +1360,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// Inserts an email account
         /// </summary>
         /// <param name="emailAccount">Email account</param>
-        public static void InsertEmailAccount(EmailAccount emailAccount)
+        public void InsertEmailAccount(EmailAccount emailAccount)
         {
             if (emailAccount == null)
                 throw new ArgumentNullException("emailAccount");
@@ -946,7 +1393,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// Updates an email account
         /// </summary>
         /// <param name="emailAccount">Email account</param>
-        public static void UpdateEmailAccount(EmailAccount emailAccount)
+        public void UpdateEmailAccount(EmailAccount emailAccount)
         {
             if (emailAccount == null)
                 throw new ArgumentNullException("emailAccount");
@@ -980,7 +1427,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// Gets all email accounts
         /// </summary>
         /// <returns>Email accounts</returns>
-        public static List<EmailAccount> GetAllEmailAccounts()
+        public List<EmailAccount> GetAllEmailAccounts()
         {
             var context = ObjectContextHelper.CurrentObjectContext;
             var query = from ea in context.EmailAccounts
@@ -1002,13 +1449,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// <param name="order">Order instance</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public static int SendOrderCompletedCustomerNotification(Order order, int languageId)
+        public int SendOrderCompletedCustomerNotification(Order order, int languageId)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
 
             string templateName = "OrderCompleted.CustomerNotification";
-            LocalizedMessageTemplate localizedMessageTemplate = MessageManager.GetLocalizedMessageTemplate(templateName, languageId);
+            LocalizedMessageTemplate localizedMessageTemplate = this.GetLocalizedMessageTemplate(templateName, languageId);
             if(localizedMessageTemplate == null || !localizedMessageTemplate.IsActive)
                 return 0;
                 
@@ -1030,14 +1477,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// <param name="order">Order instance</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public static int SendOrderPlacedStoreOwnerNotification(Order order, int languageId)
+        public int SendOrderPlacedStoreOwnerNotification(Order order, int languageId)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
 
 
             string templateName = "OrderPlaced.StoreOwnerNotification";
-            LocalizedMessageTemplate localizedMessageTemplate = MessageManager.GetLocalizedMessageTemplate(templateName, languageId);
+            LocalizedMessageTemplate localizedMessageTemplate = this.GetLocalizedMessageTemplate(templateName, languageId);
             if(localizedMessageTemplate == null || !localizedMessageTemplate.IsActive)
                 return 0;
 
@@ -1059,13 +1506,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// <param name="productVariant">Product variant</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public static int SendQuantityBelowStoreOwnerNotification(ProductVariant productVariant, int languageId)
+        public int SendQuantityBelowStoreOwnerNotification(ProductVariant productVariant, int languageId)
         {
             if (productVariant == null)
                 throw new ArgumentNullException("productVariant");
 
             string templateName = "QuantityBelow.StoreOwnerNotification";
-            LocalizedMessageTemplate localizedMessageTemplate = MessageManager.GetLocalizedMessageTemplate(templateName, languageId);
+            LocalizedMessageTemplate localizedMessageTemplate = this.GetLocalizedMessageTemplate(templateName, languageId);
             if(localizedMessageTemplate == null || !localizedMessageTemplate.IsActive)
                 return 0;
 
@@ -1087,13 +1534,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// <param name="order">Order instance</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public static int SendOrderPlacedCustomerNotification(Order order, int languageId)
+        public int SendOrderPlacedCustomerNotification(Order order, int languageId)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
 
             string templateName = "OrderPlaced.CustomerNotification";
-            LocalizedMessageTemplate localizedMessageTemplate = MessageManager.GetLocalizedMessageTemplate(templateName, languageId);
+            LocalizedMessageTemplate localizedMessageTemplate = this.GetLocalizedMessageTemplate(templateName, languageId);
             if(localizedMessageTemplate == null || !localizedMessageTemplate.IsActive)
                 return 0;
 
@@ -1115,13 +1562,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// <param name="order">Order instance</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public static int SendOrderShippedCustomerNotification(Order order, int languageId)
+        public int SendOrderShippedCustomerNotification(Order order, int languageId)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
 
             string templateName = "OrderShipped.CustomerNotification";
-            LocalizedMessageTemplate localizedMessageTemplate = MessageManager.GetLocalizedMessageTemplate(templateName, languageId);
+            LocalizedMessageTemplate localizedMessageTemplate = this.GetLocalizedMessageTemplate(templateName, languageId);
             if(localizedMessageTemplate == null || !localizedMessageTemplate.IsActive)
                 return 0;
 
@@ -1143,13 +1590,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// <param name="order">Order instance</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public static int SendOrderDeliveredCustomerNotification(Order order, int languageId)
+        public int SendOrderDeliveredCustomerNotification(Order order, int languageId)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
 
             string templateName = "OrderDelivered.CustomerNotification";
-            LocalizedMessageTemplate localizedMessageTemplate = MessageManager.GetLocalizedMessageTemplate(templateName, languageId);
+            LocalizedMessageTemplate localizedMessageTemplate = this.GetLocalizedMessageTemplate(templateName, languageId);
             if (localizedMessageTemplate == null || !localizedMessageTemplate.IsActive)
                 return 0;
 
@@ -1171,13 +1618,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// <param name="order">Order instance</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public static int SendOrderCancelledCustomerNotification(Order order, int languageId)
+        public int SendOrderCancelledCustomerNotification(Order order, int languageId)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
 
             string templateName = "OrderCancelled.CustomerNotification";
-            var localizedMessageTemplate = MessageManager.GetLocalizedMessageTemplate(templateName, languageId);
+            var localizedMessageTemplate = this.GetLocalizedMessageTemplate(templateName, languageId);
             if(localizedMessageTemplate == null || !localizedMessageTemplate.IsActive)
                 return 0;
 
@@ -1199,14 +1646,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// <param name="customer">Customer instance</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public static int SendCustomerWelcomeMessage(Customer customer, int languageId)
+        public int SendCustomerWelcomeMessage(Customer customer, int languageId)
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");
 
 
             string templateName = "Customer.WelcomeMessage";
-            var localizedMessageTemplate = MessageManager.GetLocalizedMessageTemplate(templateName, languageId);
+            var localizedMessageTemplate = this.GetLocalizedMessageTemplate(templateName, languageId);
             if(localizedMessageTemplate == null || !localizedMessageTemplate.IsActive)
                 return 0;
 
@@ -1228,14 +1675,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// <param name="customer">Customer instance</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public static int SendCustomerEmailValidationMessage(Customer customer, int languageId)
+        public int SendCustomerEmailValidationMessage(Customer customer, int languageId)
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");
 
 
             string templateName = "Customer.EmailValidationMessage";
-            var localizedMessageTemplate = MessageManager.GetLocalizedMessageTemplate(templateName, languageId);
+            var localizedMessageTemplate = this.GetLocalizedMessageTemplate(templateName, languageId);
             if(localizedMessageTemplate == null || !localizedMessageTemplate.IsActive)
                 return 0;
 
@@ -1257,13 +1704,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// <param name="customer">Customer instance</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public static int SendCustomerPasswordRecoveryMessage(Customer customer, int languageId)
+        public int SendCustomerPasswordRecoveryMessage(Customer customer, int languageId)
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");
 
             string templateName = "Customer.PasswordRecovery";
-            var localizedMessageTemplate = MessageManager.GetLocalizedMessageTemplate(templateName, languageId);
+            var localizedMessageTemplate = this.GetLocalizedMessageTemplate(templateName, languageId);
             if(localizedMessageTemplate == null || !localizedMessageTemplate.IsActive)
                 return 0;
 
@@ -1285,13 +1732,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// <param name="customer">Customer instance</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public static int SendNewCustomerNotificationMessage(Customer customer, int languageId)
+        public int SendNewCustomerNotificationMessage(Customer customer, int languageId)
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");
 
             string templateName = "NewCustomer.Notification";
-            var localizedMessageTemplate = MessageManager.GetLocalizedMessageTemplate(templateName, languageId);
+            var localizedMessageTemplate = this.GetLocalizedMessageTemplate(templateName, languageId);
             if (localizedMessageTemplate == null || !localizedMessageTemplate.IsActive)
                 return 0;
 
@@ -1315,14 +1762,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// <param name="vatAddress">Received VAT address</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public static int SendNewVATSubmittedStoreOwnerNotification(Customer customer, 
+        public int SendNewVATSubmittedStoreOwnerNotification(Customer customer, 
             string vatName, string vatAddress, int languageId)
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");
 
             string templateName = "NewVATSubmitted.StoreOwnerNotification";
-            LocalizedMessageTemplate localizedMessageTemplate = MessageManager.GetLocalizedMessageTemplate(templateName, languageId);
+            LocalizedMessageTemplate localizedMessageTemplate = this.GetLocalizedMessageTemplate(templateName, languageId);
             if (localizedMessageTemplate == null || !localizedMessageTemplate.IsActive)
                 return 0;
 
@@ -1349,7 +1796,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// <param name="friendsEmail">Friend's email</param>
         /// <param name="personalMessage">Personal message</param>
         /// <returns>Queued email identifier</returns>
-        public static int SendProductEmailAFriendMessage(Customer customer, int languageId, 
+        public int SendProductEmailAFriendMessage(Customer customer, int languageId, 
             Product product, string friendsEmail, string personalMessage)
         {
             if (customer == null)
@@ -1358,7 +1805,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
                 throw new ArgumentNullException("product");
 
             string templateName = "Service.EmailAFriend";
-            var localizedMessageTemplate = MessageManager.GetLocalizedMessageTemplate(templateName, languageId);
+            var localizedMessageTemplate = this.GetLocalizedMessageTemplate(templateName, languageId);
             if(localizedMessageTemplate == null || !localizedMessageTemplate.IsActive)
                 return 0;
 
@@ -1385,7 +1832,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// <param name="friendsEmail">Friend's email</param>
         /// <param name="personalMessage">Personal message</param>
         /// <returns>Queued email identifier</returns>
-        public static int SendWishlistEmailAFriendMessage(Customer customer, 
+        public int SendWishlistEmailAFriendMessage(Customer customer, 
             ShoppingCart cart, int languageId,
             string friendsEmail, string personalMessage)
         {
@@ -1395,7 +1842,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
                 throw new ArgumentNullException("cart");
 
             string templateName = "Wishlist.EmailAFriend";
-            var localizedMessageTemplate = MessageManager.GetLocalizedMessageTemplate(templateName, languageId);
+            var localizedMessageTemplate = this.GetLocalizedMessageTemplate(templateName, languageId);
             if (localizedMessageTemplate == null || !localizedMessageTemplate.IsActive)
                 return 0;
 
@@ -1421,14 +1868,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// <param name="forum">Forum</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public static int SendNewForumTopicMessage(Customer customer, 
+        public int SendNewForumTopicMessage(Customer customer, 
             ForumTopic forumTopic, Forum forum, int languageId)
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");
 
             string templateName = "Forums.NewForumTopic";
-            var localizedMessageTemplate = MessageManager.GetLocalizedMessageTemplate(templateName, languageId);
+            var localizedMessageTemplate = this.GetLocalizedMessageTemplate(templateName, languageId);
             if(localizedMessageTemplate == null || !localizedMessageTemplate.IsActive)
                 return 0;
 
@@ -1453,7 +1900,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// <param name="forum">Forum</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public static int SendNewForumPostMessage(Customer customer,
+        public int SendNewForumPostMessage(Customer customer,
             ForumPost forumPost, ForumTopic forumTopic, 
             Forum forum, int languageId)
         {
@@ -1461,7 +1908,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
                 throw new ArgumentNullException("customer");
 
             string templateName = "Forums.NewForumPost";
-            LocalizedMessageTemplate localizedMessageTemplate = MessageManager.GetLocalizedMessageTemplate(templateName, languageId);
+            LocalizedMessageTemplate localizedMessageTemplate = this.GetLocalizedMessageTemplate(templateName, languageId);
             if(localizedMessageTemplate == null || !localizedMessageTemplate.IsActive)
                 return 0;
 
@@ -1483,13 +1930,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// <param name="newsComment">News comment</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public static int SendNewsCommentNotificationMessage(NewsComment newsComment, int languageId)
+        public int SendNewsCommentNotificationMessage(NewsComment newsComment, int languageId)
         {
             if (newsComment == null)
                 throw new ArgumentNullException("newsComment");
 
             string templateName = "News.NewsComment";
-            var localizedMessageTemplate = MessageManager.GetLocalizedMessageTemplate(templateName, languageId);
+            var localizedMessageTemplate = this.GetLocalizedMessageTemplate(templateName, languageId);
             if(localizedMessageTemplate == null || !localizedMessageTemplate.IsActive)
                 return 0;
 
@@ -1511,13 +1958,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// <param name="blogComment">Blog comment</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public static int SendBlogCommentNotificationMessage(BlogComment blogComment, int languageId)
+        public int SendBlogCommentNotificationMessage(BlogComment blogComment, int languageId)
         {
             if (blogComment == null)
                 throw new ArgumentNullException("blogComment");
 
             string templateName = "Blog.BlogComment";
-            var localizedMessageTemplate = MessageManager.GetLocalizedMessageTemplate(templateName, languageId);
+            var localizedMessageTemplate = this.GetLocalizedMessageTemplate(templateName, languageId);
             if(localizedMessageTemplate == null || !localizedMessageTemplate.IsActive)
                 return 0;
 
@@ -1539,14 +1986,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// <param name="productReview">Product review</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public static int SendProductReviewNotificationMessage(ProductReview productReview,
+        public int SendProductReviewNotificationMessage(ProductReview productReview,
             int languageId)
         {
             if (productReview == null)
                 throw new ArgumentNullException("productReview");
 
             string templateName = "Product.ProductReview";
-            var localizedMessageTemplate = MessageManager.GetLocalizedMessageTemplate(templateName, languageId);
+            var localizedMessageTemplate = this.GetLocalizedMessageTemplate(templateName, languageId);
             if(localizedMessageTemplate == null || !localizedMessageTemplate.IsActive)
                 return 0;
 
@@ -1568,10 +2015,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// <param name="newsLetterSubscriptionId">Newsletter subscription identifier</param>
         /// <param name="languageId">Language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public static int SendNewsLetterSubscriptionActivationMessage(int newsLetterSubscriptionId,
+        public int SendNewsLetterSubscriptionActivationMessage(int newsLetterSubscriptionId,
             int languageId)
         {
-            var localizedMessageTemplate = MessageManager.GetLocalizedMessageTemplate("NewsLetterSubscription.ActivationMessage", languageId);
+            var localizedMessageTemplate = this.GetLocalizedMessageTemplate("NewsLetterSubscription.ActivationMessage", languageId);
             var subscription = GetNewsLetterSubscriptionById(newsLetterSubscriptionId);
 
             if(localizedMessageTemplate == null || !localizedMessageTemplate.IsActive || subscription == null)
@@ -1599,10 +2046,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// <param name="newsLetterSubscriptionId">Newsletter subscription identifier</param>
         /// <param name="languageId">Language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public static int SendNewsLetterSubscriptionDeactivationMessage(int newsLetterSubscriptionId, 
+        public int SendNewsLetterSubscriptionDeactivationMessage(int newsLetterSubscriptionId, 
             int languageId)
         {
-            var localizedMessageTemplate = MessageManager.GetLocalizedMessageTemplate("NewsLetterSubscription.DeactivationMessage", languageId);
+            var localizedMessageTemplate = this.GetLocalizedMessageTemplate("NewsLetterSubscription.DeactivationMessage", languageId);
             var subscription = GetNewsLetterSubscriptionById(newsLetterSubscriptionId);
 
             if(localizedMessageTemplate == null || !localizedMessageTemplate.IsActive || subscription == null)
@@ -1630,13 +2077,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// <param name="giftCard">Gift card</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public static int SendGiftCardNotification(GiftCard giftCard, int languageId)
+        public int SendGiftCardNotification(GiftCard giftCard, int languageId)
         {
             if (giftCard == null)
                 throw new ArgumentNullException("giftCard");
 
             string templateName = "GiftCard.Notification";
-            var localizedMessageTemplate = MessageManager.GetLocalizedMessageTemplate(templateName, languageId);
+            var localizedMessageTemplate = this.GetLocalizedMessageTemplate(templateName, languageId);
             if(localizedMessageTemplate == null || !localizedMessageTemplate.IsActive)
                 return 0;
 
@@ -1658,13 +2105,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// <param name="privateMessage">Private message</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public static int SendPrivateMessageNotification(PrivateMessage privateMessage, int languageId)
+        public int SendPrivateMessageNotification(PrivateMessage privateMessage, int languageId)
         {
             if (privateMessage == null)
                 throw new ArgumentNullException("privateMessage");
 
             string templateName = "Customer.NewPM";
-            var localizedMessageTemplate = MessageManager.GetLocalizedMessageTemplate(templateName, languageId);
+            var localizedMessageTemplate = this.GetLocalizedMessageTemplate(templateName, languageId);
             if (localizedMessageTemplate == null || !localizedMessageTemplate.IsActive)
                 return 0;
 
@@ -1691,13 +2138,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// <param name="returnRequest">Return request</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public static int SendNewReturnRequestStoreOwnerNotification(ReturnRequest returnRequest, int languageId)
+        public int SendNewReturnRequestStoreOwnerNotification(ReturnRequest returnRequest, int languageId)
         {
             if (returnRequest == null)
                 throw new ArgumentNullException("returnRequest");
 
             string templateName = "NewReturnRequest.StoreOwnerNotification";
-            var localizedMessageTemplate = MessageManager.GetLocalizedMessageTemplate(templateName, languageId);
+            var localizedMessageTemplate = this.GetLocalizedMessageTemplate(templateName, languageId);
             if (localizedMessageTemplate == null || !localizedMessageTemplate.IsActive)
                 return 0;
 
@@ -1719,7 +2166,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// <param name="returnRequest">Return request</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public static int SendReturnRequestStatusChangedCustomerNotification(ReturnRequest returnRequest, int languageId)
+        public int SendReturnRequestStatusChangedCustomerNotification(ReturnRequest returnRequest, int languageId)
         {
             if (returnRequest == null)
                 throw new ArgumentNullException("returnRequest");
@@ -1728,7 +2175,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
                 throw new NopException("Customer of return request could not be loaded");
 
             string templateName = "ReturnRequestStatusChanged.CustomerNotification";
-            var localizedMessageTemplate = MessageManager.GetLocalizedMessageTemplate(templateName, languageId);
+            var localizedMessageTemplate = this.GetLocalizedMessageTemplate(templateName, languageId);
             if (localizedMessageTemplate == null || !localizedMessageTemplate.IsActive)
                 return 0;
 
@@ -1748,7 +2195,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// Gets list of allowed (supported) message tokens
         /// </summary>
         /// <returns></returns>
-        public static string[] GetListOfAllowedTokens()
+        public string[] GetListOfAllowedTokens()
         {
             var allowedTokens = new List<string>();
 
@@ -1850,7 +2297,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// Gets list of allowed (supported) message tokens for campaigns
         /// </summary>
         /// <returns>List of allowed (supported) message tokens for campaigns</returns>
-        public static string[] GetListOfCampaignAllowedTokens()
+        public string[] GetListOfCampaignAllowedTokens()
         {
             var allowedTokens = new List<string>();
             allowedTokens.Add("%Store.Name%");
@@ -1865,94 +2312,20 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// <summary>
         /// Replaces a message template tokens
         /// </summary>
-        /// <param name="order">Order instance</param>
-        /// <param name="template">Template</param>
-        /// <param name="languageId">Language identifier</param>
-        /// <returns>New template</returns>
-        public static string ReplaceMessageTemplateTokens(Order order, 
-            string template, int languageId)
-        {
-            var tokens = new NameValueCollection();
-            tokens.Add("Store.Name", SettingManager.StoreName);
-            tokens.Add("Store.URL", SettingManager.StoreUrl);
-            tokens.Add("Store.Email", MessageManager.DefaultEmailAccount.Email);
-
-            tokens.Add("Order.OrderNumber", order.OrderId.ToString());
-            
-            tokens.Add("Order.CustomerFullName", HttpUtility.HtmlEncode(order.BillingFullName));
-            tokens.Add("Order.CustomerEmail", HttpUtility.HtmlEncode(order.BillingEmail));
-
-
-            tokens.Add("Order.BillingFirstName", HttpUtility.HtmlEncode(order.BillingFirstName));
-            tokens.Add("Order.BillingLastName", HttpUtility.HtmlEncode(order.BillingLastName));
-            tokens.Add("Order.BillingPhoneNumber", HttpUtility.HtmlEncode(order.BillingPhoneNumber));
-            tokens.Add("Order.BillingEmail", HttpUtility.HtmlEncode(order.BillingEmail.ToString()));
-            tokens.Add("Order.BillingFaxNumber", HttpUtility.HtmlEncode(order.BillingFaxNumber));
-            tokens.Add("Order.BillingCompany", HttpUtility.HtmlEncode(order.BillingCompany));
-            tokens.Add("Order.BillingAddress1", HttpUtility.HtmlEncode(order.BillingAddress1));
-            tokens.Add("Order.BillingAddress2", HttpUtility.HtmlEncode(order.BillingAddress2));
-            tokens.Add("Order.BillingCity", HttpUtility.HtmlEncode(order.BillingCity));
-            tokens.Add("Order.BillingStateProvince", HttpUtility.HtmlEncode(order.BillingStateProvince));
-            tokens.Add("Order.BillingZipPostalCode", HttpUtility.HtmlEncode(order.BillingZipPostalCode));
-            tokens.Add("Order.BillingCountry", HttpUtility.HtmlEncode(order.BillingCountry));
-
-            tokens.Add("Order.ShippingMethod", HttpUtility.HtmlEncode(order.ShippingMethod));
-
-            tokens.Add("Order.ShippingFirstName", HttpUtility.HtmlEncode(order.ShippingFirstName));
-            tokens.Add("Order.ShippingLastName", HttpUtility.HtmlEncode(order.ShippingLastName));
-            tokens.Add("Order.ShippingPhoneNumber", HttpUtility.HtmlEncode(order.ShippingPhoneNumber));
-            tokens.Add("Order.ShippingEmail", HttpUtility.HtmlEncode(order.ShippingEmail.ToString()));
-            tokens.Add("Order.ShippingFaxNumber", HttpUtility.HtmlEncode(order.ShippingFaxNumber));
-            tokens.Add("Order.ShippingCompany", HttpUtility.HtmlEncode(order.ShippingCompany));
-            tokens.Add("Order.ShippingAddress1", HttpUtility.HtmlEncode(order.ShippingAddress1));
-            tokens.Add("Order.ShippingAddress2", HttpUtility.HtmlEncode(order.ShippingAddress2));
-            tokens.Add("Order.ShippingCity", HttpUtility.HtmlEncode(order.ShippingCity));
-            tokens.Add("Order.ShippingStateProvince", HttpUtility.HtmlEncode(order.ShippingStateProvince));
-            tokens.Add("Order.ShippingZipPostalCode", HttpUtility.HtmlEncode(order.ShippingZipPostalCode));
-            tokens.Add("Order.ShippingCountry", HttpUtility.HtmlEncode(order.ShippingCountry));
-
-            tokens.Add("Order.TrackingNumber", HttpUtility.HtmlEncode(order.TrackingNumber));
-            tokens.Add("Order.VatNumber", HttpUtility.HtmlEncode(order.VatNumber));
-            
-            tokens.Add("Order.Product(s)", ProductListToHtmlTable(order, languageId));
-
-            var language = LanguageManager.GetLanguageById(languageId);
-            if (language != null && !String.IsNullOrEmpty(language.LanguageCulture))
-            {
-                DateTime createdOn = DateTimeHelper.ConvertToUserTime(order.CreatedOn, TimeZoneInfo.Utc, DateTimeHelper.GetCustomerTimeZone(order.Customer));
-                tokens.Add("Order.CreatedOn", createdOn.ToString("D", new CultureInfo(language.LanguageCulture)));
-            }
-            else
-            {
-                tokens.Add("Order.CreatedOn", order.CreatedOn.ToString("D"));
-            }
-            tokens.Add("Order.OrderURLForCustomer", string.Format("{0}orderdetails.aspx?orderid={1}", SettingManager.StoreUrl, order.OrderId));
-
-            foreach(string token in tokens.Keys)
-            {
-                template = Replace(template, String.Format(@"%{0}%", token), tokens[token]);
-            }
-
-            return template;
-        }
-
-        /// <summary>
-        /// Replaces a message template tokens
-        /// </summary>
         /// <param name="subscription">Subscription</param>
         /// <param name="template">Template</param>
         /// <returns>New template</returns>
-        public static string ReplaceMessageTemplateTokens(NewsLetterSubscription subscription, 
+        public string ReplaceMessageTemplateTokens(NewsLetterSubscription subscription, 
             string template)
         {
             var tokens = new NameValueCollection();
 
-            tokens.Add("Store.Name", SettingManager.StoreName);
-            tokens.Add("Store.URL", SettingManager.StoreUrl);
-            tokens.Add("Store.Email", MessageManager.DefaultEmailAccount.Email);
+            tokens.Add("Store.Name", IoCFactory.Resolve<ISettingManager>().StoreName);
+            tokens.Add("Store.URL", IoCFactory.Resolve<ISettingManager>().StoreUrl);
+            tokens.Add("Store.Email", this.DefaultEmailAccount.Email);
             tokens.Add("NewsLetterSubscription.Email", HttpUtility.HtmlEncode(subscription.Email));
-            tokens.Add("NewsLetterSubscription.ActivationUrl", String.Format("{0}newslettersubscriptionactivation.aspx?t={1}&active=1", SettingManager.StoreUrl, subscription.NewsLetterSubscriptionGuid));
-            tokens.Add("NewsLetterSubscription.DeactivationUrl", String.Format("{0}newslettersubscriptionactivation.aspx?t={1}&active=0", SettingManager.StoreUrl, subscription.NewsLetterSubscriptionGuid));
+            tokens.Add("NewsLetterSubscription.ActivationUrl", String.Format("{0}newslettersubscriptionactivation.aspx?t={1}&active=1", IoCFactory.Resolve<ISettingManager>().StoreUrl, subscription.NewsLetterSubscriptionGuid));
+            tokens.Add("NewsLetterSubscription.DeactivationUrl", String.Format("{0}newslettersubscriptionactivation.aspx?t={1}&active=0", IoCFactory.Resolve<ISettingManager>().StoreUrl, subscription.NewsLetterSubscriptionGuid));
 
             var customer = subscription.Customer;
             if(customer != null)
@@ -1969,378 +2342,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         }
 
         /// <summary>
-        /// Replaces a message template tokens
-        /// </summary>
-        /// <param name="customer">Customer instance</param>
-        /// <param name="template">Template</param>
-        /// <returns>New template</returns>
-        public static string ReplaceMessageTemplateTokens(Customer customer, 
-            string template)
-        {
-            return ReplaceMessageTemplateTokens(customer, template, null);
-        }
-
-        /// <summary>
-        /// Replaces a message template tokens
-        /// </summary>
-        /// <param name="customer">Customer instance</param>
-        /// <param name="template">Template</param>
-        /// <param name="additinalKeys">Additinal keys</param>
-        /// <returns>New template</returns>
-        public static string ReplaceMessageTemplateTokens(Customer customer,
-            string template, NameValueCollection additinalKeys)
-        {
-            var tokens = new NameValueCollection();
-            tokens.Add("Store.Name", SettingManager.StoreName);
-            tokens.Add("Store.URL", SettingManager.StoreUrl);
-            tokens.Add("Store.Email", MessageManager.DefaultEmailAccount.Email);
-
-            tokens.Add("Customer.Email", HttpUtility.HtmlEncode(customer.Email));
-            tokens.Add("Customer.Username", HttpUtility.HtmlEncode(customer.Username));
-            tokens.Add("Customer.FullName", HttpUtility.HtmlEncode(customer.FullName));
-            tokens.Add("Customer.VatNumber", HttpUtility.HtmlEncode(customer.VatNumber));
-            tokens.Add("Customer.VatNumberStatus", HttpUtility.HtmlEncode(customer.VatNumberStatus.ToString()));
-
-            string passwordRecoveryUrl = string.Empty;
-            passwordRecoveryUrl = string.Format("{0}passwordrecovery.aspx?prt={1}&email={2}", SettingManager.StoreUrl, customer.PasswordRecoveryToken, customer.Email);
-            tokens.Add("Customer.PasswordRecoveryURL", passwordRecoveryUrl);
-
-            string accountActivationUrl = string.Empty;
-            accountActivationUrl = string.Format("{0}accountactivation.aspx?act={1}&email={2}", SettingManager.StoreUrl, customer.AccountActivationToken, customer.Email);
-            tokens.Add("Customer.AccountActivationURL", accountActivationUrl);
-
-            foreach (string token in tokens.Keys)
-            {
-                template = Replace(template, String.Format(@"%{0}%", token), tokens[token]);
-            }
-            
-            if (additinalKeys != null)
-            {
-                foreach (string token in additinalKeys.Keys)
-                {
-                    template = Replace(template, String.Format(@"%{0}%", token), additinalKeys[token]);
-                }
-            }
-
-            return template;
-        }
-
-        /// <summary>
-        /// Replaces a message template tokens
-        /// </summary>
-        /// <param name="customer">Customer instance</param>
-        /// <param name="product">Product instance</param>
-        /// <param name="template">Template</param>
-        /// <param name="additinalKeys">Additinal keys</param>
-        /// <returns>New template</returns>
-        public static string ReplaceMessageTemplateTokens(Customer customer, Product product,
-            string template, NameValueCollection additinalKeys)
-        {
-            var tokens = new NameValueCollection();
-            tokens.Add("Store.Name", SettingManager.StoreName);
-            tokens.Add("Store.URL", SettingManager.StoreUrl);
-            tokens.Add("Store.Email", MessageManager.DefaultEmailAccount.Email);
-
-            tokens.Add("Customer.Email", HttpUtility.HtmlEncode(customer.Email));
-            tokens.Add("Customer.Username", HttpUtility.HtmlEncode(customer.Username));
-            tokens.Add("Customer.FullName", HttpUtility.HtmlEncode(customer.FullName));
-            tokens.Add("Customer.VatNumber", HttpUtility.HtmlEncode(customer.VatNumber));
-            tokens.Add("Customer.VatNumberStatus", HttpUtility.HtmlEncode(customer.VatNumberStatus.ToString()));
-
-            tokens.Add("Product.Name", HttpUtility.HtmlEncode(product.Name));
-            tokens.Add("Product.ShortDescription", product.ShortDescription);
-            tokens.Add("Product.ProductURLForCustomer", SEOHelper.GetProductUrl(product));
-
-            foreach(string token in tokens.Keys)
-            {
-                template = Replace(template, String.Format(@"%{0}%", token), tokens[token]);
-            }
-
-            if (additinalKeys != null)
-            {
-                foreach (string token in additinalKeys.Keys)
-                {
-                    template = Replace(template, String.Format(@"%{0}%", token), additinalKeys[token]);
-                }
-            }
-
-            return template;
-        }
-
-        /// <summary>
-        /// Replaces a message template tokens
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        /// <param name="cart">Shopping cart</param>
-        /// <param name="template">Template</param>
-        /// <param name="additinalKeys">Additinal keys</param>
-        /// <returns>New template</returns>
-        public static string ReplaceMessageTemplateTokens(Customer customer, 
-            ShoppingCart cart, string template, NameValueCollection additinalKeys)
-        {
-            var tokens = new NameValueCollection();
-            tokens.Add("Store.Name", SettingManager.StoreName);
-            tokens.Add("Store.URL", SettingManager.StoreUrl);
-            tokens.Add("Store.Email", MessageManager.DefaultEmailAccount.Email);
-
-            tokens.Add("Customer.Email", HttpUtility.HtmlEncode(customer.Email));
-            tokens.Add("Customer.Username", HttpUtility.HtmlEncode(customer.Username));
-            tokens.Add("Customer.FullName", HttpUtility.HtmlEncode(customer.FullName));
-            tokens.Add("Customer.VatNumber", HttpUtility.HtmlEncode(customer.VatNumber));
-            tokens.Add("Customer.VatNumberStatus", HttpUtility.HtmlEncode(customer.VatNumberStatus.ToString()));
-
-            tokens.Add("Wishlist.URLForCustomer", SEOHelper.GetWishlistUrl(customer.CustomerGuid));
-            //UNDONE add a wishlist content token
-
-            foreach (string token in tokens.Keys)
-            {
-                template = Replace(template, String.Format(@"%{0}%", token), tokens[token]);
-            }
-
-            if (additinalKeys != null)
-            {
-                foreach (string token in additinalKeys.Keys)
-                {
-                    template = Replace(template, String.Format(@"%{0}%", token), additinalKeys[token]);
-                }
-            }
-
-            return template;
-        }
-
-        /// <summary>
-        /// Replaces a message template tokens
-        /// </summary>
-        /// <param name="customer">Customer instance</param>
-        /// <param name="forumPost">Forum post</param>
-        /// <param name="forumTopic">Forum topic</param>
-        /// <param name="forum">Forum</param>
-        /// <param name="template">Template</param>
-        /// <returns>New template</returns>
-        public static string ReplaceMessageTemplateTokens(Customer customer,
-            ForumPost forumPost, ForumTopic forumTopic, Forum forum, string template)
-        {
-            var tokens = new NameValueCollection();
-            tokens.Add("Store.Name", SettingManager.StoreName);
-            tokens.Add("Store.URL", SettingManager.StoreUrl);
-            tokens.Add("Store.Email", MessageManager.DefaultEmailAccount.Email);
-
-            tokens.Add("Customer.Email", HttpUtility.HtmlEncode(customer.Email));
-            tokens.Add("Customer.Username", HttpUtility.HtmlEncode(customer.Username));
-            tokens.Add("Customer.FullName", HttpUtility.HtmlEncode(customer.FullName));
-            tokens.Add("Customer.VatNumber", HttpUtility.HtmlEncode(customer.VatNumber));
-            tokens.Add("Customer.VatNumberStatus", HttpUtility.HtmlEncode(customer.VatNumberStatus.ToString()));
-
-            if (forumPost != null)
-            {
-                tokens.Add("Forums.PostAuthor", HttpUtility.HtmlEncode(CustomerManager.FormatUserName(forumPost.User)));
-                tokens.Add("Forums.PostBody", ForumManager.FormatPostText(forumPost.Text));
-            }
-            if (forumTopic != null)
-            {
-                tokens.Add("Forums.TopicURL", SEOHelper.GetForumTopicUrl(forumTopic));
-                tokens.Add("Forums.TopicName", HttpUtility.HtmlEncode(forumTopic.Subject));
-            }
-            if (forum != null)
-            {
-                tokens.Add("Forums.ForumURL", SEOHelper.GetForumUrl(forum));
-                tokens.Add("Forums.ForumName", HttpUtility.HtmlEncode(forum.Name));
-            }
-            foreach(string token in tokens.Keys)
-            {
-                template = Replace(template, String.Format(@"%{0}%", token), tokens[token]);
-            }
-
-            return template;
-        }
-
-        /// <summary>
-        /// Replaces a message template tokens
-        /// </summary>
-        /// <param name="productVariant">Product variant</param>
-        /// <param name="template">Template</param>
-        /// <param name="languageId">Language identifier</param>
-        /// <returns>New template</returns>
-        public static string ReplaceMessageTemplateTokens(ProductVariant productVariant, 
-            string template, int languageId)
-        {
-            var tokens = new NameValueCollection();
-            tokens.Add("Store.Name", SettingManager.StoreName);
-            tokens.Add("Store.URL", SettingManager.StoreUrl);
-            tokens.Add("Store.Email", MessageManager.DefaultEmailAccount.Email);
-
-            tokens.Add("ProductVariant.ID", productVariant.ProductVariantId.ToString());
-            tokens.Add("ProductVariant.FullProductName", HttpUtility.HtmlEncode(productVariant.FullProductName));
-            tokens.Add("ProductVariant.StockQuantity", productVariant.StockQuantity.ToString());
-
-            foreach(string token in tokens.Keys)
-            {
-                template = Replace(template, String.Format(@"%{0}%", token), tokens[token]);
-            }
-
-            return template;
-        }
-
-        /// <summary>
-        /// Replaces a message template tokens
-        /// </summary>
-        /// <param name="newsComment">News comment</param>
-        /// <param name="template">Template</param>
-        /// <returns>New template</returns>
-        public static string ReplaceMessageTemplateTokens(NewsComment newsComment, 
-            string template)
-        {
-            var tokens = new NameValueCollection();
-            tokens.Add("Store.Name", SettingManager.StoreName);
-            tokens.Add("Store.URL", SettingManager.StoreUrl);
-            tokens.Add("Store.Email", MessageManager.DefaultEmailAccount.Email);
-
-            tokens.Add("NewsComment.NewsTitle", HttpUtility.HtmlEncode(newsComment.News.Title));
-
-            foreach(string token in tokens.Keys)
-            {
-                template = Replace(template, String.Format(@"%{0}%", token), tokens[token]);
-            }
-
-            return template;
-        }
-
-        /// <summary>
-        /// Replaces a message template tokens
-        /// </summary>
-        /// <param name="blogComment">Blog comment</param>
-        /// <param name="template">Template</param>
-        /// <returns>New template</returns>
-        public static string ReplaceMessageTemplateTokens(BlogComment blogComment,
-            string template)
-        {
-            var tokens = new NameValueCollection();
-            tokens.Add("Store.Name", SettingManager.StoreName);
-            tokens.Add("Store.URL", SettingManager.StoreUrl);
-            tokens.Add("Store.Email", MessageManager.DefaultEmailAccount.Email);
-
-            tokens.Add("BlogComment.BlogPostTitle", HttpUtility.HtmlEncode(blogComment.BlogPost.BlogPostTitle));
-
-            foreach(string token in tokens.Keys)
-            {
-                template = Replace(template, String.Format(@"%{0}%", token), tokens[token]);
-            }
-
-            return template;
-        }
-
-        /// <summary>
-        /// Replaces a message template tokens
-        /// </summary>
-        /// <param name="productReview">Product review</param>
-        /// <param name="template">Template</param>
-        /// <returns>New template</returns>
-        public static string ReplaceMessageTemplateTokens(ProductReview productReview, 
-            string template)
-        {
-            var tokens = new NameValueCollection();
-            tokens.Add("Store.Name", SettingManager.StoreName);
-            tokens.Add("Store.URL", SettingManager.StoreUrl);
-            tokens.Add("Store.Email", MessageManager.DefaultEmailAccount.Email);
-
-            tokens.Add("ProductReview.ProductName", HttpUtility.HtmlEncode(productReview.Product.Name));
-
-            foreach(string token in tokens.Keys)
-            {
-                template = Replace(template, String.Format(@"%{0}%", token), tokens[token]);
-            }
-
-            return template;
-        }
-
-        /// <summary>
-        /// Replaces a message template tokens
-        /// </summary>
-        /// <param name="privateMessage">Private message</param>
-        /// <param name="template">Template</param>
-        /// <returns>New template</returns>
-        public static string ReplaceMessageTemplateTokens(PrivateMessage privateMessage,
-            string template)
-        {
-            var tokens = new NameValueCollection();
-            tokens.Add("Store.Name", SettingManager.StoreName);
-            tokens.Add("Store.URL", SettingManager.StoreUrl);
-            tokens.Add("Store.Email", MessageManager.DefaultEmailAccount.Email);
-
-            tokens.Add("PrivateMessage.Subject", HttpUtility.HtmlEncode(privateMessage.Subject));
-            tokens.Add("PrivateMessage.Text", ForumManager.FormatPrivateMessageText(privateMessage.Text));
-
-            foreach (string token in tokens.Keys)
-            {
-                template = Replace(template, String.Format(@"%{0}%", token), tokens[token]);
-            }
-
-            return template;
-        }
-
-        /// <summary>
-        /// Replaces a message template tokens
-        /// </summary>
-        /// <param name="giftCard">Gift card</param>
-        /// <param name="template">Template</param>
-        /// <returns>New template</returns>
-        public static string ReplaceMessageTemplateTokens(GiftCard giftCard, 
-            string template)
-        {
-            var tokens = new NameValueCollection();
-            tokens.Add("Store.Name", SettingManager.StoreName);
-            tokens.Add("Store.URL", SettingManager.StoreUrl);
-            tokens.Add("Store.Email", MessageManager.DefaultEmailAccount.Email);
-
-            tokens.Add("GiftCard.SenderName", HttpUtility.HtmlEncode(giftCard.SenderName));
-            tokens.Add("GiftCard.SenderEmail", HttpUtility.HtmlEncode(giftCard.SenderEmail));
-            tokens.Add("GiftCard.RecipientName", HttpUtility.HtmlEncode(giftCard.RecipientName));
-            tokens.Add("GiftCard.RecipientEmail", HttpUtility.HtmlEncode(giftCard.RecipientEmail));
-            tokens.Add("GiftCard.Amount", HttpUtility.HtmlEncode(PriceHelper.FormatPrice(giftCard.Amount, true, false)));
-            tokens.Add("GiftCard.CouponCode", HttpUtility.HtmlEncode(giftCard.GiftCardCouponCode));
-            tokens.Add("GiftCard.Message", MessageManager.FormatContactUsFormText(giftCard.Message));
-
-            foreach(string token in tokens.Keys)
-            {
-                template = Replace(template, String.Format(@"%{0}%", token), tokens[token]);
-            }
-
-            return template;
-        }
-        
-        /// <summary>
-        /// Replaces a message template tokens
-        /// </summary>
-        /// <param name="returnRequest">Return request</param>
-        /// <param name="template">Template</param>
-        /// <returns>New template</returns>
-        public static string ReplaceMessageTemplateTokens(ReturnRequest returnRequest,
-            string template)
-        {
-            var tokens = new NameValueCollection();
-            tokens.Add("Store.Name", SettingManager.StoreName);
-            tokens.Add("Store.URL", SettingManager.StoreUrl);
-            tokens.Add("Store.Email", MessageManager.DefaultEmailAccount.Email);
-
-            tokens.Add("Customer.Email", HttpUtility.HtmlEncode(returnRequest.Customer.Email));
-            tokens.Add("Customer.FullName", HttpUtility.HtmlEncode(returnRequest.Customer.FullName));
-            
-            tokens.Add("ReturnRequest.ID", returnRequest.ReturnRequestId.ToString());
-            tokens.Add("ReturnRequest.Product.Quantity", returnRequest.Quantity.ToString());
-            tokens.Add("ReturnRequest.Product.Name", HttpUtility.HtmlEncode(returnRequest.OrderProductVariant.ProductVariant.FullProductName));
-            tokens.Add("ReturnRequest.Reason", HttpUtility.HtmlEncode(returnRequest.ReasonForReturn));
-            tokens.Add("ReturnRequest.RequestedAction", HttpUtility.HtmlEncode(returnRequest.RequestedAction));
-            tokens.Add("ReturnRequest.CustomerComment", OrderManager.FormatReturnRequestCommentsText(returnRequest.CustomerComments));
-            
-            foreach (string token in tokens.Keys)
-            {
-                template = Replace(template, String.Format(@"%{0}%", token), tokens[token]);
-            }
-
-            return template;
-        }
-
-        /// <summary>
         /// Sends an email
         /// </summary>
         /// <param name="subject">Subject</param>
@@ -2348,7 +2349,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// <param name="from">From</param>
         /// <param name="to">To</param>
         /// <param name="emailAccount">Email account to use</param>
-        public static void SendEmail(string subject, string body, string from, string to, 
+        public void SendEmail(string subject, string body, string from, string to, 
             EmailAccount emailAccount)
         {
             SendEmail(subject, body, new MailAddress(from), new MailAddress(to),
@@ -2363,7 +2364,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// <param name="from">From</param>
         /// <param name="to">To</param>
         /// <param name="emailAccount">Email account to use</param>
-        public static void SendEmail(string subject, string body, MailAddress from,
+        public void SendEmail(string subject, string body, MailAddress from,
             MailAddress to, EmailAccount emailAccount)
         {
             SendEmail(subject, body, from, to, new List<String>(), new List<String>(), emailAccount);
@@ -2379,7 +2380,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// <param name="bcc">BCC</param>
         /// <param name="cc">CC</param>
         /// <param name="emailAccount">Email account to use</param>
-        public static void SendEmail(string subject, string body,
+        public void SendEmail(string subject, string body,
             MailAddress from, MailAddress to, List<string> bcc, 
             List<string> cc, EmailAccount emailAccount)
         {
@@ -2429,7 +2430,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// </summary>
         /// <param name="text">Text</param>
         /// <returns>Formatted text</returns>
-        public static string FormatContactUsFormText(string text)
+        public string FormatContactUsFormText(string text)
         {
             if (String.IsNullOrEmpty(text))
                 return string.Empty;
@@ -2447,11 +2448,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// <summary>
         /// Gets or sets a primary store currency
         /// </summary>
-        public static EmailAccount DefaultEmailAccount
+        public EmailAccount DefaultEmailAccount
         {
             get
             {
-                int defaultEmailAccountId = SettingManager.GetSettingValueInteger("EmailAccount.DefaultEmailAccountId");
+                int defaultEmailAccountId = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("EmailAccount.DefaultEmailAccountId");
                 var emailAccount = GetEmailAccountById(defaultEmailAccountId);
                 if (emailAccount == null)
                     emailAccount = GetAllEmailAccounts().FirstOrDefault();
@@ -2461,7 +2462,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             set
             {
                 if (value != null)
-                    SettingManager.SetParam("EmailAccount.DefaultEmailAccountId", value.EmailAccountId.ToString());
+                    IoCFactory.Resolve<ISettingManager>().SetParam("EmailAccount.DefaultEmailAccountId", value.EmailAccountId.ToString());
             }
         }
 

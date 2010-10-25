@@ -24,6 +24,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.BusinessLogic.Tax;
 using NopSolutions.NopCommerce.BusinessLogic.Warehouses;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Products
 {
@@ -83,7 +84,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         {
             get
             {
-                return ProductManager.GetProductVariantById(this.ProductVariantId);
+                return IoCFactory.Resolve<IProductManager>().GetProductVariantById(this.ProductVariantId);
             }
         }
 
@@ -94,7 +95,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         {
             get
             {
-                return ProductManager.GetPricelistById(this.PricelistId);
+                return IoCFactory.Resolve<IProductManager>().GetPricelistById(this.PricelistId);
             }
         }
 

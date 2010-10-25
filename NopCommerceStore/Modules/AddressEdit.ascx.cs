@@ -29,6 +29,7 @@ using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Common;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -64,7 +65,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
         private void FillCountryDropDownsForShipping()
         {
             this.ddlCountry.Items.Clear();
-            var countryCollection = CountryManager.GetAllCountriesForShipping();
+            var countryCollection = IoCFactory.Resolve<ICountryManager>().GetAllCountriesForShipping();
             foreach (var country in countryCollection)
             {
                 var ddlCountryItem2 = new ListItem(country.Name, country.CountryId.ToString());
@@ -75,7 +76,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
         private void FillCountryDropDownsForBilling()
         {
             this.ddlCountry.Items.Clear();
-            var countryCollection = CountryManager.GetAllCountriesForBilling();
+            var countryCollection = IoCFactory.Resolve<ICountryManager>().GetAllCountriesForBilling();
             foreach (var country in countryCollection)
             {
                 var ddlCountryItem2 = new ListItem(country.Name, country.CountryId.ToString());
@@ -90,7 +91,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             if (this.ddlCountry.SelectedItem != null)
                 countryId = int.Parse(this.ddlCountry.SelectedItem.Value);
 
-            var stateProvinceCollection = StateProvinceManager.GetStateProvincesByCountryId(countryId);
+            var stateProvinceCollection = IoCFactory.Resolve<IStateProvinceManager>().GetStateProvincesByCountryId(countryId);
             foreach (var stateProvince in stateProvinceCollection)
             {
                 var ddlStateProviceItem2 = new ListItem(stateProvince.Name, stateProvince.StateProvinceId.ToString());
@@ -131,7 +132,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
                 if (this.ddlStateProvince.SelectedItem == null)
                     throw new NopException("State/Provinces are not populated");
-                var stateProvince = StateProvinceManager.GetStateProvinceById(int.Parse(this.ddlStateProvince.SelectedItem.Value));
+                var stateProvince = IoCFactory.Resolve<IStateProvinceManager>().GetStateProvinceById(int.Parse(this.ddlStateProvince.SelectedItem.Value));
                 if (stateProvince != null && stateProvince.CountryId == address.CountryId)
                     address.StateProvinceId = stateProvince.StateProvinceId;
 

@@ -13,6 +13,7 @@
 //------------------------------------------------------------------------------
 
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Payment.Methods.Dibs
 {
@@ -29,11 +30,11 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Dibs
         {
             get
             {
-                return SettingManager.GetSettingValue("PaymentMethod.Dibs.FlexWin.ColorTheme", "blue");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Dibs.FlexWin.ColorTheme", "blue");
             }
             set
             {
-                SettingManager.SetParam("PaymentMethod.Dibs.FlexWin.ColorTheme", value);
+                IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.Dibs.FlexWin.ColorTheme", value);
             }
         }
 
@@ -44,11 +45,11 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Dibs
         {
             get
             {
-                return SettingManager.GetSettingValueBoolean("PaymentMethod.Dibs.UseSandbox", true);
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.Dibs.UseSandbox", true);
             }
             set
             {
-                SettingManager.SetParam("PaymentMethod.Dibs.UseSandbox", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.Dibs.UseSandbox", value.ToString());
             }
         }
 
@@ -59,11 +60,11 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Dibs
         {
             get
             {
-                return SettingManager.GetSettingValue("PaymentMethod.Dibs.FlexWin.Decorator", "default");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Dibs.FlexWin.Decorator", "default");
             }
             set
             {
-                SettingManager.SetParam("PaymentMethod.Dibs.FlexWin.Decorator", value);
+                IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.Dibs.FlexWin.Decorator", value);
             }
         }
 
@@ -74,11 +75,11 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Dibs
         {
             get
             {
-                return SettingManager.GetSettingValue("PaymentMethod.Dibs.FlexWin.GatewayUrl", "https://payment.architrade.com/paymentweb/start.action");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Dibs.FlexWin.GatewayUrl", "https://payment.architrade.com/paymentweb/start.action");
             }
             set
             {
-                SettingManager.SetParam("PaymentMethod.Dibs.FlexWin.GatewayUrl", value);
+                IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.Dibs.FlexWin.GatewayUrl", value);
             }
         }
 
@@ -89,11 +90,11 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Dibs
         {
             get
             {
-                return SettingManager.GetSettingValue("PaymentMethod.Dibs.MD5Key1");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Dibs.MD5Key1");
             }
             set
             {
-                SettingManager.SetParam("PaymentMethod.Dibs.MD5Key1", value);
+                IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.Dibs.MD5Key1", value);
             }
         }
 
@@ -104,11 +105,11 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Dibs
         {
             get
             {
-                return SettingManager.GetSettingValue("PaymentMethod.Dibs.MD5Key2");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Dibs.MD5Key2");
             }
             set
             {
-                SettingManager.SetParam("PaymentMethod.Dibs.MD5Key2", value);
+                IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.Dibs.MD5Key2", value);
             }
         }
 
@@ -116,11 +117,11 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Dibs
         {
             get
             {
-                return SettingManager.GetSettingValueDecimalNative("PaymentMethod.Dibs.AdditionalFee");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.Dibs.AdditionalFee");
             }
             set
             {
-                SettingManager.SetParamNative("PaymentMethod.Dibs.AdditionalFee", value);
+                IoCFactory.Resolve<ISettingManager>().SetParamNative("PaymentMethod.Dibs.AdditionalFee", value);
             }
         }
         #endregion

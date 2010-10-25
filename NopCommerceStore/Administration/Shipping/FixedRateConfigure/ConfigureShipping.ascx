@@ -4,7 +4,7 @@
 <table class="adminContent">
     <tr>
         <td class="adminTitle">
-            Fixed shipping rate [<%=CurrencyManager.PrimaryStoreCurrency.CurrencyCode%>]:
+            Fixed shipping rate [<%=IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency.CurrencyCode%>]:
         </td>
         <td class="adminData">
             <nopCommerce:DecimalTextBox runat="server" ID="txtFixedRate" Value="0"

@@ -26,6 +26,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Promo.Affiliates;
 using NopSolutions.NopCommerce.BusinessLogic.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Profile
@@ -179,7 +180,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Profile
         {
             get
             {
-                string defaultTimeZoneId = SettingManager.GetSettingValue("Common.DefaultStoreTimeZoneId");
+                string defaultTimeZoneId = IoCFactory.Resolve<ISettingManager>().GetSettingValue("Common.DefaultStoreTimeZoneId");
                 TimeZoneInfo timeZoneInfo = null;
                 try
                 {
@@ -203,7 +204,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Profile
                     defaultTimeZoneId = value.Id;
                 }
 
-                SettingManager.SetParam("Common.DefaultStoreTimeZoneId", defaultTimeZoneId);
+                IoCFactory.Resolve<ISettingManager>().SetParam("Common.DefaultStoreTimeZoneId", defaultTimeZoneId);
             }
         }
 
@@ -231,7 +232,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Profile
                 var customer = NopContext.Current.User;
                 if (customer != null)
                 {
-                    customer = CustomerManager.SetTimeZoneId(customer.CustomerId, timeZoneId);
+                    customer = IoCFactory.Resolve<ICustomerManager>().SetTimeZoneId(customer.CustomerId, timeZoneId);
                 }
             }
         }
@@ -243,11 +244,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Profile
         {
             get
             {
-                return SettingManager.GetSettingValueBoolean("Common.AllowCustomersToSetTimeZone");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Common.AllowCustomersToSetTimeZone");
             }
             set
             {
-                SettingManager.SetParam("Common.AllowCustomersToSetTimeZone", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("Common.AllowCustomersToSetTimeZone", value.ToString());
             }
         }
 

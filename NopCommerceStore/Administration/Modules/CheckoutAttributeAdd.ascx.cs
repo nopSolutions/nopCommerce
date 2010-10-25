@@ -30,6 +30,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Localization;
 using NopSolutions.NopCommerce.BusinessLogic.Products.Attributes;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Web.Administration.Modules;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -44,7 +45,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     CheckoutAttribute attribute = ctrlCheckoutAttributeInfo.SaveInfo();
                     ctrlCheckoutAttributeValues.SaveInfo();
 
-                    CustomerActivityManager.InsertActivity(
+                    IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
                         "AddNewCheckoutAttribute",
                         GetLocaleResourceString("ActivityLog.AddNewCheckoutAttribute"),
                         attribute.Name);

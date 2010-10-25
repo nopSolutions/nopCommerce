@@ -27,6 +27,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Payment.Methods.PayJunction;
 using NopSolutions.NopCommerce.Web.Templates.Payment;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Payment.PayJunction
 {
@@ -35,7 +36,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Payment.PayJunction
         public static TransactMode GetCurrentTransactionMode()
         {
             TransactMode transactionModeEnum = TransactMode.Authorize;
-            string transactionMode = SettingManager.GetSettingValue("PaymentMethod.PayJunction.TransactionMode");
+            string transactionMode = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.PayJunction.TransactionMode");
             if (!String.IsNullOrEmpty(transactionMode))
             {
                 transactionModeEnum = (TransactMode)Enum.Parse(typeof(TransactMode), transactionMode);
@@ -46,7 +47,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Payment.PayJunction
 
         public static void SetTransactionMode(TransactMode transactionMode)
         {
-            SettingManager.SetParam("PaymentMethod.PayJunction.TransactionMode", transactionMode.ToString());
+            IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.PayJunction.TransactionMode", transactionMode.ToString());
         }
 
         protected void Page_Load(object sender, EventArgs e)
@@ -70,10 +71,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Payment.PayJunction
                     break;
             }
 
-            cbUseSandbox.Checked = SettingManager.GetSettingValueBoolean("PaymentMethod.PayJunction.UseSandbox");
-            txtUsername.Text = SettingManager.GetSettingValue("PaymentMethod.PayJunction.pjlogon");
-            txtPassword.Text = SettingManager.GetSettingValue("PaymentMethod.PayJunction.pjpassword");
-            txtAdditionalFee.Value = SettingManager.GetSettingValueDecimalNative("PaymentMethod.PayJunction.AdditionalFee");
+            cbUseSandbox.Checked = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.PayJunction.UseSandbox");
+            txtUsername.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.PayJunction.pjlogon");
+            txtPassword.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.PayJunction.pjpassword");
+            txtAdditionalFee.Value = IoCFactory.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.PayJunction.AdditionalFee");
         }
 
         public void Save()
@@ -89,10 +90,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Payment.PayJunction
             }
             SetTransactionMode(transactionMode);
 
-            SettingManager.SetParam("PaymentMethod.PayJunction.UseSandbox", cbUseSandbox.Checked.ToString());
-            SettingManager.SetParam("PaymentMethod.PayJunction.pjlogon", txtUsername.Text);
-            SettingManager.SetParam("PaymentMethod.PayJunction.pjpassword", txtPassword.Text);
-            SettingManager.SetParamNative("PaymentMethod.PayJunction.AdditionalFee", txtAdditionalFee.Value);
+            IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.PayJunction.UseSandbox", cbUseSandbox.Checked.ToString());
+            IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.PayJunction.pjlogon", txtUsername.Text);
+            IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.PayJunction.pjpassword", txtPassword.Text);
+            IoCFactory.Resolve<ISettingManager>().SetParamNative("PaymentMethod.PayJunction.AdditionalFee", txtAdditionalFee.Value);
         }
     }
 }

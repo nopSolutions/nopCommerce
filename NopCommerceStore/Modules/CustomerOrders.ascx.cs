@@ -31,6 +31,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -52,7 +53,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         private void BindRecurringPayments()
         {
-            var recurringPayments = OrderManager.SearchRecurringPayments(NopContext.Current.User.CustomerId,
+            var recurringPayments = IoCFactory.Resolve<IOrderManager>().SearchRecurringPayments(NopContext.Current.User.CustomerId,
                 0, null);
             if (recurringPayments.Count > 0)
             {
@@ -132,10 +133,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 var hfRecurringPaymentId = row.FindControl("hfRecurringPaymentId") as HiddenField;
 
                 int recurringPaymentId = int.Parse(hfRecurringPaymentId.Value);
-                var rp = OrderManager.GetRecurringPaymentById(recurringPaymentId);
-                if (OrderManager.CanCancelRecurringPayment(NopContext.Current.User, rp))
+                var rp = IoCFactory.Resolve<IOrderManager>().GetRecurringPaymentById(recurringPaymentId);
+                if (IoCFactory.Resolve<IOrderManager>().CanCancelRecurringPayment(NopContext.Current.User, rp))
                 {
-                    rp = OrderManager.CancelRecurringPayment(rp.RecurringPaymentId);
+                    rp = IoCFactory.Resolve<IOrderManager>().CancelRecurringPayment(rp.RecurringPaymentId);
                 }
                 BindRecurringPayments();
             }
@@ -151,7 +152,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 if (btnCancelRecurringPayment != null)
                 {
                     btnCancelRecurringPayment.CommandArgument = e.Row.RowIndex.ToString();
-                    btnCancelRecurringPayment.Visible = OrderManager.CanCancelRecurringPayment(NopContext.Current.User, rp);
+                    btnCancelRecurringPayment.Visible = IoCFactory.Resolve<IOrderManager>().CanCancelRecurringPayment(NopContext.Current.User, rp);
                 }
             }
         }
@@ -164,7 +165,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 var phReturnRequest = (PlaceHolder)e.Item.FindControl("phReturnRequest");
                 if (phReturnRequest != null)
                 {
-                    phReturnRequest.Visible = OrderManager.IsReturnRequestAllowed(order);
+                    phReturnRequest.Visible = IoCFactory.Resolve<IOrderManager>().IsReturnRequestAllowed(order);
                 }
             }
         }

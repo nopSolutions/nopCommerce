@@ -32,13 +32,14 @@ using NopSolutions.NopCommerce.BusinessLogic.Payment;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 namespace NopSolutions.NopCommerce.Web
 {
     public partial class CompareProductsPage : BaseNopPage
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!ProductManager.CompareProductsEnabled)
+            if (!IoCFactory.Resolve<IProductManager>().CompareProductsEnabled)
             {
                 Response.Redirect(CommonHelper.GetStoreLocation());
             }

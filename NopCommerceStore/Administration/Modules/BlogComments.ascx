@@ -10,7 +10,7 @@
         <asp:TemplateField ItemStyle-Width="100%" ItemStyle-HorizontalAlign="Left">
             <ItemTemplate>
                 <p>
-                    <%#BlogManager.FormatCommentText((string)Eval("CommentText"))%>
+                    <%#IoCFactory.Resolve<IBlogManager>().FormatCommentText((string)Eval("CommentText"))%>
                 </p>
                 <p>
                     <%#DateTimeHelper.ConvertToUserTime((DateTime)Eval("CreatedOn"), DateTimeKind.Utc).ToString()%>

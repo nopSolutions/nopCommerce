@@ -28,6 +28,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Data;
 using NopSolutions.NopCommerce.BusinessLogic.Utils;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Security
@@ -35,7 +36,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
     /// <summary>
     /// ACL manager
     /// </summary>
-    public partial class ACLManager
+    public partial class ACLManager : IACLManager
     {
         #region Constants
         private const string CUSTOMERACTIONS_ALL_KEY = "Nop.customeraction.all";
@@ -51,7 +52,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
         /// Deletes a customer action
         /// </summary>
         /// <param name="customerActionId">Customer action identifier</param>
-        public static void DeleteCustomerAction(int customerActionId)
+        public void DeleteCustomerAction(int customerActionId)
         {
             var customerAction = GetCustomerActionById(customerActionId);
             if (customerAction == null)
@@ -63,7 +64,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
             context.DeleteObject(customerAction);
             context.SaveChanges();
 
-            if (ACLManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(CUSTOMERACTIONS_PATTERN_KEY);
             }
@@ -74,14 +75,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
         /// </summary>
         /// <param name="customerActionId">Customer action identifier</param>
         /// <returns>Customer action</returns>
-        public static CustomerAction GetCustomerActionById(int customerActionId)
+        public CustomerAction GetCustomerActionById(int customerActionId)
         {
             if (customerActionId == 0)
                 return null;
 
             string key = string.Format(CUSTOMERACTIONS_BY_ID_KEY, customerActionId);
             object obj2 = NopRequestCache.Get(key);
-            if (ACLManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (CustomerAction)obj2;
             }
@@ -92,7 +93,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
                         select ca;
             var customerAction = query.SingleOrDefault();
 
-            if (ACLManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, customerAction);
             }
@@ -103,11 +104,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
         /// Gets all customer actions
         /// </summary>
         /// <returns>Customer action collection</returns>
-        public static List<CustomerAction> GetAllCustomerActions()
+        public List<CustomerAction> GetAllCustomerActions()
         {
             string key = string.Format(CUSTOMERACTIONS_ALL_KEY);
             object obj2 = NopRequestCache.Get(key);
-            if (ACLManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (List<CustomerAction>)obj2;
             }
@@ -118,7 +119,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
                         select ca;
             var customerActions = query.ToList();
 
-            if (ACLManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, customerActions);
             }
@@ -129,7 +130,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
         /// Deletes an ACL
         /// </summary>
         /// <param name="aclId">ACL identifier</param>
-        public static void DeleteAcl(int aclId)
+        public void DeleteAcl(int aclId)
         {
             var acl = GetAclById(aclId);
             if (acl == null)
@@ -147,7 +148,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
         /// </summary>
         /// <param name="aclId">ACL identifier</param>
         /// <returns>ACL</returns>
-        public static ACL GetAclById(int aclId)
+        public ACL GetAclById(int aclId)
         {
             if (aclId == 0)
                 return null;
@@ -167,7 +168,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
         /// <param name="customerRoleId">Customer role identifier; 0 to load all records</param>
         /// <param name="allow">Value indicating whether action is allowed; null to load all records</param>
         /// <returns>ACL collection</returns>
-        public static List<ACL> GetAllAcl(int customerActionId,
+        public List<ACL> GetAllAcl(int customerActionId,
             int customerRoleId, bool? allow)
         {
             var context = ObjectContextHelper.CurrentObjectContext;
@@ -189,7 +190,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
         /// Inserts an ACL
         /// </summary>
         /// <param name="acl">ACL</param>
-        public static void InsertAcl(ACL acl)
+        public void InsertAcl(ACL acl)
         {
             if (acl == null)
                 throw new ArgumentNullException("acl");
@@ -204,7 +205,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
         /// Updates the ACL
         /// </summary>
         /// <param name="acl">ACL</param>
-        public static void UpdateAcl(ACL acl)
+        public void UpdateAcl(ACL acl)
         {
             if (acl == null)
                 throw new ArgumentNullException("acl");
@@ -221,7 +222,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
         /// </summary>
         /// <param name="actionSystemKeyword">Action system keyword</param>
         /// <returns>Result</returns>
-        public static bool IsActionAllowed(string actionSystemKeyword)
+        public bool IsActionAllowed(string actionSystemKeyword)
         {
             int userId = 0;
             if (NopContext.Current != null &&
@@ -236,9 +237,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
         /// <param name="customerId">Customer identifer</param>
         /// <param name="actionSystemKeyword">Action system keyword</param>
         /// <returns>Result</returns>
-        public static bool IsActionAllowed(int customerId, string actionSystemKeyword)
+        public bool IsActionAllowed(int customerId, string actionSystemKeyword)
         {
-            if (!ACLManager.Enabled)
+            if (!this.Enabled)
                 return true;
 
             var context = ObjectContextHelper.CurrentObjectContext;
@@ -266,7 +267,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
         /// Deletes an ACL per object entry
         /// </summary>
         /// <param name="aclPerObjectId">ACL per object entry identifier</param>
-        public static void DeleteAclPerObject(int aclPerObjectId)
+        public void DeleteAclPerObject(int aclPerObjectId)
         {
             var aclPerObject = GetAclPerObjectById(aclPerObjectId);
             if (aclPerObject == null)
@@ -284,7 +285,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
         /// </summary>
         /// <param name="aclId">ACL per object entry identifier</param>
         /// <returns>ACL per object entry</returns>
-        public static ACLPerObject GetAclPerObjectById(int aclPerObjectId)
+        public ACLPerObject GetAclPerObjectById(int aclPerObjectId)
         {
             if (aclPerObjectId == 0)
                 return null;
@@ -305,7 +306,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
         /// <param name="customerRoleId">Customer role identifier; 0 to load all records</param>
         /// <param name="deny">Value indicating whether action is denied; null to load all records</param>
         /// <returns>ACL per object entries</returns>
-        public static List<ACLPerObject> GetAllAclPerObject(int objectId, int objectTypeId,
+        public List<ACLPerObject> GetAllAclPerObject(int objectId, int objectTypeId,
             int customerRoleId, bool? deny)
         {
             var context = ObjectContextHelper.CurrentObjectContext;
@@ -329,7 +330,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
         /// Inserts an ACL per object entry
         /// </summary>
         /// <param name="aclPerObject">ACL per object entry</param>
-        public static void InsertAclPerObject(ACLPerObject aclPerObject)
+        public void InsertAclPerObject(ACLPerObject aclPerObject)
         {
             if (aclPerObject == null)
                 throw new ArgumentNullException("aclPerObject");
@@ -344,7 +345,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
         /// Updates the ACL per object entry
         /// </summary>
         /// <param name="aclPerObject">ACL per object entry</param>
-        public static void UpdateAclPerObject(ACLPerObject aclPerObject)
+        public void UpdateAclPerObject(ACLPerObject aclPerObject)
         {
             if (aclPerObject == null)
                 throw new ArgumentNullException("aclPerObject");
@@ -364,22 +365,26 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
         /// <summary>
         /// Gets a value indicating ACL feature is enabled
         /// </summary>
-        public static bool Enabled
+        public bool Enabled
         {
             get
             {
-                return SettingManager.GetSettingValueBoolean("ACL.Enabled");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("ACL.Enabled");
+            }
+            set
+            {
+                IoCFactory.Resolve<ISettingManager>().SetParam("ACL.Enabled", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets a value indicating whether cache is enabled
         /// </summary>
-        public static bool CacheEnabled
+        public bool CacheEnabled
         {
             get
             {
-                return SettingManager.GetSettingValueBoolean("Cache.ACLManager.CacheEnabled");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.ACLManager.CacheEnabled");
             }
         }
 

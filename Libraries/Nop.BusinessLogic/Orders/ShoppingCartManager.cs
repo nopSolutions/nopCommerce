@@ -26,6 +26,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Data;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 using NopSolutions.NopCommerce.BusinessLogic.Localization;
 using NopSolutions.NopCommerce.BusinessLogic.Payment;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
@@ -42,7 +43,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
     /// <summary>
     /// Shopping cart manager
     /// </summary>
-    public partial class ShoppingCartManager
+    public partial class ShoppingCartManager : IShoppingCartManager
     {
         #region Methods
 
@@ -52,7 +53,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// Deletes expired shopping cart items
         /// </summary>
         /// <param name="olderThan">Older than date and time</param>
-        public static void DeleteExpiredShoppingCartItems(DateTime olderThan)
+        public void DeleteExpiredShoppingCartItems(DateTime olderThan)
         {
             var context = ObjectContextHelper.CurrentObjectContext;
             context.Sp_ShoppingCartItemDeleteExpired(olderThan);
@@ -63,13 +64,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// </summary>
         /// <param name="shoppingCartItemId">The shopping cart item identifier</param>
         /// <param name="resetCheckoutData">A value indicating whether to reset checkout data</param>
-        public static void DeleteShoppingCartItem(int shoppingCartItemId, bool resetCheckoutData)
+        public void DeleteShoppingCartItem(int shoppingCartItemId, bool resetCheckoutData)
         {
             if (resetCheckoutData)
             {
                 if (NopContext.Current.Session != null)
                 {
-                    CustomerManager.ResetCheckoutData(NopContext.Current.Session.CustomerId, false);
+                    IoCFactory.Resolve<ICustomerManager>().ResetCheckoutData(NopContext.Current.Session.CustomerId, false);
                 }
             }
 
@@ -79,7 +80,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
 
             if (shoppingCartItem.ShoppingCartType == ShoppingCartTypeEnum.ShoppingCart)
             {
-                CustomerActivityManager.InsertActivity(
+                IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
                     "RemoveFromShoppingCart",
                     LocalizationManager.GetLocaleResourceString("ActivityLog.RemoveFromShoppingCart"),
                     shoppingCartItem.ProductVariant.FullProductName);
@@ -98,7 +99,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="shoppingCartType">Shopping cart type</param>
         /// <param name="customerSessionGuid">The customer session identifier</param>
         /// <returns>Cart</returns>
-        public static ShoppingCart GetShoppingCartByCustomerSessionGuid(ShoppingCartTypeEnum shoppingCartType, 
+        public ShoppingCart GetShoppingCartByCustomerSessionGuid(ShoppingCartTypeEnum shoppingCartType, 
             Guid customerSessionGuid)
         {
             var context = ObjectContextHelper.CurrentObjectContext;
@@ -118,7 +119,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// </summary>
         /// <param name="shoppingCartItemId">The shopping cart item identifier</param>
         /// <returns>Shopping cart item</returns>
-        public static ShoppingCartItem GetShoppingCartItemById(int shoppingCartItemId)
+        public ShoppingCartItem GetShoppingCartItemById(int shoppingCartItemId)
         {
             if (shoppingCartItemId == 0)
                 return null;
@@ -135,7 +136,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// Inserts a shopping cart item
         /// </summary>
         /// <param name="shoppingCartItem">The shopping cart item</param>
-        internal static void InsertShoppingCartItem(ShoppingCartItem shoppingCartItem)
+        internal void InsertShoppingCartItem(ShoppingCartItem shoppingCartItem)
         {
             if (shoppingCartItem == null)
                 throw new ArgumentNullException("shoppingCartItem");
@@ -151,7 +152,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             {
                 if (shoppingCartItem.ShoppingCartType == ShoppingCartTypeEnum.ShoppingCart)
                 {
-                    CustomerActivityManager.InsertActivity(
+                    IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
                         "AddToShoppingCart",
                         LocalizationManager.GetLocaleResourceString("ActivityLog.AddToShoppingCart"),
                         shoppingCartItem.ProductVariant.FullProductName);
@@ -163,7 +164,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// Updates the shopping cart item
         /// </summary>
         /// <param name="shoppingCartItem">The shopping cart item</param>
-        internal static void UpdateShoppingCartItem(ShoppingCartItem shoppingCartItem)
+        internal void UpdateShoppingCartItem(ShoppingCartItem shoppingCartItem)
         {
             if (shoppingCartItem == null)
                 throw new ArgumentNullException("shoppingCartItem");
@@ -182,7 +183,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// </summary>
         /// <param name="shoppingCartType">Shopping cart type</param>
         /// <returns>Cart</returns>
-        public static ShoppingCart GetCurrentShoppingCart(ShoppingCartTypeEnum shoppingCartType)
+        public ShoppingCart GetCurrentShoppingCart(ShoppingCartTypeEnum shoppingCartType)
         {
             if (NopContext.Current.Session == null)
                 return new ShoppingCart();
@@ -196,10 +197,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="customerId">Customer identifier</param>
         /// <param name="shoppingCartType">Shopping cart type</param>
         /// <returns>Cart</returns>
-        public static ShoppingCart GetCustomerShoppingCart(int customerId, 
+        public ShoppingCart GetCustomerShoppingCart(int customerId, 
             ShoppingCartTypeEnum shoppingCartType)
         {
-            var customerSession = CustomerManager.GetCustomerSessionByCustomerId(customerId);
+            var customerSession = IoCFactory.Resolve<ICustomerManager>().GetCustomerSessionByCustomerId(customerId);
             if (customerSession == null)
                 return new ShoppingCart();
             var customerSessionGuid = customerSession.CustomerSessionGuid;
@@ -217,7 +218,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="paymentMethodId">Payment method identifier</param>
         /// <param name="customer">Customer</param>
         /// <returns>Shopping cart total;Null if shopping cart total couldn't be calculated now</returns>
-        public static decimal? GetShoppingCartTotal(ShoppingCart cart,
+        public decimal? GetShoppingCartTotal(ShoppingCart cart,
             int paymentMethodId, Customer customer)
         {
             bool useRewardPoints = false;
@@ -234,7 +235,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="customer">Customer</param>
         /// <param name="useRewardPoints">A value indicating whether to use reward points</param>
         /// <returns>Shopping cart total;Null if shopping cart total couldn't be calculated now</returns>
-        public static decimal? GetShoppingCartTotal(ShoppingCart cart,
+        public decimal? GetShoppingCartTotal(ShoppingCart cart,
             int paymentMethodId, Customer customer, bool useRewardPoints)
         {
             decimal discountAmount = decimal.Zero;
@@ -262,7 +263,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="redeemedRewardPoints">Reward points to redeem</param>
         /// <param name="redeemedRewardPointsAmount">Reward points amount in primary store currency to redeem</param>
         /// <returns>Shopping cart total;Null if shopping cart total couldn't be calculated now</returns>
-        public static decimal? GetShoppingCartTotal(ShoppingCart cart,
+        public decimal? GetShoppingCartTotal(ShoppingCart cart,
             int paymentMethodId, Customer customer,
             out decimal discountAmount, out Discount appliedDiscount, 
             out List<AppliedGiftCard> appliedGiftCards,
@@ -281,26 +282,26 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             Discount orderSubTotalAppliedDiscount = null;
             decimal subTotalWithoutDiscountBase = decimal.Zero;
             decimal subTotalWithDiscountBase = decimal.Zero;
-            subTotalError = ShoppingCartManager.GetShoppingCartSubTotal(cart,
+            subTotalError = this.GetShoppingCartSubTotal(cart,
                 customer, false, out orderSubTotalDiscountAmount, out orderSubTotalAppliedDiscount,
                 out subTotalWithoutDiscountBase, out subTotalWithDiscountBase);
             //subtotal with discount
             subtotalBase = subTotalWithDiscountBase;
 
             //shipping without tax
-            decimal? shoppingCartShipping = ShippingManager.GetShoppingCartShippingTotal(cart, customer, false, ref shippingError);
+            decimal? shoppingCartShipping = IoCFactory.Resolve<IShippingManager>().GetShoppingCartShippingTotal(cart, customer, false, ref shippingError);
 
             //payment method additional fee without tax
             decimal paymentMethodAdditionalFeeWithoutTax = decimal.Zero;
             if (paymentMethodId > 0)
             {
-                decimal paymentMethodAdditionalFee = PaymentManager.GetAdditionalHandlingFee(paymentMethodId);
-                paymentMethodAdditionalFeeWithoutTax = TaxManager.GetPaymentMethodAdditionalFee(paymentMethodAdditionalFee,
+                decimal paymentMethodAdditionalFee = IoCFactory.Resolve<IPaymentManager>().GetAdditionalHandlingFee(paymentMethodId);
+                paymentMethodAdditionalFeeWithoutTax = IoCFactory.Resolve<ITaxManager>().GetPaymentMethodAdditionalFee(paymentMethodAdditionalFee,
                     false, customer, ref paymentMethodAdditionalFeeError);
             }
 
             //tax
-            decimal shoppingCartTax = TaxManager.GetTaxTotal(cart, paymentMethodId, customer, ref taxError);
+            decimal shoppingCartTax = IoCFactory.Resolve<ITaxManager>().GetTaxTotal(cart, paymentMethodId, customer, ref taxError);
 
             //order total
             decimal resultTemp = decimal.Zero;
@@ -383,10 +384,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             }
 
             #region Reward points
-            if (OrderManager.RewardPointsEnabled && useRewardPoints && customer != null)
+            if (IoCFactory.Resolve<IOrderManager>().RewardPointsEnabled && useRewardPoints && customer != null)
             {
                 int rewardPointsBalance = customer.RewardPointsBalance;
-                decimal rewardPointsBalanceAmount = OrderManager.ConvertRewardPointsToAmount(rewardPointsBalance);
+                decimal rewardPointsBalanceAmount = IoCFactory.Resolve<IOrderManager>().ConvertRewardPointsToAmount(rewardPointsBalance);
                 if (orderTotal.HasValue && orderTotal.Value > decimal.Zero)
                 {
                     if (orderTotal.Value > rewardPointsBalanceAmount)
@@ -397,7 +398,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                     else
                     {
                         redeemedRewardPointsAmount = orderTotal.Value;
-                        redeemedRewardPoints = OrderManager.ConvertAmountToRewardPoints(redeemedRewardPointsAmount);
+                        redeemedRewardPoints = IoCFactory.Resolve<IOrderManager>().ConvertAmountToRewardPoints(redeemedRewardPointsAmount);
                     }
                 }
             }
@@ -423,7 +424,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="subTotalWithoutDiscount">Sub total (without discount)</param>
         /// <param name="subTotalWithDiscount">Sub total (with discount)</param>
         /// <returns>Error</returns>
-        public static string GetShoppingCartSubTotal(ShoppingCart cart, 
+        public string GetShoppingCartSubTotal(ShoppingCart cart, 
             Customer customer, out decimal discountAmount, out Discount appliedDiscount,
             out decimal subTotalWithoutDiscount, out decimal subTotalWithDiscount)
         {
@@ -453,7 +454,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="subTotalWithoutDiscount">Sub total (without discount)</param>
         /// <param name="subTotalWithDiscount">Sub total (with discount)</param>
         /// <returns>Error</returns>
-        public static string GetShoppingCartSubTotal(ShoppingCart cart,
+        public string GetShoppingCartSubTotal(ShoppingCart cart,
             Customer customer, bool includingTax,
             out decimal discountAmount, out Discount appliedDiscount,
             out decimal subTotalWithoutDiscount, out decimal subTotalWithDiscount)
@@ -476,7 +477,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="subTotalWithDiscount">Sub total (with discount)</param>
         /// <param name="taxRates">Tax rates (of order sub total)</param>
         /// <returns>Error</returns>
-        public static string GetShoppingCartSubTotal(ShoppingCart cart,
+        public string GetShoppingCartSubTotal(ShoppingCart cart,
             Customer customer, bool includingTax,
             out decimal discountAmount, out Discount appliedDiscount,
             out decimal subTotalWithoutDiscount, out decimal subTotalWithDiscount,
@@ -500,8 +501,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 string error3 = string.Empty;
                 decimal sciSubTotal = PriceHelper.GetSubTotal(shoppingCartItem, customer, true);
 
-                decimal sciExclTax = TaxManager.GetPrice(shoppingCartItem.ProductVariant, sciSubTotal, false, customer, out taxRate, ref error2);
-                decimal sciInclTax = TaxManager.GetPrice(shoppingCartItem.ProductVariant, sciSubTotal, true, customer, out taxRate, ref error2);
+                decimal sciExclTax = IoCFactory.Resolve<ITaxManager>().GetPrice(shoppingCartItem.ProductVariant, sciSubTotal, false, customer, out taxRate, ref error2);
+                decimal sciInclTax = IoCFactory.Resolve<ITaxManager>().GetPrice(shoppingCartItem.ProductVariant, sciSubTotal, true, customer, out taxRate, ref error2);
                 subTotalExclTaxWithoutDiscount += sciExclTax;
                 subTotalInclTaxWithoutDiscount += sciInclTax;
                 if (!String.IsNullOrEmpty(error2))
@@ -533,8 +534,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                     decimal taxRate = decimal.Zero;
                     string error2 = string.Empty;
 
-                    decimal caExclTax= TaxManager.GetCheckoutAttributePrice(caValue, false, customer, out taxRate, ref error2);
-                    decimal caInclTax = TaxManager.GetCheckoutAttributePrice(caValue, true, customer, out taxRate, ref error2);
+                    decimal caExclTax= IoCFactory.Resolve<ITaxManager>().GetCheckoutAttributePrice(caValue, false, customer, out taxRate, ref error2);
+                    decimal caInclTax = IoCFactory.Resolve<ITaxManager>().GetCheckoutAttributePrice(caValue, true, customer, out taxRate, ref error2);
                     subTotalExclTaxWithoutDiscount += caExclTax;
                     subTotalInclTaxWithoutDiscount += caInclTax;
                     if (!String.IsNullOrEmpty(error2))
@@ -628,7 +629,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="orderSubTotal">Order subtotal</param>
         /// <param name="appliedDiscount">Applied discount</param>
         /// <returns>Order discount</returns>
-        public static decimal GetOrderSubtotalDiscount(Customer customer,
+        public decimal GetOrderSubtotalDiscount(Customer customer,
             decimal orderSubTotal, out Discount appliedDiscount)
         {
             decimal discountAmount = decimal.Zero;
@@ -637,7 +638,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             if (customer != null)
                 customerCouponCode = customer.LastAppliedCouponCode;
 
-            var allDiscounts = DiscountManager.GetAllDiscounts(DiscountTypeEnum.AssignedToOrderSubTotal);
+            var allDiscounts = IoCFactory.Resolve<IDiscountManager>().GetAllDiscounts(DiscountTypeEnum.AssignedToOrderSubTotal);
             var allowedDiscounts = new List<Discount>();
             foreach (var _discount in allDiscounts)
             {
@@ -654,7 +655,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 }
             }
 
-            appliedDiscount = DiscountManager.GetPreferredDiscount(allowedDiscounts, orderSubTotal);
+            appliedDiscount = IoCFactory.Resolve<IDiscountManager>().GetPreferredDiscount(allowedDiscounts, orderSubTotal);
             if (appliedDiscount != null)
             {
                 discountAmount = appliedDiscount.GetDiscountAmount(orderSubTotal);
@@ -675,7 +676,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="orderTotal">Order total</param>
         /// <param name="appliedDiscount">Applied discount</param>
         /// <returns>Order discount</returns>
-        public static decimal GetOrderTotalDiscount(Customer customer, 
+        public decimal GetOrderTotalDiscount(Customer customer, 
             decimal orderTotal, out Discount appliedDiscount)
         {
             decimal discountAmount = decimal.Zero;
@@ -684,7 +685,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             if (customer != null)
                 customerCouponCode = customer.LastAppliedCouponCode;
 
-            var allDiscounts = DiscountManager.GetAllDiscounts(DiscountTypeEnum.AssignedToOrderTotal);
+            var allDiscounts = IoCFactory.Resolve<IDiscountManager>().GetAllDiscounts(DiscountTypeEnum.AssignedToOrderTotal);
             var allowedDiscounts = new List<Discount>();
             foreach (var _discount in allDiscounts)
             {
@@ -701,7 +702,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 }
             }
 
-            appliedDiscount = DiscountManager.GetPreferredDiscount(allowedDiscounts, orderTotal);
+            appliedDiscount = IoCFactory.Resolve<IDiscountManager>().GetPreferredDiscount(allowedDiscounts, orderTotal);
             if (appliedDiscount != null)
             {
                 discountAmount = appliedDiscount.GetDiscountAmount(orderTotal);
@@ -724,12 +725,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="customerEnteredPrice">Customer entered price</param>
         /// <param name="quantity">Quantity</param>
         /// <returns>Warnings</returns>
-        public static List<string> GetShoppingCartItemWarnings(ShoppingCartTypeEnum shoppingCartType,
+        public List<string> GetShoppingCartItemWarnings(ShoppingCartTypeEnum shoppingCartType,
             int productVariantId, string selectedAttributes, decimal customerEnteredPrice, 
             int quantity)
         {
             var warnings = new List<string>();
-            var productVariant = ProductManager.GetProductVariantById(productVariantId);
+            var productVariant = IoCFactory.Resolve<IProductManager>().GetProductVariantById(productVariantId);
             if (productVariant == null)
             {
                 warnings.Add(string.Format("Product variant (Id={0}) can not be loaded", productVariantId));
@@ -770,8 +771,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 if (customerEnteredPrice < productVariant.MinimumCustomerEnteredPrice ||
                     customerEnteredPrice > productVariant.MaximumCustomerEnteredPrice)
                 {
-                    decimal minimumCustomerEnteredPrice = CurrencyManager.ConvertCurrency(productVariant.MinimumCustomerEnteredPrice, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
-                    decimal maximumCustomerEnteredPrice = CurrencyManager.ConvertCurrency(productVariant.MaximumCustomerEnteredPrice, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                    decimal minimumCustomerEnteredPrice = IoCFactory.Resolve<ICurrencyManager>().ConvertCurrency(productVariant.MinimumCustomerEnteredPrice, IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                    decimal maximumCustomerEnteredPrice = IoCFactory.Resolve<ICurrencyManager>().ConvertCurrency(productVariant.MaximumCustomerEnteredPrice, IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
                     warnings.Add(string.Format(LocalizationManager.GetLocaleResourceString("ShoppingCart.CustomerEnteredPrice.RangeError"),
                         PriceHelper.FormatPrice(minimumCustomerEnteredPrice, false, false),
                         PriceHelper.FormatPrice(maximumCustomerEnteredPrice, false, false)));
@@ -811,7 +812,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                     break;
                 case ManageInventoryMethodEnum.ManageStockByAttributes:
                     {
-                        var combination = ProductAttributeManager.FindProductVariantAttributeCombination(productVariant.ProductVariantId, selectedAttributes);
+                        var combination = IoCFactory.Resolve<IProductAttributeManager>().FindProductVariantAttributeCombination(productVariant.ProductVariantId, selectedAttributes);
                         if (combination != null)
                         {
                             if (!combination.AllowOutOfStockOrders)
@@ -871,7 +872,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="selectedAttributes">Selected attributes</param>
         /// <param name="quantity">Quantity</param>
         /// <returns>Warnings</returns>
-        public static List<string> GetShoppingCartItemAttributeWarnings(ShoppingCartTypeEnum shoppingCartType,
+        public List<string> GetShoppingCartItemAttributeWarnings(ShoppingCartTypeEnum shoppingCartType,
             int productVariantId, string selectedAttributes, int quantity)
         {
             return GetShoppingCartItemAttributeWarnings(shoppingCartType,
@@ -887,11 +888,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="quantity">Quantity</param>
         /// <param name="validateQuantity">Value indicating whether to validation quantity</param>
         /// <returns>Warnings</returns>
-        public static List<string> GetShoppingCartItemAttributeWarnings(ShoppingCartTypeEnum shoppingCartType,
+        public List<string> GetShoppingCartItemAttributeWarnings(ShoppingCartTypeEnum shoppingCartType,
             int productVariantId, string selectedAttributes, int quantity, bool validateQuantity)
         {
             var warnings = new List<string>();
-            var productVariant = ProductManager.GetProductVariantById(productVariantId);
+            var productVariant = IoCFactory.Resolve<IProductManager>().GetProductVariantById(productVariantId);
             if (productVariant == null)
             {
                 warnings.Add(string.Format("Product variant (Id={0}) can not be loaded", productVariantId));
@@ -966,11 +967,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="productVariantId">Product variant identifier</param>
         /// <param name="selectedAttributes">Selected attributes</param>
         /// <returns>Warnings</returns>
-        public static List<string> GetShoppingCartItemGiftCardWarnings(ShoppingCartTypeEnum shoppingCartType,
+        public List<string> GetShoppingCartItemGiftCardWarnings(ShoppingCartTypeEnum shoppingCartType,
             int productVariantId, string selectedAttributes)
         {
             var warnings = new List<string>();
-            var productVariant = ProductManager.GetProductVariantById(productVariantId);
+            var productVariant = IoCFactory.Resolve<IProductManager>().GetProductVariantById(productVariantId);
             if (productVariant == null)
             {
                 warnings.Add(string.Format("Product variant (Id={0}) can not be loaded", productVariantId));
@@ -1020,7 +1021,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="checkoutAttributes">Checkout attributes</param>
         /// <param name="validateCheckoutAttributes">A value indicating whether to validate checkout attributes</param>
         /// <returns>Warnings</returns>
-        public static List<string> GetShoppingCartWarnings(ShoppingCart shoppingCart, string checkoutAttributes, bool validateCheckoutAttributes)
+        public List<string> GetShoppingCartWarnings(ShoppingCart shoppingCart, string checkoutAttributes, bool validateCheckoutAttributes)
         {
             var warnings = new List<string>();
 
@@ -1071,8 +1072,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 var ca1Collection = CheckoutAttributeHelper.ParseCheckoutAttributes(checkoutAttributes);
 
                 //existing checkout attributes
-                bool shoppingCartRequiresShipping = ShippingManager.ShoppingCartRequiresShipping(shoppingCart);
-                var ca2Collection = CheckoutAttributeManager.GetAllCheckoutAttributes(!shoppingCartRequiresShipping);
+                bool shoppingCartRequiresShipping = IoCFactory.Resolve<IShippingManager>().ShoppingCartRequiresShipping(shoppingCart);
+                var ca2Collection = IoCFactory.Resolve<ICheckoutAttributeManager>().GetAllCheckoutAttributes(!shoppingCartRequiresShipping);
                 foreach (var ca2 in ca2Collection)
                 {
                     if (ca2.IsRequired)
@@ -1122,7 +1123,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="cyclePeriod">Cycle period</param>
         /// <param name="totalCycles">Toital cycles</param>
         /// <returns>Error</returns>
-        public static string GetReccuringCycleInfo(ShoppingCart shoppingCart, 
+        public string GetReccuringCycleInfo(ShoppingCart shoppingCart, 
             out int cycleLength, out int cyclePeriod, out int totalCycles)
         {
             string error = string.Empty;
@@ -1203,12 +1204,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="customerEnteredPrice">The price enter by a customer</param>
         /// <param name="quantity">Quantity</param>
         /// <returns>Warnings</returns>
-        public static List<string> AddToCart(ShoppingCartTypeEnum shoppingCartType,
+        public List<string> AddToCart(ShoppingCartTypeEnum shoppingCartType,
             int productVariantId, string selectedAttributes, 
             decimal customerEnteredPrice, int quantity)
         {
             var warnings = new List<string>();
-            if (shoppingCartType == ShoppingCartTypeEnum.Wishlist && !SettingManager.GetSettingValueBoolean("Common.EnableWishlist"))
+            if (shoppingCartType == ShoppingCartTypeEnum.Wishlist && !IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Common.EnableWishlist"))
                 return warnings;
 
             if (NopContext.Current.Session == null)
@@ -1216,7 +1217,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
 
             var customerSessionGuid = NopContext.Current.Session.CustomerSessionGuid;
 
-            CustomerManager.ResetCheckoutData(NopContext.Current.Session.CustomerId, false);
+            IoCFactory.Resolve<ICustomerManager>().ResetCheckoutData(NopContext.Current.Session.CustomerId, false);
 
             var cart = GetShoppingCartByCustomerSessionGuid(shoppingCartType, customerSessionGuid);
             ShoppingCartItem shoppingCartItem = null;
@@ -1297,14 +1298,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                     //maximum items validation
                     if (shoppingCartType == ShoppingCartTypeEnum.ShoppingCart)
                     {
-                        if (cart.Count >= SettingManager.GetSettingValueInteger("Common.MaximumShoppingCartItems", 1000))
+                        if (cart.Count >= IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Common.MaximumShoppingCartItems", 1000))
                         {
                             return warnings;
                         }
                     }
                     else if (shoppingCartType == ShoppingCartTypeEnum.Wishlist)
                     {
-                        if (cart.Count >= SettingManager.GetSettingValueInteger("Common.MaximumWishlistItems", 1000))
+                        if (cart.Count >= IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Common.MaximumWishlistItems", 1000))
                         {
                             return warnings;
                         }
@@ -1336,7 +1337,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="newQuantity">New shopping cart item quantity</param>
         /// <param name="resetCheckoutData">A value indicating whether to reset checkout data</param>
         /// <returns>Warnings</returns>
-        public static List<string> UpdateCart(int shoppingCartItemId, int newQuantity,
+        public List<string> UpdateCart(int shoppingCartItemId, int newQuantity,
             bool resetCheckoutData)
         {
             var warnings = new List<string>();
@@ -1349,7 +1350,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             {
                 if (resetCheckoutData)
                 {
-                    CustomerManager.ResetCheckoutData(NopContext.Current.Session.CustomerId, false);
+                    IoCFactory.Resolve<ICustomerManager>().ResetCheckoutData(NopContext.Current.Session.CustomerId, false);
                 }
                 if (newQuantity > 0)
                 {

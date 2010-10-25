@@ -25,6 +25,7 @@ using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Web.Templates.Payment;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Payment.Moneybookers
 {
@@ -38,14 +39,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Payment.Moneybookers
 
         private void BindData()
         {
-            txtEmail.Text = SettingManager.GetSettingValue("PaymentMethod.Moneybookers.PayToEmail");
-            txtAdditionalFee.Value = SettingManager.GetSettingValueDecimalNative("PaymentMethod.Moneybookers.AdditionalFee");
+            txtEmail.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Moneybookers.PayToEmail");
+            txtAdditionalFee.Value = IoCFactory.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.Moneybookers.AdditionalFee");
         }
 
         public void Save()
         {
-            SettingManager.SetParam("PaymentMethod.Moneybookers.PayToEmail", txtEmail.Text);
-            SettingManager.SetParamNative("PaymentMethod.Moneybookers.AdditionalFee", txtAdditionalFee.Value);
+            IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.Moneybookers.PayToEmail", txtEmail.Text);
+            IoCFactory.Resolve<ISettingManager>().SetParamNative("PaymentMethod.Moneybookers.AdditionalFee", txtAdditionalFee.Value);
         }
     }
 }

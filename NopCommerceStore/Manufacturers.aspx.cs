@@ -8,6 +8,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Manufacturers;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.BusinessLogic.Media;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web
 {
@@ -18,7 +19,7 @@ namespace NopSolutions.NopCommerce.Web
             SEOHelper.RenderTitle(this, GetLocaleResourceString("PageTitle.Manufactures"), true);
             if(!IsPostBack)
             {
-                dlManufacturers.DataSource = ManufacturerManager.GetAllManufacturers();
+                dlManufacturers.DataSource = IoCFactory.Resolve<IManufacturerManager>().GetAllManufacturers();
                 dlManufacturers.DataBind();
             }
         }
@@ -33,7 +34,7 @@ namespace NopSolutions.NopCommerce.Web
                 var hlImageLink = e.Item.FindControl("hlImageLink") as HyperLink;
                 if(hlImageLink != null)
                 {
-                    hlImageLink.ImageUrl = PictureManager.GetPictureUrl(manufacturer.PictureId, SettingManager.GetSettingValueInteger("Media.Manufacturer.ThumbnailImageSize", 125), true);
+                    hlImageLink.ImageUrl = IoCFactory.Resolve<IPictureManager>().GetPictureUrl(manufacturer.PictureId, IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.Manufacturer.ThumbnailImageSize", 125), true);
                     hlImageLink.NavigateUrl = manufacturerURL;
                     hlImageLink.ToolTip = String.Format(GetLocaleResourceString("Media.Manufacturer.ImageLinkTitleFormat"), manufacturer.LocalizedName);
                     hlImageLink.Text = String.Format(GetLocaleResourceString("Media.Manufacturer.ImageAlternateTextFormat"), manufacturer.LocalizedName);

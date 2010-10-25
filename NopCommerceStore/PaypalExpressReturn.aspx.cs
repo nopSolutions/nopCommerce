@@ -34,6 +34,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Shipping;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Payment.Methods.PayPal;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web
 {
@@ -53,7 +54,7 @@ namespace NopSolutions.NopCommerce.Web
 
                     PaymentInfo paymentInfo = new PaymentInfo();
 
-                    PaymentMethod paypalExpressPaymentMethod = PaymentMethodManager.GetPaymentMethodBySystemKeyword("PayPalExpress");
+                    PaymentMethod paypalExpressPaymentMethod = IoCFactory.Resolve<IPaymentMethodManager>().GetPaymentMethodBySystemKeyword("PayPalExpress");
             
                     paymentInfo.PaymentMethodId = paypalExpressPaymentMethod.PaymentMethodId;
                     paymentInfo.BillingAddress = NopContext.Current.User.BillingAddress;
@@ -64,9 +65,9 @@ namespace NopSolutions.NopCommerce.Web
                     paymentInfo.CustomerCurrency = NopContext.Current.WorkingCurrency;
 
                     int orderId = 0;
-                    string result = OrderManager.PlaceOrder(paymentInfo, NopContext.Current.User, out orderId);
+                    string result = IoCFactory.Resolve<IOrderManager>().PlaceOrder(paymentInfo, NopContext.Current.User, out orderId);
 
-                    Order order = OrderManager.GetOrderById(orderId);
+                    Order order = IoCFactory.Resolve<IOrderManager>().GetOrderById(orderId);
                     if (!String.IsNullOrEmpty(result))
                     {
                         lConfirmOrderError.Text = Server.HtmlEncode(result);
@@ -74,12 +75,12 @@ namespace NopSolutions.NopCommerce.Web
                         return;
                     }
                     else
-                        PaymentManager.PostProcessPayment(order);
+                        IoCFactory.Resolve<IPaymentManager>().PostProcessPayment(order);
                     Response.Redirect("~/checkoutcompleted.aspx");
                 }
                 catch (Exception exc)
                 {
-                    LogManager.InsertLog(LogTypeEnum.OrderError, exc.Message, exc);
+                    IoCFactory.Resolve<ILogManager>().InsertLog(LogTypeEnum.OrderError, exc.Message, exc);
                     lConfirmOrderError.Text = Server.HtmlEncode(exc.ToString());
                     btnNextStep.Visible = false;
                 }
@@ -90,13 +91,13 @@ namespace NopSolutions.NopCommerce.Web
         {
             CommonHelper.SetResponseNoCache(Response);
 
-            if ((NopContext.Current.User == null) || (NopContext.Current.User.IsGuest && !CustomerManager.AnonymousCheckoutAllowed))
+            if ((NopContext.Current.User == null) || (NopContext.Current.User.IsGuest && !IoCFactory.Resolve<ICustomerManager>().AnonymousCheckoutAllowed))
             {
                 string loginURL = SEOHelper.GetLoginPageUrl(true);
                 Response.Redirect(loginURL);
             }
 
-            ShoppingCart cart = ShoppingCartManager.GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
+            ShoppingCart cart = IoCFactory.Resolve<IShoppingCartManager>().GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
             if (cart.Count == 0)
                 Response.Redirect(SEOHelper.GetShoppingCartUrl());
 

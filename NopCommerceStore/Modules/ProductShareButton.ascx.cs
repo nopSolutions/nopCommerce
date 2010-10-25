@@ -29,6 +29,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -36,9 +37,9 @@ namespace NopSolutions.NopCommerce.Web.Modules
     {
         protected override void OnPreRender(EventArgs e)
         {
-            if (ProductManager.ShowShareButton)
+            if (IoCFactory.Resolve<IProductManager>().ShowShareButton)
             {
-                string shareCode = SettingManager.GetSettingValue("Products.AddThisSharing.Code");
+                string shareCode = IoCFactory.Resolve<ISettingManager>().GetSettingValue("Products.AddThisSharing.Code");
                 if (CommonHelper.IsCurrentConnectionSecured())
                 {
                     //need to change the addthis link to be https linked when the page is, so that the page doesnt ask about mixed mode when viewed in https...

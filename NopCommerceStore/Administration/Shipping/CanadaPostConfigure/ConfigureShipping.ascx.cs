@@ -19,6 +19,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Web.Administration.Modules;
 using NopSolutions.NopCommerce.Web.Templates.Shipping;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Shipping.CanadaPostConfigure
 {
@@ -34,16 +35,16 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.CanadaPostConfigu
 
         private void BindData()
         {
-            txtCustomerId.Text = SettingManager.GetSettingValue("ShippingRateComputationMethod.CanadaPost.CustomerId");
-            txtURL.Text = SettingManager.GetSettingValue("ShippingRateComputationMethod.CanadaPost.URL");
-            txtPort.Text = SettingManager.GetSettingValue("ShippingRateComputationMethod.CanadaPost.Port");
+            txtCustomerId.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.CanadaPost.CustomerId");
+            txtURL.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.CanadaPost.URL");
+            txtPort.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.CanadaPost.Port");
         }
 
         public void Save()
         {
-            SettingManager.SetParam("ShippingRateComputationMethod.CanadaPost.CustomerId", txtCustomerId.Text);
-            SettingManager.SetParam("ShippingRateComputationMethod.CanadaPost.URL", txtURL.Text);
-            SettingManager.SetParam("ShippingRateComputationMethod.CanadaPost.Port", txtPort.Text);
+            IoCFactory.Resolve<ISettingManager>().SetParam("ShippingRateComputationMethod.CanadaPost.CustomerId", txtCustomerId.Text);
+            IoCFactory.Resolve<ISettingManager>().SetParam("ShippingRateComputationMethod.CanadaPost.URL", txtURL.Text);
+            IoCFactory.Resolve<ISettingManager>().SetParam("ShippingRateComputationMethod.CanadaPost.Port", txtPort.Text);
         }
     }
 }

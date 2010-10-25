@@ -23,13 +23,14 @@ using NopSolutions.NopCommerce.BusinessLogic.Caching;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Data;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Tax
 {
     /// <summary>
     /// Tax provider manager
     /// </summary>
-    public partial class TaxProviderManager
+    public partial class TaxProviderManager : ITaxProviderManager
     {
         #region Constants
         private const string TAXPROVIDERS_ALL_KEY = "Nop.taxprovider.all";
@@ -42,7 +43,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// Deletes a tax provider
         /// </summary>
         /// <param name="taxProviderId">Tax provider identifier</param>
-        public static void DeleteTaxProvider(int taxProviderId)
+        public void DeleteTaxProvider(int taxProviderId)
         {
             var taxProvider = GetTaxProviderById(taxProviderId);
             if (taxProvider == null)
@@ -53,7 +54,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
                 context.TaxProviders.Attach(taxProvider);
             context.DeleteObject(taxProvider);
             context.SaveChanges();
-            if (TaxProviderManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(TAXPROVIDERS_PATTERN_KEY);
             }
@@ -64,14 +65,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// </summary>
         /// <param name="taxProviderId">Tax provider identifier</param>
         /// <returns>Tax provider</returns>
-        public static TaxProvider GetTaxProviderById(int taxProviderId)
+        public TaxProvider GetTaxProviderById(int taxProviderId)
         {
             if (taxProviderId == 0)
                 return null;
 
             string key = string.Format(TAXPROVIDERS_BY_ID_KEY, taxProviderId);
             object obj2 = NopRequestCache.Get(key);
-            if (TaxProviderManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (TaxProvider)obj2;
             }
@@ -82,7 +83,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
                         select tp;
             var taxProvider = query.SingleOrDefault();
 
-            if (TaxProviderManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, taxProvider);
             }
@@ -93,11 +94,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// Gets all tax providers
         /// </summary>
         /// <returns>Shipping rate computation method collection</returns>
-        public static List<TaxProvider> GetAllTaxProviders()
+        public List<TaxProvider> GetAllTaxProviders()
         {
             string key = string.Format(TAXPROVIDERS_ALL_KEY);
             object obj2 = NopRequestCache.Get(key);
-            if (TaxProviderManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (List<TaxProvider>)obj2;
             }
@@ -108,7 +109,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
                         select tp;
             var taxProviders = query.ToList();
 
-            if (TaxProviderManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, taxProviders);
             }
@@ -119,7 +120,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// Inserts a tax provider
         /// </summary>
         /// <param name="taxProvider">Tax provider</param>
-        public static void InsertTaxProvider(TaxProvider taxProvider)
+        public void InsertTaxProvider(TaxProvider taxProvider)
         {
             if (taxProvider == null)
                 throw new ArgumentNullException("taxProvider");
@@ -138,7 +139,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
             context.TaxProviders.AddObject(taxProvider);
             context.SaveChanges();
 
-            if (TaxProviderManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(TAXPROVIDERS_PATTERN_KEY);
             }
@@ -148,7 +149,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// Updates the tax provider
         /// </summary>
         /// <param name="taxProvider">Tax provider</param>
-        public static void UpdateTaxProvider(TaxProvider taxProvider)
+        public void UpdateTaxProvider(TaxProvider taxProvider)
         {
             if (taxProvider == null)
                 throw new ArgumentNullException("taxProvider");
@@ -168,7 +169,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
 
             context.SaveChanges();
             
-            if (TaxProviderManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(TAXPROVIDERS_PATTERN_KEY);
             }
@@ -179,11 +180,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// <summary>
         /// Gets a value indicating whether cache is enabled
         /// </summary>
-        public static bool CacheEnabled
+        public bool CacheEnabled
         {
             get
             {
-                return SettingManager.GetSettingValueBoolean("Cache.TaxProviderManager.CacheEnabled");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.TaxProviderManager.CacheEnabled");
             }
         }
         #endregion

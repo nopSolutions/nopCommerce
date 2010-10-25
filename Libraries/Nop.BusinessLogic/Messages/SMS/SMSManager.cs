@@ -6,13 +6,14 @@ using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Data;
 using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Messages.SMS
 {
     /// <summary>
     /// Represents the SMS manager
     /// </summary>
-    public class SMSManager
+    public partial class SMSManager : ISMSManager
     {
         #region Constants
         private const string SMSPROVIDERS_BY_ID_KEY = "Nop.smsprovider.id-{0}";
@@ -24,7 +25,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages.SMS
         /// Deletes a SMS provider
         /// </summary>
         /// <param name="smsProviderId">SMS provider identifier</param>
-        public static void DeleteSMSProvider(int smsProviderId)
+        public void DeleteSMSProvider(int smsProviderId)
         {
             var smsProvider = GetSMSProviderById(smsProviderId);
             if (smsProvider == null)
@@ -47,7 +48,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages.SMS
         /// </summary>
         /// <param name="smsProviderId">SMS provider identifier</param>
         /// <returns>SMS provider</returns>
-        public static SMSProvider GetSMSProviderById(int smsProviderId)
+        public SMSProvider GetSMSProviderById(int smsProviderId)
         {
             if (smsProviderId == 0)
                 return null;
@@ -77,7 +78,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages.SMS
         /// </summary>
         /// <param name="systemKeyword">SMS provider system keyword</param>
         /// <returns>SMS provider</returns>
-        public static SMSProvider GetSMSProviderBySystemKeyword(string systemKeyword)
+        public SMSProvider GetSMSProviderBySystemKeyword(string systemKeyword)
         {
             var context = ObjectContextHelper.CurrentObjectContext;
             var query = from p in context.SMSProviders
@@ -92,7 +93,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages.SMS
         /// Gets all SMS providers
         /// </summary>
         /// <returns>SMS provider collection</returns>
-        public static List<SMSProvider> GetAllSMSProviders()
+        public List<SMSProvider> GetAllSMSProviders()
         {
             return GetAllSMSProviders();
         }
@@ -102,7 +103,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages.SMS
         /// </summary>
         /// <param name="showHidden">A value indicating whether the not active SMS providers should be load</param>
         /// <returns>SMS provider collection</returns>
-        public static List<SMSProvider> GetAllSMSProviders(bool showHidden)
+        public List<SMSProvider> GetAllSMSProviders(bool showHidden)
         {
             var context = ObjectContextHelper.CurrentObjectContext;
             var query = from p in context.SMSProviders
@@ -116,7 +117,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages.SMS
         /// Inserts a SMS provider
         /// </summary>
         /// <param name="smsProvider">SMS provider</param>
-        public static void InsertSMSProvider(SMSProvider smsProvider)
+        public void InsertSMSProvider(SMSProvider smsProvider)
         {
             if (smsProvider == null)
                 throw new ArgumentNullException("smsProvider");
@@ -143,7 +144,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages.SMS
         /// Updates the SMS provider
         /// </summary>
         /// <param name="smsProvider">SMS provider</param>
-        public static void UpdateSMSProvider(SMSProvider smsProvider)
+        public void UpdateSMSProvider(SMSProvider smsProvider)
         {
             if (smsProvider == null)
                 throw new ArgumentNullException("smsProvider");
@@ -172,7 +173,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages.SMS
         /// </summary>
         /// <param name="text">Text</param>
         /// <returns>Number of sent messages</returns>
-        public static int SendSMS(string text)
+        public int SendSMS(string text)
         {
             int i = 0;
 
@@ -192,27 +193,28 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages.SMS
         /// </summary>
         /// <param name="order">The order</param>
         /// <returns>true if message was sent successfully; otherwise false.</returns>
-        public static void SendOrderPlacedNotification(Order order)
+        public void SendOrderPlacedNotification(Order order)
         {
             if (order != null)
             {
                 if (SendSMS(String.Format("New order(#{0}) has been placed.", order.OrderId)) > 0)
                 {
-                    OrderManager.InsertOrderNote(order.OrderId, "\"Order placed\" SMS alert (to store owner) has been sent", false, DateTime.UtcNow);
+                    IoCFactory.Resolve<IOrderManager>().InsertOrderNote(order.OrderId, "\"Order placed\" SMS alert (to store owner) has been sent", false, DateTime.UtcNow);
                 }
             }
         }
+
         #endregion
 
         #region Properties
         /// <summary>
         /// Gets a value indicating whether cache is enabled
         /// </summary>
-        public static bool CacheEnabled
+        public bool CacheEnabled
         {
             get
             {
-                return SettingManager.GetSettingValueBoolean("Cache.SMSManager.CacheEnabled");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.SMSManager.CacheEnabled");
             }
         }
         #endregion

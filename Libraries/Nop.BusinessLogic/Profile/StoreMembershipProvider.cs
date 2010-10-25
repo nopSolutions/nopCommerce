@@ -24,6 +24,7 @@ using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Promo.Affiliates;
 using NopSolutions.NopCommerce.BusinessLogic.Utils;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Profile
@@ -90,7 +91,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Profile
 
             string _username = string.Empty;
             string _email = string.Empty;
-            if (CustomerManager.UsernamesEnabled)
+            if (IoCFactory.Resolve<ICustomerManager>().UsernamesEnabled)
             {
                 _username = username;
                 _email = email;
@@ -102,7 +103,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Profile
                 _email = username;
             }
 
-            var customer = CustomerManager.AddCustomer(_email, _username, password, 
+            var customer = IoCFactory.Resolve<ICustomerManager>().AddCustomer(_email, _username, password, 
                 false, false, true, out status);
 
             if (status == MembershipCreateStatus.Success)
@@ -205,9 +206,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Profile
 
             string _username = string.Empty;
             string _email = string.Empty;
-            if (CustomerManager.UsernamesEnabled)
+            if (IoCFactory.Resolve<ICustomerManager>().UsernamesEnabled)
             {
-                customer = CustomerManager.GetCustomerByUsername(username);
+                customer = IoCFactory.Resolve<ICustomerManager>().GetCustomerByUsername(username);
                 if (customer != null)
                 {
                     _username = customer.Username;
@@ -217,7 +218,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Profile
             else
             {
                 //little hack here. username variable was used to store customer email
-                customer = CustomerManager.GetCustomerByEmail(username);
+                customer = IoCFactory.Resolve<ICustomerManager>().GetCustomerByEmail(username);
                 if (customer != null)
                 {
                     _username = customer.Email;
@@ -239,11 +240,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Profile
         /// <returns>The user name associated with the specified e-mail address. If no match is found, return null.</returns>
         public override string GetUserNameByEmail(string email)
         {
-            var customer = CustomerManager.GetCustomerByEmail(email);
+            var customer = IoCFactory.Resolve<ICustomerManager>().GetCustomerByEmail(email);
             if (customer == null)
                 return null;
 
-            if (CustomerManager.UsernamesEnabled)
+            if (IoCFactory.Resolve<ICustomerManager>().UsernamesEnabled)
             {
                 return customer.Username;
             }
@@ -384,9 +385,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Profile
             Customer customer = null;
 
             string _email = string.Empty;
-            if (CustomerManager.UsernamesEnabled)
+            if (IoCFactory.Resolve<ICustomerManager>().UsernamesEnabled)
             {
-                customer = CustomerManager.GetCustomerByUsername(username);
+                customer = IoCFactory.Resolve<ICustomerManager>().GetCustomerByUsername(username);
                 if (customer != null)
                 {
                     _email = customer.Email;
@@ -395,14 +396,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Profile
             else
             {
                 //little hack here. username variable was used to store customer email
-                customer = CustomerManager.GetCustomerByEmail(username);
+                customer = IoCFactory.Resolve<ICustomerManager>().GetCustomerByEmail(username);
                 if (customer != null)
                 {
                     _email = customer.Email;
                 }
             }
 
-            return CustomerManager.Login(_email, password);
+            return IoCFactory.Resolve<ICustomerManager>().Login(_email, password);
         }
         #endregion
 

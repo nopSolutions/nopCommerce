@@ -22,6 +22,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.BusinessLogic.Shipping;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Shipping.Methods.ShippingByWeightAndCountryCM
 {
@@ -36,10 +37,10 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.ShippingByWeightAndCountryCM
         {
             decimal? shippingTotal = null;
 
-            bool limitMethodsToCreated = SettingManager.GetSettingValueBoolean("ShippingByWeightAndCountry.LimitMethodsToCreated");
+            bool limitMethodsToCreated = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("ShippingByWeightAndCountry.LimitMethodsToCreated");
 
             ShippingByWeightAndCountry shippingByWeightAndCountry = null;
-            var shippingByWeightAndCountryCollection = ShippingByWeightAndCountryManager.GetAllByShippingMethodIdAndCountryId(ShippingMethodID, CountryID);
+            var shippingByWeightAndCountryCollection = IoCFactory.Resolve<IShippingByWeightAndCountryManager>().GetAllByShippingMethodIdAndCountryId(ShippingMethodID, CountryID);
             foreach (var shippingByWeightAndCountry2 in shippingByWeightAndCountryCollection)
             {
                 if ((weight >= shippingByWeightAndCountry2.From) && (weight <= shippingByWeightAndCountry2.To))
@@ -67,7 +68,7 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.ShippingByWeightAndCountryCM
                 shippingTotal = Math.Round((decimal)((((float)subTotal) * ((float)shippingByWeightAndCountry.ShippingChargePercentage)) / 100f), 2);
             else
             {
-                if (ShippingByWeightAndCountryManager.CalculatePerWeightUnit)
+                if (IoCFactory.Resolve<IShippingByWeightAndCountryManager>().CalculatePerWeightUnit)
                 {
                     shippingTotal = shippingByWeightAndCountry.ShippingChargeAmount * weight;
                 }
@@ -116,9 +117,9 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.ShippingByWeightAndCountryCM
                     continue;
                 subTotal += PriceHelper.GetSubTotal(shoppingCartItem, shipmentPackage.Customer, true);
             }
-            decimal weight = ShippingManager.GetShoppingCartTotalWeight(shipmentPackage.Items, shipmentPackage.Customer);
+            decimal weight = IoCFactory.Resolve<IShippingManager>().GetShoppingCartTotalWeight(shipmentPackage.Items, shipmentPackage.Customer);
 
-            var shippingMethods = ShippingMethodManager.GetAllShippingMethods(shipmentPackage.ShippingAddress.CountryId);
+            var shippingMethods = IoCFactory.Resolve<IShippingMethodManager>().GetAllShippingMethods(shipmentPackage.ShippingAddress.CountryId);
             foreach (var shippingMethod in shippingMethods)
             {
                 decimal? rate = GetRate(subTotal, weight, shippingMethod.ShippingMethodId, shipmentPackage.ShippingAddress.Country.CountryId);

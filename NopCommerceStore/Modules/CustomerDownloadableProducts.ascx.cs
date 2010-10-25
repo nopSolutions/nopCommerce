@@ -36,6 +36,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Shipping;
 using NopSolutions.NopCommerce.BusinessLogic.Tax;
 using NopSolutions.NopCommerce.BusinessLogic.Utils;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -45,7 +46,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void BindData()
         {
-            var items = OrderManager.GetAllOrderProductVariants(null, NopContext.Current.User.CustomerId, null, null, null, null, null, true);
+            var items = IoCFactory.Resolve<IOrderManager>().GetAllOrderProductVariants(null, NopContext.Current.User.CustomerId, null, null, null, null, null, true);
             if (items.Count > 0)
             {
                 pnlProducts.Visible = true;
@@ -106,7 +107,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
         
         public string GetProductVariantName(int productVariantId)
         {
-            var productVariant = ProductManager.GetProductVariantById(productVariantId);
+            var productVariant = IoCFactory.Resolve<IProductManager>().GetProductVariantById(productVariantId);
             if (productVariant != null)
                 return productVariant.LocalizedFullProductName;
             return "Not available. ID=" + productVariantId.ToString();
@@ -122,7 +123,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         public string GetProductUrl(int productVariantId)
         {
-            var productVariant = ProductManager.GetProductVariantById(productVariantId);
+            var productVariant = IoCFactory.Resolve<IProductManager>().GetProductVariantById(productVariantId);
             if (productVariant != null)
                 return SEOHelper.GetProductUrl(productVariant.ProductId);
             return string.Empty;
@@ -131,9 +132,9 @@ namespace NopSolutions.NopCommerce.Web.Modules
         public string GetDownloadUrl(OrderProductVariant orderProductVariant)
         {
             string result = string.Empty;
-            if (OrderManager.IsDownloadAllowed(orderProductVariant))
+            if (IoCFactory.Resolve<IOrderManager>().IsDownloadAllowed(orderProductVariant))
             {
-                result = string.Format("<a class=\"link\" href=\"{0}\" >{1}</a>", DownloadManager.GetDownloadUrl(orderProductVariant), GetLocaleResourceString("Account.DownloadableProducts.Download"));
+                result = string.Format("<a class=\"link\" href=\"{0}\" >{1}</a>", IoCFactory.Resolve<IDownloadManager>().GetDownloadUrl(orderProductVariant), GetLocaleResourceString("Account.DownloadableProducts.Download"));
             }
             else
             {
@@ -145,9 +146,9 @@ namespace NopSolutions.NopCommerce.Web.Modules
         public string GetLicenseDownloadUrl(OrderProductVariant orderProductVariant)
         {
             string result = string.Empty;
-            if (OrderManager.IsLicenseDownloadAllowed(orderProductVariant))
+            if (IoCFactory.Resolve<IOrderManager>().IsLicenseDownloadAllowed(orderProductVariant))
             {
-                result = string.Format("<a class=\"link\" href=\"{0}\" >{1}</a>", DownloadManager.GetLicenseDownloadUrl(orderProductVariant), GetLocaleResourceString("Account.DownloadableProducts.DownloadLicense"));
+                result = string.Format("<a class=\"link\" href=\"{0}\" >{1}</a>", IoCFactory.Resolve<IDownloadManager>().GetLicenseDownloadUrl(orderProductVariant), GetLocaleResourceString("Account.DownloadableProducts.DownloadLicense"));
             }
             return result;
         }

@@ -31,7 +31,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
     /// <summary>
     /// Log manager
     /// </summary>
-    public partial class LogManager
+    public partial class LogManager : ILogManager
     {
         #region Methods
 
@@ -39,7 +39,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
         /// Deletes a log item
         /// </summary>
         /// <param name="logId">Log item identifier</param>
-        public static void DeleteLog(int logId)
+        public void DeleteLog(int logId)
         {
             var log = GetLogById(logId);
             if (log == null)
@@ -55,7 +55,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
         /// <summary>
         /// Clears a log
         /// </summary>
-        public static void ClearLog()
+        public void ClearLog()
         {
             var context = ObjectContextHelper.CurrentObjectContext;
             context.Sp_LogClear();
@@ -65,7 +65,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
         /// Gets all log items
         /// </summary>
         /// <returns>Log item collection</returns>
-        public static List<Log> GetAllLogs()
+        public List<Log> GetAllLogs()
         {
             var context = ObjectContextHelper.CurrentObjectContext;
             var query = from l in context.Log
@@ -80,7 +80,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
         /// </summary>
         /// <param name="logId">Log item identifier</param>
         /// <returns>Log item</returns>
-        public static Log GetLogById(int logId)
+        public Log GetLogById(int logId)
         {
             if (logId == 0)
                 return null;
@@ -99,7 +99,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
         /// <param name="message">The short message</param>
         /// <param name="exception">The exception</param>
         /// <returns>A log item</returns>
-        public static Log InsertLog(LogTypeEnum logType, string message, string exception)
+        public Log InsertLog(LogTypeEnum logType, string message, string exception)
         {
             return InsertLog(logType, message, new Exception(String.IsNullOrEmpty(exception) ? string.Empty : exception));
         }
@@ -111,7 +111,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
         /// <param name="message">The short message</param>
         /// <param name="exception">The exception</param>
         /// <returns>A log item</returns>
-        public static Log InsertLog(LogTypeEnum logType, string message, Exception exception)
+        public Log InsertLog(LogTypeEnum logType, string message, Exception exception)
         {
             int customerId = 0;
             if (NopContext.Current != null && NopContext.Current.User != null)
@@ -133,7 +133,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
         /// <param name="customerId">The customer identifier</param>
         /// <param name="pageUrl">The page URL</param>
         /// <returns>Log item</returns>
-        public static Log InsertLog(LogTypeEnum logType, int severity, string message,
+        public Log InsertLog(LogTypeEnum logType, int severity, string message,
             Exception exception, string IPAddress,
             int customerId, string pageUrl)
         {

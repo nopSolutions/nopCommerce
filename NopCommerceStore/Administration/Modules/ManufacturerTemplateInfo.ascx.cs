@@ -25,6 +25,7 @@ using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.BusinessLogic.Templates;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -32,7 +33,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            ManufacturerTemplate manufacturerTemplate = TemplateManager.GetManufacturerTemplateById(this.ManufacturerTemplateId);
+            ManufacturerTemplate manufacturerTemplate = IoCFactory.Resolve<ITemplateManager>().GetManufacturerTemplateById(this.ManufacturerTemplateId);
             if (manufacturerTemplate != null)
             {
                 this.txtName.Text = manufacturerTemplate.Name;
@@ -60,7 +61,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public ManufacturerTemplate SaveInfo()
         {
-            ManufacturerTemplate manufacturerTemplate = TemplateManager.GetManufacturerTemplateById(this.ManufacturerTemplateId);
+            ManufacturerTemplate manufacturerTemplate = IoCFactory.Resolve<ITemplateManager>().GetManufacturerTemplateById(this.ManufacturerTemplateId);
             if (manufacturerTemplate != null)
             {
                 manufacturerTemplate.Name = txtName.Text;
@@ -68,7 +69,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 manufacturerTemplate.DisplayOrder =  txtDisplayOrder.Value;
                 manufacturerTemplate.UpdatedOn = DateTime.UtcNow;
 
-                TemplateManager.UpdateManufacturerTemplate(manufacturerTemplate);
+                IoCFactory.Resolve<ITemplateManager>().UpdateManufacturerTemplate(manufacturerTemplate);
             }
             else
             {
@@ -81,7 +82,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     CreatedOn = now,
                     UpdatedOn = now
                 };
-                TemplateManager.InsertManufacturerTemplate(manufacturerTemplate);
+                IoCFactory.Resolve<ITemplateManager>().InsertManufacturerTemplate(manufacturerTemplate);
             }
 
             return manufacturerTemplate;

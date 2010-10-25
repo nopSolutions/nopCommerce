@@ -31,6 +31,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Tax;
 using NopSolutions.NopCommerce.BusinessLogic.Utils;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 
 namespace NopSolutions.NopCommerce.Payment.Methods.PayPal
@@ -52,9 +53,9 @@ namespace NopSolutions.NopCommerce.Payment.Methods.PayPal
         /// </summary>
         public PayPalStandardPaymentProcessor()
         {
-            useSandBox = SettingManager.GetSettingValueBoolean("PaymentMethod.PaypalStandard.UseSandbox");
-            businessEmail = SettingManager.GetSettingValue("PaymentMethod.PaypalStandard.BusinessEmail");
-            PDTId = SettingManager.GetSettingValue("PaymentMethod.PaypalStandard.PTIIdentityToken");
+            useSandBox = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.PaypalStandard.UseSandbox");
+            businessEmail = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.PaypalStandard.BusinessEmail");
+            PDTId = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.PaypalStandard.PTIIdentityToken");
 
             if (string.IsNullOrEmpty(businessEmail))
                 throw new NopException("Paypal Standard business Email is empty");
@@ -185,7 +186,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.PayPal
             string cancel_returnURL = CommonHelper.GetStoreLocation(false) + "PaypalCancel.aspx";
             builder.Append(GetPaypalUrl());
             string cmd = string.Empty;
-            if (SettingManager.GetSettingValueBoolean("PaymentMethod.PaypalStandard.PassProductNamesAndTotals"))
+            if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.PaypalStandard.PassProductNamesAndTotals"))
             {
                 cmd = "_cart";
             }
@@ -194,7 +195,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.PayPal
                 cmd = "_xclick";
             }
             builder.AppendFormat("?cmd={0}&business={1}", cmd, HttpUtility.UrlEncode(businessEmail));
-            if (SettingManager.GetSettingValueBoolean("PaymentMethod.PaypalStandard.PassProductNamesAndTotals"))
+            if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.PaypalStandard.PassProductNamesAndTotals"))
             {
                 builder.AppendFormat("&upload=1");
 
@@ -216,7 +217,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.PayPal
                 var caValues = CheckoutAttributeHelper.ParseCheckoutAttributeValues(order.CheckoutAttributesXml);
                 foreach (var val in caValues)
                 {
-                    var attPrice = TaxManager.GetCheckoutAttributePrice(val, false, order.Customer);
+                    var attPrice = IoCFactory.Resolve<ITaxManager>().GetCheckoutAttributePrice(val, false, order.Customer);
                     if (attPrice > decimal.Zero) //if it has a price
                     {
                         var ca = val.CheckoutAttribute;
@@ -286,7 +287,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.PayPal
             }
 
             builder.AppendFormat("&custom={0}", order.OrderGuid);
-            builder.Append(string.Format("&no_note=1&currency_code={0}", HttpUtility.UrlEncode(CurrencyManager.PrimaryStoreCurrency.CurrencyCode)));
+            builder.Append(string.Format("&no_note=1&currency_code={0}", HttpUtility.UrlEncode(IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency.CurrencyCode)));
             builder.AppendFormat("&invoice={0}", order.OrderId);
             builder.AppendFormat("&rm=2", new object[0]);
             if (order.ShippingStatus != ShippingStatusEnum.ShippingNotRequired)
@@ -315,12 +316,12 @@ namespace NopSolutions.NopCommerce.Payment.Methods.PayPal
             //        builder.AppendFormat("&night_phone_c={0}", HttpUtility.UrlEncode(billingPhoneNumber.Substring(6, 4)));
             //    }
             //}
-            StateProvince billingStateProvince = StateProvinceManager.GetStateProvinceById(order.BillingStateProvinceId);
+            StateProvince billingStateProvince = IoCFactory.Resolve<IStateProvinceManager>().GetStateProvinceById(order.BillingStateProvinceId);
             if (billingStateProvince != null)
                 builder.AppendFormat("&state={0}", HttpUtility.UrlEncode(billingStateProvince.Abbreviation));
             else
                 builder.AppendFormat("&state={0}", HttpUtility.UrlEncode(order.BillingStateProvince));
-            Country billingCountry = CountryManager.GetCountryById(order.BillingCountryId);
+            Country billingCountry = IoCFactory.Resolve<ICountryManager>().GetCountryById(order.BillingCountryId);
             if (billingCountry != null)
                 builder.AppendFormat("&country={0}", HttpUtility.UrlEncode(billingCountry.TwoLetterIsoCode));
             else
@@ -337,7 +338,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.PayPal
         /// <returns>Additional handling fee</returns>
         public decimal GetAdditionalHandlingFee()
         {
-            return SettingManager.GetSettingValueDecimalNative("PaymentMethod.PaypalStandard.AdditionalFee");
+            return IoCFactory.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.PaypalStandard.AdditionalFee");
         }
 
         /// <summary>

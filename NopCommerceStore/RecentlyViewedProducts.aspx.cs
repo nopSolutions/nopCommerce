@@ -30,6 +30,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Payment;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 namespace NopSolutions.NopCommerce.Web
 {
     public partial class RecentlyViewedProductsPage : BaseNopPage
@@ -38,7 +39,7 @@ namespace NopSolutions.NopCommerce.Web
         {
             CommonHelper.SetResponseNoCache(Response);
 
-            if (!ProductManager.RecentlyViewedProductsEnabled)
+            if (!IoCFactory.Resolve<IProductManager>().RecentlyViewedProductsEnabled)
             {
                 Response.Redirect(CommonHelper.GetStoreLocation());
             }

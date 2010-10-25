@@ -1,6 +1,7 @@
 <%@ Application Language="C#" %>
 <%@ Import Namespace="NopSolutions.NopCommerce.BusinessLogic.Configuration" %>
 <%@ Import Namespace="NopSolutions.NopCommerce.BusinessLogic" %>
+<%@ Import Namespace="NopSolutions.NopCommerce.BusinessLogic.IoC" %>
 <%@ Import Namespace="NopSolutions.NopCommerce.BusinessLogic.Installation" %>
 <%@ Import Namespace="NopSolutions.NopCommerce.BusinessLogic.Utils" %>
 <%@ Import Namespace="System.Globalization" %>
@@ -45,7 +46,7 @@
         {
             if (InstallerHelper.ConnectionStringIsSet())
             {
-                LogManager.InsertLog(LogTypeEnum.Unknown, ex.Message, ex);
+                IoCFactory.Resolve<ILogManager>().InsertLog(LogTypeEnum.Unknown, ex.Message, ex);
             }
         }
     }

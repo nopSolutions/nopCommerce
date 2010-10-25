@@ -29,6 +29,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Localization;
 using NopSolutions.NopCommerce.BusinessLogic.Payment;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 namespace NopSolutions.NopCommerce.Web
 {
     public partial class RecentlyAddedProductsRSSPage : BaseNopPage
@@ -40,10 +41,10 @@ namespace NopSolutions.NopCommerce.Web
 
         private void BindData()
         {
-            if (ProductManager.RecentlyAddedProductsEnabled)
+            if (IoCFactory.Resolve<IProductManager>().RecentlyAddedProductsEnabled)
             {
-                int number = ProductManager.RecentlyAddedProductsNumber;
-                var products = ProductManager.GetRecentlyAddedProducts(number);
+                int number = IoCFactory.Resolve<IProductManager>().RecentlyAddedProductsNumber;
+                var products = IoCFactory.Resolve<IProductManager>().GetRecentlyAddedProducts(number);
                 rptrRecentlyAddedProducts.DataSource = products;
                 rptrRecentlyAddedProducts.DataBind();
             }

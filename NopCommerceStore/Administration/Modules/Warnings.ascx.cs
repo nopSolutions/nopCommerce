@@ -31,6 +31,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Measures;
 using NopSolutions.NopCommerce.BusinessLogic.Messages;
 using NopSolutions.NopCommerce.BusinessLogic.Shipping;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
  
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
@@ -108,19 +109,19 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         private void TestStoreUrl()
         {
-            if (SettingManager.StoreUrl.Equals(CommonHelper.GetStoreLocation(false), StringComparison.InvariantCultureIgnoreCase))
+            if (IoCFactory.Resolve<ISettingManager>().StoreUrl.Equals(CommonHelper.GetStoreLocation(false), StringComparison.InvariantCultureIgnoreCase))
             {
                 MarkAsPass(lblStoreUrl);
             }
             else
             {
-                MarkAsWarning(lblStoreUrl, string.Format("Specified store URL ({0}) doesn't match this store URL ({1})", SettingManager.StoreUrl, CommonHelper.GetStoreLocation(false)));
+                MarkAsWarning(lblStoreUrl, string.Format("Specified store URL ({0}) doesn't match this store URL ({1})", IoCFactory.Resolve<ISettingManager>().StoreUrl, CommonHelper.GetStoreLocation(false)));
             }
         }
 
         private void TestPrimaryExchangeRateCurrency()
         {
-            if (CurrencyManager.PrimaryExchangeRateCurrency != null)
+            if (IoCFactory.Resolve<ICurrencyManager>().PrimaryExchangeRateCurrency != null)
             {
                 MarkAsPass(lblPrimaryExchangeRateCurrency);
             }
@@ -132,7 +133,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         private void TestPrimaryStoreCurrency()
         {
-            if (CurrencyManager.PrimaryStoreCurrency != null)
+            if (IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency != null)
             {
                 MarkAsPass(lblPrimaryStoreCurrency);
             }
@@ -144,7 +145,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         private void TestBaseWeight()
         {
-            if (MeasureManager.BaseWeightIn != null)
+            if (IoCFactory.Resolve<IMeasureManager>().BaseWeightIn != null)
             {
                 MarkAsPass(lblDefaultWeight);
             }
@@ -156,7 +157,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         private void TestBaseDimension()
         {
-            if (MeasureManager.BaseDimensionIn != null)
+            if (IoCFactory.Resolve<IMeasureManager>().BaseDimensionIn != null)
             {
                 MarkAsPass(lblDefaultDimension);
             }
@@ -169,12 +170,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         private void TestMessageTemplates()
         {
             StringBuilder warningResult = new StringBuilder();
-            var publishedLanguages = LanguageManager.GetAllLanguages(false);
-            foreach (var messageTemplate in MessageManager.GetAllMessageTemplates())
+            var publishedLanguages = IoCFactory.Resolve<ILanguageManager>().GetAllLanguages(false);
+            foreach (var messageTemplate in IoCFactory.Resolve<IMessageManager>().GetAllMessageTemplates())
             {
                 foreach (var language in publishedLanguages)
                 {
-                    var localizedMessageTemplate = MessageManager.GetLocalizedMessageTemplate(messageTemplate.Name, language.LanguageId);
+                    var localizedMessageTemplate = IoCFactory.Resolve<IMessageManager>().GetLocalizedMessageTemplate(messageTemplate.Name, language.LanguageId);
                     if (localizedMessageTemplate == null)
                     {
                         warningResult.AppendFormat("You don't have localized version of \"{0}\" message template for {1}.", messageTemplate.Name, language.Name);
@@ -198,7 +199,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         private void TestShippingMethods()
         {
             StringBuilder warningResult = new StringBuilder();
-            var srcmList = ShippingRateComputationMethodManager.GetAllShippingRateComputationMethods(false);
+            var srcmList = IoCFactory.Resolve<IShippingRateComputationMethodManager>().GetAllShippingRateComputationMethods(false);
             int offlineSrcmCount = 0;
             foreach (var srcm in srcmList)
             {

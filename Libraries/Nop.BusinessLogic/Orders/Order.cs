@@ -23,6 +23,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Promo.Affiliates;
 using NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts;
 using NopSolutions.NopCommerce.BusinessLogic.Shipping;
 using NopSolutions.NopCommerce.BusinessLogic.Tax;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Orders
 {
@@ -564,7 +565,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             get
             {
                 if (_customer == null)
-                    _customer = CustomerManager.GetCustomerById(this.CustomerId);
+                    _customer = IoCFactory.Resolve<ICustomerManager>().GetCustomerById(this.CustomerId);
                 return _customer;
             }
         }
@@ -591,7 +592,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         {
             get
             {
-                return AffiliateManager.GetAffiliateById(this.AffiliateId);
+                return IoCFactory.Resolve<IAffiliateManager>().GetAffiliateById(this.AffiliateId);
             }
         }
 
@@ -602,7 +603,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         {
             get
             {
-                return OrderManager.GetOrderProductVariantsByOrderId(this.OrderId);
+                return IoCFactory.Resolve<IOrderManager>().GetOrderProductVariantsByOrderId(this.OrderId);
             }
         }
 
@@ -613,7 +614,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         {
             get
             {
-                return OrderManager.GetOrderNoteByOrderId(this.OrderId);
+                return IoCFactory.Resolve<IOrderManager>().GetOrderNoteByOrderId(this.OrderId);
             }
         }
 
@@ -703,7 +704,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                     if (this.Customer == null)
                         return null;
 
-                    var rphc = OrderManager.GetAllRewardPointsHistoryEntries(this.Customer.CustomerId,
+                    var rphc = IoCFactory.Resolve<IOrderManager>().GetAllRewardPointsHistoryEntries(this.Customer.CustomerId,
                         this.OrderId, 1, 0, out rpTotalRecords);
                     if (rphc.Count > 0)
                     {

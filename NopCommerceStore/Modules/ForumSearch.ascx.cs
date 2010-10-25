@@ -32,6 +32,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Localization;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Common;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -73,7 +74,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     if (String.IsNullOrEmpty(keywords))
                         throw new NopException(LocalizationManager.GetLocaleResourceString("Forum.SearchTermCouldNotBeEmpty"));
 
-                    int searchTermMinimumLength = SettingManager.GetSettingValueInteger("Search.ForumSearchTermMinimumLength", 3);
+                    int searchTermMinimumLength = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Search.ForumSearchTermMinimumLength", 3);
                     if (keywords.Length < searchTermMinimumLength)
                         throw new NopException(string.Format(LocalizationManager.GetLocaleResourceString("Forum.SearchTermMinimumLengthIsNCharacters"), searchTermMinimumLength));
 
@@ -90,12 +91,12 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
                     int totalRecords = 0;
                     int pageSize = 10;
-                    if (ForumManager.SearchResultsPageSize > 0)
+                    if (IoCFactory.Resolve<IForumManager>().SearchResultsPageSize > 0)
                     {
-                        pageSize = ForumManager.SearchResultsPageSize;
+                        pageSize = IoCFactory.Resolve<IForumManager>().SearchResultsPageSize;
                     }
 
-                    var forumTopics = ForumManager.GetAllTopics(forumId, 0, keywords, searchWithin,
+                    var forumTopics = IoCFactory.Resolve<IForumManager>().GetAllTopics(forumId, 0, keywords, searchWithin,
                         limitResultsToPrevious, pageSize, this.CurrentPageIndex, out totalRecords);
                     if (forumTopics.Count > 0)
                     {
@@ -191,9 +192,9 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 var hlTopicStarter = e.Item.FindControl("hlTopicStarter") as HyperLink;
                 if (hlTopicStarter != null)
                 {
-                    if (customer != null && CustomerManager.AllowViewingProfiles && !customer.IsGuest)
+                    if (customer != null && IoCFactory.Resolve<ICustomerManager>().AllowViewingProfiles && !customer.IsGuest)
                     {
-                        hlTopicStarter.Text = Server.HtmlEncode(CustomerManager.FormatUserName(customer, true));
+                        hlTopicStarter.Text = Server.HtmlEncode(IoCFactory.Resolve<ICustomerManager>().FormatUserName(customer, true));
                         hlTopicStarter.NavigateUrl = SEOHelper.GetUserProfileUrl(customer.CustomerId);
                     }
                     else
@@ -205,9 +206,9 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 var lblTopicStarter = e.Item.FindControl("lblTopicStarter") as Label;
                 if (lblTopicStarter != null)
                 {
-                    if (customer != null && (!CustomerManager.AllowViewingProfiles || customer.IsGuest))
+                    if (customer != null && (!IoCFactory.Resolve<ICustomerManager>().AllowViewingProfiles || customer.IsGuest))
                     {
-                        lblTopicStarter.Text = Server.HtmlEncode(CustomerManager.FormatUserName(customer, true));
+                        lblTopicStarter.Text = Server.HtmlEncode(IoCFactory.Resolve<ICustomerManager>().FormatUserName(customer, true));
                     }
                     else
                     {

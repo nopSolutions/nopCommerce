@@ -13,6 +13,7 @@
 //------------------------------------------------------------------------------
 
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Payment.Methods.Dibs
 {
@@ -29,11 +30,11 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Dibs
         {
             get
             {
-                return SettingManager.GetSettingValueInteger("PaymentMethod.Dibs.MerchantID");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("PaymentMethod.Dibs.MerchantID");
             }
             set
             {
-                SettingManager.SetParam("PaymentMethod.Dibs.MerchantID", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.Dibs.MerchantID", value.ToString());
             }
         }
         #endregion

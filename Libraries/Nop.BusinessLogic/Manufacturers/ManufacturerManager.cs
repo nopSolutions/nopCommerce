@@ -24,13 +24,14 @@ using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Data;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
 {
     /// <summary>
     /// Manufacturer manager
     /// </summary>
-    public partial class ManufacturerManager
+    public partial class ManufacturerManager : IManufacturerManager
     {
         #region Constants
         private const string MANUFACTURERS_ALL_KEY = "Nop.manufacturer.all-{0}";
@@ -48,7 +49,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
         /// Marks a manufacturer as deleted
         /// </summary>
         /// <param name="manufacturerId">Manufacturer identifer</param>
-        public static void MarkManufacturerAsDeleted(int manufacturerId)
+        public void MarkManufacturerAsDeleted(int manufacturerId)
         {
             var manufacturer = GetManufacturerById(manufacturerId);
             if (manufacturer != null)
@@ -62,7 +63,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
         /// Removes a manufacturer picture
         /// </summary>
         /// <param name="manufacturerId">Manufacturer identifier</param>
-        public static void RemoveManufacturerPicture(int manufacturerId)
+        public void RemoveManufacturerPicture(int manufacturerId)
         {
             var manufacturer = GetManufacturerById(manufacturerId);
             if (manufacturer != null)
@@ -76,7 +77,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
         /// Gets all manufacturers
         /// </summary>
         /// <returns>Manufacturer collection</returns>
-        public static List<Manufacturer> GetAllManufacturers()
+        public List<Manufacturer> GetAllManufacturers()
         {
             bool showHidden = NopContext.Current.IsAdmin;
             return GetAllManufacturers(showHidden);
@@ -87,11 +88,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
         /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Manufacturer collection</returns>
-        public static List<Manufacturer> GetAllManufacturers(bool showHidden)
+        public List<Manufacturer> GetAllManufacturers(bool showHidden)
         {
             string key = string.Format(MANUFACTURERS_ALL_KEY, showHidden);
             object obj2 = NopRequestCache.Get(key);
-            if (ManufacturerManager.ManufacturersCacheEnabled && (obj2 != null))
+            if (this.ManufacturersCacheEnabled && (obj2 != null))
             {
                 return (List<Manufacturer>)obj2;
             }
@@ -104,7 +105,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
                         select m;
             var manufacturers = query.ToList();
 
-            if (ManufacturerManager.ManufacturersCacheEnabled)
+            if (this.ManufacturersCacheEnabled)
             {
                 NopRequestCache.Add(key, manufacturers);
             }
@@ -116,14 +117,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
         /// </summary>
         /// <param name="manufacturerId">Manufacturer identifier</param>
         /// <returns>Manufacturer</returns>
-        public static Manufacturer GetManufacturerById(int manufacturerId)
+        public Manufacturer GetManufacturerById(int manufacturerId)
         {
             if (manufacturerId == 0)
                 return null;
 
             string key = string.Format(MANUFACTURERS_BY_ID_KEY, manufacturerId);
             object obj2 = NopRequestCache.Get(key);
-            if (ManufacturerManager.ManufacturersCacheEnabled && (obj2 != null))
+            if (this.ManufacturersCacheEnabled && (obj2 != null))
             {
                 return (Manufacturer)obj2;
             }
@@ -134,7 +135,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
                         select m;
             var manufacturer = query.SingleOrDefault();
 
-            if (ManufacturerManager.ManufacturersCacheEnabled)
+            if (this.ManufacturersCacheEnabled)
             {
                 NopRequestCache.Add(key, manufacturer);
             }
@@ -145,7 +146,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
         /// Inserts a manufacturer
         /// </summary>
         /// <param name="manufacturer">Manufacturer</param>
-        public static void InsertManufacturer(Manufacturer manufacturer)
+        public void InsertManufacturer(Manufacturer manufacturer)
         {
             if (manufacturer == null)
                 throw new ArgumentNullException("manufacturer");
@@ -169,7 +170,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
             context.Manufacturers.AddObject(manufacturer);
             context.SaveChanges();
 
-            if (ManufacturerManager.ManufacturersCacheEnabled || ManufacturerManager.MappingsCacheEnabled)
+            if (this.ManufacturersCacheEnabled || this.MappingsCacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(MANUFACTURERS_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(PRODUCTMANUFACTURERS_PATTERN_KEY);
@@ -180,7 +181,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
         /// Updates the manufacturer
         /// </summary>
         /// <param name="manufacturer">Manufacturer</param>
-        public static void UpdateManufacturer(Manufacturer manufacturer)
+        public void UpdateManufacturer(Manufacturer manufacturer)
         {
             if (manufacturer == null)
                 throw new ArgumentNullException("manufacturer");
@@ -205,7 +206,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
 
             context.SaveChanges();
 
-            if (ManufacturerManager.ManufacturersCacheEnabled || ManufacturerManager.MappingsCacheEnabled)
+            if (this.ManufacturersCacheEnabled || this.MappingsCacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(MANUFACTURERS_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(PRODUCTMANUFACTURERS_PATTERN_KEY);
@@ -217,7 +218,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
         /// </summary>
         /// <param name="manufacturerLocalizedId">Localized manufacturer identifier</param>
         /// <returns>Manufacturer content</returns>
-        public static ManufacturerLocalized GetManufacturerLocalizedById(int manufacturerLocalizedId)
+        public ManufacturerLocalized GetManufacturerLocalizedById(int manufacturerLocalizedId)
         {
             if (manufacturerLocalizedId == 0)
                 return null;
@@ -235,7 +236,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
         /// </summary>
         /// <param name="manufacturerId">Manufacturer identifier</param>
         /// <returns>Manufacturer content</returns>
-        public static List<ManufacturerLocalized> GetManufacturerLocalizedByManufacturerId(int manufacturerId)
+        public List<ManufacturerLocalized> GetManufacturerLocalizedByManufacturerId(int manufacturerId)
         {
             if (manufacturerId == 0)
                 return new List<ManufacturerLocalized>();
@@ -254,7 +255,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
         /// <param name="manufacturerId">Manufacturer identifier</param>
         /// <param name="languageId">Language identifier</param>
         /// <returns>Manufacturer content</returns>
-        public static ManufacturerLocalized GetManufacturerLocalizedByManufacturerIdAndLanguageId(int manufacturerId, int languageId)
+        public ManufacturerLocalized GetManufacturerLocalizedByManufacturerIdAndLanguageId(int manufacturerId, int languageId)
         {
             if (manufacturerId == 0 || languageId == 0)
                 return null;
@@ -273,7 +274,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
         /// Inserts a localized manufacturer
         /// </summary>
         /// <param name="manufacturerLocalized">Manufacturer content</param>
-        public static void InsertManufacturerLocalized(ManufacturerLocalized manufacturerLocalized)
+        public void InsertManufacturerLocalized(ManufacturerLocalized manufacturerLocalized)
         {
             if (manufacturerLocalized == null)
                 throw new ArgumentNullException("manufacturerLocalized");
@@ -295,7 +296,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
             context.ManufacturerLocalized.AddObject(manufacturerLocalized);
             context.SaveChanges();
 
-            if (ManufacturerManager.ManufacturersCacheEnabled)
+            if (this.ManufacturersCacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(MANUFACTURERS_PATTERN_KEY);
             }
@@ -305,7 +306,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
         /// Update a localized manufacturer
         /// </summary>
         /// <param name="manufacturerLocalized">Manufacturer content</param>
-        public static void UpdateManufacturerLocalized(ManufacturerLocalized manufacturerLocalized)
+        public void UpdateManufacturerLocalized(ManufacturerLocalized manufacturerLocalized)
         {
             if (manufacturerLocalized == null)
                 throw new ArgumentNullException("manufacturerLocalized");
@@ -344,7 +345,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
                 context.SaveChanges();
             }
 
-            if (ManufacturerManager.ManufacturersCacheEnabled)
+            if (this.ManufacturersCacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(MANUFACTURERS_PATTERN_KEY);
             }
@@ -354,7 +355,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
         /// Deletes a product manufacturer mapping
         /// </summary>
         /// <param name="productManufacturerId">Product manufacturer mapping identifer</param>
-        public static void DeleteProductManufacturer(int productManufacturerId)
+        public void DeleteProductManufacturer(int productManufacturerId)
         {
             if (productManufacturerId == 0)
                 return;
@@ -369,7 +370,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
             context.DeleteObject(productManufacturer);
             context.SaveChanges();
 
-            if (ManufacturerManager.ManufacturersCacheEnabled || ManufacturerManager.MappingsCacheEnabled)
+            if (this.ManufacturersCacheEnabled || this.MappingsCacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(MANUFACTURERS_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(PRODUCTMANUFACTURERS_PATTERN_KEY);
@@ -381,7 +382,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
         /// </summary>
         /// <param name="manufacturerId">Manufacturer identifier</param>
         /// <returns>Product manufacturer collection</returns>
-        public static List<ProductManufacturer> GetProductManufacturersByManufacturerId(int manufacturerId)
+        public List<ProductManufacturer> GetProductManufacturersByManufacturerId(int manufacturerId)
         {
             if (manufacturerId == 0)
                 return new List<ProductManufacturer>();
@@ -389,7 +390,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
             bool showHidden = NopContext.Current.IsAdmin;
             string key = string.Format(PRODUCTMANUFACTURERS_ALLBYMANUFACTURERID_KEY, showHidden, manufacturerId);
             object obj2 = NopRequestCache.Get(key);
-            if (ManufacturerManager.MappingsCacheEnabled && (obj2 != null))
+            if (this.MappingsCacheEnabled && (obj2 != null))
             {
                 return (List<ProductManufacturer>)obj2;
             }
@@ -404,7 +405,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
                         select pm;
             var productManufacturers = query.ToList();
 
-            if (ManufacturerManager.MappingsCacheEnabled)
+            if (this.MappingsCacheEnabled)
             {
                 NopRequestCache.Add(key, productManufacturers);
             }
@@ -416,7 +417,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
         /// </summary>
         /// <param name="productId">Product identifier</param>
         /// <returns>Product manufacturer mapping collection</returns>
-        public static List<ProductManufacturer> GetProductManufacturersByProductId(int productId)
+        public List<ProductManufacturer> GetProductManufacturersByProductId(int productId)
         {
             if (productId == 0)
                 return new List<ProductManufacturer>();
@@ -424,7 +425,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
             bool showHidden = NopContext.Current.IsAdmin;
             string key = string.Format(PRODUCTMANUFACTURERS_ALLBYPRODUCTID_KEY, showHidden, productId);
             object obj2 = NopRequestCache.Get(key);
-            if (ManufacturerManager.MappingsCacheEnabled && (obj2 != null))
+            if (this.MappingsCacheEnabled && (obj2 != null))
             {
                 return (List<ProductManufacturer>)obj2;
             }
@@ -439,7 +440,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
                         select pm;
             var productManufacturers = query.ToList();
 
-            if (ManufacturerManager.MappingsCacheEnabled)
+            if (this.MappingsCacheEnabled)
             {
                 NopRequestCache.Add(key, productManufacturers);
             }
@@ -451,14 +452,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
         /// </summary>
         /// <param name="productManufacturerId">Product manufacturer mapping identifier</param>
         /// <returns>Product manufacturer mapping</returns>
-        public static ProductManufacturer GetProductManufacturerById(int productManufacturerId)
+        public ProductManufacturer GetProductManufacturerById(int productManufacturerId)
         {
             if (productManufacturerId == 0)
                 return null;
 
             string key = string.Format(PRODUCTMANUFACTURERS_BY_ID_KEY, productManufacturerId);
             object obj2 = NopRequestCache.Get(key);
-            if (ManufacturerManager.MappingsCacheEnabled && (obj2 != null))
+            if (this.MappingsCacheEnabled && (obj2 != null))
             {
                 return (ProductManufacturer)obj2;
             }
@@ -469,7 +470,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
                         select pm;
             var productManufacturer = query.SingleOrDefault();
 
-            if (ManufacturerManager.MappingsCacheEnabled)
+            if (this.MappingsCacheEnabled)
             {
                 NopRequestCache.Add(key, productManufacturer);
             }
@@ -480,7 +481,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
         /// Inserts a product manufacturer mapping
         /// </summary>
         /// <param name="productManufacturer">Product manufacturer mapping</param>
-        public static void InsertProductManufacturer(ProductManufacturer productManufacturer)
+        public void InsertProductManufacturer(ProductManufacturer productManufacturer)
         {
             if (productManufacturer == null)
                 throw new ArgumentNullException("productManufacturer");
@@ -490,7 +491,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
             context.ProductManufacturers.AddObject(productManufacturer);
             context.SaveChanges();
 
-            if (ManufacturerManager.ManufacturersCacheEnabled || ManufacturerManager.MappingsCacheEnabled)
+            if (this.ManufacturersCacheEnabled || this.MappingsCacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(MANUFACTURERS_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(PRODUCTMANUFACTURERS_PATTERN_KEY);
@@ -501,7 +502,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
         /// Updates the product manufacturer mapping
         /// </summary>
         /// <param name="productManufacturer">Product manufacturer mapping</param>
-        public static void UpdateProductManufacturer(ProductManufacturer productManufacturer)
+        public void UpdateProductManufacturer(ProductManufacturer productManufacturer)
         {
             if (productManufacturer == null)
                 throw new ArgumentNullException("productManufacturer");
@@ -512,7 +513,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
 
             context.SaveChanges();
 
-            if (ManufacturerManager.ManufacturersCacheEnabled || ManufacturerManager.MappingsCacheEnabled)
+            if (this.ManufacturersCacheEnabled || this.MappingsCacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(MANUFACTURERS_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(PRODUCTMANUFACTURERS_PATTERN_KEY);
@@ -525,22 +526,22 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
         /// <summary>
         /// Gets a value indicating whether manufacturers cache is enabled
         /// </summary>
-        public static bool ManufacturersCacheEnabled
+        public bool ManufacturersCacheEnabled
         {
             get
             {
-                return SettingManager.GetSettingValueBoolean("Cache.ManufacturerManager.ManufacturersCacheEnabled");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.ManufacturerManager.ManufacturersCacheEnabled");
             }
         }
 
         /// <summary>
         /// Gets a value indicating whether mappings cache is enabled
         /// </summary>
-        public static bool MappingsCacheEnabled
+        public bool MappingsCacheEnabled
         {
             get
             {
-                return SettingManager.GetSettingValueBoolean("Cache.ManufacturerManager.MappingsCacheEnabled");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.ManufacturerManager.MappingsCacheEnabled");
             }
         }
         #endregion

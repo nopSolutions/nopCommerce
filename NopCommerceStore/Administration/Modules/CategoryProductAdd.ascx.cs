@@ -31,6 +31,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Media;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -49,11 +50,11 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             var picture = product.DefaultPicture;
             if (picture != null)
             {
-                return PictureManager.GetPictureUrl(picture, SettingManager.GetSettingValueInteger("Media.ShoppingCart.ThumbnailImageSize", 80));
+                return IoCFactory.Resolve<IPictureManager>().GetPictureUrl(picture, IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.ShoppingCart.ThumbnailImageSize", 80));
             }
             else
             {
-                return PictureManager.GetDefaultPictureUrl(SettingManager.GetSettingValueInteger("Media.ShoppingCart.ThumbnailImageSize", 80));
+                return IoCFactory.Resolve<IPictureManager>().GetDefaultPictureUrl(IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.ShoppingCart.ThumbnailImageSize", 80));
             }
         }
 
@@ -65,7 +66,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             this.ddlManufacturer.Items.Clear();
             ListItem itemEmptyManufacturer = new ListItem(GetLocaleResourceString("Admin.Common.All"), "0");
             this.ddlManufacturer.Items.Add(itemEmptyManufacturer);
-            var manufacturers = ManufacturerManager.GetAllManufacturers();
+            var manufacturers = IoCFactory.Resolve<IManufacturerManager>().GetAllManufacturers();
             foreach (Manufacturer manufacturer in manufacturers)
             {
                 ListItem item2 = new ListItem(manufacturer.Name, manufacturer.ManufacturerId.ToString());
@@ -80,7 +81,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             int manufacturerId = int.Parse(this.ddlManufacturer.SelectedItem.Value);
 
             int totalRecords = 0;
-            var products = ProductManager.GetAllProducts(categoryId, 
+            var products = IoCFactory.Resolve<IProductManager>().GetAllProducts(categoryId, 
                 manufacturerId, 0, null,
                 null, null, productName, false, 1000, 0, null, out totalRecords);
             return products;
@@ -94,7 +95,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 this.gvProducts.Visible = true;
                 this.btnSave.Visible = true;
                 this.lblNoProductsFound.Visible = false;
-                this.gvProducts.Columns[2].Visible = SettingManager.GetSettingValueBoolean("Display.ShowAdminProductImages");
+                this.gvProducts.Columns[2].Visible = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Display.ShowAdminProductImages");
 
                 this.gvProducts.DataSource = products;
                 this.gvProducts.DataBind();
@@ -131,7 +132,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected void btnSave_Click(object sender, EventArgs e)
         {
-            Category category = CategoryManager.GetCategoryById(this.CategoryId);
+            var category = IoCFactory.Resolve<ICategoryManager>().GetCategoryById(this.CategoryId);
             if (category != null)
             {
                 var existingProductCategories = category.ProductCategories;
@@ -157,7 +158,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                                     DisplayOrder = displayOrder
                                 };
 
-                                CategoryManager.InsertProductCategory(productCategory);
+                                IoCFactory.Resolve<ICategoryManager>().InsertProductCategory(productCategory);
                             }
                         }
                     }

@@ -23,25 +23,27 @@ using System.Text;
 using NopSolutions.NopCommerce.BusinessLogic.Caching;
 using NopSolutions.NopCommerce.BusinessLogic.Data;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings
 {
     /// <summary>
     /// Setting manager
     /// </summary>
-    public partial class SettingManager
+    public partial class SettingManager : ISettingManager
     {
         #region Constants
         private const string SETTINGS_ALL_KEY = "Nop.setting.all";
         #endregion
 
         #region Methods
+
         /// <summary>
         /// Gets a setting
         /// </summary>
         /// <param name="settingId">Setting identifer</param>
         /// <returns>Setting</returns>
-        public static Setting GetSettingById(int settingId)
+        public Setting GetSettingById(int settingId)
         {
             if (settingId == 0)
                 return null;
@@ -58,7 +60,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings
         /// Deletes a setting
         /// </summary>
         /// <param name="settingId">Setting identifer</param>
-        public static void DeleteSetting(int settingId)
+        public void DeleteSetting(int settingId)
         {
             var setting = GetSettingById(settingId);
             if (setting == null)
@@ -70,7 +72,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings
             context.DeleteObject(setting);
             context.SaveChanges();
 
-            if (SettingManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopStaticCache.RemoveByPattern(SETTINGS_ALL_KEY);
             }
@@ -80,11 +82,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings
         /// Gets all settings
         /// </summary>
         /// <returns>Setting collection</returns>
-        public static Dictionary<string, Setting> GetAllSettings()
+        public Dictionary<string, Setting> GetAllSettings()
         {
             string key = SETTINGS_ALL_KEY;
             object obj2 = NopStaticCache.Get(key);
-            if (SettingManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (Dictionary<string, Setting>)obj2;
             }
@@ -95,9 +97,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings
                         select s;
             var settings = query.ToDictionary(s => s.Name.ToLowerInvariant());
 
-            if (SettingManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
-                NopStaticCache.Max(key, settings);
+                NopStaticCache.Add(key, settings);
             }
             return settings;
         }
@@ -108,7 +110,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings
         /// <param name="name">The name</param>
         /// <param name="value">The value</param>
         /// <returns>Setting</returns>
-        public static Setting SetParam(string name, string value)
+        public Setting SetParam(string name, string value)
         {
             var setting = GetSettingByName(name);
             if (setting != null)
@@ -124,7 +126,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings
         /// <param name="value">The value</param>
         /// <param name="description">The description</param>
         /// <returns>Setting</returns>
-        public static Setting SetParam(string name, string value, string description)
+        public Setting SetParam(string name, string value, string description)
         {
             var setting = GetSettingByName(name);
             if (setting != null)
@@ -144,7 +146,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings
         /// <param name="name">The name</param>
         /// <param name="value">The value</param>
         /// <returns>Setting</returns>
-        public static Setting SetParamNative(string name, decimal value)
+        public Setting SetParamNative(string name, decimal value)
         {
             return SetParamNative(name, value, string.Empty);
         }
@@ -156,7 +158,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings
         /// <param name="value">The value</param>
         /// <param name="description">The description</param>
         /// <returns>Setting</returns>
-        public static Setting SetParamNative(string name, decimal value, string description)
+        public Setting SetParamNative(string name, decimal value, string description)
         {
             string valueStr = value.ToString(new CultureInfo("en-US"));
             return SetParam(name, valueStr, description);
@@ -169,7 +171,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings
         /// <param name="value">The value</param>
         /// <param name="description">The description</param>
         /// <returns>Setting</returns>
-        public static Setting AddSetting(string name, string value, string description)
+        public Setting AddSetting(string name, string value, string description)
         {
             name = CommonHelper.EnsureNotNull(name);
             name = CommonHelper.EnsureMaximumLength(name, 200);
@@ -187,7 +189,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings
             context.Settings.AddObject(setting);
             context.SaveChanges();
 
-            if (SettingManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopStaticCache.RemoveByPattern(SETTINGS_ALL_KEY);
             }
@@ -203,7 +205,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings
         /// <param name="value">The value</param>
         /// <param name="description">The description</param>
         /// <returns>Setting</returns>
-        public static Setting UpdateSetting(int settingId, string name, string value, string description)
+        public Setting UpdateSetting(int settingId, string name, string value, string description)
         {
             name = CommonHelper.EnsureNotNull(name);
             name = CommonHelper.EnsureMaximumLength(name, 200);
@@ -223,8 +225,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings
             setting.Value = value;
             setting.Description = description;
             context.SaveChanges();
-            
-            if (SettingManager.CacheEnabled)
+
+            if (this.CacheEnabled)
             {
                 NopStaticCache.RemoveByPattern(SETTINGS_ALL_KEY);
             }
@@ -237,7 +239,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings
         /// </summary>
         /// <param name="name">The setting name</param>
         /// <returns>The setting value</returns>
-        public static bool GetSettingValueBoolean(string name)
+        public bool GetSettingValueBoolean(string name)
         {
             return GetSettingValueBoolean(name, false);
         }
@@ -248,7 +250,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings
         /// <param name="name">The setting name</param>
         /// <param name="defaultValue">The default value</param>
         /// <returns>The setting value</returns>
-        public static bool GetSettingValueBoolean(string name, bool defaultValue)
+        public bool GetSettingValueBoolean(string name, bool defaultValue)
         {
             string value = GetSettingValue(name);
             if (!String.IsNullOrEmpty(value))
@@ -263,7 +265,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings
         /// </summary>
         /// <param name="name">The setting name</param>
         /// <returns>The setting value</returns>
-        public static int GetSettingValueInteger(string name)
+        public int GetSettingValueInteger(string name)
         {
             return GetSettingValueInteger(name, 0);
         }
@@ -274,7 +276,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings
         /// <param name="name">The setting name</param>
         /// <param name="defaultValue">The default value</param>
         /// <returns>The setting value</returns>
-        public static int GetSettingValueInteger(string name, int defaultValue)
+        public int GetSettingValueInteger(string name, int defaultValue)
         {
             string value = GetSettingValue(name);
             if (!String.IsNullOrEmpty(value))
@@ -289,7 +291,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings
         /// </summary>
         /// <param name="name">The setting name</param>
         /// <returns>The setting value</returns>
-        public static long GetSettingValueLong(string name)
+        public long GetSettingValueLong(string name)
         {
             return GetSettingValueLong(name, 0);
         }
@@ -300,7 +302,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings
         /// <param name="name">The setting name</param>
         /// <param name="defaultValue">The default value</param>
         /// <returns>The setting value</returns>
-        public static long GetSettingValueLong(string name, int defaultValue)
+        public long GetSettingValueLong(string name, int defaultValue)
         {
             string value = GetSettingValue(name);
             if (!String.IsNullOrEmpty(value))
@@ -315,7 +317,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings
         /// </summary>
         /// <param name="name">The setting name</param>
         /// <returns>The setting value</returns>
-        public static decimal GetSettingValueDecimalNative(string name)
+        public decimal GetSettingValueDecimalNative(string name)
         {
             return GetSettingValueDecimalNative(name, decimal.Zero);
         }
@@ -326,7 +328,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings
         /// <param name="name">The setting name</param>
         /// <param name="defaultValue">The default value</param>
         /// <returns>The setting value</returns>
-        public static decimal GetSettingValueDecimalNative(string name, decimal defaultValue)
+        public decimal GetSettingValueDecimalNative(string name, decimal defaultValue)
         {
             string value = GetSettingValue(name);
             if (!String.IsNullOrEmpty(value))
@@ -341,7 +343,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings
         /// </summary>
         /// <param name="name">The setting name</param>
         /// <returns>The setting value</returns>
-        public static string GetSettingValue(string name)
+        public string GetSettingValue(string name)
         {
             var setting = GetSettingByName(name);
             if (setting != null)
@@ -355,7 +357,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings
         /// <param name="name">The setting name</param>
         /// <param name="defaultValue">The default value</param>
         /// <returns>The setting value</returns>
-        public static string GetSettingValue(string name, string defaultValue)
+        public string GetSettingValue(string name, string defaultValue)
         {
             string value = GetSettingValue(name);
             if (!String.IsNullOrEmpty(value))
@@ -370,7 +372,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings
         /// </summary>
         /// <param name="name">The setting name</param>
         /// <returns>Setting instance</returns>
-        public static Setting GetSettingByName(string name)
+        public Setting GetSettingByName(string name)
         {
             if (String.IsNullOrEmpty(name))
                 return null;
@@ -385,6 +387,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings
             }
             return null;
         }
+
         #endregion
 
         #region Properties
@@ -392,7 +395,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings
         /// <summary>
         /// Gets a value indicating whether cache is enabled
         /// </summary>
-        public static bool CacheEnabled
+        public bool CacheEnabled
         {
             get
             {
@@ -403,37 +406,48 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings
         /// <summary>
         /// Gets or sets a store name
         /// </summary>
-        public static string StoreName
+        public string StoreName
         {
             get
             {
-                string storeName = SettingManager.GetSettingValue("Common.StoreName");
+                string storeName = IoCFactory.Resolve<ISettingManager>().GetSettingValue("Common.StoreName");
                 return storeName;
             }
             set
             {
-                SettingManager.SetParam("Common.StoreName", value);
+                IoCFactory.Resolve<ISettingManager>().SetParam("Common.StoreName", value);
             }
         }
 
         /// <summary>
         /// Gets or sets a store URL (ending with "/")
         /// </summary>
-        public static string StoreUrl
+        public string StoreUrl
         {
             get
             {
-                string storeUrl = SettingManager.GetSettingValue("Common.StoreURL");
+                string storeUrl = IoCFactory.Resolve<ISettingManager>().GetSettingValue("Common.StoreURL");
                 if (!storeUrl.EndsWith("/"))
                     storeUrl += "/";
                 return storeUrl;
             }
             set
             {
-                SettingManager.SetParam("Common.StoreURL", value);
+                IoCFactory.Resolve<ISettingManager>().SetParam("Common.StoreURL", value);
             }
         }
 
+        /// <summary>
+        /// Get current version
+        /// </summary>
+        /// <returns></returns>
+        public string CurrentVersion
+        {
+            get
+            {
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValue("Common.CurrentVersion");
+            }
+        }
         #endregion
     }
 }

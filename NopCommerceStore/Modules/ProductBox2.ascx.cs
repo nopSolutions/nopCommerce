@@ -36,6 +36,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.BusinessLogic.Tax;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -61,13 +62,13 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 var picture = product.DefaultPicture;
                 if (picture != null)
                 {
-                    hlImageLink.ImageUrl = PictureManager.GetPictureUrl(picture, this.ProductImageSize, true);
+                    hlImageLink.ImageUrl = IoCFactory.Resolve<IPictureManager>().GetPictureUrl(picture, this.ProductImageSize, true);
                     hlImageLink.ToolTip = String.Format(GetLocaleResourceString("Media.Product.ImageLinkTitleFormat"), product.LocalizedName);
                     hlImageLink.Text = String.Format(GetLocaleResourceString("Media.Product.ImageAlternateTextFormat"), product.LocalizedName);
                 }
                 else
                 {
-                    hlImageLink.ImageUrl = PictureManager.GetDefaultPictureUrl(this.ProductImageSize);
+                    hlImageLink.ImageUrl = IoCFactory.Resolve<IPictureManager>().GetDefaultPictureUrl(this.ProductImageSize);
                     hlImageLink.ToolTip = String.Format(GetLocaleResourceString("Media.Product.ImageLinkTitleFormat"), product.LocalizedName);
                     hlImageLink.Text = String.Format(GetLocaleResourceString("Media.Product.ImageAlternateTextFormat"), product.LocalizedName);
                 }
@@ -82,7 +83,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     {
                         var productVariant = productVariantCollection[0];
                         btnAddToCart.Visible = (!productVariant.DisableBuyButton);
-                        if (!SettingManager.GetSettingValueBoolean("Common.HidePricesForNonRegistered") ||
+                        if (!IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Common.HidePricesForNonRegistered") ||
                             (NopContext.Current.User != null &&
                             !NopContext.Current.User.IsGuest))
                         {
@@ -116,9 +117,9 @@ namespace NopSolutions.NopCommerce.Web.Modules
         {
             int productId = Convert.ToInt32(e.CommandArgument);
             int productVariantId = 0;
-            if (ProductManager.DirectAddToCartAllowed(productId, out productVariantId))
+            if (IoCFactory.Resolve<IProductManager>().DirectAddToCartAllowed(productId, out productVariantId))
             {
-                var addToCartWarnings = ShoppingCartManager.AddToCart(ShoppingCartTypeEnum.ShoppingCart,
+                var addToCartWarnings = IoCFactory.Resolve<IShoppingCartManager>().AddToCart(ShoppingCartTypeEnum.ShoppingCart,
                     productVariantId, string.Empty, decimal.Zero, 1);
                 if (addToCartWarnings.Count == 0)
                 {
@@ -126,7 +127,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     if (this.RedirectCartAfterAddingProduct.HasValue)
                         displayCart = this.RedirectCartAfterAddingProduct.Value;
                     else
-                        displayCart = SettingManager.GetSettingValueBoolean("Display.Products.DisplayCartAfterAddingProduct");
+                        displayCart = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Display.Products.DisplayCartAfterAddingProduct");
 
                     if (displayCart)
                     {
@@ -169,7 +170,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             get
             {
                 if (ViewState["ProductImageSize"] == null)
-                    return SettingManager.GetSettingValueInteger("Media.Product.ThumbnailImageSize", 125);
+                    return IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.Product.ThumbnailImageSize", 125);
                 else
                     return (int)ViewState["ProductImageSize"];
             }

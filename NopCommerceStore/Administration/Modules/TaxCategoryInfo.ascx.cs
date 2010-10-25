@@ -25,6 +25,7 @@ using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.Tax;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -32,7 +33,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            TaxCategory taxCategory = TaxCategoryManager.GetTaxCategoryById(this.TaxCategoryId);
+            TaxCategory taxCategory = IoCFactory.Resolve<ITaxCategoryManager>().GetTaxCategoryById(this.TaxCategoryId);
             if (taxCategory != null)
             {
                 this.txtName.Text = taxCategory.Name;
@@ -59,14 +60,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public TaxCategory SaveInfo()
         {
-            TaxCategory taxCategory = TaxCategoryManager.GetTaxCategoryById(this.TaxCategoryId);
+            TaxCategory taxCategory = IoCFactory.Resolve<ITaxCategoryManager>().GetTaxCategoryById(this.TaxCategoryId);
 
             if (taxCategory != null)
             {
                 taxCategory.Name =  txtName.Text;
                 taxCategory.DisplayOrder =  txtDisplayOrder.Value;
                 taxCategory.UpdatedOn = DateTime.UtcNow;
-                TaxCategoryManager.UpdateTaxCategory(taxCategory);
+                IoCFactory.Resolve<ITaxCategoryManager>().UpdateTaxCategory(taxCategory);
             }
             else
             {
@@ -78,7 +79,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     CreatedOn = now,
                     UpdatedOn = now
                 };
-                TaxCategoryManager.InsertTaxCategory(taxCategory);
+                IoCFactory.Resolve<ITaxCategoryManager>().InsertTaxCategory(taxCategory);
             }
 
             return taxCategory;

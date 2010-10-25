@@ -22,13 +22,14 @@ using System.Text;
 using NopSolutions.NopCommerce.BusinessLogic.Caching;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Data;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
 {
     /// <summary>
     /// "ShippingByWeight" manager
     /// </summary>
-    public partial class ShippingByWeightManager
+    public partial class ShippingByWeightManager : IShippingByWeightManager
     {
         #region Methods
         /// <summary>
@@ -36,7 +37,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         /// </summary>
         /// <param name="shippingByWeightId">ShippingByWeight identifier</param>
         /// <returns>ShippingByWeight</returns>
-        public static ShippingByWeight GetById(int shippingByWeightId)
+        public ShippingByWeight GetById(int shippingByWeightId)
         {
             if (shippingByWeightId == 0)
                 return null;
@@ -53,7 +54,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         /// Deletes a ShippingByWeight
         /// </summary>
         /// <param name="shippingByWeightId">ShippingByWeight identifier</param>
-        public static void DeleteShippingByWeight(int shippingByWeightId)
+        public void DeleteShippingByWeight(int shippingByWeightId)
         {
             var shippingByWeight = GetById(shippingByWeightId);
             if (shippingByWeight == null)
@@ -70,7 +71,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         /// Gets all ShippingByWeights
         /// </summary>
         /// <returns>ShippingByWeight collection</returns>
-        public static List<ShippingByWeight> GetAll()
+        public List<ShippingByWeight> GetAll()
         {
             var context = ObjectContextHelper.CurrentObjectContext;
             var query = from sw in context.ShippingByWeight
@@ -84,7 +85,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         /// Inserts a ShippingByWeight
         /// </summary>
         /// <param name="shippingByWeight">ShippingByWeight</param>
-        public static void InsertShippingByWeight(ShippingByWeight shippingByWeight)
+        public void InsertShippingByWeight(ShippingByWeight shippingByWeight)
         {
             if (shippingByWeight == null)
                 throw new ArgumentNullException("shippingByWeight");
@@ -99,7 +100,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         /// Updates the ShippingByWeight
         /// </summary>
         /// <param name="shippingByWeight">ShippingByWeight</param>
-        public static void UpdateShippingByWeight(ShippingByWeight shippingByWeight)
+        public void UpdateShippingByWeight(ShippingByWeight shippingByWeight)
         {
             if (shippingByWeight == null)
                 throw new ArgumentNullException("shippingByWeight");
@@ -116,7 +117,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         /// </summary>
         /// <param name="shippingMethodId">The shipping method identifier</param>
         /// <returns>ShippingByWeight collection</returns>
-        public static List<ShippingByWeight> GetAllByShippingMethodId(int shippingMethodId)
+        public List<ShippingByWeight> GetAllByShippingMethodId(int shippingMethodId)
         {
             var context = ObjectContextHelper.CurrentObjectContext;
             var query = from sw in context.ShippingByWeight
@@ -134,16 +135,16 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
          /// <summary>
         /// Gets or sets a value indicating whether to calculate per weight unit (e.g. per lb)
         /// </summary>
-        public static bool CalculatePerWeightUnit
+        public bool CalculatePerWeightUnit
         {
             get
             {
-                bool val1 = SettingManager.GetSettingValueBoolean("ShippingByWeight.CalculatePerWeightUnit");
+                bool val1 = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("ShippingByWeight.CalculatePerWeightUnit");
                 return val1;
             }
             set
             {
-                SettingManager.SetParam("ShippingByWeight.CalculatePerWeightUnit", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("ShippingByWeight.CalculatePerWeightUnit", value.ToString());
             }
         }
 

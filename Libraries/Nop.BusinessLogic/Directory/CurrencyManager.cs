@@ -29,13 +29,14 @@ using NopSolutions.NopCommerce.BusinessLogic.Directory.ExchangeRates;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Directory
 {
     /// <summary>
     /// Currency manager
     /// </summary>
-    public partial class CurrencyManager
+    public partial class CurrencyManager : ICurrencyManager
     {
         #region Constants
         private const string CURRENCIES_ALL_KEY = "Nop.currency.all-{0}";
@@ -50,9 +51,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
         /// </summary>
         /// <param name="exchangeRateCurrencyCode">Exchange rate currency code</param>
         /// <returns>Exchange rates</returns>
-        public static List<ExchangeRate> GetCurrencyLiveRates(string exchangeRateCurrencyCode)
+        public List<ExchangeRate> GetCurrencyLiveRates(string exchangeRateCurrencyCode)
         {
-            var exchangeRateProvider = CurrencyManager.CurrentExchangeRateProvider;
+            var exchangeRateProvider = IoCFactory.Resolve<ICurrencyManager>().CurrentExchangeRateProvider;
             return exchangeRateProvider.GetCurrencyLiveRates(exchangeRateCurrencyCode);
         }
 
@@ -60,7 +61,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
         /// Deletes currency
         /// </summary>
         /// <param name="currencyId">Currency identifier</param>
-        public static void DeleteCurrency(int currencyId)
+        public void DeleteCurrency(int currencyId)
         {
             var currency = GetCurrencyById(currencyId);
             if (currency == null)
@@ -72,7 +73,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
             context.DeleteObject(currency);
             context.SaveChanges();
 
-            if (CurrencyManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(CURRENCIES_PATTERN_KEY);
             }
@@ -83,14 +84,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
         /// </summary>
         /// <param name="currencyId">Currency identifier</param>
         /// <returns>Currency</returns>
-        public static Currency GetCurrencyById(int currencyId)
+        public Currency GetCurrencyById(int currencyId)
         {
             if (currencyId == 0)
                 return null;
 
             string key = string.Format(CURRENCIES_BY_ID_KEY, currencyId);
             object obj2 = NopRequestCache.Get(key);
-            if (CurrencyManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (Currency)obj2;
             }
@@ -101,7 +102,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
                         select c;
             var currency = query.SingleOrDefault();
 
-            if (CurrencyManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, currency);
             }
@@ -113,7 +114,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
         /// </summary>
         /// <param name="currencyCode">Currency code</param>
         /// <returns>Currency</returns>
-        public static Currency GetCurrencyByCode(string currencyCode)
+        public Currency GetCurrencyByCode(string currencyCode)
         {
             if (String.IsNullOrEmpty(currencyCode))
                 return null;
@@ -124,7 +125,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
         /// Gets all currencies
         /// </summary>
         /// <returns>Currency collection</returns>
-        public static List<Currency> GetAllCurrencies()
+        public List<Currency> GetAllCurrencies()
         {
             bool showHidden = NopContext.Current.IsAdmin;
             return GetAllCurrencies(showHidden);
@@ -135,11 +136,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
         /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Currency collection</returns>
-        public static List<Currency> GetAllCurrencies(bool showHidden)
+        public List<Currency> GetAllCurrencies(bool showHidden)
         {
             string key = string.Format(CURRENCIES_ALL_KEY, showHidden);
             object obj2 = NopRequestCache.Get(key);
-            if (CurrencyManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (List<Currency>)obj2;
             }
@@ -151,7 +152,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
                         select c;
             var currencies = query.ToList();
 
-            if (CurrencyManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, currencies);
             }
@@ -162,7 +163,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
         /// Inserts a currency
         /// </summary>
         /// <param name="currency">Currency</param>
-        public static void InsertCurrency(Currency currency)
+        public void InsertCurrency(Currency currency)
         {
             if (currency == null)
                 throw new ArgumentNullException("currency");
@@ -190,7 +191,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
             context.Currencies.AddObject(currency);
             context.SaveChanges();
 
-            if (CurrencyManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(CURRENCIES_PATTERN_KEY);
             }
@@ -200,7 +201,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
         /// Updates the currency
         /// </summary>
         /// <param name="currency">Currency</param>
-        public static void UpdateCurrency(Currency currency)
+        public void UpdateCurrency(Currency currency)
         {
             if (currency == null)
                 throw new ArgumentNullException("currency");
@@ -230,7 +231,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
             context.SaveChanges();
 
 
-            if (CurrencyManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(CURRENCIES_PATTERN_KEY);
             }
@@ -243,7 +244,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
         /// <param name="sourceCurrencyCode">Source currency code</param>
         /// <param name="targetCurrencyCode">Target currency code</param>
         /// <returns>Converted value</returns>
-        public static decimal ConvertCurrency(decimal amount, Currency sourceCurrencyCode,
+        public decimal ConvertCurrency(decimal amount, Currency sourceCurrencyCode,
             Currency targetCurrencyCode)
         {
             decimal result = amount;
@@ -264,11 +265,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
         /// <param name="amount">Amount</param>
         /// <param name="sourceCurrencyCode">Source currency code</param>
         /// <returns>Converted value</returns>
-        public static decimal ConvertToPrimaryExchangeRateCurrency(decimal amount,
+        public decimal ConvertToPrimaryExchangeRateCurrency(decimal amount,
             Currency sourceCurrencyCode)
         {
             decimal result = amount;
-            if (result != decimal.Zero && sourceCurrencyCode.CurrencyId != PrimaryExchangeRateCurrency.CurrencyId)
+            if (result != decimal.Zero && sourceCurrencyCode.CurrencyId != IoCFactory.Resolve<ICurrencyManager>().PrimaryExchangeRateCurrency.CurrencyId)
             {
                 decimal exchangeRate = sourceCurrencyCode.Rate;
                 if (exchangeRate == decimal.Zero)
@@ -284,11 +285,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
         /// <param name="amount">Amount</param>
         /// <param name="targetCurrencyCode">Target currency code</param>
         /// <returns>Converted value</returns>
-        public static decimal ConvertFromPrimaryExchangeRateCurrency(decimal amount,
+        public decimal ConvertFromPrimaryExchangeRateCurrency(decimal amount,
             Currency targetCurrencyCode)
         {
             decimal result = amount;
-            if (result != decimal.Zero && targetCurrencyCode.CurrencyId != PrimaryExchangeRateCurrency.CurrencyId)
+            if (result != decimal.Zero && targetCurrencyCode.CurrencyId != IoCFactory.Resolve<ICurrencyManager>().PrimaryExchangeRateCurrency.CurrencyId)
             {
                 decimal exchangeRate = targetCurrencyCode.Rate;
                 if (exchangeRate == decimal.Zero)
@@ -303,59 +304,59 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
         #region Properties
 
         /// <summary>
-        /// Gets or sets a primary store currency
+        /// Gets a value indicating whether cache is enabled
         /// </summary>
-        public static Currency PrimaryStoreCurrency
+        public bool CacheEnabled
         {
             get
             {
-                int primaryStoreCurrencyId = SettingManager.GetSettingValueInteger("Currency.PrimaryStoreCurrency");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.CurrencyManager.CacheEnabled");
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a primary store currency
+        /// </summary>
+        public Currency PrimaryStoreCurrency
+        {
+            get
+            {
+                int primaryStoreCurrencyId = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Currency.PrimaryStoreCurrency");
                 return GetCurrencyById(primaryStoreCurrencyId);
             }
             set
             {
                 if (value != null)
-                    SettingManager.SetParam("Currency.PrimaryStoreCurrency", value.CurrencyId.ToString());
+                    IoCFactory.Resolve<ISettingManager>().SetParam("Currency.PrimaryStoreCurrency", value.CurrencyId.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets a primary exchange rate currency
         /// </summary>
-        public static Currency PrimaryExchangeRateCurrency
+        public Currency PrimaryExchangeRateCurrency
         {
             get
             {
-                int primaryExchangeRateCurrencyId = SettingManager.GetSettingValueInteger("Currency.PrimaryExchangeRateCurrency");
+                int primaryExchangeRateCurrencyId = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Currency.PrimaryExchangeRateCurrency");
                 return GetCurrencyById(primaryExchangeRateCurrencyId);
             }
             set
             {
                 if (value != null)
-                    SettingManager.SetParam("Currency.PrimaryExchangeRateCurrency", value.CurrencyId.ToString());
-            }
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether cache is enabled
-        /// </summary>
-        public static bool CacheEnabled
-        {
-            get
-            {
-                return SettingManager.GetSettingValueBoolean("Cache.CurrencyManager.CacheEnabled");
+                    IoCFactory.Resolve<ISettingManager>().SetParam("Currency.PrimaryExchangeRateCurrency", value.CurrencyId.ToString());
             }
         }
 
         /// <summary>
         /// Gets a current exchange rate provider
         /// </summary>
-        public static IExchangeRateProvider CurrentExchangeRateProvider
+        public IExchangeRateProvider CurrentExchangeRateProvider
         {
             get
             {
-                int i = SettingManager.GetSettingValueInteger("ExchangeRateProvider.Current");
-                string className = SettingManager.GetSettingValue(String.Format("ExchangeRateProvider{0}.Classname", i));
+                int i = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("ExchangeRateProvider.Current");
+                string className = IoCFactory.Resolve<ISettingManager>().GetSettingValue(String.Format("ExchangeRateProvider{0}.Classname", i));
 
                 if (String.IsNullOrEmpty(className))
                 {

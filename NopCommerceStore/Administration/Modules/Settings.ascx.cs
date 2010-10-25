@@ -27,6 +27,7 @@ using System.Web.UI.WebControls.WebParts;
 using System.Xml;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using System.Collections.Generic;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
  
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -42,7 +43,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         void BindGrid()
         {
-            var settingDictionary = SettingManager.GetAllSettings();
+            var settingDictionary = IoCFactory.Resolve<ISettingManager>().GetAllSettings();
             List<Setting> settings = new List<Setting>();
             foreach (KeyValuePair<string, Setting> kvp in settingDictionary)
             {

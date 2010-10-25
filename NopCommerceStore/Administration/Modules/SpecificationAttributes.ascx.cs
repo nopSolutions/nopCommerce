@@ -15,6 +15,7 @@
 using System;
 using System.Web.UI;
 using NopSolutions.NopCommerce.BusinessLogic.Products.Specs;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -30,7 +31,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         void BindGrid()
         {
-            var specificationAttributes = SpecificationAttributeManager.GetSpecificationAttributes();
+            var specificationAttributes = IoCFactory.Resolve<ISpecificationAttributeManager>().GetSpecificationAttributes();
             gvSpecificationAttributes.DataSource = specificationAttributes;
             gvSpecificationAttributes.DataBind();
         }

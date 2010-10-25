@@ -37,7 +37,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Topics
     /// <summary>
     /// Message manager
     /// </summary>
-    public partial class TopicManager
+    public partial class TopicManager : ITopicManager
     {
         #region Methods
 
@@ -45,7 +45,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Topics
         /// Deletes a topic
         /// </summary>
         /// <param name="topicId">Topic identifier</param>
-        public static void DeleteTopic(int topicId)
+        public void DeleteTopic(int topicId)
         {
             var topic = GetTopicById(topicId);
             if (topic == null)
@@ -62,7 +62,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Topics
         /// Inserts a topic
         /// </summary>
         /// <param name="topic">Topic</param>
-        public static void InsertTopic(Topic topic)
+        public void InsertTopic(Topic topic)
         {
             if (topic == null)
                 throw new ArgumentNullException("topic");
@@ -82,7 +82,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Topics
         /// Updates the topic
         /// </summary>
         /// <param name="topic">Topic</param>
-        public static void UpdateTopic(Topic topic)
+        public void UpdateTopic(Topic topic)
         {
             if (topic == null)
                 throw new ArgumentNullException("topic");
@@ -104,7 +104,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Topics
         /// </summary>
         /// <param name="topicId">topic identifier</param>
         /// <returns>topic</returns>
-        public static Topic GetTopicById(int topicId)
+        public Topic GetTopicById(int topicId)
         {
             if (topicId == 0)
                 return null;
@@ -122,7 +122,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Topics
         /// Gets all topics
         /// </summary>
         /// <returns>topic collection</returns>
-        public static List<Topic> GetAllTopics()
+        public List<Topic> GetAllTopics()
         {
             var context = ObjectContextHelper.CurrentObjectContext;
             var query = from t in context.Topics
@@ -137,7 +137,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Topics
         /// </summary>
         /// <param name="localizedTopicId">Localized topic identifier</param>
         /// <returns>Localized topic</returns>
-        public static LocalizedTopic GetLocalizedTopicById(int localizedTopicId)
+        public LocalizedTopic GetLocalizedTopicById(int localizedTopicId)
         {
             if (localizedTopicId == 0)
                 return null;
@@ -156,7 +156,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Topics
         /// <param name="topicId">The topic identifier</param>
         /// <param name="languageId">Language identifier</param>
         /// <returns>Localized topic</returns>
-        public static LocalizedTopic GetLocalizedTopic(int topicId, int languageId)
+        public LocalizedTopic GetLocalizedTopic(int topicId, int languageId)
         {
             var context = ObjectContextHelper.CurrentObjectContext;
             var query = from tl in context.LocalizedTopics
@@ -174,7 +174,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Topics
         /// <param name="topicName">Topic name</param>
         /// <param name="languageId">Language identifier</param>
         /// <returns>Localized topic</returns>
-        public static LocalizedTopic GetLocalizedTopic(string topicName, int languageId)
+        public LocalizedTopic GetLocalizedTopic(string topicName, int languageId)
         {
             var context = ObjectContextHelper.CurrentObjectContext;
             var query = from tl in context.LocalizedTopics
@@ -191,7 +191,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Topics
         /// Deletes a localized topic
         /// </summary>
         /// <param name="localizedTopicId">topic identifier</param>
-        public static void DeleteLocalizedTopic(int localizedTopicId)
+        public void DeleteLocalizedTopic(int localizedTopicId)
         {
             var localizedTopic = GetLocalizedTopicById(localizedTopicId);
             if (localizedTopic == null)
@@ -209,7 +209,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Topics
         /// </summary>
         /// <param name="topicName">topic name</param>
         /// <returns>Localized topic collection</returns>
-        public static List<LocalizedTopic> GetAllLocalizedTopics(string topicName)
+        public List<LocalizedTopic> GetAllLocalizedTopics(string topicName)
         {
             var context = ObjectContextHelper.CurrentObjectContext;
             var query = from tl in context.LocalizedTopics
@@ -225,7 +225,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Topics
         /// Inserts a localized topic
         /// </summary>
         /// <param name="localizedTopic">Localized topic</param>
-        public static void InsertLocalizedTopic(LocalizedTopic localizedTopic)
+        public void InsertLocalizedTopic(LocalizedTopic localizedTopic)
         {
             if (localizedTopic == null)
                 throw new ArgumentNullException("localizedTopic");
@@ -250,7 +250,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Topics
         /// Updates the localized topic
         /// </summary>
         /// <param name="localizedTopic">Localized topic</param>
-        public static void UpdateLocalizedTopic(LocalizedTopic localizedTopic)
+        public void UpdateLocalizedTopic(LocalizedTopic localizedTopic)
         {
             if (localizedTopic == null)
                 throw new ArgumentNullException("localizedTopic");

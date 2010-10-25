@@ -24,6 +24,7 @@ using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.Shipping;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -31,7 +32,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            ShippingMethod shippingMethod = ShippingMethodManager.GetShippingMethodById(this.ShippingMethodId);
+            ShippingMethod shippingMethod = IoCFactory.Resolve<IShippingMethodManager>().GetShippingMethodById(this.ShippingMethodId);
             if (shippingMethod != null)
             {
                 this.txtName.Text = shippingMethod.Name;
@@ -50,14 +51,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public ShippingMethod SaveInfo()
         {
-            ShippingMethod shippingMethod = ShippingMethodManager.GetShippingMethodById(this.ShippingMethodId);
+            ShippingMethod shippingMethod = IoCFactory.Resolve<IShippingMethodManager>().GetShippingMethodById(this.ShippingMethodId);
 
             if (shippingMethod != null)
             {
                 shippingMethod.Name = txtName.Text;
                 shippingMethod.Description =  txtDescription.Text;
                 shippingMethod.DisplayOrder = txtDisplayOrder.Value;
-                ShippingMethodManager.UpdateShippingMethod(shippingMethod);
+                IoCFactory.Resolve<IShippingMethodManager>().UpdateShippingMethod(shippingMethod);
             }
             else
             {
@@ -67,7 +68,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     Description = txtDescription.Text,
                     DisplayOrder = txtDisplayOrder.Value
                 };
-                ShippingMethodManager.InsertShippingMethod(shippingMethod);
+                IoCFactory.Resolve<IShippingMethodManager>().InsertShippingMethod(shippingMethod);
             }
 
             return shippingMethod;
@@ -77,7 +78,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                ShippingMethodManager.DeleteShippingMethod(this.ShippingMethodId);
+                IoCFactory.Resolve<IShippingMethodManager>().DeleteShippingMethod(this.ShippingMethodId);
                 Response.Redirect("ShippingMethods.aspx");
             }
             catch (Exception exc)

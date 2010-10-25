@@ -10,7 +10,7 @@
     <div class="footer-disclaimer">
         <%=String.Format(GetLocaleResourceString("Content.CopyrightNotice"), 
                                     DateTime.Now.Year.ToString(), 
-                                    SettingManager.StoreName)%>
+                                    IoCFactory.Resolve<ISettingManager>().StoreName)%>
     </div>
     <div class="footer-storetheme">
         <nopCommerce:StoreThemeSelector ID="ctrlStoreTheme" runat="server" />

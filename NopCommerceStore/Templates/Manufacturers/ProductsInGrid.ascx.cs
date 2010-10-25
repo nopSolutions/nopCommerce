@@ -30,6 +30,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Localization;
 using NopSolutions.NopCommerce.BusinessLogic.Manufacturers;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Templates.Manufacturers
 {
@@ -46,7 +47,7 @@ namespace NopSolutions.NopCommerce.Web.Templates.Manufacturers
 
         protected void FillDropDowns()
         {
-            if (SettingManager.GetSettingValueBoolean("Common.AllowProductSorting"))
+            if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Common.AllowProductSorting"))
             {
                 ddlSorting.Items.Clear();
 
@@ -68,7 +69,7 @@ namespace NopSolutions.NopCommerce.Web.Templates.Manufacturers
 
         protected void BindData()
         {
-            var manufacturer = ManufacturerManager.GetManufacturerById(this.ManufacturerId);
+            var manufacturer = IoCFactory.Resolve<IManufacturerManager>().GetManufacturerById(this.ManufacturerId);
             lName.Text = Server.HtmlEncode(manufacturer.LocalizedName);
             lDescription.Text = manufacturer.LocalizedDescription;
 
@@ -108,25 +109,25 @@ namespace NopSolutions.NopCommerce.Web.Templates.Manufacturers
                 minPrice = ctrlPriceRangeFilter.SelectedPriceRange.From;
                 if (minPrice.HasValue)
                 {
-                    minPriceConverted = CurrencyManager.ConvertCurrency(minPrice.Value, NopContext.Current.WorkingCurrency, CurrencyManager.PrimaryStoreCurrency);
+                    minPriceConverted = IoCFactory.Resolve<ICurrencyManager>().ConvertCurrency(minPrice.Value, NopContext.Current.WorkingCurrency, IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency);
                 }
 
                 maxPrice = ctrlPriceRangeFilter.SelectedPriceRange.To;
                 if (maxPrice.HasValue)
                 {
-                    maxPriceConverted = CurrencyManager.ConvertCurrency(maxPrice.Value, NopContext.Current.WorkingCurrency, CurrencyManager.PrimaryStoreCurrency);
+                    maxPriceConverted = IoCFactory.Resolve<ICurrencyManager>().ConvertCurrency(maxPrice.Value, NopContext.Current.WorkingCurrency, IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency);
                 }
             }
             
             //sorting
             ProductSortingEnum orderBy = ProductSortingEnum.Position;
-            if (SettingManager.GetSettingValueBoolean("Common.AllowProductSorting"))
+            if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Common.AllowProductSorting"))
             {
                 CommonHelper.SelectListItem(this.ddlSorting, CommonHelper.QueryStringInt("orderby"));
                 orderBy = (ProductSortingEnum)Enum.ToObject(typeof(ProductSortingEnum), int.Parse(ddlSorting.SelectedItem.Value));
             }
 
-            var productCollection = ProductManager.GetAllProducts(0,
+            var productCollection = IoCFactory.Resolve<IProductManager>().GetAllProducts(0,
                 this.ManufacturerId, 0, false, minPriceConverted, maxPriceConverted,
                 string.Empty, false, pageSize, this.CurrentPageIndex,
                 null, orderBy, out totalRecords);

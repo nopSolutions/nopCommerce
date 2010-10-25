@@ -27,6 +27,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Payment;
 using NopSolutions.NopCommerce.BusinessLogic.Security;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Payment.Methods.iDeal
 {
@@ -71,7 +72,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.iDeal
             remotePostHelper.Add("description", "Order " + order.OrderId);
 
             remotePostHelper.Add("language", "nl");
-            remotePostHelper.Add("currency", CurrencyManager.PrimaryStoreCurrency.CurrencyCode);
+            remotePostHelper.Add("currency", IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency.CurrencyCode);
             remotePostHelper.Add("paymentType", "ideal");
 
             remotePostHelper.Add("purchaseID", order.OrderId.ToString());

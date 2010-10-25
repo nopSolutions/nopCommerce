@@ -28,6 +28,7 @@ using NopSolutions.NopCommerce.BusinessLogic;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -43,7 +44,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void BindData()
         {
-            var product = ProductManager.GetProductById(this.ProductId);
+            var product = IoCFactory.Resolve<IProductManager>().GetProductById(this.ProductId);
             if (product != null && product.AllowCustomerReviews)
             {
                 pnlReviews.Visible = true;
@@ -70,10 +71,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
         protected string GetCustomerInfo(int customerId)
         {
             string customerInfo = string.Empty;
-            var customer = CustomerManager.GetCustomerById(customerId);
+            var customer = IoCFactory.Resolve<ICustomerManager>().GetCustomerById(customerId);
             if (customer != null)
             {
-                customerInfo = CustomerManager.FormatUserName(customer);
+                customerInfo = IoCFactory.Resolve<ICustomerManager>().FormatUserName(customer);
             }
             else
             {

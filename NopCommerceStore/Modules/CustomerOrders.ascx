@@ -86,7 +86,7 @@
                                                 <td>
                                                     <div>
                                                         <%=GetLocaleResourceString("Order.OrderStatus")%>
-                                                        <%#OrderManager.GetOrderStatusName(Convert.ToInt32(Eval("OrderStatusId")))%></div>
+                                                        <%#IoCFactory.Resolve<IOrderManager>().GetOrderStatusName(Convert.ToInt32(Eval("OrderStatusId")))%></div>
                                                     <div>
                                                         <%=GetLocaleResourceString("Account.OrderDate")%>:
                                                         <%#DateTimeHelper.ConvertToUserTime((DateTime)Eval("CreatedOn"), DateTimeKind.Utc).ToString()%></div>

@@ -25,6 +25,7 @@ using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.Content.Forums;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -32,7 +33,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            ForumGroup forumGroup = ForumManager.GetForumGroupById(this.ForumGroupId);
+            ForumGroup forumGroup = IoCFactory.Resolve<IForumManager>().GetForumGroupById(this.ForumGroupId);
             if (forumGroup != null)
             {
                 this.txtName.Text = forumGroup.Name;
@@ -62,7 +63,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public ForumGroup SaveInfo()
         {
-            ForumGroup forumGroup = ForumManager.GetForumGroupById(this.ForumGroupId);
+            ForumGroup forumGroup = IoCFactory.Resolve<IForumManager>().GetForumGroupById(this.ForumGroupId);
             DateTime nowDT = DateTime.UtcNow;
             if (forumGroup != null)
             {
@@ -71,7 +72,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 forumGroup.DisplayOrder = txtDisplayOrder.Value;
                 forumGroup.UpdatedOn = nowDT;
 
-                ForumManager.UpdateForumGroup(forumGroup);
+                IoCFactory.Resolve<IForumManager>().UpdateForumGroup(forumGroup);
             }
             else
             {
@@ -85,7 +86,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     UpdatedOn = nowDT
                 };
 
-                ForumManager.InsertForumGroup(forumGroup);
+                IoCFactory.Resolve<IForumManager>().InsertForumGroup(forumGroup);
             }
 
             return forumGroup;
@@ -95,7 +96,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                ForumManager.DeleteForumGroup(this.ForumGroupId);
+                IoCFactory.Resolve<IForumManager>().DeleteForumGroup(this.ForumGroupId);
                 Response.Redirect("Forums.aspx");
             }
             catch (Exception exc)

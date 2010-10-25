@@ -26,6 +26,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.BusinessLogic.Messages;
 using NopSolutions.NopCommerce.BusinessLogic.Messages.SMS;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -33,7 +34,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            SMSProvider smsProvider = SMSManager.GetSMSProviderBySystemKeyword(SMSProviderSystemKeyword);
+            SMSProvider smsProvider = IoCFactory.Resolve<ISMSManager>().GetSMSProviderBySystemKeyword(SMSProviderSystemKeyword);
             if (smsProvider != null)
             {
                 txtName.Text = smsProvider.Name;
@@ -53,7 +54,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public SMSProvider SaveInfo()
         {
-            SMSProvider smsProvider = SMSManager.GetSMSProviderBySystemKeyword(SMSProviderSystemKeyword);
+            SMSProvider smsProvider = IoCFactory.Resolve<ISMSManager>().GetSMSProviderBySystemKeyword(SMSProviderSystemKeyword);
 
             if (smsProvider != null)
             {
@@ -61,7 +62,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 smsProvider.ClassName = txtClassName.Text;
                 smsProvider.SystemKeyword = txtSystemKeyword.Text;
                 smsProvider.IsActive = cbActive.Checked;
-                SMSManager.UpdateSMSProvider(smsProvider);
+                IoCFactory.Resolve<ISMSManager>().UpdateSMSProvider(smsProvider);
             }
             else
             {
@@ -72,7 +73,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     SystemKeyword = txtSystemKeyword.Text,
                     IsActive = cbActive.Checked
                 };
-                SMSManager.InsertSMSProvider(smsProvider);
+                IoCFactory.Resolve<ISMSManager>().InsertSMSProvider(smsProvider);
             }
 
             return smsProvider;

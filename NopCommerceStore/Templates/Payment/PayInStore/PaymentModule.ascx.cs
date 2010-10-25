@@ -24,6 +24,7 @@ using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Payment;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Templates.Payment.PayInStore
 {
@@ -37,7 +38,7 @@ namespace NopSolutions.NopCommerce.Web.Templates.Payment.PayInStore
 
         private void BindData()
         {
-            lInfo.Text = SettingManager.GetSettingValue("PaymentMethod.PayInStore.Info");
+            lInfo.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.PayInStore.Info");
         }
 
         public bool ValidateForm()

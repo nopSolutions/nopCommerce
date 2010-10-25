@@ -38,6 +38,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Warehouses;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Web.Administration.Modules;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
  
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -58,7 +59,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         ctrlProductCategory.SaveInfo(product.ProductId);
                         ctrlProductManufacturer.SaveInfo(product.ProductId);
 
-                        CustomerActivityManager.InsertActivity(
+                        IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
                             "AddNewProduct",
                             GetLocaleResourceString("ActivityLog.AddNewProduct"),
                             product.Name);

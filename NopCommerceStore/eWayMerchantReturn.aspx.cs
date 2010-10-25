@@ -35,6 +35,7 @@ using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.Payment;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web
 {
@@ -93,12 +94,12 @@ namespace NopSolutions.NopCommerce.Web
 
 
                     int orderId = Convert.ToInt32(_MerchnatOption1);
-                    Order order = OrderManager.GetOrderById(orderId);
+                    Order order = IoCFactory.Resolve<IOrderManager>().GetOrderById(orderId);
                     if (String.IsNullOrEmpty(_ErrorMessage) && order != null)
                     {
-                        if (OrderManager.CanMarkOrderAsPaid(order))
+                        if (IoCFactory.Resolve<IOrderManager>().CanMarkOrderAsPaid(order))
                         {
-                            OrderManager.MarkOrderAsPaid(order.OrderId);
+                            IoCFactory.Resolve<IOrderManager>().MarkOrderAsPaid(order.OrderId);
                         }
                         Response.Redirect("~/checkoutcompleted.aspx");
                     }
@@ -126,11 +127,11 @@ namespace NopSolutions.NopCommerce.Web
         protected bool CheckAccessCode(string AccessPaymentCode)
         {
             //POST to Payment gateway the access code returned
-            string strPost = "CustomerID=" + SettingManager.GetSettingValue("PaymentMethod.eWayUK.CustomerId");
+            string strPost = "CustomerID=" + IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.eWayUK.CustomerId");
             strPost += Format("AccessPaymentCode", AccessPaymentCode);
-            strPost += Format("UserName", SettingManager.GetSettingValue("PaymentMethod.eWayUK.Username"));
+            strPost += Format("UserName", IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.eWayUK.Username"));
 
-            string url = SettingManager.GetSettingValue("PaymentMethod.eWayUK.PaymentPage") + "Result?" + strPost;
+            string url = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.eWayUK.PaymentPage") + "Result?" + strPost;
 
             HttpWebRequest objRequest = (HttpWebRequest)WebRequest.Create(url);
             objRequest.Method = WebRequestMethods.Http.Get;

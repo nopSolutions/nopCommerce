@@ -30,6 +30,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Content.Polls;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Security;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
  
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -148,7 +149,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             tfAction.HeaderTemplate = new NopGridViewCustomTemplate(DataControlRowType.Header, GetLocaleResourceString("Admin.ACL.Grid.CustomerAction"), "String");
             gvACL.Columns.Add(tfAction);
 
-            var roles = CustomerManager.GetAllCustomerRoles();
+            var roles = IoCFactory.Resolve<ICustomerManager>().GetAllCustomerRoles();
             foreach (CustomerRole cr in roles)
             {
                 TemplateField tf = new TemplateField();
@@ -160,13 +161,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected void BindGrid()
         {
-            var actions = ACLManager.GetAllCustomerActions();
+            var actions = IoCFactory.Resolve<IACLManager>().GetAllCustomerActions();
             if (actions.Count == 0)
             {
                 lblMessage.Text = GetLocaleResourceString("Admin.ACL.NoActionDefined");
                 return;
             }
-            var roles = CustomerManager.GetAllCustomerRoles();
+            var roles = IoCFactory.Resolve<ICustomerManager>().GetAllCustomerRoles();
             if (roles.Count == 0)
             {
                 lblMessage.Text = GetLocaleResourceString("Admin.ACL.NoRolesDefined");
@@ -182,7 +183,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                 foreach (CustomerRole cr in roles)
                 {
-                    var acls = ACLManager.GetAllAcl(ca.CustomerActionId, cr.CustomerRoleId, null);
+                    var acls = IoCFactory.Resolve<IACLManager>().GetAllAcl(ca.CustomerActionId, cr.CustomerRoleId, null);
                     if (acls.Count > 0)
                     {
                         ACL acl = acls[0];
@@ -217,7 +218,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         private void BindData()
         {
-            cbACLEnabled.Checked = SettingManager.GetSettingValueBoolean("ACL.Enabled");
+            cbACLEnabled.Checked = IoCFactory.Resolve<IACLManager>().Enabled;
         }
 
         protected void btnSave_Click(object sender, EventArgs e)
@@ -226,13 +227,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 try
                 {
-                    var roles = CustomerManager.GetAllCustomerRoles();
+                    var roles = IoCFactory.Resolve<ICustomerManager>().GetAllCustomerRoles();
                     if (roles.Count == 0)
                     {
                         lblMessage.Text = GetLocaleResourceString("Admin.ACL.NoRolesDefined");
                         return;
                     }
-                    SettingManager.SetParam("ACL.Enabled", cbACLEnabled.Checked.ToString());
+                    IoCFactory.Resolve<IACLManager>().Enabled = cbACLEnabled.Checked;
 
                     foreach (GridViewRow row in gvACL.Rows)
                     {
@@ -246,14 +247,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                             bool allow = cbAllow.Checked;
                             int customerActionId = int.Parse(hfCustomerActionId.Value);
 
-                            var acls = ACLManager.GetAllAcl(customerActionId, cr.CustomerRoleId, null);
+                            var acls = IoCFactory.Resolve<IACLManager>().GetAllAcl(customerActionId, cr.CustomerRoleId, null);
                             if (acls.Count > 0)
                             {
                                 ACL acl = acls[0];
                                 acl.CustomerActionId = customerActionId;
                                 acl.CustomerRoleId = cr.CustomerRoleId;
                                 acl.Allow = allow;
-                                ACLManager.UpdateAcl(acl);
+                                IoCFactory.Resolve<IACLManager>().UpdateAcl(acl);
                             }
                             else
                             {
@@ -263,7 +264,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                                     CustomerRoleId= cr.CustomerRoleId,
                                     Allow= allow
                                 };
-                                ACLManager.InsertAcl(acl);
+                                IoCFactory.Resolve<IACLManager>().InsertAcl(acl);
                             }
                         }
                     } 

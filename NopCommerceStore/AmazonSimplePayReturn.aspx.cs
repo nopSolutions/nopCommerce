@@ -9,6 +9,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Payment.Methods.Amazon;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web
 {
@@ -32,7 +33,7 @@ namespace NopSolutions.NopCommerce.Web
                 }
 
                 int orderId = Convert.ToInt32(CommonHelper.QueryStringInt("referenceId"));
-                Order order = OrderManager.GetOrderById(orderId);
+                Order order = IoCFactory.Resolve<IOrderManager>().GetOrderById(orderId);
                 if(order == null)
                 {
                     Response.Redirect(CommonHelper.GetStoreLocation());
@@ -44,16 +45,16 @@ namespace NopSolutions.NopCommerce.Web
 
                 if (SimplePaySettings.SettleImmediately)
                 {
-                    if (OrderManager.CanMarkOrderAsPaid(order))
+                    if (IoCFactory.Resolve<IOrderManager>().CanMarkOrderAsPaid(order))
                     {
-                        OrderManager.MarkOrderAsPaid(order.OrderId);
+                        IoCFactory.Resolve<IOrderManager>().MarkOrderAsPaid(order.OrderId);
                     }
                 }
                 else
                 {
-                    if (OrderManager.CanMarkOrderAsAuthorized(order))
+                    if (IoCFactory.Resolve<IOrderManager>().CanMarkOrderAsAuthorized(order))
                     {
-                        OrderManager.MarkAsAuthorized(order.OrderId);
+                        IoCFactory.Resolve<IOrderManager>().MarkAsAuthorized(order.OrderId);
                     }
                 }
 

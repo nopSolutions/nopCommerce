@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
@@ -99,7 +100,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                 if (languageId > 0)
                 {
                     if (_checkoutAttributeLocalized == null)
-                        _checkoutAttributeLocalized = CheckoutAttributeManager.GetCheckoutAttributeLocalizedByCheckoutAttributeId(this.CheckoutAttributeId);
+                        _checkoutAttributeLocalized = IoCFactory.Resolve<ICheckoutAttributeManager>().GetCheckoutAttributeLocalizedByCheckoutAttributeId(this.CheckoutAttributeId);
 
                     var temp1 = _checkoutAttributeLocalized.FirstOrDefault(cal => cal.LanguageId == languageId);
                     if (temp1 != null && !String.IsNullOrWhiteSpace(temp1.Name))
@@ -133,7 +134,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                 if (languageId > 0)
                 {
                     if (_checkoutAttributeLocalized == null)
-                        _checkoutAttributeLocalized = CheckoutAttributeManager.GetCheckoutAttributeLocalizedByCheckoutAttributeId(this.CheckoutAttributeId);
+                        _checkoutAttributeLocalized = IoCFactory.Resolve<ICheckoutAttributeManager>().GetCheckoutAttributeLocalizedByCheckoutAttributeId(this.CheckoutAttributeId);
 
                     var temp1 = _checkoutAttributeLocalized.FirstOrDefault(cal => cal.LanguageId == languageId);
                     if (temp1 != null && !String.IsNullOrWhiteSpace(temp1.TextPrompt))
@@ -197,7 +198,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         {
             get
             {
-                return CheckoutAttributeManager.GetCheckoutAttributeValues(this.CheckoutAttributeId);
+                return IoCFactory.Resolve<ICheckoutAttributeManager>().GetCheckoutAttributeValues(this.CheckoutAttributeId);
             }
         }
 

@@ -30,6 +30,7 @@ using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.ExportImport;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -40,13 +41,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             if (!Page.IsPostBack)
             {
                 SetDefaultValues();
-                phUsername.Visible = CustomerManager.UsernamesEnabled;
-                phDateOfBirth.Visible = CustomerManager.FormFieldDateOfBirthEnabled;
-                gvCustomers.Columns[2].Visible = CustomerManager.UsernamesEnabled;
+                phUsername.Visible = IoCFactory.Resolve<ICustomerManager>().UsernamesEnabled;
+                phDateOfBirth.Visible = IoCFactory.Resolve<ICustomerManager>().FormFieldDateOfBirthEnabled;
+                gvCustomers.Columns[2].Visible = IoCFactory.Resolve<ICustomerManager>().UsernamesEnabled;
 
                 //buttons
-                btnExportXLS.Visible = SettingManager.GetSettingValueBoolean("Features.SupportExcel");
-                btnImportXLS.Visible = SettingManager.GetSettingValueBoolean("Features.SupportExcel");
+                btnExportXLS.Visible = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Features.SupportExcel");
+                btnImportXLS.Visible = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Features.SupportExcel");
             }
         }
 
@@ -78,7 +79,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             int dateOfBirthDay = int.Parse(this.ddlDateOfBirthDay.SelectedValue);
             int dateOfBirthMonth = int.Parse(this.ddlDateOfBirthMonth.SelectedValue);
             int totalRecords = 0;
-            var customers = CustomerManager.GetAllCustomers(startDate,
+            var customers = IoCFactory.Resolve<ICustomerManager>().GetAllCustomers(startDate,
                 endDate, email, username, dontLoadGuestCustomers,
                 dateOfBirthMonth, dateOfBirthDay, int.MaxValue, 0, out totalRecords);
             return customers;

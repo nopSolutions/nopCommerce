@@ -26,6 +26,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Web.Templates.Payment;
 using NopSolutions.NopCommerce.Payment.Methods.PayFlowPro;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Payment.USAePayIntegrated
 {
@@ -34,7 +35,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Payment.USAePayIntegrated
         public static TransactMode GetCurrentTransactionMode()
         {
             TransactMode transactionModeEnum = TransactMode.Authorize;
-            string transactionMode = SettingManager.GetSettingValue("PaymentMethod.USAePayIntegrated.TransactionMode");
+            string transactionMode = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.USAePayIntegrated.TransactionMode");
             if (!String.IsNullOrEmpty(transactionMode))
             {
                 transactionModeEnum = (TransactMode)Enum.Parse(typeof(TransactMode), transactionMode);
@@ -45,7 +46,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Payment.USAePayIntegrated
 
         public static void SetTransactionMode(TransactMode transactionMode)
         {
-            SettingManager.SetParam("PaymentMethod.USAePayIntegrated.TransactionMode", transactionMode.ToString());
+            IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.USAePayIntegrated.TransactionMode", transactionMode.ToString());
         }
 
         protected void Page_Load(object sender, EventArgs e)
@@ -69,9 +70,9 @@ namespace NopSolutions.NopCommerce.Web.Administration.Payment.USAePayIntegrated
                     break;
             }
 
-            txtSourceKey.Text = SettingManager.GetSettingValue("PaymentMethod.USAePayIntegrated.SourceKey");
-            txtPin.Text = SettingManager.GetSettingValue("PaymenthMethod.USAePayIntegrated.Pin");
-            txtAdditionalFee.Value = SettingManager.GetSettingValueDecimalNative("PaymentMethod.USAePayIntegrated.AdditionalFee");
+            txtSourceKey.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.USAePayIntegrated.SourceKey");
+            txtPin.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymenthMethod.USAePayIntegrated.Pin");
+            txtAdditionalFee.Value = IoCFactory.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.USAePayIntegrated.AdditionalFee");
         }
 
         public void Save()
@@ -87,9 +88,9 @@ namespace NopSolutions.NopCommerce.Web.Administration.Payment.USAePayIntegrated
             }
             SetTransactionMode(transactionMode);
 
-            SettingManager.SetParam("PaymentMethod.USAePayIntegrated.SourceKey", txtSourceKey.Text);
-            SettingManager.SetParam("PaymenthMethod.USAePayIntegrated.Pin", txtPin.Text);
-            SettingManager.SetParamNative("PaymentMethod.USAePayIntegrated.AdditionalFee", txtAdditionalFee.Value);
+            IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.USAePayIntegrated.SourceKey", txtSourceKey.Text);
+            IoCFactory.Resolve<ISettingManager>().SetParam("PaymenthMethod.USAePayIntegrated.Pin", txtPin.Text);
+            IoCFactory.Resolve<ISettingManager>().SetParamNative("PaymentMethod.USAePayIntegrated.AdditionalFee", txtAdditionalFee.Value);
         }
     }
 }

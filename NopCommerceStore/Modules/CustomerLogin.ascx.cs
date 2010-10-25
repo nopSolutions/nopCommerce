@@ -28,6 +28,7 @@ using NopSolutions.NopCommerce.BusinessLogic;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -38,7 +39,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             var lblUsernameOrEmail = LoginForm.FindControl("lblUsernameOrEmail") as Label;
             if (lblUsernameOrEmail != null)
             {
-                if (CustomerManager.UsernamesEnabled)
+                if (IoCFactory.Resolve<ICustomerManager>().UsernamesEnabled)
                 {
                     lblUsernameOrEmail.Text = GetLocaleResourceString("Login.Username");
                 }
@@ -50,7 +51,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             var UserNameOrEmailRequired = LoginForm.FindControl("UserNameOrEmailRequired") as RequiredFieldValidator;
             if (UserNameOrEmailRequired != null)
             {
-                if (CustomerManager.UsernamesEnabled)
+                if (IoCFactory.Resolve<ICustomerManager>().UsernamesEnabled)
                 {
                     UserNameOrEmailRequired.ErrorMessage = GetLocaleResourceString("Login.UserNameRequired");
                     UserNameOrEmailRequired.ToolTip = GetLocaleResourceString("Login.UserNameRequired");
@@ -70,10 +71,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
             var CaptchaCtrl = LoginForm.FindControl("CaptchaCtrl") as CaptchaControl;
             if (CaptchaCtrl != null)
             {
-                CaptchaCtrl.Visible = SettingManager.GetSettingValueBoolean("Common.LoginCaptchaImageEnabled");
+                CaptchaCtrl.Visible = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Common.LoginCaptchaImageEnabled");
             }
 
-            if(SettingManager.GetSettingValueBoolean("Common.LoginCaptchaImageEnabled"))
+            if(IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Common.LoginCaptchaImageEnabled"))
             {
                 pnlLogin.CssClass = "login-block captcha-enabled";
                 pnlRegisterBlock.Attributes["class"] = "register-block captcha-enabled";
@@ -82,7 +83,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void OnLoggingIn(object sender, LoginCancelEventArgs e)
         {
-            if (SettingManager.GetSettingValueBoolean("Common.LoginCaptchaImageEnabled"))
+            if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Common.LoginCaptchaImageEnabled"))
             {
                 var CaptchaCtrl = LoginForm.FindControl("CaptchaCtrl") as CaptchaControl;
                 if (CaptchaCtrl != null)
@@ -107,7 +108,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void OnLoginError(object sender, EventArgs e)
         {
-            if (SettingManager.GetSettingValueBoolean("Common.LoginCaptchaImageEnabled"))
+            if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Common.LoginCaptchaImageEnabled"))
             {
                 var CaptchaCtrl = LoginForm.FindControl("CaptchaCtrl") as CaptchaControl;
                 if (CaptchaCtrl != null)
@@ -139,7 +140,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             get
             {
                 bool checkoutAsGuest = CommonHelper.QueryStringBool("CheckoutAsGuest");
-                return checkoutAsGuest && CustomerManager.AnonymousCheckoutAllowed;
+                return checkoutAsGuest && IoCFactory.Resolve<ICustomerManager>().AnonymousCheckoutAllowed;
             }
         }
     }

@@ -34,6 +34,7 @@ using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.BusinessLogic.Utils.Html;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -49,7 +50,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
         {
             pnlError.Visible = false;
 
-            var blogPost = BlogManager.GetBlogPostById(this.BlogPostId);
+            var blogPost = IoCFactory.Resolve<IBlogManager>().GetBlogPostById(this.BlogPostId);
             if (blogPost != null)
             {
                 this.lBlogPostTitle.Text = Server.HtmlEncode(blogPost.BlogPostTitle);
@@ -59,7 +60,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
                 if (blogPost.BlogPostAllowComments)
                 {
-                    if (!BlogManager.AllowNotRegisteredUsersToLeaveComments
+                    if (!IoCFactory.Resolve<IBlogManager>().AllowNotRegisteredUsersToLeaveComments
                         && (NopContext.Current.User == null || NopContext.Current.User.IsGuest))
                     {
                         lblLeaveYourComment.Text = GetLocaleResourceString("Blog.OnlyRegisteredUsersCanLeaveComments");
@@ -118,10 +119,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
             {
                 if (Page.IsValid)
                 {
-                    var blogPost = BlogManager.GetBlogPostById(this.BlogPostId);
+                    var blogPost = IoCFactory.Resolve<IBlogManager>().GetBlogPostById(this.BlogPostId);
                     if (blogPost != null && blogPost.BlogPostAllowComments)
                     {
-                        if (!BlogManager.AllowNotRegisteredUsersToLeaveComments
+                        if (!IoCFactory.Resolve<IBlogManager>().AllowNotRegisteredUsersToLeaveComments
                             && (NopContext.Current.User == null || NopContext.Current.User.IsGuest))
                         {
                             lblLeaveYourComment.Text = GetLocaleResourceString("Blog.OnlyRegisteredUsersCanLeaveComments");
@@ -137,7 +138,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                         if (NopContext.Current.User != null && !NopContext.Current.User.IsGuest)
                             customerId = NopContext.Current.User.CustomerId;
 
-                        BlogManager.InsertBlogComment(blogPost.BlogPostId, customerId, comment, DateTime.UtcNow);
+                        IoCFactory.Resolve<IBlogManager>().InsertBlogComment(blogPost.BlogPostId, customerId, comment, DateTime.UtcNow);
                         txtComment.Text = string.Empty;
                         BindData();
                     }

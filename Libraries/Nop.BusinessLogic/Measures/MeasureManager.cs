@@ -24,13 +24,14 @@ using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Data;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Measures
 {
     /// <summary>
     /// Measure dimension manager
     /// </summary>
-    public partial class MeasureManager
+    public partial class MeasureManager : IMeasureManager
     {
         #region Constants
         private const string MEASUREDIMENSIONS_ALL_KEY = "Nop.measuredimension.all";
@@ -48,7 +49,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Measures
         /// Deletes measure dimension
         /// </summary>
         /// <param name="measureDimensionId">Measure dimension identifier</param>
-        public static void DeleteMeasureDimension(int measureDimensionId)
+        public void DeleteMeasureDimension(int measureDimensionId)
         {
             var measureDimension = GetMeasureDimensionById(measureDimensionId);
             if (measureDimension == null)
@@ -59,7 +60,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Measures
                 context.MeasureDimensions.Attach(measureDimension);
             context.DeleteObject(measureDimension);
             context.SaveChanges();
-            if (MeasureManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(MEASUREDIMENSIONS_PATTERN_KEY);
             }
@@ -70,14 +71,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Measures
         /// </summary>
         /// <param name="measureDimensionId">Measure dimension identifier</param>
         /// <returns>Measure dimension</returns>
-        public static MeasureDimension GetMeasureDimensionById(int measureDimensionId)
+        public MeasureDimension GetMeasureDimensionById(int measureDimensionId)
         {
             if (measureDimensionId == 0)
                 return null;
 
             string key = string.Format(MEASUREDIMENSIONS_BY_ID_KEY, measureDimensionId);
             object obj2 = NopRequestCache.Get(key);
-            if (MeasureManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (MeasureDimension)obj2;
             }
@@ -88,7 +89,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Measures
                         select md;
             var measureDimension = query.SingleOrDefault();
 
-            if (MeasureManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, measureDimension);
             }
@@ -100,7 +101,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Measures
         /// </summary>
         /// <param name="systemKeyword">The system keyword</param>
         /// <returns>Measure dimension</returns>
-        public static MeasureDimension GetMeasureDimensionBySystemKeyword(string systemKeyword)
+        public MeasureDimension GetMeasureDimensionBySystemKeyword(string systemKeyword)
         {
             if (String.IsNullOrEmpty(systemKeyword))
                 return null;
@@ -116,11 +117,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Measures
         /// Gets all measure dimensions
         /// </summary>
         /// <returns>Measure dimension collection</returns>
-        public static List<MeasureDimension> GetAllMeasureDimensions()
+        public List<MeasureDimension> GetAllMeasureDimensions()
         {
             string key = MEASUREDIMENSIONS_ALL_KEY;
             object obj2 = NopRequestCache.Get(key);
-            if (MeasureManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (List<MeasureDimension>)obj2;
             }
@@ -131,7 +132,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Measures
                         select md;
             var measureDimensionCollection = query.ToList();
 
-            if (MeasureManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, measureDimensionCollection);
             }
@@ -142,7 +143,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Measures
         /// Inserts a measure dimension
         /// </summary>
         /// <param name="measure">Measure dimension</param>
-        public static void InsertMeasureDimension(MeasureDimension measure)
+        public void InsertMeasureDimension(MeasureDimension measure)
         {
             if (measure == null)
                 throw new ArgumentNullException("measure");
@@ -157,7 +158,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Measures
             context.MeasureDimensions.AddObject(measure);
             context.SaveChanges();
 
-            if (MeasureManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(MEASUREDIMENSIONS_PATTERN_KEY);
             }
@@ -167,7 +168,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Measures
         /// Updates the measure dimension
         /// </summary>
         /// <param name="measure">Measure dimension</param>
-        public static void UpdateMeasureDimension(MeasureDimension measure)
+        public void UpdateMeasureDimension(MeasureDimension measure)
         {
             if (measure == null)
                 throw new ArgumentNullException("measure");
@@ -183,7 +184,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Measures
 
             context.SaveChanges();
 
-            if (MeasureManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(MEASUREDIMENSIONS_PATTERN_KEY);
             }
@@ -196,7 +197,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Measures
         /// <param name="sourceMeasureDimension">Source dimension</param>
         /// <param name="targetMeasureDimension">Target dimension</param>
         /// <returns>Converted value</returns>
-        public static decimal ConvertDimension(decimal quantity,
+        public decimal ConvertDimension(decimal quantity,
             MeasureDimension sourceMeasureDimension, MeasureDimension targetMeasureDimension)
         {
             decimal result = quantity;
@@ -217,7 +218,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Measures
         /// <param name="quantity">Quantity</param>
         /// <param name="sourceMeasureDimension">Source dimension</param>
         /// <returns>Converted value</returns>
-        public static decimal ConvertToPrimaryMeasureDimension(decimal quantity,
+        public decimal ConvertToPrimaryMeasureDimension(decimal quantity,
             MeasureDimension sourceMeasureDimension)
         {
             decimal result = quantity;
@@ -237,7 +238,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Measures
         /// <param name="quantity">Quantity</param>
         /// <param name="targetMeasureDimension">Target dimension</param>
         /// <returns>Converted value</returns>
-        public static decimal ConvertFromPrimaryMeasureDimension(decimal quantity,
+        public decimal ConvertFromPrimaryMeasureDimension(decimal quantity,
             MeasureDimension targetMeasureDimension)
         {
             decimal result = quantity;
@@ -259,7 +260,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Measures
         /// Deletes measure weight
         /// </summary>
         /// <param name="measureWeightId">Measure weight identifier</param>
-        public static void DeleteMeasureWeight(int measureWeightId)
+        public void DeleteMeasureWeight(int measureWeightId)
         {
             var measureWeight = GetMeasureWeightById(measureWeightId);
             if (measureWeight == null)
@@ -270,7 +271,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Measures
                 context.MeasureWeights.Attach(measureWeight);
             context.DeleteObject(measureWeight);
             context.SaveChanges();
-            if (MeasureManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(MEASUREWEIGHTS_PATTERN_KEY);
             }
@@ -281,14 +282,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Measures
         /// </summary>
         /// <param name="measureWeightId">Measure weight identifier</param>
         /// <returns>Measure weight</returns>
-        public static MeasureWeight GetMeasureWeightById(int measureWeightId)
+        public MeasureWeight GetMeasureWeightById(int measureWeightId)
         {
             if (measureWeightId == 0)
                 return null;
 
             string key = string.Format(MEASUREWEIGHTS_BY_ID_KEY, measureWeightId);
             object obj2 = NopRequestCache.Get(key);
-            if (MeasureManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (MeasureWeight)obj2;
             }
@@ -299,7 +300,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Measures
                         select mw;
             var measureWeight = query.SingleOrDefault();
 
-            if (MeasureManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, measureWeight);
             }
@@ -311,7 +312,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Measures
         /// </summary>
         /// <param name="systemKeyword">The system keyword</param>
         /// <returns>Measure weight</returns>
-        public static MeasureWeight GetMeasureWeightBySystemKeyword(string systemKeyword)
+        public MeasureWeight GetMeasureWeightBySystemKeyword(string systemKeyword)
         {
             if (String.IsNullOrEmpty(systemKeyword))
                 return null;
@@ -327,11 +328,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Measures
         /// Gets all measure weights
         /// </summary>
         /// <returns>Measure weight collection</returns>
-        public static List<MeasureWeight> GetAllMeasureWeights()
+        public List<MeasureWeight> GetAllMeasureWeights()
         {
             string key = MEASUREWEIGHTS_ALL_KEY;
             object obj2 = NopRequestCache.Get(key);
-            if (MeasureManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (List<MeasureWeight>)obj2;
             }
@@ -342,7 +343,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Measures
                         select mw;
             var measureWeightCollection = query.ToList();
 
-            if (MeasureManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, measureWeightCollection);
             }
@@ -353,7 +354,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Measures
         /// Inserts a measure weight
         /// </summary>
         /// <param name="measure">Measure weight</param>
-        public static void InsertMeasureWeight(MeasureWeight measure)
+        public void InsertMeasureWeight(MeasureWeight measure)
         {
             if (measure == null)
                 throw new ArgumentNullException("measure");
@@ -368,7 +369,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Measures
             context.MeasureWeights.AddObject(measure);
             context.SaveChanges();
 
-            if (MeasureManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(MEASUREWEIGHTS_PATTERN_KEY);
             }
@@ -378,7 +379,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Measures
         /// Updates the measure weight
         /// </summary>
         /// <param name="measure">Measure weight</param>
-        public static void UpdateMeasureWeight(MeasureWeight measure)
+        public void UpdateMeasureWeight(MeasureWeight measure)
         {
             if (measure == null)
                 throw new ArgumentNullException("measure");
@@ -394,7 +395,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Measures
 
             context.SaveChanges();
 
-            if (MeasureManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(MEASUREWEIGHTS_PATTERN_KEY);
             }
@@ -407,7 +408,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Measures
         /// <param name="sourceMeasureWeight">Source weight</param>
         /// <param name="targetMeasureWeight">Target weight</param>
         /// <returns>Converted value</returns>
-        public static decimal ConvertWeight(decimal quantity,
+        public decimal ConvertWeight(decimal quantity,
             MeasureWeight sourceMeasureWeight, MeasureWeight targetMeasureWeight)
         {
             decimal result = quantity;
@@ -428,7 +429,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Measures
         /// <param name="quantity">Quantity</param>
         /// <param name="sourceMeasureWeight">Source weight</param>
         /// <returns>Converted value</returns>
-        public static decimal ConvertToPrimaryMeasureWeight(decimal quantity, MeasureWeight sourceMeasureWeight)
+        public decimal ConvertToPrimaryMeasureWeight(decimal quantity, MeasureWeight sourceMeasureWeight)
         {
             decimal result = quantity;
             if (result != decimal.Zero && sourceMeasureWeight.MeasureWeightId != BaseWeightIn.MeasureWeightId)
@@ -447,7 +448,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Measures
         /// <param name="quantity">Quantity</param>
         /// <param name="targetMeasureWeight">Target weight</param>
         /// <returns>Converted value</returns>
-        public static decimal ConvertFromPrimaryMeasureWeight(decimal quantity,
+        public decimal ConvertFromPrimaryMeasureWeight(decimal quantity,
             MeasureWeight targetMeasureWeight)
         {
             decimal result = quantity;
@@ -469,45 +470,45 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Measures
         /// <summary>
         /// Gets or sets the dimension that will be used as a default
         /// </summary>
-        public static MeasureDimension BaseDimensionIn
+        public MeasureDimension BaseDimensionIn
         {
             get
             {
-                int baseDimensionIn = SettingManager.GetSettingValueInteger("Common.BaseDimensionIn");
-                return MeasureManager.GetMeasureDimensionById(baseDimensionIn);
+                int baseDimensionIn = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Common.BaseDimensionIn");
+                return this.GetMeasureDimensionById(baseDimensionIn);
             }
             set
             {
                 if (value != null)
-                    SettingManager.SetParam("Common.BaseDimensionIn", value.MeasureDimensionId.ToString());
+                    IoCFactory.Resolve<ISettingManager>().SetParam("Common.BaseDimensionIn", value.MeasureDimensionId.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets the weight that will be used as a default
         /// </summary>
-        public static MeasureWeight BaseWeightIn
+        public MeasureWeight BaseWeightIn
         {
             get
             {
-                int baseWeightIn = SettingManager.GetSettingValueInteger("Common.BaseWeightIn");
-                return MeasureManager.GetMeasureWeightById(baseWeightIn);
+                int baseWeightIn = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Common.BaseWeightIn");
+                return this.GetMeasureWeightById(baseWeightIn);
             }
             set
             {
                 if (value != null)
-                    SettingManager.SetParam("Common.BaseWeightIn", value.MeasureWeightId.ToString());
+                    IoCFactory.Resolve<ISettingManager>().SetParam("Common.BaseWeightIn", value.MeasureWeightId.ToString());
             }
         }
 
         /// <summary>
         /// Gets a value indicating whether cache is enabled
         /// </summary>
-        public static bool CacheEnabled
+        public bool CacheEnabled
         {
             get
             {
-                return SettingManager.GetSettingValueBoolean("Cache.MeasureManager.CacheEnabled");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.MeasureManager.CacheEnabled");
             }
         }
         #endregion

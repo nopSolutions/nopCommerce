@@ -35,6 +35,7 @@ using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.Utils.Html;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils.Html;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -48,7 +49,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 BindData();
             }
 
-            if (ForumManager.ForumEditor == EditorTypeEnum.BBCodeEditor)
+            if (IoCFactory.Resolve<IForumManager>().ForumEditor == EditorTypeEnum.BBCodeEditor)
             {
                 LoadBBCodeEditorJS();
             }
@@ -81,7 +82,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             txtTopicBodySimple.Visible = false;
             txtTopicBodyBBCode.Visible = false;
             txtTopicBodyHtml.Visible = false;
-            switch (ForumManager.ForumEditor)
+            switch (IoCFactory.Resolve<IForumManager>().ForumEditor)
             {
                 case EditorTypeEnum.SimpleTextBox:
                     {
@@ -109,18 +110,18 @@ namespace NopSolutions.NopCommerce.Web.Modules
             {
                 #region Adding topic
 
-                var forum = ForumManager.GetForumById(this.ForumId);
+                var forum = IoCFactory.Resolve<IForumManager>().GetForumById(this.ForumId);
                 if (forum == null)
                 {
                     Response.Redirect(SEOHelper.GetForumMainUrl());
                 }
 
-                if(NopContext.Current.User == null && ForumManager.AllowGuestsToCreateTopics)
+                if(NopContext.Current.User == null && IoCFactory.Resolve<IForumManager>().AllowGuestsToCreateTopics)
                 {
-                    CustomerManager.CreateAnonymousUser();
+                    IoCFactory.Resolve<ICustomerManager>().CreateAnonymousUser();
                 }
 
-                if (!ForumManager.IsUserAllowedToCreateTopic(NopContext.Current.User, forum))
+                if (!IoCFactory.Resolve<IForumManager>().IsUserAllowedToCreateTopic(NopContext.Current.User, forum))
                 {
                     string loginURL = SEOHelper.GetLoginPageUrl(true);
                     Response.Redirect(loginURL);
@@ -137,22 +138,22 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 ctrlForumBreadcrumb.ForumId = forum.ForumId;
                 ctrlForumBreadcrumb.BindData();
 
-                phPriority.Visible = ForumManager.IsUserAllowedToSetTopicPriority(NopContext.Current.User);
-                phSubscribe.Visible = ForumManager.IsUserAllowedToSubscribe(NopContext.Current.User);
+                phPriority.Visible = IoCFactory.Resolve<IForumManager>().IsUserAllowedToSetTopicPriority(NopContext.Current.User);
+                phSubscribe.Visible = IoCFactory.Resolve<IForumManager>().IsUserAllowedToSubscribe(NopContext.Current.User);
 
                 #endregion
             }
             else if (this.EditTopic)
             {
                 #region Editing topic
-                var forumTopic = ForumManager.GetTopicById(this.ForumTopicId);
+                var forumTopic = IoCFactory.Resolve<IForumManager>().GetTopicById(this.ForumTopicId);
 
                 if (forumTopic == null)
                 {
                     Response.Redirect(SEOHelper.GetForumMainUrl());
                 }
 
-                if (!ForumManager.IsUserAllowedToEditTopic(NopContext.Current.User, forumTopic))
+                if (!IoCFactory.Resolve<IForumManager>().IsUserAllowedToEditTopic(NopContext.Current.User, forumTopic))
                 {
                     string loginURL = SEOHelper.GetLoginPageUrl(true);
                     Response.Redirect(loginURL);
@@ -180,7 +181,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 var firstPost = forumTopic.FirstPost;
                 if (firstPost != null)
                 {
-                    switch (ForumManager.ForumEditor)
+                    switch (IoCFactory.Resolve<IForumManager>().ForumEditor)
                     {
                         case EditorTypeEnum.SimpleTextBox:
                             {
@@ -203,12 +204,12 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 }
 
 
-                phPriority.Visible = ForumManager.IsUserAllowedToSetTopicPriority(NopContext.Current.User);
+                phPriority.Visible = IoCFactory.Resolve<IForumManager>().IsUserAllowedToSetTopicPriority(NopContext.Current.User);
                 //subscription
-                if (ForumManager.IsUserAllowedToSubscribe(NopContext.Current.User.CustomerId))
+                if (IoCFactory.Resolve<IForumManager>().IsUserAllowedToSubscribe(NopContext.Current.User.CustomerId))
                 {
                     phSubscribe.Visible = true;
-                    var forumSubscription = ForumManager.GetAllSubscriptions(NopContext.Current.User.CustomerId,
+                    var forumSubscription = IoCFactory.Resolve<IForumManager>().GetAllSubscriptions(NopContext.Current.User.CustomerId,
                         0, forumTopic.ForumTopicId, 1, 0).FirstOrDefault();
                     cbSubscribe.Checked = forumSubscription != null;
                 }
@@ -222,18 +223,18 @@ namespace NopSolutions.NopCommerce.Web.Modules
             {
                 #region Adding post
 
-                var forumTopic = ForumManager.GetTopicById(this.ForumTopicId);
+                var forumTopic = IoCFactory.Resolve<IForumManager>().GetTopicById(this.ForumTopicId);
                 if (forumTopic == null)
                 {
                     Response.Redirect(SEOHelper.GetForumMainUrl());
                 }
 
-                if(NopContext.Current.User == null && ForumManager.AllowGuestsToCreatePosts)
+                if(NopContext.Current.User == null && IoCFactory.Resolve<IForumManager>().AllowGuestsToCreatePosts)
                 {
-                    CustomerManager.CreateAnonymousUser();
+                    IoCFactory.Resolve<ICustomerManager>().CreateAnonymousUser();
                 }
 
-                if (!ForumManager.IsUserAllowedToCreatePost(NopContext.Current.User, forumTopic))
+                if (!IoCFactory.Resolve<IForumManager>().IsUserAllowedToCreatePost(NopContext.Current.User, forumTopic))
                 {
                     string loginURL = SEOHelper.GetLoginPageUrl(true);
                     Response.Redirect(loginURL);
@@ -250,29 +251,29 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 lblTopicTitle.Visible = true;
                 lblTopicTitle.Text = Server.HtmlEncode(forumTopic.Subject);
 
-                var quotePost = ForumManager.GetPostById(QuotePostId);
+                var quotePost = IoCFactory.Resolve<IForumManager>().GetPostById(QuotePostId);
                 if(quotePost != null && quotePost.TopicId == forumTopic.ForumTopicId)
                 {
-                    switch(ForumManager.ForumEditor)
+                    switch(IoCFactory.Resolve<IForumManager>().ForumEditor)
                     {
                         case EditorTypeEnum.SimpleTextBox:
-                            txtTopicBodySimple.Text = String.Format("{0}:\n{1}\n", CustomerManager.FormatUserName(quotePost.User), quotePost.Text);
+                            txtTopicBodySimple.Text = String.Format("{0}:\n{1}\n", IoCFactory.Resolve<ICustomerManager>().FormatUserName(quotePost.User), quotePost.Text);
                             break;
                         case EditorTypeEnum.BBCodeEditor:
-                            txtTopicBodyBBCode.Text = String.Format("[quote={0}]{1}[/quote]", CustomerManager.FormatUserName(quotePost.User), BBCodeHelper.RemoveQuotes(quotePost.Text));
+                            txtTopicBodyBBCode.Text = String.Format("[quote={0}]{1}[/quote]", IoCFactory.Resolve<ICustomerManager>().FormatUserName(quotePost.User), BBCodeHelper.RemoveQuotes(quotePost.Text));
                             break;
                         case EditorTypeEnum.HtmlEditor:
-                            txtTopicBodyHtml.Value = String.Format("<b>{0}:</b><p style=\"padding: 5px 5px 5px 5px; border: dashed 1px black; background-color: #ffffff;\">{1}</p>", CustomerManager.FormatUserName(quotePost.User), quotePost.Text);
+                            txtTopicBodyHtml.Value = String.Format("<b>{0}:</b><p style=\"padding: 5px 5px 5px 5px; border: dashed 1px black; background-color: #ffffff;\">{1}</p>", IoCFactory.Resolve<ICustomerManager>().FormatUserName(quotePost.User), quotePost.Text);
                             break;
                     }
                 }
 
                 phPriority.Visible = false;
                 //subscription
-                if (ForumManager.IsUserAllowedToSubscribe(NopContext.Current.User))
+                if (IoCFactory.Resolve<IForumManager>().IsUserAllowedToSubscribe(NopContext.Current.User))
                 {
                     phSubscribe.Visible = true;
-                    var forumSubscription = ForumManager.GetAllSubscriptions(NopContext.Current.User.CustomerId,
+                    var forumSubscription = IoCFactory.Resolve<IForumManager>().GetAllSubscriptions(NopContext.Current.User.CustomerId,
                         0, forumTopic.ForumTopicId, 1, 0).FirstOrDefault();
                     cbSubscribe.Checked = forumSubscription != null;
                 }
@@ -286,14 +287,14 @@ namespace NopSolutions.NopCommerce.Web.Modules
             {
                 #region Editing post
 
-                var forumPost = ForumManager.GetPostById(this.ForumPostId);
+                var forumPost = IoCFactory.Resolve<IForumManager>().GetPostById(this.ForumPostId);
 
                 if (forumPost == null)
                 {
                     Response.Redirect(SEOHelper.GetForumMainUrl());
                 }
 
-                if (!ForumManager.IsUserAllowedToEditPost(NopContext.Current.User, forumPost))
+                if (!IoCFactory.Resolve<IForumManager>().IsUserAllowedToEditPost(NopContext.Current.User, forumPost))
                 {
                     string loginURL = SEOHelper.GetLoginPageUrl(true);
                     Response.Redirect(loginURL);
@@ -317,7 +318,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 ctrlForumBreadcrumb.BindData();
 
 
-                switch (ForumManager.ForumEditor)
+                switch (IoCFactory.Resolve<IForumManager>().ForumEditor)
                 {
                     case EditorTypeEnum.SimpleTextBox:
                         {
@@ -340,10 +341,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
                 phPriority.Visible = false;
                 //subscription
-                if (ForumManager.IsUserAllowedToSubscribe(NopContext.Current.User.CustomerId))
+                if (IoCFactory.Resolve<IForumManager>().IsUserAllowedToSubscribe(NopContext.Current.User.CustomerId))
                 {
                     phSubscribe.Visible = true;
-                    var forumSubscription = ForumManager.GetAllSubscriptions(NopContext.Current.User.CustomerId,
+                    var forumSubscription = IoCFactory.Resolve<IForumManager>().GetAllSubscriptions(NopContext.Current.User.CustomerId,
                         0, forumTopic.ForumTopicId, 1, 0).FirstOrDefault();
                     cbSubscribe.Checked = forumSubscription != null;
                 }
@@ -365,7 +366,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             {
                 string text = string.Empty;
 
-                switch (ForumManager.ForumEditor)
+                switch (IoCFactory.Resolve<IForumManager>().ForumEditor)
                 {
                     case EditorTypeEnum.SimpleTextBox:
                         {
@@ -394,7 +395,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
                 DateTime nowDT = DateTime.UtcNow;
 
-                if (ForumManager.IsUserAllowedToSetTopicPriority(NopContext.Current.User))
+                if (IoCFactory.Resolve<IForumManager>().IsUserAllowedToSetTopicPriority(NopContext.Current.User))
                 {
                     topicType = (ForumTopicTypeEnum)Enum.ToObject(typeof(ForumTopicTypeEnum), int.Parse(ddlPriority.SelectedItem.Value));
                 }
@@ -406,13 +407,13 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 if (this.AddTopic)
                 {
                     #region Adding topic
-                    var forum = ForumManager.GetForumById(this.ForumId);
+                    var forum = IoCFactory.Resolve<IForumManager>().GetForumById(this.ForumId);
                     if (forum == null)
                     {
                         Response.Redirect(SEOHelper.GetForumMainUrl());
                     }
 
-                    if (!ForumManager.IsUserAllowedToCreateTopic(NopContext.Current.User, forum))
+                    if (!IoCFactory.Resolve<IForumManager>().IsUserAllowedToCreateTopic(NopContext.Current.User, forum))
                     {
                         string loginURL = SEOHelper.GetLoginPageUrl(true);
                         Response.Redirect(loginURL);
@@ -432,7 +433,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                         CreatedOn = nowDT,
                         UpdatedOn = nowDT
                     };
-                    ForumManager.InsertTopic(forumTopic, true);
+                    IoCFactory.Resolve<IForumManager>().InsertTopic(forumTopic, true);
 
                     //forum post
                     var forumPost = new ForumPost()
@@ -444,7 +445,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                         CreatedOn = nowDT,
                         UpdatedOn = nowDT
                     };
-                    ForumManager.InsertPost(forumPost, false);
+                    IoCFactory.Resolve<IForumManager>().InsertPost(forumPost, false);
 
                     //update forum topic
                     forumTopic.NumPosts = 1;
@@ -452,10 +453,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     forumTopic.LastPostUserId = forumPost.UserId;
                     forumTopic.LastPostTime = forumPost.CreatedOn;
                     forumTopic.UpdatedOn = nowDT;
-                    ForumManager.UpdateTopic(forumTopic);
+                    IoCFactory.Resolve<IForumManager>().UpdateTopic(forumTopic);
 
                     //subscription
-                    if (ForumManager.IsUserAllowedToSubscribe(NopContext.Current.User))
+                    if (IoCFactory.Resolve<IForumManager>().IsUserAllowedToSubscribe(NopContext.Current.User))
                     {
                         if (subscribe)
                         {
@@ -467,7 +468,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                                 CreatedOn = nowDT
                             };
 
-                            ForumManager.InsertSubscription(forumSubscription);
+                            IoCFactory.Resolve<IForumManager>().InsertSubscription(forumSubscription);
                         }
                     }
 
@@ -478,13 +479,13 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 else if (this.EditTopic)
                 {
                     #region Editing topic
-                    var forumTopic = ForumManager.GetTopicById(this.ForumTopicId);
+                    var forumTopic = IoCFactory.Resolve<IForumManager>().GetTopicById(this.ForumTopicId);
                     if (forumTopic == null)
                     {
                         Response.Redirect(SEOHelper.GetForumMainUrl());
                     }
 
-                    if (!ForumManager.IsUserAllowedToEditTopic(NopContext.Current.User, forumTopic))
+                    if (!IoCFactory.Resolve<IForumManager>().IsUserAllowedToEditTopic(NopContext.Current.User, forumTopic))
                     {
                         string loginURL = SEOHelper.GetLoginPageUrl(true);
                         Response.Redirect(loginURL);
@@ -498,7 +499,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     forumTopic.TopicTypeId = (int)topicType;
                     forumTopic.Subject = subject;
                     forumTopic.UpdatedOn = nowDT;
-                    ForumManager.UpdateTopic(forumTopic);
+                    IoCFactory.Resolve<IForumManager>().UpdateTopic(forumTopic);
 
                     //forum post
                     var firstPost = forumTopic.FirstPost;
@@ -506,7 +507,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     {
                         firstPost.Text = text;
                         firstPost.UpdatedOn = nowDT;
-                        ForumManager.UpdatePost(firstPost);
+                        IoCFactory.Resolve<IForumManager>().UpdatePost(firstPost);
                     }
                     else
                     {
@@ -520,13 +521,13 @@ namespace NopSolutions.NopCommerce.Web.Modules
                             UpdatedOn = nowDT
                         };
 
-                        ForumManager.InsertPost(firstPost, false);
+                        IoCFactory.Resolve<IForumManager>().InsertPost(firstPost, false);
                     }
 
                     //subscription
-                    if (ForumManager.IsUserAllowedToSubscribe(NopContext.Current.User.CustomerId))
+                    if (IoCFactory.Resolve<IForumManager>().IsUserAllowedToSubscribe(NopContext.Current.User.CustomerId))
                     {
-                        var forumSubscription = ForumManager.GetAllSubscriptions(NopContext.Current.User.CustomerId,
+                        var forumSubscription = IoCFactory.Resolve<IForumManager>().GetAllSubscriptions(NopContext.Current.User.CustomerId,
                             0, forumTopic.ForumTopicId, 1, 0).FirstOrDefault();
                         if (subscribe)
                         {
@@ -540,14 +541,14 @@ namespace NopSolutions.NopCommerce.Web.Modules
                                     CreatedOn = nowDT
                                 };
 
-                                ForumManager.InsertSubscription(forumSubscription);
+                                IoCFactory.Resolve<IForumManager>().InsertSubscription(forumSubscription);
                             }
                         }
                         else
                         {
                             if (forumSubscription != null)
                             {
-                                ForumManager.DeleteSubscription(forumSubscription.ForumSubscriptionId);
+                                IoCFactory.Resolve<IForumManager>().DeleteSubscription(forumSubscription.ForumSubscriptionId);
                             }
                         }
                     }
@@ -559,13 +560,13 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 else if (this.AddPost)
                 {
                     #region Adding post
-                    var forumTopic = ForumManager.GetTopicById(this.ForumTopicId);
+                    var forumTopic = IoCFactory.Resolve<IForumManager>().GetTopicById(this.ForumTopicId);
                     if (forumTopic == null)
                     {
                         Response.Redirect(SEOHelper.GetForumMainUrl());
                     }
 
-                    if (!ForumManager.IsUserAllowedToCreatePost(NopContext.Current.User, forumTopic))
+                    if (!IoCFactory.Resolve<IForumManager>().IsUserAllowedToCreatePost(NopContext.Current.User, forumTopic))
                     {
                         string loginURL = SEOHelper.GetLoginPageUrl(true);
                         Response.Redirect(loginURL);
@@ -581,12 +582,12 @@ namespace NopSolutions.NopCommerce.Web.Modules
                         CreatedOn = nowDT,
                         UpdatedOn = nowDT
                     };
-                    ForumManager.InsertPost(forumPost, true);
+                    IoCFactory.Resolve<IForumManager>().InsertPost(forumPost, true);
 
                     //subscription
-                    if (ForumManager.IsUserAllowedToSubscribe(NopContext.Current.User.CustomerId))
+                    if (IoCFactory.Resolve<IForumManager>().IsUserAllowedToSubscribe(NopContext.Current.User.CustomerId))
                     {
-                        var forumSubscription = ForumManager.GetAllSubscriptions(NopContext.Current.User.CustomerId,
+                        var forumSubscription = IoCFactory.Resolve<IForumManager>().GetAllSubscriptions(NopContext.Current.User.CustomerId,
                             0, forumPost.TopicId, 1, 0).FirstOrDefault();
                         if (subscribe)
                         {
@@ -600,25 +601,25 @@ namespace NopSolutions.NopCommerce.Web.Modules
                                     CreatedOn = nowDT
                                 };
 
-                                 ForumManager.InsertSubscription(forumSubscription);
+                                 IoCFactory.Resolve<IForumManager>().InsertSubscription(forumSubscription);
                             }
                         }
                         else
                         {
                             if (forumSubscription != null)
                             {
-                                ForumManager.DeleteSubscription(forumSubscription.ForumSubscriptionId);
+                                IoCFactory.Resolve<IForumManager>().DeleteSubscription(forumSubscription.ForumSubscriptionId);
                             }
                         }
                     }
                     
 
                     int pageSize = 10;
-                    if (ForumManager.PostsPageSize > 0)
+                    if (IoCFactory.Resolve<IForumManager>().PostsPageSize > 0)
                     {
-                        pageSize = ForumManager.PostsPageSize;
+                        pageSize = IoCFactory.Resolve<IForumManager>().PostsPageSize;
                     }
-                    int pageIndex = ForumManager.CalculateTopicPageIndex(forumPost.TopicId, pageSize, forumPost.ForumPostId);
+                    int pageIndex = IoCFactory.Resolve<IForumManager>().CalculateTopicPageIndex(forumPost.TopicId, pageSize, forumPost.ForumPostId);
                     string topicURL = SEOHelper.GetForumTopicUrl(forumPost.TopicId, "p", pageIndex + 1, forumPost.ForumPostId);
                     Response.Redirect(topicURL);
                     #endregion
@@ -626,13 +627,13 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 else if (this.EditPost)
                 {
                     #region Editing post
-                    var forumPost = ForumManager.GetPostById(this.ForumPostId);
+                    var forumPost = IoCFactory.Resolve<IForumManager>().GetPostById(this.ForumPostId);
                     if (forumPost == null)
                     {
                         Response.Redirect(SEOHelper.GetForumMainUrl());
                     }
 
-                    if (!ForumManager.IsUserAllowedToEditPost(NopContext.Current.User, forumPost))
+                    if (!IoCFactory.Resolve<IForumManager>().IsUserAllowedToEditPost(NopContext.Current.User, forumPost))
                     {
                         string loginURL = SEOHelper.GetLoginPageUrl(true);
                         Response.Redirect(loginURL);
@@ -640,12 +641,12 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
                     forumPost.Text = text;
                     forumPost.UpdatedOn = nowDT;
-                    ForumManager.UpdatePost(forumPost);
+                    IoCFactory.Resolve<IForumManager>().UpdatePost(forumPost);
 
                     //subscription
-                    if (ForumManager.IsUserAllowedToSubscribe(NopContext.Current.User.CustomerId))
+                    if (IoCFactory.Resolve<IForumManager>().IsUserAllowedToSubscribe(NopContext.Current.User.CustomerId))
                     {
-                        var forumSubscription = ForumManager.GetAllSubscriptions(NopContext.Current.User.CustomerId,
+                        var forumSubscription = IoCFactory.Resolve<IForumManager>().GetAllSubscriptions(NopContext.Current.User.CustomerId,
                             0, forumPost.TopicId, 1, 0).FirstOrDefault();
                         if (subscribe)
                         {
@@ -659,24 +660,24 @@ namespace NopSolutions.NopCommerce.Web.Modules
                                     CreatedOn = nowDT
                                 };
 
-                                ForumManager.InsertSubscription(forumSubscription);
+                                IoCFactory.Resolve<IForumManager>().InsertSubscription(forumSubscription);
                             }
                         }
                         else
                         {
                             if (forumSubscription != null)
                             {
-                                ForumManager.DeleteSubscription(forumSubscription.ForumSubscriptionId);
+                                IoCFactory.Resolve<IForumManager>().DeleteSubscription(forumSubscription.ForumSubscriptionId);
                             }
                         }
                     }
 
                     int pageSize = 10;
-                    if (ForumManager.PostsPageSize > 0)
+                    if (IoCFactory.Resolve<IForumManager>().PostsPageSize > 0)
                     {
-                        pageSize = ForumManager.PostsPageSize;
+                        pageSize = IoCFactory.Resolve<IForumManager>().PostsPageSize;
                     }
-                    int pageIndex = ForumManager.CalculateTopicPageIndex(forumPost.TopicId, pageSize, forumPost.ForumPostId);
+                    int pageIndex = IoCFactory.Resolve<IForumManager>().CalculateTopicPageIndex(forumPost.TopicId, pageSize, forumPost.ForumPostId);
                     string topicURL = SEOHelper.GetForumTopicUrl(forumPost.TopicId, "p", pageIndex + 1, forumPost.ForumPostId);
                     Response.Redirect(topicURL);
                     #endregion
@@ -695,7 +696,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             {
                 if (this.AddTopic)
                 {
-                    var forum = ForumManager.GetForumById(this.ForumId);
+                    var forum = IoCFactory.Resolve<IForumManager>().GetForumById(this.ForumId);
                     if (forum != null)
                     {
                         string forumUrl = SEOHelper.GetForumUrl(forum);
@@ -708,7 +709,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 }
                 else if (this.EditTopic)
                 {
-                    var forumTopic = ForumManager.GetTopicById(this.ForumTopicId);
+                    var forumTopic = IoCFactory.Resolve<IForumManager>().GetTopicById(this.ForumTopicId);
                     if (forumTopic != null)
                     {
                         string topicUrl = SEOHelper.GetForumTopicUrl(forumTopic);
@@ -721,7 +722,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 }
                 else if (this.AddPost)
                 {
-                    var forumTopic = ForumManager.GetTopicById(this.ForumTopicId);
+                    var forumTopic = IoCFactory.Resolve<IForumManager>().GetTopicById(this.ForumTopicId);
                     if (forumTopic != null)
                     {
                         string topicUrl = SEOHelper.GetForumTopicUrl(forumTopic);
@@ -734,7 +735,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 }
                 else if (this.EditPost)
                 {
-                    var forumPost = ForumManager.GetPostById(this.ForumPostId);
+                    var forumPost = IoCFactory.Resolve<IForumManager>().GetPostById(this.ForumPostId);
                     if (forumPost != null)
                     {
                         string topicUrl = SEOHelper.GetForumTopicUrl(forumPost.TopicId);

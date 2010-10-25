@@ -27,6 +27,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Messages;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
  
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Campaigns
@@ -34,15 +35,16 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Campaigns
     /// <summary>
     /// Message campaign manager
     /// </summary>
-    public partial class CampaignManager
+    public partial class CampaignManager : ICampaignManager
     {
         #region Methods
+
         /// <summary>
         /// Gets a campaign by campaign identifier
         /// </summary>
         /// <param name="campaignId">Campaign identifier</param>
         /// <returns>Message template</returns>
-        public static Campaign GetCampaignById(int campaignId)
+        public Campaign GetCampaignById(int campaignId)
         {
             if (campaignId == 0)
                 return null;
@@ -60,7 +62,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Campaigns
         /// Deletes a campaign
         /// </summary>
         /// <param name="campaignId">Campaign identifier</param>
-        public static void DeleteCampaign(int campaignId)
+        public void DeleteCampaign(int campaignId)
         {
             var campaign = GetCampaignById(campaignId);
             if (campaign == null)
@@ -77,7 +79,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Campaigns
         /// Gets all campaigns
         /// </summary>
         /// <returns>Campaign collection</returns>
-        public static List<Campaign> GetAllCampaigns()
+        public List<Campaign> GetAllCampaigns()
         {
             var context = ObjectContextHelper.CurrentObjectContext;
             var query = from c in context.Campaigns
@@ -92,7 +94,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Campaigns
         /// Inserts a campaign
         /// </summary>
         /// <param name="campaign">Campaign</param>
-        public static void InsertCampaign(Campaign campaign)
+        public void InsertCampaign(Campaign campaign)
         {
             if (campaign == null)
                 throw new ArgumentNullException("campaign");
@@ -113,7 +115,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Campaigns
         /// Updates the campaign
         /// </summary>
         /// <param name="campaign">Campaign</param>
-        public static void UpdateCampaign(Campaign campaign)
+        public void UpdateCampaign(Campaign campaign)
         {
             campaign.Name = CommonHelper.EnsureNotNull(campaign.Name);
             campaign.Name = CommonHelper.EnsureMaximumLength(campaign.Name, 200);
@@ -134,7 +136,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Campaigns
         /// <param name="campaignId">Campaign identifier</param>
         /// <param name="subscriptions">Subscriptions</param>
         /// <returns>Total emails sent</returns>
-        public static int SendCampaign(int campaignId,
+        public int SendCampaign(int campaignId,
             List<NewsLetterSubscription> subscriptions)
         {
             int totalEmailsSent = 0;
@@ -146,15 +148,15 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Campaigns
             }
 
 
-            var emailAccount = MessageManager.DefaultEmailAccount;
+            var emailAccount = IoCFactory.Resolve<IMessageManager>().DefaultEmailAccount;
 
             foreach (var subscription in subscriptions)
             {
-                string subject = MessageManager.ReplaceMessageTemplateTokens(subscription, campaign.Subject);
-                string body = MessageManager.ReplaceMessageTemplateTokens(subscription, campaign.Body);
+                string subject = IoCFactory.Resolve<IMessageManager>().ReplaceMessageTemplateTokens(subscription, campaign.Subject);
+                string body = IoCFactory.Resolve<IMessageManager>().ReplaceMessageTemplateTokens(subscription, campaign.Body);
                 var from = new MailAddress(emailAccount.Email, emailAccount.DisplayName);
                 var to = new MailAddress(subscription.Email);
-                MessageManager.InsertQueuedEmail(3, from, to, string.Empty, string.Empty,
+                IoCFactory.Resolve<IMessageManager>().InsertQueuedEmail(3, from, to, string.Empty, string.Empty,
                     subject, body, DateTime.UtcNow, 0, null, emailAccount.EmailAccountId);
                 totalEmailsSent++;
             }
@@ -166,7 +168,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Campaigns
         /// </summary>
         /// <param name="campaignId">Campaign identifier</param>
         /// <param name="email">Email</param>
-        public static void SendCampaign(int campaignId, string email)
+        public void SendCampaign(int campaignId, string email)
         {
             var campaign = GetCampaignById(campaignId);
             if(campaign == null)
@@ -177,10 +179,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Campaigns
             string subject = campaign.Subject;
             string body = campaign.Body;
 
-            var emailAccount = MessageManager.DefaultEmailAccount;
+            var emailAccount = IoCFactory.Resolve<IMessageManager>().DefaultEmailAccount;
             var from = new MailAddress(emailAccount.Email, emailAccount.DisplayName);
             var to = new MailAddress(email);
-            MessageManager.SendEmail(subject, body, from, to, emailAccount);
+            IoCFactory.Resolve<IMessageManager>().SendEmail(subject, body, from, to, emailAccount);
         }
         #endregion
     }

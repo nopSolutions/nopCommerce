@@ -35,6 +35,7 @@ using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Payment.Methods.PayPal;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 namespace NopSolutions.NopCommerce.Web
 {
     public partial class WorldpayReturnPage : BaseNopPage
@@ -116,12 +117,12 @@ namespace NopSolutions.NopCommerce.Web
                 string returnedcallbackPW = CommonHelper.GetFormString("callbackPW");
                 string orderId = CommonHelper.GetFormString("cartId");
                 string returnedInstanceId = CommonHelper.GetFormString("instId");
-                string callbackPassword = SettingManager.GetSettingValue("PaymentMethod.Worldpay.CallbackPassword");
+                string callbackPassword = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Worldpay.CallbackPassword");
                 string transId = CommonHelper.GetFormString("transId");
                 string transResult = CommonHelper.QueryString("msg");
-                string instanceId = SettingManager.GetSettingValue("PaymentMethod.Worldpay.InstanceId");
+                string instanceId = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Worldpay.InstanceId");
 
-                Order order = OrderManager.GetOrderById(Convert.ToInt32(orderId));
+                Order order = IoCFactory.Resolve<IOrderManager>().GetOrderById(Convert.ToInt32(orderId));
                 if (order == null)
                     throw new NopException(string.Format("The order ID {0} doesn't exists", orderId));
 
@@ -141,9 +142,9 @@ namespace NopSolutions.NopCommerce.Web
                 if (returnedcallbackPW.Trim() != callbackPassword.Trim())
                     throw new NopException(string.Format("The callback password ({0}) received within the Worldpay Callback for the order {1} does not match that stored in your database.", returnedcallbackPW, orderId));
 
-                if (OrderManager.CanMarkOrderAsPaid(order))
+                if (IoCFactory.Resolve<IOrderManager>().CanMarkOrderAsPaid(order))
                 {
-                    OrderManager.MarkOrderAsPaid(order.OrderId);
+                    IoCFactory.Resolve<IOrderManager>().MarkOrderAsPaid(order.OrderId);
                 }
 
                 string retURL = CommonHelper.GetStoreLocation() + "checkoutcompleted.aspx";

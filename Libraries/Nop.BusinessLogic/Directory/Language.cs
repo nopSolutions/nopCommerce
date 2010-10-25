@@ -20,6 +20,7 @@ using System.Web;
 using NopSolutions.NopCommerce.BusinessLogic.Content.Topics;
 using NopSolutions.NopCommerce.BusinessLogic.Localization;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Directory
@@ -78,7 +79,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
         {
             get
             {
-                return LocaleStringResourceManager.GetAllResourcesByLanguageId(this.LanguageId);
+                return IoCFactory.Resolve<ILocaleStringResourceManager>().GetAllResourcesByLanguageId(this.LanguageId);
             }
         }
 

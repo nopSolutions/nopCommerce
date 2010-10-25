@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Payment.Methods.Beanstream
 {
@@ -27,11 +28,11 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Beanstream
         {
             get
             {
-                return SettingManager.GetSettingValue("PaymentMethod.Beanstream.HostedPayment.GatewayUrl", "https://www.beanstream.com/scripts/payment/payment.asp");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Beanstream.HostedPayment.GatewayUrl", "https://www.beanstream.com/scripts/payment/payment.asp");
             }
             set
             {
-                SettingManager.SetParam("PaymentMethod.Beanstream.HostedPayment.GatewayUrl", value);
+                IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.Beanstream.HostedPayment.GatewayUrl", value);
             }
         }
 
@@ -39,11 +40,11 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Beanstream
         {
             get
             {
-                return SettingManager.GetSettingValue("PaymentMethod.Beanstream.HostedPayment.MerchantID");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Beanstream.HostedPayment.MerchantID");
             }
             set
             {
-                SettingManager.SetParam("PaymentMethod.Beanstream.HostedPayment.MerchantID", value);
+                IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.Beanstream.HostedPayment.MerchantID", value);
             }
         }
 
@@ -51,11 +52,11 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Beanstream
         {
             get
             {
-                return SettingManager.GetSettingValueDecimalNative("PaymentMethod.Beanstream.HostedPayment.AdditionalFee");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.Beanstream.HostedPayment.AdditionalFee");
             }
             set
             {
-                SettingManager.SetParamNative("PaymentMethod.Beanstream.HostedPayment.AdditionalFee", value);
+                IoCFactory.Resolve<ISettingManager>().SetParamNative("PaymentMethod.Beanstream.HostedPayment.AdditionalFee", value);
             }
         }
         #endregion

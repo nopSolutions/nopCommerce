@@ -27,6 +27,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Messages;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -34,7 +35,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            QueuedEmail queuedEmail = MessageManager.GetQueuedEmailById(this.QueuedEmailId);
+            QueuedEmail queuedEmail = IoCFactory.Resolve<IMessageManager>().GetQueuedEmailById(this.QueuedEmailId);
             if (queuedEmail != null)
             {
                 this.txtPriority.Value = queuedEmail.Priority;
@@ -69,10 +70,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 try
                 {
-                    QueuedEmail queuedEmail = MessageManager.GetQueuedEmailById(this.QueuedEmailId);
+                    QueuedEmail queuedEmail = IoCFactory.Resolve<IMessageManager>().GetQueuedEmailById(this.QueuedEmailId);
                     if (queuedEmail != null)
                     {
-                        QueuedEmail requeuedEmail = MessageManager.InsertQueuedEmail(txtPriority.Value, 
+                        QueuedEmail requeuedEmail = IoCFactory.Resolve<IMessageManager>().InsertQueuedEmail(txtPriority.Value, 
                             txtFrom.Text, txtFromName.Text,
                             txtTo.Text, txtToName.Text, txtCc.Text, txtBcc.Text,
                             txtSubject.Text, txtBody.Value, DateTime.UtcNow,
@@ -95,7 +96,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 try
                 {
-                    QueuedEmail queuedEmail = MessageManager.GetQueuedEmailById(this.QueuedEmailId);
+                    QueuedEmail queuedEmail = IoCFactory.Resolve<IMessageManager>().GetQueuedEmailById(this.QueuedEmailId);
                     if (queuedEmail != null)
                     {
                         queuedEmail.Priority = txtPriority.Value;
@@ -109,7 +110,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         queuedEmail.Body = txtBody.Value;
                         queuedEmail.SendTries = txtSendTries.Value;
 
-                        MessageManager.UpdateQueuedEmail(queuedEmail);
+                        IoCFactory.Resolve<IMessageManager>().UpdateQueuedEmail(queuedEmail);
                         Response.Redirect("MessageQueueDetails.aspx?QueuedEmailID=" + queuedEmail.QueuedEmailId.ToString());
                     }
                     else
@@ -126,7 +127,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                MessageManager.DeleteQueuedEmail(this.QueuedEmailId);
+                IoCFactory.Resolve<IMessageManager>().DeleteQueuedEmail(this.QueuedEmailId);
                 Response.Redirect("MessageQueue.aspx");
             }
             catch (Exception exc)

@@ -25,6 +25,7 @@ using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.Warehouses;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
  
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -48,7 +49,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected void DeleteButton_Click(object sender, EventArgs e)
         {
-            WarehouseManager.MarkWarehouseAsDeleted(this.WarehouseId);
+            IoCFactory.Resolve<IWarehouseManager>().MarkWarehouseAsDeleted(this.WarehouseId);
 
             Response.Redirect("Warehouses.aspx");
         }

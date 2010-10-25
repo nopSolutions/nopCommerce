@@ -25,6 +25,7 @@ using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.Security;
 using NopSolutions.NopCommerce.BusinessLogic.Shipping;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration
 {
@@ -32,7 +33,7 @@ namespace NopSolutions.NopCommerce.Web.Administration
     {
         protected override bool ValidatePageSecurity()
         {
-            return ACLManager.IsActionAllowed("ManageShippingSettings");
+            return IoCFactory.Resolve<IACLManager>().IsActionAllowed("ManageShippingSettings");
         }
 
         protected void AddButton_Click(object sender, EventArgs e)
@@ -50,7 +51,7 @@ namespace NopSolutions.NopCommerce.Web.Administration
                         IsActive = cbActive.Checked,
                         DisplayOrder = txtDisplayOrder.Value
                     };
-                    ShippingRateComputationMethodManager.InsertShippingRateComputationMethod(shippingRateComputationMethod);
+                    IoCFactory.Resolve<IShippingRateComputationMethodManager>().InsertShippingRateComputationMethod(shippingRateComputationMethod);
 
                     Response.Redirect("ShippingRateComputationMethodDetails.aspx?ShippingRateComputationMethodID=" + shippingRateComputationMethod.ShippingRateComputationMethodId.ToString());
                 }

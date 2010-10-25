@@ -23,13 +23,14 @@ using NopSolutions.NopCommerce.BusinessLogic.Caching;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Data;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
 {
     /// <summary>
     /// Poll manager
     /// </summary>
-    public partial class PollManager
+    public partial class PollManager : IPollManager
     {
         #region Constants
         private const string POLLS_BY_ID_KEY = "Nop.polls.id-{0}";
@@ -45,14 +46,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
         /// </summary>
         /// <param name="pollId">The poll identifier</param>
         /// <returns>Poll</returns>
-        public static Poll GetPollById(int pollId)
+        public Poll GetPollById(int pollId)
         {
             if (pollId == 0)
                 return null;
 
             string key = string.Format(POLLS_BY_ID_KEY, pollId);
             object obj2 = NopRequestCache.Get(key);
-            if (PollManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (Poll)obj2;
             }
@@ -63,7 +64,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
                         select p;
             var poll = query.SingleOrDefault();
 
-            if (PollManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, poll);
             }
@@ -75,7 +76,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
         /// </summary>
         /// <param name="systemKeyword">The poll system keyword</param>
         /// <returns>Poll</returns>
-        public static Poll GetPollBySystemKeyword(string systemKeyword)
+        public Poll GetPollBySystemKeyword(string systemKeyword)
         {
             if (String.IsNullOrWhiteSpace(systemKeyword))
                 return null;
@@ -94,7 +95,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
         /// </summary>
         /// <param name="languageId">Language identifier. 0 if you want to get all news</param>
         /// <returns>Poll collection</returns>
-        public static List<Poll> GetAllPolls(int languageId)
+        public List<Poll> GetAllPolls(int languageId)
         {
             return GetPolls(languageId, 0);
         }
@@ -105,7 +106,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
         /// <param name="languageId">Language identifier. 0 if you want to get all polls</param>
         /// <param name="pollCount">Poll count to load. 0 if you want to get all polls</param>
         /// <returns>Poll collection</returns>
-        public static List<Poll> GetPolls(int languageId, int pollCount)
+        public List<Poll> GetPolls(int languageId, int pollCount)
         {
             return GetPolls(languageId, pollCount, false);
         }
@@ -117,7 +118,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
         /// <param name="pollCount">Poll count to load. 0 if you want to get all polls</param>
         /// <param name="loadShownOnHomePageOnly">Retrieve only shown on home page polls</param>
         /// <returns>Poll collection</returns>
-        public static List<Poll> GetPolls(int languageId, int pollCount, bool loadShownOnHomePageOnly)
+        public List<Poll> GetPolls(int languageId, int pollCount, bool loadShownOnHomePageOnly)
         {
             bool showHidden = NopContext.Current.IsAdmin;
 
@@ -153,7 +154,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
         /// Deletes a poll
         /// </summary>
         /// <param name="pollId">The poll identifier</param>
-        public static void DeletePoll(int pollId)
+        public void DeletePoll(int pollId)
         {
             var poll = GetPollById(pollId);
             if (poll == null)
@@ -165,7 +166,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
             context.DeleteObject(poll);
             context.SaveChanges();
             
-            if (PollManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(POLLS_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(POLLANSWERS_PATTERN_KEY);
@@ -176,7 +177,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
         /// Inserts a poll
         /// </summary>
         /// <param name="poll">Poll</param>
-        public static void InsertPoll(Poll poll)
+        public void InsertPoll(Poll poll)
         {
             if (poll == null)
                 throw new ArgumentNullException("poll");
@@ -192,7 +193,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
             context.Polls.AddObject(poll);
             context.SaveChanges();
 
-            if (PollManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(POLLS_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(POLLANSWERS_PATTERN_KEY);
@@ -203,7 +204,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
         /// Updates the poll
         /// </summary>
         /// <param name="poll">Poll</param>
-        public static void UpdatePoll(Poll poll)
+        public void UpdatePoll(Poll poll)
         {
             if (poll == null)
                 throw new ArgumentNullException("poll");
@@ -220,7 +221,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
 
             context.SaveChanges();
 
-            if (PollManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(POLLS_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(POLLANSWERS_PATTERN_KEY);
@@ -233,7 +234,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
         /// <param name="pollId">Poll identifier</param>
         /// <param name="customerId">Customer identifier</param>
         /// <returns>Poll</returns>
-        public static bool PollVotingRecordExists(int pollId, int customerId)
+        public bool PollVotingRecordExists(int pollId, int customerId)
         {
             var context = ObjectContextHelper.CurrentObjectContext;
             var query = from pvr in context.PollVotingRecords
@@ -250,7 +251,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
         /// </summary>
         /// <param name="pollAnswerId">Poll answer identifier</param>
         /// <returns>Poll answer</returns>
-        public static PollAnswer GetPollAnswerById(int pollAnswerId)
+        public PollAnswer GetPollAnswerById(int pollAnswerId)
         {
             if (pollAnswerId == 0)
                 return null;
@@ -268,11 +269,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
         /// </summary>
         /// <param name="pollId">Poll identifier</param>
         /// <returns>Poll answer collection</returns>
-        public static List<PollAnswer> GetPollAnswersByPollId(int pollId)
+        public List<PollAnswer> GetPollAnswersByPollId(int pollId)
         {
             string key = string.Format(POLLANSWERS_BY_POLLID_KEY, pollId);
             object obj2 = NopRequestCache.Get(key);
-            if (PollManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (List<PollAnswer>)obj2;
             }
@@ -284,7 +285,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
                         select pa;
             var pollAnswers = query.ToList();
 
-            if (PollManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, pollAnswers);
             }
@@ -295,7 +296,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
         /// Deletes a poll answer
         /// </summary>
         /// <param name="pollAnswerId">Poll answer identifier</param>
-        public static void DeletePollAnswer(int pollAnswerId)
+        public void DeletePollAnswer(int pollAnswerId)
         {
             var pollAnswer = GetPollAnswerById(pollAnswerId);
             if (pollAnswer == null)
@@ -307,7 +308,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
             context.DeleteObject(pollAnswer);
             context.SaveChanges();
 
-            if (PollManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(POLLS_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(POLLANSWERS_PATTERN_KEY);
@@ -318,7 +319,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
         /// Inserts a poll answer
         /// </summary>
         /// <param name="pollAnswer">Poll answer</param>
-        public static void InsertPollAnswer(PollAnswer pollAnswer)
+        public void InsertPollAnswer(PollAnswer pollAnswer)
         {
             if (pollAnswer == null)
                 throw new ArgumentNullException("pollAnswer");
@@ -331,7 +332,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
             context.PollAnswers.AddObject(pollAnswer);
             context.SaveChanges();
 
-            if (PollManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(POLLS_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(POLLANSWERS_PATTERN_KEY);
@@ -342,7 +343,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
         /// Updates the poll answer
         /// </summary>
         /// <param name="pollAnswer">Poll answer</param>
-        public static void UpdatePollAnswer(PollAnswer pollAnswer)
+        public void UpdatePollAnswer(PollAnswer pollAnswer)
         {
             if (pollAnswer == null)
                 throw new ArgumentNullException("pollAnswer");
@@ -356,7 +357,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
 
             context.SaveChanges();
 
-            if (PollManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(POLLS_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(POLLANSWERS_PATTERN_KEY);
@@ -368,7 +369,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
         /// </summary>
         /// <param name="pollAnswerId">The poll answer identifier</param>
         /// <param name="customerId">Customer identifer</param>
-        public static void CreatePollVotingRecord(int pollAnswerId, int customerId)
+        public void CreatePollVotingRecord(int pollAnswerId, int customerId)
         {
             var pollAnswer = GetPollAnswerById(pollAnswerId);
             if (pollAnswer == null)
@@ -402,7 +403,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
             pollAnswer.Count = totalVotingRecords;
             UpdatePollAnswer(pollAnswer);
 
-            if (PollManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(POLLS_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(POLLANSWERS_PATTERN_KEY);
@@ -415,11 +416,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
         /// <summary>
         /// Gets a value indicating whether cache is enabled
         /// </summary>
-        public static bool CacheEnabled
+        public bool CacheEnabled
         {
             get
             {
-                return SettingManager.GetSettingValueBoolean("Cache.PollManager.CacheEnabled");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.PollManager.CacheEnabled");
             }
         }
         #endregion

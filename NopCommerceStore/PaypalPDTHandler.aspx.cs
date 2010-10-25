@@ -33,6 +33,7 @@ using NopSolutions.NopCommerce.Payment.Methods.PayPal;
 using NopSolutions.NopCommerce.BusinessLogic.Payment;
 using NopSolutions.NopCommerce.BusinessLogic.Audit;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 namespace NopSolutions.NopCommerce.Web
 {
     public partial class PaypalPDTHandlerPage : BaseNopPage
@@ -58,7 +59,7 @@ namespace NopSolutions.NopCommerce.Web
                         orderNumberGuid = new Guid(orderNumber);
                     }
                     catch { }
-                    Order order = OrderManager.GetOrderByGuid(orderNumberGuid);
+                    Order order = IoCFactory.Resolve<IOrderManager>().GetOrderByGuid(orderNumberGuid);
                     if (order != null)
                     {
                         decimal total = decimal.Zero;
@@ -68,7 +69,7 @@ namespace NopSolutions.NopCommerce.Web
                         }
                         catch (Exception exc)
                         {
-                            LogManager.InsertLog(LogTypeEnum.OrderError, "PayPal PDT. Error getting mc_gross", exc);
+                            IoCFactory.Resolve<ILogManager>().InsertLog(LogTypeEnum.OrderError, "PayPal PDT. Error getting mc_gross", exc);
                         }
 
                         string payer_status = string.Empty;
@@ -106,22 +107,22 @@ namespace NopSolutions.NopCommerce.Web
                         sb.AppendLine("invoice: " + invoice);
                         sb.AppendLine("payment_fee: " + payment_fee);
 
-                        OrderManager.InsertOrderNote(order.OrderId, sb.ToString(), false, DateTime.UtcNow);
+                        IoCFactory.Resolve<IOrderManager>().InsertOrderNote(order.OrderId, sb.ToString(), false, DateTime.UtcNow);
 
                         //validate order total
-                        bool validateOrderTotal = SettingManager.GetSettingValueBoolean("PaymentMethod.PaypalStandard.ValidateOrderTotal", true);
+                        bool validateOrderTotal = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.PaypalStandard.ValidateOrderTotal", true);
                         if (validateOrderTotal &&
                             !total.Equals(order.OrderTotal))
                         {
                             string errorStr = string.Format("PayPal PDT. Returned order total {0} doesn't equal order total {1}", total, order.OrderTotal);
-                            LogManager.InsertLog(LogTypeEnum.OrderError, errorStr, errorStr);
+                            IoCFactory.Resolve<ILogManager>().InsertLog(LogTypeEnum.OrderError, errorStr, errorStr);
                             Response.Redirect(CommonHelper.GetStoreLocation());
                         }
                         
                         //mark order as paid
-                        if (OrderManager.CanMarkOrderAsPaid(order))
+                        if (IoCFactory.Resolve<IOrderManager>().CanMarkOrderAsPaid(order))
                         {
-                            OrderManager.MarkOrderAsPaid(order.OrderId);
+                            IoCFactory.Resolve<IOrderManager>().MarkOrderAsPaid(order.OrderId);
                         }
                     }
                     Response.Redirect("~/checkoutcompleted.aspx");
@@ -136,10 +137,10 @@ namespace NopSolutions.NopCommerce.Web
                         orderNumberGuid = new Guid(orderNumber);
                     }
                     catch { }
-                    Order order = OrderManager.GetOrderByGuid(orderNumberGuid);
+                    Order order = IoCFactory.Resolve<IOrderManager>().GetOrderByGuid(orderNumberGuid);
                     if (order != null)
                     {
-                        OrderManager.InsertOrderNote(order.OrderId, "PayPal PDT failed. " + response, false, DateTime.UtcNow);
+                        IoCFactory.Resolve<IOrderManager>().InsertOrderNote(order.OrderId, "PayPal PDT failed. " + response, false, DateTime.UtcNow);
                     }
                     Response.Redirect(CommonHelper.GetStoreLocation());
                 }

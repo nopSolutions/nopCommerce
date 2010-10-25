@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 
 
@@ -72,7 +73,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
         {
             get
             {
-                return ManufacturerManager.GetManufacturerById(this.ManufacturerId);
+                return IoCFactory.Resolve<IManufacturerManager>().GetManufacturerById(this.ManufacturerId);
             }
         }
 
@@ -83,7 +84,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
         {
             get
             {
-                return ProductManager.GetProductById(this.ProductId);
+                return IoCFactory.Resolve<IProductManager>().GetProductById(this.ProductId);
             }
         }
 

@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Audit
 {
@@ -69,7 +70,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
         {
             get
             {
-                return CustomerActivityManager.GetActivityTypeById(this.ActivityLogTypeId);
+                return IoCFactory.Resolve<ICustomerActivityManager>().GetActivityTypeById(this.ActivityLogTypeId);
             }
         }
         /// <summary>
@@ -79,7 +80,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
         {
             get
             {
-                return CustomerManager.GetCustomerById(this.CustomerId);
+                return IoCFactory.Resolve<ICustomerManager>().GetCustomerById(this.CustomerId);
             }
         }
         #endregion

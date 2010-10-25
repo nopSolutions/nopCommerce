@@ -32,6 +32,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Templates;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Web.Administration.Modules;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -39,7 +40,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            Product product = ProductManager.GetProductById(this.ProductId);
+            Product product = IoCFactory.Resolve<IProductManager>().GetProductById(this.ProductId);
             if (product != null)
             {
                 pnlData.Visible = true;
@@ -47,7 +48,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                 var existingCrossSellProductCollection = product.CrossSellProducts;
                 List<CrossSellProductHelperClass> crossSellProducts = GetCrossSellProducts(existingCrossSellProductCollection);
-                gvCrossSellProducts.Columns[1].Visible = SettingManager.GetSettingValueBoolean("Display.ShowAdminProductImages");
+                gvCrossSellProducts.Columns[1].Visible = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Display.ShowAdminProductImages");
                 gvCrossSellProducts.DataSource = crossSellProducts;
                 gvCrossSellProducts.DataBind();
             }
@@ -70,7 +71,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     rphc.CrossSellProductId = crossSellProduct.CrossSellProductId;
                     rphc.ProductId2 = product.ProductId;
                     rphc.ProductInfo2 = product.Name;
-                    if (SettingManager.GetSettingValueBoolean("Display.ShowAdminProductImages"))
+                    if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Display.ShowAdminProductImages"))
                     {
                         rphc.ProductImage = GetProductImageUrl(product);
                     }
@@ -87,11 +88,11 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             var picture = product.DefaultPicture;
             if (picture != null)
             {
-                return PictureManager.GetPictureUrl(picture, SettingManager.GetSettingValueInteger("Media.ShoppingCart.ThumbnailImageSize", 80));
+                return IoCFactory.Resolve<IPictureManager>().GetPictureUrl(picture, IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.ShoppingCart.ThumbnailImageSize", 80));
             }
             else
             {
-                return PictureManager.GetDefaultPictureUrl(SettingManager.GetSettingValueInteger("Media.ShoppingCart.ThumbnailImageSize", 80));
+                return IoCFactory.Resolve<IPictureManager>().GetDefaultPictureUrl(IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.ShoppingCart.ThumbnailImageSize", 80));
             }
         }
 
@@ -107,7 +108,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public void SaveInfo()
         {
-            Product product = ProductManager.GetProductById(this.ProductId);
+            Product product = IoCFactory.Resolve<IProductManager>().GetProductById(this.ProductId);
             if (product != null)
             {
                 foreach (GridViewRow row in gvCrossSellProducts.Rows)
@@ -119,15 +120,15 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     int productId2 = int.Parse(hfProductId2.Value);
                     
                     if (crossSellProductId > 0 && !cbProductInfo2.Checked)
-                        ProductManager.DeleteCrossSellProduct(crossSellProductId);
+                        IoCFactory.Resolve<IProductManager>().DeleteCrossSellProduct(crossSellProductId);
                     if (crossSellProductId > 0 && cbProductInfo2.Checked)
                     {
-                        var csp = ProductManager.GetCrossSellProductById(crossSellProductId);
+                        var csp = IoCFactory.Resolve<IProductManager>().GetCrossSellProductById(crossSellProductId);
                         if (csp != null)
                         {
                             csp.ProductId1 = product.ProductId;
                             csp.ProductId2 = productId2;
-                            ProductManager.UpdateCrossSellProduct(csp);
+                            IoCFactory.Resolve<IProductManager>().UpdateCrossSellProduct(csp);
                         }
                     }
                 }

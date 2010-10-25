@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 
 
@@ -86,7 +87,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
         {
             get
             {
-                return LanguageManager.GetLanguageById(this.LanguageId);
+                return IoCFactory.Resolve<ILanguageManager>().GetLanguageById(this.LanguageId);
             }
         }
 
@@ -97,7 +98,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
         {
             get
             {
-                return NewsManager.GetNewsCommentsByNewsId(this.NewsId);
+                return IoCFactory.Resolve<INewsManager>().GetNewsCommentsByNewsId(this.NewsId);
             }
         }
         #endregion

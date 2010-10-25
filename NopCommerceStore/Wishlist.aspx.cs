@@ -29,6 +29,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web
 {
@@ -38,7 +39,7 @@ namespace NopSolutions.NopCommerce.Web
         {
             CommonHelper.SetResponseNoCache(Response);
 
-            if (!SettingManager.GetSettingValueBoolean("Common.EnableWishlist"))
+            if (!IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Common.EnableWishlist"))
                 Response.Redirect(CommonHelper.GetStoreLocation());
 
             string title = GetLocaleResourceString("PageTitle.Wishlist");
@@ -46,11 +47,11 @@ namespace NopSolutions.NopCommerce.Web
 
             if (!Page.IsPostBack)
             {
-                Customer customer = CustomerManager.GetCustomerByGuid(this.CustomerGuid.HasValue ? this.CustomerGuid.Value : Guid.Empty);
+                Customer customer = IoCFactory.Resolve<ICustomerManager>().GetCustomerByGuid(this.CustomerGuid.HasValue ? this.CustomerGuid.Value : Guid.Empty);
                 if (customer != null)
                 {
                     lTitle.Text = string.Format(GetLocaleResourceString("Wishlist.WishlistOf"), Server.HtmlEncode(customer.FullName), Server.HtmlEncode(customer.Email));
-                    CustomerSession customerSession = CustomerManager.GetCustomerSessionByCustomerId(customer.CustomerId);
+                    CustomerSession customerSession = IoCFactory.Resolve<ICustomerManager>().GetCustomerSessionByCustomerId(customer.CustomerId);
                     if (customerSession != null)
                         ctrlWishlist.CustomerSessionGuid = customerSession.CustomerSessionGuid;
                     ctrlWishlist.IsEditable = false;

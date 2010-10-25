@@ -29,7 +29,7 @@
         <td class="adminTitle">
             <nopCommerce:ToolTipLabel runat="server" ID="lblRatio" Text="<% $NopResources:Admin.MeasureWeightInfo.Ratio %>"
                 ToolTip="<% $NopResources:Admin.MeasureWeightInfo.Ratio.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
-            [<%=MeasureManager.BaseWeightIn.Name%>]:
+            [<%=IoCFactory.Resolve<IMeasureManager>().BaseWeightIn.Name%>]:
         </td>
         <td class="adminData">
             <nopCommerce:DecimalTextBox runat="server" ID="txtRatio" Value="1" CssClass="adminInput" RequiredErrorMessage="<% $NopResources:Admin.MeasureWeightInfo.Ratio.RequiredErrorMessage %>"

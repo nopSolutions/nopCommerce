@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using NopSolutions.NopCommerce.BusinessLogic.Categories;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 using NopSolutions.NopCommerce.BusinessLogic.Manufacturers;
 using NopSolutions.NopCommerce.BusinessLogic.Media;
 using NopSolutions.NopCommerce.BusinessLogic.Products.Specs;
@@ -155,7 +156,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                 if (languageId > 0)
                 {
                     if (_productLocalized == null)
-                        _productLocalized = ProductManager.GetProductLocalizedByProductId(this.ProductId);
+                        _productLocalized = IoCFactory.Resolve<IProductManager>().GetProductLocalizedByProductId(this.ProductId);
 
                     var temp1 = _productLocalized.FirstOrDefault(cl => cl.LanguageId == languageId);
                     if (temp1 != null && !String.IsNullOrWhiteSpace(temp1.Name))
@@ -189,7 +190,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                 if (languageId > 0)
                 {
                     if (_productLocalized == null)
-                        _productLocalized = ProductManager.GetProductLocalizedByProductId(this.ProductId);
+                        _productLocalized = IoCFactory.Resolve<IProductManager>().GetProductLocalizedByProductId(this.ProductId);
 
                     var temp1 = _productLocalized.FirstOrDefault(cl => cl.LanguageId == languageId);
                     if (temp1 != null && !String.IsNullOrWhiteSpace(temp1.ShortDescription))
@@ -223,7 +224,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                 if (languageId > 0)
                 {
                     if (_productLocalized == null)
-                        _productLocalized = ProductManager.GetProductLocalizedByProductId(this.ProductId);
+                        _productLocalized = IoCFactory.Resolve<IProductManager>().GetProductLocalizedByProductId(this.ProductId);
 
                     var temp1 = _productLocalized.FirstOrDefault(cl => cl.LanguageId == languageId);
                     if (temp1 != null && !String.IsNullOrWhiteSpace(temp1.FullDescription))
@@ -257,7 +258,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                 if (languageId > 0)
                 {
                     if (_productLocalized == null)
-                        _productLocalized = ProductManager.GetProductLocalizedByProductId(this.ProductId);
+                        _productLocalized = IoCFactory.Resolve<IProductManager>().GetProductLocalizedByProductId(this.ProductId);
 
                     var temp1 = _productLocalized.FirstOrDefault(cl => cl.LanguageId == languageId);
                     if (temp1 != null && !String.IsNullOrWhiteSpace(temp1.MetaKeywords))
@@ -291,7 +292,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                 if (languageId > 0)
                 {
                     if (_productLocalized == null)
-                        _productLocalized = ProductManager.GetProductLocalizedByProductId(this.ProductId);
+                        _productLocalized = IoCFactory.Resolve<IProductManager>().GetProductLocalizedByProductId(this.ProductId);
 
                     var temp1 = _productLocalized.FirstOrDefault(cl => cl.LanguageId == languageId);
                     if (temp1 != null && !String.IsNullOrWhiteSpace(temp1.MetaDescription))
@@ -325,7 +326,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                 if (languageId > 0)
                 {
                     if (_productLocalized == null)
-                        _productLocalized = ProductManager.GetProductLocalizedByProductId(this.ProductId);
+                        _productLocalized = IoCFactory.Resolve<IProductManager>().GetProductLocalizedByProductId(this.ProductId);
 
                     var temp1 = _productLocalized.FirstOrDefault(cl => cl.LanguageId == languageId);
                     if (temp1 != null && !String.IsNullOrWhiteSpace(temp1.MetaTitle))
@@ -359,7 +360,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                 if (languageId > 0)
                 {
                     if (_productLocalized == null)
-                        _productLocalized = ProductManager.GetProductLocalizedByProductId(this.ProductId);
+                        _productLocalized = IoCFactory.Resolve<IProductManager>().GetProductLocalizedByProductId(this.ProductId);
 
                     var temp1 = _productLocalized.FirstOrDefault(cl => cl.LanguageId == languageId);
                     if (temp1 != null && !String.IsNullOrWhiteSpace(temp1.SEName))
@@ -391,7 +392,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         {
             get
             {
-                return ProductManager.GetProductVariantsByProductId(this.ProductId);
+                return IoCFactory.Resolve<IProductManager>().GetProductVariantsByProductId(this.ProductId);
             }
         }
 
@@ -413,7 +414,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         {
             get
             {
-                return TemplateManager.GetProductTemplateById(this.TemplateId);
+                return IoCFactory.Resolve<ITemplateManager>().GetProductTemplateById(this.TemplateId);
             }
         }
 
@@ -424,7 +425,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         {
             get
             {
-                return ProductManager.GetRelatedProductsByProductId1(this.ProductId);
+                return IoCFactory.Resolve<IProductManager>().GetRelatedProductsByProductId1(this.ProductId);
             }
         }
 
@@ -435,7 +436,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         {
             get
             {
-                return ProductManager.GetCrossSellProductsByProductId1(this.ProductId);
+                return IoCFactory.Resolve<IProductManager>().GetCrossSellProductsByProductId1(this.ProductId);
             }
         }
 
@@ -446,7 +447,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         {
             get
             {
-                var picture = PictureManager.GetPicturesByProductId(this.ProductId, 1).FirstOrDefault();
+                var picture = IoCFactory.Resolve<IPictureManager>().GetPicturesByProductId(this.ProductId, 1).FirstOrDefault();
                 return picture;
             }
         }
@@ -458,7 +459,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         {
             get
             {
-                return ProductManager.GetProductPicturesByProductId(this.ProductId);
+                return IoCFactory.Resolve<IProductManager>().GetProductPicturesByProductId(this.ProductId);
             }
         }
 
@@ -469,7 +470,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         {
             get
             {
-                return CategoryManager.GetProductCategoriesByProductId(this.ProductId);
+                return IoCFactory.Resolve<ICategoryManager>().GetProductCategoriesByProductId(this.ProductId);
             }
         }
 
@@ -480,7 +481,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         {
             get
             {
-                return ManufacturerManager.GetProductManufacturersByProductId(this.ProductId);
+                return IoCFactory.Resolve<IManufacturerManager>().GetProductManufacturersByProductId(this.ProductId);
             }
         }
 
@@ -491,7 +492,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         {
             get
             {
-                return ProductManager.GetProductReviewByProductId(this.ProductId);
+                return IoCFactory.Resolve<IProductManager>().GetProductReviewByProductId(this.ProductId);
             }
         }
 

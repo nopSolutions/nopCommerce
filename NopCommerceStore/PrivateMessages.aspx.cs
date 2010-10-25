@@ -30,6 +30,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Content.Forums;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 namespace NopSolutions.NopCommerce.Web
 {
     /// <summary>
@@ -47,7 +48,7 @@ namespace NopSolutions.NopCommerce.Web
                 Response.Redirect(loginURL);
             }
 
-            if (!ForumManager.AllowPrivateMessages)
+            if (!IoCFactory.Resolve<IForumManager>().AllowPrivateMessages)
             {
                 Response.Redirect(CommonHelper.GetStoreLocation());
             }

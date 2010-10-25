@@ -38,6 +38,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Manufacturers;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.BusinessLogic.Utils;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.SEO
 {
@@ -1108,7 +1109,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO
         /// <param name="overwriteExisting">Overwrite existing content if exists</param>
         public static void RenderTitle(Page page, string title, bool overwriteExisting)
         {
-            bool includeStoreNameInTitle = SettingManager.GetSettingValueBoolean("SEO.IncludeStoreNameInTitle");
+            bool includeStoreNameInTitle = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("SEO.IncludeStoreNameInTitle");
             RenderTitle(page, title, includeStoreNameInTitle, overwriteExisting);
         }
 
@@ -1126,7 +1127,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO
                 return;
 
             if (includeStoreNameInTitle)
-                title = SettingManager.StoreName + ". " + title;
+                title = IoCFactory.Resolve<ISettingManager>().StoreName + ". " + title;
 
             if (String.IsNullOrEmpty(title))
                 return;
@@ -1194,7 +1195,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO
             string OKChars = "abcdefghijklmnopqrstuvwxyz1234567890 _-";
             name = name.Trim().ToLowerInvariant();
 
-            if (SettingManager.GetSettingValueBoolean("SEONames.ConvertNonWesternChars"))
+            if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("SEONames.ConvertNonWesternChars"))
             {
                 if (seoCharacterTable == null)
                     InitializeSeoCharacterTable();
@@ -1204,7 +1205,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO
             foreach (char c in name.ToCharArray())
             {
                 string c2 = c.ToString();
-                if (SettingManager.GetSettingValueBoolean("SEONames.ConvertNonWesternChars"))
+                if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("SEONames.ConvertNonWesternChars"))
                 {
                     if (seoCharacterTable.ContainsKey(c2))
                         c2 = seoCharacterTable[c2];
@@ -1380,7 +1381,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO
         /// <returns>Product URL</returns>
         public static string GetProductUrl(int productId)
         {
-            var product = ProductManager.GetProductById(productId);
+            var product = IoCFactory.Resolve<IProductManager>().GetProductById(productId);
             return GetProductUrl(product);
         }
 
@@ -1395,7 +1396,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO
                 throw new ArgumentNullException("product");
             string seName = GetProductSEName(product);
 
-            string url2 = SEOHelper.EnableUrlRewriting ? SettingManager.GetSettingValue("SEO.Product.UrlRewriteFormat") : "{0}Product.aspx?ProductID={1}";
+            string url2 = SEOHelper.EnableUrlRewriting ? IoCFactory.Resolve<ISettingManager>().GetSettingValue("SEO.Product.UrlRewriteFormat") : "{0}Product.aspx?ProductID={1}";
             string url = string.Format(url2, CommonHelper.GetStoreLocation(), product.ProductId, seName);
             return url.ToLowerInvariant();
         }
@@ -1445,7 +1446,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO
         /// <returns>Manufacturer URL</returns>
         public static string GetManufacturerUrl(int manufacturerId)
         {
-            var manufacturer = ManufacturerManager.GetManufacturerById(manufacturerId);
+            var manufacturer = IoCFactory.Resolve<IManufacturerManager>().GetManufacturerById(manufacturerId);
             return GetManufacturerUrl(manufacturer);
         }
 
@@ -1460,7 +1461,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO
                 throw new ArgumentNullException("manufacturer");
             string seName = GetManufacturerSEName(manufacturer);
 
-            string url2 = SEOHelper.EnableUrlRewriting ? SettingManager.GetSettingValue("SEO.Manufacturer.UrlRewriteFormat") : "{0}Manufacturer.aspx?ManufacturerID={1}";
+            string url2 = SEOHelper.EnableUrlRewriting ? IoCFactory.Resolve<ISettingManager>().GetSettingValue("SEO.Manufacturer.UrlRewriteFormat") : "{0}Manufacturer.aspx?ManufacturerID={1}";
             string url = string.Format(url2, CommonHelper.GetStoreLocation(), manufacturer.ManufacturerId, seName);
             return url.ToLowerInvariant();
         }
@@ -1489,7 +1490,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO
         /// <returns>Category URL</returns>
         public static string GetCategoryUrl(int categoryId)
         {
-            var category = CategoryManager.GetCategoryById(categoryId);
+            var category = IoCFactory.Resolve<ICategoryManager>().GetCategoryById(categoryId);
             return GetCategoryUrl(category);
         }
 
@@ -1504,7 +1505,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO
                 throw new ArgumentNullException("category");
             string seName = GetCategorySEName(category);
 
-            string url2 = SEOHelper.EnableUrlRewriting ? SettingManager.GetSettingValue("SEO.Category.UrlRewriteFormat") : "{0}Category.aspx?CategoryID={1}";
+            string url2 = SEOHelper.EnableUrlRewriting ? IoCFactory.Resolve<ISettingManager>().GetSettingValue("SEO.Category.UrlRewriteFormat") : "{0}Category.aspx?CategoryID={1}";
             string url = string.Format(url2, CommonHelper.GetStoreLocation(), category.CategoryId, seName);
             return url.ToLowerInvariant();
         }
@@ -1516,7 +1517,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO
         /// <returns>product tag URL</returns>
         public static string GetProductTagUrl(int productTagId)
         {
-            var productTag = ProductManager.GetProductTagById(productTagId);
+            var productTag = IoCFactory.Resolve<IProductManager>().GetProductTagById(productTagId);
             return GetProductTagUrl(productTag);
         }
 
@@ -1531,7 +1532,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO
                 throw new ArgumentNullException("productTag");
             string seName = GetSEName(productTag.Name);
 
-            string url2 = SEOHelper.EnableUrlRewriting ? SettingManager.GetSettingValue("SEO.ProductTags.UrlRewriteFormat") : "{0}ProductTag.aspx?tagid={1}";
+            string url2 = SEOHelper.EnableUrlRewriting ? IoCFactory.Resolve<ISettingManager>().GetSettingValue("SEO.ProductTags.UrlRewriteFormat") : "{0}ProductTag.aspx?tagid={1}";
             string url = string.Format(url2, CommonHelper.GetStoreLocation(), productTag.ProductTagId, seName);
             return url.ToLowerInvariant();
         }
@@ -1577,7 +1578,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO
         /// <returns>Blog post URL</returns>
         public static string GetBlogPostUrl(int blogPostId)
         {
-            var blogPost = BlogManager.GetBlogPostById(blogPostId);
+            var blogPost = IoCFactory.Resolve<IBlogManager>().GetBlogPostById(blogPostId);
             return GetBlogPostUrl(blogPost);
         }
 
@@ -1591,7 +1592,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO
             if (blogPost == null)
                 throw new ArgumentNullException("blogPost"); 
             string seName = GetSEName(blogPost.BlogPostTitle);
-            string url2 = SEOHelper.EnableUrlRewriting ? SettingManager.GetSettingValue("SEO.Blog.UrlRewriteFormat") : "{0}BlogPost.aspx?BlogPostID={1}";
+            string url2 = SEOHelper.EnableUrlRewriting ? IoCFactory.Resolve<ISettingManager>().GetSettingValue("SEO.Blog.UrlRewriteFormat") : "{0}BlogPost.aspx?BlogPostID={1}";
             string url = string.Format(url2, CommonHelper.GetStoreLocation(), blogPost.BlogPostId, seName);
             return url.ToLowerInvariant();
         }
@@ -1603,7 +1604,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO
         /// <returns>News URL</returns>
         public static string GetNewsUrl(int newsId)
         {
-            var news = NewsManager.GetNewsById(newsId);
+            var news = IoCFactory.Resolve<INewsManager>().GetNewsById(newsId);
             return GetNewsUrl(news);
         }
 
@@ -1617,7 +1618,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO
             if (news == null)
                 throw new ArgumentNullException("news");
             string seName = GetSEName(news.Title);
-            string url2 = SEOHelper.EnableUrlRewriting ? SettingManager.GetSettingValue("SEO.News.UrlRewriteFormat") : "{0}News.aspx?NewsId={1}";
+            string url2 = SEOHelper.EnableUrlRewriting ? IoCFactory.Resolve<ISettingManager>().GetSettingValue("SEO.News.UrlRewriteFormat") : "{0}News.aspx?NewsId={1}";
             string url = string.Format(url2, CommonHelper.GetStoreLocation(), news.NewsId, seName);
             return url.ToLowerInvariant();
         }
@@ -1689,7 +1690,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO
         /// <returns>Forum group URL</returns>
         public static string GetForumGroupUrl(int forumGroupId)
         {
-            var forumGroup = ForumManager.GetForumGroupById(forumGroupId);
+            var forumGroup = IoCFactory.Resolve<IForumManager>().GetForumGroupById(forumGroupId);
             return GetForumGroupUrl(forumGroup);
         }
 
@@ -1705,7 +1706,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO
                 throw new ArgumentNullException("forumGroup");
             }
             string seName = GetSEName(forumGroup.Name);
-            string url2 = SEOHelper.EnableUrlRewriting ? SettingManager.GetSettingValue("SEO.ForumGroup.UrlRewriteFormat") : "{0}Boards/ForumGroup.aspx?ForumGroupId={1}";
+            string url2 = SEOHelper.EnableUrlRewriting ? IoCFactory.Resolve<ISettingManager>().GetSettingValue("SEO.ForumGroup.UrlRewriteFormat") : "{0}Boards/ForumGroup.aspx?ForumGroupId={1}";
             string url = string.Format(url2, CommonHelper.GetStoreLocation(), forumGroup.ForumGroupId, seName);
             return url.ToLowerInvariant();
         }
@@ -1717,7 +1718,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO
         /// <returns>Forum URL</returns>
         public static string GetForumUrl(int forumId)
         {
-            var forum = ForumManager.GetForumById(forumId);
+            var forum = IoCFactory.Resolve<IForumManager>().GetForumById(forumId);
             return GetForumUrl(forum);
         }
 
@@ -1733,7 +1734,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO
                 throw new ArgumentNullException("Forum");
             }
             string seName = GetSEName(forum.Name);
-            string url2 = SEOHelper.EnableUrlRewriting ? SettingManager.GetSettingValue("SEO.Forum.UrlRewriteFormat") : "{0}Boards/Forum.aspx?ForumId={1}";
+            string url2 = SEOHelper.EnableUrlRewriting ? IoCFactory.Resolve<ISettingManager>().GetSettingValue("SEO.Forum.UrlRewriteFormat") : "{0}Boards/Forum.aspx?ForumId={1}";
             string url = string.Format(url2, CommonHelper.GetStoreLocation(), forum.ForumId, seName);
             return url.ToLowerInvariant();
         }
@@ -1781,7 +1782,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO
         /// <returns>Forum topic URL</returns>
         public static string GetForumTopicUrl(int topicId)
         {
-            var topic = ForumManager.GetTopicById(topicId);
+            var topic = IoCFactory.Resolve<IForumManager>().GetTopicById(topicId);
             return GetForumTopicUrl(topic); 
         }
 
@@ -1805,7 +1806,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO
         public static string GetForumTopicUrl(int topicId, 
             string queryStringProperty, int? pageIndex)
         {
-            var topic = ForumManager.GetTopicById(topicId);
+            var topic = IoCFactory.Resolve<IForumManager>().GetTopicById(topicId);
             return GetForumTopicUrl(topic, queryStringProperty, pageIndex);
         }
 
@@ -1833,7 +1834,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO
         public static string GetForumTopicUrl(int topicId, string queryStringProperty, 
             int? pageIndex, int? postId)
         {
-            var topic = ForumManager.GetTopicById(topicId);
+            var topic = IoCFactory.Resolve<IForumManager>().GetTopicById(topicId);
             return GetForumTopicUrl(topic, queryStringProperty, pageIndex, postId);
         }
 
@@ -1853,7 +1854,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO
                 throw new ArgumentNullException("forumTopic");
             }
             string seName = GetSEName(topic.Subject);
-            string url2 = SEOHelper.EnableUrlRewriting ? SettingManager.GetSettingValue("SEO.ForumTopic.UrlRewriteFormat") : "{0}Boards/Topic.aspx?TopicId={1}";
+            string url2 = SEOHelper.EnableUrlRewriting ? IoCFactory.Resolve<ISettingManager>().GetSettingValue("SEO.ForumTopic.UrlRewriteFormat") : "{0}Boards/Topic.aspx?TopicId={1}";
             string url = string.Format(url2, CommonHelper.GetStoreLocation(), topic.ForumTopicId, seName);
             if(pageIndex.HasValue && pageIndex.Value > 1)
             {
@@ -1941,7 +1942,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO
         /// <returns>Topic page URL</returns>
         public static string GetTopicUrl(int topicId, string title)
         {
-            string url2 = SEOHelper.EnableUrlRewriting ? SettingManager.GetSettingValue("SEO.Topic.UrlRewriteFormat") : "{0}Topic.aspx?TopicId={1}";            
+            string url2 = SEOHelper.EnableUrlRewriting ? IoCFactory.Resolve<ISettingManager>().GetSettingValue("SEO.Topic.UrlRewriteFormat") : "{0}Topic.aspx?TopicId={1}";            
             string url = string.Format(url2, CommonHelper.GetStoreLocation(), topicId, GetSEName(title));
             return url.ToLowerInvariant();
         }
@@ -1957,12 +1958,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO
         {
             get
             {
-                bool enableUrlRewriting = SettingManager.GetSettingValueBoolean("SEO.EnableUrlRewriting", true);
+                bool enableUrlRewriting = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("SEO.EnableUrlRewriting", true);
                 return enableUrlRewriting;
             }
             set
             {
-                SettingManager.SetParam("SEO.EnableUrlRewriting", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("SEO.EnableUrlRewriting", value.ToString());
             }
         }
 

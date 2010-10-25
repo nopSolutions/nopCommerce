@@ -24,6 +24,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Localization;
 using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.Tax;
 using NopSolutions.NopCommerce.Common.Utils.Html;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
 {
@@ -78,7 +79,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
             var Ids = ParseCheckoutAttributeIds(attributes);
             foreach (int id in Ids)
             {
-                var ca = CheckoutAttributeManager.GetCheckoutAttributeById(id);
+                var ca = IoCFactory.Resolve<ICheckoutAttributeManager>().GetCheckoutAttributeById(id);
                 if (ca != null)
                 {
                     caCollection.Add(ca);
@@ -109,7 +110,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                         int caValueId = 0;
                         if (int.TryParse(caValueStr, out caValueId))
                         {
-                            var caValue = CheckoutAttributeManager.GetCheckoutAttributeValueById(caValueId);
+                            var caValue = IoCFactory.Resolve<ICheckoutAttributeManager>().GetCheckoutAttributeValueById(caValueId);
                             if (caValue != null)
                                 caValues.Add(caValue);
                         }
@@ -299,14 +300,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                     }
                     else
                     {
-                        var caValue = CheckoutAttributeManager.GetCheckoutAttributeValueById(Convert.ToInt32(valueStr));
+                        var caValue = IoCFactory.Resolve<ICheckoutAttributeManager>().GetCheckoutAttributeValueById(Convert.ToInt32(valueStr));
                         if (caValue != null)
                         {
                             caAttribute = string.Format("{0}: {1}", ca.LocalizedName, caValue.LocalizedName);
                             if (renderPrices)
                             {
-                                decimal priceAdjustmentBase = TaxManager.GetCheckoutAttributePrice(caValue, customer);
-                                decimal priceAdjustment = CurrencyManager.ConvertCurrency(priceAdjustmentBase, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                                decimal priceAdjustmentBase = IoCFactory.Resolve<ITaxManager>().GetCheckoutAttributePrice(caValue, customer);
+                                decimal priceAdjustment = IoCFactory.Resolve<ICurrencyManager>().ConvertCurrency(priceAdjustmentBase, IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
                                 if (priceAdjustmentBase > 0)
                                 {
                                     string priceAdjustmentStr = PriceHelper.FormatPrice(priceAdjustment);

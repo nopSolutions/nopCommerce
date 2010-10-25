@@ -24,6 +24,7 @@ using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.Products.Attributes;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -31,7 +32,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            ProductAttribute productAttribute = ProductAttributeManager.GetProductAttributeById(this.ProductAttributeId);
+            ProductAttribute productAttribute = IoCFactory.Resolve<IProductAttributeManager>().GetProductAttributeById(this.ProductAttributeId);
 
             if (this.HasLocalizableContent)
             {
@@ -67,13 +68,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public ProductAttribute SaveInfo()
         {
-            ProductAttribute productAttribute = ProductAttributeManager.GetProductAttributeById(this.ProductAttributeId);
+            ProductAttribute productAttribute = IoCFactory.Resolve<IProductAttributeManager>().GetProductAttributeById(this.ProductAttributeId);
 
             if (productAttribute != null)
             {
                 productAttribute.Name = txtName.Text;
                 productAttribute.Description = txtDescription.Text;
-                ProductAttributeManager.UpdateProductAttribute(productAttribute);
+                IoCFactory.Resolve<IProductAttributeManager>().UpdateProductAttribute(productAttribute);
             }
             else
             {
@@ -82,7 +83,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     Name = txtName.Text,
                     Description = txtDescription.Text
                 };
-                ProductAttributeManager.InsertProductAttribute(productAttribute);
+                IoCFactory.Resolve<IProductAttributeManager>().InsertProductAttribute(productAttribute);
             }
 
             SaveLocalizableContent(productAttribute);
@@ -112,7 +113,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                     bool allFieldsAreEmpty = (string.IsNullOrEmpty(name) && string.IsNullOrEmpty(description));
 
-                    var content = ProductAttributeManager.GetProductAttributeLocalizedByProductAttributeIdAndLanguageId(productAttribute.ProductAttributeId, languageId);
+                    var content = IoCFactory.Resolve<IProductAttributeManager>().GetProductAttributeLocalizedByProductAttributeIdAndLanguageId(productAttribute.ProductAttributeId, languageId);
                     if (content == null)
                     {
                         if (!allFieldsAreEmpty && languageId > 0)
@@ -125,7 +126,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                                 Name = name,
                                 Description = description
                             };
-                            ProductAttributeManager.InsertProductAttributeLocalized(content);
+                            IoCFactory.Resolve<IProductAttributeManager>().InsertProductAttributeLocalized(content);
                         }
                     }
                     else
@@ -135,7 +136,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                             content.LanguageId = languageId;
                             content.Name = name;
                             content.Description = description;
-                            ProductAttributeManager.UpdateProductAttributeLocalized(content);
+                            IoCFactory.Resolve<IProductAttributeManager>().UpdateProductAttributeLocalized(content);
                         }
                     }
                 }
@@ -152,7 +153,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                 int languageId = int.Parse(lblLanguageId.Text);
 
-                var content = ProductAttributeManager.GetProductAttributeLocalizedByProductAttributeIdAndLanguageId(this.ProductAttributeId, languageId);
+                var content = IoCFactory.Resolve<IProductAttributeManager>().GetProductAttributeLocalizedByProductAttributeIdAndLanguageId(this.ProductAttributeId, languageId);
 
                 if (content != null)
                 {

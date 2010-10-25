@@ -45,6 +45,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Shipping;
 using NopSolutions.NopCommerce.BusinessLogic.Tax;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Payment.Methods.GoogleCheckout;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -52,21 +53,21 @@ namespace NopSolutions.NopCommerce.Web.Modules
     {
         protected override void OnPreRender(EventArgs e)
         {
-            var gcPaymentMethod = PaymentMethodManager.GetPaymentMethodBySystemKeyword("GoogleCheckout");
+            var gcPaymentMethod = IoCFactory.Resolve<IPaymentMethodManager>().GetPaymentMethodBySystemKeyword("GoogleCheckout");
             if (gcPaymentMethod == null || !gcPaymentMethod.IsActive)
             {
                 this.Visible = false;
                 return;
             }
 
-            var cart = ShoppingCartManager.GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
+            var cart = IoCFactory.Resolve<IShoppingCartManager>().GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
             if (cart.Count == 0)
             {
                 this.Visible = false;
                 return;
             }
 
-            if (cart.IsRecurring && PaymentManager.SupportRecurringPayments(gcPaymentMethod.PaymentMethodId) == RecurringPaymentTypeEnum.NotSupported)
+            if (cart.IsRecurring && IoCFactory.Resolve<IPaymentManager>().SupportRecurringPayments(gcPaymentMethod.PaymentMethodId) == RecurringPaymentTypeEnum.NotSupported)
             {
                 this.Visible = false;
                 return;
@@ -80,24 +81,24 @@ namespace NopSolutions.NopCommerce.Web.Modules
         protected void PostCartToGoogle(object sender, ImageClickEventArgs e)
         { 
             //user validation
-            if (NopContext.Current.User == null && CustomerManager.AnonymousCheckoutAllowed)
+            if (NopContext.Current.User == null && IoCFactory.Resolve<ICustomerManager>().AnonymousCheckoutAllowed)
             {
                 //create anonymous record
-                CustomerManager.CreateAnonymousUser();
+                IoCFactory.Resolve<ICustomerManager>().CreateAnonymousUser();
             }
 
-            if ((NopContext.Current.User == null) || (NopContext.Current.User.IsGuest && !CustomerManager.AnonymousCheckoutAllowed))
+            if ((NopContext.Current.User == null) || (NopContext.Current.User.IsGuest && !IoCFactory.Resolve<ICustomerManager>().AnonymousCheckoutAllowed))
             {
                 string loginURL = SEOHelper.GetLoginPageUrl(true);
                 Response.Redirect(loginURL);
             }
 
             //USD for US dollars, GBP for British pounds, SEK for Swedish krona, EUR for Euro etc
-            GCheckoutButton1.Currency = CurrencyManager.PrimaryStoreCurrency.CurrencyCode;
+            GCheckoutButton1.Currency = IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency.CurrencyCode;
             var Req = GCheckoutButton1.CreateRequest();
             var googleCheckoutPaymentProcessor = new GoogleCheckoutPaymentProcessor();
 
-            NopSolutions.NopCommerce.BusinessLogic.Orders.ShoppingCart cart = ShoppingCartManager.GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
+            NopSolutions.NopCommerce.BusinessLogic.Orders.ShoppingCart cart = IoCFactory.Resolve<IShoppingCartManager>().GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
             var Resp = googleCheckoutPaymentProcessor.PostCartToGoogle(Req, cart);
             if (Resp.IsGood)
             {

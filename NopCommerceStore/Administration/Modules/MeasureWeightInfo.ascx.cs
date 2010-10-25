@@ -28,6 +28,7 @@ using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.Measures;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -35,7 +36,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            MeasureWeight measureWeight = MeasureManager.GetMeasureWeightById(this.MeasureWeightId);
+            MeasureWeight measureWeight = IoCFactory.Resolve<IMeasureManager>().GetMeasureWeightById(this.MeasureWeightId);
             if (measureWeight != null)
             {
                 this.txtName.Text = measureWeight.Name;
@@ -60,14 +61,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             decimal ratio = txtRatio.Value;
             int displayOrder = txtDisplayOrder.Value;
 
-            MeasureWeight measureWeight = MeasureManager.GetMeasureWeightById(this.MeasureWeightId);
+            MeasureWeight measureWeight = IoCFactory.Resolve<IMeasureManager>().GetMeasureWeightById(this.MeasureWeightId);
             if (measureWeight != null)
             {
                 measureWeight.Name = name;
                 measureWeight.SystemKeyword = systemKeyword;
                 measureWeight.Ratio = ratio;
                 measureWeight.DisplayOrder = displayOrder;
-                MeasureManager.UpdateMeasureWeight(measureWeight);
+                IoCFactory.Resolve<IMeasureManager>().UpdateMeasureWeight(measureWeight);
             }
             else
             {
@@ -78,7 +79,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     Ratio = ratio,
                     DisplayOrder = displayOrder
                 };
-                MeasureManager.InsertMeasureWeight(measureWeight);
+                IoCFactory.Resolve<IMeasureManager>().InsertMeasureWeight(measureWeight);
             }
 
             return measureWeight;

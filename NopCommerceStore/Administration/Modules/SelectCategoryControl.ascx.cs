@@ -16,6 +16,7 @@ using System;
 using System.ComponentModel;
 using System.Web.UI.WebControls;
 using NopSolutions.NopCommerce.BusinessLogic.Categories;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
  
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -28,7 +29,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             ddlCategories.Items.Clear();
             ddlCategories.Items.Add(new ListItem(this.EmptyItemText, "0"));
 
-            var categories = CategoryManager.GetAllCategories();
+            var categories = IoCFactory.Resolve<ICategoryManager>().GetAllCategories();
             foreach (var category in categories)
             {
                 string catName = GetCategoryFullName(category);

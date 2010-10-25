@@ -30,6 +30,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Products.Specs;
 using NopSolutions.NopCommerce.BusinessLogic.Templates;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Web.Administration.Modules;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -39,7 +40,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             List<ProductManufacturerMappingHelperClass> productManufacturerMappings = null;
 
-            Product product = ProductManager.GetProductById(this.ProductId);
+            Product product = IoCFactory.Resolve<IProductManager>().GetProductById(this.ProductId);
             if (product != null)
             {
                 var existingProductManufacturerCollection = product.ProductManufacturers;
@@ -73,23 +74,23 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public void SaveInfo(int prodId)
         {
-            Product product = ProductManager.GetProductById(prodId);
+            Product product = IoCFactory.Resolve<IProductManager>().GetProductById(prodId);
             if (product != null)
             {
                 foreach (var item in this.GridState.Values)
                 {
                     if (item.ProductManufacturerId > 0 && !item.IsMapped)
-                        ManufacturerManager.DeleteProductManufacturer(item.ProductManufacturerId);
+                        IoCFactory.Resolve<IManufacturerManager>().DeleteProductManufacturer(item.ProductManufacturerId);
                     if (item.ProductManufacturerId > 0 && item.IsMapped)
                     {
-                        ProductManufacturer pm = ManufacturerManager.GetProductManufacturerById(item.ProductManufacturerId);
+                        ProductManufacturer pm = IoCFactory.Resolve<IManufacturerManager>().GetProductManufacturerById(item.ProductManufacturerId);
                         if (pm != null)
                         {
                             pm.ProductId = product.ProductId;
                             pm.ManufacturerId = item.ManufacturerId;
                             pm.IsFeaturedProduct = item.IsFeatured;
                             pm.DisplayOrder = item.DisplayOrder;
-                            ManufacturerManager.UpdateProductManufacturer(pm);
+                            IoCFactory.Resolve<IManufacturerManager>().UpdateProductManufacturer(pm);
                         }
                     }
                     if (item.ProductManufacturerId == 0 && item.IsMapped)
@@ -101,7 +102,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                             IsFeaturedProduct = item.IsFeatured,
                             DisplayOrder = item.DisplayOrder
                         };
-                        ManufacturerManager.InsertProductManufacturer(pm);
+                        IoCFactory.Resolve<IManufacturerManager>().InsertProductManufacturer(pm);
                     }
                 }
             }
@@ -115,7 +116,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         private List<ProductManufacturerMappingHelperClass> GetProductManufacturerMappings(List<ProductManufacturer> ExistingProductManufacturerCollection)
         {
-            var manufacturerCollection = ManufacturerManager.GetAllManufacturers();
+            var manufacturerCollection = IoCFactory.Resolve<IManufacturerManager>().GetAllManufacturers();
             List<ProductManufacturerMappingHelperClass> result = new List<ProductManufacturerMappingHelperClass>();
             for (int i = 0; i < manufacturerCollection.Count; i++)
             {

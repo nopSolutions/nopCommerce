@@ -24,6 +24,7 @@ using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.Templates;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -49,7 +50,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                TemplateManager.DeleteManufacturerTemplate(this.ManufacturerTemplateId);
+                IoCFactory.Resolve<ITemplateManager>().DeleteManufacturerTemplate(this.ManufacturerTemplateId);
                 Response.Redirect("ManufacturerTemplates.aspx");
             }
             catch (Exception exc)

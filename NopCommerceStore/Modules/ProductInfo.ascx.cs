@@ -31,6 +31,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Manufacturers;
 using NopSolutions.NopCommerce.BusinessLogic.Media;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -44,7 +45,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void BindData()
         {
-            var product = ProductManager.GetProductById(this.ProductId);
+            var product = IoCFactory.Resolve<IProductManager>().GetProductById(this.ProductId);
             if (product != null)
             {
                 lProductName.Text = Server.HtmlEncode(product.LocalizedName);
@@ -78,10 +79,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 }
 
                 //pictures
-                var pictures = PictureManager.GetPicturesByProductId(product.ProductId);
+                var pictures = IoCFactory.Resolve<IPictureManager>().GetPicturesByProductId(product.ProductId);
                 if (pictures.Count > 1)
                 {
-                    defaultImage.ImageUrl = PictureManager.GetPictureUrl(pictures[0], SettingManager.GetSettingValueInteger("Media.Product.DetailImageSize", 300));
+                    defaultImage.ImageUrl = IoCFactory.Resolve<IPictureManager>().GetPictureUrl(pictures[0], IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.Product.DetailImageSize", 300));
                     defaultImage.ToolTip = String.Format(GetLocaleResourceString("Media.Product.ImageAlternateTextFormat"), product.LocalizedName);
                     defaultImage.AlternateText = String.Format(GetLocaleResourceString("Media.Product.ImageAlternateTextFormat"), product.LocalizedName);
                     lvProductPictures.DataSource = pictures;
@@ -89,24 +90,24 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 }
                 else if (pictures.Count == 1)
                 {
-                    defaultImage.ImageUrl = PictureManager.GetPictureUrl(pictures[0], SettingManager.GetSettingValueInteger("Media.Product.DetailImageSize", 300));
+                    defaultImage.ImageUrl = IoCFactory.Resolve<IPictureManager>().GetPictureUrl(pictures[0], IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.Product.DetailImageSize", 300));
                     defaultImage.ToolTip = String.Format(GetLocaleResourceString("Media.Product.ImageAlternateTextFormat"), product.LocalizedName);
                     defaultImage.AlternateText = String.Format(GetLocaleResourceString("Media.Product.ImageAlternateTextFormat"), product.LocalizedName);
                     lvProductPictures.Visible = false;
                 }
                 else
                 {
-                    defaultImage.ImageUrl = PictureManager.GetDefaultPictureUrl(SettingManager.GetSettingValueInteger("Media.Product.DetailImageSize", 300));
+                    defaultImage.ImageUrl = IoCFactory.Resolve<IPictureManager>().GetDefaultPictureUrl(IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.Product.DetailImageSize", 300));
                     defaultImage.ToolTip = String.Format(GetLocaleResourceString("Media.Product.ImageAlternateTextFormat"), product.LocalizedName);
                     defaultImage.AlternateText = String.Format(GetLocaleResourceString("Media.Product.ImageAlternateTextFormat"), product.LocalizedName);
                     lvProductPictures.Visible = false;
                 }
-                if(SettingManager.GetSettingValueBoolean("Media.Product.DefaultPictureZoomEnabled", false))
+                if(IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Media.Product.DefaultPictureZoomEnabled", false))
                 {
                     var picture = product.DefaultPicture;
                     if (picture != null)
                     {
-                        lnkMainLightbox.Attributes["href"] = PictureManager.GetPictureUrl(picture);
+                        lnkMainLightbox.Attributes["href"] = IoCFactory.Resolve<IPictureManager>().GetPictureUrl(picture);
                         lnkMainLightbox.Attributes["rel"] = "lightbox-pd";
                     }
                 }

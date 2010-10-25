@@ -33,6 +33,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -46,16 +47,16 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         private void BindData()
         {
-            if (SettingManager.GetSettingValueBoolean("Display.ShowBestsellersOnMainPage"))
+            if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Display.ShowBestsellersOnMainPage"))
             {
-                int number = SettingManager.GetSettingValueInteger("Display.ShowBestsellersOnMainPageNumber");
-                var report = OrderManager.BestSellersReport(720, number, 1);
+                int number = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Display.ShowBestsellersOnMainPageNumber");
+                var report = IoCFactory.Resolve<IOrderManager>().BestSellersReport(720, number, 1);
                 if (report.Count > 0)
                 {
                     List<Product> productList = new List<Product>();
                     foreach (BestSellersReportLine line in report)
                     {
-                        var productVariant = ProductManager.GetProductVariantById(line.ProductVariantId);
+                        var productVariant = IoCFactory.Resolve<IProductManager>().GetProductVariantById(line.ProductVariantId);
                         if (productVariant != null)
                         {
                             var product = productVariant.Product;
@@ -106,11 +107,11 @@ namespace NopSolutions.NopCommerce.Web.Modules
                         var picture = product.DefaultPicture;
                         if (picture != null)
                         {
-                            hlImageLink.ImageUrl = PictureManager.GetPictureUrl(picture, SettingManager.GetSettingValueInteger("Media.Product.ThumbnailImageSize", 125), true);
+                            hlImageLink.ImageUrl = IoCFactory.Resolve<IPictureManager>().GetPictureUrl(picture, IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.Product.ThumbnailImageSize", 125), true);
                         }
                         else
                         {
-                            hlImageLink.ImageUrl = PictureManager.GetDefaultPictureUrl(SettingManager.GetSettingValueInteger("Media.Product.ThumbnailImageSize", 125));
+                            hlImageLink.ImageUrl = IoCFactory.Resolve<IPictureManager>().GetDefaultPictureUrl(IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.Product.ThumbnailImageSize", 125));
                         }
 
                         hlImageLink.NavigateUrl = productURL;

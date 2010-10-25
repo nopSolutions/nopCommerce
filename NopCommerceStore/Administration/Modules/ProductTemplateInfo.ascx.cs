@@ -25,6 +25,7 @@ using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.BusinessLogic.Templates;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -32,7 +33,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            ProductTemplate productTemplate = TemplateManager.GetProductTemplateById(this.ProductTemplateId);
+            ProductTemplate productTemplate = IoCFactory.Resolve<ITemplateManager>().GetProductTemplateById(this.ProductTemplateId);
             if (productTemplate != null)
             {
                 this.txtName.Text = productTemplate.Name;
@@ -60,7 +61,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public ProductTemplate SaveInfo()
         {
-            ProductTemplate productTemplate = TemplateManager.GetProductTemplateById(this.ProductTemplateId);
+            ProductTemplate productTemplate = IoCFactory.Resolve<ITemplateManager>().GetProductTemplateById(this.ProductTemplateId);
 
             if (productTemplate != null)
             {
@@ -68,7 +69,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 productTemplate.TemplatePath =  txtTemplatePath.Text;
                 productTemplate.DisplayOrder = txtDisplayOrder.Value;
                 productTemplate.UpdatedOn = DateTime.UtcNow;
-                TemplateManager.UpdateProductTemplate(productTemplate);
+                IoCFactory.Resolve<ITemplateManager>().UpdateProductTemplate(productTemplate);
             }
             else
             {
@@ -81,7 +82,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     CreatedOn = now,
                     UpdatedOn = now
                 };
-                TemplateManager.InsertProductTemplate(productTemplate);
+                IoCFactory.Resolve<ITemplateManager>().InsertProductTemplate(productTemplate);
 
             }
 

@@ -6,6 +6,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.Web.Templates.Payment;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Payment.Alipay
 {
@@ -15,19 +16,19 @@ namespace NopSolutions.NopCommerce.Web.Administration.Payment.Alipay
         {
             if (!Page.IsPostBack)
             {
-                txtSellerEmail.Text = SettingManager.GetSettingValue("PaymentMethod.Alipay.SellerEmail");
-                txtKey.Text = SettingManager.GetSettingValue("PaymentMethod.Alipay.Key");
-                txtPartner.Text = SettingManager.GetSettingValue("PaymentMethod.Alipay.Partner");
-                txtAdditionalFee.Value = SettingManager.GetSettingValueDecimalNative("PaymentMethod.Alipay.AdditionalFee");
+                txtSellerEmail.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Alipay.SellerEmail");
+                txtKey.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Alipay.Key");
+                txtPartner.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Alipay.Partner");
+                txtAdditionalFee.Value = IoCFactory.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.Alipay.AdditionalFee");
             }
         }
 
         public void Save()
         {
-            SettingManager.SetParam("PaymentMethod.Alipay.SellerEmail", txtSellerEmail.Text);
-            SettingManager.SetParam("PaymentMethod.Alipay.Key", txtKey.Text);
-            SettingManager.SetParam("PaymentMethod.Alipay.Partner", txtPartner.Text);
-            SettingManager.SetParamNative("PaymentMethod.Alipay.AdditionalFee", txtAdditionalFee.Value);
+            IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.Alipay.SellerEmail", txtSellerEmail.Text);
+            IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.Alipay.Key", txtKey.Text);
+            IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.Alipay.Partner", txtPartner.Text);
+            IoCFactory.Resolve<ISettingManager>().SetParamNative("PaymentMethod.Alipay.AdditionalFee", txtAdditionalFee.Value);
         }
     }
 }

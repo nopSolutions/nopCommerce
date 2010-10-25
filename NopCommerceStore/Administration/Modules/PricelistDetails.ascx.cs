@@ -26,6 +26,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.BusinessLogic.Promo.Affiliates;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Web.Administration.Modules;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -35,7 +36,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                ProductManager.DeletePricelist(this.PricelistId);
+                IoCFactory.Resolve<IProductManager>().DeletePricelist(this.PricelistId);
                 Response.Redirect(string.Format("Pricelist.aspx"));
             }
             catch (Exception exc)

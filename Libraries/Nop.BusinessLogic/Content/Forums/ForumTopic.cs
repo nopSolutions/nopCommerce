@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
@@ -119,7 +120,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         {
             get
             {
-                return ForumManager.GetForumById(this.ForumId);
+                return IoCFactory.Resolve<IForumManager>().GetForumById(this.ForumId);
             }
         }
 
@@ -130,7 +131,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         {
             get
             {
-                return CustomerManager.GetCustomerById(this.UserId);
+                return IoCFactory.Resolve<ICustomerManager>().GetCustomerById(this.UserId);
             }
         }
 
@@ -153,7 +154,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
             get
             {
                 int totalPostRecords =0;
-                var forumPosts = ForumManager.GetAllPosts(this.ForumTopicId, 0, string.Empty, 1, 0, out totalPostRecords);
+                var forumPosts = IoCFactory.Resolve<IForumManager>().GetAllPosts(this.ForumTopicId, 0, string.Empty, 1, 0, out totalPostRecords);
                 if (forumPosts.Count > 0)
                 {
                     return forumPosts[0];
@@ -170,7 +171,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         {
             get
             {
-                return ForumManager.GetPostById(this.LastPostId);
+                return IoCFactory.Resolve<IForumManager>().GetPostById(this.LastPostId);
             }
         }
 
@@ -181,7 +182,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         {
             get
             {
-                return CustomerManager.GetCustomerById(this.LastPostUserId);
+                return IoCFactory.Resolve<ICustomerManager>().GetCustomerById(this.LastPostUserId);
             }
         }
 

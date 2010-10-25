@@ -30,13 +30,14 @@ using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.BusinessLogic.Utils.Html;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Common.Utils.Html;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
 {
     /// <summary>
     /// Blog post manager
     /// </summary>
-    public partial class BlogManager
+    public partial class BlogManager : IBlogManager
     {
         #region Constants
         private const string BLOGPOST_BY_ID_KEY = "Nop.blogpost.id-{0}";
@@ -48,7 +49,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
         /// Deletes an blog post
         /// </summary>
         /// <param name="blogPostId">Blog post identifier</param>
-        public static void DeleteBlogPost(int blogPostId)
+        public void DeleteBlogPost(int blogPostId)
         {
             var blogPost = GetBlogPostById(blogPostId);
             if (blogPost == null)
@@ -60,7 +61,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
             context.DeleteObject(blogPost);
             context.SaveChanges();
             
-            if (BlogManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(BLOGPOST_PATTERN_KEY);
             }
@@ -71,14 +72,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
         /// </summary>
         /// <param name="blogPostId">Blog post identifier</param>
         /// <returns>Blog post</returns>
-        public static BlogPost GetBlogPostById(int blogPostId)
+        public BlogPost GetBlogPostById(int blogPostId)
         {
             if (blogPostId == 0)
                 return null;
 
             string key = string.Format(BLOGPOST_BY_ID_KEY, blogPostId);
             object obj2 = NopRequestCache.Get(key);
-            if (BlogManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (BlogPost)obj2;
             }
@@ -89,7 +90,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
                         select bp;
             var blogPost = query.SingleOrDefault();
 
-            if (BlogManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, blogPost);
             }
@@ -101,7 +102,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
         /// </summary>
         /// <param name="languageId">Language identifier. 0 if you want to get all records</param>
         /// <returns>Blog posts</returns>
-        public static List<BlogPost> GetAllBlogPosts(int languageId)
+        public List<BlogPost> GetAllBlogPosts(int languageId)
         {
             int totalRecords;
             return GetAllBlogPosts(languageId, Int32.MaxValue, 0, out totalRecords);
@@ -115,7 +116,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
         /// <param name="pageIndex">Page index</param>
         /// <param name="totalRecords">Total records</param>
         /// <returns>Blog posts</returns>
-        public static List<BlogPost> GetAllBlogPosts(int languageId, int pageSize,
+        public List<BlogPost> GetAllBlogPosts(int languageId, int pageSize,
             int pageIndex, out int totalRecords)
         {
             return GetAllBlogPosts(languageId,
@@ -132,7 +133,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
         /// <param name="pageIndex">Page index</param>
         /// <param name="totalRecords">Total records</param>
         /// <returns>Blog posts</returns>
-        public static List<BlogPost> GetAllBlogPosts(int languageId, 
+        public List<BlogPost> GetAllBlogPosts(int languageId, 
             DateTime? dateFrom, DateTime? dateTo, int pageSize,
             int pageIndex, out int totalRecords)
         {
@@ -158,7 +159,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
         /// <param name="languageId">Language identifier. 0 if you want to get all news</param>
         /// <param name="tag">Tag</param>
         /// <returns>Blog posts</returns>
-        public static List<BlogPost> GetAllBlogPostsByTag(int languageId, string tag)
+        public List<BlogPost> GetAllBlogPostsByTag(int languageId, string tag)
         {
             tag = tag.Trim();
 
@@ -181,7 +182,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
         /// </summary>
         /// <param name="languageId">Language identifier. 0 if you want to get all news</param>
         /// <returns>Blog post tags</returns>
-        public static List<BlogPostTag> GetAllBlogPostTags(int languageId)
+        public List<BlogPostTag> GetAllBlogPostTags(int languageId)
         {
             List<BlogPostTag> blogPostTags = new List<BlogPostTag>();
 
@@ -215,7 +216,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
         /// Inserts an blog post
         /// </summary>
         /// <param name="blogPost">Blog post</param>
-        public static void InsertBlogPost(BlogPost blogPost)
+        public void InsertBlogPost(BlogPost blogPost)
         {
             if (blogPost == null)
                 throw new ArgumentNullException("blogPost");
@@ -231,7 +232,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
             context.BlogPosts.AddObject(blogPost);
             context.SaveChanges();
 
-            if (BlogManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(BLOGPOST_PATTERN_KEY);
             }
@@ -241,7 +242,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
         /// Updates the blog post
         /// </summary>
         /// <param name="blogPost">Blog post</param>
-        public static void UpdateBlogPost(BlogPost blogPost)
+        public void UpdateBlogPost(BlogPost blogPost)
         {
             if (blogPost == null)
                 throw new ArgumentNullException("blogPost");
@@ -258,7 +259,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
 
             context.SaveChanges();
 
-            if (BlogManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(BLOGPOST_PATTERN_KEY);
             }
@@ -268,7 +269,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
         /// Deletes an blog comment
         /// </summary>
         /// <param name="blogCommentId">Blog comment identifier</param>
-        public static void DeleteBlogComment(int blogCommentId)
+        public void DeleteBlogComment(int blogCommentId)
         {
             var blogComment = GetBlogCommentById(blogCommentId);
             if (blogComment == null)
@@ -286,7 +287,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
         /// </summary>
         /// <param name="blogCommentId">Blog comment identifier</param>
         /// <returns>A blog comment</returns>
-        public static BlogComment GetBlogCommentById(int blogCommentId)
+        public BlogComment GetBlogCommentById(int blogCommentId)
         {
             if (blogCommentId == 0)
                 return null;
@@ -304,7 +305,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
         /// </summary>
         /// <param name="blogPostId">Blog post identifier</param>
         /// <returns>A collection of blog comments</returns>
-        public static List<BlogComment> GetBlogCommentsByBlogPostId(int blogPostId)
+        public List<BlogComment> GetBlogCommentsByBlogPostId(int blogPostId)
         {
             var context = ObjectContextHelper.CurrentObjectContext;
             var query = from bc in context.BlogComments
@@ -319,7 +320,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
         /// Gets all blog comments
         /// </summary>
         /// <returns>Blog comments</returns>
-        public static List<BlogComment> GetAllBlogComments()
+        public List<BlogComment> GetAllBlogComments()
         {
             var context = ObjectContextHelper.CurrentObjectContext;
             var query = from bc in context.BlogComments
@@ -337,11 +338,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
         /// <param name="commentText">The comment text</param>
         /// <param name="createdOn">The date and time of instance creation</param>
         /// <returns>Blog comment</returns>
-        public static BlogComment InsertBlogComment(int blogPostId,
+        public BlogComment InsertBlogComment(int blogPostId,
             int customerId, string commentText, DateTime createdOn)
         {
             return InsertBlogComment(blogPostId, customerId, commentText,
-                createdOn, BlogManager.NotifyAboutNewBlogComments);
+                createdOn, IoCFactory.Resolve<IBlogManager>().NotifyAboutNewBlogComments);
         }
 
         /// <summary>
@@ -353,7 +354,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
         /// <param name="createdOn">The date and time of instance creation</param>
         /// <param name="notify">A value indicating whether to notify the store owner</param>
         /// <returns>Blog comment</returns>
-        public static BlogComment InsertBlogComment(int blogPostId,
+        public BlogComment InsertBlogComment(int blogPostId,
             int customerId, string commentText, DateTime createdOn, bool notify)
         {
             string IPAddress = NopContext.Current.UserHostAddress;
@@ -370,7 +371,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
         /// <param name="createdOn">The date and time of instance creation</param>
         /// <param name="notify">A value indicating whether to notify the store owner</param>
         /// <returns>Blog comment</returns>
-        public static BlogComment InsertBlogComment(int blogPostId,
+        public BlogComment InsertBlogComment(int blogPostId,
             int customerId, string ipAddress, string commentText, DateTime createdOn, bool notify)
         {
             ipAddress = CommonHelper.EnsureNotNull(ipAddress);
@@ -391,7 +392,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
 
             if (notify)
             {
-                MessageManager.SendBlogCommentNotificationMessage(blogComment, LocalizationManager.DefaultAdminLanguage.LanguageId);
+                IoCFactory.Resolve<IMessageManager>().SendBlogCommentNotificationMessage(blogComment, LocalizationManager.DefaultAdminLanguage.LanguageId);
             }
 
             return blogComment;
@@ -401,7 +402,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
         /// Updates the blog comment
         /// </summary>
         /// <param name="blogComment">Blog comment</param>
-        public static void UpdateBlogComment(BlogComment blogComment)
+        public void UpdateBlogComment(BlogComment blogComment)
         {
             if (blogComment == null)
                 throw new ArgumentNullException("activityLogType");
@@ -422,7 +423,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
         /// </summary>
         /// <param name="text">Text</param>
         /// <returns>Formatted text</returns>
-        public static string FormatCommentText(string text)
+        public string FormatCommentText(string text)
         {
             if (String.IsNullOrEmpty(text))
                 return string.Empty;
@@ -436,71 +437,71 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
         /// <summary>
         /// Gets a value indicating whether cache is enabled
         /// </summary>
-        public static bool CacheEnabled
+        public bool CacheEnabled
         {
             get
             {
-                return SettingManager.GetSettingValueBoolean("Cache.BlogManager.CacheEnabled");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.BlogManager.CacheEnabled");
             }
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether blog is enabled
         /// </summary>
-        public static bool BlogEnabled
+        public bool BlogEnabled
         {
             get
             {
-                return SettingManager.GetSettingValueBoolean("Common.EnableBlog");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Common.EnableBlog");
             }
             set
             {
-                SettingManager.SetParam("Common.EnableBlog", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("Common.EnableBlog", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets the page size for posts
         /// </summary>
-        public static int PostsPageSize
+        public int PostsPageSize
         {
             get
             {
-                return SettingManager.GetSettingValueInteger("Blog.PostsPageSize", 10);
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Blog.PostsPageSize", 10);
             }
             set
             {
-                SettingManager.SetParam("Blog.PostsPageSize", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("Blog.PostsPageSize", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether not registered user can leave comments
         /// </summary>
-        public static bool AllowNotRegisteredUsersToLeaveComments
+        public bool AllowNotRegisteredUsersToLeaveComments
         {
             get
             {
-                return SettingManager.GetSettingValueBoolean("Blog.AllowNotRegisteredUsersToLeaveComments");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Blog.AllowNotRegisteredUsersToLeaveComments");
             }
             set
             {
-                SettingManager.SetParam("Blog.AllowNotRegisteredUsersToLeaveComments", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("Blog.AllowNotRegisteredUsersToLeaveComments", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether to notify about new blog comments
         /// </summary>
-        public static bool NotifyAboutNewBlogComments
+        public bool NotifyAboutNewBlogComments
         {
             get
             {
-                return SettingManager.GetSettingValueBoolean("Blog.NotifyAboutNewBlogComments");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Blog.NotifyAboutNewBlogComments");
             }
             set
             {
-                SettingManager.SetParam("Blog.NotifyAboutNewBlogComments", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("Blog.NotifyAboutNewBlogComments", value.ToString());
             }
         }
         #endregion

@@ -25,13 +25,14 @@ using NopSolutions.NopCommerce.BusinessLogic.Data;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.BusinessLogic.Security;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Categories
 {
     /// <summary>
     /// Category manager
     /// </summary>
-    public partial class CategoryManager
+    public partial class CategoryManager : ICategoryManager
     {
         #region Constants
         private const string CATEGORIES_BY_ID_KEY = "Nop.category.id-{0}";
@@ -42,7 +43,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
         private const string PRODUCTCATEGORIES_PATTERN_KEY = "Nop.productcategory.";
 
         #endregion
-
+        
         #region Methods
 
         /// <summary>
@@ -50,22 +51,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
         /// </summary>
         /// <param name="category">Category</param>
         /// <returns>true - access is denied; otherwise, false</returns>
-        public static bool IsCategoryAccessDenied(Category category)
-        {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            return IsCategoryAccessDenied(category, context);
-        }
-
-        /// <summary>
-        /// Is access denied
-        /// </summary>
-        /// <param name="category">Category</param>
-        /// <param name="context">context</param>
-        /// <returns>true - access is denied; otherwise, false</returns>
-        public static bool IsCategoryAccessDenied(Category category, NopObjectContext context)
+        public bool IsCategoryAccessDenied(Category category)
         {
             if (category == null)
                 throw new ArgumentNullException("category");
+
+            var context = ObjectContextHelper.CurrentObjectContext;
 
             return category.IsAccessDenied(context);
         }
@@ -74,7 +65,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
         /// Marks category as deleted
         /// </summary>
         /// <param name="categoryId">Category identifier</param>
-        public static void MarkCategoryAsDeleted(int categoryId)
+        public void MarkCategoryAsDeleted(int categoryId)
         {
             var category = GetCategoryById(categoryId);
             if (category != null)
@@ -88,7 +79,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
         /// Removes category picture
         /// </summary>
         /// <param name="categoryId">Category identifier</param>
-        public static void RemoveCategoryPicture(int categoryId)
+        public void RemoveCategoryPicture(int categoryId)
         {
             var category = GetCategoryById(categoryId);
             if (category != null)
@@ -102,7 +93,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
         /// Gets all categories
         /// </summary>
         /// <returns>Categories</returns>
-        public static List<Category> GetAllCategories()
+        public List<Category> GetAllCategories()
         {
             bool showHidden = NopContext.Current.IsAdmin;
             return GetAllCategories(showHidden);
@@ -113,7 +104,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
         /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Categories</returns>
-        public static List<Category> GetAllCategories(bool showHidden)
+        public List<Category> GetAllCategories(bool showHidden)
         {
             var context = ObjectContextHelper.CurrentObjectContext;
             var query = from c in context.Categories
@@ -141,7 +132,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
         /// </summary>
         /// <param name="parentCategoryId">Parent category identifier</param>
         /// <returns>Category collection</returns>
-        public static List<Category> GetAllCategoriesByParentCategoryId(int parentCategoryId)
+        public List<Category> GetAllCategoriesByParentCategoryId(int parentCategoryId)
         {
             bool showHidden = NopContext.Current.IsAdmin;
             return GetAllCategoriesByParentCategoryId(parentCategoryId, showHidden);
@@ -153,7 +144,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
         /// <param name="parentCategoryId">Parent category identifier</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Category collection</returns>
-        public static List<Category> GetAllCategoriesByParentCategoryId(int parentCategoryId,
+        public List<Category> GetAllCategoriesByParentCategoryId(int parentCategoryId,
             bool showHidden)
         {
             var context = ObjectContextHelper.CurrentObjectContext;
@@ -178,7 +169,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
         /// Gets all categories displayed on the home page
         /// </summary>
         /// <returns>Category collection</returns>
-        public static List<Category> GetAllCategoriesDisplayedOnHomePage()
+        public List<Category> GetAllCategoriesDisplayedOnHomePage()
         {
             bool showHidden = NopContext.Current.IsAdmin;
 
@@ -203,14 +194,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
         /// </summary>
         /// <param name="categoryId">Category identifier</param>
         /// <returns>Category</returns>
-        public static Category GetCategoryById(int categoryId)
+        public Category GetCategoryById(int categoryId)
         {
             if (categoryId == 0)
                 return null;
 
             string key = string.Format(CATEGORIES_BY_ID_KEY, categoryId);
             object obj2 = NopRequestCache.Get(key);
-            if (CategoryManager.CategoriesCacheEnabled && (obj2 != null))
+            if (this.CategoriesCacheEnabled && (obj2 != null))
             {
                 return (Category)obj2;
             }
@@ -228,7 +219,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
             {
                 category = null;
             }
-            if (CategoryManager.CategoriesCacheEnabled)
+            if (this.CategoriesCacheEnabled)
             {
                 NopRequestCache.Add(key, category);
             }
@@ -240,7 +231,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
         /// </summary>
         /// <param name="categoryId">Category identifier</param>
         /// <returns>Category</returns>
-        public static List<Category> GetBreadCrumb(int categoryId)
+        public List<Category> GetBreadCrumb(int categoryId)
         {
             var breadCrumb = new List<Category>();
 
@@ -264,7 +255,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
         /// Inserts category
         /// </summary>
         /// <param name="category">Category</param>
-        public static void InsertCategory(Category category)
+        public void InsertCategory(Category category)
         {
             if (category == null)
                 throw new ArgumentNullException("category");
@@ -288,7 +279,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
             context.Categories.AddObject(category);
             context.SaveChanges();
 
-            if (CategoryManager.CategoriesCacheEnabled || CategoryManager.MappingsCacheEnabled)
+            if (this.CategoriesCacheEnabled || this.MappingsCacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(CATEGORIES_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(PRODUCTCATEGORIES_PATTERN_KEY);
@@ -299,7 +290,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
         /// Updates the category
         /// </summary>
         /// <param name="category">Category</param>
-        public static void UpdateCategory(Category category)
+        public void UpdateCategory(Category category)
         {
             if (category == null)
                 throw new ArgumentNullException("category");
@@ -336,7 +327,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
 
             context.SaveChanges();
 
-            if (CategoryManager.CategoriesCacheEnabled || CategoryManager.MappingsCacheEnabled)
+            if (this.CategoriesCacheEnabled || this.MappingsCacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(CATEGORIES_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(PRODUCTCATEGORIES_PATTERN_KEY);
@@ -348,7 +339,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
         /// </summary>
         /// <param name="categoryLocalizedId">Localized category identifier</param>
         /// <returns>Category content</returns>
-        public static CategoryLocalized GetCategoryLocalizedById(int categoryLocalizedId)
+        public CategoryLocalized GetCategoryLocalizedById(int categoryLocalizedId)
         {
             if (categoryLocalizedId == 0)
                 return null;
@@ -366,7 +357,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
         /// </summary>
         /// <param name="categoryId">Category identifier</param>
         /// <returns>Category content</returns>
-        public static List<CategoryLocalized> GetCategoryLocalizedByCategoryId(int categoryId)
+        public List<CategoryLocalized> GetCategoryLocalizedByCategoryId(int categoryId)
         {
             if (categoryId == 0)
                 return new List<CategoryLocalized>();
@@ -385,7 +376,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
         /// <param name="categoryId">Category identifier</param>
         /// <param name="languageId">Language identifier</param>
         /// <returns>Category content</returns>
-        public static CategoryLocalized GetCategoryLocalizedByCategoryIdAndLanguageId(int categoryId, int languageId)
+        public CategoryLocalized GetCategoryLocalizedByCategoryIdAndLanguageId(int categoryId, int languageId)
         {
             if (categoryId == 0 || languageId == 0)
                 return null;
@@ -404,7 +395,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
         /// Inserts a localized category
         /// </summary>
         /// <param name="categoryLocalized">Localized category</param>
-        public static void InsertCategoryLocalized(CategoryLocalized categoryLocalized)
+        public void InsertCategoryLocalized(CategoryLocalized categoryLocalized)
         {
             if (categoryLocalized == null)
                 throw new ArgumentNullException("categoryLocalized");
@@ -426,7 +417,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
             context.CategoryLocalized.AddObject(categoryLocalized);
             context.SaveChanges();
 
-            if (CategoryManager.CategoriesCacheEnabled)
+            if (this.CategoriesCacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(CATEGORIES_PATTERN_KEY);
             }
@@ -436,7 +427,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
         /// Update a localized category
         /// </summary>
         /// <param name="categoryLocalized">Localized category</param>
-        public static void UpdateCategoryLocalized(CategoryLocalized categoryLocalized)
+        public void UpdateCategoryLocalized(CategoryLocalized categoryLocalized)
         {
             if (categoryLocalized == null)
                 throw new ArgumentNullException("categoryLocalized");
@@ -475,7 +466,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
                 context.SaveChanges();
             }
 
-            if (CategoryManager.CategoriesCacheEnabled)
+            if (this.CategoriesCacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(CATEGORIES_PATTERN_KEY);
             }
@@ -485,7 +476,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
         /// Deletes a product category mapping
         /// </summary>
         /// <param name="productCategoryId">Product category identifier</param>
-        public static void DeleteProductCategory(int productCategoryId)
+        public void DeleteProductCategory(int productCategoryId)
         {
             if (productCategoryId == 0)
                 return;
@@ -500,7 +491,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
             context.DeleteObject(productCategory);
             context.SaveChanges();
 
-            if (CategoryManager.CategoriesCacheEnabled || CategoryManager.MappingsCacheEnabled)
+            if (this.CategoriesCacheEnabled || this.MappingsCacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(CATEGORIES_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(PRODUCTCATEGORIES_PATTERN_KEY);
@@ -512,7 +503,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
         /// </summary>
         /// <param name="categoryId">Category identifier</param>
         /// <returns>Product a category mapping collection</returns>
-        public static List<ProductCategory> GetProductCategoriesByCategoryId(int categoryId)
+        public List<ProductCategory> GetProductCategoriesByCategoryId(int categoryId)
         {
             if (categoryId == 0)
                 return new List<ProductCategory>();
@@ -520,7 +511,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
             bool showHidden = NopContext.Current.IsAdmin;
             string key = string.Format(PRODUCTCATEGORIES_ALLBYCATEGORYID_KEY, showHidden, categoryId);
             object obj2 = NopRequestCache.Get(key);
-            if (CategoryManager.MappingsCacheEnabled && (obj2 != null))
+            if (this.MappingsCacheEnabled && (obj2 != null))
             {
                 return (List<ProductCategory>)obj2;
             }
@@ -535,7 +526,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
                         select pc;
             var productCategories = query.ToList();
 
-            if (CategoryManager.MappingsCacheEnabled)
+            if (this.MappingsCacheEnabled)
             {
                 NopRequestCache.Add(key, productCategories);
             }
@@ -547,7 +538,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
         /// </summary>
         /// <param name="productId">Product identifier</param>
         /// <returns>Product category mapping collection</returns>
-        public static List<ProductCategory> GetProductCategoriesByProductId(int productId)
+        public List<ProductCategory> GetProductCategoriesByProductId(int productId)
         {
             if (productId == 0)
                 return new List<ProductCategory>();
@@ -555,7 +546,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
             bool showHidden = NopContext.Current.IsAdmin;
             string key = string.Format(PRODUCTCATEGORIES_ALLBYPRODUCTID_KEY, showHidden, productId);
             object obj2 = NopRequestCache.Get(key);
-            if (CategoryManager.MappingsCacheEnabled && (obj2 != null))
+            if (this.MappingsCacheEnabled && (obj2 != null))
             {
                 return (List<ProductCategory>)obj2;
             }
@@ -570,7 +561,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
                         select pc;
             var productCategories = query.ToList();
 
-            if (CategoryManager.MappingsCacheEnabled)
+            if (this.MappingsCacheEnabled)
             {
                 NopRequestCache.Add(key, productCategories);
             }
@@ -582,14 +573,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
         /// </summary>
         /// <param name="productCategoryId">Product category mapping identifier</param>
         /// <returns>Product category mapping</returns>
-        public static ProductCategory GetProductCategoryById(int productCategoryId)
+        public ProductCategory GetProductCategoryById(int productCategoryId)
         {
             if (productCategoryId == 0)
                 return null;
 
             string key = string.Format(PRODUCTCATEGORIES_BY_ID_KEY, productCategoryId);
             object obj2 = NopRequestCache.Get(key);
-            if (CategoryManager.MappingsCacheEnabled && (obj2 != null))
+            if (this.MappingsCacheEnabled && (obj2 != null))
             {
                 return (ProductCategory)obj2;
             }
@@ -600,7 +591,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
                         select pc;
             var productCategory = query.SingleOrDefault();
 
-            if (CategoryManager.MappingsCacheEnabled)
+            if (this.MappingsCacheEnabled)
             {
                 NopRequestCache.Add(key, productCategory);
             }
@@ -611,7 +602,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
         /// Inserts a product category mapping
         /// </summary>
         /// <param name="productCategory">>Product category mapping</param>
-        public static void InsertProductCategory(ProductCategory productCategory)
+        public void InsertProductCategory(ProductCategory productCategory)
         {
             if (productCategory == null)
                 throw new ArgumentNullException("productCategory");
@@ -621,7 +612,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
             context.ProductCategories.AddObject(productCategory);
             context.SaveChanges();
 
-            if (CategoryManager.CategoriesCacheEnabled || CategoryManager.MappingsCacheEnabled)
+            if (this.CategoriesCacheEnabled || this.MappingsCacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(CATEGORIES_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(PRODUCTCATEGORIES_PATTERN_KEY);
@@ -632,7 +623,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
         /// Updates the product category mapping 
         /// </summary>
         /// <param name="productCategory">>Product category mapping</param>
-        public static void UpdateProductCategory(ProductCategory productCategory)
+        public void UpdateProductCategory(ProductCategory productCategory)
         {
             if (productCategory == null)
                 throw new ArgumentNullException("productCategory");
@@ -643,7 +634,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
 
             context.SaveChanges();
 
-            if (CategoryManager.CategoriesCacheEnabled || CategoryManager.MappingsCacheEnabled)
+            if (this.CategoriesCacheEnabled || this.MappingsCacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(CATEGORIES_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(PRODUCTCATEGORIES_PATTERN_KEY);
@@ -652,27 +643,29 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
         #endregion
         
         #region Properties
+
         /// <summary>
         /// Gets a value indicating whether categories cache is enabled
         /// </summary>
-        public static bool CategoriesCacheEnabled
+        public bool CategoriesCacheEnabled
         {
             get
             {
-                return SettingManager.GetSettingValueBoolean("Cache.CategoryManager.CategoriesCacheEnabled");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.CategoryManager.CategoriesCacheEnabled");
             }
         }
 
         /// <summary>
         /// Gets a value indicating whether mappings cache is enabled
         /// </summary>
-        public static bool MappingsCacheEnabled
+        public bool MappingsCacheEnabled
         {
             get
             {
-                return SettingManager.GetSettingValueBoolean("Cache.CategoryManager.MappingsCacheEnabled");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.CategoryManager.MappingsCacheEnabled");
             }
         }
+
         #endregion
     }
 }

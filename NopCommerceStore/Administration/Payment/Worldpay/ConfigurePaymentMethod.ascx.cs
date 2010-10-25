@@ -26,6 +26,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Payment.Methods.Worldpay;
 using NopSolutions.NopCommerce.Web.Templates.Payment;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Payment.Worldpay
 {
@@ -39,22 +40,22 @@ namespace NopSolutions.NopCommerce.Web.Administration.Payment.Worldpay
 
         private void BindData()
         {
-            txtWorldPayCSSName.Text = SettingManager.GetSettingValue(WorldpayConstants.SETTING_WorldPayCSSName);
-            cbUseSandbox.Checked = SettingManager.GetSettingValueBoolean(WorldpayConstants.SETTING_USE_SANDBOX);
-            txtWorldpayInstanceId.Text = SettingManager.GetSettingValue(WorldpayConstants.SETTING_INSTANCEID);
-            txtCallbackPassword.Text = SettingManager.GetSettingValue(WorldpayConstants.SETTING_CALLBACK_PASSWORD);
-            txtCreditCard.Text = SettingManager.GetSettingValue(WorldpayConstants.SETTING_CREDITCARD_CODE_PROPERTY);
-            txtAdditionalFee.Value = SettingManager.GetSettingValueDecimalNative("PaymentMethod.Worldpay.AdditionalFee");
+            txtWorldPayCSSName.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue(WorldpayConstants.SETTING_WorldPayCSSName);
+            cbUseSandbox.Checked = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean(WorldpayConstants.SETTING_USE_SANDBOX);
+            txtWorldpayInstanceId.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue(WorldpayConstants.SETTING_INSTANCEID);
+            txtCallbackPassword.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue(WorldpayConstants.SETTING_CALLBACK_PASSWORD);
+            txtCreditCard.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue(WorldpayConstants.SETTING_CREDITCARD_CODE_PROPERTY);
+            txtAdditionalFee.Value = IoCFactory.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.Worldpay.AdditionalFee");
         }
 
         public void Save()
         {
-            SettingManager.SetParam(WorldpayConstants.SETTING_WorldPayCSSName, txtWorldPayCSSName.Text);
-            SettingManager.SetParam(WorldpayConstants.SETTING_USE_SANDBOX, cbUseSandbox.Checked.ToString());
-            SettingManager.SetParam(WorldpayConstants.SETTING_INSTANCEID, txtWorldpayInstanceId.Text);
-            SettingManager.SetParam(WorldpayConstants.SETTING_CALLBACK_PASSWORD, txtCallbackPassword.Text);
-            SettingManager.SetParam(WorldpayConstants.SETTING_CREDITCARD_CODE_PROPERTY, txtCreditCard.Text);
-            SettingManager.SetParamNative("PaymentMethod.Worldpay.AdditionalFee", txtAdditionalFee.Value);
+            IoCFactory.Resolve<ISettingManager>().SetParam(WorldpayConstants.SETTING_WorldPayCSSName, txtWorldPayCSSName.Text);
+            IoCFactory.Resolve<ISettingManager>().SetParam(WorldpayConstants.SETTING_USE_SANDBOX, cbUseSandbox.Checked.ToString());
+            IoCFactory.Resolve<ISettingManager>().SetParam(WorldpayConstants.SETTING_INSTANCEID, txtWorldpayInstanceId.Text);
+            IoCFactory.Resolve<ISettingManager>().SetParam(WorldpayConstants.SETTING_CALLBACK_PASSWORD, txtCallbackPassword.Text);
+            IoCFactory.Resolve<ISettingManager>().SetParam(WorldpayConstants.SETTING_CREDITCARD_CODE_PROPERTY, txtCreditCard.Text);
+            IoCFactory.Resolve<ISettingManager>().SetParamNative("PaymentMethod.Worldpay.AdditionalFee", txtAdditionalFee.Value);
         }
     }
 }

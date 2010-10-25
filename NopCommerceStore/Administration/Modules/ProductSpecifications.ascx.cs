@@ -20,6 +20,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.BusinessLogic.Products.Specs;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Common;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -27,13 +28,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            Product product = ProductManager.GetProductById(this.ProductId);
+            Product product = IoCFactory.Resolve<IProductManager>().GetProductById(this.ProductId);
             if (product != null)
             {
                 pnlData.Visible = true;
                 pnlMessage.Visible = false;
 
-                var productSpecificationAttributes = SpecificationAttributeManager.GetProductSpecificationAttributesByProductId(product.ProductId);
+                var productSpecificationAttributes = IoCFactory.Resolve<ISpecificationAttributeManager>().GetProductSpecificationAttributesByProductId(product.ProductId);
                 if (productSpecificationAttributes.Count > 0)
                 {
                     gvProductSpecificationAttributes.Visible = true;
@@ -53,7 +54,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         private void FillDropDowns()
         {
             this.ddlNewProductSpecificationAttribute.Items.Clear();
-            var productSpecificationAttributes = SpecificationAttributeManager.GetSpecificationAttributes();
+            var productSpecificationAttributes = IoCFactory.Resolve<ISpecificationAttributeManager>().GetSpecificationAttributes();
             foreach (SpecificationAttribute sa in productSpecificationAttributes)
             {
                 ListItem item2 = new ListItem(sa.Name, sa.SpecificationAttributeId.ToString());
@@ -64,7 +65,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             if (!String.IsNullOrEmpty(ddlNewProductSpecificationAttribute.SelectedValue))
             {
                 int saId = Convert.ToInt32(ddlNewProductSpecificationAttribute.SelectedValue.ToString());
-                var saoCol = SpecificationAttributeManager.GetSpecificationAttributeOptionsBySpecificationAttribute(saId);
+                var saoCol = IoCFactory.Resolve<ISpecificationAttributeManager>().GetSpecificationAttributeOptionsBySpecificationAttribute(saId);
                 foreach (SpecificationAttributeOption sao in saoCol)
                 {
                     ListItem item2 = new ListItem(sao.Name, sao.SpecificationAttributeOptionId.ToString());
@@ -77,7 +78,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             ddlNewProductSpecificationAttributeOption.Items.Clear();
             int saId = Convert.ToInt32(ddlNewProductSpecificationAttribute.SelectedValue.ToString());
-            var saoCol = SpecificationAttributeManager.GetSpecificationAttributeOptionsBySpecificationAttribute(saId);
+            var saoCol = IoCFactory.Resolve<ISpecificationAttributeManager>().GetSpecificationAttributeOptionsBySpecificationAttribute(saId);
             foreach (SpecificationAttributeOption sao in saoCol)
             {
                 ListItem item2 = new ListItem(sao.Name, sao.SpecificationAttributeOptionId.ToString());
@@ -102,7 +103,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                Product product = ProductManager.GetProductById(this.ProductId);
+                Product product = IoCFactory.Resolve<IProductManager>().GetProductById(this.ProductId);
                 if (product != null)
                 {
                     if (String.IsNullOrEmpty(ddlNewProductSpecificationAttribute.SelectedValue))
@@ -124,7 +125,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         ShowOnProductPage = showOnProductPage,
                         DisplayOrder = productSpecificationAttributeDisplayOrder
                     };
-                    SpecificationAttributeManager.InsertProductSpecificationAttribute(productSpecificationAttribute);
+                    IoCFactory.Resolve<ISpecificationAttributeManager>().InsertProductSpecificationAttribute(productSpecificationAttribute);
 
                     BindData();
                 }
@@ -153,7 +154,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 int saoId = int.Parse(ddlSpecificationAttributeOption.SelectedItem.Value);
                 int displayOrder = txtProductSpecificationAttributeDisplayOrder.Value;
 
-                ProductSpecificationAttribute productSpecificationAttribute = SpecificationAttributeManager.GetProductSpecificationAttributeById(productSpecificationAttributeId);
+                ProductSpecificationAttribute productSpecificationAttribute = IoCFactory.Resolve<ISpecificationAttributeManager>().GetProductSpecificationAttributeById(productSpecificationAttributeId);
 
                 if (productSpecificationAttribute != null)
                 {
@@ -161,7 +162,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     productSpecificationAttribute.AllowFiltering = chkAllowFiltering.Checked;
                     productSpecificationAttribute.ShowOnProductPage = chkShowOnProductPage.Checked;
                     productSpecificationAttribute.DisplayOrder = displayOrder;
-                    SpecificationAttributeManager.UpdateProductSpecificationAttribute(productSpecificationAttribute);
+                    IoCFactory.Resolve<ISpecificationAttributeManager>().UpdateProductSpecificationAttribute(productSpecificationAttribute);
                 }
                 BindData();
             }
@@ -177,14 +178,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 if (btnUpdate != null)
                     btnUpdate.CommandArgument = e.Row.RowIndex.ToString();
 
-                SpecificationAttributeOption sao = SpecificationAttributeManager.GetSpecificationAttributeOptionById(productSpecificationAttribute.SpecificationAttributeOptionId);
-                SpecificationAttribute sa = SpecificationAttributeManager.GetSpecificationAttributeById(sao.SpecificationAttributeId);                
+                SpecificationAttributeOption sao = IoCFactory.Resolve<ISpecificationAttributeManager>().GetSpecificationAttributeOptionById(productSpecificationAttribute.SpecificationAttributeOptionId);
+                SpecificationAttribute sa = IoCFactory.Resolve<ISpecificationAttributeManager>().GetSpecificationAttributeById(sao.SpecificationAttributeId);                
                 Literal lblSpecificationAttributeName = e.Row.FindControl("lblSpecificationAttributeName") as Literal;
                 lblSpecificationAttributeName.Text = sa.Name;
 
                 DropDownList ddlSpecificationAttributeOption = e.Row.FindControl("ddlSpecificationAttributeOption") as DropDownList;
                 ddlSpecificationAttributeOption.Items.Clear();
-                var saoCol = SpecificationAttributeManager.GetSpecificationAttributeOptionsBySpecificationAttribute(sao.SpecificationAttributeId);
+                var saoCol = IoCFactory.Resolve<ISpecificationAttributeManager>().GetSpecificationAttributeOptionsBySpecificationAttribute(sao.SpecificationAttributeId);
                 foreach (SpecificationAttributeOption sao1 in saoCol)
                 {
                     ListItem item = new ListItem(sao1.Name, sao1.SpecificationAttributeOptionId.ToString());
@@ -204,10 +205,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         protected void gvProductSpecificationAttributes_RowDeleting(object sender, GridViewDeleteEventArgs e)
         {
             int productSpecificationAttributeId = (int)gvProductSpecificationAttributes.DataKeys[e.RowIndex]["ProductSpecificationAttributeId"];
-            ProductSpecificationAttribute productSpecificationAttribute = SpecificationAttributeManager.GetProductSpecificationAttributeById(productSpecificationAttributeId);
+            ProductSpecificationAttribute productSpecificationAttribute = IoCFactory.Resolve<ISpecificationAttributeManager>().GetProductSpecificationAttributeById(productSpecificationAttributeId);
             if (productSpecificationAttribute != null)
             {
-                SpecificationAttributeManager.DeleteProductSpecificationAttribute(productSpecificationAttribute.ProductSpecificationAttributeId);
+                IoCFactory.Resolve<ISpecificationAttributeManager>().DeleteProductSpecificationAttribute(productSpecificationAttribute.ProductSpecificationAttributeId);
                 BindData();
             }
         }

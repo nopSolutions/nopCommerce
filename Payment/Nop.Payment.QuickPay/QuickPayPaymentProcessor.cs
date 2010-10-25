@@ -27,6 +27,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Security;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
 using System.Xml;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Payment.Methods.QuickPay
 {
@@ -56,12 +57,12 @@ namespace NopSolutions.NopCommerce.Payment.Methods.QuickPay
         //This only works when a payment have been authorized and not captured.
         private void DoCancel(Order order, ref CancelPaymentResult cancelPaymentResult, bool alreadyTriedRefund)
         {
-            string merchant = SettingManager.GetSettingValue(QuickPayConstants.SETTING_MERCHANTID);
+            string merchant = IoCFactory.Resolve<ISettingManager>().GetSettingValue(QuickPayConstants.SETTING_MERCHANTID);
             string protocol = "3";
             string capturePostUrl = "https://secure.quickpay.dk/api";
             string msgtype = "cancel";
             string transaction = order.AuthorizationTransactionId;
-            string md5secret = SettingManager.GetSettingValue(QuickPayConstants.SETTING_MD5SECRET);
+            string md5secret = IoCFactory.Resolve<ISettingManager>().GetSettingValue(QuickPayConstants.SETTING_MD5SECRET);
             string stringToMd5 = string.Concat(protocol, msgtype, merchant, transaction, md5secret);
 
 
@@ -113,13 +114,13 @@ namespace NopSolutions.NopCommerce.Payment.Methods.QuickPay
         //This works only on refund to customer (refund what has already been captured...)
         private void DoRefund(Order order, ref CancelPaymentResult cancelPaymentResult, bool alreadyTriedCancel)
         {
-            string merchant = SettingManager.GetSettingValue(QuickPayConstants.SETTING_MERCHANTID);
+            string merchant = IoCFactory.Resolve<ISettingManager>().GetSettingValue(QuickPayConstants.SETTING_MERCHANTID);
             string protocol = "3";
             string capturePostUrl = "https://secure.quickpay.dk/api";
             string msgtype = "refund";
             string amount = (cancelPaymentResult.Amount * 100).ToString("0", CultureInfo.InvariantCulture); //NOTE: Primary store should be changed to DKK, if you do not have internatinal agreement with pbs and quickpay. Otherwise you need to do currency conversion here.
             string transaction = order.AuthorizationTransactionId;
-            string md5secret = SettingManager.GetSettingValue(QuickPayConstants.SETTING_MD5SECRET);
+            string md5secret = IoCFactory.Resolve<ISettingManager>().GetSettingValue(QuickPayConstants.SETTING_MD5SECRET);
             string stringToMd5 = string.Concat(protocol, msgtype, merchant, amount, transaction, md5secret);
 
 
@@ -221,19 +222,19 @@ namespace NopSolutions.NopCommerce.Payment.Methods.QuickPay
             string language = cultureInfo.TwoLetterISOLanguageName;
             string amount = (order.OrderTotal * 100).ToString("0", CultureInfo.InvariantCulture); //NOTE: Primary store should be changed to DKK, if you do not have internatinal agreement with pbs and quickpay. Otherwise you need to do currency conversion here.
 
-            string currencyCode = CurrencyManager.PrimaryStoreCurrency.CurrencyCode; //NOTE: Primary store should be changed to DKK, if you do not have internatinal agreement with pbs and quickpay. Otherwise you need to do currency conversion here.
+            string currencyCode = IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency.CurrencyCode; //NOTE: Primary store should be changed to DKK, if you do not have internatinal agreement with pbs and quickpay. Otherwise you need to do currency conversion here.
             string protocol = "3";
             string autocapture = "0";
-            string cardtypelock = SettingManager.GetSettingValue(QuickPayConstants.SETTING_CREDITCARD_CODE_PROPERTY, "dankort");
-            bool useSandBox = SettingManager.GetSettingValueBoolean(QuickPayConstants.SETTING_USE_SANDBOX);
+            string cardtypelock = IoCFactory.Resolve<ISettingManager>().GetSettingValue(QuickPayConstants.SETTING_CREDITCARD_CODE_PROPERTY, "dankort");
+            bool useSandBox = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean(QuickPayConstants.SETTING_USE_SANDBOX);
             string testmode = (useSandBox) ? "1" : "0";
             string continueurl = CommonHelper.GetStoreLocation(false) + "CheckoutCompleted.aspx";
             string cancelurl = CommonHelper.GetStoreLocation(false) + "QuickpayCancel.aspx";
             string callbackurl = CommonHelper.GetStoreLocation(false) + "QuickpayReturn.aspx";
-            string merchant = SettingManager.GetSettingValue(QuickPayConstants.SETTING_MERCHANTID);
+            string merchant = IoCFactory.Resolve<ISettingManager>().GetSettingValue(QuickPayConstants.SETTING_MERCHANTID);
             string ipaddress = NopContext.Current.UserHostAddress;
             string msgtype = "authorize";
-            string md5secret = SettingManager.GetSettingValue(QuickPayConstants.SETTING_MD5SECRET);
+            string md5secret = IoCFactory.Resolve<ISettingManager>().GetSettingValue(QuickPayConstants.SETTING_MD5SECRET);
             string ordernumber = FormatOrderNumber(order.OrderId.ToString());
 
             string stringToMd5 = string.Concat(protocol, msgtype, merchant,
@@ -272,7 +273,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.QuickPay
         /// <returns>Additional handling fee</returns>
         public decimal GetAdditionalHandlingFee()
         {
-            return SettingManager.GetSettingValueDecimalNative("PaymentMethod.QuickPay.AdditionalFee");
+            return IoCFactory.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.QuickPay.AdditionalFee");
         }
 
         /// <summary>
@@ -282,18 +283,18 @@ namespace NopSolutions.NopCommerce.Payment.Methods.QuickPay
         /// <param name="processPaymentResult">Process payment result</param>
         public void Capture(Order order, ref ProcessPaymentResult processPaymentResult)
         {
-            bool useSandBox = SettingManager.GetSettingValueBoolean(QuickPayConstants.SETTING_USE_SANDBOX);
-            string merchant = SettingManager.GetSettingValue(QuickPayConstants.SETTING_MERCHANTID);
+            bool useSandBox = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean(QuickPayConstants.SETTING_USE_SANDBOX);
+            string merchant = IoCFactory.Resolve<ISettingManager>().GetSettingValue(QuickPayConstants.SETTING_MERCHANTID);
             string protocol = "3";
             string testmode = (useSandBox) ? "1" : "0";
             const string autocapture = "0"; //in initial phase while testing system, no autocapture!.
             string capturePostUrl = "https://secure.quickpay.dk/api";
             string msgtype = "capture";
             string ordernumber = FormatOrderNumber(order.OrderId.ToString());
-            string currencyCode = CurrencyManager.PrimaryStoreCurrency.CurrencyCode; //NOTE: Primary store should be changed to DKK, if you do not have internatinal agreement with pbs and quickpay. Otherwise you need to do currency conversion here.
+            string currencyCode = IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency.CurrencyCode; //NOTE: Primary store should be changed to DKK, if you do not have internatinal agreement with pbs and quickpay. Otherwise you need to do currency conversion here.
             string amount = (order.OrderTotal * 100).ToString("0", CultureInfo.InvariantCulture); //NOTE: Primary store should be changed to DKK, if you do not have internatinal agreement with pbs and quickpay. Otherwise you need to do currency conversion here.
             string transaction = order.AuthorizationTransactionId;
-            string md5secret = SettingManager.GetSettingValue(QuickPayConstants.SETTING_MD5SECRET);
+            string md5secret = IoCFactory.Resolve<ISettingManager>().GetSettingValue(QuickPayConstants.SETTING_MD5SECRET);
             string stringToMd5 = string.Concat(protocol, msgtype, merchant, amount, autocapture, transaction, md5secret);
             
             string querystring = string.Empty;
@@ -324,12 +325,12 @@ namespace NopSolutions.NopCommerce.Payment.Methods.QuickPay
                 //caputre successful
                 if (rep_qpstat == "000")
                 {
-                    if (OrderManager.CanMarkOrderAsPaid(order))
+                    if (IoCFactory.Resolve<IOrderManager>().CanMarkOrderAsPaid(order))
                     {
-                        OrderManager.MarkOrderAsPaid(order.OrderId);
+                        IoCFactory.Resolve<IOrderManager>().MarkOrderAsPaid(order.OrderId);
                         processPaymentResult.PaymentStatus = PaymentStatusEnum.Paid;
                     }
-                    //OrderManager.SetCaptureResults(order.OrderId, rep_transaction, rep_qpstatmsg);
+                    //IoCFactory.Resolve<IOrderManager>().SetCaptureResults(order.OrderId, rep_transaction, rep_qpstatmsg);
                 }
                 else
                 {

@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Payment.Methods.SecurePay
 {
@@ -27,11 +28,11 @@ namespace NopSolutions.NopCommerce.Payment.Methods.SecurePay
         {
             get
             {
-                return SettingManager.GetSettingValueBoolean("PaymentMethod.SecurePay.XmlPayment.TestMode", true);
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.SecurePay.XmlPayment.TestMode", true);
             }
             set
             {
-                SettingManager.SetParam("PaymentMethod.SecurePay.XmlPayment.TestMode", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.SecurePay.XmlPayment.TestMode", value.ToString());
             }
         }
 
@@ -39,11 +40,11 @@ namespace NopSolutions.NopCommerce.Payment.Methods.SecurePay
         {
             get
             {
-                return SettingManager.GetSettingValueBoolean("PaymentMethod.SecurePay.XmlPayment.AuthorizeOnly", false);
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.SecurePay.XmlPayment.AuthorizeOnly", false);
             }
             set
             {
-                SettingManager.SetParam("PaymentMethod.SecurePay.XmlPayment.AuthorizeOnly", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.SecurePay.XmlPayment.AuthorizeOnly", value.ToString());
             }
         }
         #endregion

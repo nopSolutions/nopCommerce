@@ -32,6 +32,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.BusinessLogic.ExportImport;
 using NopSolutions.NopCommerce.BusinessLogic.Localization;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -79,7 +80,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         private void BindData()
         {
-            Language language = LanguageManager.GetLanguageById(this.LanguageId);
+            Language language = IoCFactory.Resolve<ILanguageManager>().GetLanguageById(this.LanguageId);
 
             if (language != null)
             {
@@ -112,7 +113,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public Language SaveInfo()
         {
-            Language language = LanguageManager.GetLanguageById(this.LanguageId);
+            Language language = IoCFactory.Resolve<ILanguageManager>().GetLanguageById(this.LanguageId);
 
             string name = txtName.Text;
             string languageCulture = ddlLanguageCulture.SelectedItem.Value;
@@ -127,7 +128,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 language.FlagImageFileName = flagImageFileName;
                 language.Published = published;
                 language.DisplayOrder = displayOrder;
-                LanguageManager.UpdateLanguage(language);
+                IoCFactory.Resolve<ILanguageManager>().UpdateLanguage(language);
             }
             else
             {
@@ -139,7 +140,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     Published = published,
                     DisplayOrder = displayOrder
                 };
-                LanguageManager.InsertLanguage(language);
+                IoCFactory.Resolve<ILanguageManager>().InsertLanguage(language);
 
             }
 
@@ -152,7 +153,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 try
                 {
-                    Language language = LanguageManager.GetLanguageById(this.LanguageId);
+                    Language language = IoCFactory.Resolve<ILanguageManager>().GetLanguageById(this.LanguageId);
 
                     if (language != null)
                     {

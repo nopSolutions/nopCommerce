@@ -32,6 +32,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.BusinessLogic.Localization;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web
 {
@@ -86,10 +87,10 @@ namespace NopSolutions.NopCommerce.Web
 
         protected void ProcessException(Exception exc, bool showError)
         {
-            LogManager.InsertLog(LogTypeEnum.AdministrationArea, exc.Message, exc);
+            IoCFactory.Resolve<ILogManager>().InsertLog(LogTypeEnum.AdministrationArea, exc.Message, exc);
             if (showError)
             {
-                if (SettingManager.GetSettingValueBoolean("Display.AdminArea.ShowFullErrors"))
+                if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Display.AdminArea.ShowFullErrors"))
                 {
                     ShowError(exc.Message, exc.ToString());
                 }
@@ -141,7 +142,7 @@ namespace NopSolutions.NopCommerce.Web
 
         protected virtual List<Language> GetLocalizableLanguagesSupported()
         {
-            return LanguageManager.GetAllLanguages(true);
+            return IoCFactory.Resolve<ILanguageManager>().GetAllLanguages(true);
         }
 
         protected virtual bool HasLocalizableContent

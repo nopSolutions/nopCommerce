@@ -36,6 +36,7 @@ using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.BusinessLogic.Shipping;
 using NopSolutions.NopCommerce.BusinessLogic.Tax;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 
 namespace NopSolutions.NopCommerce.Web.Modules
@@ -50,15 +51,15 @@ namespace NopSolutions.NopCommerce.Web.Modules
             //calculate discounted and taxed rate
             Discount appliedDiscount = null;
             decimal shippingTotalWithoutDiscount = shippingOption.Rate;
-            decimal discountAmount = ShippingManager.GetShippingDiscount(NopContext.Current.User, 
+            decimal discountAmount = IoCFactory.Resolve<IShippingManager>().GetShippingDiscount(NopContext.Current.User, 
                 shippingTotalWithoutDiscount, out appliedDiscount);
             decimal shippingTotalWithDiscount = shippingTotalWithoutDiscount - discountAmount;
             if (shippingTotalWithDiscount < decimal.Zero)
                 shippingTotalWithDiscount = decimal.Zero;
             shippingTotalWithDiscount = Math.Round(shippingTotalWithDiscount, 2);
 
-            decimal rateBase = TaxManager.GetShippingPrice(shippingTotalWithDiscount, NopContext.Current.User);
-            decimal rate = CurrencyManager.ConvertCurrency(rateBase, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+            decimal rateBase = IoCFactory.Resolve<ITaxManager>().GetShippingPrice(shippingTotalWithDiscount, NopContext.Current.User);
+            decimal rate = IoCFactory.Resolve<ICurrencyManager>().ConvertCurrency(rateBase, IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
             string rateStr = PriceHelper.FormatShippingPrice(rate, true);
             return string.Format("({0})", rateStr);
         }
@@ -80,7 +81,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                         string name = hfName.Value;
 
                         string error = string.Empty;
-                        var shippingOptions = ShippingManager.GetShippingOptions(Cart, NopContext.Current.User, NopContext.Current.User.ShippingAddress, shippingRateComputationMethodId, ref error);
+                        var shippingOptions = IoCFactory.Resolve<IShippingManager>().GetShippingOptions(Cart, NopContext.Current.User, NopContext.Current.User.ShippingAddress, shippingRateComputationMethodId, ref error);
                         shippingOption = shippingOptions.Find((so) => so.Name == name);
                         break;
                     }
@@ -121,7 +122,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         public void BindData()
         {
-            bool shoppingCartRequiresShipping = ShippingManager.ShoppingCartRequiresShipping(Cart);
+            bool shoppingCartRequiresShipping = IoCFactory.Resolve<IShippingManager>().ShoppingCartRequiresShipping(Cart);
             if (!shoppingCartRequiresShipping)
             {
                 NopContext.Current.User.LastShippingOption = null;
@@ -134,10 +135,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
             {
                 string error = string.Empty;
                 Address address = NopContext.Current.User.ShippingAddress;
-                var shippingOptions = ShippingManager.GetShippingOptions(Cart, NopContext.Current.User, address, ref error);
+                var shippingOptions = IoCFactory.Resolve<IShippingManager>().GetShippingOptions(Cart, NopContext.Current.User, address, ref error);
                 if (!String.IsNullOrEmpty(error))
                 {
-                    LogManager.InsertLog(LogTypeEnum.ShippingError, error, error);
+                    IoCFactory.Resolve<ILogManager>().InsertLog(LogTypeEnum.ShippingError, error, error);
                     phSelectShippingMethod.Visible = false;
                     lShippingMethodsError.Text = Server.HtmlEncode(error);
                 }
@@ -197,7 +198,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if ((NopContext.Current.User == null) || (NopContext.Current.User.IsGuest && !CustomerManager.AnonymousCheckoutAllowed))
+            if ((NopContext.Current.User == null) || (NopContext.Current.User.IsGuest && !IoCFactory.Resolve<ICustomerManager>().AnonymousCheckoutAllowed))
             {
                 string loginURL = SEOHelper.GetLoginPageUrl(true);
                 Response.Redirect(loginURL);
@@ -225,7 +226,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             {
                 if (cart == null)
                 {
-                    cart = ShoppingCartManager.GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
+                    cart = IoCFactory.Resolve<IShoppingCartManager>().GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
                 }
                 return cart;
             }

@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Localization
@@ -64,7 +65,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Localization
         {
             get
             {
-                return LanguageManager.GetLanguageById(this.LanguageId);
+                return IoCFactory.Resolve<ILanguageManager>().GetLanguageById(this.LanguageId);
             }
         }
         #endregion

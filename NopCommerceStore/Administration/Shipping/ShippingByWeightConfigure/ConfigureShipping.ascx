@@ -120,7 +120,7 @@
             </tr>
             <tr>
                 <td class="adminTitle">
-                    Order weight from [<%=MeasureManager.BaseWeightIn.Name%>]:
+                    Order weight from [<%=IoCFactory.Resolve<IMeasureManager>().BaseWeightIn.Name%>]:
                 </td>
                 <td class="adminData">
                     <nopCommerce:DecimalTextBox runat="server" ID="txtFrom" Value="0" RequiredErrorMessage="From is required"
@@ -131,7 +131,7 @@
             </tr>
             <tr>
                 <td class="adminTitle">
-                    Order weight to [<%=MeasureManager.BaseWeightIn.Name%>]:
+                    Order weight to [<%=IoCFactory.Resolve<IMeasureManager>().BaseWeightIn.Name%>]:
                 </td>
                 <td class="adminData">
                     <nopCommerce:DecimalTextBox runat="server" ID="txtTo" Value="0" RequiredErrorMessage="To is required"
@@ -161,11 +161,11 @@
             </tr>
             <tr>
                 <td class="adminTitle">
-                    Charge amount [<%=CurrencyManager.PrimaryStoreCurrency.CurrencyCode%>]
-                    <%if (ShippingByWeightManager.CalculatePerWeightUnit)
+                    Charge amount [<%=IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency.CurrencyCode%>]
+                    <%if (IoCFactory.Resolve<IShippingByWeightManager>().CalculatePerWeightUnit)
                       { %>
                     per
-                    <%=MeasureManager.BaseWeightIn.Name%><%} %>:
+                    <%=IoCFactory.Resolve<IMeasureManager>().BaseWeightIn.Name%><%} %>:
                 </td>
                 <td class="adminData">
                     <nopCommerce:DecimalTextBox runat="server" ID="txtShippingChargeAmount" Value="0"

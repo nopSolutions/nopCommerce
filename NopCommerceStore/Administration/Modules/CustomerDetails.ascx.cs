@@ -23,14 +23,15 @@ using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
+using NopSolutions.NopCommerce.BusinessLogic.Audit;
+using NopSolutions.NopCommerce.BusinessLogic.Content.Forums;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.BusinessLogic.Promo.Affiliates;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.Audit;
-using NopSolutions.NopCommerce.BusinessLogic.Content.Forums;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -40,7 +41,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             if (!Page.IsPostBack)
             {
-                Customer customer = CustomerManager.GetCustomerById(this.CustomerId);
+                Customer customer = IoCFactory.Resolve<ICustomerManager>().GetCustomerById(this.CustomerId);
                 if (customer != null)
                 {
                     lblTitle.Text = Server.HtmlEncode(customer.Email);
@@ -48,8 +49,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                 this.SelectTab(this.CustomerTabs, this.TabId);
 
-                pnlCustomerAvatar.Visible = CustomerManager.AllowCustomersToUploadAvatars;
-                pnlCustomerForumSubscriptions.Visible = ForumManager.AllowCustomersToManageSubscriptions;
+                pnlCustomerAvatar.Visible = IoCFactory.Resolve<ICustomerManager>().AllowCustomersToUploadAvatars;
+                pnlCustomerForumSubscriptions.Visible = IoCFactory.Resolve<IForumManager>().AllowCustomersToManageSubscriptions;
             }
         }
 
@@ -59,7 +60,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 try
                 {
-                    Customer customer = CustomerManager.GetCustomerById(this.CustomerId);
+                    Customer customer = IoCFactory.Resolve<ICustomerManager>().GetCustomerById(this.CustomerId);
 
                     if (customer != null)
                     {
@@ -73,7 +74,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         ctrlCustomerRewardPoints.SaveInfo();
                         ctrlCustomerForumSubscriptions.SaveInfo();
 
-                        CustomerActivityManager.InsertActivity(
+                        IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
                             "EditCustomer",
                             GetLocaleResourceString("ActivityLog.EditCustomer"),
                             customer.CustomerId);
@@ -92,9 +93,9 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                CustomerManager.MarkCustomerAsDeleted(this.CustomerId);
+                IoCFactory.Resolve<ICustomerManager>().MarkCustomerAsDeleted(this.CustomerId);
 
-                CustomerActivityManager.InsertActivity(
+                IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
                     "DeleteCustomer",
                     GetLocaleResourceString("ActivityLog.DeleteCustomer"),
                     this.CustomerId);

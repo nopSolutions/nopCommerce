@@ -15,6 +15,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
@@ -74,7 +75,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         {
             get
             {
-                return ForumManager.GetAllForumsByGroupId(this.ForumGroupId);
+                return IoCFactory.Resolve<IForumManager>().GetAllForumsByGroupId(this.ForumGroupId);
             }
         }
 

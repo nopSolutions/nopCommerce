@@ -33,6 +33,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.BusinessLogic.Promo.Affiliates;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -40,7 +41,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         protected void btnPlaceOrder_Click(object sender, EventArgs e)
         {
-            var customer = CustomerManager.GetCustomerById(this.CustomerId);
+            var customer = IoCFactory.Resolve<ICustomerManager>().GetCustomerById(this.CustomerId);
             if (customer != null)
             {
                 if (NopContext.Current.User != null)

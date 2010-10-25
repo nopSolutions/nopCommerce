@@ -24,13 +24,14 @@ using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Data;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Payment
 {
     /// <summary>
     /// Payment method manager
     /// </summary>
-    public partial class PaymentMethodManager
+    public partial class PaymentMethodManager : IPaymentMethodManager
     {
         #region Constants
         private const string PAYMENTMETHODS_BY_ID_KEY = "Nop.paymentmethod.id-{0}";
@@ -42,7 +43,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
         /// Deletes a payment method
         /// </summary>
         /// <param name="paymentMethodId">Payment method identifier</param>
-        public static void DeletePaymentMethod(int paymentMethodId)
+        public void DeletePaymentMethod(int paymentMethodId)
         {
             var paymentMethod = GetPaymentMethodById(paymentMethodId);
             if (paymentMethod == null)
@@ -54,7 +55,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
             context.DeleteObject(paymentMethod);
             context.SaveChanges();
 
-            if (PaymentMethodManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(PAYMENTMETHODS_PATTERN_KEY);
             }
@@ -65,14 +66,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
         /// </summary>
         /// <param name="paymentMethodId">Payment method identifier</param>
         /// <returns>Payment method</returns>
-        public static PaymentMethod GetPaymentMethodById(int paymentMethodId)
+        public PaymentMethod GetPaymentMethodById(int paymentMethodId)
         {
             if (paymentMethodId == 0)
                 return null;
 
             string key = string.Format(PAYMENTMETHODS_BY_ID_KEY, paymentMethodId);
             object obj2 = NopRequestCache.Get(key);
-            if (PaymentMethodManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (PaymentMethod)obj2;
             }
@@ -83,7 +84,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
                         select pm;
             var paymentMethod = query.SingleOrDefault();
 
-            if (PaymentMethodManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, paymentMethod);
             }
@@ -95,7 +96,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
         /// </summary>
         /// <param name="systemKeyword">Payment method system keyword</param>
         /// <returns>Payment method</returns>
-        public static PaymentMethod GetPaymentMethodBySystemKeyword(string systemKeyword)
+        public PaymentMethod GetPaymentMethodBySystemKeyword(string systemKeyword)
         {
             var context = ObjectContextHelper.CurrentObjectContext;
             var query = from pm in context.PaymentMethods
@@ -110,7 +111,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
         /// Gets all payment methods
         /// </summary>
         /// <returns>Payment method collection</returns>
-        public static List<PaymentMethod> GetAllPaymentMethods()
+        public List<PaymentMethod> GetAllPaymentMethods()
         {
             return GetAllPaymentMethods(null);
         }
@@ -120,7 +121,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
         /// </summary>
         /// <param name="filterByCountryId">The country indentifier</param>
         /// <returns>Payment method collection</returns>
-        public static List<PaymentMethod> GetAllPaymentMethods(int? filterByCountryId)
+        public List<PaymentMethod> GetAllPaymentMethods(int? filterByCountryId)
         {
             bool showHidden = NopContext.Current.IsAdmin;
 
@@ -133,7 +134,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
         /// <param name="filterByCountryId">The country indentifier</param>
         /// <param name="showHidden">A value indicating whether the not active payment methods should be load</param>
         /// <returns>Payment method collection</returns>
-        public static List<PaymentMethod> GetAllPaymentMethods(int? filterByCountryId, bool showHidden)
+        public List<PaymentMethod> GetAllPaymentMethods(int? filterByCountryId, bool showHidden)
         {
             var context = ObjectContextHelper.CurrentObjectContext;
             var paymentMethods = context.Sp_PaymentMethodLoadAll(showHidden, filterByCountryId);
@@ -144,7 +145,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
         /// Inserts a payment method
         /// </summary>
         /// <param name="paymentMethod">Payment method</param>
-        public static void InsertPaymentMethod(PaymentMethod paymentMethod)
+        public void InsertPaymentMethod(PaymentMethod paymentMethod)
         {
             if (paymentMethod == null)
                 throw new ArgumentNullException("paymentMethod");
@@ -169,7 +170,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
             context.PaymentMethods.AddObject(paymentMethod);
             context.SaveChanges();
 
-            if (PaymentMethodManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(PAYMENTMETHODS_PATTERN_KEY);
             }
@@ -179,7 +180,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
         /// Updates the payment method
         /// </summary>
         /// <param name="paymentMethod">Payment method</param>
-        public static void UpdatePaymentMethod(PaymentMethod paymentMethod)
+        public void UpdatePaymentMethod(PaymentMethod paymentMethod)
         {
             if (paymentMethod == null)
                 throw new ArgumentNullException("paymentMethod");
@@ -205,7 +206,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
 
             context.SaveChanges();
 
-            if (PaymentMethodManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(PAYMENTMETHODS_PATTERN_KEY);
             }
@@ -216,13 +217,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
         /// </summary>
         /// <param name="paymentMethodId">The payment method identifier</param>
         /// <param name="countryId">The country identifier</param>
-        public static void CreatePaymentMethodCountryMapping(int paymentMethodId, int countryId)
+        public void CreatePaymentMethodCountryMapping(int paymentMethodId, int countryId)
         {
             var paymentMethod = GetPaymentMethodById(paymentMethodId);
             if (paymentMethod == null)
                 return;
 
-            var country = CountryManager.GetCountryById(countryId);
+            var country = IoCFactory.Resolve<ICountryManager>().GetCountryById(countryId);
             if (country == null)
                 return;
 
@@ -246,7 +247,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
         /// <param name="paymentMethodId">The payment method identifier</param>
         /// <param name="countryId">The country identifier</param>
         /// <returns>True if mapping exist, otherwise false</returns>
-        public static bool DoesPaymentMethodCountryMappingExist(int paymentMethodId, int countryId)
+        public bool DoesPaymentMethodCountryMappingExist(int paymentMethodId, int countryId)
         {
             var context = ObjectContextHelper.CurrentObjectContext;
 
@@ -276,13 +277,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
         /// </summary>
         /// <param name="paymentMethodId">The payment method identifier</param>
         /// <param name="countryId">The country identifier</param>
-        public static void DeletePaymentMethodCountryMapping(int paymentMethodId, int countryId)
+        public void DeletePaymentMethodCountryMapping(int paymentMethodId, int countryId)
         {
             var paymentMethod = GetPaymentMethodById(paymentMethodId);
             if (paymentMethod == null)
                 return;
 
-            var country = CountryManager.GetCountryById(countryId);
+            var country = IoCFactory.Resolve<ICountryManager>().GetCountryById(countryId);
             if (country == null)
                 return;
 
@@ -305,11 +306,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
         /// <summary>
         /// Gets a value indicating whether cache is enabled
         /// </summary>
-        public static bool CacheEnabled
+        public bool CacheEnabled
         {
             get
             {
-                return SettingManager.GetSettingValueBoolean("Cache.PaymentMethodManager.CacheEnabled");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.PaymentMethodManager.CacheEnabled");
             }
         }
         #endregion

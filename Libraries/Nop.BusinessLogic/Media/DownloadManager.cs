@@ -27,7 +27,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
     /// <summary>
     /// Download manager
     /// </summary>
-    public partial class DownloadManager
+    public partial class DownloadManager : IDownloadManager
     {
         #region Methods
         /// <summary>
@@ -35,7 +35,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
         /// </summary>
         /// <param name="download">Download instance</param>
         /// <returns>Download url</returns>
-        public static string GetAdminDownloadUrl(Download download)
+        public string GetAdminDownloadUrl(Download download)
         {
             if (download == null)
                 throw new ArgumentNullException("download");
@@ -48,7 +48,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
         /// </summary>
         /// <param name="orderProductVariant">Order product variant instance</param>
         /// <returns>Download url</returns>
-        public static string GetDownloadUrl(OrderProductVariant orderProductVariant)
+        public string GetDownloadUrl(OrderProductVariant orderProductVariant)
         {
             if (orderProductVariant == null)
                 throw new ArgumentNullException("orderProductVariant");
@@ -67,7 +67,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
         /// </summary>
         /// <param name="orderProductVariant">Order product variant instance</param>
         /// <returns>Download url</returns>
-        public static string GetLicenseDownloadUrl(OrderProductVariant orderProductVariant)
+        public string GetLicenseDownloadUrl(OrderProductVariant orderProductVariant)
         {
             if (orderProductVariant == null)
                 throw new ArgumentNullException("orderProductVariant");
@@ -86,7 +86,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
         /// </summary>
         /// <param name="productVariant">Product variant instance</param>
         /// <returns>Download url</returns>
-        public static string GetSampleDownloadUrl(ProductVariant productVariant)
+        public string GetSampleDownloadUrl(ProductVariant productVariant)
         {
             if (productVariant == null)
                 throw new ArgumentNullException("productVariant");
@@ -104,7 +104,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
         /// </summary>
         /// <param name="downloadId">Download identifier</param>
         /// <returns>Download</returns>
-        public static Download GetDownloadById(int downloadId)
+        public Download GetDownloadById(int downloadId)
         {
             if (downloadId == 0)
                 return null;
@@ -122,7 +122,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
         /// Deletes a download
         /// </summary>
         /// <param name="downloadId">Download identifier</param>
-        public static void DeleteDownload(int downloadId)
+        public void DeleteDownload(int downloadId)
         {
             var download = GetDownloadById(downloadId);
             if (download == null)
@@ -139,7 +139,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
         /// Inserts a download
         /// </summary>
         /// <param name="download">Download</param>
-        public static void InsertDownload(Download download)
+        public void InsertDownload(Download download)
         {
             if (download == null)
                 throw new ArgumentNullException("download");
@@ -163,7 +163,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
         /// Updates the download
         /// </summary>
         /// <param name="download">Download</param>
-        public static void UpdateDownload(Download download)
+        public void UpdateDownload(Download download)
         {
             if (download == null)
                 throw new ArgumentNullException("download");
@@ -190,7 +190,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
         /// <param name="fs">File stream</param>
         /// <param name="size">Download size</param>
         /// <returns>Download binary array</returns>
-        public static byte[] GetDownloadBits(Stream fs, int size)
+        public byte[] GetDownloadBits(Stream fs, int size)
         {
             byte[] binary = new byte[size];
             fs.Read(binary, 0, size);

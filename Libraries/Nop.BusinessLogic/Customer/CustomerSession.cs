@@ -20,6 +20,7 @@ using System.Text;
 using System.Web;
 using System.Xml;
 using NopSolutions.NopCommerce.BusinessLogic.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 
 namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
@@ -73,7 +74,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             get
             {
                 if (_customer == null)
-                    _customer = CustomerManager.GetCustomerById(this.CustomerId);
+                    _customer = IoCFactory.Resolve<ICustomerManager>().GetCustomerById(this.CustomerId);
                 return _customer;
             }
         }

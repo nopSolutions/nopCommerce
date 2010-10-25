@@ -24,6 +24,7 @@ using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -31,7 +32,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            Country country = CountryManager.GetCountryById(this.CountryId);
+            Country country = IoCFactory.Resolve<ICountryManager>().GetCountryById(this.CountryId);
             if (country != null)
             {
                 this.txtName.Text = country.Name;
@@ -57,7 +58,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public Country SaveInfo()
         {
-            Country country = CountryManager.GetCountryById(this.CountryId);
+            Country country = IoCFactory.Resolve<ICountryManager>().GetCountryById(this.CountryId);
 
             if (country != null)
             {
@@ -71,7 +72,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 country.SubjectToVAT = cbSubjectToVAT.Checked;
                 country.Published = cbPublished.Checked;
                 country.DisplayOrder = txtDisplayOrder.Value;
-                CountryManager.UpdateCountry(country);
+                IoCFactory.Resolve<ICountryManager>().UpdateCountry(country);
             }
             else
             {
@@ -88,7 +89,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     Published = cbPublished.Checked,
                     DisplayOrder = txtDisplayOrder.Value
                 };
-                CountryManager.InsertCountry(country);
+                IoCFactory.Resolve<ICountryManager>().InsertCountry(country);
             }
 
             return country;

@@ -23,13 +23,14 @@ using NopSolutions.NopCommerce.BusinessLogic.Caching;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Data;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
 {
     /// <summary>
     /// Checkout attribute manager
     /// </summary>
-    public partial class CheckoutAttributeManager
+    public partial class CheckoutAttributeManager : ICheckoutAttributeManager
     {
         #region Constants
         private const string CHECKOUTATTRIBUTES_ALL_KEY = "Nop.checkoutattribute.all-{0}";
@@ -48,7 +49,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         /// Deletes a checkout attribute
         /// </summary>
         /// <param name="checkoutAttributeId">Checkout attribute identifier</param>
-        public static void DeleteCheckoutAttribute(int checkoutAttributeId)
+        public void DeleteCheckoutAttribute(int checkoutAttributeId)
         {
             var checkoutAttribute = GetCheckoutAttributeById(checkoutAttributeId);
             if (checkoutAttribute == null)
@@ -60,7 +61,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
             context.DeleteObject(checkoutAttribute);
             context.SaveChanges();
 
-            if (CheckoutAttributeManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(CHECKOUTATTRIBUTES_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(CHECKOUTATTRIBUTEVALUES_PATTERN_KEY);
@@ -72,11 +73,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         /// </summary>
         /// <param name="dontLoadShippableProductRequired">Value indicating whether to do not load attributes for checkout attibutes which require shippable products</param>
         /// <returns>Checkout attribute collection</returns>
-        public static List<CheckoutAttribute> GetAllCheckoutAttributes(bool dontLoadShippableProductRequired)
+        public List<CheckoutAttribute> GetAllCheckoutAttributes(bool dontLoadShippableProductRequired)
         {
             string key = string.Format(CHECKOUTATTRIBUTES_ALL_KEY, dontLoadShippableProductRequired);
             object obj2 = NopRequestCache.Get(key);
-            if (CheckoutAttributeManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (List<CheckoutAttribute>)obj2;
             }
@@ -88,7 +89,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                         select ca;
             var checkoutAttributes = query.ToList();
 
-            if (CheckoutAttributeManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, checkoutAttributes);
             }
@@ -100,14 +101,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         /// </summary>
         /// <param name="checkoutAttributeId">Checkout attribute identifier</param>
         /// <returns>Checkout attribute</returns>
-        public static CheckoutAttribute GetCheckoutAttributeById(int checkoutAttributeId)
+        public CheckoutAttribute GetCheckoutAttributeById(int checkoutAttributeId)
         {
             if (checkoutAttributeId == 0)
                 return null;
 
             string key = string.Format(CHECKOUTATTRIBUTES_BY_ID_KEY, checkoutAttributeId);
             object obj2 = NopRequestCache.Get(key);
-            if (CheckoutAttributeManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (CheckoutAttribute)obj2;
             }
@@ -118,7 +119,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                         select ca;
             var checkoutAttribute = query.SingleOrDefault();
 
-            if (CheckoutAttributeManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, checkoutAttribute);
             }
@@ -129,7 +130,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         /// Inserts a checkout attribute
         /// </summary>
         /// <param name="checkoutAttribute">Checkout attribute</param>
-        public static void InsertCheckoutAttribute(CheckoutAttribute checkoutAttribute)
+        public void InsertCheckoutAttribute(CheckoutAttribute checkoutAttribute)
         {
             if (checkoutAttribute == null)
                 throw new ArgumentNullException("checkoutAttribute");
@@ -144,7 +145,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
             context.CheckoutAttributes.AddObject(checkoutAttribute);
             context.SaveChanges();
 
-            if (CheckoutAttributeManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(CHECKOUTATTRIBUTES_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(CHECKOUTATTRIBUTEVALUES_PATTERN_KEY);
@@ -156,7 +157,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         /// </summary>
         /// <param name="checkoutAttribute">Checkout attribute</param>
         /// <param name="displayOrder">Display order</param>
-        public static void UpdateCheckoutAttribute(CheckoutAttribute checkoutAttribute)
+        public void UpdateCheckoutAttribute(CheckoutAttribute checkoutAttribute)
         {
             if (checkoutAttribute == null)
                 throw new ArgumentNullException("checkoutAttribute");
@@ -172,7 +173,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
 
             context.SaveChanges();
 
-            if (CheckoutAttributeManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(CHECKOUTATTRIBUTES_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(CHECKOUTATTRIBUTEVALUES_PATTERN_KEY);
@@ -184,7 +185,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         /// </summary>
         /// <param name="checkoutAttributeLocalizedId">Localized checkout attribute identifier</param>
         /// <returns>Checkout attribute content</returns>
-        public static CheckoutAttributeLocalized GetCheckoutAttributeLocalizedById(int checkoutAttributeLocalizedId)
+        public CheckoutAttributeLocalized GetCheckoutAttributeLocalizedById(int checkoutAttributeLocalizedId)
         {
             if (checkoutAttributeLocalizedId == 0)
                 return null;
@@ -202,7 +203,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         /// </summary>
         /// <param name="checkoutAttributeId">Checkout attribute identifier</param>
         /// <returns>Checkout attribute content</returns>
-        public static List<CheckoutAttributeLocalized> GetCheckoutAttributeLocalizedByCheckoutAttributeId(int checkoutAttributeId)
+        public List<CheckoutAttributeLocalized> GetCheckoutAttributeLocalizedByCheckoutAttributeId(int checkoutAttributeId)
         {
             if (checkoutAttributeId == 0)
                 return new List<CheckoutAttributeLocalized>();
@@ -221,7 +222,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         /// <param name="checkoutAttributeId">Checkout attribute identifier</param>
         /// <param name="languageId">Language identifier</param>
         /// <returns>Checkout attribute content</returns>
-        public static CheckoutAttributeLocalized GetCheckoutAttributeLocalizedByCheckoutAttributeIdAndLanguageId(int checkoutAttributeId, int languageId)
+        public CheckoutAttributeLocalized GetCheckoutAttributeLocalizedByCheckoutAttributeIdAndLanguageId(int checkoutAttributeId, int languageId)
         {
             if (checkoutAttributeId == 0 || languageId == 0)
                 return null;
@@ -240,7 +241,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         /// Inserts a localized checkout attribute
         /// </summary>
         /// <param name="checkoutAttributeLocalized">Checkout attribute content</param>
-        public static void InsertCheckoutAttributeLocalized(CheckoutAttributeLocalized checkoutAttributeLocalized)
+        public void InsertCheckoutAttributeLocalized(CheckoutAttributeLocalized checkoutAttributeLocalized)
         {
             if (checkoutAttributeLocalized == null)
                 throw new ArgumentNullException("checkoutAttributeLocalized");
@@ -255,7 +256,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
             context.CheckoutAttributeLocalized.AddObject(checkoutAttributeLocalized);
             context.SaveChanges();
 
-            if (CheckoutAttributeManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(CHECKOUTATTRIBUTES_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(CHECKOUTATTRIBUTEVALUES_PATTERN_KEY);
@@ -266,7 +267,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         /// Update a localized checkout attribute
         /// </summary>
         /// <param name="checkoutAttributeLocalized">Checkout attribute content</param>
-        public static void UpdateCheckoutAttributeLocalized(CheckoutAttributeLocalized checkoutAttributeLocalized)
+        public void UpdateCheckoutAttributeLocalized(CheckoutAttributeLocalized checkoutAttributeLocalized)
         {
             if (checkoutAttributeLocalized == null)
                 throw new ArgumentNullException("checkoutAttributeLocalized");
@@ -294,7 +295,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                 context.SaveChanges();
             }
 
-            if (CheckoutAttributeManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(CHECKOUTATTRIBUTES_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(CHECKOUTATTRIBUTEVALUES_PATTERN_KEY);
@@ -309,7 +310,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         /// Deletes a checkout attribute value
         /// </summary>
         /// <param name="checkoutAttributeValueId">Checkout attribute value identifier</param>
-        public static void DeleteCheckoutAttributeValue(int checkoutAttributeValueId)
+        public void DeleteCheckoutAttributeValue(int checkoutAttributeValueId)
         {
             var checkoutAttributeValue = GetCheckoutAttributeValueById(checkoutAttributeValueId);
             if (checkoutAttributeValue == null)
@@ -321,7 +322,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
             context.DeleteObject(checkoutAttributeValue);
             context.SaveChanges();
 
-            if (CheckoutAttributeManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(CHECKOUTATTRIBUTES_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(CHECKOUTATTRIBUTEVALUES_PATTERN_KEY);
@@ -333,11 +334,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         /// </summary>
         /// <param name="checkoutAttributeId">The checkout attribute identifier</param>
         /// <returns>Checkout attribute value collection</returns>
-        public static List<CheckoutAttributeValue> GetCheckoutAttributeValues(int checkoutAttributeId)
+        public List<CheckoutAttributeValue> GetCheckoutAttributeValues(int checkoutAttributeId)
         {
             string key = string.Format(CHECKOUTATTRIBUTEVALUES_ALL_KEY, checkoutAttributeId);
             object obj2 = NopRequestCache.Get(key);
-            if (CheckoutAttributeManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (List<CheckoutAttributeValue>)obj2;
             }
@@ -349,7 +350,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                         select cav;
             var checkoutAttributeValues = query.ToList();
 
-            if (CheckoutAttributeManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, checkoutAttributeValues);
             }
@@ -361,14 +362,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         /// </summary>
         /// <param name="checkoutAttributeValueId">Checkout attribute value identifier</param>
         /// <returns>Checkout attribute value</returns>
-        public static CheckoutAttributeValue GetCheckoutAttributeValueById(int checkoutAttributeValueId)
+        public CheckoutAttributeValue GetCheckoutAttributeValueById(int checkoutAttributeValueId)
         {
             if (checkoutAttributeValueId == 0)
                 return null;
 
             string key = string.Format(CHECKOUTATTRIBUTEVALUES_BY_ID_KEY, checkoutAttributeValueId);
             object obj2 = NopRequestCache.Get(key);
-            if (CheckoutAttributeManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (CheckoutAttributeValue)obj2;
             }
@@ -379,7 +380,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                         select cav;
             var checkoutAttributeValue = query.SingleOrDefault();
 
-            if (CheckoutAttributeManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, checkoutAttributeValue);
             }
@@ -390,7 +391,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         /// Inserts a checkout attribute value
         /// </summary>
         /// <param name="checkoutAttributeValue">Checkout attribute value</param>
-        public static void InsertCheckoutAttributeValue(CheckoutAttributeValue checkoutAttributeValue)
+        public void InsertCheckoutAttributeValue(CheckoutAttributeValue checkoutAttributeValue)
         {
             if (checkoutAttributeValue == null)
                 throw new ArgumentNullException("checkoutAttributeValue");
@@ -403,7 +404,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
             context.CheckoutAttributeValues.AddObject(checkoutAttributeValue);
             context.SaveChanges();
 
-            if (CheckoutAttributeManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(CHECKOUTATTRIBUTES_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(CHECKOUTATTRIBUTEVALUES_PATTERN_KEY);
@@ -414,7 +415,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         /// Updates the checkout attribute value
         /// </summary>
         /// <param name="checkoutAttributeValue">Checkout attribute value</param>
-        public static void UpdateCheckoutAttributeValue(CheckoutAttributeValue checkoutAttributeValue)
+        public void UpdateCheckoutAttributeValue(CheckoutAttributeValue checkoutAttributeValue)
         {
             if (checkoutAttributeValue == null)
                 throw new ArgumentNullException("checkoutAttributeValue");
@@ -428,7 +429,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
 
             context.SaveChanges();
 
-            if (CheckoutAttributeManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(CHECKOUTATTRIBUTES_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(CHECKOUTATTRIBUTEVALUES_PATTERN_KEY);
@@ -440,7 +441,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         /// </summary>
         /// <param name="checkoutAttributeValueLocalizedId">Localized checkout attribute value identifier</param>
         /// <returns>Localized checkout attribute value</returns>
-        public static CheckoutAttributeValueLocalized GetCheckoutAttributeValueLocalizedById(int checkoutAttributeValueLocalizedId)
+        public CheckoutAttributeValueLocalized GetCheckoutAttributeValueLocalizedById(int checkoutAttributeValueLocalizedId)
         {
             if (checkoutAttributeValueLocalizedId == 0)
                 return null;
@@ -458,7 +459,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         /// </summary>
         /// <param name="checkoutAttributeValueId">Checkout attribute value identifier</param>
         /// <returns>Localized checkout attribute value</returns>
-        public static List<CheckoutAttributeValueLocalized> GetCheckoutAttributeValueLocalizedByCheckoutAttributeValueId(int checkoutAttributeValueId)
+        public List<CheckoutAttributeValueLocalized> GetCheckoutAttributeValueLocalizedByCheckoutAttributeValueId(int checkoutAttributeValueId)
         {
             if (checkoutAttributeValueId == 0)
                 return new List<CheckoutAttributeValueLocalized>();
@@ -477,7 +478,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         /// <param name="checkoutAttributeValueId">Checkout attribute value identifier</param>
         /// <param name="languageId">Language identifier</param>
         /// <returns>Localized checkout attribute value</returns>
-        public static CheckoutAttributeValueLocalized GetCheckoutAttributeValueLocalizedByCheckoutAttributeValueIdAndLanguageId(int checkoutAttributeValueId, int languageId)
+        public CheckoutAttributeValueLocalized GetCheckoutAttributeValueLocalizedByCheckoutAttributeValueIdAndLanguageId(int checkoutAttributeValueId, int languageId)
         {
             if (checkoutAttributeValueId == 0 || languageId == 0)
                 return null;
@@ -496,7 +497,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         /// Inserts a localized checkout attribute value
         /// </summary>
         /// <param name="checkoutAttributeValueLocalized">Localized checkout attribute value</param>
-        public static void InsertCheckoutAttributeValueLocalized(CheckoutAttributeValueLocalized checkoutAttributeValueLocalized)
+        public void InsertCheckoutAttributeValueLocalized(CheckoutAttributeValueLocalized checkoutAttributeValueLocalized)
         {
             if (checkoutAttributeValueLocalized == null)
                 throw new ArgumentNullException("checkoutAttributeValueLocalized");
@@ -509,7 +510,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
             context.CheckoutAttributeValueLocalized.AddObject(checkoutAttributeValueLocalized);
             context.SaveChanges();
 
-            if (CheckoutAttributeManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(CHECKOUTATTRIBUTES_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(CHECKOUTATTRIBUTEVALUES_PATTERN_KEY);
@@ -520,7 +521,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         /// Update a localized checkout attribute value
         /// </summary>
         /// <param name="checkoutAttributeValueLocalized">Localized checkout attribute value</param>
-        public static void UpdateCheckoutAttributeValueLocalized(CheckoutAttributeValueLocalized checkoutAttributeValueLocalized)
+        public void UpdateCheckoutAttributeValueLocalized(CheckoutAttributeValueLocalized checkoutAttributeValueLocalized)
         {
             if (checkoutAttributeValueLocalized == null)
                 throw new ArgumentNullException("checkoutAttributeValueLocalized");
@@ -545,7 +546,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                 context.SaveChanges();
             }
 
-            if (CheckoutAttributeManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(CHECKOUTATTRIBUTES_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(CHECKOUTATTRIBUTEVALUES_PATTERN_KEY);
@@ -557,16 +558,18 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         #endregion
 
         #region Properties
+
         /// <summary>
         /// Gets a value indicating whether cache is enabled
         /// </summary>
-        public static bool CacheEnabled
+        public bool CacheEnabled
         {
             get
             {
-                return SettingManager.GetSettingValueBoolean("Cache.CheckoutAttributeManager.CacheEnabled");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.CheckoutAttributeManager.CacheEnabled");
             }
         }
+
         #endregion
     }
 }

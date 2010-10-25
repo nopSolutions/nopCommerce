@@ -27,6 +27,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Payment;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Payment.Methods.Manual;
 using NopSolutions.NopCommerce.Web.Templates.Payment;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Payment.Sermepa
 {
@@ -42,30 +43,30 @@ namespace NopSolutions.NopCommerce.Web.Administration.Payment.Sermepa
 
         private void BindData()
         {
-            NombreComercioTextBox.Text = SettingManager.GetSettingValue("PaymentMethod.Sermepa.NombreComercio");
-            TitularTextBox.Text = SettingManager.GetSettingValue("PaymentMethod.Sermepa.Titular");
-            ProductoTextBox.Text = SettingManager.GetSettingValue("PaymentMethod.Sermepa.Producto");
-            FUCTextBox.Text = SettingManager.GetSettingValue("PaymentMethod.Sermepa.FUC");
-            TerminalTextBox.Text = SettingManager.GetSettingValue("PaymentMethod.Sermepa.Terminal");
-            MonedaTextBox.Text = SettingManager.GetSettingValue("PaymentMethod.Sermepa.Moneda");
-            ClaveRealTextBox.Text = SettingManager.GetSettingValue("PaymentMethod.Sermepa.ClaveReal");
-            ClavePruebasTextBox.Text = SettingManager.GetSettingValue("PaymentMethod.Sermepa.ClavePruebas");
-            PruebasCheckBox.Checked = SettingManager.GetSettingValueBoolean("PaymentMethod.Sermepa.Pruebas");
-            txtAdditionalFee.Value = SettingManager.GetSettingValueDecimalNative("PaymentMethod.Sermepa.AdditionalFee", decimal.Zero);
+            NombreComercioTextBox.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Sermepa.NombreComercio");
+            TitularTextBox.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Sermepa.Titular");
+            ProductoTextBox.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Sermepa.Producto");
+            FUCTextBox.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Sermepa.FUC");
+            TerminalTextBox.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Sermepa.Terminal");
+            MonedaTextBox.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Sermepa.Moneda");
+            ClaveRealTextBox.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Sermepa.ClaveReal");
+            ClavePruebasTextBox.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Sermepa.ClavePruebas");
+            PruebasCheckBox.Checked = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.Sermepa.Pruebas");
+            txtAdditionalFee.Value = IoCFactory.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.Sermepa.AdditionalFee", decimal.Zero);
         }
 
         public void Save()
         {
-            SettingManager.SetParam("PaymentMethod.Sermepa.NombreComercio", NombreComercioTextBox.Text);
-            SettingManager.SetParam("PaymentMethod.Sermepa.Titular", TitularTextBox.Text);
-            SettingManager.SetParam("PaymentMethod.Sermepa.Producto", ProductoTextBox.Text);
-            SettingManager.SetParam("PaymentMethod.Sermepa.FUC", FUCTextBox.Text);
-            SettingManager.SetParam("PaymentMethod.Sermepa.Terminal", TerminalTextBox.Text);
-            SettingManager.SetParam("PaymentMethod.Sermepa.Moneda", MonedaTextBox.Text);
-            SettingManager.SetParam("PaymentMethod.Sermepa.ClaveReal", ClaveRealTextBox.Text);
-            SettingManager.SetParam("PaymentMethod.Sermepa.ClavePruebas", ClavePruebasTextBox.Text);
-            SettingManager.SetParam("PaymentMethod.Sermepa.Pruebas", PruebasCheckBox.Checked.ToString());
-            SettingManager.SetParamNative("PaymentMethod.Sermepa.AdditionalFee", txtAdditionalFee.Value);
+            IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.Sermepa.NombreComercio", NombreComercioTextBox.Text);
+            IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.Sermepa.Titular", TitularTextBox.Text);
+            IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.Sermepa.Producto", ProductoTextBox.Text);
+            IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.Sermepa.FUC", FUCTextBox.Text);
+            IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.Sermepa.Terminal", TerminalTextBox.Text);
+            IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.Sermepa.Moneda", MonedaTextBox.Text);
+            IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.Sermepa.ClaveReal", ClaveRealTextBox.Text);
+            IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.Sermepa.ClavePruebas", ClavePruebasTextBox.Text);
+            IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.Sermepa.Pruebas", PruebasCheckBox.Checked.ToString());
+            IoCFactory.Resolve<ISettingManager>().SetParamNative("PaymentMethod.Sermepa.AdditionalFee", txtAdditionalFee.Value);
         }
     }
 }

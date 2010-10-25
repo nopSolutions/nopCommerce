@@ -32,6 +32,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Templates;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Web.Administration.Modules;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -39,7 +40,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            Product product = ProductManager.GetProductById(this.ProductId);
+            Product product = IoCFactory.Resolve<IProductManager>().GetProductById(this.ProductId);
             if (product != null)
             {
                 pnlData.Visible = true;
@@ -47,7 +48,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                 var existingRelatedProductCollection = product.RelatedProducts;
                 List<RelatedProductHelperClass> relatedProducts = GetRelatedProducts(existingRelatedProductCollection);
-                gvRelatedProducts.Columns[1].Visible = SettingManager.GetSettingValueBoolean("Display.ShowAdminProductImages");
+                gvRelatedProducts.Columns[1].Visible = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Display.ShowAdminProductImages");
                 gvRelatedProducts.DataSource = relatedProducts;
                 gvRelatedProducts.DataBind();
             }
@@ -70,7 +71,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     rphc.RelatedProductId = relatedProduct.RelatedProductId;
                     rphc.ProductId2 = product.ProductId;
                     rphc.ProductInfo2 = product.Name;
-                    if (SettingManager.GetSettingValueBoolean("Display.ShowAdminProductImages"))
+                    if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Display.ShowAdminProductImages"))
                     {
                         rphc.ProductImage = GetProductImageUrl(product);
                     }
@@ -88,11 +89,11 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             var picture = product.DefaultPicture;
             if (picture != null)
             {
-                return PictureManager.GetPictureUrl(picture, SettingManager.GetSettingValueInteger("Media.ShoppingCart.ThumbnailImageSize", 80));
+                return IoCFactory.Resolve<IPictureManager>().GetPictureUrl(picture, IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.ShoppingCart.ThumbnailImageSize", 80));
             }
             else
             {
-                return PictureManager.GetDefaultPictureUrl(SettingManager.GetSettingValueInteger("Media.ShoppingCart.ThumbnailImageSize", 80));
+                return IoCFactory.Resolve<IPictureManager>().GetDefaultPictureUrl(IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.ShoppingCart.ThumbnailImageSize", 80));
             }
         }
 
@@ -109,7 +110,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public void SaveInfo()
         {
-            Product product = ProductManager.GetProductById(this.ProductId);
+            Product product = IoCFactory.Resolve<IProductManager>().GetProductById(this.ProductId);
             if (product != null)
             {
                 foreach (GridViewRow row in gvRelatedProducts.Rows)
@@ -123,16 +124,16 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     int displayOrder = txtRowDisplayOrder.Value;
 
                     if (relatedProductId > 0 && !cbProductInfo2.Checked)
-                        ProductManager.DeleteRelatedProduct(relatedProductId);
+                        IoCFactory.Resolve<IProductManager>().DeleteRelatedProduct(relatedProductId);
                     if (relatedProductId > 0 && cbProductInfo2.Checked)
                     {
-                        var rp = ProductManager.GetRelatedProductById(relatedProductId);
+                        var rp = IoCFactory.Resolve<IProductManager>().GetRelatedProductById(relatedProductId);
                         if (rp!=null)
                         {
                             rp.ProductId1 = product.ProductId;
                             rp.ProductId2 = productId2;
                             rp.DisplayOrder = displayOrder;
-                            ProductManager.UpdateRelatedProduct(rp);
+                            IoCFactory.Resolve<IProductManager>().UpdateRelatedProduct(rp);
                         }
                     }
                 }

@@ -23,6 +23,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.BusinessLogic.Tax;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Payment.Methods.Svea
 {
@@ -65,7 +66,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Svea
                 sb.AppendFormat("Row{0}Quantity={1}&", rowNumber, opv.Quantity);
 
                 string errStr = String.Empty;
-                sb.AppendFormat("Row{0}VATPercentage={1}&", rowNumber, (int)TaxManager.GetTaxRate(pv, customer, ref errStr));
+                sb.AppendFormat("Row{0}VATPercentage={1}&", rowNumber, (int)IoCFactory.Resolve<ITaxManager>().GetTaxRate(pv, customer, ref errStr));
             }
 
             //discount (applied to order subtotal)
@@ -116,7 +117,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Svea
             }
 
             //gift cards
-            var gcuhC = OrderManager.GetAllGiftCardUsageHistoryEntries(null, null, order.OrderId);
+            var gcuhC = IoCFactory.Resolve<IOrderManager>().GetAllGiftCardUsageHistoryEntries(null, null, order.OrderId);
             foreach (var gcuh in gcuhC)
             {
                 sb.AppendFormat("Row{0}AmountExVAT={1}&", rowNumber, -gcuh.UsedValue);
@@ -145,7 +146,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Svea
             sb.AppendFormat("{0}={1}&", "TestMode", HostedPaymentSettings.UseSandbox);
             sb.AppendFormat("{0}={1}&", "Language", "SV");
             sb.AppendFormat("{0}={1}&", "Country", "SE");
-            sb.AppendFormat("{0}={1}", "Currency", CurrencyManager.PrimaryStoreCurrency.CurrencyCode);
+            sb.AppendFormat("{0}={1}", "Currency", IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency.CurrencyCode);
 
             sb.AppendFormat("&{0}={1}", "MD5", HostedPaymentHelper.CalcMd5Hash(sb.ToString() + HostedPaymentSettings.Password));
 

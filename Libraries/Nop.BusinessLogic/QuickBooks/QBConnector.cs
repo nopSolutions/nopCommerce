@@ -14,6 +14,7 @@ using System.Text.RegularExpressions;
 using System.Text;
 using System.Xml;
 using NopSolutions.NopCommerce.BusinessLogic.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
 {
@@ -33,7 +34,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
         [WebMethod]
         public string serverVersion()
         {
-            return SiteHelper.GetCurrentVersion();
+            return IoCFactory.Resolve<ISettingManager>().CurrentVersion;
         }
 
         /// <summary>
@@ -75,7 +76,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
         {
             string[] rsp = new string[4];
 
-            if (!QBManager.QBIsEnabled || !strUserName.Equals(QBManager.QBUsername) || !strPassword.Equals(QBManager.QBPassword))
+            if (!IoCFactory.Resolve<IQBManager>().QBIsEnabled || !strUserName.Equals(IoCFactory.Resolve<IQBManager>().QBUsername) || !strPassword.Equals(IoCFactory.Resolve<IQBManager>().QBPassword))
             {
                 rsp[1] = "nvu";
             }
@@ -105,12 +106,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
         {
             try
             {
-                if(!QBManager.QBIsEnabled || !Ticket.Equals(ticket) || !IsTicketActive)
+                if(!IoCFactory.Resolve<IQBManager>().QBIsEnabled || !Ticket.Equals(ticket) || !IsTicketActive)
                 {
                     return String.Empty;
                 }
 
-                QBEntity entity = QBManager.GetQBEntityForSynchronization();
+                QBEntity entity = IoCFactory.Resolve<IQBManager>().GetQBEntityForSynchronization();
                 if(entity == null)
                 {
                     return String.Empty;
@@ -149,7 +150,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
             }
             catch(Exception ex)
             {
-                LogManager.InsertLog(LogTypeEnum.CommonError, ex.Message, ex);
+                IoCFactory.Resolve<ILogManager>().InsertLog(LogTypeEnum.CommonError, ex.Message, ex);
                 return String.Empty;
             }
         }
@@ -168,14 +169,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
         {
             try
             {
-                if (!QBManager.QBIsEnabled || !Ticket.Equals(ticket) || !IsTicketActive)
+                if (!IoCFactory.Resolve<IQBManager>().QBIsEnabled || !Ticket.Equals(ticket) || !IsTicketActive)
                 {
                     return -1;
                 }
 
                 if(!String.IsNullOrEmpty(hresult))
                 {
-                    LogManager.InsertLog(LogTypeEnum.CommonError, message, hresult);
+                    IoCFactory.Resolve<ILogManager>().InsertLog(LogTypeEnum.CommonError, message, hresult);
                     return -1;
                 }
 
@@ -183,7 +184,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
                 xml.LoadXml(response);
 
                 int requestId = QBXMLHelper.GetRequestId(xml);
-                QBEntity entity = QBManager.GetQBEntityById(requestId);
+                QBEntity entity = IoCFactory.Resolve<IQBManager>().GetQBEntityById(requestId);
                 if(entity == null)
                 {
                     return -1;
@@ -198,51 +199,57 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
                     case 550:
                     case 560:
                     case 570:
-                        string qbId = entity.QBEntityId;
-                        string seqNum = entity.SeqNum;
-                        switch (QBXMLHelper.GetResponseType(xml))
                         {
-                            case "TxnVoidRs":
-                            case "TxnDelRs":
-                                qbId = QBXMLHelper.GetTxnID(xml);
-                                break;
-                            case "ReceivePaymentAddRs":
-                            case "InvoiceAddRs":
-                                qbId = QBXMLHelper.GetTxnID(xml);
-                                seqNum = QBXMLHelper.GetSeqNum(xml);
-                                break;
-                            case "CustomerAddRs":
-                                qbId = QBXMLHelper.GetListID(xml);
-                                seqNum = QBXMLHelper.GetSeqNum(xml);
-                                break;
-                            case "CustomerModRs":
-                            case "InvoiceModRs":
-                                seqNum = QBXMLHelper.GetSeqNum(xml);
-                                break;
-                        }
+                            string qbId = entity.QBEntityId;
+                            string seqNum = entity.SeqNum;
+                            switch (QBXMLHelper.GetResponseType(xml))
+                            {
+                                case "TxnVoidRs":
+                                case "TxnDelRs":
+                                    qbId = QBXMLHelper.GetTxnID(xml);
+                                    break;
+                                case "ReceivePaymentAddRs":
+                                case "InvoiceAddRs":
+                                    qbId = QBXMLHelper.GetTxnID(xml);
+                                    seqNum = QBXMLHelper.GetSeqNum(xml);
+                                    break;
+                                case "CustomerAddRs":
+                                    qbId = QBXMLHelper.GetListID(xml);
+                                    seqNum = QBXMLHelper.GetSeqNum(xml);
+                                    break;
+                                case "CustomerModRs":
+                                case "InvoiceModRs":
+                                    seqNum = QBXMLHelper.GetSeqNum(xml);
+                                    break;
+                            }
 
-                        entity.QBEntityId = qbId;
-                        entity.SynStateId = (int)SynStateEnum.Success;
-                        entity.SeqNum = seqNum;
-                        entity.UpdatedOn = DateTime.UtcNow;
-                        QBManager.UpdateQBEntity(entity);
+                            entity.QBEntityId = qbId;
+                            entity.SynStateId = (int)SynStateEnum.Success;
+                            entity.SeqNum = seqNum;
+                            entity.UpdatedOn = DateTime.UtcNow;
+                            IoCFactory.Resolve<IQBManager>().UpdateQBEntity(entity);
+                        }
                         break;
                     case 3175:
-                        LogManager.InsertLog(LogTypeEnum.CommonError, QBXMLHelper.GetStatusMessage(xml), statusCode.ToString());
+                        {
+                            IoCFactory.Resolve<ILogManager>().InsertLog(LogTypeEnum.CommonError, QBXMLHelper.GetStatusMessage(xml), statusCode.ToString());
+                        }
                         break;
                     default:
-                        LogManager.InsertLog(LogTypeEnum.CommonError, QBXMLHelper.GetStatusMessage(xml), statusCode.ToString());
-                        
-                        entity.SynStateId = (int)SynStateEnum.Failed;
-                        entity.UpdatedOn = DateTime.UtcNow;
-                        QBManager.UpdateQBEntity(entity);
+                        {
+                            IoCFactory.Resolve<ILogManager>().InsertLog(LogTypeEnum.CommonError, QBXMLHelper.GetStatusMessage(xml), statusCode.ToString());
+
+                            entity.SynStateId = (int)SynStateEnum.Failed;
+                            entity.UpdatedOn = DateTime.UtcNow;
+                            IoCFactory.Resolve<IQBManager>().UpdateQBEntity(entity);
+                        }
                         break;
                 }
                 return 0;
             }
             catch(Exception ex)
             {
-                LogManager.InsertLog(LogTypeEnum.CommonError, ex.Message, ex);
+                IoCFactory.Resolve<ILogManager>().InsertLog(LogTypeEnum.CommonError, ex.Message, ex);
                 return -1;
             }
         }
@@ -258,7 +265,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://developer.intuit.com/connectionError", RequestNamespace = "http://developer.intuit.com/", ResponseNamespace = "http://developer.intuit.com/", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         public string connectionError(string ticket, string hresult, string message)
         {
-            LogManager.InsertLog(LogTypeEnum.CommonError, message, hresult);
+            IoCFactory.Resolve<ILogManager>().InsertLog(LogTypeEnum.CommonError, message, hresult);
             return String.Empty;
         }
 
@@ -293,10 +300,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
         {
             get
             {
-                Setting setting = SettingManager.GetSettingByName("QB.Ticket");
+                Setting setting = IoCFactory.Resolve<ISettingManager>().GetSettingByName("QB.Ticket");
                 if (setting == null)
                 {
-                    setting = SettingManager.SetParam("QB.Ticket", Guid.NewGuid().ToString());
+                    setting = IoCFactory.Resolve<ISettingManager>().SetParam("QB.Ticket", Guid.NewGuid().ToString());
                 }
                 return setting.Value;
             }
@@ -306,11 +313,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
         {
             get
             {
-                return SettingManager.GetSettingValueBoolean("QB.Ticket.IsActive", false);
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("QB.Ticket.IsActive", false);
             }
             set
             {
-                SettingManager.SetParam("QB.Ticket.IsActive", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("QB.Ticket.IsActive", value.ToString());
             }
         }
         #endregion

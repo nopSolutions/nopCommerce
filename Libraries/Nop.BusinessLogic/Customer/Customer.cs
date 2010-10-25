@@ -30,6 +30,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Shipping;
 using NopSolutions.NopCommerce.BusinessLogic.Tax;
 using NopSolutions.NopCommerce.BusinessLogic.Utils;
 using NopSolutions.NopCommerce.Common.Xml;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
 {
@@ -225,7 +226,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         {
             get
             {
-                return AffiliateManager.GetAffiliateById(this.AffiliateId);
+                return IoCFactory.Resolve<IAffiliateManager>().GetAffiliateById(this.AffiliateId);
             }
         }
 
@@ -237,7 +238,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             get
             {
                 if (_customerAttributesCache == null)
-                    _customerAttributesCache = CustomerManager.GetCustomerAttributesByCustomerId(this.CustomerId);
+                    _customerAttributesCache = IoCFactory.Resolve<ICustomerManager>().GetCustomerAttributesByCustomerId(this.CustomerId);
 
                 return _customerAttributesCache;
             }
@@ -251,7 +252,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             get
             {
                 if (_customerRolesCache == null)
-                    _customerRolesCache = CustomerManager.GetCustomerRolesByCustomerId(this.CustomerId);
+                    _customerRolesCache = IoCFactory.Resolve<ICustomerManager>().GetCustomerRolesByCustomerId(this.CustomerId);
 
                 return _customerRolesCache;
             }
@@ -265,7 +266,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             get
             {
                 if (_billingAddressCache == null)
-                    _billingAddressCache = CustomerManager.GetAddressById(this.BillingAddressId);
+                    _billingAddressCache = IoCFactory.Resolve<ICustomerManager>().GetAddressById(this.BillingAddressId);
 
                 return _billingAddressCache;
             }
@@ -279,7 +280,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             get
             {
                 if (_shippingAddressCache == null)
-                    _shippingAddressCache = CustomerManager.GetAddressById(this.ShippingAddressId);
+                    _shippingAddressCache = IoCFactory.Resolve<ICustomerManager>().GetAddressById(this.ShippingAddressId);
 
                 return _shippingAddressCache;
             }
@@ -292,7 +293,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         {
             get
             {
-                return LanguageManager.GetLanguageById(this.LanguageId);
+                return IoCFactory.Resolve<ILanguageManager>().GetLanguageById(this.LanguageId);
             }
         }
 
@@ -303,7 +304,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         {
             get
             {
-                return CurrencyManager.GetCurrencyById(this.CurrencyId);
+                return IoCFactory.Resolve<ICurrencyManager>().GetCurrencyById(this.CurrencyId);
             }
         }
 
@@ -314,7 +315,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         {
             get
             {
-                return CustomerManager.GetAddressesByCustomerId(this.CustomerId, true);
+                return IoCFactory.Resolve<ICustomerManager>().GetAddressesByCustomerId(this.CustomerId, true);
             }
         }
 
@@ -325,7 +326,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         {
             get
             {
-                return CustomerManager.GetAddressesByCustomerId(this.CustomerId, false);
+                return IoCFactory.Resolve<ICustomerManager>().GetAddressesByCustomerId(this.CustomerId, false);
             }
         }
 
@@ -336,7 +337,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         {
             get
             {
-                return OrderManager.GetOrdersByCustomerId(this.CustomerId);
+                return IoCFactory.Resolve<IOrderManager>().GetOrdersByCustomerId(this.CustomerId);
             }
         }
 
@@ -362,7 +363,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         {
             get
             {
-                return PictureManager.GetPictureById(this.AvatarId);
+                return IoCFactory.Resolve<IPictureManager>().GetPictureById(this.AvatarId);
             }
         }
 
@@ -373,7 +374,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         {
             get
             {
-                return PaymentMethodManager.GetPaymentMethodById(this.LastPaymentMethodId);
+                return IoCFactory.Resolve<IPaymentMethodManager>().GetPaymentMethodById(this.LastPaymentMethodId);
             }
         }
 
@@ -417,7 +418,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                         if (lastShippingOptionAttr != null)
                         {
                             lastShippingOptionAttr.Value = serialized;
-                            CustomerManager.UpdateCustomerAttribute(lastShippingOptionAttr);
+                            IoCFactory.Resolve<ICustomerManager>().UpdateCustomerAttribute(lastShippingOptionAttr);
                         }
                         else
                         {
@@ -427,14 +428,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                                 Key = "LastShippingOption",
                                 Value = serialized
                             };
-                            CustomerManager.InsertCustomerAttribute(lastShippingOptionAttr);
+                            IoCFactory.Resolve<ICustomerManager>().InsertCustomerAttribute(lastShippingOptionAttr);
                         }
                     }
                 }
                 else
                 {
                     if (lastShippingOptionAttr != null)
-                        CustomerManager.DeleteCustomerAttribute(lastShippingOptionAttr.CustomerAttributeId);
+                        IoCFactory.Resolve<ICustomerManager>().DeleteCustomerAttribute(lastShippingOptionAttr.CustomerAttributeId);
                 }
 
                 ResetCachedValues();
@@ -476,7 +477,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                 if (genderAttr != null)
                 {
                     genderAttr.Value = value;
-                    CustomerManager.UpdateCustomerAttribute(genderAttr);
+                    IoCFactory.Resolve<ICustomerManager>().UpdateCustomerAttribute(genderAttr);
                 }
                 else
                 {
@@ -486,7 +487,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                         Key = "Gender",
                         Value = value
                     };
-                    CustomerManager.InsertCustomerAttribute(genderAttr);
+                    IoCFactory.Resolve<ICustomerManager>().InsertCustomerAttribute(genderAttr);
                 }
                 ResetCachedValues();
             }
@@ -517,7 +518,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                 if (firstNameAttr != null)
                 {
                     firstNameAttr.Value = value;
-                    CustomerManager.UpdateCustomerAttribute(firstNameAttr);
+                    IoCFactory.Resolve<ICustomerManager>().UpdateCustomerAttribute(firstNameAttr);
                 }
                 else
                 {
@@ -527,7 +528,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                         Key = "FirstName",
                         Value = value
                     };
-                    CustomerManager.InsertCustomerAttribute(firstNameAttr);
+                    IoCFactory.Resolve<ICustomerManager>().InsertCustomerAttribute(firstNameAttr);
                 }
                 ResetCachedValues();
             }
@@ -558,7 +559,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                 if (lastNameAttr != null)
                 {
                     lastNameAttr.Value = value;
-                    CustomerManager.UpdateCustomerAttribute(lastNameAttr);
+                    IoCFactory.Resolve<ICustomerManager>().UpdateCustomerAttribute(lastNameAttr);
                 }
                 else
                 {
@@ -568,7 +569,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                         Key = "LastName",
                         Value = value
                     };
-                    CustomerManager.InsertCustomerAttribute(lastNameAttr);
+                    IoCFactory.Resolve<ICustomerManager>().InsertCustomerAttribute(lastNameAttr);
                 }
 
                 ResetCachedValues();
@@ -600,7 +601,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                 if (companyAttr != null)
                 {
                     companyAttr.Value = value;
-                    CustomerManager.UpdateCustomerAttribute(companyAttr);
+                    IoCFactory.Resolve<ICustomerManager>().UpdateCustomerAttribute(companyAttr);
                 }
                 else
                 {
@@ -610,7 +611,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                         Key = "Company",
                         Value = value
                     };
-                    CustomerManager.InsertCustomerAttribute(companyAttr);
+                    IoCFactory.Resolve<ICustomerManager>().InsertCustomerAttribute(companyAttr);
                 }
                 
                 ResetCachedValues();
@@ -642,7 +643,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                 if (vatNumberAttr != null)
                 {
                     vatNumberAttr.Value = value;
-                    CustomerManager.UpdateCustomerAttribute(vatNumberAttr);
+                    IoCFactory.Resolve<ICustomerManager>().UpdateCustomerAttribute(vatNumberAttr);
                 }
                 else
                 {
@@ -652,7 +653,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                         Key = "VatNumber",
                         Value = value
                     };
-                    CustomerManager.InsertCustomerAttribute(vatNumberAttr);
+                    IoCFactory.Resolve<ICustomerManager>().InsertCustomerAttribute(vatNumberAttr);
                 }
                 
                 ResetCachedValues();
@@ -685,7 +686,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                 if (vatNumberStatusAttr != null)
                 {
                     vatNumberStatusAttr.Value = vatNumberStatusId.ToString();
-                    CustomerManager.UpdateCustomerAttribute(vatNumberStatusAttr);
+                    IoCFactory.Resolve<ICustomerManager>().UpdateCustomerAttribute(vatNumberStatusAttr);
                 }
                 else
                 {
@@ -695,7 +696,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                         Key = "VatNumberStatus",
                         Value = vatNumberStatusId.ToString()
                     };
-                    CustomerManager.InsertCustomerAttribute(vatNumberStatusAttr);
+                    IoCFactory.Resolve<ICustomerManager>().InsertCustomerAttribute(vatNumberStatusAttr);
                 }
 
                 ResetCachedValues();
@@ -727,7 +728,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                 if (streetAddressAttr != null)
                 {
                     streetAddressAttr.Value = value;
-                    CustomerManager.UpdateCustomerAttribute(streetAddressAttr);
+                    IoCFactory.Resolve<ICustomerManager>().UpdateCustomerAttribute(streetAddressAttr);
                 }
                 else
                 {
@@ -737,7 +738,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                         Key = "StreetAddress",
                         Value = value
                     };
-                    CustomerManager.InsertCustomerAttribute(streetAddressAttr);
+                    IoCFactory.Resolve<ICustomerManager>().InsertCustomerAttribute(streetAddressAttr);
                 }
                 ResetCachedValues();
             }
@@ -768,7 +769,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                 if (streetAddress2Attr != null)
                 {
                     streetAddress2Attr.Value = value;
-                    CustomerManager.UpdateCustomerAttribute(streetAddress2Attr);
+                    IoCFactory.Resolve<ICustomerManager>().UpdateCustomerAttribute(streetAddress2Attr);
                 }
                 else
                 {
@@ -778,7 +779,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                         Key = "StreetAddress2",
                         Value = value
                     };
-                    CustomerManager.InsertCustomerAttribute(streetAddress2Attr);
+                    IoCFactory.Resolve<ICustomerManager>().InsertCustomerAttribute(streetAddress2Attr);
                 }
                 ResetCachedValues();
             }
@@ -809,7 +810,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                 if (zipPostalCodeAttr != null)
                 {
                     zipPostalCodeAttr.Value = value;
-                    CustomerManager.UpdateCustomerAttribute(zipPostalCodeAttr);
+                    IoCFactory.Resolve<ICustomerManager>().UpdateCustomerAttribute(zipPostalCodeAttr);
                 }
                 else
                 {
@@ -819,7 +820,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                         Key = "ZipPostalCode",
                         Value = value
                     };
-                    CustomerManager.InsertCustomerAttribute(zipPostalCodeAttr);
+                    IoCFactory.Resolve<ICustomerManager>().InsertCustomerAttribute(zipPostalCodeAttr);
                 }
                 ResetCachedValues();
             }
@@ -850,7 +851,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                 if (cityAttr != null)
                 {
                     cityAttr.Value = value;
-                    CustomerManager.UpdateCustomerAttribute(cityAttr);
+                    IoCFactory.Resolve<ICustomerManager>().UpdateCustomerAttribute(cityAttr);
                 }
                 else
                 {
@@ -860,7 +861,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                         Key = "City",
                         Value = value
                     };
-                    CustomerManager.InsertCustomerAttribute(cityAttr);
+                    IoCFactory.Resolve<ICustomerManager>().InsertCustomerAttribute(cityAttr);
                 }
 
                 ResetCachedValues();
@@ -892,7 +893,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                 if (phoneNumberAttr != null)
                 {
                     phoneNumberAttr.Value = value;
-                    CustomerManager.UpdateCustomerAttribute(phoneNumberAttr);
+                    IoCFactory.Resolve<ICustomerManager>().UpdateCustomerAttribute(phoneNumberAttr);
                 }
                 else
                 {
@@ -902,7 +903,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                         Key = "PhoneNumber",
                         Value = value
                     };
-                    CustomerManager.InsertCustomerAttribute(phoneNumberAttr);
+                    IoCFactory.Resolve<ICustomerManager>().InsertCustomerAttribute(phoneNumberAttr);
                 }
 
                 ResetCachedValues();
@@ -934,7 +935,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                 if (faxNumberAttr != null)
                 {
                     faxNumberAttr.Value = value;
-                    CustomerManager.UpdateCustomerAttribute(faxNumberAttr);
+                    IoCFactory.Resolve<ICustomerManager>().UpdateCustomerAttribute(faxNumberAttr);
                 }
                 else
                 {
@@ -944,7 +945,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                         Key = "FaxNumber",
                         Value = value
                     };
-                    CustomerManager.InsertCustomerAttribute(faxNumberAttr);
+                    IoCFactory.Resolve<ICustomerManager>().InsertCustomerAttribute(faxNumberAttr);
                 }
 
                 ResetCachedValues();
@@ -976,7 +977,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                 if (countryIdAttr != null)
                 {
                     countryIdAttr.Value = value.ToString();
-                    CustomerManager.UpdateCustomerAttribute(countryIdAttr);
+                    IoCFactory.Resolve<ICustomerManager>().UpdateCustomerAttribute(countryIdAttr);
                 }
                 else
                 {
@@ -986,7 +987,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                         Key = "CountryId",
                         Value = value.ToString()
                     };
-                    CustomerManager.InsertCustomerAttribute(countryIdAttr);
+                    IoCFactory.Resolve<ICustomerManager>().InsertCustomerAttribute(countryIdAttr);
                 }
 
                 ResetCachedValues();
@@ -1018,7 +1019,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                 if (stateProvinceIdAttr != null)
                 {
                     stateProvinceIdAttr.Value = value.ToString();
-                    CustomerManager.UpdateCustomerAttribute(stateProvinceIdAttr);
+                    IoCFactory.Resolve<ICustomerManager>().UpdateCustomerAttribute(stateProvinceIdAttr);
                 }
                 else
                 {
@@ -1028,7 +1029,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                         Key = "StateProvinceId",
                         Value = value.ToString()
                     };
-                   CustomerManager.InsertCustomerAttribute(stateProvinceIdAttr);
+                   IoCFactory.Resolve<ICustomerManager>().InsertCustomerAttribute(stateProvinceIdAttr);
                 }
 
                 ResetCachedValues();
@@ -1054,11 +1055,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                     if (value)
                     {
                         subscription.Active = true;
-                        MessageManager.UpdateNewsLetterSubscription(subscription);
+                        IoCFactory.Resolve<IMessageManager>().UpdateNewsLetterSubscription(subscription);
                     }
                     else
                     {
-                        MessageManager.DeleteNewsLetterSubscription(subscription.NewsLetterSubscriptionId);
+                        IoCFactory.Resolve<IMessageManager>().DeleteNewsLetterSubscription(subscription.NewsLetterSubscriptionId);
                     }
                 }
                 else
@@ -1072,7 +1073,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                             Active = value,
                             CreatedOn = DateTime.UtcNow
                         };
-                        MessageManager.InsertNewsLetterSubscription(newsLetterSubscription);
+                        IoCFactory.Resolve<IMessageManager>().InsertNewsLetterSubscription(newsLetterSubscription);
                     }
                 }
             }
@@ -1085,7 +1086,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         {
             get
             {
-                return MessageManager.GetNewsLetterSubscriptionByEmail(Email);
+                return IoCFactory.Resolve<IMessageManager>().GetNewsLetterSubscriptionByEmail(Email);
             }
         }
 
@@ -1113,11 +1114,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                     if (!String.IsNullOrEmpty(value))
                     {
                         passwordRecoveryAttr.Value = value;
-                        CustomerManager.UpdateCustomerAttribute(passwordRecoveryAttr);
+                        IoCFactory.Resolve<ICustomerManager>().UpdateCustomerAttribute(passwordRecoveryAttr);
                     }
                     else
                     {
-                        CustomerManager.DeleteCustomerAttribute(passwordRecoveryAttr.CustomerAttributeId);
+                        IoCFactory.Resolve<ICustomerManager>().DeleteCustomerAttribute(passwordRecoveryAttr.CustomerAttributeId);
                     }
                 }
                 else
@@ -1130,7 +1131,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                             Key = "PasswordRecoveryToken",
                             Value = value
                         };
-                        CustomerManager.InsertCustomerAttribute(passwordRecoveryAttr);
+                        IoCFactory.Resolve<ICustomerManager>().InsertCustomerAttribute(passwordRecoveryAttr);
                     }
                 }
                 ResetCachedValues();
@@ -1161,11 +1162,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                     if (!String.IsNullOrEmpty(value))
                     {
                         accountActivationAttr.Value = value;
-                        CustomerManager.UpdateCustomerAttribute(accountActivationAttr);
+                        IoCFactory.Resolve<ICustomerManager>().UpdateCustomerAttribute(accountActivationAttr);
                     }
                     else
                     {
-                        CustomerManager.DeleteCustomerAttribute(accountActivationAttr.CustomerAttributeId);
+                        IoCFactory.Resolve<ICustomerManager>().DeleteCustomerAttribute(accountActivationAttr.CustomerAttributeId);
                     }
                 }
                 else
@@ -1178,7 +1179,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                             Key = "AccountActivationToken",
                             Value = value
                         };
-                        CustomerManager.InsertCustomerAttribute(accountActivationAttr);
+                        IoCFactory.Resolve<ICustomerManager>().InsertCustomerAttribute(accountActivationAttr);
                     }
                 }
                 ResetCachedValues();
@@ -1197,7 +1198,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                 if (_rewardPointsHistoryCache == null)
                 {
                     int totalRecords = 0;
-                    _rewardPointsHistoryCache = OrderManager.GetAllRewardPointsHistoryEntries(this.CustomerId,
+                    _rewardPointsHistoryCache = IoCFactory.Resolve<IOrderManager>().GetAllRewardPointsHistoryEntries(this.CustomerId,
                         null, int.MaxValue, 0, out totalRecords);
                 }
                 return _rewardPointsHistoryCache;
@@ -1243,7 +1244,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                 if (useRewardPointsAttr != null)
                 {
                     useRewardPointsAttr.Value = value.ToString();
-                    CustomerManager.UpdateCustomerAttribute(useRewardPointsAttr);
+                    IoCFactory.Resolve<ICustomerManager>().UpdateCustomerAttribute(useRewardPointsAttr);
                 }
                 else
                 {
@@ -1253,7 +1254,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                         Key = "UseRewardPointsDuringCheckout",
                         Value = value.ToString()
                     };
-                    CustomerManager.InsertCustomerAttribute(useRewardPointsAttr);
+                    IoCFactory.Resolve<ICustomerManager>().InsertCustomerAttribute(useRewardPointsAttr);
                 }
 
                 ResetCachedValues();
@@ -1285,7 +1286,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                 if (attr != null)
                 {
                     attr.Value = value.ToString();
-                    CustomerManager.UpdateCustomerAttribute(attr);
+                    IoCFactory.Resolve<ICustomerManager>().UpdateCustomerAttribute(attr);
                 }
                 else
                 {
@@ -1295,7 +1296,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                         Key = "NotifiedAboutNewPrivateMessages",
                         Value = value.ToString()
                     };
-                    CustomerManager.InsertCustomerAttribute(attr);
+                    IoCFactory.Resolve<ICustomerManager>().InsertCustomerAttribute(attr);
                 }
 
                 ResetCachedValues();
@@ -1327,7 +1328,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                 if (attr != null)
                 {
                     attr.Value = value.ToString();
-                    CustomerManager.UpdateCustomerAttribute(attr);
+                    IoCFactory.Resolve<ICustomerManager>().UpdateCustomerAttribute(attr);
                 }
                 else
                 {
@@ -1337,7 +1338,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                         Key = "ImpersonatedCustomerGuid",
                         Value = value.ToString()
                     };
-                    CustomerManager.InsertCustomerAttribute(attr);
+                    IoCFactory.Resolve<ICustomerManager>().InsertCustomerAttribute(attr);
                 }
                 ResetCachedValues();
             }

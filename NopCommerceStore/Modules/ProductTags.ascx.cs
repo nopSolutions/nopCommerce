@@ -28,6 +28,7 @@ using NopSolutions.NopCommerce.BusinessLogic;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -43,7 +44,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void BindData()
         {
-            var productTags = ProductManager.GetAllProductTags(this.ProductId, string.Empty);
+            var productTags = IoCFactory.Resolve<IProductManager>().GetAllProductTags(this.ProductId, string.Empty);
             if (productTags.Count > 0)
             {
                 rptrProductTags.DataSource = productTags;

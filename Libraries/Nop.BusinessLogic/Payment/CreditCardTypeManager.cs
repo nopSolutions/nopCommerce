@@ -23,13 +23,14 @@ using NopSolutions.NopCommerce.BusinessLogic.Caching;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Data;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Payment
 {
     /// <summary>
     /// Credit card type manager
     /// </summary>
-    public partial class CreditCardTypeManager
+    public partial class CreditCardTypeManager : ICreditCardTypeManager
     {
         #region Constants
         private const string CREDITCARDS_ALL_KEY = "Nop.creditcard.all";
@@ -43,14 +44,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
         /// </summary>
         /// <param name="creditCardTypeId">Credit card type identifier</param>
         /// <returns>Credit card type</returns>
-        public static CreditCardType GetCreditCardTypeById(int creditCardTypeId)
+        public CreditCardType GetCreditCardTypeById(int creditCardTypeId)
         {
             if (creditCardTypeId == 0)
                 return null;
 
             string key = string.Format(CREDITCARDS_BY_ID_KEY, creditCardTypeId);
             object obj2 = NopRequestCache.Get(key);
-            if (CreditCardTypeManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (CreditCardType)obj2;
             }
@@ -61,7 +62,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
                         select cct;
             var creditCardType = query.SingleOrDefault();
 
-            if (CreditCardTypeManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, creditCardType);
             }
@@ -72,7 +73,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
         /// Marks a credit card type as deleted
         /// </summary>
         /// <param name="creditCardTypeId">Credit card type identifier</param>
-        public static void MarkCreditCardTypeAsDeleted(int creditCardTypeId)
+        public void MarkCreditCardTypeAsDeleted(int creditCardTypeId)
         {
             var creditCardType = GetCreditCardTypeById(creditCardTypeId);
             if (creditCardType != null)
@@ -80,7 +81,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
                 creditCardType.Deleted = true;
                 UpdateCreditCardType(creditCardType);
             }
-            if (CreditCardTypeManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(CREDITCARDS_PATTERN_KEY);
             }
@@ -90,11 +91,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
         /// Gets all credit card types
         /// </summary>
         /// <returns>Credit card type collection</returns>
-        public static List<CreditCardType> GetAllCreditCardTypes()
+        public List<CreditCardType> GetAllCreditCardTypes()
         {
             string key = string.Format(CREDITCARDS_ALL_KEY);
             object obj2 = NopRequestCache.Get(key);
-            if (CreditCardTypeManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (List<CreditCardType>)obj2;
             }
@@ -106,7 +107,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
                         select cct;
             var creditCardTypeCollection = query.ToList();
 
-            if (CreditCardTypeManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, creditCardTypeCollection);
             }
@@ -117,7 +118,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
         /// Inserts a credit card type
         /// </summary>
         /// <param name="creditCardType">Credit card type</param>
-        public static void InsertCreditCardType(CreditCardType creditCardType)
+        public void InsertCreditCardType(CreditCardType creditCardType)
         {
             if (creditCardType == null)
                 throw new ArgumentNullException("creditCardType");
@@ -132,7 +133,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
             context.CreditCardTypes.AddObject(creditCardType);
             context.SaveChanges();
 
-            if (CreditCardTypeManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(CREDITCARDS_PATTERN_KEY);
             }
@@ -142,7 +143,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
         /// Updates the credit card type
         /// </summary>
         /// <param name="creditCardType">Credit card type</param>
-        public static void UpdateCreditCardType(CreditCardType creditCardType)
+        public void UpdateCreditCardType(CreditCardType creditCardType)
         {
             if (creditCardType == null)
                 throw new ArgumentNullException("creditCardType");
@@ -158,7 +159,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
 
             context.SaveChanges();
 
-            if (CreditCardTypeManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(CREDITCARDS_PATTERN_KEY);
             }
@@ -166,16 +167,18 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
         #endregion
 
         #region Properties
+
         /// <summary>
         /// Gets a value indicating whether cache is enabled
         /// </summary>
-        public static bool CacheEnabled
+        public bool CacheEnabled
         {
             get
             {
-                return SettingManager.GetSettingValueBoolean("Cache.CreditCardTypeManager.CacheEnabled");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.CreditCardTypeManager.CacheEnabled");
             }
         }
+
         #endregion
     }
 }

@@ -48,7 +48,7 @@
     </tr>
     <tr>
         <td class="adminTitle">
-            Additional fee [<%=CurrencyManager.PrimaryStoreCurrency.CurrencyCode%>]:
+            Additional fee [<%=IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency.CurrencyCode%>]:
         </td>
         <td class="adminData">
             <nopCommerce:DecimalTextBox runat="server" ID="txtAdditionalFee" Value="0"

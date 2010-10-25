@@ -26,6 +26,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Content.Polls;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Web.Administration.Modules;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -34,7 +35,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         private void FillDropDowns()
         {
             this.ddlLanguage.Items.Clear();
-            var languages = LanguageManager.GetAllLanguages();
+            var languages = IoCFactory.Resolve<ILanguageManager>().GetAllLanguages();
             foreach (Language language in languages)
             {
                 ListItem item2 = new ListItem(language.Name, language.LanguageId.ToString());
@@ -44,7 +45,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         private void BindData()
         {
-            Poll poll = PollManager.GetPollById(this.PollId);
+            Poll poll = IoCFactory.Resolve<IPollManager>().GetPollById(this.PollId);
             if (poll != null)
             {
                 CommonHelper.SelectListItem(this.ddlLanguage, poll.LanguageId);
@@ -92,7 +93,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     Name = txtPollAnswerName.Text,
                     DisplayOrder = txtPollAnswerDisplayOrder.Value
                 };
-                PollManager.InsertPollAnswer(pollAnswer);
+                IoCFactory.Resolve<IPollManager>().InsertPollAnswer(pollAnswer);
 
                 BindData();
             }
@@ -114,13 +115,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 NumericTextBox txtDisplayOrder = row.FindControl("txtDisplayOrder") as NumericTextBox;
 
                 int pollAnswerId = int.Parse(hfPollAnswerId.Value);
-                PollAnswer pollAnswer = PollManager.GetPollAnswerById(pollAnswerId);
+                PollAnswer pollAnswer = IoCFactory.Resolve<IPollManager>().GetPollAnswerById(pollAnswerId);
 
                 if (pollAnswer != null)
                 {
                     pollAnswer.Name = txtName.Text;
                     pollAnswer.DisplayOrder = txtDisplayOrder.Value;
-                    PollManager.UpdatePollAnswer(pollAnswer);
+                    IoCFactory.Resolve<IPollManager>().UpdatePollAnswer(pollAnswer);
                 }
 
                 BindData();
@@ -142,10 +143,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         protected void gvPollAnswers_RowDeleting(object sender, GridViewDeleteEventArgs e)
         {
             int pollAnswerId = (int)gvPollAnswers.DataKeys[e.RowIndex]["PollAnswerId"];
-            PollAnswer pollAnswer = PollManager.GetPollAnswerById(pollAnswerId);
+            PollAnswer pollAnswer = IoCFactory.Resolve<IPollManager>().GetPollAnswerById(pollAnswerId);
             if (pollAnswer != null)
             {
-                PollManager.DeletePollAnswer(pollAnswer.PollAnswerId);
+                IoCFactory.Resolve<IPollManager>().DeletePollAnswer(pollAnswer.PollAnswerId);
                 BindData();
             }
         }
@@ -159,7 +160,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public Poll SaveInfo()
         {
-            Poll poll = PollManager.GetPollById(this.PollId);
+            Poll poll = IoCFactory.Resolve<IPollManager>().GetPollById(this.PollId);
             DateTime? startDate = ctrlStartDate.SelectedDate;
             DateTime? endDate = ctrlEndDate.SelectedDate;
             if (startDate.HasValue)
@@ -181,7 +182,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 poll.DisplayOrder = txtDisplayOrder.Value;
                 poll.StartDate = startDate;
                 poll.EndDate = endDate;
-                PollManager.UpdatePoll(poll);
+                IoCFactory.Resolve<IPollManager>().UpdatePoll(poll);
             }
             else
             {
@@ -197,7 +198,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     EndDate = endDate
                 };
 
-                PollManager.InsertPoll(poll);
+                IoCFactory.Resolve<IPollManager>().InsertPoll(poll);
             }
             return poll;
         }

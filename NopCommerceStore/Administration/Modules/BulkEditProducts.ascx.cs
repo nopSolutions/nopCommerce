@@ -34,6 +34,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Media;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.BusinessLogic.Utils;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -44,7 +45,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             if (!Page.IsPostBack)
             {
                 FillDropDowns();
-                if (SettingManager.GetSettingValueBoolean("Admin.LoadAllProducts"))
+                if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Admin.LoadAllProducts"))
                 {
                     BindGrid();
                 }
@@ -72,7 +73,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             this.ddlManufacturer.Items.Clear();
             ListItem itemEmptyManufacturer = new ListItem(GetLocaleResourceString("Admin.Common.All"), "0");
             this.ddlManufacturer.Items.Add(itemEmptyManufacturer);
-            var manufacturers = ManufacturerManager.GetAllManufacturers();
+            var manufacturers = IoCFactory.Resolve<IManufacturerManager>().GetAllManufacturers();
             foreach (Manufacturer manufacturer in manufacturers)
             {
                 ListItem item2 = new ListItem(manufacturer.Name, manufacturer.ManufacturerId.ToString());
@@ -88,7 +89,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             int manufacturerId = int.Parse(this.ddlManufacturer.SelectedItem.Value);
 
             int totalRecords = 0;
-            var productVariants = ProductManager.GetAllProductVariants(categoryId, 
+            var productVariants = IoCFactory.Resolve<IProductManager>().GetAllProductVariants(categoryId, 
                 manufacturerId, productName, int.MaxValue, 0, out totalRecords);
             return productVariants;
         }
@@ -143,13 +144,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         decimal price = txtPrice.Value;
                         decimal oldPrice = txtOldPrice.Value;
                         bool published = cbPublished.Checked;
-                        var productVariant = ProductManager.GetProductVariantById(pvId);
+                        var productVariant = IoCFactory.Resolve<IProductManager>().GetProductVariantById(pvId);
                         if (productVariant != null)
                         {
                             productVariant.Price = price;
                             productVariant.OldPrice = oldPrice;
                             productVariant.Published = published;
-                            ProductManager.UpdateProductVariant(productVariant);
+                            IoCFactory.Resolve<IProductManager>().UpdateProductVariant(productVariant);
                         }
                     }
                 }

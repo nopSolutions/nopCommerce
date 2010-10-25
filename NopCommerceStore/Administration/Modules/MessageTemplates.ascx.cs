@@ -25,6 +25,7 @@ using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.BusinessLogic.Messages;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -40,7 +41,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected void BindGrid()
         {
-            var messageTemplateCollection = MessageManager.GetAllMessageTemplates();
+            var messageTemplateCollection = IoCFactory.Resolve<IMessageManager>().GetAllMessageTemplates();
             gvMessageTemplates.DataSource = messageTemplateCollection;
             gvMessageTemplates.DataBind();
         }

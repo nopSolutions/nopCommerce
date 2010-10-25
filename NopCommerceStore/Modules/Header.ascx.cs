@@ -28,6 +28,7 @@ using NopSolutions.NopCommerce.BusinessLogic;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Content.Forums;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -66,11 +67,11 @@ namespace NopSolutions.NopCommerce.Web.Modules
         protected string GetUnreadPrivateMessages()
         {
             string result = string.Empty;
-            if (ForumManager.AllowPrivateMessages &&
+            if (IoCFactory.Resolve<IForumManager>().AllowPrivateMessages &&
                 NopContext.Current.User != null && !NopContext.Current.User.IsGuest)
             {
                 int totalRecords = 0;
-                var privateMessages = ForumManager.GetAllPrivateMessages(0,
+                var privateMessages = IoCFactory.Resolve<IForumManager>().GetAllPrivateMessages(0,
                     NopContext.Current.User.CustomerId, false, null, false, string.Empty, 1, 0, out totalRecords);
 
                 if (totalRecords > 0)
@@ -78,7 +79,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     result = string.Format(GetLocaleResourceString("PrivateMessages.TotalUnread"), totalRecords);
 
                     //notifications here
-                    if (SettingManager.GetSettingValueBoolean("Common.ShowAlertForPM") &&
+                    if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Common.ShowAlertForPM") &&
                         !NopContext.Current.User.NotifiedAboutNewPrivateMessages)
                     {
                         this.DisplayAlertMessage(string.Format(GetLocaleResourceString("PrivateMessages.YouHaveUnreadPM", totalRecords)));

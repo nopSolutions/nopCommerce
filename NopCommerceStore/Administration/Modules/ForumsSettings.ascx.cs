@@ -34,6 +34,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.BusinessLogic.Tax;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.Utils.Html;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -51,18 +52,18 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         
         protected void BindData()
         {
-            cbForumsEnabled.Checked = ForumManager.ForumsEnabled;
-            cbRelativeDateTimeFormattingEnabled.Checked = ForumManager.RelativeDateTimeFormattingEnabled;
-            cbShowCustomersPostCount.Checked = ForumManager.ShowCustomersPostCount;
-            cbGuestsAllowedToCreatePosts.Checked = ForumManager.AllowGuestsToCreatePosts;
-            cbGuestsAllowedToCreateTopics.Checked = ForumManager.AllowGuestsToCreateTopics;
-            cbCustomersAllowedToEditPosts.Checked = ForumManager.AllowCustomersToEditPosts;
-            cbCustomersAllowedToDeletePosts.Checked = ForumManager.AllowCustomersToDeletePosts;
-            cbCustomersAllowedToManageSubscriptions.Checked = ForumManager.AllowCustomersToManageSubscriptions;
-            txtTopicsPageSize.Value = ForumManager.TopicsPageSize;
-            txtPostsPageSize.Value = ForumManager.PostsPageSize;
-            CommonHelper.SelectListItem(this.ddlForumEditor, (int)ForumManager.ForumEditor);
-            cbSignatureEnabled.Checked = ForumManager.SignaturesEnabled;
+            cbForumsEnabled.Checked = IoCFactory.Resolve<IForumManager>().ForumsEnabled;
+            cbRelativeDateTimeFormattingEnabled.Checked = IoCFactory.Resolve<IForumManager>().RelativeDateTimeFormattingEnabled;
+            cbShowCustomersPostCount.Checked = IoCFactory.Resolve<IForumManager>().ShowCustomersPostCount;
+            cbGuestsAllowedToCreatePosts.Checked = IoCFactory.Resolve<IForumManager>().AllowGuestsToCreatePosts;
+            cbGuestsAllowedToCreateTopics.Checked = IoCFactory.Resolve<IForumManager>().AllowGuestsToCreateTopics;
+            cbCustomersAllowedToEditPosts.Checked = IoCFactory.Resolve<IForumManager>().AllowCustomersToEditPosts;
+            cbCustomersAllowedToDeletePosts.Checked = IoCFactory.Resolve<IForumManager>().AllowCustomersToDeletePosts;
+            cbCustomersAllowedToManageSubscriptions.Checked = IoCFactory.Resolve<IForumManager>().AllowCustomersToManageSubscriptions;
+            txtTopicsPageSize.Value = IoCFactory.Resolve<IForumManager>().TopicsPageSize;
+            txtPostsPageSize.Value = IoCFactory.Resolve<IForumManager>().PostsPageSize;
+            CommonHelper.SelectListItem(this.ddlForumEditor, (int)IoCFactory.Resolve<IForumManager>().ForumEditor);
+            cbSignatureEnabled.Checked = IoCFactory.Resolve<IForumManager>().SignaturesEnabled;
         }
 
         private void FillDropDowns()
@@ -86,18 +87,18 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 try
                 {
-                    ForumManager.ForumsEnabled = cbForumsEnabled.Checked;
-                    ForumManager.RelativeDateTimeFormattingEnabled = cbRelativeDateTimeFormattingEnabled.Checked;
-                    ForumManager.ShowCustomersPostCount = cbShowCustomersPostCount.Checked;
-                    ForumManager.AllowGuestsToCreatePosts = cbGuestsAllowedToCreatePosts.Checked;
-                    ForumManager.AllowGuestsToCreateTopics = cbGuestsAllowedToCreateTopics.Checked;
-                    ForumManager.AllowCustomersToEditPosts = cbCustomersAllowedToEditPosts.Checked;
-                    ForumManager.AllowCustomersToDeletePosts = cbCustomersAllowedToDeletePosts.Checked;
-                    ForumManager.AllowCustomersToManageSubscriptions = cbCustomersAllowedToManageSubscriptions.Checked;
-                    ForumManager.TopicsPageSize = txtTopicsPageSize.Value;
-                    ForumManager.PostsPageSize = txtPostsPageSize.Value;
-                    ForumManager.ForumEditor = (EditorTypeEnum)Enum.ToObject(typeof(EditorTypeEnum), int.Parse(this.ddlForumEditor.SelectedItem.Value));
-                    ForumManager.SignaturesEnabled = cbSignatureEnabled.Checked;
+                    IoCFactory.Resolve<IForumManager>().ForumsEnabled = cbForumsEnabled.Checked;
+                    IoCFactory.Resolve<IForumManager>().RelativeDateTimeFormattingEnabled = cbRelativeDateTimeFormattingEnabled.Checked;
+                    IoCFactory.Resolve<IForumManager>().ShowCustomersPostCount = cbShowCustomersPostCount.Checked;
+                    IoCFactory.Resolve<IForumManager>().AllowGuestsToCreatePosts = cbGuestsAllowedToCreatePosts.Checked;
+                    IoCFactory.Resolve<IForumManager>().AllowGuestsToCreateTopics = cbGuestsAllowedToCreateTopics.Checked;
+                    IoCFactory.Resolve<IForumManager>().AllowCustomersToEditPosts = cbCustomersAllowedToEditPosts.Checked;
+                    IoCFactory.Resolve<IForumManager>().AllowCustomersToDeletePosts = cbCustomersAllowedToDeletePosts.Checked;
+                    IoCFactory.Resolve<IForumManager>().AllowCustomersToManageSubscriptions = cbCustomersAllowedToManageSubscriptions.Checked;
+                    IoCFactory.Resolve<IForumManager>().TopicsPageSize = txtTopicsPageSize.Value;
+                    IoCFactory.Resolve<IForumManager>().PostsPageSize = txtPostsPageSize.Value;
+                    IoCFactory.Resolve<IForumManager>().ForumEditor = (EditorTypeEnum)Enum.ToObject(typeof(EditorTypeEnum), int.Parse(this.ddlForumEditor.SelectedItem.Value));
+                    IoCFactory.Resolve<IForumManager>().SignaturesEnabled = cbSignatureEnabled.Checked;
                     Response.Redirect("ForumsSettings.aspx");
                 }
                 catch (Exception exc)

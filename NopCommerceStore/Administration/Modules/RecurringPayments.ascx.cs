@@ -34,6 +34,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.BusinessLogic.Utils;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -55,7 +56,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected void BindGrid()
         {
-            var recurringPayments = OrderManager.SearchRecurringPayments(0, 0, null);
+            var recurringPayments = IoCFactory.Resolve<IOrderManager>().SearchRecurringPayments(0, 0, null);
             if (recurringPayments.Count > 0)
             {
                 this.gvRecurringPayments.Visible = true;

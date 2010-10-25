@@ -38,6 +38,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Shipping;
 using NopSolutions.NopCommerce.BusinessLogic.Tax;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.Media;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 
 namespace NopSolutions.NopCommerce.Web.Modules
@@ -46,12 +47,12 @@ namespace NopSolutions.NopCommerce.Web.Modules
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            this.Visible = SettingManager.GetSettingValueBoolean("Common.EnableWishlist");
+            this.Visible = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Common.EnableWishlist");
         }
 
         public void BindData()
         {
-            var cart = ShoppingCartManager.GetShoppingCartByCustomerSessionGuid(ShoppingCartTypeEnum.Wishlist, this.CustomerSessionGuid);
+            var cart = IoCFactory.Resolve<IShoppingCartManager>().GetShoppingCartByCustomerSessionGuid(ShoppingCartTypeEnum.Wishlist, this.CustomerSessionGuid);
 
             if (cart.Count > 0)
             {
@@ -65,7 +66,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 ValidateWishlistItems();
 
                 //'email wishlist' buttton
-                btnEmailWishlist.Visible = SettingManager.GetSettingValueBoolean("Common.EmailWishlist");
+                btnEmailWishlist.Visible = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Common.EmailWishlist");
             }
             else
             {
@@ -83,8 +84,8 @@ namespace NopSolutions.NopCommerce.Web.Modules
             bool hasErrors = false;
 
             //shopping cart
-            var cart = ShoppingCartManager.GetCurrentShoppingCart(ShoppingCartTypeEnum.Wishlist);
-            var warnings = ShoppingCartManager.GetShoppingCartWarnings(cart, string.Empty, false);
+            var cart = IoCFactory.Resolve<IShoppingCartManager>().GetCurrentShoppingCart(ShoppingCartTypeEnum.Wishlist);
+            var warnings = IoCFactory.Resolve<IShoppingCartManager>().GetShoppingCartWarnings(cart, string.Empty, false);
             if (warnings.Count > 0)
             {
                 hasErrors = true;
@@ -135,9 +136,9 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     if (!cbRemoveFromCart.Checked)
                     {
                         int.TryParse(txtQuantity.Text, out quantity);
-                        var sci = ShoppingCartManager.GetShoppingCartItemById(shoppingCartItemId);
+                        var sci = IoCFactory.Resolve<IShoppingCartManager>().GetShoppingCartItemById(shoppingCartItemId);
 
-                        var warnings = ShoppingCartManager.GetShoppingCartItemWarnings(
+                        var warnings = IoCFactory.Resolve<IShoppingCartManager>().GetShoppingCartItemWarnings(
                             sci.ShoppingCartType, 
                             sci.ProductVariantId, 
                             sci.AttributesXml, 
@@ -193,11 +194,11 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     {
                         int.TryParse(lblShoppingCartItemId.Text, out shoppingCartItemId);
                         if (cbRemoveFromCart.Checked)
-                            ShoppingCartManager.DeleteShoppingCartItem(shoppingCartItemId, false);
+                            IoCFactory.Resolve<IShoppingCartManager>().DeleteShoppingCartItem(shoppingCartItemId, false);
                         else
                         {
                             int.TryParse(txtQuantity.Text, out quantity);
-                            List<string> addToCartWarning = ShoppingCartManager.UpdateCart(shoppingCartItemId, quantity, false);
+                            List<string> addToCartWarning = IoCFactory.Resolve<IShoppingCartManager>().UpdateCart(shoppingCartItemId, quantity, false);
                         }
                     }
                 }
@@ -221,18 +222,18 @@ namespace NopSolutions.NopCommerce.Web.Modules
             if (productVariant != null)
             {
                 var productVariantPicture = productVariant.Picture;
-                pictureUrl = PictureManager.GetPictureUrl(productVariantPicture, SettingManager.GetSettingValueInteger("Media.ShoppingCart.ThumbnailImageSize", 80), false);
+                pictureUrl = IoCFactory.Resolve<IPictureManager>().GetPictureUrl(productVariantPicture, IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.ShoppingCart.ThumbnailImageSize", 80), false);
                 if (String.IsNullOrEmpty(pictureUrl))
                 {
                     var product = productVariant.Product;
                     var picture = product.DefaultPicture;
                     if (picture != null)
                     {
-                        pictureUrl = PictureManager.GetPictureUrl(picture, SettingManager.GetSettingValueInteger("Media.ShoppingCart.ThumbnailImageSize", 80));
+                        pictureUrl = IoCFactory.Resolve<IPictureManager>().GetPictureUrl(picture, IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.ShoppingCart.ThumbnailImageSize", 80));
                     }
                     else
                     {
-                        pictureUrl = PictureManager.GetDefaultPictureUrl(SettingManager.GetSettingValueInteger("Media.ShoppingCart.ThumbnailImageSize", 80));
+                        pictureUrl = IoCFactory.Resolve<IPictureManager>().GetDefaultPictureUrl(IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.ShoppingCart.ThumbnailImageSize", 80));
                     }
                 }
             }
@@ -279,8 +280,8 @@ namespace NopSolutions.NopCommerce.Web.Modules
             else
             {
                 decimal taxRate = decimal.Zero;
-                decimal shoppingCartUnitPriceWithDiscountBase = TaxManager.GetPrice(shoppingCartItem.ProductVariant, PriceHelper.GetUnitPrice(shoppingCartItem, true), out taxRate);
-                decimal shoppingCartUnitPriceWithDiscount = CurrencyManager.ConvertCurrency(shoppingCartUnitPriceWithDiscountBase, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                decimal shoppingCartUnitPriceWithDiscountBase = IoCFactory.Resolve<ITaxManager>().GetPrice(shoppingCartItem.ProductVariant, PriceHelper.GetUnitPrice(shoppingCartItem, true), out taxRate);
+                decimal shoppingCartUnitPriceWithDiscount = IoCFactory.Resolve<ICurrencyManager>().ConvertCurrency(shoppingCartUnitPriceWithDiscountBase, IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
                 string unitPriceString = PriceHelper.FormatPrice(shoppingCartUnitPriceWithDiscount);
 
                 sb.Append("<span class=\"productPrice\">");
@@ -303,8 +304,8 @@ namespace NopSolutions.NopCommerce.Web.Modules
             {
                 //sub total
                 decimal taxRate = decimal.Zero;
-                decimal shoppingCartItemSubTotalWithDiscountBase = TaxManager.GetPrice(shoppingCartItem.ProductVariant, PriceHelper.GetSubTotal(shoppingCartItem, true), out taxRate);
-                decimal shoppingCartItemSubTotalWithDiscount = CurrencyManager.ConvertCurrency(shoppingCartItemSubTotalWithDiscountBase, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                decimal shoppingCartItemSubTotalWithDiscountBase = IoCFactory.Resolve<ITaxManager>().GetPrice(shoppingCartItem.ProductVariant, PriceHelper.GetSubTotal(shoppingCartItem, true), out taxRate);
+                decimal shoppingCartItemSubTotalWithDiscount = IoCFactory.Resolve<ICurrencyManager>().ConvertCurrency(shoppingCartItemSubTotalWithDiscountBase, IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
                 string subTotalString = PriceHelper.FormatPrice(shoppingCartItemSubTotalWithDiscount);
 
                 sb.Append("<span class=\"productPrice\">");
@@ -312,11 +313,11 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 sb.Append("</span>");
 
                 //display an applied discount amount
-                decimal shoppingCartItemSubTotalWithoutDiscountBase = TaxManager.GetPrice(shoppingCartItem.ProductVariant, PriceHelper.GetSubTotal(shoppingCartItem, false), out taxRate);
+                decimal shoppingCartItemSubTotalWithoutDiscountBase = IoCFactory.Resolve<ITaxManager>().GetPrice(shoppingCartItem.ProductVariant, PriceHelper.GetSubTotal(shoppingCartItem, false), out taxRate);
                 decimal shoppingCartItemDiscountBase = shoppingCartItemSubTotalWithoutDiscountBase - shoppingCartItemSubTotalWithDiscountBase;
                 if (shoppingCartItemDiscountBase > decimal.Zero)
                 {
-                    decimal shoppingCartItemDiscount = CurrencyManager.ConvertCurrency(shoppingCartItemDiscountBase, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                    decimal shoppingCartItemDiscount = IoCFactory.Resolve<ICurrencyManager>().ConvertCurrency(shoppingCartItemDiscountBase, IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
                     string discountString = PriceHelper.FormatPrice(shoppingCartItemDiscount);
 
                     sb.Append("<br />");
@@ -346,10 +347,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     int.TryParse(lblShoppingCartItemId.Text, out shoppingCartItemId);
                     if (cbAddToCart.Checked)
                     {
-                        var sci  = ShoppingCartManager.GetShoppingCartItemById(shoppingCartItemId);
+                        var sci  = IoCFactory.Resolve<IShoppingCartManager>().GetShoppingCartItemById(shoppingCartItemId);
                         if (sci != null)
                         {
-                            ShoppingCartManager.AddToCart(
+                            IoCFactory.Resolve<IShoppingCartManager>().AddToCart(
                                 ShoppingCartTypeEnum.ShoppingCart,
                                 sci.ProductVariantId, 
                                 sci.AttributesXml,

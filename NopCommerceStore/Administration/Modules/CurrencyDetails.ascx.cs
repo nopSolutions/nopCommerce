@@ -24,6 +24,7 @@ using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -50,7 +51,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                CurrencyManager.DeleteCurrency(this.CurrencyId);
+                IoCFactory.Resolve<ICurrencyManager>().DeleteCurrency(this.CurrencyId);
                 Response.Redirect("Currencies.aspx");
             }
             catch (Exception exc)

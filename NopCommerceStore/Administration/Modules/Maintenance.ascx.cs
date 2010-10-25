@@ -26,6 +26,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Audit;
 using NopSolutions.NopCommerce.BusinessLogic.Maintenance;
 using NopSolutions.NopCommerce.BusinessLogic.Media;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
  
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -35,14 +36,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             if (!Page.IsPostBack)
             {
-                btnBackupPictures.Visible = !PictureManager.StoreInDB;
+                btnBackupPictures.Visible = !IoCFactory.Resolve<IPictureManager>().StoreInDB;
                 BindGrid();
             }
         }
 
         protected void BindGrid()
         {
-            var backups = MaintenanceManager.GetAllBackupFiles();
+            var backups = IoCFactory.Resolve<IMaintenanceManager>().GetAllBackupFiles();
             gvBackups.DataSource = backups;
             gvBackups.DataBind();
         }
@@ -78,9 +79,9 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                MaintenanceManager.Backup();
+                IoCFactory.Resolve<IMaintenanceManager>().Backup();
 
-                CustomerActivityManager.InsertActivity(
+                IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
                     "CreateBackup",
                     GetLocaleResourceString("ActivityLog.CreateBackup"));
 
@@ -98,7 +99,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                MaintenanceManager.BackupPictures();
+                IoCFactory.Resolve<IMaintenanceManager>().BackupPictures();
                 BindGrid();
             }
             catch (Exception exc)
@@ -113,7 +114,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 //delete old files for the last 1 hour
                 int hours = 1;
-                int num = MaintenanceManager.DeleteOldExportImportFiles(hours);
+                int num = IoCFactory.Resolve<IMaintenanceManager>().DeleteOldExportImportFiles(hours);
                 if (num > 0)
                 {
                     ShowMessage(string.Format(GetLocaleResourceString("Admin.Maintenance.DeleteOldExportedFiles.Success"), num));
@@ -135,9 +136,9 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 try
                 {
-                    MaintenanceManager.RestoreBackup(e.CommandArgument.ToString());
+                    IoCFactory.Resolve<IMaintenanceManager>().RestoreBackup(e.CommandArgument.ToString());
 
-                    CustomerActivityManager.InsertActivity(
+                    IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
                         "RestoreBackup",
                         GetLocaleResourceString("ActivityLog.RestoreBackup"));
 
@@ -155,7 +156,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 try
                 {
-                    MaintenanceManager.DeleteBackup(e.CommandArgument.ToString());
+                    IoCFactory.Resolve<IMaintenanceManager>().DeleteBackup(e.CommandArgument.ToString());
                     BindGrid();
                 }
                 catch (Exception exc)

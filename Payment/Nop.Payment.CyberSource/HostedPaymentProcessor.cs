@@ -24,6 +24,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.Payment;
 using NopSolutions.NopCommerce.BusinessLogic.Shipping;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Payment.Methods.CyberSource
 {
@@ -71,12 +72,12 @@ namespace NopSolutions.NopCommerce.Payment.Methods.CyberSource
             post.Add("billTo_firstName", order.BillingFirstName);
             post.Add("billTo_lastName", order.BillingLastName);
             post.Add("billTo_street1", order.BillingAddress1);
-            Country billCountry = CountryManager.GetCountryById(order.BillingCountryId);
+            Country billCountry = IoCFactory.Resolve<ICountryManager>().GetCountryById(order.BillingCountryId);
             if(billCountry != null)
             {
                 post.Add("billTo_country", billCountry.TwoLetterIsoCode);
             }
-            StateProvince billState = StateProvinceManager.GetStateProvinceById(order.BillingStateProvinceId);
+            StateProvince billState = IoCFactory.Resolve<IStateProvinceManager>().GetStateProvinceById(order.BillingStateProvinceId);
             if(billState != null)
             {
                 post.Add("billTo_state", billState.Abbreviation);
@@ -91,12 +92,12 @@ namespace NopSolutions.NopCommerce.Payment.Methods.CyberSource
                 post.Add("shipTo_firstName", order.ShippingFirstName);
                 post.Add("shipTo_lastName", order.ShippingLastName);
                 post.Add("shipTo_street1", order.ShippingAddress1);
-                Country shipCountry = CountryManager.GetCountryById(order.ShippingCountryId);
+                Country shipCountry = IoCFactory.Resolve<ICountryManager>().GetCountryById(order.ShippingCountryId);
                 if (shipCountry != null)
                 {
                     post.Add("shipTo_country", shipCountry.TwoLetterIsoCode);
                 }
-                StateProvince shipState = StateProvinceManager.GetStateProvinceById(order.ShippingStateProvinceId);
+                StateProvince shipState = IoCFactory.Resolve<IStateProvinceManager>().GetStateProvinceById(order.ShippingStateProvinceId);
                 if (shipState != null)
                 {
                     post.Add("shipTo_state", shipState.Abbreviation);

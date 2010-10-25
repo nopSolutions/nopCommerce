@@ -31,6 +31,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.BusinessLogic.Templates;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Web.Administration.Modules;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -38,7 +39,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            var manufacturer = ManufacturerManager.GetManufacturerById(this.ManufacturerId);
+            var manufacturer = IoCFactory.Resolve<IManufacturerManager>().GetManufacturerById(this.ManufacturerId);
 
             if (this.HasLocalizableContent)
             {
@@ -57,7 +58,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                 var manufacturerPicture = manufacturer.Picture;
                 btnRemoveManufacturerImage.Visible = manufacturerPicture != null;
-                string pictureUrl = PictureManager.GetPictureUrl(manufacturerPicture, 100);
+                string pictureUrl = IoCFactory.Resolve<IPictureManager>().GetPictureUrl(manufacturerPicture, 100);
                 this.iManufacturerPicture.Visible = true;
                 this.iManufacturerPicture.ImageUrl = pictureUrl;
 
@@ -75,7 +76,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         private void FillDropDowns()
         {
             this.ddlTemplate.Items.Clear();
-            var manufacturerTemplates = TemplateManager.GetAllManufacturerTemplates();
+            var manufacturerTemplates = IoCFactory.Resolve<ITemplateManager>().GetAllManufacturerTemplates();
             foreach (var manufacturerTemplate in manufacturerTemplates)
             {
                 ListItem item2 = new ListItem(manufacturerTemplate.Name, manufacturerTemplate.ManufacturerTemplateId.ToString());
@@ -102,7 +103,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         
         public Manufacturer SaveInfo()
         {
-            var manufacturer = ManufacturerManager.GetManufacturerById(this.ManufacturerId);
+            var manufacturer = IoCFactory.Resolve<IManufacturerManager>().GetManufacturerById(this.ManufacturerId);
 
             if (manufacturer != null)
             {
@@ -110,11 +111,11 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 HttpPostedFile manufacturerPictureFile = fuManufacturerPicture.PostedFile;
                 if ((manufacturerPictureFile != null) && (!String.IsNullOrEmpty(manufacturerPictureFile.FileName)))
                 {
-                    byte[] manufacturerPictureBinary = PictureManager.GetPictureBits(manufacturerPictureFile.InputStream, manufacturerPictureFile.ContentLength);
+                    byte[] manufacturerPictureBinary = IoCFactory.Resolve<IPictureManager>().GetPictureBits(manufacturerPictureFile.InputStream, manufacturerPictureFile.ContentLength);
                     if (manufacturerPicture != null)
-                        manufacturerPicture = PictureManager.UpdatePicture(manufacturerPicture.PictureId, manufacturerPictureBinary, manufacturerPictureFile.ContentType, true);
+                        manufacturerPicture = IoCFactory.Resolve<IPictureManager>().UpdatePicture(manufacturerPicture.PictureId, manufacturerPictureBinary, manufacturerPictureFile.ContentType, true);
                     else
-                        manufacturerPicture = PictureManager.InsertPicture(manufacturerPictureBinary, manufacturerPictureFile.ContentType, true);
+                        manufacturerPicture = IoCFactory.Resolve<IPictureManager>().InsertPicture(manufacturerPictureBinary, manufacturerPictureFile.ContentType, true);
                 }
                 int manufacturerPictureId = 0;
                 if (manufacturerPicture != null)
@@ -128,7 +129,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 manufacturer.Published = cbPublished.Checked;
                 manufacturer.DisplayOrder = txtDisplayOrder.Value;
                 manufacturer.UpdatedOn = DateTime.UtcNow;
-                ManufacturerManager.UpdateManufacturer(manufacturer);
+                IoCFactory.Resolve<IManufacturerManager>().UpdateManufacturer(manufacturer);
             }
             else
             {
@@ -136,8 +137,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 HttpPostedFile manufacturerPictureFile = fuManufacturerPicture.PostedFile;
                 if ((manufacturerPictureFile != null) && (!String.IsNullOrEmpty(manufacturerPictureFile.FileName)))
                 {
-                    byte[] manufacturerPictureBinary = PictureManager.GetPictureBits(manufacturerPictureFile.InputStream, manufacturerPictureFile.ContentLength);
-                    manufacturerPicture = PictureManager.InsertPicture(manufacturerPictureBinary, manufacturerPictureFile.ContentType, true);
+                    byte[] manufacturerPictureBinary = IoCFactory.Resolve<IPictureManager>().GetPictureBits(manufacturerPictureFile.InputStream, manufacturerPictureFile.ContentLength);
+                    manufacturerPicture = IoCFactory.Resolve<IPictureManager>().InsertPicture(manufacturerPictureBinary, manufacturerPictureFile.ContentType, true);
                 }
                 int manufacturerPictureId = 0;
                 if (manufacturerPicture != null)
@@ -158,7 +159,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     CreatedOn = nowDt,
                     UpdatedOn = nowDt
                 };
-                ManufacturerManager.InsertManufacturer(manufacturer);
+                IoCFactory.Resolve<IManufacturerManager>().InsertManufacturer(manufacturer);
             }
 
             SaveLocalizableContent(manufacturer);
@@ -188,7 +189,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                     bool allFieldsAreEmpty = (string.IsNullOrEmpty(name) && string.IsNullOrEmpty(description));
 
-                    var content = ManufacturerManager.GetManufacturerLocalizedByManufacturerIdAndLanguageId(manufacturer.ManufacturerId, languageId);
+                    var content = IoCFactory.Resolve<IManufacturerManager>().GetManufacturerLocalizedByManufacturerIdAndLanguageId(manufacturer.ManufacturerId, languageId);
                     if (content == null)
                     {
                         if (!allFieldsAreEmpty && languageId > 0)
@@ -202,7 +203,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                                 Description = description
                             };
 
-                            ManufacturerManager.InsertManufacturerLocalized(content);
+                            IoCFactory.Resolve<IManufacturerManager>().InsertManufacturerLocalized(content);
                         }
                     }
                     else
@@ -213,7 +214,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                             content.Name = name;
                             content.Description = description;
 
-                            ManufacturerManager.UpdateManufacturerLocalized(content);
+                            IoCFactory.Resolve<IManufacturerManager>().UpdateManufacturerLocalized(content);
                         }
                     }
                 }
@@ -230,7 +231,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                 int languageId = int.Parse(lblLanguageId.Text);
 
-                var content = ManufacturerManager.GetManufacturerLocalizedByManufacturerIdAndLanguageId(this.ManufacturerId, languageId);
+                var content = IoCFactory.Resolve<IManufacturerManager>().GetManufacturerLocalizedByManufacturerIdAndLanguageId(this.ManufacturerId, languageId);
 
                 if (content != null)
                 {
@@ -245,11 +246,11 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                Manufacturer manufacturer = ManufacturerManager.GetManufacturerById(this.ManufacturerId);
+                Manufacturer manufacturer = IoCFactory.Resolve<IManufacturerManager>().GetManufacturerById(this.ManufacturerId);
                 if (manufacturer != null)
                 {
-                    PictureManager.DeletePicture(manufacturer.PictureId);
-                    ManufacturerManager.RemoveManufacturerPicture(manufacturer.ManufacturerId);
+                    IoCFactory.Resolve<IPictureManager>().DeletePicture(manufacturer.PictureId);
+                    IoCFactory.Resolve<IManufacturerManager>().RemoveManufacturerPicture(manufacturer.ManufacturerId);
                     BindData();
                 }
             }

@@ -32,6 +32,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.Payment;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 namespace NopSolutions.NopCommerce.Web
 {
     /// <summary>
@@ -55,11 +56,11 @@ namespace NopSolutions.NopCommerce.Web
 
         protected void Page_PreRender(object sender, EventArgs e)
         {
-            pnlAvatar.Visible = CustomerManager.AllowCustomersToUploadAvatars;
-            pnlRewardPoints.Visible = OrderManager.RewardPointsEnabled;
-            pnlForumSubscriptions.Visible = ForumManager.AllowCustomersToManageSubscriptions && ForumManager.ForumsEnabled;
-            pnlReturnRequests.Visible = ctrlReturnRequests.Visible && SettingManager.GetSettingValueBoolean("ReturnRequests.Enable");
-            pnlDP.Visible = SettingManager.GetSettingValueBoolean("Display.DownloadableProductsTab");
+            pnlAvatar.Visible = IoCFactory.Resolve<ICustomerManager>().AllowCustomersToUploadAvatars;
+            pnlRewardPoints.Visible = IoCFactory.Resolve<IOrderManager>().RewardPointsEnabled;
+            pnlForumSubscriptions.Visible = IoCFactory.Resolve<IForumManager>().AllowCustomersToManageSubscriptions && IoCFactory.Resolve<IForumManager>().ForumsEnabled;
+            pnlReturnRequests.Visible = ctrlReturnRequests.Visible && IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("ReturnRequests.Enable");
+            pnlDP.Visible = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Display.DownloadableProductsTab");
         }
 
         public override PageSslProtectionEnum SslProtected

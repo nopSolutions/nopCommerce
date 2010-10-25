@@ -26,6 +26,7 @@ using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
  
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -45,7 +46,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             if (e.CommandName == "DeleteItem")
             {
                 int newsCommentId = Convert.ToInt32(e.CommandArgument);
-                NewsManager.DeleteNewsComment(newsCommentId);
+                IoCFactory.Resolve<INewsManager>().DeleteNewsComment(newsCommentId);
                 BindData();
             }
         }
@@ -65,7 +66,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         protected string GetCustomerInfo(int customerId)
         {
             string customerInfo = string.Empty;
-            Customer customer = CustomerManager.GetCustomerById(customerId);
+            Customer customer = IoCFactory.Resolve<ICustomerManager>().GetCustomerById(customerId);
             if (customer != null)
             {
                 if (customer.IsGuest)
@@ -84,9 +85,9 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             List<NewsComment> newsComments = null;
             if (this.NewsId > 0)
-                newsComments = NewsManager.GetNewsCommentsByNewsId(this.NewsId);
+                newsComments = IoCFactory.Resolve<INewsManager>().GetNewsCommentsByNewsId(this.NewsId);
             else
-                newsComments = NewsManager.GetAllNewsComments();
+                newsComments = IoCFactory.Resolve<INewsManager>().GetAllNewsComments();
             gvNewsComments.DataSource = newsComments;
             gvNewsComments.DataBind();
         }

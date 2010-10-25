@@ -35,6 +35,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
 using System.Collections.Generic;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -57,11 +58,11 @@ namespace NopSolutions.NopCommerce.Web.Modules
             try
             {
                 string keywords = txtSearchTerm.Text.Trim();
-                pagerProducts.PageSize = ProductManager.SearchPageProductsPerPage;
+                pagerProducts.PageSize = IoCFactory.Resolve<IProductManager>().SearchPageProductsPerPage;
 
                 if (!String.IsNullOrEmpty(keywords))
                 {
-                    int searchTermMinimumLength = SettingManager.GetSettingValueInteger("Search.ProductSearchTermMinimumLength", 3);
+                    int searchTermMinimumLength = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Search.ProductSearchTermMinimumLength", 3);
                     if (keywords.Length < searchTermMinimumLength)
                         throw new NopException(string.Format(LocalizationManager.GetLocaleResourceString("Search.SearchTermMinimumLengthIsNCharacters"), searchTermMinimumLength));
 
@@ -90,7 +91,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                                 minPrice = decimal.Parse(txtPriceFrom.Text.Trim());
                                 if (minPrice.HasValue)
                                 {
-                                    minPriceConverted = CurrencyManager.ConvertCurrency(minPrice.Value, NopContext.Current.WorkingCurrency, CurrencyManager.PrimaryStoreCurrency);
+                                    minPriceConverted = IoCFactory.Resolve<ICurrencyManager>().ConvertCurrency(minPrice.Value, NopContext.Current.WorkingCurrency, IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency);
                                 }
                             }
                         }
@@ -108,7 +109,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                                 maxPrice = decimal.Parse(txtPriceTo.Text.Trim());
                                 if (maxPrice.HasValue)
                                 {
-                                    maxPriceConverted = CurrencyManager.ConvertCurrency(maxPrice.Value, NopContext.Current.WorkingCurrency, CurrencyManager.PrimaryStoreCurrency);
+                                    maxPriceConverted = IoCFactory.Resolve<ICurrencyManager>().ConvertCurrency(maxPrice.Value, NopContext.Current.WorkingCurrency, IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency);
                                 }
                             }
                         }
@@ -122,7 +123,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     }
 
                     int totalRecords = 0;
-                    var products = ProductManager.GetAllProducts(categoryId,
+                    var products = IoCFactory.Resolve<IProductManager>().GetAllProducts(categoryId,
                         manufacturerId, 0, null,
                         minPriceConverted, maxPriceConverted,
                         keywords, searchInProductDescriptions,
@@ -144,7 +145,8 @@ namespace NopSolutions.NopCommerce.Web.Modules
                         CustomerId = customerId,
                         CreatedOn = DateTime.UtcNow
                     };
-                    SearchLogManager.InsertSearchLog(searchLog);
+
+                    IoCFactory.Resolve<ISearchLogManager>().InsertSearchLog(searchLog);
                 }
                 else
                 {
@@ -162,7 +164,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void BindCategories()
         {
-            var categories = CategoryManager.GetAllCategories();
+            var categories = IoCFactory.Resolve<ICategoryManager>().GetAllCategories();
 
             if (categories.Count > 0)
             {
@@ -205,7 +207,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void BindManufacturers()
         {
-            var manufacturers = ManufacturerManager.GetAllManufacturers();
+            var manufacturers = IoCFactory.Resolve<IManufacturerManager>().GetAllManufacturers();
             if (manufacturers.Count > 0)
             {
                 this.ddlManufacturers.Items.Clear();

@@ -27,6 +27,7 @@ using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.BusinessLogic.Promo.Affiliates;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
  
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
@@ -64,7 +65,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                AffiliateManager.MarkAffiliateAsDeleted(this.AffiliateId);
+                IoCFactory.Resolve<IAffiliateManager>().MarkAffiliateAsDeleted(this.AffiliateId);
                 Response.Redirect("Affiliates.aspx");
             }
             catch (Exception exc)

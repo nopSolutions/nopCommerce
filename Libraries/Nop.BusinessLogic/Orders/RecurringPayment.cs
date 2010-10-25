@@ -19,6 +19,7 @@ using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.BusinessLogic.Payment;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Orders
 {
@@ -93,7 +94,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         {
             get
             {
-                return OrderManager.GetOrderById(this.InitialOrderId);
+                return IoCFactory.Resolve<IOrderManager>().GetOrderById(this.InitialOrderId);
             }
         }
 
@@ -121,7 +122,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         {
             get
             {
-                return OrderManager.SearchRecurringPaymentHistory(this.RecurringPaymentId, 0);
+                return IoCFactory.Resolve<IOrderManager>().SearchRecurringPaymentHistory(this.RecurringPaymentId, 0);
             }
         }
 
@@ -254,7 +255,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 if (order == null)
                     return RecurringPaymentTypeEnum.NotSupported;
 
-                return PaymentManager.SupportRecurringPayments(order.PaymentMethodId);
+                return IoCFactory.Resolve<IPaymentManager>().SupportRecurringPayments(order.PaymentMethodId);
             }
         }
 

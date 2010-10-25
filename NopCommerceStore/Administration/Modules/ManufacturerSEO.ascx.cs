@@ -30,6 +30,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.BusinessLogic.Templates;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Web.Administration.Modules;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -37,7 +38,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            Manufacturer manufacturer = ManufacturerManager.GetManufacturerById(this.ManufacturerId);
+            Manufacturer manufacturer = IoCFactory.Resolve<IManufacturerManager>().GetManufacturerById(this.ManufacturerId);
 
             if (this.HasLocalizableContent)
             {
@@ -81,7 +82,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public void SaveInfo(int manId)
         {
-            Manufacturer manufacturer = ManufacturerManager.GetManufacturerById(manId);
+            Manufacturer manufacturer = IoCFactory.Resolve<IManufacturerManager>().GetManufacturerById(manId);
 
             if (manufacturer != null)
             {
@@ -90,7 +91,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 manufacturer.MetaTitle = txtMetaTitle.Text;
                 manufacturer.SEName = txtSEName.Text;
                 manufacturer.PageSize = txtPageSize.Value;
-                ManufacturerManager.UpdateManufacturer(manufacturer);
+                IoCFactory.Resolve<IManufacturerManager>().UpdateManufacturer(manufacturer);
             }
 
             SaveLocalizableContent(manufacturer);
@@ -125,7 +126,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         string.IsNullOrEmpty(metaTitle) &&
                         string.IsNullOrEmpty(seName));
 
-                    var content = ManufacturerManager.GetManufacturerLocalizedByManufacturerIdAndLanguageId(manufacturer.ManufacturerId, languageId);
+                    var content = IoCFactory.Resolve<IManufacturerManager>().GetManufacturerLocalizedByManufacturerIdAndLanguageId(manufacturer.ManufacturerId, languageId);
                     if (content == null)
                     {
                         if (!allFieldsAreEmpty && languageId > 0)
@@ -141,7 +142,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                                 SEName = seName
                             };
 
-                            ManufacturerManager.InsertManufacturerLocalized(content);
+                            IoCFactory.Resolve<IManufacturerManager>().InsertManufacturerLocalized(content);
                         }
                     }
                     else
@@ -153,7 +154,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                             content.MetaDescription = metaDescription;
                             content.MetaTitle = metaTitle;
                             content.SEName = seName;
-                            ManufacturerManager.UpdateManufacturerLocalized(content);
+                            IoCFactory.Resolve<IManufacturerManager>().UpdateManufacturerLocalized(content);
                         }
                     }
                 }
@@ -172,7 +173,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                 int languageId = int.Parse(lblLanguageId.Text);
 
-                var content = ManufacturerManager.GetManufacturerLocalizedByManufacturerIdAndLanguageId(this.ManufacturerId, languageId);
+                var content = IoCFactory.Resolve<IManufacturerManager>().GetManufacturerLocalizedByManufacturerIdAndLanguageId(this.ManufacturerId, languageId);
                 if (content != null)
                 {
                     txtLocalizedMetaKeywords.Text = content.MetaKeywords;

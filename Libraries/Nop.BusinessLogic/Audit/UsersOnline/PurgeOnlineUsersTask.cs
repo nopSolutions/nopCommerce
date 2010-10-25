@@ -17,6 +17,7 @@ using System.Xml;
 using NopSolutions.NopCommerce.BusinessLogic.Tasks;
 using NopSolutions.NopCommerce.BusinessLogic.Audit;
 using NopSolutions.NopCommerce.BusinessLogic.Caching;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Audit.UsersOnline
 {
@@ -33,11 +34,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit.UsersOnline
         {
             try
             {
-                OnlineUserManager.PurgeUsers();
+                IoCFactory.Resolve<IOnlineUserManager>().PurgeUsers();
             }
             catch (Exception ex)
             {
-                LogManager.InsertLog(LogTypeEnum.CustomerError, "Error purging online users.", ex);
+                IoCFactory.Resolve<ILogManager>().InsertLog(LogTypeEnum.CustomerError, "Error purging online users.", ex);
             }
         }
     }

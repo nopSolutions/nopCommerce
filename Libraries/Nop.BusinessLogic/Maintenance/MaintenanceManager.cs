@@ -30,20 +30,21 @@ using NopSolutions.NopCommerce.BusinessLogic.Media;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Maintenance
 {
     /// <summary>
     /// Maintenance manager
     /// </summary>
-    public partial class MaintenanceManager
+    public partial class MaintenanceManager : IMaintenanceManager
     {
         #region Methods
 
         /// <summary>
         /// Reindex tables
         /// </summary>
-        public static void Reindex()
+        public void Reindex()
         {
             var context = ObjectContextHelper.CurrentObjectContext;
             context.Sp_Maintenance_ReindexTables();
@@ -52,9 +53,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Maintenance
         /// <summary>
         /// Backup database
         /// </summary>
-        public static void Backup()
+        public void Backup()
         {
-            string path = SettingManager.GetSettingValue("Maintenance.BackupPath").Trim();
+            string path = IoCFactory.Resolve<ISettingManager>().GetSettingValue("Maintenance.BackupPath").Trim();
             if (String.IsNullOrEmpty(path))
                 path = string.Format("{0}{1}", HttpContext.Current.Request.PhysicalApplicationPath, "Administration\\backups\\");
 
@@ -70,12 +71,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Maintenance
         /// <summary>
         /// Back up pictures
         /// </summary>
-        public static void BackupPictures()
+        public void BackupPictures()
         {
             string fileName = string.Format("{0}Administration\\backups\\images_{1}_{2}.zip", HttpContext.Current.Request.PhysicalApplicationPath, DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), CommonHelper.GenerateRandomDigitCode(4));
             using (ZipFile zipFile = new ZipFile())
             {
-                zipFile.AddDirectory(PictureManager.LocalImagePath);
+                zipFile.AddDirectory(IoCFactory.Resolve<IPictureManager>().LocalImagePath);
                 zipFile.Save(fileName);
             }
         }
@@ -85,7 +86,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Maintenance
         /// </summary>
         /// <param name="hours">Files to delete older than specified hours value</param>
         /// <returns>Number of deleted files</returns>
-        public static int DeleteOldExportImportFiles(int hours)
+        public int DeleteOldExportImportFiles(int hours)
         {
             int num = 0;
 
@@ -110,7 +111,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Maintenance
         /// Restore database
         /// </summary>
         /// <param name="fileName">Backup file name</param>
-        public static void RestoreBackup(string fileName)
+        public void RestoreBackup(string fileName)
         {
             if (String.IsNullOrEmpty(fileName))
                 return;
@@ -124,7 +125,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Maintenance
                         {
                             using (ZipFile zipFile = new ZipFile(fileName))
                             {
-                                zipFile.ExtractAll(PictureManager.LocalImagePath, ExtractExistingFileAction.OverwriteSilently);
+                                zipFile.ExtractAll(IoCFactory.Resolve<IPictureManager>().LocalImagePath, ExtractExistingFileAction.OverwriteSilently);
                             }
                         }
                         break;
@@ -143,7 +144,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Maintenance
         /// Delete the backup file
         /// </summary>
         /// <param name="fileName">Backup file name</param>
-        public static void DeleteBackup(string fileName)
+        public void DeleteBackup(string fileName)
         {
             if (File.Exists(fileName))
                 File.Delete(fileName);
@@ -153,7 +154,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Maintenance
         /// Gets all backup files
         /// </summary>
         /// <returns>Backup file collection</returns>
-        public static List<BackupFile> GetAllBackupFiles()
+        public List<BackupFile> GetAllBackupFiles()
         {
             var collection = new List<BackupFile>();
 

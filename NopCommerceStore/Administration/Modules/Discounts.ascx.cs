@@ -23,6 +23,7 @@ using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
  
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -38,7 +39,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         void BindGrid()
         {
-            var discounts = DiscountManager.GetAllDiscounts(null);
+            var discounts = IoCFactory.Resolve<IDiscountManager>().GetAllDiscounts(null);
             gvDiscounts.DataSource = discounts;
             gvDiscounts.DataBind();
         }

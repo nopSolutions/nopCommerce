@@ -28,6 +28,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Manufacturers;
 using NopSolutions.NopCommerce.BusinessLogic.Media;
 using NopSolutions.NopCommerce.BusinessLogic.Templates;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -50,7 +51,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     Manufacturer manufacturer = ctrlManufacturerInfo.SaveInfo();
                     ctrlManufacturerSEO.SaveInfo(manufacturer.ManufacturerId);
 
-                    CustomerActivityManager.InsertActivity(
+                    IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
                         "AddNewManufacturer",
                         GetLocaleResourceString("ActivityLog.AddNewManufacturer"),
                         manufacturer.Name);

@@ -30,13 +30,14 @@ using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.BusinessLogic.Utils.Html;
 using NopSolutions.NopCommerce.Common.Utils.Html;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
 {
     /// <summary>
     /// News manager
     /// </summary>
-    public partial class NewsManager
+    public partial class NewsManager : INewsManager
     {
         #region Constants
         private const string NEWS_BY_ID_KEY = "Nop.news.id-{0}";
@@ -50,14 +51,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
         /// </summary>
         /// <param name="newsId">The news identifier</param>
         /// <returns>News</returns>
-        public static News GetNewsById(int newsId)
+        public News GetNewsById(int newsId)
         {
             if (newsId == 0)
                 return null;
 
             string key = string.Format(NEWS_BY_ID_KEY, newsId);
             object obj2 = NopRequestCache.Get(key);
-            if (NewsManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (News)obj2;
             }
@@ -68,7 +69,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
                         select n;
             var news = query.SingleOrDefault();
 
-            if (NewsManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, news);
             }
@@ -79,7 +80,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
         /// Deletes a news
         /// </summary>
         /// <param name="newsId">The news identifier</param>
-        public static void DeleteNews(int newsId)
+        public void DeleteNews(int newsId)
         {
             var news = GetNewsById(newsId);
             if (news == null)
@@ -91,7 +92,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
             context.DeleteObject(news);
             context.SaveChanges();
 
-            if (NewsManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(NEWS_PATTERN_KEY);
             }
@@ -102,7 +103,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
         /// </summary>
         /// <param name="languageId">Language identifier. 0 if you want to get all news</param>
         /// <returns>News item collection</returns>
-        public static List<News> GetAllNews(int languageId)
+        public List<News> GetAllNews(int languageId)
         {
             bool showHidden = NopContext.Current.IsAdmin;
             return GetAllNews(languageId, showHidden);
@@ -114,7 +115,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
         /// <param name="languageId">Language identifier. 0 if you want to get all news</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>News item collection</returns>
-        public static List<News> GetAllNews(int languageId, bool showHidden)
+        public List<News> GetAllNews(int languageId, bool showHidden)
         {
             return GetAllNews(languageId, showHidden, Int32.MaxValue);
         }
@@ -125,7 +126,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
         /// <param name="languageId">Language identifier. 0 if you want to get all news</param>
         /// <param name="count">News count to return</param>
         /// <returns>News item collection</returns>
-        public static List<News> GetAllNews(int languageId, int count)
+        public List<News> GetAllNews(int languageId, int count)
         {
             bool showHidden = NopContext.Current.IsAdmin;
             return GetAllNews(languageId, showHidden, count);
@@ -138,7 +139,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <param name="count">News count to return</param>
         /// <returns>News item collection</returns>
-        public static List<News> GetAllNews(int languageId, bool showHidden, int count)
+        public List<News> GetAllNews(int languageId, bool showHidden, int count)
         {
             int totalRecords = 0;
 
@@ -153,7 +154,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
         /// <param name="pageIndex">Page index</param>
         /// <param name="totalRecords">Total records</param>
         /// <returns>News item collection</returns>
-        public static List<News> GetAllNews(int languageId, int pageIndex, int pageSize,
+        public List<News> GetAllNews(int languageId, int pageIndex, int pageSize,
             out int totalRecords)
         {
             bool showHidden = NopContext.Current.IsAdmin;
@@ -169,7 +170,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
         /// <param name="pageIndex">Page index</param>
         /// <param name="totalRecords">Total records</param>
         /// <returns>News item collection</returns>
-        public static List<News> GetAllNews(int languageId, bool showHidden, 
+        public List<News> GetAllNews(int languageId, bool showHidden, 
             int pageIndex, int pageSize, out int totalRecords)
         {
             if(pageSize <= 0)
@@ -200,7 +201,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
         /// Inserts a news item
         /// </summary>
         /// <param name="news">News item</param>
-        public static void InsertNews(News news)
+        public void InsertNews(News news)
         {
             if (news == null)
                 throw new ArgumentNullException("news");
@@ -216,7 +217,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
             context.News.AddObject(news);
             context.SaveChanges();
 
-            if (NewsManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(NEWS_PATTERN_KEY);
             }
@@ -226,7 +227,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
         /// Updates the news item
         /// </summary>
         /// <param name="news">News item</param>
-        public static void UpdateNews(News news)
+        public void UpdateNews(News news)
         {
             if (news == null)
                 throw new ArgumentNullException("news");
@@ -243,7 +244,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
 
             context.SaveChanges();
 
-            if (NewsManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(NEWS_PATTERN_KEY);
             }
@@ -254,7 +255,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
         /// </summary>
         /// <param name="newsCommentId">News comment identifer</param>
         /// <returns>News comment</returns>
-        public static NewsComment GetNewsCommentById(int newsCommentId)
+        public NewsComment GetNewsCommentById(int newsCommentId)
         {
             if (newsCommentId == 0)
                 return null;
@@ -272,7 +273,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
         /// </summary>
         /// <param name="newsId">The news identifier</param>
         /// <returns>News comment collection</returns>
-        public static List<NewsComment> GetNewsCommentsByNewsId(int newsId)
+        public List<NewsComment> GetNewsCommentsByNewsId(int newsId)
         {
             var context = ObjectContextHelper.CurrentObjectContext;
             var query = from nc in context.NewsComments
@@ -287,7 +288,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
         /// Deletes a news comment
         /// </summary>
         /// <param name="newsCommentId">The news comment identifier</param>
-        public static void DeleteNewsComment(int newsCommentId)
+        public void DeleteNewsComment(int newsCommentId)
         {
             var newsComment = GetNewsCommentById(newsCommentId);
             if (newsComment == null)
@@ -304,7 +305,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
         /// Gets all news comments
         /// </summary>
         /// <returns>News comment collection</returns>
-        public static List<NewsComment> GetAllNewsComments()
+        public List<NewsComment> GetAllNewsComments()
         {
             var context = ObjectContextHelper.CurrentObjectContext;
             var query = from nc in context.NewsComments
@@ -323,11 +324,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
         /// <param name="comment">The comment</param>
         /// <param name="createdOn">The date and time of instance creation</param>
         /// <returns>News comment</returns>
-        public static NewsComment InsertNewsComment(int newsId, int customerId,
+        public NewsComment InsertNewsComment(int newsId, int customerId,
             string title, string comment, DateTime createdOn)
         {
             return InsertNewsComment(newsId, customerId, title, comment, 
-                createdOn, NewsManager.NotifyAboutNewNewsComments);
+                createdOn, this.NotifyAboutNewNewsComments);
         }
 
         /// <summary>
@@ -340,7 +341,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
         /// <param name="createdOn">The date and time of instance creation</param>
         /// <param name="notify">A value indicating whether to notify the store owner</param>
         /// <returns>News comment</returns>
-        public static NewsComment InsertNewsComment(int newsId, int customerId,
+        public NewsComment InsertNewsComment(int newsId, int customerId,
             string title, string comment, DateTime createdOn, bool notify)
         {
             string IPAddress = NopContext.Current.UserHostAddress;
@@ -358,7 +359,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
         /// <param name="createdOn">The date and time of instance creation</param>
         /// <param name="notify">A value indicating whether to notify the store owner</param>
         /// <returns>News comment</returns>
-        public static NewsComment InsertNewsComment(int newsId, int customerId, string ipAddress,
+        public NewsComment InsertNewsComment(int newsId, int customerId, string ipAddress,
             string title, string comment, DateTime createdOn, bool notify)
         {
             ipAddress = CommonHelper.EnsureNotNull(ipAddress);
@@ -383,7 +384,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
             //notifications
             if (notify)
             {
-                MessageManager.SendNewsCommentNotificationMessage(newsComment, LocalizationManager.DefaultAdminLanguage.LanguageId);
+                IoCFactory.Resolve<IMessageManager>().SendNewsCommentNotificationMessage(newsComment, LocalizationManager.DefaultAdminLanguage.LanguageId);
             }
 
             return newsComment;
@@ -393,7 +394,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
         /// Updates the news comment
         /// </summary>
         /// <param name="newsComment">News comment</param>
-        public static void UpdateNewsComment(NewsComment newsComment)
+        public void UpdateNewsComment(NewsComment newsComment)
         {
             if (newsComment == null)
                 throw new ArgumentNullException("newsComment");
@@ -416,7 +417,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
         /// </summary>
         /// <param name="text">Text</param>
         /// <returns>Formatted text</returns>
-        public static string FormatCommentText(string text)
+        public string FormatCommentText(string text)
         {
             if (String.IsNullOrEmpty(text))
                 return string.Empty;
@@ -428,109 +429,112 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
         #endregion
 
         #region Properties
+
         /// <summary>
         /// Gets a value indicating whether cache is enabled
         /// </summary>
-        public static bool CacheEnabled
+        public bool CacheEnabled
         {
             get
             {
-                return SettingManager.GetSettingValueBoolean("Cache.NewsManager.CacheEnabled");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.NewsManager.CacheEnabled");
             }
         }
         
         /// <summary>
         /// Gets or sets a value indicating whether news are enabled
         /// </summary>
-        public static bool NewsEnabled
+        public bool NewsEnabled
         {
             get
             {
-                bool newsEnabled = SettingManager.GetSettingValueBoolean("News.NewsEnabled");
+                bool newsEnabled = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("News.NewsEnabled");
                 return newsEnabled;
             }
             set
             {
-                SettingManager.SetParam("News.NewsEnabled", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("News.NewsEnabled", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether not registered user can leave comments
         /// </summary>
-        public static bool AllowNotRegisteredUsersToLeaveComments
+        public bool AllowNotRegisteredUsersToLeaveComments
         {
             get
             {
-                return SettingManager.GetSettingValueBoolean("News.AllowNotRegisteredUsersToLeaveComments");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("News.AllowNotRegisteredUsersToLeaveComments");
             }
             set
             {
-                SettingManager.SetParam("News.AllowNotRegisteredUsersToLeaveComments", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("News.AllowNotRegisteredUsersToLeaveComments", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether to notify about new news comments
         /// </summary>
-        public static bool NotifyAboutNewNewsComments
+        public bool NotifyAboutNewNewsComments
         {
             get
             {
-                return SettingManager.GetSettingValueBoolean("News.NotifyAboutNewNewsComments");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("News.NotifyAboutNewNewsComments");
             }
             set
             {
-                SettingManager.SetParam("News.NotifyAboutNewNewsComments", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("News.NotifyAboutNewNewsComments", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether to show news on the main page
         /// </summary>
-        public static bool ShowNewsOnMainPage
+        public bool ShowNewsOnMainPage
         {
             get
             {
-                bool showNewsOnMainPage = SettingManager.GetSettingValueBoolean("Display.ShowNewsOnMainPage");
+                bool showNewsOnMainPage = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Display.ShowNewsOnMainPage");
                 return showNewsOnMainPage;
             }
             set
             {
-                SettingManager.SetParam("Display.ShowNewsOnMainPage", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("Display.ShowNewsOnMainPage", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets a value indicating news count displayed on the main page
         /// </summary>
-        public static int MainPageNewsCount
+        public int MainPageNewsCount
         {
             get
             {
-                int mainPageNewsCount = SettingManager.GetSettingValueInteger("Display.MainPageNewsCount");
+                int mainPageNewsCount = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Display.MainPageNewsCount");
                 return mainPageNewsCount;
             }
             set
             {
-                SettingManager.SetParam("Display.MainPageNewsCount", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("Display.MainPageNewsCount", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets the page size for news archive
         /// </summary>
-        public static int NewsArchivePageSize
+        public int NewsArchivePageSize
         {
             get
             {
-                return SettingManager.GetSettingValueInteger("Display.NewsArchivePageSize", 10);
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Display.NewsArchivePageSize", 10);
             }
             set
             {
-                SettingManager.SetParam("Display.NewsArchivePageSize", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("Display.NewsArchivePageSize", value.ToString());
             }
         }
+
+
         #endregion
     }
 }

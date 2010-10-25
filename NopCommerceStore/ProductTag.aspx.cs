@@ -31,13 +31,14 @@ using NopSolutions.NopCommerce.BusinessLogic.Payment;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 namespace NopSolutions.NopCommerce.Web
 {
     public partial class ProductTagPage : BaseNopPage
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            var productTag = ProductManager.GetProductTagById(this.ProductTagId);
+            var productTag = IoCFactory.Resolve<IProductManager>().GetProductTagById(this.ProductTagId);
             if (productTag != null)
             {
                 string title = string.Format(GetLocaleResourceString("PageTitle.ProductTags"), productTag.Name);

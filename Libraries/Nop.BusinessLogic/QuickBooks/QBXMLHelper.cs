@@ -15,6 +15,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Payment;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Common.Utils.Html;
 using System.Web;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
 {
@@ -166,7 +167,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
             {
                 discTotal += order.RedeemedRewardPoints.UsedAmount;
             }
-            foreach(var gc in OrderManager.GetAllGiftCardUsageHistoryEntries(null, null, order.OrderId))
+            foreach(var gc in IoCFactory.Resolve<IOrderManager>().GetAllGiftCardUsageHistoryEntries(null, null, order.OrderId))
             {
                 discTotal += gc.UsedValue;
             }
@@ -309,7 +310,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
             XmlElement elAppliedToTxnAdd = xml.CreateElement("AppliedToTxnAdd");
             elReceivePaymentAdd.AppendChild(elAppliedToTxnAdd);
 
-            elAppliedToTxnAdd.AppendChild(CreateIDTypeNode(xml, "TxnID", QBManager.GetQBEntityByNopId(EntityTypeEnum.Invoice, order.OrderId)));
+            elAppliedToTxnAdd.AppendChild(CreateIDTypeNode(xml, "TxnID", IoCFactory.Resolve<IQBManager>().GetQBEntityByNopId(EntityTypeEnum.Invoice, order.OrderId)));
             elAppliedToTxnAdd.AppendChild(CreateAmtTypeNode(xml, "PaymentAmount", order.OrderTotal));
 
             decimal discTotal = order.OrderDiscount;
@@ -317,14 +318,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
             {
                 discTotal += order.RedeemedRewardPoints.UsedAmount;
             }
-            foreach (var gc in OrderManager.GetAllGiftCardUsageHistoryEntries(null, null, order.OrderId))
+            foreach (var gc in IoCFactory.Resolve<IOrderManager>().GetAllGiftCardUsageHistoryEntries(null, null, order.OrderId))
             {
                 discTotal += gc.UsedValue;
             }
             if (discTotal != Decimal.Zero)
             {
                 elAppliedToTxnAdd.AppendChild(CreateAmtTypeNode(xml, "DiscountAmount", discTotal));
-                elAppliedToTxnAdd.AppendChild(CreateRefNode(xml, "DiscountAccountRef", QBManager.QBDiscountAccountRef));
+                elAppliedToTxnAdd.AppendChild(CreateRefNode(xml, "DiscountAccountRef", IoCFactory.Resolve<IQBManager>().QBDiscountAccountRef));
             }
 
             return xml;
@@ -347,7 +348,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
             elRoot.AppendChild(elTxnVoidRq);
             
             elTxnVoidRq.AppendChild(CreateStrTypeNode(xml, "TxnVoidType", "Invoice"));
-            elTxnVoidRq.AppendChild(CreateIDTypeNode(xml, "TxnID", QBManager.GetQBEntityByNopId(EntityTypeEnum.Invoice, order.OrderId)));
+            elTxnVoidRq.AppendChild(CreateIDTypeNode(xml, "TxnID", IoCFactory.Resolve<IQBManager>().GetQBEntityByNopId(EntityTypeEnum.Invoice, order.OrderId)));
 
             return xml;
         }
@@ -369,7 +370,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
             elRoot.AppendChild(elTxnVoidRq);
 
             elTxnVoidRq.AppendChild(CreateStrTypeNode(xml, "TxnDelType", "Invoice"));
-            elTxnVoidRq.AppendChild(CreateIDTypeNode(xml, "TxnID", QBManager.GetQBEntityByNopId(EntityTypeEnum.Invoice, order.OrderId)));
+            elTxnVoidRq.AppendChild(CreateIDTypeNode(xml, "TxnID", IoCFactory.Resolve<IQBManager>().GetQBEntityByNopId(EntityTypeEnum.Invoice, order.OrderId)));
 
             return xml;
         }
@@ -409,7 +410,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
         {
             XmlElement el = xml.CreateElement("DiscountLineAdd");
             el.AppendChild(CreateAmtTypeNode(xml, "Amount", amount));
-            el.AppendChild(CreateRefNode(xml, "AccountRef", QBManager.QBDiscountAccountRef));
+            el.AppendChild(CreateRefNode(xml, "AccountRef", IoCFactory.Resolve<IQBManager>().QBDiscountAccountRef));
             return el;
         }
 
@@ -417,7 +418,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
         {
             XmlElement el = xml.CreateElement("ShippingLineAdd");
             el.AppendChild(CreateAmtTypeNode(xml, "Amount", amount));
-            el.AppendChild(CreateRefNode(xml, "AccountRef", QBManager.QBShippingAccountRef));
+            el.AppendChild(CreateRefNode(xml, "AccountRef", IoCFactory.Resolve<IQBManager>().QBShippingAccountRef));
             return el;
         }
 
@@ -425,28 +426,28 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
         {
             XmlElement el = xml.CreateElement("SalesTaxLineAdd");
             el.AppendChild(CreateAmtTypeNode(xml, "Amount", amount));
-            el.AppendChild(CreateRefNode(xml, "AccountRef", QBManager.QBSalesTaxAccountRef));
+            el.AppendChild(CreateRefNode(xml, "AccountRef", IoCFactory.Resolve<IQBManager>().QBSalesTaxAccountRef));
             return el;
         }
 
         private static XmlElement CreatePriceTypeNode(XmlDocument xml, string name, decimal value)
         {
             XmlElement el = xml.CreateElement(name);
-            el.InnerText = value.ToString("F", CultureInfo.CreateSpecificCulture(QBManager.QBCultureName));
+            el.InnerText = value.ToString("F", CultureInfo.CreateSpecificCulture(IoCFactory.Resolve<IQBManager>().QBCultureName));
             return el;
         }
 
         private static XmlElement CreateAmtTypeNode(XmlDocument xml, string name, decimal value)
         {
             XmlElement el = xml.CreateElement(name);
-            el.InnerText = value.ToString("F", CultureInfo.CreateSpecificCulture(QBManager.QBCultureName));
+            el.InnerText = value.ToString("F", CultureInfo.CreateSpecificCulture(IoCFactory.Resolve<IQBManager>().QBCultureName));
             return el;
         }
 
         private static XmlElement CreateQuanTypeNode(XmlDocument xml, string name, decimal value)
         {
             XmlElement el = xml.CreateElement(name);
-            el.InnerText = value.ToString("F", CultureInfo.CreateSpecificCulture(QBManager.QBCultureName));
+            el.InnerText = value.ToString("F", CultureInfo.CreateSpecificCulture(IoCFactory.Resolve<IQBManager>().QBCultureName));
             return el;
         }
 
@@ -486,7 +487,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
             XmlElement el = xml.CreateElement("InvoiceLineAdd");
             ProductVariant pv = opv.ProductVariant;
 
-            el.AppendChild(CreateRefNode(xml, "ItemRef", QBManager.QBItemRef));
+            el.AppendChild(CreateRefNode(xml, "ItemRef", IoCFactory.Resolve<IQBManager>().QBItemRef));
             el.AppendChild(CreateStrTypeNode(xml, "Desc", pv != null ? pv.FullProductName : "Product variant is not available"));
             el.AppendChild(CreateQuanTypeNode(xml, "Quantity", opv.Quantity));
             el.AppendChild(CreatePriceTypeNode(xml, "Rate", opv.UnitPriceInclTax));
@@ -500,7 +501,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
             ProductVariant pv = opv.ProductVariant;
 
             el.AppendChild(CreateStrTypeNode(xml, "TxnLineID", "-1"));
-            el.AppendChild(CreateRefNode(xml, "ItemRef", QBManager.QBItemRef));
+            el.AppendChild(CreateRefNode(xml, "ItemRef", IoCFactory.Resolve<IQBManager>().QBItemRef));
             el.AppendChild(CreateStrTypeNode(xml, "Desc", pv != null ? pv.FullProductName : "Product variant is not available"));
             el.AppendChild(CreateQuanTypeNode(xml, "Quantity", opv.Quantity));
             el.AppendChild(CreatePriceTypeNode(xml, "Rate", opv.UnitPriceInclTax));

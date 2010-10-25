@@ -30,6 +30,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Content.Blog;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -41,10 +42,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
         /// <param name="output">The output.</param>
         protected override void Render(HtmlTextWriter output)
         {
-            if (SettingManager.GetSettingValueBoolean("Analytics.GoogleEnabled"))
+            if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Analytics.GoogleEnabled"))
             {
-                string googleJS = SettingManager.GetSettingValue("Analytics.GoogleJS");
-                //string googleId = SettingManager.GetSettingValue("Analytics.GoogleId");
+                string googleJS = IoCFactory.Resolve<ISettingManager>().GetSettingValue("Analytics.GoogleJS");
+                //string googleId = IoCFactory.Resolve<ISettingManager>().GetSettingValue("Analytics.GoogleId");
                 //string analyticsString = string.Format(googleJS, googleId);
                 //render output
                 output.Write(googleJS);

@@ -28,6 +28,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Payment;
 using NopSolutions.NopCommerce.BusinessLogic.Utils;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Common;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 
 namespace NopSolutions.NopCommerce.Payment.Methods.Moneybookers
@@ -47,7 +48,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Moneybookers
         /// </summary>
         public MoneybookersPaymentProcessor()
         {
-            payToEmail = SettingManager.GetSettingValue("PaymentMethod.Moneybookers.PayToEmail");
+            payToEmail = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Moneybookers.PayToEmail");
         }
         #endregion
 
@@ -86,14 +87,14 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Moneybookers
             remotePostHelper.Url = GetMoneybookersUrl();
 
             remotePostHelper.Add("pay_to_email", payToEmail);
-            remotePostHelper.Add("recipient_description", SettingManager.StoreName);
+            remotePostHelper.Add("recipient_description", IoCFactory.Resolve<ISettingManager>().StoreName);
             remotePostHelper.Add("transaction_id", order.OrderId.ToString());
             remotePostHelper.Add("cancel_url", CommonHelper.GetStoreLocation(false));
             remotePostHelper.Add("status_url", CommonHelper.GetStoreLocation(false) + "MoneybookersReturn.aspx");
             //supported moneybookers languages (EN, DE, ES, FR, IT, PL, GR, RO, RU, TR, CN, CZ or NL)
             remotePostHelper.Add("language", "EN");
             remotePostHelper.Add("amount", order.OrderTotal.ToString(new CultureInfo("en-US", false).NumberFormat));
-            remotePostHelper.Add("currency", CurrencyManager.PrimaryStoreCurrency.CurrencyCode);
+            remotePostHelper.Add("currency", IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency.CurrencyCode);
             remotePostHelper.Add("detail1_description", "Order ID:");
             remotePostHelper.Add("detail1_text", order.OrderId.ToString());
 
@@ -103,12 +104,12 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Moneybookers
             remotePostHelper.Add("phone_number", order.BillingPhoneNumber);
             remotePostHelper.Add("postal_code", order.BillingZipPostalCode);
             remotePostHelper.Add("city", order.BillingCity);
-            StateProvince billingStateProvince = StateProvinceManager.GetStateProvinceById(order.BillingStateProvinceId);
+            StateProvince billingStateProvince = IoCFactory.Resolve<IStateProvinceManager>().GetStateProvinceById(order.BillingStateProvinceId);
             if (billingStateProvince != null)
                 remotePostHelper.Add("state", billingStateProvince.Abbreviation);
             else
                 remotePostHelper.Add("state", order.BillingStateProvince);
-            Country billingCountry = CountryManager.GetCountryById(order.BillingCountryId);
+            Country billingCountry = IoCFactory.Resolve<ICountryManager>().GetCountryById(order.BillingCountryId);
             if (billingCountry != null)
                 remotePostHelper.Add("country", billingCountry.ThreeLetterIsoCode);
             else
@@ -123,7 +124,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Moneybookers
         /// <returns>Additional handling fee</returns>
         public decimal GetAdditionalHandlingFee()
         {
-            return SettingManager.GetSettingValueDecimalNative("PaymentMethod.Moneybookers.AdditionalFee");
+            return IoCFactory.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.Moneybookers.AdditionalFee");
         }
 
         /// <summary>

@@ -24,6 +24,7 @@ using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
  
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -31,7 +32,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            StateProvince stateProvince = StateProvinceManager.GetStateProvinceById(this.StateProvinceId);
+            StateProvince stateProvince = IoCFactory.Resolve<IStateProvinceManager>().GetStateProvinceById(this.StateProvinceId);
             if (stateProvince != null)
             {
                 CommonHelper.SelectListItem(this.ddlCountry, stateProvince.CountryId);
@@ -44,7 +45,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         private void FillDropDowns()
         {
             this.ddlCountry.Items.Clear();
-            var countryCollection = CountryManager.GetAllCountries();
+            var countryCollection = IoCFactory.Resolve<ICountryManager>().GetAllCountries();
             foreach (Country country in countryCollection)
             {
                 ListItem ddlCountryItem2 = new ListItem(country.Name, country.CountryId.ToString());
@@ -63,14 +64,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public StateProvince SaveInfo()
         {
-            StateProvince stateProvince = StateProvinceManager.GetStateProvinceById(this.StateProvinceId);
+            StateProvince stateProvince = IoCFactory.Resolve<IStateProvinceManager>().GetStateProvinceById(this.StateProvinceId);
             if (stateProvince != null)
             {
                 stateProvince.CountryId = int.Parse(this.ddlCountry.SelectedItem.Value);
                 stateProvince.Name = txtName.Text;
                 stateProvince.Abbreviation = txtAbbreviation.Text;
                 stateProvince.DisplayOrder = txtDisplayOrder.Value;
-                StateProvinceManager.UpdateStateProvince(stateProvince);
+                IoCFactory.Resolve<IStateProvinceManager>().UpdateStateProvince(stateProvince);
             }
             else
             {
@@ -81,7 +82,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     Abbreviation = txtAbbreviation.Text,
                     DisplayOrder = txtDisplayOrder.Value
                 };
-                StateProvinceManager.InsertStateProvince(stateProvince);
+                IoCFactory.Resolve<IStateProvinceManager>().InsertStateProvince(stateProvince);
             }
             return stateProvince;
         }

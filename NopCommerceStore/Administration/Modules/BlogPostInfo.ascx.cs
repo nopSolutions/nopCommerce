@@ -28,6 +28,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Content.Blog;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -36,7 +37,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         private void FillDropDowns()
         {
             this.ddlLanguage.Items.Clear();
-            var languages = LanguageManager.GetAllLanguages();
+            var languages = IoCFactory.Resolve<ILanguageManager>().GetAllLanguages();
             foreach (Language language in languages)
             {
                 ListItem item2 = new ListItem(language.Name, language.LanguageId.ToString());
@@ -46,7 +47,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         private void BindData()
         {
-            BlogPost blogPost = BlogManager.GetBlogPostById(this.BlogPostId);
+            BlogPost blogPost = IoCFactory.Resolve<IBlogManager>().GetBlogPostById(this.BlogPostId);
             if (blogPost != null)
             {
                 CommonHelper.SelectListItem(this.ddlLanguage, blogPost.LanguageId);
@@ -86,7 +87,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public BlogPost SaveInfo()
         {
-            BlogPost blogPost = BlogManager.GetBlogPostById(this.BlogPostId);
+            BlogPost blogPost = IoCFactory.Resolve<IBlogManager>().GetBlogPostById(this.BlogPostId);
             if (blogPost != null)
             {
                 blogPost.LanguageId = int.Parse(this.ddlLanguage.SelectedItem.Value);
@@ -95,7 +96,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 blogPost.BlogPostAllowComments = cbBlogPostAllowComments.Checked;
                 blogPost.Tags = txtTags.Text.Trim();
 
-                BlogManager.UpdateBlogPost(blogPost);
+                IoCFactory.Resolve<IBlogManager>().UpdateBlogPost(blogPost);
             }
             else
             {
@@ -109,7 +110,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     CreatedById = NopContext.Current.User.CustomerId,
                     CreatedOn = DateTime.UtcNow
                 };
-                BlogManager.InsertBlogPost(blogPost);
+                IoCFactory.Resolve<IBlogManager>().InsertBlogPost(blogPost);
             }
             return blogPost;
         }

@@ -90,9 +90,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Caching
         /// </summary>
         /// <param name="key">key</param>
         /// <param name="obj">object</param>
-        public static void Max(string key, object obj)
+        public static void Add(string key, object obj)
         {
-            Max(key, obj, null);
+            Add(key, obj, null);
         }
 
         /// <summary>
@@ -101,7 +101,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Caching
         /// <param name="key">key</param>
         /// <param name="obj">object</param>
         /// <param name="dep">cache dependency</param>
-        public static void Max(string key, object obj, CacheDependency dep)
+        public static void Add(string key, object obj, CacheDependency dep)
         {
             if (IsEnabled && (obj != null))
             {

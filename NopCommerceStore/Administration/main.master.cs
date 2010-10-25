@@ -24,8 +24,10 @@ using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.Caching;
+using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Utils;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration
 {
@@ -41,7 +43,7 @@ namespace NopSolutions.NopCommerce.Web.Administration
 
         protected void BindData()
         {
-            string headerText = string.Format("nopCommerce {0}", SiteHelper.GetCurrentVersion());
+            string headerText = string.Format("nopCommerce {0}", IoCFactory.Resolve<ISettingManager>().CurrentVersion);
             lblHeader.Text = headerText;
         }
 

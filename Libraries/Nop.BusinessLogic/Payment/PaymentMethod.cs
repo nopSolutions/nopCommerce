@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Payment
 {
@@ -108,7 +109,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
                 {
                     try
                     {
-                        this.paymentMethodType = PaymentManager.GetPaymentMethodType(this.PaymentMethodId);
+                        this.paymentMethodType = IoCFactory.Resolve<IPaymentManager>().GetPaymentMethodType(this.PaymentMethodId);
                     }
                     catch { }
                 }

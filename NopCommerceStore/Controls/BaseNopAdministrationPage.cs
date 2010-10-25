@@ -34,6 +34,7 @@ using NopSolutions.NopCommerce.Common.Utils;
 using System.Collections.Generic;
 using AjaxControlToolkit;
 using NopSolutions.NopCommerce.BusinessLogic.Audit.UsersOnline;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 
 namespace NopSolutions.NopCommerce.Web
@@ -127,7 +128,7 @@ namespace NopSolutions.NopCommerce.Web
 
         protected virtual bool ValidateIP()
         {
-            string ipList = SettingManager.GetSettingValue("Security.AdminAreaAllowedIP").Trim();
+            string ipList = IoCFactory.Resolve<ISettingManager>().GetSettingValue("Security.AdminAreaAllowedIP").Trim();
             if(String.IsNullOrEmpty(ipList))
             {
                 return true;
@@ -157,7 +158,7 @@ namespace NopSolutions.NopCommerce.Web
             //online user tracking
             if (this.TrackedByOnlineCustomersModule)
             {
-                OnlineUserManager.TrackCurrentUser();
+                IoCFactory.Resolve<IOnlineUserManager>().TrackCurrentUser();
             }
 
             base.OnPreRender(e);
@@ -170,10 +171,10 @@ namespace NopSolutions.NopCommerce.Web
 
         protected void ProcessException(Exception exc, bool showError)
         {
-            LogManager.InsertLog(LogTypeEnum.AdministrationArea, exc.Message, exc);
+            IoCFactory.Resolve<ILogManager>().InsertLog(LogTypeEnum.AdministrationArea, exc.Message, exc);
             if (showError)
             {
-                if (SettingManager.GetSettingValueBoolean("Display.AdminArea.ShowFullErrors"))
+                if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Display.AdminArea.ShowFullErrors"))
                 {
                     ShowError(exc.Message, exc.ToString());
                 }

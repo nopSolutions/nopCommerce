@@ -17,6 +17,7 @@ using System.Xml;
 using NopSolutions.NopCommerce.BusinessLogic.Tasks;
 using NopSolutions.NopCommerce.BusinessLogic.Audit;
 using NopSolutions.NopCommerce.BusinessLogic.Caching;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Caching
 {
@@ -37,7 +38,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Caching
             }
             catch (Exception ex)
             {
-                LogManager.InsertLog(LogTypeEnum.AdministrationArea, "Error clearing cache.", ex);
+                IoCFactory.Resolve<ILogManager>().InsertLog(LogTypeEnum.AdministrationArea, "Error clearing cache.", ex);
             }
         }
     }

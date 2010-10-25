@@ -30,6 +30,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -108,10 +109,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
         protected void CreateMenu()
         {
             List<Category> breadCrumb = null;
-            var currentCategory = CategoryManager.GetCategoryById(CommonHelper.QueryStringInt("CategoryId"));
+            var currentCategory = IoCFactory.Resolve<ICategoryManager>().GetCategoryById(CommonHelper.QueryStringInt("CategoryId"));
             if (currentCategory == null)
             {
-                var product = ProductManager.GetProductById(CommonHelper.QueryStringInt("ProductId"));
+                var product = IoCFactory.Resolve<IProductManager>().GetProductById(CommonHelper.QueryStringInt("ProductId"));
                 if (product != null)
                 {
                     var productCategories = product.ProductCategories;
@@ -123,7 +124,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             }
 
             if (currentCategory != null)
-                breadCrumb = CategoryManager.GetBreadCrumb(currentCategory.CategoryId);
+                breadCrumb = IoCFactory.Resolve<ICategoryManager>().GetBreadCrumb(currentCategory.CategoryId);
             else
                 breadCrumb = new List<Category>();
 
@@ -133,13 +134,13 @@ namespace NopSolutions.NopCommerce.Web.Modules
         protected int GetNumberOfProducts(Category category, bool includeSubCategories)
         {
             int numberOfProducts = 0;
-            var products = ProductManager.GetAllProducts(category.CategoryId,
+            var products = IoCFactory.Resolve<IProductManager>().GetAllProducts(category.CategoryId,
                         0, 0, null, null, null, string.Empty, false, 1, 0,
                         null, ProductSortingEnum.Position, out numberOfProducts);
 
             if (includeSubCategories)
             {
-                var subCategories = CategoryManager.GetAllCategoriesByParentCategoryId(category.CategoryId);
+                var subCategories = IoCFactory.Resolve<ICategoryManager>().GetAllCategoriesByParentCategoryId(category.CategoryId);
                 foreach (var subCategory in subCategories)
                 {
                     int tmp1 = GetNumberOfProducts(subCategory, includeSubCategories);
@@ -152,7 +153,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
         protected void CreateChildMenu(List<Category> breadCrumb, int rootCategoryId, Category currentCategory, int level)
         {
             int padding = level++ * 15;
-            foreach (var category in CategoryManager.GetAllCategoriesByParentCategoryId(rootCategoryId))
+            foreach (var category in IoCFactory.Resolve<ICategoryManager>().GetAllCategoriesByParentCategoryId(rootCategoryId))
             {
                 var link = new NopCommerceLi();
                 phCategories.Controls.Add(link);
@@ -164,10 +165,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     link.CssClass = "inactive";
                 link.HyperLink.NavigateUrl = categoryURL;
                 string catName = string.Empty;
-                if (SettingManager.GetSettingValueBoolean("Display.Products.ShowCategoryProductNumber"))
+                if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Display.Products.ShowCategoryProductNumber"))
                 {
                     //display category name with assigned products number
-                    int numberOfProducts = GetNumberOfProducts(category, SettingManager.GetSettingValueBoolean("Display.Products.ShowCategoryProductNumber.IncludeSubCategories"));
+                    int numberOfProducts = GetNumberOfProducts(category, IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Display.Products.ShowCategoryProductNumber.IncludeSubCategories"));
                     catName = string.Format("{0} ({1})", category.LocalizedName, numberOfProducts);
                 }
                 else

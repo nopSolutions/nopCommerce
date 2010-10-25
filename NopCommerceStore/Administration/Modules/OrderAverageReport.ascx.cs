@@ -29,6 +29,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Audit;
 using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
  
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
@@ -46,10 +47,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         protected void BindData()
         {
             var report = new List<OrderAverageReportLineSummary>();
-            report.Add(OrderManager.OrderAverageReport(OrderStatusEnum.Pending));
-            report.Add(OrderManager.OrderAverageReport(OrderStatusEnum.Processing));
-            report.Add(OrderManager.OrderAverageReport(OrderStatusEnum.Complete));
-            report.Add(OrderManager.OrderAverageReport(OrderStatusEnum.Cancelled));
+            report.Add(IoCFactory.Resolve<IOrderManager>().OrderAverageReport(OrderStatusEnum.Pending));
+            report.Add(IoCFactory.Resolve<IOrderManager>().OrderAverageReport(OrderStatusEnum.Processing));
+            report.Add(IoCFactory.Resolve<IOrderManager>().OrderAverageReport(OrderStatusEnum.Complete));
+            report.Add(IoCFactory.Resolve<IOrderManager>().OrderAverageReport(OrderStatusEnum.Cancelled));
             gvOrders.DataSource = report;
             gvOrders.DataBind();
         }

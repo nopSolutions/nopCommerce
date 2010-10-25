@@ -23,13 +23,14 @@ using NopSolutions.NopCommerce.BusinessLogic.Data;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Security
 {
     /// <summary>
     /// IP Blacklist manager implementation
     /// </summary>
-    public partial class IpBlacklistManager
+    public partial class IpBlacklistManager : IIpBlacklistManager
     {
         #region Constants
         private const string BLACKLIST_ALLIP_KEY = "Nop.blacklist.ip.all";
@@ -48,7 +49,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
         /// </summary>
         /// <param name="ipAddress">A string representation of the IP address to convert</param>
         /// <returns>Returns a backwards uint representation of the string.</returns>
-        private static uint IpAddressToLongBackwards(string ipAddress)
+        private uint IpAddressToLongBackwards(string ipAddress)
         {
             var oIP = System.Net.IPAddress.Parse(ipAddress);
             byte[] byteIP = oIP.GetAddressBytes();
@@ -69,7 +70,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
         /// </summary>
         /// <param name="ipAddressId">IP Address unique identifier</param>
         /// <returns>An IP address</returns>
-        public static BannedIpAddress GetBannedIpAddressById(int ipAddressId)
+        public BannedIpAddress GetBannedIpAddressById(int ipAddressId)
         {
             if (ipAddressId == 0)
                 return null;
@@ -87,7 +88,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
         /// Gets all IP addresses
         /// </summary>
         /// <returns>An IP address collection</returns>
-        public static List<BannedIpAddress> GetBannedIpAddressAll()
+        public List<BannedIpAddress> GetBannedIpAddressAll()
         {
             string key = BLACKLIST_ALLIP_KEY;
             object obj2 = NopRequestCache.Get(key);
@@ -102,7 +103,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
                         select ba;
             var collection = query.ToList();
 
-            if (IpBlacklistManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, collection);
             }
@@ -114,7 +115,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
         /// </summary>
         /// <param name="ipAddress">IP address</param>
         /// <returns>IP Address</returns>
-        public static void InsertBannedIpAddress(BannedIpAddress ipAddress)
+        public void InsertBannedIpAddress(BannedIpAddress ipAddress)
         {
             if (ipAddress == null)
                 throw new ArgumentNullException("ipAddress");
@@ -130,7 +131,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
             context.BannedIpAddresses.AddObject(ipAddress);
             context.SaveChanges();
 
-            if (IpBlacklistManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(BLACKLIST_IP_PATTERN_KEY);
             }
@@ -141,7 +142,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
         /// </summary>
         /// <param name="ipAddress">IP address</param>
         /// <returns>IP address</returns>
-        public static void UpdateBannedIpAddress(BannedIpAddress ipAddress)
+        public void UpdateBannedIpAddress(BannedIpAddress ipAddress)
         {
             if (ipAddress == null)
                 throw new ArgumentNullException("ipAddress");
@@ -158,7 +159,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
 
             context.SaveChanges();
 
-            if (IpBlacklistManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(BLACKLIST_IP_PATTERN_KEY);
             }
@@ -168,7 +169,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
         /// Deletes an IP address by its identifier
         /// </summary>
         /// <param name="ipAddressId">IP address unique identifier</param>
-        public static void DeleteBannedIpAddress(int ipAddressId)
+        public void DeleteBannedIpAddress(int ipAddressId)
         {
             var ipAddress = GetBannedIpAddressById(ipAddressId);
             if (ipAddress == null)
@@ -180,7 +181,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
             context.DeleteObject(ipAddress);
             context.SaveChanges();
 
-            if (IpBlacklistManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(BLACKLIST_IP_PATTERN_KEY);
             }
@@ -191,7 +192,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
         /// </summary>
         /// <param name="bannedIpNetworkId">IP network unique identifier</param>
         /// <returns>IP network</returns>
-        public static BannedIpNetwork GetBannedIpNetworkById(int bannedIpNetworkId)
+        public BannedIpNetwork GetBannedIpNetworkById(int bannedIpNetworkId)
         {
             if (bannedIpNetworkId == 0)
                 return null;
@@ -209,11 +210,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
         /// Gets all IP networks
         /// </summary>
         /// <returns>IP network collection</returns>
-        public static List<BannedIpNetwork> GetBannedIpNetworkAll()
+        public List<BannedIpNetwork> GetBannedIpNetworkAll()
         {
             string key = BLACKLIST_ALLNETWORK_KEY;
             object obj2 = NopRequestCache.Get(key);
-            if (IpBlacklistManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (List<BannedIpNetwork>)obj2;
             }
@@ -224,7 +225,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
                         select bn;
             var collection = query.ToList();
             
-            if (IpBlacklistManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, collection);
             }
@@ -235,7 +236,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
         /// Inserts an IP network
         /// </summary>
         /// <param name="ipNetwork">IP network</param>
-        public static void InsertBannedIpNetwork(BannedIpNetwork ipNetwork)
+        public void InsertBannedIpNetwork(BannedIpNetwork ipNetwork)
         {
             if (ipNetwork == null)
                 throw new ArgumentNullException("ipNetwork");
@@ -255,7 +256,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
             context.BannedIpNetworks.AddObject(ipNetwork);
             context.SaveChanges();
 
-            if (IpBlacklistManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(BLACKLIST_NETWORK_PATTERN_KEY);
             }
@@ -265,7 +266,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
         /// Updates an IP network
         /// </summary>
         /// <param name="ipNetwork">IP network</param>
-        public static void UpdateBannedIpNetwork(BannedIpNetwork ipNetwork)
+        public void UpdateBannedIpNetwork(BannedIpNetwork ipNetwork)
         {
             if (ipNetwork == null)
                 throw new ArgumentNullException("ipNetwork");
@@ -286,7 +287,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
 
             context.SaveChanges();
 
-            if (IpBlacklistManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(BLACKLIST_NETWORK_PATTERN_KEY);
             }
@@ -296,7 +297,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
         /// Deletes an IP network
         /// </summary>
         /// <param name="bannedIpNetwork">IP network unique identifier</param>
-        public static void DeleteBannedIpNetwork(int bannedIpNetwork)
+        public void DeleteBannedIpNetwork(int bannedIpNetwork)
         {
             var ipNetwork = GetBannedIpNetworkById(bannedIpNetwork);
             if (ipNetwork == null)
@@ -308,7 +309,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
             context.DeleteObject(ipNetwork);
             context.SaveChanges();
 
-            if (IpBlacklistManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(BLACKLIST_NETWORK_PATTERN_KEY);
             }
@@ -319,7 +320,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
         /// </summary>
         /// <param name="ipAddress">IP address</param>
         /// <returns>False or true</returns>
-        public static bool IsIpAddressBanned(BannedIpAddress ipAddress)
+        public bool IsIpAddressBanned(BannedIpAddress ipAddress)
         {
             // Check if the IP is valid
             if (!IsValidIp(ipAddress.Address.Trim()))
@@ -369,7 +370,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
         /// </summary>
         /// <param name="ipAddress">The string representation of an IP address</param>
         /// <returns>True if the IP is valid.</returns>
-        public static bool IsValidIp(string ipAddress)
+        public bool IsValidIp(string ipAddress)
         {
             try
             {
@@ -389,7 +390,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
         /// <param name="ipAddress1">The first IP to compare</param>
         /// <param name="ipAddress2">The second IP to compare</param>
         /// <returns>True if equal, false if not.</returns>
-        public static bool AreEqual(string ipAddress1, string ipAddress2)
+        public bool AreEqual(string ipAddress1, string ipAddress2)
         {
             // convert to long in case there is any zero padding in the strings
             return IpAddressToLongBackwards(ipAddress1) == IpAddressToLongBackwards(ipAddress2);
@@ -404,7 +405,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
         /// <param name="compareAgainst">The Ip address on the right hand side of the 
         /// greater than operator</param>
         /// <returns>True if ToCompare is greater than CompareAgainst, else false</returns>       
-        public static bool IsGreater(string toCompare, string compareAgainst)
+        public bool IsGreater(string toCompare, string compareAgainst)
         {
             // convert to long in case there is any zero padding in the strings
             return IpAddressToLongBackwards(toCompare) > IpAddressToLongBackwards(compareAgainst);
@@ -419,7 +420,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
         /// <param name="compareAgainst">The Ip address on the right hand side of the 
         /// less than operator</param>
         /// <returns>True if ToCompare is greater than CompareAgainst, else false</returns>
-        public static bool IsLess(string toCompare, string compareAgainst)
+        public bool IsLess(string toCompare, string compareAgainst)
         {
             // convert to long in case there is any zero padding in the strings
             return IpAddressToLongBackwards(toCompare) < IpAddressToLongBackwards(compareAgainst);
@@ -433,7 +434,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
         /// <param name="compareAgainst">The Ip address on the right hand side of the 
         /// less than operator</param>
         /// <returns>Result</returns>
-        public static bool IsEqual(string toCompare, string compareAgainst)
+        public bool IsEqual(string toCompare, string compareAgainst)
         {
             return IpAddressToLongBackwards(toCompare) == IpAddressToLongBackwards(compareAgainst);
         }
@@ -447,7 +448,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
         /// <param name="compareAgainst">The Ip address on the right hand side of the 
         /// greater than or equal operator</param>
         /// <returns>True if ToCompare is greater than or equal to CompareAgainst, else false</returns>
-        public static bool IsGreaterOrEqual(string toCompare, string compareAgainst)
+        public bool IsGreaterOrEqual(string toCompare, string compareAgainst)
         {
             // convert to long in case there is any zero padding in the strings
             return IpAddressToLongBackwards(toCompare) >= IpAddressToLongBackwards(compareAgainst);
@@ -462,7 +463,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
         /// <param name="compareAgainst">The Ip address on the right hand side of the 
         /// less than or equal operator</param>
         /// <returns>True if ToCompare is greater than or equal to CompareAgainst, else false</returns>
-        public static bool IsLessOrEqual(string toCompare, string compareAgainst)
+        public bool IsLessOrEqual(string toCompare, string compareAgainst)
         {
             // convert to long in case there is any zero padding in the strings
             return IpAddressToLongBackwards(toCompare) <= IpAddressToLongBackwards(compareAgainst);
@@ -473,7 +474,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
         /// </summary>
         /// <param name="ipAddress">The IP address to convert</param>
         /// <returns>A string representation of the IP address.</returns>
-        public static string LongToIpAddress(uint ipAddress)
+        public string LongToIpAddress(uint ipAddress)
         {
             return new System.Net.IPAddress(ipAddress).ToString();
         }
@@ -485,7 +486,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
         /// </summary>
         /// <param name="ipAddress">The Ip address to convert.</param>
         /// <returns>Returns a uint representation of the IP address.</returns>
-        public static uint IpAddressToLong(string ipAddress)
+        public uint IpAddressToLong(string ipAddress)
         {
             var oIP = System.Net.IPAddress.Parse(ipAddress);
             byte[] byteIP = oIP.GetAddressBytes();
@@ -501,16 +502,18 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
         #endregion
 
         #region Properties
+
         /// <summary>
         /// Gets a value indicating whether cache is enabled
         /// </summary>
-        public static bool CacheEnabled
+        public bool CacheEnabled
         {
             get
             {
-                return SettingManager.GetSettingValueBoolean("Cache.IpBlacklistManager.CacheEnabled");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.IpBlacklistManager.CacheEnabled");
             }
         }
+
         #endregion
     }
 }

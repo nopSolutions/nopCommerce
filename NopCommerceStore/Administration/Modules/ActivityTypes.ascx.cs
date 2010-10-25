@@ -33,6 +33,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Tax;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.Shipping;
 using NopSolutions.NopCommerce.BusinessLogic.Audit;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -49,7 +50,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         private void BindData()
         {
-            var dataSource = CustomerActivityManager.GetAllActivityTypes();
+            var dataSource = IoCFactory.Resolve<ICustomerActivityManager>().GetAllActivityTypes();
             gvActivityTypes.DataSource = dataSource;
             gvActivityTypes.DataBind();
         }
@@ -68,11 +69,11 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         int activityLogTypeId = Int32.Parse(hfActivityLogTypeId.Value);
                         bool enable = cbEnabled.Checked;
 
-                        var activityLogType = CustomerActivityManager.GetActivityTypeById(activityLogTypeId);
+                        var activityLogType = IoCFactory.Resolve<ICustomerActivityManager>().GetActivityTypeById(activityLogTypeId);
                         if (activityLogType != null && activityLogType.Enabled != enable)
                         {
                             activityLogType.Enabled = enable;
-                            CustomerActivityManager.UpdateActivityType(activityLogType);
+                            IoCFactory.Resolve<ICustomerActivityManager>().UpdateActivityType(activityLogType);
                         }
                     }
                 }

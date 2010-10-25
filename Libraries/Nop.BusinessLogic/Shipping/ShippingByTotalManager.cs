@@ -27,7 +27,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
     /// <summary>
     /// "Shipping by total" manager
     /// </summary>
-    public partial class ShippingByTotalManager
+    public partial class ShippingByTotalManager : IShippingByTotalManager
     {
         #region Methods
         /// <summary>
@@ -35,7 +35,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         /// </summary>
         /// <param name="shippingByTotalId">ShippingByTotal identifier</param>
         /// <returns>ShippingByTotal</returns>
-        public static ShippingByTotal GetById(int shippingByTotalId)
+        public ShippingByTotal GetById(int shippingByTotalId)
         {
             if (shippingByTotalId == 0)
                 return null;
@@ -52,7 +52,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         /// Deletes a ShippingByTotal
         /// </summary>
         /// <param name="shippingByTotalId">ShippingByTotal identifier</param>
-        public static void DeleteShippingByTotal(int shippingByTotalId)
+        public void DeleteShippingByTotal(int shippingByTotalId)
         {
             var shippingByTotal = GetById(shippingByTotalId);
             if (shippingByTotal == null)
@@ -69,7 +69,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         /// Gets all ShippingByTotals
         /// </summary>
         /// <returns>ShippingByTotal collection</returns>
-        public static List<ShippingByTotal> GetAll()
+        public List<ShippingByTotal> GetAll()
         {
             var context = ObjectContextHelper.CurrentObjectContext;
             var query = from st in context.ShippingByTotal
@@ -83,7 +83,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         /// Inserts a ShippingByTotal
         /// </summary>
         /// <param name="shippingByTotal">ShippingByTotal</param>
-        public static void InsertShippingByTotal(ShippingByTotal shippingByTotal)
+        public void InsertShippingByTotal(ShippingByTotal shippingByTotal)
         {
             if (shippingByTotal == null)
                 throw new ArgumentNullException("shippingByTotal");
@@ -98,7 +98,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         /// Updates the ShippingByTotal
         /// </summary>
         /// <param name="shippingByTotal">ShippingByTotal</param>
-        public static void UpdateShippingByTotal(ShippingByTotal shippingByTotal)
+        public void UpdateShippingByTotal(ShippingByTotal shippingByTotal)
         {
             if (shippingByTotal == null)
                 throw new ArgumentNullException("shippingByTotal");
@@ -115,7 +115,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         /// </summary>
         /// <param name="shippingMethodId">The shipping method identifier</param>
         /// <returns>ShippingByTotal collection</returns>
-        public static List<ShippingByTotal> GetAllByShippingMethodId(int shippingMethodId)
+        public List<ShippingByTotal> GetAllByShippingMethodId(int shippingMethodId)
         {
             var context = ObjectContextHelper.CurrentObjectContext;
             var query = from st in context.ShippingByTotal

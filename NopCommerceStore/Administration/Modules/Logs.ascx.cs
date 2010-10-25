@@ -24,6 +24,7 @@ using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.Audit;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
  
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -39,7 +40,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         void BindGrid()
         {
-            var log = LogManager.GetAllLogs();
+            var log = IoCFactory.Resolve<ILogManager>().GetAllLogs();
             gvLogs.DataSource = log;
             gvLogs.DataBind();
             btnClear.Visible = log.Count > 0;
@@ -55,7 +56,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                LogManager.ClearLog();
+                IoCFactory.Resolve<ILogManager>().ClearLog();
                 BindGrid();
             }
             catch (Exception exc)
@@ -67,7 +68,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         protected string GetCustomerInfo(int customerId)
         {
             string customerInfo = string.Empty;
-            Customer customer = CustomerManager.GetCustomerById(customerId);
+            Customer customer = IoCFactory.Resolve<ICustomerManager>().GetCustomerById(customerId);
             if (customer != null)
             {
                 if (customer.IsGuest)
@@ -86,7 +87,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             if (e.CommandName == "DeleteLog")
             {
-                LogManager.DeleteLog(Convert.ToInt32(e.CommandArgument));
+                IoCFactory.Resolve<ILogManager>().DeleteLog(Convert.ToInt32(e.CommandArgument));
                 BindGrid();
             }
         }

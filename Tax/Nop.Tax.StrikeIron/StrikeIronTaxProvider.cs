@@ -22,6 +22,7 @@ using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.Tax;
 using NopSolutions.NopCommerce.Tax.TaxDataBasic;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Tax
 {
@@ -61,8 +62,8 @@ namespace NopSolutions.NopCommerce.Tax
             // UserID/Password combination or a License Key.  If you wish to use a License Key, 
             // assign this value to the UserID field and set the Password field to null.
             //**************************************************************************************************************
-            string userID = SettingManager.GetSettingValue("Tax.TaxProvider.StrikeIron.UserID");
-            string password = SettingManager.GetSettingValue("Tax.TaxProvider.StrikeIron.Password");
+            string userID = IoCFactory.Resolve<ISettingManager>().GetSettingValue("Tax.TaxProvider.StrikeIron.UserID");
+            string password = IoCFactory.Resolve<ISettingManager>().GetSettingValue("Tax.TaxProvider.StrikeIron.Password");
             //if (Password == " " || !String.IsNullOrEmpty(Password))
             //    Password = String.Empty;
             //**************************************************************************************************************
@@ -179,7 +180,7 @@ namespace NopSolutions.NopCommerce.Tax
 
             if (StrikeIronTaxProvider.CacheEnabled)
             {
-                NopStaticCache.Max(key, result);
+                NopStaticCache.Add(key, result);
             }
 
             return result;
@@ -256,7 +257,7 @@ namespace NopSolutions.NopCommerce.Tax
 
             if (StrikeIronTaxProvider.CacheEnabled)
             {
-                NopStaticCache.Max(key, result);
+                NopStaticCache.Add(key, result);
             }
 
             return result;

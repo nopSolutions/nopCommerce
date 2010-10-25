@@ -27,6 +27,7 @@ using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.Content.Blog;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
  
 namespace NopSolutions.NopCommerce.Web
 {
@@ -34,7 +35,7 @@ namespace NopSolutions.NopCommerce.Web
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!BlogManager.BlogEnabled)
+            if (!IoCFactory.Resolve<IBlogManager>().BlogEnabled)
             {
                 Response.Redirect(CommonHelper.GetStoreLocation());
             }

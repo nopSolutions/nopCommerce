@@ -36,6 +36,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Shipping;
 using NopSolutions.NopCommerce.BusinessLogic.Tax;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -80,7 +81,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             switch(step)
             {
                 case CheckoutStepEnum.ShippingAddress:
-                    if(ShippingManager.ShoppingCartRequiresShipping(Cart))
+                    if(IoCFactory.Resolve<IShippingManager>().ShoppingCartRequiresShipping(Cart))
                     {
                         cpeShippingAddress.Collapsed = false;
                         cpeShippingAddress.ClientState = "false";
@@ -102,7 +103,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     break;
 
                 case CheckoutStepEnum.ShippingMethod:
-                    if(ShippingManager.ShoppingCartRequiresShipping(Cart))
+                    if(IoCFactory.Resolve<IShippingManager>().ShoppingCartRequiresShipping(Cart))
                     {
 
                         btnModifyShippingAddress.Enabled = true;
@@ -181,7 +182,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             //check whether order total equals zero
             if (NopContext.Current.User != null)
             {
-                decimal? shoppingCartTotalBase = ShoppingCartManager.GetShoppingCartTotal(this.Cart,
+                decimal? shoppingCartTotalBase = IoCFactory.Resolve<IShoppingCartManager>().GetShoppingCartTotal(this.Cart,
                 NopContext.Current.User.LastPaymentMethodId, NopContext.Current.User);
 
                 if (shoppingCartTotalBase.HasValue && shoppingCartTotalBase.Value == decimal.Zero)
@@ -194,7 +195,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if((NopContext.Current.User == null) || (NopContext.Current.User.IsGuest && !CustomerManager.AnonymousCheckoutAllowed))
+            if((NopContext.Current.User == null) || (NopContext.Current.User.IsGuest && !IoCFactory.Resolve<ICustomerManager>().AnonymousCheckoutAllowed))
             {
                 string loginURL = SEOHelper.GetLoginPageUrl(true);
                 Response.Redirect(loginURL);
@@ -206,7 +207,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             }
 
             //validation
-            var scWarnings = ShoppingCartManager.GetShoppingCartWarnings(Cart, NopContext.Current.User.CheckoutAttributes, true);
+            var scWarnings = IoCFactory.Resolve<IShoppingCartManager>().GetShoppingCartWarnings(Cart, NopContext.Current.User.CheckoutAttributes, true);
             if (scWarnings.Count > 0)
             {
                 Response.Redirect(SEOHelper.GetShoppingCartUrl());
@@ -215,7 +216,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             {
                 foreach (ShoppingCartItem sci in this.Cart)
                 {
-                    List<String> sciWarnings = ShoppingCartManager.GetShoppingCartItemWarnings(
+                    List<String> sciWarnings = IoCFactory.Resolve<IShoppingCartManager>().GetShoppingCartItemWarnings(
                         sci.ShoppingCartType, 
                         sci.ProductVariantId, 
                         sci.AttributesXml, 
@@ -230,7 +231,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
             if(!Page.IsPostBack)
             {
-                if(!ShippingManager.ShoppingCartRequiresShipping(Cart))
+                if(!IoCFactory.Resolve<IShippingManager>().ShoppingCartRequiresShipping(Cart))
                 {
                     pnlShippingAddress.Visible = false;
                     pnlShippingMethods.Visible = false;
@@ -323,7 +324,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             {
                 if(_cart == null)
                 {
-                    _cart = ShoppingCartManager.GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
+                    _cart = IoCFactory.Resolve<IShoppingCartManager>().GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
                 }
                 return _cart;
             }

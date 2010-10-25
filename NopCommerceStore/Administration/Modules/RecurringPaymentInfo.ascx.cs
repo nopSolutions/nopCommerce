@@ -31,6 +31,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Products;
 using System.Text;
 using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
  
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -43,7 +44,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         private void BindData()
         {
-            RecurringPayment recurringPayment = OrderManager.GetRecurringPaymentById(this.RecurringPaymentId);
+            RecurringPayment recurringPayment = IoCFactory.Resolve<IOrderManager>().GetRecurringPaymentById(this.RecurringPaymentId);
             if (recurringPayment != null)
             {
                 Order initialOrder = recurringPayment.InitialOrder;
@@ -82,7 +83,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         private void BindHistory()
         {
-            RecurringPayment recurringPayment = OrderManager.GetRecurringPaymentById(this.RecurringPaymentId);
+            RecurringPayment recurringPayment = IoCFactory.Resolve<IOrderManager>().GetRecurringPaymentById(this.RecurringPaymentId);
             if (recurringPayment != null)
             {
                 DateTime? nextPaymentDate = recurringPayment.NextPaymentDate;
@@ -98,9 +99,9 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     btnProcessNextPayment.Visible = false;
                 }
 
-                btnCancelPayment.Visible = OrderManager.CanCancelRecurringPayment(NopContext.Current.User, recurringPayment);
+                btnCancelPayment.Visible = IoCFactory.Resolve<IOrderManager>().CanCancelRecurringPayment(NopContext.Current.User, recurringPayment);
 
-                var recurringPaymentHistoryCollection = OrderManager.SearchRecurringPaymentHistory(recurringPayment.RecurringPaymentId, 0);
+                var recurringPaymentHistoryCollection = IoCFactory.Resolve<IOrderManager>().SearchRecurringPaymentHistory(recurringPayment.RecurringPaymentId, 0);
                 gvRecurringPaymentHistory.DataSource = recurringPaymentHistoryCollection;
                 gvRecurringPaymentHistory.DataBind();
             }
@@ -120,7 +121,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                OrderManager.ProcessNextRecurringPayment(this.RecurringPaymentId);
+                IoCFactory.Resolve<IOrderManager>().ProcessNextRecurringPayment(this.RecurringPaymentId);
                 this.BindData();
                 this.BindHistory();
             }
@@ -134,10 +135,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                RecurringPayment rp = OrderManager.GetRecurringPaymentById(this.RecurringPaymentId);
-                if (OrderManager.CanCancelRecurringPayment(NopContext.Current.User, rp))
+                RecurringPayment rp = IoCFactory.Resolve<IOrderManager>().GetRecurringPaymentById(this.RecurringPaymentId);
+                if (IoCFactory.Resolve<IOrderManager>().CanCancelRecurringPayment(NopContext.Current.User, rp))
                 {
-                    rp = OrderManager.CancelRecurringPayment(rp.RecurringPaymentId);
+                    rp = IoCFactory.Resolve<IOrderManager>().CancelRecurringPayment(rp.RecurringPaymentId);
                 }
                 this.BindHistory();
             }
@@ -154,14 +155,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             int totalCycles = txtTotalCycles.Value;
             bool isActive = cbIsActive.Checked;
 
-            RecurringPayment recurringPayment = OrderManager.GetRecurringPaymentById(this.RecurringPaymentId);
+            RecurringPayment recurringPayment = IoCFactory.Resolve<IOrderManager>().GetRecurringPaymentById(this.RecurringPaymentId);
             if (recurringPayment != null)
             {
                 recurringPayment.CycleLength = cycleLength;
                 recurringPayment.CyclePeriod = (int)cyclePeriod;
                 recurringPayment.TotalCycles = totalCycles;
                 recurringPayment.IsActive = isActive;
-                OrderManager.UpdateRecurringPayment(recurringPayment);
+                IoCFactory.Resolve<IOrderManager>().UpdateRecurringPayment(recurringPayment);
             }
             else
             {

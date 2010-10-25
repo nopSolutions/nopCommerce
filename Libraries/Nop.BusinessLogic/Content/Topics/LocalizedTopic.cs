@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Content.Topics
@@ -94,7 +95,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Topics
         {
             get
             {
-                return LanguageManager.GetLanguageById(this.LanguageId);
+                return IoCFactory.Resolve<ILanguageManager>().GetLanguageById(this.LanguageId);
             }
         }
 
@@ -105,7 +106,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Topics
         {
             get
             {
-                return TopicManager.GetTopicById(this.TopicId);
+                return IoCFactory.Resolve<ITopicManager>().GetTopicById(this.TopicId);
             }
         }
         #endregion

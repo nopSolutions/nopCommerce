@@ -25,6 +25,7 @@ using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.Payment;
 using NopSolutions.NopCommerce.BusinessLogic.Security;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration
 {
@@ -32,7 +33,7 @@ namespace NopSolutions.NopCommerce.Web.Administration
     {
         protected override bool ValidatePageSecurity()
         {
-            return ACLManager.IsActionAllowed("ManagePaymentSettings");
+            return IoCFactory.Resolve<IACLManager>().IsActionAllowed("ManagePaymentSettings");
         }
 
         protected void AddButton_Click(object sender, EventArgs e)
@@ -53,7 +54,7 @@ namespace NopSolutions.NopCommerce.Web.Administration
                         IsActive = cbActive.Checked,
                         DisplayOrder = txtDisplayOrder.Value
                     };
-                    PaymentMethodManager.InsertPaymentMethod(paymentMethod);
+                    IoCFactory.Resolve<IPaymentMethodManager>().InsertPaymentMethod(paymentMethod);
                     Response.Redirect("PaymentMethodDetails.aspx?PaymentMethodID=" + paymentMethod.PaymentMethodId.ToString());
                 }
                 catch (Exception exc)

@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Text;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.BusinessLogic.Media;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Orders
@@ -152,7 +153,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             get
             {
                 if (_order == null)
-                    _order = OrderManager.GetOrderById(this.OrderId);
+                    _order = IoCFactory.Resolve<IOrderManager>().GetOrderById(this.OrderId);
                 return _order;
             }
         }
@@ -165,7 +166,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             get
             {
                 if (_pv == null)
-                    _pv = ProductManager.GetProductVariantById(this.ProductVariantId);
+                    _pv = IoCFactory.Resolve<IProductManager>().GetProductVariantById(this.ProductVariantId);
                 return _pv;
             }
         }
@@ -177,7 +178,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         {
             get
             {
-                return DownloadManager.GetDownloadById(this.LicenseDownloadId);
+                return IoCFactory.Resolve<IDownloadManager>().GetDownloadById(this.LicenseDownloadId);
             }
         }
         #endregion

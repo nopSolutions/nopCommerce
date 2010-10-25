@@ -31,6 +31,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.Payment;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 
 namespace NopSolutions.NopCommerce.Payment.Methods.PayJunction
@@ -65,7 +66,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.PayJunction
         public static TransactMode GetCurrentTransactionMode()
         {
             TransactMode transactionModeEnum = TransactMode.Authorize;
-            string transactionMode = SettingManager.GetSettingValue("PaymentMethod.PayJunction.TransactionMode");
+            string transactionMode = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.PayJunction.TransactionMode");
             if (!String.IsNullOrEmpty(transactionMode))
                 transactionModeEnum = (TransactMode)Enum.Parse(typeof(TransactMode), transactionMode);
             return transactionModeEnum;
@@ -76,9 +77,9 @@ namespace NopSolutions.NopCommerce.Payment.Methods.PayJunction
         /// </summary>
         private void InitSettings()
         {
-            useSandBox = SettingManager.GetSettingValueBoolean("PaymentMethod.PayJunction.UseSandbox");
-            pjlogon = SettingManager.GetSettingValue("PaymentMethod.PayJunction.pjlogon");
-            pjpassword = SettingManager.GetSettingValue("PaymentMethod.PayJunction.pjpassword");
+            useSandBox = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.PayJunction.UseSandbox");
+            pjlogon = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.PayJunction.pjlogon");
+            pjpassword = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.PayJunction.pjpassword");
         }
 
 
@@ -271,7 +272,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.PayJunction
         /// <returns>Additional handling fee</returns>
         public decimal GetAdditionalHandlingFee()
         {
-            return SettingManager.GetSettingValueDecimalNative("PaymentMethod.PayJunction.AdditionalFee");
+            return IoCFactory.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.PayJunction.AdditionalFee");
         }
 
         /// <summary>

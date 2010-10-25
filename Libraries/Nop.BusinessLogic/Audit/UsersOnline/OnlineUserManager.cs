@@ -25,13 +25,14 @@ using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Installation;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Audit.UsersOnline
 {
     /// <summary>
     /// Represents an online user manager
     /// </summary>
-    public partial class OnlineUserManager
+    public partial class OnlineUserManager : IOnlineUserManager
     {
         #region Const
 
@@ -41,25 +42,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit.UsersOnline
 
         #region Fields
 
-        private static object s_lock;
-
-        #endregion
-
-        #region Ctor
-
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        static OnlineUserManager()
-        {
-            s_lock = new object();
-        }
+        private static object s_lock = new object();
 
         #endregion
 
         #region Utilities
 
-        private static Dictionary<Guid, OnlineUserInfo> GetAnonymousUserList()
+        private Dictionary<Guid, OnlineUserInfo> GetAnonymousUserList()
         {
             string key = "Nop.OnlineUserList.Anonymous";
             Dictionary<Guid, OnlineUserInfo> obj2 = NopStaticCache.Get(key) as Dictionary<Guid, OnlineUserInfo>;
@@ -70,13 +59,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit.UsersOnline
             else
             {
                 obj2 = new Dictionary<Guid, OnlineUserInfo>();
-                NopStaticCache.Max(key, obj2);
+                NopStaticCache.Add(key, obj2);
             }
 
             return obj2;
         }
 
-        private static Dictionary<Guid, OnlineUserInfo> GetRegisteredUserList()
+        private Dictionary<Guid, OnlineUserInfo> GetRegisteredUserList()
         {
             string key = "Nop.OnlineUserList.Registered";
             Dictionary<Guid, OnlineUserInfo> obj2 = NopStaticCache.Get(key) as Dictionary<Guid, OnlineUserInfo>;
@@ -87,7 +76,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit.UsersOnline
             else
             {
                 obj2 = new Dictionary<Guid, OnlineUserInfo>();
-                NopStaticCache.Max(key, obj2);
+                NopStaticCache.Add(key, obj2);
             }
 
             return obj2;
@@ -98,9 +87,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit.UsersOnline
         /// Purges expired users
         /// </summary>
         /// <param name="userList">User list</param>
-        protected static void PurgeUsers(Dictionary<Guid, OnlineUserInfo> userList)
+        protected void PurgeUsers(Dictionary<Guid, OnlineUserInfo> userList)
         {
-            if (!OnlineUserManager.Enabled)
+            if (!this.Enabled)
                 return;
 
             if (userList == null)
@@ -132,11 +121,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit.UsersOnline
         /// <summary>
         /// Tracks current user
         /// </summary>
-        public static void TrackCurrentUser()
+        public void TrackCurrentUser()
         {
             try
             {
-                if (!OnlineUserManager.Enabled || 
+                if (!this.Enabled || 
                     !InstallerHelper.ConnectionStringIsSet() ||
                     HttpContext.Current == null)
                     return;
@@ -224,9 +213,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit.UsersOnline
 
                     //maximum online customers
                     int currentVisitors = GetAnonymousUserList().Count() + GetRegisteredUserList().Count();
-                    if (currentVisitors > OnlineUserManager.MaximumOnlineCustomers)
+                    if (currentVisitors > this.MaximumOnlineCustomers)
                     {
-                        OnlineUserManager.MaximumOnlineCustomers = currentVisitors;
+                        this.MaximumOnlineCustomers = currentVisitors;
                     }
                 }
             }
@@ -239,9 +228,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit.UsersOnline
         /// <summary>
         /// Clears user list
         /// </summary>
-        public static void ClearUserList()
+        public void ClearUserList()
         {
-            if (!OnlineUserManager.Enabled)
+            if (!this.Enabled)
                 return;
 
             lock (s_lock)
@@ -256,9 +245,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit.UsersOnline
         /// <summary>
         /// Purges expired users
         /// </summary>
-        public static void PurgeUsers()
+        public void PurgeUsers()
         {
-            if (!OnlineUserManager.Enabled)
+            if (!this.Enabled)
                 return;
 
             PurgeUsers(GetAnonymousUserList());
@@ -269,7 +258,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit.UsersOnline
         /// Get online users (guest)
         /// </summary>
         /// <returns>Online user list</returns>
-        public static List<OnlineUserInfo> GetGuestList()
+        public List<OnlineUserInfo> GetGuestList()
         {
             lock (s_lock)
             {
@@ -290,7 +279,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit.UsersOnline
         /// Get online users (registered)
         /// </summary>
         /// <returns>Online user list</returns>
-        public static List<OnlineUserInfo> GetRegisteredUsersOnline()
+        public List<OnlineUserInfo> GetRegisteredUsersOnline()
         {
             lock (s_lock)
             {
@@ -311,7 +300,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit.UsersOnline
         /// Get online users (guests and registered users)
         /// </summary>
         /// <returns>Online user list</returns>
-        public static List<OnlineUserInfo> GetAllUserList()
+        public List<OnlineUserInfo> GetAllUserList()
         {
             lock (s_lock)
             {
@@ -331,30 +320,30 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit.UsersOnline
         /// <summary>
         /// Gets a value indicating whether tracking online users is enabled
         /// </summary>
-        public static bool Enabled
+        public bool Enabled
         {
             get
             {
-                return SettingManager.GetSettingValueBoolean("OnlineUserManager.Enabled", false);
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("this.Enabled", false);
             }
             set
             {
-                SettingManager.SetParam("OnlineUserManager.Enabled", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("this.Enabled", value.ToString());
             }
         }
         
         /// <summary>
         /// Gets a maximum online customer number
         /// </summary>
-        public static int MaximumOnlineCustomers
+        public int MaximumOnlineCustomers
         {
             get
             {
-                return SettingManager.GetSettingValueInteger("OnlineUserManager.MaximumOnlineCustomers", 0);
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("this.MaximumOnlineCustomers", 0);
             }
             set
             {
-                SettingManager.SetParam("OnlineUserManager.MaximumOnlineCustomers", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("this.MaximumOnlineCustomers", value.ToString());
             }
         }
         #endregion

@@ -19,6 +19,7 @@ using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -26,7 +27,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindLanguages()
         {
-            var languages = LanguageManager.GetAllLanguages(false);
+            var languages = IoCFactory.Resolve<ILanguageManager>().GetAllLanguages(false);
             if (languages.Count > 1)
             {
                 this.Visible = true;
@@ -55,7 +56,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         protected void ddlLanguages_OnSelectedIndexChanged(object sender, EventArgs e)
         {
             int languagesId = int.Parse(this.ddlLanguages.SelectedItem.Value);
-            Language language = LanguageManager.GetLanguageById(languagesId);
+            Language language = IoCFactory.Resolve<ILanguageManager>().GetLanguageById(languagesId);
             if (language != null && language.Published)
             {
                 NopContext.Current.WorkingLanguage = language;

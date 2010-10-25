@@ -28,6 +28,7 @@ using NopSolutions.NopCommerce.BusinessLogic;
 using NopSolutions.NopCommerce.BusinessLogic.Content.Forums;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -47,7 +48,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             hlForumsHome.NavigateUrl = SEOHelper.GetForumMainUrl();
 
             //topic
-            var forumTopic = ForumManager.GetTopicById(this.ForumTopicId);
+            var forumTopic = IoCFactory.Resolve<IForumManager>().GetTopicById(this.ForumTopicId);
             if (forumTopic != null)
             {
                 hlForumTopic.NavigateUrl = SEOHelper.GetForumTopicUrl(forumTopic);
@@ -62,11 +63,11 @@ namespace NopSolutions.NopCommerce.Web.Modules
             Forum forum = null;
             if (forumTopic != null)
             {
-                forum = ForumManager.GetForumById(forumTopic.ForumId);
+                forum = IoCFactory.Resolve<IForumManager>().GetForumById(forumTopic.ForumId);
             }
             else
             {
-                forum = ForumManager.GetForumById(this.ForumId);
+                forum = IoCFactory.Resolve<IForumManager>().GetForumById(this.ForumId);
             }
 
             if (forum != null)
@@ -83,11 +84,11 @@ namespace NopSolutions.NopCommerce.Web.Modules
             ForumGroup forumGroup = null;
             if (forum != null)
             {
-                forumGroup = ForumManager.GetForumGroupById(forum.ForumGroupId);
+                forumGroup = IoCFactory.Resolve<IForumManager>().GetForumGroupById(forum.ForumGroupId);
             }
             else
             {
-                forumGroup = ForumManager.GetForumGroupById(this.ForumGroupId);
+                forumGroup = IoCFactory.Resolve<IForumManager>().GetForumGroupById(this.ForumGroupId);
             }
 
             if (forumGroup != null)

@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Media
@@ -74,7 +75,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
             }
             else
             {
-                result = PictureManager.LoadPictureFromFile(this.PictureId, this.MimeType);
+                result = IoCFactory.Resolve<IPictureManager>().LoadPictureFromFile(this.PictureId, this.MimeType);
             }
             return result;
         }
@@ -85,7 +86,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
         /// <returns>Picture binary</returns>
         public byte[] LoadPictureBinary()
         {
-            return LoadPictureBinary(PictureManager.StoreInDB);
+            return LoadPictureBinary(IoCFactory.Resolve<IPictureManager>().StoreInDB);
         }
 
         #endregion

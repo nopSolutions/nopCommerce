@@ -28,6 +28,7 @@ using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.Measures;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -35,7 +36,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            MeasureDimension measureDimension = MeasureManager.GetMeasureDimensionById(this.MeasureDimensionId);
+            MeasureDimension measureDimension = IoCFactory.Resolve<IMeasureManager>().GetMeasureDimensionById(this.MeasureDimensionId);
             if (measureDimension != null)
             {
                 this.txtName.Text = measureDimension.Name;
@@ -60,14 +61,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             decimal ratio = txtRatio.Value;
             int displayOrder = txtDisplayOrder.Value;
 
-            MeasureDimension measureDimension = MeasureManager.GetMeasureDimensionById(this.MeasureDimensionId);
+            MeasureDimension measureDimension = IoCFactory.Resolve<IMeasureManager>().GetMeasureDimensionById(this.MeasureDimensionId);
             if (measureDimension != null)
             {
                 measureDimension.Name = name;
                 measureDimension.SystemKeyword =systemKeyword;
                 measureDimension.Ratio =ratio;
                 measureDimension.DisplayOrder =displayOrder;
-                MeasureManager.UpdateMeasureDimension(measureDimension);
+                IoCFactory.Resolve<IMeasureManager>().UpdateMeasureDimension(measureDimension);
             }
             else
             {
@@ -78,7 +79,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     Ratio = ratio,
                     DisplayOrder = displayOrder
                 };
-                MeasureManager.InsertMeasureDimension(measureDimension);
+                IoCFactory.Resolve<IMeasureManager>().InsertMeasureDimension(measureDimension);
             }
 
             return measureDimension;

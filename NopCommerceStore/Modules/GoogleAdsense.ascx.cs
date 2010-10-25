@@ -27,6 +27,7 @@ using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -36,13 +37,13 @@ namespace NopSolutions.NopCommerce.Web.Modules
         {
             if(!IsPostBack)
             {
-                if(!SettingManager.GetSettingValueBoolean("GoogleAdsense.Enabled", false))
+                if(!IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("GoogleAdsense.Enabled", false))
                 {
                     Visible = false;
                 }
                 else
                 {
-                    lblGoogleAdsenseCode.Text = SettingManager.GetSettingValue("GoogleAdsense.Code");
+                    lblGoogleAdsenseCode.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue("GoogleAdsense.Code");
                 }
             }
         }

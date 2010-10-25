@@ -38,15 +38,17 @@ using NopSolutions.NopCommerce.BusinessLogic.Utils;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.QuickBooks;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
 {
     /// <summary>
     /// Customer manager
     /// </summary>
-    public partial class CustomerManager
+    public partial class CustomerManager : ICustomerManager
     {
         #region Constants
+
         private const string CUSTOMERROLES_ALL_KEY = "Nop.customerrole.all-{0}";
         private const string CUSTOMERROLES_BY_ID_KEY = "Nop.customerrole.id-{0}";
         private const string CUSTOMERROLES_BY_DISCOUNTID_KEY = "Nop.customerrole.bydiscountid-{0}-{1}";
@@ -55,11 +57,75 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         
         #region Methods
 
+        #region Utilities
+        
+        /// <summary>
+        /// Inserts a customer session
+        /// </summary>
+        /// <param name="customerSession">Customer session</param>
+        protected void InsertCustomerSession(CustomerSession customerSession)
+        {
+            if (customerSession == null)
+                throw new ArgumentNullException("customerSession");
+
+            var context = ObjectContextHelper.CurrentObjectContext;
+
+            context.CustomerSessions.AddObject(customerSession);
+            context.SaveChanges();
+        }
+
+        /// <summary>
+        /// Updates the customer session
+        /// </summary>
+        /// <param name="customerSession">Customer session</param>
+        protected void UpdateCustomerSession(CustomerSession customerSession)
+        {
+            if (customerSession == null)
+                throw new ArgumentNullException("customerSession");
+
+            var context = ObjectContextHelper.CurrentObjectContext;
+            if (!context.IsAttached(customerSession))
+                context.CustomerSessions.Attach(customerSession);
+
+            context.SaveChanges();
+        }
+
+        /// <summary>
+        /// Creates a password hash
+        /// </summary>
+        /// <param name="password">Password</param>
+        /// <param name="salt">Salt</param>
+        /// <returns>Password hash</returns>
+        private string CreatePasswordHash(string password, string salt)
+        {
+            //MD5, SHA1
+            string passwordFormat = IoCFactory.Resolve<ISettingManager>().GetSettingValue("Security.PasswordFormat");
+            if (String.IsNullOrEmpty(passwordFormat))
+                passwordFormat = "SHA1";
+
+            return FormsAuthentication.HashPasswordForStoringInConfigFile(password + salt, passwordFormat);
+        }
+
+        /// <summary>
+        /// Creates a salt
+        /// </summary>
+        /// <param name="size">A salt size</param>
+        /// <returns>A salt</returns>
+        private string CreateSalt(int size)
+        {
+            var provider = new RNGCryptoServiceProvider();
+            byte[] data = new byte[size];
+            provider.GetBytes(data);
+            return Convert.ToBase64String(data);
+        }
+
+        #endregion
+
         /// <summary>
         /// Deletes an address by address identifier 
         /// </summary>
         /// <param name="addressId">Address identifier</param>
-        public static void DeleteAddress(int addressId)
+        public void DeleteAddress(int addressId)
         {
             var address = GetAddressById(addressId);
             if (address == null)
@@ -87,7 +153,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// </summary>
         /// <param name="addressId">Address identifier</param>
         /// <returns>Address</returns>
-        public static Address GetAddressById(int addressId)
+        public Address GetAddressById(int addressId)
         {
             if (addressId == 0)
                 return null;
@@ -107,7 +173,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// <param name="customerId">Customer identifier</param>
         /// <param name="getBillingAddresses">Gets or sets a value indicating whether the addresses are billing or shipping</param>
         /// <returns>A collection of addresses</returns>
-        public static List<Address> GetAddressesByCustomerId(int customerId, bool getBillingAddresses)
+        public List<Address> GetAddressesByCustomerId(int customerId, bool getBillingAddresses)
         {
             var context = ObjectContextHelper.CurrentObjectContext;
             var query = from a in context.Addresses
@@ -123,7 +189,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// Inserts an address
         /// </summary>
         /// <param name="address">Address</param>
-        public static void InsertAddress(Address address)
+        public void InsertAddress(Address address)
         {
             if (address == null)
                 throw new ArgumentNullException("address");
@@ -171,7 +237,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// Updates the address
         /// </summary>
         /// <param name="address">Address</param>
-        public static void UpdateAddress(Address address)
+        public void UpdateAddress(Address address)
         {
             if (address == null)
                 throw new ArgumentNullException("address");
@@ -221,7 +287,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// </summary>
         /// <param name="address">Address to validate</param>
         /// <returns>Result</returns>
-        public static bool CanUseAddressAsBillingAddress(Address address)
+        public bool CanUseAddressAsBillingAddress(Address address)
         {
             if (address == null)
                 return false;
@@ -279,7 +345,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// </summary>
         /// <param name="address">Address to validate</param>
         /// <returns>Result</returns>
-        public static bool CanUseAddressAsShippingAddress(Address address)
+        public bool CanUseAddressAsShippingAddress(Address address)
         {
             if (address == null)
                 return false;
@@ -337,7 +403,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// </summary>
         /// <param name="customerId">Customer identifier</param>
         /// <param name="clearCouponCodes">A value indicating whether to clear coupon code</param>
-        public static void ResetCheckoutData(int customerId, bool clearCouponCodes)
+        public void ResetCheckoutData(int customerId, bool clearCouponCodes)
         {
             var customer = GetCustomerById(customerId);
             if (customer != null)
@@ -362,7 +428,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// <param name="customerId">Customer identifier</param>
         /// <param name="billingAddressId">Billing address identifier</param>
         /// <returns>Customer</returns>
-        public static Customer SetDefaultBillingAddress(int customerId, int billingAddressId)
+        public Customer SetDefaultBillingAddress(int customerId, int billingAddressId)
         {
             var customer = GetCustomerById(customerId);
             if (customer != null)
@@ -379,7 +445,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// <param name="customerId">Customer identifier</param>
         /// <param name="shippingAddressId">Shipping address identifier</param>
         /// <returns>Customer</returns>
-        public static Customer SetDefaultShippingAddress(int customerId, int shippingAddressId)
+        public Customer SetDefaultShippingAddress(int customerId, int shippingAddressId)
         {
             var customer = GetCustomerById(customerId);
             if (customer != null)
@@ -396,7 +462,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// <param name="customerId">Customer identifier</param>
         /// <param name="paymentMethodId">Payment method identifier</param>
         /// <returns>Customer</returns>
-        public static Customer SetLastPaymentMethodId(int customerId, int paymentMethodId)
+        public Customer SetLastPaymentMethodId(int customerId, int paymentMethodId)
         {
             var customer = GetCustomerById(customerId);
             if (customer != null)
@@ -413,7 +479,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// <param name="customerId">Customer identifier</param>
         /// <param name="timeZoneId">Time zone identifier</param>
         /// <returns>Customer</returns>
-        public static Customer SetTimeZoneId(int customerId, string timeZoneId)
+        public Customer SetTimeZoneId(int customerId, string timeZoneId)
         {
             var customer = GetCustomerById(customerId);
             if (customer != null)
@@ -430,7 +496,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// <param name="customerId">Customer identifier</param>
         /// <param name="newEmail">New email</param>
         /// <returns>Customer</returns>
-        public static Customer SetEmail(int customerId, string newEmail)
+        public Customer SetEmail(int customerId, string newEmail)
         {
             if (newEmail == null)
                 newEmail = string.Empty;
@@ -467,12 +533,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// <param name="customerId">Customer identifier</param>
         /// <param name="newUsername">New Username</param>
         /// <returns>Customer</returns>
-        public static Customer ChangeCustomerUsername(int customerId, string newUsername)
+        public Customer ChangeCustomerUsername(int customerId, string newUsername)
         {
-            if (!CustomerManager.UsernamesEnabled)
+            if (!this.UsernamesEnabled)
                 throw new NopException("Usernames are disabled");
 
-            if (!CustomerManager.AllowCustomersToChangeUsernames)
+            if (!this.AllowCustomersToChangeUsernames)
                 throw new NopException("Chnaging usernames is not allowed");
 
             if (newUsername == null)
@@ -505,7 +571,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// <param name="customerId">Customer identifier</param>
         /// <param name="signature">Signature</param>
         /// <returns>Customer</returns>
-        public static Customer SetCustomerSignature(int customerId, string signature)
+        public Customer SetCustomerSignature(int customerId, string signature)
         {
             if (signature == null)
                 signature = string.Empty;
@@ -530,7 +596,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// <param name="customerId">Customer identifier</param>
         /// <param name="affiliateId">Affiliate identifier</param>
         /// <returns>Customer</returns>
-        public static Customer SetAffiliate(int customerId, int affiliateId)
+        public Customer SetAffiliate(int customerId, int affiliateId)
         {
             var customer = GetCustomerById(customerId);
             if (customer != null)
@@ -547,7 +613,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// <param name="customerId">Customer identifier</param>
         /// <param name="dateOfBirth">Date of birth</param>
         /// <returns>Customer</returns>
-        public static Customer SetCustomerDateOfBirth(int customerId, DateTime? dateOfBirth)
+        public Customer SetCustomerDateOfBirth(int customerId, DateTime? dateOfBirth)
         {
             var customer = GetCustomerById(customerId);
             if (customer != null)
@@ -564,7 +630,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// <param name="customerId">Customer identifier</param>
         /// <param name="avatarId">Customer avatar identifier</param>
         /// <returns>Customer</returns>
-        public static Customer SetCustomerAvatarId(int customerId, int avatarId)
+        public Customer SetCustomerAvatarId(int customerId, int avatarId)
         {
             var customer = GetCustomerById(customerId);
             if (customer != null)
@@ -579,7 +645,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// Create anonymous user for current user
         /// </summary>
         /// <returns>Guest user</returns>
-        public static void CreateAnonymousUser()
+        public void CreateAnonymousUser()
         {
             //create anonymous record
             string email = "anonymous@anonymous.com";
@@ -609,7 +675,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// Applies a discount coupon code to a current customer
         /// </summary>
         /// <param name="couponCode">Coupon code</param>
-        public static void ApplyDiscountCouponCode(string couponCode)
+        public void ApplyDiscountCouponCode(string couponCode)
         {
             if (NopContext.Current.User == null)
             {
@@ -625,7 +691,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// <param name="customerId">Customer identifier</param>
         /// <param name="couponCode">Coupon code</param>
         /// <returns>Customer</returns>
-        public static Customer ApplyDiscountCouponCode(int customerId, string couponCode)
+        public Customer ApplyDiscountCouponCode(int customerId, string couponCode)
         {
             var customer = GetCustomerById(customerId);
             if (customer != null)
@@ -640,7 +706,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// Applies a gift card coupon code to a current customer
         /// </summary>
         /// <param name="couponCodesXml">Coupon code (XML)</param>
-        public static void ApplyGiftCardCouponCode(string couponCodesXml)
+        public void ApplyGiftCardCouponCode(string couponCodesXml)
         {
             if (NopContext.Current.User == null)
             {
@@ -656,7 +722,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// <param name="customerId">Customer identifier</param>
         /// <param name="couponCodesXml">Coupon code (XML)</param>
         /// <returns>Customer</returns>
-        public static Customer ApplyGiftCardCouponCode(int customerId, string couponCodesXml)
+        public Customer ApplyGiftCardCouponCode(int customerId, string couponCodesXml)
         {
             var customer = GetCustomerById(customerId);
             if (customer != null)
@@ -671,7 +737,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// Applies selected checkout attibutes to a current customer
         /// </summary>
         /// <param name="attributesXml">Checkout attibutes (XML)</param>
-        public static void ApplyCheckoutAttributes(string attributesXml)
+        public void ApplyCheckoutAttributes(string attributesXml)
         {
             if (NopContext.Current.User == null)
             {
@@ -687,7 +753,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// <param name="customerId">Customer identifier</param>
         /// <param name="attributesXml">Checkout attibutes (XML)</param>
         /// <returns>Customer</returns>
-        public static Customer ApplyCheckoutAttributes(int customerId, string attributesXml)
+        public Customer ApplyCheckoutAttributes(int customerId, string attributesXml)
         {
             if (attributesXml == null)
                 attributesXml = string.Empty;
@@ -704,7 +770,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// Gets all customers
         /// </summary>
         /// <returns>Customer collection</returns>
-        public static List<Customer> GetAllCustomers()
+        public List<Customer> GetAllCustomers()
         {
             int totalRecords = 0;
             return GetAllCustomers(null, null, null, string.Empty, false,
@@ -723,7 +789,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// <param name="pageIndex">Page index</param>
         /// <param name="totalRecords">Total records</param>
         /// <returns>Customer collection</returns>
-        public static List<Customer> GetAllCustomers(DateTime? registrationFrom,
+        public List<Customer> GetAllCustomers(DateTime? registrationFrom,
             DateTime? registrationTo, string email, string username,
             bool dontLoadGuestCustomers, int pageSize, int pageIndex, out int totalRecords)
         {
@@ -746,7 +812,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// <param name="pageIndex">Page index</param>
         /// <param name="totalRecords">Total records</param>
         /// <returns>Customer collection</returns>
-        public static List<Customer> GetAllCustomers(DateTime? registrationFrom,
+        public List<Customer> GetAllCustomers(DateTime? registrationFrom,
             DateTime? registrationTo, string email, string username,
             bool dontLoadGuestCustomers, int dateOfBirthMonth, int dateOfBirthDay, 
             int pageSize, int pageIndex, out int totalRecords)
@@ -781,7 +847,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// </summary>
         /// <param name="affiliateId">Affiliate identifier</param>
         /// <returns>Customer collection</returns>
-        public static List<Customer> GetAffiliatedCustomers(int affiliateId)
+        public List<Customer> GetAffiliatedCustomers(int affiliateId)
         {
             if (affiliateId == 0)
                 return new List<Customer>();
@@ -800,7 +866,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// </summary>
         /// <param name="customerRoleId">Customer role identifier</param>
         /// <returns>Customer collection</returns>
-        public static List<Customer> GetCustomersByCustomerRoleId(int customerRoleId)
+        public List<Customer> GetCustomersByCustomerRoleId(int customerRoleId)
         {
             bool showHidden = NopContext.Current.IsAdmin;
 
@@ -836,7 +902,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// Marks customer as deleted
         /// </summary>
         /// <param name="customerId">Customer identifier</param>
-        public static void MarkCustomerAsDeleted(int customerId)
+        public void MarkCustomerAsDeleted(int customerId)
         {
             var customer = GetCustomerById(customerId);
             if (customer != null)
@@ -851,7 +917,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// </summary>
         /// <param name="email">Customer Email</param>
         /// <returns>A customer</returns>
-        public static Customer GetCustomerByEmail(string email)
+        public Customer GetCustomerByEmail(string email)
         {
             if (string.IsNullOrEmpty(email))
                 return null;
@@ -870,7 +936,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// </summary>
         /// <param name="username">Customer username</param>
         /// <returns>A customer</returns>
-        public static Customer GetCustomerByUsername(string username)
+        public Customer GetCustomerByUsername(string username)
         {
             if (string.IsNullOrEmpty(username))
                 return null;
@@ -889,7 +955,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// </summary>
         /// <param name="customerId">Customer identifier</param>
         /// <returns>A customer</returns>
-        public static Customer GetCustomerById(int customerId)
+        public Customer GetCustomerById(int customerId)
         {
             if (customerId == 0)
                 return null;
@@ -907,7 +973,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// </summary>
         /// <param name="customerGuid">Customer GUID</param>
         /// <returns>A customer</returns>
-        public static Customer GetCustomerByGuid(Guid customerGuid)
+        public Customer GetCustomerByGuid(Guid customerGuid)
         {
             if (customerGuid == Guid.Empty)
                 return null;
@@ -932,14 +998,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// <param name="active">A value indicating whether the customer is active</param>
         /// <param name="status">Status</param>
         /// <returns>A customer</returns>
-        public static Customer AddCustomer(string email, string username, string password,
+        public Customer AddCustomer(string email, string username, string password,
             bool isAdmin, bool isGuest, bool active, out MembershipCreateStatus status)
         {
             int affiliateId = 0;
             HttpCookie affiliateCookie = HttpContext.Current.Request.Cookies.Get("NopCommerce.AffiliateId");
             if (affiliateCookie != null)
             {
-                Affiliate affiliate = AffiliateManager.GetAffiliateById(Convert.ToInt32(affiliateCookie.Value));
+                Affiliate affiliate = IoCFactory.Resolve<IAffiliateManager>().GetAffiliateById(Convert.ToInt32(affiliateCookie.Value));
                 if (affiliate != null && affiliate.Active)
                     affiliateId = affiliate.AffiliateId;
             }
@@ -979,7 +1045,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// <param name="active">A value indicating whether the customer is active</param>
         /// <param name="status">Status</param>
         /// <returns>A customer</returns>
-        public static Customer AddCustomer(string email, string username, string password,
+        public Customer AddCustomer(string email, string username, string password,
             int affiliateId, bool isAdmin, bool isGuest, bool active,
             out MembershipCreateStatus status)
         {
@@ -1024,7 +1090,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// <param name="dateOfBirth">Date of birth</param>
         /// <param name="status">Status</param>
         /// <returns>A customer</returns>
-        public static Customer AddCustomer(Guid customerGuid, string email, string username,
+        public Customer AddCustomer(Guid customerGuid, string email, string username,
             string password, int affiliateId, int billingAddressId,
             int shippingAddressId, int lastPaymentMethodId,
             string lastAppliedCouponCode, string giftCardCouponCodes,
@@ -1056,14 +1122,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             {
                 if (!NopContext.Current.IsAdmin)
                 {
-                    if (CustomerManager.CustomerRegistrationType == CustomerRegistrationTypeEnum.Disabled)
+                    if (this.CustomerRegistrationType == CustomerRegistrationTypeEnum.Disabled)
                     {
                         status = MembershipCreateStatus.ProviderError;
                         return customer;
                     }
                 }
 
-                if (CustomerManager.UsernamesEnabled)
+                if (this.UsernamesEnabled)
                 {
                     if (GetCustomerByUsername(username) != null)
                     {
@@ -1098,8 +1164,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
 
                 if (!NopContext.Current.IsAdmin)
                 {
-                    if (CustomerManager.CustomerRegistrationType == CustomerRegistrationTypeEnum.EmailValidation ||
-                        CustomerManager.CustomerRegistrationType == CustomerRegistrationTypeEnum.AdminApproval)
+                    if (this.CustomerRegistrationType == CustomerRegistrationTypeEnum.EmailValidation ||
+                        this.CustomerRegistrationType == CustomerRegistrationTypeEnum.AdminApproval)
                     {
                         active = false;
                     }
@@ -1129,16 +1195,16 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             {
                 if (active)
                 {
-                    MessageManager.SendCustomerWelcomeMessage(customer, NopContext.Current.WorkingLanguage.LanguageId);
+                    IoCFactory.Resolve<IMessageManager>().SendCustomerWelcomeMessage(customer, NopContext.Current.WorkingLanguage.LanguageId);
                 }
                 else
                 {
-                    if (CustomerManager.CustomerRegistrationType == CustomerRegistrationTypeEnum.EmailValidation)
+                    if (this.CustomerRegistrationType == CustomerRegistrationTypeEnum.EmailValidation)
                     {
                         Guid accountActivationToken = Guid.NewGuid();
                         customer.AccountActivationToken = accountActivationToken.ToString();
 
-                        MessageManager.SendCustomerEmailValidationMessage(customer, NopContext.Current.WorkingLanguage.LanguageId);
+                        IoCFactory.Resolve<IMessageManager>().SendCustomerEmailValidationMessage(customer, NopContext.Current.WorkingLanguage.LanguageId);
                     }
                 }
             }
@@ -1177,7 +1243,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// <param name="avatarId">The avatar identifier</param>
         /// <param name="dateOfBirth">Date of birth</param>
         /// <returns>A customer</returns>
-        public static Customer AddCustomerForced(Guid customerGuid, string email,
+        public Customer AddCustomerForced(Guid customerGuid, string email,
             string username, string passwordHash, string saltKey,
             int affiliateId, int billingAddressId,
             int shippingAddressId, int lastPaymentMethodId,
@@ -1245,11 +1311,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
 
             //reward points
             if (!isGuest &&
-                OrderManager.RewardPointsEnabled &&
-                OrderManager.RewardPointsForRegistration > 0)
+                IoCFactory.Resolve<IOrderManager>().RewardPointsEnabled &&
+                IoCFactory.Resolve<IOrderManager>().RewardPointsForRegistration > 0)
             {
-                var rph = OrderManager.InsertRewardPointsHistory(customer.CustomerId, 0,
-                    OrderManager.RewardPointsForRegistration, decimal.Zero, decimal.Zero,
+                var rph = IoCFactory.Resolve<IOrderManager>().InsertRewardPointsHistory(customer.CustomerId, 0,
+                    IoCFactory.Resolve<IOrderManager>().RewardPointsForRegistration, decimal.Zero, decimal.Zero,
                     string.Empty, LocalizationManager.GetLocaleResourceString("RewardPoints.Message.EarnedForRegistration"),
                     DateTime.UtcNow);
             }
@@ -1265,7 +1331,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// Updates the customer
         /// </summary>
         /// <param name="customer">Customer</param>
-        public static void UpdateCustomer(Customer customer)
+        public void UpdateCustomer(Customer customer)
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");
@@ -1300,7 +1366,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             if (subscriptionOld != null && !customer.Email.ToLower().Equals(subscriptionOld.Email.ToLower()))
             {
                 subscriptionOld.Email = customer.Email;
-                MessageManager.UpdateNewsLetterSubscription(subscriptionOld);
+                IoCFactory.Resolve<IMessageManager>().UpdateNewsLetterSubscription(subscriptionOld);
             }
 
             //raise event             
@@ -1314,7 +1380,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// <param name="email">Customer email</param>
         /// <param name="oldPassword">Old password</param>
         /// <param name="password">Password</param>
-        public static void ModifyPassword(string email, string oldPassword, string password)
+        public void ModifyPassword(string email, string oldPassword, string password)
         {
             var customer = GetCustomerByEmail(email);
             if (customer != null)
@@ -1332,7 +1398,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// </summary>
         /// <param name="email">Customer email</param>
         /// <param name="newPassword">New password</param>
-        public static void ModifyPassword(string email, string newPassword)
+        public void ModifyPassword(string email, string newPassword)
         {
             var customer = GetCustomerByEmail(email);
             if (customer != null)
@@ -1346,7 +1412,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// </summary>
         /// <param name="customerId">Customer identifier</param>
         /// <param name="newPassword">New password</param>
-        public static void ModifyPassword(int customerId, string newPassword)
+        public void ModifyPassword(int customerId, string newPassword)
         {
             if (String.IsNullOrWhiteSpace(newPassword))
                 throw new NopException(LocalizationManager.GetLocaleResourceString("Customer.PasswordIsRequired"));
@@ -1368,7 +1434,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// Activates a customer
         /// </summary>
         /// <param name="customerGuid">Customer identifier</param>
-        public static void Activate(Guid customerGuid)
+        public void Activate(Guid customerGuid)
         {
             var customer = GetCustomerByGuid(customerGuid);
             if (customer != null)
@@ -1381,7 +1447,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// Activates a customer
         /// </summary>
         /// <param name="customerId">Customer identifier</param>
-        public static void Activate(int customerId)
+        public void Activate(int customerId)
         {
             Activate(customerId, false);
         }
@@ -1391,7 +1457,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// </summary>
         /// <param name="customerId">Customer identifier</param>
         /// <param name="sendCustomerWelcomeMessage">A value indivating whether to send customer welcome message</param>
-        public static void Activate(int customerId, bool sendCustomerWelcomeMessage)
+        public void Activate(int customerId, bool sendCustomerWelcomeMessage)
         {
             var customer = GetCustomerById(customerId);
             if (customer != null)
@@ -1401,7 +1467,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
 
                 if (sendCustomerWelcomeMessage)
                 {
-                    MessageManager.SendCustomerWelcomeMessage(customer, NopContext.Current.WorkingLanguage.LanguageId);
+                    IoCFactory.Resolve<IMessageManager>().SendCustomerWelcomeMessage(customer, NopContext.Current.WorkingLanguage.LanguageId);
                 }
             }
         }
@@ -1410,7 +1476,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// Deactivates a customer
         /// </summary>
         /// <param name="customerGuid">Customer identifier</param>
-        public static void Deactivate(Guid customerGuid)
+        public void Deactivate(Guid customerGuid)
         {
             var customer = GetCustomerByGuid(customerGuid);
             if (customer != null)
@@ -1423,7 +1489,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// Deactivates a customer
         /// </summary>
         /// <param name="customerId">Customer identifier</param>
-        public static void Deactivate(int customerId)
+        public void Deactivate(int customerId)
         {
             var customer = GetCustomerById(customerId);
             if (customer != null)
@@ -1439,7 +1505,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// <param name="email">A customer email</param>
         /// <param name="password">Password</param>
         /// <returns>Result</returns>
-        public static bool Login(string email, string password)
+        public bool Login(string email, string password)
         {
             if (email == null)
                 email = string.Empty;
@@ -1468,8 +1534,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                 {
                     registeredCustomerSession.IsExpired = false;
                     var anonCustomerSession = NopContext.Current.Session;
-                    var cart1 = ShoppingCartManager.GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
-                    var cart2 = ShoppingCartManager.GetCurrentShoppingCart(ShoppingCartTypeEnum.Wishlist);
+                    var cart1 = IoCFactory.Resolve<IShoppingCartManager>().GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
+                    var cart2 = IoCFactory.Resolve<IShoppingCartManager>().GetCurrentShoppingCart(ShoppingCartTypeEnum.Wishlist);
                     NopContext.Current.Session = registeredCustomerSession;
 
                     if ((anonCustomerSession != null) && (anonCustomerSession.CustomerSessionGuid != registeredCustomerSession.CustomerSessionGuid))
@@ -1482,23 +1548,23 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
 
                         foreach (ShoppingCartItem item in cart1)
                         {
-                            ShoppingCartManager.AddToCart(
+                            IoCFactory.Resolve<IShoppingCartManager>().AddToCart(
                                 item.ShoppingCartType,
                                 item.ProductVariantId,
                                 item.AttributesXml,
                                 item.CustomerEnteredPrice,
                                 item.Quantity);
-                            ShoppingCartManager.DeleteShoppingCartItem(item.ShoppingCartItemId, true);
+                            IoCFactory.Resolve<IShoppingCartManager>().DeleteShoppingCartItem(item.ShoppingCartItemId, true);
                         }
                         foreach (ShoppingCartItem item in cart2)
                         {
-                            ShoppingCartManager.AddToCart(
+                            IoCFactory.Resolve<IShoppingCartManager>().AddToCart(
                                 item.ShoppingCartType,
                                 item.ProductVariantId,
                                 item.AttributesXml,
                                 item.CustomerEnteredPrice,
                                 item.Quantity);
-                            ShoppingCartManager.DeleteShoppingCartItem(item.ShoppingCartItemId, true);
+                            IoCFactory.Resolve<IShoppingCartManager>().DeleteShoppingCartItem(item.ShoppingCartItemId, true);
                         }
                     }
                 }
@@ -1515,7 +1581,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// <summary>
         /// Logout customer
         /// </summary>
-        public static void Logout()
+        public void Logout()
         {
             if (NopContext.Current != null)
             {
@@ -1535,35 +1601,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         }
 
         /// <summary>
-        /// Creates a password hash
-        /// </summary>
-        /// <param name="password">Password</param>
-        /// <param name="salt">Salt</param>
-        /// <returns>Password hash</returns>
-        private static string CreatePasswordHash(string password, string salt)
-        {
-            //MD5, SHA1
-            string passwordFormat = SettingManager.GetSettingValue("Security.PasswordFormat");
-            if (String.IsNullOrEmpty(passwordFormat))
-                passwordFormat = "SHA1";
-
-            return FormsAuthentication.HashPasswordForStoringInConfigFile(password + salt, passwordFormat);
-        }
-
-        /// <summary>
-        /// Creates a salt
-        /// </summary>
-        /// <param name="size">A salt size</param>
-        /// <returns>A salt</returns>
-        private static string CreateSalt(int size)
-        {
-            var provider = new RNGCryptoServiceProvider();
-            byte[] data = new byte[size];
-            provider.GetBytes(data);
-            return Convert.ToBase64String(data);
-        }
-
-        /// <summary>
         /// Get best customers
         /// </summary>
         /// <param name="startTime">Order start time; null to load all</param>
@@ -1573,7 +1610,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// <param name="ss">Order shippment status; null to load all records</param>
         /// <param name="orderBy">1 - order by order total, 2 - order by number of orders</param>
         /// <returns>Report</returns>
-        public static List<CustomerBestReportLine> GetBestCustomersReport(DateTime? startTime,
+        public List<CustomerBestReportLine> GetBestCustomersReport(DateTime? startTime,
             DateTime? endTime, OrderStatusEnum? os, PaymentStatusEnum? ps,
             ShippingStatusEnum? ss, int orderBy)
         {
@@ -1601,7 +1638,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// </summary>
         /// <param name="days">Customers registered in the last days</param>
         /// <returns>Int</returns>
-        public static int GetRegisteredCustomersReport(int days)
+        public int GetRegisteredCustomersReport(int days)
         {
             DateTime date = DateTimeHelper.ConvertToUserTime(DateTime.Now).AddDays(-days);
 
@@ -1622,7 +1659,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// Get customer report by language
         /// </summary>
         /// <returns>Report</returns>
-        public static List<CustomerReportByLanguageLine> GetCustomerReportByLanguage()
+        public List<CustomerReportByLanguageLine> GetCustomerReportByLanguage()
         {
             var context = ObjectContextHelper.CurrentObjectContext;
             var report = context.Sp_CustomerReportByLanguage().ToList();
@@ -1635,7 +1672,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// </summary>
         /// <param name="customerAttributeKey">Customer attribute key</param>
         /// <returns>Report</returns>
-        public static List<CustomerReportByAttributeKeyLine> GetCustomerReportByAttributeKey(string customerAttributeKey)
+        public List<CustomerReportByAttributeKeyLine> GetCustomerReportByAttributeKey(string customerAttributeKey)
         {
             if (String.IsNullOrEmpty(customerAttributeKey))
                 throw new ArgumentNullException("customerAttributeKey");
@@ -1650,7 +1687,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// Deletes a customer attribute
         /// </summary>
         /// <param name="customerAttributeId">Customer attribute identifier</param>
-        public static void DeleteCustomerAttribute(int customerAttributeId)
+        public void DeleteCustomerAttribute(int customerAttributeId)
         {
             var customerAttribute = GetCustomerAttributeById(customerAttributeId);
             if (customerAttribute == null)
@@ -1668,7 +1705,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// </summary>
         /// <param name="customerAttributeId">Customer attribute identifier</param>
         /// <returns>A customer attribute</returns>
-        public static CustomerAttribute GetCustomerAttributeById(int customerAttributeId)
+        public CustomerAttribute GetCustomerAttributeById(int customerAttributeId)
         {
             if (customerAttributeId == 0)
                 return null;
@@ -1687,7 +1724,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// </summary>
         /// <param name="customerId">Customer identifier</param>
         /// <returns>Customer attributes</returns>
-        public static List<CustomerAttribute> GetCustomerAttributesByCustomerId(int customerId)
+        public List<CustomerAttribute> GetCustomerAttributesByCustomerId(int customerId)
         {
             var context = ObjectContextHelper.CurrentObjectContext;
             var query = from ca in context.CustomerAttributes
@@ -1701,7 +1738,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// Inserts a customer attribute
         /// </summary>
         /// <param name="customerAttribute">Customer attribute</param>
-        public static void InsertCustomerAttribute(CustomerAttribute customerAttribute)
+        public void InsertCustomerAttribute(CustomerAttribute customerAttribute)
         {
             if (customerAttribute == null)
                 throw new ArgumentNullException("customerAttribute");
@@ -1727,7 +1764,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// Updates the customer attribute
         /// </summary>
         /// <param name="customerAttribute">Customer attribute</param>
-        public static void UpdateCustomerAttribute(CustomerAttribute customerAttribute)
+        public void UpdateCustomerAttribute(CustomerAttribute customerAttribute)
         {
             if (customerAttribute == null)
                 throw new ArgumentNullException("customerAttribute");
@@ -1751,7 +1788,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// Marks customer role as deleted
         /// </summary>
         /// <param name="customerRoleId">Customer role identifier</param>
-        public static void MarkCustomerRoleAsDeleted(int customerRoleId)
+        public void MarkCustomerRoleAsDeleted(int customerRoleId)
         {
             var customerRole = GetCustomerRoleById(customerRoleId);
             if (customerRole != null)
@@ -1760,7 +1797,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                 UpdateCustomerRole(customerRole);
             }
 
-            if (CustomerManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(CUSTOMERROLES_PATTERN_KEY);
             }
@@ -1771,14 +1808,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// </summary>
         /// <param name="customerRoleId">Customer role identifier</param>
         /// <returns>Customer role</returns>
-        public static CustomerRole GetCustomerRoleById(int customerRoleId)
+        public CustomerRole GetCustomerRoleById(int customerRoleId)
         {
             if (customerRoleId == 0)
                 return null;
 
             string key = string.Format(CUSTOMERROLES_BY_ID_KEY, customerRoleId);
             object obj2 = NopRequestCache.Get(key);
-            if (CustomerManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (CustomerRole)obj2;
             }
@@ -1789,7 +1826,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                         select cr;
             var customerRole = query.SingleOrDefault();
 
-            if (CustomerManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, customerRole);
             }
@@ -1800,12 +1837,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// Gets all customer roles
         /// </summary>
         /// <returns>Customer role collection</returns>
-        public static List<CustomerRole> GetAllCustomerRoles()
+        public List<CustomerRole> GetAllCustomerRoles()
         {
             bool showHidden = NopContext.Current.IsAdmin;
             string key = string.Format(CUSTOMERROLES_ALL_KEY, showHidden);
             object obj2 = NopRequestCache.Get(key);
-            if (CustomerManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (List<CustomerRole>)obj2;
             }
@@ -1817,7 +1854,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                         select cr;
             var customerRoles = query.ToList();
 
-            if (CustomerManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, customerRoles);
             }
@@ -1829,7 +1866,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// </summary>
         /// <param name="customerId">Customer identifier</param>
         /// <returns>Customer role collection</returns>
-        public static List<CustomerRole> GetCustomerRolesByCustomerId(int customerId)
+        public List<CustomerRole> GetCustomerRolesByCustomerId(int customerId)
         {
             bool showHidden = NopContext.Current.IsAdmin;
             return GetCustomerRolesByCustomerId(customerId, showHidden);
@@ -1841,7 +1878,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// <param name="customerId">Customer identifier</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Customer role collection</returns>
-        public static List<CustomerRole> GetCustomerRolesByCustomerId(int customerId, bool showHidden)
+        public List<CustomerRole> GetCustomerRolesByCustomerId(int customerId, bool showHidden)
         {
             if (customerId == 0)
                 return new List<CustomerRole>();
@@ -1864,7 +1901,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// Inserts a customer role
         /// </summary>
         /// <param name="customerRole">Customer role</param>
-        public static void InsertCustomerRole(CustomerRole customerRole)
+        public void InsertCustomerRole(CustomerRole customerRole)
         {
             if (customerRole == null)
                 throw new ArgumentNullException("customerRole");
@@ -1877,7 +1914,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             context.CustomerRoles.AddObject(customerRole);
             context.SaveChanges();
 
-            if (CustomerManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(CUSTOMERROLES_PATTERN_KEY);
             }
@@ -1887,7 +1924,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// Updates the customer role
         /// </summary>
         /// <param name="customerRole">Customer role</param>
-        public static void UpdateCustomerRole(CustomerRole customerRole)    
+        public void UpdateCustomerRole(CustomerRole customerRole)    
         {
             if (customerRole == null)
                 throw new ArgumentNullException("customerRole");
@@ -1901,7 +1938,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             
             context.SaveChanges();
 
-            if (CustomerManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(CUSTOMERROLES_PATTERN_KEY);
             }
@@ -1912,7 +1949,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// </summary>
         /// <param name="customerId">Customer identifier</param>
         /// <param name="customerRoleId">Customer role identifier</param>
-        public static void AddCustomerToRole(int customerId, int customerRoleId)
+        public void AddCustomerToRole(int customerId, int customerRoleId)
         {
             var customer = GetCustomerById(customerId);
             if (customer == null)
@@ -1942,7 +1979,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// </summary>
         /// <param name="customerId">Customer identifier</param>
         /// <param name="customerRoleId">Customer role identifier</param>
-        public static void RemoveCustomerFromRole(int customerId, int customerRoleId)
+        public void RemoveCustomerFromRole(int customerId, int customerRoleId)
         {
             var customer = GetCustomerById(customerId);
             if (customer == null)
@@ -1971,9 +2008,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// </summary>
         /// <param name="customerRoleId">Customer role identifier</param>
         /// <param name="discountId">Discount identifier</param>
-        public static void AddDiscountToCustomerRole(int customerRoleId, int discountId)
+        public void AddDiscountToCustomerRole(int customerRoleId, int discountId)
         {
-            var discount = DiscountManager.GetDiscountById(discountId);
+            var discount = IoCFactory.Resolve<IDiscountManager>().GetDiscountById(discountId);
             if (discount == null)
                 return;
 
@@ -2000,9 +2037,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// </summary>
         /// <param name="customerRoleId">Customer role identifier</param>
         /// <param name="discountId">Discount identifier</param>
-        public static void RemoveDiscountFromCustomerRole(int customerRoleId, int discountId)
+        public void RemoveDiscountFromCustomerRole(int customerRoleId, int discountId)
         {
-            var discount = DiscountManager.GetDiscountById(discountId);
+            var discount = IoCFactory.Resolve<IDiscountManager>().GetDiscountById(discountId);
             if (discount == null)
                 return;
 
@@ -2029,12 +2066,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// </summary>
         /// <param name="discountId">Discount identifier</param>
         /// <returns>Customer roles</returns>
-        public static List<CustomerRole> GetCustomerRolesByDiscountId(int discountId)
+        public List<CustomerRole> GetCustomerRolesByDiscountId(int discountId)
         {
             bool showHidden = NopContext.Current.IsAdmin;
             string key = string.Format(CUSTOMERROLES_BY_DISCOUNTID_KEY, discountId, showHidden);
             object obj2 = NopRequestCache.Get(key);
-            if (CustomerManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (List<CustomerRole>)obj2;
             }
@@ -2049,7 +2086,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                         select cr;
             var customerRoles = query.ToList();
 
-            if (CustomerManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, customerRoles);
             }
@@ -2061,7 +2098,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// </summary>
         /// <param name="customerSessionGuid">Customer session GUID</param>
         /// <returns>Customer session</returns>
-        public static CustomerSession GetCustomerSessionByGuid(Guid customerSessionGuid)
+        public CustomerSession GetCustomerSessionByGuid(Guid customerSessionGuid)
         {
             if (customerSessionGuid == Guid.Empty)
                 return null;
@@ -2080,7 +2117,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// </summary>
         /// <param name="customerId">Customer identifier</param>
         /// <returns>Customer session</returns>
-        public static CustomerSession GetCustomerSessionByCustomerId(int customerId)
+        public CustomerSession GetCustomerSessionByCustomerId(int customerId)
         {
             if (customerId == 0)
                 return null;
@@ -2098,7 +2135,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// Deletes a customer session
         /// </summary>
         /// <param name="customerSessionGuid">Customer session GUID</param>
-        public static void DeleteCustomerSession(Guid customerSessionGuid)
+        public void DeleteCustomerSession(Guid customerSessionGuid)
         {
             var customerSession = GetCustomerSessionByGuid(customerSessionGuid);
             if (customerSession == null)
@@ -2115,7 +2152,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// Gets all customer sessions
         /// </summary>
         /// <returns>Customer session collection</returns>
-        public static List<CustomerSession> GetAllCustomerSessions()
+        public List<CustomerSession> GetAllCustomerSessions()
         {
             var context = ObjectContextHelper.CurrentObjectContext;
             var query = from cs in context.CustomerSessions
@@ -2129,7 +2166,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// Gets all customer sessions with non empty shopping cart
         /// </summary>
         /// <returns>Customer session collection</returns>
-        public static List<CustomerSession> GetAllCustomerSessionsWithNonEmptyShoppingCart()
+        public List<CustomerSession> GetAllCustomerSessionsWithNonEmptyShoppingCart()
         {
             var context = ObjectContextHelper.CurrentObjectContext;
             return context.Sp_CustomerSessionLoadNonEmpty();
@@ -2139,7 +2176,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// Deletes all expired customer sessions
         /// </summary>
         /// <param name="olderThan">Older than date and time</param>
-        public static void DeleteExpiredCustomerSessions(DateTime olderThan)
+        public void DeleteExpiredCustomerSessions(DateTime olderThan)
         {
             var context = ObjectContextHelper.CurrentObjectContext;
             context.Sp_CustomerSessionDeleteExpired(olderThan);
@@ -2153,7 +2190,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// <param name="lastAccessed">The last accessed date and time</param>
         /// <param name="isExpired">A value indicating whether the customer session is expired</param>
         /// <returns>Customer session</returns>
-        public static CustomerSession SaveCustomerSession(Guid customerSessionGuid,
+        public CustomerSession SaveCustomerSession(Guid customerSessionGuid,
             int customerId, DateTime lastAccessed, bool isExpired)
         {
             var customerSession = GetCustomerSessionByGuid(customerSessionGuid);
@@ -2180,42 +2217,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         }
 
         /// <summary>
-        /// Inserts a customer session
-        /// </summary>
-        /// <param name="customerSession">Customer session</param>
-        protected static void InsertCustomerSession(CustomerSession customerSession)
-        {
-            if (customerSession == null)
-                throw new ArgumentNullException("customerSession");
-
-            var context = ObjectContextHelper.CurrentObjectContext;
-
-            context.CustomerSessions.AddObject(customerSession);
-            context.SaveChanges();
-        }
-
-        /// <summary>
-        /// Updates the customer session
-        /// </summary>
-        /// <param name="customerSession">Customer session</param>
-        protected static void UpdateCustomerSession(CustomerSession customerSession)
-        {
-            if (customerSession == null)
-                throw new ArgumentNullException("customerSession");
-
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(customerSession))
-                context.CustomerSessions.Attach(customerSession);
-
-            context.SaveChanges();
-        }
-
-        /// <summary>
         /// Formats customer name
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <returns>Name</returns>
-        public static string FormatUserName(Customer customer)
+        public string FormatUserName(Customer customer)
         {
             return FormatUserName(customer, false);
         }
@@ -2226,7 +2232,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// <param name="customer">Customer</param>
         /// <param name="stripTooLong">Strip too long customer name</param>
         /// <returns>Name</returns>
-        public static string FormatUserName(Customer customer, bool stripTooLong)
+        public string FormatUserName(Customer customer, bool stripTooLong)
         {
             if (customer == null)
                 return string.Empty;
@@ -2237,7 +2243,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             }
 
             string result = string.Empty;
-            switch (CustomerManager.CustomerNameFormatting)
+            switch (this.CustomerNameFormatting)
             {
                 case CustomerNameFormatEnum.ShowEmails:
                     result = customer.Email;
@@ -2254,7 +2260,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
 
             if (stripTooLong)
             {
-                int maxLength = SettingManager.GetSettingValueInteger("Customer.FormatNameMaxLength", 0);
+                int maxLength = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Customer.FormatNameMaxLength", 0);
                 if (maxLength > 0 && result.Length > maxLength)
                 {
                     result = result.Substring(0, maxLength);
@@ -2271,569 +2277,569 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// <summary>
         /// Gets a value indicating whether cache is enabled
         /// </summary>
-        public static bool CacheEnabled
+        public bool CacheEnabled
         {
             get
             {
-                return SettingManager.GetSettingValueBoolean("Cache.CustomerManager.CacheEnabled");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.CustomerManager.CacheEnabled");
             }
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether anonymous checkout allowed
         /// </summary>
-        public static bool AnonymousCheckoutAllowed
+        public bool AnonymousCheckoutAllowed
         {
             get
             {
-                bool allowed = SettingManager.GetSettingValueBoolean("Checkout.AnonymousCheckoutAllowed", false);
+                bool allowed = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Checkout.AnonymousCheckoutAllowed", false);
                 return allowed;
             }
             set
             {
-                SettingManager.SetParam("Checkout.AnonymousCheckoutAllowed", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("Checkout.AnonymousCheckoutAllowed", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether usernames are used instead of emails
         /// </summary>
-        public static bool UsernamesEnabled
+        public bool UsernamesEnabled
         {
             get
             {
-                bool usernamesEnabled = SettingManager.GetSettingValueBoolean("Customer.UsernamesEnabled");
+                bool usernamesEnabled = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Customer.UsernamesEnabled");
                 return usernamesEnabled;
             }
             set
             {
-                SettingManager.SetParam("Customer.UsernamesEnabled", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("Customer.UsernamesEnabled", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether customers are allowed to change their usernames
         /// </summary>
-        public static bool AllowCustomersToChangeUsernames
+        public bool AllowCustomersToChangeUsernames
         {
             get
             {
-                bool result = SettingManager.GetSettingValueBoolean("Customer.AllowCustomersToChangeUsernames");
+                bool result = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Customer.AllowCustomersToChangeUsernames");
                 return result;
             }
             set
             {
-                SettingManager.SetParam("Customer.AllowCustomersToChangeUsernames", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("Customer.AllowCustomersToChangeUsernames", value.ToString());
             }
         }
 
         /// <summary>
         /// Customer name formatting
         /// </summary>
-        public static CustomerNameFormatEnum CustomerNameFormatting
+        public CustomerNameFormatEnum CustomerNameFormatting
         {
             get
             {
-                int customerNameFormatting = SettingManager.GetSettingValueInteger("Customer.CustomerNameFormatting");
+                int customerNameFormatting = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Customer.CustomerNameFormatting");
                 return (CustomerNameFormatEnum)customerNameFormatting;
             }
             set
             {
-                SettingManager.SetParam("Customer.CustomerNameFormatting", ((int)value).ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("Customer.CustomerNameFormatting", ((int)value).ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether customers are allowed to upload avatars.
         /// </summary>
-        public static bool AllowCustomersToUploadAvatars
+        public bool AllowCustomersToUploadAvatars
         {
             get
             {
-                bool allowCustomersToUploadAvatars = SettingManager.GetSettingValueBoolean("Customer.CustomersAllowedToUploadAvatars");
+                bool allowCustomersToUploadAvatars = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Customer.CustomersAllowedToUploadAvatars");
                 return allowCustomersToUploadAvatars;
             }
             set
             {
-                SettingManager.SetParam("Customer.CustomersAllowedToUploadAvatars", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("Customer.CustomersAllowedToUploadAvatars", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether to display default user avatar.
         /// </summary>
-        public static bool DefaultAvatarEnabled
+        public bool DefaultAvatarEnabled
         {
             get
             {
-                bool defaultAvatarEnabled = SettingManager.GetSettingValueBoolean("Customer.DefaultAvatarEnabled");
+                bool defaultAvatarEnabled = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Customer.DefaultAvatarEnabled");
                 return defaultAvatarEnabled;
             }
             set
             {
-                SettingManager.SetParam("Customer.DefaultAvatarEnabled", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("Customer.DefaultAvatarEnabled", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether customers location is shown
         /// </summary>
-        public static bool ShowCustomersLocation
+        public bool ShowCustomersLocation
         {
             get
             {
-                bool showCustomersLocation = SettingManager.GetSettingValueBoolean("Customer.ShowCustomersLocation");
+                bool showCustomersLocation = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Customer.ShowCustomersLocation");
                 return showCustomersLocation;
             }
             set
             {
-                SettingManager.SetParam("Customer.ShowCustomersLocation", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("Customer.ShowCustomersLocation", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether to show customers join date
         /// </summary>
-        public static bool ShowCustomersJoinDate
+        public bool ShowCustomersJoinDate
         {
             get
             {
-                bool showCustomersJoinDate = SettingManager.GetSettingValueBoolean("Customer.ShowCustomersJoinDate");
+                bool showCustomersJoinDate = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Customer.ShowCustomersJoinDate");
                 return showCustomersJoinDate;
             }
             set
             {
-                SettingManager.SetParam("Customer.ShowCustomersJoinDate", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("Customer.ShowCustomersJoinDate", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether customers are allowed to view profiles of other customers
         /// </summary>
-        public static bool AllowViewingProfiles
+        public bool AllowViewingProfiles
         {
             get
             {
-                bool allowViewingProfiles = SettingManager.GetSettingValueBoolean("Customer.AllowViewingProfiles");
+                bool allowViewingProfiles = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Customer.AllowViewingProfiles");
                 return allowViewingProfiles;
             }
             set
             {
-                SettingManager.SetParam("Customer.AllowViewingProfiles", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("Customer.AllowViewingProfiles", value.ToString());
             }
         }
 
         /// <summary>
         /// Tax display type
         /// </summary>
-        public static CustomerRegistrationTypeEnum CustomerRegistrationType
+        public CustomerRegistrationTypeEnum CustomerRegistrationType
         {
             get
             {
-                int customerRegistrationType = SettingManager.GetSettingValueInteger("Common.CustomerRegistrationType", (int)CustomerRegistrationTypeEnum.Standard);
+                int customerRegistrationType = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Common.CustomerRegistrationType", (int)CustomerRegistrationTypeEnum.Standard);
                 return (CustomerRegistrationTypeEnum)customerRegistrationType;
             }
             set
             {
-                SettingManager.SetParam("Common.CustomerRegistrationType", ((int)value).ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("Common.CustomerRegistrationType", ((int)value).ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether to allow navigation only for registered users.
         /// </summary>
-        public static bool AllowNavigationOnlyRegisteredCustomers
+        public bool AllowNavigationOnlyRegisteredCustomers
         {
             get
             {
-                bool allowOnlyRegisteredCustomers = SettingManager.GetSettingValueBoolean("Common.AllowNavigationOnlyRegisteredCustomers");
+                bool allowOnlyRegisteredCustomers = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Common.AllowNavigationOnlyRegisteredCustomers");
                 return allowOnlyRegisteredCustomers;
             }
             set
             {
-                SettingManager.SetParam("Common.AllowNavigationOnlyRegisteredCustomers", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("Common.AllowNavigationOnlyRegisteredCustomers", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether product reviews must be approved by administrator.
         /// </summary>
-        public static bool ProductReviewsMustBeApproved
+        public bool ProductReviewsMustBeApproved
         {
             get
             {
-                bool productReviewsMustBeApproved = SettingManager.GetSettingValueBoolean("Common.ProductReviewsMustBeApproved");
+                bool productReviewsMustBeApproved = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Common.ProductReviewsMustBeApproved");
                 return productReviewsMustBeApproved;
             }
             set
             {
-                SettingManager.SetParam("Common.ProductReviewsMustBeApproved", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("Common.ProductReviewsMustBeApproved", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether to allow anonymous users write product reviews.
         /// </summary>
-        public static bool AllowAnonymousUsersToReviewProduct
+        public bool AllowAnonymousUsersToReviewProduct
         {
             get
             {
-                bool allowAnonymousUsersToReviewProduct = SettingManager.GetSettingValueBoolean("Common.AllowAnonymousUsersToReviewProduct");
+                bool allowAnonymousUsersToReviewProduct = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Common.AllowAnonymousUsersToReviewProduct");
                 return allowAnonymousUsersToReviewProduct;
             }
             set
             {
-                SettingManager.SetParam("Common.AllowAnonymousUsersToReviewProduct", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("Common.AllowAnonymousUsersToReviewProduct", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether to allow anonymous users to email a friend.
         /// </summary>
-        public static bool AllowAnonymousUsersToEmailAFriend
+        public bool AllowAnonymousUsersToEmailAFriend
         {
             get
             {
-                return SettingManager.GetSettingValueBoolean("Common.AllowAnonymousUsersToEmailAFriend", false);
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Common.AllowAnonymousUsersToEmailAFriend", false);
             }
             set
             {
-                SettingManager.SetParam("Common.AllowAnonymousUsersToEmailAFriend", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("Common.AllowAnonymousUsersToEmailAFriend", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether to allow anonymous users to set product ratings.
         /// </summary>
-        public static bool AllowAnonymousUsersToSetProductRatings
+        public bool AllowAnonymousUsersToSetProductRatings
         {
             get
             {
-                bool allowAnonymousUsersToSetProductRatings = SettingManager.GetSettingValueBoolean("Common.AllowAnonymousUsersToSetProductRatings");
+                bool allowAnonymousUsersToSetProductRatings = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Common.AllowAnonymousUsersToSetProductRatings");
                 return allowAnonymousUsersToSetProductRatings;
             }
             set
             {
-                SettingManager.SetParam("Common.AllowAnonymousUsersToSetProductRatings", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("Common.AllowAnonymousUsersToSetProductRatings", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether 'New customer' notification message should be sent to a store owner
         /// </summary>
-        public static bool NotifyNewCustomerRegistration
+        public bool NotifyNewCustomerRegistration
         {
             get
             {
-                return SettingManager.GetSettingValueBoolean("Common.NotifyNewCustomerRegistration", false);
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Common.NotifyNewCustomerRegistration", false);
             }
             set
             {
-                SettingManager.SetParam("Common.NotifyNewCustomerRegistration", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("Common.NotifyNewCustomerRegistration", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether 'Gender' is enabled
         /// </summary>
-        public static bool FormFieldGenderEnabled
+        public bool FormFieldGenderEnabled
         {
             get
             {
-                bool setting = SettingManager.GetSettingValueBoolean("FormField.GenderEnabled", true);
+                bool setting = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("FormField.GenderEnabled", true);
                 return setting;
             }
             set
             {
-                SettingManager.SetParam("FormField.GenderEnabled", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("FormField.GenderEnabled", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether 'Date of Birth' is enabled
         /// </summary>
-        public static bool FormFieldDateOfBirthEnabled
+        public bool FormFieldDateOfBirthEnabled
         {
             get
             {
-                bool setting = SettingManager.GetSettingValueBoolean("FormField.DateOfBirthEnabled", true);
+                bool setting = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("FormField.DateOfBirthEnabled", true);
                 return setting;
             }
             set
             {
-                SettingManager.SetParam("FormField.DateOfBirthEnabled", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("FormField.DateOfBirthEnabled", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether 'Company' is enabled
         /// </summary>
-        public static bool FormFieldCompanyEnabled
+        public bool FormFieldCompanyEnabled
         {
             get
             {
-                bool setting = SettingManager.GetSettingValueBoolean("FormField.CompanyEnabled", true);
+                bool setting = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("FormField.CompanyEnabled", true);
                 return setting;
             }
             set
             {
-                SettingManager.SetParam("FormField.CompanyEnabled", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("FormField.CompanyEnabled", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether 'Company' is required
         /// </summary>
-        public static bool FormFieldCompanyRequired
+        public bool FormFieldCompanyRequired
         {
             get
             {
-                bool setting = SettingManager.GetSettingValueBoolean("FormField.CompanyRequired", false);
+                bool setting = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("FormField.CompanyRequired", false);
                 return setting;
             }
             set
             {
-                SettingManager.SetParam("FormField.CompanyRequired", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("FormField.CompanyRequired", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether 'Street Address' is enabled
         /// </summary>
-        public static bool FormFieldStreetAddressEnabled
+        public bool FormFieldStreetAddressEnabled
         {
             get
             {
-                bool setting = SettingManager.GetSettingValueBoolean("FormField.StreetAddressEnabled", true);
+                bool setting = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("FormField.StreetAddressEnabled", true);
                 return setting;
             }
             set
             {
-                SettingManager.SetParam("FormField.StreetAddressEnabled", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("FormField.StreetAddressEnabled", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether 'Street Address' is required
         /// </summary>
-        public static bool FormFieldStreetAddressRequired
+        public bool FormFieldStreetAddressRequired
         {
             get
             {
-                bool setting = SettingManager.GetSettingValueBoolean("FormField.StreetAddressRequired", true);
+                bool setting = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("FormField.StreetAddressRequired", true);
                 return setting;
             }
             set
             {
-                SettingManager.SetParam("FormField.StreetAddressRequired", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("FormField.StreetAddressRequired", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether 'Street Address 2' is enabled
         /// </summary>
-        public static bool FormFieldStreetAddress2Enabled
+        public bool FormFieldStreetAddress2Enabled
         {
             get
             {
-                bool setting = SettingManager.GetSettingValueBoolean("FormField.StreetAddress2Enabled", true);
+                bool setting = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("FormField.StreetAddress2Enabled", true);
                 return setting;
             }
             set
             {
-                SettingManager.SetParam("FormField.StreetAddress2Enabled", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("FormField.StreetAddress2Enabled", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether 'Street Address 2' is required
         /// </summary>
-        public static bool FormFieldStreetAddress2Required
+        public bool FormFieldStreetAddress2Required
         {
             get
             {
-                bool setting = SettingManager.GetSettingValueBoolean("FormField.StreetAddress2Required", false);
+                bool setting = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("FormField.StreetAddress2Required", false);
                 return setting;
             }
             set
             {
-                SettingManager.SetParam("FormField.StreetAddress2Required", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("FormField.StreetAddress2Required", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether 'Post Code' is enabled
         /// </summary>
-        public static bool FormFieldPostCodeEnabled
+        public bool FormFieldPostCodeEnabled
         {
             get
             {
-                bool setting = SettingManager.GetSettingValueBoolean("FormField.PostCodeEnabled", true);
+                bool setting = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("FormField.PostCodeEnabled", true);
                 return setting;
             }
             set
             {
-                SettingManager.SetParam("FormField.PostCodeEnabled", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("FormField.PostCodeEnabled", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether 'Post Code' is required
         /// </summary>
-        public static bool FormFieldPostCodeRequired
+        public bool FormFieldPostCodeRequired
         {
             get
             {
-                bool setting = SettingManager.GetSettingValueBoolean("FormField.PostCodeRequired", true);
+                bool setting = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("FormField.PostCodeRequired", true);
                 return setting;
             }
             set
             {
-                SettingManager.SetParam("FormField.PostCodeRequired", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("FormField.PostCodeRequired", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether 'City' is enabled
         /// </summary>
-        public static bool FormFieldCityEnabled
+        public bool FormFieldCityEnabled
         {
             get
             {
-                bool setting = SettingManager.GetSettingValueBoolean("FormField.CityEnabled", true);
+                bool setting = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("FormField.CityEnabled", true);
                 return setting;
             }
             set
             {
-                SettingManager.SetParam("FormField.CityEnabled", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("FormField.CityEnabled", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether 'City' is required
         /// </summary>
-        public static bool FormFieldCityRequired
+        public bool FormFieldCityRequired
         {
             get
             {
-                bool setting = SettingManager.GetSettingValueBoolean("FormField.CityRequired", true);
+                bool setting = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("FormField.CityRequired", true);
                 return setting;
             }
             set
             {
-                SettingManager.SetParam("FormField.CityRequired", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("FormField.CityRequired", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether 'Country' is enabled
         /// </summary>
-        public static bool FormFieldCountryEnabled
+        public bool FormFieldCountryEnabled
         {
             get
             {
-                bool setting = SettingManager.GetSettingValueBoolean("FormField.CountryEnabled", true);
+                bool setting = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("FormField.CountryEnabled", true);
                 return setting;
             }
             set
             {
-                SettingManager.SetParam("FormField.CountryEnabled", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("FormField.CountryEnabled", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether 'State' is enabled
         /// </summary>
-        public static bool FormFieldStateEnabled
+        public bool FormFieldStateEnabled
         {
             get
             {
-                bool setting = SettingManager.GetSettingValueBoolean("FormField.StateEnabled", true);
+                bool setting = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("FormField.StateEnabled", true);
                 return setting;
             }
             set
             {
-                SettingManager.SetParam("FormField.StateEnabled", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("FormField.StateEnabled", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether 'Phone' is enabled
         /// </summary>
-        public static bool FormFieldPhoneEnabled
+        public bool FormFieldPhoneEnabled
         {
             get
             {
-                bool setting = SettingManager.GetSettingValueBoolean("FormField.PhoneEnabled", true);
+                bool setting = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("FormField.PhoneEnabled", true);
                 return setting;
             }
             set
             {
-                SettingManager.SetParam("FormField.PhoneEnabled", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("FormField.PhoneEnabled", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether 'Phone' is required
         /// </summary>
-        public static bool FormFieldPhoneRequired
+        public bool FormFieldPhoneRequired
         {
             get
             {
-                bool setting = SettingManager.GetSettingValueBoolean("FormField.PhoneRequired", true);
+                bool setting = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("FormField.PhoneRequired", true);
                 return setting;
             }
             set
             {
-                SettingManager.SetParam("FormField.PhoneRequired", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("FormField.PhoneRequired", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether 'Fax' is enabled
         /// </summary>
-        public static bool FormFieldFaxEnabled
+        public bool FormFieldFaxEnabled
         {
             get
             {
-                bool setting = SettingManager.GetSettingValueBoolean("FormField.FaxEnabled", true);
+                bool setting = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("FormField.FaxEnabled", true);
                 return setting;
             }
             set
             {
-                SettingManager.SetParam("FormField.FaxEnabled", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("FormField.FaxEnabled", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether 'Fax' is required
         /// </summary>
-        public static bool FormFieldFaxRequired
+        public bool FormFieldFaxRequired
         {
             get
             {
-                bool setting = SettingManager.GetSettingValueBoolean("FormField.FaxRequired", false);
+                bool setting = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("FormField.FaxRequired", false);
                 return setting;
             }
             set
             {
-                SettingManager.SetParam("FormField.FaxRequired", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("FormField.FaxRequired", value.ToString());
             }
         }
         
         /// <summary>
         /// Gets or sets a value indicating whether 'Newsletter' is enabled
         /// </summary>
-        public static bool FormFieldNewsletterEnabled
+        public bool FormFieldNewsletterEnabled
         {
             get
             {
-                bool setting = SettingManager.GetSettingValueBoolean("FormField.NewsletterEnabled", true);
+                bool setting = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("FormField.NewsletterEnabled", true);
                 return setting;
             }
             set
             {
-                SettingManager.SetParam("FormField.NewsletterEnabled", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("FormField.NewsletterEnabled", value.ToString());
             }
         }
         #endregion

@@ -26,6 +26,7 @@ using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Web.Templates.Payment;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Payment.eWay
 {
@@ -39,18 +40,18 @@ namespace NopSolutions.NopCommerce.Web.Administration.Payment.eWay
 
         private void BindData()
         {
-            cbUseSandbox.Checked = SettingManager.GetSettingValueBoolean("PaymentMethod.eWay.UseSandbox");
-            txtTestCustomerId.Text = SettingManager.GetSettingValue("PaymentMethod.eWay.TestCustomerId");
-            txtLiveCustomerId.Text = SettingManager.GetSettingValue("PaymentMethod.eWay.LiveCustomerId");
-            txtAdditionalFee.Value = SettingManager.GetSettingValueDecimalNative("PaymentMethod.eWay.AdditionalFee");
+            cbUseSandbox.Checked = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.eWay.UseSandbox");
+            txtTestCustomerId.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.eWay.TestCustomerId");
+            txtLiveCustomerId.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.eWay.LiveCustomerId");
+            txtAdditionalFee.Value = IoCFactory.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.eWay.AdditionalFee");
         }
 
         public void Save()
         {
-            SettingManager.SetParam("PaymentMethod.eWay.UseSandbox", cbUseSandbox.Checked.ToString());
-            SettingManager.SetParam("PaymentMethod.eWay.TestCustomerId", txtTestCustomerId.Text);
-            SettingManager.SetParam("PaymentMethod.eWay.LiveCustomerId", txtLiveCustomerId.Text);
-            SettingManager.SetParamNative("PaymentMethod.eWay.AdditionalFee", txtAdditionalFee.Value);
+            IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.eWay.UseSandbox", cbUseSandbox.Checked.ToString());
+            IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.eWay.TestCustomerId", txtTestCustomerId.Text);
+            IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.eWay.LiveCustomerId", txtLiveCustomerId.Text);
+            IoCFactory.Resolve<ISettingManager>().SetParamNative("PaymentMethod.eWay.AdditionalFee", txtAdditionalFee.Value);
         }
     }
 }

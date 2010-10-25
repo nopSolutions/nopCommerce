@@ -39,6 +39,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Localization;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.BusinessLogic.Products.Specs;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -103,7 +104,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             {
                 int id = 0;
                 int.TryParse(Request.QueryString[qsp], out id);
-                var sao = SpecificationAttributeManager.GetSpecificationAttributeOptionById(id);
+                var sao = IoCFactory.Resolve<ISpecificationAttributeManager>().GetSpecificationAttributeOptionById(id);
                 if (sao != null)
                 {
                     var sa = sao.SpecificationAttribute;
@@ -127,7 +128,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
         protected List<SpecificationAttributeOptionFilter> getNotFilteredSpecs()
         {
             //get all
-            var result = SpecificationAttributeManager.GetSpecificationAttributeOptionFilter(this.CategoryId);
+            var result = IoCFactory.Resolve<ISpecificationAttributeManager>().GetSpecificationAttributeOptionFilter(this.CategoryId);
            
             //remove already filtered
             var alreadyFilteredOptions = getAlreadyFilteredSpecs();

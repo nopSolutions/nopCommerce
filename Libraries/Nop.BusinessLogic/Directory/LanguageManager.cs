@@ -25,13 +25,14 @@ using NopSolutions.NopCommerce.BusinessLogic.Caching;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Data;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Directory
 {
     /// <summary>
     /// Language manager
     /// </summary>
-    public partial class LanguageManager
+    public partial class LanguageManager : ILanguageManager
     {
         #region Constants
         private const string LANGUAGES_ALL_KEY = "Nop.language.all-{0}";
@@ -40,11 +41,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
         #endregion
 
         #region Methods
+
         /// <summary>
         /// Deletes a language
         /// </summary>
         /// <param name="languageId">Language identifier</param>
-        public static void DeleteLanguage(int languageId)
+        public void DeleteLanguage(int languageId)
         {
             var language = GetLanguageById(languageId);
             if (language == null)
@@ -56,7 +58,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
             context.DeleteObject(language);
             context.SaveChanges();
 
-            if (LanguageManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(LANGUAGES_PATTERN_KEY);
             }
@@ -66,7 +68,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
         /// Gets all languages
         /// </summary>
         /// <returns>Language collection</returns>
-        public static List<Language> GetAllLanguages()
+        public List<Language> GetAllLanguages()
         {
             bool showHidden = NopContext.Current.IsAdmin;
             return (List<Language>)GetAllLanguages(showHidden);
@@ -77,11 +79,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
         /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Language collection</returns>
-        public static List<Language> GetAllLanguages(bool showHidden)
+        public List<Language> GetAllLanguages(bool showHidden)
         {
             string key = string.Format(LANGUAGES_ALL_KEY, showHidden);
             object obj2 = NopRequestCache.Get(key);
-            if (LanguageManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (List<Language>)obj2;
             }
@@ -93,7 +95,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
                         select l;
             var languages = query.ToList();
 
-            if (LanguageManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, languages);
             }
@@ -105,14 +107,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
         /// </summary>
         /// <param name="languageId">Language identifier</param>
         /// <returns>Language</returns>
-        public static Language GetLanguageById(int languageId)
+        public Language GetLanguageById(int languageId)
         {
             if (languageId == 0)
                 return null;
 
             string key = string.Format(LANGUAGES_BY_ID_KEY, languageId);
             object obj2 = NopRequestCache.Get(key);
-            if (LanguageManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (Language)obj2;
             }
@@ -123,7 +125,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
                         select l;
             var language = query.SingleOrDefault();
 
-            if (LanguageManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, language);
             }
@@ -134,7 +136,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
         /// Inserts a language
         /// </summary>
         /// <param name="language">Language</param>
-        public static void InsertLanguage(Language language)
+        public void InsertLanguage(Language language)
         {
             if (language == null)
                 throw new ArgumentNullException("language");
@@ -151,7 +153,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
             context.Languages.AddObject(language);
             context.SaveChanges();
 
-            if (LanguageManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(LANGUAGES_PATTERN_KEY);
             }
@@ -161,7 +163,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
         /// Updates a language
         /// </summary>
         /// <param name="language">Language</param>
-        public static void UpdateLanguage(Language language)
+        public void UpdateLanguage(Language language)
         {
             if (language == null)
                 throw new ArgumentNullException("language");
@@ -179,24 +181,27 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
 
             context.SaveChanges();
 
-            if (LanguageManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(LANGUAGES_PATTERN_KEY);
             }
         }
+
         #endregion
 
         #region Properties
+
         /// <summary>
         /// Gets a value indicating whether cache is enabled
         /// </summary>
-        public static bool CacheEnabled
+        public bool CacheEnabled
         {
             get
             {
-                return SettingManager.GetSettingValueBoolean("Cache.LanguageManager.CacheEnabled");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.LanguageManager.CacheEnabled");
             }
         }
+
         #endregion
     }
 }

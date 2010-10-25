@@ -29,6 +29,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Shipping;
 using NopSolutions.NopCommerce.BusinessLogic.Utils;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 
 namespace NopSolutions.NopCommerce.Payment.Methods.Worldpay
@@ -49,8 +50,8 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Worldpay
         /// </summary>
         public WorldpayPaymentProcessor()
         {
-            useSandBox = SettingManager.GetSettingValueBoolean(WorldpayConstants.SETTING_USE_SANDBOX);
-            instanceID = SettingManager.GetSettingValue(WorldpayConstants.SETTING_INSTANCEID);
+            useSandBox = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean(WorldpayConstants.SETTING_USE_SANDBOX);
+            instanceID = IoCFactory.Resolve<ISettingManager>().GetSettingValue(WorldpayConstants.SETTING_INSTANCEID);
         }
         #endregion
 
@@ -84,24 +85,24 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Worldpay
             remotePostHelper.Add("instId", instanceID);
             remotePostHelper.Add("cartId", order.OrderId.ToString());
 
-            if (!string.IsNullOrEmpty(SettingManager.GetSettingValue(WorldpayConstants.SETTING_CREDITCARD_CODE_PROPERTY)))
+            if (!string.IsNullOrEmpty(IoCFactory.Resolve<ISettingManager>().GetSettingValue(WorldpayConstants.SETTING_CREDITCARD_CODE_PROPERTY)))
             {
-                remotePostHelper.Add("paymentType", SettingManager.GetSettingValue(WorldpayConstants.SETTING_CREDITCARD_CODE_PROPERTY));
+                remotePostHelper.Add("paymentType", IoCFactory.Resolve<ISettingManager>().GetSettingValue(WorldpayConstants.SETTING_CREDITCARD_CODE_PROPERTY));
             }
 
-            if (!string.IsNullOrEmpty(SettingManager.GetSettingValue(WorldpayConstants.SETTING_WorldPayCSSName)))
+            if (!string.IsNullOrEmpty(IoCFactory.Resolve<ISettingManager>().GetSettingValue(WorldpayConstants.SETTING_WorldPayCSSName)))
             {
-                remotePostHelper.Add("MC_WorldPayCSSName", SettingManager.GetSettingValue(WorldpayConstants.SETTING_WorldPayCSSName));
+                remotePostHelper.Add("MC_WorldPayCSSName", IoCFactory.Resolve<ISettingManager>().GetSettingValue(WorldpayConstants.SETTING_WorldPayCSSName));
             }
 
-            remotePostHelper.Add("currency", CurrencyManager.PrimaryStoreCurrency.CurrencyCode);
+            remotePostHelper.Add("currency", IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency.CurrencyCode);
             remotePostHelper.Add("email", order.BillingEmail);
             remotePostHelper.Add("hideContact", "true");
             remotePostHelper.Add("noLanguageMenu", "true");
             remotePostHelper.Add("withDelivery", "true");
             remotePostHelper.Add("fixContact", "false");
             remotePostHelper.Add("amount", order.OrderTotal.ToString(new CultureInfo("en-US", false).NumberFormat));
-            remotePostHelper.Add("desc", SettingManager.StoreName);
+            remotePostHelper.Add("desc", IoCFactory.Resolve<ISettingManager>().StoreName);
             remotePostHelper.Add("M_UserID", order.CustomerId.ToString());
             remotePostHelper.Add("M_FirstName", order.BillingFirstName);
             remotePostHelper.Add("M_LastName", order.BillingLastName);
@@ -113,7 +114,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Worldpay
             CultureInfo cultureInfo = new CultureInfo(NopContext.Current.WorkingLanguage.LanguageCulture);
             remotePostHelper.Add("lang", cultureInfo.TwoLetterISOLanguageName);
 
-            StateProvince billingStateProvince = StateProvinceManager.GetStateProvinceById(order.BillingStateProvinceId);
+            StateProvince billingStateProvince = IoCFactory.Resolve<IStateProvinceManager>().GetStateProvinceById(order.BillingStateProvinceId);
             if (billingStateProvince != null)
                 remotePostHelper.Add("M_StateCounty", billingStateProvince.Abbreviation);
             else
@@ -123,7 +124,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Worldpay
             else
                 remotePostHelper.Add("testMode", "100");
             remotePostHelper.Add("postcode", order.BillingZipPostalCode);
-            Country billingCountry = CountryManager.GetCountryById(order.BillingCountryId);
+            Country billingCountry = IoCFactory.Resolve<ICountryManager>().GetCountryById(order.BillingCountryId);
             if (billingCountry != null)
                 remotePostHelper.Add("country", billingCountry.TwoLetterIsoCode);
             else
@@ -140,7 +141,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Worldpay
                 delvAddress += (!string.IsNullOrEmpty(order.ShippingAddress2)) ? " " + order.ShippingAddress2 : string.Empty;
                 remotePostHelper.Add("delvAddress", delvAddress);
                 remotePostHelper.Add("delvPostcode", order.ShippingZipPostalCode);
-                Country shippingCountry = CountryManager.GetCountryById(order.ShippingCountryId);
+                Country shippingCountry = IoCFactory.Resolve<ICountryManager>().GetCountryById(order.ShippingCountryId);
                 remotePostHelper.Add("delvCountry", shippingCountry.TwoLetterIsoCode);
             }
 
@@ -154,7 +155,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Worldpay
         /// <returns>Additional handling fee</returns>
         public decimal GetAdditionalHandlingFee()
         {
-            return SettingManager.GetSettingValueDecimalNative("PaymentMethod.Worldpay.AdditionalFee");
+            return IoCFactory.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.Worldpay.AdditionalFee");
         }
 
         /// <summary>

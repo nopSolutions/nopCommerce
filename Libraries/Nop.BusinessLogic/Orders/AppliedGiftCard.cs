@@ -19,6 +19,7 @@ using System.Text;
 using System.Web;
 using System.Xml;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Orders
 {
@@ -66,7 +67,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             get
             {
                 if (_gc == null)
-                    _gc = OrderManager.GetGiftCardById(this.GiftCardId);
+                    _gc = IoCFactory.Resolve<IOrderManager>().GetGiftCardById(this.GiftCardId);
                 return _gc;
             }
         }

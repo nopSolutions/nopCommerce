@@ -13,6 +13,7 @@
 //------------------------------------------------------------------------------
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Configuration.Provider;
@@ -33,12 +34,12 @@ using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Content.Blog;
 using NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Content.Topics;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 using NopSolutions.NopCommerce.BusinessLogic.Manufacturers;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.BusinessLogic.Utils;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Common.Xml;
-using System.Collections;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.SEO.Sitemaps
 {
@@ -55,10 +56,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO.Sitemaps
         /// </summary>
         protected override void GenerateUrlNodes()
         {
-            bool IncludeCategories = SettingManager.GetSettingValueBoolean("SEO.Sitemaps.IncludeCategories", true);
-            bool IncludeManufacturers = SettingManager.GetSettingValueBoolean("SEO.Sitemaps.IncludeManufacturers", false);
-            bool IncludeProducts = SettingManager.GetSettingValueBoolean("SEO.Sitemaps.IncludeProducts", false);
-            string OtherPages = SettingManager.GetSettingValue("SEO.Sitemaps.OtherPages").ToLowerInvariant();
+            bool IncludeCategories = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("SEO.Sitemaps.IncludeCategories", true);
+            bool IncludeManufacturers = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("SEO.Sitemaps.IncludeManufacturers", false);
+            bool IncludeProducts = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("SEO.Sitemaps.IncludeProducts", false);
+            string OtherPages = IoCFactory.Resolve<ISettingManager>().GetSettingValue("SEO.Sitemaps.OtherPages").ToLowerInvariant();
             
             if (IncludeCategories)
             {
@@ -82,7 +83,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO.Sitemaps
 
         private void WriteCategories(int parentCategoryId)
         {
-            var categories = CategoryManager.GetAllCategoriesByParentCategoryId(parentCategoryId, false);
+            var categories = IoCFactory.Resolve<ICategoryManager>().GetAllCategoriesByParentCategoryId(parentCategoryId, false);
             foreach (var category in categories)
             {
                 var url = SEOHelper.GetCategoryUrl(category);
@@ -96,7 +97,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO.Sitemaps
 
         private void WriteManufacturers()
         {
-            var manufacturers = ManufacturerManager.GetAllManufacturers(false);
+            var manufacturers = IoCFactory.Resolve<IManufacturerManager>().GetAllManufacturers(false);
             foreach (var manufacturer in manufacturers)
             {
                 var url = SEOHelper.GetManufacturerUrl(manufacturer);
@@ -108,7 +109,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO.Sitemaps
 
         private void WriteProducts()
         {
-            var products = ProductManager.GetAllProducts(false);
+            var products = IoCFactory.Resolve<IProductManager>().GetAllProducts(false);
             foreach (var product in products)
             {
                 var url = SEOHelper.GetProductUrl(product);
@@ -120,11 +121,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO.Sitemaps
 
         private void WriteTopics()
         {
-            var topics = TopicManager.GetAllTopics();
+            var topics = IoCFactory.Resolve<ITopicManager>().GetAllTopics();
             topics = topics.FindAll(t => t.IncludeInSitemap);
             foreach (Topic topic in topics)
             {
-                var localizedTopics = TopicManager.GetAllLocalizedTopics(topic.Name);
+                var localizedTopics = IoCFactory.Resolve<ITopicManager>().GetAllLocalizedTopics(topic.Name);
                 if (localizedTopics.Count > 0)
                 {
                     //UNDONE add topic of one language only (they have the same URL now)

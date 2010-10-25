@@ -27,6 +27,7 @@ using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.Content.Polls;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -43,9 +44,9 @@ namespace NopSolutions.NopCommerce.Web.Modules
         protected void BindData()
         {
             //get poll
-            var poll = PollManager.GetPollById(this.PollId);
+            var poll = IoCFactory.Resolve<IPollManager>().GetPollById(this.PollId);
             if (poll == null && !String.IsNullOrEmpty(this.SystemKeyword))
-                poll = PollManager.GetPollBySystemKeyword(this.SystemKeyword);
+                poll = IoCFactory.Resolve<IPollManager>().GetPollBySystemKeyword(this.SystemKeyword);
 
             this.Visible = poll != null && poll.Published;
         }

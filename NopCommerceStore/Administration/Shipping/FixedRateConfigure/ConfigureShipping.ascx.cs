@@ -21,6 +21,7 @@ using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Shipping.Methods.UPS;
 using NopSolutions.NopCommerce.Web.Administration.Modules;
 using NopSolutions.NopCommerce.Web.Templates.Shipping;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Shipping.FixedRateConfigure
 {
@@ -36,12 +37,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.FixedRateConfigur
 
         private void BindData()
         {
-            txtFixedRate.Value = SettingManager.GetSettingValueDecimalNative("ShippingRateComputationMethod.FixedRate.Rate");
+            txtFixedRate.Value = IoCFactory.Resolve<ISettingManager>().GetSettingValueDecimalNative("ShippingRateComputationMethod.FixedRate.Rate");
         }
 
         public void Save()
         {
-            SettingManager.SetParamNative("ShippingRateComputationMethod.FixedRate.Rate", txtFixedRate.Value);
+            IoCFactory.Resolve<ISettingManager>().SetParamNative("ShippingRateComputationMethod.FixedRate.Rate", txtFixedRate.Value);
         }
     }
 }

@@ -30,6 +30,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Media;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -45,9 +46,9 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         private void BindData()
         {
-            int number = ProductManager.RecentlyAddedProductsNumber;
-            var products = ProductManager.GetRecentlyAddedProducts(number);
-            if (ProductManager.RecentlyAddedProductsEnabled && products.Count > 0)
+            int number = IoCFactory.Resolve<IProductManager>().RecentlyAddedProductsNumber;
+            var products = IoCFactory.Resolve<IProductManager>().GetRecentlyAddedProducts(number);
+            if (IoCFactory.Resolve<IProductManager>().RecentlyAddedProductsEnabled && products.Count > 0)
             {
                 dlCatalog.DataSource = products;
                 dlCatalog.DataBind();

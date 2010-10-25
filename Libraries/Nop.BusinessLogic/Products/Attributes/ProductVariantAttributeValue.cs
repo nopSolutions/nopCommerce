@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 
 
@@ -90,7 +91,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                 if (languageId > 0)
                 {
                     if (_pvavLocalized == null)
-                        _pvavLocalized = ProductAttributeManager.GetProductVariantAttributeValueLocalizedByProductVariantAttributeValueId(this.ProductVariantAttributeValueId);
+                        _pvavLocalized = IoCFactory.Resolve<IProductAttributeManager>().GetProductVariantAttributeValueLocalizedByProductVariantAttributeValueId(this.ProductVariantAttributeValueId);
 
                     var temp1 = _pvavLocalized.FirstOrDefault(cavl => cavl.LanguageId == languageId);
                     if (temp1 != null && !String.IsNullOrWhiteSpace(temp1.Name))
@@ -122,7 +123,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         {
             get
             {
-                return ProductAttributeManager.GetProductVariantAttributeById(this.ProductVariantAttributeId);
+                return IoCFactory.Resolve<IProductAttributeManager>().GetProductVariantAttributeById(this.ProductVariantAttributeId);
             }
         }
 

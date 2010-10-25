@@ -27,6 +27,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.Promo.Affiliates;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
  
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
@@ -35,10 +36,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            Affiliate affiliate = AffiliateManager.GetAffiliateById(this.AffiliateId);
+            Affiliate affiliate = IoCFactory.Resolve<IAffiliateManager>().GetAffiliateById(this.AffiliateId);
             if (affiliate != null)
             {
-                gvAffiliateCustomers.DataSource = CustomerManager.GetAffiliatedCustomers(this.AffiliateId);
+                gvAffiliateCustomers.DataSource = IoCFactory.Resolve<ICustomerManager>().GetAffiliatedCustomers(this.AffiliateId);
                 gvAffiliateCustomers.DataBind();
             }
             else

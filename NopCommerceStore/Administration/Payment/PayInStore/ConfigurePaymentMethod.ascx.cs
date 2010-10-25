@@ -26,6 +26,7 @@ using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Web.Templates.Payment;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Payment.PayInStore
 {
@@ -39,14 +40,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Payment.PayInStore
 
         private void BindData()
         {
-            txtInfo.Value = SettingManager.GetSettingValue("PaymentMethod.PayInStore.Info");
-            txtAdditionalFee.Value = SettingManager.GetSettingValueDecimalNative("PaymentMethod.PayInStore.AdditionalFee");
+            txtInfo.Value = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.PayInStore.Info");
+            txtAdditionalFee.Value = IoCFactory.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.PayInStore.AdditionalFee");
         }
 
         public void Save()
         {
-            SettingManager.SetParam("PaymentMethod.PayInStore.Info", txtInfo.Value);
-            SettingManager.SetParamNative("PaymentMethod.PayInStore.AdditionalFee", txtAdditionalFee.Value);
+            IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.PayInStore.Info", txtInfo.Value);
+            IoCFactory.Resolve<ISettingManager>().SetParamNative("PaymentMethod.PayInStore.AdditionalFee", txtAdditionalFee.Value);
         }
     }
 }

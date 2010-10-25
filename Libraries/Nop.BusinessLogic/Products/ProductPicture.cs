@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using NopSolutions.NopCommerce.BusinessLogic.Media;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 
 
@@ -65,7 +66,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         {
             get
             {
-                return PictureManager.GetPictureById(this.PictureId);
+                return IoCFactory.Resolve<IPictureManager>().GetPictureById(this.PictureId);
             }
         }
         #endregion

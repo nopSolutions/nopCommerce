@@ -18,6 +18,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Audit;
 using NopSolutions.NopCommerce.BusinessLogic.QuickBooks;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.Orders;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -35,13 +36,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         private void BindData()
         {
-            cbQuickBooksEnabled.Checked = QBManager.QBIsEnabled;
-            txtQuickBooksUsername.Text = QBManager.QBUsername;
-            txtQuickBooksPassword.Text = QBManager.QBPassword;
-            txtQuickBooksItemRef.Text = QBManager.QBItemRef;
-            txtQuickBooksDiscountAccountRef.Text = QBManager.QBDiscountAccountRef;
-            txtQuickBooksShippingAccountRef.Text = QBManager.QBShippingAccountRef;
-            txtQuickBooksSalesTaxAccountRef.Text = QBManager.QBSalesTaxAccountRef;
+            cbQuickBooksEnabled.Checked = IoCFactory.Resolve<IQBManager>().QBIsEnabled;
+            txtQuickBooksUsername.Text = IoCFactory.Resolve<IQBManager>().QBUsername;
+            txtQuickBooksPassword.Text = IoCFactory.Resolve<IQBManager>().QBPassword;
+            txtQuickBooksItemRef.Text = IoCFactory.Resolve<IQBManager>().QBItemRef;
+            txtQuickBooksDiscountAccountRef.Text = IoCFactory.Resolve<IQBManager>().QBDiscountAccountRef;
+            txtQuickBooksShippingAccountRef.Text = IoCFactory.Resolve<IQBManager>().QBShippingAccountRef;
+            txtQuickBooksSalesTaxAccountRef.Text = IoCFactory.Resolve<IQBManager>().QBSalesTaxAccountRef;
         }
 
         private void FillDropDowns()
@@ -63,15 +64,15 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 try
                 {
-                    QBManager.QBIsEnabled = cbQuickBooksEnabled.Checked;
-                    QBManager.QBUsername = txtQuickBooksUsername.Text;
-                    QBManager.QBPassword = txtQuickBooksPassword.Text;
-                    QBManager.QBItemRef = txtQuickBooksItemRef.Text;
-                    QBManager.QBDiscountAccountRef = txtQuickBooksDiscountAccountRef.Text;
-                    QBManager.QBShippingAccountRef = txtQuickBooksShippingAccountRef.Text;
-                    QBManager.QBSalesTaxAccountRef = txtQuickBooksSalesTaxAccountRef.Text;
-                    
-                    CustomerActivityManager.InsertActivity("EditThirdPartyIntegration", GetLocaleResourceString("ActivityLog.EditThirdPartyIntegration"));
+                    IoCFactory.Resolve<IQBManager>().QBIsEnabled = cbQuickBooksEnabled.Checked;
+                    IoCFactory.Resolve<IQBManager>().QBUsername = txtQuickBooksUsername.Text;
+                    IoCFactory.Resolve<IQBManager>().QBPassword = txtQuickBooksPassword.Text;
+                    IoCFactory.Resolve<IQBManager>().QBItemRef = txtQuickBooksItemRef.Text;
+                    IoCFactory.Resolve<IQBManager>().QBDiscountAccountRef = txtQuickBooksDiscountAccountRef.Text;
+                    IoCFactory.Resolve<IQBManager>().QBShippingAccountRef = txtQuickBooksShippingAccountRef.Text;
+                    IoCFactory.Resolve<IQBManager>().QBSalesTaxAccountRef = txtQuickBooksSalesTaxAccountRef.Text;
+
+                    IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity("EditThirdPartyIntegration", GetLocaleResourceString("ActivityLog.EditThirdPartyIntegration"));
 
                     Response.Redirect(string.Format("ThirdPartyIntegration.aspx?TabID={0}", GetActiveTabId(ThirdPartyIntegrationTabs)));
                 }
@@ -86,9 +87,9 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                foreach (Order order in OrderManager.LoadAllOrders())
+                foreach (Order order in IoCFactory.Resolve<IOrderManager>().LoadAllOrders())
                 {
-                    QBManager.RequestSynchronization(order);
+                    IoCFactory.Resolve<IQBManager>().RequestSynchronization(order);
                 }
                 ShowMessage(GetLocaleResourceString("Admin.ThirdPartyIntegration.QuickBooks.SynchronizationSuccess"));
             }

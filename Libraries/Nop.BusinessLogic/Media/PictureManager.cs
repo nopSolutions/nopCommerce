@@ -21,23 +21,17 @@ using System.Web;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Data;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Media
 {
     /// <summary>
     /// Picture manager
     /// </summary>
-    public static partial class PictureManager
+    public partial class PictureManager : IPictureManager
     {
         #region Fields
-        private static object s_lock;
-        #endregion
-
-        #region Ctor
-        static PictureManager()
-        {
-            s_lock = new object();
-        }
+        private static object s_lock = new object();
         #endregion
 
         #region Utilities
@@ -47,7 +41,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
         /// </summary>
         /// <param name="mimeType">Mime type</param>
         /// <returns>ImageCodecInfo</returns>
-        private static ImageCodecInfo GetImageCodecInfoFromMimeType(string mimeType)
+        private ImageCodecInfo GetImageCodecInfoFromMimeType(string mimeType)
         {
             var info = ImageCodecInfo.GetImageEncoders();
             foreach (var ici in info)
@@ -61,7 +55,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
         /// </summary>
         /// <param name="fileExt">File extension</param>
         /// <returns>ImageCodecInfo</returns>
-        private static ImageCodecInfo GetImageCodecInfoFromExtension(string fileExt)
+        private ImageCodecInfo GetImageCodecInfoFromExtension(string fileExt)
         {
             fileExt = fileExt.TrimStart(".".ToCharArray()).ToLower().Trim();
             switch (fileExt)
@@ -86,7 +80,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
         /// <param name="PictureId">Picture identifier</param>
         /// <param name="pictureBinary">Picture binary</param>
         /// <param name="mimeType">MIME type</param>
-        private static void SavePictureInFile(int PictureId, byte[] pictureBinary, string mimeType)
+        private void SavePictureInFile(int PictureId, byte[] pictureBinary, string mimeType)
         {
             string[] parts = mimeType.Split('/');
             string lastPart = parts[parts.Length - 1];
@@ -110,7 +104,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
         /// Delete a picture on file system
         /// </summary>
         /// <param name="picture">Picture</param>
-        private static void DeletePictureOnFileSystem(Picture picture)
+        private void DeletePictureOnFileSystem(Picture picture)
         {
             if (picture == null)
                 throw new ArgumentNullException("picture");
@@ -146,7 +140,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
         /// </summary>
         /// <param name="targetSize">The target picture size (longest side)</param>
         /// <returns></returns>
-        public static string GetDefaultPictureUrl(int targetSize)
+        public string GetDefaultPictureUrl(int targetSize)
         {
             return GetDefaultPictureUrl(PictureTypeEnum.Entity, targetSize);
         }
@@ -157,20 +151,20 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
         /// <param name="defaultPictureType">Default picture type</param>
         /// <param name="targetSize">The target picture size (longest side)</param>
         /// <returns></returns>
-        public static string GetDefaultPictureUrl(PictureTypeEnum defaultPictureType,
+        public string GetDefaultPictureUrl(PictureTypeEnum defaultPictureType,
             int targetSize)
         {
             string defaultImageName = string.Empty;
             switch (defaultPictureType)
             {
                 case PictureTypeEnum.Entity:
-                    defaultImageName = SettingManager.GetSettingValue("Media.DefaultImageName");
+                    defaultImageName = IoCFactory.Resolve<ISettingManager>().GetSettingValue("Media.DefaultImageName");
                     break;
                 case PictureTypeEnum.Avatar:
-                    defaultImageName = SettingManager.GetSettingValue("Media.Customer.DefaultAvatarImageName");
+                    defaultImageName = IoCFactory.Resolve<ISettingManager>().GetSettingValue("Media.Customer.DefaultAvatarImageName");
                     break;
                 default:
-                    defaultImageName = SettingManager.GetSettingValue("Media.DefaultImageName");
+                    defaultImageName = IoCFactory.Resolve<ISettingManager>().GetSettingValue("Media.DefaultImageName");
                     break;
             }
 
@@ -207,7 +201,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
                         g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
                         g.DrawImage(b, 0, 0, newSize.Width, newSize.Height);
                         var ep = new EncoderParameters();
-                        ep.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, PictureManager.ImageQuality);
+                        ep.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, this.ImageQuality);
                         ImageCodecInfo ici = GetImageCodecInfoFromExtension(fileExtension);
                         if (ici == null)
                             ici = GetImageCodecInfoFromMimeType("image/jpeg");
@@ -227,7 +221,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
         /// <param name="pictureId">Picture identifier</param>
         /// <param name="mimeType">MIME type</param>
         /// <returns>Picture binary</returns>
-        public static byte[] LoadPictureFromFile(int pictureId, string mimeType)
+        public byte[] LoadPictureFromFile(int pictureId, string mimeType)
         {
             string[] parts = mimeType.Split('/');
             string lastPart = parts[parts.Length - 1];
@@ -257,7 +251,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
         /// </summary>
         /// <param name="imageId">Picture identifier</param>
         /// <returns>Picture URL</returns>
-        public static string GetPictureUrl(int imageId)
+        public string GetPictureUrl(int imageId)
         {
             Picture picture = GetPictureById(imageId);
             return GetPictureUrl(picture);
@@ -268,7 +262,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
         /// </summary>
         /// <param name="picture">Picture instance</param>
         /// <returns>Picture URL</returns>
-        public static string GetPictureUrl(Picture picture)
+        public string GetPictureUrl(Picture picture)
         {
             return GetPictureUrl(picture, 0);
         }
@@ -279,7 +273,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
         /// <param name="imageId">Picture identifier</param>
         /// <param name="targetSize">The target picture size (longest side)</param>
         /// <returns>Picture URL</returns>
-        public static string GetPictureUrl(int imageId, int targetSize)
+        public string GetPictureUrl(int imageId, int targetSize)
         {
             var picture = GetPictureById(imageId);
             return GetPictureUrl(picture, targetSize);
@@ -291,7 +285,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
         /// <param name="picture">Picture instance</param>
         /// <param name="targetSize">The target picture size (longest side)</param>
         /// <returns>Picture URL</returns>
-        public static string GetPictureUrl(Picture picture, int targetSize)
+        public string GetPictureUrl(Picture picture, int targetSize)
         {
             return GetPictureUrl(picture, targetSize, true);
         }
@@ -303,7 +297,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
         /// <param name="targetSize">The target picture size (longest side)</param>
         /// <param name="showDefaultPicture">A value indicating whether the default picture is shown</param>
         /// <returns></returns>
-        public static string GetPictureUrl(int imageId, int targetSize, 
+        public string GetPictureUrl(int imageId, int targetSize, 
             bool showDefaultPicture)
         {
             var picture = GetPictureById(imageId);
@@ -315,7 +309,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
         /// </summary>
         /// <param name="pictureId">Id of picture</param>
         /// <returns>Array containing urls for a picture in all sizes avaliable</returns>
-        public static List<String> GetPictureUrls(int pictureId)
+        public List<String> GetPictureUrls(int pictureId)
         {
             string filter = string.Format("*{0}*.*", pictureId.ToString("0000000"));
 
@@ -323,7 +317,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
 
             string orginalURL = GetPictureUrl(pictureId);
 
-            string[] currentFiles = System.IO.Directory.GetFiles(PictureManager.LocalThumbImagePath, filter);
+            string[] currentFiles = System.IO.Directory.GetFiles(this.LocalThumbImagePath, filter);
 
             foreach (string currentFileName in currentFiles)
             {
@@ -352,7 +346,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
         /// <param name="targetSize">The target picture size (longest side)</param>
         /// <param name="showDefaultPicture">A value indicating whether the default picture is shown</param>
         /// <returns></returns>
-        public static string GetPictureUrl(Picture picture, int targetSize,
+        public string GetPictureUrl(Picture picture, int targetSize,
             bool showDefaultPicture)
         {
             string url = string.Empty;
@@ -384,9 +378,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
             if (picture.IsNew)
             {
                 string filter = string.Format("{0}*.*", picture.PictureId.ToString("0000000"));
-                string[] currentFiles = System.IO.Directory.GetFiles(PictureManager.LocalThumbImagePath, filter);
+                string[] currentFiles = System.IO.Directory.GetFiles(this.LocalThumbImagePath, filter);
                 foreach (string currentFileName in currentFiles)
-                    File.Delete(Path.Combine(PictureManager.LocalThumbImagePath, currentFileName));
+                    File.Delete(Path.Combine(this.LocalThumbImagePath, currentFileName));
 
                 picture = UpdatePicture(picture.PictureId, picture.LoadPictureBinary(), picture.MimeType, false);
             }
@@ -395,23 +389,23 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
                 if (targetSize == 0)
                 {
                     localFilename = string.Format("{0}.{1}", picture.PictureId.ToString("0000000"), lastPart);
-                    if (!File.Exists(Path.Combine(PictureManager.LocalThumbImagePath, localFilename)))
+                    if (!File.Exists(Path.Combine(this.LocalThumbImagePath, localFilename)))
                     {
-                        if (!System.IO.Directory.Exists(PictureManager.LocalThumbImagePath))
+                        if (!System.IO.Directory.Exists(this.LocalThumbImagePath))
                         {
-                            System.IO.Directory.CreateDirectory(PictureManager.LocalThumbImagePath);
+                            System.IO.Directory.CreateDirectory(this.LocalThumbImagePath);
                         }
-                        File.WriteAllBytes(Path.Combine(PictureManager.LocalThumbImagePath, localFilename), picture.LoadPictureBinary());
+                        File.WriteAllBytes(Path.Combine(this.LocalThumbImagePath, localFilename), picture.LoadPictureBinary());
                     }
                 }
                 else
                 {
                     localFilename = string.Format("{0}_{1}.{2}", picture.PictureId.ToString("0000000"), targetSize, lastPart);
-                    if (!File.Exists(Path.Combine(PictureManager.LocalThumbImagePath, localFilename)))
+                    if (!File.Exists(Path.Combine(this.LocalThumbImagePath, localFilename)))
                     {
-                        if (!System.IO.Directory.Exists(PictureManager.LocalThumbImagePath))
+                        if (!System.IO.Directory.Exists(this.LocalThumbImagePath))
                         {
-                            System.IO.Directory.CreateDirectory(PictureManager.LocalThumbImagePath);
+                            System.IO.Directory.CreateDirectory(this.LocalThumbImagePath);
                         }
                         using (MemoryStream stream = new MemoryStream(picture.LoadPictureBinary()))
                         {
@@ -432,11 +426,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
                             g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
                             g.DrawImage(b, 0, 0, newSize.Width, newSize.Height);
                             var ep = new EncoderParameters();
-                            ep.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, PictureManager.ImageQuality);
+                            ep.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, this.ImageQuality);
                             ImageCodecInfo ici = GetImageCodecInfoFromExtension(lastPart);
                             if (ici == null)
                                 ici = GetImageCodecInfoFromMimeType("image/jpeg");
-                            newBitMap.Save(Path.Combine(PictureManager.LocalThumbImagePath, localFilename), ici, ep);
+                            newBitMap.Save(Path.Combine(this.LocalThumbImagePath, localFilename), ici, ep);
                             newBitMap.Dispose();
                             b.Dispose();
                         }
@@ -454,7 +448,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
         /// <param name="targetSize">The target picture size (longest side)</param>
         /// <param name="showDefaultPicture">A value indicating whether the default picture is shown</param>
         /// <returns></returns>
-        public static string GetPictureLocalPath(Picture picture, int targetSize, bool showDefaultPicture)
+        public string GetPictureLocalPath(Picture picture, int targetSize, bool showDefaultPicture)
         {
             string url = GetPictureUrl(picture, targetSize, showDefaultPicture);
             if(String.IsNullOrEmpty(url))
@@ -463,7 +457,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
             }
             else
             {
-                return Path.Combine(PictureManager.LocalThumbImagePath, Path.GetFileName(url));
+                return Path.Combine(this.LocalThumbImagePath, Path.GetFileName(url));
             }
         }
 
@@ -473,7 +467,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
         /// <param name="originalSize">The original picture size</param>
         /// <param name="targetSize">The target picture size (longest side)</param>
         /// <returns></returns>
-        public static Size CalculateDimensions(Size originalSize, int targetSize)
+        public Size CalculateDimensions(Size originalSize, int targetSize)
         {
             var newSize = new Size();
             if (originalSize.Height > originalSize.Width) // portrait 
@@ -494,7 +488,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
         /// </summary>
         /// <param name="pictureId">Picture identifier</param>
         /// <returns>Picture</returns>
-        public static Picture GetPictureById(int pictureId)
+        public Picture GetPictureById(int pictureId)
         {
             if (pictureId == 0)
                 return null;
@@ -512,7 +506,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
         /// Deletes a picture
         /// </summary>
         /// <param name="pictureId">Picture identifier</param>
-        public static void DeletePicture(int pictureId)
+        public void DeletePicture(int pictureId)
         {
             var picture = GetPictureById(pictureId);
             if (picture == null)
@@ -520,12 +514,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
 
             //delete thumbs
             string filter = string.Format("{0}*.*", pictureId.ToString("0000000"));
-            string[] currentFiles = System.IO.Directory.GetFiles(PictureManager.LocalThumbImagePath, filter);
+            string[] currentFiles = System.IO.Directory.GetFiles(this.LocalThumbImagePath, filter);
             foreach (string currentFileName in currentFiles)
-                File.Delete(Path.Combine(PictureManager.LocalThumbImagePath, currentFileName));
+                File.Delete(Path.Combine(this.LocalThumbImagePath, currentFileName));
             
             //delete from file system
-            if (!PictureManager.StoreInDB)
+            if (!this.StoreInDB)
             {
                 DeletePictureOnFileSystem(picture);
             }
@@ -544,12 +538,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
         /// <param name="pictureBinary">Picture binary</param>
         /// <param name="mimeType">MIME type</param>
         /// <returns>Picture binary or throws an exception</returns>
-        public static byte[] ValidatePicture(byte[] pictureBinary, string mimeType)
+        public byte[] ValidatePicture(byte[] pictureBinary, string mimeType)
         {
             using (MemoryStream stream = new MemoryStream(pictureBinary))
             {
                 var b = new Bitmap(stream);
-                int maxSize = SettingManager.GetSettingValueInteger("Media.MaximumImageSize", 1280);
+                int maxSize = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.MaximumImageSize", 1280);
 
                 if ((b.Height > maxSize) || (b.Width > maxSize))
                 {
@@ -564,7 +558,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
 
                     var m = new MemoryStream();
                     var ep = new EncoderParameters();
-                    ep.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, PictureManager.ImageQuality);
+                    ep.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, this.ImageQuality);
                     ImageCodecInfo ici = GetImageCodecInfoFromMimeType(mimeType);
                     if (ici == null)
                         ici = GetImageCodecInfoFromMimeType("image/jpeg");
@@ -589,7 +583,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
         /// <param name="pageSize">Items on each page</param>
         /// <param name="totalRecords">Output. how many records in results</param>
         /// <returns>Paged list of pictures</returns>
-        public static List<Picture> GetPictures(int pageSize, 
+        public List<Picture> GetPictures(int pageSize, 
             int pageIndex, out int totalRecords)
         {
             if (pageSize <= 0)
@@ -613,7 +607,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
         /// </summary>
         /// <param name="productId">Product identifier</param>
         /// <returns>Pictures</returns>
-        public static List<Picture> GetPicturesByProductId(int productId)
+        public List<Picture> GetPicturesByProductId(int productId)
         {
             return GetPicturesByProductId(productId, 0);
         }
@@ -624,7 +618,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
         /// <param name="productId">Product identifier</param>
         /// <param name="recordsToReturn">Number of records to return. 0 if you want to get all items</param>
         /// <returns>Pictures</returns>
-        public static List<Picture> GetPicturesByProductId(int productId,
+        public List<Picture> GetPicturesByProductId(int productId,
             int recordsToReturn)
         {
             if (productId == 0)
@@ -651,7 +645,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
         /// <param name="mimeType">The picture MIME type</param>
         /// <param name="isNew">A value indicating whether the picture is new</param>
         /// <returns>Picture</returns>
-        public static Picture InsertPicture(byte[] pictureBinary, string mimeType, bool isNew)
+        public Picture InsertPicture(byte[] pictureBinary, string mimeType, bool isNew)
         {
             mimeType = CommonHelper.EnsureNotNull(mimeType);
             mimeType = CommonHelper.EnsureMaximumLength(mimeType, 20);
@@ -660,14 +654,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
 
             var context = ObjectContextHelper.CurrentObjectContext;
             var picture = context.Pictures.CreateObject();
-            picture.PictureBinary = (PictureManager.StoreInDB ? pictureBinary : new byte[0]);
+            picture.PictureBinary = (this.StoreInDB ? pictureBinary : new byte[0]);
             picture.MimeType = mimeType;
             picture.IsNew = isNew;
 
             context.Pictures.AddObject(picture);
             context.SaveChanges();
 
-            if(!PictureManager.StoreInDB && picture != null)
+            if(!this.StoreInDB && picture != null)
             {
                 SavePictureInFile(picture.PictureId, pictureBinary, mimeType);
             }
@@ -682,7 +676,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
         /// <param name="mimeType">The picture MIME type</param>
         /// <param name="isNew">A value indicating whether the picture is new</param>
         /// <returns>Picture</returns>
-        public static Picture UpdatePicture(int pictureId, byte[] pictureBinary,
+        public Picture UpdatePicture(int pictureId, byte[] pictureBinary,
             string mimeType, bool isNew)
         {
             mimeType = CommonHelper.EnsureNotNull(mimeType);
@@ -698,12 +692,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
             if (!context.IsAttached(picture))
                 context.Pictures.Attach(picture);
 
-            picture.PictureBinary = (PictureManager.StoreInDB ? pictureBinary : new byte[0]);
+            picture.PictureBinary = (this.StoreInDB ? pictureBinary : new byte[0]);
             picture.MimeType = mimeType;
             picture.IsNew = isNew;
             context.SaveChanges();
 
-            if(!PictureManager.StoreInDB && picture != null)
+            if(!this.StoreInDB && picture != null)
             {
                 SavePictureInFile(picture.PictureId, pictureBinary, mimeType);
             }
@@ -716,7 +710,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
         /// <param name="fs">File stream</param>
         /// <param name="size">Picture size</param>
         /// <returns>Picture binary array</returns>
-        public static byte[] GetPictureBits(Stream fs, int size)
+        public byte[] GetPictureBits(Stream fs, int size)
         {
             byte[] img = new byte[size];
             fs.Read(img, 0, size);
@@ -728,7 +722,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
         /// <summary>
         /// Gets an image quality
         /// </summary>
-        public static long ImageQuality
+        public long ImageQuality
         {
             get
             {
@@ -739,7 +733,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
         /// <summary>
         /// Gets a local thumb image path
         /// </summary>
-        public static string LocalThumbImagePath
+        public string LocalThumbImagePath
         {
             get
             {
@@ -751,7 +745,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
         /// <summary>
         /// Gets the local image path
         /// </summary>
-        public static string LocalImagePath
+        public string LocalImagePath
         {
             get
             {
@@ -763,23 +757,23 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
         /// <summary>
         /// Gets or sets a value indicating whether the images should be stored in data base.
         /// </summary>
-        public static bool StoreInDB
+        public bool StoreInDB
         {
             get
             {
-                return SettingManager.GetSettingValueBoolean("Media.Images.StoreInDB", true);
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Media.Images.StoreInDB", true);
             }
             set
             {
                 //check whether it's a new value
-                if (PictureManager.StoreInDB != value)
+                if (this.StoreInDB != value)
                 {
                     //save the nwe setting value
-                    SettingManager.SetParam("Media.Images.StoreInDB", value.ToString());
+                    IoCFactory.Resolve<ISettingManager>().SetParam("Media.Images.StoreInDB", value.ToString());
 
                     //update all picture objects
                     int totalRecords = 0;
-                    var pictures = PictureManager.GetPictures(int.MaxValue, 0, out totalRecords);
+                    var pictures = this.GetPictures(int.MaxValue, 0, out totalRecords);
                     for (int i = 0; i < pictures.Count; i++)
                     {
                         var picture = pictures[i];

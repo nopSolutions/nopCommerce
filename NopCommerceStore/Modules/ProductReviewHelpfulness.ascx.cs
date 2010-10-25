@@ -29,6 +29,7 @@ using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -42,7 +43,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void BindData()
         {
-            var productReview = ProductManager.GetProductReviewById(this.ProductReviewId);
+            var productReview = IoCFactory.Resolve<IProductManager>().GetProductReviewById(this.ProductReviewId);
             if (productReview != null)
             {
                 lblHelpfulYesTotal.Text = productReview.HelpfulYesTotal.ToString();
@@ -54,19 +55,19 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         private void SetHelpful(bool WasHelpful)
         {
-            var productReview = ProductManager.GetProductReviewById(this.ProductReviewId);
+            var productReview = IoCFactory.Resolve<IProductManager>().GetProductReviewById(this.ProductReviewId);
             if (productReview != null)
             {
-                if (NopContext.Current.User == null && CustomerManager.AllowAnonymousUsersToReviewProduct)
-                    CustomerManager.CreateAnonymousUser();
+                if (NopContext.Current.User == null && IoCFactory.Resolve<ICustomerManager>().AllowAnonymousUsersToReviewProduct)
+                    IoCFactory.Resolve<ICustomerManager>().CreateAnonymousUser();
 
-                if (NopContext.Current.User == null || (NopContext.Current.User.IsGuest && !CustomerManager.AllowAnonymousUsersToReviewProduct))
+                if (NopContext.Current.User == null || (NopContext.Current.User.IsGuest && !IoCFactory.Resolve<ICustomerManager>().AllowAnonymousUsersToReviewProduct))
                 {
                     string loginURL = SEOHelper.GetLoginPageUrl(true);
                     Response.Redirect(loginURL);
                 }
                 
-                ProductManager.SetProductRatingHelpfulness(productReview.ProductReviewId, WasHelpful);
+                IoCFactory.Resolve<IProductManager>().SetProductRatingHelpfulness(productReview.ProductReviewId, WasHelpful);
                 BindData();
             }
             else

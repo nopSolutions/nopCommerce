@@ -24,7 +24,8 @@ using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.Audit;
 using NopSolutions.NopCommerce.BusinessLogic.Products.Specs;
-using NopSolutions.NopCommerce.Common.Utils; 
+using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC; 
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -47,7 +48,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     SpecificationAttribute specificationAttribute = ctrlSpecificationAttributeInfo.SaveInfo();
                     ctrlSpecificationAttributeOptions.SaveInfo();
 
-                    CustomerActivityManager.InsertActivity(
+                    IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
                         "EditSpecAttribute",
                         GetLocaleResourceString("ActivityLog.EditSpecAttribute"),
                         specificationAttribute.Name);
@@ -66,12 +67,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                SpecificationAttribute specificationAttribute = SpecificationAttributeManager.GetSpecificationAttributeById(this.SpecificationAttributeId);
+                SpecificationAttribute specificationAttribute = IoCFactory.Resolve<ISpecificationAttributeManager>().GetSpecificationAttributeById(this.SpecificationAttributeId);
                 if (specificationAttribute != null)
                 {
-                    SpecificationAttributeManager.DeleteSpecificationAttribute(this.SpecificationAttributeId);
+                    IoCFactory.Resolve<ISpecificationAttributeManager>().DeleteSpecificationAttribute(this.SpecificationAttributeId);
 
-                    CustomerActivityManager.InsertActivity(
+                    IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
                         "DeleteSpecAttribute",
                         GetLocaleResourceString("ActivityLog.DeleteSpecAttribute"),
                         specificationAttribute.Name);

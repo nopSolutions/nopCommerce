@@ -15,6 +15,7 @@ using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Payment.Methods.PayPoint;
 using NopSolutions.NopCommerce.Payment.Methods.QuickPay;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web
 {
@@ -104,7 +105,7 @@ namespace NopSolutions.NopCommerce.Web
                 string cardtype = CommonHelper.GetFormString("cardtype");
                 string cardnumber = CommonHelper.GetFormString("cardnumber");
                 string responseMD5check = CommonHelper.GetFormString("md5check");
-                string md5secret = SettingManager.GetSettingValue(QuickPayConstants.SETTING_MD5SECRET);
+                string md5secret = IoCFactory.Resolve<ISettingManager>().GetSettingValue(QuickPayConstants.SETTING_MD5SECRET);
 
 
                 var processor = new QuickPayPaymentProcessor();
@@ -140,14 +141,14 @@ namespace NopSolutions.NopCommerce.Web
                 if (string.IsNullOrEmpty(merchant))
                     throw new NopException("Quickpay merchant is not set");
 
-                Order order = OrderManager.GetOrderById(Convert.ToInt32(ordernumber));
+                Order order = IoCFactory.Resolve<IOrderManager>().GetOrderById(Convert.ToInt32(ordernumber));
 
                 if (order == null)
                     throw new NopException(string.Format("The order ID {0} doesn't exists", ordernumber));
                 
-                if (OrderManager.CanMarkOrderAsPaid(order))
+                if (IoCFactory.Resolve<IOrderManager>().CanMarkOrderAsPaid(order))
                 {
-                    OrderManager.MarkOrderAsPaid(order.OrderId);
+                    IoCFactory.Resolve<IOrderManager>().MarkOrderAsPaid(order.OrderId);
                 }
             }
         }

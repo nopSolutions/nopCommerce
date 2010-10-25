@@ -31,6 +31,7 @@ using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.BusinessLogic.Templates;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Common;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
  
 namespace NopSolutions.NopCommerce.Web
 {
@@ -40,7 +41,7 @@ namespace NopSolutions.NopCommerce.Web
 
         private void CreateChildControlsTree()
         {
-            category = CategoryManager.GetCategoryById(this.CategoryId);
+            category = IoCFactory.Resolve<ICategoryManager>().GetCategoryById(this.CategoryId);
             if (category != null)
             {
                 Control child = null;
@@ -77,7 +78,7 @@ namespace NopSolutions.NopCommerce.Web
 
             //canonical URL
             if (SEOHelper.EnableUrlRewriting &&
-                SettingManager.GetSettingValueBoolean("SEO.CanonicalURLs.Category.Enabled"))
+                IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("SEO.CanonicalURLs.Category.Enabled"))
             {
                 if (!this.SEName.Equals(SEOHelper.GetCategorySEName(category)))
                 {

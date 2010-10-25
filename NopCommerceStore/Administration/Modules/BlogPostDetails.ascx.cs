@@ -26,6 +26,7 @@ using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.Content.Blog;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -52,7 +53,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                BlogManager.DeleteBlogPost(this.BlogPostId);
+                IoCFactory.Resolve<IBlogManager>().DeleteBlogPost(this.BlogPostId);
                 Response.Redirect("Blog.aspx");
             }
             catch (Exception exc)

@@ -27,6 +27,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Media;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.BusinessLogic.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Froogle
 {
@@ -54,15 +55,15 @@ namespace NopSolutions.NopCommerce.Froogle
                 writer.WriteAttributeString("version", "2.0");
                 writer.WriteAttributeString("xmlns", "g", null, googleBaseNamespace);
                 writer.WriteStartElement("channel");
-                writer.WriteElementString("title", string.Format("{0} Google Base", SettingManager.StoreName));
+                writer.WriteElementString("title", string.Format("{0} Google Base", IoCFactory.Resolve<ISettingManager>().StoreName));
                 writer.WriteElementString("link", "http://base.google.com/base/");
                 writer.WriteElementString("description", "Information about products");
 
 
-                var products = ProductManager.GetAllProducts(false);
+                var products = IoCFactory.Resolve<IProductManager>().GetAllProducts(false);
                 foreach (var product in products)
                 {
-                    var productVariants = ProductManager.GetProductVariantsByProductId(product.ProductId, false);
+                    var productVariants = IoCFactory.Resolve<IProductManager>().GetProductVariantsByProductId(product.ProductId, false);
 
                     foreach (var productVariant in productVariants)
                     {
@@ -85,9 +86,9 @@ namespace NopSolutions.NopCommerce.Froogle
                         writer.WriteElementString("g", "expiration_date", googleBaseNamespace, DateTime.Now.AddDays(28).ToString("yyyy-MM-dd"));
                         writer.WriteElementString("g", "id", googleBaseNamespace, productVariant.ProductVariantId.ToString());
                         string imageUrl = string.Empty;
-                        var pictures = PictureManager.GetPicturesByProductId(product.ProductId, 1);
+                        var pictures = IoCFactory.Resolve<IPictureManager>().GetPicturesByProductId(product.ProductId, 1);
                         if (pictures.Count > 0)
-                            imageUrl = PictureManager.GetPictureUrl(pictures[0], SettingManager.GetSettingValueInteger("PromotionProvider.Froogle.ProductThumbnailImageSize"), true);
+                            imageUrl = IoCFactory.Resolve<IPictureManager>().GetPictureUrl(pictures[0], IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("PromotionProvider.Froogle.ProductThumbnailImageSize"), true);
                         writer.WriteElementString("g", "image_link", googleBaseNamespace, imageUrl);
                         decimal price = productVariant.Price;
                         writer.WriteElementString("g", "price", googleBaseNamespace, price.ToString(new CultureInfo("en-US", false).NumberFormat));
@@ -100,7 +101,7 @@ namespace NopSolutions.NopCommerce.Froogle
 
                         //if (productVariant.Weight != decimal.Zero)
                         //{
-                        //    writer.WriteElementString("g", "weight", googleBaseNamespace, string.Format(CultureInfo.InvariantCulture, "{0} {1}", productVariant.Weight.ToString(new CultureInfo("en-US", false).NumberFormat), MeasureManager.BaseWeightIn.SystemKeyword));
+                        //    writer.WriteElementString("g", "weight", googleBaseNamespace, string.Format(CultureInfo.InvariantCulture, "{0} {1}", productVariant.Weight.ToString(new CultureInfo("en-US", false).NumberFormat), IoCFactory.Resolve<IMeasureManager>().BaseWeightIn.SystemKeyword));
                         //}
                         writer.WriteEndElement(); // item
                     }

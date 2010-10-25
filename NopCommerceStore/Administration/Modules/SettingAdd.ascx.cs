@@ -25,6 +25,7 @@ using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.Audit;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -41,9 +42,9 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 try
                 {
-                    Setting setting = ctrlSettingInfo.SaveInfo(); 
-                    
-                    CustomerActivityManager.InsertActivity(
+                    Setting setting = ctrlSettingInfo.SaveInfo();
+
+                    IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
                         "AddNewSetting",
                         GetLocaleResourceString("ActivityLog.AddNewSetting"),
                         setting.Name);

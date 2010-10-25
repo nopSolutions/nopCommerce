@@ -17,6 +17,7 @@ using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Web.Modules;
 using NopSolutions.NopCommerce.BusinessLogic.Manufacturers;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Templates.Products
 {
@@ -32,7 +33,7 @@ namespace NopSolutions.NopCommerce.Web.Templates.Products
 
         protected void BindData()
         {
-            var product = ProductManager.GetProductById(this.ProductId);
+            var product = IoCFactory.Resolve<IProductManager>().GetProductById(this.ProductId);
             if(product == null || product.ProductVariants.Count == 0)
             {
                 Response.Redirect(CommonHelper.GetStoreLocation());
@@ -74,10 +75,10 @@ namespace NopSolutions.NopCommerce.Web.Templates.Products
             }
 
             //pictures
-            var pictures = PictureManager.GetPicturesByProductId(product.ProductId);
+            var pictures = IoCFactory.Resolve<IPictureManager>().GetPicturesByProductId(product.ProductId);
             if (pictures.Count > 1)
             {
-                defaultImage.ImageUrl = PictureManager.GetPictureUrl(pictures[0], SettingManager.GetSettingValueInteger("Media.Product.DetailImageSize", 300));
+                defaultImage.ImageUrl = IoCFactory.Resolve<IPictureManager>().GetPictureUrl(pictures[0], IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.Product.DetailImageSize", 300));
                 defaultImage.ToolTip = String.Format(GetLocaleResourceString("Media.Product.ImageAlternateTextFormat"), product.LocalizedName);
                 defaultImage.AlternateText = String.Format(GetLocaleResourceString("Media.Product.ImageAlternateTextFormat"), product.LocalizedName);
                 lvProductPictures.DataSource = pictures;
@@ -85,24 +86,24 @@ namespace NopSolutions.NopCommerce.Web.Templates.Products
             }
             else if (pictures.Count == 1)
             {
-                defaultImage.ImageUrl = PictureManager.GetPictureUrl(pictures[0], SettingManager.GetSettingValueInteger("Media.Product.DetailImageSize", 300));
+                defaultImage.ImageUrl = IoCFactory.Resolve<IPictureManager>().GetPictureUrl(pictures[0], IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.Product.DetailImageSize", 300));
                 defaultImage.ToolTip = String.Format(GetLocaleResourceString("Media.Product.ImageAlternateTextFormat"), product.LocalizedName);
                 defaultImage.AlternateText = String.Format(GetLocaleResourceString("Media.Product.ImageAlternateTextFormat"), product.LocalizedName);
                 lvProductPictures.Visible = false;
             }
             else
             {
-                defaultImage.ImageUrl = PictureManager.GetDefaultPictureUrl(SettingManager.GetSettingValueInteger("Media.Product.DetailImageSize", 300));
+                defaultImage.ImageUrl = IoCFactory.Resolve<IPictureManager>().GetDefaultPictureUrl(IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.Product.DetailImageSize", 300));
                 defaultImage.ToolTip = String.Format(GetLocaleResourceString("Media.Product.ImageAlternateTextFormat"), product.LocalizedName);
                 defaultImage.AlternateText = String.Format(GetLocaleResourceString("Media.Product.ImageAlternateTextFormat"), product.LocalizedName);
                 lvProductPictures.Visible = false;
             }
-            if(SettingManager.GetSettingValueBoolean("Media.Product.DefaultPictureZoomEnabled", false))
+            if(IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Media.Product.DefaultPictureZoomEnabled", false))
             {
                 var picture = product.DefaultPicture;
                 if (picture != null)
                 {
-                    lnkMainLightbox.Attributes["href"] = PictureManager.GetPictureUrl(picture);
+                    lnkMainLightbox.Attributes["href"] = IoCFactory.Resolve<IPictureManager>().GetPictureUrl(picture);
                     lnkMainLightbox.Attributes["rel"] = "lightbox-pd";
                 }
             }
@@ -110,10 +111,10 @@ namespace NopSolutions.NopCommerce.Web.Templates.Products
         
         protected void BindProductVariantInfo(ProductVariant productVariant)
         {
-            btnAddToWishlist.Visible = SettingManager.GetSettingValueBoolean("Common.EnableWishlist");
+            btnAddToWishlist.Visible = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Common.EnableWishlist");
 
             //sku
-            if (SettingManager.GetSettingValueBoolean("Display.Products.ShowSKU") &&
+            if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Display.Products.ShowSKU") &&
                 !String.IsNullOrEmpty(productVariant.SKU))
             {
                 phSKU.Visible = true;
@@ -125,7 +126,7 @@ namespace NopSolutions.NopCommerce.Web.Templates.Products
             }
 
             //manufacturer part number
-            if (SettingManager.GetSettingValueBoolean("Display.Products.ShowManufacturerPartNumber") &&
+            if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Display.Products.ShowManufacturerPartNumber") &&
                 !String.IsNullOrEmpty(productVariant.ManufacturerPartNumber))
             {
                 phManufacturerPartNumber.Visible = true;
@@ -155,8 +156,8 @@ namespace NopSolutions.NopCommerce.Web.Templates.Products
             //price entered by a customer
             if (productVariant.CustomerEntersPrice)
             {
-                decimal minimumCustomerEnteredPrice = CurrencyManager.ConvertCurrency(productVariant.MinimumCustomerEnteredPrice, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
-                decimal maximumCustomerEnteredPrice = CurrencyManager.ConvertCurrency(productVariant.MaximumCustomerEnteredPrice, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                decimal minimumCustomerEnteredPrice = IoCFactory.Resolve<ICurrencyManager>().ConvertCurrency(productVariant.MinimumCustomerEnteredPrice, IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                decimal maximumCustomerEnteredPrice = IoCFactory.Resolve<ICurrencyManager>().ConvertCurrency(productVariant.MaximumCustomerEnteredPrice, IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
                 txtCustomerEnteredPrice.Visible = true;
                 txtCustomerEnteredPrice.ValidationGroup = string.Format("ProductVariant{0}", productVariant.ProductVariantId);
                 txtCustomerEnteredPrice.Value = minimumCustomerEnteredPrice;
@@ -193,7 +194,7 @@ namespace NopSolutions.NopCommerce.Web.Templates.Products
                 if(productVariant.IsDownload && productVariant.HasSampleDownload)
                 {
                     pnlDownloadSample.Visible = true;
-                    hlDownloadSample.NavigateUrl = DownloadManager.GetSampleDownloadUrl(productVariant);
+                    hlDownloadSample.NavigateUrl = IoCFactory.Resolve<IDownloadManager>().GetSampleDownloadUrl(productVariant);
                 }
                 else
                 {
@@ -202,7 +203,7 @@ namespace NopSolutions.NopCommerce.Web.Templates.Products
             }
 
             //final check - hide prices for non-registered customers
-            if (!SettingManager.GetSettingValueBoolean("Common.HidePricesForNonRegistered") ||
+            if (!IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Common.HidePricesForNonRegistered") ||
                     (NopContext.Current.User != null &&
                     !NopContext.Current.User.IsGuest))
             {
@@ -254,7 +255,7 @@ namespace NopSolutions.NopCommerce.Web.Templates.Products
         {
             get
             {
-                Product product = ProductManager.GetProductById(this.ProductId);
+                Product product = IoCFactory.Resolve<IProductManager>().GetProductById(this.ProductId);
                 if(product == null && product.ProductVariants.Count == 0)
                 {
                     return null;
@@ -273,7 +274,7 @@ namespace NopSolutions.NopCommerce.Web.Templates.Products
 
             string attributes = ctrlProductAttributes.SelectedAttributes;
             decimal customerEnteredPrice = txtCustomerEnteredPrice.Value;
-            decimal customerEnteredPriceConverted = CurrencyManager.ConvertCurrency(customerEnteredPrice, NopContext.Current.WorkingCurrency, CurrencyManager.PrimaryStoreCurrency);
+            decimal customerEnteredPriceConverted = IoCFactory.Resolve<ICurrencyManager>().ConvertCurrency(customerEnteredPrice, NopContext.Current.WorkingCurrency, IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency);
             int quantity = txtQuantity.Value;
 
             //gift cards
@@ -293,7 +294,7 @@ namespace NopSolutions.NopCommerce.Web.Templates.Products
                 if(e.CommandName == "AddToCart")
                 {
                     string sep = "<br />";
-                    var addToCartWarnings = ShoppingCartManager.AddToCart(
+                    var addToCartWarnings = IoCFactory.Resolve<IShoppingCartManager>().AddToCart(
                         ShoppingCartTypeEnum.ShoppingCart,
                         pv.ProductVariantId, 
                         attributes,
@@ -301,7 +302,7 @@ namespace NopSolutions.NopCommerce.Web.Templates.Products
                         quantity);
                     if(addToCartWarnings.Count == 0)
                     {
-                        if (SettingManager.GetSettingValueBoolean("Display.Products.DisplayCartAfterAddingProduct"))
+                        if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Display.Products.DisplayCartAfterAddingProduct"))
                         {
                             //redirect to shopping cart page
                             Response.Redirect(SEOHelper.GetShoppingCartUrl());
@@ -325,7 +326,7 @@ namespace NopSolutions.NopCommerce.Web.Templates.Products
                         }
                         string errorFull = addToCartWarningsSb.ToString();
                         lblError.Text = errorFull;
-                        if (SettingManager.GetSettingValueBoolean("Common.ShowAlertForProductAttributes"))
+                        if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Common.ShowAlertForProductAttributes"))
                         {
                             this.DisplayAlertMessage(errorFull.Replace(sep, "\\n"));
                         }
@@ -335,7 +336,7 @@ namespace NopSolutions.NopCommerce.Web.Templates.Products
                 if(e.CommandName == "AddToWishlist")
                 {
                     string sep = "<br />";
-                    var addToCartWarnings = ShoppingCartManager.AddToCart(
+                    var addToCartWarnings = IoCFactory.Resolve<IShoppingCartManager>().AddToCart(
                         ShoppingCartTypeEnum.Wishlist,
                         pv.ProductVariantId, 
                         attributes,
@@ -358,7 +359,7 @@ namespace NopSolutions.NopCommerce.Web.Templates.Products
                         }
                         string errorFull = addToCartWarningsSb.ToString();
                         lblError.Text = errorFull;
-                        if (SettingManager.GetSettingValueBoolean("Common.ShowAlertForProductAttributes"))
+                        if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Common.ShowAlertForProductAttributes"))
                         {
                             this.DisplayAlertMessage(errorFull.Replace(sep, "\\n"));
                         }
@@ -367,7 +368,7 @@ namespace NopSolutions.NopCommerce.Web.Templates.Products
             }
             catch(Exception exc)
             {
-                LogManager.InsertLog(LogTypeEnum.CustomerError, exc.Message, exc);
+                IoCFactory.Resolve<ILogManager>().InsertLog(LogTypeEnum.CustomerError, exc.Message, exc);
                 lblError.Text = Server.HtmlEncode(exc.Message);
             }
         }

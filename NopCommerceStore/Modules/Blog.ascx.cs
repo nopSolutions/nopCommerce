@@ -31,6 +31,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Content.Blog;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -47,7 +48,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             if (String.IsNullOrEmpty(this.Tag))
             {
                 int totalRecords = 0;
-                int pageSize = BlogManager.PostsPageSize;
+                int pageSize = IoCFactory.Resolve<IBlogManager>().PostsPageSize;
                 DateTime? dateFrom = null;
                 DateTime? dateTo = null;
                 if (this.FilterByMonth.HasValue)
@@ -62,7 +63,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     lTitle.Text = GetLocaleResourceString("Blog.Blog");
                 }
 
-                var blogPosts = BlogManager.GetAllBlogPosts(NopContext.Current.WorkingLanguage.LanguageId,
+                var blogPosts = IoCFactory.Resolve<IBlogManager>().GetAllBlogPosts(NopContext.Current.WorkingLanguage.LanguageId,
                     dateFrom, dateTo, pageSize, CurrentPageIndex, out totalRecords);
                 if (blogPosts.Count > 0)
                 {
@@ -77,7 +78,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             else
             {
                 lTitle.Text = string.Format(GetLocaleResourceString("Blog.TaggedWith"), Server.HtmlEncode(this.Tag));
-                var blogPosts = BlogManager.GetAllBlogPostsByTag(NopContext.Current.WorkingLanguage.LanguageId, this.Tag);
+                var blogPosts = IoCFactory.Resolve<IBlogManager>().GetAllBlogPostsByTag(NopContext.Current.WorkingLanguage.LanguageId, this.Tag);
                 if (blogPosts.Count > 0)
                 {
                     rptrBlogPosts.DataSource = blogPosts;

@@ -27,6 +27,7 @@ using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Messages;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -63,7 +64,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             bool loadNotSentItemsOnly = cbLoadNotSentItemsOnly.Checked;
             int maxSendTries = txtMaxSendTries.Value;
 
-            var queuedEmails = MessageManager.GetAllQueuedEmails(fromEmail, toEmail,
+            var queuedEmails = IoCFactory.Resolve<IMessageManager>().GetAllQueuedEmails(fromEmail, toEmail,
                 startDate, endDate, 0, loadNotSentItemsOnly, maxSendTries);
             if (queuedEmails.Count > 0)
             {
@@ -120,7 +121,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     int queuedEmailId = int.Parse(hfQueuedEmailId.Value);
                     if (isChecked)
                     {
-                        MessageManager.DeleteQueuedEmail(queuedEmailId);
+                        IoCFactory.Resolve<IMessageManager>().DeleteQueuedEmail(queuedEmailId);
                     }
                 }
 

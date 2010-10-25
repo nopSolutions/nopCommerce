@@ -3,6 +3,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Audit;
 using NopSolutions.NopCommerce.BusinessLogic.Clickatell;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.Common;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Messages.SMS
 {
@@ -45,7 +46,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages.SMS
             }
             catch (Exception ex)
             {
-                LogManager.InsertLog(LogTypeEnum.Unknown, ex.Message, ex);
+                IoCFactory.Resolve<ILogManager>().InsertLog(LogTypeEnum.Unknown, ex.Message, ex);
             }
             return false;
         }
@@ -59,11 +60,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages.SMS
         {
             get
             {
-                return SettingManager.GetSettingValue("Mobile.SMS.Clickatell.PhoneNumber");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValue("Mobile.SMS.Clickatell.PhoneNumber");
             }
             set
             {
-                SettingManager.SetParam("Mobile.SMS.Clickatell.PhoneNumber", value);
+                IoCFactory.Resolve<ISettingManager>().SetParam("Mobile.SMS.Clickatell.PhoneNumber", value);
             }
         }
 
@@ -74,11 +75,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages.SMS
         {
             get
             {
-                return SettingManager.GetSettingValue("Mobile.SMS.Clickatell.APIID");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValue("Mobile.SMS.Clickatell.APIID");
             }
             set
             {
-                SettingManager.SetParam("Mobile.SMS.Clickatell.APIID", value);
+                IoCFactory.Resolve<ISettingManager>().SetParam("Mobile.SMS.Clickatell.APIID", value);
             }
         }
 
@@ -89,11 +90,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages.SMS
         {
             get
             {
-                return SettingManager.GetSettingValue("Mobile.SMS.Clickatell.Username");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValue("Mobile.SMS.Clickatell.Username");
             }
             set
             {
-                SettingManager.SetParam("Mobile.SMS.Clickatell.Username", value);
+                IoCFactory.Resolve<ISettingManager>().SetParam("Mobile.SMS.Clickatell.Username", value);
             }
         }
 
@@ -104,11 +105,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages.SMS
         {
             get
             {
-                return SettingManager.GetSettingValue("Mobile.SMS.Clickatell.Password");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValue("Mobile.SMS.Clickatell.Password");
             }
             set
             {
-                SettingManager.SetParam("Mobile.SMS.Clickatell.Password", value);
+                IoCFactory.Resolve<ISettingManager>().SetParam("Mobile.SMS.Clickatell.Password", value);
             }
         } 
         #endregion

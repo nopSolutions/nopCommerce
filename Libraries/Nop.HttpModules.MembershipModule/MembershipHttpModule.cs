@@ -26,6 +26,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Audit.UsersOnline;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.BusinessLogic.Installation;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.BusinessLogic.Utils;
 using NopSolutions.NopCommerce.Common.Utils;
@@ -43,7 +44,7 @@ namespace NopSolutions.NopCommerce.HttpModules
         /// </summary>
         private void logout()
         {
-            CustomerManager.Logout();
+            IoCFactory.Resolve<ICustomerManager>().Logout();
             string loginURL = string.Empty;
             if (NopContext.Current != null)
             {
@@ -79,13 +80,13 @@ namespace NopSolutions.NopCommerce.HttpModules
                 {
                     Customer customer = null;
                     string name = HttpContext.Current.User.Identity.Name;
-                    if (CustomerManager.UsernamesEnabled)
+                    if (IoCFactory.Resolve<ICustomerManager>().UsernamesEnabled)
                     {
-                        customer = CustomerManager.GetCustomerByUsername(name);
+                        customer = IoCFactory.Resolve<ICustomerManager>().GetCustomerByUsername(name);
                     }
                     else
                     {
-                        customer = CustomerManager.GetCustomerByEmail(name);
+                        customer = IoCFactory.Resolve<ICustomerManager>().GetCustomerByEmail(name);
                     }
                     
                     if (customer != null)
@@ -102,7 +103,7 @@ namespace NopSolutions.NopCommerce.HttpModules
                                 customer.ImpersonatedCustomerGuid != Guid.Empty)
                             {
                                 //set impersonated customer
-                                var impersonatedCustomer = CustomerManager.GetCustomerByGuid(customer.ImpersonatedCustomerGuid);
+                                var impersonatedCustomer = IoCFactory.Resolve<ICustomerManager>().GetCustomerByGuid(customer.ImpersonatedCustomerGuid);
                                 if (impersonatedCustomer != null)
                                 {
                                     NopContext.Current.User = impersonatedCustomer;
@@ -122,14 +123,14 @@ namespace NopSolutions.NopCommerce.HttpModules
                             }
 
                             //set current customer session
-                            var customerSession = CustomerManager.GetCustomerSessionByCustomerId(NopContext.Current.User.CustomerId);
+                            var customerSession = IoCFactory.Resolve<ICustomerManager>().GetCustomerSessionByCustomerId(NopContext.Current.User.CustomerId);
                             if (customerSession == null)
                             {
                                 customerSession = NopContext.Current.GetSession(true);
                                 customerSession.IsExpired = false;
                                 customerSession.LastAccessed = DateTime.UtcNow;
                                 customerSession.CustomerId = NopContext.Current.User.CustomerId;
-                                customerSession = CustomerManager.SaveCustomerSession(customerSession.CustomerSessionGuid, customerSession.CustomerId, customerSession.LastAccessed, customerSession.IsExpired);
+                                customerSession = IoCFactory.Resolve<ICustomerManager>().SaveCustomerSession(customerSession.CustomerSessionGuid, customerSession.CustomerId, customerSession.LastAccessed, customerSession.IsExpired);
                             }
                             NopContext.Current.Session = customerSession;
                         }
@@ -186,7 +187,7 @@ namespace NopSolutions.NopCommerce.HttpModules
                     if (NopContext.Current.Session.LastAccessed.AddMinutes(1.0) < dtNow)
                     {
                         NopContext.Current.Session.LastAccessed = dtNow;
-                        NopContext.Current.Session = CustomerManager.SaveCustomerSession(
+                        NopContext.Current.Session = IoCFactory.Resolve<ICustomerManager>().SaveCustomerSession(
                             NopContext.Current.Session.CustomerSessionGuid, 
                             NopContext.Current.Session.CustomerId, 
                             NopContext.Current.Session.LastAccessed,

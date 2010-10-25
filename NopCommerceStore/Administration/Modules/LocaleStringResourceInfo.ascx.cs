@@ -25,6 +25,7 @@ using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.BusinessLogic.Localization;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -32,10 +33,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            LocaleStringResource localeStringResource = LocaleStringResourceManager.GetLocaleStringResourceById(this.LocaleStringResourceId);
+            var localeStringResource = IoCFactory.Resolve<ILocaleStringResourceManager>().GetLocaleStringResourceById(this.LocaleStringResourceId);
             if (localeStringResource != null)
             {
-                Language language = LanguageManager.GetLanguageById(localeStringResource.LanguageId);
+                Language language = IoCFactory.Resolve<ILanguageManager>().GetLanguageById(localeStringResource.LanguageId);
                 if (language != null)
                     lblLanguage.Text = Server.HtmlEncode(language.Name);
                 else
@@ -46,7 +47,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             }
             else
             {
-                Language language = LanguageManager.GetLanguageById(this.LanguageId);
+                Language language = IoCFactory.Resolve<ILanguageManager>().GetLanguageById(this.LanguageId);
                 if (language != null)
                     lblLanguage.Text = Server.HtmlEncode(language.Name);
                 else
@@ -64,13 +65,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public LocaleStringResource SaveInfo()
         {
-            LocaleStringResource localeStringResource = LocaleStringResourceManager.GetLocaleStringResourceById(this.LocaleStringResourceId);
+            LocaleStringResource localeStringResource = IoCFactory.Resolve<ILocaleStringResourceManager>().GetLocaleStringResourceById(this.LocaleStringResourceId);
 
             if (localeStringResource != null)
             {
                 localeStringResource.ResourceName = txtResourceName.Text;
                 localeStringResource.ResourceValue = txtResourceValue.Text;
-                LocaleStringResourceManager.UpdateLocaleStringResource(localeStringResource);
+                IoCFactory.Resolve<ILocaleStringResourceManager>().UpdateLocaleStringResource(localeStringResource);
             }
             else
             {
@@ -80,7 +81,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     ResourceName = txtResourceName.Text,
                     ResourceValue = txtResourceValue.Text
                 };
-                LocaleStringResourceManager.InsertLocaleStringResource(localeStringResource);
+                IoCFactory.Resolve<ILocaleStringResourceManager>().InsertLocaleStringResource(localeStringResource);
             }
 
             return localeStringResource;

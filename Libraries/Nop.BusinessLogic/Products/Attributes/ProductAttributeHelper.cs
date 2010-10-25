@@ -23,6 +23,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.BusinessLogic.Localization;
 using NopSolutions.NopCommerce.BusinessLogic.Tax;
 using NopSolutions.NopCommerce.Common.Utils.Html;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
 {
@@ -77,7 +78,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
             var Ids = ParseProductVariantAttributeIds(attributes);
             foreach (int id in Ids)
             {
-                var pva = ProductAttributeManager.GetProductVariantAttributeById(id);
+                var pva = IoCFactory.Resolve<IProductAttributeManager>().GetProductVariantAttributeById(id);
                 if (pva != null)
                 {
                     pvaCollection.Add(pva);
@@ -108,7 +109,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                         int pvaValueId = 0;
                         if (int.TryParse(pvaValueStr, out pvaValueId))
                         {
-                            var pvaValue = ProductAttributeManager.GetProductVariantAttributeValueById(pvaValueId);
+                            var pvaValue = IoCFactory.Resolve<IProductAttributeManager>().GetProductVariantAttributeValueById(pvaValueId);
                             if (pvaValue != null)
                                 pvaValues.Add(pvaValue);
                         }
@@ -505,15 +506,15 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                         }
                         else
                         {
-                            var pvaValue = ProductAttributeManager.GetProductVariantAttributeValueById(Convert.ToInt32(valueStr));
+                            var pvaValue = IoCFactory.Resolve<IProductAttributeManager>().GetProductVariantAttributeValueById(Convert.ToInt32(valueStr));
                             if (pvaValue != null)
                             {
                                 pvaAttribute = string.Format("{0}: {1}", pva.ProductAttribute.LocalizedName, pvaValue.LocalizedName);
                                 if (renderPrices)
                                 {
                                     decimal taxRate = decimal.Zero;
-                                    decimal priceAdjustmentBase = TaxManager.GetPrice(productVariant, pvaValue.PriceAdjustment, customer, out taxRate);
-                                    decimal priceAdjustment = CurrencyManager.ConvertCurrency(priceAdjustmentBase, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                                    decimal priceAdjustmentBase = IoCFactory.Resolve<ITaxManager>().GetPrice(productVariant, pvaValue.PriceAdjustment, customer, out taxRate);
+                                    decimal priceAdjustment = IoCFactory.Resolve<ICurrencyManager>().ConvertCurrency(priceAdjustmentBase, IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
                                     if (priceAdjustmentBase > 0)
                                     {
                                         string priceAdjustmentStr = PriceHelper.FormatPrice(priceAdjustment, false, false);

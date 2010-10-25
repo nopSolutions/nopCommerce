@@ -28,6 +28,7 @@ using NopSolutions.NopCommerce.BusinessLogic;
 using NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -47,9 +48,9 @@ namespace NopSolutions.NopCommerce.Web.Modules
         protected void BindData()
         {
             int totalRecords = 0;
-            int pageSize = NewsManager.NewsArchivePageSize;
+            int pageSize = IoCFactory.Resolve<INewsManager>().NewsArchivePageSize;
 
-            var newsCollection = NewsManager.GetAllNews(NopContext.Current.WorkingLanguage.LanguageId, CurrentPageIndex, pageSize, out totalRecords);
+            var newsCollection = IoCFactory.Resolve<INewsManager>().GetAllNews(NopContext.Current.WorkingLanguage.LanguageId, CurrentPageIndex, pageSize, out totalRecords);
             if(newsCollection.Count > 0)
             {
                 newsPager.PageSize = pageSize;

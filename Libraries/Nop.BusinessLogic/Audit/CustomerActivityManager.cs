@@ -26,7 +26,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
     /// <summary>
     /// Customer activity manager
     /// </summary>
-    public class CustomerActivityManager
+    public class CustomerActivityManager : ICustomerActivityManager
     {
         #region Constants
         private const string ACTIVITYTYPE_ALL_KEY = "Nop.activitytype.all";
@@ -40,7 +40,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
         /// Inserts an activity log type item
         /// </summary>
         /// <param name="activityLogType">Activity log type item</param>
-        public static void InsertActivityType(ActivityLogType activityLogType)
+        public void InsertActivityType(ActivityLogType activityLogType)
         {
             if (activityLogType == null)
                 throw new ArgumentNullException("activityLogType");
@@ -63,7 +63,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
         /// Updates an activity log type item
         /// </summary>
         /// <param name="activityLogType">Activity log type item</param>
-        public static void UpdateActivityType(ActivityLogType activityLogType)
+        public void UpdateActivityType(ActivityLogType activityLogType)
         {
             if (activityLogType == null)
                 throw new ArgumentNullException("activityLogType");
@@ -87,7 +87,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
         /// Deletes an activity log type item
         /// </summary>
         /// <param name="activityLogTypeId">Activity log type identifier</param>
-        public static void DeleteActivityType(int activityLogTypeId)
+        public void DeleteActivityType(int activityLogTypeId)
         {
             var activityLogType = GetActivityTypeById(activityLogTypeId);
             if (activityLogType == null)
@@ -107,7 +107,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
         /// Gets all activity log type items
         /// </summary>
         /// <returns>Activity log type collection</returns>
-        public static List<ActivityLogType> GetAllActivityTypes()
+        public List<ActivityLogType> GetAllActivityTypes()
         {
             if (NopRequestCache.IsEnabled)
             {
@@ -133,7 +133,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
         /// </summary>
         /// <param name="activityLogTypeId">Activity log type identifier</param>
         /// <returns>Activity log type item</returns>
-        public static ActivityLogType GetActivityTypeById(int activityLogTypeId)
+        public ActivityLogType GetActivityTypeById(int activityLogTypeId)
         {
             if (activityLogTypeId == 0)
                 return null;
@@ -164,7 +164,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
         /// <param name="systemKeyword">The system keyword</param>
         /// <param name="comment">The activity comment</param>
         /// <returns>Activity log item</returns>
-        public static ActivityLog InsertActivity(string systemKeyword, string comment)
+        public ActivityLog InsertActivity(string systemKeyword, string comment)
         {
             return InsertActivity(systemKeyword, comment, new object[0]);
         }
@@ -176,7 +176,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
         /// <param name="comment">The activity comment</param>
         /// <param name="commentParams">The activity comment parameters for string.Format() function.</param>
         /// <returns>Activity log item</returns>
-        public static ActivityLog InsertActivity(string systemKeyword, 
+        public ActivityLog InsertActivity(string systemKeyword, 
             string comment, params object[] commentParams)
         {
             if (NopContext.Current == null || 
@@ -212,7 +212,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
         /// Deletes an activity log item
         /// </summary>
         /// <param name="activityLogId">Activity log type identifier</param>
-        public static void DeleteActivity(int activityLogId)
+        public void DeleteActivity(int activityLogId)
         {
             var activity = GetActivityById(activityLogId);
             if (activity == null)
@@ -237,7 +237,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
         /// <param name="pageIndex">Page index</param>
         /// <param name="totalRecords">Total records</param>
         /// <returns>Activity log collection</returns>
-        public static List<ActivityLog> GetAllActivities(DateTime? createdOnFrom,
+        public List<ActivityLog> GetAllActivities(DateTime? createdOnFrom,
             DateTime? createdOnTo, string email, string username, int activityLogTypeId,
             int pageSize, int pageIndex, out int totalRecords)
         {
@@ -264,7 +264,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
         /// </summary>
         /// <param name="activityLogId">Activity log identifier</param>
         /// <returns>Activity log item</returns>
-        public static ActivityLog GetActivityById(int activityLogId)
+        public ActivityLog GetActivityById(int activityLogId)
         {
             if (activityLogId == 0)
                 return null;
@@ -280,7 +280,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
         /// <summary>
         /// Clears activity log
         /// </summary>
-        public static void ClearAllActivities()
+        public void ClearAllActivities()
         {
             var context = ObjectContextHelper.CurrentObjectContext;
             context.Sp_ActivityLogClearAll();

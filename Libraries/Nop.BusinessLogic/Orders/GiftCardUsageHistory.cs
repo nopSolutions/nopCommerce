@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Text;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Orders;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Orders
@@ -90,7 +91,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             get
             {
                 if (_gc == null)
-                    _gc = OrderManager.GetGiftCardById(this.GiftCardId);
+                    _gc = IoCFactory.Resolve<IOrderManager>().GetGiftCardById(this.GiftCardId);
                 return _gc;
             }
         }
@@ -103,7 +104,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             get
             {
                 if (_customer == null)
-                    _customer = CustomerManager.GetCustomerById(this.CustomerId);
+                    _customer = IoCFactory.Resolve<ICustomerManager>().GetCustomerById(this.CustomerId);
                 return _customer;
             }
         }
@@ -116,7 +117,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             get
             {
                 if (_order == null)
-                    _order = OrderManager.GetOrderById(this.OrderId);
+                    _order = IoCFactory.Resolve<IOrderManager>().GetOrderById(this.OrderId);
                 return _order;
             }
         }

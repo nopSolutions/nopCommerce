@@ -22,7 +22,7 @@
                     </div>
                     <div class="clear">
                     </div>
-                    <%#ProductManager.FormatProductReviewText((string)Eval("ReviewText"))%>
+                    <%#IoCFactory.Resolve<IProductManager>().FormatProductReviewText((string)Eval("ReviewText"))%>
                     <p>
                         <%=GetLocaleResourceString("Products.ProductReviewFrom")%>:
                         <%#Server.HtmlEncode(GetCustomerInfo(Convert.ToInt32(Eval("CustomerId"))))%>

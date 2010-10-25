@@ -5,6 +5,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Clickatell;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Messages.SMS
 {
@@ -23,19 +24,19 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages.SMS
         {
             try
             {
-                var emailAccount = MessageManager.DefaultEmailAccount;
+                var emailAccount = IoCFactory.Resolve<IMessageManager>().DefaultEmailAccount;
 
                 var from = new MailAddress(emailAccount.Email, emailAccount.DisplayName);
                 var to = new MailAddress(VerizonEmail);
 
-                MessageManager.InsertQueuedEmail(5, from, to,
-                    string.Empty, string.Empty, SettingManager.StoreName, text, 
+                IoCFactory.Resolve<IMessageManager>().InsertQueuedEmail(5, from, to,
+                    string.Empty, string.Empty, IoCFactory.Resolve<ISettingManager>().StoreName, text, 
                     DateTime.UtcNow, 0, null, emailAccount.EmailAccountId);
                 return true;
             }
             catch (Exception ex)
             {
-                LogManager.InsertLog(LogTypeEnum.Unknown, ex.Message, ex);
+                IoCFactory.Resolve<ILogManager>().InsertLog(LogTypeEnum.Unknown, ex.Message, ex);
                 return false;
             }
         }
@@ -49,11 +50,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages.SMS
         {
             get
             {
-                return SettingManager.GetSettingValue("Mobile.SMS.Verizon.Email");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValue("Mobile.SMS.Verizon.Email");
             }
             set
             {
-                SettingManager.SetParam("Mobile.SMS.Verizon.Email", value);
+                IoCFactory.Resolve<ISettingManager>().SetParam("Mobile.SMS.Verizon.Email", value);
             }
         }
         #endregion

@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Text;
 
 using NopSolutions.NopCommerce.BusinessLogic.Shipping;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
 {
@@ -86,7 +87,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
                 ShippingRateComputationMethodTypeEnum type = ShippingRateComputationMethodTypeEnum.Unknown;
                 try
                 {
-                    type = ShippingRateComputationMethodManager.GetShippingRateComputationMethodTypeEnum(this.ShippingRateComputationMethodId);
+                    type = IoCFactory.Resolve<IShippingRateComputationMethodManager>().GetShippingRateComputationMethodTypeEnum(this.ShippingRateComputationMethodId);
                 }
                 catch { }
                 return type;

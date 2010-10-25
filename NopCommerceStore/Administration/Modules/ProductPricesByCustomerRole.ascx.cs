@@ -34,6 +34,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Tax;
 using NopSolutions.NopCommerce.BusinessLogic.Warehouses;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Web.Administration.Modules;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -41,16 +42,16 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            ProductVariant productVariant = ProductManager.GetProductVariantById(this.ProductVariantId);
+            ProductVariant productVariant = IoCFactory.Resolve<IProductManager>().GetProductVariantById(this.ProductVariantId);
             if (productVariant != null)
             {
-                var customerRoles = CustomerManager.GetAllCustomerRoles();
+                var customerRoles = IoCFactory.Resolve<ICustomerManager>().GetAllCustomerRoles();
                 if (customerRoles.Count > 0)
                 {
                     pnlData.Visible = true;
                     pnlMessage.Visible = false;
 
-                    var prices = ProductManager.GetAllCustomerRoleProductPrices(productVariant.ProductVariantId);
+                    var prices = IoCFactory.Resolve<IProductManager>().GetAllCustomerRoleProductPrices(productVariant.ProductVariantId);
                     if (prices.Count > 0)
                     {
                         gvPrices.Visible = true;
@@ -78,7 +79,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         private void FillDropDowns()
         {
             this.ddlNewCustomerRole.Items.Clear();
-            var customerRoles = CustomerManager.GetAllCustomerRoles();
+            var customerRoles = IoCFactory.Resolve<ICustomerManager>().GetAllCustomerRoles();
             foreach (var cr in customerRoles)
             {
                 ListItem item2 = new ListItem(cr.Name, cr.CustomerRoleId.ToString());
@@ -90,7 +91,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             if (!Page.IsPostBack)
             {
-                this.gvPrices.Columns[1].HeaderText = string.Format("{0} [{1}]", GetLocaleResourceString("Admin.ProductPricesByCustomerRole.Price"), CurrencyManager.PrimaryStoreCurrency.CurrencyCode);
+                this.gvPrices.Columns[1].HeaderText = string.Format("{0} [{1}]", GetLocaleResourceString("Admin.ProductPricesByCustomerRole.Price"), IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency.CurrencyCode);
                 this.FillDropDowns();
                 this.BindData();
             }
@@ -105,7 +106,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                var productVariant = ProductManager.GetProductVariantById(this.ProductVariantId);
+                var productVariant = IoCFactory.Resolve<IProductManager>().GetProductVariantById(this.ProductVariantId);
                 if (productVariant != null)
                 {
                     int customerRoleId = int.Parse(ddlNewCustomerRole.SelectedItem.Value);
@@ -116,7 +117,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         ProductVariantId = productVariant.ProductVariantId,
                         Price = price
                     };
-                    ProductManager.InsertCustomerRoleProductPrice(crpp);
+                    IoCFactory.Resolve<IProductManager>().InsertCustomerRoleProductPrice(crpp);
 
                     BindData();
                 }
@@ -140,11 +141,11 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 int crppId = int.Parse(hfCustomerRoleProductPriceId.Value);
                 decimal price = txtPrice.Value;
 
-                var crpp = ProductManager.GetCustomerRoleProductPriceById(crppId);
+                var crpp = IoCFactory.Resolve<IProductManager>().GetCustomerRoleProductPriceById(crppId);
                 if (crpp != null)
                 {
                     crpp.Price = price;
-                    ProductManager.UpdateCustomerRoleProductPrice(crpp);
+                    IoCFactory.Resolve<IProductManager>().UpdateCustomerRoleProductPrice(crpp);
                 }
 
                 BindData();
@@ -164,7 +165,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 Label lblCustomerRole = e.Row.FindControl("lblCustomerRole") as Label;
                 if (lblCustomerRole != null)
                 {
-                    CustomerRole cr = CustomerManager.GetCustomerRoleById(tierPrice.CustomerRoleId);
+                    CustomerRole cr = IoCFactory.Resolve<ICustomerManager>().GetCustomerRoleById(tierPrice.CustomerRoleId);
                     if (cr != null)
                     {
                         lblCustomerRole.Text = Server.HtmlEncode(cr.Name);
@@ -177,7 +178,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         protected void gvPrices_RowDeleting(object sender, GridViewDeleteEventArgs e)
         {
             int crppId = (int)gvPrices.DataKeys[e.RowIndex]["CustomerRoleProductPriceId"];
-            ProductManager.DeleteCustomerRoleProductPrice(crppId);
+            IoCFactory.Resolve<IProductManager>().DeleteCustomerRoleProductPrice(crppId);
             BindData();
         }
 

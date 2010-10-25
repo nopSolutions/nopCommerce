@@ -23,13 +23,14 @@ using NopSolutions.NopCommerce.BusinessLogic.Caching;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Data;
 using NopSolutions.NopCommerce.BusinessLogic.Localization;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
 {
     /// <summary>
     /// Shipping status manager
     /// </summary>
-    public partial class ShippingStatusManager
+    public partial class ShippingStatusManager : IShippingStatusManager
     {
         #region Constants
         private const string SHIPPINGTATUSES_ALL_KEY = "Nop.shippingstatus.all";
@@ -44,7 +45,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         /// </summary>
         /// <param name="shippingStatusId">Shipping status identifier</param>
         /// <returns>Shipping status name</returns>
-        public static string GetShippingStatusName(int shippingStatusId)
+        public string GetShippingStatusName(int shippingStatusId)
         {
             var shippingStatus = GetShippingStatusById(shippingStatusId);
             if (shippingStatus != null)
@@ -71,14 +72,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         /// </summary>
         /// <param name="shippingStatusId">Shipping status identifier</param>
         /// <returns>Shipping status</returns>
-        public static ShippingStatus GetShippingStatusById(int shippingStatusId)
+        public ShippingStatus GetShippingStatusById(int shippingStatusId)
         {
             if (shippingStatusId == 0)
                 return null;
 
             string key = string.Format(SHIPPINGTATUSES_BY_ID_KEY, shippingStatusId);
             object obj2 = NopRequestCache.Get(key);
-            if (ShippingStatusManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (ShippingStatus)obj2;
             }
@@ -89,7 +90,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
                         select ss;
             var shippingStatus = query.SingleOrDefault();
 
-            if (ShippingStatusManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, shippingStatus);
             }
@@ -100,11 +101,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         /// Gets all shipping statuses
         /// </summary>
         /// <returns>Shipping status collection</returns>
-        public static List<ShippingStatus> GetAllShippingStatuses()
+        public List<ShippingStatus> GetAllShippingStatuses()
         {
             string key = string.Format(SHIPPINGTATUSES_ALL_KEY);
             object obj2 = NopRequestCache.Get(key);
-            if (ShippingStatusManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (List<ShippingStatus>)obj2;
             }
@@ -115,7 +116,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
                         select ss;
             var shippingStatuses = query.ToList();
             
-            if (ShippingStatusManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, shippingStatuses);
             }
@@ -128,11 +129,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         /// <summary>
         /// Gets a value indicating whether cache is enabled
         /// </summary>
-        public static bool CacheEnabled
+        public bool CacheEnabled
         {
             get
             {
-                return SettingManager.GetSettingValueBoolean("Cache.ShippingStatusManager.CacheEnabled");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.ShippingStatusManager.CacheEnabled");
             }
         }
         #endregion

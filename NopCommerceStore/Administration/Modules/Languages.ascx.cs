@@ -23,6 +23,7 @@ using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -38,7 +39,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         void BindGrid()
         {
-            var languageCollection = LanguageManager.GetAllLanguages();
+            var languageCollection = IoCFactory.Resolve<ILanguageManager>().GetAllLanguages();
             gvLanguages.DataSource = languageCollection;
             gvLanguages.DataBind();
         }

@@ -15,7 +15,7 @@
                     </strong>
                 </p>
                 <p>
-                    <%#NewsManager.FormatCommentText((string)Eval("Comment"))%>
+                    <%#IoCFactory.Resolve<INewsManager>().FormatCommentText((string)Eval("Comment"))%>
                 </p>
                 <p>
                     <%#DateTimeHelper.ConvertToUserTime((DateTime)Eval("CreatedOn"), DateTimeKind.Utc).ToString()%>

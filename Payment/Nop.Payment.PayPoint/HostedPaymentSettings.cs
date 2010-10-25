@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Payment.Methods.PayPoint
 {
@@ -13,11 +14,11 @@ namespace NopSolutions.NopCommerce.Payment.Methods.PayPoint
         {
             get
             {
-                return SettingManager.GetSettingValue("PaymentMethod.PayPoint.HostedPayment.GatewayUrl", "https://www.secpay.com/java-bin/ValCard");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.PayPoint.HostedPayment.GatewayUrl", "https://www.secpay.com/java-bin/ValCard");
             }
             set
             {
-                SettingManager.SetParam("PaymentMethod.PayPoint.HostedPayment.GatewayUrl", value);
+                IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.PayPoint.HostedPayment.GatewayUrl", value);
             }
         }
 
@@ -25,11 +26,11 @@ namespace NopSolutions.NopCommerce.Payment.Methods.PayPoint
         {
             get
             {
-                return SettingManager.GetSettingValue("PaymentMethod.PayPoint.HostedPayment.MerchantID");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.PayPoint.HostedPayment.MerchantID");
             }
             set
             {
-                SettingManager.SetParam("PaymentMethod.PayPoint.HostedPayment.MerchantID", value);
+                IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.PayPoint.HostedPayment.MerchantID", value);
             }
         }
 
@@ -37,11 +38,11 @@ namespace NopSolutions.NopCommerce.Payment.Methods.PayPoint
         {
             get
             {
-                return SettingManager.GetSettingValue("PaymentMethod.PayPoint.HostedPayment.RemotePassword");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.PayPoint.HostedPayment.RemotePassword");
             }
             set
             {
-                SettingManager.SetParam("PaymentMethod.PayPoint.HostedPayment.RemotePassword", value);
+                IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.PayPoint.HostedPayment.RemotePassword", value);
             }
         }
 
@@ -49,11 +50,11 @@ namespace NopSolutions.NopCommerce.Payment.Methods.PayPoint
         {
             get
             {
-                return SettingManager.GetSettingValue("PaymentMethod.PayPoint.HostedPayment.DigestKey");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.PayPoint.HostedPayment.DigestKey");
             }
             set
             {
-                SettingManager.SetParam("PaymentMethod.PayPoint.HostedPayment.DigestKey", value);
+                IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.PayPoint.HostedPayment.DigestKey", value);
             }
         }
 
@@ -61,11 +62,11 @@ namespace NopSolutions.NopCommerce.Payment.Methods.PayPoint
         {
             get
             {
-                return SettingManager.GetSettingValueDecimalNative("PaymentMethod.PayPoint.HostedPayment.AdditionalFee");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.PayPoint.HostedPayment.AdditionalFee");
             }
             set
             {
-                SettingManager.SetParamNative("PaymentMethod.PayPoint.HostedPayment.AdditionalFee", value);
+                IoCFactory.Resolve<ISettingManager>().SetParamNative("PaymentMethod.PayPoint.HostedPayment.AdditionalFee", value);
             }
         }
         #endregion

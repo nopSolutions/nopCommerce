@@ -34,6 +34,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Common.Xml;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -49,7 +50,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         public void BindData()
         {
-            gvForumSubscriptions.DataSource = ForumManager.GetAllSubscriptions(CustomerId, 0, 0, int.MaxValue, 0);
+            gvForumSubscriptions.DataSource = IoCFactory.Resolve<IForumManager>().GetAllSubscriptions(CustomerId, 0, 0, int.MaxValue, 0);
             gvForumSubscriptions.DataBind();
         }
 
@@ -79,7 +80,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     int forumSubscriptionId = int.Parse(hfForumSubscriptionId.Value);
                     if (selected)
                     {
-                        ForumManager.DeleteSubscription(forumSubscriptionId);
+                        IoCFactory.Resolve<IForumManager>().DeleteSubscription(forumSubscriptionId);
                     }
                 }
             }

@@ -33,6 +33,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts;
 using NopSolutions.NopCommerce.BusinessLogic.Templates;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Web.Administration.Modules;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
  
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
@@ -41,7 +42,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            Category category = CategoryManager.GetCategoryById(this.CategoryId);
+            var category = IoCFactory.Resolve<ICategoryManager>().GetCategoryById(this.CategoryId);
 
             if (this.HasLocalizableContent)
             {
@@ -61,7 +62,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                 Picture categoryPicture = category.Picture;
                 this.btnRemoveCategoryImage.Visible = categoryPicture != null;
-                string pictureUrl = PictureManager.GetPictureUrl(categoryPicture, 100);
+                string pictureUrl = IoCFactory.Resolve<IPictureManager>().GetPictureUrl(categoryPicture, 100);
                 this.iCategoryPicture.Visible = true;
                 this.iCategoryPicture.ImageUrl = pictureUrl;
 
@@ -84,7 +85,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         private void FillDropDowns()
         {
             this.ddlTemplate.Items.Clear();
-            var categoryTemplates = TemplateManager.GetAllCategoryTemplates();
+            var categoryTemplates = IoCFactory.Resolve<ITemplateManager>().GetAllCategoryTemplates();
             foreach (CategoryTemplate categoryTemplate in categoryTemplates)
             {
                 ListItem item2 = new ListItem(categoryTemplate.Name, categoryTemplate.CategoryTemplateId.ToString());
@@ -111,7 +112,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         
         public Category SaveInfo()
         {
-            Category category = CategoryManager.GetCategoryById(this.CategoryId);
+            var category = IoCFactory.Resolve<ICategoryManager>().GetCategoryById(this.CategoryId);
 
             if (category != null)
             {
@@ -119,11 +120,11 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 HttpPostedFile categoryPictureFile = fuCategoryPicture.PostedFile;
                 if ((categoryPictureFile != null) && (!String.IsNullOrEmpty(categoryPictureFile.FileName)))
                 {
-                    byte[] categoryPictureBinary = PictureManager.GetPictureBits(categoryPictureFile.InputStream, categoryPictureFile.ContentLength);
+                    byte[] categoryPictureBinary = IoCFactory.Resolve<IPictureManager>().GetPictureBits(categoryPictureFile.InputStream, categoryPictureFile.ContentLength);
                     if (categoryPicture != null)
-                        categoryPicture = PictureManager.UpdatePicture(categoryPicture.PictureId, categoryPictureBinary, categoryPictureFile.ContentType, true);
+                        categoryPicture = IoCFactory.Resolve<IPictureManager>().UpdatePicture(categoryPicture.PictureId, categoryPictureBinary, categoryPictureFile.ContentType, true);
                     else
-                        categoryPicture = PictureManager.InsertPicture(categoryPictureBinary, categoryPictureFile.ContentType, true);
+                        categoryPicture = IoCFactory.Resolve<IPictureManager>().InsertPicture(categoryPictureBinary, categoryPictureFile.ContentType, true);
                 }
                 int categoryPictureId = 0;
                 if (categoryPicture != null)
@@ -140,7 +141,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 category.DisplayOrder = txtDisplayOrder.Value;
                 category.UpdatedOn = DateTime.UtcNow;
 
-                CategoryManager.UpdateCategory(category);
+                IoCFactory.Resolve<ICategoryManager>().UpdateCategory(category);
             }
             else
             {
@@ -148,8 +149,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 HttpPostedFile categoryPictureFile = fuCategoryPicture.PostedFile;
                 if ((categoryPictureFile != null) && (!String.IsNullOrEmpty(categoryPictureFile.FileName)))
                 {
-                    byte[] categoryPictureBinary = PictureManager.GetPictureBits(categoryPictureFile.InputStream, categoryPictureFile.ContentLength);
-                    categoryPicture = PictureManager.InsertPicture(categoryPictureBinary, categoryPictureFile.ContentType, true);
+                    byte[] categoryPictureBinary = IoCFactory.Resolve<IPictureManager>().GetPictureBits(categoryPictureFile.InputStream, categoryPictureFile.ContentLength);
+                    categoryPicture = IoCFactory.Resolve<IPictureManager>().InsertPicture(categoryPictureBinary, categoryPictureFile.ContentType, true);
                 }
                 int categoryPictureId = 0;
                 if (categoryPicture != null)
@@ -173,7 +174,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     UpdatedOn = nowDT
                 };
 
-                CategoryManager.InsertCategory(category);
+                IoCFactory.Resolve<ICategoryManager>().InsertCategory(category);
             }
 
             SaveLocalizableContent(category);
@@ -203,7 +204,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                     bool allFieldsAreEmpty = (string.IsNullOrEmpty(name) && string.IsNullOrEmpty(description));
 
-                    var content = CategoryManager.GetCategoryLocalizedByCategoryIdAndLanguageId(category.CategoryId, languageId);
+                    var content = IoCFactory.Resolve<ICategoryManager>().GetCategoryLocalizedByCategoryIdAndLanguageId(category.CategoryId, languageId);
                     if (content == null)
                     {
                         if (!allFieldsAreEmpty && languageId > 0)
@@ -217,7 +218,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                                 Description = description
                             };
 
-                            CategoryManager.InsertCategoryLocalized(content);
+                            IoCFactory.Resolve<ICategoryManager>().InsertCategoryLocalized(content);
                         }
                     }
                     else
@@ -227,8 +228,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                             content.LanguageId = languageId;
                             content.Name = name;
                             content.Description = description;
-                            
-                            CategoryManager.UpdateCategoryLocalized(content);
+
+                            IoCFactory.Resolve<ICategoryManager>().UpdateCategoryLocalized(content);
                         }
                     }
                 }
@@ -245,7 +246,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                 int languageId = int.Parse(lblLanguageId.Text);
 
-                var content = CategoryManager.GetCategoryLocalizedByCategoryIdAndLanguageId(this.CategoryId, languageId);
+                var content = IoCFactory.Resolve<ICategoryManager>().GetCategoryLocalizedByCategoryIdAndLanguageId(this.CategoryId, languageId);
 
                 if (content != null)
                 {
@@ -260,11 +261,11 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                var category = CategoryManager.GetCategoryById(this.CategoryId);
+                var category = IoCFactory.Resolve<ICategoryManager>().GetCategoryById(this.CategoryId);
                 if (category != null)
                 {
-                    PictureManager.DeletePicture(category.PictureId);
-                    CategoryManager.RemoveCategoryPicture(category.CategoryId);
+                    IoCFactory.Resolve<IPictureManager>().DeletePicture(category.PictureId);
+                    IoCFactory.Resolve<ICategoryManager>().RemoveCategoryPicture(category.CategoryId);
                     BindData();
                 }
             }

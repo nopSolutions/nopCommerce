@@ -15,6 +15,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Directory
@@ -97,7 +98,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
         {
             get
             {
-                Currency activePrimaryExchangeRateCurrency = CurrencyManager.PrimaryExchangeRateCurrency;
+                Currency activePrimaryExchangeRateCurrency = IoCFactory.Resolve<ICurrencyManager>().PrimaryExchangeRateCurrency;
                 return ((activePrimaryExchangeRateCurrency != null && activePrimaryExchangeRateCurrency.CurrencyId == this.CurrencyId));
             }
         }
@@ -109,7 +110,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
         {
             get
             {
-                Currency activePrimaryStoreCurrency = CurrencyManager.PrimaryStoreCurrency;
+                Currency activePrimaryStoreCurrency = IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency;
                 return ((activePrimaryStoreCurrency != null && activePrimaryStoreCurrency.CurrencyId == this.CurrencyId));
             }
         }

@@ -24,13 +24,14 @@ using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Data;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
 {
     /// <summary>
     /// Shipping method manager
     /// </summary>
-    public partial class ShippingMethodManager
+    public partial class ShippingMethodManager : IShippingMethodManager
     {
         #region Constants
         private const string SHIPPINGMETHODS_BY_ID_KEY = "Nop.shippingMethod.id-{0}";
@@ -43,7 +44,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         /// Deletes a shipping method
         /// </summary>
         /// <param name="shippingMethodId">The shipping method identifier</param>
-        public static void DeleteShippingMethod(int shippingMethodId)
+        public void DeleteShippingMethod(int shippingMethodId)
         {
             var shippingMethod = GetShippingMethodById(shippingMethodId);
             if (shippingMethod == null)
@@ -55,7 +56,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
             context.DeleteObject(shippingMethod);
             context.SaveChanges();
 
-            if (ShippingMethodManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(SHIPPINGMETHODS_PATTERN_KEY);
             }
@@ -66,14 +67,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         /// </summary>
         /// <param name="shippingMethodId">The shipping method identifier</param>
         /// <returns>Shipping method</returns>
-        public static ShippingMethod GetShippingMethodById(int shippingMethodId)
+        public ShippingMethod GetShippingMethodById(int shippingMethodId)
         {
             if (shippingMethodId == 0)
                 return null;
 
             string key = string.Format(SHIPPINGMETHODS_BY_ID_KEY, shippingMethodId);
             object obj2 = NopRequestCache.Get(key);
-            if (ShippingMethodManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (ShippingMethod)obj2;
             }
@@ -84,7 +85,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
                         select sm;
             var shippingMethod = query.SingleOrDefault();
 
-            if (ShippingMethodManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, shippingMethod);
             }
@@ -95,7 +96,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         /// Gets all shipping methods
         /// </summary>
         /// <returns>Shipping method collection</returns>
-        public static List<ShippingMethod> GetAllShippingMethods()
+        public List<ShippingMethod> GetAllShippingMethods()
         {
             return GetAllShippingMethods(null);
         }
@@ -105,7 +106,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         /// </summary>
         /// <param name="filterByCountryId">The country indentifier</param>
         /// <returns>Shipping method collection</returns>
-        public static List<ShippingMethod> GetAllShippingMethods(int? filterByCountryId)
+        public List<ShippingMethod> GetAllShippingMethods(int? filterByCountryId)
         {
             var context = ObjectContextHelper.CurrentObjectContext;
             var shippingMethods = context.Sp_ShippingMethodLoadAll(filterByCountryId);
@@ -116,7 +117,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         /// Inserts a shipping method
         /// </summary>
         /// <param name="shippingMethod">Shipping method</param>
-        public static void InsertShippingMethod(ShippingMethod shippingMethod)
+        public void InsertShippingMethod(ShippingMethod shippingMethod)
         {
             if (shippingMethod == null)
                 throw new ArgumentNullException("shippingMethod");
@@ -131,7 +132,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
             context.ShippingMethods.AddObject(shippingMethod);
             context.SaveChanges();
 
-            if (ShippingMethodManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(SHIPPINGMETHODS_PATTERN_KEY);
             }
@@ -141,7 +142,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         /// Updates the shipping method
         /// </summary>
         /// <param name="shippingMethod">Shipping method</param>
-        public static void UpdateShippingMethod(ShippingMethod shippingMethod)
+        public void UpdateShippingMethod(ShippingMethod shippingMethod)
         {
             if (shippingMethod == null)
                 throw new ArgumentNullException("shippingMethod");
@@ -157,7 +158,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
 
             context.SaveChanges();
 
-            if (ShippingMethodManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(SHIPPINGMETHODS_PATTERN_KEY);
             }
@@ -168,13 +169,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         /// </summary>
         /// <param name="shippingMethodId">The shipping method identifier</param>
         /// <param name="countryId">The country identifier</param>
-        public static void CreateShippingMethodCountryMapping(int shippingMethodId, int countryId)
+        public void CreateShippingMethodCountryMapping(int shippingMethodId, int countryId)
         {
             var shippingMethod = GetShippingMethodById(shippingMethodId);
             if (shippingMethod == null)
                 return;
 
-            var country = CountryManager.GetCountryById(countryId);
+            var country = IoCFactory.Resolve<ICountryManager>().GetCountryById(countryId);
             if (country == null)
                 return;
 
@@ -198,7 +199,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         /// <param name="shippingMethodId">The shipping method identifier</param>
         /// <param name="countryId">The country identifier</param>
         /// <returns>True if mapping exist, otherwise false</returns>
-        public static bool DoesShippingMethodCountryMappingExist(int shippingMethodId, int countryId)
+        public bool DoesShippingMethodCountryMappingExist(int shippingMethodId, int countryId)
         {
             var context = ObjectContextHelper.CurrentObjectContext;
 
@@ -228,13 +229,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         /// </summary>
         /// <param name="shippingMethodId">The shipping method identifier</param>
         /// <param name="countryId">The country identifier</param>
-        public static void DeleteShippingMethodCountryMapping(int shippingMethodId, int countryId)
+        public void DeleteShippingMethodCountryMapping(int shippingMethodId, int countryId)
         {
             var shippingMethod = GetShippingMethodById(shippingMethodId);
             if (shippingMethod == null)
                 return;
 
-            var country = CountryManager.GetCountryById(countryId);
+            var country = IoCFactory.Resolve<ICountryManager>().GetCountryById(countryId);
             if (country == null)
                 return;
 
@@ -258,11 +259,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         /// <summary>
         /// Gets a value indicating whether cache is enabled
         /// </summary>
-        public static bool CacheEnabled
+        public bool CacheEnabled
         {
             get
             {
-                return SettingManager.GetSettingValueBoolean("Cache.ShippingMethodManager.CacheEnabled");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.ShippingMethodManager.CacheEnabled");
             }
         }
         #endregion

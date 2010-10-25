@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
@@ -91,7 +92,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         {
             get
             {
-                return CustomerManager.GetCustomerById(this.FromUserId);
+                return IoCFactory.Resolve<ICustomerManager>().GetCustomerById(this.FromUserId);
             }
         }
 
@@ -102,7 +103,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         {
             get
             {
-                return CustomerManager.GetCustomerById(this.ToUserId);
+                return IoCFactory.Resolve<ICustomerManager>().GetCustomerById(this.ToUserId);
             }
         }
 

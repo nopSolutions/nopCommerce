@@ -24,6 +24,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Products.Attributes;
 using NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts;
 using NopSolutions.NopCommerce.BusinessLogic.Tax;
 using NopSolutions.NopCommerce.BusinessLogic.Warehouses;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Products
 {
@@ -357,7 +358,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                 if (languageId > 0)
                 {
                     if (_pvLocalized == null)
-                        _pvLocalized = ProductManager.GetProductVariantLocalizedByProductVariantId(this.ProductVariantId);
+                        _pvLocalized = IoCFactory.Resolve<IProductManager>().GetProductVariantLocalizedByProductVariantId(this.ProductVariantId);
 
                     var temp1 = _pvLocalized.FirstOrDefault(cl => cl.LanguageId == languageId);
                     if (temp1 != null && !String.IsNullOrWhiteSpace(temp1.Name))
@@ -391,7 +392,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                 if (languageId > 0)
                 {
                     if (_pvLocalized == null)
-                        _pvLocalized = ProductManager.GetProductVariantLocalizedByProductVariantId(this.ProductVariantId);
+                        _pvLocalized = IoCFactory.Resolve<IProductManager>().GetProductVariantLocalizedByProductVariantId(this.ProductVariantId);
 
                     var temp1 = _pvLocalized.FirstOrDefault(cl => cl.LanguageId == languageId);
                     if (temp1 != null && !String.IsNullOrWhiteSpace(temp1.Description))
@@ -454,7 +455,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         {
             get
             {
-                return WarehouseManager.GetWarehouseById(this.WarehouseId);
+                return IoCFactory.Resolve<IWarehouseManager>().GetWarehouseById(this.WarehouseId);
             }
         }
 
@@ -480,7 +481,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         {
             get
             {
-                return TaxCategoryManager.GetTaxCategoryById(this.TaxCategoryId);
+                return IoCFactory.Resolve<ITaxCategoryManager>().GetTaxCategoryById(this.TaxCategoryId);
             }
         }
 
@@ -491,7 +492,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         {
             get
             {
-                return ProductManager.GetProductById(this.ProductId);
+                return IoCFactory.Resolve<IProductManager>().GetProductById(this.ProductId);
             }
         }
 
@@ -502,7 +503,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         {
             get
             {
-                return DiscountManager.GetDiscountsByProductVariantId(this.ProductVariantId);
+                return IoCFactory.Resolve<IDiscountManager>().GetDiscountsByProductVariantId(this.ProductVariantId);
             }
         }
 
@@ -531,7 +532,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         {
             get
             {
-                return PictureManager.GetPictureById(this.PictureId);
+                return IoCFactory.Resolve<IPictureManager>().GetPictureById(this.PictureId);
             }
         }
 
@@ -542,7 +543,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         {
             get
             {
-                return DownloadManager.GetDownloadById(this.DownloadId);
+                return IoCFactory.Resolve<IDownloadManager>().GetDownloadById(this.DownloadId);
             }
         }
                 
@@ -553,7 +554,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         {
             get
             {
-                return DownloadManager.GetDownloadById(this.SampleDownloadId);
+                return IoCFactory.Resolve<IDownloadManager>().GetDownloadById(this.SampleDownloadId);
             }
         }
         
@@ -564,7 +565,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         {
             get
             {
-                return ProductAttributeManager.GetProductVariantAttributesByProductVariantId(this.ProductVariantId);
+                return IoCFactory.Resolve<IProductAttributeManager>().GetProductVariantAttributesByProductVariantId(this.ProductVariantId);
             }
         }
 
@@ -575,7 +576,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         {
             get
             {
-                return ProductManager.GetTierPricesByProductVariantId(this.ProductVariantId);
+                return IoCFactory.Resolve<IProductManager>().GetTierPricesByProductVariantId(this.ProductVariantId);
             }
         }
 
@@ -586,7 +587,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         {
             get
             {
-                return ProductManager.GetAllCustomerRoleProductPrices(this.ProductVariantId);
+                return IoCFactory.Resolve<IProductManager>().GetAllCustomerRoleProductPrices(this.ProductVariantId);
             }
         }
 

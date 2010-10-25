@@ -15,6 +15,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 
 
@@ -71,7 +72,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
         {
             get
             {
-                return PollManager.GetPollById(this.PollId);
+                return IoCFactory.Resolve<IPollManager>().GetPollById(this.PollId);
             }
         }
 

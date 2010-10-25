@@ -20,13 +20,14 @@ using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Data;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Templates
 {
     /// <summary>
     /// Category template manager
     /// </summary>
-    public partial class TemplateManager
+    public partial class TemplateManager : ITemplateManager
     {
         #region Constants
         private const string CATEGORYTEMPLATES_ALL_KEY = "Nop.categorytemplate.all";
@@ -45,7 +46,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
         /// Deletes a category template
         /// </summary>
         /// <param name="categoryTemplateId">Category template identifier</param>
-        public static void DeleteCategoryTemplate(int categoryTemplateId)
+        public void DeleteCategoryTemplate(int categoryTemplateId)
         {
             var categoryTemplate = GetCategoryTemplateById(categoryTemplateId);
             if (categoryTemplate == null)
@@ -57,7 +58,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
             context.DeleteObject(categoryTemplate);
             context.SaveChanges();
             
-            if (TemplateManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(CATEGORYTEMPLATES_PATTERN_KEY);
             }
@@ -67,11 +68,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
         /// Gets all category templates
         /// </summary>
         /// <returns>Category template collection</returns>
-        public static List<CategoryTemplate> GetAllCategoryTemplates()
+        public List<CategoryTemplate> GetAllCategoryTemplates()
         {
             string key = string.Format(CATEGORYTEMPLATES_ALL_KEY);
             object obj2 = NopRequestCache.Get(key);
-            if (TemplateManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (List<CategoryTemplate>)obj2;
             }
@@ -82,7 +83,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
                         select ct;
             var categoryTemplates = query.ToList();
 
-            if (TemplateManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, categoryTemplates);
             }
@@ -94,14 +95,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
         /// </summary>
         /// <param name="categoryTemplateId">Category template identifier</param>
         /// <returns>A category template</returns>
-        public static CategoryTemplate GetCategoryTemplateById(int categoryTemplateId)
+        public CategoryTemplate GetCategoryTemplateById(int categoryTemplateId)
         {
             if (categoryTemplateId == 0)
                 return null;
 
             string key = string.Format(CATEGORYTEMPLATES_BY_ID_KEY, categoryTemplateId);
             object obj2 = NopRequestCache.Get(key);
-            if (TemplateManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (CategoryTemplate)obj2;
             }
@@ -112,7 +113,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
                         select ct;
             var categoryTemplate = query.SingleOrDefault();
 
-            if (TemplateManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, categoryTemplate);
             }
@@ -123,7 +124,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
         /// Inserts a category template
         /// </summary>
         /// <param name="categoryTemplate">Category template</param>
-        public static void InsertCategoryTemplate(CategoryTemplate categoryTemplate)
+        public void InsertCategoryTemplate(CategoryTemplate categoryTemplate)
         {
             if (categoryTemplate == null)
                 throw new ArgumentNullException("categoryTemplate");
@@ -138,7 +139,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
             context.CategoryTemplates.AddObject(categoryTemplate);
             context.SaveChanges();
 
-            if (TemplateManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(CATEGORYTEMPLATES_PATTERN_KEY);
             }
@@ -148,7 +149,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
         /// Updates the category template
         /// </summary>
         /// <param name="categoryTemplate">Category template</param>
-        public static void UpdateCategoryTemplate(CategoryTemplate categoryTemplate)
+        public void UpdateCategoryTemplate(CategoryTemplate categoryTemplate)
         {
             if (categoryTemplate == null)
                 throw new ArgumentNullException("categoryTemplate");
@@ -164,7 +165,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
 
             context.SaveChanges();
 
-            if (TemplateManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(CATEGORYTEMPLATES_PATTERN_KEY);
             }
@@ -174,7 +175,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
         /// Deletes a manufacturer template
         /// </summary>
         /// <param name="manufacturerTemplateId">Manufacturer template identifier</param>
-        public static void DeleteManufacturerTemplate(int manufacturerTemplateId)
+        public void DeleteManufacturerTemplate(int manufacturerTemplateId)
         {
             var manufacturerTemplate = GetManufacturerTemplateById(manufacturerTemplateId);
             if (manufacturerTemplate == null)
@@ -186,7 +187,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
             context.DeleteObject(manufacturerTemplate);
             context.SaveChanges();
 
-            if (TemplateManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(MANUFACTURERTEMPLATES_PATTERN_KEY);
             }
@@ -196,11 +197,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
         /// Gets all manufacturer templates
         /// </summary>
         /// <returns>Manufacturer template collection</returns>
-        public static List<ManufacturerTemplate> GetAllManufacturerTemplates()
+        public List<ManufacturerTemplate> GetAllManufacturerTemplates()
         {
             string key = string.Format(MANUFACTURERTEMPLATES_ALL_KEY);
             object obj2 = NopRequestCache.Get(key);
-            if (TemplateManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (List<ManufacturerTemplate>)obj2;
             }
@@ -211,7 +212,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
                         select mt;
             var manufacturerTemplates = query.ToList();
 
-            if (TemplateManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, manufacturerTemplates);
             }
@@ -223,14 +224,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
         /// </summary>
         /// <param name="manufacturerTemplateId">Manufacturer template identifier</param>
         /// <returns>Manufacturer template</returns>
-        public static ManufacturerTemplate GetManufacturerTemplateById(int manufacturerTemplateId)
+        public ManufacturerTemplate GetManufacturerTemplateById(int manufacturerTemplateId)
         {
             if (manufacturerTemplateId == 0)
                 return null;
 
             string key = string.Format(MANUFACTURERTEMPLATES_BY_ID_KEY, manufacturerTemplateId);
             object obj2 = NopRequestCache.Get(key);
-            if (TemplateManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (ManufacturerTemplate)obj2;
             }
@@ -241,7 +242,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
                         select mt;
             var manufacturerTemplate = query.SingleOrDefault();
 
-            if (TemplateManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, manufacturerTemplate);
             }
@@ -252,7 +253,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
         /// Inserts a manufacturer template
         /// </summary>
         /// <param name="manufacturerTemplate">Manufacturer template</param>
-        public static void InsertManufacturerTemplate(ManufacturerTemplate manufacturerTemplate)
+        public void InsertManufacturerTemplate(ManufacturerTemplate manufacturerTemplate)
         {
             if (manufacturerTemplate == null)
                 throw new ArgumentNullException("manufacturerTemplate");
@@ -267,7 +268,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
             context.ManufacturerTemplates.AddObject(manufacturerTemplate);
             context.SaveChanges();
 
-            if (TemplateManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(MANUFACTURERTEMPLATES_PATTERN_KEY);
             }
@@ -277,7 +278,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
         /// Updates the manufacturer template
         /// </summary>
         /// <param name="manufacturerTemplate">Manufacturer template</param>
-        public static void UpdateManufacturerTemplate(ManufacturerTemplate manufacturerTemplate)
+        public void UpdateManufacturerTemplate(ManufacturerTemplate manufacturerTemplate)
         {
             if (manufacturerTemplate == null)
                 throw new ArgumentNullException("manufacturerTemplate");
@@ -293,7 +294,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
 
             context.SaveChanges();
             
-            if (TemplateManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(MANUFACTURERTEMPLATES_PATTERN_KEY);
             }
@@ -303,7 +304,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
         /// Deletes a product template
         /// </summary>
         /// <param name="productTemplateId">Product template identifier</param>
-        public static void DeleteProductTemplate(int productTemplateId)
+        public void DeleteProductTemplate(int productTemplateId)
         {
             var productTemplate = GetProductTemplateById(productTemplateId);
             if (productTemplate == null)
@@ -315,7 +316,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
             context.DeleteObject(productTemplate);
             context.SaveChanges();
 
-            if (TemplateManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(PRODUCTTEMPLATES_PATTERN_KEY);
             }
@@ -325,11 +326,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
         /// Gets all product templates
         /// </summary>
         /// <returns>Product template collection</returns>
-        public static List<ProductTemplate> GetAllProductTemplates()
+        public List<ProductTemplate> GetAllProductTemplates()
         {
             string key = string.Format(PRODUCTTEMPLATES_ALL_KEY);
             object obj2 = NopRequestCache.Get(key);
-            if (TemplateManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (List<ProductTemplate>)obj2;
             }
@@ -340,7 +341,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
                         select pt;
             var productTemplates = query.ToList();
 
-            if (TemplateManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, productTemplates);
             }
@@ -352,14 +353,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
         /// </summary>
         /// <param name="productTemplateId">Product template identifier</param>
         /// <returns>Product template</returns>
-        public static ProductTemplate GetProductTemplateById(int productTemplateId)
+        public ProductTemplate GetProductTemplateById(int productTemplateId)
         {
             if (productTemplateId == 0)
                 return null;
 
             string key = string.Format(PRODUCTTEMPLATES_BY_ID_KEY, productTemplateId);
             object obj2 = NopRequestCache.Get(key);
-            if (TemplateManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (ProductTemplate)obj2;
             }
@@ -370,7 +371,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
                         select pt;
             var productTemplate = query.SingleOrDefault();
 
-            if (TemplateManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, productTemplate);
             }
@@ -381,7 +382,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
         /// Inserts a product template
         /// </summary>
         /// <param name="productTemplate">Product template</param>
-        public static void InsertProductTemplate(ProductTemplate productTemplate)
+        public void InsertProductTemplate(ProductTemplate productTemplate)
         {
             if (productTemplate == null)
                 throw new ArgumentNullException("productTemplate");
@@ -396,7 +397,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
             context.ProductTemplates.AddObject(productTemplate);
             context.SaveChanges();
 
-            if (TemplateManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(PRODUCTTEMPLATES_PATTERN_KEY);
             }
@@ -407,7 +408,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
         /// </summary>
         /// <param name="productTemplate">Product template</param>
         /// <returns>Product template</returns>
-        public static void UpdateProductTemplate(ProductTemplate productTemplate)
+        public void UpdateProductTemplate(ProductTemplate productTemplate)
         {
             if (productTemplate == null)
                 throw new ArgumentNullException("productTemplate");
@@ -423,7 +424,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
 
             context.SaveChanges();
 
-            if (TemplateManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(PRODUCTTEMPLATES_PATTERN_KEY);
             }
@@ -435,11 +436,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
         /// <summary>
         /// Gets a value indicating whether cache is enabled
         /// </summary>
-        public static bool CacheEnabled
+        public bool CacheEnabled
         {
             get
             {
-                return SettingManager.GetSettingValueBoolean("Cache.TemplateManager.CacheEnabled");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.TemplateManager.CacheEnabled");
             }
         }
         #endregion

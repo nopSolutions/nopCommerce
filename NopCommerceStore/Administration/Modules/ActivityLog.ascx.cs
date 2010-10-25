@@ -14,8 +14,10 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.IO;
 using System.Web;
 using System.Web.Security;
 using System.Web.UI;
@@ -23,13 +25,12 @@ using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic;
+using NopSolutions.NopCommerce.BusinessLogic.Audit;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.ExportImport;
-using NopSolutions.NopCommerce.Common.Utils;
-using System.IO;
-using NopSolutions.NopCommerce.BusinessLogic.Audit;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
-using System.Collections.Generic;
+using NopSolutions.NopCommerce.Common.Utils;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -101,7 +102,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             var allItem = new ListItem(GetLocaleResourceString("Admin.ActivityLog.AllActivityLogType"), "0");
             ddlActivityLogType.Items.Add(allItem);
 
-            var activityLogTypes = CustomerActivityManager.GetAllActivityTypes();
+            var activityLogTypes = IoCFactory.Resolve<ICustomerActivityManager>().GetAllActivityTypes();
             foreach (var activityType in activityLogTypes)
             {
                 var item = new ListItem(activityType.Name, activityType.ActivityLogTypeId.ToString());
@@ -129,7 +130,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
             int activityLogTypeId = int.Parse(this.ddlActivityLogType.SelectedItem.Value);
             int totalRecords = 0;
-            var activityLogs = CustomerActivityManager.GetAllActivities(
+            var activityLogs = IoCFactory.Resolve<ICustomerActivityManager>().GetAllActivities(
                 startDate, endDate, customerEmail, customerName, activityLogTypeId,
                 int.MaxValue, 0, out totalRecords);
 
@@ -162,7 +163,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             FillActivityLogTypesDropDowns();
             SetDefaultValues();
-            phCustomerName.Visible = CustomerManager.UsernamesEnabled;
+            phCustomerName.Visible = IoCFactory.Resolve<ICustomerManager>().UsernamesEnabled;
         }
 
         protected void gvActivityLog_PageIndexChanging(object sender, GridViewPageEventArgs e)
@@ -190,7 +191,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             if (e.CommandName == "DeleteActivityLog")
             {
-                CustomerActivityManager.DeleteActivity(Convert.ToInt32(e.CommandArgument));
+                IoCFactory.Resolve<ICustomerActivityManager>().DeleteActivity(Convert.ToInt32(e.CommandArgument));
                 BindGrid();
             }
         }
@@ -199,7 +200,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                CustomerActivityManager.ClearAllActivities();
+                IoCFactory.Resolve<ICustomerActivityManager>().ClearAllActivities();
                 BindGrid();
             }
             catch (Exception exc)

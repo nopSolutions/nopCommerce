@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 
 namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
@@ -76,7 +77,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         {
             get
             {
-                return CustomerManager.GetCustomersByCustomerRoleId(this.CustomerRoleId);
+                return IoCFactory.Resolve<ICustomerManager>().GetCustomersByCustomerRoleId(this.CustomerRoleId);
             }
         }
 

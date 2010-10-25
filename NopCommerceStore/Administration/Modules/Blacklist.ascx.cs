@@ -19,6 +19,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using NopSolutions.NopCommerce.BusinessLogic.Security;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -34,11 +35,11 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         private void BindGrid()
         {
-            var ipAddressCollection = IpBlacklistManager.GetBannedIpAddressAll();
+            var ipAddressCollection = IoCFactory.Resolve<IIpBlacklistManager>().GetBannedIpAddressAll();
             gvBannedIpAddress.DataSource = ipAddressCollection;
             gvBannedIpAddress.DataBind();
 
-            var ipNetworkCollection = IpBlacklistManager.GetBannedIpNetworkAll();
+            var ipNetworkCollection = IoCFactory.Resolve<IIpBlacklistManager>().GetBannedIpNetworkAll();
             gvBannedIpNetwork.DataSource = ipNetworkCollection;
             gvBannedIpNetwork.DataBind();
         }

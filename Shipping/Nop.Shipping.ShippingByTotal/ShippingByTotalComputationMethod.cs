@@ -22,6 +22,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.BusinessLogic.Shipping;
 using NopSolutions.NopCommerce.Common;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Shipping.Methods.ShippingByTotalCM
 {
@@ -42,10 +43,10 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.ShippingByTotalCM
         {
             decimal? shippingTotal = null;
 
-            bool limitMethodsToCreated = SettingManager.GetSettingValueBoolean("ShippingByTotal.LimitMethodsToCreated");
+            bool limitMethodsToCreated = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("ShippingByTotal.LimitMethodsToCreated");
 
             ShippingByTotal shippingByTotal = null;
-            var shippingByTotalCollection = ShippingByTotalManager.GetAllByShippingMethodId(ShippingMethodID);
+            var shippingByTotalCollection = IoCFactory.Resolve<IShippingByTotalManager>().GetAllByShippingMethodId(ShippingMethodID);
             foreach (ShippingByTotal shippingByTotal2 in shippingByTotalCollection)
             {
                 if ((subTotal >= shippingByTotal2.From) && (subTotal <= shippingByTotal2.To))
@@ -114,7 +115,7 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.ShippingByTotalCM
                 subTotal += PriceHelper.GetSubTotal(shoppingCartItem, shipmentPackage.Customer, true);
             }
 
-            var shippingMethods = ShippingMethodManager.GetAllShippingMethods(shipmentPackage.ShippingAddress.CountryId);
+            var shippingMethods = IoCFactory.Resolve<IShippingMethodManager>().GetAllShippingMethods(shipmentPackage.ShippingAddress.CountryId);
             foreach (var shippingMethod in shippingMethods)
             {
                 decimal? rate = GetRate(subTotal, shippingMethod.ShippingMethodId);

@@ -19,6 +19,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -34,7 +35,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected void BindGrid()
         {
-            var pricelists = ProductManager.GetAllPricelists();
+            var pricelists = IoCFactory.Resolve<IProductManager>().GetAllPricelists();
             gvPricelists.DataSource = pricelists;
             gvPricelists.DataBind();
         }

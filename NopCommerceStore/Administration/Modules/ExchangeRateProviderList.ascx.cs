@@ -8,6 +8,7 @@ using System.Web.UI.WebControls;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.Directory.ExchangeRates;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -23,9 +24,9 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         private void BindData()
         {
-            string prv1 = SettingManager.GetSettingValue("ExchangeRateProvider1.Classname");
-            string prv2 = SettingManager.GetSettingValue("ExchangeRateProvider2.Classname");
-            string prv3 = SettingManager.GetSettingValue("ExchangeRateProvider3.Classname");
+            string prv1 = IoCFactory.Resolve<ISettingManager>().GetSettingValue("ExchangeRateProvider1.Classname");
+            string prv2 = IoCFactory.Resolve<ISettingManager>().GetSettingValue("ExchangeRateProvider2.Classname");
+            string prv3 = IoCFactory.Resolve<ISettingManager>().GetSettingValue("ExchangeRateProvider3.Classname");
 
             if (!String.IsNullOrEmpty(prv1))
             {
@@ -71,7 +72,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             }
             ddlExchangeRateProviders.DataBind();
 
-            ddlExchangeRateProviders.SelectedValue = SettingManager.GetSettingValue("ExchangeRateProvider.Current");
+            ddlExchangeRateProviders.SelectedValue = IoCFactory.Resolve<ISettingManager>().GetSettingValue("ExchangeRateProvider.Current");
         }
 
         public string SelectedProvider

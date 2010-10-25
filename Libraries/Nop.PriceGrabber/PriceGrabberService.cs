@@ -10,6 +10,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Common.Utils.Html;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.PriceGrabber
 {
@@ -28,9 +29,9 @@ namespace NopSolutions.NopCommerce.PriceGrabber
             {
                 writer.WriteLine("Unique Retailer SKU;Manufacturer Name;Manufacturer Part Number;Product Title;Categorization;Product URL;Image URL;Detailed Description;Selling Price;Condition;Availability");
 
-                foreach(Product p in ProductManager.GetAllProducts(false))
+                foreach(Product p in IoCFactory.Resolve<IProductManager>().GetAllProducts(false))
                 {
-                    foreach (ProductVariant pv in ProductManager.GetProductVariantsByProductId(p.ProductId, false))
+                    foreach (ProductVariant pv in IoCFactory.Resolve<IProductManager>().GetProductVariantsByProductId(p.ProductId, false))
                     {
                         string sku = pv.ProductVariantId.ToString();
                         string manufacturerName = p.ProductManufacturers.Count > 0 ? p.ProductManufacturers[0].Manufacturer.Name : String.Empty;
@@ -39,11 +40,11 @@ namespace NopSolutions.NopCommerce.PriceGrabber
                         string productUrl = SEOHelper.GetProductUrl(p);
 
                         string imageUrl = string.Empty;
-                        var pictures = PictureManager.GetPicturesByProductId(p.ProductId, 1);
+                        var pictures = IoCFactory.Resolve<IPictureManager>().GetPicturesByProductId(p.ProductId, 1);
                         if (pictures.Count > 0)
-                            imageUrl = PictureManager.GetPictureUrl(pictures[0], SettingManager.GetSettingValueInteger("PromotionProvider.PriceGrabber.ProductThumbnailImageSize"), true);
+                            imageUrl = IoCFactory.Resolve<IPictureManager>().GetPictureUrl(pictures[0], IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("PromotionProvider.PriceGrabber.ProductThumbnailImageSize"), true);
                         else
-                            imageUrl = PictureManager.GetDefaultPictureUrl(PictureTypeEnum.Entity, SettingManager.GetSettingValueInteger("PromotionProvider.PriceGrabber.ProductThumbnailImageSize"));
+                            imageUrl = IoCFactory.Resolve<IPictureManager>().GetDefaultPictureUrl(PictureTypeEnum.Entity, IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("PromotionProvider.PriceGrabber.ProductThumbnailImageSize"));
 
                         string description = pv.Description;
                         string price = pv.Price.ToString(new CultureInfo("en-US", false).NumberFormat);
@@ -67,7 +68,7 @@ namespace NopSolutions.NopCommerce.PriceGrabber
                         if (productCategories.Count > 0)
                         {
                             StringBuilder sb = new StringBuilder();
-                            foreach (Category cat in CategoryManager.GetBreadCrumb(productCategories[0].CategoryId))
+                            foreach (Category cat in IoCFactory.Resolve<ICategoryManager>().GetBreadCrumb(productCategories[0].CategoryId))
                             {
                                 sb.AppendFormat("{0}>", cat.Name);
                             }

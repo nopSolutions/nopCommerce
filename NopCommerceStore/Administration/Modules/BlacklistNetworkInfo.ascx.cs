@@ -23,6 +23,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.BusinessLogic.Security;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Common;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -41,7 +42,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         /// </summary>
         private void BindData()
         {
-            BannedIpNetwork ipNetwork = IpBlacklistManager.GetBannedIpNetworkById(this.BannedIpNetworkId);
+            BannedIpNetwork ipNetwork = IoCFactory.Resolve<IIpBlacklistManager>().GetBannedIpNetworkById(this.BannedIpNetworkId);
             if (ipNetwork != null)
             {
                 txtBannedIP.Text = ipNetwork.ToString();
@@ -70,14 +71,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             string[] rangeItems = txtBannedIP.Text.ToString().Split("-".ToCharArray());
 
             // Check if the 1st IP is valid
-            if (!IpBlacklistManager.IsValidIp(rangeItems[0].Trim()))
+            if (!IoCFactory.Resolve<IIpBlacklistManager>().IsValidIp(rangeItems[0].Trim()))
                 throw new NopException("The following isn't a valid IP address: " + rangeItems[0]);
 
             // Check if the 2nd IP is valid
-            if (!IpBlacklistManager.IsValidIp(rangeItems[1].Trim()))
+            if (!IoCFactory.Resolve<IIpBlacklistManager>().IsValidIp(rangeItems[1].Trim()))
                 throw new NopException("The following isn't a valid IP address: " + rangeItems[1]);
 
-            BannedIpNetwork ipNetwork = IpBlacklistManager.GetBannedIpNetworkById(this.BannedIpNetworkId);
+            BannedIpNetwork ipNetwork = IoCFactory.Resolve<IIpBlacklistManager>().GetBannedIpNetworkById(this.BannedIpNetworkId);
             //if ip network is not null update
             if (ipNetwork != null)
             {
@@ -87,7 +88,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 ipNetwork.IpException = txtIpException.Text;
                 ipNetwork.UpdatedOn = nowDT;
 
-               IpBlacklistManager.UpdateBannedIpNetwork(ipNetwork);
+               IoCFactory.Resolve<IIpBlacklistManager>().UpdateBannedIpNetwork(ipNetwork);
             }
             else //insert
             {
@@ -100,7 +101,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     CreatedOn = nowDT,
                     UpdatedOn = nowDT
                 };
-                IpBlacklistManager.InsertBannedIpNetwork(ipNetwork);
+                IoCFactory.Resolve<IIpBlacklistManager>().InsertBannedIpNetwork(ipNetwork);
             }
 
             return ipNetwork;

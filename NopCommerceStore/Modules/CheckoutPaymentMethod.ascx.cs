@@ -35,6 +35,7 @@ using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.BusinessLogic.Shipping;
 using NopSolutions.NopCommerce.BusinessLogic.Tax;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
  
 
 namespace NopSolutions.NopCommerce.Web.Modules
@@ -46,9 +47,9 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected string FormatPaymentMethodInfo(PaymentMethod paymentMethod)
         {
-            decimal paymentMethodAdditionalFee = PaymentManager.GetAdditionalHandlingFee(paymentMethod.PaymentMethodId);
-            decimal rateBase = TaxManager.GetPaymentMethodAdditionalFee(paymentMethodAdditionalFee, NopContext.Current.User);
-            decimal rate = CurrencyManager.ConvertCurrency(rateBase, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+            decimal paymentMethodAdditionalFee = IoCFactory.Resolve<IPaymentManager>().GetAdditionalHandlingFee(paymentMethod.PaymentMethodId);
+            decimal rateBase = IoCFactory.Resolve<ITaxManager>().GetPaymentMethodAdditionalFee(paymentMethodAdditionalFee, NopContext.Current.User);
+            decimal rate = IoCFactory.Resolve<ICurrencyManager>().ConvertCurrency(rateBase, IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
             if (rate > decimal.Zero)
             {
                 string rateStr = PriceHelper.FormatPaymentMethodAdditionalFee(rate, true);
@@ -71,10 +72,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 int paymentMethodId = this.SelectedPaymentMethodId;
                 if (paymentMethodId > 0)
                 {
-                    var paymentMethod = PaymentMethodManager.GetPaymentMethodById(paymentMethodId);
+                    var paymentMethod = IoCFactory.Resolve<IPaymentMethodManager>().GetPaymentMethodById(paymentMethodId);
                     if (paymentMethod != null && paymentMethod.IsActive)
                     {
-                        NopContext.Current.User = CustomerManager.SetLastPaymentMethodId(NopContext.Current.User.CustomerId, paymentMethodId);
+                        NopContext.Current.User = IoCFactory.Resolve<ICustomerManager>().SetLastPaymentMethodId(NopContext.Current.User.CustomerId, paymentMethodId);
                         var args1 = new CheckoutStepEventArgs() { PaymentMethodSelected = true };
                         OnCheckoutStepChanged(args1);
                         if (!this.OnePageCheckout)
@@ -86,7 +87,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if ((NopContext.Current.User == null) || (NopContext.Current.User.IsGuest && !CustomerManager.AnonymousCheckoutAllowed))
+            if ((NopContext.Current.User == null) || (NopContext.Current.User.IsGuest && !IoCFactory.Resolve<ICustomerManager>().AnonymousCheckoutAllowed))
             {
                 string loginURL = SEOHelper.GetLoginPageUrl(true);
                 Response.Redirect(loginURL);
@@ -153,7 +154,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             //check whether order total equals zero
             if (NopContext.Current.User != null)
             {
-                decimal? shoppingCartTotalBase = ShoppingCartManager.GetShoppingCartTotal(this.Cart,
+                decimal? shoppingCartTotalBase = IoCFactory.Resolve<IShoppingCartManager>().GetShoppingCartTotal(this.Cart,
                 NopContext.Current.User.LastPaymentMethodId, NopContext.Current.User);
 
                 if (shoppingCartTotalBase.HasValue && shoppingCartTotalBase.Value == decimal.Zero)
@@ -176,7 +177,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             bool isPaymentWorkflowRequired = IsPaymentWorkflowRequired();
             if (!isPaymentWorkflowRequired)
             {
-                NopContext.Current.User = CustomerManager.SetLastPaymentMethodId(NopContext.Current.User.CustomerId, 0);
+                NopContext.Current.User = IoCFactory.Resolve<ICustomerManager>().SetLastPaymentMethodId(NopContext.Current.User.CustomerId, 0);
                 var args1 = new CheckoutStepEventArgs() { PaymentMethodSelected = true };
                 OnCheckoutStepChanged(args1);
                 if (!this.OnePageCheckout)
@@ -190,7 +191,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             bool isPaymentWorkflowRequired = IsPaymentWorkflowRequired();
             if (!isPaymentWorkflowRequired)
             {
-                NopContext.Current.User = CustomerManager.SetLastPaymentMethodId(NopContext.Current.User.CustomerId, 0);
+                NopContext.Current.User = IoCFactory.Resolve<ICustomerManager>().SetLastPaymentMethodId(NopContext.Current.User.CustomerId, 0);
                 var args1 = new CheckoutStepEventArgs() { PaymentMethodSelected = true };
                 OnCheckoutStepChanged(args1);
                 if (!this.OnePageCheckout)
@@ -198,11 +199,11 @@ namespace NopSolutions.NopCommerce.Web.Modules
             }
 
             //reward points
-            if (OrderManager.RewardPointsEnabled && !this.Cart.IsRecurring)
+            if (IoCFactory.Resolve<IOrderManager>().RewardPointsEnabled && !this.Cart.IsRecurring)
             {
                 int rewardPointsBalance = NopContext.Current.User.RewardPointsBalance;
-                decimal rewardPointsAmountBase = OrderManager.ConvertRewardPointsToAmount(rewardPointsBalance);
-                decimal rewardPointsAmount = CurrencyManager.ConvertCurrency(rewardPointsAmountBase, CurrencyManager.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                decimal rewardPointsAmountBase = IoCFactory.Resolve<IOrderManager>().ConvertRewardPointsToAmount(rewardPointsBalance);
+                decimal rewardPointsAmount = IoCFactory.Resolve<ICurrencyManager>().ConvertCurrency(rewardPointsAmountBase, IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
                 if (rewardPointsAmount > decimal.Zero)
                 {
                     string rewardPointsAmountStr = PriceHelper.FormatPrice(rewardPointsAmount, true, false);
@@ -228,7 +229,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
             bool hasButtonMethods = false;
             var boundPaymentMethods = new List<PaymentMethod>();
-            var paymentMethods = PaymentMethodManager.GetAllPaymentMethods(filterByCountryId);
+            var paymentMethods = IoCFactory.Resolve<IPaymentMethodManager>().GetAllPaymentMethods(filterByCountryId);
             foreach (var pm in paymentMethods)
             {
                 switch (pm.PaymentMethodType)
@@ -236,7 +237,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     case PaymentMethodTypeEnum.Unknown:
                     case PaymentMethodTypeEnum.Standard:
                         {
-                            if (!Cart.IsRecurring || PaymentManager.SupportRecurringPayments(pm.PaymentMethodId) != RecurringPaymentTypeEnum.NotSupported)
+                            if (!Cart.IsRecurring || IoCFactory.Resolve<IPaymentManager>().SupportRecurringPayments(pm.PaymentMethodId) != RecurringPaymentTypeEnum.NotSupported)
                                 boundPaymentMethods.Add(pm);
                         }
                         break;
@@ -245,7 +246,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                             //PayPal Express is placed here as button
                             if (pm.SystemKeyword == "PayPalExpress")
                             {
-                                if (!Cart.IsRecurring || PaymentManager.SupportRecurringPayments(pm.PaymentMethodId) != RecurringPaymentTypeEnum.NotSupported)
+                                if (!Cart.IsRecurring || IoCFactory.Resolve<IPaymentManager>().SupportRecurringPayments(pm.PaymentMethodId) != RecurringPaymentTypeEnum.NotSupported)
                                 {
                                     //bind PayPal Express button
                                     btnPaypalExpressButton.BindData();
@@ -347,7 +348,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             {
                 if (cart == null)
                 {
-                    cart = ShoppingCartManager.GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
+                    cart = IoCFactory.Resolve<IShoppingCartManager>().GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
                 }
                 return cart;
             }

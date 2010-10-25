@@ -30,6 +30,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.Localization;
 using NopSolutions.NopCommerce.BusinessLogic.ExportImport;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -55,7 +56,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                LanguageManager.DeleteLanguage(this.LanguageId);
+                IoCFactory.Resolve<ILanguageManager>().DeleteLanguage(this.LanguageId);
                 Response.Redirect("Languages.aspx");
             }
             catch (Exception exc)

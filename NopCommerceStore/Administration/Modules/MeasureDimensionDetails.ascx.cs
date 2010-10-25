@@ -24,6 +24,7 @@ using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.Measures;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -50,7 +51,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                MeasureManager.DeleteMeasureDimension(this.MeasureDimensionId);
+                IoCFactory.Resolve<IMeasureManager>().DeleteMeasureDimension(this.MeasureDimensionId);
                 Response.Redirect("Measures.aspx");
             }
             catch (Exception exc)

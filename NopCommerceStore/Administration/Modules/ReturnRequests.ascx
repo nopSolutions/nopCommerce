@@ -48,7 +48,7 @@
             <asp:TemplateField HeaderText="<% $NopResources:Admin.ReturnRequests.StatusColumn %>"
                 ItemStyle-Width="15%" ItemStyle-HorizontalAlign="Center">
                 <ItemTemplate>
-                    <%#OrderManager.GetReturnRequestStatusName((ReturnStatusEnum)(Eval("ReturnStatus")))%>
+                    <%#IoCFactory.Resolve<IOrderManager>().GetReturnRequestStatusName((ReturnStatusEnum)(Eval("ReturnStatus")))%>
                 </ItemTemplate>
             </asp:TemplateField>
             <asp:TemplateField HeaderText="<% $NopResources:Admin.ReturnRequests.Edit %>" HeaderStyle-HorizontalAlign="Center"

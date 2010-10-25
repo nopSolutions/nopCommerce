@@ -21,13 +21,14 @@ using NopSolutions.NopCommerce.BusinessLogic.Caching;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Data;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
 {
     /// <summary>
     /// Specification attribute manager
     /// </summary>
-    public partial class SpecificationAttributeManager
+    public partial class SpecificationAttributeManager : ISpecificationAttributeManager
     {
         #region Constants
         private const string SPECIFICATIONATTRIBUTE_BY_ID_KEY = "Nop.specificationattributes.id-{0}";
@@ -47,14 +48,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
         /// </summary>
         /// <param name="specificationAttributeId">The specification attribute identifier</param>
         /// <returns>Specification attribute</returns>
-        public static SpecificationAttribute GetSpecificationAttributeById(int specificationAttributeId)
+        public SpecificationAttribute GetSpecificationAttributeById(int specificationAttributeId)
         {
             if (specificationAttributeId == 0)
                 return null;
 
             string key = string.Format(SPECIFICATIONATTRIBUTE_BY_ID_KEY, specificationAttributeId);
             object obj2 = NopRequestCache.Get(key);
-            if (SpecificationAttributeManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (SpecificationAttribute)obj2;
             }
@@ -65,7 +66,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
                         select sa;
             var specificationAttribute = query.SingleOrDefault();
 
-            if (SpecificationAttributeManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, specificationAttribute);
             }
@@ -76,7 +77,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
         /// Gets specification attribute collection
         /// </summary>
         /// <returns>Specification attribute collection</returns>
-        public static List<SpecificationAttribute> GetSpecificationAttributes()
+        public List<SpecificationAttribute> GetSpecificationAttributes()
         {
             int languageId = 0;
             if (NopContext.Current != null)
@@ -89,7 +90,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
         /// </summary>
         /// <param name="languageId">Language identifier</param>
         /// <returns>Specification attribute collection</returns>
-        public static List<SpecificationAttribute> GetSpecificationAttributes(int languageId)
+        public List<SpecificationAttribute> GetSpecificationAttributes(int languageId)
         {
             var context = ObjectContextHelper.CurrentObjectContext;
             var query = from sa in context.SpecificationAttributes
@@ -103,7 +104,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
         /// Deletes a specification attribute
         /// </summary>
         /// <param name="specificationAttributeId">The specification attribute identifier</param>
-        public static void DeleteSpecificationAttribute(int specificationAttributeId)
+        public void DeleteSpecificationAttribute(int specificationAttributeId)
         {
             var specificationAttribute = GetSpecificationAttributeById(specificationAttributeId);
             if (specificationAttribute == null)
@@ -115,7 +116,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
             context.DeleteObject(specificationAttribute);
             context.SaveChanges();
 
-            if (SpecificationAttributeManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(SPECIFICATIONATTRIBUTE_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(SPECIFICATIONATTRIBUTEOPTION_PATTERN_KEY);
@@ -127,7 +128,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
         /// Inserts a specification attribute
         /// </summary>
         /// <param name="specificationAttribute">The specification attribute</param>
-        public static void InsertSpecificationAttribute(SpecificationAttribute specificationAttribute)
+        public void InsertSpecificationAttribute(SpecificationAttribute specificationAttribute)
         {
             if (specificationAttribute == null)
                 throw new ArgumentNullException("activityLogType");
@@ -140,7 +141,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
             context.SpecificationAttributes.AddObject(specificationAttribute);
             context.SaveChanges();
 
-            if (SpecificationAttributeManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(SPECIFICATIONATTRIBUTE_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(SPECIFICATIONATTRIBUTEOPTION_PATTERN_KEY);
@@ -152,7 +153,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
         /// Updates the specification attribute
         /// </summary>
         /// <param name="specificationAttribute">The specification attribute</param>
-        public static void UpdateSpecificationAttribute(SpecificationAttribute specificationAttribute)
+        public void UpdateSpecificationAttribute(SpecificationAttribute specificationAttribute)
         {
             if (specificationAttribute == null)
                 throw new ArgumentNullException("activityLogType");
@@ -166,7 +167,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
 
             context.SaveChanges();
 
-            if (SpecificationAttributeManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(SPECIFICATIONATTRIBUTE_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(SPECIFICATIONATTRIBUTEOPTION_PATTERN_KEY);
@@ -179,7 +180,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
         /// </summary>
         /// <param name="specificationAttributeLocalizedId">Localized specification identifier</param>
         /// <returns>Specification attribute content</returns>
-        public static SpecificationAttributeLocalized GetSpecificationAttributeLocalizedById(int specificationAttributeLocalizedId)
+        public SpecificationAttributeLocalized GetSpecificationAttributeLocalizedById(int specificationAttributeLocalizedId)
         {
             if (specificationAttributeLocalizedId == 0)
                 return null;
@@ -197,7 +198,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
         /// </summary>
         /// <param name="specificationAttributeId">Specification attribute identifier</param>
         /// <returns>Secification attribute content</returns>
-        public static List<SpecificationAttributeLocalized> GetSpecificationAttributeLocalizedBySpecificationAttributeId(int specificationAttributeId)
+        public List<SpecificationAttributeLocalized> GetSpecificationAttributeLocalizedBySpecificationAttributeId(int specificationAttributeId)
         {
             if (specificationAttributeId == 0)
                 return new List<SpecificationAttributeLocalized>();
@@ -216,7 +217,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
         /// <param name="specificationAttributeId">Specification attribute identifier</param>
         /// <param name="languageId">Language identifier</param>
         /// <returns>Specification attribute content</returns>
-        public static SpecificationAttributeLocalized GetSpecificationAttributeLocalizedBySpecificationAttributeIdAndLanguageId(int specificationAttributeId, int languageId)
+        public SpecificationAttributeLocalized GetSpecificationAttributeLocalizedBySpecificationAttributeIdAndLanguageId(int specificationAttributeId, int languageId)
         {
             if (specificationAttributeId == 0 || languageId == 0)
                 return null;
@@ -235,7 +236,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
         /// Inserts a localized specification attribute
         /// </summary>
         /// <param name="specificationAttributeLocalized">Localized specification attribute</param>
-        public static void InsertSpecificationAttributeLocalized(SpecificationAttributeLocalized specificationAttributeLocalized)
+        public void InsertSpecificationAttributeLocalized(SpecificationAttributeLocalized specificationAttributeLocalized)
         {
             if (specificationAttributeLocalized == null)
                 throw new ArgumentNullException("specificationAttributeLocalized");
@@ -248,7 +249,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
             context.SpecificationAttributeLocalized.AddObject(specificationAttributeLocalized);
             context.SaveChanges();
 
-            if (SpecificationAttributeManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(SPECIFICATIONATTRIBUTE_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(SPECIFICATIONATTRIBUTEOPTION_PATTERN_KEY);
@@ -260,7 +261,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
         /// Update a localized specification attribute
         /// </summary>
         /// <param name="specificationAttributeLocalized">Localized specification attribute</param>
-        public static void UpdateSpecificationAttributeLocalized(SpecificationAttributeLocalized specificationAttributeLocalized)
+        public void UpdateSpecificationAttributeLocalized(SpecificationAttributeLocalized specificationAttributeLocalized)
         {
             if (specificationAttributeLocalized == null)
                 throw new ArgumentNullException("specificationAttributeLocalized");
@@ -285,7 +286,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
                 context.SaveChanges();
             }
 
-            if (SpecificationAttributeManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(SPECIFICATIONATTRIBUTE_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(SPECIFICATIONATTRIBUTEOPTION_PATTERN_KEY);
@@ -302,14 +303,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
         /// </summary>
         /// <param name="specificationAttributeOptionId">The specification attribute option identifier</param>
         /// <returns>Specification attribute option</returns>
-        public static SpecificationAttributeOption GetSpecificationAttributeOptionById(int specificationAttributeOptionId)
+        public SpecificationAttributeOption GetSpecificationAttributeOptionById(int specificationAttributeOptionId)
         {
             if (specificationAttributeOptionId == 0)
                 return null;
 
             string key = string.Format(SPECIFICATIONATTRIBUTEOPTION_BY_ID_KEY, specificationAttributeOptionId);
             object obj2 = NopRequestCache.Get(key);
-            if (SpecificationAttributeManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (SpecificationAttributeOption)obj2;
             }
@@ -320,7 +321,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
                         select sao;
             var specificationAttributeOption = query.SingleOrDefault();
 
-            if (SpecificationAttributeManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, specificationAttributeOption);
             }
@@ -332,7 +333,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
         /// </summary>
         /// <param name="specificationAttributeId">The specification attribute identifier</param>
         /// <returns>Specification attribute option</returns>
-        public static List<SpecificationAttributeOption> GetSpecificationAttributeOptionsBySpecificationAttribute(int specificationAttributeId)
+        public List<SpecificationAttributeOption> GetSpecificationAttributeOptionsBySpecificationAttribute(int specificationAttributeId)
         {
             var context = ObjectContextHelper.CurrentObjectContext;
             var query = from sao in context.SpecificationAttributeOptions
@@ -348,7 +349,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
         /// Deletes a specification attribute option
         /// </summary>
         /// <param name="specificationAttributeOptionId">The specification attribute option identifier</param>
-        public static void DeleteSpecificationAttributeOption(int specificationAttributeOptionId)
+        public void DeleteSpecificationAttributeOption(int specificationAttributeOptionId)
         {
             var specificationAttributeOption = GetSpecificationAttributeOptionById(specificationAttributeOptionId);
             if (specificationAttributeOption == null)
@@ -360,7 +361,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
             context.DeleteObject(specificationAttributeOption);
             context.SaveChanges();
 
-            if (SpecificationAttributeManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(SPECIFICATIONATTRIBUTEOPTION_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(SPECIFICATIONATTRIBUTEOPTION_PATTERN_KEY);
@@ -372,7 +373,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
         /// Inserts a specification attribute option
         /// </summary>
         /// <param name="specificationAttributeOption">The specification attribute option</param>
-        public static void InsertSpecificationAttributeOption(SpecificationAttributeOption specificationAttributeOption)
+        public void InsertSpecificationAttributeOption(SpecificationAttributeOption specificationAttributeOption)
         {
             if (specificationAttributeOption == null)
                 throw new ArgumentNullException("specificationAttributeOption");
@@ -385,7 +386,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
             context.SpecificationAttributeOptions.AddObject(specificationAttributeOption);
             context.SaveChanges();
 
-            if (SpecificationAttributeManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(SPECIFICATIONATTRIBUTEOPTION_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(SPECIFICATIONATTRIBUTEOPTION_PATTERN_KEY);
@@ -397,7 +398,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
         /// Updates the specification attribute
         /// </summary>
         /// <param name="specificationAttributeOption">The specification attribute option</param>
-        public static void UpdateSpecificationAttributeOptions(SpecificationAttributeOption specificationAttributeOption)
+        public void UpdateSpecificationAttributeOptions(SpecificationAttributeOption specificationAttributeOption)
         {
             if (specificationAttributeOption == null)
                 throw new ArgumentNullException("specificationAttributeOption");
@@ -411,7 +412,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
 
             context.SaveChanges();
 
-            if (SpecificationAttributeManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(SPECIFICATIONATTRIBUTEOPTION_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(SPECIFICATIONATTRIBUTEOPTION_PATTERN_KEY);
@@ -424,7 +425,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
         /// </summary>
         /// <param name="specificationAttributeOptionLocalizedId">Localized specification attribute option identifier</param>
         /// <returns>Localized specification attribute option</returns>
-        public static SpecificationAttributeOptionLocalized GetSpecificationAttributeOptionLocalizedById(int specificationAttributeOptionLocalizedId)
+        public SpecificationAttributeOptionLocalized GetSpecificationAttributeOptionLocalizedById(int specificationAttributeOptionLocalizedId)
         {
             if (specificationAttributeOptionLocalizedId == 0)
                 return null;
@@ -442,7 +443,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
         /// </summary>
         /// <param name="specificationAttributeOptionId">Specification attribute option identifier</param>
         /// <returns>Localized specification attribute option content</returns>
-        public static List<SpecificationAttributeOptionLocalized> GetSpecificationAttributeOptionLocalizedBySpecificationAttributeOptionId(int specificationAttributeOptionId)
+        public List<SpecificationAttributeOptionLocalized> GetSpecificationAttributeOptionLocalizedBySpecificationAttributeOptionId(int specificationAttributeOptionId)
         {
             if (specificationAttributeOptionId == 0)
                 return new List<SpecificationAttributeOptionLocalized>();
@@ -462,7 +463,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
         /// <param name="specificationAttributeOptionId">Specification attribute option identifier</param>
         /// <param name="languageId">Language identifier</param>
         /// <returns>Localized specification attribute option</returns>
-        public static SpecificationAttributeOptionLocalized GetSpecificationAttributeOptionLocalizedBySpecificationAttributeOptionIdAndLanguageId(int specificationAttributeOptionId, int languageId)
+        public SpecificationAttributeOptionLocalized GetSpecificationAttributeOptionLocalizedBySpecificationAttributeOptionIdAndLanguageId(int specificationAttributeOptionId, int languageId)
         {
             if (specificationAttributeOptionId == 0 || languageId == 0)
                 return null;
@@ -482,7 +483,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
         /// </summary>
         /// <param name="specificationAttributeOptionLocalized">Localized specification attribute option</param>
         /// <returns>Localized specification attribute option</returns>
-        public static void InsertSpecificationAttributeOptionLocalized(SpecificationAttributeOptionLocalized specificationAttributeOptionLocalized)
+        public void InsertSpecificationAttributeOptionLocalized(SpecificationAttributeOptionLocalized specificationAttributeOptionLocalized)
         {
             if (specificationAttributeOptionLocalized == null)
                 throw new ArgumentNullException("specificationAttributeOptionLocalized");
@@ -495,7 +496,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
             context.SpecificationAttributeOptionLocalized.AddObject(specificationAttributeOptionLocalized);
             context.SaveChanges();
 
-            if (SpecificationAttributeManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(SPECIFICATIONATTRIBUTE_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(SPECIFICATIONATTRIBUTEOPTION_PATTERN_KEY);
@@ -508,7 +509,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
         /// </summary>
         /// <param name="specificationAttributeOptionLocalized">Localized specification attribute option</param>
         /// <returns>Localized specification attribute option</returns>
-        public static void UpdateSpecificationAttributeOptionLocalized(SpecificationAttributeOptionLocalized specificationAttributeOptionLocalized)
+        public void UpdateSpecificationAttributeOptionLocalized(SpecificationAttributeOptionLocalized specificationAttributeOptionLocalized)
         {
             if (specificationAttributeOptionLocalized == null)
                 throw new ArgumentNullException("specificationAttributeOptionLocalized");
@@ -533,7 +534,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
                 context.SaveChanges();
             }
 
-            if (SpecificationAttributeManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(SPECIFICATIONATTRIBUTE_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(SPECIFICATIONATTRIBUTEOPTION_PATTERN_KEY);
@@ -549,7 +550,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
         /// Deletes a product specification attribute mapping
         /// </summary>
         /// <param name="productSpecificationAttributeId">Product specification attribute identifier</param>
-        public static void DeleteProductSpecificationAttribute(int productSpecificationAttributeId)
+        public void DeleteProductSpecificationAttribute(int productSpecificationAttributeId)
         {
             var productSpecificationAttribute = GetProductSpecificationAttributeById(productSpecificationAttributeId);
             if (productSpecificationAttribute == null)
@@ -561,7 +562,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
             context.DeleteObject(productSpecificationAttribute);
             context.SaveChanges();
 
-            if (SpecificationAttributeManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(SPECIFICATIONATTRIBUTEOPTION_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(SPECIFICATIONATTRIBUTEOPTION_PATTERN_KEY);
@@ -574,7 +575,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
         /// </summary>
         /// <param name="productId">Product identifier</param>
         /// <returns>Product specification attribute mapping collection</returns>
-        public static List<ProductSpecificationAttribute> GetProductSpecificationAttributesByProductId(int productId)
+        public List<ProductSpecificationAttribute> GetProductSpecificationAttributesByProductId(int productId)
         {
             return GetProductSpecificationAttributesByProductId(productId, null, null);
         }
@@ -586,7 +587,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
         /// <param name="allowFiltering">0 to load attributes with AllowFiltering set to false, 0 to load attributes with AllowFiltering set to true, null to load all attributes</param>
         /// <param name="showOnProductPage">0 to load attributes with ShowOnProductPage set to false, 0 to load attributes with ShowOnProductPage set to true, null to load all attributes</param>
         /// <returns>Product specification attribute mapping collection</returns>
-        public static List<ProductSpecificationAttribute> GetProductSpecificationAttributesByProductId(int productId, 
+        public List<ProductSpecificationAttribute> GetProductSpecificationAttributesByProductId(int productId, 
             bool? allowFiltering, bool? showOnProductPage)
         {
             string allowFilteringCacheStr = "null";
@@ -597,7 +598,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
                 showOnProductPageCacheStr = showOnProductPage.ToString();
             string key = string.Format(PRODUCTSPECIFICATIONATTRIBUTE_ALLBYPRODUCTID_KEY, productId, allowFilteringCacheStr, showOnProductPageCacheStr);
             object obj2 = NopRequestCache.Get(key);
-            if (SpecificationAttributeManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (List<ProductSpecificationAttribute>)obj2;
             }
@@ -613,7 +614,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
 
             var productSpecificationAttributes = query.ToList();
             
-            if (SpecificationAttributeManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, productSpecificationAttributes);
             }
@@ -625,7 +626,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
         /// </summary>
         /// <param name="productSpecificationAttributeId">Product specification attribute mapping identifier</param>
         /// <returns>Product specification attribute mapping</returns>
-        public static ProductSpecificationAttribute GetProductSpecificationAttributeById(int productSpecificationAttributeId)
+        public ProductSpecificationAttribute GetProductSpecificationAttributeById(int productSpecificationAttributeId)
         {
             if (productSpecificationAttributeId == 0)
                 return null;
@@ -642,7 +643,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
         /// Inserts a product specification attribute mapping
         /// </summary>
         /// <param name="productSpecificationAttribute">Product specification attribute mapping</param>
-        public static void InsertProductSpecificationAttribute(ProductSpecificationAttribute productSpecificationAttribute)
+        public void InsertProductSpecificationAttribute(ProductSpecificationAttribute productSpecificationAttribute)
         {
             if (productSpecificationAttribute == null)
                 throw new ArgumentNullException("productSpecificationAttribute");
@@ -652,7 +653,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
             context.ProductSpecificationAttributes.AddObject(productSpecificationAttribute);
             context.SaveChanges();
 
-            if (SpecificationAttributeManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(SPECIFICATIONATTRIBUTEOPTION_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(SPECIFICATIONATTRIBUTEOPTION_PATTERN_KEY);
@@ -664,7 +665,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
         /// Updates the product specification attribute mapping
         /// </summary>
         /// <param name="productSpecificationAttribute">Product specification attribute mapping</param>
-        public static void UpdateProductSpecificationAttribute(ProductSpecificationAttribute productSpecificationAttribute)
+        public void UpdateProductSpecificationAttribute(ProductSpecificationAttribute productSpecificationAttribute)
         {
             if (productSpecificationAttribute == null)
                 throw new ArgumentNullException("productSpecificationAttribute");
@@ -675,7 +676,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
 
             context.SaveChanges();
 
-            if (SpecificationAttributeManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(SPECIFICATIONATTRIBUTEOPTION_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(SPECIFICATIONATTRIBUTEOPTION_PATTERN_KEY);
@@ -692,7 +693,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
         /// </summary>
         /// <param name="categoryId">Category identifier</param>
         /// <returns>Product specification attribute mapping collection</returns>
-        public static List<SpecificationAttributeOptionFilter> GetSpecificationAttributeOptionFilter(int categoryId)
+        public List<SpecificationAttributeOptionFilter> GetSpecificationAttributeOptionFilter(int categoryId)
         {
             int languageId = 0;
             if (NopContext.Current != null)
@@ -706,7 +707,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
         /// <param name="categoryId">Category identifier</param>
         /// <param name="languageId">Language identifier</param>
         /// <returns>Product specification attribute mapping collection</returns>
-        public static List<SpecificationAttributeOptionFilter> GetSpecificationAttributeOptionFilter(int categoryId, int languageId)
+        public List<SpecificationAttributeOptionFilter> GetSpecificationAttributeOptionFilter(int categoryId, int languageId)
         {
             var context = ObjectContextHelper.CurrentObjectContext;
             var result = context.Sp_SpecificationAttributeOptionFilter_LoadByFilter(categoryId, languageId);
@@ -721,11 +722,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
         /// <summary>
         /// Gets a value indicating whether cache is enabled
         /// </summary>
-        public static bool CacheEnabled
+        public bool CacheEnabled
         {
             get
             {
-                return SettingManager.GetSettingValueBoolean("Cache.SpecificationAttributeManager.CacheEnabled");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.SpecificationAttributeManager.CacheEnabled");
             }
         }
         #endregion

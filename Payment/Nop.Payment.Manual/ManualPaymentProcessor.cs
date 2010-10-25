@@ -22,6 +22,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.Payment;
 using NopSolutions.NopCommerce.BusinessLogic.Security;
 using NopSolutions.NopCommerce.Common;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Payment.Methods.Manual
 {
@@ -38,7 +39,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Manual
         public static TransactMode GetCurrentTransactionMode()
         {
             TransactMode transactionModeEnum = TransactMode.Authorize;
-            string transactionMode = SettingManager.GetSettingValue("PaymentMethod.Manual.TransactionMode");
+            string transactionMode = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Manual.TransactionMode");
             if (!String.IsNullOrEmpty(transactionMode))
                 transactionModeEnum = (TransactMode)Enum.Parse(typeof(TransactMode), transactionMode);
             return transactionModeEnum;
@@ -87,7 +88,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Manual
         /// <returns>Additional handling fee</returns>
         public decimal GetAdditionalHandlingFee()
         {
-            return SettingManager.GetSettingValueDecimalNative("PaymentMethod.Manual.AdditionalFee");
+            return IoCFactory.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.Manual.AdditionalFee");
         }
 
         /// <summary>
@@ -149,7 +150,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Manual
             //restore credit cart info
             if (paymentInfo.IsRecurringPayment)
             {
-                Order initialOrder = OrderManager.GetOrderById(paymentInfo.InitialOrderId);
+                Order initialOrder = IoCFactory.Resolve<IOrderManager>().GetOrderById(paymentInfo.InitialOrderId);
                 if (initialOrder != null)
                 {
                     paymentInfo.CreditCardType = processPaymentResult.AllowStoringCreditCardNumber ? SecurityHelper.Decrypt(initialOrder.CardType) : string.Empty;

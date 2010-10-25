@@ -34,6 +34,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Common.Xml;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -66,16 +67,16 @@ namespace NopSolutions.NopCommerce.Web.Modules
         protected string GetFromInfo(int customerId)
         {
             string customerInfo = string.Empty;
-            var customer = CustomerManager.GetCustomerById(customerId);
+            var customer = IoCFactory.Resolve<ICustomerManager>().GetCustomerById(customerId);
             if (customer != null && !customer.IsGuest)
             {
-                if (CustomerManager.AllowViewingProfiles)
+                if (IoCFactory.Resolve<ICustomerManager>().AllowViewingProfiles)
                 {
-                    customerInfo = string.Format("<a href=\"{0}\">{1}</a>", SEOHelper.GetUserProfileUrl(customer.CustomerId), Server.HtmlEncode(CustomerManager.FormatUserName(customer)));
+                    customerInfo = string.Format("<a href=\"{0}\">{1}</a>", SEOHelper.GetUserProfileUrl(customer.CustomerId), Server.HtmlEncode(IoCFactory.Resolve<ICustomerManager>().FormatUserName(customer)));
                 }
                 else
                 {
-                    customerInfo = Server.HtmlEncode(CustomerManager.FormatUserName(customer));
+                    customerInfo = Server.HtmlEncode(IoCFactory.Resolve<ICustomerManager>().FormatUserName(customer));
                 }           
             }
             return customerInfo; 
@@ -114,13 +115,13 @@ namespace NopSolutions.NopCommerce.Web.Modules
                             int pmId = int.Parse(hfPrivateMessageId.Value);
                             if (selected)
                             {
-                                PrivateMessage pm = ForumManager.GetPrivateMessageById(pmId);
+                                PrivateMessage pm = IoCFactory.Resolve<IForumManager>().GetPrivateMessageById(pmId);
                                 if (pm != null)
                                 {
                                     if (pm.ToUserId == NopContext.Current.User.CustomerId)
                                     {
                                         pm.IsDeletedByRecipient = true;
-                                        ForumManager.UpdatePrivateMessage(pm);
+                                        IoCFactory.Resolve<IForumManager>().UpdatePrivateMessage(pm);
                                     }
                                 }
                             }
@@ -131,7 +132,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 }
                 catch (Exception exc)
                 {
-                    LogManager.InsertLog(LogTypeEnum.CustomerError, exc.Message, exc);
+                    IoCFactory.Resolve<ILogManager>().InsertLog(LogTypeEnum.CustomerError, exc.Message, exc);
                 }
             }
         }
@@ -152,13 +153,13 @@ namespace NopSolutions.NopCommerce.Web.Modules
                             int pmId = int.Parse(hfPrivateMessageId.Value);
                             if (selected)
                             {
-                                PrivateMessage pm = ForumManager.GetPrivateMessageById(pmId);
+                                PrivateMessage pm = IoCFactory.Resolve<IForumManager>().GetPrivateMessageById(pmId);
                                 if (pm != null && pm.IsRead)
                                 {
                                     if (pm.ToUserId == NopContext.Current.User.CustomerId)
                                     {
                                         pm.IsRead = false;
-                                        ForumManager.UpdatePrivateMessage(pm);
+                                        IoCFactory.Resolve<IForumManager>().UpdatePrivateMessage(pm);
                                     }
                                 }
                             }
@@ -169,7 +170,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 }
                 catch (Exception exc)
                 {
-                    LogManager.InsertLog(LogTypeEnum.CustomerError, exc.Message, exc);
+                    IoCFactory.Resolve<ILogManager>().InsertLog(LogTypeEnum.CustomerError, exc.Message, exc);
                 }
             }
         }

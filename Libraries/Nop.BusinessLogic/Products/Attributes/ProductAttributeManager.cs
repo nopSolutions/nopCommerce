@@ -23,13 +23,14 @@ using NopSolutions.NopCommerce.BusinessLogic.Caching;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Data;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
 {
     /// <summary>
     /// Product attribute manager
     /// </summary>
-    public partial class ProductAttributeManager
+    public partial class ProductAttributeManager : IProductAttributeManager
     {
         #region Constants
         private const string PRODUCTATTRIBUTES_ALL_KEY = "Nop.productattribute.all";
@@ -51,7 +52,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         /// Deletes a product attribute
         /// </summary>
         /// <param name="productAttributeId">Product attribute identifier</param>
-        public static void DeleteProductAttribute(int productAttributeId)
+        public void DeleteProductAttribute(int productAttributeId)
         {
             var productAttribute = GetProductAttributeById(productAttributeId);
             if (productAttribute == null)
@@ -63,7 +64,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
             context.DeleteObject(productAttribute);
             context.SaveChanges();
 
-            if (ProductAttributeManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(PRODUCTATTRIBUTES_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(PRODUCTVARIANTATTRIBUTES_PATTERN_KEY);
@@ -75,11 +76,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         /// Gets all product attributes
         /// </summary>
         /// <returns>Product attribute collection</returns>
-        public static List<ProductAttribute> GetAllProductAttributes()
+        public List<ProductAttribute> GetAllProductAttributes()
         {
             string key = string.Format(PRODUCTATTRIBUTES_ALL_KEY);
             object obj2 = NopRequestCache.Get(key);
-            if (ProductAttributeManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (List<ProductAttribute>)obj2;
             }
@@ -90,7 +91,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                         select pa;
             var productAttributes = query.ToList();
 
-            if (ProductAttributeManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, productAttributes);
             }
@@ -102,14 +103,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         /// </summary>
         /// <param name="productAttributeId">Product attribute identifier</param>
         /// <returns>Product attribute </returns>
-        public static ProductAttribute GetProductAttributeById(int productAttributeId)
+        public ProductAttribute GetProductAttributeById(int productAttributeId)
         {
             if (productAttributeId == 0)
                 return null;
 
             string key = string.Format(PRODUCTATTRIBUTES_BY_ID_KEY, productAttributeId);
             object obj2 = NopRequestCache.Get(key);
-            if (ProductAttributeManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (ProductAttribute)obj2;
             }
@@ -120,7 +121,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                         select pa;
             var productAttribute = query.SingleOrDefault();
 
-            if (ProductAttributeManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, productAttribute);
             }
@@ -131,7 +132,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         /// Inserts a product attribute
         /// </summary>
         /// <param name="productAttribute">Product attribute</param>
-        public static void InsertProductAttribute(ProductAttribute productAttribute)
+        public void InsertProductAttribute(ProductAttribute productAttribute)
         {
             if (productAttribute == null)
                 throw new ArgumentNullException("productAttribute");
@@ -146,7 +147,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
             context.ProductAttributes.AddObject(productAttribute);
             context.SaveChanges();
 
-            if (ProductAttributeManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(PRODUCTATTRIBUTES_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(PRODUCTVARIANTATTRIBUTES_PATTERN_KEY);
@@ -158,7 +159,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         /// Updates the product attribute
         /// </summary>
         /// <param name="productAttribute">Product attribute</param>
-        public static void UpdateProductAttribute(ProductAttribute productAttribute)
+        public void UpdateProductAttribute(ProductAttribute productAttribute)
         {
             if (productAttribute == null)
                 throw new ArgumentNullException("productAttribute");
@@ -174,7 +175,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
 
             context.SaveChanges();
 
-            if (ProductAttributeManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(PRODUCTATTRIBUTES_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(PRODUCTVARIANTATTRIBUTES_PATTERN_KEY);
@@ -187,7 +188,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         /// </summary>
         /// <param name="productAttributeLocalizedId">Localized product attribute identifier</param>
         /// <returns>Product attribute content</returns>
-        public static ProductAttributeLocalized GetProductAttributeLocalizedById(int productAttributeLocalizedId)
+        public ProductAttributeLocalized GetProductAttributeLocalizedById(int productAttributeLocalizedId)
         {
             if (productAttributeLocalizedId == 0)
                 return null;
@@ -205,7 +206,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         /// </summary>
         /// <param name="productAttributeId">Product attribute identifier</param>
         /// <returns>Product attribute content</returns>
-        public static List<ProductAttributeLocalized> GetProductAttributeLocalizedByProductAttributeId(int productAttributeId)
+        public List<ProductAttributeLocalized> GetProductAttributeLocalizedByProductAttributeId(int productAttributeId)
         {
             if (productAttributeId == 0)
                 return new List<ProductAttributeLocalized>();
@@ -224,7 +225,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         /// <param name="productAttributeId">Product attribute identifier</param>
         /// <param name="languageId">Language identifier</param>
         /// <returns>Product attribute content</returns>
-        public static ProductAttributeLocalized GetProductAttributeLocalizedByProductAttributeIdAndLanguageId(int productAttributeId, int languageId)
+        public ProductAttributeLocalized GetProductAttributeLocalizedByProductAttributeIdAndLanguageId(int productAttributeId, int languageId)
         {
             if (productAttributeId == 0 || languageId == 0)
                 return null;
@@ -243,7 +244,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         /// Inserts a localized product attribute
         /// </summary>
         /// <param name="productAttributeLocalized">Localized product attribute</param>
-        public static void InsertProductAttributeLocalized(ProductAttributeLocalized productAttributeLocalized)
+        public void InsertProductAttributeLocalized(ProductAttributeLocalized productAttributeLocalized)
         {
             if (productAttributeLocalized == null)
                 throw new ArgumentNullException("productAttributeLocalized");
@@ -258,7 +259,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
             context.ProductAttributeLocalized.AddObject(productAttributeLocalized);
             context.SaveChanges();
 
-            if (ProductAttributeManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(PRODUCTATTRIBUTES_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(PRODUCTVARIANTATTRIBUTES_PATTERN_KEY);
@@ -270,7 +271,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         /// Update a localized product attribute
         /// </summary>
         /// <param name="productAttributeLocalized">Localized product attribute</param>
-        public static void UpdateProductAttributeLocalized(ProductAttributeLocalized productAttributeLocalized)
+        public void UpdateProductAttributeLocalized(ProductAttributeLocalized productAttributeLocalized)
         {
             if (productAttributeLocalized == null)
                 throw new ArgumentNullException("productAttributeLocalized");
@@ -298,7 +299,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                 context.SaveChanges();
             }
 
-            if (ProductAttributeManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(PRODUCTATTRIBUTES_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(PRODUCTVARIANTATTRIBUTES_PATTERN_KEY);
@@ -314,7 +315,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         /// Deletes a product variant attribute mapping
         /// </summary>
         /// <param name="productVariantAttributeId">Product variant attribute mapping identifier</param>
-        public static void DeleteProductVariantAttribute(int productVariantAttributeId)
+        public void DeleteProductVariantAttribute(int productVariantAttributeId)
         {
             var productVariantAttribute = GetProductVariantAttributeById(productVariantAttributeId);
             if (productVariantAttribute == null)
@@ -326,7 +327,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
             context.DeleteObject(productVariantAttribute);
             context.SaveChanges();
 
-            if (ProductAttributeManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(PRODUCTATTRIBUTES_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(PRODUCTVARIANTATTRIBUTES_PATTERN_KEY);
@@ -339,11 +340,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         /// </summary>
         /// <param name="productVariantId">The product variant identifier</param>
         /// <returns>Product variant attribute mapping collection</returns>
-        public static List<ProductVariantAttribute> GetProductVariantAttributesByProductVariantId(int productVariantId)
+        public List<ProductVariantAttribute> GetProductVariantAttributesByProductVariantId(int productVariantId)
         {
             string key = string.Format(PRODUCTVARIANTATTRIBUTES_ALL_KEY, productVariantId);
             object obj2 = NopRequestCache.Get(key);
-            if (ProductAttributeManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (List<ProductVariantAttribute>)obj2;
             }
@@ -355,7 +356,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                         select pva;
             var productVariantAttributes = query.ToList();
 
-            if (ProductAttributeManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, productVariantAttributes);
             }
@@ -367,14 +368,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         /// </summary>
         /// <param name="productVariantAttributeId">Product variant attribute mapping identifier</param>
         /// <returns>Product variant attribute mapping</returns>
-        public static ProductVariantAttribute GetProductVariantAttributeById(int productVariantAttributeId)
+        public ProductVariantAttribute GetProductVariantAttributeById(int productVariantAttributeId)
         {
             if (productVariantAttributeId == 0)
                 return null;
 
             string key = string.Format(PRODUCTVARIANTATTRIBUTES_BY_ID_KEY, productVariantAttributeId);
             object obj2 = NopRequestCache.Get(key);
-            if (ProductAttributeManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (ProductVariantAttribute)obj2;
             }
@@ -385,7 +386,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                         select pva;
             var productVariantAttribute = query.SingleOrDefault();
 
-            if (ProductAttributeManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, productVariantAttribute);
             }
@@ -396,7 +397,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         /// Inserts a product variant attribute mapping
         /// </summary>
         /// <param name="productVariantAttribute">The product variant attribute mapping</param>
-        public static void InsertProductVariantAttribute(ProductVariantAttribute productVariantAttribute)
+        public void InsertProductVariantAttribute(ProductVariantAttribute productVariantAttribute)
         {
             if (productVariantAttribute == null)
                 throw new ArgumentNullException("productVariantAttribute");
@@ -409,7 +410,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
             context.ProductVariantAttributes.AddObject(productVariantAttribute);
             context.SaveChanges();
 
-            if (ProductAttributeManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(PRODUCTATTRIBUTES_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(PRODUCTVARIANTATTRIBUTES_PATTERN_KEY);
@@ -421,7 +422,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         /// Updates the product variant attribute mapping
         /// </summary>
         /// <param name="productVariantAttribute">The product variant attribute mapping</param>
-        public static void UpdateProductVariantAttribute(ProductVariantAttribute productVariantAttribute)
+        public void UpdateProductVariantAttribute(ProductVariantAttribute productVariantAttribute)
         {
             if (productVariantAttribute == null)
                 throw new ArgumentNullException("productVariantAttribute");
@@ -435,7 +436,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
 
             context.SaveChanges();
 
-            if (ProductAttributeManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(PRODUCTATTRIBUTES_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(PRODUCTVARIANTATTRIBUTES_PATTERN_KEY);
@@ -451,7 +452,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         /// Deletes a product variant attribute value
         /// </summary>
         /// <param name="productVariantAttributeValueId">Product variant attribute value identifier</param>
-        public static void DeleteProductVariantAttributeValue(int productVariantAttributeValueId)
+        public void DeleteProductVariantAttributeValue(int productVariantAttributeValueId)
         {
             var productVariantAttributeValue = GetProductVariantAttributeValueById(productVariantAttributeValueId);
             if (productVariantAttributeValue == null)
@@ -463,7 +464,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
             context.DeleteObject(productVariantAttributeValue);
             context.SaveChanges();
 
-            if (ProductAttributeManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(PRODUCTATTRIBUTES_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(PRODUCTVARIANTATTRIBUTES_PATTERN_KEY);
@@ -476,11 +477,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         /// </summary>
         /// <param name="productVariantAttributeId">The product variant attribute mapping identifier</param>
         /// <returns>Product variant attribute mapping collection</returns>
-        public static List<ProductVariantAttributeValue> GetProductVariantAttributeValues(int productVariantAttributeId)
+        public List<ProductVariantAttributeValue> GetProductVariantAttributeValues(int productVariantAttributeId)
         {
             string key = string.Format(PRODUCTVARIANTATTRIBUTEVALUES_ALL_KEY, productVariantAttributeId);
             object obj2 = NopRequestCache.Get(key);
-            if (ProductAttributeManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (List<ProductVariantAttributeValue>)obj2;
             }
@@ -492,7 +493,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                         select pvav;
             var productVariantAttributeValues = query.ToList();
 
-            if (ProductAttributeManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, productVariantAttributeValues);
             }
@@ -504,14 +505,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         /// </summary>
         /// <param name="productVariantAttributeValueId">Product variant attribute value identifier</param>
         /// <returns>Product variant attribute value</returns>
-        public static ProductVariantAttributeValue GetProductVariantAttributeValueById(int productVariantAttributeValueId)
+        public ProductVariantAttributeValue GetProductVariantAttributeValueById(int productVariantAttributeValueId)
         {
             if (productVariantAttributeValueId == 0)
                 return null;
 
             string key = string.Format(PRODUCTVARIANTATTRIBUTEVALUES_BY_ID_KEY, productVariantAttributeValueId);
             object obj2 = NopRequestCache.Get(key);
-            if (ProductAttributeManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (ProductVariantAttributeValue)obj2;
             }
@@ -522,7 +523,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                         select pvav;
             var productVariantAttributeValue = query.SingleOrDefault();
 
-            if (ProductAttributeManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, productVariantAttributeValue);
             }
@@ -533,7 +534,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         /// Inserts a product variant attribute value
         /// </summary>
         /// <param name="productVariantAttributeValue">The product variant attribute value</param>
-        public static void InsertProductVariantAttributeValue(ProductVariantAttributeValue productVariantAttributeValue)
+        public void InsertProductVariantAttributeValue(ProductVariantAttributeValue productVariantAttributeValue)
         {
             if (productVariantAttributeValue == null)
                 throw new ArgumentNullException("productVariantAttributeValue");
@@ -546,7 +547,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
             context.ProductVariantAttributeValues.AddObject(productVariantAttributeValue);
             context.SaveChanges();
 
-            if (ProductAttributeManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(PRODUCTATTRIBUTES_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(PRODUCTVARIANTATTRIBUTES_PATTERN_KEY);
@@ -558,7 +559,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         /// Updates the product variant attribute value
         /// </summary>
         /// <param name="productVariantAttributeValue">The product variant attribute value</param>
-        public static void UpdateProductVariantAttributeValue(ProductVariantAttributeValue productVariantAttributeValue)
+        public void UpdateProductVariantAttributeValue(ProductVariantAttributeValue productVariantAttributeValue)
         {
             if (productVariantAttributeValue == null)
                 throw new ArgumentNullException("productVariantAttributeValue");
@@ -572,7 +573,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
 
             context.SaveChanges();
 
-            if (ProductAttributeManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(PRODUCTATTRIBUTES_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(PRODUCTVARIANTATTRIBUTES_PATTERN_KEY);
@@ -585,7 +586,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         /// </summary>
         /// <param name="productVariantAttributeValueLocalizedId">Localized product variant attribute value identifier</param>
         /// <returns>Localized product variant attribute value</returns>
-        public static ProductVariantAttributeValueLocalized GetProductVariantAttributeValueLocalizedById(int productVariantAttributeValueLocalizedId)
+        public ProductVariantAttributeValueLocalized GetProductVariantAttributeValueLocalizedById(int productVariantAttributeValueLocalizedId)
         {
             if (productVariantAttributeValueLocalizedId == 0)
                 return null;
@@ -603,7 +604,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         /// </summary>
         /// <param name="productVariantAttributeValueId">Product variant attribute value identifier</param>
         /// <returns>Content</returns>
-        public static List<ProductVariantAttributeValueLocalized> GetProductVariantAttributeValueLocalizedByProductVariantAttributeValueId(int productVariantAttributeValueId)
+        public List<ProductVariantAttributeValueLocalized> GetProductVariantAttributeValueLocalizedByProductVariantAttributeValueId(int productVariantAttributeValueId)
         {
             if (productVariantAttributeValueId == 0)
                 return new List<ProductVariantAttributeValueLocalized>();
@@ -622,7 +623,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         /// <param name="productVariantAttributeValueId">Product variant attribute value identifier</param>
         /// <param name="languageId">Language identifier</param>
         /// <returns>Localized product variant attribute value</returns>
-        public static ProductVariantAttributeValueLocalized GetProductVariantAttributeValueLocalizedByProductVariantAttributeValueIdAndLanguageId(int productVariantAttributeValueId, int languageId)
+        public ProductVariantAttributeValueLocalized GetProductVariantAttributeValueLocalizedByProductVariantAttributeValueIdAndLanguageId(int productVariantAttributeValueId, int languageId)
         {
             if (productVariantAttributeValueId == 0 || languageId == 0)
                 return null;
@@ -641,7 +642,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         /// Inserts a localized product variant attribute value
         /// </summary>
         /// <param name="productVariantAttributeValueLocalized">Localized product variant attribute value</param>
-        public static void InsertProductVariantAttributeValueLocalized(ProductVariantAttributeValueLocalized productVariantAttributeValueLocalized)
+        public void InsertProductVariantAttributeValueLocalized(ProductVariantAttributeValueLocalized productVariantAttributeValueLocalized)
         {
             if (productVariantAttributeValueLocalized == null)
                 throw new ArgumentNullException("productVariantAttributeValueLocalized");
@@ -654,7 +655,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
             context.ProductVariantAttributeValueLocalized.AddObject(productVariantAttributeValueLocalized);
             context.SaveChanges();
             
-            if (ProductAttributeManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(PRODUCTATTRIBUTES_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(PRODUCTVARIANTATTRIBUTES_PATTERN_KEY);
@@ -666,7 +667,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         /// Update a localized product variant attribute value
         /// </summary>
         /// <param name="productVariantAttributeValueLocalized">Localized product variant attribute value</param>
-        public static void UpdateProductVariantAttributeValueLocalized(ProductVariantAttributeValueLocalized productVariantAttributeValueLocalized)
+        public void UpdateProductVariantAttributeValueLocalized(ProductVariantAttributeValueLocalized productVariantAttributeValueLocalized)
         {
             if (productVariantAttributeValueLocalized == null)
                 throw new ArgumentNullException("productVariantAttributeValueLocalized");
@@ -691,7 +692,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                 context.SaveChanges();
             }
 
-            if (ProductAttributeManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(PRODUCTATTRIBUTES_PATTERN_KEY);
                 NopRequestCache.RemoveByPattern(PRODUCTVARIANTATTRIBUTES_PATTERN_KEY);
@@ -707,7 +708,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         /// Deletes a product variant attribute combination
         /// </summary>
         /// <param name="productVariantAttributeCombinationId">Product variant attribute combination identifier</param>
-        public static void DeleteProductVariantAttributeCombination(int productVariantAttributeCombinationId)
+        public void DeleteProductVariantAttributeCombination(int productVariantAttributeCombinationId)
         {
             var combination = GetProductVariantAttributeCombinationById(productVariantAttributeCombinationId);
             if (combination == null)
@@ -725,7 +726,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         /// </summary>
         /// <param name="productVariantId">Product variant identifier</param>
         /// <returns>Product variant attribute combination collection</returns>
-        public static List<ProductVariantAttributeCombination> GetAllProductVariantAttributeCombinations(int productVariantId)
+        public List<ProductVariantAttributeCombination> GetAllProductVariantAttributeCombinations(int productVariantId)
         {
             if (productVariantId == 0)
                 return new List<ProductVariantAttributeCombination>();
@@ -743,7 +744,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         /// </summary>
         /// <param name="productVariantAttributeCombinationId">Product variant attribute combination identifier</param>
         /// <returns>Product variant attribute combination</returns>
-        public static ProductVariantAttributeCombination GetProductVariantAttributeCombinationById(int productVariantAttributeCombinationId)
+        public ProductVariantAttributeCombination GetProductVariantAttributeCombinationById(int productVariantAttributeCombinationId)
         {
             if (productVariantAttributeCombinationId == 0)
                 return null;
@@ -761,7 +762,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         /// Inserts a product variant attribute combination
         /// </summary>
         /// <param name="combination">Product variant attribute combination</param>
-        public static void InsertProductVariantAttributeCombination(ProductVariantAttributeCombination combination)
+        public void InsertProductVariantAttributeCombination(ProductVariantAttributeCombination combination)
         {
             if (combination == null)
                 throw new ArgumentNullException("combination");
@@ -776,7 +777,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         /// Updates a product variant attribute combination
         /// </summary>
         /// <param name="productVariantAttributeCombination">Product variant attribute combination</param>
-        public static void UpdateProductVariantAttributeCombination(ProductVariantAttributeCombination combination)
+        public void UpdateProductVariantAttributeCombination(ProductVariantAttributeCombination combination)
         {
             if (combination == null)
                 throw new ArgumentNullException("combination");
@@ -794,10 +795,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         /// <param name="productVariantId">Product variant identifier</param>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Found product variant attribute combination</returns>
-        public static ProductVariantAttributeCombination FindProductVariantAttributeCombination(int productVariantId, string attributesXml)
+        public ProductVariantAttributeCombination FindProductVariantAttributeCombination(int productVariantId, string attributesXml)
         {
             //existing combinations
-            var combinations = ProductAttributeManager.GetAllProductVariantAttributeCombinations(productVariantId);
+            var combinations = this.GetAllProductVariantAttributeCombinations(productVariantId);
             if (combinations.Count == 0)
                 return null;
 
@@ -821,11 +822,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         /// <summary>
         /// Gets a value indicating whether cache is enabled
         /// </summary>
-        public static bool CacheEnabled
+        public bool CacheEnabled
         {
             get
             {
-                return SettingManager.GetSettingValueBoolean("Cache.ProductAttributeManager.CacheEnabled");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.ProductAttributeManager.CacheEnabled");
             }
         }
         #endregion

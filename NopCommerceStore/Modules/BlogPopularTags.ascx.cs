@@ -30,6 +30,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Content.Blog;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Controls;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 
 namespace NopSolutions.NopCommerce.Web.Modules
@@ -48,7 +49,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
         {
             //get all tags
             int maxItems = 15;
-            var blogPostTags = BlogManager.GetAllBlogPostTags(NopContext.Current.WorkingLanguage.LanguageId);
+            var blogPostTags = IoCFactory.Resolve<IBlogManager>().GetAllBlogPostTags(NopContext.Current.WorkingLanguage.LanguageId);
             List<BlogPostTag> cloudItems = new List<BlogPostTag>();
             for (int i = 0; i < blogPostTags.Count; i++)
             {

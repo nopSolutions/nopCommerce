@@ -27,6 +27,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
@@ -34,7 +35,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
     /// <summary>
     /// Discount manager
     /// </summary>
-    public partial class DiscountManager
+    public partial class DiscountManager : IDiscountManager
     {
         #region Constants
         private const string DISCOUNTS_ALL_KEY = "Nop.discount.all-{0}-{1}";
@@ -60,7 +61,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         /// <param name="discounts">Discounts to analyze</param>
         /// <param name="amount">Amount</param>
         /// <returns>Preferred discount</returns>
-        public static Discount GetPreferredDiscount(List<Discount> discounts, 
+        public Discount GetPreferredDiscount(List<Discount> discounts, 
             decimal amount)
         {
             Discount preferredDiscount = null;
@@ -83,14 +84,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         /// </summary>
         /// <param name="discountId">Discount identifier</param>
         /// <returns>Discount</returns>
-        public static Discount GetDiscountById(int discountId)
+        public Discount GetDiscountById(int discountId)
         {
             if (discountId == 0)
                 return null;
 
             string key = string.Format(DISCOUNTS_BY_ID_KEY, discountId);
             object obj2 = NopRequestCache.Get(key);
-            if (DiscountManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (Discount)obj2;
             }
@@ -101,7 +102,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
                         select d;
             var discount = query.SingleOrDefault();
 
-            if (DiscountManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, discount);
             }
@@ -112,7 +113,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         /// Marks discount as deleted
         /// </summary>
         /// <param name="discountId">Discount identifier</param>
-        public static void MarkDiscountAsDeleted(int discountId)
+        public void MarkDiscountAsDeleted(int discountId)
         {
             Discount discount = GetDiscountById(discountId);
             if (discount != null)
@@ -126,7 +127,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         /// Get a value indicating whether discounts that require coupon code exist
         /// </summary>
         /// <returns>A value indicating whether discounts that require coupon code exist</returns>
-        public static bool HasDiscountsWithCouponCode()
+        public bool HasDiscountsWithCouponCode()
         {
             var discounts = GetAllDiscounts(null);
             return discounts.Find(d => d.RequiresCouponCode) != null;
@@ -137,12 +138,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         /// </summary>
         /// <param name="discountType">Discount type; null to load all discount</param>
         /// <returns>Discount collection</returns>
-        public static List<Discount> GetAllDiscounts(DiscountTypeEnum? discountType)
+        public List<Discount> GetAllDiscounts(DiscountTypeEnum? discountType)
         {
             bool showHidden = NopContext.Current.IsAdmin;
             string key = string.Format(DISCOUNTS_ALL_KEY, showHidden, discountType);
             object obj2 = NopRequestCache.Get(key);
-            if (DiscountManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (List<Discount>)obj2;
             }
@@ -162,7 +163,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
 
             var discounts = query.ToList();
             
-            if (DiscountManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, discounts);
             }
@@ -173,7 +174,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         /// Inserts a discount
         /// </summary>
         /// <param name="discount">Discount</param>
-        public static void InsertDiscount(Discount discount)
+        public void InsertDiscount(Discount discount)
         {
             if (discount == null)
                 throw new ArgumentNullException("discount");
@@ -196,7 +197,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
             context.Discounts.AddObject(discount);
             context.SaveChanges();
 
-            if (DiscountManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(DISCOUNTS_PATTERN_KEY);
             }
@@ -206,7 +207,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         /// Updates the discount
         /// </summary>
         /// <param name="discount">Discount</param>
-        public static void UpdateDiscount(Discount discount)
+        public void UpdateDiscount(Discount discount)
         {
             if (discount == null)
                 throw new ArgumentNullException("discount");
@@ -230,7 +231,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
 
             context.SaveChanges();
 
-            if (DiscountManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(DISCOUNTS_PATTERN_KEY);
             }
@@ -241,9 +242,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         /// </summary>
         /// <param name="productVariantId">Product variant identifier</param>
         /// <param name="discountId">Discount identifier</param>
-        public static void AddDiscountToProductVariant(int productVariantId, int discountId)
+        public void AddDiscountToProductVariant(int productVariantId, int discountId)
         {
-            var productVariant = ProductManager.GetProductVariantById(productVariantId);
+            var productVariant = IoCFactory.Resolve<IProductManager>().GetProductVariantById(productVariantId);
             if (productVariant == null)
                 return;
 
@@ -264,7 +265,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
             productVariant.NpDiscounts.Add(discount);
             context.SaveChanges();
 
-            if (DiscountManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(DISCOUNTS_PATTERN_KEY);
             }
@@ -275,9 +276,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         /// </summary>
         /// <param name="productVariantId">Product variant identifier</param>
         /// <param name="discountId">Discount identifier</param>
-        public static void RemoveDiscountFromProductVariant(int productVariantId, int discountId)
+        public void RemoveDiscountFromProductVariant(int productVariantId, int discountId)
         {
-            var productVariant = ProductManager.GetProductVariantById(productVariantId);
+            var productVariant = IoCFactory.Resolve<IProductManager>().GetProductVariantById(productVariantId);
             if (productVariant == null)
                 return;
 
@@ -294,7 +295,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
             productVariant.NpDiscounts.Remove(discount);
             context.SaveChanges();
 
-            if (DiscountManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(DISCOUNTS_PATTERN_KEY);
             }
@@ -305,12 +306,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         /// </summary>
         /// <param name="productVariantId">Product variant identifier</param>
         /// <returns>Discount collection</returns>
-        public static List<Discount> GetDiscountsByProductVariantId(int productVariantId)
+        public List<Discount> GetDiscountsByProductVariantId(int productVariantId)
         {
             bool showHidden = NopContext.Current.IsAdmin;
             string key = string.Format(DISCOUNTS_BY_PRODUCTVARIANTID_KEY, productVariantId, showHidden);
             object obj2 = NopRequestCache.Get(key);
-            if (DiscountManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (List<Discount>)obj2;
             }
@@ -325,7 +326,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
                         select d;
             var discounts = query.ToList();
 
-            if (DiscountManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, discounts);
             }
@@ -337,9 +338,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         /// </summary>
         /// <param name="categoryId">Category identifier</param>
         /// <param name="discountId">Discount identifier</param>
-        public static void AddDiscountToCategory(int categoryId, int discountId)
+        public void AddDiscountToCategory(int categoryId, int discountId)
         {
-            var category = CategoryManager.GetCategoryById(categoryId);
+            var category = IoCFactory.Resolve<ICategoryManager>().GetCategoryById(categoryId);
             if (category == null)
                 return;
 
@@ -360,7 +361,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
             category.NpDiscounts.Add(discount);
             context.SaveChanges();
             
-            if (DiscountManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(DISCOUNTS_PATTERN_KEY);
             }
@@ -371,9 +372,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         /// </summary>
         /// <param name="categoryId">Category identifier</param>
         /// <param name="discountId">Discount identifier</param>
-        public static void RemoveDiscountFromCategory(int categoryId, int discountId)
+        public void RemoveDiscountFromCategory(int categoryId, int discountId)
         {
-            var category = CategoryManager.GetCategoryById(categoryId);
+            var category = IoCFactory.Resolve<ICategoryManager>().GetCategoryById(categoryId);
             if (category == null)
                 return;
 
@@ -394,7 +395,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
             category.NpDiscounts.Remove(discount);
             context.SaveChanges();
 
-            if (DiscountManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(DISCOUNTS_PATTERN_KEY);
             }
@@ -405,12 +406,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         /// </summary>
         /// <param name="categoryId">Category identifier</param>
         /// <returns>Discount collection</returns>
-        public static List<Discount> GetDiscountsByCategoryId(int categoryId)
+        public List<Discount> GetDiscountsByCategoryId(int categoryId)
         {
             bool showHidden = NopContext.Current.IsAdmin;
             string key = string.Format(DISCOUNTS_BY_CATEGORYID_KEY, categoryId, showHidden);
             object obj2 = NopRequestCache.Get(key);
-            if (DiscountManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (List<Discount>)obj2;
             }
@@ -425,7 +426,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
                         select d;
             var discounts = query.ToList();
 
-            if (DiscountManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, discounts);
             }
@@ -437,9 +438,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         /// </summary>
         /// <param name="productVariantId">Product variant identifier</param>
         /// <param name="discountId">Discount identifier</param>
-        public static void AddDiscountRestriction(int productVariantId, int discountId)
+        public void AddDiscountRestriction(int productVariantId, int discountId)
         {
-            var productVariant = ProductManager.GetProductVariantById(productVariantId);
+            var productVariant = IoCFactory.Resolve<IProductManager>().GetProductVariantById(productVariantId);
             if (productVariant == null)
                 return;
 
@@ -466,9 +467,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         /// </summary>
         /// <param name="productVariantId">Product variant identifier</param>
         /// <param name="discountId">Discount identifier</param>
-        public static void RemoveDiscountRestriction(int productVariantId, int discountId)
+        public void RemoveDiscountRestriction(int productVariantId, int discountId)
         {
-            var productVariant = ProductManager.GetProductVariantById(productVariantId);
+            var productVariant = IoCFactory.Resolve<IProductManager>().GetProductVariantById(productVariantId);
             if (productVariant == null)
                 return;
 
@@ -498,11 +499,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         /// Gets all discount requirements
         /// </summary>
         /// <returns>Discount requirement collection</returns>
-        public static List<DiscountRequirement> GetAllDiscountRequirements()
+        public List<DiscountRequirement> GetAllDiscountRequirements()
         {
             string key = string.Format(DISCOUNTREQUIREMENT_ALL_KEY);
             object obj2 = NopRequestCache.Get(key);
-            if (DiscountManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (List<DiscountRequirement>)obj2;
             }
@@ -513,7 +514,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
                         select dr;
             var discountRequirements = query.ToList();
 
-            if (DiscountManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, discountRequirements);
             }
@@ -524,11 +525,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         /// Gets all discount types
         /// </summary>
         /// <returns>Discount type collection</returns>
-        public static List<DiscountType> GetAllDiscountTypes()
+        public List<DiscountType> GetAllDiscountTypes()
         {
             string key = string.Format(DISCOUNTTYPES_ALL_KEY);
             object obj2 = NopRequestCache.Get(key);
-            if (DiscountManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (List<DiscountType>)obj2;
             }
@@ -539,7 +540,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
                         select dt;
             var discountTypes = query.ToList();
 
-            if (DiscountManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, discountTypes);
             }
@@ -550,11 +551,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         /// Gets all discount limitations
         /// </summary>
         /// <returns>Discount limitation collection</returns>
-        public static List<DiscountLimitation> GetAllDiscountLimitations()
+        public List<DiscountLimitation> GetAllDiscountLimitations()
         {
             string key = string.Format(DISCOUNTLIMITATION_ALL_KEY);
             object obj2 = NopRequestCache.Get(key);
-            if (DiscountManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (List<DiscountLimitation>)obj2;
             }
@@ -565,7 +566,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
                         select dl;
             var discountLimitations = query.ToList();
 
-            if (DiscountManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, discountLimitations);
             }
@@ -580,7 +581,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         /// Deletes a discount usage history entry
         /// </summary>
         /// <param name="discountUsageHistoryId">Discount usage history entry identifier</param>
-        public static void DeleteDiscountUsageHistory(int discountUsageHistoryId)
+        public void DeleteDiscountUsageHistory(int discountUsageHistoryId)
         {
             var discountUsageHistory = GetDiscountUsageHistoryById(discountUsageHistoryId);
             if (discountUsageHistory == null)
@@ -598,7 +599,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         /// </summary>
         /// <param name="discountUsageHistoryId">Discount usage history entry identifier</param>
         /// <returns>Discount usage history entry</returns>
-        public static DiscountUsageHistory GetDiscountUsageHistoryById(int discountUsageHistoryId)
+        public DiscountUsageHistory GetDiscountUsageHistoryById(int discountUsageHistoryId)
         {
             if (discountUsageHistoryId == 0)
                 return null;
@@ -618,7 +619,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         /// <param name="customerId">Customer identifier; null to load all</param>
         /// <param name="orderId">Order identifier; null to load all</param>
         /// <returns>Discount usage history entries</returns>
-        public static List<DiscountUsageHistory> GetAllDiscountUsageHistoryEntries(int? discountId,
+        public List<DiscountUsageHistory> GetAllDiscountUsageHistoryEntries(int? discountId,
             int? customerId, int? orderId)
         {
             var context = ObjectContextHelper.CurrentObjectContext;
@@ -632,7 +633,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         /// Inserts a discount usage history entry
         /// </summary>
         /// <param name="discountUsageHistory">Discount usage history entry</param>
-        public static void InsertDiscountUsageHistory(DiscountUsageHistory discountUsageHistory)
+        public void InsertDiscountUsageHistory(DiscountUsageHistory discountUsageHistory)
         {
             if (discountUsageHistory == null)
                 throw new ArgumentNullException("discountUsageHistory");
@@ -647,7 +648,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         /// Updates the discount usage history entry
         /// </summary>
         /// <param name="discountUsageHistory">Discount usage history entry</param>
-        public static void UpdateDiscountUsageHistory(DiscountUsageHistory discountUsageHistory)
+        public void UpdateDiscountUsageHistory(DiscountUsageHistory discountUsageHistory)
         {
             if (discountUsageHistory == null)
                 throw new ArgumentNullException("discountUsageHistory");
@@ -664,16 +665,18 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         #endregion
 
         #region Properties
+
         /// <summary>
         /// Gets a value indicating whether cache is enabled
         /// </summary>
-        public static bool CacheEnabled
+        public bool CacheEnabled
         {
             get
             {
-                return SettingManager.GetSettingValueBoolean("Cache.DiscountManager.CacheEnabled");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.DiscountManager.CacheEnabled");
             }
         }
+
         #endregion
     }
 }

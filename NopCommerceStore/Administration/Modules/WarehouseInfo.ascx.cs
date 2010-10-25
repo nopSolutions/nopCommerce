@@ -26,6 +26,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.Warehouses;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
  
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -33,7 +34,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            Warehouse warehouse = WarehouseManager.GetWarehouseById(this.WarehouseId);
+            Warehouse warehouse = IoCFactory.Resolve<IWarehouseManager>().GetWarehouseById(this.WarehouseId);
             if (warehouse != null)
             {
                 this.txtName.Text = warehouse.Name;
@@ -61,7 +62,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         private void FillDropDowns()
         {
             this.ddlCountry.Items.Clear();
-            var countryCollection = CountryManager.GetAllCountries();
+            var countryCollection = IoCFactory.Resolve<ICountryManager>().GetAllCountries();
             foreach (Country country in countryCollection)
             {
                 ListItem ddlCountryItem2 = new ListItem(country.Name, country.CountryId.ToString());
@@ -80,7 +81,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public Warehouse SaveInfo()
         {
-            Warehouse warehouse = WarehouseManager.GetWarehouseById(this.WarehouseId);
+            Warehouse warehouse = IoCFactory.Resolve<IWarehouseManager>().GetWarehouseById(this.WarehouseId);
 
             if (warehouse != null)
             {
@@ -96,7 +97,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 warehouse.CountryId = int.Parse(this.ddlCountry.SelectedItem.Value);
                 warehouse.UpdatedOn = DateTime.UtcNow;
 
-                WarehouseManager.UpdateWarehouse(warehouse);
+                IoCFactory.Resolve<IWarehouseManager>().UpdateWarehouse(warehouse);
 
             }
             else
@@ -117,7 +118,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     CreatedOn = now,
                     UpdatedOn = now
                 };
-                WarehouseManager.InsertWarehouse(warehouse);
+                IoCFactory.Resolve<IWarehouseManager>().InsertWarehouse(warehouse);
             }
 
             return warehouse;

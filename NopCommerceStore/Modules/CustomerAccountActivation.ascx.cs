@@ -29,6 +29,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Audit;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Messages;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
  
 
 namespace NopSolutions.NopCommerce.Web.Modules
@@ -53,12 +54,12 @@ namespace NopSolutions.NopCommerce.Web.Modules
             else
             {
                 string email = CommonHelper.QueryString("Email");
-                var customer = CustomerManager.GetCustomerByEmail(email);
+                var customer = IoCFactory.Resolve<ICustomerManager>().GetCustomerByEmail(email);
                 if (customer != null)
                 {
                     if (customer.AccountActivationToken.ToLower() == accountActivationToken.Value.ToString().ToLower())
                     {
-                        CustomerManager.Activate(customer.CustomerId, true);
+                        IoCFactory.Resolve<ICustomerManager>().Activate(customer.CustomerId, true);
                         customer.AccountActivationToken = string.Empty;
                         lResult.Text = GetLocaleResourceString("Account.AccountHasBeenActivated");
                     }

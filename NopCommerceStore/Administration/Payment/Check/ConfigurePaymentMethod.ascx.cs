@@ -26,6 +26,7 @@ using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Web.Templates.Payment;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Payment.Check
 {
@@ -39,14 +40,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Payment.Check
 
         private void BindData()
         {
-            txtInfo.Value = SettingManager.GetSettingValue("PaymentMethod.Check.Info");
-            txtAdditionalFee.Value = SettingManager.GetSettingValueDecimalNative("PaymentMethod.Check.AdditionalFee");
+            txtInfo.Value = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Check.Info");
+            txtAdditionalFee.Value = IoCFactory.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.Check.AdditionalFee");
         }
 
         public void Save()
         {
-            SettingManager.SetParam("PaymentMethod.Check.Info", txtInfo.Value);
-            SettingManager.SetParamNative("PaymentMethod.Check.AdditionalFee", txtAdditionalFee.Value);
+            IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.Check.Info", txtInfo.Value);
+            IoCFactory.Resolve<ISettingManager>().SetParamNative("PaymentMethod.Check.AdditionalFee", txtAdditionalFee.Value);
         }
     }
 }

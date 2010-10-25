@@ -29,6 +29,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Products.Attributes;
 using NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts;
 using NopSolutions.NopCommerce.BusinessLogic.Shipping;
 using NopSolutions.NopCommerce.Common;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Tax
@@ -36,7 +37,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
     /// <summary>
     /// Tax manager
     /// </summary>
-    public partial class TaxManager
+    public partial class TaxManager : ITaxManager
     {
         #region Utilities
 
@@ -46,7 +47,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// <param name="productVariant">Product variant</param>
         /// <param name="customer">Customer</param>
         /// <returns>A value indicating whether tax exempt</returns>
-        protected static bool IsTaxExempt(ProductVariant productVariant, Customer customer)
+        protected bool IsTaxExempt(ProductVariant productVariant, Customer customer)
         {
             if (customer != null)
             {
@@ -78,9 +79,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// <param name="address">Address</param>
         /// <param name="customer">Customer</param>
         /// <returns>Result</returns>
-        protected static bool IsVatExempt(Address address, Customer customer)
+        protected bool IsVatExempt(Address address, Customer customer)
         {
-            if (!TaxManager.EUVatEnabled)
+            if (!this.EUVatEnabled)
             {
                 return false;
             }
@@ -100,9 +101,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
             {
                 // VAT not chargeable if address, customer and config meet our VAT exemption requirements:
                 // returns true if this customer is VAT exempt because they are shipping within the EU but outside our shop country, they have supplied a validated VAT number, and the shop is configured to allow VAT exemption
-                return address.CountryId != TaxManager.EUVatShopCountryId &&
+                return address.CountryId != this.EUVatShopCountryId &&
                     customer.VatNumberStatus == VatNumberStatusEnum.Valid &&
-                    TaxManager.EUVatAllowVATExemption;
+                    this.EUVatAllowVATExemption;
             }
         }
 
@@ -111,7 +112,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// </summary>
         /// <remarks>Doesn't check the name and address</remarks>
         /// <returns>A value from the VatNumberStatusEnum enumeration</returns>
-        protected static VatNumberStatusEnum DoVatCheck(string countryCode, string vatNumber, out string name, out string address, out Exception exception)
+        protected VatNumberStatusEnum DoVatCheck(string countryCode, string vatNumber, out string name, out string address, out Exception exception)
         {
             name = string.Empty;
             address = string.Empty;
@@ -154,7 +155,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// <param name="taxClassId">Tax class identifier</param>
         /// <param name="customer">Customer</param>
         /// <returns>Package for tax calculation</returns>
-        protected static CalculateTaxRequest CreateCalculateTaxRequest(ProductVariant productVariant, 
+        protected CalculateTaxRequest CreateCalculateTaxRequest(ProductVariant productVariant, 
             int taxClassId, Customer customer)
         {
             var calculateTaxRequest = new CalculateTaxRequest();
@@ -162,7 +163,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
             calculateTaxRequest.Item = productVariant;
             calculateTaxRequest.TaxClassId = taxClassId;
 
-            var basedOn = TaxManager.TaxBasedOn;
+            var basedOn = this.TaxBasedOn;
 
             if (basedOn == TaxBasedOnEnum.BillingAddress)
             {
@@ -195,12 +196,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
                     break;
                 case TaxBasedOnEnum.DefaultAddress:
                     {
-                        address = TaxManager.DefaultTaxAddress;
+                        address = this.DefaultTaxAddress;
                     }
                     break;
                 case TaxBasedOnEnum.ShippingOrigin:
                     {
-                        address = ShippingManager.ShippingOrigin;
+                        address = IoCFactory.Resolve<IShippingManager>().ShippingOrigin;
                     }
                     break;
             }
@@ -216,7 +217,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// <param name="percent">Percent</param>
         /// <param name="increase">Increase</param>
         /// <returns>New price</returns>
-        protected static decimal CalculatePrice(decimal price, decimal percent, bool increase)
+        protected decimal CalculatePrice(decimal price, decimal percent, bool increase)
         {
             decimal result = decimal.Zero;
             if (percent == decimal.Zero)
@@ -244,7 +245,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// <param name="customer">Customer</param>
         /// <param name="error">Error</param>
         /// <returns>Tax total</returns>
-        public static decimal GetTaxTotal(ShoppingCart cart,
+        public decimal GetTaxTotal(ShoppingCart cart,
             Customer customer, ref string error)
         {
             return GetTaxTotal(cart, 0, customer, ref error);
@@ -258,7 +259,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// <param name="customer">Customer</param>
         /// <param name="error">Error</param>
         /// <returns>Tax total</returns>
-        public static decimal GetTaxTotal(ShoppingCart cart, int paymentMethodId, 
+        public decimal GetTaxTotal(ShoppingCart cart, int paymentMethodId, 
             Customer customer, ref string error)
         {
             SortedDictionary<decimal, decimal> taxRates = null;
@@ -275,7 +276,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// <param name="taxRates">Tax rates</param>
         /// <param name="error">Error</param>
         /// <returns>Tax total</returns>
-        public static decimal GetTaxTotal(ShoppingCart cart, int paymentMethodId,
+        public decimal GetTaxTotal(ShoppingCart cart, int paymentMethodId,
             Customer customer, out SortedDictionary<decimal, decimal> taxRates, ref string error)
         {
             decimal taxTotal = decimal.Zero;
@@ -288,7 +289,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
             decimal subTotalWithoutDiscountBase = decimal.Zero;
             decimal subTotalWithDiscountBase = decimal.Zero;
             SortedDictionary<decimal, decimal> orderSubTotalTaxRates = null;
-            string SubTotalError = ShoppingCartManager.GetShoppingCartSubTotal(cart,
+            string SubTotalError = IoCFactory.Resolve<IShoppingCartManager>().GetShoppingCartSubTotal(cart,
                 customer, false, out orderSubTotalDiscountAmount, out orderSubTotalAppliedDiscount,
                 out subTotalWithoutDiscountBase, out subTotalWithDiscountBase, out orderSubTotalTaxRates);
             foreach (KeyValuePair<decimal,decimal> kvp in orderSubTotalTaxRates)
@@ -312,14 +313,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
 
             //shipping
             decimal shippingTax = decimal.Zero;
-            if (TaxManager.ShippingIsTaxable)
+            if (this.ShippingIsTaxable)
             {
                 decimal taxRate = decimal.Zero;
                 string error1 = string.Empty;
                 string error2 = string.Empty;
 
-                decimal? shippingExclTax = ShippingManager.GetShoppingCartShippingTotal(cart, customer, false, out taxRate, ref error1);
-                decimal? shippingInclTax = ShippingManager.GetShoppingCartShippingTotal(cart, customer, true, out taxRate, ref error2);
+                decimal? shippingExclTax = IoCFactory.Resolve<IShippingManager>().GetShoppingCartShippingTotal(cart, customer, false, out taxRate, ref error1);
+                decimal? shippingInclTax = IoCFactory.Resolve<IShippingManager>().GetShoppingCartShippingTotal(cart, customer, true, out taxRate, ref error2);
                 if (!String.IsNullOrEmpty(error1))
                 {
                     error = error1;
@@ -349,15 +350,15 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
 
             //payment method additional fee
             decimal paymentMethodAdditionalFeeTax = decimal.Zero;
-            if (TaxManager.PaymentMethodAdditionalFeeIsTaxable)
+            if (this.PaymentMethodAdditionalFeeIsTaxable)
             {
                 decimal taxRate = decimal.Zero;
                 string error1 = string.Empty;
                 string error2 = string.Empty;
 
-                decimal paymentMethodAdditionalFee = PaymentManager.GetAdditionalHandlingFee(paymentMethodId);
-                decimal? paymentMethodAdditionalFeeExclTax = TaxManager.GetPaymentMethodAdditionalFee(paymentMethodAdditionalFee, false, customer, out taxRate, ref error1);
-                decimal? paymentMethodAdditionalFeeInclTax = TaxManager.GetPaymentMethodAdditionalFee(paymentMethodAdditionalFee, true, customer, out taxRate, ref error2);
+                decimal paymentMethodAdditionalFee = IoCFactory.Resolve<IPaymentManager>().GetAdditionalHandlingFee(paymentMethodId);
+                decimal? paymentMethodAdditionalFeeExclTax = this.GetPaymentMethodAdditionalFee(paymentMethodAdditionalFee, false, customer, out taxRate, ref error1);
+                decimal? paymentMethodAdditionalFeeInclTax = this.GetPaymentMethodAdditionalFee(paymentMethodAdditionalFee, true, customer, out taxRate, ref error2);
                 if (!String.IsNullOrEmpty(error1))
                 {
                     error = error1;
@@ -402,7 +403,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// <param name="customer">Customer</param>
         /// <param name="error">Error</param>
         /// <returns>Tax rate</returns>
-        public static decimal GetTaxRate(ProductVariant productVariant, 
+        public decimal GetTaxRate(ProductVariant productVariant, 
             Customer customer, ref string error)
         {
             return GetTaxRate(productVariant, 0, customer, ref error);
@@ -415,7 +416,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// <param name="customer">Customer</param>
         /// <param name="error">Error</param>
         /// <returns>Tax rate</returns>
-        public static decimal GetTaxRate(int taxClassId, Customer customer, ref string error)
+        public decimal GetTaxRate(int taxClassId, Customer customer, ref string error)
         {
             return GetTaxRate(null, taxClassId, customer, ref error);
         }
@@ -428,7 +429,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// <param name="customer">Customer</param>
         /// <param name="error">Error</param>
         /// <returns>Tax rate</returns>
-        public static decimal GetTaxRate(ProductVariant productVariant, 
+        public decimal GetTaxRate(ProductVariant productVariant, 
             int taxClassId, Customer customer, ref string error)
         {
             //tax exempt
@@ -441,7 +442,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
             var calculateTaxRequest = CreateCalculateTaxRequest(productVariant, taxClassId, customer);
 
             //make EU VAT exempt validation (the European Union Value Added Tax)
-            if (TaxManager.EUVatEnabled)
+            if (this.EUVatEnabled)
             {
                 if (IsVatExempt(calculateTaxRequest.Address, calculateTaxRequest.Customer))
                 {
@@ -451,7 +452,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
             }
 
             //instantiate tax provider
-            var activeTaxProvider = TaxManager.ActiveTaxProvider;
+            var activeTaxProvider = this.ActiveTaxProvider;
             if (activeTaxProvider == null)
                 throw new NopException("Tax provider could not be loaded");
             var iTaxProvider = Activator.CreateInstance(Type.GetType(activeTaxProvider.ClassName)) as ITaxProvider;
@@ -468,7 +469,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// <param name="price">Price</param>
         /// <param name="taxRate">Tax rate</param>
         /// <returns>Price</returns>
-        public static decimal GetPrice(ProductVariant productVariant, decimal price, 
+        public decimal GetPrice(ProductVariant productVariant, decimal price, 
             out decimal taxRate)
         {
             string error = string.Empty;
@@ -483,7 +484,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// <param name="taxRate">Tax rate</param>
         /// <param name="error">Error</param>
         /// <returns>Price</returns>
-        public static decimal GetPrice(ProductVariant productVariant, decimal price, 
+        public decimal GetPrice(ProductVariant productVariant, decimal price, 
             out decimal taxRate, ref string error)
         {
             var customer = NopContext.Current.User;
@@ -498,7 +499,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// <param name="customer">Customer</param>
         /// <param name="taxRate">Tax rate</param>
         /// <returns>Price</returns>
-        public static decimal GetPrice(ProductVariant productVariant, decimal price,
+        public decimal GetPrice(ProductVariant productVariant, decimal price,
             Customer customer, out decimal taxRate)
         {
             string error = string.Empty;
@@ -514,7 +515,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// <param name="taxRate">Tax rate</param>
         /// <param name="error">Error</param>
         /// <returns>Price</returns>
-        public static decimal GetPrice(ProductVariant productVariant, decimal price,
+        public decimal GetPrice(ProductVariant productVariant, decimal price,
             Customer customer, out decimal taxRate, ref string error)
         {
             bool includingTax = false;
@@ -539,7 +540,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// <param name="customer">Customer</param>
         /// <param name="taxRate">Tax rate</param>
         /// <returns>Price</returns>
-        public static decimal GetPrice(ProductVariant productVariant, decimal price,
+        public decimal GetPrice(ProductVariant productVariant, decimal price,
             bool includingTax, Customer customer, out decimal taxRate)
         {
             string error = string.Empty;
@@ -556,10 +557,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// <param name="taxRate">Tax rate</param>
         /// <param name="error">Error</param>
         /// <returns>Price</returns>
-        public static decimal GetPrice(ProductVariant productVariant, decimal price,
+        public decimal GetPrice(ProductVariant productVariant, decimal price,
             bool includingTax, Customer customer, out decimal taxRate, ref string error)
         {
-            bool priceIncludesTax = TaxManager.PricesIncludeTax;
+            bool priceIncludesTax = this.PricesIncludeTax;
             int taxClassId = 0;
             return GetPrice(productVariant, taxClassId, price, includingTax, 
                 customer, priceIncludesTax, out taxRate, ref error);
@@ -576,7 +577,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// <param name="priceIncludesTax">A value indicating whether price already includes tax</param>
         /// <param name="taxRate">Tax rate</param>
         /// <returns>Price</returns>
-        public static decimal GetPrice(ProductVariant productVariant, int taxClassId,
+        public decimal GetPrice(ProductVariant productVariant, int taxClassId,
             decimal price, bool includingTax, Customer customer, out decimal taxRate, 
             bool priceIncludesTax)
         {
@@ -597,7 +598,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// <param name="taxRate">Tax rate</param>
         /// <param name="error">Error</param>
         /// <returns>Price</returns>
-        public static decimal GetPrice(ProductVariant productVariant, int taxClassId,
+        public decimal GetPrice(ProductVariant productVariant, int taxClassId,
             decimal price, bool includingTax, Customer customer,
             bool priceIncludesTax, out decimal taxRate, ref string error)
         {
@@ -632,7 +633,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// <param name="price">Price</param>
         /// <param name="customer">Customer</param>
         /// <returns>Price</returns>
-        public static decimal GetShippingPrice(decimal price, Customer customer)
+        public decimal GetShippingPrice(decimal price, Customer customer)
         {
             string error = string.Empty;
             return GetShippingPrice(price, customer, ref error);
@@ -645,7 +646,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// <param name="customer">Customer</param>
         /// <param name="error">Error</param>
         /// <returns>Price</returns>
-        public static decimal GetShippingPrice(decimal price,  Customer customer, 
+        public decimal GetShippingPrice(decimal price,  Customer customer, 
             ref string error)
         {
             bool includingTax = false;
@@ -668,7 +669,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
         /// <param name="customer">Customer</param>
         /// <returns>Price</returns>
-        public static decimal GetShippingPrice(decimal price, bool includingTax, Customer customer)
+        public decimal GetShippingPrice(decimal price, bool includingTax, Customer customer)
         {
             string error = string.Empty;
             return GetShippingPrice(price, includingTax, customer, ref error);
@@ -682,7 +683,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// <param name="customer">Customer</param>
         /// <param name="error">Error</param>
         /// <returns>Price</returns>
-        public static decimal GetShippingPrice(decimal price, bool includingTax, 
+        public decimal GetShippingPrice(decimal price, bool includingTax, 
             Customer customer, ref string error)
         {
             decimal taxRate = decimal.Zero;
@@ -698,17 +699,17 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// <param name="taxRate">Tax rate</param>
         /// <param name="error">Error</param>
         /// <returns>Price</returns>
-        public static decimal GetShippingPrice(decimal price, bool includingTax,
+        public decimal GetShippingPrice(decimal price, bool includingTax,
             Customer customer, out decimal taxRate, ref string error)
         {
             taxRate = decimal.Zero;
 
-            if (!TaxManager.ShippingIsTaxable)
+            if (!this.ShippingIsTaxable)
             {
                 return price;
             }
-            int taxClassId = TaxManager.ShippingTaxClassId;
-            bool priceIncludesTax = TaxManager.ShippingPriceIncludesTax;
+            int taxClassId = this.ShippingTaxClassId;
+            bool priceIncludesTax = this.ShippingPriceIncludesTax;
             return GetPrice(null, taxClassId, price, includingTax, customer, 
                 priceIncludesTax, out taxRate, ref error);
         }
@@ -719,7 +720,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// <param name="price">Price</param>
         /// <param name="customer">Customer</param>
         /// <returns>Price</returns>
-        public static decimal GetPaymentMethodAdditionalFee(decimal price, Customer customer)
+        public decimal GetPaymentMethodAdditionalFee(decimal price, Customer customer)
         {
             string error = string.Empty;
             return GetPaymentMethodAdditionalFee(price, customer, ref error);
@@ -732,7 +733,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// <param name="customer">Customer</param>
         /// <param name="error">Error</param>
         /// <returns>Price</returns>
-        public static decimal GetPaymentMethodAdditionalFee(decimal price, 
+        public decimal GetPaymentMethodAdditionalFee(decimal price, 
             Customer customer, ref string error)
         {
             bool includingTax = false;
@@ -755,7 +756,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
         /// <param name="customer">Customer</param>
         /// <returns>Price</returns>
-        public static decimal GetPaymentMethodAdditionalFee(decimal price, bool includingTax, Customer customer)
+        public decimal GetPaymentMethodAdditionalFee(decimal price, bool includingTax, Customer customer)
         {
             string error = string.Empty;
             return GetPaymentMethodAdditionalFee(price, includingTax, customer, ref error);
@@ -769,7 +770,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// <param name="customer">Customer</param>
         /// <param name="error">Error</param>
         /// <returns>Price</returns>
-        public static decimal GetPaymentMethodAdditionalFee(decimal price, 
+        public decimal GetPaymentMethodAdditionalFee(decimal price, 
             bool includingTax, Customer customer, ref string error)
         {
             decimal taxRate = decimal.Zero;
@@ -786,17 +787,17 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// <param name="taxRate">Tax rate</param>
         /// <param name="error">Error</param>
         /// <returns>Price</returns>
-        public static decimal GetPaymentMethodAdditionalFee(decimal price,
+        public decimal GetPaymentMethodAdditionalFee(decimal price,
             bool includingTax, Customer customer, out decimal taxRate, ref string error)
         {
             taxRate = decimal.Zero;
 
-            if (!TaxManager.PaymentMethodAdditionalFeeIsTaxable)
+            if (!this.PaymentMethodAdditionalFeeIsTaxable)
             {
                 return price;
             }
-            int taxClassId = TaxManager.PaymentMethodAdditionalFeeTaxClassId;
-            bool priceIncludesTax = TaxManager.PaymentMethodAdditionalFeeIncludesTax;
+            int taxClassId = this.PaymentMethodAdditionalFeeTaxClassId;
+            bool priceIncludesTax = this.PaymentMethodAdditionalFeeIncludesTax;
             return GetPrice(null, taxClassId, price, includingTax, customer, 
                 priceIncludesTax, out taxRate, ref error);
         }
@@ -806,7 +807,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// </summary>
         /// <param name="cav">Checkout attribute value</param>
         /// <returns>Price</returns>
-        public static decimal GetCheckoutAttributePrice(CheckoutAttributeValue cav)
+        public decimal GetCheckoutAttributePrice(CheckoutAttributeValue cav)
         {
             var customer = NopContext.Current.User;
             return GetCheckoutAttributePrice(cav, customer);
@@ -818,7 +819,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// <param name="cav">Checkout attribute value</param>
         /// <param name="customer">Customer</param>
         /// <returns>Price</returns>
-        public static decimal GetCheckoutAttributePrice(CheckoutAttributeValue cav, 
+        public decimal GetCheckoutAttributePrice(CheckoutAttributeValue cav, 
             Customer customer)
         {
             string error = string.Empty;
@@ -832,7 +833,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// <param name="customer">Customer</param>
         /// <param name="error">Error</param>
         /// <returns>Price</returns>
-        public static decimal GetCheckoutAttributePrice(CheckoutAttributeValue cav, 
+        public decimal GetCheckoutAttributePrice(CheckoutAttributeValue cav, 
             Customer customer, ref string error)
         {
             bool includingTax = false;
@@ -856,7 +857,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
         /// <param name="customer">Customer</param>
         /// <returns>Price</returns>
-        public static decimal GetCheckoutAttributePrice(CheckoutAttributeValue cav, 
+        public decimal GetCheckoutAttributePrice(CheckoutAttributeValue cav, 
             bool includingTax, Customer customer)
         {
             string error = string.Empty;
@@ -872,7 +873,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// <param name="customer">Customer</param>
         /// <param name="error">Error</param>
         /// <returns>Price</returns>
-        public static decimal GetCheckoutAttributePrice(CheckoutAttributeValue cav,
+        public decimal GetCheckoutAttributePrice(CheckoutAttributeValue cav,
             bool includingTax, Customer customer, ref string error)
         {
             decimal taxRate = decimal.Zero;
@@ -889,7 +890,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// <param name="taxRate">Tax rate</param>
         /// <param name="error">Error</param>
         /// <returns>Price</returns>
-        public static decimal GetCheckoutAttributePrice(CheckoutAttributeValue cav,
+        public decimal GetCheckoutAttributePrice(CheckoutAttributeValue cav,
             bool includingTax, Customer customer, out decimal taxRate, ref string error)
         {
             if (cav == null)
@@ -903,7 +904,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
                 return price;
             }
 
-            bool priceIncludesTax = TaxManager.PricesIncludeTax;
+            bool priceIncludesTax = this.PricesIncludeTax;
             int taxClassId = cav.CheckoutAttribute.TaxCategoryId;
             return GetPrice(null, taxClassId, price, includingTax, customer, 
                 priceIncludesTax, out taxRate, ref error);
@@ -915,7 +916,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// <param name="country">Country</param>
         /// <param name="vatNumber">VAT number</param>
         /// <returns>VAT Number status</returns>
-        public static VatNumberStatusEnum GetVatNumberStatus(Country country,
+        public VatNumberStatusEnum GetVatNumberStatus(Country country,
             string vatNumber)
         {
             string name = string.Empty;
@@ -931,7 +932,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// <param name="name">Name (if received)</param>
         /// <param name="address">Address (if received)</param>
         /// <returns>VAT Number status</returns>
-        public static VatNumberStatusEnum GetVatNumberStatus(Country country,
+        public VatNumberStatusEnum GetVatNumberStatus(Country country,
             string vatNumber, out string name, out string address)
         {
             name = string.Empty;
@@ -948,7 +949,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
             if (country == null)
                 return VatNumberStatusEnum.Unknown;
 
-            if (!TaxManager.EUVatUseWebService)
+            if (!this.EUVatUseWebService)
                 return VatNumberStatusEnum.Unknown;
 
 
@@ -970,7 +971,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// </summary>
         /// <param name="status">VAT Number status</param>
         /// <returns>VAT Number status name</returns>
-        public static string GetVatNumberStatusName(VatNumberStatusEnum status)
+        public string GetVatNumberStatusName(VatNumberStatusEnum status)
         {
             return LocalizationManager.GetLocaleResourceString(string.Format("VatNumberStatus.{0}", status.ToString()));
         }
@@ -980,7 +981,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// </summary>
         /// <param name="taxRate">Tax rate</param>
         /// <returns>Formatted tax rate</returns>
-        public static string FormatTaxRate(decimal taxRate)
+        public string FormatTaxRate(decimal taxRate)
         {
             return taxRate.ToString("G29");
         }
@@ -992,62 +993,62 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// <summary>
         /// Tax based on
         /// </summary>
-        public static TaxBasedOnEnum TaxBasedOn
+        public TaxBasedOnEnum TaxBasedOn
         {
             get
             {
-                int taxBasedOn = SettingManager.GetSettingValueInteger("Tax.TaxBasedOn");
+                int taxBasedOn = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Tax.TaxBasedOn");
                 return (TaxBasedOnEnum)taxBasedOn;
             }
             set
             {
-                SettingManager.SetParam("Tax.TaxBasedOn", ((int)value).ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("Tax.TaxBasedOn", ((int)value).ToString());
             }
         }
 
         /// <summary>
         /// Tax display type
         /// </summary>
-        public static TaxDisplayTypeEnum TaxDisplayType
+        public TaxDisplayTypeEnum TaxDisplayType
         {
             get
             {
-                int taxBasedOn = SettingManager.GetSettingValueInteger("Tax.TaxDisplayType");
+                int taxBasedOn = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Tax.TaxDisplayType");
                 return (TaxDisplayTypeEnum)taxBasedOn;
             }
             set
             {
-                SettingManager.SetParam("Tax.TaxDisplayType", ((int)value).ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("Tax.TaxDisplayType", ((int)value).ToString());
             }
         }
         
         /// <summary>
         /// Gets or sets an active shipping rate computation method
         /// </summary>
-        public static TaxProvider ActiveTaxProvider
+        public TaxProvider ActiveTaxProvider
         {
             get
             {
-                int taxProviderId = SettingManager.GetSettingValueInteger("Tax.TaxProvider.ActiveId");
-                return TaxProviderManager.GetTaxProviderById(taxProviderId);
+                int taxProviderId = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Tax.TaxProvider.ActiveId");
+                return IoCFactory.Resolve<ITaxProviderManager>().GetTaxProviderById(taxProviderId);
             }
             set
             {
                 if (value != null)
-                    SettingManager.SetParam("Tax.TaxProvider.ActiveId", value.TaxProviderId.ToString());
+                    IoCFactory.Resolve<ISettingManager>().SetParam("Tax.TaxProvider.ActiveId", value.TaxProviderId.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets a default tax address
         /// </summary>
-        public static Address DefaultTaxAddress
+        public Address DefaultTaxAddress
         {
             get
             {
-                int countryId = SettingManager.GetSettingValueInteger("Tax.DefaultTaxAddress.CountryId");
-                int stateProvinceId = SettingManager.GetSettingValueInteger("Tax.DefaultTaxAddress.StateProvinceId");
-                string zipPostalCode = SettingManager.GetSettingValue("Tax.DefaultTaxAddress.ZipPostalCode");
+                int countryId = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Tax.DefaultTaxAddress.CountryId");
+                int stateProvinceId = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Tax.DefaultTaxAddress.StateProvinceId");
+                string zipPostalCode = IoCFactory.Resolve<ISettingManager>().GetSettingValue("Tax.DefaultTaxAddress.ZipPostalCode");
                 Address address = new Address();
                 address.CountryId = countryId;
                 address.StateProvinceId = stateProvinceId;
@@ -1067,281 +1068,281 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
                     zipPostalCode = value.ZipPostalCode;
                 }
 
-                SettingManager.SetParam("Tax.DefaultTaxAddress.CountryId", countryId.ToString());
-                SettingManager.SetParam("Tax.DefaultTaxAddress.StateProvinceId", stateProvinceId.ToString());
-                SettingManager.SetParam("Tax.DefaultTaxAddress.ZipPostalCode", zipPostalCode);
+                IoCFactory.Resolve<ISettingManager>().SetParam("Tax.DefaultTaxAddress.CountryId", countryId.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("Tax.DefaultTaxAddress.StateProvinceId", stateProvinceId.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("Tax.DefaultTaxAddress.ZipPostalCode", zipPostalCode);
             }
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether to display tax suffix
         /// </summary>
-        public static bool DisplayTaxSuffix
+        public bool DisplayTaxSuffix
         {
             get
             {
-                bool displayTaxSuffix = SettingManager.GetSettingValueBoolean("Tax.DisplayTaxSuffix");
+                bool displayTaxSuffix = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Tax.DisplayTaxSuffix");
                 return displayTaxSuffix;
             }
             set
             {
-                SettingManager.SetParam("Tax.DisplayTaxSuffix", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("Tax.DisplayTaxSuffix", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether each tax rate should be displayed on separate line (shopping cart page)
         /// </summary>
-        public static bool DisplayTaxRates
+        public bool DisplayTaxRates
         {
             get
             {
-                bool displayTaxRate = SettingManager.GetSettingValueBoolean("Tax.DisplayTaxRates", false);
+                bool displayTaxRate = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Tax.DisplayTaxRates", false);
                 return displayTaxRate;
             }
             set
             {
-                SettingManager.SetParam("Tax.DisplayTaxRates", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("Tax.DisplayTaxRates", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether prices incude tax
         /// </summary>
-        public static bool PricesIncludeTax
+        public bool PricesIncludeTax
         {
             get
             {
-                bool pricesIncludeTax = SettingManager.GetSettingValueBoolean("Tax.PricesIncludeTax");
+                bool pricesIncludeTax = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Tax.PricesIncludeTax");
                 return pricesIncludeTax;
             }
             set
             {
-                SettingManager.SetParam("Tax.PricesIncludeTax", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("Tax.PricesIncludeTax", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether customers are allowed to select tax display type
         /// </summary>
-        public static bool AllowCustomersToSelectTaxDisplayType
+        public bool AllowCustomersToSelectTaxDisplayType
         {
             get
             {
-                bool allowCustomersToSelectTaxDisplayType = SettingManager.GetSettingValueBoolean("Tax.AllowCustomersToSelectTaxDisplayType");
+                bool allowCustomersToSelectTaxDisplayType = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Tax.AllowCustomersToSelectTaxDisplayType");
                 return allowCustomersToSelectTaxDisplayType;
             }
             set
             {
-                SettingManager.SetParam("Tax.AllowCustomersToSelectTaxDisplayType", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("Tax.AllowCustomersToSelectTaxDisplayType", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether to hide zero tax
         /// </summary>
-        public static bool HideZeroTax
+        public bool HideZeroTax
         {
             get
             {
-                bool hideZeroTax = SettingManager.GetSettingValueBoolean("Tax.HideZeroTax");
+                bool hideZeroTax = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Tax.HideZeroTax");
                 return hideZeroTax;
             }
             set
             {
-                SettingManager.SetParam("Tax.HideZeroTax", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("Tax.HideZeroTax", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether to hide tax in order summary when prices are shown tax inclusive
         /// </summary>
-        public static bool HideTaxInOrderSummary
+        public bool HideTaxInOrderSummary
         {
             get
             {
-                bool hideTaxInOrderSummary = SettingManager.GetSettingValueBoolean("Tax.HideTaxInOrderSummary");
+                bool hideTaxInOrderSummary = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Tax.HideTaxInOrderSummary");
                 return hideTaxInOrderSummary;
             }
             set
             {
-                SettingManager.SetParam("Tax.HideTaxInOrderSummary", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("Tax.HideTaxInOrderSummary", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether shipping price is taxable
         /// </summary>
-        public static bool ShippingIsTaxable
+        public bool ShippingIsTaxable
         {
             get
             {
-                bool shippingIsTaxable = SettingManager.GetSettingValueBoolean("Tax.ShippingIsTaxable");
+                bool shippingIsTaxable = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Tax.ShippingIsTaxable");
                 return shippingIsTaxable;
             }
             set
             {
-                SettingManager.SetParam("Tax.ShippingIsTaxable", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("Tax.ShippingIsTaxable", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether shipping price incudes tax
         /// </summary>
-        public static bool ShippingPriceIncludesTax
+        public bool ShippingPriceIncludesTax
         {
             get
             {
-                bool shippingPriceIncludesTax = SettingManager.GetSettingValueBoolean("Tax.ShippingPriceIncludesTax");
+                bool shippingPriceIncludesTax = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Tax.ShippingPriceIncludesTax");
                 return shippingPriceIncludesTax;
             }
             set
             {
-                SettingManager.SetParam("Tax.ShippingPriceIncludesTax", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("Tax.ShippingPriceIncludesTax", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets a value indicating the shipping tax class identifier
         /// </summary>
-        public static int ShippingTaxClassId
+        public int ShippingTaxClassId
         {
             get
             {
-                int shippingTaxClassId = SettingManager.GetSettingValueInteger("Tax.ShippingTaxClassId");
+                int shippingTaxClassId = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Tax.ShippingTaxClassId");
                 return shippingTaxClassId;
             }
             set
             {
-                SettingManager.SetParam("Tax.ShippingTaxClassId", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("Tax.ShippingTaxClassId", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether payment method additional fee is taxable
         /// </summary>
-        public static bool PaymentMethodAdditionalFeeIsTaxable
+        public bool PaymentMethodAdditionalFeeIsTaxable
         {
             get
             {
-                bool paymentMethodAdditionalFeeIsTaxable = SettingManager.GetSettingValueBoolean("Tax.PaymentMethodAdditionalFeeIsTaxable");
+                bool paymentMethodAdditionalFeeIsTaxable = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Tax.PaymentMethodAdditionalFeeIsTaxable");
                 return paymentMethodAdditionalFeeIsTaxable;
             }
             set
             {
-                SettingManager.SetParam("Tax.PaymentMethodAdditionalFeeIsTaxable", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("Tax.PaymentMethodAdditionalFeeIsTaxable", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether payment method additional fee incudes tax
         /// </summary>
-        public static bool PaymentMethodAdditionalFeeIncludesTax
+        public bool PaymentMethodAdditionalFeeIncludesTax
         {
             get
             {
-                bool paymentMethodAdditionalFeeIncludesTax = SettingManager.GetSettingValueBoolean("Tax.PaymentMethodAdditionalFeeIncludesTax");
+                bool paymentMethodAdditionalFeeIncludesTax = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Tax.PaymentMethodAdditionalFeeIncludesTax");
                 return paymentMethodAdditionalFeeIncludesTax;
             }
             set
             {
-                SettingManager.SetParam("Tax.PaymentMethodAdditionalFeeIncludesTax", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("Tax.PaymentMethodAdditionalFeeIncludesTax", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets a value indicating the payment method additional fee tax class identifier
         /// </summary>
-        public static int PaymentMethodAdditionalFeeTaxClassId
+        public int PaymentMethodAdditionalFeeTaxClassId
         {
             get
             {
-                int paymentMethodAdditionalFeeTaxClassId = SettingManager.GetSettingValueInteger("Tax.PaymentMethodAdditionalFeeTaxClassId");
+                int paymentMethodAdditionalFeeTaxClassId = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Tax.PaymentMethodAdditionalFeeTaxClassId");
                 return paymentMethodAdditionalFeeTaxClassId;
             }
             set
             {
-                SettingManager.SetParam("Tax.PaymentMethodAdditionalFeeTaxClassId", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("Tax.PaymentMethodAdditionalFeeTaxClassId", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether EU VAT (Eupore Union Value Added Tax) is enabled
         /// </summary>
-        public static bool EUVatEnabled
+        public bool EUVatEnabled
         {
             get
             {
-                bool result = SettingManager.GetSettingValueBoolean("Tax.EUVat.Enabled");
+                bool result = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Tax.EUVat.Enabled");
                 return result;
             }
             set
             {
-                SettingManager.SetParam("Tax.EUVat.Enabled", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("Tax.EUVat.Enabled", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets a shop country identifier
         /// </summary>
-        public static int EUVatShopCountryId
+        public int EUVatShopCountryId
         {
             get
             {
-                int result = SettingManager.GetSettingValueInteger("Tax.EUVat.EUVatShopCountryId");
+                int result = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Tax.EUVat.EUVatShopCountryId");
                 return result;
             }
             set
             {
-                SettingManager.SetParam("Tax.EUVat.EUVatShopCountryId", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("Tax.EUVat.EUVatShopCountryId", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether this store will exempt eligible VAT-registered customers from VAT
         /// </summary>
-        public static bool EUVatAllowVATExemption
+        public bool EUVatAllowVATExemption
         {
             get
             {
-                bool result = SettingManager.GetSettingValueBoolean("Tax.EUVat.AllowVATExemption", true);
+                bool result = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Tax.EUVat.AllowVATExemption", true);
                 return result;
             }
             set
             {
-                SettingManager.SetParam("Tax.EUVat.AllowVATExemption", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("Tax.EUVat.AllowVATExemption", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether we should use the EU web service to validate VAT numbers
         /// </summary>
-        public static bool EUVatUseWebService
+        public bool EUVatUseWebService
         {
             get
             {
-                bool result = SettingManager.GetSettingValueBoolean("Tax.EUVat.UseWebService");
+                bool result = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Tax.EUVat.UseWebService");
                 return result;
             }
             set
             {
-                SettingManager.SetParam("Tax.EUVat.UseWebService", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("Tax.EUVat.UseWebService", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether we should notify a store owner when a new VAT number is submitted
         /// </summary>
-        public static bool EUVatEmailAdminWhenNewVATSubmitted
+        public bool EUVatEmailAdminWhenNewVATSubmitted
         {
             get
             {
-                bool result = SettingManager.GetSettingValueBoolean("Tax.EUVat.EUVatEmailAdminWhenNewVATSubmitted");
+                bool result = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Tax.EUVat.EUVatEmailAdminWhenNewVATSubmitted");
                 return result;
             }
             set
             {
-                SettingManager.SetParam("Tax.EUVat.EUVatEmailAdminWhenNewVATSubmitted", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("Tax.EUVat.EUVatEmailAdminWhenNewVATSubmitted", value.ToString());
             }
         }
 

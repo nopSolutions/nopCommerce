@@ -34,6 +34,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Warehouses;
 using NopSolutions.NopCommerce.Web.Administration.Modules;
 using NopSolutions.NopCommerce.BusinessLogic.Audit;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -41,7 +42,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            ProductVariant productVariant = ProductManager.GetProductVariantById(this.ProductVariantId);
+            ProductVariant productVariant = IoCFactory.Resolve<IProductManager>().GetProductVariantById(this.ProductVariantId);
             if (productVariant != null)
             {
                 Product product = productVariant.Product;
@@ -75,7 +76,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     ctrlProductVariantAttributes.SaveInfo();
                     ctrlProductVariantDiscounts.SaveInfo();
 
-                    CustomerActivityManager.InsertActivity(
+                    IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
                         "EditProductVariant",
                         GetLocaleResourceString("ActivityLog.EditProductVariant"),
                         productVariant.FullProductName);
@@ -93,12 +94,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                ProductVariant productVariant = ProductManager.GetProductVariantById(this.ProductVariantId);
+                ProductVariant productVariant = IoCFactory.Resolve<IProductManager>().GetProductVariantById(this.ProductVariantId);
                 if (productVariant != null)
                 {
-                    ProductManager.MarkProductVariantAsDeleted(productVariant.ProductVariantId);
-                    
-                    CustomerActivityManager.InsertActivity(
+                    IoCFactory.Resolve<IProductManager>().MarkProductVariantAsDeleted(productVariant.ProductVariantId);
+
+                    IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
                         "DeleteProductVariant",
                         GetLocaleResourceString("ActivityLog.DeleteProductVariant"),
                         productVariant.FullProductName);
@@ -119,7 +120,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         
         protected override void OnPreRender(EventArgs e)
         {
-            ProductVariant productVariant = ProductManager.GetProductVariantById(this.ProductVariantId);
+            ProductVariant productVariant = IoCFactory.Resolve<IProductManager>().GetProductVariantById(this.ProductVariantId);
             if (productVariant != null)
             {
                 PreviewButton.OnClientClick = string.Format("javascript:OpenWindow('{0}', 800, 600, true); return false;", SEOHelper.GetProductUrl(productVariant.ProductId));

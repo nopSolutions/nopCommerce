@@ -28,6 +28,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.Promo.Affiliates;
 using NopSolutions.NopCommerce.Common.Utils;
 using System.Collections.Generic;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -35,7 +36,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            Affiliate affiliate = AffiliateManager.GetAffiliateById(this.AffiliateId);
+            Affiliate affiliate = IoCFactory.Resolve<IAffiliateManager>().GetAffiliateById(this.AffiliateId);
 
             if (affiliate != null)
             {
@@ -68,7 +69,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         private void FillDropDowns()
         {
             this.ddlCountry.Items.Clear();
-            List<Country> countryCollection = CountryManager.GetAllCountriesForRegistration();
+            List<Country> countryCollection = IoCFactory.Resolve<ICountryManager>().GetAllCountriesForRegistration();
             foreach (Country country in countryCollection)
             {
                 ListItem ddlCountryItem2 = new ListItem(country.Name, country.CountryId.ToString());
@@ -87,7 +88,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public Affiliate SaveInfo()
         {
-            Affiliate affiliate = AffiliateManager.GetAffiliateById(this.AffiliateId);
+            Affiliate affiliate = IoCFactory.Resolve<IAffiliateManager>().GetAffiliateById(this.AffiliateId);
 
             if (affiliate != null)
             {
@@ -105,7 +106,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 affiliate.ZipPostalCode =  txtZipPostalCode.Text;
                 affiliate.CountryId = int.Parse(this.ddlCountry.SelectedItem.Value);
                 affiliate.Active = cbActive.Checked;
-                AffiliateManager.UpdateAffiliate(affiliate);
+                IoCFactory.Resolve<IAffiliateManager>().UpdateAffiliate(affiliate);
             }
             else
             {
@@ -126,7 +127,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     CountryId = int.Parse(this.ddlCountry.SelectedItem.Value),
                     Active = cbActive.Checked
                 };
-                AffiliateManager.InsertAffiliate(affiliate);
+                IoCFactory.Resolve<IAffiliateManager>().InsertAffiliate(affiliate);
             }
 
             return affiliate;

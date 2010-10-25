@@ -26,6 +26,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Payment.Methods.Worldpay;
 using NopSolutions.NopCommerce.Web.Templates.Payment;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Payment.CCAvenue
 {
@@ -39,20 +40,20 @@ namespace NopSolutions.NopCommerce.Web.Administration.Payment.CCAvenue
 
         private void BindData()
         {
-            txtCCAvenueMerchantID.Text = SettingManager.GetSettingValue("PaymentMethod.CCAvenue.MerchantID");
-            txtCCAvenueWorkingKey.Text = SettingManager.GetSettingValue("PaymentMethod.CCAvenue.Key");
-            txtCCAvenueMerchantParam.Text = SettingManager.GetSettingValue("PaymentMethod.CCAvenue.MerchantParam");
-            txtCCAvenuePayURI.Text = SettingManager.GetSettingValue("PaymentMethod.CCAvenue.PayURI");
-            txtAdditionalFee.Value = SettingManager.GetSettingValueDecimalNative("PaymentMethod.CCAvenue.AdditionalFee");
+            txtCCAvenueMerchantID.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.CCAvenue.MerchantID");
+            txtCCAvenueWorkingKey.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.CCAvenue.Key");
+            txtCCAvenueMerchantParam.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.CCAvenue.MerchantParam");
+            txtCCAvenuePayURI.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.CCAvenue.PayURI");
+            txtAdditionalFee.Value = IoCFactory.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.CCAvenue.AdditionalFee");
         }
 
         public void Save()
         {
-            SettingManager.SetParam("PaymentMethod.CCAvenue.MerchantID", txtCCAvenueMerchantID.Text);
-            SettingManager.SetParam("PaymentMethod.CCAvenue.Key", txtCCAvenueWorkingKey.Text);
-            SettingManager.SetParam("PaymentMethod.CCAvenue.MerchantParam", txtCCAvenueMerchantParam.Text);
-            SettingManager.SetParam("PaymentMethod.CCAvenue.PayURI", txtCCAvenuePayURI.Text);
-            SettingManager.SetParamNative("PaymentMethod.CCAvenue.AdditionalFee", txtAdditionalFee.Value);
+            IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.CCAvenue.MerchantID", txtCCAvenueMerchantID.Text);
+            IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.CCAvenue.Key", txtCCAvenueWorkingKey.Text);
+            IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.CCAvenue.MerchantParam", txtCCAvenueMerchantParam.Text);
+            IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.CCAvenue.PayURI", txtCCAvenuePayURI.Text);
+            IoCFactory.Resolve<ISettingManager>().SetParamNative("PaymentMethod.CCAvenue.AdditionalFee", txtAdditionalFee.Value);
         }
     }
 }

@@ -26,6 +26,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Data;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 using NopSolutions.NopCommerce.BusinessLogic.Localization;
 using NopSolutions.NopCommerce.BusinessLogic.Messages;
 using NopSolutions.NopCommerce.BusinessLogic.Messages.SMS;
@@ -49,7 +50,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
     /// <summary>
     /// Order manager
     /// </summary>
-    public partial class OrderManager
+    public partial class OrderManager : IOrderManager
     {
         #region Constants
         private const string ORDERSTATUSES_ALL_KEY = "Nop.orderstatus.all";
@@ -65,7 +66,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="order">Order</param>
         /// <param name="os">New order status</param>
         /// <param name="notifyCustomer">True to notify customer</param>
-        protected static void SetOrderStatus(Order order,
+        protected void SetOrderStatus(Order order,
             OrderStatusEnum os, bool notifyCustomer)
         {
             if (order == null)
@@ -86,7 +87,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 os == OrderStatusEnum.Complete
                 && notifyCustomer)
             {
-                int orderCompletedCustomerNotificationQueuedEmailId = MessageManager.SendOrderCompletedCustomerNotification(order, order.CustomerLanguageId);
+                int orderCompletedCustomerNotificationQueuedEmailId = IoCFactory.Resolve<IMessageManager>().SendOrderCompletedCustomerNotification(order, order.CustomerLanguageId);
                 if (orderCompletedCustomerNotificationQueuedEmailId > 0)
                 {
                     InsertOrderNote(order.OrderId, string.Format("\"Order completed\" email (to customer) has been queued. Queued email identifier: {0}.", orderCompletedCustomerNotificationQueuedEmailId), false, DateTime.UtcNow);
@@ -97,7 +98,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 os == OrderStatusEnum.Cancelled
                 && notifyCustomer)
             {
-                int orderCancelledCustomerNotificationQueuedEmailId = MessageManager.SendOrderCancelledCustomerNotification(order, order.CustomerLanguageId);
+                int orderCancelledCustomerNotificationQueuedEmailId = IoCFactory.Resolve<IMessageManager>().SendOrderCancelledCustomerNotification(order, order.CustomerLanguageId);
                 if (orderCancelledCustomerNotificationQueuedEmailId > 0)
                 {
                     InsertOrderNote(order.OrderId, string.Format("\"Order cancelled\" email (to customer) has been queued. Queued email identifier: {0}.", orderCancelledCustomerNotificationQueuedEmailId), false, DateTime.UtcNow);
@@ -105,14 +106,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             }
 
             //reward points
-            if (OrderManager.RewardPointsEnabled)
+            if (this.RewardPointsEnabled)
             {
-                if (OrderManager.RewardPointsForPurchases_Amount > decimal.Zero)
+                if (this.RewardPointsForPurchases_Amount > decimal.Zero)
                 {
-                    int points = (int)Math.Truncate(order.OrderTotal / OrderManager.RewardPointsForPurchases_Amount * OrderManager.RewardPointsForPurchases_Points);
+                    int points = (int)Math.Truncate(order.OrderTotal / this.RewardPointsForPurchases_Amount * this.RewardPointsForPurchases_Points);
                     if (points != 0)
                     {
-                        if (OrderManager.RewardPointsForPurchases_Awarded == order.OrderStatus)
+                        if (this.RewardPointsForPurchases_Awarded == order.OrderStatus)
                         {
                             var rph = InsertRewardPointsHistory(order.CustomerId,
                                 0, points, decimal.Zero,
@@ -122,7 +123,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                         }
 
 
-                        if (OrderManager.RewardPointsForPurchases_Canceled == order.OrderStatus)
+                        if (this.RewardPointsForPurchases_Canceled == order.OrderStatus)
                         {
                             var rph = InsertRewardPointsHistory(order.CustomerId,
                                 0, -points, decimal.Zero,
@@ -135,8 +136,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             }
 
             //gift cards activation
-            if (OrderManager.GiftCards_Activated.HasValue &&
-               OrderManager.GiftCards_Activated.Value == order.OrderStatus)
+            if (this.GiftCards_Activated.HasValue &&
+               this.GiftCards_Activated.Value == order.OrderStatus)
             {
                 var giftCards = GetAllGiftCards(order.OrderId, null, null, null, null, null, null, false, string.Empty);
                 foreach (var gc in giftCards)
@@ -150,10 +151,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                                 if (!String.IsNullOrEmpty(gc.RecipientEmail) &&
                                     !String.IsNullOrEmpty(gc.SenderEmail))
                                 {
-                                    Language customerLang = LanguageManager.GetLanguageById(order.CustomerLanguageId);
+                                    Language customerLang = IoCFactory.Resolve<ILanguageManager>().GetLanguageById(order.CustomerLanguageId);
                                     if (customerLang == null)
                                         customerLang = NopContext.Current.WorkingLanguage;
-                                    int queuedEmailId = MessageManager.SendGiftCardNotification(gc, customerLang.LanguageId);
+                                    int queuedEmailId = IoCFactory.Resolve<IMessageManager>().SendGiftCardNotification(gc, customerLang.LanguageId);
                                     if (queuedEmailId > 0)
                                     {
                                         isRecipientNotified = true;
@@ -171,20 +172,20 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
 
                     gc.IsGiftCardActivated = true;
                     gc.IsRecipientNotified = isRecipientNotified;
-                    OrderManager.UpdateGiftCard(gc);
+                    this.UpdateGiftCard(gc);
                 }
             }
 
             //gift cards deactivation
-            if (OrderManager.GiftCards_Deactivated.HasValue &&
-               OrderManager.GiftCards_Deactivated.Value == order.OrderStatus)
+            if (this.GiftCards_Deactivated.HasValue &&
+               this.GiftCards_Deactivated.Value == order.OrderStatus)
             {
                 var giftCards = GetAllGiftCards(order.OrderId,
                     null, null, null, null, null, null, true, string.Empty);
                 foreach (var gc in giftCards)
                 {
                     gc.IsGiftCardActivated = false;
-                    OrderManager.UpdateGiftCard(gc);
+                    this.UpdateGiftCard(gc);
                 }
             }
         }
@@ -194,7 +195,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// </summary>
         /// <param name="orderId">Order identifier</param>
         /// <returns>Validated order</returns>
-        protected static Order CheckOrderStatus(int orderId)
+        protected Order CheckOrderStatus(int orderId)
         {
             var order = GetOrderById(orderId);
             if (order == null)
@@ -253,7 +254,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// </summary>
         /// <param name="orderId">The order identifier</param>
         /// <returns>Order</returns>
-        public static Order GetOrderById(int orderId)
+        public Order GetOrderById(int orderId)
         {
             if (orderId == 0)
                 return null;
@@ -271,7 +272,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// </summary>
         /// <param name="orderGuid">The order identifier</param>
         /// <returns>Order</returns>
-        public static Order GetOrderByGuid(Guid orderGuid)
+        public Order GetOrderByGuid(Guid orderGuid)
         {
             if (orderGuid == Guid.Empty)
                 return null;
@@ -288,7 +289,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// Marks an order as deleted
         /// </summary>
         /// <param name="orderId">The order identifier</param>
-        public static void MarkOrderAsDeleted(int orderId)
+        public void MarkOrderAsDeleted(int orderId)
         {
             var order = GetOrderById(orderId);
             if (order != null)
@@ -308,7 +309,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="ps">Order payment status; null to load all orders</param>
         /// <param name="ss">Order shippment status; null to load all orders</param>
         /// <returns>Order collection</returns>
-        public static List<Order> SearchOrders(DateTime? startTime, DateTime? endTime,
+        public List<Order> SearchOrders(DateTime? startTime, DateTime? endTime,
             string customerEmail, OrderStatusEnum? os, PaymentStatusEnum? ps, 
             ShippingStatusEnum? ss)
         {
@@ -327,7 +328,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="ss">Order shippment status; null to load all orders</param>
         /// <param name="orderGuid">Search by order GUID (Global unique identifier) or part of GUID. Leave empty to load all orders.</param>
         /// <returns>Order collection</returns>
-        public static List<Order> SearchOrders(DateTime? startTime, DateTime? endTime,
+        public List<Order> SearchOrders(DateTime? startTime, DateTime? endTime,
             string customerEmail, OrderStatusEnum? os, PaymentStatusEnum? ps,
             ShippingStatusEnum? ss, string orderGuid)
         {
@@ -372,7 +373,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// Load all orders
         /// </summary>
         /// <returns>Order collection</returns>
-        public static List<Order> LoadAllOrders()
+        public List<Order> LoadAllOrders()
         {
             return SearchOrders(null, null, string.Empty, null, null, null);
         }
@@ -382,7 +383,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// </summary>
         /// <param name="customerId">Customer identifier</param>
         /// <returns>Order collection</returns>
-        public static List<Order> GetOrdersByCustomerId(int customerId)
+        public List<Order> GetOrdersByCustomerId(int customerId)
         {
             var context = ObjectContextHelper.CurrentObjectContext;
             var query = from o in context.Orders
@@ -399,7 +400,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="authorizationTransactionId">Authorization transaction identifier</param>
         /// <param name="paymentMethodId">Payment method identifier</param>
         /// <returns>Order</returns>
-        public static Order GetOrderByAuthorizationTransactionIdAndPaymentMethodId(string authorizationTransactionId, 
+        public Order GetOrderByAuthorizationTransactionIdAndPaymentMethodId(string authorizationTransactionId, 
             int paymentMethodId)
         {
             var context = ObjectContextHelper.CurrentObjectContext;
@@ -417,7 +418,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// </summary>
         /// <param name="affiliateId">Affiliate identifier</param>
         /// <returns>Order collection</returns>
-        public static List<Order> GetOrdersByAffiliateId(int affiliateId)
+        public List<Order> GetOrdersByAffiliateId(int affiliateId)
         {
             var context = ObjectContextHelper.CurrentObjectContext;
             var query = from o in context.Orders
@@ -432,7 +433,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// Inserts an order
         /// </summary>
         /// <param name="order">Order</param>
-        public static void InsertOrder(Order order)
+        public void InsertOrder(Order order)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
@@ -540,9 +541,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             context.SaveChanges();
 
             //quickbooks
-            if (QBManager.QBIsEnabled)
+            if (IoCFactory.Resolve<IQBManager>().QBIsEnabled)
             {
-                QBManager.RequestSynchronization(order);
+                IoCFactory.Resolve<IQBManager>().RequestSynchronization(order);
             }
 
             //raise event             
@@ -554,7 +555,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// Updates the order
         /// </summary>
         /// <param name="order">The order</param>
-        public static void UpdateOrder(Order order)
+        public void UpdateOrder(Order order)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
@@ -663,9 +664,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             context.SaveChanges();
 
             //quickbooks
-            if (QBManager.QBIsEnabled)
+            if (IoCFactory.Resolve<IQBManager>().QBIsEnabled)
             {
-                QBManager.RequestSynchronization(order);
+                IoCFactory.Resolve<IQBManager>().RequestSynchronization(order);
             }
 
 
@@ -679,7 +680,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// </summary>
         /// <param name="orderId">Order note identifier</param>
         /// <param name="trackingNumber">The tracking number of order</param>
-        public static void SetOrderTrackingNumber(int orderId, string trackingNumber)
+        public void SetOrderTrackingNumber(int orderId, string trackingNumber)
         {
             var order = GetOrderById(orderId);
             if (order != null)
@@ -698,7 +699,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// </summary>
         /// <param name="orderProductVariantId">Order product variant identifier</param>
         /// <returns>Order product variant</returns>
-        public static OrderProductVariant GetOrderProductVariantById(int orderProductVariantId)
+        public OrderProductVariant GetOrderProductVariantById(int orderProductVariantId)
         {
             if (orderProductVariantId == 0)
                 return null;
@@ -716,7 +717,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// Delete an order product variant
         /// </summary>
         /// <param name="orderProductVariantId">Order product variant identifier</param>
-        public static void DeleteOrderProductVariant(int orderProductVariantId)
+        public void DeleteOrderProductVariant(int orderProductVariantId)
         {
             if (orderProductVariantId == 0)
                 return;
@@ -737,7 +738,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// </summary>
         /// <param name="orderProductVariantGuid">Order product variant identifier</param>
         /// <returns>Order product variant</returns>
-        public static OrderProductVariant GetOrderProductVariantByGuid(Guid orderProductVariantGuid)
+        public OrderProductVariant GetOrderProductVariantByGuid(Guid orderProductVariantGuid)
         {
             if (orderProductVariantGuid == Guid.Empty)
                 return null;
@@ -762,7 +763,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="ps">Order payment status; null to load all records</param>
         /// <param name="ss">Order shippment status; null to load all records</param>
         /// <returns>Order collection</returns>
-        public static List<OrderProductVariant> GetAllOrderProductVariants(int? orderId,
+        public List<OrderProductVariant> GetAllOrderProductVariants(int? orderId,
             int? customerId, DateTime? startTime, DateTime? endTime,
             OrderStatusEnum? os, PaymentStatusEnum? ps, ShippingStatusEnum? ss)
         {
@@ -782,7 +783,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="ss">Order shippment status; null to load all records</param>
         /// <param name="loadDownloableProductsOnly">Value indicating whether to load downloadable products only</param>
         /// <returns>Order collection</returns>
-        public static List<OrderProductVariant> GetAllOrderProductVariants(int? orderId,
+        public List<OrderProductVariant> GetAllOrderProductVariants(int? orderId,
             int? customerId, DateTime? startTime, DateTime? endTime,
             OrderStatusEnum? os, PaymentStatusEnum? ps, ShippingStatusEnum? ss,
             bool loadDownloableProductsOnly)
@@ -825,7 +826,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// </summary>
         /// <param name="orderId">The order identifier</param>
         /// <returns>Order product variant collection</returns>
-        public static List<OrderProductVariant> GetOrderProductVariantsByOrderId(int orderId)
+        public List<OrderProductVariant> GetOrderProductVariantsByOrderId(int orderId)
         {
             return GetAllOrderProductVariants(orderId, null, null, null, null, null, null);
         }
@@ -834,7 +835,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// Inserts a order product variant
         /// </summary>
         /// <param name="opv">Order product variant</param>
-        public static void InsertOrderProductVariant(OrderProductVariant opv)
+        public void InsertOrderProductVariant(OrderProductVariant opv)
         {
             if (opv == null)
                 throw new ArgumentNullException("opv");
@@ -852,7 +853,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// Updates the order product variant
         /// </summary>
         /// <param name="opv">Order product variant</param>
-        public static void UpdateOrderProductVariant(OrderProductVariant opv)
+        public void UpdateOrderProductVariant(OrderProductVariant opv)
         {
             if (opv == null)
                 throw new ArgumentNullException("opv");
@@ -872,7 +873,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// </summary>
         /// <param name="orderProductVariantId">Order product variant identifier</param>
         /// <returns>Order product variant</returns>
-        public static OrderProductVariant IncreaseOrderProductDownloadCount(int orderProductVariantId)
+        public OrderProductVariant IncreaseOrderProductDownloadCount(int orderProductVariantId)
         {
             var opv = GetOrderProductVariantById(orderProductVariantId);
             if (opv == null)
@@ -893,7 +894,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// </summary>
         /// <param name="orderNoteId">Order note identifier</param>
         /// <returns>Order note</returns>
-        public static OrderNote GetOrderNoteById(int orderNoteId)
+        public OrderNote GetOrderNoteById(int orderNoteId)
         {
             if (orderNoteId == 0)
                 return null;
@@ -911,7 +912,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// </summary>
         /// <param name="orderId">Order identifier</param>
         /// <returns>Order note collection</returns>
-        public static List<OrderNote> GetOrderNoteByOrderId(int orderId)
+        public List<OrderNote> GetOrderNoteByOrderId(int orderId)
         {
             return GetOrderNoteByOrderId(orderId, NopContext.Current.IsAdmin);
         }
@@ -922,7 +923,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="orderId">Order identifier</param>
         /// <param name="showHidden">A value indicating whether all orders should be loaded</param>
         /// <returns>Order note collection</returns>
-        public static List<OrderNote> GetOrderNoteByOrderId(int orderId, bool showHidden)
+        public List<OrderNote> GetOrderNoteByOrderId(int orderId, bool showHidden)
         {
             var context = ObjectContextHelper.CurrentObjectContext;
             var query = from onote in context.OrderNotes
@@ -938,7 +939,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// Deletes an order note
         /// </summary>
         /// <param name="orderNoteId">Order note identifier</param>
-        public static void DeleteOrderNote(int orderNoteId)
+        public void DeleteOrderNote(int orderNoteId)
         {
             var orderNote = GetOrderNoteById(orderNoteId);
             if (orderNote == null)
@@ -958,7 +959,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="note">The note</param>
         /// <param name="createdOn">The date and time of order note creation</param>
         /// <returns>Order note</returns>
-        public static OrderNote InsertOrderNote(int orderId, string note, DateTime createdOn)
+        public OrderNote InsertOrderNote(int orderId, string note, DateTime createdOn)
         {
             return InsertOrderNote(orderId, note, false, createdOn);
         }
@@ -971,7 +972,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="displayToCustomer">A value indicating whether the customer can see a note</param>
         /// <param name="createdOn">The date and time of order note creation</param>
         /// <returns>Order note</returns>
-        public static OrderNote InsertOrderNote(int orderId, string note, 
+        public OrderNote InsertOrderNote(int orderId, string note, 
             bool displayToCustomer, DateTime createdOn)
         {
             note = CommonHelper.EnsureNotNull(note);
@@ -994,7 +995,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// Updates the order note
         /// </summary>
         /// <param name="orderNote">Order note</param>
-        public static void UpdateOrderNote(OrderNote orderNote)
+        public void UpdateOrderNote(OrderNote orderNote)
         {
             if (orderNote == null)
                 throw new ArgumentNullException("orderNote");
@@ -1018,7 +1019,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// </summary>
         /// <param name="orderStatusId">Order status identifier</param>
         /// <returns>Order status name</returns>
-        public static string GetOrderStatusName(int orderStatusId)
+        public string GetOrderStatusName(int orderStatusId)
         {
             var orderStatus = GetOrderStatusById(orderStatusId);
             if (orderStatus != null)
@@ -1045,14 +1046,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// </summary>
         /// <param name="orderStatusId">Order status identifier</param>
         /// <returns>Order status</returns>
-        public static OrderStatus GetOrderStatusById(int orderStatusId)
+        public OrderStatus GetOrderStatusById(int orderStatusId)
         {
             if (orderStatusId == 0)
                 return null;
 
             string key = string.Format(ORDERSTATUSES_BY_ID_KEY, orderStatusId);
             object obj2 = NopRequestCache.Get(key);
-            if (OrderManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (OrderStatus)obj2;
             }
@@ -1063,7 +1064,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                         select os;
             var orderStatus = query.SingleOrDefault();
 
-            if (OrderManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, orderStatus);
             }
@@ -1074,11 +1075,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// Gets all order statuses
         /// </summary>
         /// <returns>Order status collection</returns>
-        public static List<OrderStatus> GetAllOrderStatuses()
+        public List<OrderStatus> GetAllOrderStatuses()
         {
             string key = string.Format(ORDERSTATUSES_ALL_KEY);
             object obj2 = NopRequestCache.Get(key);
-            if (OrderManager.CacheEnabled && (obj2 != null))
+            if (this.CacheEnabled && (obj2 != null))
             {
                 return (List<OrderStatus>)obj2;
             }
@@ -1089,7 +1090,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                         select os;
             var orderStatuses = query.ToList();
 
-            if (OrderManager.CacheEnabled)
+            if (this.CacheEnabled)
             {
                 NopRequestCache.Add(key, orderStatuses);
             }
@@ -1109,7 +1110,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="ps">Order payment status; null to load all records</param>
         /// <param name="billingCountryId">Billing country identifier; null to load all records</param>
         /// <returns>Result</returns>
-        public static List<OrderProductVariantReportLine> OrderProductVariantReport(DateTime? startTime,
+        public List<OrderProductVariantReportLine> OrderProductVariantReport(DateTime? startTime,
             DateTime? endTime, OrderStatusEnum? os, PaymentStatusEnum? ps,
             int? billingCountryId)
         {
@@ -1134,7 +1135,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="recordsToReturn">Number of products to return</param>
         /// <param name="orderBy">1 - order by total count, 2 - Order by total amount</param>
         /// <returns>Result</returns>
-        public static List<BestSellersReportLine> BestSellersReport(int lastDays, 
+        public List<BestSellersReportLine> BestSellersReport(int lastDays, 
             int recordsToReturn, int orderBy)
         {
             var context = ObjectContextHelper.CurrentObjectContext;
@@ -1150,7 +1151,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="startTime">Start date</param>
         /// <param name="endTime">End date</param>
         /// <returns>Result</returns>
-        public static OrderAverageReportLine GetOrderAverageReportLine(OrderStatusEnum os, 
+        public OrderAverageReportLine GetOrderAverageReportLine(OrderStatusEnum os, 
             DateTime? startTime, DateTime? endTime)
         {
             int orderStatusId = (int)os;
@@ -1165,7 +1166,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// </summary>
         /// <param name="os">Order status</param>
         /// <returns>Result</returns>
-        public static OrderAverageReportLineSummary OrderAverageReport(OrderStatusEnum os)
+        public OrderAverageReportLineSummary OrderAverageReport(OrderStatusEnum os)
         {
             int orderStatusId = (int)os;
 
@@ -1217,7 +1218,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="ps">Order payment status; null to load all orders</param>
         /// <param name="ss">Order shippment status; null to load all orders</param>
         /// <returns>IdataReader</returns>
-        public static OrderIncompleteReportLine GetOrderReport(OrderStatusEnum? os, 
+        public OrderIncompleteReportLine GetOrderReport(OrderStatusEnum? os, 
             PaymentStatusEnum? ps, ShippingStatusEnum? ss)
         {
             int? orderStatusId = null;
@@ -1246,7 +1247,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// </summary>
         /// <param name="recurringPaymentId">The recurring payment identifier</param>
         /// <returns>Recurring payment</returns>
-        public static RecurringPayment GetRecurringPaymentById(int recurringPaymentId)
+        public RecurringPayment GetRecurringPaymentById(int recurringPaymentId)
         {
             if (recurringPaymentId == 0)
                 return null;
@@ -1263,7 +1264,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// Deletes a recurring payment
         /// </summary>
         /// <param name="recurringPaymentId">Recurring payment identifier</param>
-        public static void DeleteRecurringPayment(int recurringPaymentId)
+        public void DeleteRecurringPayment(int recurringPaymentId)
         {
             var recurringPayment = GetRecurringPaymentById(recurringPaymentId);
             if (recurringPayment != null)
@@ -1277,7 +1278,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// Inserts a recurring payment
         /// </summary>
         /// <param name="recurringPayment">Recurring payment</param>
-        public static void InsertRecurringPayment(RecurringPayment recurringPayment)
+        public void InsertRecurringPayment(RecurringPayment recurringPayment)
         {
             if (recurringPayment == null)
                 throw new ArgumentNullException("recurringPayment");
@@ -1292,7 +1293,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// Updates the recurring payment
         /// </summary>
         /// <param name="recurringPayment">Recurring payment</param>
-        public static void UpdateRecurringPayment(RecurringPayment recurringPayment)
+        public void UpdateRecurringPayment(RecurringPayment recurringPayment)
         {
             if (recurringPayment == null)
                 throw new ArgumentNullException("recurringPayment");
@@ -1311,7 +1312,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="initialOrderId">The initial order identifier; 0 to load all records</param>
         /// <param name="initialOrderStatus">Initial order status identifier; null to load all records</param>
         /// <returns>Recurring payment collection</returns>
-        public static List<RecurringPayment> SearchRecurringPayments(int customerId, 
+        public List<RecurringPayment> SearchRecurringPayments(int customerId, 
             int initialOrderId, OrderStatusEnum? initialOrderStatus)
         {
             bool showHidden = NopContext.Current.IsAdmin;
@@ -1327,7 +1328,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="initialOrderId">The initial order identifier; 0 to load all records</param>
         /// <param name="initialOrderStatus">Initial order status identifier; null to load all records</param>
         /// <returns>Recurring payment collection</returns>
-        public static List<RecurringPayment> SearchRecurringPayments(bool showHidden,
+        public List<RecurringPayment> SearchRecurringPayments(bool showHidden,
             int customerId, int initialOrderId, OrderStatusEnum? initialOrderStatus)
         {
             int? initialOrderStatusId = null;
@@ -1345,7 +1346,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// Deletes a recurring payment history
         /// </summary>
         /// <param name="recurringPaymentHistoryId">Recurring payment history identifier</param>
-        public static void DeleteRecurringPaymentHistory(int recurringPaymentHistoryId)
+        public void DeleteRecurringPaymentHistory(int recurringPaymentHistoryId)
         {
             var recurringPaymentHistory = GetRecurringPaymentHistoryById(recurringPaymentHistoryId);
             if (recurringPaymentHistory == null)
@@ -1363,7 +1364,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// </summary>
         /// <param name="recurringPaymentHistoryId">The recurring payment history identifier</param>
         /// <returns>Recurring payment history</returns>
-        public static RecurringPaymentHistory GetRecurringPaymentHistoryById(int recurringPaymentHistoryId)
+        public RecurringPaymentHistory GetRecurringPaymentHistoryById(int recurringPaymentHistoryId)
         {
             if (recurringPaymentHistoryId == 0)
                 return null;
@@ -1380,7 +1381,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// Inserts a recurring payment history
         /// </summary>
         /// <param name="recurringPaymentHistory">Recurring payment history</param>
-        public static void InsertRecurringPaymentHistory(RecurringPaymentHistory recurringPaymentHistory)
+        public void InsertRecurringPaymentHistory(RecurringPaymentHistory recurringPaymentHistory)
         {
             if (recurringPaymentHistory == null)
                 throw new ArgumentNullException("recurringPaymentHistory");
@@ -1395,7 +1396,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// Updates the recurring payment history
         /// </summary>
         /// <param name="recurringPaymentHistory">Recurring payment history</param>
-        public static void UpdateRecurringPaymentHistory(RecurringPaymentHistory recurringPaymentHistory)
+        public void UpdateRecurringPaymentHistory(RecurringPaymentHistory recurringPaymentHistory)
         {
             if (recurringPaymentHistory == null)
                 throw new ArgumentNullException("recurringPaymentHistory");
@@ -1413,7 +1414,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="recurringPaymentId">The recurring payment identifier; 0 to load all records</param>
         /// <param name="orderId">The order identifier; 0 to load all records</param>
         /// <returns>Recurring payment history collection</returns>
-        public static List<RecurringPaymentHistory> SearchRecurringPaymentHistory(int recurringPaymentId, 
+        public List<RecurringPaymentHistory> SearchRecurringPaymentHistory(int recurringPaymentId, 
             int orderId)
         {
             var context = ObjectContextHelper.CurrentObjectContext;
@@ -1429,7 +1430,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// Deletes a gift card
         /// </summary>
         /// <param name="giftCardId">Gift card identifier</param>
-        public static void DeleteGiftCard(int giftCardId)
+        public void DeleteGiftCard(int giftCardId)
         {
             var giftCard = GetGiftCardById(giftCardId);
             if (giftCard == null)
@@ -1447,7 +1448,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// </summary>
         /// <param name="giftCardId">Gift card identifier</param>
         /// <returns>Gift card entry</returns>
-        public static GiftCard GetGiftCardById(int giftCardId)
+        public GiftCard GetGiftCardById(int giftCardId)
         {
             if (giftCardId == 0)
                 return null;
@@ -1473,7 +1474,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="isGiftCardActivated">Value indicating whether gift card is activated; null to load all records</param>
         /// <param name="giftCardCouponCode">Gift card coupon code; null or string.empty to load all records</param>
         /// <returns>Gift cards</returns>
-        public static List<GiftCard> GetAllGiftCards(int? orderId,
+        public List<GiftCard> GetAllGiftCards(int? orderId,
             int? customerId, DateTime? startTime, DateTime? endTime,
             OrderStatusEnum? os, PaymentStatusEnum? ps, ShippingStatusEnum? ss,
             bool? isGiftCardActivated, string giftCardCouponCode)
@@ -1504,7 +1505,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// Inserts a gift card
         /// </summary>
         /// <param name="giftCard">Gift card</param>
-        public static void InsertGiftCard(GiftCard giftCard)
+        public void InsertGiftCard(GiftCard giftCard)
         {
             if (giftCard == null)
                 throw new ArgumentNullException("giftCard");
@@ -1532,7 +1533,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// Updates the gift card
         /// </summary>
         /// <param name="giftCard">Gift card</param>
-        public static void UpdateGiftCard(GiftCard giftCard)
+        public void UpdateGiftCard(GiftCard giftCard)
         {
             if (giftCard == null)
                 throw new ArgumentNullException("giftCard");
@@ -1560,7 +1561,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// Deletes a gift card usage history entry
         /// </summary>
         /// <param name="giftCardUsageHistoryId">Gift card usage history entry identifier</param>
-        public static void DeleteGiftCardUsageHistory(int giftCardUsageHistoryId)
+        public void DeleteGiftCardUsageHistory(int giftCardUsageHistoryId)
         {
             var giftCardUsageHistory = GetGiftCardUsageHistoryById(giftCardUsageHistoryId);
             if (giftCardUsageHistory == null)
@@ -1578,7 +1579,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// </summary>
         /// <param name="giftCardUsageHistoryId">Gift card usage history entry identifier</param>
         /// <returns>Gift card usage history entry</returns>
-        public static GiftCardUsageHistory GetGiftCardUsageHistoryById(int giftCardUsageHistoryId)
+        public GiftCardUsageHistory GetGiftCardUsageHistoryById(int giftCardUsageHistoryId)
         {
             if (giftCardUsageHistoryId == 0)
                 return null;
@@ -1598,7 +1599,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="customerId">Customer identifier; null to load all records</param>
         /// <param name="orderId">Order identifier; null to load all records</param>
         /// <returns>Gift card usage history entries</returns>
-        public static List<GiftCardUsageHistory> GetAllGiftCardUsageHistoryEntries(int? giftCardId,
+        public List<GiftCardUsageHistory> GetAllGiftCardUsageHistoryEntries(int? giftCardId,
             int? customerId, int? orderId)
         {
             var context = ObjectContextHelper.CurrentObjectContext;
@@ -1611,7 +1612,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// Inserts a gift card usage history entry
         /// </summary>
         /// <param name="giftCardUsageHistory">Gift card usage history entry</param>
-        public static void InsertGiftCardUsageHistory(GiftCardUsageHistory giftCardUsageHistory)
+        public void InsertGiftCardUsageHistory(GiftCardUsageHistory giftCardUsageHistory)
         {
             if (giftCardUsageHistory == null)
                 throw new ArgumentNullException("giftCardUsageHistory");
@@ -1626,7 +1627,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// Updates the gift card usage history entry
         /// </summary>
         /// <param name="giftCardUsageHistory">Gift card usage history entry</param>
-        public static void UpdateGiftCardUsageHistory(GiftCardUsageHistory giftCardUsageHistory)
+        public void UpdateGiftCardUsageHistory(GiftCardUsageHistory giftCardUsageHistory)
         {
             if (giftCardUsageHistory == null)
                 throw new ArgumentNullException("giftCardUsageHistory");
@@ -1646,7 +1647,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// Deletes a reward point history entry
         /// </summary>
         /// <param name="rewardPointsHistoryId">Reward point history entry identifier</param>
-        public static void DeleteRewardPointsHistory(int rewardPointsHistoryId)
+        public void DeleteRewardPointsHistory(int rewardPointsHistoryId)
         {
             var rewardPointsHistory = GetRewardPointsHistoryById(rewardPointsHistoryId);
             if (rewardPointsHistory == null)
@@ -1664,7 +1665,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// </summary>
         /// <param name="rewardPointsHistoryId">Reward point history entry identifier</param>
         /// <returns>Reward point history entry</returns>
-        public static RewardPointsHistory GetRewardPointsHistoryById(int rewardPointsHistoryId)
+        public RewardPointsHistory GetRewardPointsHistoryById(int rewardPointsHistoryId)
         {
             if (rewardPointsHistoryId == 0)
                 return null;
@@ -1686,7 +1687,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="pageIndex">Page index</param>
         /// <param name="totalRecords">Total records</param>
         /// <returns>Reward point history entries</returns>
-        public static List<RewardPointsHistory> GetAllRewardPointsHistoryEntries(int? customerId,
+        public List<RewardPointsHistory> GetAllRewardPointsHistoryEntries(int? customerId,
             int? orderId, int pageSize, int pageIndex, out int totalRecords)
         {
             if (pageSize <= 0)
@@ -1718,7 +1719,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="message">Customer currency code</param>
         /// <param name="createdOn">A date and time of instance creation</param>
         /// <returns>Reward point history entry</returns>
-        public static RewardPointsHistory InsertRewardPointsHistory(int customerId,
+        public RewardPointsHistory InsertRewardPointsHistory(int customerId,
             int orderId, int points, decimal usedAmount,
             decimal usedAmountInCustomerCurrency, string customerCurrencyCode,
             string message, DateTime createdOn)
@@ -1728,7 +1729,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             message = CommonHelper.EnsureNotNull(message);
             message = CommonHelper.EnsureMaximumLength(message, 1000);
 
-            Customer customer = CustomerManager.GetCustomerById(customerId);
+            Customer customer = IoCFactory.Resolve<ICustomerManager>().GetCustomerById(customerId);
             if (customer == null)
                 throw new NopException("Customer not found. ID=" + customerId);
 
@@ -1759,7 +1760,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// Updates a reward point history entry
         /// </summary>
         /// <param name="rewardPointsHistory">Reward point history entry</param>
-        public static void UpdateRewardPointsHistory(RewardPointsHistory rewardPointsHistory)
+        public void UpdateRewardPointsHistory(RewardPointsHistory rewardPointsHistory)
         {
             if (rewardPointsHistory == null)
                 throw new ArgumentNullException("rewardPointsHistory");
@@ -1785,7 +1786,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// </summary>
         /// <param name="rs">Return status</param>
         /// <returns>Return request status name</returns>
-        public static string GetReturnRequestStatusName(ReturnStatusEnum rs)
+        public string GetReturnRequestStatusName(ReturnStatusEnum rs)
         {
             string name = string.Empty;
             switch (rs)
@@ -1823,9 +1824,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// </summary>
         /// <param name="order">Order</param>
         /// <returns>Result</returns>
-        public static bool IsReturnRequestAllowed(Order order)
+        public bool IsReturnRequestAllowed(Order order)
         {
-            if (!SettingManager.GetSettingValueBoolean("ReturnRequests.Enable"))
+            if (!IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("ReturnRequests.Enable"))
                 return false;
 
             if (order == null || order.Deleted)
@@ -1839,7 +1840,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// </summary>
         /// <param name="returnRequestId">Return request identifier</param>
         /// <returns>Return request</returns>
-        public static ReturnRequest GetReturnRequestById(int returnRequestId)
+        public ReturnRequest GetReturnRequestById(int returnRequestId)
         {
             if (returnRequestId == 0)
                 return null;
@@ -1856,7 +1857,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// Deletes a return request
         /// </summary>
         /// <param name="returnRequestId">Return request identifier</param>
-        public static void DeleteReturnRequest(int returnRequestId)
+        public void DeleteReturnRequest(int returnRequestId)
         {
             var returnRequest = GetReturnRequestById(returnRequestId);
             if (returnRequest == null)
@@ -1876,7 +1877,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="orderProductVariantId">Order product variant identifier; null to load all entries</param>
         /// <param name="rs">Return status; null to load all entries</param>
         /// <returns>Return requests</returns>
-        public static List<ReturnRequest> SearchReturnRequests(int customerId, 
+        public List<ReturnRequest> SearchReturnRequests(int customerId, 
             int orderProductVariantId, ReturnStatusEnum? rs)
         {
             int? returnStatusId = null;
@@ -1901,7 +1902,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// </summary>
         /// <param name="returnRequest">Return request</param>
         /// <param name="notifyStoreOwner">A value indicating whether to notify about new return request</param>
-        public static void InsertReturnRequest(ReturnRequest returnRequest, bool notifyStoreOwner)
+        public void InsertReturnRequest(ReturnRequest returnRequest, bool notifyStoreOwner)
         {
             if (returnRequest == null)
                 throw new ArgumentNullException("returnRequest");
@@ -1920,7 +1921,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
 
             if (notifyStoreOwner)
             {
-                MessageManager.SendNewReturnRequestStoreOwnerNotification(returnRequest, LocalizationManager.DefaultAdminLanguage.LanguageId);
+                IoCFactory.Resolve<IMessageManager>().SendNewReturnRequestStoreOwnerNotification(returnRequest, LocalizationManager.DefaultAdminLanguage.LanguageId);
             }
         }
         
@@ -1928,7 +1929,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// Updates the return request
         /// </summary>
         /// <param name="returnRequest">Return request</param>
-        public static void UpdateReturnRequest(ReturnRequest returnRequest)
+        public void UpdateReturnRequest(ReturnRequest returnRequest)
         {
             if (returnRequest == null)
                 throw new ArgumentNullException("returnRequest");
@@ -1952,7 +1953,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// </summary>
         /// <param name="text">Text</param>
         /// <returns>Formatted text</returns>
-        public static string FormatReturnRequestCommentsText(string text)
+        public string FormatReturnRequestCommentsText(string text)
         {
             if (String.IsNullOrEmpty(text))
                 return string.Empty;
@@ -1971,7 +1972,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// </summary>
         /// <param name="orderProductVariant">Order produvt variant to check</param>
         /// <returns>True if download is allowed; otherwise, false.</returns>
-        public static bool IsDownloadAllowed(OrderProductVariant orderProductVariant)
+        public bool IsDownloadAllowed(OrderProductVariant orderProductVariant)
         {
             if (orderProductVariant == null)
                 return false;
@@ -2041,7 +2042,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// </summary>
         /// <param name="orderProductVariant">Order produvt variant to check</param>
         /// <returns>True if license download is allowed; otherwise, false.</returns>
-        public static bool IsLicenseDownloadAllowed(OrderProductVariant orderProductVariant)
+        public bool IsLicenseDownloadAllowed(OrderProductVariant orderProductVariant)
         {
             if (orderProductVariant == null)
                 return false;
@@ -2054,7 +2055,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// </summary>
         /// <param name="text">Text</param>
         /// <returns>Formatted text</returns>
-        public static string FormatOrderNoteText(string text)
+        public string FormatOrderNoteText(string text)
         {
             if (String.IsNullOrEmpty(text))
                 return string.Empty;
@@ -2070,7 +2071,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="customer">Customer</param>
         /// <param name="orderId">Order identifier</param>
         /// <returns>The error status, or String.Empty if no errors</returns>
-        public static string PlaceOrder(PaymentInfo paymentInfo, Customer customer, 
+        public string PlaceOrder(PaymentInfo paymentInfo, Customer customer, 
             out int orderId)
         {
             var orderGuid = Guid.NewGuid();
@@ -2085,7 +2086,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="orderGuid">Order GUID to use</param>
         /// <param name="orderId">Order identifier</param>
         /// <returns>The error status, or String.Empty if no errors</returns>
-        public static string PlaceOrder(PaymentInfo paymentInfo, Customer customer, 
+        public string PlaceOrder(PaymentInfo paymentInfo, Customer customer, 
             Guid orderGuid, out int orderId)
         {
             orderId = 0;
@@ -2095,7 +2096,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 if (customer == null)
                     throw new ArgumentNullException("customer");
 
-                if (customer.IsGuest && !CustomerManager.AnonymousCheckoutAllowed)
+                if (customer.IsGuest && !IoCFactory.Resolve<ICustomerManager>().AnonymousCheckoutAllowed)
                     throw new NopException("Anonymous checkout is not allowed");
 
                 if (!CommonHelper.IsValidEmail(customer.Email))
@@ -2143,10 +2144,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 ShoppingCart cart = null;
                 if (!paymentInfo.IsRecurringPayment)
                 {
-                    cart = ShoppingCartManager.GetCustomerShoppingCart(customer.CustomerId, ShoppingCartTypeEnum.ShoppingCart);
+                    cart = IoCFactory.Resolve<IShoppingCartManager>().GetCustomerShoppingCart(customer.CustomerId, ShoppingCartTypeEnum.ShoppingCart);
 
                     //validate cart
-                    var warnings = ShoppingCartManager.GetShoppingCartWarnings(cart, customer.CheckoutAttributes, true);
+                    var warnings = IoCFactory.Resolve<IShoppingCartManager>().GetShoppingCartWarnings(cart, customer.CheckoutAttributes, true);
                     if (warnings.Count > 0)
                     {
                         StringBuilder warningsSb = new StringBuilder();
@@ -2161,7 +2162,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                     //validate individual cart items
                     foreach (var sci in cart)
                     {
-                        var sciWarnings = ShoppingCartManager.GetShoppingCartItemWarnings(sci.ShoppingCartType,
+                        var sciWarnings = IoCFactory.Resolve<IShoppingCartManager>().GetShoppingCartItemWarnings(sci.ShoppingCartType,
                             sci.ProductVariantId, sci.AttributesXml, 
                             sci.CustomerEnteredPrice, sci.Quantity);
 
@@ -2182,10 +2183,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 var customerTaxDisplayType = TaxDisplayTypeEnum.IncludingTax;
                 if (!paymentInfo.IsRecurringPayment)
                 {
-                    if (TaxManager.AllowCustomersToSelectTaxDisplayType)
+                    if (IoCFactory.Resolve<ITaxManager>().AllowCustomersToSelectTaxDisplayType)
                         customerTaxDisplayType = customer.TaxDisplayType;
                     else
-                        customerTaxDisplayType = TaxManager.TaxDisplayType;
+                        customerTaxDisplayType = IoCFactory.Resolve<ITaxManager>().TaxDisplayType;
                 }
                 else
                 {
@@ -2225,7 +2226,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                     Discount orderSubTotalAppliedDiscount1 = null;
                     decimal subTotalWithoutDiscountBase1 = decimal.Zero;
                     decimal subTotalWithDiscountBase1 = decimal.Zero;
-                    string subTotalError1 = ShoppingCartManager.GetShoppingCartSubTotal(cart, customer,
+                    string subTotalError1 = IoCFactory.Resolve<IShoppingCartManager>().GetShoppingCartSubTotal(cart, customer,
                         true, out orderSubTotalDiscountAmount1, out orderSubTotalAppliedDiscount1,
                         out subTotalWithoutDiscountBase1, out subTotalWithDiscountBase1);
                     orderSubTotalInclTax = subTotalWithoutDiscountBase1;
@@ -2240,7 +2241,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                     Discount orderSubTotalAppliedDiscount2 = null;
                     decimal subTotalWithoutDiscountBase2 = decimal.Zero;
                     decimal subTotalWithDiscountBase2 = decimal.Zero;
-                    string subTotalError2 = ShoppingCartManager.GetShoppingCartSubTotal(cart, customer,
+                    string subTotalError2 = IoCFactory.Resolve<IShoppingCartManager>().GetShoppingCartSubTotal(cart, customer,
                         false, out orderSubTotalDiscountAmount2, out orderSubTotalAppliedDiscount2,
                         out subTotalWithoutDiscountBase2, out subTotalWithDiscountBase2);
                     orderSubTotalExclTax = subTotalWithoutDiscountBase2;
@@ -2250,10 +2251,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                         throw new NopException("Sub total couldn't be calculated");
                     
                     //in customer currency
-                    orderSubtotalInclTaxInCustomerCurrency = CurrencyManager.ConvertCurrency(orderSubTotalInclTax, CurrencyManager.PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
-                    orderSubtotalExclTaxInCustomerCurrency = CurrencyManager.ConvertCurrency(orderSubTotalExclTax, CurrencyManager.PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
-                    orderSubTotalDiscountInclTaxInCustomerCurrency = CurrencyManager.ConvertCurrency(orderSubTotalDiscountInclTax, CurrencyManager.PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
-                    orderSubTotalDiscountExclTaxInCustomerCurrency = CurrencyManager.ConvertCurrency(orderSubTotalDiscountExclTax, CurrencyManager.PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
+                    orderSubtotalInclTaxInCustomerCurrency = IoCFactory.Resolve<ICurrencyManager>().ConvertCurrency(orderSubTotalInclTax, IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
+                    orderSubtotalExclTaxInCustomerCurrency = IoCFactory.Resolve<ICurrencyManager>().ConvertCurrency(orderSubTotalExclTax, IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
+                    orderSubTotalDiscountInclTaxInCustomerCurrency = IoCFactory.Resolve<ICurrencyManager>().ConvertCurrency(orderSubTotalDiscountInclTax, IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
+                    orderSubTotalDiscountExclTaxInCustomerCurrency = IoCFactory.Resolve<ICurrencyManager>().ConvertCurrency(orderSubTotalDiscountExclTax, IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
                 }
                 else
                 {
@@ -2270,8 +2271,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 bool shoppingCartRequiresShipping = false;
                 if (!paymentInfo.IsRecurringPayment)
                 {
-                    orderWeight = ShippingManager.GetShoppingCartTotalWeight(cart, customer);
-                    shoppingCartRequiresShipping = ShippingManager.ShoppingCartRequiresShipping(cart);
+                    orderWeight = IoCFactory.Resolve<IShippingManager>().GetShoppingCartTotalWeight(cart, customer);
+                    shoppingCartRequiresShipping = IoCFactory.Resolve<IShippingManager>().ShoppingCartRequiresShipping(cart);
                     if (shoppingCartRequiresShipping)
                     {
                         if (paymentInfo.ShippingAddress == null)
@@ -2302,16 +2303,16 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                     string shippingTotalError1 = string.Empty;
                     string shippingTotalError2 = string.Empty;
                     Discount shippingTotalDiscount = null;
-                    orderShippingTotalInclTax = ShippingManager.GetShoppingCartShippingTotal(cart, customer, true, out taxRate, out shippingTotalDiscount, ref shippingTotalError1);
-                    orderShippingTotalExclTax = ShippingManager.GetShoppingCartShippingTotal(cart, customer, false, ref shippingTotalError2);
+                    orderShippingTotalInclTax = IoCFactory.Resolve<IShippingManager>().GetShoppingCartShippingTotal(cart, customer, true, out taxRate, out shippingTotalDiscount, ref shippingTotalError1);
+                    orderShippingTotalExclTax = IoCFactory.Resolve<IShippingManager>().GetShoppingCartShippingTotal(cart, customer, false, ref shippingTotalError2);
                     if (!orderShippingTotalInclTax.HasValue || !orderShippingTotalExclTax.HasValue)
                         throw new NopException("Shipping total couldn't be calculated");
                     if (shippingTotalDiscount != null && !appliedDiscounts.ContainsDiscount(shippingTotalDiscount.Name))
                         appliedDiscounts.Add(shippingTotalDiscount);
 
                     //in customer currency
-                    orderShippingInclTaxInCustomerCurrency = CurrencyManager.ConvertCurrency(orderShippingTotalInclTax.Value, CurrencyManager.PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
-                    orderShippingExclTaxInCustomerCurrency = CurrencyManager.ConvertCurrency(orderShippingTotalExclTax.Value, CurrencyManager.PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
+                    orderShippingInclTaxInCustomerCurrency = IoCFactory.Resolve<ICurrencyManager>().ConvertCurrency(orderShippingTotalInclTax.Value, IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
+                    orderShippingExclTaxInCustomerCurrency = IoCFactory.Resolve<ICurrencyManager>().ConvertCurrency(orderShippingTotalExclTax.Value, IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
 
                 }
                 else
@@ -2332,17 +2333,17 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 {
                     string paymentAdditionalFeeError1 = string.Empty;
                     string paymentAdditionalFeeError2 = string.Empty;
-                    decimal paymentAdditionalFee = PaymentManager.GetAdditionalHandlingFee(paymentInfo.PaymentMethodId);
-                    paymentAdditionalFeeInclTax = TaxManager.GetPaymentMethodAdditionalFee(paymentAdditionalFee, true, customer, ref paymentAdditionalFeeError1);
-                    paymentAdditionalFeeExclTax = TaxManager.GetPaymentMethodAdditionalFee(paymentAdditionalFee, false, customer, ref paymentAdditionalFeeError2);
+                    decimal paymentAdditionalFee = IoCFactory.Resolve<IPaymentManager>().GetAdditionalHandlingFee(paymentInfo.PaymentMethodId);
+                    paymentAdditionalFeeInclTax = IoCFactory.Resolve<ITaxManager>().GetPaymentMethodAdditionalFee(paymentAdditionalFee, true, customer, ref paymentAdditionalFeeError1);
+                    paymentAdditionalFeeExclTax = IoCFactory.Resolve<ITaxManager>().GetPaymentMethodAdditionalFee(paymentAdditionalFee, false, customer, ref paymentAdditionalFeeError2);
                     if (!String.IsNullOrEmpty(paymentAdditionalFeeError1))
                         throw new NopException("Payment method fee couldn't be calculated");
                     if (!String.IsNullOrEmpty(paymentAdditionalFeeError2))
                         throw new NopException("Payment method fee couldn't be calculated");
 
                     //in customer currency
-                    paymentAdditionalFeeInclTaxInCustomerCurrency = CurrencyManager.ConvertCurrency(paymentAdditionalFeeInclTax, CurrencyManager.PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
-                    paymentAdditionalFeeExclTaxInCustomerCurrency = CurrencyManager.ConvertCurrency(paymentAdditionalFeeExclTax, CurrencyManager.PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
+                    paymentAdditionalFeeInclTaxInCustomerCurrency = IoCFactory.Resolve<ICurrencyManager>().ConvertCurrency(paymentAdditionalFeeInclTax, IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
+                    paymentAdditionalFeeExclTaxInCustomerCurrency = IoCFactory.Resolve<ICurrencyManager>().ConvertCurrency(paymentAdditionalFeeExclTax, IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
                 }
                 else
                 {
@@ -2364,16 +2365,16 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                     //tax amount
                     SortedDictionary<decimal, decimal> taxRatesDictionary = null;
                     string taxError = string.Empty;
-                    orderTaxTotal = TaxManager.GetTaxTotal(cart,
+                    orderTaxTotal = IoCFactory.Resolve<ITaxManager>().GetTaxTotal(cart,
                         paymentInfo.PaymentMethodId, customer, out taxRatesDictionary, ref taxError);
                     if (!String.IsNullOrEmpty(taxError))
                         throw new NopException("Tax total couldn't be calculated");
 
                     //in customer currency
-                    orderTaxInCustomerCurrency = CurrencyManager.ConvertCurrency(orderTaxTotal, CurrencyManager.PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
+                    orderTaxInCustomerCurrency = IoCFactory.Resolve<ICurrencyManager>().ConvertCurrency(orderTaxTotal, IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
 
                     //VAT number
-                    if (TaxManager.EUVatEnabled && customer.VatNumberStatus == VatNumberStatusEnum.Valid)
+                    if (IoCFactory.Resolve<ITaxManager>().EUVatEnabled && customer.VatNumberStatus == VatNumberStatusEnum.Valid)
                     {
                         vatNumber = customer.VatNumber;
                     }
@@ -2384,7 +2385,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                         var taxRate = kvp.Key;
                         var taxValue = kvp.Value;
 
-                        var taxValueInCustomerCurrency = CurrencyManager.ConvertCurrency(taxValue, CurrencyManager.PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
+                        var taxValueInCustomerCurrency = IoCFactory.Resolve<ICurrencyManager>().ConvertCurrency(taxValue, IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
 
                         taxRates += string.Format("{0}:{1};   ", taxRate.ToString(new CultureInfo("en-US")), taxValue.ToString(new CultureInfo("en-US")));
                         taxRatesInCustomerCurrency += string.Format("{0}:{1};   ", taxRate.ToString(new CultureInfo("en-US")), taxValueInCustomerCurrency.ToString(new CultureInfo("en-US")));
@@ -2415,7 +2416,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
 
                     bool useRewardPoints = customer.UseRewardPointsDuringCheckout;
 
-                    orderTotal = ShoppingCartManager.GetShoppingCartTotal(cart,
+                    orderTotal = IoCFactory.Resolve<IShoppingCartManager>().GetShoppingCartTotal(cart,
                         paymentInfo.PaymentMethodId, customer,
                         out orderDiscountAmount, out orderAppliedDiscount, 
                         out appliedGiftCards, useRewardPoints,
@@ -2428,10 +2429,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                         appliedDiscounts.Add(orderAppliedDiscount);
 
                     //in customer currency
-                    orderDiscountInCustomerCurrency = CurrencyManager.ConvertCurrency(orderDiscountAmount,
-                        CurrencyManager.PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
-                    orderTotalInCustomerCurrency = CurrencyManager.ConvertCurrency(orderTotal.Value, 
-                        CurrencyManager.PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
+                    orderDiscountInCustomerCurrency = IoCFactory.Resolve<ICurrencyManager>().ConvertCurrency(orderDiscountAmount,
+                        IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
+                    orderTotalInCustomerCurrency = IoCFactory.Resolve<ICurrencyManager>().ConvertCurrency(orderTotal.Value, 
+                        IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
                 }
                 else
                 {
@@ -2453,7 +2454,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 string paymentMethodName = string.Empty;
                 if (!skipPaymentWorkflow)
                 {
-                    paymentMethod = PaymentMethodManager.GetPaymentMethodById(paymentInfo.PaymentMethodId);
+                    paymentMethod = IoCFactory.Resolve<IPaymentMethodManager>().GetPaymentMethodById(paymentInfo.PaymentMethodId);
                     if (paymentMethod == null)
                         throw new NopException("Payment method couldn't be loaded");
 
@@ -2639,7 +2640,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                     isRecurringShoppingCart = cart.IsRecurring;
                     if (isRecurringShoppingCart)
                     {
-                        string recurringCyclesError = ShoppingCartManager.GetReccuringCycleInfo(cart, out recurringCycleLength, out recurringCyclePeriod, out recurringTotalCycles);
+                        string recurringCyclesError = IoCFactory.Resolve<IShoppingCartManager>().GetReccuringCycleInfo(cart, out recurringCycleLength, out recurringCyclePeriod, out recurringTotalCycles);
                         if (!string.IsNullOrEmpty(recurringCyclesError))
                         {
                             throw new NopException(recurringCyclesError);
@@ -2662,14 +2663,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                         if (isRecurringShoppingCart)
                         {
                             //recurring cart
-                            var recurringPaymentType = PaymentManager.SupportRecurringPayments(paymentInfo.PaymentMethodId);
+                            var recurringPaymentType = IoCFactory.Resolve<IPaymentManager>().SupportRecurringPayments(paymentInfo.PaymentMethodId);
                             switch (recurringPaymentType)
                             {
                                 case RecurringPaymentTypeEnum.NotSupported:
                                     throw new NopException("Recurring payments are not supported by selected payment method");
                                 case RecurringPaymentTypeEnum.Manual:
                                 case RecurringPaymentTypeEnum.Automatic:
-                                    PaymentManager.ProcessRecurringPayment(paymentInfo, customer, orderGuid, ref processPaymentResult);
+                                    IoCFactory.Resolve<IPaymentManager>().ProcessRecurringPayment(paymentInfo, customer, orderGuid, ref processPaymentResult);
                                     break;
                                 default:
                                     throw new NopException("Not supported recurring payment type");
@@ -2678,20 +2679,20 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                         else
                         {
                             //standard cart
-                            PaymentManager.ProcessPayment(paymentInfo, customer, orderGuid, ref processPaymentResult);
+                            IoCFactory.Resolve<IPaymentManager>().ProcessPayment(paymentInfo, customer, orderGuid, ref processPaymentResult);
                         }
                     }
                     else
                     {
                         if (isRecurringShoppingCart)
                         {
-                            var recurringPaymentType = PaymentManager.SupportRecurringPayments(paymentInfo.PaymentMethodId);
+                            var recurringPaymentType = IoCFactory.Resolve<IPaymentManager>().SupportRecurringPayments(paymentInfo.PaymentMethodId);
                             switch (recurringPaymentType)
                             {
                                 case RecurringPaymentTypeEnum.NotSupported:
                                     throw new NopException("Recurring payments are not supported by selected payment method");
                                 case RecurringPaymentTypeEnum.Manual:
-                                    PaymentManager.ProcessRecurringPayment(paymentInfo, customer, orderGuid, ref processPaymentResult);
+                                    IoCFactory.Resolve<IPaymentManager>().ProcessRecurringPayment(paymentInfo, customer, orderGuid, ref processPaymentResult);
                                     break;
                                 case RecurringPaymentTypeEnum.Automatic:
                                     //payment is processed on payment gateway site
@@ -2764,7 +2765,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                             CardType = processPaymentResult.AllowStoringCreditCardNumber ? SecurityHelper.Encrypt(paymentInfo.CreditCardType) : string.Empty,
                             CardName = processPaymentResult.AllowStoringCreditCardNumber ? SecurityHelper.Encrypt(paymentInfo.CreditCardName) : string.Empty,
                             CardNumber = processPaymentResult.AllowStoringCreditCardNumber ? SecurityHelper.Encrypt(paymentInfo.CreditCardNumber) : string.Empty,
-                            MaskedCreditCardNumber = SecurityHelper.Encrypt(PaymentManager.GetMaskedCreditCardNumber(paymentInfo.CreditCardNumber)),
+                            MaskedCreditCardNumber = SecurityHelper.Encrypt(IoCFactory.Resolve<IPaymentManager>().GetMaskedCreditCardNumber(paymentInfo.CreditCardNumber)),
                             CardCvv2 = processPaymentResult.AllowStoringCreditCardNumber ? SecurityHelper.Encrypt(paymentInfo.CreditCardCvv2) : string.Empty,
                             CardExpirationMonth = processPaymentResult.AllowStoringCreditCardNumber ? SecurityHelper.Encrypt(paymentInfo.CreditCardExpireMonth.ToString()) : string.Empty,
                             CardExpirationYear = processPaymentResult.AllowStoringCreditCardNumber ? SecurityHelper.Encrypt(paymentInfo.CreditCardExpireYear.ToString()) : string.Empty,
@@ -2830,20 +2831,20 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                                 decimal taxRate = decimal.Zero;
                                 decimal scUnitPrice = PriceHelper.GetUnitPrice(sc, customer, true);
                                 decimal scSubTotal = PriceHelper.GetSubTotal(sc, customer, true);
-                                decimal scUnitPriceInclTax = TaxManager.GetPrice(sc.ProductVariant, scUnitPrice, true, customer, out taxRate);
-                                decimal scUnitPriceExclTax = TaxManager.GetPrice(sc.ProductVariant, scUnitPrice, false, customer, out taxRate);
-                                decimal scSubTotalInclTax = TaxManager.GetPrice(sc.ProductVariant, scSubTotal, true, customer, out taxRate);
-                                decimal scSubTotalExclTax = TaxManager.GetPrice(sc.ProductVariant, scSubTotal, false, customer, out taxRate);
-                                decimal scUnitPriceInclTaxInCustomerCurrency = CurrencyManager.ConvertCurrency(scUnitPriceInclTax, CurrencyManager.PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
-                                decimal scUnitPriceExclTaxInCustomerCurrency = CurrencyManager.ConvertCurrency(scUnitPriceExclTax, CurrencyManager.PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
-                                decimal scSubTotalInclTaxInCustomerCurrency = CurrencyManager.ConvertCurrency(scSubTotalInclTax, CurrencyManager.PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
-                                decimal scSubTotalExclTaxInCustomerCurrency = CurrencyManager.ConvertCurrency(scSubTotalExclTax, CurrencyManager.PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
+                                decimal scUnitPriceInclTax = IoCFactory.Resolve<ITaxManager>().GetPrice(sc.ProductVariant, scUnitPrice, true, customer, out taxRate);
+                                decimal scUnitPriceExclTax = IoCFactory.Resolve<ITaxManager>().GetPrice(sc.ProductVariant, scUnitPrice, false, customer, out taxRate);
+                                decimal scSubTotalInclTax = IoCFactory.Resolve<ITaxManager>().GetPrice(sc.ProductVariant, scSubTotal, true, customer, out taxRate);
+                                decimal scSubTotalExclTax = IoCFactory.Resolve<ITaxManager>().GetPrice(sc.ProductVariant, scSubTotal, false, customer, out taxRate);
+                                decimal scUnitPriceInclTaxInCustomerCurrency = IoCFactory.Resolve<ICurrencyManager>().ConvertCurrency(scUnitPriceInclTax, IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
+                                decimal scUnitPriceExclTaxInCustomerCurrency = IoCFactory.Resolve<ICurrencyManager>().ConvertCurrency(scUnitPriceExclTax, IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
+                                decimal scSubTotalInclTaxInCustomerCurrency = IoCFactory.Resolve<ICurrencyManager>().ConvertCurrency(scSubTotalInclTax, IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
+                                decimal scSubTotalExclTaxInCustomerCurrency = IoCFactory.Resolve<ICurrencyManager>().ConvertCurrency(scSubTotalExclTax, IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
 
                                 //discounts
                                 Discount scDiscount = null;
                                 decimal discountAmount = PriceHelper.GetDiscountAmount(sc, customer, out scDiscount);
-                                decimal discountAmountInclTax = TaxManager.GetPrice(sc.ProductVariant, discountAmount, true, customer, out taxRate);
-                                decimal discountAmountExclTax = TaxManager.GetPrice(sc.ProductVariant, discountAmount, false, customer, out taxRate);
+                                decimal discountAmountInclTax = IoCFactory.Resolve<ITaxManager>().GetPrice(sc.ProductVariant, discountAmount, true, customer, out taxRate);
+                                decimal discountAmountExclTax = IoCFactory.Resolve<ITaxManager>().GetPrice(sc.ProductVariant, discountAmount, false, customer, out taxRate);
                                 if (scDiscount != null && !appliedDiscounts.ContainsDiscount(scDiscount.Name))
                                     appliedDiscounts.Add(scDiscount);
 
@@ -2908,13 +2909,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                                 }
 
                                 //inventory
-                                ProductManager.AdjustInventory(sc.ProductVariantId, true, sc.Quantity, sc.AttributesXml);
+                                IoCFactory.Resolve<IProductManager>().AdjustInventory(sc.ProductVariantId, true, sc.Quantity, sc.AttributesXml);
                             }
 
                             //clear shopping cart
                             foreach (var sc in cart)
                             {
-                                ShoppingCartManager.DeleteShoppingCartItem(sc.ShoppingCartItemId, false);
+                                IoCFactory.Resolve<IShoppingCartManager>().DeleteShoppingCartItem(sc.ShoppingCartItemId, false);
                             }
                         }
                         else
@@ -2981,7 +2982,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                                 }
 
                                 //inventory
-                                ProductManager.AdjustInventory(opv.ProductVariantId, true, opv.Quantity, opv.AttributesXml);
+                                IoCFactory.Resolve<IProductManager>().AdjustInventory(opv.ProductVariantId, true, opv.Quantity, opv.AttributesXml);
                             }
                         }
 
@@ -2997,7 +2998,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                                     OrderId = order.OrderId,
                                     CreatedOn = DateTime.UtcNow
                                 };
-                                DiscountManager.InsertDiscountUsageHistory(duh);
+                                IoCFactory.Resolve<IDiscountManager>().InsertDiscountUsageHistory(duh);
                             }
                         }
 
@@ -3009,7 +3010,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                                 foreach (var agc in appliedGiftCards)
                                 {
                                     decimal amountUsed = agc.AmountCanBeUsed;
-                                    decimal amountUsedInCustomerCurrency = CurrencyManager.ConvertCurrency(amountUsed, CurrencyManager.PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
+                                    decimal amountUsedInCustomerCurrency = IoCFactory.Resolve<ICurrencyManager>().ConvertCurrency(amountUsed, IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
                                     var gcuh = new GiftCardUsageHistory()
                                     {
                                         GiftCardId = agc.GiftCardId,
@@ -3027,10 +3028,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                         //reward points history
                         if (redeemedRewardPointsAmount > decimal.Zero)
                         {
-                            decimal redeemedRewardPointsAmountInCustomerCurrency = CurrencyManager.ConvertCurrency(redeemedRewardPointsAmount, CurrencyManager.PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
+                            decimal redeemedRewardPointsAmountInCustomerCurrency = IoCFactory.Resolve<ICurrencyManager>().ConvertCurrency(redeemedRewardPointsAmount, IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
                             string message = string.Format(LocalizationManager.GetLocaleResourceString("RewardPoints.Message.RedeemedForOrder", order.CustomerLanguageId), order.OrderId);
 
-                            RewardPointsHistory rph = OrderManager.InsertRewardPointsHistory(customer.CustomerId,
+                            RewardPointsHistory rph = this.InsertRewardPointsHistory(customer.CustomerId,
                                 order.OrderId, -redeemedRewardPoints,
                                 redeemedRewardPointsAmount,
                                 redeemedRewardPointsAmountInCustomerCurrency,
@@ -3059,7 +3060,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                                 InsertRecurringPayment(rp);
 
 
-                                var recurringPaymentType = PaymentManager.SupportRecurringPayments(paymentInfo.PaymentMethodId);
+                                var recurringPaymentType = IoCFactory.Resolve<IPaymentManager>().SupportRecurringPayments(paymentInfo.PaymentMethodId);
                                 switch (recurringPaymentType)
                                 {
                                     case RecurringPaymentTypeEnum.NotSupported:
@@ -3094,19 +3095,19 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                         //notes, messages
                         InsertOrderNote(order.OrderId, string.Format("Order placed"), false, DateTime.UtcNow);
 
-                        int orderPlacedStoreOwnerNotificationQueuedEmailId = MessageManager.SendOrderPlacedStoreOwnerNotification(order, LocalizationManager.DefaultAdminLanguage.LanguageId);
+                        int orderPlacedStoreOwnerNotificationQueuedEmailId = IoCFactory.Resolve<IMessageManager>().SendOrderPlacedStoreOwnerNotification(order, LocalizationManager.DefaultAdminLanguage.LanguageId);
                         if (orderPlacedStoreOwnerNotificationQueuedEmailId > 0)
                         {
                             InsertOrderNote(order.OrderId, string.Format("\"Order placed\" email (to store owner) has been queued. Queued email identifier: {0}.", orderPlacedStoreOwnerNotificationQueuedEmailId), false, DateTime.UtcNow);
                         }
 
-                        int orderPlacedCustomerNotificationQueuedEmailId = MessageManager.SendOrderPlacedCustomerNotification(order, order.CustomerLanguageId);
+                        int orderPlacedCustomerNotificationQueuedEmailId = IoCFactory.Resolve<IMessageManager>().SendOrderPlacedCustomerNotification(order, order.CustomerLanguageId);
                         if (orderPlacedCustomerNotificationQueuedEmailId > 0)
                         {
                             InsertOrderNote(order.OrderId, string.Format("\"Order placed\" email (to customer) has been queued. Queued email identifier: {0}.", orderPlacedCustomerNotificationQueuedEmailId), false, DateTime.UtcNow);
                         }
 
-                        SMSManager.SendOrderPlacedNotification(order);
+                        IoCFactory.Resolve<ISMSManager>().SendOrderPlacedNotification(order);
 
                         //order status
                         order = CheckOrderStatus(order.OrderId);
@@ -3114,13 +3115,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                         //reset checkout data
                         if (!paymentInfo.IsRecurringPayment)
                         {
-                            CustomerManager.ResetCheckoutData(customer.CustomerId, true);
+                            IoCFactory.Resolve<ICustomerManager>().ResetCheckoutData(customer.CustomerId, true);
                         }
 
                         //log
                         if (!paymentInfo.IsRecurringPayment)
                         {
-                            CustomerActivityManager.InsertActivity(
+                            IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
                                 "PlaceOrder",
                                 LocalizationManager.GetLocaleResourceString("ActivityLog.PlaceOrder"),
                                 order.OrderId);
@@ -3151,7 +3152,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
 
             if (!String.IsNullOrEmpty(processPaymentResult.Error))
             {
-                LogManager.InsertLog(LogTypeEnum.OrderError, string.Format("Error while placing order. {0}", processPaymentResult.Error), processPaymentResult.FullError);
+                IoCFactory.Resolve<ILogManager>().InsertLog(LogTypeEnum.OrderError, string.Format("Error while placing order. {0}", processPaymentResult.Error), processPaymentResult.FullError);
             }
             return processPaymentResult.Error;
         }
@@ -3160,14 +3161,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// Place order items in current user shopping cart.
         /// </summary>
         /// <param name="orderId">The order identifier</param>
-        public static void ReOrder(int orderId)
+        public void ReOrder(int orderId)
         {
             var order = GetOrderById(orderId);
             if(order != null)
             {
                 foreach (var orderProductVariant in order.OrderProductVariants)
                 {
-                    ShoppingCartManager.AddToCart(ShoppingCartTypeEnum.ShoppingCart, 
+                    IoCFactory.Resolve<IShoppingCartManager>().AddToCart(ShoppingCartTypeEnum.ShoppingCart, 
                         orderProductVariant.ProductVariantId, 
                         orderProductVariant.AttributesXml, 
                         orderProductVariant.UnitPriceExclTax,
@@ -3180,7 +3181,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// Process next recurring psayment
         /// </summary>
         /// <param name="recurringPaymentId">Recurring payment identifier</param>
-        public static void ProcessNextRecurringPayment(int recurringPaymentId)
+        public void ProcessNextRecurringPayment(int recurringPaymentId)
         {
             try
             {
@@ -3213,7 +3214,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
 
                 //place new order
                 int newOrderId = 0;
-                string result = OrderManager.PlaceOrder(paymentInfo, customer,
+                string result = this.PlaceOrder(paymentInfo, customer,
                     Guid.NewGuid(), out newOrderId);
                 if (!String.IsNullOrEmpty(result))
                 {
@@ -3232,7 +3233,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             }
             catch (Exception exc)
             {
-                LogManager.InsertLog(LogTypeEnum.OrderError, string.Format("Error while processing recurring order. {0}", exc.Message), exc);
+                IoCFactory.Resolve<ILogManager>().InsertLog(LogTypeEnum.OrderError, string.Format("Error while processing recurring order. {0}", exc.Message), exc);
                 throw;
             }
         }
@@ -3241,7 +3242,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// Cancels a recurring payment
         /// </summary>
         /// <param name="recurringPaymentId">Recurring payment identifier</param>
-        public static RecurringPayment CancelRecurringPayment(int recurringPaymentId)
+        public RecurringPayment CancelRecurringPayment(int recurringPaymentId)
         {
             return CancelRecurringPayment(recurringPaymentId, true);
         }
@@ -3251,7 +3252,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// </summary>
         /// <param name="recurringPaymentId">Recurring payment identifier</param>
         /// <param name="throwException">A value indicating whether to throw the exception after an error has occupied.</param>
-        public static RecurringPayment CancelRecurringPayment(int recurringPaymentId, 
+        public RecurringPayment CancelRecurringPayment(int recurringPaymentId, 
             bool throwException)
         {
             var recurringPayment = GetRecurringPaymentById(recurringPaymentId);
@@ -3274,7 +3275,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                     cancelPaymentResult.SubscriptionTransactionId = initialOrder.SubscriptionTransactionId;
                     cancelPaymentResult.Amount = initialOrder.OrderTotal;
 
-                    PaymentManager.CancelRecurringPayment(initialOrder, ref cancelPaymentResult);
+                    IoCFactory.Resolve<IPaymentManager>().CancelRecurringPayment(initialOrder, ref cancelPaymentResult);
                     if (String.IsNullOrEmpty(cancelPaymentResult.Error))
                     {
                         InsertOrderNote(initialOrder.OrderId, string.Format("Recurring payment has been cancelled"), false, DateTime.UtcNow);
@@ -3287,7 +3288,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             }
             catch (Exception exc)
             {
-                LogManager.InsertLog(LogTypeEnum.OrderError, "Error cancelling recurring payment", exc);
+                IoCFactory.Resolve<ILogManager>().InsertLog(LogTypeEnum.OrderError, "Error cancelling recurring payment", exc);
                 if (throwException)
                     throw;
             }
@@ -3300,7 +3301,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="customerToValidate">Customer</param>
         /// <param name="recurringPayment">Recurring Payment</param>
         /// <returns>value indicating whether a customer can cancel recurring payment</returns>
-        public static bool CanCancelRecurringPayment(Customer customerToValidate, RecurringPayment recurringPayment)
+        public bool CanCancelRecurringPayment(Customer customerToValidate, RecurringPayment recurringPayment)
         {
             if (recurringPayment == null)
                 return false;
@@ -3336,7 +3337,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// </summary>
         /// <param name="order">Order</param>
         /// <returns>A value indicating whether shipping is allowed</returns>
-        public static bool CanShip(Order order)
+        public bool CanShip(Order order)
         {
             if (order == null)
                 return false;
@@ -3356,7 +3357,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="orderId">Order identifier</param>
         /// <param name="notifyCustomer">True to notify customer</param>
         /// <returns>Updated order</returns>
-        public static Order Ship(int orderId, bool notifyCustomer)
+        public Order Ship(int orderId, bool notifyCustomer)
         {
             var order = GetOrderById(orderId);
             if (order == null)
@@ -3373,7 +3374,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
 
             if (notifyCustomer)
             {
-                int orderShippedCustomerNotificationQueuedEmailId = MessageManager.SendOrderShippedCustomerNotification(order, order.CustomerLanguageId);
+                int orderShippedCustomerNotificationQueuedEmailId = IoCFactory.Resolve<IMessageManager>().SendOrderShippedCustomerNotification(order, order.CustomerLanguageId);
                 if (orderShippedCustomerNotificationQueuedEmailId > 0)
                 {
                     InsertOrderNote(order.OrderId, string.Format("\"Shipped\" email (to customer) has been queued. Queued email identifier: {0}.", orderShippedCustomerNotificationQueuedEmailId), false, DateTime.UtcNow);
@@ -3390,7 +3391,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// </summary>
         /// <param name="order">Order</param>
         /// <returns>A value indicating whether shipping is delivered</returns>
-        public static bool CanDeliver(Order order)
+        public bool CanDeliver(Order order)
         {
             if (order == null)
                 return false;
@@ -3410,7 +3411,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="orderId">Order identifier</param>
         /// <param name="notifyCustomer">True to notify customer</param>
         /// <returns>Updated order</returns>
-        public static Order Deliver(int orderId, bool notifyCustomer)
+        public Order Deliver(int orderId, bool notifyCustomer)
         {
             var order = GetOrderById(orderId);
             if (order == null)
@@ -3427,7 +3428,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
 
             if (notifyCustomer)
             {
-                int orderDeliveredCustomerNotificationQueuedEmailId = MessageManager.SendOrderDeliveredCustomerNotification(order, order.CustomerLanguageId);
+                int orderDeliveredCustomerNotificationQueuedEmailId = IoCFactory.Resolve<IMessageManager>().SendOrderDeliveredCustomerNotification(order, order.CustomerLanguageId);
                 if (orderDeliveredCustomerNotificationQueuedEmailId > 0)
                 {
                     InsertOrderNote(order.OrderId, string.Format("\"Delivered\" email (to customer) has been queued. Queued email identifier: {0}.", orderDeliveredCustomerNotificationQueuedEmailId), false, DateTime.UtcNow);
@@ -3444,7 +3445,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// </summary>
         /// <param name="order">Order</param>
         /// <returns>A value indicating whether cancel is allowed</returns>
-        public static bool CanCancelOrder(Order order)
+        public bool CanCancelOrder(Order order)
         {
             if (order == null)
                 return false;
@@ -3461,7 +3462,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="orderId">Order identifier</param>
         /// <param name="notifyCustomer">True to notify customer</param>
         /// <returns>Cancelled order</returns>
-        public static Order CancelOrder(int orderId, bool notifyCustomer)
+        public Order CancelOrder(int orderId, bool notifyCustomer)
         {
             var order = GetOrderById(orderId);
             if (order == null)
@@ -3484,7 +3485,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 
             //Adjust inventory
             foreach (var opv in order.OrderProductVariants)
-                ProductManager.AdjustInventory(opv.ProductVariantId, false, opv.Quantity, opv.AttributesXml);
+                IoCFactory.Resolve<IProductManager>().AdjustInventory(opv.ProductVariantId, false, opv.Quantity, opv.AttributesXml);
 
             return order;
         }
@@ -3494,7 +3495,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// </summary>
         /// <param name="order">Order</param>
         /// <returns>A value indicating whether order can be marked as authorized</returns>
-        public static bool CanMarkOrderAsAuthorized(Order order)
+        public bool CanMarkOrderAsAuthorized(Order order)
         {
             if (order == null)
                 return false;
@@ -3513,7 +3514,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// </summary>
         /// <param name="orderId">Order identifier</param>
         /// <returns>Authorized order</returns>
-        public static Order MarkAsAuthorized(int orderId)
+        public Order MarkAsAuthorized(int orderId)
         {
             var order = GetOrderById(orderId);
             if (order == null)
@@ -3534,7 +3535,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// </summary>
         /// <param name="order">Order</param>
         /// <returns>A value indicating whether capture from admin panel is allowed</returns>
-        public static bool CanCapture(Order order)
+        public bool CanCapture(Order order)
         {
             if (order == null)
                 return false;
@@ -3544,7 +3545,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 return false;
 
             if (order.PaymentStatus == PaymentStatusEnum.Authorized &&
-                PaymentManager.CanCapture(order.PaymentMethodId))
+                IoCFactory.Resolve<IPaymentManager>().CanCapture(order.PaymentMethodId))
                 return true;
 
             return false;
@@ -3556,7 +3557,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="orderId">Order identifier</param>
         /// <param name="error">Error</param>
         /// <returns>Captured order</returns>
-        public static Order Capture(int orderId, ref string error)
+        public Order Capture(int orderId, ref string error)
         {
             var order = GetOrderById(orderId);
             if (order == null)
@@ -3577,7 +3578,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 processPaymentResult.SubscriptionTransactionId = order.SubscriptionTransactionId;
                 processPaymentResult.PaymentStatus = order.PaymentStatus;
 
-                PaymentManager.Capture(order, ref processPaymentResult);
+                IoCFactory.Resolve<IPaymentManager>().Capture(order, ref processPaymentResult);
 
                 if (String.IsNullOrEmpty(processPaymentResult.Error))
                 {
@@ -3622,7 +3623,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             if (!String.IsNullOrEmpty(processPaymentResult.Error))
             {
                 error = processPaymentResult.Error;
-                LogManager.InsertLog(LogTypeEnum.OrderError, string.Format("Error capturing order. {0}", processPaymentResult.Error), processPaymentResult.FullError);
+                IoCFactory.Resolve<ILogManager>().InsertLog(LogTypeEnum.OrderError, string.Format("Error capturing order. {0}", processPaymentResult.Error), processPaymentResult.FullError);
             }
             return order;
         }
@@ -3632,7 +3633,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// </summary>
         /// <param name="order">Order</param>
         /// <returns>A value indicating whether order can be marked as paid</returns>
-        public static bool CanMarkOrderAsPaid(Order order)
+        public bool CanMarkOrderAsPaid(Order order)
         {
             if (order == null)
                 return false;
@@ -3653,7 +3654,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// </summary>
         /// <param name="orderId">Order identifier</param>
         /// <returns>Updated order</returns>
-        public static Order MarkOrderAsPaid(int orderId)
+        public Order MarkOrderAsPaid(int orderId)
         {
             var order = GetOrderById(orderId);
             if (order == null)
@@ -3685,7 +3686,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// </summary>
         /// <param name="order">Order</param>
         /// <returns>A value indicating whether refund from admin panel is allowed</returns>
-        public static bool CanRefund(Order order)
+        public bool CanRefund(Order order)
         {
             if (order == null)
                 return false;
@@ -3697,7 +3698,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 return false;
 
             if (order.PaymentStatus == PaymentStatusEnum.Paid &&
-                PaymentManager.CanRefund(order.PaymentMethodId))
+                IoCFactory.Resolve<IPaymentManager>().CanRefund(order.PaymentMethodId))
                 return true;
 
             return false;
@@ -3709,7 +3710,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="orderId">Order identifier</param>
         /// <param name="error">Error</param>
         /// <returns>Refunded order</returns>
-        public static Order Refund(int orderId, ref string error)
+        public Order Refund(int orderId, ref string error)
         {
             var order = GetOrderById(orderId);
             if (order == null)
@@ -3732,7 +3733,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 cancelPaymentResult.IsPartialRefund = false;
                 cancelPaymentResult.PaymentStatus = order.PaymentStatus;
 
-                PaymentManager.Refund(order, ref cancelPaymentResult);
+                IoCFactory.Resolve<IPaymentManager>().Refund(order, ref cancelPaymentResult);
 
                 if (String.IsNullOrEmpty(cancelPaymentResult.Error))
                 {
@@ -3765,7 +3766,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             if (!String.IsNullOrEmpty(cancelPaymentResult.Error))
             {
                 error = cancelPaymentResult.Error;
-                LogManager.InsertLog(LogTypeEnum.OrderError, string.Format("Error refunding order. {0}", cancelPaymentResult.Error), cancelPaymentResult.FullError);
+                IoCFactory.Resolve<ILogManager>().InsertLog(LogTypeEnum.OrderError, string.Format("Error refunding order. {0}", cancelPaymentResult.Error), cancelPaymentResult.FullError);
             }
             return order;
         }
@@ -3775,7 +3776,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// </summary>
         /// <param name="order">Order</param>
         /// <returns>A value indicating whether order can be marked as refunded</returns>
-        public static bool CanRefundOffline(Order order)
+        public bool CanRefundOffline(Order order)
         {
             if (order == null)
                 return false;
@@ -3797,7 +3798,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// </summary>
         /// <param name="orderId">Order identifier</param>
         /// <returns>Updated order</returns>
-        public static Order RefundOffline(int orderId)
+        public Order RefundOffline(int orderId)
         {
             var order = GetOrderById(orderId);
             if (order == null)
@@ -3831,7 +3832,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="order">Order</param>
         /// <param name="amountToRefund">Amount to refund</param>
         /// <returns>A value indicating whether refund from admin panel is allowed</returns>
-        public static bool CanPartiallyRefund(Order order, decimal amountToRefund)
+        public bool CanPartiallyRefund(Order order, decimal amountToRefund)
         {
             if (order == null)
                 return false;
@@ -3851,7 +3852,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
 
             if ((order.PaymentStatus == PaymentStatusEnum.Paid || 
                 order.PaymentStatus == PaymentStatusEnum.PartiallyRefunded) &&
-                PaymentManager.CanPartiallyRefund(order.PaymentMethodId))
+                IoCFactory.Resolve<IPaymentManager>().CanPartiallyRefund(order.PaymentMethodId))
                 return true;
 
             return false;
@@ -3864,7 +3865,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="amountToRefund">Amount to refund</param>
         /// <param name="error">Error</param>
         /// <returns>Refunded order</returns>
-        public static Order PartiallyRefund(int orderId, decimal amountToRefund, ref string error)
+        public Order PartiallyRefund(int orderId, decimal amountToRefund, ref string error)
         {
             var order = GetOrderById(orderId);
             if (order == null)
@@ -3886,7 +3887,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 cancelPaymentResult.IsPartialRefund = true;
                 cancelPaymentResult.PaymentStatus = order.PaymentStatus;
 
-                PaymentManager.Refund(order, ref cancelPaymentResult);
+                IoCFactory.Resolve<IPaymentManager>().Refund(order, ref cancelPaymentResult);
 
                 if (String.IsNullOrEmpty(cancelPaymentResult.Error))
                 {
@@ -3919,7 +3920,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             if (!String.IsNullOrEmpty(cancelPaymentResult.Error))
             {
                 error = cancelPaymentResult.Error;
-                LogManager.InsertLog(LogTypeEnum.OrderError, string.Format("Error refunding order. {0}", cancelPaymentResult.Error), cancelPaymentResult.FullError);
+                IoCFactory.Resolve<ILogManager>().InsertLog(LogTypeEnum.OrderError, string.Format("Error refunding order. {0}", cancelPaymentResult.Error), cancelPaymentResult.FullError);
             }
             return order;
         }
@@ -3930,7 +3931,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="order">Order</param>
         /// <param name="amountToRefund">Amount to refund</param>
         /// <returns>A value indicating whether order can be marked as partially refunded</returns>
-        public static bool CanPartiallyRefundOffline(Order order, decimal amountToRefund)
+        public bool CanPartiallyRefundOffline(Order order, decimal amountToRefund)
         {
             if (order == null)
                 return false;
@@ -3960,7 +3961,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// </summary>
         /// <param name="orderId">Order identifier</param>
         /// <returns>Updated order</returns>
-        public static Order PartiallyRefundOffline(int orderId, decimal amountToRefund)
+        public Order PartiallyRefundOffline(int orderId, decimal amountToRefund)
         {
             var order = GetOrderById(orderId);
             if (order == null)
@@ -3992,7 +3993,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// </summary>
         /// <param name="order">Order</param>
         /// <returns>A value indicating whether void from admin panel is allowed</returns>
-        public static bool CanVoid(Order order)
+        public bool CanVoid(Order order)
         {
             if (order == null)
                 return false;
@@ -4004,7 +4005,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 return false;
 
             if (order.PaymentStatus == PaymentStatusEnum.Authorized &&
-                PaymentManager.CanVoid(order.PaymentMethodId))
+                IoCFactory.Resolve<IPaymentManager>().CanVoid(order.PaymentMethodId))
                 return true;
 
             return false;
@@ -4016,7 +4017,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="orderId">Order identifier</param>
         /// <param name="error">Error</param>
         /// <returns>Voided order</returns>
-        public static Order Void(int orderId, ref string error)
+        public Order Void(int orderId, ref string error)
         {
             var order = GetOrderById(orderId);
             if (order == null)
@@ -4034,7 +4035,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 cancelPaymentResult.Amount = order.OrderTotal;
                 cancelPaymentResult.PaymentStatus = order.PaymentStatus;
 
-                PaymentManager.Void(order, ref cancelPaymentResult);
+                IoCFactory.Resolve<IPaymentManager>().Void(order, ref cancelPaymentResult);
 
                 if (String.IsNullOrEmpty(cancelPaymentResult.Error))
                 {
@@ -4061,7 +4062,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             if (!String.IsNullOrEmpty(cancelPaymentResult.Error))
             {
                 error = cancelPaymentResult.Error;
-                LogManager.InsertLog(LogTypeEnum.OrderError, string.Format("Error voiding order. {0}", cancelPaymentResult.Error), cancelPaymentResult.FullError);
+                IoCFactory.Resolve<ILogManager>().InsertLog(LogTypeEnum.OrderError, string.Format("Error voiding order. {0}", cancelPaymentResult.Error), cancelPaymentResult.FullError);
             }
             return order;
         }
@@ -4071,7 +4072,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// </summary>
         /// <param name="order">Order</param>
         /// <returns>A value indicating whether order can be marked as voided</returns>
-        public static bool CanVoidOffline(Order order)
+        public bool CanVoidOffline(Order order)
         {
             if (order == null)
                 return false;
@@ -4093,7 +4094,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// </summary>
         /// <param name="orderId">Order identifier</param>
         /// <returns>Updated order</returns>
-        public static Order VoidOffline(int orderId)
+        public Order VoidOffline(int orderId)
         {
             var order = GetOrderById(orderId);
             if (order == null)
@@ -4117,13 +4118,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// </summary>
         /// <param name="rewardPoints">Reward points</param>
         /// <returns>Converted value</returns>
-        public static decimal ConvertRewardPointsToAmount(int rewardPoints)
+        public decimal ConvertRewardPointsToAmount(int rewardPoints)
         {
             decimal result = decimal.Zero;
             if (rewardPoints <= 0)
                 return decimal.Zero;
 
-            result = rewardPoints * OrderManager.RewardPointsExchangeRate;            
+            result = rewardPoints * this.RewardPointsExchangeRate;            
             result = Math.Round(result, 2);
             return result;
         }
@@ -4133,15 +4134,15 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// </summary>
         /// <param name="amount">Amount</param>
         /// <returns>Converted value</returns>
-        public static int ConvertAmountToRewardPoints(decimal amount)
+        public int ConvertAmountToRewardPoints(decimal amount)
         {
             int result = 0;
             if (amount <= 0)
                 return 0;
 
-            if (OrderManager.RewardPointsExchangeRate > 0)
+            if (this.RewardPointsExchangeRate > 0)
             {
-                result = (int)Math.Ceiling(amount / OrderManager.RewardPointsExchangeRate);
+                result = (int)Math.Ceiling(amount / this.RewardPointsExchangeRate);
             }
             return result;
         }
@@ -4152,12 +4153,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="cart">Shopping cart</param>
         /// <param name="customer">Customer</param>
         /// <returns>true - OK; false - minimum order sub-total amount is not reached</returns>
-        public static bool ValidateMinOrderSubtotalAmount(ShoppingCart cart, Customer customer)
+        public bool ValidateMinOrderSubtotalAmount(ShoppingCart cart, Customer customer)
         {
             bool result = true;
             //min order amount sub-total validation
             if (cart.Count > 0 &&
-                OrderManager.MinOrderSubtotalAmount > decimal.Zero)
+                this.MinOrderSubtotalAmount > decimal.Zero)
             {
                 //subtotal
                 decimal subtotalBase = decimal.Zero;
@@ -4165,13 +4166,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 Discount orderSubTotalAppliedDiscount = null;
                 decimal subTotalWithoutDiscountBase = decimal.Zero;
                 decimal subTotalWithDiscountBase = decimal.Zero;
-                string SubTotalError = ShoppingCartManager.GetShoppingCartSubTotal(cart,
+                string SubTotalError = IoCFactory.Resolve<IShoppingCartManager>().GetShoppingCartSubTotal(cart,
                     customer, out orderSubTotalDiscountAmountBase, out orderSubTotalAppliedDiscount,
                 out subTotalWithoutDiscountBase, out subTotalWithDiscountBase);
                 subtotalBase = subTotalWithoutDiscountBase;
                 if (String.IsNullOrEmpty(SubTotalError))
                 {
-                    if (subtotalBase < OrderManager.MinOrderSubtotalAmount)
+                    if (subtotalBase < this.MinOrderSubtotalAmount)
                     {
                         result = false;
                     }
@@ -4192,11 +4193,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="cart">Shopping cart</param>
         /// <param name="customer">Customer</param>
         /// <returns>true - OK; false - minimum order total amount is not reached</returns>
-        public static bool ValidateMinOrderTotalAmount(ShoppingCart cart, Customer customer)
+        public bool ValidateMinOrderTotalAmount(ShoppingCart cart, Customer customer)
         {
             bool result = true;
             //min order amount validation
-            if (cart.Count > 0 && OrderManager.MinOrderTotalAmount > decimal.Zero)
+            if (cart.Count > 0 && this.MinOrderTotalAmount > decimal.Zero)
             {
                 int paymentMethodId = 0;
                 if (customer != null)
@@ -4210,14 +4211,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 bool useRewardPoints = false;
                 if (customer != null)
                     useRewardPoints = customer.UseRewardPointsDuringCheckout;
-                decimal? shoppingCartTotalBase = ShoppingCartManager.GetShoppingCartTotal(cart,
+                decimal? shoppingCartTotalBase = IoCFactory.Resolve<IShoppingCartManager>().GetShoppingCartTotal(cart,
                     paymentMethodId, customer,
                     out discountAmountBase, out appliedDiscount,
                     out appliedGiftCards, useRewardPoints,
                     out redeemedRewardPoints, out redeemedRewardPointsAmount);
                 if (shoppingCartTotalBase.HasValue)
                 {
-                    if (shoppingCartTotalBase.Value < OrderManager.MinOrderTotalAmount)
+                    if (shoppingCartTotalBase.Value < this.MinOrderTotalAmount)
                     {
                         result = false;
                     }
@@ -4235,142 +4236,142 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <summary>
         /// Gets a value indicating whether cache is enabled
         /// </summary>
-        public static bool CacheEnabled
+        public bool CacheEnabled
         {
             get
             {
-                return SettingManager.GetSettingValueBoolean("Cache.OrderManager.CacheEnabled");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.OrderManager.CacheEnabled");
             }
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether customer can make re-order
         /// </summary>
-        public static bool IsReOrderAllowed
+        public bool IsReOrderAllowed
         {
             get
             {
-                return SettingManager.GetSettingValueBoolean("Order.IsReOrderAllowed", true);
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Order.IsReOrderAllowed", true);
             }
             set
             {
-                SettingManager.SetParam("Order.IsReOrderAllowed", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("Order.IsReOrderAllowed", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether Reward Points Program is enabled
         /// </summary>
-        public static bool RewardPointsEnabled
+        public bool RewardPointsEnabled
         {
             get
             {
-                return SettingManager.GetSettingValueBoolean("RewardPoints.Enabled", false);
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("RewardPoints.Enabled", false);
             }
             set
             {
-                SettingManager.SetParam("RewardPoints.Enabled", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("RewardPoints.Enabled", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether Reward Points exchange rate
         /// </summary>
-        public static decimal RewardPointsExchangeRate
+        public decimal RewardPointsExchangeRate
         {
             get
             {
-                return SettingManager.GetSettingValueDecimalNative("RewardPoints.Rate", 1.00M);
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueDecimalNative("RewardPoints.Rate", 1.00M);
             }
             set
             {
-                SettingManager.SetParamNative("RewardPoints.Rate", value);
+                IoCFactory.Resolve<ISettingManager>().SetParamNative("RewardPoints.Rate", value);
             }
         }
 
         /// <summary>
         /// Gets or sets a number of points awarded for registration
         /// </summary>
-        public static int RewardPointsForRegistration
+        public int RewardPointsForRegistration
         {
             get
             {
-                return SettingManager.GetSettingValueInteger("RewardPoints.Earning.ForRegistration", 0);
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("RewardPoints.Earning.ForRegistration", 0);
             }
             set
             {
-                SettingManager.SetParam("RewardPoints.Earning.ForRegistration", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("RewardPoints.Earning.ForRegistration", value.ToString());
             }
         }
 
         /// <summary>
         /// Gets or sets a number of points awarded for purchases (amount in primary store currency)
         /// </summary>
-        public static decimal RewardPointsForPurchases_Amount
+        public decimal RewardPointsForPurchases_Amount
         {
             get
             {
-                return SettingManager.GetSettingValueDecimalNative("RewardPoints.Earning.RewardPointsForPurchases.Amount", 10.00M);
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueDecimalNative("RewardPoints.Earning.RewardPointsForPurchases.Amount", 10.00M);
             }
             set
             {
-                SettingManager.SetParamNative("RewardPoints.Earning.RewardPointsForPurchases.Amount", value);
+                IoCFactory.Resolve<ISettingManager>().SetParamNative("RewardPoints.Earning.RewardPointsForPurchases.Amount", value);
             }
         }
 
         /// <summary>
         /// Gets or sets a number of points awarded for purchases
         /// </summary>
-        public static int RewardPointsForPurchases_Points
+        public int RewardPointsForPurchases_Points
         {
             get
             {
-                return SettingManager.GetSettingValueInteger("RewardPoints.Earning.RewardPointsForPurchases.Points", 1);
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("RewardPoints.Earning.RewardPointsForPurchases.Points", 1);
             }
             set
             {
-                SettingManager.SetParam("RewardPoints.Earning.RewardPointsForPurchases.Points", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("RewardPoints.Earning.RewardPointsForPurchases.Points", value.ToString());
             }
         }
 
         /// <summary>
         /// Points are awarded when the order status is
         /// </summary>
-        public static OrderStatusEnum RewardPointsForPurchases_Awarded
+        public OrderStatusEnum RewardPointsForPurchases_Awarded
         {
             get
             {
-                return (OrderStatusEnum)SettingManager.GetSettingValueInteger("RewardPoints.Earning.RewardPointsForPurchases.AwardedOS", (int)OrderStatusEnum.Complete);
+                return (OrderStatusEnum)IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("RewardPoints.Earning.RewardPointsForPurchases.AwardedOS", (int)OrderStatusEnum.Complete);
             }
             set
             {
-                SettingManager.SetParam("RewardPoints.Earning.RewardPointsForPurchases.AwardedOS", ((int)value).ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("RewardPoints.Earning.RewardPointsForPurchases.AwardedOS", ((int)value).ToString());
             }
         }
 
         /// <summary>
         /// Points are canceled when the order is
         /// </summary>
-        public static OrderStatusEnum RewardPointsForPurchases_Canceled
+        public OrderStatusEnum RewardPointsForPurchases_Canceled
         {
             get
             {
-                return (OrderStatusEnum)SettingManager.GetSettingValueInteger("RewardPoints.Earning.RewardPointsForPurchases.CanceledOS", (int)OrderStatusEnum.Cancelled);
+                return (OrderStatusEnum)IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("RewardPoints.Earning.RewardPointsForPurchases.CanceledOS", (int)OrderStatusEnum.Cancelled);
             }
             set
             {
-                SettingManager.SetParam("RewardPoints.Earning.RewardPointsForPurchases.CanceledOS", ((int)value).ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("RewardPoints.Earning.RewardPointsForPurchases.CanceledOS", ((int)value).ToString());
             }
         }
 
         /// <summary>
         /// Gift cards are activated when the order status is
         /// </summary>
-        public static OrderStatusEnum? GiftCards_Activated
+        public OrderStatusEnum? GiftCards_Activated
         {
             get
             {
-                int os = SettingManager.GetSettingValueInteger("GiftCards.Activation.ActivatedOS");
+                int os = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("GiftCards.Activation.ActivatedOS");
                 if (os > 0)
                 {
                     return (OrderStatusEnum)os;
@@ -4384,11 +4385,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             {
                 if (value.HasValue)
                 {
-                    SettingManager.SetParam("GiftCards.Activation.ActivatedOS", ((int)value).ToString());
+                    IoCFactory.Resolve<ISettingManager>().SetParam("GiftCards.Activation.ActivatedOS", ((int)value).ToString());
                 }
                 else
                 {
-                    SettingManager.SetParam("GiftCards.Activation.ActivatedOS", "0");
+                    IoCFactory.Resolve<ISettingManager>().SetParam("GiftCards.Activation.ActivatedOS", "0");
                 }
             }
         }
@@ -4396,11 +4397,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <summary>
         /// Gift cards are deactivated when the order status is
         /// </summary>
-        public static OrderStatusEnum? GiftCards_Deactivated
+        public OrderStatusEnum? GiftCards_Deactivated
         {
             get
             {
-                int os = SettingManager.GetSettingValueInteger("GiftCards.Activation.DeactivatedOS");
+                int os = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("GiftCards.Activation.DeactivatedOS");
                 if (os > 0)
                 {
                     return (OrderStatusEnum)os;
@@ -4414,11 +4415,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             {
                 if (value.HasValue)
                 {
-                    SettingManager.SetParam("GiftCards.Activation.DeactivatedOS", ((int)value).ToString());
+                    IoCFactory.Resolve<ISettingManager>().SetParam("GiftCards.Activation.DeactivatedOS", ((int)value).ToString());
                 }
                 else
                 {
-                    SettingManager.SetParam("GiftCards.Activation.DeactivatedOS", "0");
+                    IoCFactory.Resolve<ISettingManager>().SetParam("GiftCards.Activation.DeactivatedOS", "0");
                 }
             }
         }
@@ -4426,30 +4427,30 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <summary>
         /// Gets or sets a minimum order subtotal amount
         /// </summary>
-        public static decimal MinOrderSubtotalAmount
+        public decimal MinOrderSubtotalAmount
         {
             get
             {
-                return SettingManager.GetSettingValueDecimalNative("Order.MinOrderSubtotalAmount", decimal.Zero);
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueDecimalNative("Order.MinOrderSubtotalAmount", decimal.Zero);
             }
             set
             {
-                SettingManager.SetParamNative("Order.MinOrderSubtotalAmount", value);
+                IoCFactory.Resolve<ISettingManager>().SetParamNative("Order.MinOrderSubtotalAmount", value);
             }
         }
 
         /// <summary>
         /// Gets or sets a minimum order total amount
         /// </summary>
-        public static decimal MinOrderTotalAmount
+        public decimal MinOrderTotalAmount
         {
             get
             {
-                return SettingManager.GetSettingValueDecimalNative("Order.MinOrderAmount", decimal.Zero);
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueDecimalNative("Order.MinOrderAmount", decimal.Zero);
             }
             set
             {
-                SettingManager.SetParamNative("Order.MinOrderAmount", value);
+                IoCFactory.Resolve<ISettingManager>().SetParamNative("Order.MinOrderAmount", value);
             }
         }
 

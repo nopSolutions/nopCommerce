@@ -27,6 +27,7 @@ using NopSolutions.NopCommerce.BusinessLogic.ExportImport;
 using NopSolutions.NopCommerce.BusinessLogic.Localization;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -42,7 +43,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected void BindGrid()
         {
-            var productVariants = ProductManager.GetLowStockProductVariants();
+            var productVariants = IoCFactory.Resolve<IProductManager>().GetLowStockProductVariants();
 
             gvProductVariants.DataSource = productVariants;
             gvProductVariants.DataBind();
