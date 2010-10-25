@@ -20,6 +20,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Caching;
 using NopSolutions.NopCommerce.BusinessLogic.Data;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.Common.Utils;
+using System.Data.Objects;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Audit
 {
@@ -252,10 +253,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
                 pageIndex = int.MaxValue - 1;
             
             var context = ObjectContextHelper.CurrentObjectContext;
+            ObjectParameter totalRecordsParameter = new ObjectParameter("TotalRecords", typeof(int));
             var activityLog = context.Sp_ActivityLogLoadAll(createdOnFrom,
                 createdOnTo, email, username, activityLogTypeId,
-                pageSize, pageIndex, out totalRecords).ToList();
-
+                pageSize, pageIndex, totalRecordsParameter).ToList();
+            totalRecords = Convert.ToInt32(totalRecordsParameter.Value);
             return activityLog;
         }
         

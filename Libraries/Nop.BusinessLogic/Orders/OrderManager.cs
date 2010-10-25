@@ -44,6 +44,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Utils.Html;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Common.Utils.Html;
+using System.Data.Objects;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Orders
 {
@@ -1124,7 +1125,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
 
             var context = ObjectContextHelper.CurrentObjectContext;
             var report = context.Sp_OrderProductVariantReport(startTime,
-                endTime, orderStatusId, paymentStatusId, billingCountryId);
+                endTime, orderStatusId, paymentStatusId, billingCountryId).ToList();
             return report;
         }
 
@@ -1140,7 +1141,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         {
             var context = ObjectContextHelper.CurrentObjectContext;
             var report = context.Sp_SalesBestSellersReport(lastDays,
-                recordsToReturn, orderBy);
+                recordsToReturn, orderBy).ToList();
             return report;
         }
 
@@ -1157,7 +1158,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             int orderStatusId = (int)os;
 
             var context = ObjectContextHelper.CurrentObjectContext;
-            var item = context.Sp_OrderAverageReport(startTime, endTime, orderStatusId);
+            var item = context.Sp_OrderAverageReport(startTime, endTime, orderStatusId).FirstOrDefault();
             return item;
         }
         
@@ -1234,7 +1235,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 shippmentStatusId = (int)ss.Value;
 
             var context = ObjectContextHelper.CurrentObjectContext;
-            var item = context.Sp_OrderIncompleteReport(orderStatusId, paymentStatusId, shippmentStatusId);
+            var item = context.Sp_OrderIncompleteReport(orderStatusId, paymentStatusId, shippmentStatusId).FirstOrDefault();
             return item;
         }
        
@@ -1338,7 +1339,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             var context = ObjectContextHelper.CurrentObjectContext;
 
             var recurringPayments = context.Sp_RecurringPaymentLoadAll(showHidden,
-                customerId, initialOrderId, initialOrderStatusId);
+                customerId, initialOrderId, initialOrderStatusId).ToList();
             return recurringPayments;
         }
 
@@ -1418,7 +1419,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             int orderId)
         {
             var context = ObjectContextHelper.CurrentObjectContext;
-            var recurringPaymentHistory = context.Sp_RecurringPaymentHistoryLoadAll(recurringPaymentId, orderId);
+            var recurringPaymentHistory = context.Sp_RecurringPaymentHistoryLoadAll(recurringPaymentId, orderId).ToList();
             return recurringPaymentHistory;
         }
 
@@ -1497,7 +1498,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             var context = ObjectContextHelper.CurrentObjectContext;
             var giftCards = context.Sp_GiftCardLoadAll(orderId,
                 customerId, startTime, endTime, orderStatusId, paymentStatusId, shippingStatusId,
-                isGiftCardActivated, giftCardCouponCode);
+                isGiftCardActivated, giftCardCouponCode).ToList();
             return giftCards;
         }
 
@@ -1604,7 +1605,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         {
             var context = ObjectContextHelper.CurrentObjectContext;
             var giftCardUsageHistoryEntries = context.Sp_GiftCardUsageHistoryLoadAll(giftCardId,
-                customerId, orderId);
+                customerId, orderId).ToList();
             return giftCardUsageHistoryEntries;
         }
 
@@ -1702,8 +1703,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             
             var context = ObjectContextHelper.CurrentObjectContext;
 
+            ObjectParameter totalRecordsParameter = new ObjectParameter("TotalRecords", typeof(int));
             var rewardPointsHistoryEntries = context.Sp_RewardPointsHistoryLoadAll(customerId,
-                orderId, pageSize, pageIndex, out totalRecords);
+                orderId, pageIndex, pageSize, totalRecordsParameter).ToList();
+            totalRecords = Convert.ToInt32(totalRecordsParameter.Value);
+
             return rewardPointsHistoryEntries;
         }
 

@@ -1271,7 +1271,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         public List<NewsLetterSubscription> GetAllNewsLetterSubscriptions(string email, bool showHidden)
         {
             var context = ObjectContextHelper.CurrentObjectContext;
-            var newsletterSubscriptions = context.Sp_NewsLetterSubscriptionLoadAll(email, showHidden);
+            var newsletterSubscriptions = context.Sp_NewsLetterSubscriptionLoadAll(email, showHidden).ToList();
 
             return newsletterSubscriptions;
         }

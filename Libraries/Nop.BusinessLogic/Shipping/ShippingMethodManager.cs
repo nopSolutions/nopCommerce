@@ -109,7 +109,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         public List<ShippingMethod> GetAllShippingMethods(int? filterByCountryId)
         {
             var context = ObjectContextHelper.CurrentObjectContext;
-            var shippingMethods = context.Sp_ShippingMethodLoadAll(filterByCountryId);
+            var shippingMethods = context.Sp_ShippingMethodLoadAll(filterByCountryId).ToList();
             return shippingMethods;
         }
 

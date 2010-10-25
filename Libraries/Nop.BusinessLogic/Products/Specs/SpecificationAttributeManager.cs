@@ -710,7 +710,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
         public List<SpecificationAttributeOptionFilter> GetSpecificationAttributeOptionFilter(int categoryId, int languageId)
         {
             var context = ObjectContextHelper.CurrentObjectContext;
-            var result = context.Sp_SpecificationAttributeOptionFilter_LoadByFilter(categoryId, languageId);
+            var result = context.Sp_SpecificationAttributeOptionFilter_LoadByFilter(categoryId, languageId).ToList();
             return result;
         }
         

@@ -425,10 +425,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
             }
 
             var context = ObjectContextHelper.CurrentObjectContext;
+            ObjectParameter totalRecordsParameter = new ObjectParameter("TotalRecords", typeof(int));
             var forumTopics = context.Sp_Forums_TopicLoadAll(forumId,
                 userId, keywords, (int)searchType, limitDate,
-                pageSize, pageIndex, out totalRecords);
-
+                pageIndex, pageSize, totalRecordsParameter).ToList();
+            totalRecords = Convert.ToInt32(totalRecordsParameter.Value);
             return forumTopics;
         }
         
@@ -441,7 +442,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         public List<ForumTopic> GetActiveTopics(int forumId, int topicCount)
         {
             var context = ObjectContextHelper.CurrentObjectContext;
-            var forumTopics = context.Sp_Forums_TopicLoadActive(forumId, topicCount);
+            var forumTopics = context.Sp_Forums_TopicLoadActive(forumId, topicCount).ToList();
             return forumTopics;
         }
         
@@ -667,11 +668,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
                 pageIndex = 0;
             if (pageIndex == int.MaxValue)
                 pageIndex = int.MaxValue - 1;
-            
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var forumPosts = context.Sp_Forums_PostLoadAll(forumTopicId,
-                userId, keywords, ascSort, pageSize, pageIndex, out totalRecords);
 
+            var context = ObjectContextHelper.CurrentObjectContext;
+            ObjectParameter totalRecordsParameter = new ObjectParameter("TotalRecords", typeof(int));
+            var forumPosts = context.Sp_Forums_PostLoadAll(forumTopicId,
+                userId, keywords, ascSort, pageIndex, pageSize, totalRecordsParameter).ToList();
+            totalRecords = Convert.ToInt32(totalRecordsParameter.Value);
             return forumPosts;
         }
 
@@ -831,9 +833,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
                 pageIndex = int.MaxValue - 1;
 
             var context = ObjectContextHelper.CurrentObjectContext;
+            ObjectParameter totalRecordsParameter = new ObjectParameter("TotalRecords", typeof(int));
             var privateMessages = context.Sp_Forums_PrivateMessageLoadAll(fromUserId,
-                toUserId, isRead, isDeletedByAuthor, isDeletedByRecipient, 
-                keywords, pageSize, pageIndex, out totalRecords);
+                toUserId, isRead, isDeletedByAuthor, isDeletedByRecipient,
+                keywords, pageIndex, pageSize, totalRecordsParameter).ToList();
+            totalRecords = Convert.ToInt32(totalRecordsParameter.Value);
+
             return privateMessages;
         }
 
@@ -1007,10 +1012,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
                 pageIndex = 0;
             if (pageIndex == int.MaxValue)
                 pageIndex = int.MaxValue - 1;
-            
+
             var context = ObjectContextHelper.CurrentObjectContext;
+            ObjectParameter totalRecordsParameter = new ObjectParameter("TotalRecords", typeof(int));
             var forumSubscriptions = context.Sp_Forums_SubscriptionLoadAll(userId,
-                forumId, topicId, pageSize, pageIndex, out totalRecords);
+                forumId, topicId, pageIndex, pageSize, totalRecordsParameter).ToList();
+            totalRecords = Convert.ToInt32(totalRecordsParameter.Value);
 
             return forumSubscriptions;
         }

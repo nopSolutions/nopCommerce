@@ -39,6 +39,7 @@ using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.QuickBooks;
 using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using System.Data.Objects;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
 {
@@ -834,10 +835,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                 username = string.Empty;
 
             var context = ObjectContextHelper.CurrentObjectContext;
+            ObjectParameter totalRecordsParameter = new ObjectParameter("TotalRecords", typeof(int));
             var customers = context.Sp_CustomerLoadAll(registrationFrom,
                 registrationTo, email, username, dontLoadGuestCustomers,
-                dateOfBirthMonth, dateOfBirthDay, 
-                pageSize, pageIndex, out totalRecords).ToList();
+                dateOfBirthMonth, dateOfBirthDay,
+                pageSize, pageIndex, totalRecordsParameter).ToList();
+            totalRecords = Convert.ToInt32(totalRecordsParameter.Value);
 
             return customers;
         }
@@ -2169,7 +2172,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         public List<CustomerSession> GetAllCustomerSessionsWithNonEmptyShoppingCart()
         {
             var context = ObjectContextHelper.CurrentObjectContext;
-            return context.Sp_CustomerSessionLoadNonEmpty();
+            return context.Sp_CustomerSessionLoadNonEmpty().ToList();
         }
 
         /// <summary>

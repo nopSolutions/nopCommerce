@@ -31,6 +31,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Utils.Html;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Common.Utils.Html;
 using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using System.Data.Objects;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
 {
@@ -147,9 +148,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
                 pageIndex = Int32.MaxValue - 1;
 
             var context = ObjectContextHelper.CurrentObjectContext;
+            ObjectParameter totalRecordsParameter = new ObjectParameter("TotalRecords", typeof(int));
             var blogPosts = context.Sp_BlogPostLoadAll(languageId,
-                dateFrom, dateTo, pageSize, pageIndex, out totalRecords).ToList();
-
+                dateFrom, dateTo, pageSize, pageIndex, totalRecordsParameter).ToList();
+            totalRecords = Convert.ToInt32(totalRecordsParameter.Value);
             return blogPosts;
         }
 

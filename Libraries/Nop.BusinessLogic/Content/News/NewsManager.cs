@@ -31,6 +31,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Utils.Html;
 using NopSolutions.NopCommerce.Common.Utils.Html;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using System.Data.Objects;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
 {
@@ -191,8 +192,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
             }
 
             var context = ObjectContextHelper.CurrentObjectContext;
+            ObjectParameter totalRecordsParameter = new ObjectParameter("TotalRecords", typeof(int));
             var news = context.Sp_NewsLoadAll(languageId, showHidden,
-                pageSize, pageIndex, out totalRecords).ToList();
+                pageIndex, pageSize, totalRecordsParameter).ToList();
+            totalRecords = Convert.ToInt32(totalRecordsParameter.Value);
 
             return news;
         }

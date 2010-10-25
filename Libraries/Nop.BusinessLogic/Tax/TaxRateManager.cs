@@ -105,7 +105,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
             }
 
             var context = ObjectContextHelper.CurrentObjectContext;
-            var collection = context.Sp_TaxRateLoadAll();
+            var collection = context.Sp_TaxRateLoadAll().ToList();
 
             if (this.CacheEnabled)
             {

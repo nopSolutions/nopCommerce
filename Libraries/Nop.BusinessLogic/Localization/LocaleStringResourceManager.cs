@@ -26,6 +26,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Data;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using System.Data.Objects;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Localization
 {
@@ -168,7 +169,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Localization
         {
             string xmlPackage = string.Empty;
             var context = ObjectContextHelper.CurrentObjectContext;
-            context.Sp_LanguagePackExport(languageId, out xmlPackage);
+            ObjectParameter xmlPackageParameter = new ObjectParameter("XmlPackage", typeof(string));
+            context.Sp_LanguagePackExport(languageId, xmlPackageParameter);
+            xmlPackage = Convert.ToString(xmlPackageParameter.Value);
 
             return xmlPackage;
         }

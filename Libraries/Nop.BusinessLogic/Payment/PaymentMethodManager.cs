@@ -137,7 +137,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
         public List<PaymentMethod> GetAllPaymentMethods(int? filterByCountryId, bool showHidden)
         {
             var context = ObjectContextHelper.CurrentObjectContext;
-            var paymentMethods = context.Sp_PaymentMethodLoadAll(showHidden, filterByCountryId);
+            var paymentMethods = context.Sp_PaymentMethodLoadAll(showHidden, filterByCountryId).ToList();
             return paymentMethods;
         }
 

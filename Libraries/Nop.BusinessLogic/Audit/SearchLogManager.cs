@@ -44,8 +44,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
             DateTime? endTime, int count)
         {
             var context = ObjectContextHelper.CurrentObjectContext;
-            var report = context.Sp_SearchTermReport(startTime,
-                endTime, count);
+            var report = context.Sp_SearchTermReport(startTime, endTime, count).ToList();
             return report;
         }
 

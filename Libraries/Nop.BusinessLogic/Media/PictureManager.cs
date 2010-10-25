@@ -22,6 +22,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Data;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using System.Data.Objects;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Media
 {
@@ -598,7 +599,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
 
 
             var context = ObjectContextHelper.CurrentObjectContext;
-            var pics = context.Sp_PictureLoadAllPaged(pageSize, pageIndex, out totalRecords);
+            ObjectParameter totalRecordsParameter = new ObjectParameter("TotalRecords", typeof(int));
+            var pics = context.Sp_PictureLoadAllPaged(pageIndex, pageSize, totalRecordsParameter).ToList();
+            totalRecords = Convert.ToInt32(totalRecordsParameter.Value);
             return pics;
         }
         

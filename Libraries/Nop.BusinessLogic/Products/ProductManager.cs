@@ -34,6 +34,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Products.Specs;
 using NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Common.Utils.Html;
+using System.Data.Objects;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Products
 {
@@ -340,12 +341,28 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
 
             bool showHidden = NopContext.Current.IsAdmin;
 
+            string commaSeparatedSpecIds = string.Empty;
+            if (filteredSpecs != null)
+            {
+                filteredSpecs.Sort();
+                for (int i = 0; i < filteredSpecs.Count; i++)
+                {
+                    commaSeparatedSpecIds += filteredSpecs[i].ToString();
+                    if (i != filteredSpecs.Count - 1)
+                    {
+                        commaSeparatedSpecIds += ",";
+                    }
+                }
+            }
+
             var context = ObjectContextHelper.CurrentObjectContext;
+            ObjectParameter totalRecordsParameter = new ObjectParameter("TotalRecords", typeof(int));
             var products = context.Sp_ProductLoadAllPaged(categoryId,
                manufacturerId, productTagId, featuredProducts,
-               priceMin, priceMax, relatedToProductId, 
-               keywords, searchDescriptions, pageSize, pageIndex, filteredSpecs,
-               languageId, (int)orderBy, showHidden, out totalRecords);
+               priceMin, priceMax, relatedToProductId,
+               keywords, searchDescriptions, showHidden, pageIndex, pageSize, commaSeparatedSpecIds,
+               languageId, (int)orderBy, totalRecordsParameter).ToList();
+            totalRecords = Convert.ToInt32(totalRecordsParameter.Value);
 
             return products;
         }
@@ -670,8 +687,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             bool showHidden = NopContext.Current.IsAdmin;
 
             var context = ObjectContextHelper.CurrentObjectContext;
+            ObjectParameter totalRecordsParameter = new ObjectParameter("TotalRecords", typeof(int));
             var products = context.Sp_ProductAlsoPurchasedLoadByProductID(productId,
-               showHidden, pageSize, pageIndex, out totalRecords);
+               showHidden, pageIndex, pageSize, totalRecordsParameter).ToList();
+            totalRecords = Convert.ToInt32(totalRecordsParameter.Value);
             return products;
         }
 
@@ -1522,9 +1541,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             bool showHidden = NopContext.Current.IsAdmin;
 
             var context = ObjectContextHelper.CurrentObjectContext;
+            ObjectParameter totalRecordsParameter = new ObjectParameter("TotalRecords", typeof(int));
             var productVariants = context.Sp_ProductVariantLoadAll(categoryId,
-                manufacturerId, keywords, showHidden, pageSize,
-                pageIndex, out totalRecords);
+                manufacturerId, keywords, showHidden,
+                pageIndex, pageSize, totalRecordsParameter).ToList();
+            totalRecords = Convert.ToInt32(totalRecordsParameter.Value);
+
             return productVariants;
         }
         
@@ -2992,7 +3014,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             name = name.Trim();
 
             var context = ObjectContextHelper.CurrentObjectContext;
-            var productTags = context.Sp_ProductTagLoadAll(productId, name);
+            var productTags = context.Sp_ProductTagLoadAll(productId, name).ToList();
             return productTags;
         }
 
