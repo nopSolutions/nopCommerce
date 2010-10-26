@@ -76,6 +76,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IPagedList.cs" />
+    <Compile Include="PagedList.cs" />
     <Compile Include="GenericComparer.cs" />
     <Compile Include="NopException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

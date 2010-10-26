@@ -253,10 +253,23 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 if (IoCFactory.Resolve<ICustomerManager>().UsernamesEnabled &&
                     IoCFactory.Resolve<ICustomerManager>().AllowCustomersToChangeUsernames)
                 {
-                    customer = IoCFactory.Resolve<ICustomerManager>().ChangeCustomerUsername(customer.CustomerId, username);
+                    if (customer.Username.ToLowerInvariant() != username.ToLowerInvariant().Trim())
+                    {
+                        if (!customer.IsGuest)
+                        {
+                            customer = IoCFactory.Resolve<ICustomerManager>().ChangeCustomerUsername(customer.CustomerId, username);
+                        }
+                    }
                 }
 
-                customer = IoCFactory.Resolve<ICustomerManager>().SetEmail(customer.CustomerId, email);
+                //email
+                if (customer.Email.ToLowerInvariant() != email.ToLowerInvariant().Trim())
+                {
+                    if (!customer.IsGuest)
+                    {
+                        customer = IoCFactory.Resolve<ICustomerManager>().SetEmail(customer.CustomerId, email);
+                    }
+                }
 
                 customer.AffiliateId = affiliateId;
                 customer.IsTaxExempt = isTaxExempt;

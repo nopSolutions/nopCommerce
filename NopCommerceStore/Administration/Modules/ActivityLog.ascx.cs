@@ -129,10 +129,9 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             string customerName = txtCustomerName.Text.Trim();
 
             int activityLogTypeId = int.Parse(this.ddlActivityLogType.SelectedItem.Value);
-            int totalRecords = 0;
             var activityLogs = IoCFactory.Resolve<ICustomerActivityManager>().GetAllActivities(
                 startDate, endDate, customerEmail, customerName, activityLogTypeId,
-                int.MaxValue, 0, out totalRecords);
+                 0, int.MaxValue);
 
             var result = new List<RowHelper>();
             foreach (var activityLog in activityLogs)

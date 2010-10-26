@@ -14,13 +14,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data.Objects;
 using System.Linq;
 using System.Text;
 using NopSolutions.NopCommerce.BusinessLogic.Caching;
 using NopSolutions.NopCommerce.BusinessLogic.Data;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
+using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
-using System.Data.Objects;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Audit
 {
@@ -234,13 +235,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
         /// <param name="email">Customer Email</param>
         /// <param name="username">Customer username</param>
         /// <param name="activityLogTypeId">Activity log type identifier</param>
-        /// <param name="pageSize">Page size</param>
         /// <param name="pageIndex">Page index</param>
-        /// <param name="totalRecords">Total records</param>
+        /// <param name="pageSize">Page size</param>
         /// <returns>Activity log collection</returns>
-        public List<ActivityLog> GetAllActivities(DateTime? createdOnFrom,
+        public PagedList<ActivityLog> GetAllActivities(DateTime? createdOnFrom,
             DateTime? createdOnTo, string email, string username, int activityLogTypeId,
-            int pageSize, int pageIndex, out int totalRecords)
+            int pageIndex, int pageSize)
         {
             if (pageSize <= 0)
                 pageSize = 10;
@@ -251,13 +251,19 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
                 pageIndex = 0;
             if (pageIndex == int.MaxValue)
                 pageIndex = int.MaxValue - 1;
-            
+
             var context = ObjectContextHelper.CurrentObjectContext;
-            ObjectParameter totalRecordsParameter = new ObjectParameter("TotalRecords", typeof(int));
-            var activityLog = context.Sp_ActivityLogLoadAll(createdOnFrom,
-                createdOnTo, email, username, activityLogTypeId,
-                pageSize, pageIndex, totalRecordsParameter).ToList();
-            totalRecords = Convert.ToInt32(totalRecordsParameter.Value);
+            var query = from al in context.ActivityLog
+                        where (!createdOnFrom.HasValue || createdOnFrom.Value <= al.CreatedOn) &&
+                        (!createdOnTo.HasValue || createdOnTo.Value >= al.CreatedOn) &&
+                        (activityLogTypeId == 0 || activityLogTypeId == al.ActivityLogTypeId) &&
+                        (String.IsNullOrEmpty(email) || al.NpCustomer.Email.Contains(email)) &&
+                        (String.IsNullOrEmpty(username) || al.NpCustomer.Username.Contains(username)) &&
+                        !al.NpCustomer.IsGuest &&
+                        !al.NpCustomer.Deleted
+                        orderby al.CreatedOn descending
+                        select al;
+            var activityLog = new PagedList<ActivityLog>(query, pageIndex, pageSize);
             return activityLog;
         }
         
@@ -285,7 +291,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
         public void ClearAllActivities()
         {
             var context = ObjectContextHelper.CurrentObjectContext;
-            context.Sp_ActivityLogClearAll();
+            var activityLog = context.ActivityLog.ToList();
+            foreach (var activityLogItem in activityLog)
+                context.DeleteObject(activityLogItem);
+            context.SaveChanges();
         }
         #endregion
     }

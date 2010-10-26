@@ -20,6 +20,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Caching;
 using NopSolutions.NopCommerce.BusinessLogic.Data;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.Common;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Audit
 {
@@ -90,13 +91,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
         /// <param name="email">Customer Email</param>
         /// <param name="username">Customer username</param>
         /// <param name="activityLogTypeId">Activity log type identifier</param>
-        /// <param name="pageSize">Page size</param>
         /// <param name="pageIndex">Page index</param>
-        /// <param name="totalRecords">Total records</param>
+        /// <param name="pageSize">Page size</param>
         /// <returns>Activity log collection</returns>
-        List<ActivityLog> GetAllActivities(DateTime? createdOnFrom,
+        PagedList<ActivityLog> GetAllActivities(DateTime? createdOnFrom,
             DateTime? createdOnTo, string email, string username, int activityLogTypeId,
-            int pageSize, int pageIndex, out int totalRecords);
+            int pageIndex, int pageSize);
         
         /// <summary>
         /// Gets an activity log item

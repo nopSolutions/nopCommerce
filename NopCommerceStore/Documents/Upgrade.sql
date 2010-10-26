@@ -866,3 +866,18 @@ BEGIN
 	DROP TABLE #PageIndex
 END
 GO
+
+
+IF EXISTS (
+		SELECT *
+		FROM dbo.sysobjects
+		WHERE id = OBJECT_ID(N'[dbo].[Nop_ActivityLogLoadAll]') AND OBJECTPROPERTY(id,N'IsProcedure') = 1)
+DROP PROCEDURE [dbo].[Nop_ActivityLogLoadAll]
+GO
+
+IF EXISTS (
+		SELECT *
+		FROM dbo.sysobjects
+		WHERE id = OBJECT_ID(N'[dbo].[Nop_ActivityLogClearAll]') AND OBJECTPROPERTY(id,N'IsProcedure') = 1)
+DROP PROCEDURE [dbo].[Nop_ActivityLogClearAll]
+GO

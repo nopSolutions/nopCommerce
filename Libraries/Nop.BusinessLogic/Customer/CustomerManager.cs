@@ -510,6 +510,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                 {
                     throw new NopException("New email is not valid");
                 }
+                
+                if (customer.IsGuest)
+                {
+                    throw new NopException("You cannot change email for guest customer");
+                }
 
                 var cust2 = GetCustomerByEmail(newEmail);
                 if (cust2 != null && customer.CustomerId != cust2.CustomerId)
@@ -540,7 +545,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                 throw new NopException("Usernames are disabled");
 
             if (!this.AllowCustomersToChangeUsernames)
-                throw new NopException("Chnaging usernames is not allowed");
+                throw new NopException("Changing usernames is not allowed");
 
             if (newUsername == null)
                 newUsername = string.Empty;
@@ -549,6 +554,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             var customer = GetCustomerById(customerId);
             if (customer != null)
             {
+                if (customer.IsGuest)
+                {
+                    throw new NopException("You cannot change username for guest customer");
+                }
+
                 var cust2 = GetCustomerByUsername(newUsername);
                 if (cust2 != null && customer.CustomerId != cust2.CustomerId)
                 {
