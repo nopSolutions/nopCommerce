@@ -23,6 +23,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Data;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.IoC;
 using System.Data.Objects;
+using NopSolutions.NopCommerce.Common;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Media
 {
@@ -582,10 +583,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
         /// </summary>
         /// <param name="pageIndex">Current page</param>
         /// <param name="pageSize">Items on each page</param>
-        /// <param name="totalRecords">Output. how many records in results</param>
         /// <returns>Paged list of pictures</returns>
-        public List<Picture> GetPictures(int pageSize, 
-            int pageIndex, out int totalRecords)
+        public PagedList<Picture> GetPictures(int pageSize, int pageIndex)
         {
             if (pageSize <= 0)
                 pageSize = 10;
@@ -599,9 +598,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
 
 
             var context = ObjectContextHelper.CurrentObjectContext;
-            ObjectParameter totalRecordsParameter = new ObjectParameter("TotalRecords", typeof(int));
-            var pics = context.Sp_PictureLoadAllPaged(pageIndex, pageSize, totalRecordsParameter).ToList();
-            totalRecords = Convert.ToInt32(totalRecordsParameter.Value);
+            var query = from p in context.Pictures
+                       orderby p.PictureId descending
+                       select p;
+            var pics = new PagedList<Picture>(query, pageIndex, pageSize);
             return pics;
         }
         
@@ -776,7 +776,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
 
                     //update all picture objects
                     int totalRecords = 0;
-                    var pictures = this.GetPictures(int.MaxValue, 0, out totalRecords);
+                    var pictures = this.GetPictures(int.MaxValue, 0);
                     for (int i = 0; i < pictures.Count; i++)
                     {
                         var picture = pictures[i];

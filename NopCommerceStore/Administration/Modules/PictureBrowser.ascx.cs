@@ -100,8 +100,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         private void BindGrid()
         {
-            int totalRecords = 0;
-            var pictures = IoCFactory.Resolve<IPictureManager>().GetPictures(int.MaxValue, 0, out totalRecords);
+            var pictures = IoCFactory.Resolve<IPictureManager>().GetPictures(int.MaxValue, 0);
             gvPictures.DataSource = pictures;
             gvPictures.DataBind();
         }

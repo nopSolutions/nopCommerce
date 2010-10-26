@@ -4103,11 +4103,6 @@
           <Parameter Name="ShowHidden" Type="bit" Mode="In" />
           <Parameter Name="FilterByCountryID" Type="int" Mode="In" />
         </Function>
-        <Function Name="Nop_PictureLoadAllPaged" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="PageIndex" Type="int" Mode="In" />
-          <Parameter Name="PageSize" Type="int" Mode="In" />
-          <Parameter Name="TotalRecords" Type="int" Mode="InOut" />
-        </Function>
         <Function Name="Nop_ProductAlsoPurchasedLoadByProductID" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="ProductID" Type="int" Mode="In" />
           <Parameter Name="ShowHidden" Type="bit" Mode="In" />
@@ -4833,11 +4828,6 @@
           <FunctionImport Name="Sp_PaymentMethodLoadAll" EntitySet="PaymentMethods" ReturnType="Collection(NopSolutions.NopCommerce.BusinessLogic.Data.PaymentMethod)">
             <Parameter Name="ShowHidden" Mode="In" Type="Boolean" />
             <Parameter Name="FilterByCountryID" Mode="In" Type="Int32" />
-          </FunctionImport>
-          <FunctionImport Name="Sp_PictureLoadAllPaged" EntitySet="Pictures" ReturnType="Collection(NopSolutions.NopCommerce.BusinessLogic.Data.Picture)">
-            <Parameter Name="PageIndex" Mode="In" Type="Int32" />
-            <Parameter Name="PageSize" Mode="In" Type="Int32" />
-            <Parameter Name="TotalRecords" Mode="InOut" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="Sp_ProductAlsoPurchasedLoadByProductID" EntitySet="Products" ReturnType="Collection(NopSolutions.NopCommerce.BusinessLogic.Data.Product)">
             <Parameter Name="ProductID" Mode="In" Type="Int32" />
@@ -9812,7 +9802,6 @@
             </ResultMapping>
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="Sp_PaymentMethodLoadAll" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_PaymentMethodLoadAll" />
-          <FunctionImportMapping FunctionImportName="Sp_PictureLoadAllPaged" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_PictureLoadAllPaged" />
           <FunctionImportMapping FunctionImportName="Sp_ProductAlsoPurchasedLoadByProductID" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_ProductAlsoPurchasedLoadByProductID" />
           <FunctionImportMapping FunctionImportName="Sp_ProductLoadAllPaged" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_ProductLoadAllPaged" />
           <FunctionImportMapping FunctionImportName="Sp_ProductRatingCreate" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_ProductRatingCreate" />

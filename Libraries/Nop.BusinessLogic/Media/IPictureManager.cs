@@ -22,6 +22,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Data;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.Common;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Media
 {
@@ -154,10 +155,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
         /// </summary>
         /// <param name="pageIndex">Current page</param>
         /// <param name="pageSize">Items on each page</param>
-        /// <param name="totalRecords">Output. how many records in results</param>
         /// <returns>Paged list of pictures</returns>
-        List<Picture> GetPictures(int pageSize,
-            int pageIndex, out int totalRecords);
+        PagedList<Picture> GetPictures(int pageSize, int pageIndexs);
         
         /// <summary>
         /// Gets pictures by product identifier
