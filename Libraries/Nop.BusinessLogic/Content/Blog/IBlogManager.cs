@@ -31,6 +31,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Utils.Html;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Common.Utils.Html;
 using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.Common;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
 {
@@ -63,12 +64,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
         /// Gets all blog posts
         /// </summary>
         /// <param name="languageId">Language identifier. 0 if you want to get all records</param>
-        /// <param name="pageSize">Page size</param>
         /// <param name="pageIndex">Page index</param>
-        /// <param name="totalRecords">Total records</param>
+        /// <param name="pageSize">Page size</param>
         /// <returns>Blog posts</returns>
-        List<BlogPost> GetAllBlogPosts(int languageId, int pageSize,
-            int pageIndex, out int totalRecords);
+        PagedList<BlogPost> GetAllBlogPosts(int languageId, int pageIndex, int pageSize);
 
         /// <summary>
         /// Gets all blog posts
@@ -76,13 +75,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
         /// <param name="languageId">Language identifier; 0 if you want to get all records</param>
         /// <param name="dateFrom">Filter by created date; null if you want to get all records</param>
         /// <param name="dateTo">Filter by created date; null if you want to get all records</param>
-        /// <param name="pageSize">Page size</param>
         /// <param name="pageIndex">Page index</param>
-        /// <param name="totalRecords">Total records</param>
+        /// <param name="pageSize">Page size</param>
         /// <returns>Blog posts</returns>
-        List<BlogPost> GetAllBlogPosts(int languageId, 
-            DateTime? dateFrom, DateTime? dateTo, int pageSize,
-            int pageIndex, out int totalRecords);
+        PagedList<BlogPost> GetAllBlogPosts(int languageId,
+            DateTime? dateFrom, DateTime? dateTo, int pageIndex, int pageSize);
 
         /// <summary>
         /// Gets all blog posts

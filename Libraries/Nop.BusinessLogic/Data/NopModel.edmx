@@ -3934,14 +3934,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Function Name="Nop_BlogPostLoadAll" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="LanguageID" Type="int" Mode="In" />
-          <Parameter Name="DateFrom" Type="datetime" Mode="In" />
-          <Parameter Name="DateTo" Type="datetime" Mode="In" />
-          <Parameter Name="PageSize" Type="int" Mode="In" />
-          <Parameter Name="PageIndex" Type="int" Mode="In" />
-          <Parameter Name="TotalRecords" Type="int" Mode="InOut" />
-        </Function>
         <Function Name="Nop_CustomerBestReport" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="StartTime" Type="datetime" Mode="In" />
           <Parameter Name="EndTime" Type="datetime" Mode="In" />
@@ -4780,15 +4772,7 @@
           <AssociationSet Name="FK_Nop_RecurringPaymentHistory_Nop_RecurringPayment" Association="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_RecurringPaymentHistory_Nop_RecurringPayment">
             <End Role="Nop_RecurringPayment" EntitySet="RecurringPayments" />
             <End Role="Nop_RecurringPaymentHistory" EntitySet="RecurringPaymentHistory" />
-          </AssociationSet>
-          <FunctionImport Name="Sp_BlogPostLoadAll" EntitySet="BlogPosts" ReturnType="Collection(NopSolutions.NopCommerce.BusinessLogic.Data.BlogPost)">
-            <Parameter Name="LanguageID" Mode="In" Type="Int32" />
-            <Parameter Name="DateFrom" Mode="In" Type="DateTime" />
-            <Parameter Name="DateTo" Mode="In" Type="DateTime" />
-            <Parameter Name="PageSize" Mode="In" Type="Int32" />
-            <Parameter Name="PageIndex" Mode="In" Type="Int32" />
-            <Parameter Name="TotalRecords" Mode="InOut" Type="Int32" />
-          </FunctionImport>
+          </AssociationSet>          
           <FunctionImport Name="Sp_CustomerBestReport" ReturnType="Collection(NopSolutions.NopCommerce.BusinessLogic.Data.CustomerBestReportLine)">
             <Parameter Name="StartTime" Mode="In" Type="DateTime" />
             <Parameter Name="EndTime" Mode="In" Type="DateTime" />
@@ -9810,7 +9794,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="Sp_BlogPostLoadAll" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_BlogPostLoadAll" />
           <FunctionImportMapping FunctionImportName="Sp_CustomerBestReport" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_CustomerBestReport">
             <ResultMapping>
               <ComplexTypeMapping TypeName="NopSolutions.NopCommerce.BusinessLogic.Data.CustomerBestReportLine">

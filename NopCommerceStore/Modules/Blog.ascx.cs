@@ -47,7 +47,6 @@ namespace NopSolutions.NopCommerce.Web.Modules
         {
             if (String.IsNullOrEmpty(this.Tag))
             {
-                int totalRecords = 0;
                 int pageSize = IoCFactory.Resolve<IBlogManager>().PostsPageSize;
                 DateTime? dateFrom = null;
                 DateTime? dateTo = null;
@@ -64,11 +63,11 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 }
 
                 var blogPosts = IoCFactory.Resolve<IBlogManager>().GetAllBlogPosts(NopContext.Current.WorkingLanguage.LanguageId,
-                    dateFrom, dateTo, pageSize, CurrentPageIndex, out totalRecords);
+                    dateFrom, dateTo, CurrentPageIndex, pageSize);
                 if (blogPosts.Count > 0)
                 {
                     this.postsPager.PageSize = pageSize;
-                    this.postsPager.TotalRecords = totalRecords;
+                    this.postsPager.TotalRecords = blogPosts.TotalCount;
                     this.postsPager.PageIndex = this.CurrentPageIndex;
 
                     rptrBlogPosts.DataSource = blogPosts;

@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Data.Objects;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -24,14 +25,14 @@ using NopSolutions.NopCommerce.BusinessLogic.Caching;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Data;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 using NopSolutions.NopCommerce.BusinessLogic.Localization;
 using NopSolutions.NopCommerce.BusinessLogic.Messages;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.BusinessLogic.Utils.Html;
+using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Common.Utils.Html;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
-using System.Data.Objects;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
 {
@@ -105,23 +106,20 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
         /// <returns>Blog posts</returns>
         public List<BlogPost> GetAllBlogPosts(int languageId)
         {
-            int totalRecords;
-            return GetAllBlogPosts(languageId, Int32.MaxValue, 0, out totalRecords);
+            return GetAllBlogPosts(languageId, 0, int.MaxValue);
         }
 
         /// <summary>
         /// Gets all blog posts
         /// </summary>
         /// <param name="languageId">Language identifier. 0 if you want to get all records</param>
-        /// <param name="pageSize">Page size</param>
         /// <param name="pageIndex">Page index</param>
-        /// <param name="totalRecords">Total records</param>
+        /// <param name="pageSize">Page size</param>
         /// <returns>Blog posts</returns>
-        public List<BlogPost> GetAllBlogPosts(int languageId, int pageSize,
-            int pageIndex, out int totalRecords)
+        public PagedList<BlogPost> GetAllBlogPosts(int languageId, int pageIndex, int pageSize)
         {
             return GetAllBlogPosts(languageId,
-                null, null, pageSize, pageIndex, out totalRecords);
+                null, null, pageIndex, pageSize);
         }
 
         /// <summary>
@@ -130,28 +128,29 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
         /// <param name="languageId">Language identifier; 0 if you want to get all records</param>
         /// <param name="dateFrom">Filter by created date; null if you want to get all records</param>
         /// <param name="dateTo">Filter by created date; null if you want to get all records</param>
-        /// <param name="pageSize">Page size</param>
         /// <param name="pageIndex">Page index</param>
-        /// <param name="totalRecords">Total records</param>
+        /// <param name="pageSize">Page size</param>
         /// <returns>Blog posts</returns>
-        public List<BlogPost> GetAllBlogPosts(int languageId, 
-            DateTime? dateFrom, DateTime? dateTo, int pageSize,
-            int pageIndex, out int totalRecords)
+        public PagedList<BlogPost> GetAllBlogPosts(int languageId,
+            DateTime? dateFrom, DateTime? dateTo, int pageIndex, int pageSize)
         {
-            if (pageSize <= 0)
-                pageSize = 10;
-            if (pageSize == Int32.MaxValue)
-                pageSize = Int32.MaxValue - 1;
             if (pageIndex < 0)
                 pageIndex = 0;
             if (pageIndex == Int32.MaxValue)
                 pageIndex = Int32.MaxValue - 1;
+            if (pageSize <= 0)
+                pageSize = 10;
+            if (pageSize == Int32.MaxValue)
+                pageSize = Int32.MaxValue - 1;
 
             var context = ObjectContextHelper.CurrentObjectContext;
-            ObjectParameter totalRecordsParameter = new ObjectParameter("TotalRecords", typeof(int));
-            var blogPosts = context.Sp_BlogPostLoadAll(languageId,
-                dateFrom, dateTo, pageSize, pageIndex, totalRecordsParameter).ToList();
-            totalRecords = Convert.ToInt32(totalRecordsParameter.Value);
+            var query = from bp in context.BlogPosts
+                        where (!dateFrom.HasValue || dateFrom.Value <= bp.CreatedOn) &&
+                        (!dateTo.HasValue || dateTo.Value >= bp.CreatedOn) &&
+                        (languageId == 0 || languageId == bp.LanguageId)
+                        orderby bp.CreatedOn descending
+                        select bp;
+            var blogPosts = new PagedList<BlogPost>(query, pageIndex, pageSize);
             return blogPosts;
         }
 
