@@ -32,6 +32,7 @@ using NopSolutions.NopCommerce.Common.Utils.Html;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.IoC;
 using System.Data.Objects;
+using NopSolutions.NopCommerce.Common;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
 {
@@ -142,9 +143,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
         /// <returns>News item collection</returns>
         public List<News> GetAllNews(int languageId, bool showHidden, int count)
         {
-            int totalRecords = 0;
-
-            return GetAllNews(languageId, showHidden, 0, count, out totalRecords);
+            return GetAllNews(languageId, showHidden, 0, count);
         }
 
         /// <summary>
@@ -153,13 +152,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
         /// <param name="languageId">Language identifier. 0 if you want to get all news</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="pageIndex">Page index</param>
-        /// <param name="totalRecords">Total records</param>
         /// <returns>News item collection</returns>
-        public List<News> GetAllNews(int languageId, int pageIndex, int pageSize,
-            out int totalRecords)
+        public PagedList<News> GetAllNews(int languageId, int pageIndex, int pageSize)
         {
             bool showHidden = NopContext.Current.IsAdmin;
-            return GetAllNews(languageId, showHidden, pageIndex, pageSize, out totalRecords);
+            return GetAllNews(languageId, showHidden, pageIndex, pageSize);
         }
 
         /// <summary>
@@ -169,10 +166,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="pageIndex">Page index</param>
-        /// <param name="totalRecords">Total records</param>
         /// <returns>News item collection</returns>
-        public List<News> GetAllNews(int languageId, bool showHidden, 
-            int pageIndex, int pageSize, out int totalRecords)
+        public PagedList<News> GetAllNews(int languageId, bool showHidden, 
+            int pageIndex, int pageSize)
         {
             if(pageSize <= 0)
             {
@@ -192,11 +188,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
             }
 
             var context = ObjectContextHelper.CurrentObjectContext;
-            ObjectParameter totalRecordsParameter = new ObjectParameter("TotalRecords", typeof(int));
-            var news = context.Sp_NewsLoadAll(languageId, showHidden,
-                pageIndex, pageSize, totalRecordsParameter).ToList();
-            totalRecords = Convert.ToInt32(totalRecordsParameter.Value);
-
+            var query = from n in context.News
+                        where (showHidden || n.Published) &&
+                        (languageId == 0 || languageId == n.LanguageId)
+                        orderby n.CreatedOn descending
+                        select n;
+            var news = new PagedList<News>(query, pageIndex, pageSize);
             return news;
         }
 

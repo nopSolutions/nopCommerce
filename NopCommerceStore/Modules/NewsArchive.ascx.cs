@@ -47,14 +47,13 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void BindData()
         {
-            int totalRecords = 0;
             int pageSize = IoCFactory.Resolve<INewsManager>().NewsArchivePageSize;
 
-            var newsCollection = IoCFactory.Resolve<INewsManager>().GetAllNews(NopContext.Current.WorkingLanguage.LanguageId, CurrentPageIndex, pageSize, out totalRecords);
+            var newsCollection = IoCFactory.Resolve<INewsManager>().GetAllNews(NopContext.Current.WorkingLanguage.LanguageId, CurrentPageIndex, pageSize);
             if(newsCollection.Count > 0)
             {
                 newsPager.PageSize = pageSize;
-                newsPager.TotalRecords = totalRecords;
+                newsPager.TotalRecords = newsCollection.TotalCount;
                 newsPager.PageIndex = CurrentPageIndex;
 
                 rptrNews.DataSource = newsCollection;

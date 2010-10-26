@@ -24,13 +24,14 @@ using NopSolutions.NopCommerce.BusinessLogic.Caching;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Data;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 using NopSolutions.NopCommerce.BusinessLogic.Localization;
 using NopSolutions.NopCommerce.BusinessLogic.Messages;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.BusinessLogic.Utils.Html;
-using NopSolutions.NopCommerce.Common.Utils.Html;
+using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.Common.Utils.Html;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
 {
@@ -90,10 +91,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
         /// <param name="languageId">Language identifier. 0 if you want to get all news</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="pageIndex">Page index</param>
-        /// <param name="totalRecords">Total records</param>
         /// <returns>News item collection</returns>
-        List<News> GetAllNews(int languageId, int pageIndex, int pageSize,
-            out int totalRecords);
+        PagedList<News> GetAllNews(int languageId, int pageIndex, int pageSize);
 
         /// <summary>
         /// Gets news item collection
@@ -102,10 +101,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="pageIndex">Page index</param>
-        /// <param name="totalRecords">Total records</param>
         /// <returns>News item collection</returns>
-        List<News> GetAllNews(int languageId, bool showHidden,
-            int pageIndex, int pageSize, out int totalRecords);
+        PagedList<News> GetAllNews(int languageId, bool showHidden,
+            int pageIndex, int pageSize);
 
         /// <summary>
         /// Inserts a news item

@@ -918,3 +918,10 @@ IF EXISTS (
 		WHERE id = OBJECT_ID(N'[dbo].[Nop_LogClear]') AND OBJECTPROPERTY(id,N'IsProcedure') = 1)
 DROP PROCEDURE [dbo].[Nop_LogClear]
 GO
+
+IF EXISTS (
+		SELECT *
+		FROM dbo.sysobjects
+		WHERE id = OBJECT_ID(N'[dbo].[Nop_NewsLoadAll]') AND OBJECTPROPERTY(id,N'IsProcedure') = 1)
+DROP PROCEDURE [dbo].[Nop_NewsLoadAll]
+GO
