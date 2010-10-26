@@ -1684,29 +1684,31 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// </summary>
         /// <param name="customerId">Customer identifier; null to load all records</param>
         /// <param name="orderId">Order identifier; null to load all records</param>
-        /// <param name="pageSize">Page size</param>
         /// <param name="pageIndex">Page index</param>
-        /// <param name="totalRecords">Total records</param>
+        /// <param name="pageSize">Page size</param>
         /// <returns>Reward point history entries</returns>
-        public List<RewardPointsHistory> GetAllRewardPointsHistoryEntries(int? customerId,
-            int? orderId, int pageSize, int pageIndex, out int totalRecords)
+        public PagedList<RewardPointsHistory> GetAllRewardPointsHistoryEntries(int? customerId,
+            int? orderId, int pageIndex, int pageSize)
         {
-            if (pageSize <= 0)
-                pageSize = 10;
-            if (pageSize == int.MaxValue)
-                pageSize = int.MaxValue - 1;
-
             if (pageIndex < 0)
                 pageIndex = 0;
             if (pageIndex == int.MaxValue)
                 pageIndex = int.MaxValue - 1;
+
+            if (pageSize <= 0)
+                pageSize = 10;
+            if (pageSize == int.MaxValue)
+                pageSize = int.MaxValue - 1;
             
             var context = ObjectContextHelper.CurrentObjectContext;
 
-            ObjectParameter totalRecordsParameter = new ObjectParameter("TotalRecords", typeof(int));
-            var rewardPointsHistoryEntries = context.Sp_RewardPointsHistoryLoadAll(customerId,
-                orderId, pageIndex, pageSize, totalRecordsParameter).ToList();
-            totalRecords = Convert.ToInt32(totalRecordsParameter.Value);
+            var query = from rph in context.RewardPointsHistory
+                        where
+                        (!customerId.HasValue || customerId.Value == 0 || customerId.Value == rph.CustomerId) &&
+                        (!orderId.HasValue || orderId.Value == 0 || orderId.Value == rph.OrderId)
+                        orderby rph.CreatedOn descending
+                        select rph;
+            var rewardPointsHistoryEntries = new PagedList<RewardPointsHistory>(query, pageIndex, pageSize);
 
             return rewardPointsHistoryEntries;
         }

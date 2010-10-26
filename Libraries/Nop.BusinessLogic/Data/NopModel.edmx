@@ -4159,13 +4159,6 @@
           <Parameter Name="InitialOrderID" Type="int" Mode="In" />
           <Parameter Name="InitialOrderStatusID" Type="int" Mode="In" />
         </Function>
-        <Function Name="Nop_RewardPointsHistoryLoadAll" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="CustomerID" Type="int" Mode="In" />
-          <Parameter Name="OrderID" Type="int" Mode="In" />
-          <Parameter Name="PageIndex" Type="int" Mode="In" />
-          <Parameter Name="PageSize" Type="int" Mode="In" />
-          <Parameter Name="TotalRecords" Type="int" Mode="InOut" />
-        </Function>
         <Function Name="Nop_SalesBestSellersReport" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="LastDays" Type="int" Mode="In" />
           <Parameter Name="RecordsToReturn" Type="int" Mode="In" />
@@ -4878,13 +4871,6 @@
             <Parameter Name="CustomerID" Mode="In" Type="Int32" />
             <Parameter Name="InitialOrderID" Mode="In" Type="Int32" />
             <Parameter Name="InitialOrderStatusID" Mode="In" Type="Int32" />
-          </FunctionImport>
-          <FunctionImport Name="Sp_RewardPointsHistoryLoadAll" EntitySet="RewardPointsHistory" ReturnType="Collection(NopSolutions.NopCommerce.BusinessLogic.Data.RewardPointsHistory)">
-            <Parameter Name="CustomerID" Mode="In" Type="Int32" />
-            <Parameter Name="OrderID" Mode="In" Type="Int32" />
-            <Parameter Name="PageIndex" Mode="In" Type="Int32" />
-            <Parameter Name="PageSize" Mode="In" Type="Int32" />
-            <Parameter Name="TotalRecords" Mode="InOut" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="Sp_SalesBestSellersReport" ReturnType="Collection(NopSolutions.NopCommerce.BusinessLogic.Data.BestSellersReportLine)">
             <Parameter Name="LastDays" Mode="In" Type="Int32" />
@@ -9798,7 +9784,6 @@
           <FunctionImportMapping FunctionImportName="Sp_ProductVariantLoadAll" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_ProductVariantLoadAll" />
           <FunctionImportMapping FunctionImportName="Sp_RecurringPaymentHistoryLoadAll" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_RecurringPaymentHistoryLoadAll" />
           <FunctionImportMapping FunctionImportName="Sp_RecurringPaymentLoadAll" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_RecurringPaymentLoadAll" />
-          <FunctionImportMapping FunctionImportName="Sp_RewardPointsHistoryLoadAll" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_RewardPointsHistoryLoadAll" />
           <FunctionImportMapping FunctionImportName="Sp_SalesBestSellersReport" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_SalesBestSellersReport">
             <ResultMapping>
               <ComplexTypeMapping TypeName="NopSolutions.NopCommerce.BusinessLogic.Data.BestSellersReportLine">

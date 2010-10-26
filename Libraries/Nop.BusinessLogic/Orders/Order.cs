@@ -700,12 +700,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             {
                 if (_rph == null)
                 {
-                    int rpTotalRecords = 0;
-                    if (this.Customer == null)
+                    if (this.CustomerId == 0)
                         return null;
 
-                    var rphc = IoCFactory.Resolve<IOrderManager>().GetAllRewardPointsHistoryEntries(this.Customer.CustomerId,
-                        this.OrderId, 1, 0, out rpTotalRecords);
+                    var rphc = IoCFactory.Resolve<IOrderManager>().GetAllRewardPointsHistoryEntries(this.CustomerId,
+                        this.OrderId, 0, 1);
                     if (rphc.Count > 0)
                     {
                         _rph = rphc[0];

@@ -1199,7 +1199,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                 {
                     int totalRecords = 0;
                     _rewardPointsHistoryCache = IoCFactory.Resolve<IOrderManager>().GetAllRewardPointsHistoryEntries(this.CustomerId,
-                        null, int.MaxValue, 0, out totalRecords);
+                        null, 0, int.MaxValue);
                 }
                 return _rewardPointsHistoryCache;
             }

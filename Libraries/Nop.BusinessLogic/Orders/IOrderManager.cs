@@ -551,18 +551,17 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="rewardPointsHistoryId">Reward point history entry identifier</param>
         /// <returns>Reward point history entry</returns>
         RewardPointsHistory GetRewardPointsHistoryById(int rewardPointsHistoryId);
-
+        
         /// <summary>
         /// Gets all reward point history entries
         /// </summary>
         /// <param name="customerId">Customer identifier; null to load all records</param>
         /// <param name="orderId">Order identifier; null to load all records</param>
-        /// <param name="pageSize">Page size</param>
         /// <param name="pageIndex">Page index</param>
-        /// <param name="totalRecords">Total records</param>
+        /// <param name="pageSize">Page size</param>
         /// <returns>Reward point history entries</returns>
-        List<RewardPointsHistory> GetAllRewardPointsHistoryEntries(int? customerId,
-            int? orderId, int pageSize, int pageIndex, out int totalRecords);
+        PagedList<RewardPointsHistory> GetAllRewardPointsHistoryEntries(int? customerId,
+            int? orderId, int pageIndex, int pageSize);
 
         /// <summary>
         /// Inserts a reward point history entry
