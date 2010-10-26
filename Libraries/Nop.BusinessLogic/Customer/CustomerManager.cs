@@ -2182,7 +2182,16 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         public List<CustomerSession> GetAllCustomerSessionsWithNonEmptyShoppingCart()
         {
             var context = ObjectContextHelper.CurrentObjectContext;
-            return context.Sp_CustomerSessionLoadNonEmpty().ToList();
+            
+            var sciQuery = from sci in context.ShoppingCartItems
+                           where sci.ShoppingCartTypeId == (int)ShoppingCartTypeEnum.ShoppingCart
+                           select sci.CustomerSessionGuid;
+            var query = from cs in context.CustomerSessions
+                        where sciQuery.Contains(cs.CustomerSessionGuid)
+                        orderby cs.LastAccessed descending
+                        select cs;
+            var customerSessions = query.ToList();
+            return customerSessions;
         }
 
         /// <summary>

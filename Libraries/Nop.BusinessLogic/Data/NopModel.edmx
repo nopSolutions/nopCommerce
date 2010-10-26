@@ -3961,7 +3961,6 @@
         <Function Name="Nop_CustomerSessionDeleteExpired" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="OlderThan" Type="datetime" Mode="In" />
         </Function>
-        <Function Name="Nop_CustomerSessionLoadNonEmpty" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="Nop_DiscountUsageHistoryLoadAll" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="DiscountID" Type="int" Mode="In" />
           <Parameter Name="CustomerID" Type="int" Mode="In" />
@@ -5009,7 +5008,6 @@
           <Parameter Name="OlderThan" Mode="In" Type="DateTime" />
           </FunctionImport>
           <EntitySet Name="SMSProviders" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.SMSProvider" />
-          <FunctionImport Name="Sp_CustomerSessionLoadNonEmpty" EntitySet="CustomerSessions" ReturnType="Collection(NopSolutions.NopCommerce.BusinessLogic.Data.CustomerSession)" />
           <EntitySet Name="ReturnRequests" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.ReturnRequest" />
           <AssociationSet Name="FK_Nop_ReturnRequest_Nop_Customer" Association="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_ReturnRequest_Nop_Customer">
             <End Role="Customer" EntitySet="Customers" />
@@ -9931,7 +9929,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="Sp_CustomerSessionLoadNonEmpty" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_CustomerSessionLoadNonEmpty" />
           <EntitySetMapping Name="ReturnRequests">
             <EntityTypeMapping TypeName="NopSolutions.NopCommerce.BusinessLogic.Data.ReturnRequest">
               <MappingFragment StoreEntitySet="Nop_ReturnRequest">

@@ -3253,22 +3253,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
     
             return base.ExecuteFunction("Sp_ShoppingCartItemDeleteExpired", olderThanParameter);
         }
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        public ObjectResult<CustomerSession> Sp_CustomerSessionLoadNonEmpty()
-        {
-            return base.ExecuteFunction<CustomerSession>("Sp_CustomerSessionLoadNonEmpty");
-        }
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        /// <param name="mergeOption"></param>
-        public ObjectResult<CustomerSession> Sp_CustomerSessionLoadNonEmpty(MergeOption mergeOption)
-        {
-            return base.ExecuteFunction<CustomerSession>("Sp_CustomerSessionLoadNonEmpty", mergeOption);
-        }
 
         #endregion
     }
