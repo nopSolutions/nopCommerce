@@ -254,13 +254,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// <param name="isDeletedByAuthor">A value indicating whether loaded messages are deleted by author. false - messages are not deleted by author, null to load all messages</param>
         /// <param name="isDeletedByRecipient">A value indicating whether loaded messages are deleted by recipient. false - messages are not deleted by recipient, null to load all messages</param>
         /// <param name="keywords">Keywords</param>
-        /// <param name="pageSize">Page size</param>
         /// <param name="pageIndex">Page index</param>
-        /// <param name="totalRecords">Total records</param>
+        /// <param name="pageSize">Page size</param>
         /// <returns>Private messages</returns>
-        List<PrivateMessage> GetAllPrivateMessages(int fromUserId,
+        PagedList<PrivateMessage> GetAllPrivateMessages(int fromUserId,
             int toUserId, bool? isRead, bool? isDeletedByAuthor, bool? isDeletedByRecipient,
-            string keywords, int pageSize, int pageIndex, out int totalRecords);
+            string keywords, int pageIndex, int pageSize);
 
         /// <summary>
         /// Inserts a private message

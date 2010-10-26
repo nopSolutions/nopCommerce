@@ -61,8 +61,10 @@ namespace NopSolutions.NopCommerce.Web
             if (NopContext.Current.User == null)
                 return new List<PrivateMessage>();
 
-            var result = IoCFactory.Resolve<IForumManager>().GetAllPrivateMessages(NopContext.Current.User.CustomerId, 0, null, false, null,
-                string.Empty, PageSize, PageIndex, out totalRecords);
+            var result = IoCFactory.Resolve<IForumManager>().GetAllPrivateMessages(
+                NopContext.Current.User.CustomerId, 0, null, false, null,
+                string.Empty, PageIndex, PageSize);
+            totalRecords = result.TotalCount;
             return result;
         }
 
@@ -97,7 +99,8 @@ namespace NopSolutions.NopCommerce.Web
                 return new List<PrivateMessage>();
 
             var result = IoCFactory.Resolve<IForumManager>().GetAllPrivateMessages(0, NopContext.Current.User.CustomerId, null, null, false,
-                string.Empty, PageSize, PageIndex, out totalRecords);
+                string.Empty, PageIndex, PageSize);
+            totalRecords = result.TotalCount;
             return result;
         }
 

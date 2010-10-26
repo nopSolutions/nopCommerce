@@ -814,31 +814,37 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// <param name="isDeletedByAuthor">A value indicating whether loaded messages are deleted by author. false - messages are not deleted by author, null to load all messages</param>
         /// <param name="isDeletedByRecipient">A value indicating whether loaded messages are deleted by recipient. false - messages are not deleted by recipient, null to load all messages</param>
         /// <param name="keywords">Keywords</param>
-        /// <param name="pageSize">Page size</param>
         /// <param name="pageIndex">Page index</param>
-        /// <param name="totalRecords">Total records</param>
+        /// <param name="pageSize">Page size</param>
         /// <returns>Private messages</returns>
-        public List<PrivateMessage> GetAllPrivateMessages(int fromUserId,
+        public PagedList<PrivateMessage> GetAllPrivateMessages(int fromUserId,
             int toUserId, bool? isRead, bool? isDeletedByAuthor, bool? isDeletedByRecipient,
-            string keywords, int pageSize, int pageIndex, out int totalRecords)
+            string keywords, int pageIndex, int pageSize)
         {
-            if (pageSize <= 0)
-                pageSize = 10;
-            if (pageSize == int.MaxValue)
-                pageSize = int.MaxValue - 1;
-
             if (pageIndex < 0)
                 pageIndex = 0;
             if (pageIndex == int.MaxValue)
                 pageIndex = int.MaxValue - 1;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            ObjectParameter totalRecordsParameter = new ObjectParameter("TotalRecords", typeof(int));
-            var privateMessages = context.Sp_Forums_PrivateMessageLoadAll(fromUserId,
-                toUserId, isRead, isDeletedByAuthor, isDeletedByRecipient,
-                keywords, pageIndex, pageSize, totalRecordsParameter).ToList();
-            totalRecords = Convert.ToInt32(totalRecordsParameter.Value);
+            if (pageSize <= 0)
+                pageSize = 10;
+            if (pageSize == int.MaxValue)
+                pageSize = int.MaxValue - 1;
 
+            var context = ObjectContextHelper.CurrentObjectContext;
+            var query = from pm in context.PrivateMessages
+                        where
+                        (fromUserId == 0 || fromUserId == pm.FromUserId) &&
+                        (toUserId == 0 || toUserId == pm.ToUserId) &&
+                        (!isRead.HasValue || isRead.Value == pm.IsRead) &&
+                        (!isDeletedByAuthor.HasValue || isDeletedByAuthor.Value == pm.IsDeletedByAuthor) &&
+                        (!isDeletedByRecipient.HasValue || isDeletedByRecipient.Value == pm.IsDeletedByRecipient) && 
+                        (String.IsNullOrEmpty(keywords) || pm.Subject.Contains(keywords)) &&
+                        (String.IsNullOrEmpty(keywords) || pm.Text.Contains(keywords))
+                        orderby pm.CreatedOn descending
+                        select pm;
+            var privateMessages = new PagedList<PrivateMessage>(query, pageIndex, pageSize);
+            
             return privateMessages;
         }
 
