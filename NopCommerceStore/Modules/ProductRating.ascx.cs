@@ -29,6 +29,7 @@ using NopSolutions.NopCommerce.BusinessLogic;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -61,7 +62,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void productRating_Changed(object sender, RatingEventArgs e)
         {
-            if (NopContext.Current.User == null || NopContext.Current.User.IsGuest)
+            if (NopContext.Current.User == null && IoCFactory.Resolve<ICustomerManager>().AllowAnonymousUsersToSetProductRatings)
+                IoCFactory.Resolve<ICustomerManager>().CreateAnonymousUser();
+
+            if (NopContext.Current.User == null || (NopContext.Current.User.IsGuest && !IoCFactory.Resolve<ICustomerManager>().AllowAnonymousUsersToSetProductRatings))
             {
                 lblProductRatingResult.Text = GetLocaleResourceString("Products.OnlyRegisteredUsersCanRating");
                 e.CallbackResult = GetLocaleResourceString("Products.OnlyRegisteredUsersCanRating");

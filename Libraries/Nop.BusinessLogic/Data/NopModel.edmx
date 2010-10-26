@@ -4128,12 +4128,6 @@
           <Parameter Name="OrderBy" Type="int" Mode="In" />
           <Parameter Name="TotalRecords" Type="int" Mode="InOut" />
         </Function>
-        <Function Name="Nop_ProductRatingCreate" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="ProductID" Type="int" Mode="In" />
-          <Parameter Name="CustomerID" Type="int" Mode="In" />
-          <Parameter Name="Rating" Type="int" Mode="In" />
-          <Parameter Name="RatedOn" Type="datetime" Mode="In" />
-        </Function>
         <Function Name="Nop_ProductTag_Product_MappingDelete" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="ProductTagID" Type="int" Mode="In" />
           <Parameter Name="ProductID" Type="int" Mode="In" />
@@ -4853,12 +4847,6 @@
             <Parameter Name="LanguageID" Mode="In" Type="Int32" />
             <Parameter Name="OrderBy" Mode="In" Type="Int32" />
             <Parameter Name="TotalRecords" Mode="InOut" Type="Int32" />
-          </FunctionImport>
-          <FunctionImport Name="Sp_ProductRatingCreate">
-            <Parameter Name="ProductID" Mode="In" Type="Int32" />
-            <Parameter Name="CustomerID" Mode="In" Type="Int32" />
-            <Parameter Name="Rating" Mode="In" Type="Int32" />
-            <Parameter Name="RatedOn" Mode="In" Type="DateTime" />
           </FunctionImport>
           <FunctionImport Name="Sp_ProductTag_Product_MappingDelete">
             <Parameter Name="ProductTagID" Mode="In" Type="Int32" />
@@ -9804,7 +9792,6 @@
           <FunctionImportMapping FunctionImportName="Sp_PaymentMethodLoadAll" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_PaymentMethodLoadAll" />
           <FunctionImportMapping FunctionImportName="Sp_ProductAlsoPurchasedLoadByProductID" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_ProductAlsoPurchasedLoadByProductID" />
           <FunctionImportMapping FunctionImportName="Sp_ProductLoadAllPaged" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_ProductLoadAllPaged" />
-          <FunctionImportMapping FunctionImportName="Sp_ProductRatingCreate" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_ProductRatingCreate" />
           <FunctionImportMapping FunctionImportName="Sp_ProductTag_Product_MappingDelete" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_ProductTag_Product_MappingDelete" />
           <FunctionImportMapping FunctionImportName="Sp_ProductTag_Product_MappingInsert" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_ProductTag_Product_MappingInsert" />
           <FunctionImportMapping FunctionImportName="Sp_ProductTagLoadAll" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_ProductTagLoadAll" />

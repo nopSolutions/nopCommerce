@@ -1554,58 +1554,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        /// <param name="productID">No Metadata Documentation available.</param>
-        /// <param name="customerID">No Metadata Documentation available.</param>
-        /// <param name="rating">No Metadata Documentation available.</param>
-        /// <param name="ratedOn">No Metadata Documentation available.</param>
-        public int Sp_ProductRatingCreate(Nullable<global::System.Int32> productID, Nullable<global::System.Int32> customerID, Nullable<global::System.Int32> rating, Nullable<global::System.DateTime> ratedOn)
-        {
-            ObjectParameter productIDParameter;
-            if (productID.HasValue)
-            {
-                productIDParameter = new ObjectParameter("ProductID", productID);
-            }
-            else
-            {
-                productIDParameter = new ObjectParameter("ProductID", typeof(global::System.Int32));
-            }
-    
-            ObjectParameter customerIDParameter;
-            if (customerID.HasValue)
-            {
-                customerIDParameter = new ObjectParameter("CustomerID", customerID);
-            }
-            else
-            {
-                customerIDParameter = new ObjectParameter("CustomerID", typeof(global::System.Int32));
-            }
-    
-            ObjectParameter ratingParameter;
-            if (rating.HasValue)
-            {
-                ratingParameter = new ObjectParameter("Rating", rating);
-            }
-            else
-            {
-                ratingParameter = new ObjectParameter("Rating", typeof(global::System.Int32));
-            }
-    
-            ObjectParameter ratedOnParameter;
-            if (ratedOn.HasValue)
-            {
-                ratedOnParameter = new ObjectParameter("RatedOn", ratedOn);
-            }
-            else
-            {
-                ratedOnParameter = new ObjectParameter("RatedOn", typeof(global::System.DateTime));
-            }
-    
-            return base.ExecuteFunction("Sp_ProductRatingCreate", productIDParameter, customerIDParameter, ratingParameter, ratedOnParameter);
-        }
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
         /// <param name="productTagID">No Metadata Documentation available.</param>
         /// <param name="productID">No Metadata Documentation available.</param>
         public int Sp_ProductTag_Product_MappingDelete(Nullable<global::System.Int32> productTagID, Nullable<global::System.Int32> productID)

@@ -35,6 +35,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Common.Utils.Html;
 using System.Data.Objects;
+using NopSolutions.NopCommerce.Common;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Products
 {
@@ -701,28 +702,51 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         /// <param name="rating">Rating</param>
         public void SetProductRating(int productId, int rating)
         {
-            if (NopContext.Current.User == null)
+            if (NopContext.Current.User == null || (NopContext.Current.User.IsGuest && !IoCFactory.Resolve<ICustomerManager>().AllowAnonymousUsersToSetProductRatings))
             {
                 return;
             }
-            if (NopContext.Current.User.IsGuest && !IoCFactory.Resolve<ICustomerManager>().AllowAnonymousUsersToSetProductRatings)
-            {
-                return;
-            }
+
+            var product = GetProductById(productId);
+            if (product == null)
+                throw new NopException("Product could not be loaded");
 
             if (rating < 1 || rating > 5)
                 rating = 1;
             var ratedOn = DateTime.UtcNow;
 
-
+            //delete previous helpfulness
             var context = ObjectContextHelper.CurrentObjectContext;
-            context.Sp_ProductRatingCreate(productId, NopContext.Current.User.CustomerId,
-                rating, ratedOn);
-
-            if (this.CacheEnabled)
+            var oldPr = (from pr in context.ProductRatings
+                         where pr.ProductId == productId &&
+                         pr.CustomerId == NopContext.Current.User.CustomerId
+                         select pr).FirstOrDefault();
+            if (oldPr != null)
             {
-                NopRequestCache.RemoveByPattern(PRODUCTS_PATTERN_KEY);
+                context.DeleteObject(oldPr);
             }
+            context.SaveChanges();
+
+            //insert new rating
+            var newPr = context.ProductRatings.CreateObject();
+            newPr.ProductId = productId;
+            newPr.CustomerId = NopContext.Current.User.CustomerId;
+            newPr.Rating = rating;
+            newPr.RatedOn = ratedOn;
+            context.ProductRatings.AddObject(newPr);
+            context.SaveChanges();
+
+            //new totals
+            int ratingSum = (from pr in context.ProductRatings
+                             where pr.ProductId == productId
+                             select pr).Sum(p => p.Rating);
+            int totalRatingVotes = (from pr in context.ProductRatings
+                                    where pr.ProductId == productId
+                                    select pr).Count();
+
+            product.RatingSum = ratingSum;
+            product.TotalRatingVotes = totalRatingVotes;
+            UpdateProduct(product);
         }
 
         /// <summary>
