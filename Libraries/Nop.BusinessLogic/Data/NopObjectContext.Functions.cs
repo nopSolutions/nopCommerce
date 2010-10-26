@@ -827,14 +827,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        public int Sp_LogClear()
-        {
-            return base.ExecuteFunction("Sp_LogClear");
-        }
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
         public int Sp_Maintenance_ReindexTables()
         {
             return base.ExecuteFunction("Sp_Maintenance_ReindexTables");
@@ -2358,14 +2350,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
             }
     
             return base.ExecuteFunction<BestSellersReportLine>("Sp_SalesBestSellersReport", lastDaysParameter, recordsToReturnParameter, orderByParameter);
-        }
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        public int Sp_SearchLogClear()
-        {
-            return base.ExecuteFunction("Sp_SearchLogClear");
         }
     
         /// <summary>

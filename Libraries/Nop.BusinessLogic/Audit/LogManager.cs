@@ -58,7 +58,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
         public void ClearLog()
         {
             var context = ObjectContextHelper.CurrentObjectContext;
-            context.Sp_LogClear();
+            var log = context.Log.ToList();
+            foreach (var logItem in log)
+                context.DeleteObject(logItem);
+            context.SaveChanges();
         }
 
         /// <summary>
