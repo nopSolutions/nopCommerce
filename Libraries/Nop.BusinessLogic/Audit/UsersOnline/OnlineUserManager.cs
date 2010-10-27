@@ -159,7 +159,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit.UsersOnline
 
                         //update other properties
                         oui.LastVisit = DateTime.UtcNow;
-                        oui.LastPageVisited = CommonHelper.GetThisPageUrl(false);
+                        oui.LastPageVisited = CommonHelper.GetThisPageUrl(true);
                         oui.IPAddress = NopContext.Current.UserHostAddress;
                         oui.AssociatedCustomerId = NopContext.Current.User.CustomerId;
                         HttpContext.Current.Response.Cookies.Remove(TRACKINGCOOKIENAME);
@@ -199,7 +199,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit.UsersOnline
 
                         //update other properties
                         oui.LastVisit = DateTime.UtcNow;
-                        oui.LastPageVisited = CommonHelper.GetThisPageUrl(false);
+                        oui.LastPageVisited = CommonHelper.GetThisPageUrl(true);
                         oui.IPAddress = NopContext.Current.UserHostAddress;
                         oui.AssociatedCustomerId = null;
 
