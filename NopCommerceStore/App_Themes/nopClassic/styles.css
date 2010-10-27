@@ -5237,6 +5237,12 @@ ul.languagelist li .selected
 	padding: 10px;
 }
 
+.profile-page .body .userLastPosts .topicBody a
+{
+	color: #3664A5;
+	text-decoration: underline;
+}
+
 .profile-page .body .userLastPosts .topicBody .quote
 {
 	padding: 5px 5px 5px 5px; 
