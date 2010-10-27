@@ -261,7 +261,8 @@ namespace NopSolutions.NopCommerce.Web.Modules
             customer.LastName = txtLastName.Text;
             if (IoCFactory.Resolve<ICustomerManager>().FormFieldDateOfBirthEnabled)
             {
-                customer = IoCFactory.Resolve<ICustomerManager>().SetCustomerDateOfBirth(customer.CustomerId, dtDateOfBirth.SelectedDate);
+                customer.DateOfBirth = dtDateOfBirth.SelectedDate;
+                IoCFactory.Resolve<ICustomerManager>().UpdateCustomer(customer);
             }
             if (IoCFactory.Resolve<ICustomerManager>().FormFieldCompanyEnabled)
             {
@@ -345,7 +346,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
             if (IoCFactory.Resolve<ICustomerManager>().CanUseAddressAsBillingAddress(billingAddress))
             {
                 IoCFactory.Resolve<ICustomerManager>().InsertAddress(billingAddress);
-                customer = IoCFactory.Resolve<ICustomerManager>().SetDefaultBillingAddress(customer.CustomerId, billingAddress.AddressId);
+
+                //set default billing address
+                customer.BillingAddressId = billingAddress.AddressId;
+                IoCFactory.Resolve<ICustomerManager>().UpdateCustomer(customer);
             }
 
             //shipping address
@@ -371,7 +375,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
             if (IoCFactory.Resolve<ICustomerManager>().CanUseAddressAsShippingAddress(shippingAddress))
             {
                 IoCFactory.Resolve<ICustomerManager>().InsertAddress(shippingAddress);
-                customer = IoCFactory.Resolve<ICustomerManager>().SetDefaultShippingAddress(customer.CustomerId, shippingAddress.AddressId);
+
+                //set default shipping address
+                customer.ShippingAddressId = shippingAddress.AddressId;
+                IoCFactory.Resolve<ICustomerManager>().UpdateCustomer(customer);
             }
 
             //notification

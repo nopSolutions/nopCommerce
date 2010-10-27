@@ -412,28 +412,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         #region Product variants
 
         /// <summary>
-        /// Remove a product variant picture
-        /// </summary>
-        /// <param name="productVariantId">Product variant identifier</param>
-        void RemoveProductVariantPicture(int productVariantId);
-
-        /// <summary>
         /// Get low stock product variants
         /// </summary>
         /// <returns>Result</returns>
         List<ProductVariant> GetLowStockProductVariants();
-
-        /// <summary>
-        /// Remove a product variant download
-        /// </summary>
-        /// <param name="productVariantId">Product variant identifier</param>
-        void RemoveProductVariantDownload(int productVariantId);
-
-        /// <summary>
-        /// Remove a product variant sample download
-        /// </summary>
-        /// <param name="productVariantId">Product variant identifier</param>
-        void RemoveProductVariantSampleDownload(int productVariantId);
 
         /// <summary>
         /// Gets a product variant

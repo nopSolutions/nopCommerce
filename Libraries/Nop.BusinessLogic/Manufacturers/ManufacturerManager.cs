@@ -60,20 +60,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
         }
 
         /// <summary>
-        /// Removes a manufacturer picture
-        /// </summary>
-        /// <param name="manufacturerId">Manufacturer identifier</param>
-        public void RemoveManufacturerPicture(int manufacturerId)
-        {
-            var manufacturer = GetManufacturerById(manufacturerId);
-            if (manufacturer != null)
-            {
-                manufacturer.PictureId = 0;
-                UpdateManufacturer(manufacturer);
-            }
-        }
-
-        /// <summary>
         /// Gets all manufacturers
         /// </summary>
         /// <returns>Manufacturer collection</returns>

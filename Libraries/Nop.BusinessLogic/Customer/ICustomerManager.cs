@@ -102,38 +102,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         void ResetCheckoutData(int customerId, bool clearCouponCodes);
 
         /// <summary>
-        /// Sets a default billing address
-        /// </summary>
-        /// <param name="customerId">Customer identifier</param>
-        /// <param name="billingAddressId">Billing address identifier</param>
-        /// <returns>Customer</returns>
-        Customer SetDefaultBillingAddress(int customerId, int billingAddressId);
-
-        /// <summary>
-        /// Sets a default shipping address
-        /// </summary>
-        /// <param name="customerId">Customer identifier</param>
-        /// <param name="shippingAddressId">Shipping address identifier</param>
-        /// <returns>Customer</returns>
-        Customer SetDefaultShippingAddress(int customerId, int shippingAddressId);
-
-        /// <summary>
-        /// Sets a customer payment method
-        /// </summary>
-        /// <param name="customerId">Customer identifier</param>
-        /// <param name="paymentMethodId">Payment method identifier</param>
-        /// <returns>Customer</returns>
-        Customer SetLastPaymentMethodId(int customerId, int paymentMethodId);
-
-        /// <summary>
-        /// Sets a customer time zone
-        /// </summary>
-        /// <param name="customerId">Customer identifier</param>
-        /// <param name="timeZoneId">Time zone identifier</param>
-        /// <returns>Customer</returns>
-        Customer SetTimeZoneId(int customerId, string timeZoneId);
-
-        /// <summary>
         /// Sets a customer email
         /// </summary>
         /// <param name="customerId">Customer identifier</param>
@@ -156,30 +124,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// <param name="signature">Signature</param>
         /// <returns>Customer</returns>
         Customer SetCustomerSignature(int customerId, string signature);
-
-        /// <summary>
-        /// Sets a customer's affiliate
-        /// </summary>
-        /// <param name="customerId">Customer identifier</param>
-        /// <param name="affiliateId">Affiliate identifier</param>
-        /// <returns>Customer</returns>
-        Customer SetAffiliate(int customerId, int affiliateId);
-
-        /// <summary>
-        /// Sets a customer's affiliate
-        /// </summary>
-        /// <param name="customerId">Customer identifier</param>
-        /// <param name="dateOfBirth">Date of birth</param>
-        /// <returns>Customer</returns>
-        Customer SetCustomerDateOfBirth(int customerId, DateTime? dateOfBirth);
-
-        /// <summary>
-        /// Removes customer avatar
-        /// </summary>
-        /// <param name="customerId">Customer identifier</param>
-        /// <param name="avatarId">Customer avatar identifier</param>
-        /// <returns>Customer</returns>
-        Customer SetCustomerAvatarId(int customerId, int avatarId);
 
         /// <summary>
         /// Create anonymous user for current user

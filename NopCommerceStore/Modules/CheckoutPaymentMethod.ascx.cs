@@ -75,7 +75,9 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     var paymentMethod = IoCFactory.Resolve<IPaymentMethodManager>().GetPaymentMethodById(paymentMethodId);
                     if (paymentMethod != null && paymentMethod.IsActive)
                     {
-                        NopContext.Current.User = IoCFactory.Resolve<ICustomerManager>().SetLastPaymentMethodId(NopContext.Current.User.CustomerId, paymentMethodId);
+                        //save selected payment methods
+                        NopContext.Current.User.LastPaymentMethodId = paymentMethodId;
+                        IoCFactory.Resolve<ICustomerManager>().UpdateCustomer(NopContext.Current.User);
                         var args1 = new CheckoutStepEventArgs() { PaymentMethodSelected = true };
                         OnCheckoutStepChanged(args1);
                         if (!this.OnePageCheckout)
@@ -177,7 +179,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
             bool isPaymentWorkflowRequired = IsPaymentWorkflowRequired();
             if (!isPaymentWorkflowRequired)
             {
-                NopContext.Current.User = IoCFactory.Resolve<ICustomerManager>().SetLastPaymentMethodId(NopContext.Current.User.CustomerId, 0);
+                //save selected payment methods
+                NopContext.Current.User.LastPaymentMethodId = 0;
+                IoCFactory.Resolve<ICustomerManager>().UpdateCustomer(NopContext.Current.User);
+
                 var args1 = new CheckoutStepEventArgs() { PaymentMethodSelected = true };
                 OnCheckoutStepChanged(args1);
                 if (!this.OnePageCheckout)
@@ -191,7 +196,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
             bool isPaymentWorkflowRequired = IsPaymentWorkflowRequired();
             if (!isPaymentWorkflowRequired)
             {
-                NopContext.Current.User = IoCFactory.Resolve<ICustomerManager>().SetLastPaymentMethodId(NopContext.Current.User.CustomerId, 0);
+                //save selected payment methods
+                NopContext.Current.User.LastPaymentMethodId = 0;
+                IoCFactory.Resolve<ICustomerManager>().UpdateCustomer(NopContext.Current.User);
+                
                 var args1 = new CheckoutStepEventArgs() { PaymentMethodSelected = true };
                 OnCheckoutStepChanged(args1);
                 if (!this.OnePageCheckout)

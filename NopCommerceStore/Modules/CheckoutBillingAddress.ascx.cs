@@ -69,7 +69,9 @@ namespace NopSolutions.NopCommerce.Web.Modules
         {
             if (billingAddress == null)
             {
-                NopContext.Current.User = IoCFactory.Resolve<ICustomerManager>().SetDefaultBillingAddress(NopContext.Current.User.CustomerId, 0);
+                //set default billing address
+                NopContext.Current.User.BillingAddressId = 0;
+                IoCFactory.Resolve<ICustomerManager>().UpdateCustomer(NopContext.Current.User);
                 var args1 = new CheckoutStepEventArgs() { BillingAddressSelected = true };
                 OnCheckoutStepChanged(args1);
                 if (!this.OnePageCheckout) 
@@ -101,8 +103,9 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     IoCFactory.Resolve<ICustomerManager>().InsertAddress(billingAddress);
                 }
             }
-
-            NopContext.Current.User = IoCFactory.Resolve<ICustomerManager>().SetDefaultBillingAddress(NopContext.Current.User.CustomerId, billingAddress.AddressId);
+            //set default billing address
+            NopContext.Current.User.BillingAddressId = billingAddress.AddressId;
+            IoCFactory.Resolve<ICustomerManager>().UpdateCustomer(NopContext.Current.User);
             var args2 = new CheckoutStepEventArgs() { BillingAddressSelected = true };
             OnCheckoutStepChanged(args2);
             if (!this.OnePageCheckout)

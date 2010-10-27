@@ -79,9 +79,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
             try
             {
                 IoCFactory.Resolve<IPictureManager>().DeletePicture(NopContext.Current.User.AvatarId);
-                NopContext.Current.User = IoCFactory.Resolve<ICustomerManager>().SetCustomerAvatarId(NopContext.Current.User.CustomerId, NopContext.Current.User.AvatarId);
-                BindData();
 
+                NopContext.Current.User.AvatarId = 0;
+                IoCFactory.Resolve<ICustomerManager>().UpdateCustomer(NopContext.Current.User);
+                BindData();
             }
             catch (Exception exc)
             {
@@ -118,7 +119,8 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     if (customerAvatar != null)
                         customerAvatarId = customerAvatar.PictureId;
 
-                    NopContext.Current.User = IoCFactory.Resolve<ICustomerManager>().SetCustomerAvatarId(NopContext.Current.User.CustomerId, customerAvatarId);
+                    NopContext.Current.User.AvatarId = customerAvatarId;
+                    IoCFactory.Resolve<ICustomerManager>().UpdateCustomer(NopContext.Current.User);
 
                     BindData();
                 }

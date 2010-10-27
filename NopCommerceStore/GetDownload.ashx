@@ -26,7 +26,6 @@ using NopSolutions.NopCommerce.Common.Utils;
 
 public class GetDownload : IHttpHandler
 {
-
     private void processOrderProductVariantDownload(HttpContext context, Guid orderProductVariantGuid)
     {
         OrderProductVariant orderProductVariant = IoCFactory.Resolve<IOrderManager>().GetOrderProductVariantByGuid(orderProductVariantGuid);
@@ -102,7 +101,8 @@ public class GetDownload : IHttpHandler
                 return;
             }
 
-            orderProductVariant = IoCFactory.Resolve<IOrderManager>().IncreaseOrderProductDownloadCount(orderProductVariant.OrderProductVariantId);
+            orderProductVariant.DownloadCount++;
+            IoCFactory.Resolve<IOrderManager>().UpdateOrderProductVariant(orderProductVariant);
 
             context.Response.Redirect(download.DownloadUrl);
         }
@@ -147,7 +147,8 @@ public class GetDownload : IHttpHandler
                 }
             }
 
-            orderProductVariant = IoCFactory.Resolve<IOrderManager>().IncreaseOrderProductDownloadCount(orderProductVariant.OrderProductVariantId);
+            orderProductVariant.DownloadCount++;
+            IoCFactory.Resolve<IOrderManager>().UpdateOrderProductVariant(orderProductVariant);
         }
     }
 

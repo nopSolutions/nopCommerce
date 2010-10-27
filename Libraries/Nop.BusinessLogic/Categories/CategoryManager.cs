@@ -76,20 +76,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
         }
 
         /// <summary>
-        /// Removes category picture
-        /// </summary>
-        /// <param name="categoryId">Category identifier</param>
-        public void RemoveCategoryPicture(int categoryId)
-        {
-            var category = GetCategoryById(categoryId);
-            if (category != null)
-            {
-                category.PictureId = 0;
-                UpdateCategory(category);
-            }
-        }
-
-        /// <summary>
         /// Gets all categories
         /// </summary>
         /// <returns>Categories</returns>

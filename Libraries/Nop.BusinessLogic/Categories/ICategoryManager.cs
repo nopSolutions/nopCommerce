@@ -47,12 +47,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
         void MarkCategoryAsDeleted(int categoryId);
 
         /// <summary>
-        /// Removes category picture
-        /// </summary>
-        /// <param name="categoryId">Category identifier</param>
-        void RemoveCategoryPicture(int categoryId);
-
-        /// <summary>
         /// Gets all categories
         /// </summary>
         /// <returns>Categories</returns>

@@ -676,21 +676,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 new OrderEventArgs() { Order = order });
         }
 
-        /// <summary>
-        /// Set tracking number of order
-        /// </summary>
-        /// <param name="orderId">Order note identifier</param>
-        /// <param name="trackingNumber">The tracking number of order</param>
-        public void SetOrderTrackingNumber(int orderId, string trackingNumber)
-        {
-            var order = GetOrderById(orderId);
-            if (order != null)
-            {
-                order.TrackingNumber = trackingNumber;
-                UpdateOrder(order);
-            }
-        }
-
         #endregion
         
         #region Orders product variants
@@ -867,23 +852,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 context.OrderProductVariants.Attach(opv);
 
             context.SaveChanges();
-        }
-
-        /// <summary>
-        /// Increase an order product variant download count
-        /// </summary>
-        /// <param name="orderProductVariantId">Order product variant identifier</param>
-        /// <returns>Order product variant</returns>
-        public OrderProductVariant IncreaseOrderProductDownloadCount(int orderProductVariantId)
-        {
-            var opv = GetOrderProductVariantById(orderProductVariantId);
-            if (opv == null)
-                throw new NopException("Order product variant could not be loaded");
-
-            opv.DownloadCount = opv.DownloadCount + 1;
-            UpdateOrderProductVariant(opv);
-
-            return opv;
         }
 
         #endregion

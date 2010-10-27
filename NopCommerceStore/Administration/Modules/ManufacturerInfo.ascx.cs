@@ -250,7 +250,9 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 if (manufacturer != null)
                 {
                     IoCFactory.Resolve<IPictureManager>().DeletePicture(manufacturer.PictureId);
-                    IoCFactory.Resolve<IManufacturerManager>().RemoveManufacturerPicture(manufacturer.ManufacturerId);
+
+                    manufacturer.PictureId = 0;
+                    IoCFactory.Resolve<IManufacturerManager>().UpdateManufacturer(manufacturer);
                     BindData();
                 }
             }

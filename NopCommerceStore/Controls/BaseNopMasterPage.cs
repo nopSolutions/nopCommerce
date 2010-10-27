@@ -99,7 +99,8 @@ namespace NopSolutions.NopCommerce.Web
                 }
                 else if (NopContext.Current.User.AffiliateId != affiliate.AffiliateId)
                 {
-                    NopContext.Current.User = IoCFactory.Resolve<ICustomerManager>().SetAffiliate(NopContext.Current.User.CustomerId, affiliate.AffiliateId);
+                    NopContext.Current.User.AffiliateId = affiliate.AffiliateId;
+                    IoCFactory.Resolve<ICustomerManager>().UpdateCustomer(NopContext.Current.User);
                 }
             }
         }

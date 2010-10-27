@@ -40,12 +40,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
         void MarkManufacturerAsDeleted(int manufacturerId);
 
         /// <summary>
-        /// Removes a manufacturer picture
-        /// </summary>
-        /// <param name="manufacturerId">Manufacturer identifier</param>
-        void RemoveManufacturerPicture(int manufacturerId);
-
-        /// <summary>
         /// Gets all manufacturers
         /// </summary>
         /// <returns>Manufacturer collection</returns>

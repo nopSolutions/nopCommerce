@@ -136,10 +136,17 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             if (customer != null)
             {
                 if (customer.BillingAddressId == address.AddressId)
-                    customer = SetDefaultBillingAddress(customer.CustomerId, 0);
-
+                {
+                    //set default billing address
+                    customer.BillingAddressId = 0;
+                    UpdateCustomer(customer);
+                }
                 if (customer.ShippingAddressId == address.AddressId)
-                    customer = SetDefaultShippingAddress(customer.CustomerId, 0);
+                {
+                    //set default shipping address
+                    customer.ShippingAddressId = 0;
+                    UpdateCustomer(customer);
+                }
             }
 
             var context = ObjectContextHelper.CurrentObjectContext;
@@ -408,12 +415,16 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         {
             var customer = GetCustomerById(customerId);
             if (customer != null)
-            {
-                //customer = SetDefaultShippingAddress(customer.CustomerId, 0);
-                //customer = SetDefaultBillingAddress(customer.CustomerId, 0);
-                customer.LastShippingOption = null;
-                customer = SetLastPaymentMethodId(customer.CustomerId, 0);
+            {                
+                //clear reward points flag
                 customer.UseRewardPointsDuringCheckout = false;
+                
+                //clear selected shipping and payment methods
+                customer.LastShippingOption = null;
+                customer.LastPaymentMethodId = 0;
+                UpdateCustomer(customer);
+
+                //clear entered coupon codes
                 if (clearCouponCodes)
                 {
                     customer = ApplyDiscountCouponCode(customer.CustomerId, string.Empty);
@@ -421,74 +432,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                     customer = ApplyCheckoutAttributes(customer.CustomerId, string.Empty);
                 }
             }
-        }
-
-        /// <summary>
-        /// Sets a default billing address
-        /// </summary>
-        /// <param name="customerId">Customer identifier</param>
-        /// <param name="billingAddressId">Billing address identifier</param>
-        /// <returns>Customer</returns>
-        public Customer SetDefaultBillingAddress(int customerId, int billingAddressId)
-        {
-            var customer = GetCustomerById(customerId);
-            if (customer != null)
-            {
-                customer.BillingAddressId = billingAddressId;
-                UpdateCustomer(customer);
-            }
-            return customer;
-        }
-
-        /// <summary>
-        /// Sets a default shipping address
-        /// </summary>
-        /// <param name="customerId">Customer identifier</param>
-        /// <param name="shippingAddressId">Shipping address identifier</param>
-        /// <returns>Customer</returns>
-        public Customer SetDefaultShippingAddress(int customerId, int shippingAddressId)
-        {
-            var customer = GetCustomerById(customerId);
-            if (customer != null)
-            {
-                customer.ShippingAddressId = shippingAddressId;
-                UpdateCustomer(customer);
-            }
-            return customer;
-        }
-
-        /// <summary>
-        /// Sets a customer payment method
-        /// </summary>
-        /// <param name="customerId">Customer identifier</param>
-        /// <param name="paymentMethodId">Payment method identifier</param>
-        /// <returns>Customer</returns>
-        public Customer SetLastPaymentMethodId(int customerId, int paymentMethodId)
-        {
-            var customer = GetCustomerById(customerId);
-            if (customer != null)
-            {
-                customer.LastPaymentMethodId = paymentMethodId;
-                UpdateCustomer(customer);
-            }
-            return customer;
-        }
-
-        /// <summary>
-        /// Sets a customer time zone
-        /// </summary>
-        /// <param name="customerId">Customer identifier</param>
-        /// <param name="timeZoneId">Time zone identifier</param>
-        /// <returns>Customer</returns>
-        public Customer SetTimeZoneId(int customerId, string timeZoneId)
-        {
-            var customer = GetCustomerById(customerId);
-            if (customer != null)
-            {
-                customer.TimeZoneId = timeZoneId;
-                UpdateCustomer(customer);
-            }
-            return customer;
         }
 
         /// <summary>
@@ -600,58 +543,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             }
             return customer;
         }
-
-        /// <summary>
-        /// Sets a customer's affiliate
-        /// </summary>
-        /// <param name="customerId">Customer identifier</param>
-        /// <param name="affiliateId">Affiliate identifier</param>
-        /// <returns>Customer</returns>
-        public Customer SetAffiliate(int customerId, int affiliateId)
-        {
-            var customer = GetCustomerById(customerId);
-            if (customer != null)
-            {
-                customer.AffiliateId = affiliateId;
-                UpdateCustomer(customer);
-            }
-            return customer;
-        }
-
-        /// <summary>
-        /// Sets a customer's affiliate
-        /// </summary>
-        /// <param name="customerId">Customer identifier</param>
-        /// <param name="dateOfBirth">Date of birth</param>
-        /// <returns>Customer</returns>
-        public Customer SetCustomerDateOfBirth(int customerId, DateTime? dateOfBirth)
-        {
-            var customer = GetCustomerById(customerId);
-            if (customer != null)
-            {
-                customer.DateOfBirth = dateOfBirth;
-                UpdateCustomer(customer);
-            }
-            return customer;
-        }
-
-        /// <summary>
-        /// Removes customer avatar
-        /// </summary>
-        /// <param name="customerId">Customer identifier</param>
-        /// <param name="avatarId">Customer avatar identifier</param>
-        /// <returns>Customer</returns>
-        public Customer SetCustomerAvatarId(int customerId, int avatarId)
-        {
-            var customer = GetCustomerById(customerId);
-            if (customer != null)
-            {
-                customer.AvatarId = avatarId;
-                UpdateCustomer(customer);
-            }
-            return customer;
-        }
-
+        
         /// <summary>
         /// Create anonymous user for current user
         /// </summary>

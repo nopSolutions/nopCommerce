@@ -96,7 +96,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         if(customerAvatar != null)
                             customerAvatarId = customerAvatar.PictureId;
 
-                        IoCFactory.Resolve<ICustomerManager>().SetCustomerAvatarId(customer.CustomerId, customerAvatarId);
+                        customer.AvatarId = customerAvatarId;
+                        IoCFactory.Resolve<ICustomerManager>().UpdateCustomer(customer);
 
                         BindData();
                     }
@@ -116,7 +117,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 if(customer != null)
                 {
                     IoCFactory.Resolve<IPictureManager>().DeletePicture(customer.AvatarId);
-                    IoCFactory.Resolve<ICustomerManager>().SetCustomerAvatarId(customer.CustomerId, customer.AvatarId);
+                    customer.AvatarId = 0;
+                    IoCFactory.Resolve<ICustomerManager>().UpdateCustomer(customer);
                     BindData();
                 }
             }

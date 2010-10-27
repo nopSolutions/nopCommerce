@@ -1427,21 +1427,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         #endregion
 
         #region Product variants
-
-        /// <summary>
-        /// Remove a product variant picture
-        /// </summary>
-        /// <param name="productVariantId">Product variant identifier</param>
-        public void RemoveProductVariantPicture(int productVariantId)
-        {
-            var productVariant = GetProductVariantById(productVariantId);
-            if (productVariant != null)
-            {
-                productVariant.PictureId = 0;
-                UpdateProductVariant(productVariant);
-            }
-        }
-
+        
         /// <summary>
         /// Get low stock product variants
         /// </summary>
@@ -1457,35 +1443,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             var productVariants = query.ToList();
             return productVariants;
         }
-
-        /// <summary>
-        /// Remove a product variant download
-        /// </summary>
-        /// <param name="productVariantId">Product variant identifier</param>
-        public void RemoveProductVariantDownload(int productVariantId)
-        {
-            var productVariant = GetProductVariantById(productVariantId);
-            if (productVariant != null)
-            {
-                productVariant.DownloadId = 0;
-                UpdateProductVariant(productVariant);
-            }
-        }
-
-        /// <summary>
-        /// Remove a product variant sample download
-        /// </summary>
-        /// <param name="productVariantId">Product variant identifier</param>
-        public void RemoveProductVariantSampleDownload(int productVariantId)
-        {
-            var productVariant = GetProductVariantById(productVariantId);
-            if (productVariant != null)
-            {
-                productVariant.SampleDownloadId = 0;
-                UpdateProductVariant(productVariant);
-            }
-        }
-
+        
         /// <summary>
         /// Gets a product variant
         /// </summary>

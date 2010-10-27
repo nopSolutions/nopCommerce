@@ -778,7 +778,9 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 if (productVariant != null)
                 {
                     IoCFactory.Resolve<IPictureManager>().DeletePicture(productVariant.PictureId);
-                    IoCFactory.Resolve<IProductManager>().RemoveProductVariantPicture(productVariant.ProductVariantId);
+
+                    productVariant.PictureId = 0;
+                    IoCFactory.Resolve<IProductManager>().UpdateProductVariant(productVariant);
                     BindData();
                 }
             }
@@ -805,6 +807,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         download.IsNew = true;
                         IoCFactory.Resolve<IDownloadManager>().UpdateDownload(download);
                     }
+
                     BindData();
                 }
             }

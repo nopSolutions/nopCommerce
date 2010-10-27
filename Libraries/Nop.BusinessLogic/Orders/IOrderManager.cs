@@ -144,13 +144,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="order">The order</param>
         void UpdateOrder(Order order);
 
-        /// <summary>
-        /// Set tracking number of order
-        /// </summary>
-        /// <param name="orderId">Order note identifier</param>
-        /// <param name="trackingNumber">The tracking number of order</param>
-        void SetOrderTrackingNumber(int orderId, string trackingNumber);
-
         #endregion
 
         #region Orders product variants
@@ -225,13 +218,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// </summary>
         /// <param name="opv">Order product variant</param>
         void UpdateOrderProductVariant(OrderProductVariant opv);
-
-        /// <summary>
-        /// Increase an order product variant download count
-        /// </summary>
-        /// <param name="orderProductVariantId">Order product variant identifier</param>
-        /// <returns>Order product variant</returns>
-        OrderProductVariant IncreaseOrderProductDownloadCount(int orderProductVariantId);
 
         #endregion
 

@@ -68,7 +68,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
         {
             if (shippingAddress == null)
             {
-                NopContext.Current.User = IoCFactory.Resolve<ICustomerManager>().SetDefaultShippingAddress(NopContext.Current.User.CustomerId, 0);
+                //set default shipping address
+                NopContext.Current.User.ShippingAddressId = 0;
+                IoCFactory.Resolve<ICustomerManager>().UpdateCustomer(NopContext.Current.User);
+
                 var args1 = new CheckoutStepEventArgs() { ShippingAddressSelected = true };
                 OnCheckoutStepChanged(args1);
                 if (!this.OnePageCheckout)
@@ -101,7 +104,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 }
             }
 
-            NopContext.Current.User = IoCFactory.Resolve<ICustomerManager>().SetDefaultShippingAddress(NopContext.Current.User.CustomerId, shippingAddress.AddressId);
+            //set default shipping address
+            NopContext.Current.User.ShippingAddressId = shippingAddress.AddressId;
+            IoCFactory.Resolve<ICustomerManager>().UpdateCustomer(NopContext.Current.User);
+            
             var args2 = new CheckoutStepEventArgs() { ShippingAddressSelected = true };
             OnCheckoutStepChanged(args2);
             if (!this.OnePageCheckout)

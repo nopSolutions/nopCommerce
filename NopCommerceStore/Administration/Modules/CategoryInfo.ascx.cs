@@ -265,7 +265,9 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 if (category != null)
                 {
                     IoCFactory.Resolve<IPictureManager>().DeletePicture(category.PictureId);
-                    IoCFactory.Resolve<ICategoryManager>().RemoveCategoryPicture(category.CategoryId);
+
+                    category.PictureId = 0;
+                    IoCFactory.Resolve<ICategoryManager>().UpdateCategory(category);
                     BindData();
                 }
             }

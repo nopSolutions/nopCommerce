@@ -203,7 +203,8 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     customer.LastName = txtLastName.Text;
                     if (IoCFactory.Resolve<ICustomerManager>().FormFieldDateOfBirthEnabled)
                     {
-                        customer = IoCFactory.Resolve<ICustomerManager>().SetCustomerDateOfBirth(customer.CustomerId, dtDateOfBirth.SelectedDate);
+                        customer.DateOfBirth = dtDateOfBirth.SelectedDate;
+                        IoCFactory.Resolve<ICustomerManager>().UpdateCustomer(customer);
                     }
                     if (IoCFactory.Resolve<ICustomerManager>().FormFieldCompanyEnabled)
                     {

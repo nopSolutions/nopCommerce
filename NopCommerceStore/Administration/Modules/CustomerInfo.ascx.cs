@@ -317,7 +317,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             customer.LastName = txtLastName.Text;
             if (IoCFactory.Resolve<ICustomerManager>().FormFieldDateOfBirthEnabled)
             {
-                customer = IoCFactory.Resolve<ICustomerManager>().SetCustomerDateOfBirth(customer.CustomerId, ctrlDateOfBirthDatePicker.SelectedDate);
+                customer.DateOfBirth = ctrlDateOfBirthDatePicker.SelectedDate;
+                IoCFactory.Resolve<ICustomerManager>().UpdateCustomer(customer);
             }
             if (IoCFactory.Resolve<ICustomerManager>().FormFieldCompanyEnabled)
             {
@@ -380,7 +381,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     string timeZoneId = ddlTimeZone.SelectedItem.Value;
                     TimeZoneInfo timeZone = DateTimeHelper.FindTimeZoneById(timeZoneId);
                     if (timeZone != null)
-                        customer = IoCFactory.Resolve<ICustomerManager>().SetTimeZoneId(customer.CustomerId, timeZone.Id);
+                    {
+                        customer.TimeZoneId = timeZone.Id;
+                        IoCFactory.Resolve<ICustomerManager>().UpdateCustomer(customer);
+                    }
                 }
             }
 

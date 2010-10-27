@@ -1315,7 +1315,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                IoCFactory.Resolve<IOrderManager>().SetOrderTrackingNumber(this.OrderId, txtTrackingNumber.Text);
+                var order = IoCFactory.Resolve<IOrderManager>().GetOrderById(this.OrderId);
+                if (order != null)
+                {
+                    order.TrackingNumber = txtTrackingNumber.Text.Trim();
+                    IoCFactory.Resolve<IOrderManager>().UpdateOrder(order);
+                }
                 BindData();
             }
             catch (Exception exc)

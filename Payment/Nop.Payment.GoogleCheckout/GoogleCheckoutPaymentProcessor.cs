@@ -170,7 +170,9 @@ namespace NopSolutions.NopCommerce.Payment.Methods.GoogleCheckout
                     };
                     IoCFactory.Resolve<ICustomerManager>().InsertAddress(billingAddress);
                 }
-                customer = IoCFactory.Resolve<ICustomerManager>().SetDefaultBillingAddress(customer.CustomerId, billingAddress.AddressId);
+                //set default billing address
+                customer.BillingAddressId = billingAddress.AddressId;
+                IoCFactory.Resolve<ICustomerManager>().UpdateCustomer(customer);
 
                 NopSolutions.NopCommerce.BusinessLogic.CustomerManagement.Address shippingAddress = null;
                 customer.LastShippingOption = null;
@@ -223,8 +225,9 @@ namespace NopSolutions.NopCommerce.Payment.Methods.GoogleCheckout
                         };
                         IoCFactory.Resolve<ICustomerManager>().InsertAddress(shippingAddress);
                     }
-
-                    customer = IoCFactory.Resolve<ICustomerManager>().SetDefaultShippingAddress(customer.CustomerId, shippingAddress.AddressId);
+                    //set default shipping address
+                    customer.ShippingAddressId =  shippingAddress.AddressId;
+                    IoCFactory.Resolve<ICustomerManager>().UpdateCustomer(customer);
 
                     string shippingMethod = string.Empty;
                     decimal shippingCost = decimal.Zero;
