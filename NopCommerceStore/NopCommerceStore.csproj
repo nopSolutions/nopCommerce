@@ -5676,10 +5676,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Libraries\Nop.Become\Nop.Become.csproj">
-      <Project>{B91A4CB2-D8AF-4784-BED3-CF166FA5B7AD}</Project>
-      <Name>Nop.Become</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Libraries\Nop.BusinessLogic\Nop.BusinessLogic.csproj">
       <Project>{EDF31192-A159-48DA-A737-9935A8A5BC18}</Project>
       <Name>Nop.BusinessLogic</Name>
@@ -5692,10 +5688,6 @@
       <Project>{E682693C-DC17-4C46-BB57-6DC2C2B02555}</Project>
       <Name>Nop.Controls</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Libraries\Nop.Froogle\Nop.Froogle.csproj">
-      <Project>{1DE849F3-EA26-43A8-9D49-32B6FECBF0AA}</Project>
-      <Name>Nop.Froogle</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Libraries\Nop.HttpModules.BlacklistModule\Nop.HttpModules.BlacklistModule.csproj">
       <Project>{4D26AD7F-0482-4B2D-A5A6-A1AE338B4F4D}</Project>
       <Name>Nop.HttpModules.BlacklistModule</Name>
@@ -5703,10 +5695,6 @@
     <ProjectReference Include="..\Libraries\Nop.HttpModules.MembershipModule\Nop.HttpModules.MembershipModule.csproj">
       <Project>{ADC07038-4AAC-45E4-B652-75A971A413A5}</Project>
       <Name>Nop.HttpModules.MembershipModule</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Libraries\Nop.PriceGrabber\Nop.PriceGrabber.csproj">
-      <Project>{2E7C1D59-84AF-4E2A-870A-9D627AD68F56}</Project>
-      <Name>Nop.PriceGrabber</Name>
     </ProjectReference>
     <ProjectReference Include="..\Libraries\UrlRewritingNet.UrlRewriter\UrlRewritingNet.UrlRewriter.csproj">
       <Project>{44697772-09C1-4B28-B3F5-C28B693B06F7}</Project>
@@ -5847,6 +5835,18 @@
     <ProjectReference Include="..\Payment\Nop.Payment.Worldpay\Nop.Payment.Worldpay.csproj">
       <Project>{52E712D4-946B-4DFE-B7AD-A1383AEE9146}</Project>
       <Name>Nop.Payment.Worldpay</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PromotionProviders\Nop.Become\Nop.Become.csproj">
+      <Project>{B91A4CB2-D8AF-4784-BED3-CF166FA5B7AD}</Project>
+      <Name>Nop.Become</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PromotionProviders\Nop.Froogle\Nop.Froogle.csproj">
+      <Project>{1DE849F3-EA26-43A8-9D49-32B6FECBF0AA}</Project>
+      <Name>Nop.Froogle</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PromotionProviders\Nop.PriceGrabber\Nop.PriceGrabber.csproj">
+      <Project>{2E7C1D59-84AF-4E2A-870A-9D627AD68F56}</Project>
+      <Name>Nop.PriceGrabber</Name>
     </ProjectReference>
     <ProjectReference Include="..\Shipping\Nop.Shipping.AustraliaPost\Nop.Shipping.AustraliaPost.csproj">
       <Project>{372F2340-971F-4F59-AEF3-B303F2AABF35}</Project>
