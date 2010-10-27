@@ -31,9 +31,9 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.FisedRateShippingCM
     public class FixedRateShippingComputationMethod : IShippingRateComputationMethod
     {
         #region Utilities
-        protected decimal GetRate()
+        protected decimal GetRate(int shippingMethodId)
         {
-            decimal rate = IoCFactory.Resolve<ISettingManager>().GetSettingValueDecimalNative("ShippingRateComputationMethod.FixedRate.Rate");
+            decimal rate = IoCFactory.Resolve<ISettingManager>().GetSettingValueDecimalNative(string.Format("ShippingRateComputationMethod.FixedRate.Rate.ShippingMethodId{0}", shippingMethodId));
             return rate;
         }
         #endregion
@@ -71,7 +71,7 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.FisedRateShippingCM
                 var shippingOption = new ShippingOption();
                 shippingOption.Name = shippingMethod.Name;
                 shippingOption.Description = shippingMethod.Description;
-                shippingOption.Rate = GetRate();
+                shippingOption.Rate = GetRate(shippingMethod.ShippingMethodId);
                 shippingOptions.Add(shippingOption);
             }
 
@@ -85,8 +85,32 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.FisedRateShippingCM
         /// <returns>Fixed shipping rate; or null if shipping rate could not be calculated before checkout</returns>
         public decimal? GetFixedRate(ShipmentPackage shipmentPackage)
         {
-            return GetRate();
+            if (shipmentPackage == null)
+                return null;
+            if (shipmentPackage.Items == null)
+                return null;
+            if (shipmentPackage.ShippingAddress == null)
+                return null;
+            if (shipmentPackage.ShippingAddress.Country == null)
+                return null;
+
+
+            var shippingMethods = IoCFactory.Resolve<IShippingMethodManager>().GetAllShippingMethods(shipmentPackage.ShippingAddress.CountryId);
+            List<decimal> rates = new List<decimal>();
+            foreach (var shippingMethod in shippingMethods)
+            {
+                decimal rate = GetRate(shippingMethod.ShippingMethodId);
+                if (!rates.Contains(rate))
+                    rates.Add(rate);
+            }
+
+            //return default rate if all of them equal
+            if (rates.Count == 1)
+                return rates[0];
+
+            return null;
         }
+
         #endregion
 
         #region Properties

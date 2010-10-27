@@ -37,20 +37,20 @@ namespace NopSolutions.NopCommerce.Tax
         {
             decimal taxRate = decimal.Zero;
 
-            int taxClassID = 0;
+            int taxClassId = 0;
             if (calculateTaxRequest.TaxClassId > 0)
             {
-                taxClassID = calculateTaxRequest.TaxClassId;
+                taxClassId = calculateTaxRequest.TaxClassId;
             }
             else
             {
                 var productVariant = calculateTaxRequest.Item;
                 if (productVariant != null)
                 {
-                    taxClassID = productVariant.TaxCategoryId;
+                    taxClassId = productVariant.TaxCategoryId;
                 }
             }
-            taxRate = GetTaxRate(taxClassID);
+            taxRate = GetTaxRate(taxClassId);
 
             return taxRate;
         }
@@ -60,9 +60,9 @@ namespace NopSolutions.NopCommerce.Tax
         /// </summary>
         /// <param name="taxCategoryID">The tax category identifier</param>
         /// <returns>Tax rate</returns>
-        protected decimal GetTaxRate(int taxCategoryID)
+        protected decimal GetTaxRate(int taxCategoryId)
         {
-            decimal rate = IoCFactory.Resolve<ISettingManager>().GetSettingValueDecimalNative(string.Format("Tax.TaxProvider.FixedRate.TaxCategoryId{0}", taxCategoryID));
+            decimal rate = IoCFactory.Resolve<ISettingManager>().GetSettingValueDecimalNative(string.Format("Tax.TaxProvider.FixedRate.TaxCategoryId{0}", taxCategoryId));
             return rate;
         }
     }

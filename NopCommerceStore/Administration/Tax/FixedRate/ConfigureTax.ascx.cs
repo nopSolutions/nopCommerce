@@ -60,8 +60,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Tax.FixedRate
                 }
             }
         }
-
-
+        
         public void Save()
         {
             foreach (GridViewRow row in gvTaxCategories.Rows)

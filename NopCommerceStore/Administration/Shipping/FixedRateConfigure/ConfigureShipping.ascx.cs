@@ -22,6 +22,7 @@ using NopSolutions.NopCommerce.Shipping.Methods.UPS;
 using NopSolutions.NopCommerce.Web.Administration.Modules;
 using NopSolutions.NopCommerce.Web.Templates.Shipping;
 using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Shipping;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Shipping.FixedRateConfigure
 {
@@ -30,19 +31,42 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.FixedRateConfigur
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!Page.IsPostBack)
-            {
                 BindData();
-            }
         }
 
         private void BindData()
         {
-            txtFixedRate.Value = IoCFactory.Resolve<ISettingManager>().GetSettingValueDecimalNative("ShippingRateComputationMethod.FixedRate.Rate");
+            var shippingMethods = IoCFactory.Resolve<IShippingMethodManager>().GetAllShippingMethods();
+            gvShippingMethods.DataSource = shippingMethods;
+            gvShippingMethods.DataBind();
+        }
+
+        protected void gvShippingMethods_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                ShippingMethod shippingMethod = (ShippingMethod)e.Row.DataItem;
+
+                DecimalTextBox txtRate = e.Row.FindControl("txtRate") as DecimalTextBox;
+                if (txtRate != null)
+                {
+                    txtRate.Value = IoCFactory.Resolve<ISettingManager>().GetSettingValueDecimalNative(string.Format("ShippingRateComputationMethod.FixedRate.Rate.ShippingMethodId{0}", shippingMethod.ShippingMethodId));
+                }
+            }
         }
 
         public void Save()
         {
-            IoCFactory.Resolve<ISettingManager>().SetParamNative("ShippingRateComputationMethod.FixedRate.Rate", txtFixedRate.Value);
+            foreach (GridViewRow row in gvShippingMethods.Rows)
+            {
+                DecimalTextBox txtRate = row.FindControl("txtRate") as DecimalTextBox;
+                HiddenField hfShippingMethodId = row.FindControl("hfShippingMethodId") as HiddenField;
+
+                int shippingMethodId = int.Parse(hfShippingMethodId.Value);
+                decimal rate = txtRate.Value;
+
+                IoCFactory.Resolve<ISettingManager>().SetParamNative(string.Format("ShippingRateComputationMethod.FixedRate.Rate.ShippingMethodId{0}", shippingMethodId), rate);
+            }
         }
     }
 }
