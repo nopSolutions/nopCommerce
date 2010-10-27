@@ -12,7 +12,9 @@
         <asp:CreateUserWizard ID="CreateUserForm" EmailRegularExpression="[\w\.-]+(\+[\w-]*)?@([\w-]+\.)+[\w-]+"
             RequireEmail="False" runat="server" OnCreatedUser="CreatedUser" OnCreatingUser="CreatingUser"
             OnCreateUserError="CreateUserError" FinishDestinationPageUrl="~/default.aspx"
-            ContinueDestinationPageUrl="~/default.aspx" Width="100%" LoginCreatedUser="true">
+            ContinueDestinationPageUrl="~/default.aspx" Width="100%" LoginCreatedUser="true"
+            DuplicateEmailErrorMessage="<% $NopResources:Account.DuplicateEmail %>" 
+            DuplicateUserNameErrorMessage="<% $NopResources:Account.DuplicateUserName %>">
             <WizardSteps> 
                 <asp:CreateUserWizardStep ID="CreateUserWizardStep1" runat="server" Title="">
                     <ContentTemplate>

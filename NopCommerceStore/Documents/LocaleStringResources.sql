@@ -434,6 +434,12 @@ set @resources='
   <LocaleResource Name="Admin.PaymentMethodInfo.HidePaymentInfoForZeroOrders.Tooltip">
     <Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Account.DuplicateEmail">
+    <Value>The e-mail address that you entered is already in use. Please enter a different e-mail address.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.DuplicateUserName">
+    <Value>Please enter a different user name.</Value>
+  </LocaleResource>
 </Language>
 '
 
