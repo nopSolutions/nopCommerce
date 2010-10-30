@@ -56,7 +56,7 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.FreeShippingCM
                 return shippingOptions;
             }
 
-            var shippingMethods = IoCFactory.Resolve<IShippingMethodManager>().GetAllShippingMethods(shipmentPackage.ShippingAddress.CountryId);
+            var shippingMethods = IoCFactory.Resolve<IShippingManager>().GetAllShippingMethods(shipmentPackage.ShippingAddress.CountryId);
             foreach (var shippingMethod in shippingMethods)
             {
                 var shippingOption = new ShippingOption();

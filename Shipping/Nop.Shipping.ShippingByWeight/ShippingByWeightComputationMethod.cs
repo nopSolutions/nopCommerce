@@ -119,7 +119,7 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.ShippingByWeightCM
 
             decimal weight = IoCFactory.Resolve<IShippingManager>().GetShoppingCartTotalWeight(shipmentPackage.Items, shipmentPackage.Customer);
 
-            var shippingMethods = IoCFactory.Resolve<IShippingMethodManager>().GetAllShippingMethods(shipmentPackage.ShippingAddress.CountryId);
+            var shippingMethods = IoCFactory.Resolve<IShippingManager>().GetAllShippingMethods(shipmentPackage.ShippingAddress.CountryId);
             foreach (var shippingMethod in shippingMethods)
             {
                 decimal? rate = GetRate(subTotal, weight, shippingMethod.ShippingMethodId);

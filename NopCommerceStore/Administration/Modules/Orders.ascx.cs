@@ -109,10 +109,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             this.ddlShippingStatus.Items.Clear();
             ListItem itemShippingStatus = new ListItem(GetLocaleResourceString("Admin.Common.All"), "0");
             this.ddlShippingStatus.Items.Add(itemShippingStatus);
-            var shippingStatuses = IoCFactory.Resolve<IShippingStatusManager>().GetAllShippingStatuses();
+            var shippingStatuses = IoCFactory.Resolve<IShippingManager>().GetAllShippingStatuses();
             foreach (ShippingStatus shippingStatus in shippingStatuses)
             {
-                ListItem item2 = new ListItem(IoCFactory.Resolve<IShippingStatusManager>().GetShippingStatusName(shippingStatus.ShippingStatusId), shippingStatus.ShippingStatusId.ToString());
+                ListItem item2 = new ListItem(IoCFactory.Resolve<IShippingManager>().GetShippingStatusName(shippingStatus.ShippingStatusId), shippingStatus.ShippingStatusId.ToString());
                 this.ddlShippingStatus.Items.Add(item2);
             }
         }

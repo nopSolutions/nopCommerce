@@ -171,9 +171,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.IoC
             container.RegisterType<IShippingByWeightAndCountryManager, ShippingByWeightAndCountryManager>(new TransientLifetimeManager());
             container.RegisterType<IShippingByWeightManager, ShippingByWeightManager>(new TransientLifetimeManager());
             container.RegisterType<IShippingManager, ShippingManager>(new TransientLifetimeManager());
-            container.RegisterType<IShippingMethodManager, ShippingMethodManager>(new TransientLifetimeManager());
-            container.RegisterType<IShippingRateComputationMethodManager, ShippingRateComputationMethodManager>(new TransientLifetimeManager());
-            container.RegisterType<IShippingStatusManager, ShippingStatusManager>(new TransientLifetimeManager());
             container.RegisterType<ITaxCategoryManager, TaxCategoryManager>(new TransientLifetimeManager());
             container.RegisterType<ITaxManager, TaxManager>(new TransientLifetimeManager());
             container.RegisterType<ITaxProviderManager, TaxProviderManager>(new TransientLifetimeManager());

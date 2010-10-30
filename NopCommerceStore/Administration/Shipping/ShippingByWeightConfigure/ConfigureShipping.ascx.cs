@@ -49,7 +49,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.ShippingByWeightC
         private void FillDropDowns()
         {
             ddlShippingMethod.Items.Clear();
-            var shippingMethodCollection = IoCFactory.Resolve<IShippingMethodManager>().GetAllShippingMethods();
+            var shippingMethodCollection = IoCFactory.Resolve<IShippingManager>().GetAllShippingMethods();
             foreach (ShippingMethod shippingMethod in shippingMethodCollection)
             {
                 ListItem item = new ListItem(shippingMethod.Name, shippingMethod.ShippingMethodId.ToString());
@@ -140,7 +140,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.ShippingByWeightC
 
                 DropDownList ddlShippingMethod = e.Row.FindControl("ddlShippingMethod") as DropDownList;
                 ddlShippingMethod.Items.Clear();
-                var shippingMethodCollection = IoCFactory.Resolve<IShippingMethodManager>().GetAllShippingMethods();
+                var shippingMethodCollection = IoCFactory.Resolve<IShippingManager>().GetAllShippingMethods();
                 foreach (ShippingMethod shippingMethod in shippingMethodCollection)
                 {
                     ListItem item = new ListItem(shippingMethod.Name, shippingMethod.ShippingMethodId.ToString());

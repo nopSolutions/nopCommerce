@@ -121,7 +121,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             var orderStatuses = IoCFactory.Resolve<IOrderManager>().GetAllOrderStatuses();
             var paymentStatuses = IoCFactory.Resolve<IPaymentManager>().GetAllPaymentStatuses();
-            var shippingStatuses = IoCFactory.Resolve<IShippingStatusManager>().GetAllShippingStatuses();
+            var shippingStatuses = IoCFactory.Resolve<IShippingManager>().GetAllShippingStatuses();
 
             //by order total
             this.ddlOrderStatusByOrderTotal.Items.Clear();
@@ -147,7 +147,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             this.ddlShippingStatusByOrderTotal.Items.Add(itemShippingStatusByOrderTotal);
             foreach (ShippingStatus shippingStatus in shippingStatuses)
             {
-                ListItem item2 = new ListItem(IoCFactory.Resolve<IShippingStatusManager>().GetShippingStatusName(shippingStatus.ShippingStatusId), shippingStatus.ShippingStatusId.ToString());
+                ListItem item2 = new ListItem(IoCFactory.Resolve<IShippingManager>().GetShippingStatusName(shippingStatus.ShippingStatusId), shippingStatus.ShippingStatusId.ToString());
                 this.ddlShippingStatusByOrderTotal.Items.Add(item2);
             }
 
@@ -176,7 +176,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             this.ddlShippingStatusByNumberOfOrder.Items.Add(itemShippingStatusByNumberOfOrder);
             foreach (ShippingStatus shippingStatus in shippingStatuses)
             {
-                ListItem item2 = new ListItem(IoCFactory.Resolve<IShippingStatusManager>().GetShippingStatusName(shippingStatus.ShippingStatusId), shippingStatus.ShippingStatusId.ToString());
+                ListItem item2 = new ListItem(IoCFactory.Resolve<IShippingManager>().GetShippingStatusName(shippingStatus.ShippingStatusId), shippingStatus.ShippingStatusId.ToString());
                 this.ddlShippingStatusByNumberOfOrder.Items.Add(item2);
             }
         }

@@ -352,9 +352,6 @@
     <Compile Include="SEO\Sitemaps\BaseSitemapGenerator.cs" />
     <Compile Include="SEO\Sitemaps\SitemapGenerator.cs" />
     <Compile Include="SEO\Sitemaps\UpdateFrequency.cs" />
-    <Compile Include="Shipping\IShippingStatusManager.cs" />
-    <Compile Include="Shipping\IShippingRateComputationMethodManager.cs" />
-    <Compile Include="Shipping\IShippingMethodManager.cs" />
     <Compile Include="Shipping\IShippingManager.cs" />
     <Compile Include="Shipping\IShippingByWeightManager.cs" />
     <Compile Include="Shipping\IShippingByWeightAndCountryManager.cs" />
@@ -362,7 +359,6 @@
     <Compile Include="Shipping\ShippingRateComputationMethodTypeEnum.cs" />
     <Compile Include="Shipping\ShippingStatus.cs" />
     <Compile Include="Shipping\ShippingStatusEnum.cs" />
-    <Compile Include="Shipping\ShippingStatusManager.cs" />
     <Compile Include="Tasks\ITask.cs" />
     <Compile Include="Tasks\Task.cs" />
     <Compile Include="Tasks\TaskManager.cs" />
@@ -478,8 +474,6 @@
     <Compile Include="Orders\OrderManager.cs" />
     <Compile Include="Products\ProductManager.cs" />
     <Compile Include="Configuration\Settings\SettingManager.cs" />
-    <Compile Include="Shipping\ShippingMethodManager.cs" />
-    <Compile Include="Shipping\ShippingRateComputationMethodManager.cs" />
     <Compile Include="Orders\ShoppingCartManager.cs" />
     <Compile Include="Directory\StateProvinceManager.cs" />
     <Compile Include="Tax\TaxRateManager.cs" />

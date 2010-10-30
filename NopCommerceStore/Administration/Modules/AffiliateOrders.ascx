@@ -20,7 +20,7 @@
         </asp:TemplateField>
         <asp:TemplateField HeaderText="<% $NopResources:Admin.AffiliateOrders.ShippingStatus %>" ItemStyle-Width="10%">
             <ItemTemplate>
-                <%#IoCFactory.Resolve<IShippingStatusManager>().GetShippingStatusName(Convert.ToInt32(Eval("ShippingStatusId")))%>
+                <%#IoCFactory.Resolve<IShippingManager>().GetShippingStatusName(Convert.ToInt32(Eval("ShippingStatusId")))%>
             </ItemTemplate>
         </asp:TemplateField>
         <asp:TemplateField HeaderText="<% $NopResources:Admin.AffiliateOrders.Customer %>" ItemStyle-Width="15%">

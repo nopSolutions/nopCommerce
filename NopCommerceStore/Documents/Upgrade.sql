@@ -986,3 +986,26 @@ GO
 DELETE FROM [dbo].[Nop_Setting]
 WHERE [Name] = N'Cache.IpBlacklistManager.CacheEnabled'
 GO
+
+
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[Nop_Setting]
+		WHERE [Name] = N'Cache.ShippingManager.CacheEnabled')
+BEGIN
+	INSERT [dbo].[Nop_Setting] ([Name], [Value], [Description])
+	VALUES (N'Cache.ShippingManager.CacheEnabled', N'true', N'')
+END
+GO
+
+DELETE FROM [dbo].[Nop_Setting]
+WHERE [Name] = N'Cache.ShippingRateComputationMethodManager.CacheEnabled'
+GO
+
+DELETE FROM [dbo].[Nop_Setting]
+WHERE [Name] = N'Cache.ShippingStatusManager.CacheEnabled'
+GO
+
+DELETE FROM [dbo].[Nop_Setting]
+WHERE [Name] = N'Cache.ShippingMethodManager.CacheEnabled'
+GO

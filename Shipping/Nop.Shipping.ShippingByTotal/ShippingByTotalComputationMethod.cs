@@ -115,7 +115,7 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.ShippingByTotalCM
                 subTotal += PriceHelper.GetSubTotal(shoppingCartItem, shipmentPackage.Customer, true);
             }
 
-            var shippingMethods = IoCFactory.Resolve<IShippingMethodManager>().GetAllShippingMethods(shipmentPackage.ShippingAddress.CountryId);
+            var shippingMethods = IoCFactory.Resolve<IShippingManager>().GetAllShippingMethods(shipmentPackage.ShippingAddress.CountryId);
             foreach (var shippingMethod in shippingMethods)
             {
                 decimal? rate = GetRate(subTotal, shippingMethod.ShippingMethodId);

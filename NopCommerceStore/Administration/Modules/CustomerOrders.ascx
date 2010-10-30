@@ -19,7 +19,7 @@
             <%#IoCFactory.Resolve<IPaymentManager>().GetPaymentStatusName(Convert.ToInt32(Eval("PaymentStatusId")))%>
             <br />
             <%#GetLocaleResourceString("Admin.CustomerOrders.ShippingStatus")%>
-            <%#IoCFactory.Resolve<IShippingStatusManager>().GetShippingStatusName(Convert.ToInt32(Eval("ShippingStatusId")))%>
+            <%#IoCFactory.Resolve<IShippingManager>().GetShippingStatusName(Convert.ToInt32(Eval("ShippingStatusId")))%>
             <br />
             <%#GetLocaleResourceString("Admin.CustomerOrders.OrderTotal")%>
             <%#Server.HtmlEncode(PriceHelper.FormatPrice(Convert.ToDecimal(Eval("OrderTotal")), true, false))%>

@@ -199,7 +199,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         private void TestShippingMethods()
         {
             StringBuilder warningResult = new StringBuilder();
-            var srcmList = IoCFactory.Resolve<IShippingRateComputationMethodManager>().GetAllShippingRateComputationMethods(false);
+            var srcmList = IoCFactory.Resolve<IShippingManager>().GetAllShippingRateComputationMethods(false);
             int offlineSrcmCount = 0;
             foreach (var srcm in srcmList)
             {

@@ -56,7 +56,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         void BindGrid()
         {
-            var shippingMethodCollection = IoCFactory.Resolve<IShippingMethodManager>().GetAllShippingMethods();
+            var shippingMethodCollection = IoCFactory.Resolve<IShippingManager>().GetAllShippingMethods();
             gvShippingMethods.DataSource = shippingMethodCollection;
             gvShippingMethods.DataBind();
         }

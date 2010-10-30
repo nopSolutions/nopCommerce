@@ -80,7 +80,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         {
             get
             {
-                return IoCFactory.Resolve<IShippingMethodManager>().GetShippingMethodById(this.ShippingMethodId);
+                return IoCFactory.Resolve<IShippingManager>().GetShippingMethodById(this.ShippingMethodId);
             }
         }
         #endregion

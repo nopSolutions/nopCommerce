@@ -51,7 +51,7 @@ namespace NopSolutions.NopCommerce.Web.Administration
                         IsActive = cbActive.Checked,
                         DisplayOrder = txtDisplayOrder.Value
                     };
-                    IoCFactory.Resolve<IShippingRateComputationMethodManager>().InsertShippingRateComputationMethod(shippingRateComputationMethod);
+                    IoCFactory.Resolve<IShippingManager>().InsertShippingRateComputationMethod(shippingRateComputationMethod);
 
                     Response.Redirect("ShippingRateComputationMethodDetails.aspx?ShippingRateComputationMethodID=" + shippingRateComputationMethod.ShippingRateComputationMethodId.ToString());
                 }

@@ -32,6 +32,145 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
     /// </summary>
     public partial interface IShippingManager
     {
+        #region Shipping rate computation methods
+        
+        /// <summary>
+        /// Deletes a shipping rate computation method
+        /// </summary>
+        /// <param name="shippingRateComputationMethodId">Shipping rate computation method identifier</param>
+        void DeleteShippingRateComputationMethod(int shippingRateComputationMethodId);
+
+        /// <summary>
+        /// Gets a shipping rate computation method
+        /// </summary>
+        /// <param name="shippingRateComputationMethodId">Shipping rate computation method identifier</param>
+        /// <returns>Shipping rate computation method</returns>
+        ShippingRateComputationMethod GetShippingRateComputationMethodById(int shippingRateComputationMethodId);
+
+        /// <summary>
+        /// Gets all shipping rate computation methods
+        /// </summary>
+        /// <returns>Shipping rate computation method collection</returns>
+        List<ShippingRateComputationMethod> GetAllShippingRateComputationMethods();
+
+        /// <summary>
+        /// Gets all shipping rate computation methods
+        /// </summary>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <returns>Shipping rate computation method collection</returns>
+        List<ShippingRateComputationMethod> GetAllShippingRateComputationMethods(bool showHidden);
+
+        /// <summary>
+        /// Inserts a shipping rate computation method
+        /// </summary>
+        /// <param name="shippingRateComputationMethod">Shipping rate computation method</param>
+        void InsertShippingRateComputationMethod(ShippingRateComputationMethod shippingRateComputationMethod);
+
+        /// <summary>
+        /// Updates the shipping rate computation method
+        /// </summary>
+        /// <param name="shippingRateComputationMethod">Shipping rate computation method</param>
+        void UpdateShippingRateComputationMethod(ShippingRateComputationMethod shippingRateComputationMethod);
+
+        /// <summary>
+        /// Gets a shipping rate computation method type
+        /// </summary>
+        /// <param name="shippingRateComputationMethodId">The shipping rate computation method identifier</param>
+        /// <returns>A shipping rate computation method type</returns>
+        ShippingRateComputationMethodTypeEnum GetShippingRateComputationMethodTypeEnum(int shippingRateComputationMethodId);
+        
+        #endregion
+
+        #region Shipping statuses
+
+        /// <summary>
+        /// Gets a shipping status full name
+        /// </summary>
+        /// <param name="shippingStatusId">Shipping status identifier</param>
+        /// <returns>Shipping status name</returns>
+        string GetShippingStatusName(int shippingStatusId);
+
+        /// <summary>
+        /// Gets a shipping status by identifier
+        /// </summary>
+        /// <param name="shippingStatusId">Shipping status identifier</param>
+        /// <returns>Shipping status</returns>
+        ShippingStatus GetShippingStatusById(int shippingStatusId);
+
+        /// <summary>
+        /// Gets all shipping statuses
+        /// </summary>
+        /// <returns>Shipping status collection</returns>
+        List<ShippingStatus> GetAllShippingStatuses();
+
+        #endregion
+
+        #region Shipping methods
+
+        /// <summary>
+        /// Deletes a shipping method
+        /// </summary>
+        /// <param name="shippingMethodId">The shipping method identifier</param>
+        void DeleteShippingMethod(int shippingMethodId);
+
+        /// <summary>
+        /// Gets a shipping method
+        /// </summary>
+        /// <param name="shippingMethodId">The shipping method identifier</param>
+        /// <returns>Shipping method</returns>
+        ShippingMethod GetShippingMethodById(int shippingMethodId);
+
+        /// <summary>
+        /// Gets all shipping methods
+        /// </summary>
+        /// <returns>Shipping method collection</returns>
+        List<ShippingMethod> GetAllShippingMethods();
+
+        /// <summary>
+        /// Gets all shipping methods
+        /// </summary>
+        /// <param name="filterByCountryId">The country indentifier</param>
+        /// <returns>Shipping method collection</returns>
+        List<ShippingMethod> GetAllShippingMethods(int? filterByCountryId);
+
+        /// <summary>
+        /// Inserts a shipping method
+        /// </summary>
+        /// <param name="shippingMethod">Shipping method</param>
+        void InsertShippingMethod(ShippingMethod shippingMethod);
+
+        /// <summary>
+        /// Updates the shipping method
+        /// </summary>
+        /// <param name="shippingMethod">Shipping method</param>
+        void UpdateShippingMethod(ShippingMethod shippingMethod);
+
+        /// <summary>
+        /// Creates the shipping method country mapping
+        /// </summary>
+        /// <param name="shippingMethodId">The shipping method identifier</param>
+        /// <param name="countryId">The country identifier</param>
+        void CreateShippingMethodCountryMapping(int shippingMethodId, int countryId);
+
+        /// <summary>
+        /// Checking whether the shipping method country mapping exists
+        /// </summary>
+        /// <param name="shippingMethodId">The shipping method identifier</param>
+        /// <param name="countryId">The country identifier</param>
+        /// <returns>True if mapping exist, otherwise false</returns>
+        bool DoesShippingMethodCountryMappingExist(int shippingMethodId, int countryId);
+
+        /// <summary>
+        /// Deletes the shipping method country mapping
+        /// </summary>
+        /// <param name="shippingMethodId">The shipping method identifier</param>
+        /// <param name="countryId">The country identifier</param>
+        void DeleteShippingMethodCountryMapping(int shippingMethodId, int countryId);
+
+        #endregion
+        
+        #region Worflow
+
         /// <summary>
         /// Gets shopping cart weight
         /// </summary>
@@ -168,10 +307,16 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         List<ShippingOption> GetShippingOptions(ShoppingCart cart,
             Customer customer, Address shippingAddress,
             int? allowedShippingRateComputationMethodId, ref string error);
-    
+        
+        #endregion
+
+        #region Properties
+
         /// <summary>
         /// Gets or sets a default shipping origin address
         /// </summary>
         Address ShippingOrigin { get; set; }
+        
+        #endregion
     }
 }

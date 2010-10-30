@@ -14,16 +14,21 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using NopSolutions.NopCommerce.BusinessLogic.Caching;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
+using NopSolutions.NopCommerce.BusinessLogic.Data;
+using NopSolutions.NopCommerce.BusinessLogic.Directory;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Localization;
 using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.BusinessLogic.Products.Attributes;
 using NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts;
 using NopSolutions.NopCommerce.BusinessLogic.Tax;
 using NopSolutions.NopCommerce.Common;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
-using NopSolutions.NopCommerce.BusinessLogic.Data;
+using NopSolutions.NopCommerce.Common.Utils;
 
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
@@ -33,6 +38,21 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
     /// </summary>
     public partial class ShippingManager : IShippingManager
     {
+        #region Constants
+
+        private const string SHIPPINGMETHODS_BY_ID_KEY = "Nop.shippingMethod.id-{0}";
+        private const string SHIPPINGMETHODS_PATTERN_KEY = "Nop.shippingMethod.";
+        
+        private const string SHIPPINGTATUSES_ALL_KEY = "Nop.shippingstatus.all";
+        private const string SHIPPINGTATUSES_BY_ID_KEY = "Nop.shippingstatus.id-{0}";
+        private const string SHIPPINGTATUSES_PATTERN_KEY = "Nop.shippingstatus.";
+        
+        private const string SHIPPINGRATECOMPUTATIONMETHODS_ALL_KEY = "Nop.shippingratecomputationmethod.all-{0}";
+        private const string SHIPPINGRATECOMPUTATIONMETHODS_BY_ID_KEY = "Nop.shippingratecomputationmethod.id-{0}";
+        private const string SHIPPINGRATECOMPUTATIONMETHODS_PATTERN_KEY = "Nop.shippingratecomputationmethod.";
+
+        #endregion
+
         #region Fields
 
         /// <summary>
@@ -138,6 +158,479 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         #endregion
 
         #region Methods
+
+        #region Shipping rate computation methods
+        
+        /// <summary>
+        /// Deletes a shipping rate computation method
+        /// </summary>
+        /// <param name="shippingRateComputationMethodId">Shipping rate computation method identifier</param>
+        public void DeleteShippingRateComputationMethod(int shippingRateComputationMethodId)
+        {
+            var shippingRateComputationMethod = GetShippingRateComputationMethodById(shippingRateComputationMethodId);
+            if (shippingRateComputationMethod == null)
+                return;
+
+            
+            if (!_context.IsAttached(shippingRateComputationMethod))
+                _context.ShippingRateComputationMethods.Attach(shippingRateComputationMethod);
+            _context.DeleteObject(shippingRateComputationMethod);
+            _context.SaveChanges();
+
+            if (this.CacheEnabled)
+            {
+                NopRequestCache.RemoveByPattern(SHIPPINGRATECOMPUTATIONMETHODS_PATTERN_KEY);
+            }
+        }
+
+        /// <summary>
+        /// Gets a shipping rate computation method
+        /// </summary>
+        /// <param name="shippingRateComputationMethodId">Shipping rate computation method identifier</param>
+        /// <returns>Shipping rate computation method</returns>
+        public ShippingRateComputationMethod GetShippingRateComputationMethodById(int shippingRateComputationMethodId)
+        {
+            if (shippingRateComputationMethodId == 0)
+                return null;
+
+            string key = string.Format(SHIPPINGRATECOMPUTATIONMETHODS_BY_ID_KEY, shippingRateComputationMethodId);
+            object obj2 = NopRequestCache.Get(key);
+            if (this.CacheEnabled && (obj2 != null))
+            {
+                return (ShippingRateComputationMethod)obj2;
+            }
+
+            
+            var query = from s in _context.ShippingRateComputationMethods
+                        where s.ShippingRateComputationMethodId == shippingRateComputationMethodId
+                        select s;
+            var shippingRateComputationMethod = query.SingleOrDefault();
+
+            if (this.CacheEnabled)
+            {
+                NopRequestCache.Add(key, shippingRateComputationMethod);
+            }
+            return shippingRateComputationMethod;
+        }
+
+        /// <summary>
+        /// Gets all shipping rate computation methods
+        /// </summary>
+        /// <returns>Shipping rate computation method collection</returns>
+        public List<ShippingRateComputationMethod> GetAllShippingRateComputationMethods()
+        {
+            bool showHidden = NopContext.Current.IsAdmin;
+            return GetAllShippingRateComputationMethods(showHidden);
+        }
+
+        /// <summary>
+        /// Gets all shipping rate computation methods
+        /// </summary>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <returns>Shipping rate computation method collection</returns>
+        public List<ShippingRateComputationMethod> GetAllShippingRateComputationMethods(bool showHidden)
+        {
+            string key = string.Format(SHIPPINGRATECOMPUTATIONMETHODS_ALL_KEY, showHidden);
+            object obj2 = NopRequestCache.Get(key);
+            if (this.CacheEnabled && (obj2 != null))
+            {
+                return (List<ShippingRateComputationMethod>)obj2;
+            }
+
+            
+            var query = from s in _context.ShippingRateComputationMethods
+                        orderby s.DisplayOrder
+                        where showHidden || s.IsActive
+                        select s;
+            var shippingRateComputationMethods = query.ToList();
+
+            if (this.CacheEnabled)
+            {
+                NopRequestCache.Add(key, shippingRateComputationMethods);
+            }
+            return shippingRateComputationMethods;
+        }
+
+        /// <summary>
+        /// Inserts a shipping rate computation method
+        /// </summary>
+        /// <param name="shippingRateComputationMethod">Shipping rate computation method</param>
+        public void InsertShippingRateComputationMethod(ShippingRateComputationMethod shippingRateComputationMethod)
+        {
+            if (shippingRateComputationMethod == null)
+                throw new ArgumentNullException("shippingRateComputationMethod");
+                        
+            shippingRateComputationMethod.Name = CommonHelper.EnsureNotNull(shippingRateComputationMethod.Name);
+            shippingRateComputationMethod.Name = CommonHelper.EnsureMaximumLength(shippingRateComputationMethod.Name, 100);
+            shippingRateComputationMethod.Description = CommonHelper.EnsureNotNull(shippingRateComputationMethod.Description);
+            shippingRateComputationMethod.Description = CommonHelper.EnsureMaximumLength(shippingRateComputationMethod.Description, 4000);
+            shippingRateComputationMethod.ConfigureTemplatePath = CommonHelper.EnsureNotNull(shippingRateComputationMethod.ConfigureTemplatePath);
+            shippingRateComputationMethod.ConfigureTemplatePath = CommonHelper.EnsureMaximumLength(shippingRateComputationMethod.ConfigureTemplatePath, 500);
+            shippingRateComputationMethod.ClassName = CommonHelper.EnsureNotNull(shippingRateComputationMethod.ClassName);
+            shippingRateComputationMethod.ClassName = CommonHelper.EnsureMaximumLength(shippingRateComputationMethod.ClassName, 500);
+
+            
+
+            _context.ShippingRateComputationMethods.AddObject(shippingRateComputationMethod);
+            _context.SaveChanges();
+
+            if (this.CacheEnabled)
+            {
+                NopRequestCache.RemoveByPattern(SHIPPINGRATECOMPUTATIONMETHODS_PATTERN_KEY);
+            }
+        }
+
+        /// <summary>
+        /// Updates the shipping rate computation method
+        /// </summary>
+        /// <param name="shippingRateComputationMethod">Shipping rate computation method</param>
+        public void UpdateShippingRateComputationMethod(ShippingRateComputationMethod shippingRateComputationMethod)
+        {
+            if (shippingRateComputationMethod == null)
+                throw new ArgumentNullException("shippingRateComputationMethod");
+
+            shippingRateComputationMethod.Name = CommonHelper.EnsureNotNull(shippingRateComputationMethod.Name);
+            shippingRateComputationMethod.Name = CommonHelper.EnsureMaximumLength(shippingRateComputationMethod.Name, 100);
+            shippingRateComputationMethod.Description = CommonHelper.EnsureNotNull(shippingRateComputationMethod.Description);
+            shippingRateComputationMethod.Description = CommonHelper.EnsureMaximumLength(shippingRateComputationMethod.Description, 4000);
+            shippingRateComputationMethod.ConfigureTemplatePath = CommonHelper.EnsureNotNull(shippingRateComputationMethod.ConfigureTemplatePath);
+            shippingRateComputationMethod.ConfigureTemplatePath = CommonHelper.EnsureMaximumLength(shippingRateComputationMethod.ConfigureTemplatePath, 500);
+            shippingRateComputationMethod.ClassName = CommonHelper.EnsureNotNull(shippingRateComputationMethod.ClassName);
+            shippingRateComputationMethod.ClassName = CommonHelper.EnsureMaximumLength(shippingRateComputationMethod.ClassName, 500);
+
+            
+            if (!_context.IsAttached(shippingRateComputationMethod))
+                _context.ShippingRateComputationMethods.Attach(shippingRateComputationMethod);
+
+            _context.SaveChanges();
+
+            if (this.CacheEnabled)
+            {
+                NopRequestCache.RemoveByPattern(SHIPPINGRATECOMPUTATIONMETHODS_PATTERN_KEY);
+            }
+        }
+        
+        /// <summary>
+        /// Gets a shipping rate computation method type
+        /// </summary>
+        /// <param name="shippingRateComputationMethodId">The shipping rate computation method identifier</param>
+        /// <returns>A shipping rate computation method type</returns>
+        public ShippingRateComputationMethodTypeEnum GetShippingRateComputationMethodTypeEnum(int shippingRateComputationMethodId)
+        {
+            var method = GetShippingRateComputationMethodById(shippingRateComputationMethodId);
+            if (method == null)
+                return ShippingRateComputationMethodTypeEnum.Unknown;
+            var iMethod = Activator.CreateInstance(Type.GetType(method.ClassName)) as IShippingRateComputationMethod;
+            return iMethod.ShippingRateComputationMethodType;
+        }
+        
+        #endregion
+
+        #region Shipping statuses
+        
+        /// <summary>
+        /// Gets a shipping status full name
+        /// </summary>
+        /// <param name="shippingStatusId">Shipping status identifier</param>
+        /// <returns>Shipping status name</returns>
+        public string GetShippingStatusName(int shippingStatusId)
+        {
+            var shippingStatus = GetShippingStatusById(shippingStatusId);
+            if (shippingStatus != null)
+            {
+                string name = string.Empty;
+                if (NopContext.Current != null)
+                {
+                    name = LocalizationManager.GetLocaleResourceString(string.Format("ShippingStatus.{0}", (ShippingStatusEnum)shippingStatus.ShippingStatusId), NopContext.Current.WorkingLanguage.LanguageId, true, shippingStatus.Name);
+                }
+                else
+                {
+                    name = shippingStatus.Name;
+                }
+                return name;
+            }
+            else
+            {
+                return ((ShippingStatusEnum)shippingStatusId).ToString();
+            }
+        }
+
+        /// <summary>
+        /// Gets a shipping status by identifier
+        /// </summary>
+        /// <param name="shippingStatusId">Shipping status identifier</param>
+        /// <returns>Shipping status</returns>
+        public ShippingStatus GetShippingStatusById(int shippingStatusId)
+        {
+            if (shippingStatusId == 0)
+                return null;
+
+            string key = string.Format(SHIPPINGTATUSES_BY_ID_KEY, shippingStatusId);
+            object obj2 = NopRequestCache.Get(key);
+            if (this.CacheEnabled && (obj2 != null))
+            {
+                return (ShippingStatus)obj2;
+            }
+
+            
+            var query = from ss in _context.ShippingStatuses
+                        where ss.ShippingStatusId == shippingStatusId
+                        select ss;
+            var shippingStatus = query.SingleOrDefault();
+
+            if (this.CacheEnabled)
+            {
+                NopRequestCache.Add(key, shippingStatus);
+            }
+            return shippingStatus;
+        }
+
+        /// <summary>
+        /// Gets all shipping statuses
+        /// </summary>
+        /// <returns>Shipping status collection</returns>
+        public List<ShippingStatus> GetAllShippingStatuses()
+        {
+            string key = string.Format(SHIPPINGTATUSES_ALL_KEY);
+            object obj2 = NopRequestCache.Get(key);
+            if (this.CacheEnabled && (obj2 != null))
+            {
+                return (List<ShippingStatus>)obj2;
+            }
+
+            
+            var query = from ss in _context.ShippingStatuses
+                        orderby ss.ShippingStatusId
+                        select ss;
+            var shippingStatuses = query.ToList();
+            
+            if (this.CacheEnabled)
+            {
+                NopRequestCache.Add(key, shippingStatuses);
+            }
+            return shippingStatuses;
+        }
+
+        #endregion
+
+        #region Shipping methods
+
+        /// <summary>
+        /// Deletes a shipping method
+        /// </summary>
+        /// <param name="shippingMethodId">The shipping method identifier</param>
+        public void DeleteShippingMethod(int shippingMethodId)
+        {
+            var shippingMethod = GetShippingMethodById(shippingMethodId);
+            if (shippingMethod == null)
+                return;
+
+
+            if (!_context.IsAttached(shippingMethod))
+                _context.ShippingMethods.Attach(shippingMethod);
+            _context.DeleteObject(shippingMethod);
+            _context.SaveChanges();
+
+            if (this.CacheEnabled)
+            {
+                NopRequestCache.RemoveByPattern(SHIPPINGMETHODS_PATTERN_KEY);
+            }
+        }
+
+        /// <summary>
+        /// Gets a shipping method
+        /// </summary>
+        /// <param name="shippingMethodId">The shipping method identifier</param>
+        /// <returns>Shipping method</returns>
+        public ShippingMethod GetShippingMethodById(int shippingMethodId)
+        {
+            if (shippingMethodId == 0)
+                return null;
+
+            string key = string.Format(SHIPPINGMETHODS_BY_ID_KEY, shippingMethodId);
+            object obj2 = NopRequestCache.Get(key);
+            if (this.CacheEnabled && (obj2 != null))
+            {
+                return (ShippingMethod)obj2;
+            }
+
+
+            var query = from sm in _context.ShippingMethods
+                        where sm.ShippingMethodId == shippingMethodId
+                        select sm;
+            var shippingMethod = query.SingleOrDefault();
+
+            if (this.CacheEnabled)
+            {
+                NopRequestCache.Add(key, shippingMethod);
+            }
+            return shippingMethod;
+        }
+
+        /// <summary>
+        /// Gets all shipping methods
+        /// </summary>
+        /// <returns>Shipping method collection</returns>
+        public List<ShippingMethod> GetAllShippingMethods()
+        {
+            return GetAllShippingMethods(null);
+        }
+
+        /// <summary>
+        /// Gets all shipping methods
+        /// </summary>
+        /// <param name="filterByCountryId">The country indentifier</param>
+        /// <returns>Shipping method collection</returns>
+        public List<ShippingMethod> GetAllShippingMethods(int? filterByCountryId)
+        {
+
+            var shippingMethods = _context.Sp_ShippingMethodLoadAll(filterByCountryId).ToList();
+            return shippingMethods;
+        }
+
+        /// <summary>
+        /// Inserts a shipping method
+        /// </summary>
+        /// <param name="shippingMethod">Shipping method</param>
+        public void InsertShippingMethod(ShippingMethod shippingMethod)
+        {
+            if (shippingMethod == null)
+                throw new ArgumentNullException("shippingMethod");
+
+            shippingMethod.Name = CommonHelper.EnsureNotNull(shippingMethod.Name);
+            shippingMethod.Name = CommonHelper.EnsureMaximumLength(shippingMethod.Name, 100);
+            shippingMethod.Description = CommonHelper.EnsureNotNull(shippingMethod.Description);
+            shippingMethod.Description = CommonHelper.EnsureMaximumLength(shippingMethod.Description, 2000);
+
+
+
+            _context.ShippingMethods.AddObject(shippingMethod);
+            _context.SaveChanges();
+
+            if (this.CacheEnabled)
+            {
+                NopRequestCache.RemoveByPattern(SHIPPINGMETHODS_PATTERN_KEY);
+            }
+        }
+
+        /// <summary>
+        /// Updates the shipping method
+        /// </summary>
+        /// <param name="shippingMethod">Shipping method</param>
+        public void UpdateShippingMethod(ShippingMethod shippingMethod)
+        {
+            if (shippingMethod == null)
+                throw new ArgumentNullException("shippingMethod");
+
+            shippingMethod.Name = CommonHelper.EnsureNotNull(shippingMethod.Name);
+            shippingMethod.Name = CommonHelper.EnsureMaximumLength(shippingMethod.Name, 100);
+            shippingMethod.Description = CommonHelper.EnsureNotNull(shippingMethod.Description);
+            shippingMethod.Description = CommonHelper.EnsureMaximumLength(shippingMethod.Description, 2000);
+
+
+            if (!_context.IsAttached(shippingMethod))
+                _context.ShippingMethods.Attach(shippingMethod);
+
+            _context.SaveChanges();
+
+            if (this.CacheEnabled)
+            {
+                NopRequestCache.RemoveByPattern(SHIPPINGMETHODS_PATTERN_KEY);
+            }
+        }
+
+        /// <summary>
+        /// Creates the shipping method country mapping
+        /// </summary>
+        /// <param name="shippingMethodId">The shipping method identifier</param>
+        /// <param name="countryId">The country identifier</param>
+        public void CreateShippingMethodCountryMapping(int shippingMethodId, int countryId)
+        {
+            var shippingMethod = GetShippingMethodById(shippingMethodId);
+            if (shippingMethod == null)
+                return;
+
+            var country = IoCFactory.Resolve<ICountryManager>().GetCountryById(countryId);
+            if (country == null)
+                return;
+
+
+            if (!_context.IsAttached(shippingMethod))
+                _context.ShippingMethods.Attach(shippingMethod);
+            if (!_context.IsAttached(country))
+                _context.Countries.Attach(country);
+
+            //ensure that navigation property is loaded
+            if (country.NpRestrictedShippingMethods == null)
+                _context.LoadProperty(country, c => c.NpRestrictedShippingMethods);
+
+            country.NpRestrictedShippingMethods.Add(shippingMethod);
+            _context.SaveChanges();
+        }
+
+        /// <summary>
+        /// Checking whether the shipping method country mapping exists
+        /// </summary>
+        /// <param name="shippingMethodId">The shipping method identifier</param>
+        /// <param name="countryId">The country identifier</param>
+        /// <returns>True if mapping exist, otherwise false</returns>
+        public bool DoesShippingMethodCountryMappingExist(int shippingMethodId, int countryId)
+        {
+
+
+            var shippingMethod = GetShippingMethodById(shippingMethodId);
+            if (shippingMethod == null)
+                return false;
+
+            //ensure that navigation property is loaded
+            if (shippingMethod.NpRestrictedCountries == null)
+                _context.LoadProperty(shippingMethod, sm => sm.NpRestrictedCountries);
+
+            bool result = shippingMethod.NpRestrictedCountries.ToList().Find(c => c.CountryId == countryId) != null;
+            return result;
+
+            //var query = from sm in _context.ShippingMethods
+            //            from c in sm.NpRestrictedCountries
+            //            where sm.ShippingMethodId == shippingMethodId &&
+            //            c.CountryId == countryId
+            //            select sm;
+
+            //bool result = query.Count() > 0;
+            //return result;
+        }
+
+        /// <summary>
+        /// Deletes the shipping method country mapping
+        /// </summary>
+        /// <param name="shippingMethodId">The shipping method identifier</param>
+        /// <param name="countryId">The country identifier</param>
+        public void DeleteShippingMethodCountryMapping(int shippingMethodId, int countryId)
+        {
+            var shippingMethod = GetShippingMethodById(shippingMethodId);
+            if (shippingMethod == null)
+                return;
+
+            var country = IoCFactory.Resolve<ICountryManager>().GetCountryById(countryId);
+            if (country == null)
+                return;
+
+
+            if (!_context.IsAttached(shippingMethod))
+                _context.ShippingMethods.Attach(shippingMethod);
+            if (!_context.IsAttached(country))
+                _context.Countries.Attach(country);
+
+            //ensure that navigation property is loaded
+            if (country.NpRestrictedShippingMethods == null)
+                _context.LoadProperty(country, c => c.NpRestrictedShippingMethods);
+
+            country.NpRestrictedShippingMethods.Remove(shippingMethod);
+            _context.SaveChanges();
+        }
+
+        #endregion
+
+        #region Workflow
 
         /// <summary>
         /// Gets shopping cart weight
@@ -320,7 +813,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
                     shippingAddress = customer.ShippingAddress;
                 }
                 var ShipmentPackage = CreateShipmentPackage(cart, customer, shippingAddress);
-                var shippingRateComputationMethods = IoCFactory.Resolve<IShippingRateComputationMethodManager>().GetAllShippingRateComputationMethods(false);
+                var shippingRateComputationMethods = GetAllShippingRateComputationMethods(false);
                 if (shippingRateComputationMethods.Count == 0)
                     throw new NopException("Shipping rate computation method could not be loaded");
 
@@ -477,7 +970,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
 
             //create a package
             var shipmentPackage = CreateShipmentPackage(cart, customer, shippingAddress);
-            var shippingRateComputationMethods = IoCFactory.Resolve<IShippingRateComputationMethodManager>().GetAllShippingRateComputationMethods(false);
+            var shippingRateComputationMethods = GetAllShippingRateComputationMethods(false);
             if (shippingRateComputationMethods.Count == 0)
                 throw new NopException("Shipping rate computation method could not be loaded");
 
@@ -523,8 +1016,21 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
 
         #endregion
 
+        #endregion
+
         #region Properties
         
+        /// <summary>
+        /// Gets a value indicating whether cache is enabled
+        /// </summary>
+        public bool CacheEnabled
+        {
+            get
+            {
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.ShippingManager.CacheEnabled");
+            }
+        }
+
         /// <summary>
         /// Gets or sets a default shipping origin address
         /// </summary>
