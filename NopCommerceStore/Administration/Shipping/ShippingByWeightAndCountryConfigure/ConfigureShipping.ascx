@@ -177,7 +177,7 @@
             <tr>
                 <td class="adminTitle">
                     Charge amount [<%=IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency.CurrencyCode%>]
-                    <%if (ShippingByWeightAndIoCFactory.Resolve<ICountryManager>().CalculatePerWeightUnit)
+                    <%if (IoCFactory.Resolve<IShippingByWeightAndCountryManager>().CalculatePerWeightUnit)
                       { %>
                     per
                     <%=IoCFactory.Resolve<IMeasureManager>().BaseWeightIn.Name%><%} %>:
