@@ -26,11 +26,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Caching
     /// <summary>
     /// Represents a NopStaticCache
     /// </summary>
-    public partial class NopStaticCache
+    public partial class NopStaticCache : ICacheManager
     {
         #region Fields
 
-        private static readonly Cache _cache;
+        private readonly Cache _cache;
 
         #endregion
 
@@ -39,7 +39,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Caching
         /// <summary>
         /// Creates a new instance of the NopStaticCache class
         /// </summary>
-        static NopStaticCache()
+        public NopStaticCache()
         {
             HttpContext current = HttpContext.Current;
             if (current != null)
@@ -52,13 +52,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Caching
             }
         }
 
-        /// <summary>
-        /// Creates a new instance of the NopStaticCache class
-        /// </summary>
-        private NopStaticCache()
-        {
-        }
-
         #endregion
 
         #region Methods
@@ -66,7 +59,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Caching
         /// <summary>
         /// Removes all keys and values from the cache
         /// </summary>
-        public static void Clear()
+        public void Clear()
         {
             IDictionaryEnumerator enumerator = _cache.GetEnumerator();
             while (enumerator.MoveNext())
@@ -80,7 +73,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Caching
         /// </summary>
         /// <param name="key">The key of the value to get.</param>
         /// <returns>The value associated with the specified key.</returns>
-        public static object Get(string key)
+        public object Get(string key)
         {
             return _cache[key];
         }
@@ -90,7 +83,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Caching
         /// </summary>
         /// <param name="key">key</param>
         /// <param name="obj">object</param>
-        public static void Add(string key, object obj)
+        public void Add(string key, object obj)
         {
             Add(key, obj, null);
         }
@@ -101,7 +94,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Caching
         /// <param name="key">key</param>
         /// <param name="obj">object</param>
         /// <param name="dep">cache dependency</param>
-        public static void Add(string key, object obj, CacheDependency dep)
+        public void Add(string key, object obj, CacheDependency dep)
         {
             if (IsEnabled && (obj != null))
             {
@@ -113,7 +106,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Caching
         /// Removes the value with the specified key from the cache
         /// </summary>
         /// <param name="key"></param>
-        public static void Remove(string key)
+        public void Remove(string key)
         {
             _cache.Remove(key);
         }
@@ -122,7 +115,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Caching
         /// Removes items by pattern
         /// </summary>
         /// <param name="pattern">pattern</param>
-        public static void RemoveByPattern(string pattern)
+        public void RemoveByPattern(string pattern)
         {
             IDictionaryEnumerator enumerator = _cache.GetEnumerator();
             Regex regex = new Regex(pattern, RegexOptions.Singleline | RegexOptions.Compiled | RegexOptions.IgnoreCase);
@@ -142,7 +135,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Caching
         /// <summary>
         /// Gets or sets a value indicating whether the cache is enabled
         /// </summary>
-        public static bool IsEnabled
+        public bool IsEnabled
         {
             get
             {

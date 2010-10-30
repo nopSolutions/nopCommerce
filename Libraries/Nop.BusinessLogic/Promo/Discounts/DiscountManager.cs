@@ -54,9 +54,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         #region Fields
 
         /// <summary>
-        /// object context
+        /// Object context
         /// </summary>
         protected NopObjectContext _context;
+
+        /// <summary>
+        /// Cache manager
+        /// </summary>
+        protected ICacheManager _cacheManager;
 
         #endregion
 
@@ -69,6 +74,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         public DiscountManager(NopObjectContext context)
         {
             _context = context;
+            _cacheManager = new NopRequestCache();
         }
 
         #endregion
@@ -112,7 +118,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
                 return null;
 
             string key = string.Format(DISCOUNTS_BY_ID_KEY, discountId);
-            object obj2 = NopRequestCache.Get(key);
+            object obj2 = _cacheManager.Get(key);
             if (this.CacheEnabled && (obj2 != null))
             {
                 return (Discount)obj2;
@@ -126,7 +132,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.Add(key, discount);
+                _cacheManager.Add(key, discount);
             }
             return discount;
         }
@@ -164,7 +170,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         {
             bool showHidden = NopContext.Current.IsAdmin;
             string key = string.Format(DISCOUNTS_ALL_KEY, showHidden, discountType);
-            object obj2 = NopRequestCache.Get(key);
+            object obj2 = _cacheManager.Get(key);
             if (this.CacheEnabled && (obj2 != null))
             {
                 return (List<Discount>)obj2;
@@ -187,7 +193,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
             
             if (this.CacheEnabled)
             {
-                NopRequestCache.Add(key, discounts);
+                _cacheManager.Add(key, discounts);
             }
             return discounts;
         }
@@ -221,7 +227,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(DISCOUNTS_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(DISCOUNTS_PATTERN_KEY);
             }
         }
 
@@ -255,7 +261,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(DISCOUNTS_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(DISCOUNTS_PATTERN_KEY);
             }
         }
 
@@ -289,7 +295,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(DISCOUNTS_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(DISCOUNTS_PATTERN_KEY);
             }
         }
 
@@ -319,7 +325,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(DISCOUNTS_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(DISCOUNTS_PATTERN_KEY);
             }
         }
 
@@ -332,7 +338,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         {
             bool showHidden = NopContext.Current.IsAdmin;
             string key = string.Format(DISCOUNTS_BY_PRODUCTVARIANTID_KEY, productVariantId, showHidden);
-            object obj2 = NopRequestCache.Get(key);
+            object obj2 = _cacheManager.Get(key);
             if (this.CacheEnabled && (obj2 != null))
             {
                 return (List<Discount>)obj2;
@@ -350,7 +356,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.Add(key, discounts);
+                _cacheManager.Add(key, discounts);
             }
             return discounts;
         }
@@ -385,7 +391,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
             
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(DISCOUNTS_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(DISCOUNTS_PATTERN_KEY);
             }
         }
 
@@ -419,7 +425,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(DISCOUNTS_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(DISCOUNTS_PATTERN_KEY);
             }
         }
 
@@ -432,7 +438,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         {
             bool showHidden = NopContext.Current.IsAdmin;
             string key = string.Format(DISCOUNTS_BY_CATEGORYID_KEY, categoryId, showHidden);
-            object obj2 = NopRequestCache.Get(key);
+            object obj2 = _cacheManager.Get(key);
             if (this.CacheEnabled && (obj2 != null))
             {
                 return (List<Discount>)obj2;
@@ -450,7 +456,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.Add(key, discounts);
+                _cacheManager.Add(key, discounts);
             }
             return discounts;
         }
@@ -524,7 +530,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         public List<DiscountRequirement> GetAllDiscountRequirements()
         {
             string key = string.Format(DISCOUNTREQUIREMENT_ALL_KEY);
-            object obj2 = NopRequestCache.Get(key);
+            object obj2 = _cacheManager.Get(key);
             if (this.CacheEnabled && (obj2 != null))
             {
                 return (List<DiscountRequirement>)obj2;
@@ -538,7 +544,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.Add(key, discountRequirements);
+                _cacheManager.Add(key, discountRequirements);
             }
             return discountRequirements;
         }
@@ -550,7 +556,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         public List<DiscountType> GetAllDiscountTypes()
         {
             string key = string.Format(DISCOUNTTYPES_ALL_KEY);
-            object obj2 = NopRequestCache.Get(key);
+            object obj2 = _cacheManager.Get(key);
             if (this.CacheEnabled && (obj2 != null))
             {
                 return (List<DiscountType>)obj2;
@@ -564,7 +570,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.Add(key, discountTypes);
+                _cacheManager.Add(key, discountTypes);
             }
             return discountTypes;
         }
@@ -576,7 +582,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         public List<DiscountLimitation> GetAllDiscountLimitations()
         {
             string key = string.Format(DISCOUNTLIMITATION_ALL_KEY);
-            object obj2 = NopRequestCache.Get(key);
+            object obj2 = _cacheManager.Get(key);
             if (this.CacheEnabled && (obj2 != null))
             {
                 return (List<DiscountLimitation>)obj2;
@@ -590,7 +596,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.Add(key, discountLimitations);
+                _cacheManager.Add(key, discountLimitations);
             }
             return discountLimitations;
         }

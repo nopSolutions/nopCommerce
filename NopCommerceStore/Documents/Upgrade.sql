@@ -1009,3 +1009,14 @@ GO
 DELETE FROM [dbo].[Nop_Setting]
 WHERE [Name] = N'Cache.ShippingMethodManager.CacheEnabled'
 GO
+
+
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[Nop_Setting]
+		WHERE [Name] = N'Cache.CustomerActivityManager.CacheEnabled')
+BEGIN
+	INSERT [dbo].[Nop_Setting] ([Name], [Value], [Description])
+	VALUES (N'Cache.CustomerActivityManager.CacheEnabled', N'true', N'')
+END
+GO

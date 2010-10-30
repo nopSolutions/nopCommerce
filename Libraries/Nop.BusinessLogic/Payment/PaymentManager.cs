@@ -54,9 +54,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
         #region Fields
 
         /// <summary>
-        /// object context
+        /// Object context
         /// </summary>
         protected NopObjectContext _context;
+
+        /// <summary>
+        /// Cache manager
+        /// </summary>
+        protected ICacheManager _cacheManager;
 
         #endregion
 
@@ -69,6 +74,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
         public PaymentManager(NopObjectContext context)
         {
             _context = context;
+            _cacheManager = new NopRequestCache();
         }
 
         #endregion
@@ -87,7 +93,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
                 return null;
 
             string key = string.Format(CREDITCARDS_BY_ID_KEY, creditCardTypeId);
-            object obj2 = NopRequestCache.Get(key);
+            object obj2 = _cacheManager.Get(key);
             if (this.CacheEnabled && (obj2 != null))
             {
                 return (CreditCardType)obj2;
@@ -101,7 +107,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.Add(key, creditCardType);
+                _cacheManager.Add(key, creditCardType);
             }
             return creditCardType;
         }
@@ -120,7 +126,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
             }
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(CREDITCARDS_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(CREDITCARDS_PATTERN_KEY);
             }
         }
 
@@ -131,7 +137,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
         public List<CreditCardType> GetAllCreditCardTypes()
         {
             string key = string.Format(CREDITCARDS_ALL_KEY);
-            object obj2 = NopRequestCache.Get(key);
+            object obj2 = _cacheManager.Get(key);
             if (this.CacheEnabled && (obj2 != null))
             {
                 return (List<CreditCardType>)obj2;
@@ -146,7 +152,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.Add(key, creditCardTypeCollection);
+                _cacheManager.Add(key, creditCardTypeCollection);
             }
             return creditCardTypeCollection;
         }
@@ -172,7 +178,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(CREDITCARDS_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(CREDITCARDS_PATTERN_KEY);
             }
         }
 
@@ -198,7 +204,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(CREDITCARDS_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(CREDITCARDS_PATTERN_KEY);
             }
         }
         #endregion
@@ -223,7 +229,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(PAYMENTMETHODS_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(PAYMENTMETHODS_PATTERN_KEY);
             }
         }
 
@@ -238,7 +244,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
                 return null;
 
             string key = string.Format(PAYMENTMETHODS_BY_ID_KEY, paymentMethodId);
-            object obj2 = NopRequestCache.Get(key);
+            object obj2 = _cacheManager.Get(key);
             if (this.CacheEnabled && (obj2 != null))
             {
                 return (PaymentMethod)obj2;
@@ -252,7 +258,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.Add(key, paymentMethod);
+                _cacheManager.Add(key, paymentMethod);
             }
             return paymentMethod;
         }
@@ -338,7 +344,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(PAYMENTMETHODS_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(PAYMENTMETHODS_PATTERN_KEY);
             }
         }
 
@@ -374,7 +380,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(PAYMENTMETHODS_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(PAYMENTMETHODS_PATTERN_KEY);
             }
         }
 
@@ -508,7 +514,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
                 return null;
 
             string key = string.Format(PAYMENTSTATUSES_BY_ID_KEY, paymentStatusId);
-            object obj2 = NopRequestCache.Get(key);
+            object obj2 = _cacheManager.Get(key);
             if (this.CacheEnabled && (obj2 != null))
             {
                 return (PaymentStatus)obj2;
@@ -522,7 +528,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.Add(key, paymentStatus);
+                _cacheManager.Add(key, paymentStatus);
             }
             return paymentStatus;
         }
@@ -534,7 +540,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
         public List<PaymentStatus> GetAllPaymentStatuses()
         {
             string key = string.Format(PAYMENTSTATUSES_ALL_KEY);
-            object obj2 = NopRequestCache.Get(key);
+            object obj2 = _cacheManager.Get(key);
             if (this.CacheEnabled && (obj2 != null))
             {
                 return (List<PaymentStatus>)obj2;
@@ -548,7 +554,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.Add(key, paymentStatuses);
+                _cacheManager.Add(key, paymentStatuses);
             }
             return paymentStatuses;
         }

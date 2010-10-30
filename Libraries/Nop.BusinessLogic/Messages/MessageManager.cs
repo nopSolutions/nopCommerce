@@ -58,9 +58,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         #region Fields
 
         /// <summary>
-        /// object context
+        /// Object context
         /// </summary>
         protected NopObjectContext _context;
+
+        /// <summary>
+        /// Cache manager
+        /// </summary>
+        protected ICacheManager _cacheManager;
 
         #endregion
 
@@ -73,6 +78,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         public MessageManager(NopObjectContext context)
         {
             _context = context;
+            _cacheManager = new NopRequestCache();
         }
 
         #endregion

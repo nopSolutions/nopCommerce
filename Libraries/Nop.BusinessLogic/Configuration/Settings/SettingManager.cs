@@ -39,9 +39,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings
         #region Fields
 
         /// <summary>
-        /// object context
+        /// Object context
         /// </summary>
         protected NopObjectContext _context;
+
+        /// <summary>
+        /// Cache manager
+        /// </summary>
+        protected ICacheManager _cacheManager;
 
         #endregion
 
@@ -54,6 +59,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings
         public SettingManager(NopObjectContext context)
         {
             _context = context;
+            _cacheManager = new NopStaticCache();
         }
 
         #endregion
@@ -96,7 +102,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings
 
             if (this.CacheEnabled)
             {
-                NopStaticCache.RemoveByPattern(SETTINGS_ALL_KEY);
+                _cacheManager.RemoveByPattern(SETTINGS_ALL_KEY);
             }
         }
 
@@ -107,7 +113,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings
         public Dictionary<string, Setting> GetAllSettings()
         {
             string key = SETTINGS_ALL_KEY;
-            object obj2 = NopStaticCache.Get(key);
+            object obj2 = _cacheManager.Get(key);
             if (this.CacheEnabled && (obj2 != null))
             {
                 return (Dictionary<string, Setting>)obj2;
@@ -121,7 +127,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings
 
             if (this.CacheEnabled)
             {
-                NopStaticCache.Add(key, settings);
+                _cacheManager.Add(key, settings);
             }
             return settings;
         }
@@ -213,7 +219,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings
 
             if (this.CacheEnabled)
             {
-                NopStaticCache.RemoveByPattern(SETTINGS_ALL_KEY);
+                _cacheManager.RemoveByPattern(SETTINGS_ALL_KEY);
             }
 
             return setting;
@@ -250,7 +256,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings
 
             if (this.CacheEnabled)
             {
-                NopStaticCache.RemoveByPattern(SETTINGS_ALL_KEY);
+                _cacheManager.RemoveByPattern(SETTINGS_ALL_KEY);
             }
 
             return setting;

@@ -42,9 +42,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
         #region Fields
 
         /// <summary>
-        /// object context
+        /// Object context
         /// </summary>
         protected NopObjectContext _context;
+
+        /// <summary>
+        /// Cache manager
+        /// </summary>
+        protected ICacheManager _cacheManager;
 
         #endregion
 
@@ -57,6 +62,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
         public PollManager(NopObjectContext context)
         {
             _context = context;
+            _cacheManager = new NopRequestCache();
         }
 
         #endregion
@@ -74,7 +80,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
                 return null;
 
             string key = string.Format(POLLS_BY_ID_KEY, pollId);
-            object obj2 = NopRequestCache.Get(key);
+            object obj2 = _cacheManager.Get(key);
             if (this.CacheEnabled && (obj2 != null))
             {
                 return (Poll)obj2;
@@ -88,7 +94,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.Add(key, poll);
+                _cacheManager.Add(key, poll);
             }
             return poll;
         }
@@ -190,8 +196,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
             
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(POLLS_PATTERN_KEY);
-                NopRequestCache.RemoveByPattern(POLLANSWERS_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(POLLS_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(POLLANSWERS_PATTERN_KEY);
             }
         }
         
@@ -217,8 +223,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(POLLS_PATTERN_KEY);
-                NopRequestCache.RemoveByPattern(POLLANSWERS_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(POLLS_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(POLLANSWERS_PATTERN_KEY);
             }
         }
 
@@ -245,8 +251,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(POLLS_PATTERN_KEY);
-                NopRequestCache.RemoveByPattern(POLLANSWERS_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(POLLS_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(POLLANSWERS_PATTERN_KEY);
             }
         }
 
@@ -294,7 +300,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
         public List<PollAnswer> GetPollAnswersByPollId(int pollId)
         {
             string key = string.Format(POLLANSWERS_BY_POLLID_KEY, pollId);
-            object obj2 = NopRequestCache.Get(key);
+            object obj2 = _cacheManager.Get(key);
             if (this.CacheEnabled && (obj2 != null))
             {
                 return (List<PollAnswer>)obj2;
@@ -309,7 +315,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.Add(key, pollAnswers);
+                _cacheManager.Add(key, pollAnswers);
             }
             return pollAnswers;
         }
@@ -332,8 +338,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(POLLS_PATTERN_KEY);
-                NopRequestCache.RemoveByPattern(POLLANSWERS_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(POLLS_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(POLLANSWERS_PATTERN_KEY);
             }
         }
 
@@ -356,8 +362,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(POLLS_PATTERN_KEY);
-                NopRequestCache.RemoveByPattern(POLLANSWERS_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(POLLS_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(POLLANSWERS_PATTERN_KEY);
             }
         }
 
@@ -381,8 +387,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(POLLS_PATTERN_KEY);
-                NopRequestCache.RemoveByPattern(POLLANSWERS_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(POLLS_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(POLLANSWERS_PATTERN_KEY);
             }
         }
 
@@ -427,8 +433,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(POLLS_PATTERN_KEY);
-                NopRequestCache.RemoveByPattern(POLLANSWERS_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(POLLS_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(POLLANSWERS_PATTERN_KEY);
             }
         }
 

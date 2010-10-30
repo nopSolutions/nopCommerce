@@ -36,9 +36,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
         #region Fields
 
         /// <summary>
-        /// object context
+        /// Object context
         /// </summary>
         protected NopObjectContext _context;
+
+        /// <summary>
+        /// Cache manager
+        /// </summary>
+        protected ICacheManager _cacheManager;
 
         #endregion
         
@@ -51,6 +56,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
         public LogManager(NopObjectContext context)
         {
             _context = context;
+            _cacheManager = new NopRequestCache();
         }
 
         #endregion

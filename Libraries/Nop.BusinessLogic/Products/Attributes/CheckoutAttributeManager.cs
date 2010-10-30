@@ -44,9 +44,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         #region Fields
 
         /// <summary>
-        /// object context
+        /// Object context
         /// </summary>
         protected NopObjectContext _context;
+
+        /// <summary>
+        /// Cache manager
+        /// </summary>
+        protected ICacheManager _cacheManager;
 
         #endregion
 
@@ -59,6 +64,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         public CheckoutAttributeManager(NopObjectContext context)
         {
             _context = context;
+            _cacheManager = new NopRequestCache();
         }
 
         #endregion
@@ -85,8 +91,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(CHECKOUTATTRIBUTES_PATTERN_KEY);
-                NopRequestCache.RemoveByPattern(CHECKOUTATTRIBUTEVALUES_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTES_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTEVALUES_PATTERN_KEY);
             }
         }
 
@@ -98,7 +104,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         public List<CheckoutAttribute> GetAllCheckoutAttributes(bool dontLoadShippableProductRequired)
         {
             string key = string.Format(CHECKOUTATTRIBUTES_ALL_KEY, dontLoadShippableProductRequired);
-            object obj2 = NopRequestCache.Get(key);
+            object obj2 = _cacheManager.Get(key);
             if (this.CacheEnabled && (obj2 != null))
             {
                 return (List<CheckoutAttribute>)obj2;
@@ -113,7 +119,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.Add(key, checkoutAttributes);
+                _cacheManager.Add(key, checkoutAttributes);
             }
             return checkoutAttributes;
         }
@@ -129,7 +135,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                 return null;
 
             string key = string.Format(CHECKOUTATTRIBUTES_BY_ID_KEY, checkoutAttributeId);
-            object obj2 = NopRequestCache.Get(key);
+            object obj2 = _cacheManager.Get(key);
             if (this.CacheEnabled && (obj2 != null))
             {
                 return (CheckoutAttribute)obj2;
@@ -143,7 +149,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.Add(key, checkoutAttribute);
+                _cacheManager.Add(key, checkoutAttribute);
             }
             return checkoutAttribute;
         }
@@ -169,8 +175,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(CHECKOUTATTRIBUTES_PATTERN_KEY);
-                NopRequestCache.RemoveByPattern(CHECKOUTATTRIBUTEVALUES_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTES_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTEVALUES_PATTERN_KEY);
             }
         }
 
@@ -197,8 +203,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(CHECKOUTATTRIBUTES_PATTERN_KEY);
-                NopRequestCache.RemoveByPattern(CHECKOUTATTRIBUTEVALUES_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTES_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTEVALUES_PATTERN_KEY);
             }
         }
 
@@ -280,8 +286,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(CHECKOUTATTRIBUTES_PATTERN_KEY);
-                NopRequestCache.RemoveByPattern(CHECKOUTATTRIBUTEVALUES_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTES_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTEVALUES_PATTERN_KEY);
             }
         }
 
@@ -319,8 +325,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(CHECKOUTATTRIBUTES_PATTERN_KEY);
-                NopRequestCache.RemoveByPattern(CHECKOUTATTRIBUTEVALUES_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTES_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTEVALUES_PATTERN_KEY);
             }
         }
         
@@ -346,8 +352,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(CHECKOUTATTRIBUTES_PATTERN_KEY);
-                NopRequestCache.RemoveByPattern(CHECKOUTATTRIBUTEVALUES_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTES_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTEVALUES_PATTERN_KEY);
             }
         }
 
@@ -359,7 +365,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         public List<CheckoutAttributeValue> GetCheckoutAttributeValues(int checkoutAttributeId)
         {
             string key = string.Format(CHECKOUTATTRIBUTEVALUES_ALL_KEY, checkoutAttributeId);
-            object obj2 = NopRequestCache.Get(key);
+            object obj2 = _cacheManager.Get(key);
             if (this.CacheEnabled && (obj2 != null))
             {
                 return (List<CheckoutAttributeValue>)obj2;
@@ -374,7 +380,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.Add(key, checkoutAttributeValues);
+                _cacheManager.Add(key, checkoutAttributeValues);
             }
             return checkoutAttributeValues;
         }
@@ -390,7 +396,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                 return null;
 
             string key = string.Format(CHECKOUTATTRIBUTEVALUES_BY_ID_KEY, checkoutAttributeValueId);
-            object obj2 = NopRequestCache.Get(key);
+            object obj2 = _cacheManager.Get(key);
             if (this.CacheEnabled && (obj2 != null))
             {
                 return (CheckoutAttributeValue)obj2;
@@ -404,7 +410,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.Add(key, checkoutAttributeValue);
+                _cacheManager.Add(key, checkoutAttributeValue);
             }
             return checkoutAttributeValue;
         }
@@ -428,8 +434,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(CHECKOUTATTRIBUTES_PATTERN_KEY);
-                NopRequestCache.RemoveByPattern(CHECKOUTATTRIBUTEVALUES_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTES_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTEVALUES_PATTERN_KEY);
             }
         }
 
@@ -453,8 +459,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(CHECKOUTATTRIBUTES_PATTERN_KEY);
-                NopRequestCache.RemoveByPattern(CHECKOUTATTRIBUTEVALUES_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTES_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTEVALUES_PATTERN_KEY);
             }
         }
 
@@ -534,8 +540,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(CHECKOUTATTRIBUTES_PATTERN_KEY);
-                NopRequestCache.RemoveByPattern(CHECKOUTATTRIBUTEVALUES_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTES_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTEVALUES_PATTERN_KEY);
             }
         }
 
@@ -570,8 +576,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(CHECKOUTATTRIBUTES_PATTERN_KEY);
-                NopRequestCache.RemoveByPattern(CHECKOUTATTRIBUTEVALUES_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTES_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTEVALUES_PATTERN_KEY);
             }
         }
         

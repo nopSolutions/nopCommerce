@@ -11,6 +11,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Payment;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Caching;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
 {
@@ -22,9 +23,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
         #region Fields
 
         /// <summary>
-        /// object context
+        /// Object context
         /// </summary>
         protected NopObjectContext _context;
+
+        /// <summary>
+        /// Cache manager
+        /// </summary>
+        protected ICacheManager _cacheManager;
 
         #endregion
 
@@ -37,6 +43,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
         public QBManager(NopObjectContext context)
         {
             _context = context;
+            _cacheManager = new NopRequestCache();
         }
 
         #endregion

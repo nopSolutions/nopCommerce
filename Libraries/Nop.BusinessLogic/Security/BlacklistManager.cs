@@ -42,9 +42,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
         #region Fields
 
         /// <summary>
-        /// object context
+        /// Object context
         /// </summary>
         protected NopObjectContext _context;
+
+        /// <summary>
+        /// Cache manager
+        /// </summary>
+        protected ICacheManager _cacheManager;
 
         #endregion
 
@@ -57,6 +62,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
         public BlacklistManager(NopObjectContext context)
         {
             _context = context;
+            _cacheManager = new NopRequestCache();
         }
 
         #endregion
@@ -229,7 +235,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
         public List<BannedIpAddress> GetBannedIpAddressAll()
         {
             string key = BLACKLIST_ALLIP_KEY;
-            object obj2 = NopRequestCache.Get(key);
+            object obj2 = _cacheManager.Get(key);
             if (CacheEnabled && (obj2 != null))
             {
                 return (List<BannedIpAddress>)obj2;
@@ -243,7 +249,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.Add(key, collection);
+                _cacheManager.Add(key, collection);
             }
             return collection;
         }
@@ -271,7 +277,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(BLACKLIST_IP_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(BLACKLIST_IP_PATTERN_KEY);
             }
         }
 
@@ -299,7 +305,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(BLACKLIST_IP_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(BLACKLIST_IP_PATTERN_KEY);
             }
         }
 
@@ -321,7 +327,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(BLACKLIST_IP_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(BLACKLIST_IP_PATTERN_KEY);
             }
         }
 
@@ -351,7 +357,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
         public List<BannedIpNetwork> GetBannedIpNetworkAll()
         {
             string key = BLACKLIST_ALLNETWORK_KEY;
-            object obj2 = NopRequestCache.Get(key);
+            object obj2 = _cacheManager.Get(key);
             if (this.CacheEnabled && (obj2 != null))
             {
                 return (List<BannedIpNetwork>)obj2;
@@ -365,7 +371,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
             
             if (this.CacheEnabled)
             {
-                NopRequestCache.Add(key, collection);
+                _cacheManager.Add(key, collection);
             }
             return collection;
         }
@@ -396,7 +402,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(BLACKLIST_NETWORK_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(BLACKLIST_NETWORK_PATTERN_KEY);
             }
         }
 
@@ -427,7 +433,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(BLACKLIST_NETWORK_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(BLACKLIST_NETWORK_PATTERN_KEY);
             }
         }
 
@@ -449,7 +455,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(BLACKLIST_NETWORK_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(BLACKLIST_NETWORK_PATTERN_KEY);
             }
         }
 

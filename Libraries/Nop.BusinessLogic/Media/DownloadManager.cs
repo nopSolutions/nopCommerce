@@ -21,6 +21,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Payment;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.BusinessLogic.Utils;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.Caching;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Media
 {
@@ -32,9 +33,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
         #region Fields
 
         /// <summary>
-        /// object context
+        /// Object context
         /// </summary>
         protected NopObjectContext _context;
+
+        /// <summary>
+        /// Cache manager
+        /// </summary>
+        protected ICacheManager _cacheManager;
 
         #endregion
 
@@ -47,6 +53,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
         public DownloadManager(NopObjectContext context)
         {
             _context = context;
+            _cacheManager = new NopRequestCache();
         }
 
         #endregion

@@ -44,9 +44,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
         #region Fields
 
         /// <summary>
-        /// object context
+        /// Object context
         /// </summary>
         protected NopObjectContext _context;
+
+        /// <summary>
+        /// Cache manager
+        /// </summary>
+        protected ICacheManager _cacheManager;
 
         #endregion
 
@@ -59,6 +64,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
         public TemplateManager(NopObjectContext context)
         {
             _context = context;
+            _cacheManager = new NopRequestCache();
         }
 
         #endregion
@@ -82,7 +88,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
             
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(CATEGORYTEMPLATES_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(CATEGORYTEMPLATES_PATTERN_KEY);
             }
         }
 
@@ -93,7 +99,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
         public List<CategoryTemplate> GetAllCategoryTemplates()
         {
             string key = string.Format(CATEGORYTEMPLATES_ALL_KEY);
-            object obj2 = NopRequestCache.Get(key);
+            object obj2 = _cacheManager.Get(key);
             if (this.CacheEnabled && (obj2 != null))
             {
                 return (List<CategoryTemplate>)obj2;
@@ -107,7 +113,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.Add(key, categoryTemplates);
+                _cacheManager.Add(key, categoryTemplates);
             }
             return categoryTemplates;
         }
@@ -123,7 +129,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
                 return null;
 
             string key = string.Format(CATEGORYTEMPLATES_BY_ID_KEY, categoryTemplateId);
-            object obj2 = NopRequestCache.Get(key);
+            object obj2 = _cacheManager.Get(key);
             if (this.CacheEnabled && (obj2 != null))
             {
                 return (CategoryTemplate)obj2;
@@ -137,7 +143,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.Add(key, categoryTemplate);
+                _cacheManager.Add(key, categoryTemplate);
             }
             return categoryTemplate;
         }
@@ -163,7 +169,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(CATEGORYTEMPLATES_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(CATEGORYTEMPLATES_PATTERN_KEY);
             }
         }
 
@@ -189,7 +195,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(CATEGORYTEMPLATES_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(CATEGORYTEMPLATES_PATTERN_KEY);
             }
         }
         
@@ -211,7 +217,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(MANUFACTURERTEMPLATES_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(MANUFACTURERTEMPLATES_PATTERN_KEY);
             }
         }
 
@@ -222,7 +228,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
         public List<ManufacturerTemplate> GetAllManufacturerTemplates()
         {
             string key = string.Format(MANUFACTURERTEMPLATES_ALL_KEY);
-            object obj2 = NopRequestCache.Get(key);
+            object obj2 = _cacheManager.Get(key);
             if (this.CacheEnabled && (obj2 != null))
             {
                 return (List<ManufacturerTemplate>)obj2;
@@ -236,7 +242,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.Add(key, manufacturerTemplates);
+                _cacheManager.Add(key, manufacturerTemplates);
             }
             return manufacturerTemplates;
         }
@@ -252,7 +258,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
                 return null;
 
             string key = string.Format(MANUFACTURERTEMPLATES_BY_ID_KEY, manufacturerTemplateId);
-            object obj2 = NopRequestCache.Get(key);
+            object obj2 = _cacheManager.Get(key);
             if (this.CacheEnabled && (obj2 != null))
             {
                 return (ManufacturerTemplate)obj2;
@@ -266,7 +272,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.Add(key, manufacturerTemplate);
+                _cacheManager.Add(key, manufacturerTemplate);
             }
             return manufacturerTemplate;
         }
@@ -292,7 +298,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(MANUFACTURERTEMPLATES_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(MANUFACTURERTEMPLATES_PATTERN_KEY);
             }
         }
 
@@ -318,7 +324,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
             
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(MANUFACTURERTEMPLATES_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(MANUFACTURERTEMPLATES_PATTERN_KEY);
             }
         }
         
@@ -340,7 +346,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(PRODUCTTEMPLATES_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(PRODUCTTEMPLATES_PATTERN_KEY);
             }
         }
 
@@ -351,7 +357,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
         public List<ProductTemplate> GetAllProductTemplates()
         {
             string key = string.Format(PRODUCTTEMPLATES_ALL_KEY);
-            object obj2 = NopRequestCache.Get(key);
+            object obj2 = _cacheManager.Get(key);
             if (this.CacheEnabled && (obj2 != null))
             {
                 return (List<ProductTemplate>)obj2;
@@ -365,7 +371,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.Add(key, productTemplates);
+                _cacheManager.Add(key, productTemplates);
             }
             return productTemplates;
         }
@@ -381,7 +387,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
                 return null;
 
             string key = string.Format(PRODUCTTEMPLATES_BY_ID_KEY, productTemplateId);
-            object obj2 = NopRequestCache.Get(key);
+            object obj2 = _cacheManager.Get(key);
             if (this.CacheEnabled && (obj2 != null))
             {
                 return (ProductTemplate)obj2;
@@ -395,7 +401,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.Add(key, productTemplate);
+                _cacheManager.Add(key, productTemplate);
             }
             return productTemplate;
         }
@@ -421,7 +427,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(PRODUCTTEMPLATES_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(PRODUCTTEMPLATES_PATTERN_KEY);
             }
         }
 
@@ -448,7 +454,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(PRODUCTTEMPLATES_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(PRODUCTTEMPLATES_PATTERN_KEY);
             }
         }
 

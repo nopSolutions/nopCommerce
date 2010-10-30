@@ -43,9 +43,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Localization
         #region Fields
 
         /// <summary>
-        /// object context
+        /// Object context
         /// </summary>
         protected NopObjectContext _context;
+
+        /// <summary>
+        /// Cache manager
+        /// </summary>
+        protected ICacheManager _cacheManager;
 
         #endregion
 
@@ -58,6 +63,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Localization
         public LocaleStringResourceManager(NopObjectContext context)
         {
             _context = context;
+            _cacheManager = new NopStaticCache();
         }
 
         #endregion
@@ -82,7 +88,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Localization
             
             if (this.CacheEnabled)
             {
-                NopStaticCache.RemoveByPattern(LOCALSTRINGRESOURCES_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(LOCALSTRINGRESOURCES_PATTERN_KEY);
             }
         }
 
@@ -113,7 +119,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Localization
         public Dictionary<string, LocaleStringResource> GetAllResourcesByLanguageId(int languageId)
         {
             string key = string.Format(LOCALSTRINGRESOURCES_ALL_KEY, languageId);
-            object obj2 = NopStaticCache.Get(key);
+            object obj2 = _cacheManager.Get(key);
             if (this.CacheEnabled && (obj2 != null))
             {
                 return (Dictionary<string, LocaleStringResource>)obj2;
@@ -128,7 +134,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Localization
 
             if (this.CacheEnabled)
             {
-                NopStaticCache.Add(key, localeStringResourceDictionary);
+                _cacheManager.Add(key, localeStringResourceDictionary);
             }
             return localeStringResourceDictionary;
         }
@@ -153,7 +159,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Localization
 
             if (this.CacheEnabled)
             {
-                NopStaticCache.RemoveByPattern(LOCALSTRINGRESOURCES_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(LOCALSTRINGRESOURCES_PATTERN_KEY);
             }
         }
 
@@ -178,7 +184,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Localization
             
             if (this.CacheEnabled)
             {
-                NopStaticCache.RemoveByPattern(LOCALSTRINGRESOURCES_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(LOCALSTRINGRESOURCES_PATTERN_KEY);
             }
         }
 
@@ -225,7 +231,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Localization
 
             if (this.CacheEnabled)
             {
-                NopStaticCache.RemoveByPattern(LOCALSTRINGRESOURCES_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(LOCALSTRINGRESOURCES_PATTERN_KEY);
             }
         }
 

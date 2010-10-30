@@ -149,6 +149,7 @@
     <Compile Include="Audit\UsersOnline\PurgeOnlineUsersTask.cs" />
     <Compile Include="Audit\UsersOnline\OnlineUserManager.cs" />
     <Compile Include="Audit\UsersOnline\OnlineUserInfo.cs" />
+    <Compile Include="Caching\ICacheManager.cs" />
     <Compile Include="Caching\NopRequestCache.cs" />
     <Compile Include="Caching\NopStaticCache.cs" />
     <Compile Include="Categories\CategoryLocalized.cs" />

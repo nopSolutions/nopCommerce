@@ -22,6 +22,8 @@ using NopSolutions.NopCommerce.BusinessLogic.Data;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Audit
 {
@@ -39,9 +41,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
         #region Fields
 
         /// <summary>
-        /// object context
+        /// Object context
         /// </summary>
         protected NopObjectContext _context;
+
+        /// <summary>
+        /// Cache manager
+        /// </summary>
+        protected ICacheManager _cacheManager;
 
         #endregion
         
@@ -54,6 +61,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
         public CustomerActivityManager(NopObjectContext context)
         {
             _context = context;
+            _cacheManager = new NopRequestCache();
         }
 
         #endregion
@@ -79,8 +87,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
             _context.ActivityLogTypes.AddObject(activityLogType);
             _context.SaveChanges();
 
-            if (NopRequestCache.IsEnabled)
-                NopRequestCache.RemoveByPattern(ACTIVITYTYPE_PATTERN_KEY);
+            if (this.CacheEnabled)
+                _cacheManager.RemoveByPattern(ACTIVITYTYPE_PATTERN_KEY);
         }
 
         /// <summary>
@@ -103,8 +111,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
 
             _context.SaveChanges();
 
-            if (NopRequestCache.IsEnabled)
-                NopRequestCache.RemoveByPattern(ACTIVITYTYPE_PATTERN_KEY);
+            if (this.CacheEnabled)
+                _cacheManager.RemoveByPattern(ACTIVITYTYPE_PATTERN_KEY);
         }
                 
         /// <summary>
@@ -123,8 +131,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
             _context.DeleteObject(activityLogType);
             _context.SaveChanges();
 
-            if (NopRequestCache.IsEnabled)
-                NopRequestCache.RemoveByPattern(ACTIVITYTYPE_PATTERN_KEY);
+            if (this.CacheEnabled)
+                _cacheManager.RemoveByPattern(ACTIVITYTYPE_PATTERN_KEY);
         }
         
         /// <summary>
@@ -133,9 +141,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
         /// <returns>Activity log type collection</returns>
         public List<ActivityLogType> GetAllActivityTypes()
         {
-            if (NopRequestCache.IsEnabled)
+            if (this.CacheEnabled)
             {
-                object cache = NopRequestCache.Get(ACTIVITYTYPE_ALL_KEY);
+                object cache = _cacheManager.Get(ACTIVITYTYPE_ALL_KEY);
                 if (cache != null)
                     return (List<ActivityLogType>)cache;
             }
@@ -146,8 +154,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
                         select at;
             var collection = query.ToList();
 
-            if (NopRequestCache.IsEnabled)
-                NopRequestCache.Add(ACTIVITYTYPE_ALL_KEY, collection);
+            if (this.CacheEnabled)
+                _cacheManager.Add(ACTIVITYTYPE_ALL_KEY, collection);
             
             return collection;
         }
@@ -163,9 +171,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
                 return null;
 
             string key = string.Format(ACTIVITYTYPE_BY_ID_KEY, activityLogTypeId);
-            if (NopRequestCache.IsEnabled)
+            if (this.CacheEnabled)
             {
-                object cache = NopRequestCache.Get(key);
+                object cache = _cacheManager.Get(key);
                 if (cache != null)
                     return (ActivityLogType)cache;
             }
@@ -176,8 +184,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
                         select at;
             var activityLogType = query.SingleOrDefault();
 
-            if (NopRequestCache.IsEnabled)
-                NopRequestCache.Add(key, activityLogType);
+            if (this.CacheEnabled)
+                _cacheManager.Add(key, activityLogType);
             
             return activityLogType;
         }
@@ -317,6 +325,19 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
             foreach (var activityLogItem in activityLog)
                 _context.DeleteObject(activityLogItem);
             _context.SaveChanges();
+        }
+        #endregion
+
+        #region Properties
+        /// <summary>
+        /// Gets a value indicating whether cache is enabled
+        /// </summary>
+        public bool CacheEnabled
+        {
+            get
+            {
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.CustomerActivityManager.CacheEnabled");
+            }
         }
         #endregion
     }

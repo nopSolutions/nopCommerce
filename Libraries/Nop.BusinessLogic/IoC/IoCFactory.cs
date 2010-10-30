@@ -26,6 +26,7 @@ using System.Xml;
 using Microsoft.Practices.Unity;
 using NopSolutions.NopCommerce.BusinessLogic.Audit;
 using NopSolutions.NopCommerce.BusinessLogic.Audit.UsersOnline;
+using NopSolutions.NopCommerce.BusinessLogic.Caching;
 using NopSolutions.NopCommerce.BusinessLogic.Categories;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
@@ -123,14 +124,17 @@ namespace NopSolutions.NopCommerce.BusinessLogic.IoC
         /// <param name="container">Container to configure</param>
         static void ConfigureRootContainer(IUnityContainer container)
         {
-            // Take into account that Types and Mappings registration could be also done using the UNITY XML configuration
+            //Take into account that Types and Mappings registration could be also done using the UNITY XML configuration
             //But we prefer doing it here (C# code) because we'll catch errors at compiling time instead execution time, if any type has been written wrong.
 
-            //Register Repositories mappings
+            //Register repositories mappings
             //to be done
 
-            //Register Managers(Services) mappings
-            container.RegisterType<IOnlineUserManager, OnlineUserManager>(new TransientLifetimeManager());
+            //Register default cache manager            
+            //container.RegisterType<ICacheManager, NopRequestCache>(new PerExecutionContextLifetimeManager());
+            
+            //Register managers(services) mappings
+            container.RegisterType<IOnlineUserManager, OnlineUserManager>(new TransientLifetimeManager());            
             container.RegisterType<ISearchLogManager, SearchLogManager>(new TransientLifetimeManager());
             container.RegisterType<ICustomerActivityManager, CustomerActivityManager>(new TransientLifetimeManager());
             container.RegisterType<ILogManager, LogManager>(new TransientLifetimeManager());
@@ -186,6 +190,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.IoC
         static void ConfigureRealContainer(IUnityContainer container)
         {
             //Object context
+
             //Connection string
             var ecsbuilder = new EntityConnectionStringBuilder();
             ecsbuilder.Provider = "System.Data.SqlClient";

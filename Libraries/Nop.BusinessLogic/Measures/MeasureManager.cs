@@ -45,9 +45,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Measures
         #region Fields
 
         /// <summary>
-        /// object context
+        /// Object context
         /// </summary>
         protected NopObjectContext _context;
+
+        /// <summary>
+        /// Cache manager
+        /// </summary>
+        protected ICacheManager _cacheManager;
 
         #endregion
 
@@ -60,6 +65,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Measures
         public MeasureManager(NopObjectContext context)
         {
             _context = context;
+            _cacheManager = new NopRequestCache();
         }
 
         #endregion
@@ -84,7 +90,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Measures
             _context.SaveChanges();
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(MEASUREDIMENSIONS_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(MEASUREDIMENSIONS_PATTERN_KEY);
             }
         }
 
@@ -99,7 +105,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Measures
                 return null;
 
             string key = string.Format(MEASUREDIMENSIONS_BY_ID_KEY, measureDimensionId);
-            object obj2 = NopRequestCache.Get(key);
+            object obj2 = _cacheManager.Get(key);
             if (this.CacheEnabled && (obj2 != null))
             {
                 return (MeasureDimension)obj2;
@@ -113,7 +119,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Measures
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.Add(key, measureDimension);
+                _cacheManager.Add(key, measureDimension);
             }
             return measureDimension;
         }
@@ -142,7 +148,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Measures
         public List<MeasureDimension> GetAllMeasureDimensions()
         {
             string key = MEASUREDIMENSIONS_ALL_KEY;
-            object obj2 = NopRequestCache.Get(key);
+            object obj2 = _cacheManager.Get(key);
             if (this.CacheEnabled && (obj2 != null))
             {
                 return (List<MeasureDimension>)obj2;
@@ -156,7 +162,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Measures
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.Add(key, measureDimensionCollection);
+                _cacheManager.Add(key, measureDimensionCollection);
             }
             return measureDimensionCollection;
         }
@@ -182,7 +188,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Measures
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(MEASUREDIMENSIONS_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(MEASUREDIMENSIONS_PATTERN_KEY);
             }
         }
 
@@ -208,7 +214,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Measures
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(MEASUREDIMENSIONS_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(MEASUREDIMENSIONS_PATTERN_KEY);
             }
         }
 
@@ -295,7 +301,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Measures
             _context.SaveChanges();
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(MEASUREWEIGHTS_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(MEASUREWEIGHTS_PATTERN_KEY);
             }
         }
 
@@ -310,7 +316,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Measures
                 return null;
 
             string key = string.Format(MEASUREWEIGHTS_BY_ID_KEY, measureWeightId);
-            object obj2 = NopRequestCache.Get(key);
+            object obj2 = _cacheManager.Get(key);
             if (this.CacheEnabled && (obj2 != null))
             {
                 return (MeasureWeight)obj2;
@@ -324,7 +330,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Measures
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.Add(key, measureWeight);
+                _cacheManager.Add(key, measureWeight);
             }
             return measureWeight;
         }
@@ -353,7 +359,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Measures
         public List<MeasureWeight> GetAllMeasureWeights()
         {
             string key = MEASUREWEIGHTS_ALL_KEY;
-            object obj2 = NopRequestCache.Get(key);
+            object obj2 = _cacheManager.Get(key);
             if (this.CacheEnabled && (obj2 != null))
             {
                 return (List<MeasureWeight>)obj2;
@@ -367,7 +373,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Measures
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.Add(key, measureWeightCollection);
+                _cacheManager.Add(key, measureWeightCollection);
             }
             return measureWeightCollection;
         }
@@ -393,7 +399,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Measures
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(MEASUREWEIGHTS_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(MEASUREWEIGHTS_PATTERN_KEY);
             }
         }
 
@@ -419,7 +425,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Measures
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(MEASUREWEIGHTS_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(MEASUREWEIGHTS_PATTERN_KEY);
             }
         }
 

@@ -42,9 +42,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Maintenance
         #region Fields
 
         /// <summary>
-        /// object context
+        /// Object context
         /// </summary>
         protected NopObjectContext _context;
+
+        /// <summary>
+        /// Cache manager
+        /// </summary>
+        protected ICacheManager _cacheManager;
 
         #endregion
 
@@ -57,6 +62,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Maintenance
         public MaintenanceManager(NopObjectContext context)
         {
             _context = context;
+            _cacheManager = new NopRequestCache();
         }
 
         #endregion

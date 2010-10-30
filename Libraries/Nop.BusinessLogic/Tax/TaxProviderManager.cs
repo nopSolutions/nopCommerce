@@ -41,9 +41,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         #region Fields
 
         /// <summary>
-        /// object context
+        /// Object context
         /// </summary>
         protected NopObjectContext _context;
+
+        /// <summary>
+        /// Cache manager
+        /// </summary>
+        protected ICacheManager _cacheManager;
 
         #endregion
 
@@ -56,6 +61,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         public TaxProviderManager(NopObjectContext context)
         {
             _context = context;
+            _cacheManager = new NopRequestCache();
         }
 
         #endregion
@@ -78,7 +84,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
             _context.SaveChanges();
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(TAXPROVIDERS_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(TAXPROVIDERS_PATTERN_KEY);
             }
         }
 
@@ -93,7 +99,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
                 return null;
 
             string key = string.Format(TAXPROVIDERS_BY_ID_KEY, taxProviderId);
-            object obj2 = NopRequestCache.Get(key);
+            object obj2 = _cacheManager.Get(key);
             if (this.CacheEnabled && (obj2 != null))
             {
                 return (TaxProvider)obj2;
@@ -107,7 +113,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.Add(key, taxProvider);
+                _cacheManager.Add(key, taxProvider);
             }
             return taxProvider;
         }
@@ -119,7 +125,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         public List<TaxProvider> GetAllTaxProviders()
         {
             string key = string.Format(TAXPROVIDERS_ALL_KEY);
-            object obj2 = NopRequestCache.Get(key);
+            object obj2 = _cacheManager.Get(key);
             if (this.CacheEnabled && (obj2 != null))
             {
                 return (List<TaxProvider>)obj2;
@@ -133,7 +139,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.Add(key, taxProviders);
+                _cacheManager.Add(key, taxProviders);
             }
             return taxProviders;
         }
@@ -163,7 +169,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(TAXPROVIDERS_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(TAXPROVIDERS_PATTERN_KEY);
             }
         }
 
@@ -193,7 +199,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
             
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(TAXPROVIDERS_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(TAXPROVIDERS_PATTERN_KEY);
             }
         }
         #endregion

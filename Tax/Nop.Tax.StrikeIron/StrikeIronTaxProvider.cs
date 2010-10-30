@@ -23,6 +23,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.Tax;
 using NopSolutions.NopCommerce.Tax.TaxDataBasic;
 using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using Microsoft.Practices.Unity;
 
 namespace NopSolutions.NopCommerce.Tax
 {
@@ -116,7 +117,7 @@ namespace NopSolutions.NopCommerce.Tax
         {
             decimal result = decimal.Zero;
             string key = string.Format(TAXRATEUSA_KEY, zipCode);
-            object obj2 = NopStaticCache.Get(key);
+            object obj2 = CacheManager.Get(key);
             if (StrikeIronTaxProvider.CacheEnabled && (obj2 != null))
             {
                 return (decimal)obj2;
@@ -180,7 +181,7 @@ namespace NopSolutions.NopCommerce.Tax
 
             if (StrikeIronTaxProvider.CacheEnabled)
             {
-                NopStaticCache.Add(key, result);
+                CacheManager.Add(key, result);
             }
 
             return result;
@@ -199,7 +200,7 @@ namespace NopSolutions.NopCommerce.Tax
         {
             decimal result = decimal.Zero;
             string key = string.Format(TAXRATECANADA_KEY, province);
-            object obj2 = NopStaticCache.Get(key);
+            object obj2 = CacheManager.Get(key);
             if (StrikeIronTaxProvider.CacheEnabled && (obj2 != null))
             {
                 return (decimal)obj2;
@@ -257,7 +258,7 @@ namespace NopSolutions.NopCommerce.Tax
 
             if (StrikeIronTaxProvider.CacheEnabled)
             {
-                NopStaticCache.Add(key, result);
+                CacheManager.Add(key, result);
             }
 
             return result;
@@ -265,6 +266,20 @@ namespace NopSolutions.NopCommerce.Tax
         #endregion
 
         #region Properties
+        
+        #region Utilities
+
+        public ICacheManager CacheManager 
+        {
+            get
+            {
+                return new NopStaticCache();
+            }
+        }
+
+        #endregion
+
+
         /// <summary>
         /// Gets a value indicating whether cache is enabled
         /// </summary>

@@ -41,9 +41,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         #region Fields
 
         /// <summary>
-        /// object context
+        /// Object context
         /// </summary>
         protected NopObjectContext _context;
+
+        /// <summary>
+        /// Cache manager
+        /// </summary>
+        protected ICacheManager _cacheManager;
 
         #endregion
 
@@ -56,6 +61,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         public TaxRateManager(NopObjectContext context)
         {
             _context = context;
+            _cacheManager = new NopRequestCache();
         }
 
         #endregion
@@ -79,7 +85,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
             
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(TAXRATE_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(TAXRATE_PATTERN_KEY);
             }
         }
 
@@ -94,7 +100,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
                 return null;
 
             string key = string.Format(TAXRATE_BY_ID_KEY, taxRateId);
-            object obj2 = NopRequestCache.Get(key);
+            object obj2 = _cacheManager.Get(key);
             if (this.CacheEnabled && (obj2 != null))
             {
                 return (TaxRate)obj2;
@@ -108,7 +114,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.Add(key, taxRate);
+                _cacheManager.Add(key, taxRate);
             }
             return taxRate;
         }
@@ -120,7 +126,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         public List<TaxRate> GetAllTaxRates()
         {
             string key = TAXRATE_ALL_KEY;
-            object obj2 = NopRequestCache.Get(key);
+            object obj2 = _cacheManager.Get(key);
             if (this.CacheEnabled && (obj2 != null))
             {
                 return (List<TaxRate>)obj2;
@@ -131,7 +137,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.Add(key, collection);
+                _cacheManager.Add(key, collection);
             } 
             
             return collection;
@@ -210,7 +216,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
             
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(TAXRATE_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(TAXRATE_PATTERN_KEY);
             }
         }
 
@@ -235,7 +241,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
             
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(TAXRATE_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(TAXRATE_PATTERN_KEY);
             }
         }
         #endregion

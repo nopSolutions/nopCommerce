@@ -49,9 +49,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
         #region Fields
 
         /// <summary>
-        /// object context
+        /// Object context
         /// </summary>
         protected NopObjectContext _context;
+
+        /// <summary>
+        /// Cache manager
+        /// </summary>
+        protected ICacheManager _cacheManager;
 
         #endregion
 
@@ -64,6 +69,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
         public NewsManager(NopObjectContext context)
         {
             _context = context;
+            _cacheManager = new NopRequestCache();
         }
 
         #endregion
@@ -81,7 +87,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
                 return null;
 
             string key = string.Format(NEWS_BY_ID_KEY, newsId);
-            object obj2 = NopRequestCache.Get(key);
+            object obj2 = _cacheManager.Get(key);
             if (this.CacheEnabled && (obj2 != null))
             {
                 return (News)obj2;
@@ -95,7 +101,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.Add(key, news);
+                _cacheManager.Add(key, news);
             }
             return news;
         }
@@ -118,7 +124,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(NEWS_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(NEWS_PATTERN_KEY);
             }
         }
 
@@ -241,7 +247,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(NEWS_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(NEWS_PATTERN_KEY);
             }
         }
 
@@ -268,7 +274,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(NEWS_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(NEWS_PATTERN_KEY);
             }
         }
 

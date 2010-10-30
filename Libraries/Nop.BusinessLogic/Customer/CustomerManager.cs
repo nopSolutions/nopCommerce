@@ -59,9 +59,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         #region Fields
 
         /// <summary>
-        /// object context
+        /// Object context
         /// </summary>
         protected NopObjectContext _context;
+
+        /// <summary>
+        /// Cache manager
+        /// </summary>
+        protected ICacheManager _cacheManager;
 
         #endregion
 
@@ -74,6 +79,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         public CustomerManager(NopObjectContext context)
         {
             _context = context;
+            _cacheManager = new NopRequestCache();
         }
 
         #endregion
@@ -1726,7 +1732,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(CUSTOMERROLES_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(CUSTOMERROLES_PATTERN_KEY);
             }
         }
 
@@ -1741,7 +1747,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                 return null;
 
             string key = string.Format(CUSTOMERROLES_BY_ID_KEY, customerRoleId);
-            object obj2 = NopRequestCache.Get(key);
+            object obj2 = _cacheManager.Get(key);
             if (this.CacheEnabled && (obj2 != null))
             {
                 return (CustomerRole)obj2;
@@ -1755,7 +1761,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.Add(key, customerRole);
+                _cacheManager.Add(key, customerRole);
             }
             return customerRole;
         }
@@ -1768,7 +1774,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         {
             bool showHidden = NopContext.Current.IsAdmin;
             string key = string.Format(CUSTOMERROLES_ALL_KEY, showHidden);
-            object obj2 = NopRequestCache.Get(key);
+            object obj2 = _cacheManager.Get(key);
             if (this.CacheEnabled && (obj2 != null))
             {
                 return (List<CustomerRole>)obj2;
@@ -1783,7 +1789,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.Add(key, customerRoles);
+                _cacheManager.Add(key, customerRoles);
             }
             return customerRoles;
         }
@@ -1843,7 +1849,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(CUSTOMERROLES_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(CUSTOMERROLES_PATTERN_KEY);
             }
         }
 
@@ -1867,7 +1873,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(CUSTOMERROLES_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(CUSTOMERROLES_PATTERN_KEY);
             }
         }
 
@@ -1997,7 +2003,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         {
             bool showHidden = NopContext.Current.IsAdmin;
             string key = string.Format(CUSTOMERROLES_BY_DISCOUNTID_KEY, discountId, showHidden);
-            object obj2 = NopRequestCache.Get(key);
+            object obj2 = _cacheManager.Get(key);
             if (this.CacheEnabled && (obj2 != null))
             {
                 return (List<CustomerRole>)obj2;
@@ -2015,7 +2021,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.Add(key, customerRoles);
+                _cacheManager.Add(key, customerRoles);
             }
             return customerRoles;
         }

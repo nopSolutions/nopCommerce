@@ -49,9 +49,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
         #region Fields
 
         /// <summary>
-        /// object context
+        /// Object context
         /// </summary>
         protected NopObjectContext _context;
+
+        /// <summary>
+        /// Cache manager
+        /// </summary>
+        protected ICacheManager _cacheManager;
 
         #endregion
 
@@ -64,6 +69,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
         public BlogManager(NopObjectContext context)
         {
             _context = context;
+            _cacheManager = new NopRequestCache();
         }
 
         #endregion
@@ -87,7 +93,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
             
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(BLOGPOST_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(BLOGPOST_PATTERN_KEY);
             }
         }
 
@@ -102,7 +108,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
                 return null;
 
             string key = string.Format(BLOGPOST_BY_ID_KEY, blogPostId);
-            object obj2 = NopRequestCache.Get(key);
+            object obj2 = _cacheManager.Get(key);
             if (this.CacheEnabled && (obj2 != null))
             {
                 return (BlogPost)obj2;
@@ -116,7 +122,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.Add(key, blogPost);
+                _cacheManager.Add(key, blogPost);
             }
             return blogPost;
         }
@@ -257,7 +263,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(BLOGPOST_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(BLOGPOST_PATTERN_KEY);
             }
         }
 
@@ -284,7 +290,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(BLOGPOST_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(BLOGPOST_PATTERN_KEY);
             }
         }
 

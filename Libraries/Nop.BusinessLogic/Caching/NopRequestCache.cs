@@ -26,14 +26,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Caching
     /// <summary>
     /// Represents a NopRequestCache
     /// </summary>
-    public partial class NopRequestCache
+    public partial class NopRequestCache : ICacheManager
     {
         #region Ctor
-        
+
         /// <summary>
         /// Creates a new instance of the NopRequestCache class
         /// </summary>
-        private NopRequestCache()
+        public NopRequestCache()
         {
         }
 
@@ -44,7 +44,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Caching
         /// <summary>
         /// Creates a new instance of the NopRequestCache class
         /// </summary>
-        protected static IDictionary GetItems()
+        protected IDictionary GetItems()
         {
             HttpContext current = HttpContext.Current;
             if (current != null)
@@ -54,13 +54,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Caching
 
             return null;
         }
-        
+
         /// <summary>
         /// Gets or sets the value associated with the specified key.
         /// </summary>
         /// <param name="key">The key of the value to get.</param>
         /// <returns>The value associated with the specified key.</returns>
-        public static object Get(string key)
+        public object Get(string key)
         {
             var _items = GetItems();
             if (_items == null)
@@ -74,7 +74,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Caching
         /// </summary>
         /// <param name="key">key</param>
         /// <param name="obj">object</param>
-        public static void Add(string key, object obj)
+        public void Add(string key, object obj)
         {
             var _items = GetItems();
             if (_items == null)
@@ -90,7 +90,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Caching
         /// Removes the value with the specified key from the cache
         /// </summary>
         /// <param name="key"></param>
-        public static void Remove(string key)
+        public void Remove(string key)
         {
             var _items = GetItems();
             if (_items == null)
@@ -103,7 +103,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Caching
         /// Removes items by pattern
         /// </summary>
         /// <param name="pattern">pattern</param>
-        public static void RemoveByPattern(string pattern)
+        public void RemoveByPattern(string pattern)
         {
             var _items = GetItems();
             if (_items == null)
@@ -133,7 +133,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Caching
         /// <summary>
         /// Gets or sets a value indicating whether the cache is enabled
         /// </summary>
-        public static bool IsEnabled
+        public bool IsEnabled
         {
             get
             {

@@ -45,14 +45,39 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit.UsersOnline
 
         private static object s_lock = new object();
 
+        /// <summary>
+        /// Object context
+        /// </summary>
+        protected NopObjectContext _context;
+
+        /// <summary>
+        /// Cache manager
+        /// </summary>
+        protected ICacheManager _cacheManager;
+
         #endregion
         
+        #region Ctor
+
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="context">Object context</param>
+        public OnlineUserManager(NopObjectContext context)
+        {
+            _context = context;
+            _cacheManager = new NopStaticCache();
+        }
+
+        #endregion
+
+
         #region Utilities
 
         private Dictionary<Guid, OnlineUserInfo> GetAnonymousUserList()
         {
             string key = "Nop.OnlineUserList.Anonymous";
-            Dictionary<Guid, OnlineUserInfo> obj2 = NopStaticCache.Get(key) as Dictionary<Guid, OnlineUserInfo>;
+            Dictionary<Guid, OnlineUserInfo> obj2 = _cacheManager.Get(key) as Dictionary<Guid, OnlineUserInfo>;
             if (obj2 != null)
             {
                 return obj2;
@@ -60,7 +85,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit.UsersOnline
             else
             {
                 obj2 = new Dictionary<Guid, OnlineUserInfo>();
-                NopStaticCache.Add(key, obj2);
+                _cacheManager.Add(key, obj2);
             }
 
             return obj2;
@@ -69,7 +94,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit.UsersOnline
         private Dictionary<Guid, OnlineUserInfo> GetRegisteredUserList()
         {
             string key = "Nop.OnlineUserList.Registered";
-            Dictionary<Guid, OnlineUserInfo> obj2 = NopStaticCache.Get(key) as Dictionary<Guid, OnlineUserInfo>;
+            Dictionary<Guid, OnlineUserInfo> obj2 = _cacheManager.Get(key) as Dictionary<Guid, OnlineUserInfo>;
             if (obj2 != null)
             {
                 return obj2;
@@ -77,7 +102,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit.UsersOnline
             else
             {
                 obj2 = new Dictionary<Guid, OnlineUserInfo>();
-                NopStaticCache.Add(key, obj2);
+                _cacheManager.Add(key, obj2);
             }
 
             return obj2;
@@ -325,11 +350,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit.UsersOnline
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("this.Enabled", false);
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("OnlineUserManager.Enabled", false);
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("this.Enabled", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("OnlineUserManager.Enabled", value.ToString());
             }
         }
         
@@ -340,11 +365,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit.UsersOnline
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("this.MaximumOnlineCustomers", 0);
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("OnlineUserManager.MaximumOnlineCustomers", 0);
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("this.MaximumOnlineCustomers", value.ToString());
+                IoCFactory.Resolve<ISettingManager>().SetParam("OnlineUserManager.MaximumOnlineCustomers", value.ToString());
             }
         }
         #endregion

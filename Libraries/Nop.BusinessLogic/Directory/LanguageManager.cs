@@ -43,9 +43,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
         #region Fields
 
         /// <summary>
-        /// object context
+        /// Object context
         /// </summary>
         protected NopObjectContext _context;
+
+        /// <summary>
+        /// Cache manager
+        /// </summary>
+        protected ICacheManager _cacheManager;
 
         #endregion
 
@@ -58,6 +63,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
         public LanguageManager(NopObjectContext context)
         {
             _context = context;
+            _cacheManager = new NopRequestCache();
         }
 
         #endregion
@@ -82,7 +88,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(LANGUAGES_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(LANGUAGES_PATTERN_KEY);
             }
         }
 
@@ -104,7 +110,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
         public List<Language> GetAllLanguages(bool showHidden)
         {
             string key = string.Format(LANGUAGES_ALL_KEY, showHidden);
-            object obj2 = NopRequestCache.Get(key);
+            object obj2 = _cacheManager.Get(key);
             if (this.CacheEnabled && (obj2 != null))
             {
                 return (List<Language>)obj2;
@@ -119,7 +125,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.Add(key, languages);
+                _cacheManager.Add(key, languages);
             }
             return languages;
         }
@@ -135,7 +141,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
                 return null;
 
             string key = string.Format(LANGUAGES_BY_ID_KEY, languageId);
-            object obj2 = NopRequestCache.Get(key);
+            object obj2 = _cacheManager.Get(key);
             if (this.CacheEnabled && (obj2 != null))
             {
                 return (Language)obj2;
@@ -149,7 +155,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.Add(key, language);
+                _cacheManager.Add(key, language);
             }
             return language;
         }
@@ -177,7 +183,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(LANGUAGES_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(LANGUAGES_PATTERN_KEY);
             }
         }
 
@@ -205,7 +211,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(LANGUAGES_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(LANGUAGES_PATTERN_KEY);
             }
         }
 

@@ -47,9 +47,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
         #region Fields
 
         /// <summary>
-        /// object context
+        /// Object context
         /// </summary>
         protected NopObjectContext _context;
+
+        /// <summary>
+        /// Cache manager
+        /// </summary>
+        protected ICacheManager _cacheManager;
 
         #endregion
 
@@ -62,6 +67,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
         public CurrencyManager(NopObjectContext context)
         {
             _context = context;
+            _cacheManager = new NopRequestCache();
         }
 
         #endregion
@@ -97,7 +103,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(CURRENCIES_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(CURRENCIES_PATTERN_KEY);
             }
         }
 
@@ -112,7 +118,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
                 return null;
 
             string key = string.Format(CURRENCIES_BY_ID_KEY, currencyId);
-            object obj2 = NopRequestCache.Get(key);
+            object obj2 = _cacheManager.Get(key);
             if (this.CacheEnabled && (obj2 != null))
             {
                 return (Currency)obj2;
@@ -126,7 +132,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.Add(key, currency);
+                _cacheManager.Add(key, currency);
             }
             return currency;
         }
@@ -161,7 +167,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
         public List<Currency> GetAllCurrencies(bool showHidden)
         {
             string key = string.Format(CURRENCIES_ALL_KEY, showHidden);
-            object obj2 = NopRequestCache.Get(key);
+            object obj2 = _cacheManager.Get(key);
             if (this.CacheEnabled && (obj2 != null))
             {
                 return (List<Currency>)obj2;
@@ -176,7 +182,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.Add(key, currencies);
+                _cacheManager.Add(key, currencies);
             }
             return currencies;
         }
@@ -215,7 +221,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(CURRENCIES_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(CURRENCIES_PATTERN_KEY);
             }
         }
 
@@ -255,7 +261,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(CURRENCIES_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(CURRENCIES_PATTERN_KEY);
             }
         }
 

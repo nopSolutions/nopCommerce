@@ -47,9 +47,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
         #region Fields
 
         /// <summary>
-        /// object context
+        /// Object context
         /// </summary>
         protected NopObjectContext _context;
+
+        /// <summary>
+        /// Cache manager
+        /// </summary>
+        protected ICacheManager _cacheManager;
 
         #endregion
 
@@ -62,6 +67,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
         public ACLManager(NopObjectContext context)
         {
             _context = context;
+            _cacheManager = new NopRequestCache();
         }
 
         #endregion
@@ -88,7 +94,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(CUSTOMERACTIONS_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(CUSTOMERACTIONS_PATTERN_KEY);
             }
         }
 
@@ -103,7 +109,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
                 return null;
 
             string key = string.Format(CUSTOMERACTIONS_BY_ID_KEY, customerActionId);
-            object obj2 = NopRequestCache.Get(key);
+            object obj2 = _cacheManager.Get(key);
             if (this.CacheEnabled && (obj2 != null))
             {
                 return (CustomerAction)obj2;
@@ -117,7 +123,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.Add(key, customerAction);
+                _cacheManager.Add(key, customerAction);
             }
             return customerAction;
         }
@@ -129,7 +135,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
         public List<CustomerAction> GetAllCustomerActions()
         {
             string key = string.Format(CUSTOMERACTIONS_ALL_KEY);
-            object obj2 = NopRequestCache.Get(key);
+            object obj2 = _cacheManager.Get(key);
             if (this.CacheEnabled && (obj2 != null))
             {
                 return (List<CustomerAction>)obj2;
@@ -143,7 +149,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.Add(key, customerActions);
+                _cacheManager.Add(key, customerActions);
             }
             return customerActions;
         }

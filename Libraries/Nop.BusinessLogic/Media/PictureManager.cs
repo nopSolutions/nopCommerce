@@ -24,6 +24,7 @@ using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.IoC;
 using System.Data.Objects;
 using NopSolutions.NopCommerce.Common;
+using NopSolutions.NopCommerce.BusinessLogic.Caching;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Media
 {
@@ -37,9 +38,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
         private static object s_lock = new object();
 
         /// <summary>
-        /// object context
+        /// Object context
         /// </summary>
         protected NopObjectContext _context;
+
+        /// <summary>
+        /// Cache manager
+        /// </summary>
+        protected ICacheManager _cacheManager;
 
         #endregion
 
@@ -52,6 +58,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
         public PictureManager(NopObjectContext context)
         {
             _context = context;
+            _cacheManager = new NopRequestCache();
         }
 
         #endregion

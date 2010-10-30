@@ -23,9 +23,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages.SMS
         #region Fields
 
         /// <summary>
-        /// object context
+        /// Object context
         /// </summary>
         protected NopObjectContext _context;
+
+        /// <summary>
+        /// Cache manager
+        /// </summary>
+        protected ICacheManager _cacheManager;
 
         #endregion
 
@@ -38,6 +43,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages.SMS
         public SMSManager(NopObjectContext context)
         {
             _context = context;
+            _cacheManager = new NopRequestCache();
         }
 
         #endregion
@@ -61,7 +67,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages.SMS
 
             if (CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(SMSPROVIDERS_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(SMSPROVIDERS_PATTERN_KEY);
             }
         }
 
@@ -76,7 +82,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages.SMS
                 return null;
 
             string key = string.Format(SMSPROVIDERS_BY_ID_KEY, smsProviderId);
-            object obj2 = NopRequestCache.Get(key);
+            object obj2 = _cacheManager.Get(key);
             if (CacheEnabled && (obj2 != null))
             {
                 return (SMSProvider)obj2;
@@ -90,7 +96,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages.SMS
 
             if (CacheEnabled)
             {
-                NopRequestCache.Add(key, smsProvider);
+                _cacheManager.Add(key, smsProvider);
             }
             return smsProvider;
         }
@@ -158,7 +164,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages.SMS
 
             if (CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(SMSPROVIDERS_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(SMSPROVIDERS_PATTERN_KEY);
             }
         }
 
@@ -186,7 +192,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages.SMS
 
             if (CacheEnabled)
             {
-                NopRequestCache.RemoveByPattern(SMSPROVIDERS_PATTERN_KEY);
+                _cacheManager.RemoveByPattern(SMSPROVIDERS_PATTERN_KEY);
             }
         }
 

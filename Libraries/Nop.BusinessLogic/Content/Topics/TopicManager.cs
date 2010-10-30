@@ -31,6 +31,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.BusinessLogic.Utils;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.Caching;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Content.Topics
 {
@@ -42,9 +43,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Topics
         #region Fields
 
         /// <summary>
-        /// object context
+        /// Object context
         /// </summary>
         protected NopObjectContext _context;
+
+        /// <summary>
+        /// Cache manager
+        /// </summary>
+        protected ICacheManager _cacheManager;
 
         #endregion
 
@@ -57,6 +63,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Topics
         public TopicManager(NopObjectContext context)
         {
             _context = context;
+            _cacheManager = new NopRequestCache();
         }
 
         #endregion

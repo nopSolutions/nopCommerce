@@ -62,9 +62,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         #region Fields
 
         /// <summary>
-        /// object context
+        /// Object context
         /// </summary>
         protected NopObjectContext _context;
+
+        /// <summary>
+        /// Cache manager
+        /// </summary>
+        protected ICacheManager _cacheManager;
 
         #endregion
 
@@ -77,6 +82,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         public OrderManager(NopObjectContext context)
         {
             _context = context;
+            _cacheManager = new NopRequestCache();
         }
 
         #endregion
@@ -1043,7 +1049,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 return null;
 
             string key = string.Format(ORDERSTATUSES_BY_ID_KEY, orderStatusId);
-            object obj2 = NopRequestCache.Get(key);
+            object obj2 = _cacheManager.Get(key);
             if (this.CacheEnabled && (obj2 != null))
             {
                 return (OrderStatus)obj2;
@@ -1057,7 +1063,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.Add(key, orderStatus);
+                _cacheManager.Add(key, orderStatus);
             }
             return orderStatus;
         }
@@ -1069,7 +1075,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         public List<OrderStatus> GetAllOrderStatuses()
         {
             string key = string.Format(ORDERSTATUSES_ALL_KEY);
-            object obj2 = NopRequestCache.Get(key);
+            object obj2 = _cacheManager.Get(key);
             if (this.CacheEnabled && (obj2 != null))
             {
                 return (List<OrderStatus>)obj2;
@@ -1083,7 +1089,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
 
             if (this.CacheEnabled)
             {
-                NopRequestCache.Add(key, orderStatuses);
+                _cacheManager.Add(key, orderStatuses);
             }
             return orderStatuses;
         }
