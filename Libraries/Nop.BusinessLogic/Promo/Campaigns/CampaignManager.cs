@@ -37,6 +37,28 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Campaigns
     /// </summary>
     public partial class CampaignManager : ICampaignManager
     {
+        #region Fields
+
+        /// <summary>
+        /// object context
+        /// </summary>
+        protected NopObjectContext _context;
+
+        #endregion
+
+        #region Ctor
+
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="context">Object context</param>
+        public CampaignManager(NopObjectContext context)
+        {
+            _context = context;
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -49,8 +71,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Campaigns
             if (campaignId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from c in context.Campaigns
+            
+            var query = from c in _context.Campaigns
                         where c.CampaignId == campaignId
                         select c;
             var campaign = query.SingleOrDefault();
@@ -68,11 +90,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Campaigns
             if (campaign == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(campaign))
-                context.Campaigns.Attach(campaign);
-            context.DeleteObject(campaign);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(campaign))
+                _context.Campaigns.Attach(campaign);
+            _context.DeleteObject(campaign);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -81,8 +103,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Campaigns
         /// <returns>Campaign collection</returns>
         public List<Campaign> GetAllCampaigns()
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from c in context.Campaigns
+            
+            var query = from c in _context.Campaigns
                         orderby c.CreatedOn
                         select c;
             var campaigns = query.ToList();
@@ -105,10 +127,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Campaigns
             campaign.Subject = CommonHelper.EnsureMaximumLength(campaign.Subject, 200);
             campaign.Body = CommonHelper.EnsureNotNull(campaign.Body);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
             
-            context.Campaigns.AddObject(campaign);
-            context.SaveChanges();
+            
+            _context.Campaigns.AddObject(campaign);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -123,11 +145,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Campaigns
             campaign.Subject = CommonHelper.EnsureMaximumLength(campaign.Subject, 200);
             campaign.Body = CommonHelper.EnsureNotNull(campaign.Body);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(campaign))
-                context.Campaigns.Attach(campaign);
+            
+            if (!_context.IsAttached(campaign))
+                _context.Campaigns.Attach(campaign);
 
-            context.SaveChanges();
+            _context.SaveChanges();
         }
 
         /// <summary>

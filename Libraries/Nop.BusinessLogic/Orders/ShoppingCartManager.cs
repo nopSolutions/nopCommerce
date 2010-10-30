@@ -45,6 +45,28 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
     /// </summary>
     public partial class ShoppingCartManager : IShoppingCartManager
     {
+        #region Fields
+
+        /// <summary>
+        /// object context
+        /// </summary>
+        protected NopObjectContext _context;
+
+        #endregion
+
+        #region Ctor
+
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="context">Object context</param>
+        public ShoppingCartManager(NopObjectContext context)
+        {
+            _context = context;
+        }
+
+        #endregion
+
         #region Methods
 
         #region Repository methods
@@ -55,8 +77,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="olderThan">Older than date and time</param>
         public void DeleteExpiredShoppingCartItems(DateTime olderThan)
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            context.Sp_ShoppingCartItemDeleteExpired(olderThan);
+            
+            _context.Sp_ShoppingCartItemDeleteExpired(olderThan);
         }
 
         /// <summary>
@@ -86,11 +108,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                     shoppingCartItem.ProductVariant.FullProductName);
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(shoppingCartItem))
-                context.ShoppingCartItems.Attach(shoppingCartItem);
-            context.DeleteObject(shoppingCartItem);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(shoppingCartItem))
+                _context.ShoppingCartItems.Attach(shoppingCartItem);
+            _context.DeleteObject(shoppingCartItem);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -102,8 +124,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         public ShoppingCart GetShoppingCartByCustomerSessionGuid(ShoppingCartTypeEnum shoppingCartType, 
             Guid customerSessionGuid)
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from sci in context.ShoppingCartItems
+            
+            var query = from sci in _context.ShoppingCartItems
                         orderby sci.CreatedOn
                         where sci.ShoppingCartTypeId == (int)shoppingCartType && sci.CustomerSessionGuid == customerSessionGuid
                         select sci;
@@ -124,8 +146,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             if (shoppingCartItemId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from sci in context.ShoppingCartItems
+            
+            var query = from sci in _context.ShoppingCartItems
                         where sci.ShoppingCartItemId == shoppingCartItemId
                         select sci;
             var shoppingCartItem = query.SingleOrDefault();
@@ -143,10 +165,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
 
             shoppingCartItem.AttributesXml  = CommonHelper.EnsureNotNull(shoppingCartItem.AttributesXml);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
 
-            context.ShoppingCartItems.AddObject(shoppingCartItem);
-            context.SaveChanges();
+            _context.ShoppingCartItems.AddObject(shoppingCartItem);
+            _context.SaveChanges();
 
             if (shoppingCartItem != null)
             {
@@ -171,11 +193,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
 
             shoppingCartItem.AttributesXml = CommonHelper.EnsureNotNull(shoppingCartItem.AttributesXml);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(shoppingCartItem))
-                context.ShoppingCartItems.Attach(shoppingCartItem);
+            
+            if (!_context.IsAttached(shoppingCartItem))
+                _context.ShoppingCartItems.Attach(shoppingCartItem);
 
-            context.SaveChanges();
+            _context.SaveChanges();
         }
 
         /// <summary>

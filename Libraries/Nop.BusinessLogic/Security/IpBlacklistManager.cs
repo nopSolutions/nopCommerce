@@ -39,6 +39,28 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
         private const string BLACKLIST_NETWORK_PATTERN_KEY = "Nop.blacklist.network.";
         #endregion
 
+        #region Fields
+
+        /// <summary>
+        /// object context
+        /// </summary>
+        protected NopObjectContext _context;
+
+        #endregion
+
+        #region Ctor
+
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="context">Object context</param>
+        public IpBlacklistManager(NopObjectContext context)
+        {
+            _context = context;
+        }
+
+        #endregion
+
         #region Utilities
 
         /// <summary>
@@ -191,8 +213,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
             if (ipAddressId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from ba in context.BannedIpAddresses
+            
+            var query = from ba in _context.BannedIpAddresses
                         where ba.BannedIpAddressId == ipAddressId
                         select ba;
             var bannedIpAddress = query.SingleOrDefault();
@@ -213,8 +235,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
                 return (List<BannedIpAddress>)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from ba in context.BannedIpAddresses
+            
+            var query = from ba in _context.BannedIpAddresses
                         orderby ba.BannedIpAddressId
                         select ba;
             var collection = query.ToList();
@@ -242,10 +264,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
             ipAddress.Comment = CommonHelper.EnsureNotNull(ipAddress.Comment);
             ipAddress.Comment = CommonHelper.EnsureMaximumLength(ipAddress.Comment, 500);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
 
-            context.BannedIpAddresses.AddObject(ipAddress);
-            context.SaveChanges();
+            _context.BannedIpAddresses.AddObject(ipAddress);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -269,11 +291,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
             ipAddress.Comment = CommonHelper.EnsureNotNull(ipAddress.Comment);
             ipAddress.Comment = CommonHelper.EnsureMaximumLength(ipAddress.Comment, 500);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(ipAddress))
-                context.BannedIpAddresses.Attach(ipAddress);
+            
+            if (!_context.IsAttached(ipAddress))
+                _context.BannedIpAddresses.Attach(ipAddress);
 
-            context.SaveChanges();
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -291,11 +313,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
             if (ipAddress == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(ipAddress))
-                context.BannedIpAddresses.Attach(ipAddress);
-            context.DeleteObject(ipAddress);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(ipAddress))
+                _context.BannedIpAddresses.Attach(ipAddress);
+            _context.DeleteObject(ipAddress);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -313,8 +335,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
             if (bannedIpNetworkId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from bn in context.BannedIpNetworks
+            
+            var query = from bn in _context.BannedIpNetworks
                         where bn.BannedIpNetworkId == bannedIpNetworkId
                         select bn;
             var ipNetwork = query.SingleOrDefault();
@@ -335,8 +357,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
                 return (List<BannedIpNetwork>)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from bn in context.BannedIpNetworks
+            
+            var query = from bn in _context.BannedIpNetworks
                         orderby bn.BannedIpNetworkId
                         select bn;
             var collection = query.ToList();
@@ -367,10 +389,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
             ipNetwork.Comment = CommonHelper.EnsureMaximumLength(ipNetwork.Comment, 500);
             ipNetwork.IpException = CommonHelper.EnsureNotNull(ipNetwork.IpException);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
             
-            context.BannedIpNetworks.AddObject(ipNetwork);
-            context.SaveChanges();
+            
+            _context.BannedIpNetworks.AddObject(ipNetwork);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -397,11 +419,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
             ipNetwork.Comment = CommonHelper.EnsureMaximumLength(ipNetwork.Comment, 500);
             ipNetwork.IpException = CommonHelper.EnsureNotNull(ipNetwork.IpException);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(ipNetwork))
-                context.BannedIpNetworks.Attach(ipNetwork);
+            
+            if (!_context.IsAttached(ipNetwork))
+                _context.BannedIpNetworks.Attach(ipNetwork);
 
-            context.SaveChanges();
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -419,11 +441,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
             if (ipNetwork == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(ipNetwork))
-                context.BannedIpNetworks.Attach(ipNetwork);
-            context.DeleteObject(ipNetwork);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(ipNetwork))
+                _context.BannedIpNetworks.Attach(ipNetwork);
+            _context.DeleteObject(ipNetwork);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {

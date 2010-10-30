@@ -38,7 +38,29 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
         private const string POLLS_PATTERN_KEY = "Nop.polls.";
         private const string POLLANSWERS_PATTERN_KEY = "Nop.pollanswers.";
         #endregion
-        
+
+        #region Fields
+
+        /// <summary>
+        /// object context
+        /// </summary>
+        protected NopObjectContext _context;
+
+        #endregion
+
+        #region Ctor
+
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="context">Object context</param>
+        public PollManager(NopObjectContext context)
+        {
+            _context = context;
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -58,8 +80,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
                 return (Poll)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from p in context.Polls
+            
+            var query = from p in _context.Polls
                         where p.PollId == pollId
                         select p;
             var poll = query.SingleOrDefault();
@@ -81,8 +103,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
             if (String.IsNullOrWhiteSpace(systemKeyword))
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from p in context.Polls
+            
+            var query = from p in _context.Polls
                         where p.SystemKeyword == systemKeyword
                         select p;
             var poll = query.FirstOrDefault();
@@ -122,8 +144,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
         {
             bool showHidden = NopContext.Current.IsAdmin;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = (IQueryable<Poll>)context.Polls;
+            
+            var query = (IQueryable<Poll>)_context.Polls;
             if (!showHidden)
             {
                 query = query.Where(p => p.Published);
@@ -160,11 +182,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
             if (poll == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(poll))
-                context.Polls.Attach(poll);
-            context.DeleteObject(poll);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(poll))
+                _context.Polls.Attach(poll);
+            _context.DeleteObject(poll);
+            _context.SaveChanges();
             
             if (this.CacheEnabled)
             {
@@ -188,10 +210,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
             poll.SystemKeyword = CommonHelper.EnsureMaximumLength(poll.SystemKeyword, 400);
             poll.SystemKeyword = poll.SystemKeyword.Trim();
 
-            var context = ObjectContextHelper.CurrentObjectContext;
             
-            context.Polls.AddObject(poll);
-            context.SaveChanges();
+            
+            _context.Polls.AddObject(poll);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -215,11 +237,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
             poll.SystemKeyword = CommonHelper.EnsureMaximumLength(poll.SystemKeyword, 400);
             poll.SystemKeyword = poll.SystemKeyword.Trim();
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(poll))
-                context.Polls.Attach(poll);
+            
+            if (!_context.IsAttached(poll))
+                _context.Polls.Attach(poll);
 
-            context.SaveChanges();
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -236,9 +258,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
         /// <returns>Poll</returns>
         public bool PollVotingRecordExists(int pollId, int customerId)
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from pvr in context.PollVotingRecords
-                        join pa in context.PollAnswers on pvr.PollAnswerId equals pa.PollAnswerId
+            
+            var query = from pvr in _context.PollVotingRecords
+                        join pa in _context.PollAnswers on pvr.PollAnswerId equals pa.PollAnswerId
                         where pa.PollId == pollId &&
                         pvr.CustomerId == customerId
                         select pvr;
@@ -256,8 +278,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
             if (pollAnswerId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from pa in context.PollAnswers
+            
+            var query = from pa in _context.PollAnswers
                         where pa.PollAnswerId == pollAnswerId
                         select pa;
             var pollAnswer = query.SingleOrDefault();
@@ -278,8 +300,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
                 return (List<PollAnswer>)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from pa in context.PollAnswers
+            
+            var query = from pa in _context.PollAnswers
                         orderby pa.DisplayOrder
                         where pa.PollId == pollId
                         select pa;
@@ -302,11 +324,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
             if (pollAnswer == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(pollAnswer))
-                context.PollAnswers.Attach(pollAnswer);
-            context.DeleteObject(pollAnswer);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(pollAnswer))
+                _context.PollAnswers.Attach(pollAnswer);
+            _context.DeleteObject(pollAnswer);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -327,10 +349,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
             pollAnswer.Name = CommonHelper.EnsureNotNull(pollAnswer.Name);
             pollAnswer.Name = CommonHelper.EnsureMaximumLength(pollAnswer.Name, 400);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
            
-            context.PollAnswers.AddObject(pollAnswer);
-            context.SaveChanges();
+            _context.PollAnswers.AddObject(pollAnswer);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -351,11 +373,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
             pollAnswer.Name = CommonHelper.EnsureNotNull(pollAnswer.Name);
             pollAnswer.Name = CommonHelper.EnsureMaximumLength(pollAnswer.Name, 400);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(pollAnswer))
-                context.PollAnswers.Attach(pollAnswer);
+            
+            if (!_context.IsAttached(pollAnswer))
+                _context.PollAnswers.Attach(pollAnswer);
 
-            context.SaveChanges();
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -376,27 +398,27 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
                 return;
 
             //delete previous vote
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var oldPvr = (from pvr in context.PollVotingRecords
+            
+            var oldPvr = (from pvr in _context.PollVotingRecords
                           where pvr.PollAnswerId == pollAnswerId &&
                           pvr.CustomerId == customerId
                           select pvr).FirstOrDefault();
             if (oldPvr != null)
             {
-                context.DeleteObject(oldPvr);
+                _context.DeleteObject(oldPvr);
             }
-            context.SaveChanges();
+            _context.SaveChanges();
 
             //insert new vote
-            var newPvr = context.PollVotingRecords.CreateObject();
+            var newPvr = _context.PollVotingRecords.CreateObject();
             newPvr.PollAnswerId = pollAnswerId;
             newPvr.CustomerId = customerId;
 
-            context.PollVotingRecords.AddObject(newPvr);
-            context.SaveChanges();
+            _context.PollVotingRecords.AddObject(newPvr);
+            _context.SaveChanges();
 
             //new vote records
-            int totalVotingRecords = (from pvr in context.PollVotingRecords
+            int totalVotingRecords = (from pvr in _context.PollVotingRecords
                                       where pvr.PollAnswerId == pollAnswerId
                                       select pvr).Count();
 

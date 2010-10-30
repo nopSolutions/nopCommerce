@@ -37,7 +37,29 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
         private const string STATEPROVINCES_BY_ID_KEY = "Nop.stateprovince.id-{0}";
         private const string STATEPROVINCES_PATTERN_KEY = "Nop.stateprovince.";
         #endregion
-        
+
+        #region Fields
+
+        /// <summary>
+        /// object context
+        /// </summary>
+        protected NopObjectContext _context;
+
+        #endregion
+
+        #region Ctor
+
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="context">Object context</param>
+        public StateProvinceManager(NopObjectContext context)
+        {
+            _context = context;
+        }
+
+        #endregion
+
         #region Methods
         /// <summary>
         /// Deletes a state/province
@@ -49,11 +71,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
             if (stateProvince == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(stateProvince))
-                context.StateProvinces.Attach(stateProvince);
-            context.DeleteObject(stateProvince);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(stateProvince))
+                _context.StateProvinces.Attach(stateProvince);
+            _context.DeleteObject(stateProvince);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -78,8 +100,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
                 return (StateProvince)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from sp in context.StateProvinces
+            
+            var query = from sp in _context.StateProvinces
                         where sp.StateProvinceId == stateProvinceId
                         select sp;
             var stateProvince = query.SingleOrDefault();
@@ -98,8 +120,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
         /// <returns>State/province</returns>
         public StateProvince GetStateProvinceByAbbreviation(string abbreviation)
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from sp in context.StateProvinces
+            
+            var query = from sp in _context.StateProvinces
                         where sp.Abbreviation == abbreviation
                         select sp;
             var stateProvince = query.FirstOrDefault();
@@ -120,8 +142,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
                 return (List<StateProvince>)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from sp in context.StateProvinces
+            
+            var query = from sp in _context.StateProvinces
                         orderby sp.DisplayOrder
                         where sp.CountryId == countryId
                         select sp;
@@ -148,10 +170,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
             stateProvince.Abbreviation = CommonHelper.EnsureNotNull(stateProvince.Abbreviation);
             stateProvince.Abbreviation = CommonHelper.EnsureMaximumLength(stateProvince.Abbreviation, 30);
             
-            var context = ObjectContextHelper.CurrentObjectContext;
             
-            context.StateProvinces.AddObject(stateProvince);
-            context.SaveChanges();
+            
+            _context.StateProvinces.AddObject(stateProvince);
+            _context.SaveChanges();
             
             if (this.CacheEnabled)
             {
@@ -173,11 +195,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
             stateProvince.Abbreviation = CommonHelper.EnsureNotNull(stateProvince.Abbreviation);
             stateProvince.Abbreviation = CommonHelper.EnsureMaximumLength(stateProvince.Abbreviation, 30);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(stateProvince))
-                context.StateProvinces.Attach(stateProvince);
+            
+            if (!_context.IsAttached(stateProvince))
+                _context.StateProvinces.Attach(stateProvince);
 
-            context.SaveChanges();
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {

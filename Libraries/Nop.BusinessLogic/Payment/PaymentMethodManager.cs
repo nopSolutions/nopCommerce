@@ -38,6 +38,28 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
         private const string PAYMENTMETHODS_PATTERN_KEY = "Nop.paymentmethod.";
         #endregion
 
+        #region Fields
+
+        /// <summary>
+        /// object context
+        /// </summary>
+        protected NopObjectContext _context;
+
+        #endregion
+
+        #region Ctor
+
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="context">Object context</param>
+        public PaymentMethodManager(NopObjectContext context)
+        {
+            _context = context;
+        }
+
+        #endregion
+
         #region Methods
         /// <summary>
         /// Deletes a payment method
@@ -49,11 +71,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
             if (paymentMethod == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(paymentMethod))
-                context.PaymentMethods.Attach(paymentMethod);
-            context.DeleteObject(paymentMethod);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(paymentMethod))
+                _context.PaymentMethods.Attach(paymentMethod);
+            _context.DeleteObject(paymentMethod);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -78,8 +100,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
                 return (PaymentMethod)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from pm in context.PaymentMethods
+            
+            var query = from pm in _context.PaymentMethods
                         where pm.PaymentMethodId == paymentMethodId
                         select pm;
             var paymentMethod = query.SingleOrDefault();
@@ -98,8 +120,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
         /// <returns>Payment method</returns>
         public PaymentMethod GetPaymentMethodBySystemKeyword(string systemKeyword)
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from pm in context.PaymentMethods
+            
+            var query = from pm in _context.PaymentMethods
                         where pm.SystemKeyword == systemKeyword
                         select pm;
             var paymentMethod = query.FirstOrDefault();
@@ -136,8 +158,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
         /// <returns>Payment method collection</returns>
         public List<PaymentMethod> GetAllPaymentMethods(int? filterByCountryId, bool showHidden)
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var paymentMethods = context.Sp_PaymentMethodLoadAll(showHidden, filterByCountryId).ToList();
+            
+            var paymentMethods = _context.Sp_PaymentMethodLoadAll(showHidden, filterByCountryId).ToList();
             return paymentMethods;
         }
 
@@ -165,10 +187,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
             paymentMethod.SystemKeyword = CommonHelper.EnsureNotNull(paymentMethod.SystemKeyword);
             paymentMethod.SystemKeyword = CommonHelper.EnsureMaximumLength(paymentMethod.SystemKeyword, 500);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
 
-            context.PaymentMethods.AddObject(paymentMethod);
-            context.SaveChanges();
+            _context.PaymentMethods.AddObject(paymentMethod);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -200,11 +222,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
             paymentMethod.SystemKeyword = CommonHelper.EnsureNotNull(paymentMethod.SystemKeyword);
             paymentMethod.SystemKeyword = CommonHelper.EnsureMaximumLength(paymentMethod.SystemKeyword, 500);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(paymentMethod))
-                context.PaymentMethods.Attach(paymentMethod);
+            
+            if (!_context.IsAttached(paymentMethod))
+                _context.PaymentMethods.Attach(paymentMethod);
 
-            context.SaveChanges();
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -227,18 +249,18 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
             if (country == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(paymentMethod))
-                context.PaymentMethods.Attach(paymentMethod);
-            if (!context.IsAttached(country))
-                context.Countries.Attach(country);
+            
+            if (!_context.IsAttached(paymentMethod))
+                _context.PaymentMethods.Attach(paymentMethod);
+            if (!_context.IsAttached(country))
+                _context.Countries.Attach(country);
 
             //ensure that navigation property is loaded
             if (country.NpRestrictedPaymentMethods == null)
-                context.LoadProperty(country, c => c.NpRestrictedPaymentMethods);
+                _context.LoadProperty(country, c => c.NpRestrictedPaymentMethods);
 
             country.NpRestrictedPaymentMethods.Add(paymentMethod);
-            context.SaveChanges();
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -249,7 +271,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
         /// <returns>True if mapping exist, otherwise false</returns>
         public bool DoesPaymentMethodCountryMappingExist(int paymentMethodId, int countryId)
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
 
             var paymentMethod = GetPaymentMethodById(paymentMethodId);
             if (paymentMethod == null)
@@ -257,12 +279,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
 
             //ensure that navigation property is loaded
             if (paymentMethod.NpRestrictedCountries == null)
-                context.LoadProperty(paymentMethod, p => p.NpRestrictedCountries);
+                _context.LoadProperty(paymentMethod, p => p.NpRestrictedCountries);
 
             bool result = paymentMethod.NpRestrictedCountries.ToList().Find(c => c.CountryId == countryId) != null;
             return result;
 
-            //var query = from pm in context.PaymentMethods
+            //var query = from pm in _context.PaymentMethods
             //            from c in pm.NpRestrictedCountries
             //            where pm.PaymentMethodId == paymentMethodId &&
             //            c.CountryId == countryId
@@ -287,18 +309,18 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
             if (country == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(paymentMethod))
-                context.PaymentMethods.Attach(paymentMethod);
-            if (!context.IsAttached(country))
-                context.Countries.Attach(country);
+            
+            if (!_context.IsAttached(paymentMethod))
+                _context.PaymentMethods.Attach(paymentMethod);
+            if (!_context.IsAttached(country))
+                _context.Countries.Attach(country);
 
             //ensure that navigation property is loaded
             if (country.NpRestrictedPaymentMethods == null)
-                context.LoadProperty(country, c => c.NpRestrictedPaymentMethods);
+                _context.LoadProperty(country, c => c.NpRestrictedPaymentMethods);
 
             country.NpRestrictedPaymentMethods.Remove(paymentMethod);
-            context.SaveChanges();
+            _context.SaveChanges();
         }
         #endregion
 

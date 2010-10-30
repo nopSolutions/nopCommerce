@@ -15,6 +15,7 @@
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data.EntityClient;
 using System.IO;
 using System.Runtime.Remoting.Messaging;
 using System.ServiceModel;
@@ -26,6 +27,7 @@ using Microsoft.Practices.Unity;
 using NopSolutions.NopCommerce.BusinessLogic.Audit;
 using NopSolutions.NopCommerce.BusinessLogic.Audit.UsersOnline;
 using NopSolutions.NopCommerce.BusinessLogic.Categories;
+using NopSolutions.NopCommerce.BusinessLogic.Configuration;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Content.Blog;
 using NopSolutions.NopCommerce.BusinessLogic.Content.Forums;
@@ -33,6 +35,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Content.Polls;
 using NopSolutions.NopCommerce.BusinessLogic.Content.Topics;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
+using NopSolutions.NopCommerce.BusinessLogic.Data;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.BusinessLogic.Localization;
 using NopSolutions.NopCommerce.BusinessLogic.Maintenance;
@@ -64,7 +67,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.IoC
     /// </summary>
     public static class IoCFactory
     {
-        #region Members
+        #region Fields
+
         private static IDictionary<string, IUnityContainer> _containersDictionary;
 
         #endregion
@@ -81,7 +85,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.IoC
 
         #endregion
 
-        #region Private Methods
+        #region Utilities
 
         static void InitContainers()
         {
@@ -179,10 +183,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.IoC
             container.RegisterType<ITaxRateManager, TaxRateManager>(new TransientLifetimeManager());
             container.RegisterType<ITemplateManager, TemplateManager>(new TransientLifetimeManager());
             container.RegisterType<IWarehouseManager, WarehouseManager>(new TransientLifetimeManager());
-            
-            
-
-
         }
 
         /// <summary>
@@ -191,7 +191,16 @@ namespace NopSolutions.NopCommerce.BusinessLogic.IoC
         /// <param name="container">Container to configure</param>
         static void ConfigureRealContainer(IUnityContainer container)
         {
-            //container.RegisterType<INopObjectContext, NopObjectContext>(new PerExecutionContextLifetimeManager());
+            //Object context
+            //Connection string
+            var ecsbuilder = new EntityConnectionStringBuilder();
+            ecsbuilder.Provider = "System.Data.SqlClient";
+            ecsbuilder.ProviderConnectionString = NopConfig.ConnectionString;
+            ecsbuilder.Metadata = @"res://*/Data.NopModel.csdl|res://*/Data.NopModel.ssdl|res://*/Data.NopModel.msl";
+            string connectionString = ecsbuilder.ToString();
+            InjectionConstructor connectionStringParam = new InjectionConstructor(connectionString);
+            //Registering object context
+            container.RegisterType<NopObjectContext>(new PerExecutionContextLifetimeManager(), connectionStringParam);
         }
 
         /// <summary>
@@ -206,7 +215,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.IoC
 
         #endregion
 
-        #region Public Methods
+        #region Methods
 
         /// <summary>
         /// Returns an injected object instance implementation for the requested interface

@@ -41,6 +41,28 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
         private const string PRODUCTTEMPLATES_PATTERN_KEY = "Nop.producttemplate.";
         #endregion
 
+        #region Fields
+
+        /// <summary>
+        /// object context
+        /// </summary>
+        protected NopObjectContext _context;
+
+        #endregion
+
+        #region Ctor
+
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="context">Object context</param>
+        public TemplateManager(NopObjectContext context)
+        {
+            _context = context;
+        }
+
+        #endregion
+
         #region Methods
         /// <summary>
         /// Deletes a category template
@@ -52,11 +74,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
             if (categoryTemplate == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(categoryTemplate))
-                context.CategoryTemplates.Attach(categoryTemplate);
-            context.DeleteObject(categoryTemplate);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(categoryTemplate))
+                _context.CategoryTemplates.Attach(categoryTemplate);
+            _context.DeleteObject(categoryTemplate);
+            _context.SaveChanges();
             
             if (this.CacheEnabled)
             {
@@ -77,8 +99,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
                 return (List<CategoryTemplate>)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from ct in context.CategoryTemplates
+            
+            var query = from ct in _context.CategoryTemplates
                         orderby ct.DisplayOrder, ct.Name
                         select ct;
             var categoryTemplates = query.ToList();
@@ -107,8 +129,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
                 return (CategoryTemplate)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from ct in context.CategoryTemplates
+            
+            var query = from ct in _context.CategoryTemplates
                         where ct.CategoryTemplateId == categoryTemplateId
                         select ct;
             var categoryTemplate = query.SingleOrDefault();
@@ -134,10 +156,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
             categoryTemplate.TemplatePath = CommonHelper.EnsureNotNull(categoryTemplate.TemplatePath);
             categoryTemplate.TemplatePath = CommonHelper.EnsureMaximumLength(categoryTemplate.TemplatePath, 200);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
 
-            context.CategoryTemplates.AddObject(categoryTemplate);
-            context.SaveChanges();
+            _context.CategoryTemplates.AddObject(categoryTemplate);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -159,11 +181,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
             categoryTemplate.TemplatePath = CommonHelper.EnsureNotNull(categoryTemplate.TemplatePath);
             categoryTemplate.TemplatePath = CommonHelper.EnsureMaximumLength(categoryTemplate.TemplatePath, 200);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(categoryTemplate))
-                context.CategoryTemplates.Attach(categoryTemplate);
+            
+            if (!_context.IsAttached(categoryTemplate))
+                _context.CategoryTemplates.Attach(categoryTemplate);
 
-            context.SaveChanges();
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -181,11 +203,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
             if (manufacturerTemplate == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(manufacturerTemplate))
-                context.ManufacturerTemplates.Attach(manufacturerTemplate);
-            context.DeleteObject(manufacturerTemplate);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(manufacturerTemplate))
+                _context.ManufacturerTemplates.Attach(manufacturerTemplate);
+            _context.DeleteObject(manufacturerTemplate);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -206,8 +228,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
                 return (List<ManufacturerTemplate>)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from mt in context.ManufacturerTemplates
+            
+            var query = from mt in _context.ManufacturerTemplates
                         orderby mt.DisplayOrder, mt.Name
                         select mt;
             var manufacturerTemplates = query.ToList();
@@ -236,8 +258,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
                 return (ManufacturerTemplate)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from mt in context.ManufacturerTemplates
+            
+            var query = from mt in _context.ManufacturerTemplates
                         where mt.ManufacturerTemplateId == manufacturerTemplateId
                         select mt;
             var manufacturerTemplate = query.SingleOrDefault();
@@ -263,10 +285,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
             manufacturerTemplate.TemplatePath = CommonHelper.EnsureNotNull(manufacturerTemplate.TemplatePath);
             manufacturerTemplate.TemplatePath = CommonHelper.EnsureMaximumLength(manufacturerTemplate.TemplatePath, 200);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
             
-            context.ManufacturerTemplates.AddObject(manufacturerTemplate);
-            context.SaveChanges();
+            
+            _context.ManufacturerTemplates.AddObject(manufacturerTemplate);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -288,11 +310,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
             manufacturerTemplate.TemplatePath = CommonHelper.EnsureNotNull(manufacturerTemplate.TemplatePath);
             manufacturerTemplate.TemplatePath = CommonHelper.EnsureMaximumLength(manufacturerTemplate.TemplatePath, 200);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(manufacturerTemplate))
-                context.ManufacturerTemplates.Attach(manufacturerTemplate);
+            
+            if (!_context.IsAttached(manufacturerTemplate))
+                _context.ManufacturerTemplates.Attach(manufacturerTemplate);
 
-            context.SaveChanges();
+            _context.SaveChanges();
             
             if (this.CacheEnabled)
             {
@@ -310,11 +332,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
             if (productTemplate == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(productTemplate))
-                context.ProductTemplates.Attach(productTemplate);
-            context.DeleteObject(productTemplate);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(productTemplate))
+                _context.ProductTemplates.Attach(productTemplate);
+            _context.DeleteObject(productTemplate);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -335,8 +357,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
                 return (List<ProductTemplate>)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from pt in context.ProductTemplates
+            
+            var query = from pt in _context.ProductTemplates
                         orderby pt.DisplayOrder, pt.Name
                         select pt;
             var productTemplates = query.ToList();
@@ -365,8 +387,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
                 return (ProductTemplate)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from pt in context.ProductTemplates
+            
+            var query = from pt in _context.ProductTemplates
                         where pt.ProductTemplateId == productTemplateId
                         select pt;
             var productTemplate = query.SingleOrDefault();
@@ -392,10 +414,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
             productTemplate.TemplatePath = CommonHelper.EnsureNotNull(productTemplate.TemplatePath);
             productTemplate.TemplatePath = CommonHelper.EnsureMaximumLength(productTemplate.TemplatePath, 200);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
             
-            context.ProductTemplates.AddObject(productTemplate);
-            context.SaveChanges();
+            
+            _context.ProductTemplates.AddObject(productTemplate);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -418,11 +440,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Templates
             productTemplate.TemplatePath = CommonHelper.EnsureNotNull(productTemplate.TemplatePath);
             productTemplate.TemplatePath = CommonHelper.EnsureMaximumLength(productTemplate.TemplatePath, 200);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(productTemplate))
-                context.ProductTemplates.Attach(productTemplate);
+            
+            if (!_context.IsAttached(productTemplate))
+                _context.ProductTemplates.Attach(productTemplate);
 
-            context.SaveChanges();
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {

@@ -33,7 +33,29 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         private const string TAXCATEGORIES_BY_ID_KEY = "Nop.taxcategory.id-{0}";
         private const string TAXCATEGORIES_PATTERN_KEY = "Nop.taxcategory.";
         #endregion
-        
+
+        #region Fields
+
+        /// <summary>
+        /// object context
+        /// </summary>
+        protected NopObjectContext _context;
+
+        #endregion
+
+        #region Ctor
+
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="context">Object context</param>
+        public TaxCategoryManager(NopObjectContext context)
+        {
+            _context = context;
+        }
+
+        #endregion
+
         #region Methods
         /// <summary>
         /// Deletes a tax category
@@ -45,11 +67,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
             if (taxCategory == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(taxCategory))
-                context.TaxCategories.Attach(taxCategory);
-            context.DeleteObject(taxCategory);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(taxCategory))
+                _context.TaxCategories.Attach(taxCategory);
+            _context.DeleteObject(taxCategory);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -70,8 +92,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
                 return (List<TaxCategory>)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from tc in context.TaxCategories
+            
+            var query = from tc in _context.TaxCategories
                         orderby tc.DisplayOrder
                         select tc;
             var taxCategories = query.ToList();
@@ -100,8 +122,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
                 return (TaxCategory)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from tc in context.TaxCategories
+            
+            var query = from tc in _context.TaxCategories
                         where tc.TaxCategoryId == taxCategoryId
                         select tc;
             var taxCategory = query.SingleOrDefault();
@@ -125,10 +147,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
             taxCategory.Name = CommonHelper.EnsureNotNull(taxCategory.Name);
             taxCategory.Name = CommonHelper.EnsureMaximumLength(taxCategory.Name, 100);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
 
-            context.TaxCategories.AddObject(taxCategory);
-            context.SaveChanges();
+            _context.TaxCategories.AddObject(taxCategory);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -148,11 +170,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
             taxCategory.Name = CommonHelper.EnsureNotNull(taxCategory.Name);
             taxCategory.Name = CommonHelper.EnsureMaximumLength(taxCategory.Name, 100);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(taxCategory))
-                context.TaxCategories.Attach(taxCategory);
+            
+            if (!_context.IsAttached(taxCategory))
+                _context.TaxCategories.Attach(taxCategory);
 
-            context.SaveChanges();
+            _context.SaveChanges();
             
             if (this.CacheEnabled)
             {

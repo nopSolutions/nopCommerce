@@ -30,6 +30,28 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Affiliates
     /// </summary>
     public partial class AffiliateManager : IAffiliateManager
     {
+        #region Fields
+
+        /// <summary>
+        /// object context
+        /// </summary>
+        protected NopObjectContext _context;
+
+        #endregion
+
+        #region Ctor
+
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="context">Object context</param>
+        public AffiliateManager(NopObjectContext context)
+        {
+            _context = context;
+        }
+
+        #endregion
+
         #region Methods
         /// <summary>
         /// Gets an affiliate by affiliate identifier
@@ -41,8 +63,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Affiliates
             if (affiliateId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from a in context.Affiliates
+            
+            var query = from a in _context.Affiliates
                         where a.AffiliateId == affiliateId
                         select a;
             var affiliate = query.SingleOrDefault();
@@ -70,8 +92,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Affiliates
         /// <returns>Affiliate collection</returns>
         public List<Affiliate> GetAllAffiliates()
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from a in context.Affiliates
+            
+            var query = from a in _context.Affiliates
                         orderby a.LastName
                         where !a.Deleted
                         select a;
@@ -114,10 +136,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Affiliates
             affiliate.ZipPostalCode = CommonHelper.EnsureNotNull(affiliate.ZipPostalCode);
             affiliate.ZipPostalCode = CommonHelper.EnsureMaximumLength(affiliate.ZipPostalCode, 30);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
 
-            context.Affiliates.AddObject(affiliate);
-            context.SaveChanges();
+            _context.Affiliates.AddObject(affiliate);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -154,11 +176,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Affiliates
             affiliate.ZipPostalCode = CommonHelper.EnsureNotNull(affiliate.ZipPostalCode);
             affiliate.ZipPostalCode = CommonHelper.EnsureMaximumLength(affiliate.ZipPostalCode, 30);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(affiliate))
-                context.Affiliates.Attach(affiliate);
+            
+            if (!_context.IsAttached(affiliate))
+                _context.Affiliates.Attach(affiliate);
 
-            context.SaveChanges();
+            _context.SaveChanges();
         }
         #endregion
     }

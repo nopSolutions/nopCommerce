@@ -31,6 +31,28 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
     /// </summary>
     public partial class SearchLogManager : ISearchLogManager
     {
+        #region Fields
+
+        /// <summary>
+        /// object context
+        /// </summary>
+        protected NopObjectContext _context;
+
+        #endregion
+        
+        #region Ctor
+
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="context">Object context</param>
+        public SearchLogManager(NopObjectContext context)
+        {
+            _context = context;
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -43,8 +65,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
         public List<SearchTermReportLine> SearchTermReport(DateTime? startTime, 
             DateTime? endTime, int count)
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var report = context.Sp_SearchTermReport(startTime, endTime, count).ToList();
+            
+            var report = _context.Sp_SearchTermReport(startTime, endTime, count).ToList();
             return report;
         }
 
@@ -54,8 +76,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
         /// <returns>Search log collection</returns>
         public List<SearchLog> GetAllSearchLogs()
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from s in context.SearchLog
+            
+            var query = from s in _context.SearchLog
                         orderby s.CreatedOn descending
                         select s;
             var searchLog = query.ToList();
@@ -73,8 +95,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
             if (searchLogId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from s in context.SearchLog
+            
+            var query = from s in _context.SearchLog
                         where s.SearchLogId == searchLogId
                         select s;
             var searchLog = query.SingleOrDefault();
@@ -93,10 +115,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
             searchLog.SearchTerm = CommonHelper.EnsureNotNull(searchLog.SearchTerm);
             searchLog.SearchTerm = CommonHelper.EnsureMaximumLength(searchLog.SearchTerm, 100);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
             
-            context.SearchLog.AddObject(searchLog);
-            context.SaveChanges();
+            
+            _context.SearchLog.AddObject(searchLog);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -104,11 +126,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
         /// </summary>
         public void ClearSearchLog()
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var log = context.SearchLog.ToList();
+            
+            var log = _context.SearchLog.ToList();
             foreach (var logItem in log)
-                context.DeleteObject(logItem);
-            context.SaveChanges();
+                _context.DeleteObject(logItem);
+            _context.SaveChanges();
         }
         #endregion
     }

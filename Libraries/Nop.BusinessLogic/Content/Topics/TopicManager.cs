@@ -39,6 +39,28 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Topics
     /// </summary>
     public partial class TopicManager : ITopicManager
     {
+        #region Fields
+
+        /// <summary>
+        /// object context
+        /// </summary>
+        protected NopObjectContext _context;
+
+        #endregion
+
+        #region Ctor
+
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="context">Object context</param>
+        public TopicManager(NopObjectContext context)
+        {
+            _context = context;
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -51,11 +73,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Topics
             if (topic == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(topic))
-                context.Topics.Attach(topic);
-            context.DeleteObject(topic);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(topic))
+                _context.Topics.Attach(topic);
+            _context.DeleteObject(topic);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -72,10 +94,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Topics
             topic.Password = CommonHelper.EnsureNotNull(topic.Password);
             topic.Password = CommonHelper.EnsureMaximumLength(topic.Password, 200);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
             
-            context.Topics.AddObject(topic);
-            context.SaveChanges();
+            
+            _context.Topics.AddObject(topic);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -92,11 +114,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Topics
             topic.Password = CommonHelper.EnsureNotNull(topic.Password);
             topic.Password = CommonHelper.EnsureMaximumLength(topic.Password, 200);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(topic))
-                context.Topics.Attach(topic);
+            
+            if (!_context.IsAttached(topic))
+                _context.Topics.Attach(topic);
 
-            context.SaveChanges();
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -109,8 +131,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Topics
             if (topicId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from t in context.Topics
+            
+            var query = from t in _context.Topics
                         where t.TopicId == topicId
                         select t;
             var topic = query.SingleOrDefault();
@@ -124,8 +146,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Topics
         /// <returns>topic collection</returns>
         public List<Topic> GetAllTopics()
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from t in context.Topics
+            
+            var query = from t in _context.Topics
                         orderby t.Name
                         select t;
             var topics = query.ToList();
@@ -142,8 +164,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Topics
             if (localizedTopicId == 0)
                 return null;
            
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from tl in context.LocalizedTopics
+            
+            var query = from tl in _context.LocalizedTopics
                         where tl.TopicLocalizedId == localizedTopicId
                         select tl;
             var localizedTopic = query.SingleOrDefault();
@@ -158,8 +180,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Topics
         /// <returns>Localized topic</returns>
         public LocalizedTopic GetLocalizedTopic(int topicId, int languageId)
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from tl in context.LocalizedTopics
+            
+            var query = from tl in _context.LocalizedTopics
                         where tl.TopicId == topicId &&
                         tl.LanguageId == languageId 
                         select tl;
@@ -176,9 +198,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Topics
         /// <returns>Localized topic</returns>
         public LocalizedTopic GetLocalizedTopic(string topicName, int languageId)
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from tl in context.LocalizedTopics
-                        join t in context.Topics on tl.TopicId equals t.TopicId
+            
+            var query = from tl in _context.LocalizedTopics
+                        join t in _context.Topics on tl.TopicId equals t.TopicId
                         where tl.LanguageId == languageId &&
                         t.Name == topicName 
                         select tl;
@@ -197,11 +219,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Topics
             if (localizedTopic == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(localizedTopic))
-                context.LocalizedTopics.Attach(localizedTopic);
-            context.DeleteObject(localizedTopic);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(localizedTopic))
+                _context.LocalizedTopics.Attach(localizedTopic);
+            _context.DeleteObject(localizedTopic);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -211,9 +233,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Topics
         /// <returns>Localized topic collection</returns>
         public List<LocalizedTopic> GetAllLocalizedTopics(string topicName)
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from tl in context.LocalizedTopics
-                        join t in context.Topics on tl.TopicId equals t.TopicId
+            
+            var query = from tl in _context.LocalizedTopics
+                        join t in _context.Topics on tl.TopicId equals t.TopicId
                         where t.Name == topicName
                         orderby tl.LanguageId
                         select tl;
@@ -240,10 +262,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Topics
             localizedTopic.MetaDescription = CommonHelper.EnsureNotNull(localizedTopic.MetaDescription);
             localizedTopic.MetaDescription = CommonHelper.EnsureMaximumLength(localizedTopic.MetaDescription, 4000);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
 
-            context.LocalizedTopics.AddObject(localizedTopic);
-            context.SaveChanges();
+            _context.LocalizedTopics.AddObject(localizedTopic);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -265,11 +287,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Topics
             localizedTopic.MetaDescription = CommonHelper.EnsureNotNull(localizedTopic.MetaDescription);
             localizedTopic.MetaDescription = CommonHelper.EnsureMaximumLength(localizedTopic.MetaDescription, 4000);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(localizedTopic))
-                context.LocalizedTopics.Attach(localizedTopic);
+            
+            if (!_context.IsAttached(localizedTopic))
+                _context.LocalizedTopics.Attach(localizedTopic);
 
-            context.SaveChanges();
+            _context.SaveChanges();
         }
 
         #endregion

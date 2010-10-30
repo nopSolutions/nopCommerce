@@ -35,7 +35,29 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
         private const string ACTIVITYTYPE_BY_ID_KEY = "Nop.activitytype.id-{0}";
         private const string ACTIVITYTYPE_PATTERN_KEY = "Nop.activitytype.";
         #endregion
+
+        #region Fields
+
+        /// <summary>
+        /// object context
+        /// </summary>
+        protected NopObjectContext _context;
+
+        #endregion
         
+        #region Ctor
+
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="context">Object context</param>
+        public CustomerActivityManager(NopObjectContext context)
+        {
+            _context = context;
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -52,10 +74,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
             activityLogType.Name = CommonHelper.EnsureNotNull(activityLogType.Name);            
             activityLogType.Name = CommonHelper.EnsureMaximumLength(activityLogType.Name, 100);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
 
-            context.ActivityLogTypes.AddObject(activityLogType);
-            context.SaveChanges();
+            _context.ActivityLogTypes.AddObject(activityLogType);
+            _context.SaveChanges();
 
             if (NopRequestCache.IsEnabled)
                 NopRequestCache.RemoveByPattern(ACTIVITYTYPE_PATTERN_KEY);
@@ -75,11 +97,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
             activityLogType.Name = CommonHelper.EnsureNotNull(activityLogType.Name);
             activityLogType.Name = CommonHelper.EnsureMaximumLength(activityLogType.Name, 100);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(activityLogType))
-                context.ActivityLogTypes.Attach(activityLogType);
+            
+            if (!_context.IsAttached(activityLogType))
+                _context.ActivityLogTypes.Attach(activityLogType);
 
-            context.SaveChanges();
+            _context.SaveChanges();
 
             if (NopRequestCache.IsEnabled)
                 NopRequestCache.RemoveByPattern(ACTIVITYTYPE_PATTERN_KEY);
@@ -95,11 +117,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
             if (activityLogType == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(activityLogType))
-                context.ActivityLogTypes.Attach(activityLogType);
-            context.DeleteObject(activityLogType);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(activityLogType))
+                _context.ActivityLogTypes.Attach(activityLogType);
+            _context.DeleteObject(activityLogType);
+            _context.SaveChanges();
 
             if (NopRequestCache.IsEnabled)
                 NopRequestCache.RemoveByPattern(ACTIVITYTYPE_PATTERN_KEY);
@@ -118,8 +140,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
                     return (List<ActivityLogType>)cache;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from at in context.ActivityLogTypes
+            
+            var query = from at in _context.ActivityLogTypes
                         orderby at.Name
                         select at;
             var collection = query.ToList();
@@ -148,8 +170,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
                     return (ActivityLogType)cache;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from at in context.ActivityLogTypes
+            
+            var query = from at in _context.ActivityLogTypes
                         where at.ActivityLogTypeId == activityLogTypeId
                         select at;
             var activityLogType = query.SingleOrDefault();
@@ -196,16 +218,16 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
             comment = string.Format(comment, commentParams);
             comment = CommonHelper.EnsureMaximumLength(comment, 4000);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
 
-            var activity = context.ActivityLog.CreateObject();
+            var activity = _context.ActivityLog.CreateObject();
             activity.ActivityLogTypeId = activityType.ActivityLogTypeId;
             activity.CustomerId = customerId;
             activity.Comment = comment;
             activity.CreatedOn = DateTime.UtcNow;
 
-            context.ActivityLog.AddObject(activity);
-            context.SaveChanges();
+            _context.ActivityLog.AddObject(activity);
+            _context.SaveChanges();
 
             return activity;
         }
@@ -220,11 +242,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
             if (activity == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(activity))
-                context.ActivityLog.Attach(activity);
-            context.DeleteObject(activity);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(activity))
+                _context.ActivityLog.Attach(activity);
+            _context.DeleteObject(activity);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -252,8 +274,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
             if (pageIndex == int.MaxValue)
                 pageIndex = int.MaxValue - 1;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from al in context.ActivityLog
+            
+            var query = from al in _context.ActivityLog
                         where (!createdOnFrom.HasValue || createdOnFrom.Value <= al.CreatedOn) &&
                         (!createdOnTo.HasValue || createdOnTo.Value >= al.CreatedOn) &&
                         (activityLogTypeId == 0 || activityLogTypeId == al.ActivityLogTypeId) &&
@@ -277,8 +299,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
             if (activityLogId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from al in context.ActivityLog
+            
+            var query = from al in _context.ActivityLog
                         where al.ActivityLogId == activityLogId
                         select al;
             var activityLog = query.SingleOrDefault();
@@ -290,11 +312,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
         /// </summary>
         public void ClearAllActivities()
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var activityLog = context.ActivityLog.ToList();
+            
+            var activityLog = _context.ActivityLog.ToList();
             foreach (var activityLogItem in activityLog)
-                context.DeleteObject(activityLogItem);
-            context.SaveChanges();
+                _context.DeleteObject(activityLogItem);
+            _context.SaveChanges();
         }
         #endregion
     }

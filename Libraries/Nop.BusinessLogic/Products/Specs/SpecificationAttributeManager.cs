@@ -39,6 +39,28 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
         private const string PRODUCTSPECIFICATIONATTRIBUTE_PATTERN_KEY = "Nop.productspecificationattribute.";
         #endregion
 
+        #region Fields
+
+        /// <summary>
+        /// object context
+        /// </summary>
+        protected NopObjectContext _context;
+
+        #endregion
+
+        #region Ctor
+
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="context">Object context</param>
+        public SpecificationAttributeManager(NopObjectContext context)
+        {
+            _context = context;
+        }
+
+        #endregion
+
         #region Methods
 
         #region Specification attribute
@@ -60,8 +82,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
                 return (SpecificationAttribute)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from sa in context.SpecificationAttributes
+            
+            var query = from sa in _context.SpecificationAttributes
                         where sa.SpecificationAttributeId == specificationAttributeId
                         select sa;
             var specificationAttribute = query.SingleOrDefault();
@@ -92,8 +114,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
         /// <returns>Specification attribute collection</returns>
         public List<SpecificationAttribute> GetSpecificationAttributes(int languageId)
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from sa in context.SpecificationAttributes
+            
+            var query = from sa in _context.SpecificationAttributes
                         orderby sa.DisplayOrder
                         select sa;
             var specificationAttributes = query.ToList();
@@ -110,11 +132,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
             if (specificationAttribute == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(specificationAttribute))
-                context.SpecificationAttributes.Attach(specificationAttribute);
-            context.DeleteObject(specificationAttribute);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(specificationAttribute))
+                _context.SpecificationAttributes.Attach(specificationAttribute);
+            _context.DeleteObject(specificationAttribute);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -136,10 +158,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
             specificationAttribute.Name = CommonHelper.EnsureNotNull(specificationAttribute.Name);
             specificationAttribute.Name = CommonHelper.EnsureMaximumLength(specificationAttribute.Name, 100);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
 
-            context.SpecificationAttributes.AddObject(specificationAttribute);
-            context.SaveChanges();
+            _context.SpecificationAttributes.AddObject(specificationAttribute);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -161,11 +183,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
             specificationAttribute.Name = CommonHelper.EnsureNotNull(specificationAttribute.Name);
             specificationAttribute.Name = CommonHelper.EnsureMaximumLength(specificationAttribute.Name, 100);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(specificationAttribute))
-                context.SpecificationAttributes.Attach(specificationAttribute);
+            
+            if (!_context.IsAttached(specificationAttribute))
+                _context.SpecificationAttributes.Attach(specificationAttribute);
 
-            context.SaveChanges();
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -185,8 +207,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
             if (specificationAttributeLocalizedId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from sal in context.SpecificationAttributeLocalized
+            
+            var query = from sal in _context.SpecificationAttributeLocalized
                         where sal.SpecificationAttributeLocalizedId == specificationAttributeLocalizedId
                         select sal;
             var specificationAttributeLocalized = query.SingleOrDefault();
@@ -203,8 +225,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
             if (specificationAttributeId == 0)
                 return new List<SpecificationAttributeLocalized>();
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from sal in context.SpecificationAttributeLocalized
+            
+            var query = from sal in _context.SpecificationAttributeLocalized
                         where sal.SpecificationAttributeId == specificationAttributeId
                         select sal;
             var content = query.ToList();
@@ -222,8 +244,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
             if (specificationAttributeId == 0 || languageId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from sal in context.SpecificationAttributeLocalized
+            
+            var query = from sal in _context.SpecificationAttributeLocalized
                         orderby sal.SpecificationAttributeLocalizedId
                         where sal.SpecificationAttributeId == specificationAttributeId &&
                         sal.LanguageId == languageId
@@ -244,10 +266,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
             specificationAttributeLocalized.Name = CommonHelper.EnsureNotNull(specificationAttributeLocalized.Name);
             specificationAttributeLocalized.Name = CommonHelper.EnsureMaximumLength(specificationAttributeLocalized.Name, 100);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
             
-            context.SpecificationAttributeLocalized.AddObject(specificationAttributeLocalized);
-            context.SaveChanges();
+            
+            _context.SpecificationAttributeLocalized.AddObject(specificationAttributeLocalized);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -271,19 +293,19 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
 
             bool allFieldsAreEmpty = string.IsNullOrEmpty(specificationAttributeLocalized.Name);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(specificationAttributeLocalized))
-                context.SpecificationAttributeLocalized.Attach(specificationAttributeLocalized);
+            
+            if (!_context.IsAttached(specificationAttributeLocalized))
+                _context.SpecificationAttributeLocalized.Attach(specificationAttributeLocalized);
 
             if (allFieldsAreEmpty)
             {
                 //delete if all fields are empty
-                context.DeleteObject(specificationAttributeLocalized);
-                context.SaveChanges();
+                _context.DeleteObject(specificationAttributeLocalized);
+                _context.SaveChanges();
             }
             else
             {
-                context.SaveChanges();
+                _context.SaveChanges();
             }
 
             if (this.CacheEnabled)
@@ -315,8 +337,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
                 return (SpecificationAttributeOption)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from sao in context.SpecificationAttributeOptions
+            
+            var query = from sao in _context.SpecificationAttributeOptions
                         where sao.SpecificationAttributeOptionId == specificationAttributeOptionId
                         select sao;
             var specificationAttributeOption = query.SingleOrDefault();
@@ -335,8 +357,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
         /// <returns>Specification attribute option</returns>
         public List<SpecificationAttributeOption> GetSpecificationAttributeOptionsBySpecificationAttribute(int specificationAttributeId)
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from sao in context.SpecificationAttributeOptions
+            
+            var query = from sao in _context.SpecificationAttributeOptions
                         orderby sao.DisplayOrder
                         where sao.SpecificationAttributeId == specificationAttributeId
                         select sao;
@@ -355,11 +377,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
             if (specificationAttributeOption == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(specificationAttributeOption))
-                context.SpecificationAttributeOptions.Attach(specificationAttributeOption);
-            context.DeleteObject(specificationAttributeOption);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(specificationAttributeOption))
+                _context.SpecificationAttributeOptions.Attach(specificationAttributeOption);
+            _context.DeleteObject(specificationAttributeOption);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -381,10 +403,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
             specificationAttributeOption.Name = CommonHelper.EnsureNotNull(specificationAttributeOption.Name);
             specificationAttributeOption.Name = CommonHelper.EnsureMaximumLength(specificationAttributeOption.Name, 500);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
 
-            context.SpecificationAttributeOptions.AddObject(specificationAttributeOption);
-            context.SaveChanges();
+            _context.SpecificationAttributeOptions.AddObject(specificationAttributeOption);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -406,11 +428,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
             specificationAttributeOption.Name = CommonHelper.EnsureNotNull(specificationAttributeOption.Name);
             specificationAttributeOption.Name = CommonHelper.EnsureMaximumLength(specificationAttributeOption.Name, 500);
             
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(specificationAttributeOption))
-                context.SpecificationAttributeOptions.Attach(specificationAttributeOption);
+            
+            if (!_context.IsAttached(specificationAttributeOption))
+                _context.SpecificationAttributeOptions.Attach(specificationAttributeOption);
 
-            context.SaveChanges();
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -430,8 +452,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
             if (specificationAttributeOptionLocalizedId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from saol in context.SpecificationAttributeOptionLocalized
+            
+            var query = from saol in _context.SpecificationAttributeOptionLocalized
                         where saol.SpecificationAttributeOptionLocalizedId == specificationAttributeOptionLocalizedId
                         select saol;
             var specificationAttributeOptionLocalized = query.SingleOrDefault();
@@ -448,8 +470,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
             if (specificationAttributeOptionId == 0)
                 return new List<SpecificationAttributeOptionLocalized>();
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from saol in context.SpecificationAttributeOptionLocalized
+            
+            var query = from saol in _context.SpecificationAttributeOptionLocalized
                         where saol.SpecificationAttributeOptionId == specificationAttributeOptionId
                         select saol;
             var content = query.ToList();
@@ -468,8 +490,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
             if (specificationAttributeOptionId == 0 || languageId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from saol in context.SpecificationAttributeOptionLocalized
+            
+            var query = from saol in _context.SpecificationAttributeOptionLocalized
                         orderby saol.SpecificationAttributeOptionLocalizedId
                         where saol.SpecificationAttributeOptionId == specificationAttributeOptionId &&
                         saol.LanguageId == languageId
@@ -491,10 +513,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
             specificationAttributeOptionLocalized.Name = CommonHelper.EnsureNotNull(specificationAttributeOptionLocalized.Name);
             specificationAttributeOptionLocalized.Name = CommonHelper.EnsureMaximumLength(specificationAttributeOptionLocalized.Name, 500);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
 
-            context.SpecificationAttributeOptionLocalized.AddObject(specificationAttributeOptionLocalized);
-            context.SaveChanges();
+            _context.SpecificationAttributeOptionLocalized.AddObject(specificationAttributeOptionLocalized);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -519,19 +541,19 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
 
             bool allFieldsAreEmpty = string.IsNullOrEmpty(specificationAttributeOptionLocalized.Name);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(specificationAttributeOptionLocalized))
-                context.SpecificationAttributeOptionLocalized.Attach(specificationAttributeOptionLocalized);
+            
+            if (!_context.IsAttached(specificationAttributeOptionLocalized))
+                _context.SpecificationAttributeOptionLocalized.Attach(specificationAttributeOptionLocalized);
 
             if (allFieldsAreEmpty)
             {
                 //delete if all fields are empty
-                context.DeleteObject(specificationAttributeOptionLocalized);
-                context.SaveChanges();
+                _context.DeleteObject(specificationAttributeOptionLocalized);
+                _context.SaveChanges();
             }
             else
             {
-                context.SaveChanges();
+                _context.SaveChanges();
             }
 
             if (this.CacheEnabled)
@@ -556,11 +578,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
             if (productSpecificationAttribute == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(productSpecificationAttribute))
-                context.ProductSpecificationAttributes.Attach(productSpecificationAttribute);
-            context.DeleteObject(productSpecificationAttribute);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(productSpecificationAttribute))
+                _context.ProductSpecificationAttributes.Attach(productSpecificationAttribute);
+            _context.DeleteObject(productSpecificationAttribute);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -603,8 +625,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
                 return (List<ProductSpecificationAttribute>)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = (IQueryable<ProductSpecificationAttribute>)context.ProductSpecificationAttributes;
+            
+            var query = (IQueryable<ProductSpecificationAttribute>)_context.ProductSpecificationAttributes;
             query = query.Where(psa => psa.ProductId == productId);
             if (allowFiltering.HasValue)
                 query = query.Where(psa => psa.AllowFiltering == allowFiltering.Value);
@@ -631,8 +653,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
             if (productSpecificationAttributeId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from psa in context.ProductSpecificationAttributes
+            
+            var query = from psa in _context.ProductSpecificationAttributes
                         where psa.ProductSpecificationAttributeId == productSpecificationAttributeId
                         select psa;
             var productSpecificationAttribute = query.SingleOrDefault();
@@ -648,10 +670,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
             if (productSpecificationAttribute == null)
                 throw new ArgumentNullException("productSpecificationAttribute");
 
-            var context = ObjectContextHelper.CurrentObjectContext;
             
-            context.ProductSpecificationAttributes.AddObject(productSpecificationAttribute);
-            context.SaveChanges();
+            
+            _context.ProductSpecificationAttributes.AddObject(productSpecificationAttribute);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -670,11 +692,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
             if (productSpecificationAttribute == null)
                 throw new ArgumentNullException("productSpecificationAttribute");
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(productSpecificationAttribute))
-                context.ProductSpecificationAttributes.Attach(productSpecificationAttribute);
+            
+            if (!_context.IsAttached(productSpecificationAttribute))
+                _context.ProductSpecificationAttributes.Attach(productSpecificationAttribute);
 
-            context.SaveChanges();
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -709,8 +731,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
         /// <returns>Product specification attribute mapping collection</returns>
         public List<SpecificationAttributeOptionFilter> GetSpecificationAttributeOptionFilter(int categoryId, int languageId)
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var result = context.Sp_SpecificationAttributeOptionFilter_LoadByFilter(categoryId, languageId).ToList();
+            
+            var result = _context.Sp_SpecificationAttributeOptionFilter_LoadByFilter(categoryId, languageId).ToList();
             return result;
         }
         

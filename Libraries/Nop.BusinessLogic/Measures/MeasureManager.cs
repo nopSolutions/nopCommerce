@@ -42,6 +42,28 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Measures
         private const string MEASUREWEIGHTS_PATTERN_KEY = "Nop.measureweight.";
         #endregion
 
+        #region Fields
+
+        /// <summary>
+        /// object context
+        /// </summary>
+        protected NopObjectContext _context;
+
+        #endregion
+
+        #region Ctor
+
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="context">Object context</param>
+        public MeasureManager(NopObjectContext context)
+        {
+            _context = context;
+        }
+
+        #endregion
+
         #region Methods
 
         #region Dimensions
@@ -55,11 +77,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Measures
             if (measureDimension == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(measureDimension))
-                context.MeasureDimensions.Attach(measureDimension);
-            context.DeleteObject(measureDimension);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(measureDimension))
+                _context.MeasureDimensions.Attach(measureDimension);
+            _context.DeleteObject(measureDimension);
+            _context.SaveChanges();
             if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(MEASUREDIMENSIONS_PATTERN_KEY);
@@ -83,8 +105,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Measures
                 return (MeasureDimension)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from md in context.MeasureDimensions
+            
+            var query = from md in _context.MeasureDimensions
                         where md.MeasureDimensionId == measureDimensionId
                         select md;
             var measureDimension = query.SingleOrDefault();
@@ -126,8 +148,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Measures
                 return (List<MeasureDimension>)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from md in context.MeasureDimensions
+            
+            var query = from md in _context.MeasureDimensions
                         orderby md.DisplayOrder
                         select md;
             var measureDimensionCollection = query.ToList();
@@ -153,10 +175,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Measures
             measure.SystemKeyword = CommonHelper.EnsureNotNull(measure.SystemKeyword);
             measure.SystemKeyword = CommonHelper.EnsureMaximumLength(measure.SystemKeyword, 100);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
             
-            context.MeasureDimensions.AddObject(measure);
-            context.SaveChanges();
+            
+            _context.MeasureDimensions.AddObject(measure);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -178,11 +200,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Measures
             measure.SystemKeyword = CommonHelper.EnsureNotNull(measure.SystemKeyword);
             measure.SystemKeyword = CommonHelper.EnsureMaximumLength(measure.SystemKeyword, 100);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(measure))
-                context.MeasureDimensions.Attach(measure);
+            
+            if (!_context.IsAttached(measure))
+                _context.MeasureDimensions.Attach(measure);
 
-            context.SaveChanges();
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -266,11 +288,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Measures
             if (measureWeight == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(measureWeight))
-                context.MeasureWeights.Attach(measureWeight);
-            context.DeleteObject(measureWeight);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(measureWeight))
+                _context.MeasureWeights.Attach(measureWeight);
+            _context.DeleteObject(measureWeight);
+            _context.SaveChanges();
             if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(MEASUREWEIGHTS_PATTERN_KEY);
@@ -294,8 +316,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Measures
                 return (MeasureWeight)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from mw in context.MeasureWeights
+            
+            var query = from mw in _context.MeasureWeights
                         where mw.MeasureWeightId == measureWeightId
                         select mw;
             var measureWeight = query.SingleOrDefault();
@@ -337,8 +359,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Measures
                 return (List<MeasureWeight>)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from mw in context.MeasureWeights
+            
+            var query = from mw in _context.MeasureWeights
                         orderby mw.DisplayOrder
                         select mw;
             var measureWeightCollection = query.ToList();
@@ -364,10 +386,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Measures
             measure.SystemKeyword = CommonHelper.EnsureNotNull(measure.SystemKeyword);
             measure.SystemKeyword = CommonHelper.EnsureMaximumLength(measure.SystemKeyword, 100);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
 
-            context.MeasureWeights.AddObject(measure);
-            context.SaveChanges();
+            _context.MeasureWeights.AddObject(measure);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -389,11 +411,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Measures
             measure.SystemKeyword = CommonHelper.EnsureNotNull(measure.SystemKeyword);
             measure.SystemKeyword = CommonHelper.EnsureMaximumLength(measure.SystemKeyword, 100);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(measure))
-                context.MeasureWeights.Attach(measure);
+            
+            if (!_context.IsAttached(measure))
+                _context.MeasureWeights.Attach(measure);
 
-            context.SaveChanges();
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {

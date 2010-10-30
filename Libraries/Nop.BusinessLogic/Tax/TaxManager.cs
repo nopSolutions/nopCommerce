@@ -30,6 +30,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts;
 using NopSolutions.NopCommerce.BusinessLogic.Shipping;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Data;
 
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Tax
@@ -39,6 +40,28 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
     /// </summary>
     public partial class TaxManager : ITaxManager
     {
+        #region Fields
+
+        /// <summary>
+        /// object context
+        /// </summary>
+        protected NopObjectContext _context;
+
+        #endregion
+
+        #region Ctor
+
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="context">Object context</param>
+        public TaxManager(NopObjectContext context)
+        {
+            _context = context;
+        }
+
+        #endregion
+
         #region Utilities
 
         /// <summary>

@@ -31,6 +31,28 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
     /// </summary>
     public partial class ShippingByWeightAndCountryManager : IShippingByWeightAndCountryManager
     {
+        #region Fields
+
+        /// <summary>
+        /// object context
+        /// </summary>
+        protected NopObjectContext _context;
+
+        #endregion
+
+        #region Ctor
+
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="context">Object context</param>
+        public ShippingByWeightAndCountryManager(NopObjectContext context)
+        {
+            _context = context;
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -43,8 +65,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
             if (shippingByWeightAndCountryId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from swc in context.ShippingByWeightAndCountry
+            
+            var query = from swc in _context.ShippingByWeightAndCountry
                         where swc.ShippingByWeightAndCountryId == shippingByWeightAndCountryId
                         select swc;
             var shippingByWeightAndCountry = query.SingleOrDefault();
@@ -61,11 +83,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
             if (shippingByWeightAndCountry == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(shippingByWeightAndCountry))
-                context.ShippingByWeightAndCountry.Attach(shippingByWeightAndCountry);
-            context.DeleteObject(shippingByWeightAndCountry);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(shippingByWeightAndCountry))
+                _context.ShippingByWeightAndCountry.Attach(shippingByWeightAndCountry);
+            _context.DeleteObject(shippingByWeightAndCountry);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -74,8 +96,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         /// <returns>ShippingByWeightAndCountry collection</returns>
         public List<ShippingByWeightAndCountry> GetAll()
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from swc in context.ShippingByWeightAndCountry
+            
+            var query = from swc in _context.ShippingByWeightAndCountry
                         orderby swc.CountryId, swc.ShippingMethodId, swc.From
                         select swc;
             var collection = query.ToList();
@@ -91,10 +113,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
             if (shippingByWeightAndCountry == null)
                 throw new ArgumentNullException("shippingByWeightAndCountry");
 
-            var context = ObjectContextHelper.CurrentObjectContext;
             
-            context.ShippingByWeightAndCountry.AddObject(shippingByWeightAndCountry);
-            context.SaveChanges();
+            
+            _context.ShippingByWeightAndCountry.AddObject(shippingByWeightAndCountry);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -106,11 +128,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
             if (shippingByWeightAndCountry == null)
                 throw new ArgumentNullException("shippingByWeightAndCountry");
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(shippingByWeightAndCountry))
-                context.ShippingByWeightAndCountry.Attach(shippingByWeightAndCountry);
+            
+            if (!_context.IsAttached(shippingByWeightAndCountry))
+                _context.ShippingByWeightAndCountry.Attach(shippingByWeightAndCountry);
 
-            context.SaveChanges();
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -122,8 +144,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         public List<ShippingByWeightAndCountry> GetAllByShippingMethodIdAndCountryId(int shippingMethodId, 
             int countryId)
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from swc in context.ShippingByWeightAndCountry
+            
+            var query = from swc in _context.ShippingByWeightAndCountry
                         where swc.ShippingMethodId == shippingMethodId && swc.CountryId == countryId
                         orderby swc.From
                         select swc;

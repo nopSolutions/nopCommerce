@@ -51,6 +51,28 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         private const string FORUM_PATTERN_KEY = "Nop.forum.";
         #endregion
 
+        #region Fields
+
+        /// <summary>
+        /// object context
+        /// </summary>
+        protected NopObjectContext _context;
+
+        #endregion
+
+        #region Ctor
+
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="context">Object context</param>
+        public ForumManager(NopObjectContext context)
+        {
+            _context = context;
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -63,11 +85,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
             if (forumGroup == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(forumGroup))
-                context.ForumGroups.Attach(forumGroup);
-            context.DeleteObject(forumGroup);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(forumGroup))
+                _context.ForumGroups.Attach(forumGroup);
+            _context.DeleteObject(forumGroup);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -93,8 +115,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
                 return (ForumGroup)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from fg in context.ForumGroups
+            
+            var query = from fg in _context.ForumGroups
                         where fg.ForumGroupId == forumGroupId
                         select fg;
             var forumGroup = query.SingleOrDefault();
@@ -119,8 +141,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
                 return (List<ForumGroup>)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from fg in context.ForumGroups
+            
+            var query = from fg in _context.ForumGroups
                         orderby fg.DisplayOrder
                         select fg;
             var forumGroups = query.ToList();
@@ -145,10 +167,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
             forumGroup.Name = CommonHelper.EnsureMaximumLength(forumGroup.Name, 200);
             forumGroup.Description = CommonHelper.EnsureNotNull(forumGroup.Description);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
 
-            context.ForumGroups.AddObject(forumGroup);
-            context.SaveChanges();
+            _context.ForumGroups.AddObject(forumGroup);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -170,11 +192,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
             forumGroup.Name = CommonHelper.EnsureMaximumLength(forumGroup.Name, 200);
             forumGroup.Description = CommonHelper.EnsureNotNull(forumGroup.Description);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(forumGroup))
-                context.ForumGroups.Attach(forumGroup);
+            
+            if (!_context.IsAttached(forumGroup))
+                _context.ForumGroups.Attach(forumGroup);
 
-            context.SaveChanges();
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -192,8 +214,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
             if (forumId == 0)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            context.Sp_Forums_ForumDelete(forumId);
+            
+            _context.Sp_Forums_ForumDelete(forumId);
 
             if (this.CacheEnabled)
             {
@@ -219,8 +241,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
                 return (Forum)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from f in context.Forums
+            
+            var query = from f in _context.Forums
                         where f.ForumId == forumId
                         select f;
             var forum = query.SingleOrDefault();
@@ -246,8 +268,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
                 return (List<Forum>)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from f in context.Forums
+            
+            var query = from f in _context.Forums
                         orderby f.DisplayOrder
                         where f.ForumGroupId == forumGroupId
                         select f;
@@ -273,10 +295,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
             forum.Name = CommonHelper.EnsureMaximumLength(forum.Name, 200);
             forum.Description = CommonHelper.EnsureNotNull(forum.Description);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
 
-            context.Forums.AddObject(forum);
-            context.SaveChanges();
+            _context.Forums.AddObject(forum);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -298,10 +320,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
             forum.Name = CommonHelper.EnsureMaximumLength(forum.Name, 200);
             forum.Description = CommonHelper.EnsureNotNull(forum.Description);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(forum))
-                context.Forums.Attach(forum);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(forum))
+                _context.Forums.Attach(forum);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -320,8 +342,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
             if (forumId == 0)
                 return;
             
-            var context = ObjectContextHelper.CurrentObjectContext;
-            context.Sp_Forums_ForumUpdateCounts(forumId);
+            
+            _context.Sp_Forums_ForumUpdateCounts(forumId);
 
             if (this.CacheEnabled)
             {
@@ -340,11 +362,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
             if (forumTopic == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(forumTopic))
-                context.ForumTopics.Attach(forumTopic);
-            context.DeleteObject(forumTopic);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(forumTopic))
+                _context.ForumTopics.Attach(forumTopic);
+            _context.DeleteObject(forumTopic);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -374,8 +396,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
             if (forumTopicId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from ft in context.ForumTopics
+            
+            var query = from ft in _context.ForumTopics
                         where ft.ForumTopicId == forumTopicId
                         select ft;
             var forumTopic = query.SingleOrDefault();
@@ -424,9 +446,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
                 limitDate = DateTime.UtcNow.AddDays(-limitDays);
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
             ObjectParameter totalRecordsParameter = new ObjectParameter("TotalRecords", typeof(int));
-            var forumTopics = context.Sp_Forums_TopicLoadAll(forumId,
+            var forumTopics = _context.Sp_Forums_TopicLoadAll(forumId,
                 userId, keywords, (int)searchType, limitDate,
                 pageIndex, pageSize, totalRecordsParameter).ToList();
             totalRecords = Convert.ToInt32(totalRecordsParameter.Value);
@@ -441,8 +463,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// <returns>Topics</returns>
         public List<ForumTopic> GetActiveTopics(int forumId, int topicCount)
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var forumTopics = context.Sp_Forums_TopicLoadActive(forumId, topicCount).ToList();
+            
+            var forumTopics = _context.Sp_Forums_TopicLoadActive(forumId, topicCount).ToList();
             return forumTopics;
         }
         
@@ -470,10 +492,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
 
             forumTopic.Subject = CommonHelper.EnsureMaximumLength(forumTopic.Subject, 450);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
             
-            context.ForumTopics.AddObject(forumTopic);
-            context.SaveChanges();
+            
+            _context.ForumTopics.AddObject(forumTopic);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -520,11 +542,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
 
             forumTopic.Subject = CommonHelper.EnsureMaximumLength(forumTopic.Subject, 450);
             
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(forumTopic))
-                context.ForumTopics.Attach(forumTopic);
             
-            context.SaveChanges();
+            if (!_context.IsAttached(forumTopic))
+                _context.ForumTopics.Attach(forumTopic);
+            
+            _context.SaveChanges();
             
             if (this.CacheEnabled)
             {
@@ -591,11 +613,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
                 }
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(forumPost))
-                context.ForumPosts.Attach(forumPost);
-            context.DeleteObject(forumPost);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(forumPost))
+                _context.ForumPosts.Attach(forumPost);
+            _context.DeleteObject(forumPost);
+            _context.SaveChanges();
 
             if (deleteTopic)
             {
@@ -619,8 +641,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
             if (forumPostId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from fp in context.ForumPosts
+            
+            var query = from fp in _context.ForumPosts
                         where fp.ForumPostId == forumPostId
                         select fp;
             var forumPost = query.SingleOrDefault();
@@ -669,9 +691,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
             if (pageIndex == int.MaxValue)
                 pageIndex = int.MaxValue - 1;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
             ObjectParameter totalRecordsParameter = new ObjectParameter("TotalRecords", typeof(int));
-            var forumPosts = context.Sp_Forums_PostLoadAll(forumTopicId,
+            var forumPosts = _context.Sp_Forums_PostLoadAll(forumTopicId,
                 userId, keywords, ascSort, pageIndex, pageSize, totalRecordsParameter).ToList();
             totalRecords = Convert.ToInt32(totalRecordsParameter.Value);
             return forumPosts;
@@ -702,10 +724,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
             forumPost.IPAddress = CommonHelper.EnsureNotNull(forumPost.IPAddress);
             forumPost.IPAddress = CommonHelper.EnsureMaximumLength(forumPost.IPAddress, 100);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
 
-            context.ForumPosts.AddObject(forumPost);
-            context.SaveChanges();
+            _context.ForumPosts.AddObject(forumPost);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -756,11 +778,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
             forumPost.IPAddress = CommonHelper.EnsureNotNull(forumPost.IPAddress);
             forumPost.IPAddress = CommonHelper.EnsureMaximumLength(forumPost.IPAddress, 100);            
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(forumPost))
-                context.ForumPosts.Attach(forumPost);
+            
+            if (!_context.IsAttached(forumPost))
+                _context.ForumPosts.Attach(forumPost);
 
-            context.SaveChanges();
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -779,11 +801,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
             if (privateMessage == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(privateMessage))
-                context.PrivateMessages.Attach(privateMessage);
-            context.DeleteObject(privateMessage);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(privateMessage))
+                _context.PrivateMessages.Attach(privateMessage);
+            _context.DeleteObject(privateMessage);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -796,8 +818,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
             if (forumPrivateMessageId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from pm in context.PrivateMessages
+            
+            var query = from pm in _context.PrivateMessages
                         where pm.PrivateMessageId == forumPrivateMessageId
                         select pm;
             var privateMessage = query.SingleOrDefault();
@@ -831,8 +853,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
             if (pageSize == int.MaxValue)
                 pageSize = int.MaxValue - 1;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from pm in context.PrivateMessages
+            
+            var query = from pm in _context.PrivateMessages
                         where
                         (fromUserId == 0 || fromUserId == pm.FromUserId) &&
                         (toUserId == 0 || toUserId == pm.ToUserId) &&
@@ -884,10 +906,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
             if (customerTo == null)
                 throw new NopException("Recipient could not be loaded");
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
 
-            context.PrivateMessages.AddObject(privateMessage);
-            context.SaveChanges();
+            _context.PrivateMessages.AddObject(privateMessage);
+            _context.SaveChanges();
             
             //UI notification
             customerTo.NotifiedAboutNewPrivateMessages = false;
@@ -935,11 +957,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
             }
             else
             {
-                var context = ObjectContextHelper.CurrentObjectContext;
-                if (!context.IsAttached(privateMessage))
-                    context.PrivateMessages.Attach(privateMessage);
+                
+                if (!_context.IsAttached(privateMessage))
+                    _context.PrivateMessages.Attach(privateMessage);
 
-                context.SaveChanges();
+                _context.SaveChanges();
             }
         }
 
@@ -953,11 +975,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
             if (forumSubscription == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(forumSubscription))
-                context.ForumSubscriptions.Attach(forumSubscription);
-            context.DeleteObject(forumSubscription);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(forumSubscription))
+                _context.ForumSubscriptions.Attach(forumSubscription);
+            _context.DeleteObject(forumSubscription);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -970,8 +992,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
             if (forumSubscriptionId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from fs in context.ForumSubscriptions
+            
+            var query = from fs in _context.ForumSubscriptions
                         where fs.ForumSubscriptionId == forumSubscriptionId
                         select fs;
             var forumSubscription = query.SingleOrDefault();
@@ -1019,9 +1041,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
             if (pageIndex == int.MaxValue)
                 pageIndex = int.MaxValue - 1;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
             ObjectParameter totalRecordsParameter = new ObjectParameter("TotalRecords", typeof(int));
-            var forumSubscriptions = context.Sp_Forums_SubscriptionLoadAll(userId,
+            var forumSubscriptions = _context.Sp_Forums_SubscriptionLoadAll(userId,
                 forumId, topicId, pageIndex, pageSize, totalRecordsParameter).ToList();
             totalRecords = Convert.ToInt32(totalRecordsParameter.Value);
 
@@ -1037,10 +1059,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
             if (forumSubscription == null)
                 throw new ArgumentNullException("forumSubscription");
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
 
-            context.ForumSubscriptions.AddObject(forumSubscription);
-            context.SaveChanges();
+            _context.ForumSubscriptions.AddObject(forumSubscription);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -1052,11 +1074,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
             if (forumSubscription == null)
                 throw new ArgumentNullException("forumSubscription");
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(forumSubscription))
-                context.ForumSubscriptions.Attach(forumSubscription);
+            
+            if (!_context.IsAttached(forumSubscription))
+                _context.ForumSubscriptions.Attach(forumSubscription);
 
-            context.SaveChanges();
+            _context.SaveChanges();
         }
 
         /// <summary>

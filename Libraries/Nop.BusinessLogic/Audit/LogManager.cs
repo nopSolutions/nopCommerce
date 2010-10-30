@@ -33,6 +33,28 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
     /// </summary>
     public partial class LogManager : ILogManager
     {
+        #region Fields
+
+        /// <summary>
+        /// object context
+        /// </summary>
+        protected NopObjectContext _context;
+
+        #endregion
+        
+        #region Ctor
+
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="context">Object context</param>
+        public LogManager(NopObjectContext context)
+        {
+            _context = context;
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -45,11 +67,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
             if (log == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(log))
-                context.Log.Attach(log);
-            context.DeleteObject(log);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(log))
+                _context.Log.Attach(log);
+            _context.DeleteObject(log);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -57,11 +79,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
         /// </summary>
         public void ClearLog()
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var log = context.Log.ToList();
+            
+            var log = _context.Log.ToList();
             foreach (var logItem in log)
-                context.DeleteObject(logItem);
-            context.SaveChanges();
+                _context.DeleteObject(logItem);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -70,8 +92,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
         /// <returns>Log item collection</returns>
         public List<Log> GetAllLogs()
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from l in context.Log
+            
+            var query = from l in _context.Log
                         orderby l.CreatedOn descending
                         select l;
             var collection = query.ToList();
@@ -87,8 +109,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
         {
             if (logId == 0)
                 return null;
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from l in context.Log
+            
+            var query = from l in _context.Log
                         where l.LogId == logId
                         select l;
             var log = query.SingleOrDefault();
@@ -163,9 +185,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
             referrerUrl = CommonHelper.EnsureNotNull(referrerUrl);
             referrerUrl = CommonHelper.EnsureMaximumLength(referrerUrl, 100);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
 
-            var log = context.Log.CreateObject();
+            var log = _context.Log.CreateObject();
             log.LogTypeId = (int)logType;
             log.Severity = severity;
             log.Message = message;
@@ -176,8 +198,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
             log.ReferrerUrl = referrerUrl;
             log.CreatedOn = DateTime.UtcNow;
 
-            context.Log.AddObject(log);
-            context.SaveChanges();
+            _context.Log.AddObject(log);
+            _context.SaveChanges();
 
             return log;
         }

@@ -40,6 +40,28 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
         private const string LANGUAGES_PATTERN_KEY = "Nop.language.";
         #endregion
 
+        #region Fields
+
+        /// <summary>
+        /// object context
+        /// </summary>
+        protected NopObjectContext _context;
+
+        #endregion
+
+        #region Ctor
+
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="context">Object context</param>
+        public LanguageManager(NopObjectContext context)
+        {
+            _context = context;
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -52,11 +74,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
             if (language == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(language))
-                context.Languages.Attach(language);
-            context.DeleteObject(language);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(language))
+                _context.Languages.Attach(language);
+            _context.DeleteObject(language);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -88,8 +110,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
                 return (List<Language>)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from l in context.Languages
+            
+            var query = from l in _context.Languages
                         orderby l.DisplayOrder
                         where showHidden || l.Published
                         select l;
@@ -119,8 +141,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
                 return (Language)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from l in context.Languages
+            
+            var query = from l in _context.Languages
                         where l.LanguageId == languageId
                         select l;
             var language = query.SingleOrDefault();
@@ -148,10 +170,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
             language.FlagImageFileName = CommonHelper.EnsureNotNull(language.FlagImageFileName);
             language.FlagImageFileName = CommonHelper.EnsureMaximumLength(language.FlagImageFileName, 50);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
 
-            context.Languages.AddObject(language);
-            context.SaveChanges();
+            _context.Languages.AddObject(language);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -175,11 +197,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
             language.FlagImageFileName = CommonHelper.EnsureNotNull(language.FlagImageFileName);
             language.FlagImageFileName = CommonHelper.EnsureMaximumLength(language.FlagImageFileName, 50);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(language))
-                context.Languages.Attach(language);
+            
+            if (!_context.IsAttached(language))
+                _context.Languages.Attach(language);
 
-            context.SaveChanges();
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {

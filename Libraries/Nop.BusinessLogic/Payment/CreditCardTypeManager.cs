@@ -38,6 +38,28 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
         private const string CREDITCARDS_PATTERN_KEY = "Nop.creditcard.";
         #endregion
 
+        #region Fields
+
+        /// <summary>
+        /// object context
+        /// </summary>
+        protected NopObjectContext _context;
+
+        #endregion
+
+        #region Ctor
+
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="context">Object context</param>
+        public CreditCardTypeManager(NopObjectContext context)
+        {
+            _context = context;
+        }
+
+        #endregion
+
         #region Methods
         /// <summary>
         /// Gets a credit card type
@@ -56,8 +78,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
                 return (CreditCardType)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from cct in context.CreditCardTypes
+            
+            var query = from cct in _context.CreditCardTypes
                         where cct.CreditCardTypeId == creditCardTypeId
                         select cct;
             var creditCardType = query.SingleOrDefault();
@@ -100,8 +122,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
                 return (List<CreditCardType>)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from cct in context.CreditCardTypes
+            
+            var query = from cct in _context.CreditCardTypes
                         orderby cct.DisplayOrder
                         where !cct.Deleted
                         select cct;
@@ -128,10 +150,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
             creditCardType.SystemKeyword = CommonHelper.EnsureNotNull(creditCardType.SystemKeyword);
             creditCardType.SystemKeyword = CommonHelper.EnsureMaximumLength(creditCardType.SystemKeyword, 100);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
 
-            context.CreditCardTypes.AddObject(creditCardType);
-            context.SaveChanges();
+            _context.CreditCardTypes.AddObject(creditCardType);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -153,11 +175,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
             creditCardType.SystemKeyword = CommonHelper.EnsureNotNull(creditCardType.SystemKeyword);
             creditCardType.SystemKeyword = CommonHelper.EnsureMaximumLength(creditCardType.SystemKeyword, 100);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(creditCardType))
-                context.CreditCardTypes.Attach(creditCardType);
+            
+            if (!_context.IsAttached(creditCardType))
+                _context.CreditCardTypes.Attach(creditCardType);
 
-            context.SaveChanges();
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {

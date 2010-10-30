@@ -45,7 +45,29 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
         private const string BLOGPOST_BY_ID_KEY = "Nop.blogpost.id-{0}";
         private const string BLOGPOST_PATTERN_KEY = "Nop.blogpost.";
         #endregion
-        
+
+        #region Fields
+
+        /// <summary>
+        /// object context
+        /// </summary>
+        protected NopObjectContext _context;
+
+        #endregion
+
+        #region Ctor
+
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="context">Object context</param>
+        public BlogManager(NopObjectContext context)
+        {
+            _context = context;
+        }
+
+        #endregion
+
         #region Methods
         /// <summary>
         /// Deletes an blog post
@@ -57,11 +79,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
             if (blogPost == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(blogPost))
-                context.BlogPosts.Attach(blogPost);
-            context.DeleteObject(blogPost);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(blogPost))
+                _context.BlogPosts.Attach(blogPost);
+            _context.DeleteObject(blogPost);
+            _context.SaveChanges();
             
             if (this.CacheEnabled)
             {
@@ -86,8 +108,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
                 return (BlogPost)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from bp in context.BlogPosts
+            
+            var query = from bp in _context.BlogPosts
                         where bp.BlogPostId == blogPostId
                         select bp;
             var blogPost = query.SingleOrDefault();
@@ -143,8 +165,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
             if (pageSize == Int32.MaxValue)
                 pageSize = Int32.MaxValue - 1;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from bp in context.BlogPosts
+            
+            var query = from bp in _context.BlogPosts
                         where (!dateFrom.HasValue || dateFrom.Value <= bp.CreatedOn) &&
                         (!dateTo.HasValue || dateTo.Value >= bp.CreatedOn) &&
                         (languageId == 0 || languageId == bp.LanguageId)
@@ -228,10 +250,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
             blogPost.Tags = CommonHelper.EnsureNotNull(blogPost.Tags);
             blogPost.Tags = CommonHelper.EnsureMaximumLength(blogPost.Tags, 4000);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
 
-            context.BlogPosts.AddObject(blogPost);
-            context.SaveChanges();
+            _context.BlogPosts.AddObject(blogPost);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -254,11 +276,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
             blogPost.Tags = CommonHelper.EnsureNotNull(blogPost.Tags);
             blogPost.Tags = CommonHelper.EnsureMaximumLength(blogPost.Tags, 4000);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(blogPost))
-                context.BlogPosts.Attach(blogPost);
+            
+            if (!_context.IsAttached(blogPost))
+                _context.BlogPosts.Attach(blogPost);
 
-            context.SaveChanges();
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -276,11 +298,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
             if (blogComment == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(blogComment))
-                context.BlogComments.Attach(blogComment);
-            context.DeleteObject(blogComment);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(blogComment))
+                _context.BlogComments.Attach(blogComment);
+            _context.DeleteObject(blogComment);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -293,8 +315,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
             if (blogCommentId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from bc in context.BlogComments
+            
+            var query = from bc in _context.BlogComments
                         where bc.BlogCommentId == blogCommentId
                         select bc;
             var blogComment = query.SingleOrDefault();
@@ -308,8 +330,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
         /// <returns>A collection of blog comments</returns>
         public List<BlogComment> GetBlogCommentsByBlogPostId(int blogPostId)
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from bc in context.BlogComments
+            
+            var query = from bc in _context.BlogComments
                         orderby bc.CreatedOn
                         where bc.BlogPostId == blogPostId
                         select bc;
@@ -323,8 +345,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
         /// <returns>Blog comments</returns>
         public List<BlogComment> GetAllBlogComments()
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from bc in context.BlogComments
+            
+            var query = from bc in _context.BlogComments
                         orderby bc.CreatedOn
                         select bc;
             var collection = query.ToList();
@@ -379,17 +401,17 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
             ipAddress = CommonHelper.EnsureMaximumLength(ipAddress, 100);
             commentText = CommonHelper.EnsureNotNull(commentText);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
 
-            var blogComment = context.BlogComments.CreateObject();
+            var blogComment = _context.BlogComments.CreateObject();
             blogComment.BlogPostId = blogPostId;
             blogComment.CustomerId = customerId;
             blogComment.IPAddress = ipAddress;
             blogComment.CommentText = commentText;
             blogComment.CreatedOn = createdOn;
 
-            context.BlogComments.AddObject(blogComment);
-            context.SaveChanges();
+            _context.BlogComments.AddObject(blogComment);
+            _context.SaveChanges();
 
             if (notify)
             {
@@ -412,11 +434,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
             blogComment.IPAddress = CommonHelper.EnsureMaximumLength(blogComment.IPAddress, 100);
             blogComment.CommentText = CommonHelper.EnsureNotNull(blogComment.CommentText);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(blogComment))
-                context.BlogComments.Attach(blogComment);
+            
+            if (!_context.IsAttached(blogComment))
+                _context.BlogComments.Attach(blogComment);
 
-            context.SaveChanges();
+            _context.SaveChanges();
         }
         
         /// <summary>

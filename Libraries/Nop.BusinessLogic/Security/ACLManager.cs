@@ -44,6 +44,28 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
         private const string CUSTOMERACTIONS_PATTERN_KEY = "Nop.customeraction.";
         #endregion
 
+        #region Fields
+
+        /// <summary>
+        /// object context
+        /// </summary>
+        protected NopObjectContext _context;
+
+        #endregion
+
+        #region Ctor
+
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="context">Object context</param>
+        public ACLManager(NopObjectContext context)
+        {
+            _context = context;
+        }
+
+        #endregion
+
         #region Methods
 
         #region ACL
@@ -58,11 +80,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
             if (customerAction == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(customerAction))
-                context.CustomerActions.Attach(customerAction);
-            context.DeleteObject(customerAction);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(customerAction))
+                _context.CustomerActions.Attach(customerAction);
+            _context.DeleteObject(customerAction);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -87,8 +109,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
                 return (CustomerAction)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from ca in context.CustomerActions
+            
+            var query = from ca in _context.CustomerActions
                         where ca.CustomerActionId == customerActionId
                         select ca;
             var customerAction = query.SingleOrDefault();
@@ -113,8 +135,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
                 return (List<CustomerAction>)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from ca in context.CustomerActions
+            
+            var query = from ca in _context.CustomerActions
                         orderby ca.DisplayOrder, ca.Name
                         select ca;
             var customerActions = query.ToList();
@@ -136,11 +158,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
             if (acl == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(acl))
-                context.ACL.Attach(acl);
-            context.DeleteObject(acl);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(acl))
+                _context.ACL.Attach(acl);
+            _context.DeleteObject(acl);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -153,8 +175,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
             if (aclId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from a in context.ACL
+            
+            var query = from a in _context.ACL
                         where a.AclId == aclId
                         select a;
             var acl = query.SingleOrDefault();
@@ -171,8 +193,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
         public List<ACL> GetAllAcl(int customerActionId,
             int customerRoleId, bool? allow)
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = (IQueryable<ACL>)context.ACL;
+            
+            var query = (IQueryable<ACL>)_context.ACL;
             if (customerActionId > 0)
                 query = query.Where(a => a.CustomerActionId == customerActionId);
             if (customerRoleId > 0)
@@ -195,10 +217,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
             if (acl == null)
                 throw new ArgumentNullException("acl");
 
-            var context = ObjectContextHelper.CurrentObjectContext;
             
-            context.ACL.AddObject(acl);
-            context.SaveChanges();
+            
+            _context.ACL.AddObject(acl);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -210,11 +232,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
             if (acl == null)
                 throw new ArgumentNullException("acl");
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(acl))
-                context.ACL.Attach(acl);
+            
+            if (!_context.IsAttached(acl))
+                _context.ACL.Attach(acl);
 
-            context.SaveChanges();
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -242,12 +264,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
             if (!this.Enabled)
                 return true;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
 
-            var query = from c in context.Customers
+            var query = from c in _context.Customers
                         from cr in c.NpCustomerRoles
-                        join acl in context.ACL on cr.CustomerRoleId equals acl.CustomerRoleId
-                        join ca in context.CustomerActions on acl.CustomerActionId equals ca.CustomerActionId
+                        join acl in _context.ACL on cr.CustomerRoleId equals acl.CustomerRoleId
+                        join ca in _context.CustomerActions on acl.CustomerActionId equals ca.CustomerActionId
                         where c.CustomerId == customerId &&
                         !cr.Deleted &&
                         cr.Active &&
@@ -273,11 +295,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
             if (aclPerObject == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(aclPerObject))
-                context.ACLPerObject.Attach(aclPerObject);
-            context.DeleteObject(aclPerObject);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(aclPerObject))
+                _context.ACLPerObject.Attach(aclPerObject);
+            _context.DeleteObject(aclPerObject);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -290,8 +312,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
             if (aclPerObjectId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from a in context.ACLPerObject
+            
+            var query = from a in _context.ACLPerObject
                         where a.ACLPerObjectId == aclPerObjectId
                         select a;
             var aclPerObject = query.SingleOrDefault();
@@ -309,8 +331,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
         public List<ACLPerObject> GetAllAclPerObject(int objectId, int objectTypeId,
             int customerRoleId, bool? deny)
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = (IQueryable<ACLPerObject>)context.ACLPerObject;
+            
+            var query = (IQueryable<ACLPerObject>)_context.ACLPerObject;
             if (objectId > 0)
                 query = query.Where(a => a.ObjectId == objectId);
             if (objectTypeId > 0)
@@ -335,10 +357,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
             if (aclPerObject == null)
                 throw new ArgumentNullException("aclPerObject");
 
-            var context = ObjectContextHelper.CurrentObjectContext;
             
-            context.ACLPerObject.AddObject(aclPerObject);
-            context.SaveChanges();
+            
+            _context.ACLPerObject.AddObject(aclPerObject);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -350,11 +372,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
             if (aclPerObject == null)
                 throw new ArgumentNullException("aclPerObject");
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(aclPerObject))
-                context.ACLPerObject.Attach(aclPerObject);
+            
+            if (!_context.IsAttached(aclPerObject))
+                _context.ACLPerObject.Attach(aclPerObject);
 
-            context.SaveChanges();
+            _context.SaveChanges();
         }
 
         #endregion

@@ -46,6 +46,28 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
         private const string NEWS_PATTERN_KEY = "Nop.news.";
         #endregion
 
+        #region Fields
+
+        /// <summary>
+        /// object context
+        /// </summary>
+        protected NopObjectContext _context;
+
+        #endregion
+
+        #region Ctor
+
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="context">Object context</param>
+        public NewsManager(NopObjectContext context)
+        {
+            _context = context;
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -65,8 +87,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
                 return (News)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from n in context.News
+            
+            var query = from n in _context.News
                         where n.NewsId == newsId
                         select n;
             var news = query.SingleOrDefault();
@@ -88,11 +110,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
             if (news == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(news))
-                context.News.Attach(news);
-            context.DeleteObject(news);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(news))
+                _context.News.Attach(news);
+            _context.DeleteObject(news);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -187,8 +209,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
                 pageIndex = Int32.MaxValue - 1;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from n in context.News
+            
+            var query = from n in _context.News
                         where (showHidden || n.Published) &&
                         (languageId == 0 || languageId == n.LanguageId)
                         orderby n.CreatedOn descending
@@ -212,10 +234,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
             news.Short = CommonHelper.EnsureMaximumLength(news.Short, 4000);
             news.Full = CommonHelper.EnsureNotNull(news.Full);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
 
-            context.News.AddObject(news);
-            context.SaveChanges();
+            _context.News.AddObject(news);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -238,11 +260,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
             news.Short = CommonHelper.EnsureMaximumLength(news.Short, 4000);
             news.Full = CommonHelper.EnsureNotNull(news.Full);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(news))
-                context.News.Attach(news);
+            
+            if (!_context.IsAttached(news))
+                _context.News.Attach(news);
 
-            context.SaveChanges();
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -260,8 +282,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
             if (newsCommentId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from nc in context.NewsComments
+            
+            var query = from nc in _context.NewsComments
                         where nc.NewsCommentId == newsCommentId
                         select nc;
             var newsComment = query.SingleOrDefault();
@@ -275,8 +297,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
         /// <returns>News comment collection</returns>
         public List<NewsComment> GetNewsCommentsByNewsId(int newsId)
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from nc in context.NewsComments
+            
+            var query = from nc in _context.NewsComments
                         orderby nc.CreatedOn
                         where nc.NewsId == newsId
                         select nc;
@@ -294,11 +316,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
             if (newsComment == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(newsComment))
-                context.NewsComments.Attach(newsComment);
-            context.DeleteObject(newsComment);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(newsComment))
+                _context.NewsComments.Attach(newsComment);
+            _context.DeleteObject(newsComment);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -307,8 +329,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
         /// <returns>News comment collection</returns>
         public List<NewsComment> GetAllNewsComments()
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from nc in context.NewsComments
+            
+            var query = from nc in _context.NewsComments
                         orderby nc.CreatedOn
                         select nc;
             var newsComments = query.ToList();
@@ -368,9 +390,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
             title = CommonHelper.EnsureMaximumLength(title, 1000);
             comment = CommonHelper.EnsureNotNull(comment);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
 
-            var newsComment = context.NewsComments.CreateObject();
+            var newsComment = _context.NewsComments.CreateObject();
             newsComment.NewsId = newsId;
             newsComment.CustomerId = customerId;
             newsComment.IPAddress = ipAddress;
@@ -378,8 +400,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
             newsComment.Comment = comment;
             newsComment.CreatedOn = createdOn;
 
-            context.NewsComments.AddObject(newsComment);
-            context.SaveChanges();
+            _context.NewsComments.AddObject(newsComment);
+            _context.SaveChanges();
             
             //notifications
             if (notify)
@@ -405,11 +427,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
             newsComment.Title = CommonHelper.EnsureMaximumLength(newsComment.Title, 1000);
             newsComment.Comment = CommonHelper.EnsureNotNull(newsComment.Comment);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(newsComment))
-                context.NewsComments.Attach(newsComment);
+            
+            if (!_context.IsAttached(newsComment))
+                _context.NewsComments.Attach(newsComment);
 
-            context.SaveChanges();
+            _context.SaveChanges();
         }
 
         /// <summary>

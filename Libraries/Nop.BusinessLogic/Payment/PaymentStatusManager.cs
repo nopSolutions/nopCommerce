@@ -37,7 +37,29 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
         private const string PAYMENTSTATUSES_BY_ID_KEY = "Nop.paymentstatus.id-{0}";
         private const string PAYMENTSTATUSES_PATTERN_KEY = "Nop.paymentstatus.";
         #endregion
-        
+
+        #region Fields
+
+        /// <summary>
+        /// object context
+        /// </summary>
+        protected NopObjectContext _context;
+
+        #endregion
+
+        #region Ctor
+
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="context">Object context</param>
+        public PaymentStatusManager(NopObjectContext context)
+        {
+            _context = context;
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -84,8 +106,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
                 return (PaymentStatus)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from ps in context.PaymentStatuses
+            
+            var query = from ps in _context.PaymentStatuses
                         where ps.PaymentStatusId == paymentStatusId
                         select ps;
             var paymentStatus = query.SingleOrDefault();
@@ -110,8 +132,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
                 return (List<PaymentStatus>)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from ps in context.PaymentStatuses
+            
+            var query = from ps in _context.PaymentStatuses
                         orderby ps.PaymentStatusId
                         select ps;
             var paymentStatuses = query.ToList();

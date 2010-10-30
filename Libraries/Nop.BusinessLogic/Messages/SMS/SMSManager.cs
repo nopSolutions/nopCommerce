@@ -20,6 +20,28 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages.SMS
         private const string SMSPROVIDERS_PATTERN_KEY = "Nop.smsprovider.";
         #endregion
 
+        #region Fields
+
+        /// <summary>
+        /// object context
+        /// </summary>
+        protected NopObjectContext _context;
+
+        #endregion
+
+        #region Ctor
+
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="context">Object context</param>
+        public SMSManager(NopObjectContext context)
+        {
+            _context = context;
+        }
+
+        #endregion
+
         #region Methods
         /// <summary>
         /// Deletes a SMS provider
@@ -31,11 +53,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages.SMS
             if (smsProvider == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(smsProvider))
-                context.SMSProviders.Attach(smsProvider);
-            context.DeleteObject(smsProvider);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(smsProvider))
+                _context.SMSProviders.Attach(smsProvider);
+            _context.DeleteObject(smsProvider);
+            _context.SaveChanges();
 
             if (CacheEnabled)
             {
@@ -60,8 +82,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages.SMS
                 return (SMSProvider)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from p in context.SMSProviders
+            
+            var query = from p in _context.SMSProviders
                         where p.SMSProviderId == smsProviderId
                         select p;
             var smsProvider = query.SingleOrDefault();
@@ -80,8 +102,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages.SMS
         /// <returns>SMS provider</returns>
         public SMSProvider GetSMSProviderBySystemKeyword(string systemKeyword)
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from p in context.SMSProviders
+            
+            var query = from p in _context.SMSProviders
                         where p.SystemKeyword == systemKeyword
                         select p;
             var smsProvider = query.FirstOrDefault();
@@ -105,8 +127,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages.SMS
         /// <returns>SMS provider collection</returns>
         public List<SMSProvider> GetAllSMSProviders(bool showHidden)
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from p in context.SMSProviders
+            
+            var query = from p in _context.SMSProviders
                         where showHidden || p.IsActive
                         orderby p.Name
                         select p;
@@ -129,10 +151,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages.SMS
             smsProvider.SystemKeyword = CommonHelper.EnsureNotNull(smsProvider.SystemKeyword);
             smsProvider.SystemKeyword = CommonHelper.EnsureMaximumLength(smsProvider.SystemKeyword, 500);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
             
-            context.SMSProviders.AddObject(smsProvider);
-            context.SaveChanges();
+            
+            _context.SMSProviders.AddObject(smsProvider);
+            _context.SaveChanges();
 
             if (CacheEnabled)
             {
@@ -156,11 +178,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages.SMS
             smsProvider.SystemKeyword = CommonHelper.EnsureNotNull(smsProvider.SystemKeyword);
             smsProvider.SystemKeyword = CommonHelper.EnsureMaximumLength(smsProvider.SystemKeyword, 500);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(smsProvider))
-                context.SMSProviders.Attach(smsProvider);
+            
+            if (!_context.IsAttached(smsProvider))
+                _context.SMSProviders.Attach(smsProvider);
 
-            context.SaveChanges();
+            _context.SaveChanges();
 
             if (CacheEnabled)
             {

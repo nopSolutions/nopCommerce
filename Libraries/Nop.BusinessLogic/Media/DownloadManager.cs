@@ -29,6 +29,28 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
     /// </summary>
     public partial class DownloadManager : IDownloadManager
     {
+        #region Fields
+
+        /// <summary>
+        /// object context
+        /// </summary>
+        protected NopObjectContext _context;
+
+        #endregion
+
+        #region Ctor
+
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="context">Object context</param>
+        public DownloadManager(NopObjectContext context)
+        {
+            _context = context;
+        }
+
+        #endregion
+
         #region Methods
         /// <summary>
         /// Gets a download url for an admin area
@@ -109,8 +131,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
             if (downloadId == 0)
                 return null;
             
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from d in context.Downloads
+            
+            var query = from d in _context.Downloads
                         where d.DownloadId == downloadId
                         select d;
             var download = query.SingleOrDefault();
@@ -128,11 +150,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
             if (download == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(download))
-                context.Downloads.Attach(download);
-            context.DeleteObject(download);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(download))
+                _context.Downloads.Attach(download);
+            _context.DeleteObject(download);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -153,10 +175,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
             download.Extension = CommonHelper.EnsureNotNull(download.Extension);
             download.Extension = CommonHelper.EnsureMaximumLength(download.Extension, 20);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
 
-            context.Downloads.AddObject(download);
-            context.SaveChanges();
+            _context.Downloads.AddObject(download);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -177,11 +199,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
             download.Extension = CommonHelper.EnsureNotNull(download.Extension);
             download.Extension = CommonHelper.EnsureMaximumLength(download.Extension, 20);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(download))
-                context.Downloads.Attach(download);
+            
+            if (!_context.IsAttached(download))
+                _context.Downloads.Attach(download);
 
-            context.SaveChanges();
+            _context.SaveChanges();
         }
 
         /// <summary>

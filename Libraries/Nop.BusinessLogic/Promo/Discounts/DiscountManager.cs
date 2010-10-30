@@ -51,6 +51,28 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         private const string DISCOUNTLIMITATION_PATTERN_KEY = "Nop.discountlimitation.";
         #endregion
 
+        #region Fields
+
+        /// <summary>
+        /// object context
+        /// </summary>
+        protected NopObjectContext _context;
+
+        #endregion
+
+        #region Ctor
+
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="context">Object context</param>
+        public DiscountManager(NopObjectContext context)
+        {
+            _context = context;
+        }
+
+        #endregion
+
         #region Methods
 
         #region Discounts
@@ -96,8 +118,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
                 return (Discount)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from d in context.Discounts
+            
+            var query = from d in _context.Discounts
                         where d.DiscountId == discountId
                         select d;
             var discount = query.SingleOrDefault();
@@ -152,8 +174,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
             if (discountType.HasValue)
                 discountTypeId = (int)discountType.Value;
             
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = (IQueryable<Discount>)context.Discounts;
+            
+            var query = (IQueryable<Discount>)_context.Discounts;
             if (!showHidden)
                 query = query.Where(d => d.StartDate <= DateTime.UtcNow && d.EndDate >= DateTime.UtcNow);
             if (discountTypeId.HasValue && discountTypeId.Value > 0)
@@ -192,10 +214,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
             discount.CouponCode = CommonHelper.EnsureNotNull(discount.CouponCode);
             discount.CouponCode = CommonHelper.EnsureMaximumLength(discount.CouponCode, 100);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
 
-            context.Discounts.AddObject(discount);
-            context.SaveChanges();
+            _context.Discounts.AddObject(discount);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -225,11 +247,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
             discount.CouponCode = CommonHelper.EnsureNotNull(discount.CouponCode);
             discount.CouponCode = CommonHelper.EnsureMaximumLength(discount.CouponCode, 100);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(discount))
-                context.Discounts.Attach(discount);
+            
+            if (!_context.IsAttached(discount))
+                _context.Discounts.Attach(discount);
 
-            context.SaveChanges();
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -252,18 +274,18 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
             if (discount == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(productVariant))
-                context.ProductVariants.Attach(productVariant);
-            if (!context.IsAttached(discount))
-                context.Discounts.Attach(discount);
+            
+            if (!_context.IsAttached(productVariant))
+                _context.ProductVariants.Attach(productVariant);
+            if (!_context.IsAttached(discount))
+                _context.Discounts.Attach(discount);
 
             //ensure that navigation property is loaded
             if (productVariant.NpDiscounts == null)
-                context.LoadProperty(productVariant, pv => pv.NpDiscounts);
+                _context.LoadProperty(productVariant, pv => pv.NpDiscounts);
 
             productVariant.NpDiscounts.Add(discount);
-            context.SaveChanges();
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -286,14 +308,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
             if (discount == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(productVariant))
-                context.ProductVariants.Attach(productVariant);
-            if (!context.IsAttached(discount))
-                context.Discounts.Attach(discount);
+            
+            if (!_context.IsAttached(productVariant))
+                _context.ProductVariants.Attach(productVariant);
+            if (!_context.IsAttached(discount))
+                _context.Discounts.Attach(discount);
 
             productVariant.NpDiscounts.Remove(discount);
-            context.SaveChanges();
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -316,8 +338,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
                 return (List<Discount>)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from d in context.Discounts
+            
+            var query = from d in _context.Discounts
                         from pv in d.NpProductVariants
                         where (showHidden || (d.StartDate <= DateTime.UtcNow && d.EndDate >= DateTime.UtcNow)) &&
                             !d.Deleted &&
@@ -348,18 +370,18 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
             if (discount == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(category))
-                context.Categories.Attach(category);
-            if (!context.IsAttached(discount))
-                context.Discounts.Attach(discount);
+            
+            if (!_context.IsAttached(category))
+                _context.Categories.Attach(category);
+            if (!_context.IsAttached(discount))
+                _context.Discounts.Attach(discount);
 
             //ensure that navigation property is loaded
             if (category.NpDiscounts == null)
-                context.LoadProperty(category, c => c.NpDiscounts);
+                _context.LoadProperty(category, c => c.NpDiscounts);
 
             category.NpDiscounts.Add(discount);
-            context.SaveChanges();
+            _context.SaveChanges();
             
             if (this.CacheEnabled)
             {
@@ -382,18 +404,18 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
             if (discount == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(category))
-                context.Categories.Attach(category);
-            if (!context.IsAttached(discount))
-                context.Discounts.Attach(discount);
+            
+            if (!_context.IsAttached(category))
+                _context.Categories.Attach(category);
+            if (!_context.IsAttached(discount))
+                _context.Discounts.Attach(discount);
 
             //ensure that navigation property is loaded
             if (category.NpDiscounts == null)
-                context.LoadProperty(category, c => c.NpDiscounts);
+                _context.LoadProperty(category, c => c.NpDiscounts);
 
             category.NpDiscounts.Remove(discount);
-            context.SaveChanges();
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -416,8 +438,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
                 return (List<Discount>)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from d in context.Discounts
+            
+            var query = from d in _context.Discounts
                         from c in d.NpCategories
                         where (showHidden || (d.StartDate <= DateTime.UtcNow  && d.EndDate >= DateTime.UtcNow)) &&
                             !d.Deleted &&
@@ -448,18 +470,18 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
             if (discount == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(productVariant))
-                context.ProductVariants.Attach(productVariant);
-            if (!context.IsAttached(discount))
-                context.Discounts.Attach(discount);
+            
+            if (!_context.IsAttached(productVariant))
+                _context.ProductVariants.Attach(productVariant);
+            if (!_context.IsAttached(discount))
+                _context.Discounts.Attach(discount);
 
             //ensure that navigation property is loaded
             if (discount.NpRestrictedProductVariants == null)
-                context.LoadProperty(discount, d => d.NpRestrictedProductVariants);
+                _context.LoadProperty(discount, d => d.NpRestrictedProductVariants);
 
             discount.NpRestrictedProductVariants.Add(productVariant);
-            context.SaveChanges();
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -477,18 +499,18 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
             if (discount == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(productVariant))
-                context.ProductVariants.Attach(productVariant);
-            if (!context.IsAttached(discount))
-                context.Discounts.Attach(discount);
+            
+            if (!_context.IsAttached(productVariant))
+                _context.ProductVariants.Attach(productVariant);
+            if (!_context.IsAttached(discount))
+                _context.Discounts.Attach(discount);
 
             //ensure that navigation property is loaded
             if (discount.NpRestrictedProductVariants == null)
-                context.LoadProperty(discount, d => d.NpRestrictedProductVariants);
+                _context.LoadProperty(discount, d => d.NpRestrictedProductVariants);
 
             discount.NpRestrictedProductVariants.Remove(productVariant);
-            context.SaveChanges();
+            _context.SaveChanges();
         }
 
         #endregion
@@ -508,8 +530,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
                 return (List<DiscountRequirement>)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from dr in context.DiscountRequirements
+            
+            var query = from dr in _context.DiscountRequirements
                         orderby dr.DiscountRequirementId
                         select dr;
             var discountRequirements = query.ToList();
@@ -534,8 +556,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
                 return (List<DiscountType>)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from dt in context.DiscountTypes
+            
+            var query = from dt in _context.DiscountTypes
                         orderby dt.DiscountTypeId
                         select dt;
             var discountTypes = query.ToList();
@@ -560,8 +582,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
                 return (List<DiscountLimitation>)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from dl in context.DiscountLimitations
+            
+            var query = from dl in _context.DiscountLimitations
                         orderby dl.DiscountLimitationId
                         select dl;
             var discountLimitations = query.ToList();
@@ -587,11 +609,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
             if (discountUsageHistory == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(discountUsageHistory))
-                context.DiscountUsageHistory.Attach(discountUsageHistory);
-            context.DeleteObject(discountUsageHistory);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(discountUsageHistory))
+                _context.DiscountUsageHistory.Attach(discountUsageHistory);
+            _context.DeleteObject(discountUsageHistory);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -604,8 +626,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
             if (discountUsageHistoryId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from duh in context.DiscountUsageHistory
+            
+            var query = from duh in _context.DiscountUsageHistory
                         where duh.DiscountUsageHistoryId == discountUsageHistoryId
                         select duh;
             var discountUsageHistory = query.SingleOrDefault();
@@ -622,8 +644,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         public List<DiscountUsageHistory> GetAllDiscountUsageHistoryEntries(int? discountId,
             int? customerId, int? orderId)
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var discountUsageHistoryEntries = context.Sp_DiscountUsageHistoryLoadAll(discountId,
+            
+            var discountUsageHistoryEntries = _context.Sp_DiscountUsageHistoryLoadAll(discountId,
                 customerId, orderId).ToList();
 
             return discountUsageHistoryEntries;
@@ -638,10 +660,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
             if (discountUsageHistory == null)
                 throw new ArgumentNullException("discountUsageHistory");
 
-            var context = ObjectContextHelper.CurrentObjectContext;
             
-            context.DiscountUsageHistory.AddObject(discountUsageHistory);
-            context.SaveChanges();
+            
+            _context.DiscountUsageHistory.AddObject(discountUsageHistory);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -653,11 +675,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
             if (discountUsageHistory == null)
                 throw new ArgumentNullException("discountUsageHistory");
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(discountUsageHistory))
-                context.DiscountUsageHistory.Attach(discountUsageHistory);
+            
+            if (!_context.IsAttached(discountUsageHistory))
+                _context.DiscountUsageHistory.Attach(discountUsageHistory);
 
-            context.SaveChanges();
+            _context.SaveChanges();
         }
 
         #endregion

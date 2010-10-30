@@ -31,6 +31,28 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
     /// </summary>
     public partial class ShippingByWeightManager : IShippingByWeightManager
     {
+        #region Fields
+
+        /// <summary>
+        /// object context
+        /// </summary>
+        protected NopObjectContext _context;
+
+        #endregion
+
+        #region Ctor
+
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="context">Object context</param>
+        public ShippingByWeightManager(NopObjectContext context)
+        {
+            _context = context;
+        }
+
+        #endregion
+
         #region Methods
         /// <summary>
         /// Gets a ShippingByWeight
@@ -42,8 +64,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
             if (shippingByWeightId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from sw in context.ShippingByWeight
+            
+            var query = from sw in _context.ShippingByWeight
                         where sw.ShippingByWeightId == shippingByWeightId
                         select sw;
             var shippingByWeight = query.SingleOrDefault();
@@ -60,11 +82,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
             if (shippingByWeight == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(shippingByWeight))
-                context.ShippingByWeight.Attach(shippingByWeight);
-            context.DeleteObject(shippingByWeight);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(shippingByWeight))
+                _context.ShippingByWeight.Attach(shippingByWeight);
+            _context.DeleteObject(shippingByWeight);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -73,8 +95,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         /// <returns>ShippingByWeight collection</returns>
         public List<ShippingByWeight> GetAll()
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from sw in context.ShippingByWeight
+            
+            var query = from sw in _context.ShippingByWeight
                         orderby sw.ShippingMethodId, sw.From
                         select sw;
             var collection = query.ToList();
@@ -90,10 +112,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
             if (shippingByWeight == null)
                 throw new ArgumentNullException("shippingByWeight");
 
-            var context = ObjectContextHelper.CurrentObjectContext;
             
-            context.ShippingByWeight.AddObject(shippingByWeight);
-            context.SaveChanges();
+            
+            _context.ShippingByWeight.AddObject(shippingByWeight);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -105,11 +127,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
             if (shippingByWeight == null)
                 throw new ArgumentNullException("shippingByWeight");
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(shippingByWeight))
-                context.ShippingByWeight.Attach(shippingByWeight);
+            
+            if (!_context.IsAttached(shippingByWeight))
+                _context.ShippingByWeight.Attach(shippingByWeight);
 
-            context.SaveChanges();
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -119,8 +141,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         /// <returns>ShippingByWeight collection</returns>
         public List<ShippingByWeight> GetAllByShippingMethodId(int shippingMethodId)
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from sw in context.ShippingByWeight
+            
+            var query = from sw in _context.ShippingByWeight
                         where sw.ShippingMethodId == shippingMethodId
                         orderby sw.From
                         select sw;

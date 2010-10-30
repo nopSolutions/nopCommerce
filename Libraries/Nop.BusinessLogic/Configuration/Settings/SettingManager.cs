@@ -36,6 +36,28 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings
         private const string SETTINGS_ALL_KEY = "Nop.setting.all";
         #endregion
 
+        #region Fields
+
+        /// <summary>
+        /// object context
+        /// </summary>
+        protected NopObjectContext _context;
+
+        #endregion
+
+        #region Ctor
+
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="context">Object context</param>
+        public SettingManager(NopObjectContext context)
+        {
+            _context = context;
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -48,8 +70,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings
             if (settingId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from s in context.Settings
+            
+            var query = from s in _context.Settings
                         where s.SettingId == settingId
                         select s;
             var setting = query.SingleOrDefault();
@@ -66,11 +88,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings
             if (setting == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(setting))
-                context.Settings.Attach(setting);
-            context.DeleteObject(setting);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(setting))
+                _context.Settings.Attach(setting);
+            _context.DeleteObject(setting);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -91,8 +113,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings
                 return (Dictionary<string, Setting>)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from s in context.Settings
+            
+            var query = from s in _context.Settings
                         orderby s.Name
                         select s;
             var settings = query.ToDictionary(s => s.Name.ToLowerInvariant());
@@ -179,15 +201,15 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings
             value = CommonHelper.EnsureMaximumLength(value, 2000);
             description = CommonHelper.EnsureNotNull(description);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
 
-            var setting = context.Settings.CreateObject();
+            var setting = _context.Settings.CreateObject();
             setting.Name = name;
             setting.Value = value;
             setting.Description = description;
 
-            context.Settings.AddObject(setting);
-            context.SaveChanges();
+            _context.Settings.AddObject(setting);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -217,14 +239,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings
             if (setting == null)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(setting))
-                context.Settings.Attach(setting);
+            
+            if (!_context.IsAttached(setting))
+                _context.Settings.Attach(setting);
 
             setting.Name = name;
             setting.Value = value;
             setting.Description = description;
-            context.SaveChanges();
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {

@@ -38,6 +38,28 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         private const string SHIPPINGTATUSES_PATTERN_KEY = "Nop.shippingstatus.";
         #endregion
 
+        #region Fields
+
+        /// <summary>
+        /// object context
+        /// </summary>
+        protected NopObjectContext _context;
+
+        #endregion
+
+        #region Ctor
+
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="context">Object context</param>
+        public ShippingStatusManager(NopObjectContext context)
+        {
+            _context = context;
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -84,8 +106,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
                 return (ShippingStatus)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from ss in context.ShippingStatuses
+            
+            var query = from ss in _context.ShippingStatuses
                         where ss.ShippingStatusId == shippingStatusId
                         select ss;
             var shippingStatus = query.SingleOrDefault();
@@ -110,8 +132,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
                 return (List<ShippingStatus>)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from ss in context.ShippingStatuses
+            
+            var query = from ss in _context.ShippingStatuses
                         orderby ss.ShippingStatusId
                         select ss;
             var shippingStatuses = query.ToList();

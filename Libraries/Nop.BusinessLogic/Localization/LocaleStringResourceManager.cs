@@ -39,7 +39,29 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Localization
         private const string LOCALSTRINGRESOURCES_ALL_KEY = "Nop.localestringresource.all-{0}";
         private const string LOCALSTRINGRESOURCES_PATTERN_KEY = "Nop.localestringresource.";
         #endregion
-        
+
+        #region Fields
+
+        /// <summary>
+        /// object context
+        /// </summary>
+        protected NopObjectContext _context;
+
+        #endregion
+
+        #region Ctor
+
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="context">Object context</param>
+        public LocaleStringResourceManager(NopObjectContext context)
+        {
+            _context = context;
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -52,11 +74,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Localization
             if (localeStringResource == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(localeStringResource))
-                context.LocaleStringResources.Attach(localeStringResource);
-            context.DeleteObject(localeStringResource);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(localeStringResource))
+                _context.LocaleStringResources.Attach(localeStringResource);
+            _context.DeleteObject(localeStringResource);
+            _context.SaveChanges();
             
             if (this.CacheEnabled)
             {
@@ -74,8 +96,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Localization
             if (localeStringResourceId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from l in context.LocaleStringResources
+            
+            var query = from l in _context.LocaleStringResources
                         where l.LocaleStringResourceId == localeStringResourceId
                         select l;
             var localeStringResource = query.SingleOrDefault();
@@ -97,8 +119,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Localization
                 return (Dictionary<string, LocaleStringResource>)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from l in context.LocaleStringResources
+            
+            var query = from l in _context.LocaleStringResources
                         orderby l.ResourceName
                         where l.LanguageId == languageId
                         select l;
@@ -124,10 +146,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Localization
             localeStringResource.ResourceName = CommonHelper.EnsureMaximumLength(localeStringResource.ResourceName, 200);
             localeStringResource.ResourceValue = CommonHelper.EnsureNotNull(localeStringResource.ResourceValue);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
             
-            context.LocaleStringResources.AddObject(localeStringResource);
-            context.SaveChanges();
+            
+            _context.LocaleStringResources.AddObject(localeStringResource);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -148,11 +170,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Localization
             localeStringResource.ResourceName = CommonHelper.EnsureMaximumLength(localeStringResource.ResourceName, 200);
             localeStringResource.ResourceValue = CommonHelper.EnsureNotNull(localeStringResource.ResourceValue);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(localeStringResource))
-                context.LocaleStringResources.Attach(localeStringResource);
+            
+            if (!_context.IsAttached(localeStringResource))
+                _context.LocaleStringResources.Attach(localeStringResource);
 
-            context.SaveChanges();
+            _context.SaveChanges();
             
             if (this.CacheEnabled)
             {
@@ -168,9 +190,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Localization
         public string GetAllLocaleStringResourcesAsXml(int languageId)
         {
             string xmlPackage = string.Empty;
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
             ObjectParameter xmlPackageParameter = new ObjectParameter("XmlPackage", typeof(string));
-            context.Sp_LanguagePackExport(languageId, xmlPackageParameter);
+            _context.Sp_LanguagePackExport(languageId, xmlPackageParameter);
             xmlPackage = Convert.ToString(xmlPackageParameter.Value);
 
             return xmlPackage;
@@ -183,13 +205,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Localization
         /// <param name="xml">The XML package</param>
         public void InsertAllLocaleStringResourcesFromXml(int languageId, string xml)
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
             //long-running query
-            int? timeout = context.CommandTimeout;
+            int? timeout = _context.CommandTimeout;
             try
             {
-                context.CommandTimeout = 600;
-                context.Sp_LanguagePackImport(languageId, xml);
+                _context.CommandTimeout = 600;
+                _context.Sp_LanguagePackImport(languageId, xml);
             }
             catch (Exception exc)
             {
@@ -198,7 +220,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Localization
             }
             finally
             {
-                context.CommandTimeout = timeout;
+                _context.CommandTimeout = timeout;
             }
 
             if (this.CacheEnabled)

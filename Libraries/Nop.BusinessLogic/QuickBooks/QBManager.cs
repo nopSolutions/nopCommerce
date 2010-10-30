@@ -19,6 +19,28 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
     /// </summary>
     public partial class QBManager : IQBManager
     {
+        #region Fields
+
+        /// <summary>
+        /// object context
+        /// </summary>
+        protected NopObjectContext _context;
+
+        #endregion
+
+        #region Ctor
+
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="context">Object context</param>
+        public QBManager(NopObjectContext context)
+        {
+            _context = context;
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -116,11 +138,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
             entity.QBEntityId = CommonHelper.EnsureMaximumLength(entity.QBEntityId, 50);
             entity.SeqNum = CommonHelper.EnsureNotNull(entity.SeqNum);
             entity.SeqNum = CommonHelper.EnsureMaximumLength(entity.SeqNum, 20);
-
-            NopObjectContext context = ObjectContextHelper.CurrentObjectContext;
-            
-            context.QBEntities.AddObject(entity);
-            context.SaveChanges();
+                        
+            _context.QBEntities.AddObject(entity);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -137,11 +157,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
             entity.SeqNum = CommonHelper.EnsureNotNull(entity.SeqNum);
             entity.SeqNum = CommonHelper.EnsureMaximumLength(entity.SeqNum, 20);
 
-            NopObjectContext context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(entity))
-                context.QBEntities.Attach(entity);
+            if (!_context.IsAttached(entity))
+                _context.QBEntities.Attach(entity);
 
-            context.SaveChanges();
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -156,8 +175,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
                 return null;
             }
 
-            NopObjectContext context = ObjectContextHelper.CurrentObjectContext;
-            var query = from qbe in context.QBEntities
+            var query = from qbe in _context.QBEntities
                         where qbe.EntityId == entityId
                         select qbe;
             QBEntity entity = query.SingleOrDefault();
@@ -176,9 +194,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
                 return null;
             }
 
-            NopObjectContext context = ObjectContextHelper.CurrentObjectContext;
-
-            var query = from qbe in context.QBEntities
+            
+            var query = from qbe in _context.QBEntities
                         where qbe.QBEntityId == qbEntityId
                         select qbe;
 
@@ -195,9 +212,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
         /// <returns>QBEntity</returns>
         public QBEntity GetQBEntityByNopId(EntityTypeEnum entityType, int nopEntityId)
         {
-            NopObjectContext context = ObjectContextHelper.CurrentObjectContext;
-
-            var query = from qbe in context.QBEntities
+            var query = from qbe in _context.QBEntities
                         where qbe.EntityTypeId == (int)entityType && qbe.NopEntityId == nopEntityId
                         select qbe;
 
@@ -220,9 +235,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
                 return new List<QBEntity>();
             }
 
-            NopObjectContext context = ObjectContextHelper.CurrentObjectContext;
-
-            var query = (IQueryable<QBEntity>)context.QBEntities;
+            var query = (IQueryable<QBEntity>)_context.QBEntities;
 
             if (entityType.HasValue)
             {

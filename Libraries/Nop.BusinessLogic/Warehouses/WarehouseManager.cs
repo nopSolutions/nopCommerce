@@ -31,6 +31,28 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Warehouses
     /// </summary>
     public partial class WarehouseManager : IWarehouseManager
     {
+        #region Fields
+
+        /// <summary>
+        /// object context
+        /// </summary>
+        protected NopObjectContext _context;
+
+        #endregion
+
+        #region Ctor
+
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="context">Object context</param>
+        public WarehouseManager(NopObjectContext context)
+        {
+            _context = context;
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -53,8 +75,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Warehouses
         /// <returns>Warehouse collection</returns>
         public List<Warehouse> GetAllWarehouses()
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from w in context.Warehouses
+            
+            var query = from w in _context.Warehouses
                         orderby w.Name
                         where !w.Deleted
                         select w;
@@ -73,8 +95,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Warehouses
             if (warehouseId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from w in context.Warehouses
+            
+            var query = from w in _context.Warehouses
                         where w.WarehouseId == warehouseId
                         select w;
             var warehouse = query.SingleOrDefault();
@@ -109,10 +131,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Warehouses
             warehouse.ZipPostalCode = CommonHelper.EnsureNotNull(warehouse.ZipPostalCode);
             warehouse.ZipPostalCode = CommonHelper.EnsureMaximumLength(warehouse.ZipPostalCode, 30);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
 
-            context.Warehouses.AddObject(warehouse);
-            context.SaveChanges();
+            _context.Warehouses.AddObject(warehouse);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -143,11 +165,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Warehouses
             warehouse.ZipPostalCode = CommonHelper.EnsureNotNull(warehouse.ZipPostalCode);
             warehouse.ZipPostalCode = CommonHelper.EnsureMaximumLength(warehouse.ZipPostalCode, 30);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(warehouse))
-                context.Warehouses.Attach(warehouse);
+            
+            if (!_context.IsAttached(warehouse))
+                _context.Warehouses.Attach(warehouse);
 
-            context.SaveChanges();
+            _context.SaveChanges();
         }
 
         #endregion

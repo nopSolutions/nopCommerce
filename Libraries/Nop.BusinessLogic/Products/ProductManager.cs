@@ -55,7 +55,29 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         private const string TIERPRICES_PATTERN_KEY = "Nop.tierprice.";
         private const string CUSTOMERROLEPRICES_PATTERN_KEY = "Nop.customerroleproductprice.";
         #endregion
-        
+
+        #region Fields
+
+        /// <summary>
+        /// object context
+        /// </summary>
+        protected NopObjectContext _context;
+
+        #endregion
+
+        #region Ctor
+
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="context">Object context</param>
+        public ProductManager(NopObjectContext context)
+        {
+            _context = context;
+        }
+
+        #endregion
+
         #region Methods
 
         #region Products
@@ -97,8 +119,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         /// <returns>Product collection</returns>
         public List<Product> GetAllProducts(bool showHidden)
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from p in context.Products
+            
+            var query = from p in _context.Products
                         orderby p.Name
                         where (showHidden || p.Published) &&
                         !p.Deleted
@@ -356,9 +378,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                 }
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
             ObjectParameter totalRecordsParameter = new ObjectParameter("TotalRecords", typeof(int));
-            var products = context.Sp_ProductLoadAllPaged(categoryId,
+            var products = _context.Sp_ProductLoadAllPaged(categoryId,
                manufacturerId, productTagId, featuredProducts,
                priceMin, priceMax, relatedToProductId,
                keywords, searchDescriptions, showHidden, pageIndex, pageSize, commaSeparatedSpecIds,
@@ -380,8 +402,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             if (NopContext.Current != null)
                 languageId = NopContext.Current.WorkingLanguage.LanguageId;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from p in context.Products
+            
+            var query = from p in _context.Products
                         orderby p.Name
                         where (showHidden || p.Published) &&
                         !p.Deleted &&
@@ -408,8 +430,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                 return (Product)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from p in context.Products
+            
+            var query = from p in _context.Products
                         where p.ProductId == productId
                         select p;
             var product = query.SingleOrDefault();
@@ -444,10 +466,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             product.SEName = CommonHelper.EnsureNotNull(product.SEName);
             product.SEName = CommonHelper.EnsureMaximumLength(product.SEName, 100);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
             
-            context.Products.AddObject(product);
-            context.SaveChanges();
+            
+            _context.Products.AddObject(product);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -485,11 +507,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             product.SEName = CommonHelper.EnsureNotNull(product.SEName);
             product.SEName = CommonHelper.EnsureMaximumLength(product.SEName, 100);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(product))
-                context.Products.Attach(product);
+            
+            if (!_context.IsAttached(product))
+                _context.Products.Attach(product);
 
-            context.SaveChanges();
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -514,8 +536,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             if (productLocalizedId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from pl in context.ProductLocalized
+            
+            var query = from pl in _context.ProductLocalized
                         where pl.ProductLocalizedId == productLocalizedId
                         select pl;
             var productLocalized = query.SingleOrDefault();
@@ -532,8 +554,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             if (productId == 0)
                 return new List<ProductLocalized>();
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from pl in context.ProductLocalized
+            
+            var query = from pl in _context.ProductLocalized
                         where pl.ProductId == productId
                         select pl;
             var content = query.ToList();
@@ -551,8 +573,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             if (productId == 0 || languageId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from pl in context.ProductLocalized
+            
+            var query = from pl in _context.ProductLocalized
                         orderby pl.ProductLocalizedId
                         where pl.ProductId == productId &&
                         pl.LanguageId == languageId
@@ -583,10 +605,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             productLocalized.SEName = CommonHelper.EnsureNotNull(productLocalized.SEName);
             productLocalized.SEName = CommonHelper.EnsureMaximumLength(productLocalized.SEName, 100);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
 
-            context.ProductLocalized.AddObject(productLocalized);
-            context.SaveChanges();
+            _context.ProductLocalized.AddObject(productLocalized);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -627,19 +649,19 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                string.IsNullOrEmpty(productLocalized.MetaTitle) &&
                string.IsNullOrEmpty(productLocalized.SEName);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(productLocalized))
-                context.ProductLocalized.Attach(productLocalized);
+            
+            if (!_context.IsAttached(productLocalized))
+                _context.ProductLocalized.Attach(productLocalized);
 
             if (allFieldsAreEmpty)
             {
                 //delete if all fields are empty
-                context.DeleteObject(productLocalized);
-                context.SaveChanges();
+                _context.DeleteObject(productLocalized);
+                _context.SaveChanges();
             }
             else
             {
-                context.SaveChanges();
+                _context.SaveChanges();
             }
 
             if (this.CacheEnabled)
@@ -687,9 +709,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
 
             bool showHidden = NopContext.Current.IsAdmin;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
             ObjectParameter totalRecordsParameter = new ObjectParameter("TotalRecords", typeof(int));
-            var products = context.Sp_ProductAlsoPurchasedLoadByProductID(productId,
+            var products = _context.Sp_ProductAlsoPurchasedLoadByProductID(productId,
                showHidden, pageIndex, pageSize, totalRecordsParameter).ToList();
             totalRecords = Convert.ToInt32(totalRecordsParameter.Value);
             return products;
@@ -716,31 +738,31 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             var ratedOn = DateTime.UtcNow;
 
             //delete previous helpfulness
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var oldPr = (from pr in context.ProductRatings
+            
+            var oldPr = (from pr in _context.ProductRatings
                          where pr.ProductId == productId &&
                          pr.CustomerId == NopContext.Current.User.CustomerId
                          select pr).FirstOrDefault();
             if (oldPr != null)
             {
-                context.DeleteObject(oldPr);
+                _context.DeleteObject(oldPr);
             }
-            context.SaveChanges();
+            _context.SaveChanges();
 
             //insert new rating
-            var newPr = context.ProductRatings.CreateObject();
+            var newPr = _context.ProductRatings.CreateObject();
             newPr.ProductId = productId;
             newPr.CustomerId = NopContext.Current.User.CustomerId;
             newPr.Rating = rating;
             newPr.RatedOn = ratedOn;
-            context.ProductRatings.AddObject(newPr);
-            context.SaveChanges();
+            _context.ProductRatings.AddObject(newPr);
+            _context.SaveChanges();
 
             //new totals
-            int ratingSum = (from pr in context.ProductRatings
+            int ratingSum = (from pr in _context.ProductRatings
                              where pr.ProductId == productId
                              select pr).Sum(p => p.Rating);
-            int totalRatingVotes = (from pr in context.ProductRatings
+            int totalRatingVotes = (from pr in _context.ProductRatings
                                     where pr.ProductId == productId
                                     select pr).Count();
 
@@ -1434,8 +1456,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         /// <returns>Result</returns>
         public List<ProductVariant> GetLowStockProductVariants()
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from pv in context.ProductVariants
+            
+            var query = from pv in _context.ProductVariants
                         orderby pv.MinStockQuantity
                         where !pv.Deleted &&
                         pv.MinStockQuantity >= pv.StockQuantity
@@ -1461,8 +1483,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                 return (ProductVariant)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from pv in context.ProductVariants
+            
+            var query = from pv in _context.ProductVariants
                         where pv.ProductVariantId == productVariantId
                         select pv;
             var productVariant = query.SingleOrDefault();
@@ -1486,8 +1508,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
 
             sku = sku.Trim();
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from pv in context.ProductVariants
+            
+            var query = from pv in _context.ProductVariants
                         orderby pv.DisplayOrder, pv.ProductVariantId
                         where !pv.Deleted &&
                         pv.SKU == sku
@@ -1522,9 +1544,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
 
             bool showHidden = NopContext.Current.IsAdmin;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
             ObjectParameter totalRecordsParameter = new ObjectParameter("TotalRecords", typeof(int));
-            var productVariants = context.Sp_ProductVariantLoadAll(categoryId,
+            var productVariants = _context.Sp_ProductVariantLoadAll(categoryId,
                 manufacturerId, keywords, showHidden,
                 pageIndex, pageSize, totalRecordsParameter).ToList();
             totalRecords = Convert.ToInt32(totalRecordsParameter.Value);
@@ -1554,10 +1576,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             productVariant.ManufacturerPartNumber = CommonHelper.EnsureMaximumLength(productVariant.ManufacturerPartNumber, 100);
             productVariant.UserAgreementText = CommonHelper.EnsureNotNull(productVariant.UserAgreementText);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
 
-            context.ProductVariants.AddObject(productVariant);
-            context.SaveChanges();
+            _context.ProductVariants.AddObject(productVariant);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -1594,11 +1616,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             productVariant.ManufacturerPartNumber = CommonHelper.EnsureMaximumLength(productVariant.ManufacturerPartNumber, 100);
             productVariant.UserAgreementText = CommonHelper.EnsureNotNull(productVariant.UserAgreementText);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(productVariant))
-                context.ProductVariants.Attach(productVariant);
+            
+            if (!_context.IsAttached(productVariant))
+                _context.ProductVariants.Attach(productVariant);
 
-            context.SaveChanges();
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -1639,8 +1661,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                 return (List<ProductVariant>)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = (IQueryable<ProductVariant>)context.ProductVariants;
+            
+            var query = (IQueryable<ProductVariant>)_context.ProductVariants;
             if (!showHidden)
             {
                 query = query.Where(pv => pv.Published);
@@ -1673,8 +1695,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             if (discountId == 0)
                 return new List<ProductVariant>();
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from pv in context.ProductVariants
+            
+            var query = from pv in _context.ProductVariants
                         from d in pv.NpRestrictedDiscounts
                         where d.DiscountId == discountId
                         select pv;
@@ -1692,8 +1714,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             if (productVariantLocalizedId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from pvl in context.ProductVariantLocalized
+            
+            var query = from pvl in _context.ProductVariantLocalized
                         where pvl.ProductVariantLocalizedId == productVariantLocalizedId
                         select pvl;
             var productVariantLocalized = query.SingleOrDefault();
@@ -1710,8 +1732,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             if (productVariantId == 0)
                 return new List<ProductVariantLocalized>();
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from pvl in context.ProductVariantLocalized
+            
+            var query = from pvl in _context.ProductVariantLocalized
                         where pvl.ProductVariantId == productVariantId
                         select pvl;
             var content = query.ToList();
@@ -1729,8 +1751,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             if (productVariantId == 0 || languageId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from pvl in context.ProductVariantLocalized
+            
+            var query = from pvl in _context.ProductVariantLocalized
                         orderby pvl.ProductVariantLocalizedId
                         where pvl.ProductVariantId == productVariantId &&
                         pvl.LanguageId == languageId
@@ -1752,10 +1774,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             productVariantLocalized.Name = CommonHelper.EnsureMaximumLength(productVariantLocalized.Name, 400);
             productVariantLocalized.Description = CommonHelper.EnsureNotNull(productVariantLocalized.Description);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
 
-            context.ProductVariantLocalized.AddObject(productVariantLocalized);
-            context.SaveChanges();
+            _context.ProductVariantLocalized.AddObject(productVariantLocalized);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -1782,19 +1804,19 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             bool allFieldsAreEmpty = string.IsNullOrEmpty(productVariantLocalized.Name) &&
                string.IsNullOrEmpty(productVariantLocalized.Description);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(productVariantLocalized))
-                context.ProductVariantLocalized.Attach(productVariantLocalized);
+            
+            if (!_context.IsAttached(productVariantLocalized))
+                _context.ProductVariantLocalized.Attach(productVariantLocalized);
 
             if (allFieldsAreEmpty)
             {
                 //delete if all fields are empty
-                context.DeleteObject(productVariantLocalized);
-                context.SaveChanges();
+                _context.DeleteObject(productVariantLocalized);
+                _context.SaveChanges();
             }
             else
             {
-                context.SaveChanges();
+                _context.SaveChanges();
             }
 
             if (this.CacheEnabled)
@@ -1937,11 +1959,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             if (productPicture == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(productPicture))
-                context.ProductPictures.Attach(productPicture);
-            context.DeleteObject(productPicture);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(productPicture))
+                _context.ProductPictures.Attach(productPicture);
+            _context.DeleteObject(productPicture);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -1954,8 +1976,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             if (productPictureId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from pp in context.ProductPictures
+            
+            var query = from pp in _context.ProductPictures
                         where pp.ProductPictureId == productPictureId
                         select pp;
             var productPicture = query.SingleOrDefault();
@@ -1971,10 +1993,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             if (productPicture == null)
                 throw new ArgumentNullException("productPicture");
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
 
-            context.ProductPictures.AddObject(productPicture);
-            context.SaveChanges();
+            _context.ProductPictures.AddObject(productPicture);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -1986,11 +2008,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             if (productPicture == null)
                 throw new ArgumentNullException("productPicture");
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(productPicture))
-                context.ProductPictures.Attach(productPicture);
+            
+            if (!_context.IsAttached(productPicture))
+                _context.ProductPictures.Attach(productPicture);
 
-            context.SaveChanges();
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -2000,8 +2022,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         /// <returns>Product picture mapping collection</returns>
         public List<ProductPicture> GetProductPicturesByProductId(int productId)
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = (IQueryable<ProductPicture>)context.ProductPictures;
+            
+            var query = (IQueryable<ProductPicture>)_context.ProductPictures;
             query = query.Where(pp => pp.ProductId == productId);
             query = query.OrderBy(pp => pp.DisplayOrder);
 
@@ -2022,8 +2044,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             if (productReviewId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from pr in context.ProductReviews
+            
+            var query = from pr in _context.ProductReviews
                         where pr.ProductReviewId == productReviewId
                         select pr;
             var productReview = query.SingleOrDefault();
@@ -2039,8 +2061,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         {
             bool showHidden = NopContext.Current.IsAdmin;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from pr in context.ProductReviews
+            
+            var query = from pr in _context.ProductReviews
                         orderby pr.CreatedOn descending
                         where (showHidden || pr.IsApproved) &&
                         pr.ProductId == productId
@@ -2059,11 +2081,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             if (productReview == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(productReview))
-                context.ProductReviews.Attach(productReview);
-            context.DeleteObject(productReview);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(productReview))
+                _context.ProductReviews.Attach(productReview);
+            _context.DeleteObject(productReview);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -2074,8 +2096,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         {
             bool showHidden = NopContext.Current.IsAdmin;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from pr in context.ProductReviews
+            
+            var query = from pr in _context.ProductReviews
                         orderby pr.CreatedOn descending
                         where (showHidden || pr.IsApproved)
                         select pr;
@@ -2161,9 +2183,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             title = CommonHelper.EnsureMaximumLength(title, 1000);
             reviewText = CommonHelper.EnsureNotNull(reviewText);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
 
-            var productReview = context.ProductReviews.CreateObject();
+            var productReview = _context.ProductReviews.CreateObject();
             productReview.ProductId = productId;
             productReview.CustomerId = customerId;
             productReview.IPAddress = ipAddress;
@@ -2175,8 +2197,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             productReview.IsApproved = isApproved;
             productReview.CreatedOn = createdOn;
 
-            context.ProductReviews.AddObject(productReview);
-            context.SaveChanges();
+            _context.ProductReviews.AddObject(productReview);
+            _context.SaveChanges();
 
             //activity log
             IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
@@ -2208,11 +2230,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             productReview.Title = CommonHelper.EnsureMaximumLength(productReview.Title, 1000);
             productReview.ReviewText = CommonHelper.EnsureNotNull(productReview.ReviewText);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(productReview))
-                context.ProductReviews.Attach(productReview);
+            
+            if (!_context.IsAttached(productReview))
+                _context.ProductReviews.Attach(productReview);
 
-            context.SaveChanges();
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -2236,32 +2258,32 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                 return;
 
             //delete previous helpfulness
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var oldPrh = (from prh in context.ProductReviewHelpfulness
+            
+            var oldPrh = (from prh in _context.ProductReviewHelpfulness
                          where prh.ProductReviewId == productReviewId &&
                          prh.CustomerId == NopContext.Current.User.CustomerId
                          select prh).FirstOrDefault();
             if (oldPrh != null)
             {
-                context.DeleteObject(oldPrh);
+                _context.DeleteObject(oldPrh);
             }
-            context.SaveChanges();
+            _context.SaveChanges();
 
             //insert new helpfulness
-            var newPrh = context.ProductReviewHelpfulness.CreateObject();
+            var newPrh = _context.ProductReviewHelpfulness.CreateObject();
             newPrh.ProductReviewId = productReviewId;
             newPrh.CustomerId = NopContext.Current.User.CustomerId;
             newPrh.WasHelpful = wasHelpful;
 
-            context.ProductReviewHelpfulness.AddObject(newPrh);
-            context.SaveChanges();
+            _context.ProductReviewHelpfulness.AddObject(newPrh);
+            _context.SaveChanges();
 
             //new totals
-            int helpfulYesTotal = (from prh in context.ProductReviewHelpfulness
+            int helpfulYesTotal = (from prh in _context.ProductReviewHelpfulness
                                    where prh.ProductReviewId == productReviewId && 
                                    prh.WasHelpful == true
                                    select prh).Count();
-            int helpfulNoTotal = (from prh in context.ProductReviewHelpfulness
+            int helpfulNoTotal = (from prh in _context.ProductReviewHelpfulness
                                    where prh.ProductReviewId == productReviewId &&
                                    prh.WasHelpful == false
                                    select prh).Count();
@@ -2285,11 +2307,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             if (relatedProduct == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(relatedProduct))
-                context.RelatedProducts.Attach(relatedProduct);
-            context.DeleteObject(relatedProduct);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(relatedProduct))
+                _context.RelatedProducts.Attach(relatedProduct);
+            _context.DeleteObject(relatedProduct);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -2301,9 +2323,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         {
             bool showHidden = NopContext.Current.IsAdmin;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from rp in context.RelatedProducts
-                        join p in context.Products on rp.ProductId2 equals p.ProductId
+            
+            var query = from rp in _context.RelatedProducts
+                        join p in _context.Products on rp.ProductId2 equals p.ProductId
                         where rp.ProductId1 == productId1 &&
                         !p.Deleted &&
                         (showHidden || p.Published)
@@ -2324,8 +2346,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             if (relatedProductId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from rp in context.RelatedProducts
+            
+            var query = from rp in _context.RelatedProducts
                         where rp.RelatedProductId == relatedProductId
                         select rp;
             var relatedProduct = query.SingleOrDefault();
@@ -2341,10 +2363,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             if (relatedProduct == null)
                 throw new ArgumentNullException("relatedProduct");
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
 
-            context.RelatedProducts.AddObject(relatedProduct);
-            context.SaveChanges();
+            _context.RelatedProducts.AddObject(relatedProduct);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -2356,11 +2378,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             if (relatedProduct == null)
                 throw new ArgumentNullException("relatedProduct");
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(relatedProduct))
-                context.RelatedProducts.Attach(relatedProduct);
+            
+            if (!_context.IsAttached(relatedProduct))
+                _context.RelatedProducts.Attach(relatedProduct);
 
-            context.SaveChanges();
+            _context.SaveChanges();
         }
 
         #endregion
@@ -2377,11 +2399,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             if (crossSellProduct == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(crossSellProduct))
-                context.CrossSellProducts.Attach(crossSellProduct);
-            context.DeleteObject(crossSellProduct);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(crossSellProduct))
+                _context.CrossSellProducts.Attach(crossSellProduct);
+            _context.DeleteObject(crossSellProduct);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -2393,9 +2415,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         {
             bool showHidden = NopContext.Current.IsAdmin;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from csp in context.CrossSellProducts
-                        join p in context.Products on csp.ProductId2 equals p.ProductId
+            
+            var query = from csp in _context.CrossSellProducts
+                        join p in _context.Products on csp.ProductId2 equals p.ProductId
                         where csp.ProductId1 == productId1 &&
                         !p.Deleted &&
                         (showHidden || p.Published)
@@ -2416,8 +2438,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             if (crossSellProductId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from csp in context.CrossSellProducts
+            
+            var query = from csp in _context.CrossSellProducts
                         where csp.CrossSellProductId == crossSellProductId
                         select csp;
             var crossSellProduct = query.SingleOrDefault();
@@ -2433,10 +2455,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             if (crossSellProduct == null)
                 throw new ArgumentNullException("crossSellProduct");
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
 
-            context.CrossSellProducts.AddObject(crossSellProduct);
-            context.SaveChanges();
+            _context.CrossSellProducts.AddObject(crossSellProduct);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -2448,11 +2470,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             if (crossSellProduct == null)
                 throw new ArgumentNullException("crossSellProduct");
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(crossSellProduct))
-                context.CrossSellProducts.Attach(crossSellProduct);
+            
+            if (!_context.IsAttached(crossSellProduct))
+                _context.CrossSellProducts.Attach(crossSellProduct);
 
-            context.SaveChanges();
+            _context.SaveChanges();
         }
 
         #endregion
@@ -2466,9 +2488,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         /// <returns>Product variants</returns>
         public List<ProductVariant> GetProductVariantsByPricelistId(int pricelistId)
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from pv in context.ProductVariants
-                        join pvpl in context.ProductVariantPricelists on pv.ProductVariantId equals pvpl.ProductVariantId
+            
+            var query = from pv in _context.ProductVariants
+                        join pvpl in _context.ProductVariantPricelists on pv.ProductVariantId equals pvpl.ProductVariantId
                         where pvpl.PricelistId == pricelistId
                         select pv;
             var productVariants = query.ToList();
@@ -2486,11 +2508,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             if (pricelist == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(pricelist))
-                context.Pricelists.Attach(pricelist);
-            context.DeleteObject(pricelist);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(pricelist))
+                _context.Pricelists.Attach(pricelist);
+            _context.DeleteObject(pricelist);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -2499,8 +2521,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         /// <returns>Collection of pricelists</returns>
         public List<Pricelist> GetAllPricelists()
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from pl in context.Pricelists
+            
+            var query = from pl in _context.Pricelists
                         orderby pl.PricelistId
                         select pl;
             var pricelists = query.ToList();
@@ -2518,8 +2540,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             if (pricelistId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from pl in context.Pricelists
+            
+            var query = from pl in _context.Pricelists
                         where pl.PricelistId == pricelistId
                         select pl;
             var pricelist = query.SingleOrDefault();
@@ -2534,8 +2556,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         /// <returns>Pricelist</returns>
         public Pricelist GetPricelistByGuid(string pricelistGuid)
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from pl in context.Pricelists
+            
+            var query = from pl in _context.Pricelists
                         where pl.PricelistGuid == pricelistGuid
                         select pl;
             var pricelist = query.FirstOrDefault();
@@ -2571,10 +2593,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             pricelist.Footer = CommonHelper.EnsureNotNull(pricelist.Footer);
             pricelist.Footer = CommonHelper.EnsureMaximumLength(pricelist.Footer, 500);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
             
-            context.Pricelists.AddObject(pricelist);
-            context.SaveChanges();
+            
+            _context.Pricelists.AddObject(pricelist);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -2605,11 +2627,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             pricelist.Footer = CommonHelper.EnsureNotNull(pricelist.Footer);
             pricelist.Footer = CommonHelper.EnsureMaximumLength(pricelist.Footer, 500);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(pricelist))
-                context.Pricelists.Attach(pricelist);
+            
+            if (!_context.IsAttached(pricelist))
+                _context.Pricelists.Attach(pricelist);
 
-            context.SaveChanges();
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -2625,11 +2647,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             if (productVariantPricelist == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(productVariantPricelist))
-                context.ProductVariantPricelists.Attach(productVariantPricelist);
-            context.DeleteObject(productVariantPricelist);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(productVariantPricelist))
+                _context.ProductVariantPricelists.Attach(productVariantPricelist);
+            _context.DeleteObject(productVariantPricelist);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -2642,8 +2664,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             if (productVariantPricelistId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from pvpl in context.ProductVariantPricelists
+            
+            var query = from pvpl in _context.ProductVariantPricelists
                         where pvpl.ProductVariantPricelistId == productVariantPricelistId
                         select pvpl;
             var productVariantPricelist = query.SingleOrDefault();
@@ -2658,8 +2680,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         /// <returns>ProductVariantPricelist</returns>
         public ProductVariantPricelist GetProductVariantPricelist(int productVariantId, int pricelistId)
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from pvpl in context.ProductVariantPricelists
+            
+            var query = from pvpl in _context.ProductVariantPricelists
                         where pvpl.ProductVariantId == productVariantId &&
                         pvpl.PricelistId == pricelistId 
                         select pvpl;
@@ -2676,10 +2698,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             if (productVariantPricelist == null)
                 throw new ArgumentNullException("productVariantPricelist");
 
-            var context = ObjectContextHelper.CurrentObjectContext;
             
-            context.ProductVariantPricelists.AddObject(productVariantPricelist);
-            context.SaveChanges();
+            
+            _context.ProductVariantPricelists.AddObject(productVariantPricelist);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -2691,11 +2713,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             if (productVariantPricelist == null)
                 throw new ArgumentNullException("productVariantPricelist");
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(productVariantPricelist))
-                context.ProductVariantPricelists.Attach(productVariantPricelist);
+            
+            if (!_context.IsAttached(productVariantPricelist))
+                _context.ProductVariantPricelists.Attach(productVariantPricelist);
 
-            context.SaveChanges();
+            _context.SaveChanges();
         }
 
         #endregion
@@ -2712,8 +2734,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             if (tierPriceId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from tp in context.TierPrices
+            
+            var query = from tp in _context.TierPrices
                         where tp.TierPriceId == tierPriceId
                         select tp;
             var tierPrice = query.SingleOrDefault();
@@ -2737,8 +2759,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                 return (List<TierPrice>)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from tp in context.TierPrices
+            
+            var query = from tp in _context.TierPrices
                         orderby tp.Quantity
                         where tp.ProductVariantId == productVariantId
                         select tp;
@@ -2761,11 +2783,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             if (tierPrice == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(tierPrice))
-                context.TierPrices.Attach(tierPrice);
-            context.DeleteObject(tierPrice);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(tierPrice))
+                _context.TierPrices.Attach(tierPrice);
+            _context.DeleteObject(tierPrice);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -2785,10 +2807,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             if (tierPrice == null)
                 throw new ArgumentNullException("tierPrice");
 
-            var context = ObjectContextHelper.CurrentObjectContext;
             
-            context.TierPrices.AddObject(tierPrice);
-            context.SaveChanges();
+            
+            _context.TierPrices.AddObject(tierPrice);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -2808,11 +2830,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             if (tierPrice == null)
                 throw new ArgumentNullException("tierPrice");
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(tierPrice))
-                context.TierPrices.Attach(tierPrice);
+            
+            if (!_context.IsAttached(tierPrice))
+                _context.TierPrices.Attach(tierPrice);
 
-            context.SaveChanges();
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -2837,11 +2859,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             if (customerRoleProductPrice == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(customerRoleProductPrice))
-                context.CustomerRoleProductPrices.Attach(customerRoleProductPrice);
-            context.DeleteObject(customerRoleProductPrice);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(customerRoleProductPrice))
+                _context.CustomerRoleProductPrices.Attach(customerRoleProductPrice);
+            _context.DeleteObject(customerRoleProductPrice);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -2862,8 +2884,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             if (customerRoleProductPriceId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from crpp in context.CustomerRoleProductPrices
+            
+            var query = from crpp in _context.CustomerRoleProductPrices
                         where crpp.CustomerRoleProductPriceId == customerRoleProductPriceId
                         select crpp;
             var customerRoleProductPrice = query.SingleOrDefault();
@@ -2883,8 +2905,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             {
                 return (List<CustomerRoleProductPrice>)obj2;
             }
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from crpp in context.CustomerRoleProductPrices
+            
+            var query = from crpp in _context.CustomerRoleProductPrices
                         where crpp.ProductVariantId == productVariantId
                         select crpp;
             var collection = query.ToList();
@@ -2905,10 +2927,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             if (customerRoleProductPrice == null)
                 throw new ArgumentNullException("customerRoleProductPrice");
 
-            var context = ObjectContextHelper.CurrentObjectContext;
             
-            context.CustomerRoleProductPrices.AddObject(customerRoleProductPrice);
-            context.SaveChanges();
+            
+            _context.CustomerRoleProductPrices.AddObject(customerRoleProductPrice);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -2928,11 +2950,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             if (customerRoleProductPrice == null)
                 throw new ArgumentNullException("customerRoleProductPrice");
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(customerRoleProductPrice))
-                context.CustomerRoleProductPrices.Attach(customerRoleProductPrice);
+            
+            if (!_context.IsAttached(customerRoleProductPrice))
+                _context.CustomerRoleProductPrices.Attach(customerRoleProductPrice);
 
-            context.SaveChanges();
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -2957,11 +2979,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             if (productTag == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(productTag))
-                context.ProductTags.Attach(productTag);
-            context.DeleteObject(productTag);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(productTag))
+                _context.ProductTags.Attach(productTag);
+            _context.DeleteObject(productTag);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -2974,8 +2996,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             if (productTagId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from pt in context.ProductTags
+            
+            var query = from pt in _context.ProductTags
                         where pt.ProductTagId == productTagId
                         select pt;
             var productTag = query.SingleOrDefault();
@@ -2995,8 +3017,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                 name = string.Empty;
             name = name.Trim();
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var productTags = context.Sp_ProductTagLoadAll(productId, name).ToList();
+            
+            var productTags = _context.Sp_ProductTagLoadAll(productId, name).ToList();
             return productTags;
         }
 
@@ -3013,10 +3035,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             productTag.Name = productTag.Name.Trim();
             productTag.Name = CommonHelper.EnsureMaximumLength(productTag.Name, 100);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
             
-            context.ProductTags.AddObject(productTag);
-            context.SaveChanges();
+            
+            _context.ProductTags.AddObject(productTag);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -3033,11 +3055,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             productTag.Name = CommonHelper.EnsureMaximumLength(productTag.Name, 100);
 
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(productTag))
-                context.ProductTags.Attach(productTag);
+            
+            if (!_context.IsAttached(productTag))
+                _context.ProductTags.Attach(productTag);
 
-            context.SaveChanges();
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -3047,8 +3069,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         /// <param name="productTagId">Product tag identifier</param>
         public void AddProductTagMapping(int productId, int productTagId)
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            context.Sp_ProductTag_Product_MappingInsert(productTagId, productId);
+            
+            _context.Sp_ProductTag_Product_MappingInsert(productTagId, productId);
         }
 
         /// <summary>
@@ -3058,8 +3080,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         /// <param name="productTagId">Product tag identifier</param>
         public void RemoveProductTagMapping(int productId, int productTagId)
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            context.Sp_ProductTag_Product_MappingDelete(productTagId, productId);
+            
+            _context.Sp_ProductTag_Product_MappingDelete(productTagId, productId);
         }
 
         #endregion

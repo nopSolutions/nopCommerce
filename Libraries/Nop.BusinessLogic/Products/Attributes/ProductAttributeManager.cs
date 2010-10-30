@@ -44,6 +44,28 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         private const string PRODUCTVARIANTATTRIBUTEVALUES_PATTERN_KEY = "Nop.productvariantattributevalue.";
         #endregion
 
+        #region Fields
+
+        /// <summary>
+        /// object context
+        /// </summary>
+        protected NopObjectContext _context;
+
+        #endregion
+
+        #region Ctor
+
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="context">Object context</param>
+        public ProductAttributeManager(NopObjectContext context)
+        {
+            _context = context;
+        }
+
+        #endregion
+
         #region Methods
 
         #region Product attributes
@@ -58,11 +80,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
             if (productAttribute == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(productAttribute))
-                context.ProductAttributes.Attach(productAttribute);
-            context.DeleteObject(productAttribute);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(productAttribute))
+                _context.ProductAttributes.Attach(productAttribute);
+            _context.DeleteObject(productAttribute);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -85,8 +107,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                 return (List<ProductAttribute>)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from pa in context.ProductAttributes
+            
+            var query = from pa in _context.ProductAttributes
                         orderby pa.Name
                         select pa;
             var productAttributes = query.ToList();
@@ -115,8 +137,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                 return (ProductAttribute)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from pa in context.ProductAttributes
+            
+            var query = from pa in _context.ProductAttributes
                         where pa.ProductAttributeId == productAttributeId
                         select pa;
             var productAttribute = query.SingleOrDefault();
@@ -142,10 +164,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
             productAttribute.Description = CommonHelper.EnsureNotNull(productAttribute.Description);
             productAttribute.Description = CommonHelper.EnsureMaximumLength(productAttribute.Description, 400);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
             
-            context.ProductAttributes.AddObject(productAttribute);
-            context.SaveChanges();
+            
+            _context.ProductAttributes.AddObject(productAttribute);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -169,11 +191,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
             productAttribute.Description = CommonHelper.EnsureNotNull(productAttribute.Description);
             productAttribute.Description = CommonHelper.EnsureMaximumLength(productAttribute.Description, 400);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(productAttribute))
-                context.ProductAttributes.Attach(productAttribute);
+            
+            if (!_context.IsAttached(productAttribute))
+                _context.ProductAttributes.Attach(productAttribute);
 
-            context.SaveChanges();
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -193,8 +215,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
             if (productAttributeLocalizedId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from pal in context.ProductAttributeLocalized
+            
+            var query = from pal in _context.ProductAttributeLocalized
                         where pal.ProductAttributeLocalizedId == productAttributeLocalizedId
                         select pal;
             var productAttributeLocalized = query.SingleOrDefault();
@@ -211,8 +233,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
             if (productAttributeId == 0)
                 return new List<ProductAttributeLocalized>();
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from pal in context.ProductAttributeLocalized
+            
+            var query = from pal in _context.ProductAttributeLocalized
                         where pal.ProductAttributeId == productAttributeId
                         select pal;
             var content = query.ToList();
@@ -230,8 +252,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
             if (productAttributeId == 0 || languageId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from pal in context.ProductAttributeLocalized
+            
+            var query = from pal in _context.ProductAttributeLocalized
                         orderby pal.ProductAttributeLocalizedId
                         where pal.ProductAttributeId == productAttributeId &&
                         pal.LanguageId == languageId
@@ -254,10 +276,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
             productAttributeLocalized.Description = CommonHelper.EnsureNotNull(productAttributeLocalized.Description);
             productAttributeLocalized.Description = CommonHelper.EnsureMaximumLength(productAttributeLocalized.Description, 400);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
             
-            context.ProductAttributeLocalized.AddObject(productAttributeLocalized);
-            context.SaveChanges();
+            
+            _context.ProductAttributeLocalized.AddObject(productAttributeLocalized);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -284,19 +306,19 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
             bool allFieldsAreEmpty = string.IsNullOrEmpty(productAttributeLocalized.Name) &&
                 string.IsNullOrEmpty(productAttributeLocalized.Description);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(productAttributeLocalized))
-                context.ProductAttributeLocalized.Attach(productAttributeLocalized);
+            
+            if (!_context.IsAttached(productAttributeLocalized))
+                _context.ProductAttributeLocalized.Attach(productAttributeLocalized);
 
             if (allFieldsAreEmpty)
             {
                 //delete if all fields are empty
-                context.DeleteObject(productAttributeLocalized);
-                context.SaveChanges();
+                _context.DeleteObject(productAttributeLocalized);
+                _context.SaveChanges();
             }
             else
             {
-                context.SaveChanges();
+                _context.SaveChanges();
             }
 
             if (this.CacheEnabled)
@@ -321,11 +343,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
             if (productVariantAttribute == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(productVariantAttribute))
-                context.ProductVariantAttributes.Attach(productVariantAttribute);
-            context.DeleteObject(productVariantAttribute);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(productVariantAttribute))
+                _context.ProductVariantAttributes.Attach(productVariantAttribute);
+            _context.DeleteObject(productVariantAttribute);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -349,8 +371,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                 return (List<ProductVariantAttribute>)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from pva in context.ProductVariantAttributes
+            
+            var query = from pva in _context.ProductVariantAttributes
                         orderby pva.DisplayOrder
                         where pva.ProductVariantId == productVariantId
                         select pva;
@@ -380,8 +402,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                 return (ProductVariantAttribute)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from pva in context.ProductVariantAttributes
+            
+            var query = from pva in _context.ProductVariantAttributes
                         where pva.ProductVariantAttributeId == productVariantAttributeId
                         select pva;
             var productVariantAttribute = query.SingleOrDefault();
@@ -405,10 +427,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
             productVariantAttribute.TextPrompt = CommonHelper.EnsureNotNull(productVariantAttribute.TextPrompt);
             productVariantAttribute.TextPrompt = CommonHelper.EnsureMaximumLength(productVariantAttribute.TextPrompt, 200);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
             
-            context.ProductVariantAttributes.AddObject(productVariantAttribute);
-            context.SaveChanges();
+            
+            _context.ProductVariantAttributes.AddObject(productVariantAttribute);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -430,11 +452,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
             productVariantAttribute.TextPrompt = CommonHelper.EnsureNotNull(productVariantAttribute.TextPrompt);
             productVariantAttribute.TextPrompt = CommonHelper.EnsureMaximumLength(productVariantAttribute.TextPrompt, 200);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(productVariantAttribute))
-                context.ProductVariantAttributes.Attach(productVariantAttribute);
+            
+            if (!_context.IsAttached(productVariantAttribute))
+                _context.ProductVariantAttributes.Attach(productVariantAttribute);
 
-            context.SaveChanges();
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -458,11 +480,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
             if (productVariantAttributeValue == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(productVariantAttributeValue))
-                context.ProductVariantAttributeValues.Attach(productVariantAttributeValue);
-            context.DeleteObject(productVariantAttributeValue);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(productVariantAttributeValue))
+                _context.ProductVariantAttributeValues.Attach(productVariantAttributeValue);
+            _context.DeleteObject(productVariantAttributeValue);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -486,8 +508,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                 return (List<ProductVariantAttributeValue>)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from pvav in context.ProductVariantAttributeValues
+            
+            var query = from pvav in _context.ProductVariantAttributeValues
                         orderby pvav.DisplayOrder
                         where pvav.ProductVariantAttributeId == productVariantAttributeId
                         select pvav;
@@ -517,8 +539,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                 return (ProductVariantAttributeValue)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from pvav in context.ProductVariantAttributeValues
+            
+            var query = from pvav in _context.ProductVariantAttributeValues
                         where pvav.ProductVariantAttributeValueId == productVariantAttributeValueId
                         select pvav;
             var productVariantAttributeValue = query.SingleOrDefault();
@@ -542,10 +564,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
             productVariantAttributeValue.Name = CommonHelper.EnsureNotNull(productVariantAttributeValue.Name);
             productVariantAttributeValue.Name = CommonHelper.EnsureMaximumLength(productVariantAttributeValue.Name, 100);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
 
-            context.ProductVariantAttributeValues.AddObject(productVariantAttributeValue);
-            context.SaveChanges();
+            _context.ProductVariantAttributeValues.AddObject(productVariantAttributeValue);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -567,11 +589,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
             productVariantAttributeValue.Name = CommonHelper.EnsureNotNull(productVariantAttributeValue.Name);
             productVariantAttributeValue.Name = CommonHelper.EnsureMaximumLength(productVariantAttributeValue.Name, 100);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(productVariantAttributeValue))
-                context.ProductVariantAttributeValues.Attach(productVariantAttributeValue);
+            
+            if (!_context.IsAttached(productVariantAttributeValue))
+                _context.ProductVariantAttributeValues.Attach(productVariantAttributeValue);
 
-            context.SaveChanges();
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -591,8 +613,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
             if (productVariantAttributeValueLocalizedId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from pvavl in context.ProductVariantAttributeValueLocalized
+            
+            var query = from pvavl in _context.ProductVariantAttributeValueLocalized
                         where pvavl.ProductVariantAttributeValueLocalizedId == productVariantAttributeValueLocalizedId
                         select pvavl;
             var productVariantAttributeValueLocalized = query.SingleOrDefault();
@@ -609,8 +631,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
             if (productVariantAttributeValueId == 0)
                 return new List<ProductVariantAttributeValueLocalized>();
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from pvavl in context.ProductVariantAttributeValueLocalized
+            
+            var query = from pvavl in _context.ProductVariantAttributeValueLocalized
                         where pvavl.ProductVariantAttributeValueId == productVariantAttributeValueId
                         select pvavl;
             var content = query.ToList();
@@ -628,8 +650,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
             if (productVariantAttributeValueId == 0 || languageId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from pvavl in context.ProductVariantAttributeValueLocalized
+            
+            var query = from pvavl in _context.ProductVariantAttributeValueLocalized
                         orderby pvavl.ProductVariantAttributeValueLocalizedId
                         where pvavl.ProductVariantAttributeValueId == productVariantAttributeValueId &&
                         pvavl.LanguageId == languageId
@@ -650,10 +672,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
             productVariantAttributeValueLocalized.Name = CommonHelper.EnsureNotNull(productVariantAttributeValueLocalized.Name);
             productVariantAttributeValueLocalized.Name = CommonHelper.EnsureMaximumLength(productVariantAttributeValueLocalized.Name, 100);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
             
-            context.ProductVariantAttributeValueLocalized.AddObject(productVariantAttributeValueLocalized);
-            context.SaveChanges();
+            
+            _context.ProductVariantAttributeValueLocalized.AddObject(productVariantAttributeValueLocalized);
+            _context.SaveChanges();
             
             if (this.CacheEnabled)
             {
@@ -677,19 +699,19 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
 
             bool allFieldsAreEmpty = string.IsNullOrEmpty(productVariantAttributeValueLocalized.Name);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(productVariantAttributeValueLocalized))
-                context.ProductVariantAttributeValueLocalized.Attach(productVariantAttributeValueLocalized);
+            
+            if (!_context.IsAttached(productVariantAttributeValueLocalized))
+                _context.ProductVariantAttributeValueLocalized.Attach(productVariantAttributeValueLocalized);
 
             if (allFieldsAreEmpty)
             {
                 //delete if all fields are empty
-                context.DeleteObject(productVariantAttributeValueLocalized);
-                context.SaveChanges();
+                _context.DeleteObject(productVariantAttributeValueLocalized);
+                _context.SaveChanges();
             }
             else
             {
-                context.SaveChanges();
+                _context.SaveChanges();
             }
 
             if (this.CacheEnabled)
@@ -714,11 +736,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
             if (combination == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(combination))
-                context.ProductVariantAttributeCombinations.Attach(combination);
-            context.DeleteObject(combination);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(combination))
+                _context.ProductVariantAttributeCombinations.Attach(combination);
+            _context.DeleteObject(combination);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -730,8 +752,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         {
             if (productVariantId == 0)
                 return new List<ProductVariantAttributeCombination>();
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from pvac in context.ProductVariantAttributeCombinations
+            
+            var query = from pvac in _context.ProductVariantAttributeCombinations
                         orderby pvac.ProductVariantAttributeCombinationId
                         where pvac.ProductVariantId == productVariantId
                         select pvac;
@@ -749,8 +771,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
             if (productVariantAttributeCombinationId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from pvac in context.ProductVariantAttributeCombinations
+            
+            var query = from pvac in _context.ProductVariantAttributeCombinations
                         where pvac.ProductVariantAttributeCombinationId == productVariantAttributeCombinationId
                         select pvac;
             var combination = query.SingleOrDefault();
@@ -767,10 +789,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
             if (combination == null)
                 throw new ArgumentNullException("combination");
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
 
-            context.ProductVariantAttributeCombinations.AddObject(combination);
-            context.SaveChanges();
+            _context.ProductVariantAttributeCombinations.AddObject(combination);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -782,11 +804,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
             if (combination == null)
                 throw new ArgumentNullException("combination");
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(combination))
-                context.ProductVariantAttributeCombinations.Attach(combination);
+            
+            if (!_context.IsAttached(combination))
+                _context.ProductVariantAttributeCombinations.Attach(combination);
 
-            context.SaveChanges();
+            _context.SaveChanges();
         }
 
         /// <summary>

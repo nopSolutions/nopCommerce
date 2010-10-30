@@ -59,6 +59,28 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         private const string ORDERSTATUSES_PATTERN_KEY = "Nop.orderstatus.";
         #endregion
 
+        #region Fields
+
+        /// <summary>
+        /// object context
+        /// </summary>
+        protected NopObjectContext _context;
+
+        #endregion
+
+        #region Ctor
+
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="context">Object context</param>
+        public OrderManager(NopObjectContext context)
+        {
+            _context = context;
+        }
+
+        #endregion
+
         #region Utilities
 
         /// <summary>
@@ -260,8 +282,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             if (orderId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from o in context.Orders
+            
+            var query = from o in _context.Orders
                         where o.OrderId == orderId
                         select o;
             var order = query.SingleOrDefault();
@@ -278,8 +300,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             if (orderGuid == Guid.Empty)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from o in context.Orders
+            
+            var query = from o in _context.Orders
                         where o.OrderGuid == orderGuid
                         select o;
             var order = query.FirstOrDefault();
@@ -345,10 +367,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             if (ss.HasValue)
                 shippingStatusId = (int)ss.Value;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
 
-            var query = from o in context.Orders
-                        join c in context.Customers on o.CustomerId equals c.CustomerId
+            var query = from o in _context.Orders
+                        join c in _context.Customers on o.CustomerId equals c.CustomerId
                         where (String.IsNullOrEmpty(customerEmail) || c.Email.Contains(customerEmail)) &&
                         (!startTime.HasValue || startTime.Value <= o.CreatedOn) &&
                         (!endTime.HasValue || endTime.Value >= o.CreatedOn) &&
@@ -386,8 +408,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <returns>Order collection</returns>
         public List<Order> GetOrdersByCustomerId(int customerId)
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from o in context.Orders
+            
+            var query = from o in _context.Orders
                         orderby o.CreatedOn descending
                         where !o.Deleted && o.CustomerId == customerId
                         select o;
@@ -404,8 +426,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         public Order GetOrderByAuthorizationTransactionIdAndPaymentMethodId(string authorizationTransactionId, 
             int paymentMethodId)
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from o in context.Orders
+            
+            var query = from o in _context.Orders
                         orderby o.CreatedOn descending
                         where o.AuthorizationTransactionId == authorizationTransactionId && 
                         o.PaymentMethodId == paymentMethodId
@@ -421,8 +443,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <returns>Order collection</returns>
         public List<Order> GetOrdersByAffiliateId(int affiliateId)
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from o in context.Orders
+            
+            var query = from o in _context.Orders
                         orderby o.CreatedOn descending
                         where !o.Deleted && o.AffiliateId == affiliateId
                         select o;
@@ -536,10 +558,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             order.TrackingNumber = CommonHelper.EnsureMaximumLength(order.TrackingNumber, 100);
             order.VatNumber = CommonHelper.EnsureMaximumLength(order.VatNumber, 100);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
 
-            context.Orders.AddObject(order);
-            context.SaveChanges();
+            _context.Orders.AddObject(order);
+            _context.SaveChanges();
 
             //quickbooks
             if (IoCFactory.Resolve<IQBManager>().QBIsEnabled)
@@ -658,11 +680,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             order.TrackingNumber = CommonHelper.EnsureMaximumLength(order.TrackingNumber, 100);
             order.VatNumber = CommonHelper.EnsureMaximumLength(order.VatNumber, 100);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(order))
-                context.Orders.Attach(order);
+            
+            if (!_context.IsAttached(order))
+                _context.Orders.Attach(order);
 
-            context.SaveChanges();
+            _context.SaveChanges();
 
             //quickbooks
             if (IoCFactory.Resolve<IQBManager>().QBIsEnabled)
@@ -690,8 +712,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             if (orderProductVariantId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from opv in context.OrderProductVariants
+            
+            var query = from opv in _context.OrderProductVariants
                         where opv.OrderProductVariantId == orderProductVariantId
                         select opv;
             var orderProductVariant = query.SingleOrDefault();
@@ -712,11 +734,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             if (orderProductVariant == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(orderProductVariant))
-                context.OrderProductVariants.Attach(orderProductVariant);
-            context.DeleteObject(orderProductVariant);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(orderProductVariant))
+                _context.OrderProductVariants.Attach(orderProductVariant);
+            _context.DeleteObject(orderProductVariant);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -729,8 +751,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             if (orderProductVariantGuid == Guid.Empty)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from opv in context.OrderProductVariants
+            
+            var query = from opv in _context.OrderProductVariants
                         where opv.OrderProductVariantGuid == orderProductVariantGuid
                         select opv;
             var orderProductVariant = query.FirstOrDefault();
@@ -786,11 +808,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             if (ss.HasValue)
                 shippingStatusId = (int)ss.Value;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
 
-            var query = from opv in context.OrderProductVariants
-                        join o in context.Orders on opv.OrderId equals o.OrderId
-                        join pv in context.ProductVariants on opv.ProductVariantId equals pv.ProductVariantId
+            var query = from opv in _context.OrderProductVariants
+                        join o in _context.Orders on opv.OrderId equals o.OrderId
+                        join pv in _context.ProductVariants on opv.ProductVariantId equals pv.ProductVariantId
                         where (!orderId.HasValue || orderId.Value == 0 || orderId == o.OrderId) &&
                         (!customerId.HasValue || customerId.Value == 0 || customerId == o.CustomerId) &&
                         (!startTime.HasValue || startTime.Value <= o.CreatedOn) &&
@@ -829,10 +851,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             opv.AttributeDescription = CommonHelper.EnsureNotNull(opv.AttributeDescription);
             opv.AttributeDescription = CommonHelper.EnsureMaximumLength(opv.AttributeDescription, 4000);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
             
-            context.OrderProductVariants.AddObject(opv);
-            context.SaveChanges();
+            
+            _context.OrderProductVariants.AddObject(opv);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -847,11 +869,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             opv.AttributeDescription = CommonHelper.EnsureNotNull(opv.AttributeDescription);
             opv.AttributeDescription = CommonHelper.EnsureMaximumLength(opv.AttributeDescription, 4000);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(opv))
-                context.OrderProductVariants.Attach(opv);
+            
+            if (!_context.IsAttached(opv))
+                _context.OrderProductVariants.Attach(opv);
 
-            context.SaveChanges();
+            _context.SaveChanges();
         }
 
         #endregion
@@ -868,8 +890,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             if (orderNoteId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from onote in context.OrderNotes
+            
+            var query = from onote in _context.OrderNotes
                         where onote.OrderNoteId == orderNoteId
                         select onote;
             var orderNote = query.SingleOrDefault();
@@ -894,8 +916,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <returns>Order note collection</returns>
         public List<OrderNote> GetOrderNoteByOrderId(int orderId, bool showHidden)
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from onote in context.OrderNotes
+            
+            var query = from onote in _context.OrderNotes
                         orderby onote.CreatedOn descending, onote.OrderNoteId descending
                         where (showHidden || onote.DisplayToCustomer) &&
                         onote.OrderId == orderId
@@ -914,11 +936,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             if (orderNote == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(orderNote))
-                context.OrderNotes.Attach(orderNote);
-            context.DeleteObject(orderNote);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(orderNote))
+                _context.OrderNotes.Attach(orderNote);
+            _context.DeleteObject(orderNote);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -947,16 +969,16 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             note = CommonHelper.EnsureNotNull(note);
             note = CommonHelper.EnsureMaximumLength(note, 4000);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
 
-            var orderNote = context.OrderNotes.CreateObject();
+            var orderNote = _context.OrderNotes.CreateObject();
             orderNote.OrderId = orderId;
             orderNote.Note = note;
             orderNote.DisplayToCustomer = displayToCustomer;
             orderNote.CreatedOn = createdOn;
 
-            context.OrderNotes.AddObject(orderNote);
-            context.SaveChanges();
+            _context.OrderNotes.AddObject(orderNote);
+            _context.SaveChanges();
             return orderNote;
         }
 
@@ -972,11 +994,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             orderNote.Note = CommonHelper.EnsureNotNull(orderNote.Note);
             orderNote.Note = CommonHelper.EnsureMaximumLength(orderNote.Note, 4000);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(orderNote))
-                context.OrderNotes.Attach(orderNote);
+            
+            if (!_context.IsAttached(orderNote))
+                _context.OrderNotes.Attach(orderNote);
 
-            context.SaveChanges();
+            _context.SaveChanges();
         }
 
         #endregion
@@ -1027,8 +1049,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 return (OrderStatus)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from os in context.OrderStatuses
+            
+            var query = from os in _context.OrderStatuses
                         where os.OrderStatusId == orderStatusId
                         select os;
             var orderStatus = query.SingleOrDefault();
@@ -1053,8 +1075,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 return (List<OrderStatus>)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from os in context.OrderStatuses
+            
+            var query = from os in _context.OrderStatuses
                         orderby os.OrderStatusId
                         select os;
             var orderStatuses = query.ToList();
@@ -1091,8 +1113,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             if (ps.HasValue)
                 paymentStatusId = (int)ps.Value;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var report = context.Sp_OrderProductVariantReport(startTime,
+            
+            var report = _context.Sp_OrderProductVariantReport(startTime,
                 endTime, orderStatusId, paymentStatusId, billingCountryId).ToList();
             return report;
         }
@@ -1107,8 +1129,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         public List<BestSellersReportLine> BestSellersReport(int lastDays, 
             int recordsToReturn, int orderBy)
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var report = context.Sp_SalesBestSellersReport(lastDays,
+            
+            var report = _context.Sp_SalesBestSellersReport(lastDays,
                 recordsToReturn, orderBy).ToList();
             return report;
         }
@@ -1125,8 +1147,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         {
             int orderStatusId = (int)os;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var item = context.Sp_OrderAverageReport(startTime, endTime, orderStatusId).FirstOrDefault();
+            
+            var item = _context.Sp_OrderAverageReport(startTime, endTime, orderStatusId).FirstOrDefault();
             return item;
         }
         
@@ -1202,8 +1224,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             if (ss.HasValue)
                 shippmentStatusId = (int)ss.Value;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var item = context.Sp_OrderIncompleteReport(orderStatusId, paymentStatusId, shippmentStatusId).FirstOrDefault();
+            
+            var item = _context.Sp_OrderIncompleteReport(orderStatusId, paymentStatusId, shippmentStatusId).FirstOrDefault();
             return item;
         }
        
@@ -1221,8 +1243,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             if (recurringPaymentId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from rp in context.RecurringPayments
+            
+            var query = from rp in _context.RecurringPayments
                         where rp.RecurringPaymentId == recurringPaymentId
                         select rp;
             var recurringPayment = query.SingleOrDefault();
@@ -1252,10 +1274,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             if (recurringPayment == null)
                 throw new ArgumentNullException("recurringPayment");
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
 
-            context.RecurringPayments.AddObject(recurringPayment);
-            context.SaveChanges();
+            _context.RecurringPayments.AddObject(recurringPayment);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -1267,11 +1289,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             if (recurringPayment == null)
                 throw new ArgumentNullException("recurringPayment");
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(recurringPayment))
-                context.RecurringPayments.Attach(recurringPayment);
+            
+            if (!_context.IsAttached(recurringPayment))
+                _context.RecurringPayments.Attach(recurringPayment);
 
-            context.SaveChanges();
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -1304,9 +1326,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             if (initialOrderStatus.HasValue)
                 initialOrderStatusId = (int)initialOrderStatus.Value;
             
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
 
-            var recurringPayments = context.Sp_RecurringPaymentLoadAll(showHidden,
+            var recurringPayments = _context.Sp_RecurringPaymentLoadAll(showHidden,
                 customerId, initialOrderId, initialOrderStatusId).ToList();
             return recurringPayments;
         }
@@ -1321,11 +1343,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             if (recurringPaymentHistory == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(recurringPaymentHistory))
-                context.RecurringPaymentHistory.Attach(recurringPaymentHistory);
-            context.DeleteObject(recurringPaymentHistory);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(recurringPaymentHistory))
+                _context.RecurringPaymentHistory.Attach(recurringPaymentHistory);
+            _context.DeleteObject(recurringPaymentHistory);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -1338,8 +1360,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             if (recurringPaymentHistoryId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from rph in context.RecurringPaymentHistory
+            
+            var query = from rph in _context.RecurringPaymentHistory
                         where rph.RecurringPaymentHistoryId == recurringPaymentHistoryId
                         select rph;
             var recurringPaymentHistory = query.SingleOrDefault();
@@ -1355,10 +1377,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             if (recurringPaymentHistory == null)
                 throw new ArgumentNullException("recurringPaymentHistory");
 
-            var context = ObjectContextHelper.CurrentObjectContext;
             
-            context.RecurringPaymentHistory.AddObject(recurringPaymentHistory);
-            context.SaveChanges();
+            
+            _context.RecurringPaymentHistory.AddObject(recurringPaymentHistory);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -1370,11 +1392,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             if (recurringPaymentHistory == null)
                 throw new ArgumentNullException("recurringPaymentHistory");
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(recurringPaymentHistory))
-                context.RecurringPaymentHistory.Attach(recurringPaymentHistory);
+            
+            if (!_context.IsAttached(recurringPaymentHistory))
+                _context.RecurringPaymentHistory.Attach(recurringPaymentHistory);
 
-            context.SaveChanges();
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -1386,8 +1408,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         public List<RecurringPaymentHistory> SearchRecurringPaymentHistory(int recurringPaymentId, 
             int orderId)
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var recurringPaymentHistory = context.Sp_RecurringPaymentHistoryLoadAll(recurringPaymentId, orderId).ToList();
+            
+            var recurringPaymentHistory = _context.Sp_RecurringPaymentHistoryLoadAll(recurringPaymentId, orderId).ToList();
             return recurringPaymentHistory;
         }
 
@@ -1405,11 +1427,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             if (giftCard == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(giftCard))
-                context.GiftCards.Attach(giftCard);
-            context.DeleteObject(giftCard);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(giftCard))
+                _context.GiftCards.Attach(giftCard);
+            _context.DeleteObject(giftCard);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -1422,8 +1444,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             if (giftCardId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from gc in context.GiftCards
+            
+            var query = from gc in _context.GiftCards
                         where gc.GiftCardId == giftCardId
                         select gc;
             var giftCard = query.SingleOrDefault();
@@ -1463,8 +1485,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             if (giftCardCouponCode != null)
                 giftCardCouponCode = giftCardCouponCode.Trim();
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var giftCards = context.Sp_GiftCardLoadAll(orderId,
+            
+            var giftCards = _context.Sp_GiftCardLoadAll(orderId,
                 customerId, startTime, endTime, orderStatusId, paymentStatusId, shippingStatusId,
                 isGiftCardActivated, giftCardCouponCode).ToList();
             return giftCards;
@@ -1492,10 +1514,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             giftCard.Message = CommonHelper.EnsureNotNull(giftCard.Message);
             giftCard.Message = CommonHelper.EnsureMaximumLength(giftCard.Message, 4000);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
 
-            context.GiftCards.AddObject(giftCard);
-            context.SaveChanges();
+            _context.GiftCards.AddObject(giftCard);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -1519,11 +1541,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             giftCard.Message = CommonHelper.EnsureNotNull(giftCard.Message);
             giftCard.Message = CommonHelper.EnsureMaximumLength(giftCard.Message, 4000);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(giftCard))
-                context.GiftCards.Attach(giftCard);
+            
+            if (!_context.IsAttached(giftCard))
+                _context.GiftCards.Attach(giftCard);
 
-            context.SaveChanges();
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -1536,11 +1558,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             if (giftCardUsageHistory == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(giftCardUsageHistory))
-                context.GiftCardUsageHistory.Attach(giftCardUsageHistory);
-            context.DeleteObject(giftCardUsageHistory);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(giftCardUsageHistory))
+                _context.GiftCardUsageHistory.Attach(giftCardUsageHistory);
+            _context.DeleteObject(giftCardUsageHistory);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -1553,8 +1575,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             if (giftCardUsageHistoryId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from gcuh in context.GiftCardUsageHistory
+            
+            var query = from gcuh in _context.GiftCardUsageHistory
                         where gcuh.GiftCardUsageHistoryId == giftCardUsageHistoryId
                         select gcuh;
             var giftCardUsageHistory = query.SingleOrDefault();
@@ -1571,8 +1593,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         public List<GiftCardUsageHistory> GetAllGiftCardUsageHistoryEntries(int? giftCardId,
             int? customerId, int? orderId)
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var giftCardUsageHistoryEntries = context.Sp_GiftCardUsageHistoryLoadAll(giftCardId,
+            
+            var giftCardUsageHistoryEntries = _context.Sp_GiftCardUsageHistoryLoadAll(giftCardId,
                 customerId, orderId).ToList();
             return giftCardUsageHistoryEntries;
         }
@@ -1586,10 +1608,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             if (giftCardUsageHistory == null)
                 throw new ArgumentNullException("giftCardUsageHistory");
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
 
-            context.GiftCardUsageHistory.AddObject(giftCardUsageHistory);
-            context.SaveChanges();
+            _context.GiftCardUsageHistory.AddObject(giftCardUsageHistory);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -1601,11 +1623,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             if (giftCardUsageHistory == null)
                 throw new ArgumentNullException("giftCardUsageHistory");
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(giftCardUsageHistory))
-                context.GiftCardUsageHistory.Attach(giftCardUsageHistory);
+            
+            if (!_context.IsAttached(giftCardUsageHistory))
+                _context.GiftCardUsageHistory.Attach(giftCardUsageHistory);
 
-            context.SaveChanges();
+            _context.SaveChanges();
         }
 
         #endregion
@@ -1622,11 +1644,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             if (rewardPointsHistory == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(rewardPointsHistory))
-                context.RewardPointsHistory.Attach(rewardPointsHistory);
-            context.DeleteObject(rewardPointsHistory);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(rewardPointsHistory))
+                _context.RewardPointsHistory.Attach(rewardPointsHistory);
+            _context.DeleteObject(rewardPointsHistory);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -1639,8 +1661,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             if (rewardPointsHistoryId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from rph in context.RewardPointsHistory
+            
+            var query = from rph in _context.RewardPointsHistory
                         where rph.RewardPointsHistoryId == rewardPointsHistoryId
                         select rph;
             var rewardPointsHistory = query.SingleOrDefault();
@@ -1668,9 +1690,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             if (pageSize == int.MaxValue)
                 pageSize = int.MaxValue - 1;
             
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
 
-            var query = from rph in context.RewardPointsHistory
+            var query = from rph in _context.RewardPointsHistory
                         where
                         (!customerId.HasValue || customerId.Value == 0 || customerId.Value == rph.CustomerId) &&
                         (!orderId.HasValue || orderId.Value == 0 || orderId.Value == rph.OrderId)
@@ -1709,9 +1731,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
 
             int newPointsBalance = customer.RewardPointsBalance + points;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
 
-            var rewardPointsHistory = context.RewardPointsHistory.CreateObject();
+            var rewardPointsHistory = _context.RewardPointsHistory.CreateObject();
             rewardPointsHistory.CustomerId = customerId;
             rewardPointsHistory.OrderId = orderId;
             rewardPointsHistory.Points = points;
@@ -1722,8 +1744,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             rewardPointsHistory.Message = message;
             rewardPointsHistory.CreatedOn = createdOn;
 
-            context.RewardPointsHistory.AddObject(rewardPointsHistory);
-            context.SaveChanges();
+            _context.RewardPointsHistory.AddObject(rewardPointsHistory);
+            _context.SaveChanges();
 
             customer.ResetCachedValues();
 
@@ -1744,11 +1766,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             rewardPointsHistory.Message = CommonHelper.EnsureNotNull(rewardPointsHistory.Message);
             rewardPointsHistory.Message = CommonHelper.EnsureMaximumLength(rewardPointsHistory.Message, 1000);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(rewardPointsHistory))
-                context.RewardPointsHistory.Attach(rewardPointsHistory);
+            
+            if (!_context.IsAttached(rewardPointsHistory))
+                _context.RewardPointsHistory.Attach(rewardPointsHistory);
 
-            context.SaveChanges();
+            _context.SaveChanges();
         }
 
         #endregion
@@ -1819,8 +1841,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             if (returnRequestId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from rr in context.ReturnRequests
+            
+            var query = from rr in _context.ReturnRequests
                         where rr.ReturnRequestId == returnRequestId
                         select rr;
             var returnRequest = query.SingleOrDefault();
@@ -1837,11 +1859,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             if (returnRequest == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(returnRequest))
-                context.ReturnRequests.Attach(returnRequest);
-            context.DeleteObject(returnRequest);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(returnRequest))
+                _context.ReturnRequests.Attach(returnRequest);
+            _context.DeleteObject(returnRequest);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -1858,9 +1880,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             if (rs.HasValue)
                 returnStatusId = (int)rs.Value;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
 
-            var query = from rr in context.ReturnRequests
+            var query = from rr in _context.ReturnRequests
                         where (!returnStatusId.HasValue || returnStatusId == rr.ReturnStatusId) &&
                         (customerId == 0 || customerId == rr.CustomerId) &&
                         (orderProductVariantId == 0 || orderProductVariantId == rr.OrderProductVariantId)
@@ -1888,10 +1910,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             returnRequest.CustomerComments = CommonHelper.EnsureNotNull(returnRequest.CustomerComments);
             returnRequest.StaffNotes = CommonHelper.EnsureNotNull(returnRequest.StaffNotes);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
 
-            context.ReturnRequests.AddObject(returnRequest);
-            context.SaveChanges();
+            _context.ReturnRequests.AddObject(returnRequest);
+            _context.SaveChanges();
 
             if (notifyStoreOwner)
             {
@@ -1915,11 +1937,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             returnRequest.CustomerComments = CommonHelper.EnsureNotNull(returnRequest.CustomerComments);
             returnRequest.StaffNotes = CommonHelper.EnsureNotNull(returnRequest.StaffNotes);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(returnRequest))
-                context.ReturnRequests.Attach(returnRequest);
+            
+            if (!_context.IsAttached(returnRequest))
+                _context.ReturnRequests.Attach(returnRequest);
 
-            context.SaveChanges();
+            _context.SaveChanges();
         }
 
         /// <summary>

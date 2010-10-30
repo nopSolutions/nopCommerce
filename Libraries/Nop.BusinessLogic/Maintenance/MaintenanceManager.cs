@@ -39,6 +39,28 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Maintenance
     /// </summary>
     public partial class MaintenanceManager : IMaintenanceManager
     {
+        #region Fields
+
+        /// <summary>
+        /// object context
+        /// </summary>
+        protected NopObjectContext _context;
+
+        #endregion
+
+        #region Ctor
+
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="context">Object context</param>
+        public MaintenanceManager(NopObjectContext context)
+        {
+            _context = context;
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -46,8 +68,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Maintenance
         /// </summary>
         public void Reindex()
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            context.Sp_Maintenance_ReindexTables();
+            
+            _context.Sp_Maintenance_ReindexTables();
         }
 
         /// <summary>

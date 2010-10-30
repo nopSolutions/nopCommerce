@@ -43,7 +43,29 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
         private const string PRODUCTCATEGORIES_PATTERN_KEY = "Nop.productcategory.";
 
         #endregion
+
+        #region Fields
+
+        /// <summary>
+        /// object context
+        /// </summary>
+        protected NopObjectContext _context;
+
+        #endregion
         
+        #region Ctor
+
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="context">Object context</param>
+        public CategoryManager(NopObjectContext context)
+        {
+            _context = context;
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -56,9 +78,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
             if (category == null)
                 throw new ArgumentNullException("category");
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-
-            return category.IsAccessDenied(context);
+            return category.IsAccessDenied(_context);
         }
 
         /// <summary>
@@ -92,8 +112,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
         /// <returns>Categories</returns>
         public List<Category> GetAllCategories(bool showHidden)
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from c in context.Categories
+            
+            var query = from c in _context.Categories
                         orderby c.ParentCategoryId, c.DisplayOrder
                         where (showHidden || c.Published) &&
                         !c.Deleted
@@ -102,7 +122,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
             //filter by access control list (public store)
             if (!showHidden)
             {
-                query = query.WhereAclPerObjectNotDenied(context);
+                query = query.WhereAclPerObjectNotDenied(_context);
             }
             var unsortedCategories = query.ToList();
 
@@ -133,8 +153,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
         public List<Category> GetAllCategoriesByParentCategoryId(int parentCategoryId,
             bool showHidden)
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from c in context.Categories
+            
+            var query = from c in _context.Categories
                         orderby c.DisplayOrder
                         where (showHidden || c.Published) && 
                         !c.Deleted && 
@@ -144,7 +164,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
             //filter by access control list (public store)
             if (!showHidden)
             {
-                query = query.WhereAclPerObjectNotDenied(context);
+                query = query.WhereAclPerObjectNotDenied(_context);
             }
 
             var categories = query.ToList();
@@ -159,8 +179,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
         {
             bool showHidden = NopContext.Current.IsAdmin;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from c in context.Categories
+            
+            var query = from c in _context.Categories
                         orderby c.DisplayOrder
                         where (showHidden || c.Published) && !c.Deleted && c.ShowOnHomePage
                         select c;
@@ -168,7 +188,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
             //filter by access control list (public store)
             if (!showHidden)
             {
-                query = query.WhereAclPerObjectNotDenied(context);
+                query = query.WhereAclPerObjectNotDenied(_context);
             }
 
             var categories = query.ToList();
@@ -194,8 +214,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
             
             bool showHidden = NopContext.Current.IsAdmin;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from c in context.Categories
+            
+            var query = from c in _context.Categories
                         where c.CategoryId == categoryId
                         select c;
             var category = query.SingleOrDefault();
@@ -260,10 +280,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
             category.PriceRanges = CommonHelper.EnsureNotNull(category.PriceRanges);
             category.PriceRanges = CommonHelper.EnsureMaximumLength(category.PriceRanges, 400);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
 
-            context.Categories.AddObject(category);
-            context.SaveChanges();
+            _context.Categories.AddObject(category);
+            _context.SaveChanges();
 
             if (this.CategoriesCacheEnabled || this.MappingsCacheEnabled)
             {
@@ -307,11 +327,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
                 parentCategory = GetCategoryById(parentCategory.ParentCategoryId);
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(category))
-                context.Categories.Attach(category);
+            
+            if (!_context.IsAttached(category))
+                _context.Categories.Attach(category);
 
-            context.SaveChanges();
+            _context.SaveChanges();
 
             if (this.CategoriesCacheEnabled || this.MappingsCacheEnabled)
             {
@@ -330,8 +350,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
             if (categoryLocalizedId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from cl in context.CategoryLocalized
+            
+            var query = from cl in _context.CategoryLocalized
                         where cl.CategoryLocalizedId == categoryLocalizedId
                         select cl;
             var categoryLocalized = query.SingleOrDefault();
@@ -348,8 +368,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
             if (categoryId == 0)
                 return new List<CategoryLocalized>();
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from cl in context.CategoryLocalized
+            
+            var query = from cl in _context.CategoryLocalized
                         where cl.CategoryId == categoryId
                         select cl;
             var content = query.ToList();
@@ -367,8 +387,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
             if (categoryId == 0 || languageId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from cl in context.CategoryLocalized
+            
+            var query = from cl in _context.CategoryLocalized
                         orderby cl.CategoryLocalizedId
                         where cl.CategoryId == categoryId &&
                         cl.LanguageId == languageId
@@ -398,10 +418,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
             categoryLocalized.SEName = CommonHelper.EnsureNotNull(categoryLocalized.SEName);
             categoryLocalized.SEName = CommonHelper.EnsureMaximumLength(categoryLocalized.SEName, 100);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
             
-            context.CategoryLocalized.AddObject(categoryLocalized);
-            context.SaveChanges();
+            
+            _context.CategoryLocalized.AddObject(categoryLocalized);
+            _context.SaveChanges();
 
             if (this.CategoriesCacheEnabled)
             {
@@ -437,19 +457,19 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
                 string.IsNullOrEmpty(categoryLocalized.MetaTitle) &&
                 string.IsNullOrEmpty(categoryLocalized.SEName);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(categoryLocalized))
-                context.CategoryLocalized.Attach(categoryLocalized);
+            
+            if (!_context.IsAttached(categoryLocalized))
+                _context.CategoryLocalized.Attach(categoryLocalized);
 
             if (allFieldsAreEmpty)
             {
                 //delete if all fields are empty
-                context.DeleteObject(categoryLocalized);
-                context.SaveChanges();
+                _context.DeleteObject(categoryLocalized);
+                _context.SaveChanges();
             }
             else
             {
-                context.SaveChanges();
+                _context.SaveChanges();
             }
 
             if (this.CategoriesCacheEnabled)
@@ -471,11 +491,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
             if (productCategory == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(productCategory))
-                context.ProductCategories.Attach(productCategory);
-            context.DeleteObject(productCategory);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(productCategory))
+                _context.ProductCategories.Attach(productCategory);
+            _context.DeleteObject(productCategory);
+            _context.SaveChanges();
 
             if (this.CategoriesCacheEnabled || this.MappingsCacheEnabled)
             {
@@ -502,9 +522,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
                 return (List<ProductCategory>)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from pc in context.ProductCategories
-                        join p in context.Products on pc.ProductId equals p.ProductId
+            
+            var query = from pc in _context.ProductCategories
+                        join p in _context.Products on pc.ProductId equals p.ProductId
                         where pc.CategoryId == categoryId &&
                         !p.Deleted &&
                         (showHidden || p.Published)
@@ -537,9 +557,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
                 return (List<ProductCategory>)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from pc in context.ProductCategories
-                        join c in context.Categories on pc.CategoryId equals c.CategoryId
+            
+            var query = from pc in _context.ProductCategories
+                        join c in _context.Categories on pc.CategoryId equals c.CategoryId
                         where pc.ProductId == productId &&
                         !c.Deleted &&
                         (showHidden || c.Published)
@@ -571,8 +591,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
                 return (ProductCategory)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from pc in context.ProductCategories
+            
+            var query = from pc in _context.ProductCategories
                         where pc.ProductCategoryId == productCategoryId
                         select pc;
             var productCategory = query.SingleOrDefault();
@@ -593,10 +613,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
             if (productCategory == null)
                 throw new ArgumentNullException("productCategory");
 
-            var context = ObjectContextHelper.CurrentObjectContext;
             
-            context.ProductCategories.AddObject(productCategory);
-            context.SaveChanges();
+            
+            _context.ProductCategories.AddObject(productCategory);
+            _context.SaveChanges();
 
             if (this.CategoriesCacheEnabled || this.MappingsCacheEnabled)
             {
@@ -614,11 +634,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
             if (productCategory == null)
                 throw new ArgumentNullException("productCategory");
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(productCategory))
-                context.ProductCategories.Attach(productCategory);
+            
+            if (!_context.IsAttached(productCategory))
+                _context.ProductCategories.Attach(productCategory);
 
-            context.SaveChanges();
+            _context.SaveChanges();
 
             if (this.CategoriesCacheEnabled || this.MappingsCacheEnabled)
             {

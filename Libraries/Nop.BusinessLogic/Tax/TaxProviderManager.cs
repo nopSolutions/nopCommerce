@@ -37,7 +37,29 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         private const string TAXPROVIDERS_BY_ID_KEY = "Nop.taxprovider.id-{0}";
         private const string TAXPROVIDERS_PATTERN_KEY = "Nop.taxprovider.";
         #endregion
-        
+
+        #region Fields
+
+        /// <summary>
+        /// object context
+        /// </summary>
+        protected NopObjectContext _context;
+
+        #endregion
+
+        #region Ctor
+
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="context">Object context</param>
+        public TaxProviderManager(NopObjectContext context)
+        {
+            _context = context;
+        }
+
+        #endregion
+
         #region Methods
         /// <summary>
         /// Deletes a tax provider
@@ -49,11 +71,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
             if (taxProvider == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(taxProvider))
-                context.TaxProviders.Attach(taxProvider);
-            context.DeleteObject(taxProvider);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(taxProvider))
+                _context.TaxProviders.Attach(taxProvider);
+            _context.DeleteObject(taxProvider);
+            _context.SaveChanges();
             if (this.CacheEnabled)
             {
                 NopRequestCache.RemoveByPattern(TAXPROVIDERS_PATTERN_KEY);
@@ -77,8 +99,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
                 return (TaxProvider)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from tp in context.TaxProviders
+            
+            var query = from tp in _context.TaxProviders
                         where tp.TaxProviderId == taxProviderId
                         select tp;
             var taxProvider = query.SingleOrDefault();
@@ -103,8 +125,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
                 return (List<TaxProvider>)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from tp in context.TaxProviders
+            
+            var query = from tp in _context.TaxProviders
                         orderby tp.DisplayOrder
                         select tp;
             var taxProviders = query.ToList();
@@ -134,10 +156,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
             taxProvider.ClassName = CommonHelper.EnsureNotNull(taxProvider.ClassName); 
             taxProvider.ClassName = CommonHelper.EnsureMaximumLength(taxProvider.ClassName, 500);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
             
-            context.TaxProviders.AddObject(taxProvider);
-            context.SaveChanges();
+            
+            _context.TaxProviders.AddObject(taxProvider);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -163,11 +185,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
             taxProvider.ClassName = CommonHelper.EnsureNotNull(taxProvider.ClassName);
             taxProvider.ClassName = CommonHelper.EnsureMaximumLength(taxProvider.ClassName, 500);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(taxProvider))
-                context.TaxProviders.Attach(taxProvider);
+            
+            if (!_context.IsAttached(taxProvider))
+                _context.TaxProviders.Attach(taxProvider);
 
-            context.SaveChanges();
+            _context.SaveChanges();
             
             if (this.CacheEnabled)
             {

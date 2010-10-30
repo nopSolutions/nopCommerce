@@ -29,6 +29,28 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
     /// </summary>
     public partial class ShippingByTotalManager : IShippingByTotalManager
     {
+        #region Fields
+
+        /// <summary>
+        /// object context
+        /// </summary>
+        protected NopObjectContext _context;
+
+        #endregion
+
+        #region Ctor
+
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="context">Object context</param>
+        public ShippingByTotalManager(NopObjectContext context)
+        {
+            _context = context;
+        }
+
+        #endregion
+
         #region Methods
         /// <summary>
         /// Get a ShippingByTotal
@@ -40,8 +62,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
             if (shippingByTotalId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from st in context.ShippingByTotal
+            
+            var query = from st in _context.ShippingByTotal
                         where st.ShippingByTotalId == shippingByTotalId
                         select st;
             var shippingByTotal = query.SingleOrDefault();
@@ -58,11 +80,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
             if (shippingByTotal == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(shippingByTotal))
-                context.ShippingByTotal.Attach(shippingByTotal);
-            context.DeleteObject(shippingByTotal);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(shippingByTotal))
+                _context.ShippingByTotal.Attach(shippingByTotal);
+            _context.DeleteObject(shippingByTotal);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -71,8 +93,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         /// <returns>ShippingByTotal collection</returns>
         public List<ShippingByTotal> GetAll()
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from st in context.ShippingByTotal
+            
+            var query = from st in _context.ShippingByTotal
                         orderby st.ShippingMethodId, st.From
                         select st;
             var collection = query.ToList();
@@ -88,10 +110,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
             if (shippingByTotal == null)
                 throw new ArgumentNullException("shippingByTotal");
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
 
-            context.ShippingByTotal.AddObject(shippingByTotal);
-            context.SaveChanges();
+            _context.ShippingByTotal.AddObject(shippingByTotal);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -103,11 +125,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
             if (shippingByTotal == null)
                 throw new ArgumentNullException("shippingByTotal");
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(shippingByTotal))
-                context.ShippingByTotal.Attach(shippingByTotal);
+            
+            if (!_context.IsAttached(shippingByTotal))
+                _context.ShippingByTotal.Attach(shippingByTotal);
 
-            context.SaveChanges();
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -117,8 +139,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         /// <returns>ShippingByTotal collection</returns>
         public List<ShippingByTotal> GetAllByShippingMethodId(int shippingMethodId)
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from st in context.ShippingByTotal
+            
+            var query = from st in _context.ShippingByTotal
                         where st.ShippingMethodId == shippingMethodId
                         orderby st.From
                         select st;

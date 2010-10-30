@@ -44,6 +44,28 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
         private const string CURRENCIES_PATTERN_KEY = "Nop.currency.";
         #endregion
 
+        #region Fields
+
+        /// <summary>
+        /// object context
+        /// </summary>
+        protected NopObjectContext _context;
+
+        #endregion
+
+        #region Ctor
+
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="context">Object context</param>
+        public CurrencyManager(NopObjectContext context)
+        {
+            _context = context;
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -67,11 +89,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
             if (currency == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(currency))
-                context.Currencies.Attach(currency);
-            context.DeleteObject(currency);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(currency))
+                _context.Currencies.Attach(currency);
+            _context.DeleteObject(currency);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -96,8 +118,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
                 return (Currency)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from c in context.Currencies
+            
+            var query = from c in _context.Currencies
                         where c.CurrencyId == currencyId
                         select c;
             var currency = query.SingleOrDefault();
@@ -145,8 +167,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
                 return (List<Currency>)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from c in context.Currencies
+            
+            var query = from c in _context.Currencies
                         orderby c.DisplayOrder
                         where showHidden || c.Published
                         select c;
@@ -186,10 +208,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
                 throw new NopException("Specified display locale culture is not supported");
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
 
-            context.Currencies.AddObject(currency);
-            context.SaveChanges();
+            _context.Currencies.AddObject(currency);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -224,11 +246,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
                 throw new NopException("Specified display locale culture is not supported");
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(currency))
-                context.Currencies.Attach(currency);
+            
+            if (!_context.IsAttached(currency))
+                _context.Currencies.Attach(currency);
 
-            context.SaveChanges();
+            _context.SaveChanges();
 
 
             if (this.CacheEnabled)

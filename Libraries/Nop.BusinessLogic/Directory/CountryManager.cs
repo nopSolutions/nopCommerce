@@ -42,6 +42,28 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
         private const string COUNTRIES_PATTERN_KEY = "Nop.country.";
         #endregion
 
+        #region Fields
+
+        /// <summary>
+        /// object context
+        /// </summary>
+        protected NopObjectContext _context;
+
+        #endregion
+
+        #region Ctor
+
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="context">Object context</param>
+        public CountryManager(NopObjectContext context)
+        {
+            _context = context;
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -54,11 +76,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
             if (country == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(country))
-                context.Countries.Attach(country);
-            context.DeleteObject(country);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(country))
+                _context.Countries.Attach(country);
+            _context.DeleteObject(country);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -80,8 +102,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
                 return (List<Country>)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from c in context.Countries
+            
+            var query = from c in _context.Countries
                         orderby c.DisplayOrder, c.Name
                         where showHidden || c.Published
                         select c;
@@ -108,8 +130,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
                 return (List<Country>)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from c in context.Countries
+            
+            var query = from c in _context.Countries
                         orderby c.DisplayOrder, c.Name
                         where (showHidden || c.Published) && c.AllowsRegistration
                         select c;
@@ -136,8 +158,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
                 return (List<Country>)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from c in context.Countries
+            
+            var query = from c in _context.Countries
                         orderby c.DisplayOrder, c.Name
                         where (showHidden || c.Published) && c.AllowsBilling
                         select c;
@@ -165,8 +187,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
                 return (List<Country>)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from c in context.Countries
+            
+            var query = from c in _context.Countries
                         orderby c.DisplayOrder, c.Name
                         where (showHidden || c.Published) && c.AllowsShipping
                         select c;
@@ -196,8 +218,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
                 return (Country)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from c in context.Countries
+            
+            var query = from c in _context.Countries
                         where c.CountryId == countryId
                         select c;
             var country = query.SingleOrDefault();
@@ -216,8 +238,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
         /// <returns>Country</returns>
         public Country GetCountryByTwoLetterIsoCode(string twoLetterIsoCode)
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from c in context.Countries
+            
+            var query = from c in _context.Countries
                         where c.TwoLetterIsoCode == twoLetterIsoCode
                         select c;
             var country = query.FirstOrDefault();
@@ -232,8 +254,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
         /// <returns>Country</returns>
         public Country GetCountryByThreeLetterIsoCode(string threeLetterIsoCode)
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from c in context.Countries
+            
+            var query = from c in _context.Countries
                         where c.ThreeLetterIsoCode == threeLetterIsoCode
                         select c;
             var country = query.FirstOrDefault();
@@ -256,10 +278,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
             country.ThreeLetterIsoCode = CommonHelper.EnsureNotNull(country.ThreeLetterIsoCode);
             country.ThreeLetterIsoCode = CommonHelper.EnsureMaximumLength(country.ThreeLetterIsoCode, 3);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
 
-            context.Countries.AddObject(country);
-            context.SaveChanges();
+            _context.Countries.AddObject(country);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -283,11 +305,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
             country.ThreeLetterIsoCode = CommonHelper.EnsureNotNull(country.ThreeLetterIsoCode);
             country.ThreeLetterIsoCode = CommonHelper.EnsureMaximumLength(country.ThreeLetterIsoCode, 3);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(country))
-                context.Countries.Attach(country);
+            
+            if (!_context.IsAttached(country))
+                _context.Countries.Attach(country);
 
-            context.SaveChanges();
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {

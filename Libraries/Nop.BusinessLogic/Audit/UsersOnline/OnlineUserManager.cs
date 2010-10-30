@@ -22,10 +22,11 @@ using System.Web;
 using NopSolutions.NopCommerce.BusinessLogic.Caching;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
+using NopSolutions.NopCommerce.BusinessLogic.Data;
 using NopSolutions.NopCommerce.BusinessLogic.Installation;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Audit.UsersOnline
 {
@@ -45,7 +46,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit.UsersOnline
         private static object s_lock = new object();
 
         #endregion
-
+        
         #region Utilities
 
         private Dictionary<Guid, OnlineUserInfo> GetAnonymousUserList()

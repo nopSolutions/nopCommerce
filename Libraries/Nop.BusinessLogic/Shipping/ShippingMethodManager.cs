@@ -37,7 +37,29 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         private const string SHIPPINGMETHODS_BY_ID_KEY = "Nop.shippingMethod.id-{0}";
         private const string SHIPPINGMETHODS_PATTERN_KEY = "Nop.shippingMethod.";
         #endregion
-        
+
+        #region Fields
+
+        /// <summary>
+        /// object context
+        /// </summary>
+        protected NopObjectContext _context;
+
+        #endregion
+
+        #region Ctor
+
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="context">Object context</param>
+        public ShippingMethodManager(NopObjectContext context)
+        {
+            _context = context;
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -50,11 +72,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
             if (shippingMethod == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(shippingMethod))
-                context.ShippingMethods.Attach(shippingMethod);
-            context.DeleteObject(shippingMethod);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(shippingMethod))
+                _context.ShippingMethods.Attach(shippingMethod);
+            _context.DeleteObject(shippingMethod);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -79,8 +101,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
                 return (ShippingMethod)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from sm in context.ShippingMethods
+            
+            var query = from sm in _context.ShippingMethods
                         where sm.ShippingMethodId == shippingMethodId
                         select sm;
             var shippingMethod = query.SingleOrDefault();
@@ -108,8 +130,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         /// <returns>Shipping method collection</returns>
         public List<ShippingMethod> GetAllShippingMethods(int? filterByCountryId)
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var shippingMethods = context.Sp_ShippingMethodLoadAll(filterByCountryId).ToList();
+            
+            var shippingMethods = _context.Sp_ShippingMethodLoadAll(filterByCountryId).ToList();
             return shippingMethods;
         }
 
@@ -127,10 +149,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
             shippingMethod.Description = CommonHelper.EnsureNotNull(shippingMethod.Description);
             shippingMethod.Description = CommonHelper.EnsureMaximumLength(shippingMethod.Description, 2000);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
 
-            context.ShippingMethods.AddObject(shippingMethod);
-            context.SaveChanges();
+            _context.ShippingMethods.AddObject(shippingMethod);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -152,11 +174,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
             shippingMethod.Description = CommonHelper.EnsureNotNull(shippingMethod.Description);
             shippingMethod.Description = CommonHelper.EnsureMaximumLength(shippingMethod.Description, 2000);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(shippingMethod))
-                context.ShippingMethods.Attach(shippingMethod);
+            
+            if (!_context.IsAttached(shippingMethod))
+                _context.ShippingMethods.Attach(shippingMethod);
 
-            context.SaveChanges();
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -179,18 +201,18 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
             if (country == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(shippingMethod))
-                context.ShippingMethods.Attach(shippingMethod);
-            if (!context.IsAttached(country))
-                context.Countries.Attach(country);
+            
+            if (!_context.IsAttached(shippingMethod))
+                _context.ShippingMethods.Attach(shippingMethod);
+            if (!_context.IsAttached(country))
+                _context.Countries.Attach(country);
 
             //ensure that navigation property is loaded
             if (country.NpRestrictedShippingMethods == null)
-                context.LoadProperty(country, c => c.NpRestrictedShippingMethods);
+                _context.LoadProperty(country, c => c.NpRestrictedShippingMethods);
 
             country.NpRestrictedShippingMethods.Add(shippingMethod);
-            context.SaveChanges();
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -201,7 +223,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         /// <returns>True if mapping exist, otherwise false</returns>
         public bool DoesShippingMethodCountryMappingExist(int shippingMethodId, int countryId)
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
 
             var shippingMethod = GetShippingMethodById(shippingMethodId);
             if (shippingMethod == null)
@@ -209,12 +231,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
 
             //ensure that navigation property is loaded
             if (shippingMethod.NpRestrictedCountries == null)
-                context.LoadProperty(shippingMethod, sm => sm.NpRestrictedCountries);
+                _context.LoadProperty(shippingMethod, sm => sm.NpRestrictedCountries);
 
             bool result = shippingMethod.NpRestrictedCountries.ToList().Find(c => c.CountryId == countryId) != null;
             return result;
 
-            //var query = from sm in context.ShippingMethods
+            //var query = from sm in _context.ShippingMethods
             //            from c in sm.NpRestrictedCountries
             //            where sm.ShippingMethodId == shippingMethodId &&
             //            c.CountryId == countryId
@@ -239,18 +261,18 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
             if (country == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(shippingMethod))
-                context.ShippingMethods.Attach(shippingMethod);
-            if (!context.IsAttached(country))
-                context.Countries.Attach(country);
+            
+            if (!_context.IsAttached(shippingMethod))
+                _context.ShippingMethods.Attach(shippingMethod);
+            if (!_context.IsAttached(country))
+                _context.Countries.Attach(country);
 
             //ensure that navigation property is loaded
             if (country.NpRestrictedShippingMethods == null)
-                context.LoadProperty(country, c => c.NpRestrictedShippingMethods);
+                _context.LoadProperty(country, c => c.NpRestrictedShippingMethods);
 
             country.NpRestrictedShippingMethods.Remove(shippingMethod);
-            context.SaveChanges();
+            _context.SaveChanges();
         }
 
         #endregion

@@ -38,6 +38,28 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         private const string SHIPPINGRATECOMPUTATIONMETHODS_PATTERN_KEY = "Nop.shippingratecomputationmethod.";
         #endregion
 
+        #region Fields
+
+        /// <summary>
+        /// object context
+        /// </summary>
+        protected NopObjectContext _context;
+
+        #endregion
+
+        #region Ctor
+
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="context">Object context</param>
+        public ShippingRateComputationMethodManager(NopObjectContext context)
+        {
+            _context = context;
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -50,11 +72,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
             if (shippingRateComputationMethod == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(shippingRateComputationMethod))
-                context.ShippingRateComputationMethods.Attach(shippingRateComputationMethod);
-            context.DeleteObject(shippingRateComputationMethod);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(shippingRateComputationMethod))
+                _context.ShippingRateComputationMethods.Attach(shippingRateComputationMethod);
+            _context.DeleteObject(shippingRateComputationMethod);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -79,8 +101,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
                 return (ShippingRateComputationMethod)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from s in context.ShippingRateComputationMethods
+            
+            var query = from s in _context.ShippingRateComputationMethods
                         where s.ShippingRateComputationMethodId == shippingRateComputationMethodId
                         select s;
             var shippingRateComputationMethod = query.SingleOrDefault();
@@ -116,8 +138,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
                 return (List<ShippingRateComputationMethod>)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from s in context.ShippingRateComputationMethods
+            
+            var query = from s in _context.ShippingRateComputationMethods
                         orderby s.DisplayOrder
                         where showHidden || s.IsActive
                         select s;
@@ -148,10 +170,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
             shippingRateComputationMethod.ClassName = CommonHelper.EnsureNotNull(shippingRateComputationMethod.ClassName);
             shippingRateComputationMethod.ClassName = CommonHelper.EnsureMaximumLength(shippingRateComputationMethod.ClassName, 500);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
 
-            context.ShippingRateComputationMethods.AddObject(shippingRateComputationMethod);
-            context.SaveChanges();
+            _context.ShippingRateComputationMethods.AddObject(shippingRateComputationMethod);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -177,11 +199,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
             shippingRateComputationMethod.ClassName = CommonHelper.EnsureNotNull(shippingRateComputationMethod.ClassName);
             shippingRateComputationMethod.ClassName = CommonHelper.EnsureMaximumLength(shippingRateComputationMethod.ClassName, 500);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(shippingRateComputationMethod))
-                context.ShippingRateComputationMethods.Attach(shippingRateComputationMethod);
+            
+            if (!_context.IsAttached(shippingRateComputationMethod))
+                _context.ShippingRateComputationMethods.Attach(shippingRateComputationMethod);
 
-            context.SaveChanges();
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {

@@ -38,6 +38,28 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         private const string TAXRATE_PATTERN_KEY = "Nop.taxrate.";
         #endregion
 
+        #region Fields
+
+        /// <summary>
+        /// object context
+        /// </summary>
+        protected NopObjectContext _context;
+
+        #endregion
+
+        #region Ctor
+
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="context">Object context</param>
+        public TaxRateManager(NopObjectContext context)
+        {
+            _context = context;
+        }
+
+        #endregion
+
         #region Methods
         /// <summary>
         /// Deletes a tax rate
@@ -49,11 +71,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
             if (taxRate == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(taxRate))
-                context.TaxRates.Attach(taxRate);
-            context.DeleteObject(taxRate);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(taxRate))
+                _context.TaxRates.Attach(taxRate);
+            _context.DeleteObject(taxRate);
+            _context.SaveChanges();
             
             if (this.CacheEnabled)
             {
@@ -78,8 +100,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
                 return (TaxRate)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from tr in context.TaxRates
+            
+            var query = from tr in _context.TaxRates
                         where tr.TaxRateId == taxRateId
                         select tr;
             var taxRate = query.SingleOrDefault();
@@ -104,8 +126,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
                 return (List<TaxRate>)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var collection = context.Sp_TaxRateLoadAll().ToList();
+            
+            var collection = _context.Sp_TaxRateLoadAll().ToList();
 
             if (this.CacheEnabled)
             {
@@ -181,10 +203,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
             taxRate.Zip = taxRate.Zip.Trim();
             taxRate.Zip = CommonHelper.EnsureMaximumLength(taxRate.Zip, 50);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
             
-            context.TaxRates.AddObject(taxRate);
-            context.SaveChanges();
+            
+            _context.TaxRates.AddObject(taxRate);
+            _context.SaveChanges();
             
             if (this.CacheEnabled)
             {
@@ -205,11 +227,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
             taxRate.Zip = taxRate.Zip.Trim();
             taxRate.Zip = CommonHelper.EnsureMaximumLength(taxRate.Zip, 50);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(taxRate))
-                context.TaxRates.Attach(taxRate);
+            
+            if (!_context.IsAttached(taxRate))
+                _context.TaxRates.Attach(taxRate);
 
-            context.SaveChanges();
+            _context.SaveChanges();
             
             if (this.CacheEnabled)
             {

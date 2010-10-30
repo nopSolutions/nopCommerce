@@ -33,7 +33,27 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
     public partial class PictureManager : IPictureManager
     {
         #region Fields
+
         private static object s_lock = new object();
+
+        /// <summary>
+        /// object context
+        /// </summary>
+        protected NopObjectContext _context;
+
+        #endregion
+
+        #region Ctor
+
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="context">Object context</param>
+        public PictureManager(NopObjectContext context)
+        {
+            _context = context;
+        }
+
         #endregion
 
         #region Utilities
@@ -495,8 +515,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
             if (pictureId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from p in context.Pictures
+            
+            var query = from p in _context.Pictures
                         where p.PictureId == pictureId
                         select p;
             var picture = query.SingleOrDefault();
@@ -527,11 +547,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
             }
 
             //delete from database
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(picture))
-                context.Pictures.Attach(picture);
-            context.DeleteObject(picture);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(picture))
+                _context.Pictures.Attach(picture);
+            _context.DeleteObject(picture);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -597,8 +617,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
                 pageIndex = int.MaxValue - 1;
 
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from p in context.Pictures
+            
+            var query = from p in _context.Pictures
                        orderby p.PictureId descending
                        select p;
             var pics = new PagedList<Picture>(query, pageIndex, pageSize);
@@ -627,9 +647,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
             if (productId == 0)
                 return new List<Picture>();
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from p in context.Pictures
-                        join pp in context.ProductPictures on p.PictureId equals pp.PictureId
+            
+            var query = from p in _context.Pictures
+                        join pp in _context.ProductPictures on p.PictureId equals pp.PictureId
                         orderby pp.DisplayOrder
                         where pp.ProductId == productId
                         select p;
@@ -655,14 +675,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
 
             pictureBinary = ValidatePicture(pictureBinary, mimeType);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var picture = context.Pictures.CreateObject();
+            
+            var picture = _context.Pictures.CreateObject();
             picture.PictureBinary = (this.StoreInDB ? pictureBinary : new byte[0]);
             picture.MimeType = mimeType;
             picture.IsNew = isNew;
 
-            context.Pictures.AddObject(picture);
-            context.SaveChanges();
+            _context.Pictures.AddObject(picture);
+            _context.SaveChanges();
 
             if(!this.StoreInDB && picture != null)
             {
@@ -691,14 +711,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
             if (picture == null)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(picture))
-                context.Pictures.Attach(picture);
+            
+            if (!_context.IsAttached(picture))
+                _context.Pictures.Attach(picture);
 
             picture.PictureBinary = (this.StoreInDB ? pictureBinary : new byte[0]);
             picture.MimeType = mimeType;
             picture.IsNew = isNew;
-            context.SaveChanges();
+            _context.SaveChanges();
 
             if(!this.StoreInDB && picture != null)
             {

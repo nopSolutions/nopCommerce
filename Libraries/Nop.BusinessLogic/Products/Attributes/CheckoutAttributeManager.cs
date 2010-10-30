@@ -41,6 +41,28 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         private const string CHECKOUTATTRIBUTEVALUES_PATTERN_KEY = "Nop.checkoutattributevalue.";
         #endregion
 
+        #region Fields
+
+        /// <summary>
+        /// object context
+        /// </summary>
+        protected NopObjectContext _context;
+
+        #endregion
+
+        #region Ctor
+
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="context">Object context</param>
+        public CheckoutAttributeManager(NopObjectContext context)
+        {
+            _context = context;
+        }
+
+        #endregion
+
         #region Methods
 
         #region Checkout attributes
@@ -55,11 +77,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
             if (checkoutAttribute == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(checkoutAttribute))
-                context.CheckoutAttributes.Attach(checkoutAttribute);
-            context.DeleteObject(checkoutAttribute);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(checkoutAttribute))
+                _context.CheckoutAttributes.Attach(checkoutAttribute);
+            _context.DeleteObject(checkoutAttribute);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -82,8 +104,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                 return (List<CheckoutAttribute>)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from ca in context.CheckoutAttributes
+            
+            var query = from ca in _context.CheckoutAttributes
                         orderby ca.DisplayOrder
                         where !dontLoadShippableProductRequired || !ca.ShippableProductRequired
                         select ca;
@@ -113,8 +135,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                 return (CheckoutAttribute)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from ca in context.CheckoutAttributes
+            
+            var query = from ca in _context.CheckoutAttributes
                         where ca.CheckoutAttributeId == checkoutAttributeId
                         select ca;
             var checkoutAttribute = query.SingleOrDefault();
@@ -140,10 +162,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
             checkoutAttribute.TextPrompt = CommonHelper.EnsureNotNull(checkoutAttribute.TextPrompt);
             checkoutAttribute.TextPrompt = CommonHelper.EnsureMaximumLength(checkoutAttribute.TextPrompt, 300);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
 
-            context.CheckoutAttributes.AddObject(checkoutAttribute);
-            context.SaveChanges();
+            _context.CheckoutAttributes.AddObject(checkoutAttribute);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -167,11 +189,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
             checkoutAttribute.TextPrompt = CommonHelper.EnsureNotNull(checkoutAttribute.TextPrompt);
             checkoutAttribute.TextPrompt = CommonHelper.EnsureMaximumLength(checkoutAttribute.TextPrompt, 300);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(checkoutAttribute))
-                context.CheckoutAttributes.Attach(checkoutAttribute);
+            
+            if (!_context.IsAttached(checkoutAttribute))
+                _context.CheckoutAttributes.Attach(checkoutAttribute);
 
-            context.SaveChanges();
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -190,8 +212,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
             if (checkoutAttributeLocalizedId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from cal in context.CheckoutAttributeLocalized
+            
+            var query = from cal in _context.CheckoutAttributeLocalized
                         where cal.CheckoutAttributeLocalizedId == checkoutAttributeLocalizedId
                         select cal;
             var checkoutAttributeLocalized = query.SingleOrDefault();
@@ -208,8 +230,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
             if (checkoutAttributeId == 0)
                 return new List<CheckoutAttributeLocalized>();
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from cal in context.CheckoutAttributeLocalized
+            
+            var query = from cal in _context.CheckoutAttributeLocalized
                         where cal.CheckoutAttributeId == checkoutAttributeId
                         select cal;
             var content = query.ToList();
@@ -227,8 +249,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
             if (checkoutAttributeId == 0 || languageId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from cal in context.CheckoutAttributeLocalized
+            
+            var query = from cal in _context.CheckoutAttributeLocalized
                         orderby cal.CheckoutAttributeLocalizedId
                         where cal.CheckoutAttributeId == checkoutAttributeId &&
                         cal.LanguageId == languageId
@@ -251,10 +273,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
             checkoutAttributeLocalized.TextPrompt = CommonHelper.EnsureNotNull(checkoutAttributeLocalized.TextPrompt);
             checkoutAttributeLocalized.TextPrompt = CommonHelper.EnsureMaximumLength(checkoutAttributeLocalized.TextPrompt, 300);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
 
-            context.CheckoutAttributeLocalized.AddObject(checkoutAttributeLocalized);
-            context.SaveChanges();
+            _context.CheckoutAttributeLocalized.AddObject(checkoutAttributeLocalized);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -280,19 +302,19 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
             bool allFieldsAreEmpty = string.IsNullOrEmpty(checkoutAttributeLocalized.Name) &&
                 string.IsNullOrEmpty(checkoutAttributeLocalized.TextPrompt);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(checkoutAttributeLocalized))
-                context.CheckoutAttributeLocalized.Attach(checkoutAttributeLocalized);
+            
+            if (!_context.IsAttached(checkoutAttributeLocalized))
+                _context.CheckoutAttributeLocalized.Attach(checkoutAttributeLocalized);
 
             if (allFieldsAreEmpty)
             {
                 //delete if all fields are empty
-                context.DeleteObject(checkoutAttributeLocalized);
-                context.SaveChanges();
+                _context.DeleteObject(checkoutAttributeLocalized);
+                _context.SaveChanges();
             }
             else
             {
-                context.SaveChanges();
+                _context.SaveChanges();
             }
 
             if (this.CacheEnabled)
@@ -316,11 +338,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
             if (checkoutAttributeValue == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(checkoutAttributeValue))
-                context.CheckoutAttributeValues.Attach(checkoutAttributeValue);
-            context.DeleteObject(checkoutAttributeValue);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(checkoutAttributeValue))
+                _context.CheckoutAttributeValues.Attach(checkoutAttributeValue);
+            _context.DeleteObject(checkoutAttributeValue);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -343,8 +365,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                 return (List<CheckoutAttributeValue>)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from cav in context.CheckoutAttributeValues
+            
+            var query = from cav in _context.CheckoutAttributeValues
                         orderby cav.DisplayOrder
                         where cav.CheckoutAttributeId == checkoutAttributeId
                         select cav;
@@ -374,8 +396,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                 return (CheckoutAttributeValue)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from cav in context.CheckoutAttributeValues
+            
+            var query = from cav in _context.CheckoutAttributeValues
                         where cav.CheckoutAttributeValueId == checkoutAttributeValueId
                         select cav;
             var checkoutAttributeValue = query.SingleOrDefault();
@@ -399,10 +421,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
             checkoutAttributeValue.Name = CommonHelper.EnsureNotNull(checkoutAttributeValue.Name);
             checkoutAttributeValue.Name = CommonHelper.EnsureMaximumLength(checkoutAttributeValue.Name, 100);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
 
-            context.CheckoutAttributeValues.AddObject(checkoutAttributeValue);
-            context.SaveChanges();
+            _context.CheckoutAttributeValues.AddObject(checkoutAttributeValue);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -423,11 +445,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
             checkoutAttributeValue.Name = CommonHelper.EnsureNotNull(checkoutAttributeValue.Name);
             checkoutAttributeValue.Name = CommonHelper.EnsureMaximumLength(checkoutAttributeValue.Name, 100);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(checkoutAttributeValue))
-                context.CheckoutAttributeValues.Attach(checkoutAttributeValue);
+            
+            if (!_context.IsAttached(checkoutAttributeValue))
+                _context.CheckoutAttributeValues.Attach(checkoutAttributeValue);
 
-            context.SaveChanges();
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -446,8 +468,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
             if (checkoutAttributeValueLocalizedId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from cavl in context.CheckoutAttributeValueLocalized
+            
+            var query = from cavl in _context.CheckoutAttributeValueLocalized
                         where cavl.CheckoutAttributeValueLocalizedId == checkoutAttributeValueLocalizedId
                         select cavl;
             var checkoutAttributeValueLocalized = query.SingleOrDefault();
@@ -464,8 +486,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
             if (checkoutAttributeValueId == 0)
                 return new List<CheckoutAttributeValueLocalized>();
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from cavl in context.CheckoutAttributeValueLocalized
+            
+            var query = from cavl in _context.CheckoutAttributeValueLocalized
                         where cavl.CheckoutAttributeValueId == checkoutAttributeValueId
                         select cavl;
             var content = query.ToList();
@@ -483,8 +505,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
             if (checkoutAttributeValueId == 0 || languageId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from cavl in context.CheckoutAttributeValueLocalized
+            
+            var query = from cavl in _context.CheckoutAttributeValueLocalized
                         orderby cavl.CheckoutAttributeValueLocalizedId
                         where cavl.CheckoutAttributeValueId == checkoutAttributeValueId &&
                         cavl.LanguageId == languageId
@@ -505,10 +527,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
             checkoutAttributeValueLocalized.Name = CommonHelper.EnsureNotNull(checkoutAttributeValueLocalized.Name);
             checkoutAttributeValueLocalized.Name = CommonHelper.EnsureMaximumLength(checkoutAttributeValueLocalized.Name, 100);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
             
-            context.CheckoutAttributeValueLocalized.AddObject(checkoutAttributeValueLocalized);
-            context.SaveChanges();
+            
+            _context.CheckoutAttributeValueLocalized.AddObject(checkoutAttributeValueLocalized);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -531,19 +553,19 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
 
             bool allFieldsAreEmpty = string.IsNullOrEmpty(checkoutAttributeValueLocalized.Name);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(checkoutAttributeValueLocalized))
-                context.CheckoutAttributeValueLocalized.Attach(checkoutAttributeValueLocalized);
+            
+            if (!_context.IsAttached(checkoutAttributeValueLocalized))
+                _context.CheckoutAttributeValueLocalized.Attach(checkoutAttributeValueLocalized);
 
             if (allFieldsAreEmpty)
             {
                 //delete if all fields are empty
-                context.DeleteObject(checkoutAttributeValueLocalized);
-                context.SaveChanges();
+                _context.DeleteObject(checkoutAttributeValueLocalized);
+                _context.SaveChanges();
             }
             else
             {
-                context.SaveChanges();
+                _context.SaveChanges();
             }
 
             if (this.CacheEnabled)

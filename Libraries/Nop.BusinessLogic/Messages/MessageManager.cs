@@ -55,6 +55,28 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
     /// </summary>
     public partial class MessageManager : IMessageManager
     {
+        #region Fields
+
+        /// <summary>
+        /// object context
+        /// </summary>
+        protected NopObjectContext _context;
+
+        #endregion
+
+        #region Ctor
+
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="context">Object context</param>
+        public MessageManager(NopObjectContext context)
+        {
+            _context = context;
+        }
+
+        #endregion
+
         #region Utilities
 
         private string Replace(string original, string pattern, string replacement)
@@ -826,8 +848,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             if (messageTemplateId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from mt in context.MessageTemplates
+            
+            var query = from mt in _context.MessageTemplates
                         where mt.MessageTemplateId == messageTemplateId
                         select mt;
             var messageTemplate = query.SingleOrDefault();
@@ -841,8 +863,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// <returns>Message template collection</returns>
         public List<MessageTemplate> GetAllMessageTemplates()
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from mt in context.MessageTemplates
+            
+            var query = from mt in _context.MessageTemplates
                         orderby mt.Name
                         select mt;
             var collection = query.ToList();
@@ -860,8 +882,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             if (localizedMessageTemplateId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from lmt in context.LocalizedMessageTemplates
+            
+            var query = from lmt in _context.LocalizedMessageTemplates
                         where lmt.MessageTemplateLocalizedId == localizedMessageTemplateId
                         select lmt;
             var localizedMessageTemplate = query.SingleOrDefault(); 
@@ -877,9 +899,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// <returns>Localized message template</returns>
         public LocalizedMessageTemplate GetLocalizedMessageTemplate(string name, int languageId)
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from lmt in context.LocalizedMessageTemplates
-                        join mt in context.MessageTemplates on lmt.MessageTemplateId equals mt.MessageTemplateId
+            
+            var query = from lmt in _context.LocalizedMessageTemplates
+                        join mt in _context.MessageTemplates on lmt.MessageTemplateId equals mt.MessageTemplateId
                         where lmt.LanguageId == languageId &&
                         mt.Name == name
                         select lmt;
@@ -899,11 +921,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             if (localizedMessageTemplate == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(localizedMessageTemplate))
-                context.LocalizedMessageTemplates.Attach(localizedMessageTemplate);
-            context.DeleteObject(localizedMessageTemplate);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(localizedMessageTemplate))
+                _context.LocalizedMessageTemplates.Attach(localizedMessageTemplate);
+            _context.DeleteObject(localizedMessageTemplate);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -913,9 +935,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// <returns>Localized message template collection</returns>
         public List<LocalizedMessageTemplate> GetAllLocalizedMessageTemplates(string messageTemplateName)
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from lmt in context.LocalizedMessageTemplates
-                        join mt in context.MessageTemplates on lmt.MessageTemplateId equals mt.MessageTemplateId
+            
+            var query = from lmt in _context.LocalizedMessageTemplates
+                        join mt in _context.MessageTemplates on lmt.MessageTemplateId equals mt.MessageTemplateId
                         where mt.Name == messageTemplateName
                         orderby lmt.LanguageId
                         select lmt;
@@ -938,10 +960,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             localizedMessageTemplate.Subject = CommonHelper.EnsureMaximumLength(localizedMessageTemplate.Subject, 200);
             localizedMessageTemplate.Body = CommonHelper.EnsureNotNull(localizedMessageTemplate.Body);
            
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
 
-            context.LocalizedMessageTemplates.AddObject(localizedMessageTemplate);
-            context.SaveChanges();
+            _context.LocalizedMessageTemplates.AddObject(localizedMessageTemplate);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -959,11 +981,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             localizedMessageTemplate.Subject = CommonHelper.EnsureMaximumLength(localizedMessageTemplate.Subject, 200);
             localizedMessageTemplate.Body = CommonHelper.EnsureNotNull(localizedMessageTemplate.Body);
            
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(localizedMessageTemplate))
-                context.LocalizedMessageTemplates.Attach(localizedMessageTemplate);
+            
+            if (!_context.IsAttached(localizedMessageTemplate))
+                _context.LocalizedMessageTemplates.Attach(localizedMessageTemplate);
 
-            context.SaveChanges();
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -976,8 +998,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             if (queuedEmailId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from qe in context.QueuedEmails
+            
+            var query = from qe in _context.QueuedEmails
                         where qe.QueuedEmailId == queuedEmailId
                         select qe;
             var queuedEmail = query.SingleOrDefault();
@@ -994,11 +1016,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             if (queuedEmail == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(queuedEmail))
-                context.QueuedEmails.Attach(queuedEmail);
-            context.DeleteObject(queuedEmail);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(queuedEmail))
+                _context.QueuedEmails.Attach(queuedEmail);
+            _context.DeleteObject(queuedEmail);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -1038,8 +1060,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
                 toEmail = string.Empty;
             toEmail = toEmail.Trim();
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = (IQueryable<QueuedEmail>)context.QueuedEmails;
+            
+            var query = (IQueryable<QueuedEmail>)_context.QueuedEmails;
             if (!String.IsNullOrEmpty(fromEmail))
                 query = query.Where(qe => qe.From.Contains(fromEmail));
             if (!String.IsNullOrEmpty(toEmail))
@@ -1121,9 +1143,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             subject = CommonHelper.EnsureMaximumLength(subject, 500);
             body = CommonHelper.EnsureNotNull(body);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
 
-            var queuedEmail = context.QueuedEmails.CreateObject();
+            var queuedEmail = _context.QueuedEmails.CreateObject();
             queuedEmail.Priority = priority;
             queuedEmail.From = from;
             queuedEmail.FromName = fromName;
@@ -1138,8 +1160,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             queuedEmail.SentOn = sentOn;
             queuedEmail.EmailAccountId = emailAccountId;
 
-            context.QueuedEmails.AddObject(queuedEmail);
-            context.SaveChanges();
+            _context.QueuedEmails.AddObject(queuedEmail);
+            _context.SaveChanges();
 
             return queuedEmail;
         }
@@ -1169,11 +1191,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             queuedEmail.Subject = CommonHelper.EnsureMaximumLength(queuedEmail.Subject, 500);
             queuedEmail.Body = CommonHelper.EnsureNotNull(queuedEmail.Body);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(queuedEmail))
-                context.QueuedEmails.Attach(queuedEmail);
+            
+            if (!_context.IsAttached(queuedEmail))
+                _context.QueuedEmails.Attach(queuedEmail);
 
-            context.SaveChanges();
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -1194,10 +1216,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             newsLetterSubscription.Email = newsLetterSubscription.Email.Trim();
             newsLetterSubscription.Email = CommonHelper.EnsureMaximumLength(newsLetterSubscription.Email, 255);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
             
-            context.NewsLetterSubscriptions.AddObject(newsLetterSubscription);
-            context.SaveChanges();
+            
+            _context.NewsLetterSubscriptions.AddObject(newsLetterSubscription);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -1207,8 +1229,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// <returns>NewsLetterSubscription entity</returns>
         public NewsLetterSubscription GetNewsLetterSubscriptionById(int newsLetterSubscriptionId)
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from n in context.NewsLetterSubscriptions
+            
+            var query = from n in _context.NewsLetterSubscriptions
                         where n.NewsLetterSubscriptionId == newsLetterSubscriptionId
                         select n;
             var newsLetterSubscription = query.SingleOrDefault();
@@ -1228,8 +1250,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
                 return null;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from n in context.NewsLetterSubscriptions
+            
+            var query = from n in _context.NewsLetterSubscriptions
                         where n.NewsLetterSubscriptionGuid == newsLetterSubscriptionGuid
                         orderby n.NewsLetterSubscriptionId
                         select n;
@@ -1252,8 +1274,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
 
             email = email.Trim();
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from n in context.NewsLetterSubscriptions
+            
+            var query = from n in _context.NewsLetterSubscriptions
                         where n.Email == email
                         orderby n.NewsLetterSubscriptionId
                         select n;
@@ -1270,8 +1292,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// <returns>NewsLetterSubscription entity collection</returns>
         public List<NewsLetterSubscription> GetAllNewsLetterSubscriptions(string email, bool showHidden)
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var newsletterSubscriptions = context.Sp_NewsLetterSubscriptionLoadAll(email, showHidden).ToList();
+            
+            var newsletterSubscriptions = _context.Sp_NewsLetterSubscriptionLoadAll(email, showHidden).ToList();
 
             return newsletterSubscriptions;
         }
@@ -1294,11 +1316,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
                 throw new NopException("Email is not valid.");
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(newsLetterSubscription))
-                context.NewsLetterSubscriptions.Attach(newsLetterSubscription);
+            
+            if (!_context.IsAttached(newsLetterSubscription))
+                _context.NewsLetterSubscriptions.Attach(newsLetterSubscription);
 
-            context.SaveChanges();
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -1311,11 +1333,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             if (newsLetterSubscription == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(newsLetterSubscription))
-                context.NewsLetterSubscriptions.Attach(newsLetterSubscription);
-            context.DeleteObject(newsLetterSubscription);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(newsLetterSubscription))
+                _context.NewsLetterSubscriptions.Attach(newsLetterSubscription);
+            _context.DeleteObject(newsLetterSubscription);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -1328,8 +1350,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             if (emailAccountId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from ea in context.EmailAccounts
+            
+            var query = from ea in _context.EmailAccounts
                         where ea.EmailAccountId == emailAccountId
                         select ea;
             var emailAccount = query.SingleOrDefault();
@@ -1349,11 +1371,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             if (GetAllEmailAccounts().Count == 1)
                 throw new NopException("You cannot delete this email account. At least one account is required.");
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(emailAccount))
-                context.EmailAccounts.Attach(emailAccount);
-            context.DeleteObject(emailAccount);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(emailAccount))
+                _context.EmailAccounts.Attach(emailAccount);
+            _context.DeleteObject(emailAccount);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -1383,10 +1405,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             emailAccount.Username = CommonHelper.EnsureMaximumLength(emailAccount.Username, 255);
             emailAccount.Password = CommonHelper.EnsureMaximumLength(emailAccount.Password, 255);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
             
-            context.EmailAccounts.AddObject(emailAccount);
-            context.SaveChanges();
+            
+            _context.EmailAccounts.AddObject(emailAccount);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -1416,11 +1438,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             emailAccount.Username = CommonHelper.EnsureMaximumLength(emailAccount.Username, 255);
             emailAccount.Password = CommonHelper.EnsureMaximumLength(emailAccount.Password, 255);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(emailAccount))
-                context.EmailAccounts.Attach(emailAccount);
+            
+            if (!_context.IsAttached(emailAccount))
+                _context.EmailAccounts.Attach(emailAccount);
 
-            context.SaveChanges();
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -1429,8 +1451,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// <returns>Email accounts</returns>
         public List<EmailAccount> GetAllEmailAccounts()
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from ea in context.EmailAccounts
+            
+            var query = from ea in _context.EmailAccounts
                         orderby ea.EmailAccountId
                         select ea;
 

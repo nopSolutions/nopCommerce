@@ -42,7 +42,29 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
         private const string MANUFACTURERS_PATTERN_KEY = "Nop.manufacturer.";
         private const string PRODUCTMANUFACTURERS_PATTERN_KEY = "Nop.productmanufacturer.";
         #endregion
-        
+
+        #region Fields
+
+        /// <summary>
+        /// object context
+        /// </summary>
+        protected NopObjectContext _context;
+
+        #endregion
+
+        #region Ctor
+
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="context">Object context</param>
+        public ManufacturerManager(NopObjectContext context)
+        {
+            _context = context;
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -83,8 +105,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
                 return (List<Manufacturer>)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from m in context.Manufacturers
+            
+            var query = from m in _context.Manufacturers
                         orderby m.DisplayOrder
                         where (showHidden || m.Published) &&
                         !m.Deleted
@@ -115,8 +137,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
                 return (Manufacturer)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from m in context.Manufacturers
+            
+            var query = from m in _context.Manufacturers
                         where m.ManufacturerId == manufacturerId
                         select m;
             var manufacturer = query.SingleOrDefault();
@@ -151,10 +173,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
             manufacturer.PriceRanges = CommonHelper.EnsureNotNull(manufacturer.PriceRanges);
             manufacturer.PriceRanges = CommonHelper.EnsureMaximumLength(manufacturer.PriceRanges, 400);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
             
-            context.Manufacturers.AddObject(manufacturer);
-            context.SaveChanges();
+            
+            _context.Manufacturers.AddObject(manufacturer);
+            _context.SaveChanges();
 
             if (this.ManufacturersCacheEnabled || this.MappingsCacheEnabled)
             {
@@ -186,11 +208,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
             manufacturer.PriceRanges = CommonHelper.EnsureNotNull(manufacturer.PriceRanges);
             manufacturer.PriceRanges = CommonHelper.EnsureMaximumLength(manufacturer.PriceRanges, 400);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(manufacturer))
-                context.Manufacturers.Attach(manufacturer);
+            
+            if (!_context.IsAttached(manufacturer))
+                _context.Manufacturers.Attach(manufacturer);
 
-            context.SaveChanges();
+            _context.SaveChanges();
 
             if (this.ManufacturersCacheEnabled || this.MappingsCacheEnabled)
             {
@@ -209,8 +231,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
             if (manufacturerLocalizedId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from ml in context.ManufacturerLocalized
+            
+            var query = from ml in _context.ManufacturerLocalized
                         where ml.ManufacturerLocalizedId == manufacturerLocalizedId
                         select ml;
             var manufacturerLocalized = query.SingleOrDefault();
@@ -227,8 +249,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
             if (manufacturerId == 0)
                 return new List<ManufacturerLocalized>();
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from ml in context.ManufacturerLocalized
+            
+            var query = from ml in _context.ManufacturerLocalized
                         where ml.ManufacturerId == manufacturerId
                         select ml;
             var content = query.ToList();
@@ -246,8 +268,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
             if (manufacturerId == 0 || languageId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from ml in context.ManufacturerLocalized
+            
+            var query = from ml in _context.ManufacturerLocalized
                         orderby ml.ManufacturerLocalizedId
                         where ml.ManufacturerId == manufacturerId &&
                         ml.LanguageId == languageId
@@ -277,10 +299,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
             manufacturerLocalized.SEName = CommonHelper.EnsureNotNull(manufacturerLocalized.SEName);
             manufacturerLocalized.SEName = CommonHelper.EnsureMaximumLength(manufacturerLocalized.SEName, 100);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
 
-            context.ManufacturerLocalized.AddObject(manufacturerLocalized);
-            context.SaveChanges();
+            _context.ManufacturerLocalized.AddObject(manufacturerLocalized);
+            _context.SaveChanges();
 
             if (this.ManufacturersCacheEnabled)
             {
@@ -316,19 +338,19 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
                 string.IsNullOrEmpty(manufacturerLocalized.MetaTitle) &&
                 string.IsNullOrEmpty(manufacturerLocalized.SEName);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(manufacturerLocalized))
-                context.ManufacturerLocalized.Attach(manufacturerLocalized);
+            
+            if (!_context.IsAttached(manufacturerLocalized))
+                _context.ManufacturerLocalized.Attach(manufacturerLocalized);
 
             if (allFieldsAreEmpty)
             {
                 //delete if all fields are empty
-                context.DeleteObject(manufacturerLocalized);
-                context.SaveChanges();
+                _context.DeleteObject(manufacturerLocalized);
+                _context.SaveChanges();
             }
             else
             {
-                context.SaveChanges();
+                _context.SaveChanges();
             }
 
             if (this.ManufacturersCacheEnabled)
@@ -350,11 +372,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
             if (productManufacturer == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(productManufacturer))
-                context.ProductManufacturers.Attach(productManufacturer);
-            context.DeleteObject(productManufacturer);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(productManufacturer))
+                _context.ProductManufacturers.Attach(productManufacturer);
+            _context.DeleteObject(productManufacturer);
+            _context.SaveChanges();
 
             if (this.ManufacturersCacheEnabled || this.MappingsCacheEnabled)
             {
@@ -381,9 +403,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
                 return (List<ProductManufacturer>)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from pm in context.ProductManufacturers
-                        join p in context.Products on pm.ProductId equals p.ProductId
+            
+            var query = from pm in _context.ProductManufacturers
+                        join p in _context.Products on pm.ProductId equals p.ProductId
                         where pm.ManufacturerId == manufacturerId &&
                         !p.Deleted &&
                         (showHidden || p.Published)
@@ -416,9 +438,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
                 return (List<ProductManufacturer>)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from pm in context.ProductManufacturers
-                        join m in context.Manufacturers on pm.ManufacturerId equals m.ManufacturerId
+            
+            var query = from pm in _context.ProductManufacturers
+                        join m in _context.Manufacturers on pm.ManufacturerId equals m.ManufacturerId
                         where pm.ProductId == productId &&
                         !m.Deleted &&
                         (showHidden || m.Published)
@@ -450,8 +472,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
                 return (ProductManufacturer)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from pm in context.ProductManufacturers
+            
+            var query = from pm in _context.ProductManufacturers
                         where pm.ProductManufacturerId == productManufacturerId
                         select pm;
             var productManufacturer = query.SingleOrDefault();
@@ -472,10 +494,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
             if (productManufacturer == null)
                 throw new ArgumentNullException("productManufacturer");
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
 
-            context.ProductManufacturers.AddObject(productManufacturer);
-            context.SaveChanges();
+            _context.ProductManufacturers.AddObject(productManufacturer);
+            _context.SaveChanges();
 
             if (this.ManufacturersCacheEnabled || this.MappingsCacheEnabled)
             {
@@ -493,11 +515,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
             if (productManufacturer == null)
                 throw new ArgumentNullException("productManufacturer");
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(productManufacturer))
-                context.ProductManufacturers.Attach(productManufacturer);
+            
+            if (!_context.IsAttached(productManufacturer))
+                _context.ProductManufacturers.Attach(productManufacturer);
 
-            context.SaveChanges();
+            _context.SaveChanges();
 
             if (this.ManufacturersCacheEnabled || this.MappingsCacheEnabled)
             {

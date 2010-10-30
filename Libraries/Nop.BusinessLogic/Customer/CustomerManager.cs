@@ -55,7 +55,29 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         private const string CUSTOMERROLES_BY_DISCOUNTID_KEY = "Nop.customerrole.bydiscountid-{0}-{1}";
         private const string CUSTOMERROLES_PATTERN_KEY = "Nop.customerrole.";
         #endregion
-        
+
+        #region Fields
+
+        /// <summary>
+        /// object context
+        /// </summary>
+        protected NopObjectContext _context;
+
+        #endregion
+
+        #region Ctor
+
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="context">Object context</param>
+        public CustomerManager(NopObjectContext context)
+        {
+            _context = context;
+        }
+
+        #endregion
+
         #region Methods
 
         #region Utilities
@@ -69,10 +91,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             if (customerSession == null)
                 throw new ArgumentNullException("customerSession");
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
 
-            context.CustomerSessions.AddObject(customerSession);
-            context.SaveChanges();
+            _context.CustomerSessions.AddObject(customerSession);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -84,11 +106,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             if (customerSession == null)
                 throw new ArgumentNullException("customerSession");
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(customerSession))
-                context.CustomerSessions.Attach(customerSession);
+            
+            if (!_context.IsAttached(customerSession))
+                _context.CustomerSessions.Attach(customerSession);
 
-            context.SaveChanges();
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -149,11 +171,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                 }
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(address))
-                context.Addresses.Attach(address);
-            context.DeleteObject(address);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(address))
+                _context.Addresses.Attach(address);
+            _context.DeleteObject(address);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -166,8 +188,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             if (addressId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from a in context.Addresses
+            
+            var query = from a in _context.Addresses
                         where a.AddressId == addressId
                         select a;
             var address = query.SingleOrDefault();
@@ -183,8 +205,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// <returns>A collection of addresses</returns>
         public List<Address> GetAddressesByCustomerId(int customerId, bool getBillingAddresses)
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from a in context.Addresses
+            
+            var query = from a in _context.Addresses
                         orderby a.CreatedOn
                         where a.CustomerId == customerId && a.IsBillingAddress == getBillingAddresses
                         select a;
@@ -235,10 +257,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             address.City = CommonHelper.EnsureMaximumLength(address.City, 100);
             address.ZipPostalCode = CommonHelper.EnsureMaximumLength(address.ZipPostalCode, 30);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
 
-            context.Addresses.AddObject(address);
-            context.SaveChanges();
+            _context.Addresses.AddObject(address);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -283,11 +305,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             address.City = CommonHelper.EnsureMaximumLength(address.City, 100);
             address.ZipPostalCode = CommonHelper.EnsureMaximumLength(address.ZipPostalCode, 30);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(address))
-                context.Addresses.Attach(address);
+            
+            if (!_context.IsAttached(address))
+                _context.Addresses.Attach(address);
 
-            context.SaveChanges();
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -736,9 +758,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             if (username == null)
                 username = string.Empty;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
             ObjectParameter totalRecordsParameter = new ObjectParameter("TotalRecords", typeof(int));
-            var customers = context.Sp_CustomerLoadAll(registrationFrom,
+            var customers = _context.Sp_CustomerLoadAll(registrationFrom,
                 registrationTo, email, username, dontLoadGuestCustomers,
                 dateOfBirthMonth, dateOfBirthDay,
                 pageSize, pageIndex, totalRecordsParameter).ToList();
@@ -757,8 +779,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             if (affiliateId == 0)
                 return new List<Customer>();
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from c in context.Customers
+            
+            var query = from c in _context.Customers
                         orderby c.RegistrationDate descending
                         where c.AffiliateId == affiliateId && !c.Deleted
                         select c;
@@ -775,8 +797,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         {
             bool showHidden = NopContext.Current.IsAdmin;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from c in context.Customers
+            
+            var query = from c in _context.Customers
                         from cr in c.NpCustomerRoles
                         where (showHidden || c.Active) &&
                             !c.Deleted &&
@@ -784,14 +806,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                         orderby c.RegistrationDate descending
                         select c;
 
-            //var query = from c in context.Customers
+            //var query = from c in _context.Customers
             //            where (showHidden || c.Active) && !c.Deleted
             //            && c.NpCustomerRoles.Any(cr => cr.CustomerRoleId == customerRoleId)
             //            orderby c.RegistrationDate descending
             //            select c;
 
 
-            //var query = context.CustomerRoles.Where(cr => cr.CustomerRoleId == customerRoleId)
+            //var query = _context.CustomerRoles.Where(cr => cr.CustomerRoleId == customerRoleId)
             //    .SelectMany(cr => cr.NpCustomers);
             //if (!showHidden)
             //    query = query.Where(c => c.Active);
@@ -827,8 +849,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             if (string.IsNullOrEmpty(email))
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from c in context.Customers
+            
+            var query = from c in _context.Customers
                         orderby c.CustomerId
                         where c.Email == email
                         select c;
@@ -846,8 +868,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             if (string.IsNullOrEmpty(username))
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from c in context.Customers
+            
+            var query = from c in _context.Customers
                         orderby c.CustomerId
                         where c.Username == username
                         select c;
@@ -865,8 +887,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             if (customerId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from c in context.Customers
+            
+            var query = from c in _context.Customers
                         where c.CustomerId == customerId
                         select c;
             var customer = query.SingleOrDefault();
@@ -883,8 +905,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             if (customerGuid == Guid.Empty)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from c in context.Customers
+            
+            var query = from c in _context.Customers
                         where c.CustomerGuid == customerGuid
                         orderby c.CustomerId
                         select c;
@@ -1179,9 +1201,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             timeZoneId = CommonHelper.EnsureNotNull(timeZoneId);
             timeZoneId = CommonHelper.EnsureMaximumLength(timeZoneId, 200);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
 
-            var customer = context.Customers.CreateObject();
+            var customer = _context.Customers.CreateObject();
             customer.CustomerGuid = customerGuid;
             customer.Email = email;
             customer.Username = username;
@@ -1211,8 +1233,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             customer.AvatarId = avatarId;
             customer.DateOfBirth = dateOfBirth;
 
-            context.Customers.AddObject(customer);
-            context.SaveChanges();
+            _context.Customers.AddObject(customer);
+            _context.SaveChanges();
 
             //reward points
             if (!isGuest &&
@@ -1263,10 +1285,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             
             var subscriptionOld = customer.NewsLetterSubscription;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(customer))
-                context.Customers.Attach(customer);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(customer))
+                _context.Customers.Attach(customer);
+            _context.SaveChanges();
 
             if (subscriptionOld != null && !customer.Email.ToLower().Equals(subscriptionOld.Email.ToLower()))
             {
@@ -1531,8 +1553,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             if (ss.HasValue)
                 shippingStatusId = (int)ss.Value;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var report = context.Sp_CustomerBestReport(startTime, endTime,
+            
+            var report = _context.Sp_CustomerBestReport(startTime, endTime,
                 orderStatusId, paymentStatusId, shippingStatusId, orderBy).ToList();
 
             return report;
@@ -1547,8 +1569,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         {
             DateTime date = DateTimeHelper.ConvertToUserTime(DateTime.Now).AddDays(-days);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from c in context.Customers
+            
+            var query = from c in _context.Customers
                         where c.Active &&
                         !c.Deleted &&
                         !c.IsGuest &&
@@ -1566,8 +1588,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// <returns>Report</returns>
         public List<CustomerReportByLanguageLine> GetCustomerReportByLanguage()
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var report = context.Sp_CustomerReportByLanguage().ToList();
+            
+            var report = _context.Sp_CustomerReportByLanguage().ToList();
 
             return report;
         }
@@ -1582,8 +1604,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             if (String.IsNullOrEmpty(customerAttributeKey))
                 throw new ArgumentNullException("customerAttributeKey");
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var report = context.Sp_CustomerReportByAttributeKey(customerAttributeKey).ToList();
+            
+            var report = _context.Sp_CustomerReportByAttributeKey(customerAttributeKey).ToList();
 
             return report;
         }
@@ -1598,11 +1620,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             if (customerAttribute == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(customerAttribute))
-                context.CustomerAttributes.Attach(customerAttribute);
-            context.DeleteObject(customerAttribute);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(customerAttribute))
+                _context.CustomerAttributes.Attach(customerAttribute);
+            _context.DeleteObject(customerAttribute);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -1615,8 +1637,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             if (customerAttributeId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from ca in context.CustomerAttributes
+            
+            var query = from ca in _context.CustomerAttributes
                         where ca.CustomerAttributeId == customerAttributeId
                         select ca;
             var customerAttribute = query.SingleOrDefault();
@@ -1631,8 +1653,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// <returns>Customer attributes</returns>
         public List<CustomerAttribute> GetCustomerAttributesByCustomerId(int customerId)
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from ca in context.CustomerAttributes
+            
+            var query = from ca in _context.CustomerAttributes
                         where ca.CustomerId == customerId
                         select ca;
             var customerAttributes = query.ToList();
@@ -1659,10 +1681,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             customerAttribute.Value = CommonHelper.EnsureNotNull(customerAttribute.Value);
             customerAttribute.Value = CommonHelper.EnsureMaximumLength(customerAttribute.Value, 1000);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
             
-            context.CustomerAttributes.AddObject(customerAttribute);
-            context.SaveChanges();
+            
+            _context.CustomerAttributes.AddObject(customerAttribute);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -1682,11 +1704,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             customerAttribute.Value = CommonHelper.EnsureNotNull(customerAttribute.Value);
             customerAttribute.Value = CommonHelper.EnsureMaximumLength(customerAttribute.Value, 1000);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(customerAttribute))
-                context.CustomerAttributes.Attach(customerAttribute);
+            
+            if (!_context.IsAttached(customerAttribute))
+                _context.CustomerAttributes.Attach(customerAttribute);
 
-            context.SaveChanges();
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -1725,8 +1747,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                 return (CustomerRole)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from cr in context.CustomerRoles
+            
+            var query = from cr in _context.CustomerRoles
                         where cr.CustomerRoleId == customerRoleId
                         select cr;
             var customerRole = query.SingleOrDefault();
@@ -1752,8 +1774,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                 return (List<CustomerRole>)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from cr in context.CustomerRoles
+            
+            var query = from cr in _context.CustomerRoles
                         orderby cr.Name
                         where (showHidden || cr.Active) && !cr.Deleted
                         select cr;
@@ -1788,9 +1810,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             if (customerId == 0)
                 return new List<CustomerRole>();
 
-            var context = ObjectContextHelper.CurrentObjectContext;
+            
 
-            var query = from cr in context.CustomerRoles
+            var query = from cr in _context.CustomerRoles
                         from c in cr.NpCustomers
                         where (showHidden || cr.Active) &&
                             !cr.Deleted &&
@@ -1814,10 +1836,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             customerRole.Name = CommonHelper.EnsureNotNull(customerRole.Name);
             customerRole.Name = CommonHelper.EnsureMaximumLength(customerRole.Name, 255);
 
-            var context = ObjectContextHelper.CurrentObjectContext;
             
-            context.CustomerRoles.AddObject(customerRole);
-            context.SaveChanges();
+            
+            _context.CustomerRoles.AddObject(customerRole);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -1837,11 +1859,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             customerRole.Name = CommonHelper.EnsureNotNull(customerRole.Name);
             customerRole.Name = CommonHelper.EnsureMaximumLength(customerRole.Name, 255);
             
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(customerRole))
-                context.CustomerRoles.Attach(customerRole);
             
-            context.SaveChanges();
+            if (!_context.IsAttached(customerRole))
+                _context.CustomerRoles.Attach(customerRole);
+            
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -1864,19 +1886,19 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             if (customerRole == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(customer))
-                context.Customers.Attach(customer);
-            if (!context.IsAttached(customerRole))
-                context.CustomerRoles.Attach(customerRole);
+            
+            if (!_context.IsAttached(customer))
+                _context.Customers.Attach(customer);
+            if (!_context.IsAttached(customerRole))
+                _context.CustomerRoles.Attach(customerRole);
             
             //ensure that navigation property is loaded
             if (customer.NpCustomerRoles == null)
-                context.LoadProperty(customer, c => c.NpCustomerRoles);
+                _context.LoadProperty(customer, c => c.NpCustomerRoles);
 
             customer.NpCustomerRoles.Add(customerRole);
 
-            context.SaveChanges();
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -1894,18 +1916,18 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             if (customerRole == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(customer))
-                context.Customers.Attach(customer);
-            if (!context.IsAttached(customerRole))
-                context.CustomerRoles.Attach(customerRole);
+            
+            if (!_context.IsAttached(customer))
+                _context.Customers.Attach(customer);
+            if (!_context.IsAttached(customerRole))
+                _context.CustomerRoles.Attach(customerRole);
 
             //ensure that navigation property is loaded
             if (customer.NpCustomerRoles == null)
-                context.LoadProperty(customer, c => c.NpCustomerRoles);
+                _context.LoadProperty(customer, c => c.NpCustomerRoles);
 
             customer.NpCustomerRoles.Remove(customerRole);
-            context.SaveChanges();
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -1923,18 +1945,18 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             if (customerRole == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(discount))
-                context.Discounts.Attach(discount);
-            if (!context.IsAttached(customerRole))
-                context.CustomerRoles.Attach(customerRole);
+            
+            if (!_context.IsAttached(discount))
+                _context.Discounts.Attach(discount);
+            if (!_context.IsAttached(customerRole))
+                _context.CustomerRoles.Attach(customerRole);
 
             //ensure that navigation property is loaded
             if (discount.NpCustomerRoles == null)
-                context.LoadProperty(discount, d => d.NpCustomerRoles);
+                _context.LoadProperty(discount, d => d.NpCustomerRoles);
 
             discount.NpCustomerRoles.Add(customerRole);
-            context.SaveChanges();
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -1952,18 +1974,18 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             if (customerRole == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(discount))
-                context.Discounts.Attach(discount);
-            if (!context.IsAttached(customerRole))
-                context.CustomerRoles.Attach(customerRole);
+            
+            if (!_context.IsAttached(discount))
+                _context.Discounts.Attach(discount);
+            if (!_context.IsAttached(customerRole))
+                _context.CustomerRoles.Attach(customerRole);
 
             //ensure that navigation property is loaded
             if (discount.NpCustomerRoles == null)
-                context.LoadProperty(discount, d => d.NpCustomerRoles);
+                _context.LoadProperty(discount, d => d.NpCustomerRoles);
 
             discount.NpCustomerRoles.Remove(customerRole);
-            context.SaveChanges();
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -1981,8 +2003,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                 return (List<CustomerRole>)obj2;
             }
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from cr in context.CustomerRoles
+            
+            var query = from cr in _context.CustomerRoles
                         from d in cr.NpDiscounts
                         where (showHidden || cr.Active) &&
                             !cr.Deleted &&
@@ -2008,8 +2030,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             if (customerSessionGuid == Guid.Empty)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from cs in context.CustomerSessions
+            
+            var query = from cs in _context.CustomerSessions
                         where cs.CustomerSessionGuid == customerSessionGuid
                         orderby cs.LastAccessed descending
                         select cs;
@@ -2027,8 +2049,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             if (customerId == 0)
                 return null;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from cs in context.CustomerSessions
+            
+            var query = from cs in _context.CustomerSessions
                         where cs.CustomerId == customerId
                         orderby cs.LastAccessed descending
                         select cs;
@@ -2046,11 +2068,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             if (customerSession == null)
                 return;
 
-            var context = ObjectContextHelper.CurrentObjectContext;
-            if (!context.IsAttached(customerSession))
-                context.CustomerSessions.Attach(customerSession);
-            context.DeleteObject(customerSession);
-            context.SaveChanges();
+            
+            if (!_context.IsAttached(customerSession))
+                _context.CustomerSessions.Attach(customerSession);
+            _context.DeleteObject(customerSession);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -2059,8 +2081,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// <returns>Customer session collection</returns>
         public List<CustomerSession> GetAllCustomerSessions()
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            var query = from cs in context.CustomerSessions
+            
+            var query = from cs in _context.CustomerSessions
                         orderby cs.LastAccessed descending
                         select cs;
             var customerSessions = query.ToList();
@@ -2073,12 +2095,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// <returns>Customer session collection</returns>
         public List<CustomerSession> GetAllCustomerSessionsWithNonEmptyShoppingCart()
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
             
-            var sciQuery = from sci in context.ShoppingCartItems
+            
+            var sciQuery = from sci in _context.ShoppingCartItems
                            where sci.ShoppingCartTypeId == (int)ShoppingCartTypeEnum.ShoppingCart
                            select sci.CustomerSessionGuid;
-            var query = from cs in context.CustomerSessions
+            var query = from cs in _context.CustomerSessions
                         where sciQuery.Contains(cs.CustomerSessionGuid)
                         orderby cs.LastAccessed descending
                         select cs;
@@ -2092,8 +2114,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// <param name="olderThan">Older than date and time</param>
         public void DeleteExpiredCustomerSessions(DateTime olderThan)
         {
-            var context = ObjectContextHelper.CurrentObjectContext;
-            context.Sp_CustomerSessionDeleteExpired(olderThan);
+            
+            _context.Sp_CustomerSessionDeleteExpired(olderThan);
         }
 
         /// <summary>
