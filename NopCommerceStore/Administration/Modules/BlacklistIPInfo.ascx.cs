@@ -42,7 +42,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         /// </summary>
         private void BindData()
         {
-            BannedIpAddress ipAddress = IoCFactory.Resolve<IIpBlacklistManager>().GetBannedIpAddressById(this.BannedIpAddressId);
+            BannedIpAddress ipAddress = IoCFactory.Resolve<IBlacklistManager>().GetBannedIpAddressById(this.BannedIpAddressId);
             if (ipAddress != null)
             {
                 txtBannedIP.Text = ipAddress.Address;
@@ -66,10 +66,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         public BannedIpAddress SaveBannedIpAddressInfo()
         {
             DateTime nowDT = DateTime.UtcNow;
-            BannedIpAddress ipAddress = IoCFactory.Resolve<IIpBlacklistManager>().GetBannedIpAddressById(this.BannedIpAddressId);
+            BannedIpAddress ipAddress = IoCFactory.Resolve<IBlacklistManager>().GetBannedIpAddressById(this.BannedIpAddressId);
 
             // Check if the IP is valid
-            if (!IoCFactory.Resolve<IIpBlacklistManager>().IsValidIp(txtBannedIP.Text.Trim()))
+            if (!IoCFactory.Resolve<IBlacklistManager>().IsValidIp(txtBannedIP.Text.Trim()))
                 throw new NopException("The following isn't a valid IP address: " + txtBannedIP.Text);
 
             //if ip address is not null update
@@ -78,7 +78,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 ipAddress.Address = txtBannedIP.Text;
                 ipAddress.Comment = txtComment.Text;
                 ipAddress.UpdatedOn = nowDT;
-                IoCFactory.Resolve<IIpBlacklistManager>().UpdateBannedIpAddress(ipAddress);
+                IoCFactory.Resolve<IBlacklistManager>().UpdateBannedIpAddress(ipAddress);
             }
             else //insert
             {
@@ -89,7 +89,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     CreatedOn = nowDT,
                     UpdatedOn = nowDT
                 };
-                IoCFactory.Resolve<IIpBlacklistManager>().InsertBannedIpAddress(ipAddress);
+                IoCFactory.Resolve<IBlacklistManager>().InsertBannedIpAddress(ipAddress);
             }
 
             return ipAddress;

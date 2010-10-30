@@ -30,7 +30,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
     /// <summary>
     /// IP Blacklist manager implementation
     /// </summary>
-    public partial class IpBlacklistManager : IIpBlacklistManager
+    public partial class BlacklistManager : IBlacklistManager
     {
         #region Constants
         private const string BLACKLIST_ALLIP_KEY = "Nop.blacklist.ip.all";
@@ -54,7 +54,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
         /// Ctor
         /// </summary>
         /// <param name="context">Object context</param>
-        public IpBlacklistManager(NopObjectContext context)
+        public BlacklistManager(NopObjectContext context)
         {
             _context = context;
         }
@@ -533,7 +533,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.IpBlacklistManager.CacheEnabled");
+                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.BlacklistManager.CacheEnabled");
             }
         }
 

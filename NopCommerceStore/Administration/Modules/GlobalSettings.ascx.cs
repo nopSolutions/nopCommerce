@@ -344,7 +344,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     {
                         foreach (string s in ipList.Split(new char[1] { ',' }))
                         {
-                            if (!IoCFactory.Resolve<IIpBlacklistManager>().IsValidIp(s.Trim()))
+                            if (!IoCFactory.Resolve<IBlacklistManager>().IsValidIp(s.Trim()))
                             {
                                 throw new NopException("IP list is not valid.");
                             }

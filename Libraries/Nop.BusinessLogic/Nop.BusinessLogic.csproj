@@ -342,12 +342,12 @@
     <Compile Include="Security\BannedIpAddress.cs" />
     <Compile Include="Security\ACL.cs" />
     <Compile Include="Security\ACLPerObject.cs" />
-    <Compile Include="Security\IIpBlacklistManager.cs" />
+    <Compile Include="Security\IBlacklistManager.cs" />
     <Compile Include="Security\IACLManager.cs" />
     <Compile Include="Security\ObjectTypeEnum.cs" />
     <Compile Include="Security\CustomerAction.cs" />
     <Compile Include="Security\ACLManager.cs" />
-    <Compile Include="Security\IpBlacklistManager.cs" />
+    <Compile Include="Security\BlacklistManager.cs" />
     <Compile Include="Security\BannedIpNetwork.cs" />
     <Compile Include="SEO\Sitemaps\BaseSitemapGenerator.cs" />
     <Compile Include="SEO\Sitemaps\SitemapGenerator.cs" />

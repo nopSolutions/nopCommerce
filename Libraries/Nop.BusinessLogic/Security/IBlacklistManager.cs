@@ -30,7 +30,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
     /// <summary>
     /// IP Blacklist manager interface
     /// </summary>
-    public partial interface IIpBlacklistManager
+    public partial interface IBlacklistManager
     {
         /// <summary>
         /// Gets an IP address by its identifier

@@ -1372,9 +1372,9 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 BannedIpAddress banItem = new BannedIpAddress();
                 banItem.Address = order.CustomerIP;
-                if(!IoCFactory.Resolve<IIpBlacklistManager>().IsIpAddressBanned(banItem))
+                if(!IoCFactory.Resolve<IBlacklistManager>().IsIpAddressBanned(banItem))
                 {
-                    IoCFactory.Resolve<IIpBlacklistManager>().InsertBannedIpAddress(
+                    IoCFactory.Resolve<IBlacklistManager>().InsertBannedIpAddress(
                         new BannedIpAddress()
                         {
                             Address = order.CustomerIP,

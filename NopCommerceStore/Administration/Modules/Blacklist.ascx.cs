@@ -35,11 +35,11 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         private void BindGrid()
         {
-            var ipAddressCollection = IoCFactory.Resolve<IIpBlacklistManager>().GetBannedIpAddressAll();
+            var ipAddressCollection = IoCFactory.Resolve<IBlacklistManager>().GetBannedIpAddressAll();
             gvBannedIpAddress.DataSource = ipAddressCollection;
             gvBannedIpAddress.DataBind();
 
-            var ipNetworkCollection = IoCFactory.Resolve<IIpBlacklistManager>().GetBannedIpNetworkAll();
+            var ipNetworkCollection = IoCFactory.Resolve<IBlacklistManager>().GetBannedIpNetworkAll();
             gvBannedIpNetwork.DataSource = ipNetworkCollection;
             gvBannedIpNetwork.DataBind();
         }
