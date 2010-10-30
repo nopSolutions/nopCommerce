@@ -146,7 +146,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 phVatNumber.Visible = false;
 
             //payment method
-            var paymentMethod = IoCFactory.Resolve<IPaymentMethodManager>().GetPaymentMethodById(order.PaymentMethodId);
+            var paymentMethod = IoCFactory.Resolve<IPaymentManager>().GetPaymentMethodById(order.PaymentMethodId);
             if (paymentMethod != null)
                 this.lPaymentMethod.Text = paymentMethod.VisibleName;
             else

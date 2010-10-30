@@ -374,7 +374,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         {
             get
             {
-                return IoCFactory.Resolve<IPaymentMethodManager>().GetPaymentMethodById(this.LastPaymentMethodId);
+                return IoCFactory.Resolve<IPaymentManager>().GetPaymentMethodById(this.LastPaymentMethodId);
             }
         }
 

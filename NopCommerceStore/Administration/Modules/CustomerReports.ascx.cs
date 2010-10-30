@@ -120,7 +120,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         protected void FillDropDowns()
         {
             var orderStatuses = IoCFactory.Resolve<IOrderManager>().GetAllOrderStatuses();
-            var paymentStatuses = IoCFactory.Resolve<IPaymentStatusManager>().GetAllPaymentStatuses();
+            var paymentStatuses = IoCFactory.Resolve<IPaymentManager>().GetAllPaymentStatuses();
             var shippingStatuses = IoCFactory.Resolve<IShippingStatusManager>().GetAllShippingStatuses();
 
             //by order total
@@ -138,7 +138,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             this.ddlPaymentStatusByOrderTotal.Items.Add(itemPaymentStatusByOrderTotal);
             foreach (PaymentStatus paymentStatus in paymentStatuses)
             {
-                ListItem item2 = new ListItem(IoCFactory.Resolve<IPaymentStatusManager>().GetPaymentStatusName(paymentStatus.PaymentStatusId), paymentStatus.PaymentStatusId.ToString());
+                ListItem item2 = new ListItem(IoCFactory.Resolve<IPaymentManager>().GetPaymentStatusName(paymentStatus.PaymentStatusId), paymentStatus.PaymentStatusId.ToString());
                 this.ddlPaymentStatusByOrderTotal.Items.Add(item2);
             }
 
@@ -167,7 +167,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             this.ddlPaymentStatusByNumberOfOrder.Items.Add(itemPaymentStatusByNumberOfOrder);
             foreach (PaymentStatus paymentStatus in paymentStatuses)
             {
-                ListItem item2 = new ListItem(IoCFactory.Resolve<IPaymentStatusManager>().GetPaymentStatusName(paymentStatus.PaymentStatusId), paymentStatus.PaymentStatusId.ToString());
+                ListItem item2 = new ListItem(IoCFactory.Resolve<IPaymentManager>().GetPaymentStatusName(paymentStatus.PaymentStatusId), paymentStatus.PaymentStatusId.ToString());
                 this.ddlPaymentStatusByNumberOfOrder.Items.Add(item2);
             }
 

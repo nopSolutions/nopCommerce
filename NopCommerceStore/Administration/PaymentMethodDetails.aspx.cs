@@ -41,7 +41,7 @@ namespace NopSolutions.NopCommerce.Web.Administration
 
         private void BindData()
         {
-            PaymentMethod paymentMethod = IoCFactory.Resolve<IPaymentMethodManager>().GetPaymentMethodById(this.PaymentMethodId);
+            PaymentMethod paymentMethod = IoCFactory.Resolve<IPaymentManager>().GetPaymentMethodById(this.PaymentMethodId);
             if (paymentMethod != null)
             {
                 this.txtName.Text = paymentMethod.Name;
@@ -77,7 +77,7 @@ namespace NopSolutions.NopCommerce.Web.Administration
         
         private void CreateChildControlsTree()
         {
-            PaymentMethod paymentMethod = IoCFactory.Resolve<IPaymentMethodManager>().GetPaymentMethodById(this.PaymentMethodId);
+            PaymentMethod paymentMethod = IoCFactory.Resolve<IPaymentManager>().GetPaymentMethodById(this.PaymentMethodId);
             if (paymentMethod != null)
             {
                 Control child = null;
@@ -121,7 +121,7 @@ namespace NopSolutions.NopCommerce.Web.Administration
             {
                 try
                 {
-                    var paymentMethod = IoCFactory.Resolve<IPaymentMethodManager>().GetPaymentMethodById(this.PaymentMethodId);
+                    var paymentMethod = IoCFactory.Resolve<IPaymentManager>().GetPaymentMethodById(this.PaymentMethodId);
 
                     if (paymentMethod != null)
                     {
@@ -135,7 +135,7 @@ namespace NopSolutions.NopCommerce.Web.Administration
                         paymentMethod.IsActive = cbActive.Checked;
                         paymentMethod.DisplayOrder = txtDisplayOrder.Value;
 
-                        IoCFactory.Resolve<IPaymentMethodManager>().UpdatePaymentMethod(paymentMethod);
+                        IoCFactory.Resolve<IPaymentManager>().UpdatePaymentMethod(paymentMethod);
 
                         var configureModule = GetConfigureModule();
                         if (configureModule != null)
@@ -162,7 +162,7 @@ namespace NopSolutions.NopCommerce.Web.Administration
         {
             try
             {
-                IoCFactory.Resolve<IPaymentMethodManager>().DeletePaymentMethod(this.PaymentMethodId);
+                IoCFactory.Resolve<IPaymentManager>().DeletePaymentMethod(this.PaymentMethodId);
                 Response.Redirect("PaymentMethods.aspx");
             }
             catch (Exception exc)

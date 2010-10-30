@@ -54,7 +54,7 @@ namespace NopSolutions.NopCommerce.Web
 
                     PaymentInfo paymentInfo = new PaymentInfo();
 
-                    PaymentMethod paypalExpressPaymentMethod = IoCFactory.Resolve<IPaymentMethodManager>().GetPaymentMethodBySystemKeyword("PayPalExpress");
+                    PaymentMethod paypalExpressPaymentMethod = IoCFactory.Resolve<IPaymentManager>().GetPaymentMethodBySystemKeyword("PayPalExpress");
             
                     paymentInfo.PaymentMethodId = paypalExpressPaymentMethod.PaymentMethodId;
                     paymentInfo.BillingAddress = NopContext.Current.User.BillingAddress;

@@ -249,7 +249,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.GoogleCheckout
 
                 //customer.LastCalculatedTax = decimal.Zero;
 
-                PaymentMethod googleCheckoutPaymentMethod = IoCFactory.Resolve<IPaymentMethodManager>().GetPaymentMethodBySystemKeyword("GoogleCheckout");
+                PaymentMethod googleCheckoutPaymentMethod = IoCFactory.Resolve<IPaymentManager>().GetPaymentMethodBySystemKeyword("GoogleCheckout");
 
                 PaymentInfo paymentInfo = new PaymentInfo();
                 paymentInfo.PaymentMethodId = googleCheckoutPaymentMethod.PaymentMethodId;
@@ -359,7 +359,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.GoogleCheckout
             if (String.IsNullOrEmpty(GoogleOrderID))
                 return null;
 
-            PaymentMethod googleCheckoutPaymentMethod = IoCFactory.Resolve<IPaymentMethodManager>().GetPaymentMethodBySystemKeyword("GoogleCheckout");
+            PaymentMethod googleCheckoutPaymentMethod = IoCFactory.Resolve<IPaymentManager>().GetPaymentMethodBySystemKeyword("GoogleCheckout");
             if (googleCheckoutPaymentMethod == null)
                 return null;
 

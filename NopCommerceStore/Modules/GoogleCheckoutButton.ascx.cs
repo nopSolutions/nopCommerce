@@ -53,7 +53,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
     {
         protected override void OnPreRender(EventArgs e)
         {
-            var gcPaymentMethod = IoCFactory.Resolve<IPaymentMethodManager>().GetPaymentMethodBySystemKeyword("GoogleCheckout");
+            var gcPaymentMethod = IoCFactory.Resolve<IPaymentManager>().GetPaymentMethodBySystemKeyword("GoogleCheckout");
             if (gcPaymentMethod == null || !gcPaymentMethod.IsActive)
             {
                 this.Visible = false;

@@ -2450,7 +2450,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 string paymentMethodName = string.Empty;
                 if (!skipPaymentWorkflow)
                 {
-                    paymentMethod = IoCFactory.Resolve<IPaymentMethodManager>().GetPaymentMethodById(paymentInfo.PaymentMethodId);
+                    paymentMethod = IoCFactory.Resolve<IPaymentManager>().GetPaymentMethodById(paymentInfo.PaymentMethodId);
                     if (paymentMethod == null)
                         throw new NopException("Payment method couldn't be loaded");
 

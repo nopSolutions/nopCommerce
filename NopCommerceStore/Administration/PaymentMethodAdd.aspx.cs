@@ -54,7 +54,7 @@ namespace NopSolutions.NopCommerce.Web.Administration
                         IsActive = cbActive.Checked,
                         DisplayOrder = txtDisplayOrder.Value
                     };
-                    IoCFactory.Resolve<IPaymentMethodManager>().InsertPaymentMethod(paymentMethod);
+                    IoCFactory.Resolve<IPaymentManager>().InsertPaymentMethod(paymentMethod);
                     Response.Redirect("PaymentMethodDetails.aspx?PaymentMethodID=" + paymentMethod.PaymentMethodId.ToString());
                 }
                 catch (Exception exc)

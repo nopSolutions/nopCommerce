@@ -70,7 +70,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             bool displayButton = true;
 
             //validate payment method availablity
-            var ppePaymentMethod = IoCFactory.Resolve<IPaymentMethodManager>().GetPaymentMethodBySystemKeyword("PayPalExpress");
+            var ppePaymentMethod = IoCFactory.Resolve<IPaymentManager>().GetPaymentMethodBySystemKeyword("PayPalExpress");
             if (ppePaymentMethod == null || !ppePaymentMethod.IsActive)
             {
                 displayButton = false;
@@ -119,7 +119,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             }
 
             var payPalExpress = new PayPalExpressPaymentProcessor();
-            var ppePaymentMethod = IoCFactory.Resolve<IPaymentMethodManager>().GetPaymentMethodBySystemKeyword("PayPalExpress");
+            var ppePaymentMethod = IoCFactory.Resolve<IPaymentManager>().GetPaymentMethodBySystemKeyword("PayPalExpress");
             if (ppePaymentMethod != null && ppePaymentMethod.IsActive)
             {
                 //apply reward points

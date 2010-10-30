@@ -72,7 +72,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 int paymentMethodId = this.SelectedPaymentMethodId;
                 if (paymentMethodId > 0)
                 {
-                    var paymentMethod = IoCFactory.Resolve<IPaymentMethodManager>().GetPaymentMethodById(paymentMethodId);
+                    var paymentMethod = IoCFactory.Resolve<IPaymentManager>().GetPaymentMethodById(paymentMethodId);
                     if (paymentMethod != null && paymentMethod.IsActive)
                     {
                         //save selected payment methods
@@ -237,7 +237,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
             bool hasButtonMethods = false;
             var boundPaymentMethods = new List<PaymentMethod>();
-            var paymentMethods = IoCFactory.Resolve<IPaymentMethodManager>().GetAllPaymentMethods(filterByCountryId);
+            var paymentMethods = IoCFactory.Resolve<IPaymentManager>().GetAllPaymentMethods(filterByCountryId);
             foreach (var pm in paymentMethods)
             {
                 switch (pm.PaymentMethodType)

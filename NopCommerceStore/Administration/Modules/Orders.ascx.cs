@@ -99,10 +99,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             this.ddlPaymentStatus.Items.Clear();
             ListItem itemPaymentStatus = new ListItem(GetLocaleResourceString("Admin.Common.All"), "0");
             this.ddlPaymentStatus.Items.Add(itemPaymentStatus);
-            var paymentStatuses = IoCFactory.Resolve<IPaymentStatusManager>().GetAllPaymentStatuses();
+            var paymentStatuses = IoCFactory.Resolve<IPaymentManager>().GetAllPaymentStatuses();
             foreach (PaymentStatus paymentStatus in paymentStatuses)
             {
-                ListItem item2 = new ListItem(IoCFactory.Resolve<IPaymentStatusManager>().GetPaymentStatusName(paymentStatus.PaymentStatusId), paymentStatus.PaymentStatusId.ToString());
+                ListItem item2 = new ListItem(IoCFactory.Resolve<IPaymentManager>().GetPaymentStatusName(paymentStatus.PaymentStatusId), paymentStatus.PaymentStatusId.ToString());
                 this.ddlPaymentStatus.Items.Add(item2);
             }
 

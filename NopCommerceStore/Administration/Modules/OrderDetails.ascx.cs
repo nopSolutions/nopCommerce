@@ -219,7 +219,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             }
 
             //purchase order number
-            PaymentMethod pm = IoCFactory.Resolve<IPaymentMethodManager>().GetPaymentMethodById(order.PaymentMethodId);
+            PaymentMethod pm = IoCFactory.Resolve<IPaymentManager>().GetPaymentMethodById(order.PaymentMethodId);
             if (pm != null && pm.SystemKeyword == "PURCHASEORDER")
             {
                 this.lblPONumber.Text = Server.HtmlEncode(order.PurchaseOrderNumber);
@@ -257,7 +257,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
             //payment method info
             this.lblPaymentMethodName.Text = Server.HtmlEncode(order.PaymentMethodName);
-            this.lblPaymentStatus.Text = IoCFactory.Resolve<IPaymentStatusManager>().GetPaymentStatusName(order.PaymentStatusId);
+            this.lblPaymentStatus.Text = IoCFactory.Resolve<IPaymentManager>().GetPaymentStatusName(order.PaymentStatusId);
 
             //payment method buttons
             this.btnCapture.Visible = IoCFactory.Resolve<IOrderManager>().CanCapture(order);

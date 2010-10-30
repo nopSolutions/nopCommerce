@@ -948,3 +948,26 @@ IF EXISTS (
 		WHERE id = OBJECT_ID(N'[dbo].[Nop_RewardPointsHistoryLoadAll]') AND OBJECTPROPERTY(id,N'IsProcedure') = 1)
 DROP PROCEDURE [dbo].[Nop_RewardPointsHistoryLoadAll]
 GO
+
+
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[Nop_Setting]
+		WHERE [Name] = N'Cache.PaymentManager.CacheEnabled')
+BEGIN
+	INSERT [dbo].[Nop_Setting] ([Name], [Value], [Description])
+	VALUES (N'Cache.PaymentManager.CacheEnabled', N'true', N'')
+END
+GO
+
+DELETE FROM [dbo].[Nop_Setting]
+WHERE [Name] = N'Cache.CreditCardTypeManager.CacheEnabled'
+GO
+
+DELETE FROM [dbo].[Nop_Setting]
+WHERE [Name] = N'Cache.PaymentMethodManager.CacheEnabled'
+GO
+
+DELETE FROM [dbo].[Nop_Setting]
+WHERE [Name] = N'Cache.PaymentStatusManager.CacheEnabled'
+GO

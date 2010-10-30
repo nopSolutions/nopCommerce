@@ -16,7 +16,7 @@
             <%#IoCFactory.Resolve<IOrderManager>().GetOrderStatusName(Convert.ToInt32(Eval("OrderStatusId")))%>
             <br />
             <%#GetLocaleResourceString("Admin.CustomerOrders.PaymentStatus")%>
-            <%#IoCFactory.Resolve<IPaymentStatusManager>().GetPaymentStatusName(Convert.ToInt32(Eval("PaymentStatusId")))%>
+            <%#IoCFactory.Resolve<IPaymentManager>().GetPaymentStatusName(Convert.ToInt32(Eval("PaymentStatusId")))%>
             <br />
             <%#GetLocaleResourceString("Admin.CustomerOrders.ShippingStatus")%>
             <%#IoCFactory.Resolve<IShippingStatusManager>().GetShippingStatusName(Convert.ToInt32(Eval("ShippingStatusId")))%>

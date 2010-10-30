@@ -32,7 +32,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            CreditCardType creditCardType = IoCFactory.Resolve<ICreditCardTypeManager>().GetCreditCardTypeById(this.CreditCardTypeId);
+            CreditCardType creditCardType = IoCFactory.Resolve<IPaymentManager>().GetCreditCardTypeById(this.CreditCardTypeId);
             if (creditCardType != null)
             {
                 this.txtName.Text = creditCardType.Name;
@@ -51,13 +51,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public CreditCardType SaveInfo()
         {
-            CreditCardType creditCardType = IoCFactory.Resolve<ICreditCardTypeManager>().GetCreditCardTypeById(this.CreditCardTypeId);
+            CreditCardType creditCardType = IoCFactory.Resolve<IPaymentManager>().GetCreditCardTypeById(this.CreditCardTypeId);
             if (creditCardType != null)
             {
                 creditCardType.Name = txtName.Text;
                 creditCardType.SystemKeyword = txtSystemKeyword.Text;
                 creditCardType.DisplayOrder = txtDisplayOrder.Value;
-                IoCFactory.Resolve<ICreditCardTypeManager>().UpdateCreditCardType(creditCardType);
+                IoCFactory.Resolve<IPaymentManager>().UpdateCreditCardType(creditCardType);
             }
             else
             {
@@ -67,7 +67,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     SystemKeyword = txtSystemKeyword.Text,
                     DisplayOrder = txtDisplayOrder.Value
                 };
-                IoCFactory.Resolve<ICreditCardTypeManager>().InsertCreditCardType(creditCardType);
+                IoCFactory.Resolve<IPaymentManager>().InsertCreditCardType(creditCardType);
             }
 
             return creditCardType;

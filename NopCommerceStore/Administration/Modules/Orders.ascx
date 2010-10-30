@@ -125,7 +125,7 @@
         <asp:TemplateField HeaderText="<% $NopResources:Admin.Orders.PaymentStatusColumn %>"
             ItemStyle-Width="20%">
             <ItemTemplate>
-                <%#IoCFactory.Resolve<IPaymentStatusManager>().GetPaymentStatusName(Convert.ToInt32(Eval("PaymentStatusId")))%>
+                <%#IoCFactory.Resolve<IPaymentManager>().GetPaymentStatusName(Convert.ToInt32(Eval("PaymentStatusId")))%>
             </ItemTemplate>
         </asp:TemplateField>
         <asp:TemplateField HeaderText="<% $NopResources:Admin.Orders.ShippingStatusColumn %>"

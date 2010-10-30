@@ -94,7 +94,7 @@ namespace NopSolutions.NopCommerce.Web
                     }
 
                     PaymentStatusEnum newPaymentStatus = PaypalHelper.GetPaymentStatus(payment_status, pending_reason);
-                    sb.AppendLine("New payment status: " + IoCFactory.Resolve<IPaymentStatusManager>().GetPaymentStatusName((int)newPaymentStatus));
+                    sb.AppendLine("New payment status: " + IoCFactory.Resolve<IPaymentManager>().GetPaymentStatusName((int)newPaymentStatus));
 
                     switch (txn_type)
                     {

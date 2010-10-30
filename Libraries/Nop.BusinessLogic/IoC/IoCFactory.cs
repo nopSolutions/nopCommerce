@@ -156,10 +156,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.IoC
             container.RegisterType<IMessageManager, MessageManager>(new TransientLifetimeManager());
             container.RegisterType<IOrderManager, OrderManager>(new TransientLifetimeManager());
             container.RegisterType<IShoppingCartManager, ShoppingCartManager>(new TransientLifetimeManager());
-            container.RegisterType<ICreditCardTypeManager, CreditCardTypeManager>(new TransientLifetimeManager());
-            container.RegisterType<IPaymentMethodManager, PaymentMethodManager>(new TransientLifetimeManager());
-            container.RegisterType<IPaymentManager, PaymentManager>(new TransientLifetimeManager());
-            container.RegisterType<IPaymentStatusManager, PaymentStatusManager>(new TransientLifetimeManager());
+            container.RegisterType<IPaymentManager, PaymentManager>(new TransientLifetimeManager());            
             container.RegisterType<ICheckoutAttributeManager, CheckoutAttributeManager>(new TransientLifetimeManager());
             container.RegisterType<IProductAttributeManager, ProductAttributeManager>(new TransientLifetimeManager());
             container.RegisterType<ISpecificationAttributeManager, SpecificationAttributeManager>(new TransientLifetimeManager());

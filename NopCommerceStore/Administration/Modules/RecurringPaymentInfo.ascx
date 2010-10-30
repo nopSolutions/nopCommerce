@@ -143,7 +143,7 @@
                                 <asp:TemplateField HeaderText="<% $NopResources:Admin.RecurringPaymentInfo.History.PaymentStatusColumn %>"
                                     ItemStyle-Width="20%">
                                     <ItemTemplate>
-                                        <%#IoCFactory.Resolve<IPaymentStatusManager>().GetPaymentStatusName(((Order)(Eval("Order"))).PaymentStatusId)%>
+                                        <%#IoCFactory.Resolve<IPaymentManager>().GetPaymentStatusName(((Order)(Eval("Order"))).PaymentStatusId)%>
                                     </ItemTemplate>
                                 </asp:TemplateField>
                                 <asp:TemplateField HeaderText="<% $NopResources:Admin.RecurringPaymentInfo.History.ShippingStatusColumn %>"

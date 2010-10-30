@@ -248,10 +248,7 @@
     <Compile Include="Orders\DeleteExpiredShoppingCartsTask.cs" />
     <Compile Include="Orders\OrderAverageReportLine.cs" />
     <Compile Include="Payment\CancelPaymentResult.cs" />
-    <Compile Include="Payment\IPaymentStatusManager.cs" />
     <Compile Include="Payment\IPaymentManager.cs" />
-    <Compile Include="Payment\IPaymentMethodManager.cs" />
-    <Compile Include="Payment\ICreditCardTypeManager.cs" />
     <Compile Include="Payment\PaymentMethodTypeEnum.cs" />
     <Compile Include="Payment\RecurringPaymentTypeEnum.cs" />
     <Compile Include="Products\Attributes\CheckoutAttribute.cs" />
@@ -310,7 +307,6 @@
     <Compile Include="Orders\OrderStatus.cs" />
     <Compile Include="Orders\OrderStatusEnum.cs" />
     <Compile Include="Orders\OrderNote.cs" />
-    <Compile Include="Payment\PaymentStatusManager.cs" />
     <Compile Include="Payment\PaymentStatus.cs" />
     <Compile Include="Products\Attributes\AttributeControlTypeEnum.cs" />
     <Compile Include="Products\PriceRange.cs" />
@@ -472,7 +468,6 @@
     <Compile Include="Templates\TemplateManager.cs" />
     <Compile Include="Localization\LocaleStringResourceManager.cs" />
     <Compile Include="Directory\CountryManager.cs" />
-    <Compile Include="Payment\CreditCardTypeManager.cs" />
     <Compile Include="Directory\CurrencyManager.cs" />
     <Compile Include="Customer\CustomerManager.cs" />
     <Compile Include="Promo\Discounts\DiscountManager.cs" />
@@ -481,7 +476,6 @@
     <Compile Include="Manufacturers\ManufacturerManager.cs" />
     <Compile Include="Content\News\NewsManager.cs" />
     <Compile Include="Orders\OrderManager.cs" />
-    <Compile Include="Payment\PaymentMethodManager.cs" />
     <Compile Include="Products\ProductManager.cs" />
     <Compile Include="Configuration\Settings\SettingManager.cs" />
     <Compile Include="Shipping\ShippingMethodManager.cs" />
