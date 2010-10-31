@@ -76,7 +76,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
         /// <returns>Poll</returns>
         public Poll GetPollById(int pollId)
         {
-            if (pollId == 0)
+            if (pollId <= 0)
                 return null;
 
             string key = string.Format(POLLS_BY_ID_KEY, pollId);

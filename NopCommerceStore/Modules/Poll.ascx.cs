@@ -47,10 +47,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
         protected void BindData()
         {
             //get poll
-            var poll = IoCFactory.Resolve<IPollManager>().GetPollById(this.PollId);
-            if (poll == null && !String.IsNullOrEmpty(this.SystemKeyword))
-                poll = IoCFactory.Resolve<IPollManager>().GetPollBySystemKeyword(this.SystemKeyword);
-
+            var poll = GetPoll();
             if (poll != null && poll.Published)
             {
                 //bind data
@@ -111,10 +108,8 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 Response.Redirect(loginURL);
             }
 
-            var poll = IoCFactory.Resolve<IPollManager>().GetPollById(this.PollId);
-            if (poll == null&& !String.IsNullOrEmpty(this.SystemKeyword))
-                poll = IoCFactory.Resolve<IPollManager>().GetPollBySystemKeyword(this.SystemKeyword);
-            if (poll != null)
+            var poll = GetPoll();
+            if (poll != null && poll.Published)
             {
                 if (!IoCFactory.Resolve<IPollManager>().PollVotingRecordExists(poll.PollId, NopContext.Current.User.CustomerId))
                 {
@@ -130,9 +125,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             //var imgPercentage = (Image)e.Item.FindControl("imgPercentage");
             var lPercentage = (Literal)e.Item.FindControl("lPercentage");
 
-            var poll = IoCFactory.Resolve<IPollManager>().GetPollById(this.PollId);
-            if (poll == null && !String.IsNullOrEmpty(this.SystemKeyword))
-                poll = IoCFactory.Resolve<IPollManager>().GetPollBySystemKeyword(this.SystemKeyword);
+            var poll = GetPoll();
             if (poll != null)
             {
                 int pollAnswerVoteCount = (int)DataBinder.Eval(e.Item.DataItem, "Count");
@@ -149,6 +142,18 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     //imgPercentage.Visible = false;
                 }
             }
+        }
+
+        Poll _pollCached = null;
+        public Poll GetPoll()
+        {
+            if (_pollCached == null)
+            {
+                _pollCached = IoCFactory.Resolve<IPollManager>().GetPollById(this.PollId);
+                if (_pollCached == null && !String.IsNullOrEmpty(this.SystemKeyword))
+                    _pollCached = IoCFactory.Resolve<IPollManager>().GetPollBySystemKeyword(this.SystemKeyword);
+            }
+            return _pollCached;
         }
 
         public int PollId

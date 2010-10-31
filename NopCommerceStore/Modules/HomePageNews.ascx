@@ -21,14 +21,14 @@
         <asp:Repeater ID="rptrNews" runat="server" EnableViewState="false">
             <ItemTemplate>
                 <div class="item">
-                    <a class="newstitle" href="<%#SEOHelper.GetNewsUrl(Convert.ToInt32(Eval("NewsId")))%>">
+                    <a class="newstitle" href="<%#SEOHelper.GetNewsUrl((News)Container.DataItem)%>">
                         <%#Server.HtmlEncode(Eval("Title").ToString())%></a> <span class="newsdate">-
                             <%#DateTimeHelper.ConvertToUserTime((DateTime)Eval("CreatedOn"), DateTimeKind.Utc).ToString("D")%>
                         </span>
                     <div class="newsdetails">
                         <%#Eval("Short")%>
                     </div>
-                    <a href="<%#SEOHelper.GetNewsUrl(Convert.ToInt32(Eval("NewsId")))%>" class="readmore">
+                    <a href="<%#SEOHelper.GetNewsUrl((News)Container.DataItem)%>" class="readmore">
                         <%=GetLocaleResourceString("News.MoreInfo")%></a>
                 </div>
             </ItemTemplate>
