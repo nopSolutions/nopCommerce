@@ -316,6 +316,30 @@
                             <div class="clear">
                             </div>
                         </asp:PlaceHolder>
+                        <asp:PlaceHolder runat="server" ID="phPreferences">
+                            <div class="section-title">
+                                <%=GetLocaleResourceString("Account.Preferences")%>
+                            </div>
+                            <div class="clear">
+                            </div>
+                            <div class="section-body">
+                                <table class="table-container">
+                                    <tbody>
+                                        <tr class="row" runat="server" id="trTimeZone">
+                                            <td class="item-name">
+                                                <%=GetLocaleResourceString("Account.TimeZone")%>:
+                                            </td>
+                                            <td class="item-value">
+                                                <asp:DropDownList ID="ddlTimeZone" runat="server">
+                                                </asp:DropDownList>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="clear">
+                            </div>
+                        </asp:PlaceHolder>
                         <div class="section-title">
                             <%=GetLocaleResourceString("Account.YourPassword")%>
                         </div>

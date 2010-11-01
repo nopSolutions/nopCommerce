@@ -479,6 +479,12 @@ set @resources='
   <LocaleResource Name="Admin.Sitemap.SystemInformationDescription">
     <Value>View System Information</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Profiles.FormFields.TimeZoneEnabled">
+    <Value>''Time Zone'' enabled:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.Profiles.FormFields.TimeZoneEnabled.Tooltip">
+    <Value>Set if ''Time Zone'' is enabled (registration page). NOTE: Ensure that ''Allow customers to select time zone'' option is also enabled</Value>
+  </LocaleResource>
 </Language>
 '
 

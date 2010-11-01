@@ -834,6 +834,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// <summary>
         /// Gets or sets a value indicating whether 'Newsletter' is enabled
         /// </summary>
-        bool FormFieldNewsletterEnabled {get;set;}
+        bool FormFieldNewsletterEnabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether 'Time Zone' is enabled
+        /// </summary>
+        bool FormFieldTimeZoneEnabled { get; set; }
     }
 }

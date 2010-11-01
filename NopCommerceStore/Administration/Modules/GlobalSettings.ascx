@@ -862,6 +862,16 @@
                             <asp:CheckBox ID="cbffNewsletterBoxEnabled" runat="server"></asp:CheckBox>
                         </td>
                     </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ID="lblffTimeZoneEnabled" Text="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.TimeZoneEnabled %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.Profiles.FormFields.TimeZoneEnabled.Tooltip %>"
+                                ToolTipImage="~/Administration/Common/ico-help.gif" />
+                        </td>
+                        <td class="adminData">
+                            <asp:CheckBox ID="cbffTimeZoneEnabled" runat="server"></asp:CheckBox>
+                        </td>
+                    </tr>
                 </table>
             </ContentTemplate>
         </ajaxToolkit:TabPanel>

@@ -219,7 +219,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Profile
             }
             set
             {
-                //registered user only
                 if (!DateTimeHelper.AllowCustomersToSetTimeZone)
                     return;
 
@@ -229,6 +228,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Profile
                     timeZoneId = value.Id;
                 }
 
+                //registered user only
                 var customer = NopContext.Current.User;
                 if (customer != null)
                 {

@@ -106,10 +106,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
             
             if (!Page.IsPostBack)
             {
-                FillCountryDropDowns();
-                FillStateProvinceDropDowns();
-                FillTimeZones();
-                BindData();
+                this.FillCountryDropDowns();
+                this.FillStateProvinceDropDowns();
+                this.FillTimeZones();
+                this.BindData();
             }
         }
 

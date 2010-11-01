@@ -26,15 +26,17 @@ using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
+using NopSolutions.NopCommerce.BusinessLogic.Content.Forums;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 using NopSolutions.NopCommerce.BusinessLogic.Localization;
 using NopSolutions.NopCommerce.BusinessLogic.Messages;
+using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.BusinessLogic.Tax;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Common.Xml;
 using NopSolutions.NopCommerce.Controls;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -174,7 +176,9 @@ namespace NopSolutions.NopCommerce.Web.Modules
             var rfvFaxNumber = (RequiredFieldValidator)CreateUserWizardStep1.ContentTemplateContainer.FindControl("rfvFaxNumber");
             var phYourContactInformation = (PlaceHolder)CreateUserWizardStep1.ContentTemplateContainer.FindControl("phYourContactInformation");
             var phNewsletter = (PlaceHolder)CreateUserWizardStep1.ContentTemplateContainer.FindControl("phNewsletter");
-
+            var phPreferences = (PlaceHolder)CreateUserWizardStep1.ContentTemplateContainer.FindControl("phPreferences");
+            var trTimeZone = (HtmlTableRow)CreateUserWizardStep1.ContentTemplateContainer.FindControl("trTimeZone");
+            
             phGender.Visible = IoCFactory.Resolve<ICustomerManager>().FormFieldGenderEnabled;
             phDateOfBirth.Visible = IoCFactory.Resolve<ICustomerManager>().FormFieldDateOfBirthEnabled;
 
@@ -217,6 +221,9 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
             phNewsletter.Visible = IoCFactory.Resolve<ICustomerManager>().FormFieldNewsletterEnabled;
 
+            trTimeZone.Visible = DateTimeHelper.AllowCustomersToSetTimeZone && IoCFactory.Resolve<ICustomerManager>().FormFieldTimeZoneEnabled;
+            phPreferences.Visible = trTimeZone.Visible;
+            
             base.OnInit(e);
         }
 
@@ -240,7 +247,8 @@ namespace NopSolutions.NopCommerce.Web.Modules
             var ddlStateProvince = (DropDownList)CreateUserWizardStep1.ContentTemplateContainer.FindControl("ddlStateProvince");
             var cbNewsletter = (CheckBox)CreateUserWizardStep1.ContentTemplateContainer.FindControl("cbNewsletter");
             var dtDateOfBirth = (NopDatePicker)CreateUserWizardStep1.ContentTemplateContainer.FindControl("dtDateOfBirth");
-
+            var ddlTimeZone = (DropDownList)CreateUserWizardStep1.ContentTemplateContainer.FindControl("ddlTimeZone");
+            
             Customer customer = null;
             if (IoCFactory.Resolve<ICustomerManager>().UsernamesEnabled)
             {
@@ -304,6 +312,15 @@ namespace NopSolutions.NopCommerce.Web.Modules
             if (IoCFactory.Resolve<ICustomerManager>().FormFieldNewsletterEnabled)
             {
                 customer.ReceiveNewsletter = cbNewsletter.Checked;
+            }
+            if (DateTimeHelper.AllowCustomersToSetTimeZone && IoCFactory.Resolve<ICustomerManager>().FormFieldTimeZoneEnabled)
+            {
+                if (ddlTimeZone.SelectedItem != null && !String.IsNullOrEmpty(ddlTimeZone.SelectedItem.Value))
+                {
+                    string timeZoneId = ddlTimeZone.SelectedItem.Value;
+                    customer.TimeZoneId = DateTimeHelper.FindTimeZoneById(timeZoneId).Id;
+                    IoCFactory.Resolve<ICustomerManager>().UpdateCustomer(customer);
+                }
             }
 
             //set VAT number after country is saved
@@ -449,6 +466,24 @@ namespace NopSolutions.NopCommerce.Web.Modules
             }
         }
 
+        private void FillTimeZones()
+        {
+            if (DateTimeHelper.AllowCustomersToSetTimeZone && IoCFactory.Resolve<ICustomerManager>().FormFieldTimeZoneEnabled)
+            {
+                var ddlTimeZone = (DropDownList)CreateUserWizardStep1.ContentTemplateContainer.FindControl("ddlTimeZone");
+
+                ddlTimeZone.Items.Clear();
+                var timeZones = DateTimeHelper.GetSystemTimeZones();
+                foreach (var timeZone in timeZones)
+                {
+                    string timeZoneName = timeZone.DisplayName;
+                    var ddlTimeZoneItem2 = new ListItem(timeZoneName, timeZone.Id);
+                    ddlTimeZone.Items.Add(ddlTimeZoneItem2);
+                }
+                CommonHelper.SelectListItem(ddlTimeZone, DateTimeHelper.CurrentTimeZone.Id);
+            }
+        }
+
         protected void ddlCountry_SelectedIndexChanged(object sender, EventArgs e)
         {
             FillStateProvinceDropDowns();
@@ -492,6 +527,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
                 this.FillCountryDropDowns();
                 this.FillStateProvinceDropDowns();
+                this.FillTimeZones();
                 this.DataBind();
             }
 

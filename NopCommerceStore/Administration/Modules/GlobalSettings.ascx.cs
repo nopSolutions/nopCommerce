@@ -247,6 +247,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             cbffFaxEnabled.Checked = IoCFactory.Resolve<ICustomerManager>().FormFieldFaxEnabled;
             cbffFaxRequired.Checked = IoCFactory.Resolve<ICustomerManager>().FormFieldFaxRequired;
             cbffNewsletterBoxEnabled.Checked = IoCFactory.Resolve<ICustomerManager>().FormFieldNewsletterEnabled;
+            cbffTimeZoneEnabled.Checked = IoCFactory.Resolve<ICustomerManager>().FormFieldTimeZoneEnabled;
 
             //return requests (RMA)
             cbReturnRequestsEnabled.Checked = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("ReturnRequests.Enable");
@@ -579,6 +580,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     IoCFactory.Resolve<ICustomerManager>().FormFieldFaxEnabled = cbffFaxEnabled.Checked;
                     IoCFactory.Resolve<ICustomerManager>().FormFieldFaxRequired = cbffFaxRequired.Checked;
                     IoCFactory.Resolve<ICustomerManager>().FormFieldNewsletterEnabled = cbffNewsletterBoxEnabled.Checked;
+                    IoCFactory.Resolve<ICustomerManager>().FormFieldTimeZoneEnabled = cbffTimeZoneEnabled.Checked;
 
 
                     IoCFactory.Resolve<ISettingManager>().SetParam("Display.PageExecutionTimeInfoEnabled", cbDisplayPageExecutionTime.Checked.ToString());

@@ -2784,6 +2784,23 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                 IoCFactory.Resolve<ISettingManager>().SetParam("FormField.NewsletterEnabled", value.ToString());
             }
         }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether 'Time Zone' is enabled
+        /// </summary>
+        public bool FormFieldTimeZoneEnabled
+        {
+            get
+            {
+                bool setting = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("FormField.TimeZoneEnabled", false);
+                return setting;
+            }
+            set
+            {
+                IoCFactory.Resolve<ISettingManager>().SetParam("FormField.TimeZoneEnabled", value.ToString());
+            }
+        }
+
         #endregion
     } 
 }
