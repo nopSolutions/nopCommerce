@@ -3269,45 +3269,49 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// </summary>
         /// <param name="recurringPaymentId">Recurring payment identifier</param>
         /// <param name="throwException">A value indicating whether to throw the exception after an error has occupied.</param>
-        public RecurringPayment CancelRecurringPayment(int recurringPaymentId, 
+        public RecurringPayment CancelRecurringPayment(int recurringPaymentId,
             bool throwException)
         {
             var recurringPayment = GetRecurringPaymentById(recurringPaymentId);
-            try
+
+            if (recurringPayment != null)
             {
-                if (recurringPayment != null)
+                var initialOrder = recurringPayment.InitialOrder;
+                if (initialOrder == null)
+                    return recurringPayment;
+
+                try
                 {
-                    //update recurring payment
-                    recurringPayment.IsActive = false;
-                    UpdateRecurringPayment(recurringPayment);
-
-                    var initialOrder = recurringPayment.InitialOrder;
-                    if (initialOrder == null)
-                        return recurringPayment;
-
                     //old info from placing order
-                    var cancelPaymentResult = new CancelPaymentResult();                    
+                    var cancelPaymentResult = new CancelPaymentResult();
                     cancelPaymentResult.AuthorizationTransactionId = initialOrder.AuthorizationTransactionId;
                     cancelPaymentResult.CaptureTransactionId = initialOrder.CaptureTransactionId;
                     cancelPaymentResult.SubscriptionTransactionId = initialOrder.SubscriptionTransactionId;
                     cancelPaymentResult.Amount = initialOrder.OrderTotal;
-
                     IoCFactory.Resolve<IPaymentManager>().CancelRecurringPayment(initialOrder, ref cancelPaymentResult);
+
                     if (String.IsNullOrEmpty(cancelPaymentResult.Error))
                     {
+                        //update recurring payment
+                        recurringPayment.IsActive = false;
+                        UpdateRecurringPayment(recurringPayment);
+
+                        //order note
                         InsertOrderNote(initialOrder.OrderId, string.Format("Recurring payment has been cancelled"), false, DateTime.UtcNow);
                     }
                     else
                     {
+                        //order note
                         InsertOrderNote(initialOrder.OrderId, string.Format("Error cancelling recurring payment. Error: {0}", cancelPaymentResult.Error), false, DateTime.UtcNow);
                     }
+
                 }
-            }
-            catch (Exception exc)
-            {
-                IoCFactory.Resolve<ILogManager>().InsertLog(LogTypeEnum.OrderError, "Error cancelling recurring payment", exc);
-                if (throwException)
-                    throw;
+                catch (Exception exc)
+                {
+                    IoCFactory.Resolve<ILogManager>().InsertLog(LogTypeEnum.OrderError, "Error cancelling recurring payment", exc);
+                    if (throwException)
+                        throw;
+                }
             }
             return recurringPayment;
         }

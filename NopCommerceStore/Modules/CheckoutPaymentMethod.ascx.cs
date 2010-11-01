@@ -254,12 +254,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
                             //PayPal Express is placed here as button
                             if (pm.SystemKeyword == "PayPalExpress")
                             {
-                                if (!Cart.IsRecurring || IoCFactory.Resolve<IPaymentManager>().SupportRecurringPayments(pm.PaymentMethodId) != RecurringPaymentTypeEnum.NotSupported)
-                                {
-                                    //bind PayPal Express button
-                                    btnPaypalExpressButton.BindData();
+                                //bind PayPal Express button
+                                btnPaypalExpressButton.BindData();
+                                if (btnPaypalExpressButton.Visible)
                                     hasButtonMethods = true;
-                                }
                             }
                         }
                         break;

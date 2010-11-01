@@ -140,6 +140,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 {
                     rp = IoCFactory.Resolve<IOrderManager>().CancelRecurringPayment(rp.RecurringPaymentId);
                 }
+                this.BindData();
                 this.BindHistory();
             }
             catch (Exception exc)
