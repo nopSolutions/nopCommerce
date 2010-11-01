@@ -20,8 +20,8 @@
         </td>
         <td class="adminData">
             <nopCommerce:SimpleTextBox runat="server" ID="txtResourceName" CssClass="adminInput"
-                ErrorMessage="<% $NopResources:Admin.LocaleStringResourceInfo.Name.ErrorMessage %>">
-            </nopCommerce:SimpleTextBox>
+                ErrorMessage="<% $NopResources:Admin.LocaleStringResourceInfo.Name.ErrorMessage %>"
+                Width="400px" />
         </td>
     </tr>
     <tr>
@@ -30,9 +30,8 @@
                 ToolTip="<% $NopResources:Admin.LocaleStringResourceInfo.Value.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
         </td>
         <td class="adminData">
-            <nopCommerce:SimpleTextBox runat="server" ID="txtResourceValue" CssClass="adminInput"
-                ErrorMessage="<% $NopResources:Admin.LocaleStringResourceInfo.Value.ErrorMessage %>">
-            </nopCommerce:SimpleTextBox>
+            <asp:TextBox ID="txtResourceValue" runat="server" CssClass="adminInput" TextMode="MultiLine"
+                Height="100" Width="400px" />
         </td>
     </tr>
 </table>

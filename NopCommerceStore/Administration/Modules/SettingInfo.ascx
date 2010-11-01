@@ -9,8 +9,8 @@
                 ToolTip="<% $NopResources:Admin.SettingInfo.Name.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
         </td>
         <td class="adminData">
-            <nopCommerce:SimpleTextBox runat="server" ID="txtName" CssClass="adminInput" ErrorMessage="<% $NopResources:Admin.SettingInfo.Name.ErrorMessage %>">
-            </nopCommerce:SimpleTextBox>
+            <nopCommerce:SimpleTextBox runat="server" ID="txtName" CssClass="adminInput" ErrorMessage="<% $NopResources:Admin.SettingInfo.Name.ErrorMessage %>"
+                Width="400px" />
         </td>
     </tr>
     <tr>
@@ -19,7 +19,7 @@
                 ToolTip="<% $NopResources:Admin.SettingInfo.Value.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
         </td>
         <td class="adminData">
-            <asp:TextBox ID="txtValue" runat="server" CssClass="adminInput"></asp:TextBox>
+            <asp:TextBox ID="txtValue" runat="server" CssClass="adminInput" Width="400px" />
         </td>
     </tr>
     <tr>
@@ -29,7 +29,7 @@
         </td>
         <td class="adminData">
             <asp:TextBox ID="txtDescription" runat="server" CssClass="adminInput" TextMode="MultiLine"
-                Height="100"></asp:TextBox>
+                Height="100" Width="400px"></asp:TextBox>
         </td>
     </tr>
 </table>
