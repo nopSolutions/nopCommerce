@@ -59,16 +59,44 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             txtFroogleFTPFilename.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue("Froogle.FTPFilename");
             txtFroogleFTPUsername.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue("Froogle.FTPUsername");
             txtFroogleFTPPassword.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue("Froogle.FTPPassword");
+            CommonHelper.SelectListItem(this.ddlFroogleCurrency, FroogleService.UsedCurrency.CurrencyId);
 
             //price grabber
             txtPriceGrabberProductThumbSize.Value = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("PromotionProvider.PriceGrabber.ProductThumbnailImageSize");
+            CommonHelper.SelectListItem(this.ddlPriceGrabberCurrency, PriceGrabberService.UsedCurrency.CurrencyId);
 
             //become.com
             txtBecomeProductThumbSize.Value = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("PromotionProvider.BecomeCom.ProductThumbnailImageSize");
+            CommonHelper.SelectListItem(this.ddlBecomeCurrency, BecomeService.UsedCurrency.CurrencyId);
         }
 
         private void FillDropDowns()
         {
+            var currencies = IoCFactory.Resolve<ICurrencyManager>().GetAllCurrencies(false);
+
+            //Froogle
+            this.ddlFroogleCurrency.Items.Clear();
+            foreach (var currency in currencies)
+            {
+                ListItem item2 = new ListItem(currency.Name, currency.CurrencyId.ToString());
+                this.ddlFroogleCurrency.Items.Add(item2);
+            }
+
+            //Price Grabber
+            this.ddlPriceGrabberCurrency.Items.Clear();
+            foreach (var currency in currencies)
+            {
+                ListItem item2 = new ListItem(currency.Name, currency.CurrencyId.ToString());
+                this.ddlPriceGrabberCurrency.Items.Add(item2);
+            }
+
+            //Become.com
+            this.ddlBecomeCurrency.Items.Clear();
+            foreach (var currency in currencies)
+            {
+                ListItem item2 = new ListItem(currency.Name, currency.CurrencyId.ToString());
+                this.ddlBecomeCurrency.Items.Add(item2);
+            }
         }
 
         protected override void OnPreRender(EventArgs e)
@@ -91,12 +119,15 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     IoCFactory.Resolve<ISettingManager>().SetParam("Froogle.FTPFilename", txtFroogleFTPFilename.Text);
                     IoCFactory.Resolve<ISettingManager>().SetParam("Froogle.FTPUsername", txtFroogleFTPUsername.Text);
                     IoCFactory.Resolve<ISettingManager>().SetParam("Froogle.FTPPassword", txtFroogleFTPPassword.Text);
-                    
+                    FroogleService.UsedCurrency = IoCFactory.Resolve<ICurrencyManager>().GetCurrencyById(int.Parse(this.ddlFroogleCurrency.SelectedItem.Value));
+
                     //price grabber
                     IoCFactory.Resolve<ISettingManager>().SetParam("PromotionProvider.PriceGrabber.ProductThumbnailImageSize", txtPriceGrabberProductThumbSize.Value.ToString());
+                    PriceGrabberService.UsedCurrency = IoCFactory.Resolve<ICurrencyManager>().GetCurrencyById(int.Parse(this.ddlPriceGrabberCurrency.SelectedItem.Value));
 
                     //become.com
                     IoCFactory.Resolve<ISettingManager>().SetParam("PromotionProvider.BecomeCom.ProductThumbnailImageSize", txtBecomeProductThumbSize.Value.ToString());
+                    BecomeService.UsedCurrency = IoCFactory.Resolve<ICurrencyManager>().GetCurrencyById(int.Parse(this.ddlBecomeCurrency.SelectedItem.Value));
 
                     //activity log
                     IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity("EditPromotionProviders", GetLocaleResourceString("ActivityLog.EditPromotionProviders"));

@@ -90,7 +90,7 @@ namespace NopSolutions.NopCommerce.Froogle
                         if (pictures.Count > 0)
                             imageUrl = IoCFactory.Resolve<IPictureManager>().GetPictureUrl(pictures[0], IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("PromotionProvider.Froogle.ProductThumbnailImageSize"), true);
                         writer.WriteElementString("g", "image_link", googleBaseNamespace, imageUrl);
-                        decimal price = productVariant.Price;
+                        decimal price = IoCFactory.Resolve<ICurrencyManager>().ConvertCurrency(productVariant.Price, IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency, FroogleService.UsedCurrency);
                         writer.WriteElementString("g", "price", googleBaseNamespace, price.ToString(new CultureInfo("en-US", false).NumberFormat));
                         
                         //uncomment and set your product_type attribute
@@ -110,6 +110,28 @@ namespace NopSolutions.NopCommerce.Froogle
                 writer.WriteEndElement(); // channel
                 writer.WriteEndElement(); // rss
                 writer.WriteEndDocument();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the currency that is used to generate the feed
+        /// </summary>
+        public static Currency UsedCurrency
+        {
+            get
+            {
+                int currencyId = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("PromotionProvider.Froogle.Currency");
+                var currency = IoCFactory.Resolve<ICurrencyManager>().GetCurrencyById(currencyId);
+                if (currency == null || !currency.Published)
+                    currency = IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency;
+                return currency;
+            }
+            set
+            {
+                int id = 0;
+                if (value != null)
+                    id = value.CurrencyId;
+                IoCFactory.Resolve<ISettingManager>().SetParam("PromotionProvider.Froogle.Currency", id.ToString());
             }
         }
     }

@@ -52,6 +52,16 @@
                         </td>
                     </tr>
                     <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
+                                ID="lblFroogleCurrency" Text="<% $NopResources:Admin.PromotionProviders.Froogle.Currency %>"
+                                ToolTip="<% $NopResources:Admin.PromotionProviders.Froogle.Currency.Tooltip %>" />
+                        </td>
+                        <td class="adminData">
+                            <asp:DropDownList runat="server" ID="ddlFroogleCurrency" CssClass="adminInput" />
+                        </td>
+                    </tr>
+                    <tr>
                         <td colspan="2">
                             <asp:Button runat="server" Text="<% $NopResources:Admin.PromotionProviders.Froogle.GenerateButton.Text %>"
                                 CssClass="adminButtonBlue" ID="btnFroogleGenerate" CausesValidation="false" 
@@ -150,6 +160,16 @@
                         </td>
                     </tr>
                     <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
+                                ID="lblPriceGrabberCurrency" Text="<% $NopResources:Admin.PromotionProviders.PriceGrabber.Currency %>"
+                                ToolTip="<% $NopResources:Admin.PromotionProviders.PriceGrabber.Currency.Tooltip %>" />
+                        </td>
+                        <td class="adminData">
+                            <asp:DropDownList runat="server" ID="ddlPriceGrabberCurrency" CssClass="adminInput" />
+                        </td>
+                    </tr>
+                    <tr>
                         <td colspan="2">
                             <asp:Button runat="server" Text="<% $NopResources:Admin.PromotionProviders.PriceGrabber.GenerateButton.Text %>"
                                 CssClass="adminButtonBlue" ID="btnPriceGrabberGenerate" CausesValidation="false" 
@@ -174,6 +194,16 @@
                                 MinimumValue="0" MaximumValue="999999" RangeErrorMessage="<% $NopResources:Admin.PromotionProviders.Become.ProductThumbSize.RangeErrorMessage %>"
                                 Width="50px" />
                             pixels
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
+                                ID="lblBecomeCurrency" Text="<% $NopResources:Admin.PromotionProviders.Become.Currency %>"
+                                ToolTip="<% $NopResources:Admin.PromotionProviders.Become.Currency.Tooltip %>" />
+                        </td>
+                        <td class="adminData">
+                            <asp:DropDownList runat="server" ID="ddlBecomeCurrency" CssClass="adminInput" />
                         </td>
                     </tr>
                     <tr>

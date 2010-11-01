@@ -485,6 +485,24 @@ set @resources='
   <LocaleResource Name="Admin.GlobalSettings.Profiles.FormFields.TimeZoneEnabled.Tooltip">
     <Value>Set if ''Time Zone'' is enabled (registration page). NOTE: Ensure that ''Allow customers to select time zone'' option is also enabled</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.PromotionProviders.Froogle.Currency">
+    <Value>Currency:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.PromotionProviders.Froogle.Currency.Tooltip">
+    <Value>Select the default currency that will be used to generate the feed</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.PromotionProviders.PriceGrabber.Currency">
+    <Value>Currency:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.PromotionProviders.PriceGrabber.Currency.Tooltip">
+    <Value>Select the default currency that will be used to generate the feed</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.PromotionProviders.Become.Currency">
+    <Value>Currency:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.PromotionProviders.Become.Currency.Tooltip">
+    <Value>Select the default currency that will be used to generate the feed</Value>
+  </LocaleResource>
 </Language>
 '
 

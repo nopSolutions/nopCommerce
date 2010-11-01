@@ -76,6 +76,24 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         protected global::NopSolutions.NopCommerce.Web.Administration.Modules.NumericTextBox txtFroogleProductThumbSize;
         
         /// <summary>
+        /// lblFroogleCurrency control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblFroogleCurrency;
+        
+        /// <summary>
+        /// ddlFroogleCurrency control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlFroogleCurrency;
+        
+        /// <summary>
         /// btnFroogleGenerate control.
         /// </summary>
         /// <remarks>
@@ -229,6 +247,24 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         protected global::NopSolutions.NopCommerce.Web.Administration.Modules.NumericTextBox txtPriceGrabberProductThumbSize;
         
         /// <summary>
+        /// lblPriceGrabberCurrency control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblPriceGrabberCurrency;
+        
+        /// <summary>
+        /// ddlPriceGrabberCurrency control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlPriceGrabberCurrency;
+        
+        /// <summary>
         /// btnPriceGrabberGenerate control.
         /// </summary>
         /// <remarks>
@@ -263,6 +299,24 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::NopSolutions.NopCommerce.Web.Administration.Modules.NumericTextBox txtBecomeProductThumbSize;
+        
+        /// <summary>
+        /// lblBecomeCurrency control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblBecomeCurrency;
+        
+        /// <summary>
+        /// ddlBecomeCurrency control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlBecomeCurrency;
         
         /// <summary>
         /// btnBecomeGenerate control.
