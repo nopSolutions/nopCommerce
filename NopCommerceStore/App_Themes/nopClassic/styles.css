@@ -1089,7 +1089,7 @@ ul.languagelist li .selected
 
 .order-summary-content .cart td, .wishlist-content .cart td
 {
-	padding: 3px 0 3px 0;
+	padding: 10px;
 }
 
 .order-summary-content .cart .cart-header-row, .wishlist-content .cart .cart-header-row
@@ -1097,18 +1097,21 @@ ul.languagelist li .selected
 	font-weight: bold;
 }
 
-.order-summary-content .cart .cart-header-row td, .wishlist-content .cart .cart-header-row td
+.order-summary-content .cart .cart-header-row th, .wishlist-content .cart .cart-header-row th
 {
 	background: url('images/cart_line_y.gif') repeat-y right;
+	padding: 2px 8px;
+	vertical-align: middle;
+	white-space: nowrap;
 }
 
-.order-summary-content .cart .cart-header-row td.picture, .wishlist-content .cart .cart-header-row td.picture
+.order-summary-content .cart .cart-header-row th.picture, .wishlist-content .cart .cart-header-row th.picture
 {
 	background: none;
 	border: none;
 }
 
-.order-summary-content .cart .cart-header-row td.end, .wishlist-content .cart .cart-header-row td.end
+.order-summary-content .cart .cart-header-row th.end, .wishlist-content .cart .cart-header-row th.end
 {
 	background: none;
 	padding-right: 5px;

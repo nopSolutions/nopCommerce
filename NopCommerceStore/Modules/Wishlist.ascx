@@ -10,56 +10,75 @@
             Visible="false"></asp:Label>
     </asp:Panel>
     <table class="cart">
-        <tbody>
+        <%if (IsEditable)
+                  { %>
+        <col width="1" />
+        <%} %>
+        <col width="1" />
+        <%if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Display.Products.ShowSKU"))
+                  {%>
+        <col width="1" />
+        <%} %>
+        <%if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Display.ShowProductImagesOnWishList"))
+                  {%>
+        <col width="1" class="picture" />
+        <%} %>
+        <col />
+        <col width="1" />
+        <col width="1" />
+        <col width="1" class="end" />
+        <thead>
             <tr class="cart-header-row">
                 <%if (IsEditable)
                   { %>
-                <td width="10%">
+                <th>
                     <%=GetLocaleResourceString("Wishlist.Remove")%>
-                </td>
+                </th>
                 <%} %>
-                <td width="10%">
+                <th>
                     <%=GetLocaleResourceString("Wishlist.AddToCart")%>
-                </td>
+                </th>
                 <%if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Display.Products.ShowSKU"))
                   {%>
-                <td width="10%">
+                <th>
                     <%=GetLocaleResourceString("ShoppingCart.SKU")%>
-                </td>
+                </th>
                 <%} %>
                 <%if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Display.ShowProductImagesOnWishList"))
                   {%>
-                <td class="picture">
-                </td>
+                <th class="picture">
+                </th>
                 <%} %>
-                <td width="30%">
+                <th>
                     <%=GetLocaleResourceString("Wishlist.Product(s)")%>
-                </td>
-                <td width="20%">
+                </th>
+                <th>
                     <%=GetLocaleResourceString("Wishlist.UnitPrice")%>
-                </td>
-                <td width="10%">
+                </th>
+                <th>
                     <%=GetLocaleResourceString("Wishlist.Quantity")%>
-                </td>
-                <td width="20%" class="end">
+                </th>
+                <th class="end">
                     <%=GetLocaleResourceString("Wishlist.ItemTotal")%>
-                </td>
+                </th>
             </tr>
+        </thead>
+        <tbody>
             <asp:Repeater ID="rptShoppingCart" runat="server">
                 <ItemTemplate>
                     <tr class="cart-item-row">
                         <%if (IsEditable)
                           { %>
-                        <td width="10%">
+                        <td>
                             <asp:CheckBox runat="server" ID="cbRemoveFromCart" />
                         </td>
                         <%} %>
-                        <td width="10%">
+                        <td>
                             <asp:CheckBox runat="server" ID="cbAddToCart" />
                         </td>
                         <%if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Display.Products.ShowSKU"))
                           {%>
-                        <td width="10%">
+                        <td style="white-space: nowrap;">
                             <%#Server.HtmlEncode(((ShoppingCartItem)Container.DataItem).ProductVariant.SKU)%>
                         </td>
                         <%} %>
@@ -81,10 +100,10 @@
                                     Visible="false"></asp:Label>
                             </asp:Panel>
                         </td>
-                        <td width="20%">
+                        <td style="white-space: nowrap;">
                             <%#GetShoppingCartItemUnitPriceString((ShoppingCartItem)Container.DataItem)%>
                         </td>
-                        <td width="10%">
+                        <td style="white-space: nowrap;">
                             <%if (IsEditable)
                               { %>
                             <asp:TextBox ID="txtQuantity" size="4" runat="server" Text='<%# Eval("Quantity") %>'
@@ -95,7 +114,7 @@
                             <asp:Label ID="lblQuantity" runat="server" Text='<%# Eval("Quantity") %>' CssClass="Label" />
                             <%} %>
                         </td>
-                        <td width="20%" class="end">
+                        <td style="white-space: nowrap;" class="end">
                             <%#GetShoppingCartItemSubTotalString((ShoppingCartItem)Container.DataItem)%>
                             <asp:Label ID="lblShoppingCartItemId" runat="server" Visible="false" Text='<%# Eval("ShoppingCartItemId") %>' />
                         </td>

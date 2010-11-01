@@ -62,50 +62,68 @@
             Visible="false"></asp:Label>
     </asp:Panel>
     <table class="cart">
-        <tbody>
+        <%if (IsShoppingCart)
+          { %>
+        <col width="1" />
+        <%} %>
+        <%if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Display.Products.ShowSKU"))
+          {%>
+        <col width="1" />
+        <%} %>
+        <%if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Display.ShowProductImagesOnShoppingCart"))
+          {%>
+        <col width="1" />
+        <%} %>
+        <col />
+        <col width="1" />
+        <col width="1" />
+        <col width="1" />
+        <thead>
             <tr class="cart-header-row">
                 <%if (IsShoppingCart)
                   { %>
-                <td width="10%">
+                <th>
                     <%=GetLocaleResourceString("ShoppingCart.Remove")%>
-                </td>
+                </th>
                 <%} %>
                 <%if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Display.Products.ShowSKU"))
                   {%>
-                <td width="10%">
+                <th>
                     <%=GetLocaleResourceString("ShoppingCart.SKU")%>
-                </td>
+                </th>
                 <%} %>
                 <%if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Display.ShowProductImagesOnShoppingCart"))
                   {%>
-                <td class="picture">
-                </td>
+                <th class="picture">
+                </th>
                 <%} %>
-                <td width="40%">
+                <th>
                     <%=GetLocaleResourceString("ShoppingCart.Product(s)")%>
-                </td>
-                <td width="20%">
+                </th>
+                <th>
                     <%=GetLocaleResourceString("ShoppingCart.UnitPrice")%>
-                </td>
-                <td width="10%">
+                </th>
+                <th>
                     <%=GetLocaleResourceString("ShoppingCart.Quantity")%>
-                </td>
-                <td width="20%" class="end">
+                </th>
+                <th class="end">
                     <%=GetLocaleResourceString("ShoppingCart.ItemTotal")%>
-                </td>
+                </th>
             </tr>
+        </thead>
+        <tbody>
             <asp:Repeater ID="rptShoppingCart" runat="server">
                 <ItemTemplate>
                     <tr class="cart-item-row">
                         <%if (IsShoppingCart)
                           { %>
-                        <td width="10%">
+                        <td>
                             <asp:CheckBox runat="server" ID="cbRemoveFromCart" />
                         </td>
                         <%} %>
                         <%if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Display.Products.ShowSKU"))
                           {%>
-                        <td width="10%">
+                        <td style="white-space: nowrap;">
                             <%#Server.HtmlEncode(((ShoppingCartItem)Container.DataItem).ProductVariant.SKU)%>
                         </td>
                         <%} %>
@@ -116,7 +134,7 @@
                                 AlternateText="Product picture" />
                         </td>
                         <%} %>
-                        <td width="40%" class="product">
+                        <td class="product">
                             <a href='<%#GetProductUrl((ShoppingCartItem)Container.DataItem)%>' title="View details">
                                 <%#Server.HtmlEncode(GetProductVariantName((ShoppingCartItem)Container.DataItem))%></a>
                             <%#GetAttributeDescription((ShoppingCartItem)Container.DataItem)%>
@@ -127,10 +145,10 @@
                                     Visible="false"></asp:Label>
                             </asp:Panel>
                         </td>
-                        <td width="20%">
+                        <td style="white-space: nowrap;" >
                             <%#GetShoppingCartItemUnitPriceString((ShoppingCartItem)Container.DataItem)%>
                         </td>
-                        <td width="10%">
+                        <td style="white-space: nowrap;" >
                             <%if (IsShoppingCart)
                               { %>
                             <asp:TextBox ID="txtQuantity" size="4" runat="server" Text='<%# Eval("Quantity") %>'
@@ -141,7 +159,7 @@
                             <asp:Label ID="lblQuantity" runat="server" Text='<%# Eval("Quantity") %>' CssClass="Label" />
                             <%} %>
                         </td>
-                        <td width="20%" class="end">
+                        <td style="white-space: nowrap;"  class="end">
                             <%#GetShoppingCartItemSubTotalString((ShoppingCartItem)Container.DataItem)%>
                             <asp:Label ID="lblShoppingCartItemId" runat="server" Visible="false" Text='<%# Eval("ShoppingCartItemId") %>' />
                         </td>
