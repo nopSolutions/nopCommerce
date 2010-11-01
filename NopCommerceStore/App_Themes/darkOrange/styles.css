@@ -1272,7 +1272,7 @@ ul.languagelist li .selected
 	padding-left: 5px;
 }
 
-.order-summary-content .removegiftcardbutton
+.order-summary-content .removegiftcardbutton, .order-summary-content .removediscountbutton 
 {
 	padding-right: 5px;
 	padding-left: 18px;

@@ -81,10 +81,15 @@ namespace NopSolutions.NopCommerce.Web.Modules
                         decimal orderSubTotalDiscountAmount = IoCFactory.Resolve<ICurrencyManager>().ConvertCurrency(orderSubTotalDiscountAmountBase, IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
                         lblOrderSubTotalDiscountAmount.Text = PriceHelper.FormatPrice(-orderSubTotalDiscountAmount);
                         phOrderSubTotalDiscount.Visible = true;
+                        btnRemoveOrderSubTotalDiscount.Visible = orderSubTotalAppliedDiscount != null &&
+                            orderSubTotalAppliedDiscount.RequiresCouponCode &&
+                            !String.IsNullOrEmpty(orderSubTotalAppliedDiscount.CouponCode) &&
+                            this.IsShoppingCart;
                     }
                     else
                     {
                         phOrderSubTotalDiscount.Visible = false;
+                        btnRemoveOrderSubTotalDiscount.Visible = false;
                     }
                 }
                 else
@@ -92,6 +97,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     //impossible
                     lblSubTotalAmount.Text = GetLocaleResourceString("ShoppingCart.CalculatedDuringCheckout");
                     lblSubTotalAmount.CssClass = string.Empty;
+                    phOrderSubTotalDiscount.Visible = false;
                 }
 
                 //shipping info
@@ -207,10 +213,15 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     decimal orderTotalDiscountAmount = IoCFactory.Resolve<ICurrencyManager>().ConvertCurrency(orderTotalDiscountAmountBase, IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
                     lblOrderTotalDiscountAmount.Text = PriceHelper.FormatPrice(-orderTotalDiscountAmount, true, false);
                     phOrderTotalDiscount.Visible = true;
+                    btnRemoveOrderTotalDiscount.Visible = orderTotalAppliedDiscount != null &&
+                        orderTotalAppliedDiscount.RequiresCouponCode &&
+                        !String.IsNullOrEmpty(orderTotalAppliedDiscount.CouponCode) &&
+                        this.IsShoppingCart;
                 }
                 else
                 {
                     phOrderTotalDiscount.Visible = false;
+                    btnRemoveOrderTotalDiscount.Visible = false;
                 }
 
                 //gift cards
@@ -304,6 +315,42 @@ namespace NopSolutions.NopCommerce.Web.Modules
             }
         }
 
+        protected void btnRemoveOrderSubTotalDiscount_Command(object sender, CommandEventArgs e)
+        {
+            if (e.CommandName == "remove")
+            {
+                if (this.IsShoppingCart)
+                {
+                    //discount code (not used now)
+                    //string discountCode = Convert.ToString(e.CommandArgument);
+                    if (NopContext.Current.User != null)
+                    {
+                        //remove discount
+                        IoCFactory.Resolve<ICustomerManager>().ApplyDiscountCouponCode(NopContext.Current.User.CustomerId, string.Empty);
+                    }
+                    this.BindData(this.IsShoppingCart);
+                }
+            }
+        }
+
+        protected void btnRemoveOrderTotalDiscount_Command(object sender, CommandEventArgs e)
+        {
+            if (e.CommandName == "remove")
+            {
+                if (this.IsShoppingCart)
+                {
+                    //discount code (not used now)
+                    //string discountCode = Convert.ToString(e.CommandArgument);
+                    if (NopContext.Current.User != null)
+                    {
+                        //remove discount
+                        IoCFactory.Resolve<ICustomerManager>().ApplyDiscountCouponCode(NopContext.Current.User.CustomerId, string.Empty);
+                    }
+                    this.BindData(this.IsShoppingCart);
+                }
+            }
+        }
+        
         [DefaultValue(false)]
         public bool IsShoppingCart
         {

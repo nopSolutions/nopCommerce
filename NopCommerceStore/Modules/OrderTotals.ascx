@@ -18,7 +18,9 @@
                 <tr>
                     <td class="cart_total_left">
                         <strong>
-                            <%=GetLocaleResourceString("ShoppingCart.OrderDiscount")%>:</strong>
+                            <%=GetLocaleResourceString("ShoppingCart.OrderDiscount")%><asp:LinkButton runat="server"
+                                ID="btnRemoveOrderSubTotalDiscount" Text="" CommandName="remove" OnCommand="btnRemoveOrderSubTotalDiscount_Command"
+                                CssClass="removediscountbutton" />:</strong>
                     </td>
                     <td class="cart_total_right">
                         <span style="white-space: nowrap;">
@@ -83,7 +85,9 @@
                 <tr>
                     <td class="cart_total_left">
                         <strong>
-                            <%=GetLocaleResourceString("ShoppingCart.OrderDiscount")%>:</strong>
+                            <%=GetLocaleResourceString("ShoppingCart.OrderDiscount")%><asp:LinkButton runat="server"
+                                ID="btnRemoveOrderTotalDiscount" Text="" CommandName="remove" OnCommand="btnRemoveOrderTotalDiscount_Command"
+                                CssClass="removediscountbutton" />:</strong>
                     </td>
                     <td class="cart_total_right">
                         <span style="white-space: nowrap;">
