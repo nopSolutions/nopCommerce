@@ -403,12 +403,26 @@
     <Compile Include="Administration\BulkEditProducts.aspx.designer.cs">
       <DependentUpon>BulkEditProducts.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Administration\SystemInformation.aspx.cs">
+      <DependentUpon>SystemInformation.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Administration\SystemInformation.aspx.designer.cs">
+      <DependentUpon>SystemInformation.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Administration\Modules\CategoryACL.ascx.cs">
       <DependentUpon>CategoryACL.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Administration\Modules\CategoryACL.ascx.designer.cs">
       <DependentUpon>CategoryACL.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Administration\Modules\SystemInformation.ascx.cs">
+      <DependentUpon>SystemInformation.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Administration\Modules\SystemInformation.ascx.designer.cs">
+      <DependentUpon>SystemInformation.ascx</DependentUpon>
     </Compile>
     <Compile Include="Administration\Warnings.aspx.cs">
       <DependentUpon>Warnings.aspx</DependentUpon>
@@ -5927,7 +5941,9 @@
     <Content Include="Administration\CategoryTemplateAdd.aspx" />
     <Content Include="Administration\CategoryTemplateDetails.aspx" />
     <Content Include="Administration\CategoryTemplates.aspx" />
+    <Content Include="Administration\SystemInformation.aspx" />
     <Content Include="Administration\Modules\CategoryACL.ascx" />
+    <Content Include="Administration\Modules\SystemInformation.ascx" />
     <Content Include="Administration\Warnings.aspx" />
     <Content Include="Administration\EmailAccountAdd.aspx" />
     <Content Include="Administration\EmailAccountDetails.aspx" />

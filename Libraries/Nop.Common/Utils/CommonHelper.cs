@@ -297,6 +297,22 @@ namespace NopSolutions.NopCommerce.Common.Utils
                 page.ClientScript.RegisterClientScriptInclude(jQueryUrl, jQueryUrl);
             }
         }
+        
+        /// <summary>
+        /// Disable browser cache
+        /// </summary>
+        public static void DisableBrowserCache()
+        {
+            if (HttpContext.Current != null)
+            {
+                HttpContext.Current.Response.Cache.SetExpires(new DateTime(1995, 5, 6, 12, 0, 0, DateTimeKind.Utc));
+                HttpContext.Current.Response.Cache.SetNoStore();
+                HttpContext.Current.Response.Cache.SetCacheability(HttpCacheability.NoCache);
+                HttpContext.Current.Response.Cache.SetRevalidation(HttpCacheRevalidation.AllCaches);
+                HttpContext.Current.Response.Cache.AppendCacheExtension("post-check=0,pre-check=0");
+
+            }
+        }
 
         /// <summary>
         /// Gets a value indicating whether requested page is an admin page

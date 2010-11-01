@@ -130,6 +130,7 @@
       <siteMapNode title="Message queue" url="~/administration/messagequeue.aspx" description="Manage Message Queue" nopResourceTitle="Admin.Sitemap.MessageQueueTitle" nopResourceDescription="Admin.Sitemap.MessageQueueDescription" />
       <siteMapNode title="Maintenance" url="~/administration/maintenance.aspx" description="Maintenance" nopResourceTitle="Admin.Sitemap.MaintenanceTitle" nopResourceDescription="Admin.Sitemap.MaintenanceDescription" />
       <siteMapNode title="Warnings" url="~/administration/warnings.aspx" description="Warnings" nopResourceTitle="Admin.Sitemap.WarningsTitle" nopResourceDescription="Admin.Sitemap.WarningsDescription" />
+      <siteMapNode title="System Information" url="~/administration/systeminformation.aspx" description="View System Information" nopResourceTitle="Admin.Sitemap.SystemInformationTitle" nopResourceDescription="Admin.Sitemap.SystemInformationDescription" />
     </siteMapNode>
     <!-- System -->
 

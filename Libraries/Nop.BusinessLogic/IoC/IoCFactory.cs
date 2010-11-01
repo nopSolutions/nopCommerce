@@ -230,8 +230,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.IoC
 
             return Resolve<T>(containerName);
         }
-
-
+        
         /// <summary>
         /// Returns an injected implementation for the requested interface
         /// It uses provided IoC Container passed as parameter
