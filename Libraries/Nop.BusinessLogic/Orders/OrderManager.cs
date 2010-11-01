@@ -1165,45 +1165,60 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <returns>Result</returns>
         public OrderAverageReportLineSummary OrderAverageReport(OrderStatusEnum os)
         {
-            int orderStatusId = (int)os;
+            var item = new OrderAverageReportLineSummary();
+            item.OrderStatus = os;
 
-            DateTime nowDT = DateTimeHelper.ConvertToUserTime(DateTime.Now);
+            DateTime nowDT = DateTimeHelper.ConvertToUserTime(DateTime.Now);            
+            TimeZoneInfo timeZone = DateTimeHelper.CurrentTimeZone;
 
             //today
-            DateTime? startTime = DateTimeHelper.ConvertToUtcTime(new DateTime(nowDT.Year, nowDT.Month, nowDT.Day), DateTimeHelper.CurrentTimeZone);
-            DateTime? endTime = null;
-            var todayResult = GetOrderAverageReportLine(os, startTime, endTime);
+            DateTime t1 = new DateTime(nowDT.Year, nowDT.Month, nowDT.Day);
+            if (!timeZone.IsInvalidTime(t1))
+            {
+                DateTime? startTime1 = DateTimeHelper.ConvertToUtcTime(t1, timeZone);
+                DateTime? endTime1 = null;
+                var todayResult = GetOrderAverageReportLine(os, startTime1, endTime1);
+                item.SumTodayOrders = todayResult.SumOrders;
+                item.CountTodayOrders = todayResult.CountOrders;
+            }
             //week
             DayOfWeek fdow = CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek;
             DateTime today = new DateTime(nowDT.Year, nowDT.Month, nowDT.Day);
-            startTime = DateTimeHelper.ConvertToUtcTime(today.AddDays(-(today.DayOfWeek - fdow)), DateTimeHelper.CurrentTimeZone);
-            endTime = null;
-            var weekResult = GetOrderAverageReportLine(os, startTime, endTime);
+            DateTime t2 = today.AddDays(-(today.DayOfWeek - fdow));
+            if (!timeZone.IsInvalidTime(t2))
+            {
+                DateTime? startTime2 = DateTimeHelper.ConvertToUtcTime(t2, timeZone);
+                DateTime? endTime2 = null;
+                var weekResult = GetOrderAverageReportLine(os, startTime2, endTime2);
+                item.SumThisWeekOrders = weekResult.SumOrders;
+                item.CountThisWeekOrders = weekResult.CountOrders;
+            }
             //month
-            startTime = DateTimeHelper.ConvertToUtcTime(new DateTime(nowDT.Year, nowDT.Month, 1), DateTimeHelper.CurrentTimeZone);
-            endTime = null;
-            var monthResult = GetOrderAverageReportLine(os, startTime, endTime);
+            DateTime t3 = new DateTime(nowDT.Year, nowDT.Month, 1);
+            if (!timeZone.IsInvalidTime(t3))
+            {
+                DateTime? startTime3 = DateTimeHelper.ConvertToUtcTime(t3, timeZone);
+                DateTime? endTime3 = null;
+                var monthResult = GetOrderAverageReportLine(os, startTime3, endTime3);
+                item.SumThisMonthOrders = monthResult.SumOrders;
+                item.CountThisMonthOrders = monthResult.CountOrders;
+            }
             //year
-            startTime = DateTimeHelper.ConvertToUtcTime(new DateTime(nowDT.Year, 1, 1), DateTimeHelper.CurrentTimeZone);
-            endTime = null;
-            var yearResult = GetOrderAverageReportLine(os, startTime, endTime);
+            DateTime t4 = new DateTime(nowDT.Year, 1, 1);
+            if (!timeZone.IsInvalidTime(t4))
+            {
+                DateTime? startTime4 = DateTimeHelper.ConvertToUtcTime(t4, timeZone);
+                DateTime? endTime4 = null;
+                var yearResult = GetOrderAverageReportLine(os, startTime4, endTime4);
+                item.SumThisYearOrders = yearResult.SumOrders;
+                item.CountThisYearOrders = yearResult.CountOrders;
+            }
             //all time
-            startTime = null;
-            endTime = null;
-            var allTimeResult = GetOrderAverageReportLine(os, startTime, endTime);
-
-            var item = new OrderAverageReportLineSummary();
-            item.SumTodayOrders = todayResult.SumOrders;
-            item.CountTodayOrders = todayResult.CountOrders;
-            item.SumThisWeekOrders = weekResult.SumOrders;
-            item.CountThisWeekOrders = weekResult.CountOrders;
-            item.SumThisMonthOrders = monthResult.SumOrders;
-            item.CountThisMonthOrders = monthResult.CountOrders;
-            item.SumThisYearOrders = yearResult.SumOrders;
-            item.CountThisYearOrders = yearResult.CountOrders;
+            DateTime? startTime5 = null;
+            DateTime? endTime5 = null;
+            var allTimeResult = GetOrderAverageReportLine(os, startTime5, endTime5);
             item.SumAllTimeOrders = allTimeResult.SumOrders;
             item.CountAllTimeOrders = allTimeResult.CountOrders;
-            item.OrderStatus = os;
 
             return item;
         }

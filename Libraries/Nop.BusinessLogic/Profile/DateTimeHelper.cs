@@ -133,7 +133,15 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Profile
         /// <returns>A DateTime value that represents the Coordinated Universal Time (UTC) that corresponds to the dateTime parameter. The DateTime value's Kind property is always set to DateTimeKind.Utc.</returns>
         public static DateTime ConvertToUtcTime(DateTime dt, TimeZoneInfo sourceTimeZone)
         {
-            return TimeZoneInfo.ConvertTimeToUtc(dt, sourceTimeZone);
+            if (sourceTimeZone.IsInvalidTime(dt))
+            {
+                //could not convert
+                return dt;
+            }
+            else
+            {
+                return TimeZoneInfo.ConvertTimeToUtc(dt, sourceTimeZone);
+            }
         }
 
         /// <summary>
