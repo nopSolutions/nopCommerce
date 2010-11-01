@@ -440,6 +440,45 @@ set @resources='
   <LocaleResource Name="Account.DuplicateUserName">
     <Value>Please enter a different user name.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.SystemInformation.Title">
+    <Value>System Information</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SystemInformation.nopVersion">
+    <Value>nopCommerce version:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SystemInformation.OperatingSystem">
+    <Value>Operating system:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SystemInformation.ASPNETInfo">
+    <Value>ASP.NET info:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SystemInformation.IsFullTrust">
+    <Value>Is full trust level:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SystemInformation.ServerTimeZone">
+    <Value>Server time zone:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SystemInformation.ServerLocalTime">
+    <Value>Server local time:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SystemInformation.UTCTime">
+    <Value>Greenwich mean time (GMT/UTC):</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SystemHome.SystemInformation.TitleDescription">
+    <Value>System information</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SystemHome.SystemInformation.Title">
+    <Value>System information</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SystemHome.SystemInformation.Description">
+    <Value>View system and server information here</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Sitemap.SystemInformationTitle">
+    <Value>System Information</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Sitemap.SystemInformationDescription">
+    <Value>View System Information</Value>
+  </LocaleResource>
 </Language>
 '
 
