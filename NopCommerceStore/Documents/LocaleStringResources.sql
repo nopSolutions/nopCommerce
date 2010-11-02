@@ -503,6 +503,21 @@ set @resources='
   <LocaleResource Name="Admin.PromotionProviders.Become.Currency.Tooltip">
     <Value>Select the default currency that will be used to generate the feed</Value>
   </LocaleResource>
+  <LocaleResource Name="PdfPackagingSlip.Company">
+    <Value>Company: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="PdfPackagingSlip.Name">
+    <Value>Name: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="PdfPackagingSlip.Phone">
+    <Value>Phone: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="PdfPackagingSlip.Address">
+    <Value>Address: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="PdfPackagingSlip.ShippingMethod">
+    <Value>Shipping method: {0}</Value>
+  </LocaleResource>
 </Language>
 '
 

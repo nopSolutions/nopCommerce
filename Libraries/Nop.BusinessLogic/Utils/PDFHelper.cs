@@ -610,12 +610,19 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Utils
                 p1.Format.Font.Underline = Underline.None;
                 section.AddParagraph();
 
-                section.AddParagraph(order.ShippingFullName);
-                section.AddParagraph(order.ShippingAddress1);
+                if (!String.IsNullOrEmpty(order.ShippingCompany))
+                {
+                    section.AddParagraph(String.Format(LocalizationManager.GetLocaleResourceString("PdfPackagingSlip.Company"), order.ShippingCompany));
+                }
+                section.AddParagraph(String.Format(LocalizationManager.GetLocaleResourceString("PdfPackagingSlip.Name"), order.ShippingFullName));
+                section.AddParagraph(String.Format(LocalizationManager.GetLocaleResourceString("PdfPackagingSlip.Phone"), order.ShippingPhoneNumber));
+                section.AddParagraph(String.Format(LocalizationManager.GetLocaleResourceString("PdfPackagingSlip.Address"), order.ShippingAddress1));
+                section.AddParagraph(String.Format("{0}, {1}", order.ShippingCountry, order.ShippingStateProvince));
                 section.AddParagraph(String.Format("{0}, {1}", order.ShippingCity, order.ShippingZipPostalCode));
+
                 section.AddParagraph();
 
-                section.AddParagraph(String.Format(LocalizationManager.GetLocaleResourceString("PDFInvoice.ShippingMethod"), order.ShippingMethod));
+                section.AddParagraph(String.Format(LocalizationManager.GetLocaleResourceString("PdfPackagingSlip.ShippingMethod"), order.ShippingMethod));
                 section.AddParagraph();
                 
                 Table productTable = section.AddTable();
