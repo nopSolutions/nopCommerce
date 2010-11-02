@@ -29,6 +29,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.Common;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -114,6 +115,15 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         public Currency SaveInfo()
         {
             string displayLocale = ddlDisplayLocale.SelectedItem.Value;
+
+            try
+            {
+                CultureInfo ci = CultureInfo.GetCultureInfo(displayLocale);
+            }
+            catch (Exception)
+            {
+                throw new NopException("Specified display locale culture is not supported");
+            }
 
             Currency currency = IoCFactory.Resolve<ICurrencyManager>().GetCurrencyById(this.CurrencyId);
             if (currency != null)

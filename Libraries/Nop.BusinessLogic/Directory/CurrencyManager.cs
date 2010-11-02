@@ -205,17 +205,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
             currency.CustomFormatting = CommonHelper.EnsureNotNull(currency.CustomFormatting);
             currency.CustomFormatting = CommonHelper.EnsureMaximumLength(currency.CustomFormatting, 50);
 
-            try
-            {
-                CultureInfo ci = CultureInfo.GetCultureInfo(currency.DisplayLocale);
-            }
-            catch (Exception)
-            {
-                throw new NopException("Specified display locale culture is not supported");
-            }
-
-            
-
             _context.Currencies.AddObject(currency);
             _context.SaveChanges();
 
@@ -242,17 +231,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
             currency.DisplayLocale = CommonHelper.EnsureMaximumLength(currency.DisplayLocale, 50);
             currency.CustomFormatting = CommonHelper.EnsureNotNull(currency.CustomFormatting);
             currency.CustomFormatting = CommonHelper.EnsureMaximumLength(currency.CustomFormatting, 50);
-
-            try
-            {
-                CultureInfo ci = CultureInfo.GetCultureInfo(currency.DisplayLocale);
-            }
-            catch (Exception)
-            {
-                throw new NopException("Specified display locale culture is not supported");
-            }
-
-            
+                        
             if (!_context.IsAttached(currency))
                 _context.Currencies.Attach(currency);
 

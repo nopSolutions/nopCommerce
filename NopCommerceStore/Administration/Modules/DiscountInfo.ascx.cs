@@ -238,6 +238,15 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             discountStartDate = DateTime.SpecifyKind(discountStartDate, DateTimeKind.Utc);
             discountEndDate = DateTime.SpecifyKind(discountEndDate, DateTimeKind.Utc);
             
+            if (discountStartDate.CompareTo(discountEndDate) >= 0)
+                throw new NopException("Start date should be less then expiration date");
+
+            if (requiresCouponCode && String.IsNullOrEmpty(couponCode))
+            {
+                throw new NopException("Discount requires coupon code. Coupon code could not be empty.");
+            }
+
+
             Discount discount = IoCFactory.Resolve<IDiscountManager>().GetDiscountById(this.DiscountId);
 
             if (discount != null)

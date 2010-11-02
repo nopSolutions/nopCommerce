@@ -207,21 +207,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
             if (discount == null)
                 throw new ArgumentNullException("discount");
 
-            if (discount.StartDate.CompareTo(discount.EndDate) >= 0)
-                throw new NopException("Start date should be less then expiration date");
-
-            if (discount.RequiresCouponCode && String.IsNullOrEmpty(discount.CouponCode))
-            {
-                throw new NopException("Discount requires coupon code. Coupon code could not be empty.");
-            }
-
             discount.Name = CommonHelper.EnsureNotNull(discount.Name);
             discount.Name = CommonHelper.EnsureMaximumLength(discount.Name, 100);
             discount.CouponCode = CommonHelper.EnsureNotNull(discount.CouponCode);
             discount.CouponCode = CommonHelper.EnsureMaximumLength(discount.CouponCode, 100);
-
             
-
             _context.Discounts.AddObject(discount);
             _context.SaveChanges();
 
@@ -240,20 +230,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
             if (discount == null)
                 throw new ArgumentNullException("discount");
 
-            if (discount.StartDate.CompareTo(discount.EndDate) >= 0)
-                throw new NopException("Start date should be less then expiration date");
-
-            if (discount.RequiresCouponCode && String.IsNullOrEmpty(discount.CouponCode))
-            {
-                throw new NopException("Discount requires coupon code. Coupon code could not be empty.");
-            }
-
             discount.Name = CommonHelper.EnsureNotNull(discount.Name);
             discount.Name = CommonHelper.EnsureMaximumLength(discount.Name, 100);
             discount.CouponCode = CommonHelper.EnsureNotNull(discount.CouponCode);
             discount.CouponCode = CommonHelper.EnsureMaximumLength(discount.CouponCode, 100);
-
-            
+                        
             if (!_context.IsAttached(discount))
                 _context.Discounts.Attach(discount);
 
