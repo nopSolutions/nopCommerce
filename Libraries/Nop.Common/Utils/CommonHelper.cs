@@ -951,6 +951,17 @@ namespace NopSolutions.NopCommerce.Common.Utils
         /// <param name="enumType">Enumeration</param>
         public static void FillDropDownWithEnum(DropDownList list, Type enumType)
         {
+            FillDropDownWithEnum(list, enumType, true);
+        }
+
+        /// <summary>
+        /// Fills drop down list with values of enumaration
+        /// </summary>
+        /// <param name="list">Dropdownlist</param>
+        /// <param name="enumType">Enumeration</param>
+        /// <param name="clearListItems">Clear list of exsisting items</param>
+        public static void FillDropDownWithEnum(DropDownList list, Type enumType, bool clearListItems)
+        {
             if (list == null)
             {
                 throw new ArgumentNullException("list");
@@ -964,7 +975,10 @@ namespace NopSolutions.NopCommerce.Common.Utils
                 throw new ArgumentException("enumType must be enum type");
             }
 
-            list.Items.Clear();
+            if (clearListItems)
+            {
+                list.Items.Clear();
+            }
             string[] strArray = Enum.GetNames(enumType);
             foreach (string str2 in strArray)
             {

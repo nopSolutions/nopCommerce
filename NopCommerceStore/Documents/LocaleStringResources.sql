@@ -530,6 +530,39 @@ set @resources='
   <LocaleResource Name="Admin.GlobalSettings.GoogleAnalytics.Placement.Body">
     <Value>Before the &lt;/body&gt; tag</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Logs.SearchButton.Text">
+    <Value>Search</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Logs.SearchButton.Tooltip">
+    <Value>Search for log based on the criteria below</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Log.CreatedOnFrom">
+    <Value>Created from:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Log.CreatedOnFrom.Tooltip">
+    <Value>The creation from date for the search.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Log.CreatedOnTo">
+    <Value>Created to:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Log.CreatedOnTo.Tooltip">
+    <Value>The creation to date for the search.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Log.Message">
+    <Value>Message:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Log.Message.Tooltip">
+    <Value>Search by message or part of entered message. Leave empty to load all records</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Log.LogType">
+    <Value>Log type:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Log.LogType.Tooltip">
+    <Value>Select a log type.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Log.AllLogTypes">
+    <Value>All</Value>
+  </LocaleResource>
 </Language>
 '
 

@@ -86,15 +86,6 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             } 
         }
 
-        protected void SetDefaultValues()
-        {
-            int days = CommonHelper.QueryStringInt("ShowDays");
-            if (days > 0)
-            {
-                ctrlCreatedOnFromDatePicker.SelectedDate = DateTime.UtcNow.AddDays(-days);
-            }
-        }
-
         protected void FillActivityLogTypesDropDowns()
         {
             ddlActivityLogType.Items.Clear();
@@ -161,7 +152,6 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         private void BindData()
         {
             FillActivityLogTypesDropDowns();
-            SetDefaultValues();
             phCustomerName.Visible = IoCFactory.Resolve<ICustomerManager>().UsernamesEnabled;
         }
 

@@ -24,6 +24,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Caching;
 using NopSolutions.NopCommerce.BusinessLogic.Data;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.BusinessLogic.Utils;
+using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Audit
@@ -47,8 +48,15 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
         /// <summary>
         /// Gets all log items
         /// </summary>
+        /// <param name="createdOnFrom">Log item creation from; null to load all customers</param>
+        /// <param name="createdOnTo">Log item creation to; null to load all customers</param>
+        /// <param name="message">Message</param>
+        /// <param name="logTypeId">Log type identifier</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
         /// <returns>Log item collection</returns>
-         List<Log> GetAllLogs();
+        PagedList<Log> GetAllLogs(DateTime? createdOnFrom,
+           DateTime? createdOnTo, string message,  int logTypeId, int pageIndex, int pageSize);
 
         /// <summary>
         /// Gets a log item

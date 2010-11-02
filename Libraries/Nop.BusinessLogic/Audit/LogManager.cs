@@ -24,6 +24,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Caching;
 using NopSolutions.NopCommerce.BusinessLogic.Data;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.BusinessLogic.Utils;
+using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Audit
@@ -95,15 +96,35 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
         /// <summary>
         /// Gets all log items
         /// </summary>
+        /// <param name="createdOnFrom">Log item creation from; null to load all customers</param>
+        /// <param name="createdOnTo">Log item creation to; null to load all customers</param>
+        /// <param name="message">Message</param>
+        /// <param name="logTypeId">Log type identifier</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
         /// <returns>Log item collection</returns>
-        public List<Log> GetAllLogs()
+        public PagedList<Log> GetAllLogs(DateTime? createdOnFrom,
+           DateTime? createdOnTo, string message, int logTypeId, int pageIndex, int pageSize)
         {
-            
+            if (pageSize <= 0)
+                pageSize = 10;
+            if (pageSize == int.MaxValue)
+                pageSize = int.MaxValue - 1;
+
+            if (pageIndex < 0)
+                pageIndex = 0;
+            if (pageIndex == int.MaxValue)
+                pageIndex = int.MaxValue - 1;
+
             var query = from l in _context.Log
+                        where (!createdOnFrom.HasValue || createdOnFrom.Value <= l.CreatedOn) &&
+                        (!createdOnTo.HasValue || createdOnTo.Value >= l.CreatedOn) &&
+                        (logTypeId == 0 || logTypeId == l.LogTypeId) &&
+                        (String.IsNullOrEmpty(message) || l.Message.Contains(message) || l.Exception.Contains(message))
                         orderby l.CreatedOn descending
                         select l;
-            var collection = query.ToList();
-            return collection;
+            var log = new PagedList<Log>(query, pageIndex, pageSize);
+            return log;
         }
 
         /// <summary>
