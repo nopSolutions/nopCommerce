@@ -195,6 +195,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             cbGoogleAnalyticsEnabled.Checked = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Analytics.GoogleEnabled", false);
             txtGoogleAnalyticsId.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue("Analytics.GoogleID");
             txtGoogleAnalyticsJS.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue("Analytics.GoogleJS");
+            CommonHelper.SelectListItem(this.ddlGoogleAnalyticsPlacement, IoCFactory.Resolve<ISettingManager>().GetSettingValue("Analytics.GooglePlacement", "Body"));
 
             txtAllowedIPList.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue("Security.AdminAreaAllowedIP");
 
@@ -486,6 +487,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     IoCFactory.Resolve<ISettingManager>().SetParam("Analytics.GoogleEnabled", cbGoogleAnalyticsEnabled.Checked.ToString());
                     IoCFactory.Resolve<ISettingManager>().SetParam("Analytics.GoogleID", txtGoogleAnalyticsId.Text);
                     IoCFactory.Resolve<ISettingManager>().SetParam("Analytics.GoogleJS", txtGoogleAnalyticsJS.Text);
+                    IoCFactory.Resolve<ISettingManager>().SetParam("Analytics.GooglePlacement", this.ddlGoogleAnalyticsPlacement.SelectedItem.Value);
+
 
                     if (uplPdfLogo.HasFile)
                     {

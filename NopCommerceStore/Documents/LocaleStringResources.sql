@@ -518,6 +518,18 @@ set @resources='
   <LocaleResource Name="PdfPackagingSlip.ShippingMethod">
     <Value>Shipping method: {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.GoogleAnalytics.Placement">
+    <Value>Placement:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.GoogleAnalytics.Placement.Tooltip">
+    <Value>Select the placement of Google Analytics script</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.GoogleAnalytics.Placement.Head">
+    <Value>Before the closing &lt;/head&gt; tag</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GlobalSettings.GoogleAnalytics.Placement.Body">
+    <Value>Before the &lt;/body&gt; tag</Value>
+  </LocaleResource>
 </Language>
 '
 

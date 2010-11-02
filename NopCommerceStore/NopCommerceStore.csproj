@@ -4625,13 +4625,6 @@
     <Compile Include="Modules\ForumSelector.ascx.designer.cs">
       <DependentUpon>ForumSelector.ascx</DependentUpon>
     </Compile>
-    <Compile Include="Modules\WebAnalytics.ascx.cs">
-      <DependentUpon>WebAnalytics.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Modules\WebAnalytics.ascx.designer.cs">
-      <DependentUpon>WebAnalytics.ascx</DependentUpon>
-    </Compile>
     <Compile Include="Modules\NewsComment.ascx.cs">
       <DependentUpon>NewsComment.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -7587,7 +7580,6 @@
     <Content Include="Modules\ProductsAlsoPurchased.ascx" />
     <Content Include="Modules\MoveForumTopic.ascx" />
     <Content Include="Modules\ForumSelector.ascx" />
-    <Content Include="Modules\WebAnalytics.ascx" />
     <Content Include="Modules\NewsComment.ascx" />
     <Content Include="Modules\ForumSearchBox.ascx" />
     <Content Include="Modules\ForumSearch.ascx" />

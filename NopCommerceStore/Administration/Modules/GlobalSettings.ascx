@@ -104,10 +104,12 @@
             if (getE('<%=cbGoogleAnalyticsEnabled.ClientID %>').checked) {
                 $('#pnlGoogleAnalyticsId').show();
                 $('#pnlGoogleAnalyticsJS').show();
+                $('#pnlGoogleAnalyticsPlacement').show();                
             }
             else {
                 $('#pnlGoogleAnalyticsId').hide();
                 $('#pnlGoogleAnalyticsJS').hide();
+                $('#pnlGoogleAnalyticsPlacement').hide();
             }
         }
         
@@ -1445,6 +1447,21 @@
                         <td class="adminData">
                             <asp:TextBox runat="server" ID="txtGoogleAnalyticsJS" TextMode="MultiLine" Rows="5"
                                 CssClass="adminInput" />
+                        </td>
+                    </tr>
+                    <tr id="pnlGoogleAnalyticsPlacement">
+                        <td class="adminTitle">
+                            <nopCommerce:ToolTipLabel runat="server" ToolTipImage="~/Administration/Common/ico-help.gif"
+                                ID="lblGoogleAnalyticsPlacement" Text="<% $NopResources:Admin.GlobalSettings.GoogleAnalytics.Placement %>"
+                                ToolTip="<% $NopResources:Admin.GlobalSettings.GoogleAnalytics.Placement.Tooltip %>" />
+                        </td>
+                        <td class="adminData">
+                            <asp:DropDownList runat="server" ID="ddlGoogleAnalyticsPlacement" CssClass="adminInput" >
+                                <asp:ListItem Text="<% $NopResources:Admin.GlobalSettings.GoogleAnalytics.Placement.Head %>"
+                                    Value="Head"></asp:ListItem>
+                                <asp:ListItem Text="<% $NopResources:Admin.GlobalSettings.GoogleAnalytics.Placement.Body %>"
+                                    Value="Body"></asp:ListItem>
+                            </asp:DropDownList>
                         </td>
                     </tr>
                 </table>

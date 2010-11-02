@@ -2119,6 +2119,24 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules {
         protected global::System.Web.UI.WebControls.TextBox txtGoogleAnalyticsJS;
         
         /// <summary>
+        /// lblGoogleAnalyticsPlacement control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl lblGoogleAnalyticsPlacement;
+        
+        /// <summary>
+        /// ddlGoogleAnalyticsPlacement control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlGoogleAnalyticsPlacement;
+        
+        /// <summary>
         /// pnlRewardPoints control.
         /// </summary>
         /// <remarks>
