@@ -41,7 +41,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
     {
         protected CheckoutStepChangedEventHandler handler;
         protected ShoppingCart cart = null;
-        protected bool paymentControlLoaded = false;
+        protected string lastPaymentControlLoaded = string.Empty;
 
         public void LoadPaymentControl()
         {
@@ -56,14 +56,16 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 }
                 if (paymentMethod != null && paymentMethod.IsActive)
                 {
-                    if (paymentControlLoaded)
+                    //ensure that this template is not loaded
+                    if (String.IsNullOrEmpty(lastPaymentControlLoaded) ||
+                        !lastPaymentControlLoaded.Equals(paymentMethod.UserTemplatePath))
                     {
                         this.PaymentInfoPlaceHolder.Controls.Clear();
+
+                        Control child = base.LoadControl(paymentMethod.UserTemplatePath);
+                        this.PaymentInfoPlaceHolder.Controls.Add(child);
+                        lastPaymentControlLoaded = paymentMethod.UserTemplatePath;
                     }
-                    Control child = null;
-                    child = base.LoadControl(paymentMethod.UserTemplatePath);
-                    this.PaymentInfoPlaceHolder.Controls.Add(child);
-                    paymentControlLoaded = true;
                 }
                 else
                 {
