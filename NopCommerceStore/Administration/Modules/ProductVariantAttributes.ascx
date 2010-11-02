@@ -94,7 +94,7 @@
                                     ToolTipImage="~/Administration/Common/ico-help.gif" />
                             </td>
                             <td class="adminData">
-                                <asp:DropDownList class="text" ID="ddlNewProductAttributes" AutoPostBack="False"
+                                <asp:DropDownList ID="ddlNewProductAttributes" AutoPostBack="False"
                                     CssClass="adminInput" runat="server">
                                 </asp:DropDownList>
                             </td>
@@ -126,7 +126,7 @@
                                     ToolTipImage="~/Administration/Common/ico-help.gif" />
                             </td>
                             <td class="adminData">
-                                <asp:DropDownList class="text" ID="ddlAttributeControlType" AutoPostBack="False"
+                                <asp:DropDownList ID="ddlAttributeControlType" AutoPostBack="False"
                                     CssClass="adminInput" runat="server">
                                 </asp:DropDownList>
                             </td>

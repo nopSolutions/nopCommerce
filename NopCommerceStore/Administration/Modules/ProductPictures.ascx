@@ -71,7 +71,7 @@
                     ToolTip="<% $NopResources:Admin.ProductPictures.SelectPicture.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
             </td>
             <td class="adminData">
-                <asp:FileUpload class="text" ID="fuProductPicture1" CssClass="adminInput" runat="server"
+                <asp:FileUpload ID="fuProductPicture1" CssClass="adminInput" runat="server"
                     ToolTip="<% $NopResources:Admin.ProductPictures.FileUpload %>" />
             </td>
         </tr>
@@ -100,7 +100,7 @@
                     ToolTip="<% $NopResources:Admin.ProductPictures.SelectPicture.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
             </td>
             <td class="adminData">
-                <asp:FileUpload class="text" ID="fuProductPicture2" CssClass="adminInput" runat="server"
+                <asp:FileUpload ID="fuProductPicture2" CssClass="adminInput" runat="server"
                     ToolTip="<% $NopResources:Admin.ProductPictures.FileUpload %>" />
             </td>
         </tr>
@@ -129,7 +129,7 @@
                     ToolTip="<% $NopResources:Admin.ProductPictures.SelectPicture.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
             </td>
             <td class="adminData">
-                <asp:FileUpload class="text" ID="fuProductPicture3" CssClass="adminInput" runat="server"
+                <asp:FileUpload ID="fuProductPicture3" CssClass="adminInput" runat="server"
                     ToolTip="<% $NopResources:Admin.ProductPictures.FileUpload %>" />
             </td>
         </tr>

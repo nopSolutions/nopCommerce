@@ -79,7 +79,7 @@
                             ToolTipImage="~/Administration/Common/ico-help.gif" />
                     </td>
                     <td class="adminData">
-                        <asp:DropDownList class="text" ID="ddlNewProductSpecificationAttribute" AutoPostBack="true"
+                        <asp:DropDownList ID="ddlNewProductSpecificationAttribute" AutoPostBack="true"
                             CssClass="adminInput" runat="server" OnSelectedIndexChanged="OnSpecificationAttributeIndexChanged">
                         </asp:DropDownList>
                     </td>

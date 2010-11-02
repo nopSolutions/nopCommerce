@@ -1238,7 +1238,7 @@
                                                 runat="server" Text="<% $NopResources:Admin.OrderDetails.Products.License.Remove %>"
                                                 CommandName="RemoveLicenseDownload" />
                                             <br />
-                                            <asp:FileUpload class="text" ID="fuLicenseDownload" CssClass="adminInput" runat="server" />
+                                            <asp:FileUpload ID="fuLicenseDownload" CssClass="adminInput" runat="server" />
                                             <asp:Button ID="btnUploadLicenseDownload" CssClass="adminButton" CausesValidation="false"
                                                 runat="server" Text="<% $NopResources:Admin.OrderDetails.Products.License.UploadButton %>"
                                                 CommandName="UploadLicenseDownload" />
