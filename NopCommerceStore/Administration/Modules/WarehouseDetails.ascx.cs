@@ -31,13 +31,35 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
     public partial class WarehouseDetailsControl : BaseNopAdministrationUserControl
     {
+        protected Warehouse Save()
+        {
+            Warehouse warehouse = ctrlWarehouseInfo.SaveInfo();
+            return warehouse;
+        }
+
         protected void SaveButton_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
                 try
                 {
-                    Warehouse warehouse = ctrlWarehouseInfo.SaveInfo();
+                    Warehouse warehouse = Save();
+                    Response.Redirect("Warehouses.aspx");
+                }
+                catch (Exception exc)
+                {
+                    ProcessException(exc);
+                }
+            }
+        }
+
+        protected void SaveAndStayButton_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+            {
+                try
+                {
+                    Warehouse warehouse = Save();
                     Response.Redirect("WarehouseDetails.aspx?WarehouseID=" + warehouse.WarehouseId.ToString());
                 }
                 catch (Exception exc)

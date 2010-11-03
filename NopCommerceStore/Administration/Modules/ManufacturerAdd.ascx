@@ -12,6 +12,9 @@
     <div class="options">
         <asp:Button ID="SaveButton" runat="server" Text="<% $NopResources:Admin.ManufacturerAdd.SaveButton.Text %>"
             CssClass="adminButtonBlue" OnClick="SaveButton_Click" ToolTip="<% $NopResources:Admin.ManufacturerAdd.SaveButton.Tooltip %>" />
+
+        <asp:Button ID="SaveAndStayButton" runat="server" CssClass="adminButtonBlue" Text="<% $NopResources:Admin.ManufacturerAdd.SaveAndStayButton.Text %>"
+            OnClick="SaveAndStayButton_Click" />
     </div>
 </div>
 <ajaxToolkit:TabContainer runat="server" ID="ManufacturerTabs" ActiveTabIndex="0">

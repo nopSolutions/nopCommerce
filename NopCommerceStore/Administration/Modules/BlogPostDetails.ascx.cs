@@ -32,14 +32,35 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
     public partial class BlogPostDetailsControl : BaseNopAdministrationUserControl
     {
+        protected BlogPost Save()
+        {
+            BlogPost blogPost = ctrlBlogPostInfo.SaveInfo();
+            return blogPost;
+        }
+
         protected void SaveButton_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
                 try
                 {
-                    BlogPost blogPost = ctrlBlogPostInfo.SaveInfo();
+                    BlogPost blogPost = Save();
+                    Response.Redirect("Blog.aspx");
+                }
+                catch (Exception exc)
+                {
+                    ProcessException(exc);
+                }
+            }
+        }
 
+        protected void SaveAndStayButton_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+            {
+                try
+                {
+                    BlogPost blogPost = Save();
                     Response.Redirect("BlogPostDetails.aspx?BlogPostID=" + blogPost.BlogPostId.ToString());
                 }
                 catch (Exception exc)

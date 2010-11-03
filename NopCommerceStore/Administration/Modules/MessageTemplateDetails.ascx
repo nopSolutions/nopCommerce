@@ -15,6 +15,8 @@
     <div class="options">
         <asp:Button ID="SaveButton" runat="server" CssClass="adminButtonBlue" Text="<% $NopResources:Admin.MessageTemplateDetails.SaveButton.Text %>"
             OnClick="SaveButton_Click" ToolTip="<% $NopResources:Admin.MessageTemplateDetails.SaveButton.Tooltip %>" />
+        <asp:Button ID="SaveAndStayButton" runat="server" CssClass="adminButtonBlue" Text="<% $NopResources:Admin.MessageTemplateDetails.SaveAndStayButton.Text %>"
+            OnClick="SaveAndStayButton_Click" />
     </div>
 </div>
 <table class="adminContent">

@@ -31,19 +31,43 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
     public partial class ProductAttributeAddControl : BaseNopAdministrationUserControl
     {
-        protected void AddButton_Click(object sender, EventArgs e)
+        protected ProductAttribute Save()
+        {
+            ProductAttribute productAttribute = ctrlProductAttributeInfo.SaveInfo();
+
+            IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
+                "AddNewProductAttribute",
+                GetLocaleResourceString("ActivityLog.AddNewProductAttribute"),
+                productAttribute.Name);
+
+            return productAttribute;
+        }
+
+        protected void SaveButton_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
                 try
                 {
-                    ProductAttribute productAttribute = ctrlProductAttributeInfo.SaveInfo();
 
-                    IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
-                        "AddNewProductAttribute",
-                        GetLocaleResourceString("ActivityLog.AddNewProductAttribute"),
-                        productAttribute.Name);
+                    ProductAttribute productAttribute = Save();
+                    Response.Redirect("ProductAttributes.aspx");
+                }
+                catch (Exception exc)
+                {
+                    ProcessException(exc);
+                }
+            }
+        }
 
+        protected void SaveAndStayButton_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+            {
+                try
+                {
+
+                    ProductAttribute productAttribute = Save(); 
                     Response.Redirect("ProductAttributeDetails.aspx?ProductAttributeID=" + productAttribute.ProductAttributeId.ToString());
                 }
                 catch (Exception exc)

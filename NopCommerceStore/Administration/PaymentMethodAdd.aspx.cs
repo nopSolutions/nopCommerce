@@ -35,26 +35,49 @@ namespace NopSolutions.NopCommerce.Web.Administration
         {
             return IoCFactory.Resolve<IACLManager>().IsActionAllowed("ManagePaymentSettings");
         }
+        
+        protected PaymentMethod Save()
+        {
+            var paymentMethod = new PaymentMethod()
+            {
+                Name = txtName.Text,
+                VisibleName = txtVisibleName.Text,
+                Description = txtDescription.Text,
+                ConfigureTemplatePath = txtConfigureTemplatePath.Text,
+                UserTemplatePath = txtUserTemplatePath.Text,
+                ClassName = txtClassName.Text,
+                SystemKeyword = txtSystemKeyword.Text,
+                IsActive = cbActive.Checked,
+                DisplayOrder = txtDisplayOrder.Value
+            };
+            IoCFactory.Resolve<IPaymentManager>().InsertPaymentMethod(paymentMethod);
 
-        protected void AddButton_Click(object sender, EventArgs e)
+            return paymentMethod;
+        }
+
+        protected void SaveButton_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
                 try
                 {
-                    var paymentMethod = new PaymentMethod()
-                    {
-                        Name = txtName.Text,
-                        VisibleName = txtVisibleName.Text,
-                        Description = txtDescription.Text,
-                        ConfigureTemplatePath = txtConfigureTemplatePath.Text,
-                        UserTemplatePath = txtUserTemplatePath.Text,
-                        ClassName = txtClassName.Text,
-                        SystemKeyword = txtSystemKeyword.Text,
-                        IsActive = cbActive.Checked,
-                        DisplayOrder = txtDisplayOrder.Value
-                    };
-                    IoCFactory.Resolve<IPaymentManager>().InsertPaymentMethod(paymentMethod);
+                    PaymentMethod paymentMethod = Save();
+                    Response.Redirect("PaymentMethods.aspx");
+                }
+                catch (Exception exc)
+                {
+                    ProcessException(exc);
+                }
+            }
+        }
+
+        protected void SaveAndStayButton_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+            {
+                try
+                {
+                    PaymentMethod paymentMethod = Save();
                     Response.Redirect("PaymentMethodDetails.aspx?PaymentMethodID=" + paymentMethod.PaymentMethodId.ToString());
                 }
                 catch (Exception exc)

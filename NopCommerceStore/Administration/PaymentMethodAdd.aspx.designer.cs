@@ -13,13 +13,22 @@ namespace NopSolutions.NopCommerce.Web.Administration {
     public partial class Administration_PaymentMethodAdd {
         
         /// <summary>
-        /// AddButton control.
+        /// SaveButton control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button AddButton;
+        protected global::System.Web.UI.WebControls.Button SaveButton;
+        
+        /// <summary>
+        /// SaveAndStayButton control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button SaveAndStayButton;
         
         /// <summary>
         /// lblName control.

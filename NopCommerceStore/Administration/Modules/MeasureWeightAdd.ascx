@@ -9,8 +9,10 @@
             (<%=GetLocaleResourceString("Admin.Measures.MeasureWeightAdd.BackToMeasures")%>)</a>
     </div>
     <div class="options">
-        <asp:Button ID="AddButton" runat="server" Text="<% $NopResources:Admin.Measures.MeasureWeightAdd.SaveButton.Text %>"
-            CssClass="adminButtonBlue" OnClick="AddButton_Click" ToolTip="<% $NopResources:Admin.Measures.MeasureWeightAdd.SaveButton.Tooltip %>" />
+        <asp:Button ID="SaveButton" runat="server" Text="<% $NopResources:Admin.Measures.MeasureWeightAdd.SaveButton.Text %>"
+            CssClass="adminButtonBlue" OnClick="SaveButton_Click" ToolTip="<% $NopResources:Admin.Measures.MeasureWeightAdd.SaveButton.Tooltip %>" />
+        <asp:Button ID="SaveAndStayButton" runat="server" CssClass="adminButtonBlue" Text="<% $NopResources:Admin.MeasureWeightAdd.SaveAndStayButton.Text %>"
+            OnClick="SaveAndStayButton_Click" />
     </div>
 </div>
 <nopCommerce:MeasureWeightInfo ID="ctrlMeasureWeightInfo" runat="server" />

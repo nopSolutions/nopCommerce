@@ -114,66 +114,82 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             }
         }
 
+        protected MessageTemplate Save()
+        {
+            MessageTemplate messageTemplate = IoCFactory.Resolve<IMessageManager>().GetMessageTemplateById(this.MessageTemplateId);
+
+            foreach (RepeaterItem item in rptrLanguageDivs.Items)
+            {
+                if (item.ItemType == ListItemType.Item || item.ItemType == ListItemType.AlternatingItem)
+                {
+                    var ddlEmailAccount = (DropDownList)item.FindControl("ddlEmailAccount");
+                    var txtBCCEmailAddresses = (TextBox)item.FindControl("txtBCCEmailAddresses");
+                    var txtSubject = (TextBox)item.FindControl("txtSubject");
+                    var txtBody = (FCKeditor)item.FindControl("txtBody");
+                    var cbActive = (CheckBox)item.FindControl("cbActive");
+                    var lblLanguageId = (Label)item.FindControl("lblLanguageId");
+
+                    int emailAccountId = int.Parse(ddlEmailAccount.SelectedValue);
+                    int languageId = int.Parse(lblLanguageId.Text);
+                    string BCCEmailAddresses = txtBCCEmailAddresses.Text;
+                    string subject = txtSubject.Text;
+                    string body = txtBody.Value;
+                    bool active = cbActive.Checked;
+
+                    var content = IoCFactory.Resolve<IMessageManager>().GetLocalizedMessageTemplate(this.MessageTemplate.Name, languageId);
+                    if (content == null)
+                    {
+                        content = new LocalizedMessageTemplate()
+                        {
+                            MessageTemplateId = this.MessageTemplateId,
+                            LanguageId = languageId,
+                            EmailAccountId = emailAccountId,
+                            BccEmailAddresses = BCCEmailAddresses,
+                            Subject = subject,
+                            Body = body,
+                            IsActive = active
+                        };
+                        IoCFactory.Resolve<IMessageManager>().InsertLocalizedMessageTemplate(content);
+                    }
+                    else
+                    {
+                        content.EmailAccountId = emailAccountId;
+                        content.BccEmailAddresses = BCCEmailAddresses;
+                        content.Subject = subject;
+                        content.Body = body;
+                        content.IsActive = active;
+                        IoCFactory.Resolve<IMessageManager>().UpdateLocalizedMessageTemplate(content);
+                    }
+                }
+            }
+
+            return messageTemplate;
+        }
+
         protected void SaveButton_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
                 try
                 {
-                    MessageTemplate messageTemplate = IoCFactory.Resolve<IMessageManager>().GetMessageTemplateById(this.MessageTemplateId);
-                    if (messageTemplate != null)
-                    {
-                        foreach (RepeaterItem item in rptrLanguageDivs.Items)
-                        {
-                            if (item.ItemType == ListItemType.Item || item.ItemType == ListItemType.AlternatingItem)
-                            {
-                                var ddlEmailAccount = (DropDownList)item.FindControl("ddlEmailAccount");
-                                var txtBCCEmailAddresses = (TextBox)item.FindControl("txtBCCEmailAddresses");
-                                var txtSubject = (TextBox)item.FindControl("txtSubject");
-                                var txtBody = (FCKeditor)item.FindControl("txtBody");
-                                var cbActive = (CheckBox)item.FindControl("cbActive");
-                                var lblLanguageId = (Label)item.FindControl("lblLanguageId");
+                    MessageTemplate messageTemplate = Save();
+                    Response.Redirect("MessageTemplates.aspx");
+                }
+                catch (Exception exc)
+                {
+                    ProcessException(exc);
+                }
+            }
+        }
 
-                                int emailAccountId = int.Parse(ddlEmailAccount.SelectedValue);
-                                int languageId = int.Parse(lblLanguageId.Text);
-                                string BCCEmailAddresses = txtBCCEmailAddresses.Text;
-                                string subject = txtSubject.Text;
-                                string body = txtBody.Value;
-                                bool active = cbActive.Checked;
-
-                                var content = IoCFactory.Resolve<IMessageManager>().GetLocalizedMessageTemplate(this.MessageTemplate.Name, languageId);
-                                if (content == null)
-                                {
-                                    content = new LocalizedMessageTemplate()
-                                    {
-                                        MessageTemplateId = this.MessageTemplateId,
-                                        LanguageId = languageId,
-                                        EmailAccountId = emailAccountId,
-                                        BccEmailAddresses = BCCEmailAddresses,
-                                        Subject = subject,
-                                        Body = body,
-                                        IsActive = active
-                                    };
-                                    IoCFactory.Resolve<IMessageManager>().InsertLocalizedMessageTemplate(content);
-                                }
-                                else
-                                {
-                                    content.EmailAccountId = emailAccountId;
-                                    content.BccEmailAddresses = BCCEmailAddresses;
-                                    content.Subject = subject;
-                                    content.Body = body;
-                                    content.IsActive = active;
-                                    IoCFactory.Resolve<IMessageManager>().UpdateLocalizedMessageTemplate(content);
-                                }
-                            }
-                        }
-
-                        Response.Redirect(string.Format("MessageTemplateDetails.aspx?MessageTemplateID={0}", this.MessageTemplateId));
-                    }
-                    else
-                    {
-                        Response.Redirect("MessageTemplates.aspx");
-                    }
+        protected void SaveAndStayButton_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+            {
+                try
+                {
+                    MessageTemplate messageTemplate = Save();
+                    Response.Redirect(string.Format("MessageTemplateDetails.aspx?MessageTemplateID={0}", messageTemplate.MessageTemplateId));
                 }
                 catch (Exception exc)
                 {

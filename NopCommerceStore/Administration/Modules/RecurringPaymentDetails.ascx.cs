@@ -32,13 +32,35 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
     public partial class RecurringPaymentDetailsControl : BaseNopAdministrationUserControl
     {
+        protected RecurringPayment Save()
+        {
+            RecurringPayment recurringPayment = ctrlRecurringPaymentInfo.SaveInfo();
+            return recurringPayment;
+        }
+
         protected void SaveButton_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
                 try
                 {
-                    RecurringPayment recurringPayment = ctrlRecurringPaymentInfo.SaveInfo();
+                    RecurringPayment recurringPayment = Save();
+                    Response.Redirect("RecurringPayments.aspx");
+                }
+                catch (Exception exc)
+                {
+                    ProcessException(exc);
+                }
+            }
+        }
+
+        protected void SaveAndStayButton_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+            {
+                try
+                {
+                    RecurringPayment recurringPayment = Save();
                     Response.Redirect("RecurringPaymentDetails.aspx?RecurringPaymentID=" + recurringPayment.RecurringPaymentId.ToString());
                 }
                 catch (Exception exc)

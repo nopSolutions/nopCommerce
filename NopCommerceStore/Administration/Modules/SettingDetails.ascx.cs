@@ -31,19 +31,41 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
     public partial class SettingDetailsControl : BaseNopAdministrationUserControl
     {
+        protected Setting Save()
+        {
+            Setting setting = ctrlSettingInfo.SaveInfo();
+
+            IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
+                "EditSetting",
+                GetLocaleResourceString("ActivityLog.EditSetting"),
+                setting.Name);
+
+            return setting;
+        }
+
         protected void SaveButton_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
                 try
                 {
-                    Setting setting = ctrlSettingInfo.SaveInfo();
+                    Setting setting = Save();
+                    Response.Redirect("Settings.aspx");
+                }
+                catch (Exception exc)
+                {
+                    ProcessException(exc);
+                }
+            }
+        }
 
-                    IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
-                        "EditSetting",
-                        GetLocaleResourceString("ActivityLog.EditSetting"),
-                        setting.Name);
-
+        protected void SaveAndStayButton_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+            {
+                try
+                {
+                    Setting setting = Save();
                     Response.Redirect("SettingDetails.aspx?SettingID=" + setting.SettingId.ToString());
                 }
                 catch (Exception exc)

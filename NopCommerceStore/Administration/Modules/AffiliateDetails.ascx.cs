@@ -42,16 +42,38 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             }
         }
 
+        protected Affiliate Save()
+        {
+            Affiliate affiliate = ctrlAffiliateInfo.SaveInfo();
+            ctrlAffiliateCustomers.SaveInfo();
+            ctrlAffiliateOrders.SaveInfo();
+
+            return affiliate;
+        }
+
         protected void SaveButton_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
                 try
                 {
-                    Affiliate affiliate = ctrlAffiliateInfo.SaveInfo();
-                    ctrlAffiliateCustomers.SaveInfo();
-                    ctrlAffiliateOrders.SaveInfo();
+                    Affiliate affiliate = Save();
+                    Response.Redirect("Affiliates.aspx");
+                }
+                catch (Exception exc)
+                {
+                    ProcessException(exc);
+                }
+            }
+        }
 
+        protected void SaveAndStayButton_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+            {
+                try
+                {
+                    Affiliate affiliate = Save();
                     Response.Redirect(string.Format("AffiliateDetails.aspx?AffiliateID={0}&TabID={1}", affiliate.AffiliateId, this.GetActiveTabId(this.AffiliateTabs)));
                 }
                 catch (Exception exc)

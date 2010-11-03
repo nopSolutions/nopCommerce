@@ -54,33 +54,36 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             }
         }
 
+        protected Customer Save()
+        {
+            Customer customer = IoCFactory.Resolve<ICustomerManager>().GetCustomerById(this.CustomerId);
+
+            customer = ctrlCustomerInfo.SaveInfo();
+            ctrlCustomerBillingAddresses.SaveInfo();
+            ctrlCustomerShippingAddresses.SaveInfo();
+            ctrlCustomerOrders.SaveInfo();
+            ctrlCustomerRoleMappings.SaveInfo();
+            ctrlCurrentShoppingCart.SaveInfo();
+            ctrlCurrentWishlist.SaveInfo();
+            ctrlCustomerRewardPoints.SaveInfo();
+            ctrlCustomerForumSubscriptions.SaveInfo();
+
+            IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
+                "EditCustomer",
+                GetLocaleResourceString("ActivityLog.EditCustomer"),
+                customer.CustomerId);
+
+            return customer;
+        }
+
         protected void SaveButton_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
                 try
                 {
-                    Customer customer = IoCFactory.Resolve<ICustomerManager>().GetCustomerById(this.CustomerId);
-
-                    if (customer != null)
-                    {
-                        customer = ctrlCustomerInfo.SaveInfo();
-                        ctrlCustomerBillingAddresses.SaveInfo();
-                        ctrlCustomerShippingAddresses.SaveInfo();
-                        ctrlCustomerOrders.SaveInfo();
-                        ctrlCustomerRoleMappings.SaveInfo();
-                        ctrlCurrentShoppingCart.SaveInfo();
-                        ctrlCurrentWishlist.SaveInfo();
-                        ctrlCustomerRewardPoints.SaveInfo();
-                        ctrlCustomerForumSubscriptions.SaveInfo();
-
-                        IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
-                            "EditCustomer",
-                            GetLocaleResourceString("ActivityLog.EditCustomer"),
-                            customer.CustomerId);
-                    }
-
-                    Response.Redirect(string.Format("CustomerDetails.aspx?CustomerID={0}&TabID={1}", customer.CustomerId, this.GetActiveTabId(this.CustomerTabs)));
+                    Customer customer = Save();
+                    Response.Redirect("Customers.aspx");
                 }
                 catch (Exception exc)
                 {
@@ -89,6 +92,22 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             }
         }
 
+        protected void SaveAndStayButton_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+            {
+                try
+                {
+                    Customer customer = Save();
+                    Response.Redirect(string.Format("CustomerDetails.aspx?CustomerID={0}&TabID={1}", customer.CustomerId, this.GetActiveTabId(this.CustomerTabs)));
+                }
+                catch (Exception exc)
+                {
+                    ProcessException(exc);
+                }
+            }
+        }
+        
         protected void DeleteButton_Click(object sender, EventArgs e)
         {
             try

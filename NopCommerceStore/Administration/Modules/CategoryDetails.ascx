@@ -19,6 +19,8 @@
             ToolTip="<% $NopResources:Admin.CategoryDetails.PreviewButton.ToolTip %>" />
         <asp:Button ID="SaveButton" runat="server" CssClass="adminButtonBlue" Text="<% $NopResources:Admin.CategoryDetails.SaveButton.Text %>"
             OnClick="SaveButton_Click" ToolTip="<% $NopResources:Admin.CategoryDetails.SaveButton.ToolTip %>" />
+        <asp:Button ID="SaveAndStayButton" runat="server" CssClass="adminButtonBlue" Text="<% $NopResources:Admin.CategoryDetails.SaveAndStayButton.Text %>"
+            OnClick="SaveAndStayButton_Click" />
         <asp:Button ID="DeleteButton" runat="server" CssClass="adminButtonBlue" Text="<% $NopResources:Admin.CategoryDetails.DeleteButton.Text %>"
             OnClick="DeleteButton_Click" CausesValidation="false" ToolTip="<% $NopResources:Admin.CategoryDetails.DeleteButton.ToolTip %>" />
     </div>

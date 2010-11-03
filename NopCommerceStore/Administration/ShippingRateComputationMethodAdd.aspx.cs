@@ -36,23 +36,45 @@ namespace NopSolutions.NopCommerce.Web.Administration
             return IoCFactory.Resolve<IACLManager>().IsActionAllowed("ManageShippingSettings");
         }
 
-        protected void AddButton_Click(object sender, EventArgs e)
+        protected ShippingRateComputationMethod Save()
+        {
+            var shippingRateComputationMethod = new ShippingRateComputationMethod()
+            {
+                Name = txtName.Text,
+                Description = txtDescription.Text,
+                ConfigureTemplatePath = txtConfigureTemplatePath.Text,
+                ClassName = txtClassName.Text,
+                IsActive = cbActive.Checked,
+                DisplayOrder = txtDisplayOrder.Value
+            };
+            IoCFactory.Resolve<IShippingManager>().InsertShippingRateComputationMethod(shippingRateComputationMethod);
+
+            return shippingRateComputationMethod;
+        }
+
+        protected void SaveButton_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
                 try
                 {
-                    var shippingRateComputationMethod = new ShippingRateComputationMethod()
-                    {
-                        Name = txtName.Text,
-                        Description = txtDescription.Text,
-                        ConfigureTemplatePath = txtConfigureTemplatePath.Text,
-                        ClassName = txtClassName.Text,
-                        IsActive = cbActive.Checked,
-                        DisplayOrder = txtDisplayOrder.Value
-                    };
-                    IoCFactory.Resolve<IShippingManager>().InsertShippingRateComputationMethod(shippingRateComputationMethod);
+                    ShippingRateComputationMethod shippingRateComputationMethod = Save();
+                    Response.Redirect("ShippingRateComputationMethods.aspx");
+                }
+                catch (Exception exc)
+                {
+                    ProcessException(exc);
+                }
+            }
+        }
 
+        protected void SaveAndStayButton_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+            {
+                try
+                {
+                    ShippingRateComputationMethod shippingRateComputationMethod = Save();
                     Response.Redirect("ShippingRateComputationMethodDetails.aspx?ShippingRateComputationMethodID=" + shippingRateComputationMethod.ShippingRateComputationMethodId.ToString());
                 }
                 catch (Exception exc)

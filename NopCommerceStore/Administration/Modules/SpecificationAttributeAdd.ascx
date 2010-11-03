@@ -10,8 +10,10 @@
             (<%=GetLocaleResourceString("Admin.SpecificationAttributeAdd.BackToAttributeList")%>)</a>
     </div>
     <div class="options">
-        <asp:Button ID="AddButton" runat="server" Text="<% $NopResources:Admin.SpecificationAttributeAdd.SaveButton.Text %>"
-            CssClass="adminButtonBlue" OnClick="AddButton_Click" ToolTip="<% $NopResources:Admin.SpecificationAttributeAdd.SaveButton.Tooltip %>" />
+        <asp:Button ID="SaveButton" runat="server" Text="<% $NopResources:Admin.SpecificationAttributeAdd.SaveButton.Text %>"
+            CssClass="adminButtonBlue" OnClick="SaveButton_Click" ToolTip="<% $NopResources:Admin.SpecificationAttributeAdd.SaveButton.Tooltip %>" />
+        <asp:Button ID="SaveAndStayButton" runat="server" CssClass="adminButtonBlue" Text="<% $NopResources:Admin.SpecificationAttributeAdd.SaveAndStayButton.Text %>"
+            OnClick="SaveAndStayButton_Click" />
     </div>
 </div>
 <ajaxToolkit:TabContainer runat="server" ID="AttributeTabs" ActiveTabIndex="0">

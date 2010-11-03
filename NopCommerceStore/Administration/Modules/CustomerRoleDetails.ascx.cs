@@ -41,20 +41,43 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             }
         }
 
+        protected CustomerRole Save()
+        {
+            CustomerRole customerRole = ctrlCustomerRoleInfo.SaveInfo();
+            ctrlCustomerRoleCustomers.SaveInfo();
+
+            IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
+                "EditCustomerRole",
+                GetLocaleResourceString("ActivityLog.EditCustomerRole"),
+                customerRole.Name);
+
+            return customerRole;
+        }
+
+
         protected void SaveButton_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
                 try
                 {
-                    CustomerRole customerRole = ctrlCustomerRoleInfo.SaveInfo();
-                    ctrlCustomerRoleCustomers.SaveInfo();
+                    CustomerRole customerRole = Save();
+                    Response.Redirect("CustomerRoles.aspx");
+                }
+                catch (Exception exc)
+                {
+                    ProcessException(exc);
+                }
+            }
+        }
 
-                    IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
-                        "EditCustomerRole",
-                        GetLocaleResourceString("ActivityLog.EditCustomerRole"),
-                        customerRole.Name);
-
+        protected void SaveAndStayButton_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+            {
+                try
+                {
+                    CustomerRole customerRole = Save();
                     Response.Redirect(string.Format("CustomerRoleDetails.aspx?CustomerRoleID={0}&TabID={1}", customerRole.CustomerRoleId, this.GetActiveTabId(this.CustomerRoleTabs)));
                 }
                 catch (Exception exc)

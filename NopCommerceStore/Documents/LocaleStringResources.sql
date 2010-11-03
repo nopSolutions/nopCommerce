@@ -515,6 +515,9 @@ set @resources='
   <LocaleResource Name="PdfPackagingSlip.Address">
     <Value>Address: {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="PdfPackagingSlip.Address2">
+    <Value>Address 2: {0}</Value>
+  </LocaleResource>
   <LocaleResource Name="PdfPackagingSlip.ShippingMethod">
     <Value>Shipping method: {0}</Value>
   </LocaleResource>
@@ -562,6 +565,306 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.Log.AllLogTypes">
     <Value>All</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CategoryAdd.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CategoryDetails.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductAdd.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductDetails.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductVariantAdd.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductVariantDetails.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductAttributeAdd.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductAttributeDetails.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SpecificationAttributeAdd.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SpecificationAttributeDetails.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CheckoutAttributeAdd.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CheckoutAttributeDetails.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ManufacturerAdd.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ManufacturerDetails.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.RecurringPaymentDetails.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GiftCardDetails.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequestDetails.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CustomerAdd.AddButton">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CustomerAdd.AddButton.Tooltip">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CustomerAdd.SaveButton">
+    <Value>Save</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CustomerAdd.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CustomerDetails.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.AddressAdd.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.AddressDetails.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CustomerRoleAdd.AddButton">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CustomerRoleAdd.AddButton.Tooltip">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CustomerRoleAdd.SaveButton.Text">
+    <Value>Save</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CustomerRoleAdd.SaveButton.Tooltip">
+    <Value>Save customer role</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CustomerRoleAdd.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CustomerRoleDetails.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.AffiliateAdd.AddButton">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.AffiliateAdd.AddButton.Tooltip">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.AffiliateAdd.SaveButton.Text">
+    <Value>Save</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.AffiliateAdd.SaveButton.Tooltip">
+    <Value>Save affiliate</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.AffiliateAdd.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.AffiliateDetails.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CampaignAdd.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CampaignDetails.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.DiscountAdd.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.DiscountDetails.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.PricelistAdd.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.PricelistDetails.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.PollAdd.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.PollDetails.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.NewsAdd.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.NewsDetails.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.BlogPostAdd.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.BlogPostDetails.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.TopicAdd.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.TopicDetails.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ForumGroupAdd.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ForumGroupDetails.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ForumAdd.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ForumDetails.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductTemplateAdd.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ProductTemplateDetails.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CategoryTemplateAdd.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CategoryTemplateDetails.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ManufacturerTemplateAdd.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ManufacturerTemplateDetails.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.MessageTemplateDetails.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.LocaleStringResourceAdd.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.LocaleStringResourceDetails.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.EmailAccountAdd.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.EmailAccountDetails.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.BlacklistIPAdd.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.BlacklistIPDetails.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.BlacklistNetworkAdd.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.BlacklistNetworkDetails.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.LocaleStringResourceAdd.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.LocaleStringResourceDetails.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CreditCardTypeAdd.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CreditCardTypeDetails.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.PaymentMethodAdd.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.PaymentMethodDetails.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.TaxProviderAdd.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.TaxProviderDetails.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.TaxCategoryAdd.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.TaxCategoryDetails.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ShippingMethodAdd.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ShippingMethodDetails.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ShippingRateComputationMethodAdd.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ShippingRateComputationMethodDetails.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CountryAdd.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CountryDetails.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.StateProvinceAdd.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.StateProvinceDetails.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.LanguageAdd.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.LanguageDetails.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CurrencyAdd.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.CurrencyDetails.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.WarehouseAdd.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.WarehouseDetails.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.MeasureDimensionAdd.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.MeasureDimensionDetails.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.MeasureWeightAdd.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.MeasureWeightDetails.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SettingAdd.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SettingDetails.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.MessageQueueDetails.SaveAndStayButton.Text">
+    <Value>Save and Continue Edit</Value>
   </LocaleResource>
 </Language>
 '

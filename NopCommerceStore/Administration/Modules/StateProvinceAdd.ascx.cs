@@ -29,13 +29,35 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
     public partial class StateProvinceAddControl : BaseNopAdministrationUserControl
     {
-        protected void AddButton_Click(object sender, EventArgs e)
+        protected StateProvince Save()
+        {
+            StateProvince stateProvince = ctrlStateProvinceInfo.SaveInfo();
+            return stateProvince;
+        }
+
+        protected void SaveButton_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
                 try
                 {
-                    StateProvince stateProvince = ctrlStateProvinceInfo.SaveInfo();
+                    StateProvince stateProvince = Save();
+                    Response.Redirect("StateProvinces.aspx");
+                }
+                catch (Exception exc)
+                {
+                    ProcessException(exc);
+                }
+            }
+        }
+
+        protected void SaveAndStayButton_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+            {
+                try
+                {
+                    StateProvince stateProvince = Save();
                     Response.Redirect("StateProvinceDetails.aspx?StateProvinceID=" + stateProvince.StateProvinceId.ToString());
                 }
                 catch (Exception exc)

@@ -54,20 +54,44 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             }
         }
 
+        protected ProductVariant Save()
+        {
+            ProductVariant productVariant = ctrlProductVariantInfo.SaveInfo();
+            ctrlProductVariantDiscounts.SaveInfo(productVariant.ProductVariantId);
+
+            IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
+                "AddNewProductVariant",
+                GetLocaleResourceString("ActivityLog.AddNewProductVariant"),
+                productVariant.FullProductName);
+
+            return productVariant;
+        }
+        
         protected void SaveButton_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
                 try
                 {
-                    ProductVariant productVariant = ctrlProductVariantInfo.SaveInfo();
-                    ctrlProductVariantDiscounts.SaveInfo(productVariant.ProductVariantId);
+                    ProductVariant productVariant = Save();
+                    Response.Redirect(string.Format("ProductDetails.aspx?ProductID={0}", productVariant.ProductId));
+                    //Response.Redirect("Products.aspx");
+                }
+                catch (Exception exc)
+                {
+                    ProcessException(exc);
+                }
+            }
+        }
 
-                    IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
-                        "AddNewProductVariant",
-                        GetLocaleResourceString("ActivityLog.AddNewProductVariant"),
-                        productVariant.FullProductName);
+        protected void SaveAndStayButton_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+            {
+                try
+                {
 
+                    ProductVariant productVariant = Save(); 
                     Response.Redirect("ProductVariantDetails.aspx?ProductVariantID=" + productVariant.ProductVariantId);
                 }
                 catch (Exception exc)

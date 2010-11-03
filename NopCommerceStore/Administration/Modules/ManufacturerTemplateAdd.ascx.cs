@@ -29,13 +29,35 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
     public partial class ManufacturerTemplateAddControl : BaseNopAdministrationUserControl
     {
-        protected void AddButton_Click(object sender, EventArgs e)
+        protected ManufacturerTemplate Save()
+        {
+            ManufacturerTemplate manufacturerTemplate = ctrlManufacturerTemplateInfo.SaveInfo();
+            return manufacturerTemplate;
+        }
+
+        protected void SaveButton_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
                 try
                 {
-                    ManufacturerTemplate manufacturerTemplate = ctrlManufacturerTemplateInfo.SaveInfo();
+                    ManufacturerTemplate manufacturerTemplate = Save();
+                    Response.Redirect("ManufacturerTemplates.aspx");
+                }
+                catch (Exception exc)
+                {
+                    ProcessException(exc);
+                }
+            }
+        }
+
+        protected void SaveAndStayButton_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+            {
+                try
+                {
+                    ManufacturerTemplate manufacturerTemplate = Save();
                     Response.Redirect("ManufacturerTemplateDetails.aspx?ManufacturerTemplateID=" + manufacturerTemplate.ManufacturerTemplateId.ToString());
                 }
                 catch (Exception exc)

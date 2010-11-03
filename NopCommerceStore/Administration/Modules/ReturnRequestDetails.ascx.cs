@@ -37,19 +37,41 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
     public partial class ReturnRequestDetailsControl : BaseNopAdministrationUserControl
     {
+        protected ReturnRequest Save()
+        {
+            ReturnRequest rr = ctrlReturnRequestInfo.SaveInfo();
+
+            IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
+                "EditReturnRequest",
+                GetLocaleResourceString("ActivityLog.EditReturnRequest"),
+                rr.ReturnRequestId);
+
+            return rr;
+        }
+
         protected void SaveButton_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
                 try
                 {
-                    ReturnRequest rr = ctrlReturnRequestInfo.SaveInfo();
+                    ReturnRequest rr = Save();
+                    Response.Redirect("ReturnRequests.aspx");
+                }
+                catch (Exception exc)
+                {
+                    ProcessException(exc);
+                }
+            }
+        }
 
-                    IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
-                        "EditReturnRequest",
-                        GetLocaleResourceString("ActivityLog.EditReturnRequest"),
-                        rr.ReturnRequestId);
-
+        protected void SaveAndStayButton_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+            {
+                try
+                {
+                    ReturnRequest rr = Save();
                     Response.Redirect("ReturnRequestDetails.aspx?ReturnRequestID=" + rr.ReturnRequestId.ToString());
                 }
                 catch (Exception exc)

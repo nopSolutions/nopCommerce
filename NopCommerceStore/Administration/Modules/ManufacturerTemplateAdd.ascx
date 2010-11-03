@@ -9,8 +9,10 @@
             (<%=GetLocaleResourceString("Admin.ManufacturerTemplateAdd.BackToTemplates")%>)</a>
     </div>
     <div class="options">
-        <asp:Button ID="AddButton" runat="server" Text="<% $NopResources:Admin.ManufacturerTemplateAdd.AddButton.Text %>"
-            CssClass="adminButtonBlue" OnClick="AddButton_Click" ToolTip="<% $NopResources:Admin.ManufacturerTemplateAdd.AddButton.Tooltip %>" />
+        <asp:Button ID="SaveButton" runat="server" Text="<% $NopResources:Admin.ManufacturerTemplateAdd.AddButton.Text %>"
+            CssClass="adminButtonBlue" OnClick="SaveButton_Click" ToolTip="<% $NopResources:Admin.ManufacturerTemplateAdd.AddButton.Tooltip %>" />
+        <asp:Button ID="SaveAndStayButton" runat="server" CssClass="adminButtonBlue" Text="<% $NopResources:Admin.ManufacturerTemplateAdd.SaveAndStayButton.Text %>"
+            OnClick="SaveAndStayButton_Click" />
     </div>
 </div>
 <nopCommerce:ManufacturerTemplateInfo ID="ctrlManufacturerTemplateInfo" runat="server" />

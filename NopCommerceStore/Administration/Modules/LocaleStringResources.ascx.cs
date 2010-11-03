@@ -17,6 +17,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.Linq;
 using System.Web;
 using System.Web.Security;
 using System.Web.UI;
@@ -99,7 +100,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 gvLocaleStringResources.DataBind();
             }
 
-            btnAddNew.Visible = this.ddlLanguage.SelectedIndex > 0;
+            //btnAddNew.Visible = this.ddlLanguage.SelectedIndex > 0;
         }
 
         protected void btnAddNew_Click(object sender, EventArgs e)
@@ -108,12 +109,16 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 try
                 {
+                    int languageId = 0;
                     if (this.ddlLanguage.SelectedItem != null)
                     {
-                        Language language = IoCFactory.Resolve<ILanguageManager>().GetLanguageById(int.Parse(this.ddlLanguage.SelectedItem.Value));
-                        if (language != null)
-                            Response.Redirect("LocaleStringResourceAdd.aspx?LanguageID=" + language.LanguageId);
+                        languageId = int.Parse(this.ddlLanguage.SelectedItem.Value);
                     }
+                    else
+                    {
+                        languageId = IoCFactory.Resolve<ILanguageManager>().GetAllLanguages().FirstOrDefault().LanguageId;
+                    }
+                    Response.Redirect("LocaleStringResourceAdd.aspx?LanguageID=" + languageId);
                 }
                 catch (Exception exc)
                 {

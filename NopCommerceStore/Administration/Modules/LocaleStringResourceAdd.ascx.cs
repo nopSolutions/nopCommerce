@@ -45,14 +45,36 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 hlBackToResources.NavigateUrl = CommonHelper.GetStoreAdminLocation() + "LocaleStringResources.aspx?LanguageID=" + language.LanguageId.ToString();
             }
         }
+        
+        protected LocaleStringResource Save()
+        {
+            LocaleStringResource localeStringResource = ctrlLocaleStringResourceInfo.SaveInfo();
+            return localeStringResource;
+        }
 
-        protected void AddButton_Click(object sender, EventArgs e)
+        protected void SaveButton_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
                 try
                 {
-                    LocaleStringResource localeStringResource = ctrlLocaleStringResourceInfo.SaveInfo();
+                    LocaleStringResource localeStringResource = Save(); 
+                    Response.Redirect("LocaleStringResources.aspx?LanguageID=" + localeStringResource.LanguageId.ToString());
+                }
+                catch (Exception exc)
+                {
+                    ProcessException(exc);
+                }
+            }
+        }
+
+        protected void SaveAndStayButton_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+            {
+                try
+                {
+                    LocaleStringResource localeStringResource = Save();
                     Response.Redirect("LocaleStringResourceDetails.aspx?LocaleStringResourceID=" + localeStringResource.LocaleStringResourceId.ToString());
                 }
                 catch (Exception exc)

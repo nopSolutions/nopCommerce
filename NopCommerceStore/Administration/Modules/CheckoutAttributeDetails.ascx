@@ -13,6 +13,8 @@
     <div class="options">
         <asp:Button ID="SaveButton" runat="server" CssClass="adminButtonBlue" Text="<% $NopResources:Admin.CheckoutAttributeDetails.SaveButton.Text %>"
             OnClick="SaveButton_Click" ToolTip="<% $NopResources:Admin.CheckoutAttributeDetails.SaveButton.Tooltip %>" />
+        <asp:Button ID="SaveAndStayButton" runat="server" CssClass="adminButtonBlue" Text="<% $NopResources:Admin.CheckoutAttributeDetails.SaveAndStayButton.Text %>"
+            OnClick="SaveAndStayButton_Click" />
         <asp:Button ID="DeleteButton" runat="server" CssClass="adminButtonBlue" Text="<% $NopResources:Admin.CheckoutAttributeDetails.DeleteButton.Text %>"
             OnClick="DeleteButton_Click" CausesValidation="false" ToolTip="<% $NopResources:Admin.CheckoutAttributeDetails.DeleteButton.Tooltip %>" />
     </div>

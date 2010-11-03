@@ -30,14 +30,20 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
     public partial class StateProvinceDetailsControl : BaseNopAdministrationUserControl
     {
+        protected StateProvince Save()
+        {
+            StateProvince stateProvince = ctrlStateProvinceInfo.SaveInfo();
+            return stateProvince;
+        }
+
         protected void SaveButton_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
                 try
                 {
-                    StateProvince stateProvince = ctrlStateProvinceInfo.SaveInfo();
-                    Response.Redirect("StateProvinceDetails.aspx?StateProvinceID=" + stateProvince.StateProvinceId.ToString());
+                    StateProvince stateProvince = Save();
+                    Response.Redirect("StateProvinces.aspx");
                 }
                 catch (Exception exc)
                 {
@@ -46,6 +52,22 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             }
         }
 
+        protected void SaveAndStayButton_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+            {
+                try
+                {
+                    StateProvince stateProvince = Save();
+                    Response.Redirect("StateProvinceDetails.aspx?StateProvinceID=" + stateProvince.StateProvinceId.ToString());
+                }
+                catch (Exception exc)
+                {
+                    ProcessException(exc);
+                }
+            }
+        }
+        
         protected void DeleteButton_Click(object sender, EventArgs e)
         {
             try

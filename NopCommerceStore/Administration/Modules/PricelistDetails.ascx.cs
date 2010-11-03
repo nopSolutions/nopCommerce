@@ -45,21 +45,37 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             }
         }
 
+        protected Pricelist Save()
+        {
+            Pricelist pricelist = ctrlPricelistInfo.SaveInfo();
+            return pricelist;
+        }
+
         protected void SaveButton_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
                 try
                 {
-                    Pricelist pricelist = ctrlPricelistInfo.SaveInfo();
-                    if (pricelist != null)
-                    {
-                        Response.Redirect("PricelistDetails.aspx?PricelistID=" + pricelist.PricelistId.ToString());
-                    }
-                    else
-                    {
-                        Response.Redirect("Pricelist.aspx");
-                    }
+                    Pricelist pricelist = Save();
+                    Response.Redirect("Pricelist.aspx");
+                }
+                catch (Exception exc)
+                {
+                    ProcessException(exc);
+                }
+            }
+        }
+
+        protected void SaveAndStayButton_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+            {
+                try
+                {
+
+                    Pricelist pricelist = Save();
+                    Response.Redirect("PricelistDetails.aspx?PricelistID=" + pricelist.PricelistId.ToString());
                 }
                 catch (Exception exc)
                 {

@@ -10,8 +10,10 @@
             (<%=GetLocaleResourceString("Admin.CustomerAdd.BackToCustomers")%>)</a>
     </div>
     <div class="options">
-        <asp:Button ID="AddButton" runat="server" Text="<% $NopResources:Admin.CustomerAdd.AddButton %>"
-            CssClass="adminButtonBlue" OnClick="AddButton_Click" ToolTip="<% $NopResources:Admin.CustomerAdd.AddButton.Tooltip %>" />
+        <asp:Button ID="SaveButton" runat="server" Text="<% $NopResources:Admin.CustomerAdd.SaveButton %>"
+            CssClass="adminButtonBlue" OnClick="SaveButton_Click" />
+        <asp:Button ID="SaveAndStayButton" runat="server" CssClass="adminButtonBlue" Text="<% $NopResources:Admin.ProductAdd.SaveAndStayButton.Text %>"
+            OnClick="SaveAndStayButton_Click" />
     </div>
 </div>
 <ajaxToolkit:TabContainer runat="server" ID="CustomerTabs" ActiveTabIndex="0">

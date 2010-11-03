@@ -29,17 +29,35 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
     public partial class CountryAddControl : BaseNopAdministrationUserControl
     {
-        protected void Page_Load(object sender, EventArgs e)
+        protected Country Save()
         {
+            Country country = ctrlCountryInfo.SaveInfo();
+            return country;
         }
 
-        protected void AddButton_Click(object sender, EventArgs e)
+        protected void SaveButton_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
                 try
                 {
-                    Country country = ctrlCountryInfo.SaveInfo();
+                    Country country = Save();
+                    Response.Redirect("Countries.aspx");
+                }
+                catch (Exception exc)
+                {
+                    ProcessException(exc);
+                }
+            }
+        }
+
+        protected void SaveAndStayButton_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+            {
+                try
+                {
+                    Country country = Save();
                     Response.Redirect("CountryDetails.aspx?CountryID=" + country.CountryId.ToString());
                 }
                 catch (Exception exc)

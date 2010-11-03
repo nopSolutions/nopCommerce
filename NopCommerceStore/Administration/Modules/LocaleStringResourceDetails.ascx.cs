@@ -54,15 +54,36 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             }
         }
 
+        protected LocaleStringResource Save()
+        {
+            LocaleStringResource localeStringResource = ctrlLocaleStringResourceInfo.SaveInfo();
+            return localeStringResource;
+        }
+
         protected void SaveButton_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
                 try
                 {
-                    LocaleStringResource localeStringResource = ctrlLocaleStringResourceInfo.SaveInfo();
+                    LocaleStringResource localeStringResource = Save();
                     Response.Redirect("LocaleStringResources.aspx?LanguageID=" + localeStringResource.LanguageId.ToString());
-                    
+                }
+                catch (Exception exc)
+                {
+                    ProcessException(exc);
+                }
+            }
+        }
+
+        protected void SaveAndStayButton_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+            {
+                try
+                {
+                    LocaleStringResource localeStringResource = Save();
+                    Response.Redirect("LocaleStringResourceDetails.aspx?LocaleStringResourceID=" + localeStringResource.LocaleStringResourceId.ToString());
                 }
                 catch (Exception exc)
                 {

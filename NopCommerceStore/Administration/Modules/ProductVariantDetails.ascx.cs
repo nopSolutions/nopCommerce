@@ -64,23 +64,47 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             }
         }
 
+        protected ProductVariant Save()
+        {
+            ProductVariant productVariant = ctrlProductVariantInfo.SaveInfo();
+            ctrlProductVariantTierPrices.SaveInfo();
+            ctrlProductPricesByCustomerRole.SaveInfo();
+            ctrlProductVariantAttributes.SaveInfo();
+            ctrlProductVariantDiscounts.SaveInfo();
+
+            IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
+                "EditProductVariant",
+                GetLocaleResourceString("ActivityLog.EditProductVariant"),
+                productVariant.FullProductName);
+
+            return productVariant;
+        }
+
         protected void SaveButton_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
                 try
                 {
-                    ProductVariant productVariant = ctrlProductVariantInfo.SaveInfo();
-                    ctrlProductVariantTierPrices.SaveInfo();
-                    ctrlProductPricesByCustomerRole.SaveInfo();
-                    ctrlProductVariantAttributes.SaveInfo();
-                    ctrlProductVariantDiscounts.SaveInfo();
+                    ProductVariant productVariant = Save();
+                    Response.Redirect(string.Format("ProductDetails.aspx?ProductID={0}", productVariant.ProductId));
+                    //Response.Redirect("Products.aspx");
+                }
+                catch (Exception exc)
+                {
+                    ProcessException(exc);
+                }
+            }
+        }
 
-                    IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
-                        "EditProductVariant",
-                        GetLocaleResourceString("ActivityLog.EditProductVariant"),
-                        productVariant.FullProductName);
+        protected void SaveAndStayButton_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+            {
+                try
+                {
 
+                    ProductVariant productVariant = Save();
                     Response.Redirect(string.Format("ProductVariantDetails.aspx?ProductVariantID={0}&TabID={1}", productVariant.ProductVariantId, this.GetActiveTabId(this.ProductVariantTabs)));
                 }
                 catch (Exception exc)

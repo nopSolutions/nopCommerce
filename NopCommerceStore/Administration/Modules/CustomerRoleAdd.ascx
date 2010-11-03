@@ -9,8 +9,10 @@
             (<%=GetLocaleResourceString("Admin.CustomerRoleAdd.BackToCustomerRoles")%>)</a>
     </div>
     <div class="options">
-        <asp:Button ID="AddButton" runat="server" Text="<% $NopResources:Admin.CustomerRoleAdd.AddButton.Text %>"
-            CssClass="adminButtonBlue" OnClick="AddButton_Click" ToolTip="<% $NopResources:Admin.CustomerRoleAdd.AddButton.Tooltip %>" />
+        <asp:Button ID="SaveButton" runat="server" Text="<% $NopResources:Admin.CustomerRoleAdd.SaveButton.Text %>"
+            CssClass="adminButtonBlue" OnClick="SaveButton_Click" ToolTip="<% $NopResources:Admin.CustomerRoleAdd.SaveButton.Tooltip %>" />
+        <asp:Button ID="SaveAndStayButton" runat="server" CssClass="adminButtonBlue" Text="<% $NopResources:Admin.CustomerRoleAdd.SaveAndStayButton.Text %>"
+            OnClick="SaveAndStayButton_Click" />
     </div>
 </div>
 <nopCommerce:CustomerRoleInfo ID="ctrlCustomerRoleInfo" runat="server" />

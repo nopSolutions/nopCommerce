@@ -9,8 +9,10 @@
             Text="<% $NopResources:Admin.LocaleStringResourceAdd.BackToResources %>" ToolTip="<% $NopResources:Admin.LocaleStringResourceAdd.BackToResources %>" />
     </div>
     <div class="options">
-        <asp:Button ID="AddButton" runat="server" Text="<% $NopResources:Admin.LocaleStringResourceAdd.SaveButton.Text %>"
-            CssClass="adminButtonBlue" OnClick="AddButton_Click" ToolTip="<% $NopResources:Admin.LocaleStringResourceAdd.SaveButton.Tooltip %>" />
+        <asp:Button ID="SaveButton" runat="server" Text="<% $NopResources:Admin.LocaleStringResourceAdd.SaveButton.Text %>"
+            CssClass="adminButtonBlue" OnClick="SaveButton_Click" ToolTip="<% $NopResources:Admin.LocaleStringResourceAdd.SaveButton.Tooltip %>" />
+        <asp:Button ID="SaveAndStayButton" runat="server" CssClass="adminButtonBlue" Text="<% $NopResources:Admin.LocaleStringResourceAdd.SaveAndStayButton.Text %>"
+            OnClick="SaveAndStayButton_Click" />
     </div>
 </div>
 <nopCommerce:LocaleStringResourceInfo ID="ctrlLocaleStringResourceInfo" runat="server" />

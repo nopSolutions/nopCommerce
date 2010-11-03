@@ -14,8 +14,10 @@
                 (<%=GetLocaleResourceString("Admin.ShippingRateComputationMethodAdd.BackToMethods")%>)</a>
         </div>
         <div class="options">
-            <asp:Button ID="AddButton" runat="server" Text="<% $NopResources:Admin.ShippingRateComputationMethodAdd.SaveButton.Text %>"
-                CssClass="adminButtonBlue" OnClick="AddButton_Click" ToolTip="<% $NopResources:Admin.ShippingRateComputationMethodAdd.SaveButton.Tooltip %>" />
+            <asp:Button ID="SaveButton" runat="server" Text="<% $NopResources:Admin.ShippingRateComputationMethodAdd.SaveButton.Text %>"
+                CssClass="adminButtonBlue" OnClick="SaveButton_Click" ToolTip="<% $NopResources:Admin.ShippingRateComputationMethodAdd.SaveButton.Tooltip %>" />
+        <asp:Button ID="SaveAndStayButton" runat="server" CssClass="adminButtonBlue" Text="<% $NopResources:Admin.ShippingRateComputationMethodAdd.SaveAndStayButton.Text %>"
+            OnClick="SaveAndStayButton_Click" />
         </div>
     </div>
     <table class="adminContent">

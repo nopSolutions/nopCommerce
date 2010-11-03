@@ -30,13 +30,35 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
     public partial class EmailAccountDetailsControl : BaseNopAdministrationUserControl
     {
+        protected EmailAccount Save()
+        {
+            EmailAccount emailAccount = ctrlEmailAccountInfo.SaveInfo();
+            return emailAccount;
+        }
+
         protected void SaveButton_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
                 try
                 {
-                    EmailAccount emailAccount = ctrlEmailAccountInfo.SaveInfo();
+                    EmailAccount emailAccount = Save();
+                    Response.Redirect("EmailAccounts.aspx");
+                }
+                catch (Exception exc)
+                {
+                    ProcessException(exc);
+                }
+            }
+        }
+
+        protected void SaveAndStayButton_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+            {
+                try
+                {
+                    EmailAccount emailAccount = Save();
                     Response.Redirect("EmailAccountDetails.aspx?EmailAccountID=" + emailAccount.EmailAccountId.ToString());
                 }
                 catch (Exception exc)

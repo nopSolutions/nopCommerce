@@ -35,19 +35,40 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
     public partial class GiftCardDetailsControl : BaseNopAdministrationUserControl
     {
+        protected GiftCard Save()
+        {
+            GiftCard gc = ctrlGiftCardInfo.SaveInfo();
+
+            IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
+                "EditGiftCard",
+                GetLocaleResourceString("ActivityLog.EditGiftCard"),
+                gc.GiftCardCouponCode);
+            return gc;
+        }
+
         protected void SaveButton_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
                 try
                 {
-                    GiftCard gc = ctrlGiftCardInfo.SaveInfo();
+                    GiftCard gc = Save();
+                    Response.Redirect("PurchasedGiftCards.aspx");
+                }
+                catch (Exception exc)
+                {
+                    ProcessException(exc);
+                }
+            }
+        }
 
-                    IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
-                        "EditGiftCard",
-                        GetLocaleResourceString("ActivityLog.EditGiftCard"),
-                        gc.GiftCardCouponCode);
-
+        protected void SaveAndStayButton_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+            {
+                try
+                {
+                    GiftCard gc = Save();
                     Response.Redirect("GiftCardDetails.aspx?GiftCardID=" + gc.GiftCardId.ToString());
                 }
                 catch (Exception exc)

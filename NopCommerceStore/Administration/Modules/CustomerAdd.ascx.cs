@@ -32,20 +32,42 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
     public partial class CustomerAddControl : BaseNopAdministrationUserControl
     {
-        protected void AddButton_Click(object sender, EventArgs e)
+        protected Customer Save()
+        {
+            Customer customer = ctrlCustomerInfo.SaveInfo();
+            ctrlCustomerRoleMappings.SaveInfo(customer.CustomerId);
+
+            IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
+                "AddNewCustomer",
+                GetLocaleResourceString("ActivityLog.AddNewCustomer"),
+                customer.CustomerId);
+
+            return customer;
+        }
+
+        protected void SaveButton_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
                 try
                 {
-                    Customer customer = ctrlCustomerInfo.SaveInfo();
-                    ctrlCustomerRoleMappings.SaveInfo(customer.CustomerId);
+                    Customer customer = Save();
+                    Response.Redirect("Customers.aspx");
+                }
+                catch (Exception exc)
+                {
+                    ProcessException(exc);
+                }
+            }
+        }
 
-                    IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
-                        "AddNewCustomer",
-                        GetLocaleResourceString("ActivityLog.AddNewCustomer"),
-                        customer.CustomerId);
-
+        protected void SaveAndStayButton_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+            {
+                try
+                {
+                    Customer customer = Save();
                     Response.Redirect("CustomerDetails.aspx?CustomerID=" + customer.CustomerId.ToString());
                 }
                 catch (Exception exc)

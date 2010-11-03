@@ -100,35 +100,52 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             }
         }
 
+        protected Address Save()
+        {
+            var address = IoCFactory.Resolve<ICustomerManager>().GetAddressById(this.AddressId);
+
+            address.FirstName = txtFirstName.Text;
+            address.LastName = txtLastName.Text;
+            address.PhoneNumber = txtPhoneNumber.Text;
+            address.Email = txtEmail.Text;
+            address.FaxNumber = txtFaxNumber.Text;
+            address.Company = txtCompany.Text;
+            address.Address1 = txtAddress1.Text;
+            address.Address2 = txtAddress2.Text;
+            address.City = txtCity.Text;
+            address.StateProvinceId = int.Parse(this.ddlStateProvince.SelectedItem.Value);
+            address.ZipPostalCode = txtZipPostalCode.Text;
+            address.CountryId = int.Parse(this.ddlCountry.SelectedItem.Value);
+            address.UpdatedOn = DateTime.UtcNow;
+            IoCFactory.Resolve<ICustomerManager>().UpdateAddress(address);
+
+            return address;
+        }
+
         protected void SaveButton_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
                 try
                 {
-                    var address = IoCFactory.Resolve<ICustomerManager>().GetAddressById(this.AddressId);
+                    Address address = Save();
+                    Response.Redirect(string.Format("CustomerDetails.aspx?CustomerID={0}", address.CustomerId));
+                }
+                catch (Exception exc)
+                {
+                    ProcessException(exc);
+                }
+            }
+        }
 
-                    if (address != null)
-                    {
-                        address.FirstName = txtFirstName.Text;
-                        address.LastName = txtLastName.Text;
-                        address.PhoneNumber = txtPhoneNumber.Text;
-                        address.Email = txtEmail.Text;
-                        address.FaxNumber = txtFaxNumber.Text;
-                        address.Company = txtCompany.Text;
-                        address.Address1 = txtAddress1.Text;
-                        address.Address2 = txtAddress2.Text;
-                        address.City = txtCity.Text;
-                        address.StateProvinceId = int.Parse(this.ddlStateProvince.SelectedItem.Value);
-                        address.ZipPostalCode = txtZipPostalCode.Text;
-                        address.CountryId = int.Parse(this.ddlCountry.SelectedItem.Value);
-                        address.UpdatedOn = DateTime.UtcNow;
-                        IoCFactory.Resolve<ICustomerManager>().UpdateAddress(address);
-
-                        Response.Redirect("CustomerDetails.aspx?CustomerID=" + address.CustomerId.ToString());
-                    }
-                    else
-                        Response.Redirect("Customers.aspx");
+        protected void SaveAndStayButton_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+            {
+                try
+                {
+                    Address address = Save();
+                    Response.Redirect("AddressDetails.aspx?AddressID=" + address.AddressId.ToString());
                 }
                 catch (Exception exc)
                 {

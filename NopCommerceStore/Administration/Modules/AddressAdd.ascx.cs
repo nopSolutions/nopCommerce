@@ -80,33 +80,55 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             }
         }
 
-        protected void AddButton_Click(object sender, EventArgs e)
+        protected Address Save()
+        {
+            Address address = new Address()
+            {
+                CustomerId = this.CustomerId,
+                IsBillingAddress = this.IsBillingAddress,
+                FirstName = txtFirstName.Text,
+                LastName = txtLastName.Text,
+                PhoneNumber = txtPhoneNumber.Text,
+                Email = txtEmail.Text,
+                FaxNumber = txtFaxNumber.Text,
+                Company = txtCompany.Text,
+                Address1 = txtAddress1.Text,
+                Address2 = txtAddress2.Text,
+                City = txtCity.Text,
+                StateProvinceId = int.Parse(this.ddlStateProvince.SelectedItem.Value),
+                ZipPostalCode = txtZipPostalCode.Text,
+                CountryId = int.Parse(this.ddlCountry.SelectedItem.Value),
+                CreatedOn = DateTime.UtcNow,
+                UpdatedOn = DateTime.UtcNow
+            };
+            IoCFactory.Resolve<ICustomerManager>().InsertAddress(address);
+
+            return address;
+        }
+
+        protected void SaveButton_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
                 try
                 {
-                    Address address = new Address()
-                    {
-                        CustomerId = this.CustomerId,
-                        IsBillingAddress = this.IsBillingAddress,
-                        FirstName = txtFirstName.Text,
-                        LastName = txtLastName.Text,
-                        PhoneNumber = txtPhoneNumber.Text,
-                        Email = txtEmail.Text,
-                        FaxNumber = txtFaxNumber.Text,
-                        Company = txtCompany.Text,
-                        Address1 = txtAddress1.Text,
-                        Address2 = txtAddress2.Text,
-                        City = txtCity.Text,
-                        StateProvinceId = int.Parse(this.ddlStateProvince.SelectedItem.Value),
-                        ZipPostalCode = txtZipPostalCode.Text,
-                        CountryId = int.Parse(this.ddlCountry.SelectedItem.Value),
-                        CreatedOn = DateTime.UtcNow,
-                        UpdatedOn = DateTime.UtcNow
-                    };
-                    IoCFactory.Resolve<ICustomerManager>().InsertAddress(address);
+                    Address address = Save();
+                    Response.Redirect(string.Format("CustomerDetails.aspx?CustomerID={0}", address.CustomerId));
+                }
+                catch (Exception exc)
+                {
+                    ProcessException(exc);
+                }
+            }
+        }
 
+        protected void SaveAndStayButton_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+            {
+                try
+                {
+                    Address address = Save();
                     Response.Redirect("AddressDetails.aspx?AddressID=" + address.AddressId.ToString());
                 }
                 catch (Exception exc)

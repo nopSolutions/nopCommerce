@@ -31,24 +31,42 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
     public partial class CustomerRoleAddControl : BaseNopAdministrationUserControl
     {
-        protected void Page_Load(object sender, EventArgs e)
+        protected CustomerRole Save()
         {
+            CustomerRole customerRole = ctrlCustomerRoleInfo.SaveInfo();
 
+            IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
+                "AddNewCustomerRole",
+                GetLocaleResourceString("ActivityLog.AddNewCustomerRole"),
+                customerRole.Name);
+
+            return customerRole;
         }
 
-        protected void AddButton_Click(object sender, EventArgs e)
+
+        protected void SaveButton_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
                 try
                 {
-                    CustomerRole customerRole = ctrlCustomerRoleInfo.SaveInfo();
+                    CustomerRole customerRole = Save();
+                    Response.Redirect("CustomerRoles.aspx");
+                }
+                catch (Exception exc)
+                {
+                    ProcessException(exc);
+                }
+            }
+        }
 
-                    IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
-                        "AddNewCustomerRole",
-                        GetLocaleResourceString("ActivityLog.AddNewCustomerRole"),
-                        customerRole.Name);
-
+        protected void SaveAndStayButton_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+            {
+                try
+                {
+                    CustomerRole customerRole = Save();
                     Response.Redirect("CustomerRoleDetails.aspx?CustomerRoleID=" + customerRole.CustomerRoleId.ToString());
                 }
                 catch (Exception exc)

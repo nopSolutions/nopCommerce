@@ -39,22 +39,43 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             }
         }
 
+        protected SpecificationAttribute Save()
+        {
+            SpecificationAttribute specificationAttribute = ctrlSpecificationAttributeInfo.SaveInfo();
+            ctrlSpecificationAttributeOptions.SaveInfo();
+
+            IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
+                "EditSpecAttribute",
+                GetLocaleResourceString("ActivityLog.EditSpecAttribute"),
+                specificationAttribute.Name);
+
+            return specificationAttribute;
+        }
+
         protected void SaveButton_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
                 try
                 {
-                    SpecificationAttribute specificationAttribute = ctrlSpecificationAttributeInfo.SaveInfo();
-                    ctrlSpecificationAttributeOptions.SaveInfo();
+                    SpecificationAttribute specificationAttribute = Save();
+                    Response.Redirect("SpecificationAttributes.aspx");
+                }
+                catch (Exception exc)
+                {
+                    ProcessException(exc);
+                }
+            }
+        }
 
-                    IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
-                        "EditSpecAttribute",
-                        GetLocaleResourceString("ActivityLog.EditSpecAttribute"),
-                        specificationAttribute.Name);
-
-                    if (specificationAttribute != null)
-                        Response.Redirect(string.Format("SpecificationAttributeDetails.aspx?SpecificationAttributeID={0}&TabID={1}", specificationAttribute.SpecificationAttributeId, this.GetActiveTabId(this.AttributeTabs)));
+        protected void SaveAndStayButton_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+            {
+                try
+                {
+                    SpecificationAttribute specificationAttribute = Save();
+                    Response.Redirect(string.Format("SpecificationAttributeDetails.aspx?SpecificationAttributeID={0}&TabID={1}", specificationAttribute.SpecificationAttributeId, this.GetActiveTabId(this.AttributeTabs)));
                 }
                 catch (Exception exc)
                 {

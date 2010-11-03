@@ -13,7 +13,9 @@
     <div class="options">
         <asp:Button ID="SaveButton" runat="server" CssClass="adminButtonBlue" Text="<% $NopResources:Admin.SpecificationAttributeDetails.SaveButton.Text %>"
             OnClick="SaveButton_Click" ToolTip="<% $NopResources:Admin.SpecificationAttributeDetails.SaveButton.Tooltip %>" />
-        <asp:Button ID="DeleteButton" runat="server" CssClass="adminButtonBlue" Text="<% $NopResources:Admin.SpecificationAttributeDetails.DeleteButton.Text %>"
+        <asp:Button ID="SaveAndStayButton" runat="server" CssClass="adminButtonBlue" Text="<% $NopResources:Admin.SpecificationAttributeDetails.SaveAndStayButton.Text %>"
+            OnClick="SaveAndStayButton_Click" />
+            <asp:Button ID="DeleteButton" runat="server" CssClass="adminButtonBlue" Text="<% $NopResources:Admin.SpecificationAttributeDetails.DeleteButton.Text %>"
             OnClick="DeleteButton_Click" CausesValidation="false" ToolTip="<% $NopResources:Admin.SpecificationAttributeDetails.DeleteButton.Tooltip %>" />
     </div>
 </div>

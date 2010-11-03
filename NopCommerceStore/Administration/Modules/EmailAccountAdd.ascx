@@ -8,8 +8,10 @@
             title="<%=GetLocaleResourceString("Admin.EmailAccountAdd.BackTo")%>"> (<%=GetLocaleResourceString("Admin.EmailAccountAdd.BackTo")%>)</a>
     </div>
     <div class="options">
-        <asp:Button ID="AddButton" runat="server" Text="<% $NopResources:Admin.EmailAccountAdd.SaveButton.Text %>"
-            CssClass="adminButtonBlue" OnClick="AddButton_Click" />
+        <asp:Button ID="SaveButton" runat="server" Text="<% $NopResources:Admin.EmailAccountAdd.SaveButton.Text %>"
+            CssClass="adminButtonBlue" OnClick="SaveButton_Click" />
+        <asp:Button ID="SaveAndStayButton" runat="server" CssClass="adminButtonBlue" Text="<% $NopResources:Admin.EmailAccountAdd.SaveAndStayButton.Text %>"
+            OnClick="SaveAndStayButton_Click" />
     </div>
 </div>
 <nopCommerce:EmailAccountInfo ID="ctrlEmailAccountInfo" runat="server" />

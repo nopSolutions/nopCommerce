@@ -41,23 +41,44 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             }
         }
 
+        protected CheckoutAttribute Save()
+        {
+            CheckoutAttribute attribute = null;
+            attribute = ctrlCheckoutAttributeInfo.SaveInfo();
+            ctrlCheckoutAttributeValues.SaveInfo();
+
+            IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
+                "EditCheckoutAttribute",
+                GetLocaleResourceString("ActivityLog.EditCheckoutAttribute"),
+                attribute.Name);
+
+            return attribute;
+        }
+
         protected void SaveButton_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
                 try
                 {
-                    CheckoutAttribute attribute = null;
-                    attribute = ctrlCheckoutAttributeInfo.SaveInfo();
-                    ctrlCheckoutAttributeValues.SaveInfo();
+                    CheckoutAttribute attribute = Save();
+                    Response.Redirect("CheckoutAttributes.aspx");
+                }
+                catch (Exception exc)
+                {
+                    ProcessException(exc);
+                }
+            }
+        }
 
-                    IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
-                        "EditCheckoutAttribute",
-                        GetLocaleResourceString("ActivityLog.EditCheckoutAttribute"),
-                        attribute.Name);
-
-                    if (attribute != null)
-                        Response.Redirect(string.Format("CheckoutAttributeDetails.aspx?CheckoutAttributeID={0}&TabID={1}", attribute.CheckoutAttributeId, this.GetActiveTabId(this.AttributeTabs)));
+        protected void SaveAndStayButton_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+            {
+                try
+                {
+                    CheckoutAttribute attribute = Save();
+                    Response.Redirect(string.Format("CheckoutAttributeDetails.aspx?CheckoutAttributeID={0}&TabID={1}", attribute.CheckoutAttributeId, this.GetActiveTabId(this.AttributeTabs)));
                 }
                 catch (Exception exc)
                 {

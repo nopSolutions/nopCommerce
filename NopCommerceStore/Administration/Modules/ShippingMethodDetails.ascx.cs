@@ -30,13 +30,35 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
     public partial class ShippingMethodDetailsControl : BaseNopAdministrationUserControl
     {
+        protected ShippingMethod Save()
+        {
+            ShippingMethod shippingMethod = ctrlShippingMethodInfo.SaveInfo();
+            return shippingMethod;
+        }
+
         protected void SaveButton_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
                 try
                 {
-                    ShippingMethod shippingMethod = ctrlShippingMethodInfo.SaveInfo();
+                    ShippingMethod shippingMethod = Save();
+                    Response.Redirect("ShippingMethods.aspx");
+                }
+                catch (Exception exc)
+                {
+                    ProcessException(exc);
+                }
+            }
+        }
+
+        protected void SaveAndStayButton_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+            {
+                try
+                {
+                    ShippingMethod shippingMethod = Save();
                     Response.Redirect("ShippingMethodDetails.aspx?ShippingMethodID=" + shippingMethod.ShippingMethodId.ToString());
                 }
                 catch (Exception exc)

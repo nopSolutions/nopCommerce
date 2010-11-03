@@ -42,22 +42,44 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             }
         }
 
+        protected Category Save()
+        {
+            Category category = ctrlCategoryInfo.SaveInfo();
+            ctrlCategorySEO.SaveInfo(category.CategoryId);
+            ctrlCategoryDiscount.SaveInfo(category.CategoryId);
+            ctrlCategoryACL.SaveInfo(category.CategoryId);
+
+            IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
+                "AddNewCategory",
+                GetLocaleResourceString("ActivityLog.AddNewCategory"),
+                category.Name);
+
+            return category;
+        }
+
         protected void SaveButton_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
                 try
                 {
-                    Category category = ctrlCategoryInfo.SaveInfo();
-                    ctrlCategorySEO.SaveInfo(category.CategoryId);
-                    ctrlCategoryDiscount.SaveInfo(category.CategoryId);
-                    ctrlCategoryACL.SaveInfo(category.CategoryId);
+                    Category category = Save();
+                    Response.Redirect("Categories.aspx");
+                }
+                catch (Exception exc)
+                {
+                    ProcessException(exc);
+                }
+            }
+        }
 
-                    IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
-                        "AddNewCategory",
-                        GetLocaleResourceString("ActivityLog.AddNewCategory"),
-                        category.Name);
-                
+        protected void SaveAndStayButton_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+            {
+                try
+                {
+                    Category category = Save();
                     Response.Redirect(string.Format("CategoryDetails.aspx?CategoryID={0}&TabID={1}", category.CategoryId, this.GetActiveTabId(this.CategoryTabs)));
                 }
                 catch (Exception exc)

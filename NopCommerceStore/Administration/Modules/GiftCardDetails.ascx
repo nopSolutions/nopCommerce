@@ -12,6 +12,8 @@
     <div class="options">
         <asp:Button ID="SaveButton" runat="server" CssClass="adminButtonBlue" Text="<% $NopResources:Admin.GiftCardDetails.SaveButton %>"
             OnClick="SaveButton_Click" ToolTip="<% $NopResources:Admin.GiftCardDetails.SaveButton.Tooltip %>" />
+        <asp:Button ID="SaveAndStayButton" runat="server" CssClass="adminButtonBlue" Text="<% $NopResources:Admin.GiftCardDetails.SaveAndStayButton.Text %>"
+            OnClick="SaveAndStayButton_Click" />
     </div>
 </div>
 <nopCommerce:GiftCardInfo ID="ctrlGiftCardInfo" runat="server" />

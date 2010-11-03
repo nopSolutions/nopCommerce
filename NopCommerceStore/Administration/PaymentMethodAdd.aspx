@@ -14,8 +14,10 @@
                 (<%=GetLocaleResourceString("Admin.PaymentMethodAdd.BackToMethodList")%>)</a>
         </div>
         <div class="options">
-            <asp:Button ID="AddButton" runat="server" Text="<% $NopResources:Admin.PaymentMethodAdd.SaveButton.Text %>"
-                CssClass="adminButtonBlue" OnClick="AddButton_Click" ToolTip="<% $NopResources:Admin.PaymentMethodAdd.SaveButton.Tooltip %>" />
+            <asp:Button ID="SaveButton" runat="server" Text="<% $NopResources:Admin.PaymentMethodAdd.SaveButton.Text %>"
+                CssClass="adminButtonBlue" OnClick="SaveButton_Click" ToolTip="<% $NopResources:Admin.PaymentMethodAdd.SaveButton.Tooltip %>" />
+            <asp:Button ID="SaveAndStayButton" runat="server" CssClass="adminButtonBlue" Text="<% $NopResources:Admin.PaymentMethodAdd.SaveAndStayButton.Text %>"
+                OnClick="SaveAndStayButton_Click" />
         </div>
     </div>
     <table class="adminContent">

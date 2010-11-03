@@ -30,13 +30,36 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
     public partial class PollAddControl : BaseNopAdministrationUserControl
     {
-        protected void AddButton_Click(object sender, EventArgs e)
+        protected Poll Save()
+        {
+            Poll poll = ctrlPollInfo.SaveInfo();
+            return poll;
+        }
+
+        protected void SaveButton_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
                 try
                 {
-                    Poll poll = ctrlPollInfo.SaveInfo();
+                    Poll poll = Save();
+                    Response.Redirect("Polls.aspx");
+                }
+                catch (Exception exc)
+                {
+                    ProcessException(exc);
+                }
+            }
+        }
+
+        protected void SaveAndStayButton_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+            {
+                try
+                {
+
+                    Poll poll = Save();
                     Response.Redirect("PollDetails.aspx?PollID=" + poll.PollId.ToString());
                 }
                 catch (Exception exc)

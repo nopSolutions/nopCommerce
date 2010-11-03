@@ -44,32 +44,55 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
     public partial class ProductAddControl : BaseNopAdministrationUserControl
     {
+        protected Product Save()
+        {
+            Product product = null;
+            //uncomment this line to support transactions
+            //using (var scope = new System.Transactions.TransactionScope())
+            {
+                product = ctrlProductInfoAdd.SaveInfo();
+                ctrlProductSEO.SaveInfo(product.ProductId);
+                ctrlProductCategory.SaveInfo(product.ProductId);
+                ctrlProductManufacturer.SaveInfo(product.ProductId);
+
+                IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
+                    "AddNewProduct",
+                    GetLocaleResourceString("ActivityLog.AddNewProduct"),
+                    product.Name);
+
+                //uncomment this line to support transactions
+                //scope.Complete();
+            }
+
+            return product;
+        }
+
         protected void SaveButton_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
                 try
                 {
-                    Product product = null;
-                    //uncomment this line to support transactions
-                    //using (var scope = new System.Transactions.TransactionScope())
-                    {
-                        product = ctrlProductInfoAdd.SaveInfo();
-                        ctrlProductSEO.SaveInfo(product.ProductId);
-                        ctrlProductCategory.SaveInfo(product.ProductId);
-                        ctrlProductManufacturer.SaveInfo(product.ProductId);
 
-                        IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
-                            "AddNewProduct",
-                            GetLocaleResourceString("ActivityLog.AddNewProduct"),
-                            product.Name);
+                    Product product = Save();
+                    Response.Redirect("Products.aspx");
+                }
+                catch (Exception exc)
+                {
+                    ProcessException(exc);
+                }
+            }
+        }
 
-                        //uncomment this line to support transactions
-                        //scope.Complete();
-                    }
+        protected void SaveAndStayButton_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+            {
+                try
+                {
 
-                    if (product != null)
-                        Response.Redirect("ProductDetails.aspx?ProductID=" + product.ProductId);
+                    Product product = Save();
+                    Response.Redirect("ProductDetails.aspx?ProductID=" + product.ProductId);
                 }
                 catch (Exception exc)
                 {

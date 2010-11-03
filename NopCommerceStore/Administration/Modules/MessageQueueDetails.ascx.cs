@@ -90,31 +90,49 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             }
         }
 
+        protected QueuedEmail Save()
+        {
+            QueuedEmail queuedEmail = IoCFactory.Resolve<IMessageManager>().GetQueuedEmailById(this.QueuedEmailId);
+
+            queuedEmail.Priority = txtPriority.Value;
+            queuedEmail.From = txtFrom.Text;
+            queuedEmail.FromName = txtFromName.Text;
+            queuedEmail.To = txtTo.Text;
+            queuedEmail.ToName = txtToName.Text;
+            queuedEmail.CC = txtCc.Text;
+            queuedEmail.Bcc = txtBcc.Text;
+            queuedEmail.Subject = txtSubject.Text;
+            queuedEmail.Body = txtBody.Value;
+            queuedEmail.SendTries = txtSendTries.Value;
+
+            IoCFactory.Resolve<IMessageManager>().UpdateQueuedEmail(queuedEmail);
+            return queuedEmail;
+        }
+
         protected void SaveButton_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
                 try
                 {
-                    QueuedEmail queuedEmail = IoCFactory.Resolve<IMessageManager>().GetQueuedEmailById(this.QueuedEmailId);
-                    if (queuedEmail != null)
-                    {
-                        queuedEmail.Priority = txtPriority.Value;
-                        queuedEmail.From = txtFrom.Text;
-                        queuedEmail.FromName = txtFromName.Text;
-                        queuedEmail.To = txtTo.Text;
-                        queuedEmail.ToName = txtToName.Text;
-                        queuedEmail.CC = txtCc.Text;
-                        queuedEmail.Bcc = txtBcc.Text;
-                        queuedEmail.Subject = txtSubject.Text;
-                        queuedEmail.Body = txtBody.Value;
-                        queuedEmail.SendTries = txtSendTries.Value;
+                    QueuedEmail queuedEmail = Save();
+                    Response.Redirect("MessageQueue.aspx");
+                }
+                catch (Exception exc)
+                {
+                    ProcessException(exc);
+                }
+            }
+        }
 
-                        IoCFactory.Resolve<IMessageManager>().UpdateQueuedEmail(queuedEmail);
-                        Response.Redirect("MessageQueueDetails.aspx?QueuedEmailID=" + queuedEmail.QueuedEmailId.ToString());
-                    }
-                    else
-                        Response.Redirect("MessageQueue.aspx");
+        protected void SaveAndStayButton_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+            {
+                try
+                {
+                    QueuedEmail queuedEmail = Save();
+                    Response.Redirect("MessageQueueDetails.aspx?QueuedEmailID=" + queuedEmail.QueuedEmailId.ToString());
                 }
                 catch (Exception exc)
                 {

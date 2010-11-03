@@ -29,17 +29,35 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
     public partial class LanguageAddControl : BaseNopAdministrationUserControl
     {
-        protected void Page_Load(object sender, EventArgs e)
+        protected Language Save()
         {
+            Language language = ctrlLanguageInfo.SaveInfo();
+            return language;
         }
 
-        protected void AddButton_Click(object sender, EventArgs e)
+        protected void SaveButton_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
                 try
                 {
-                    Language language = ctrlLanguageInfo.SaveInfo();
+                    Language language = Save();
+                    Response.Redirect("Languages.aspx");
+                }
+                catch (Exception exc)
+                {
+                    ProcessException(exc);
+                }
+            }
+        }
+
+        protected void SaveAndStayButton_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+            {
+                try
+                {
+                    Language language = Save();
                     Response.Redirect("LanguageDetails.aspx?LanguageID=" + language.LanguageId.ToString());
                 }
                 catch (Exception exc)

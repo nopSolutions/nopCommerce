@@ -30,13 +30,35 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
     public partial class TaxCategoryDetailsControl : BaseNopAdministrationUserControl
     {
+        protected TaxCategory Save()
+        {
+            TaxCategory taxCategory = ctrlTaxCategoryInfo.SaveInfo();
+            return taxCategory;
+        }
+
         protected void SaveButton_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
                 try
                 {
-                    TaxCategory taxCategory = ctrlTaxCategoryInfo.SaveInfo();
+                    TaxCategory taxCategory = Save();
+                    Response.Redirect("TaxCategories.aspx");
+                }
+                catch (Exception exc)
+                {
+                    ProcessException(exc);
+                }
+            }
+        }
+
+        protected void SaveAndStayButton_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+            {
+                try
+                {
+                    TaxCategory taxCategory = Save();
                     Response.Redirect("TaxCategoryDetails.aspx?TaxCategoryID=" + taxCategory.TaxCategoryId.ToString());
                 }
                 catch (Exception exc)

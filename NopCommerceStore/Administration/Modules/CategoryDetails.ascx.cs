@@ -54,6 +54,22 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 this.SelectTab(this.CategoryTabs, this.TabId);
             }
         }
+       
+        protected Category Save()
+        {
+            Category category = ctrlCategoryInfo.SaveInfo();
+            ctrlCategorySEO.SaveInfo();
+            ctrlCategoryProduct.SaveInfo();
+            ctrlCategoryDiscount.SaveInfo();
+            ctrlCategoryACL.SaveInfo();
+
+            IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
+                "EditCategory",
+                GetLocaleResourceString("ActivityLog.EditCategory"),
+                category.Name);
+
+            return category;
+        }
 
         protected void SaveButton_Click(object sender, EventArgs e)
         {
@@ -61,17 +77,23 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 try
                 {
-                    Category category = ctrlCategoryInfo.SaveInfo();
-                    ctrlCategorySEO.SaveInfo();
-                    ctrlCategoryProduct.SaveInfo();
-                    ctrlCategoryDiscount.SaveInfo();
-                    ctrlCategoryACL.SaveInfo();
+                    Category category = Save();
+                    Response.Redirect("Categories.aspx");
+                }
+                catch (Exception exc)
+                {
+                    ProcessException(exc);
+                }
+            }
+        }
 
-                    IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
-                        "EditCategory",
-                        GetLocaleResourceString("ActivityLog.EditCategory"),
-                        category.Name);
-
+        protected void SaveAndStayButton_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+            {
+                try
+                {
+                    Category category = Save();
                     Response.Redirect(string.Format("CategoryDetails.aspx?CategoryID={0}&TabID={1}", category.CategoryId, this.GetActiveTabId(this.CategoryTabs)));
                 }
                 catch (Exception exc)

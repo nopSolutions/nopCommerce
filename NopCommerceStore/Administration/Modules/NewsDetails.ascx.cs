@@ -32,13 +32,35 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
     public partial class NewsDetailsControl : BaseNopAdministrationUserControl
     {
+        protected News Save()
+        {
+            News news = ctrlNewsInfo.SaveInfo();
+            return news;
+        }
+
         protected void SaveButton_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
                 try
                 {
-                    News news = ctrlNewsInfo.SaveInfo();
+                    News news = Save();
+                    Response.Redirect("News.aspx");
+                }
+                catch (Exception exc)
+                {
+                    ProcessException(exc);
+                }
+            }
+        }
+
+        protected void SaveAndStayButton_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+            {
+                try
+                {
+                    News news = Save();
                     Response.Redirect("NewsDetails.aspx?NewsID=" + news.NewsId.ToString());
                 }
                 catch (Exception exc)

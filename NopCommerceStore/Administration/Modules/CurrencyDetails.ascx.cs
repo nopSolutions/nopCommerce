@@ -30,15 +30,36 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
     public partial class CurrencyDetailsControl : BaseNopAdministrationUserControl
     {
+        protected Currency Save()
+        {
+            Currency currency = ctrlCurrencyInfo.SaveInfo();
+            return currency;
+        }
+
         protected void SaveButton_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
                 try
                 {
-                    Currency currency = ctrlCurrencyInfo.SaveInfo();
+                    Currency currency = Save();
+                    Response.Redirect("Currencies.aspx");
+                }
+                catch (Exception exc)
+                {
+                    ProcessException(exc);
+                }
+            }
+        }
+
+        protected void SaveAndStayButton_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+            {
+                try
+                {
+                    Currency currency = Save();
                     Response.Redirect("CurrencyDetails.aspx?CurrencyID=" + currency.CurrencyId.ToString());
-                    
                 }
                 catch (Exception exc)
                 {

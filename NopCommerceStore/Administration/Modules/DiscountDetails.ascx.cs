@@ -34,19 +34,41 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
     public partial class DiscountDetailsControl : BaseNopAdministrationUserControl
     {
+        protected Discount Save()
+        {
+            Discount discount = ctrlDiscountInfo.SaveInfo();
+
+            IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
+                "EditDiscount",
+                GetLocaleResourceString("ActivityLog.EditDiscount"),
+                discount.Name);
+
+            return discount;
+        }
+
         protected void SaveButton_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
                 try
                 {
-                    Discount discount = ctrlDiscountInfo.SaveInfo();
+                    Discount discount = Save();
+                    Response.Redirect("Discounts.aspx");
+                }
+                catch (Exception exc)
+                {
+                    ProcessException(exc);
+                }
+            }
+        }
 
-                    IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
-                        "EditDiscount",
-                        GetLocaleResourceString("ActivityLog.EditDiscount"),
-                        discount.Name);
-
+        protected void SaveAndStayButton_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+            {
+                try
+                {
+                    Discount discount = Save();
                     Response.Redirect("DiscountDetails.aspx?DiscountID=" + discount.DiscountId.ToString());
                 }
                 catch (Exception exc)

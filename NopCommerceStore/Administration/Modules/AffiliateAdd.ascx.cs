@@ -30,13 +30,35 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
     public partial class AffiliateAddControl : BaseNopAdministrationUserControl
     {
-        protected void AddButton_Click(object sender, EventArgs e)
+        protected Affiliate Save()
+        {
+            Affiliate affiliate = ctrlAffiliateInfo.SaveInfo();
+            return affiliate;
+        }
+
+        protected void SaveButton_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
                 try
                 {
-                    Affiliate affiliate = ctrlAffiliateInfo.SaveInfo();
+                    Affiliate affiliate = Save();
+                    Response.Redirect("Affiliates.aspx");
+                }
+                catch (Exception exc)
+                {
+                    ProcessException(exc);
+                }
+            }
+        }
+
+        protected void SaveAndStayButton_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+            {
+                try
+                {
+                    Affiliate affiliate = Save();
                     Response.Redirect("AffiliateDetails.aspx?AffiliateID=" + affiliate.AffiliateId.ToString());
                 }
                 catch (Exception exc)

@@ -30,13 +30,35 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
     public partial class CategoryTemplateDetailsControl : BaseNopAdministrationUserControl
     {
+        protected CategoryTemplate Save()
+        {
+            CategoryTemplate categoryTemplate = ctrlCategoryTemplateInfo.SaveInfo();
+            return categoryTemplate;
+        }
+
         protected void SaveButton_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
                 try
                 {
-                    CategoryTemplate categoryTemplate = ctrlCategoryTemplateInfo.SaveInfo();
+                    CategoryTemplate categoryTemplate = Save();
+                    Response.Redirect("CategoryTemplates.aspx");
+                }
+                catch (Exception exc)
+                {
+                    ProcessException(exc);
+                }
+            }
+        }
+
+        protected void SaveAndStayButton_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+            {
+                try
+                {
+                    CategoryTemplate categoryTemplate = Save();
                     Response.Redirect("CategoryTemplateDetails.aspx?CategoryTemplateID=" + categoryTemplate.CategoryTemplateId.ToString());
                 }
                 catch (Exception exc)

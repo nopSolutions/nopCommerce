@@ -30,13 +30,35 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
     public partial class TopicDetailsControl : BaseNopAdministrationUserControl
     {
+        protected Topic Save()
+        {
+            Topic topic = ctrlTopicInfo.SaveInfo();
+            return topic;
+        }
+
         protected void SaveButton_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
                 try
                 {
-                    Topic topic = ctrlTopicInfo.SaveInfo();
+                    Topic topic = Save();
+                    Response.Redirect("Topics.aspx");
+                }
+                catch (Exception exc)
+                {
+                    ProcessException(exc);
+                }
+            }
+        }
+
+        protected void SaveAndStayButton_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+            {
+                try
+                {
+                    Topic topic = Save();
                     Response.Redirect("TopicDetails.aspx?TopicID=" + topic.TopicId.ToString());
                 }
                 catch (Exception exc)

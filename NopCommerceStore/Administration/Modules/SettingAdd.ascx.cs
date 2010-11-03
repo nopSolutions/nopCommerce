@@ -31,24 +31,40 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
     public partial class SettingAddControl : BaseNopAdministrationUserControl
     {
-        protected void Page_Load(object sender, EventArgs e)
+        protected Setting Save()
         {
+            Setting setting = ctrlSettingInfo.SaveInfo();
 
+            IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
+                "AddNewSetting",
+                GetLocaleResourceString("ActivityLog.AddNewSetting"),
+                setting.Name);
+            return setting;
         }
 
-        protected void AddButton_Click(object sender, EventArgs e)
+        protected void SaveButton_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
                 try
                 {
-                    Setting setting = ctrlSettingInfo.SaveInfo();
+                    Setting setting = Save();
+                    Response.Redirect("Settings.aspx");
+                }
+                catch (Exception exc)
+                {
+                    ProcessException(exc);
+                }
+            }
+        }
 
-                    IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
-                        "AddNewSetting",
-                        GetLocaleResourceString("ActivityLog.AddNewSetting"),
-                        setting.Name);
-
+        protected void SaveAndStayButton_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+            {
+                try
+                {
+                    Setting setting = Save();
                     Response.Redirect("SettingDetails.aspx?SettingID=" + setting.SettingId.ToString());
                 }
                 catch (Exception exc)

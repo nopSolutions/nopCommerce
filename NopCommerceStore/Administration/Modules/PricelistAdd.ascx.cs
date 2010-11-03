@@ -30,21 +30,20 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
     public partial class PricelistAddControl : BaseNopAdministrationUserControl
     {
+        protected Pricelist Save()
+        {
+            Pricelist pricelist = ctrlPricelistInfo.SaveInfo();
+            return pricelist;
+        }
+
         protected void SaveButton_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
                 try
                 {
-                    Pricelist pricelist = ctrlPricelistInfo.SaveInfo();
-                    if (pricelist != null)
-                    {
-                        Response.Redirect("PricelistDetails.aspx?PricelistID=" + pricelist.PricelistId.ToString());
-                    }
-                    else
-                    {
-                        Response.Redirect("Pricelist.aspx");
-                    }
+                    Pricelist pricelist = Save();
+                    Response.Redirect("Pricelist.aspx");
                 }
                 catch (Exception exc)
                 {
@@ -53,11 +52,20 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             }
         }
 
-        public int PricelistId
+        protected void SaveAndStayButton_Click(object sender, EventArgs e)
         {
-            get
+            if (Page.IsValid)
             {
-                return CommonHelper.QueryStringInt("PricelistId");
+                try
+                {
+
+                    Pricelist pricelist = Save();
+                    Response.Redirect("PricelistDetails.aspx?PricelistID=" + pricelist.PricelistId.ToString());
+                }
+                catch (Exception exc)
+                {
+                    ProcessException(exc);
+                }
             }
         }
     }

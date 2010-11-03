@@ -80,7 +80,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             var log = GetLogItems();
             gvLogs.DataSource = log;
             gvLogs.DataBind();
-            btnClear.Visible = log.TotalCount > 0;
+            //btnClear.Visible = log.TotalCount > 0;
         }
 
         protected void gvLogs_PageIndexChanging(object sender, GridViewPageEventArgs e)

@@ -30,15 +30,36 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
     public partial class MeasureDimensionDetailsControl : BaseNopAdministrationUserControl
     {
+        protected MeasureDimension Save()
+        {
+            MeasureDimension measureDimension = ctrlMeasureDimensionInfo.SaveInfo();
+            return measureDimension;
+        }
+
         protected void SaveButton_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
                 try
                 {
-                    MeasureDimension measureDimension = ctrlMeasureDimensionInfo.SaveInfo();
+                    MeasureDimension measureDimension = Save();
+                    Response.Redirect("Measures.aspx");
+                }
+                catch (Exception exc)
+                {
+                    ProcessException(exc);
+                }
+            }
+        }
+
+        protected void SaveAndStayButton_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+            {
+                try
+                {
+                    MeasureDimension measureDimension = Save();
                     Response.Redirect("MeasureDimensionDetails.aspx?MeasureDimensionID=" + measureDimension.MeasureDimensionId.ToString());
-                    
                 }
                 catch (Exception exc)
                 {

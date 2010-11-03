@@ -93,37 +93,55 @@ namespace NopSolutions.NopCommerce.Web.Administration
             }
         }
 
+
+        protected TaxProvider Save()
+        {
+            TaxProvider taxProvider = IoCFactory.Resolve<ITaxProviderManager>().GetTaxProviderById(this.TaxProviderId);
+
+            taxProvider.Name = txtName.Text;
+            taxProvider.Description = txtDescription.Text;
+            taxProvider.ConfigureTemplatePath = txtConfigureTemplatePath.Text;
+            taxProvider.ClassName = txtClassName.Text;
+            taxProvider.DisplayOrder = txtDisplayOrder.Value;
+
+            IoCFactory.Resolve<ITaxProviderManager>().UpdateTaxProvider(taxProvider);
+
+            var configureModule = GetConfigureModule();
+            if (configureModule != null)
+                configureModule.Save();
+
+            IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
+                "EditTaxProvider",
+                GetLocaleResourceString("ActivityLog.EditTaxProvider"),
+                taxProvider.Name);
+
+            return taxProvider;
+        }
+
         protected void SaveButton_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
                 try
                 {
-                    var taxProvider = IoCFactory.Resolve<ITaxProviderManager>().GetTaxProviderById(this.TaxProviderId);
+                    TaxProvider taxProvider = Save();
+                    Response.Redirect("TaxProviders.aspx");
+                }
+                catch (Exception exc)
+                {
+                    ProcessException(exc);
+                }
+            }
+        }
 
-                    if (taxProvider != null)
-                    {
-                        taxProvider.Name = txtName.Text;
-                        taxProvider.Description = txtDescription.Text;
-                        taxProvider.ConfigureTemplatePath = txtConfigureTemplatePath.Text;
-                        taxProvider.ClassName = txtClassName.Text;
-                        taxProvider.DisplayOrder =  txtDisplayOrder.Value;
-
-                        IoCFactory.Resolve<ITaxProviderManager>().UpdateTaxProvider(taxProvider);
-
-                        var configureModule = GetConfigureModule();
-                        if (configureModule != null)
-                            configureModule.Save();
-
-                        IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
-                            "EditTaxProvider",
-                            GetLocaleResourceString("ActivityLog.EditTaxProvider"),
-                            taxProvider.Name);
-
-                        Response.Redirect(string.Format("TaxProviderDetails.aspx?TaxProviderID={0}&TabID={1}", taxProvider.TaxProviderId, this.GetActiveTabId(this.TaxTabs)));
-                    }
-                    else
-                        Response.Redirect("TaxProviders.aspx");
+        protected void SaveAndStayButton_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+            {
+                try
+                {
+                    TaxProvider taxProvider = Save();
+                    Response.Redirect(string.Format("TaxProviderDetails.aspx?TaxProviderID={0}&TabID={1}", taxProvider.TaxProviderId, this.GetActiveTabId(this.TaxTabs)));
                 }
                 catch (Exception exc)
                 {

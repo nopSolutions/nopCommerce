@@ -11,6 +11,8 @@
     <div class="options">
         <asp:Button ID="SaveButton" runat="server" Text="<% $NopResources:Admin.PricelistAdd.SaveButton.Text %>"
             CssClass="adminButtonBlue" OnClick="SaveButton_Click" ToolTip="<% $NopResources:Admin.PricelistAdd.SaveButton.Tooltip %>" />
+        <asp:Button ID="SaveAndStayButton" runat="server" CssClass="adminButtonBlue" Text="<% $NopResources:Admin.PricelistAdd.SaveAndStayButton.Text %>"
+            OnClick="SaveAndStayButton_Click" />
     </div>
 </div>
 <nopCommerce:PricelistInfo ID="ctrlPricelistInfo" runat="server" />

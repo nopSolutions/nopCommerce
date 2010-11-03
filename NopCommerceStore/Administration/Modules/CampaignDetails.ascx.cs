@@ -34,14 +34,35 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
     public partial class CampaignDetailsControl : BaseNopAdministrationUserControl
     {
+        protected Campaign Save()
+        {
+            Campaign campaign = ctrlCampaignInfo.SaveInfo();
+            return campaign;
+        }
+
         protected void SaveButton_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
                 try
                 {
-                    Campaign campaign = ctrlCampaignInfo.SaveInfo();
+                    Campaign campaign = Save();
+                    Response.Redirect("Campaigns.aspx");
+                }
+                catch (Exception exc)
+                {
+                    ProcessException(exc);
+                }
+            }
+        }
 
+        protected void SaveAndStayButton_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+            {
+                try
+                {
+                    Campaign campaign = Save();
                     Response.Redirect("CampaignDetails.aspx?CampaignID=" + campaign.CampaignId.ToString());
                 }
                 catch (Exception exc)

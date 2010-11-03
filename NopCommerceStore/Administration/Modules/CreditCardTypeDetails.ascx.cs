@@ -30,13 +30,35 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
     public partial class CreditCardTypeDetailsControl : BaseNopAdministrationUserControl
     {
+        protected CreditCardType Save()
+        {
+            CreditCardType creditCardType = ctrlCreditCardTypeInfo.SaveInfo();
+            return creditCardType;
+        }
+
         protected void SaveButton_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
                 try
                 {
-                    CreditCardType creditCardType = ctrlCreditCardTypeInfo.SaveInfo();
+                    CreditCardType creditCardType = Save();
+                    Response.Redirect("CreditCardTypes.aspx");
+                }
+                catch (Exception exc)
+                {
+                    ProcessException(exc);
+                }
+            }
+        }
+
+        protected void SaveAndStayButton_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+            {
+                try
+                {
+                    CreditCardType creditCardType = Save();
                     Response.Redirect("CreditCardTypeDetails.aspx?CreditCardTypeID=" + creditCardType.CreditCardTypeId.ToString());
                 }
                 catch (Exception exc)

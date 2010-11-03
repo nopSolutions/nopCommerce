@@ -94,37 +94,55 @@ namespace NopSolutions.NopCommerce.Web.Administration
             }
         }
 
+
+        protected ShippingRateComputationMethod Save()
+        {
+            var shippingRateComputationMethod = IoCFactory.Resolve<IShippingManager>().GetShippingRateComputationMethodById(this.ShippingRateComputationMethodId);
+
+            shippingRateComputationMethod.Name = txtName.Text;
+            shippingRateComputationMethod.Description = txtDescription.Text;
+            shippingRateComputationMethod.ConfigureTemplatePath = txtConfigureTemplatePath.Text;
+            shippingRateComputationMethod.ClassName = txtClassName.Text;
+            shippingRateComputationMethod.IsActive = cbActive.Checked;
+            shippingRateComputationMethod.DisplayOrder = txtDisplayOrder.Value;
+            IoCFactory.Resolve<IShippingManager>().UpdateShippingRateComputationMethod(shippingRateComputationMethod);
+
+            var configureModule = GetConfigureModule();
+            if (configureModule != null)
+                configureModule.Save();
+
+            IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
+                "EditShippingProvider",
+                GetLocaleResourceString("ActivityLog.EditShippingProvider"),
+                shippingRateComputationMethod.Name);
+
+            return shippingRateComputationMethod;
+        }
+
         protected void SaveButton_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
                 try
                 {
-                    var shippingRateComputationMethod = IoCFactory.Resolve<IShippingManager>().GetShippingRateComputationMethodById(this.ShippingRateComputationMethodId);
+                    ShippingRateComputationMethod shippingRateComputationMethod = Save();
+                    Response.Redirect("ShippingRateComputationMethods.aspx");
+                }
+                catch (Exception exc)
+                {
+                    ProcessException(exc);
+                }
+            }
+        }
 
-                    if (shippingRateComputationMethod != null)
-                    {
-                        shippingRateComputationMethod.Name =  txtName.Text;
-                        shippingRateComputationMethod.Description =  txtDescription.Text;
-                        shippingRateComputationMethod.ConfigureTemplatePath = txtConfigureTemplatePath.Text;
-                        shippingRateComputationMethod.ClassName = txtClassName.Text;
-                        shippingRateComputationMethod.IsActive = cbActive.Checked;
-                        shippingRateComputationMethod.DisplayOrder = txtDisplayOrder.Value;
-                        IoCFactory.Resolve<IShippingManager>().UpdateShippingRateComputationMethod(shippingRateComputationMethod);
-
-                        var configureModule = GetConfigureModule();
-                        if (configureModule != null)
-                            configureModule.Save();
-
-                        IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
-                            "EditShippingProvider",
-                            GetLocaleResourceString("ActivityLog.EditShippingProvider"),
-                            shippingRateComputationMethod.Name);
-
-                        Response.Redirect(string.Format("ShippingRateComputationMethodDetails.aspx?ShippingRateComputationMethodID={0}&TabID={1}", shippingRateComputationMethod.ShippingRateComputationMethodId, this.GetActiveTabId(this.ShippingTabs)));
-                    }
-                    else
-                        Response.Redirect("ShippingRateComputationMethods.aspx");
+        protected void SaveAndStayButton_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+            {
+                try
+                {
+                    ShippingRateComputationMethod shippingRateComputationMethod = Save(); 
+                    Response.Redirect(string.Format("ShippingRateComputationMethodDetails.aspx?ShippingRateComputationMethodID={0}&TabID={1}", shippingRateComputationMethod.ShippingRateComputationMethodId, this.GetActiveTabId(this.ShippingTabs)));
                 }
                 catch (Exception exc)
                 {

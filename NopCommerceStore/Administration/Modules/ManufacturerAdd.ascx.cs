@@ -42,20 +42,42 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             }
         }
 
+        protected Manufacturer Save()
+        {
+            Manufacturer manufacturer = ctrlManufacturerInfo.SaveInfo();
+            ctrlManufacturerSEO.SaveInfo(manufacturer.ManufacturerId);
+
+            IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
+                "AddNewManufacturer",
+                GetLocaleResourceString("ActivityLog.AddNewManufacturer"),
+                manufacturer.Name);
+
+            return manufacturer;
+        }
+
         protected void SaveButton_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
                 try
                 {
-                    Manufacturer manufacturer = ctrlManufacturerInfo.SaveInfo();
-                    ctrlManufacturerSEO.SaveInfo(manufacturer.ManufacturerId);
+                    Manufacturer manufacturer = Save();
+                    Response.Redirect("manufacturers.aspx");
+                }
+                catch (Exception exc)
+                {
+                    ProcessException(exc);
+                }
+            }
+        }
 
-                    IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
-                        "AddNewManufacturer",
-                        GetLocaleResourceString("ActivityLog.AddNewManufacturer"),
-                        manufacturer.Name);
-
+        protected void SaveAndStayButton_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+            {
+                try
+                {
+                    Manufacturer manufacturer = Save();
                     Response.Redirect(string.Format("ManufacturerDetails.aspx?ManufacturerID={0}&TabID={1}", manufacturer.ManufacturerId, this.GetActiveTabId(this.ManufacturerTabs)));
                 }
                 catch (Exception exc)

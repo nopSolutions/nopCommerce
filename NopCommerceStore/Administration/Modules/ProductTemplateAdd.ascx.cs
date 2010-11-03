@@ -29,18 +29,36 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
     public partial class ProductTemplateAddControl : BaseNopAdministrationUserControl
     {
-        protected void Page_Load(object sender, EventArgs e)
+        protected ProductTemplate Save()
         {
-
+            ProductTemplate productTemplate = ctrlProductTemplateInfo.SaveInfo();
+            return productTemplate;
         }
 
-        protected void AddButton_Click(object sender, EventArgs e)
+        protected void SaveButton_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
                 try
                 {
-                    ProductTemplate productTemplate = ctrlProductTemplateInfo.SaveInfo();
+                    ProductTemplate productTemplate = Save();
+                    Response.Redirect("ProductTemplates.aspx");
+                }
+                catch (Exception exc)
+                {
+                    ProcessException(exc);
+                }
+            }
+        }
+
+        protected void SaveAndStayButton_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+            {
+                try
+                {
+
+                    ProductTemplate productTemplate = Save(); 
                     Response.Redirect("ProductTemplateDetails.aspx?ProductTemplateID=" + productTemplate.ProductTemplateId.ToString());
                 }
                 catch (Exception exc)

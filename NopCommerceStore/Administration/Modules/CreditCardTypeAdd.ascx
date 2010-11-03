@@ -8,8 +8,10 @@
             title="<%=GetLocaleResourceString("Admin.CreditCardTypeAdd.BackToCards")%>"> (<%=GetLocaleResourceString("Admin.CreditCardTypeAdd.BackToCards")%>)</a>
     </div>
     <div class="options">
-        <asp:Button ID="AddButton" runat="server" Text="<% $NopResources:Admin.CreditCardTypeAdd.SaveButton.Text %>"
-            CssClass="adminButtonBlue" OnClick="AddButton_Click" ToolTip="<% $NopResources:Admin.CreditCardTypeAdd.SaveButton.Tooltip %>" />
+        <asp:Button ID="SaveButton" runat="server" Text="<% $NopResources:Admin.CreditCardTypeAdd.SaveButton.Text %>"
+            CssClass="adminButtonBlue" OnClick="SaveButton_Click" ToolTip="<% $NopResources:Admin.CreditCardTypeAdd.SaveButton.Tooltip %>" />
+        <asp:Button ID="SaveAndStayButton" runat="server" CssClass="adminButtonBlue" Text="<% $NopResources:Admin.CreditCardTypeAdd.SaveAndStayButton.Text %>"
+            OnClick="SaveAndStayButton_Click" />
     </div>
 </div>
 <nopCommerce:CreditCardTypeInfo ID="ctrlCreditCardTypeInfo" runat="server" />

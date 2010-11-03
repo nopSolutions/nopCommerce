@@ -30,13 +30,35 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
     public partial class MeasureWeightDetailsControl : BaseNopAdministrationUserControl
     {
+        protected MeasureWeight Save()
+        {
+            MeasureWeight measureWeight = ctrlMeasureWeightInfo.SaveInfo();
+            return measureWeight;
+        }
+
         protected void SaveButton_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
                 try
                 {
-                    MeasureWeight measureWeight = ctrlMeasureWeightInfo.SaveInfo();
+                    MeasureWeight measureWeight = Save();
+                    Response.Redirect("Measures.aspx");
+                }
+                catch (Exception exc)
+                {
+                    ProcessException(exc);
+                }
+            }
+        }
+
+        protected void SaveAndStayButton_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+            {
+                try
+                {
+                    MeasureWeight measureWeight = Save();
                     Response.Redirect("MeasureWeightDetails.aspx?MeasureWeightID=" + measureWeight.MeasureWeightId.ToString());
                 }
                 catch (Exception exc)

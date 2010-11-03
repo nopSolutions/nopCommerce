@@ -71,37 +71,60 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             base.OnPreRender(e);
         }
 
+        protected Product Save()
+        {
+            Product product = null;
+            //uncomment this line to support transactions
+            //using (var scope = new System.Transactions.TransactionScope())
+            {
+                product = ctrlProductInfoEdit.SaveInfo();
+                ctrlProductSEO.SaveInfo();
+                ctrlProductVariants.SaveInfo();
+                ctrlProductCategory.SaveInfo();
+                ctrlProductManufacturer.SaveInfo();
+                ctrlRelatedProducts.SaveInfo();
+                ctrlCrossSellProducts.SaveInfo();
+                ctrlProductPictures.SaveInfo();
+                ctrlProductSpecifications.SaveInfo();
+
+                IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
+                    "EditProduct",
+                    GetLocaleResourceString("ActivityLog.EditProduct"),
+                    product.Name);
+
+                //uncomment this line to support transactions
+                //scope.Complete();
+            }
+
+            return product;
+        }
+
         protected void SaveButton_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
                 try
                 {
-                    Product product = null;
-                    //uncomment this line to support transactions
-                    //using (var scope = new System.Transactions.TransactionScope())
-                    {
-                        product = ctrlProductInfoEdit.SaveInfo();
-                        ctrlProductSEO.SaveInfo();
-                        ctrlProductVariants.SaveInfo();
-                        ctrlProductCategory.SaveInfo();
-                        ctrlProductManufacturer.SaveInfo();
-                        ctrlRelatedProducts.SaveInfo();
-                        ctrlCrossSellProducts.SaveInfo();
-                        ctrlProductPictures.SaveInfo();
-                        ctrlProductSpecifications.SaveInfo();
 
-                        IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
-                            "EditProduct",
-                            GetLocaleResourceString("ActivityLog.EditProduct"),
-                            product.Name);
+                    Product product = Save();
+                    Response.Redirect("Products.aspx");
+                }
+                catch (Exception exc)
+                {
+                    ProcessException(exc);
+                }
+            }
+        }
 
-                        //uncomment this line to support transactions
-                        //scope.Complete();
-                    }
+        protected void SaveAndStayButton_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+            {
+                try
+                {
 
-                    if (product != null)
-                        Response.Redirect(string.Format("ProductDetails.aspx?ProductID={0}&TabID={1}", product.ProductId, this.GetActiveTabId(this.ProductTabs)));
+                    Product product = Save();
+                    Response.Redirect(string.Format("ProductDetails.aspx?ProductID={0}&TabID={1}", product.ProductId, this.GetActiveTabId(this.ProductTabs)));
                 }
                 catch (Exception exc)
                 {

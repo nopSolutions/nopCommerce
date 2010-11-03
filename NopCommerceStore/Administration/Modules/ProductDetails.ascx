@@ -23,6 +23,8 @@
         <asp:Button ID="btnDuplicate" runat="server" CssClass="adminButtonBlue" Text="<% $NopResources:Admin.ProductDetails.BtnDuplicate.Text %>" OnClick="BtnDuplicate_OnClick" ToolTip="<% $NopResources:Admin.ProductDetails.BtnDuplicate.Tooltip %>" />
         <asp:Button ID="SaveButton" runat="server" CssClass="adminButtonBlue" Text="<% $NopResources:Admin.ProductDetails.SaveButton.Text %>"
             OnClick="SaveButton_Click" ToolTip="<% $NopResources:Admin.ProductDetails.SaveButton.Tooltip %>" />
+        <asp:Button ID="SaveAndStayButton" runat="server" CssClass="adminButtonBlue" Text="<% $NopResources:Admin.ProductDetails.SaveAndStayButton.Text %>"
+            OnClick="SaveAndStayButton_Click" />
         <asp:Button ID="DeleteButton" runat="server" CssClass="adminButtonBlue" Text="<% $NopResources:Admin.ProductDetails.DeleteButton.Text %>"
             OnClick="DeleteButton_Click" CausesValidation="false" ToolTip="<% $NopResources:Admin.ProductDetails.DeleteButton.Tooltip %>" />
     </div>

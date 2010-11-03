@@ -25,9 +25,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
     public partial class BlacklistIPAddControl : BaseNopAdministrationUserControl
     {
-        protected void Page_Load(object sender, EventArgs e)
+        protected BannedIpAddress Save()
         {
-
+            BannedIpAddress ipAddress = ctrlBlacklist.SaveBannedIpAddressInfo();
+            return ipAddress;
         }
 
         protected void SaveButton_Click(object sender, EventArgs e)
@@ -36,7 +37,23 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 try
                 {
-                    BannedIpAddress ipAddress = ctrlBlacklist.SaveBannedIpAddressInfo();
+                    BannedIpAddress ipAddress = Save();
+                    Response.Redirect("Blacklist.aspx");
+                }
+                catch (Exception exc)
+                {
+                    ProcessException(exc);
+                }
+            }
+        }
+
+        protected void SaveAndStayButton_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+            {
+                try
+                {
+                    BannedIpAddress ipAddress = Save();
                     Response.Redirect("BlacklistIPDetails.aspx?BannedIpAddressID=" + ipAddress.BannedIpAddressId.ToString());
                 }
                 catch (Exception exc)

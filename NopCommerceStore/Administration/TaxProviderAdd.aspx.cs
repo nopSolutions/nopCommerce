@@ -36,22 +36,44 @@ namespace NopSolutions.NopCommerce.Web.Administration
             return IoCFactory.Resolve<IACLManager>().IsActionAllowed("ManageTaxSettings");
         }
 
-        protected void AddButton_Click(object sender, EventArgs e)
+        protected TaxProvider Save()
+        {
+            TaxProvider taxProvider = new TaxProvider()
+            {
+                Name = txtName.Text,
+                Description = txtDescription.Text,
+                ConfigureTemplatePath = txtConfigureTemplatePath.Text,
+                ClassName = txtClassName.Text,
+                DisplayOrder = txtDisplayOrder.Value
+            };
+            IoCFactory.Resolve<ITaxProviderManager>().InsertTaxProvider(taxProvider);
+
+            return taxProvider;
+        }
+
+        protected void SaveButton_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
                 try
                 {
-                    var taxProvider = new TaxProvider()
-                    {
-                        Name = txtName.Text,
-                        Description = txtDescription.Text,
-                        ConfigureTemplatePath = txtConfigureTemplatePath.Text,
-                        ClassName = txtClassName.Text,
-                        DisplayOrder = txtDisplayOrder.Value
-                    };
-                    IoCFactory.Resolve<ITaxProviderManager>().InsertTaxProvider(taxProvider);
+                    TaxProvider taxProvider = Save();
+                    Response.Redirect("TaxProviders.aspx");
+                }
+                catch (Exception exc)
+                {
+                    ProcessException(exc);
+                }
+            }
+        }
 
+        protected void SaveAndStayButton_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+            {
+                try
+                {
+                    TaxProvider taxProvider = Save();
                     Response.Redirect("TaxProviderDetails.aspx?TaxProviderID=" + taxProvider.TaxProviderId.ToString());
                 }
                 catch (Exception exc)

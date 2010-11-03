@@ -30,13 +30,35 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
     public partial class ForumGroupDetailsControl : BaseNopAdministrationUserControl
     {
+        protected ForumGroup Save()
+        {
+            ForumGroup forumGroup = ctrlForumGroupInfo.SaveInfo();
+            return forumGroup;
+        }
+
         protected void SaveButton_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
                 try
                 {
-                    ForumGroup forumGroup = ctrlForumGroupInfo.SaveInfo();
+                    ForumGroup forumGroup = Save();
+                    Response.Redirect("Forums.aspx");
+                }
+                catch (Exception exc)
+                {
+                    ProcessException(exc);
+                }
+            }
+        }
+
+        protected void SaveAndStayButton_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+            {
+                try
+                {
+                    ForumGroup forumGroup = Save();
                     Response.Redirect("ForumGroupDetails.aspx?ForumGroupID=" + forumGroup.ForumGroupId.ToString());
                 }
                 catch (Exception exc)

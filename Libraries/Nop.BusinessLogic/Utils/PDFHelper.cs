@@ -617,6 +617,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Utils
                 section.AddParagraph(String.Format(LocalizationManager.GetLocaleResourceString("PdfPackagingSlip.Name"), order.ShippingFullName));
                 section.AddParagraph(String.Format(LocalizationManager.GetLocaleResourceString("PdfPackagingSlip.Phone"), order.ShippingPhoneNumber));
                 section.AddParagraph(String.Format(LocalizationManager.GetLocaleResourceString("PdfPackagingSlip.Address"), order.ShippingAddress1));
+                if (!String.IsNullOrEmpty(order.ShippingAddress2))
+                    section.AddParagraph(String.Format(LocalizationManager.GetLocaleResourceString("PdfPackagingSlip.Address2"), order.ShippingAddress2));
                 section.AddParagraph(String.Format("{0}, {1}", order.ShippingCountry, order.ShippingStateProvince));
                 section.AddParagraph(String.Format("{0}, {1}", order.ShippingCity, order.ShippingZipPostalCode));
 

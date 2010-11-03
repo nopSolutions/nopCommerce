@@ -29,21 +29,41 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
     public partial class EmailAccountAddControl : BaseNopAdministrationUserControl
     {
-        protected void Page_Load(object sender, EventArgs e)
+        protected EmailAccount Save()
         {
-
+            EmailAccount emailAccount = ctrlEmailAccountInfo.SaveInfo();
+            return emailAccount;
         }
 
-        protected void AddButton_Click(object sender, EventArgs e)
+        protected void SaveButton_Click(object sender, EventArgs e)
         {
-            try
+            if (Page.IsValid)
             {
-                EmailAccount emailAccount = ctrlEmailAccountInfo.SaveInfo();
-                Response.Redirect("EmailAccountDetails.aspx?EmailAccountID=" + emailAccount.EmailAccountId.ToString());
+                try
+                {
+                    EmailAccount emailAccount = Save();
+                    Response.Redirect("EmailAccounts.aspx");
+                }
+                catch (Exception exc)
+                {
+                    ProcessException(exc);
+                }
             }
-            catch (Exception exc)
+        }
+
+        protected void SaveAndStayButton_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
             {
-                ProcessException(exc);
+                try
+                {
+                    EmailAccount emailAccount = Save();
+                    Response.Redirect("EmailAccountDetails.aspx?EmailAccountID=" + emailAccount.EmailAccountId.ToString());
+                }
+                catch (Exception exc)
+                {
+                    ProcessException(exc);
+                }
             }
         }
     }

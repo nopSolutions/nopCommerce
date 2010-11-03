@@ -36,22 +36,43 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
     public partial class CheckoutAttributeAddControl : BaseNopAdministrationUserControl
     {
+        protected CheckoutAttribute Save()
+        {
+            CheckoutAttribute attribute = ctrlCheckoutAttributeInfo.SaveInfo();
+            ctrlCheckoutAttributeValues.SaveInfo();
+
+            IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
+                "AddNewCheckoutAttribute",
+                GetLocaleResourceString("ActivityLog.AddNewCheckoutAttribute"),
+                attribute.Name);
+
+            return attribute;
+        }
+
         protected void SaveButton_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
                 try
                 {
-                    CheckoutAttribute attribute = ctrlCheckoutAttributeInfo.SaveInfo();
-                    ctrlCheckoutAttributeValues.SaveInfo();
+                    CheckoutAttribute attribute = Save();
+                    Response.Redirect("CheckoutAttributes.aspx");
+                }
+                catch (Exception exc)
+                {
+                    ProcessException(exc);
+                }
+            }
+        }
 
-                    IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
-                        "AddNewCheckoutAttribute",
-                        GetLocaleResourceString("ActivityLog.AddNewCheckoutAttribute"),
-                        attribute.Name);
-
-                    if (attribute != null)
-                        Response.Redirect("CheckoutAttributeDetails.aspx?CheckoutAttributeID=" + attribute.CheckoutAttributeId);
+        protected void SaveAndStayButton_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+            {
+                try
+                {
+                    CheckoutAttribute attribute = Save();
+                    Response.Redirect("CheckoutAttributeDetails.aspx?CheckoutAttributeID=" + attribute.CheckoutAttributeId);
                 }
                 catch (Exception exc)
                 {

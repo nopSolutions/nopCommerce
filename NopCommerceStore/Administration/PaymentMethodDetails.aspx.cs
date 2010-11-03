@@ -115,41 +115,58 @@ namespace NopSolutions.NopCommerce.Web.Administration
             }
         }
 
+        protected PaymentMethod Save()
+        {
+            PaymentMethod paymentMethod = IoCFactory.Resolve<IPaymentManager>().GetPaymentMethodById(this.PaymentMethodId);
+
+            paymentMethod.Name = txtName.Text;
+            paymentMethod.VisibleName = txtVisibleName.Text;
+            paymentMethod.Description = txtDescription.Text;
+            paymentMethod.ConfigureTemplatePath = txtConfigureTemplatePath.Text;
+            paymentMethod.UserTemplatePath = txtUserTemplatePath.Text;
+            paymentMethod.ClassName = txtClassName.Text;
+            paymentMethod.SystemKeyword = txtSystemKeyword.Text;
+            paymentMethod.IsActive = cbActive.Checked;
+            paymentMethod.DisplayOrder = txtDisplayOrder.Value;
+
+            IoCFactory.Resolve<IPaymentManager>().UpdatePaymentMethod(paymentMethod);
+
+            var configureModule = GetConfigureModule();
+            if (configureModule != null)
+                configureModule.Save();
+
+            IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
+                "EditPaymentMethod",
+                GetLocaleResourceString("ActivityLog.EditPaymentMethod"),
+                paymentMethod.Name);
+
+            return paymentMethod;
+        }
+
         protected void SaveButton_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
                 try
                 {
-                    var paymentMethod = IoCFactory.Resolve<IPaymentManager>().GetPaymentMethodById(this.PaymentMethodId);
+                    PaymentMethod paymentMethod = Save();
+                    Response.Redirect("PaymentMethods.aspx");
+                }
+                catch (Exception exc)
+                {
+                    ProcessException(exc);
+                }
+            }
+        }
 
-                    if (paymentMethod != null)
-                    {
-                        paymentMethod.Name = txtName.Text;
-                        paymentMethod.VisibleName = txtVisibleName.Text;
-                        paymentMethod.Description = txtDescription.Text;
-                        paymentMethod.ConfigureTemplatePath = txtConfigureTemplatePath.Text;
-                        paymentMethod.UserTemplatePath = txtUserTemplatePath.Text;
-                        paymentMethod.ClassName = txtClassName.Text;
-                        paymentMethod.SystemKeyword = txtSystemKeyword.Text;
-                        paymentMethod.IsActive = cbActive.Checked;
-                        paymentMethod.DisplayOrder = txtDisplayOrder.Value;
-
-                        IoCFactory.Resolve<IPaymentManager>().UpdatePaymentMethod(paymentMethod);
-
-                        var configureModule = GetConfigureModule();
-                        if (configureModule != null)
-                            configureModule.Save();
-
-                        IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
-                            "EditPaymentMethod",
-                            GetLocaleResourceString("ActivityLog.EditPaymentMethod"),
-                            paymentMethod.Name);
-
-                        Response.Redirect(string.Format("PaymentMethodDetails.aspx?PaymentMethodID={0}&TabID={1}", paymentMethod.PaymentMethodId, this.GetActiveTabId(this.PaymentTabs)));
-                    }
-                    else
-                        Response.Redirect("PaymentMethods.aspx");
+        protected void SaveAndStayButton_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+            {
+                try
+                {
+                    PaymentMethod paymentMethod = Save();
+                    Response.Redirect(string.Format("PaymentMethodDetails.aspx?PaymentMethodID={0}&TabID={1}", paymentMethod.PaymentMethodId, this.GetActiveTabId(this.PaymentTabs)));
                 }
                 catch (Exception exc)
                 {

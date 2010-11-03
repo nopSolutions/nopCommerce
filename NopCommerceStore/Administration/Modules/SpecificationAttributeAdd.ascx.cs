@@ -30,20 +30,42 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
     public partial class SpecificationAttributeAddControl : BaseNopAdministrationUserControl
     {
-        protected void AddButton_Click(object sender, EventArgs e)
+        protected SpecificationAttribute Save()
+        {
+            SpecificationAttribute specificationAttribute = ctrlSpecificationAttributeInfo.SaveInfo();
+            ctrlSpecificationAttributeOptions.SaveInfo();
+
+            IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
+                "AddNewSpecAttribute",
+                GetLocaleResourceString("ActivityLog.AddNewSpecAttribute"),
+                specificationAttribute.Name);
+
+            return specificationAttribute;
+        }
+
+        protected void SaveButton_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
                 try
                 {
-                    SpecificationAttribute specificationAttribute = ctrlSpecificationAttributeInfo.SaveInfo();
-                    ctrlSpecificationAttributeOptions.SaveInfo();
+                    SpecificationAttribute specificationAttribute = Save();
+                    Response.Redirect("SpecificationAttributes.aspx");
+                }
+                catch (Exception exc)
+                {
+                    ProcessException(exc);
+                }
+            }
+        }
 
-                    IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
-                        "AddNewSpecAttribute",
-                        GetLocaleResourceString("ActivityLog.AddNewSpecAttribute"),
-                        specificationAttribute.Name);
-
+        protected void SaveAndStayButton_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+            {
+                try
+                {
+                    SpecificationAttribute specificationAttribute = Save();
                     Response.Redirect("SpecificationAttributeDetails.aspx?SpecificationAttributeID=" + specificationAttribute.SpecificationAttributeId.ToString());
                 }
                 catch (Exception exc)
