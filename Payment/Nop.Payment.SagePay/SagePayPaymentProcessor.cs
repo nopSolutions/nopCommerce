@@ -95,7 +95,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.SagePay
 
             StringBuilder cryptBuilder = new StringBuilder();
 
-            cryptBuilder.AppendFormat("VendorTxCode={0}", order.OrderId.ToString("N"));
+            cryptBuilder.AppendFormat("VendorTxCode={0}", order.OrderId.ToString());
             cryptBuilder.AppendFormat("&ReferrerID={0}", partnerID);
             cryptBuilder.AppendFormat("&Amount={0:0.00}", order.OrderTotal); // FormatNumber(order.OrderTotal, 2, -1, 0, 0)); // ** Formatted to 2 decimal places with leading digit **
             cryptBuilder.AppendFormat("&Currency={0}", IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency.CurrencyCode);
