@@ -41,7 +41,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected void BindGrid()
         {
-            var customerSessions = IoCFactory.Resolve<ICustomerManager>().GetAllCustomerSessionsWithNonEmptyShoppingCart();
+            var customerSessions = IoCFactory.Resolve<ICustomerService>().GetAllCustomerSessionsWithNonEmptyShoppingCart();
             if (customerSessions.Count == 0)
             {
                 lblCurrentShoppingCartsEmpty.Visible = true;
@@ -72,7 +72,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                 if (gvProductVariants != null)
                 {
-                    var cart = IoCFactory.Resolve<IShoppingCartManager>().GetShoppingCartByCustomerSessionGuid(ShoppingCartTypeEnum.ShoppingCart, 
+                    var cart = IoCFactory.Resolve<IShoppingCartService>().GetShoppingCartByCustomerSessionGuid(ShoppingCartTypeEnum.ShoppingCart, 
                         customerSession.CustomerSessionGuid);
 
                     gvProductVariants.DataSource = cart;
@@ -147,8 +147,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             Customer customer = shoppingCartItem.CustomerSession.Customer;
             StringBuilder sb = new StringBuilder();
             decimal taxRate = decimal.Zero;
-            decimal shoppingCartUnitPriceWithDiscountBase = IoCFactory.Resolve<ITaxManager>().GetPrice(shoppingCartItem.ProductVariant, PriceHelper.GetUnitPrice(shoppingCartItem, customer, true), customer, out taxRate);
-            decimal shoppingCartUnitPriceWithDiscount = IoCFactory.Resolve<ICurrencyManager>().ConvertCurrency(shoppingCartUnitPriceWithDiscountBase, IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+            decimal shoppingCartUnitPriceWithDiscountBase = IoCFactory.Resolve<ITaxService>().GetPrice(shoppingCartItem.ProductVariant, PriceHelper.GetUnitPrice(shoppingCartItem, customer, true), customer, out taxRate);
+            decimal shoppingCartUnitPriceWithDiscount = IoCFactory.Resolve<ICurrencyService>().ConvertCurrency(shoppingCartUnitPriceWithDiscountBase, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
             string unitPriceString = PriceHelper.FormatPrice(shoppingCartUnitPriceWithDiscount);
 
             sb.Append(unitPriceString);
@@ -160,16 +160,16 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             Customer customer = shoppingCartItem.CustomerSession.Customer;
             StringBuilder sb = new StringBuilder();
             decimal taxRate = decimal.Zero;
-            decimal shoppingCartItemSubTotalWithDiscountBase = IoCFactory.Resolve<ITaxManager>().GetPrice(shoppingCartItem.ProductVariant, PriceHelper.GetSubTotal(shoppingCartItem, customer, true), customer, out taxRate);
-            decimal shoppingCartItemSubTotalWithDiscount = IoCFactory.Resolve<ICurrencyManager>().ConvertCurrency(shoppingCartItemSubTotalWithDiscountBase, IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+            decimal shoppingCartItemSubTotalWithDiscountBase = IoCFactory.Resolve<ITaxService>().GetPrice(shoppingCartItem.ProductVariant, PriceHelper.GetSubTotal(shoppingCartItem, customer, true), customer, out taxRate);
+            decimal shoppingCartItemSubTotalWithDiscount = IoCFactory.Resolve<ICurrencyService>().ConvertCurrency(shoppingCartItemSubTotalWithDiscountBase, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
             string subTotalString = PriceHelper.FormatPrice(shoppingCartItemSubTotalWithDiscount);
 
             sb.Append(subTotalString);
 
-            decimal shoppingCartItemDiscountBase = IoCFactory.Resolve<ITaxManager>().GetPrice(shoppingCartItem.ProductVariant, PriceHelper.GetDiscountAmount(shoppingCartItem, customer), customer, out taxRate);
+            decimal shoppingCartItemDiscountBase = IoCFactory.Resolve<ITaxService>().GetPrice(shoppingCartItem.ProductVariant, PriceHelper.GetDiscountAmount(shoppingCartItem, customer), customer, out taxRate);
             if (shoppingCartItemDiscountBase > decimal.Zero)
             {
-                decimal shoppingCartItemDiscount = IoCFactory.Resolve<ICurrencyManager>().ConvertCurrency(shoppingCartItemDiscountBase, IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                decimal shoppingCartItemDiscount = IoCFactory.Resolve<ICurrencyService>().ConvertCurrency(shoppingCartItemDiscountBase, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
                 string discountString = PriceHelper.FormatPrice(shoppingCartItemDiscount);
 
                 sb.Append("<br />");

@@ -41,10 +41,10 @@ namespace NopSolutions.NopCommerce.Web
 
         private void BindData()
         {
-            if (IoCFactory.Resolve<IProductManager>().RecentlyAddedProductsEnabled)
+            if (IoCFactory.Resolve<IProductService>().RecentlyAddedProductsEnabled)
             {
-                int number = IoCFactory.Resolve<IProductManager>().RecentlyAddedProductsNumber;
-                var products = IoCFactory.Resolve<IProductManager>().GetRecentlyAddedProducts(number);
+                int number = IoCFactory.Resolve<IProductService>().RecentlyAddedProductsNumber;
+                var products = IoCFactory.Resolve<IProductService>().GetRecentlyAddedProducts(number);
                 rptrRecentlyAddedProducts.DataSource = products;
                 rptrRecentlyAddedProducts.DataBind();
             }

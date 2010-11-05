@@ -34,11 +34,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit.UsersOnline
         {
             try
             {
-                IoCFactory.Resolve<IOnlineUserManager>().PurgeUsers();
+                IoCFactory.Resolve<IOnlineUserService>().PurgeUsers();
             }
             catch (Exception ex)
             {
-                IoCFactory.Resolve<ILogManager>().InsertLog(LogTypeEnum.CustomerError, "Error purging online users.", ex);
+                IoCFactory.Resolve<ILogService>().InsertLog(LogTypeEnum.CustomerError, "Error purging online users.", ex);
             }
         }
     }

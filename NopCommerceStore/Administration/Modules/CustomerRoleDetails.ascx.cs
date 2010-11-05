@@ -46,7 +46,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             CustomerRole customerRole = ctrlCustomerRoleInfo.SaveInfo();
             ctrlCustomerRoleCustomers.SaveInfo();
 
-            IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
+            IoCFactory.Resolve<ICustomerActivityService>().InsertActivity(
                 "EditCustomerRole",
                 GetLocaleResourceString("ActivityLog.EditCustomerRole"),
                 customerRole.Name);
@@ -91,12 +91,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                CustomerRole customerRole = IoCFactory.Resolve<ICustomerManager>().GetCustomerRoleById(this.CustomerRoleId);
+                CustomerRole customerRole = IoCFactory.Resolve<ICustomerService>().GetCustomerRoleById(this.CustomerRoleId);
                 if (customerRole != null)
                 {
-                    IoCFactory.Resolve<ICustomerManager>().MarkCustomerRoleAsDeleted(this.CustomerRoleId);
+                    IoCFactory.Resolve<ICustomerService>().MarkCustomerRoleAsDeleted(this.CustomerRoleId);
 
-                    IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
+                    IoCFactory.Resolve<ICustomerActivityService>().InsertActivity(
                         "DeleteCustomerRole",
                         GetLocaleResourceString("ActivityLog.DeleteCustomerRole"),
                         customerRole.Name);

@@ -39,7 +39,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             GiftCard gc = ctrlGiftCardInfo.SaveInfo();
 
-            IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
+            IoCFactory.Resolve<ICustomerActivityService>().InsertActivity(
                 "EditGiftCard",
                 GetLocaleResourceString("ActivityLog.EditGiftCard"),
                 gc.GiftCardCouponCode);

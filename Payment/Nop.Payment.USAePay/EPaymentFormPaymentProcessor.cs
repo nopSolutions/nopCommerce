@@ -65,7 +65,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.USAePay
             post.Add("UMkey", EPaymentFormSettings.SourceKey);
             post.Add("UMcommand", (EPaymentFormSettings.AuthorizeOnly ? "authonly" : "sale"));
             post.Add("UMamount", String.Format(CultureInfo.InvariantCulture, "{0:0.00}", order.OrderTotal));
-            post.Add("UMcurrency", IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency.CurrencyCode);
+            post.Add("UMcurrency", IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode);
             post.Add("UMinvoice", String.Format("{0:0000000000}", order.OrderId));
             post.Add("UMredirApproved", String.Format("{0}USAePayEPaymentFormReturn.aspx", CommonHelper.GetStoreLocation(false)));
             post.Add("UMemail", order.BillingEmail);

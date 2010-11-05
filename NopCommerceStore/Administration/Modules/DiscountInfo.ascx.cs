@@ -41,7 +41,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             //discunt types
             this.ddlDiscountType.Items.Clear();
-            var discountTypes = IoCFactory.Resolve<IDiscountManager>().GetAllDiscountTypes();
+            var discountTypes = IoCFactory.Resolve<IDiscountService>().GetAllDiscountTypes();
             foreach (DiscountType discountType in discountTypes)
             {
                 ListItem item2 = new ListItem(discountType.Name, discountType.DiscountTypeId.ToString());
@@ -50,7 +50,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
             //discount requirements
             this.ddlDiscountRequirement.Items.Clear();
-            var discountRequirements = IoCFactory.Resolve<IDiscountManager>().GetAllDiscountRequirements();
+            var discountRequirements = IoCFactory.Resolve<IDiscountService>().GetAllDiscountRequirements();
             foreach (DiscountRequirement discountRequirement in discountRequirements)
             {
                 ListItem item2 = new ListItem(discountRequirement.Name, discountRequirement.DiscountRequirementId.ToString());
@@ -59,7 +59,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
             //discount limitations
             this.ddlDiscountLimitation.Items.Clear();
-            var discountLimitations = IoCFactory.Resolve<IDiscountManager>().GetAllDiscountLimitations();
+            var discountLimitations = IoCFactory.Resolve<IDiscountService>().GetAllDiscountLimitations();
             foreach (DiscountLimitation discountLimitation in discountLimitations)
             {
                 ListItem item2 = new ListItem(discountLimitation.Name, discountLimitation.DiscountLimitationId.ToString());
@@ -70,7 +70,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             this.ddlRequirementBillingCountryIs.Items.Clear();
             ListItem rbciEmpty = new ListItem(GetLocaleResourceString("Admin.DiscountInfo.RequirementBillingCountryIs.SelectCountry"), "0");
             this.ddlRequirementBillingCountryIs.Items.Add(rbciEmpty);
-            var billingCountries = IoCFactory.Resolve<ICountryManager>().GetAllCountriesForBilling();
+            var billingCountries = IoCFactory.Resolve<ICountryService>().GetAllCountriesForBilling();
             foreach (Country country in billingCountries)
             {
                 ListItem ddlCountryItem2 = new ListItem(country.Name, country.CountryId.ToString());
@@ -81,7 +81,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             this.ddlRequirementShippingCountryIs.Items.Clear();
             ListItem rsciEmpty = new ListItem(GetLocaleResourceString("Admin.DiscountInfo.RequirementShippingCountryIs.SelectCountry"), "0");
             this.ddlRequirementShippingCountryIs.Items.Add(rsciEmpty);
-            var shippingCountries = IoCFactory.Resolve<ICountryManager>().GetAllCountriesForShipping();
+            var shippingCountries = IoCFactory.Resolve<ICountryService>().GetAllCountriesForShipping();
             foreach (Country country in shippingCountries)
             {
                 ListItem ddlCountryItem2 = new ListItem(country.Name, country.CountryId.ToString());
@@ -115,7 +115,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     int id = 0;
                     if (int.TryParse(val1.Trim(), out id))
                     {
-                        if (IoCFactory.Resolve<IProductManager>().GetProductVariantById(id) != null)
+                        if (IoCFactory.Resolve<IProductService>().GetProductVariantById(id) != null)
                             result.Add(id);
                     }
                 }
@@ -125,13 +125,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         private void BindData()
         {
-            Discount discount = IoCFactory.Resolve<IDiscountManager>().GetDiscountById(this.DiscountId);
+            Discount discount = IoCFactory.Resolve<IDiscountService>().GetDiscountById(this.DiscountId);
             if (discount != null)
             {
                 CommonHelper.SelectListItem(this.ddlDiscountType, discount.DiscountTypeId);
                 CommonHelper.SelectListItem(this.ddlDiscountRequirement, discount.DiscountRequirementId);
                 this.txtRequirementSpentAmount.Value = discount.RequirementSpentAmount;
-                this.txtRestrictedProductVariants.Text = GenerateListOfRestrictedProductVariants(IoCFactory.Resolve<IProductManager>().GetProductVariantsRestrictedByDiscountId(discount.DiscountId));
+                this.txtRestrictedProductVariants.Text = GenerateListOfRestrictedProductVariants(IoCFactory.Resolve<IProductService>().GetProductVariantsRestrictedByDiscountId(discount.DiscountId));
                 CommonHelper.SelectListItem(this.ddlRequirementBillingCountryIs, discount.RequirementBillingCountryIs);
                 CommonHelper.SelectListItem(this.ddlRequirementShippingCountryIs, discount.RequirementShippingCountryIs);
                 CommonHelper.SelectListItem(this.ddlDiscountLimitation, discount.DiscountLimitationId);
@@ -165,10 +165,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         private void BindUsageHistory()
         {
-            Discount discount = IoCFactory.Resolve<IDiscountManager>().GetDiscountById(this.DiscountId);
+            Discount discount = IoCFactory.Resolve<IDiscountService>().GetDiscountById(this.DiscountId);
             if (discount != null)
             {
-                gvDiscountUsageHistory.DataSource = IoCFactory.Resolve<IDiscountManager>().GetAllDiscountUsageHistoryEntries(discount.DiscountId, null, null);
+                gvDiscountUsageHistory.DataSource = IoCFactory.Resolve<IDiscountService>().GetAllDiscountUsageHistoryEntries(discount.DiscountId, null, null);
                 gvDiscountUsageHistory.DataBind();
             }
         }
@@ -247,7 +247,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             }
 
 
-            Discount discount = IoCFactory.Resolve<IDiscountManager>().GetDiscountById(this.DiscountId);
+            Discount discount = IoCFactory.Resolve<IDiscountService>().GetDiscountById(this.DiscountId);
 
             if (discount != null)
             {
@@ -266,18 +266,18 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 discount.EndDate = discountEndDate;
                 discount.RequiresCouponCode = requiresCouponCode;
                 discount.CouponCode = couponCode;
-                IoCFactory.Resolve<IDiscountManager>().UpdateDiscount(discount);
+                IoCFactory.Resolve<IDiscountService>().UpdateDiscount(discount);
 
                 //discount requirements
                 foreach (CustomerRole customerRole in discount.CustomerRoles)
-                    IoCFactory.Resolve<ICustomerManager>().RemoveDiscountFromCustomerRole(customerRole.CustomerRoleId, discount.DiscountId);
+                    IoCFactory.Resolve<ICustomerService>().RemoveDiscountFromCustomerRole(customerRole.CustomerRoleId, discount.DiscountId);
                 foreach (int customerRoleId in CustomerRoleMappingControl.SelectedCustomerRoleIds)
-                    IoCFactory.Resolve<ICustomerManager>().AddDiscountToCustomerRole(customerRoleId, discount.DiscountId);
+                    IoCFactory.Resolve<ICustomerService>().AddDiscountToCustomerRole(customerRoleId, discount.DiscountId);
 
-                foreach (ProductVariant pv in IoCFactory.Resolve<IProductManager>().GetProductVariantsRestrictedByDiscountId(discount.DiscountId))
-                    IoCFactory.Resolve<IDiscountManager>().RemoveDiscountRestriction(pv.ProductVariantId, discount.DiscountId);
+                foreach (ProductVariant pv in IoCFactory.Resolve<IProductService>().GetProductVariantsRestrictedByDiscountId(discount.DiscountId))
+                    IoCFactory.Resolve<IDiscountService>().RemoveDiscountRestriction(pv.ProductVariantId, discount.DiscountId);
                 foreach (int productVariantId in restrictedProductVariantIds)
-                    IoCFactory.Resolve<IDiscountManager>().AddDiscountRestriction(productVariantId, discount.DiscountId);
+                    IoCFactory.Resolve<IDiscountService>().AddDiscountRestriction(productVariantId, discount.DiscountId);
             }
             else
             {
@@ -299,14 +299,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     RequiresCouponCode = requiresCouponCode,
                     CouponCode = couponCode
                 };
-                IoCFactory.Resolve<IDiscountManager>().InsertDiscount(discount);
+                IoCFactory.Resolve<IDiscountService>().InsertDiscount(discount);
 
                 //discount requirements
                 foreach (int customerRoleId in CustomerRoleMappingControl.SelectedCustomerRoleIds)
-                    IoCFactory.Resolve<ICustomerManager>().AddDiscountToCustomerRole(customerRoleId, discount.DiscountId);
+                    IoCFactory.Resolve<ICustomerService>().AddDiscountToCustomerRole(customerRoleId, discount.DiscountId);
 
                 foreach (int productVariantId in restrictedProductVariantIds)
-                    IoCFactory.Resolve<IDiscountManager>().AddDiscountRestriction(productVariantId, discount.DiscountId);
+                    IoCFactory.Resolve<IDiscountService>().AddDiscountRestriction(productVariantId, discount.DiscountId);
             }
 
             return discount;
@@ -315,7 +315,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         protected string GetCustomerInfo(int customerId)
         {
             string customerInfo = string.Empty;
-            Customer customer = IoCFactory.Resolve<ICustomerManager>().GetCustomerById(customerId);
+            Customer customer = IoCFactory.Resolve<ICustomerService>().GetCustomerById(customerId);
             if (customer != null)
             {
                 if (customer.IsGuest)
@@ -368,7 +368,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             if (e.CommandName == "DeleteUsageHistory")
             {
-                IoCFactory.Resolve<IDiscountManager>().DeleteDiscountUsageHistory(Convert.ToInt32(e.CommandArgument));
+                IoCFactory.Resolve<IDiscountService>().DeleteDiscountUsageHistory(Convert.ToInt32(e.CommandArgument));
                 BindUsageHistory();
             }
         }

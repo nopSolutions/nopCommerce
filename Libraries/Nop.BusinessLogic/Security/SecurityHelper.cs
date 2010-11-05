@@ -143,7 +143,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
             if (oldEncryptionPrivateKey == newEncryptionPrivateKey)
                 return;
 
-            var orders = IoCFactory.Resolve<IOrderManager>().LoadAllOrders();
+            var orders = IoCFactory.Resolve<IOrderService>().LoadAllOrders();
             //uncomment this line to support transactions
             //using (var scope = new System.Transactions.TransactionScope())
             {
@@ -172,7 +172,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
                     order.CardCvv2 = encryptedCardCvv2;
                     order.CardExpirationMonth = encryptedCardExpirationMonth;
                     order.CardExpirationYear = encryptedCardExpirationYear;
-                    IoCFactory.Resolve<IOrderManager>().UpdateOrder(order);
+                    IoCFactory.Resolve<IOrderService>().UpdateOrder(order);
                 }
 
                 IoCFactory.Resolve<ISettingManager>().SetParam("Security.EncryptionPrivateKey", newEncryptionPrivateKey);

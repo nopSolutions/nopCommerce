@@ -189,7 +189,7 @@
                     Value="0" RequiredErrorMessage="<% $NopResources:Admin.CheckoutAttributeValues.New.PriceAdjustment.RequiredErrorMessage %>"
                     MinimumValue="0" MaximumValue="100000000" RangeErrorMessage="<% $NopResources:Admin.CheckoutAttributeValues.New.PriceAdjustment.RangeErrorMessage %>"
                     ValidationGroup="NewCheckoutAttributeValue"></nopCommerce:DecimalTextBox>
-                [<%=IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency.CurrencyCode%>]
+                [<%=IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode%>]
             </td>
         </tr>
         <tr>
@@ -203,7 +203,7 @@
                     Value="0" RequiredErrorMessage="<% $NopResources:Admin.CheckoutAttributeValues.New.WeightAdjustment.RequiredErrorMessage %>"
                     MinimumValue="0" MaximumValue="999999" RangeErrorMessage="<% $NopResources:Admin.CheckoutAttributeValues.New.WeightAdjustment.RangeErrorMessage %>"
                     ValidationGroup="NewCheckoutAttributeValue"></nopCommerce:DecimalTextBox>
-                [<%=IoCFactory.Resolve<IMeasureManager>().BaseWeightIn.Name%>]
+                [<%=IoCFactory.Resolve<IMeasureService>().BaseWeightIn.Name%>]
             </td>
         </tr>
         <tr>

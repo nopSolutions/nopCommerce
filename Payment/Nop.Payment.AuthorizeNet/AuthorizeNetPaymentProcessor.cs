@@ -157,7 +157,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.AuthorizeNET
             form.Add("x_version", APIVersion);
             form.Add("x_relay_response", "FALSE");
             form.Add("x_method", "CC");
-            form.Add("x_currency_code", IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency.CurrencyCode);
+            form.Add("x_currency_code", IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode);
             if (transactionMode == TransactMode.Authorize)
                 form.Add("x_type", "AUTH_ONLY");
             else if (transactionMode == TransactMode.AuthorizeAndCapture)
@@ -268,7 +268,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.AuthorizeNET
             form.Add("x_version", APIVersion);
             form.Add("x_relay_response", "FALSE");
             form.Add("x_method", "CC");
-            form.Add("x_currency_code", IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency.CurrencyCode);
+            form.Add("x_currency_code", IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode);
             form.Add("x_type", "PRIOR_AUTH_CAPTURE");
 
             form.Add("x_amount", order.OrderTotal.ToString("0.00", CultureInfo.InvariantCulture));

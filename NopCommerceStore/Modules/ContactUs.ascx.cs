@@ -65,11 +65,11 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     string email = txtEmail.Text.Trim();
                     string fullName = txtFullName.Text.Trim();
                     string subject = string.Format("{0}. {1}", IoCFactory.Resolve<ISettingManager>().StoreName, "Contact us");
-                    string body = IoCFactory.Resolve<IMessageManager>().FormatContactUsFormText(txtEnquiry.Text);
+                    string body = IoCFactory.Resolve<IMessageService>().FormatContactUsFormText(txtEnquiry.Text);
 
                     var from = new MailAddress(email, fullName);
                     
-                    var emailAccount = IoCFactory.Resolve<IMessageManager>().DefaultEmailAccount;
+                    var emailAccount = IoCFactory.Resolve<IMessageService>().DefaultEmailAccount;
                     //required for some SMTP servers
                     if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Email.UseSystemEmailForContactUsForm"))
                     {
@@ -77,7 +77,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                         body = string.Format("<b>From</b>: {0} - {1}<br /><br />{2}", Server.HtmlEncode(fullName), Server.HtmlEncode(email), body);
                     }
                     var to = new MailAddress(emailAccount.Email, emailAccount.DisplayName);
-                    IoCFactory.Resolve<IMessageManager>().InsertQueuedEmail(5, from, to, string.Empty, string.Empty, subject, body,
+                    IoCFactory.Resolve<IMessageService>().InsertQueuedEmail(5, from, to, string.Empty, string.Empty, subject, body,
                         DateTime.UtcNow, 0, null, emailAccount.EmailAccountId);
 
                     pnlResult.Visible = true;
@@ -85,7 +85,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 }
                 catch (Exception exc)
                 {
-                    IoCFactory.Resolve<ILogManager>().InsertLog(LogTypeEnum.MailError, string.Format("Error sending \"Contact us\" email."), exc);
+                    IoCFactory.Resolve<ILogService>().InsertLog(LogTypeEnum.MailError, string.Format("Error sending \"Contact us\" email."), exc);
                 }
             }
         }

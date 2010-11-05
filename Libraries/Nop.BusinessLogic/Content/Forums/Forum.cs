@@ -111,7 +111,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         {
             get
             {
-                return IoCFactory.Resolve<IForumManager>().GetForumGroupById(this.ForumGroupId);
+                return IoCFactory.Resolve<IForumService>().GetForumGroupById(this.ForumGroupId);
             }
         }
 
@@ -122,7 +122,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         {
             get
             {
-                return IoCFactory.Resolve<IForumManager>().GetTopicById(this.LastTopicId);
+                return IoCFactory.Resolve<IForumService>().GetTopicById(this.LastTopicId);
             }
         }
 
@@ -133,7 +133,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         {
             get
             {
-                return IoCFactory.Resolve<IForumManager>().GetPostById(this.LastPostId);
+                return IoCFactory.Resolve<IForumService>().GetPostById(this.LastPostId);
             }
         }
 
@@ -144,7 +144,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         {
             get
             {
-                return IoCFactory.Resolve<ICustomerManager>().GetCustomerById(this.LastPostUserId);
+                return IoCFactory.Resolve<ICustomerService>().GetCustomerById(this.LastPostUserId);
             }
         }
         #endregion

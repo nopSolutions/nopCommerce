@@ -90,7 +90,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.CCAvenue
             remotePostHelper.Url = _payURI;
             remotePostHelper.Add("Merchant_Id", _merchantID.ToString());
             remotePostHelper.Add("Amount", order.OrderTotal.ToString(new CultureInfo("en-US", false).NumberFormat));
-            remotePostHelper.Add("Currency", IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency.CurrencyCode);
+            remotePostHelper.Add("Currency", IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode);
             remotePostHelper.Add("Order_Id", order.OrderId.ToString());
             remotePostHelper.Add("Redirect_Url", CommonHelper.GetStoreLocation(false) + "CCAvenueReturn.aspx");
             remotePostHelper.Add("Checksum", _myUtility.getchecksum(_merchantID.ToString(), order.OrderId.ToString(), order.OrderTotal.ToString(), CommonHelper.GetStoreLocation(false) + "CCAvenueReturn.aspx", _key));
@@ -102,13 +102,13 @@ namespace NopSolutions.NopCommerce.Payment.Methods.CCAvenue
             remotePostHelper.Add("billing_cust_tel", order.BillingPhoneNumber);
             remotePostHelper.Add("billing_cust_email", order.BillingEmail);
             remotePostHelper.Add("billing_cust_city", order.BillingCity);
-            StateProvince billingStateProvince = IoCFactory.Resolve<IStateProvinceManager>().GetStateProvinceById(order.BillingStateProvinceId);
+            StateProvince billingStateProvince = IoCFactory.Resolve<IStateProvinceService>().GetStateProvinceById(order.BillingStateProvinceId);
             if (billingStateProvince != null)
                 remotePostHelper.Add("billing_cust_state", billingStateProvince.Abbreviation);
             else
                 remotePostHelper.Add("billing_cust_state", order.BillingStateProvince);
             remotePostHelper.Add("billing_zip_code", order.BillingZipPostalCode);
-            Country billingCountry = IoCFactory.Resolve<ICountryManager>().GetCountryById(order.BillingCountryId);
+            Country billingCountry = IoCFactory.Resolve<ICountryService>().GetCountryById(order.BillingCountryId);
             if (billingCountry != null)
                 remotePostHelper.Add("billing_cust_country", billingCountry.ThreeLetterIsoCode);
             else
@@ -123,13 +123,13 @@ namespace NopSolutions.NopCommerce.Payment.Methods.CCAvenue
                 remotePostHelper.Add("delivery_cust_notes", string.Empty);
                 remotePostHelper.Add("delivery_cust_tel", order.ShippingPhoneNumber);
                 remotePostHelper.Add("delivery_cust_city", order.ShippingCity);
-                StateProvince deliveryStateProvince = IoCFactory.Resolve<IStateProvinceManager>().GetStateProvinceById(order.ShippingStateProvinceId);
+                StateProvince deliveryStateProvince = IoCFactory.Resolve<IStateProvinceService>().GetStateProvinceById(order.ShippingStateProvinceId);
                 if (deliveryStateProvince != null)
                     remotePostHelper.Add("delivery_cust_state", deliveryStateProvince.Abbreviation);
                 else
                     remotePostHelper.Add("delivery_cust_state", order.ShippingStateProvince);
                 remotePostHelper.Add("delivery_zip_code", order.ShippingZipPostalCode);
-                Country deliveryCountry = IoCFactory.Resolve<ICountryManager>().GetCountryById(order.ShippingCountryId);
+                Country deliveryCountry = IoCFactory.Resolve<ICountryService>().GetCountryById(order.ShippingCountryId);
                 if (deliveryCountry != null)
                     remotePostHelper.Add("delivery_cust_country", deliveryCountry.ThreeLetterIsoCode);
                 else

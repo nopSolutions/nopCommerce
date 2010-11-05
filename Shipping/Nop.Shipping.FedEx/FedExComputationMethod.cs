@@ -82,7 +82,7 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.FedEx
             Discount orderSubTotalAppliedDiscount = null;
             decimal subTotalWithoutDiscountBase = decimal.Zero;
             decimal subTotalWithDiscountBase = decimal.Zero;
-            IoCFactory.Resolve<IShoppingCartManager>().GetShoppingCartSubTotal(ShipmentPackage.Items,
+            IoCFactory.Resolve<IShoppingCartService>().GetShoppingCartSubTotal(ShipmentPackage.Items,
                 ShipmentPackage.Customer, out orderSubTotalDiscountAmount, out orderSubTotalAppliedDiscount,
                 out subTotalWithoutDiscountBase, out subTotalWithDiscountBase);
             subtotalBase = subTotalWithDiscountBase;
@@ -101,7 +101,7 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.FedEx
             request.RequestedShipment.DropoffType = DropoffType.REGULAR_PICKUP; //Drop off types are BUSINESS_SERVICE_CENTER, DROP_BOX, REGULAR_PICKUP, REQUEST_COURIER, STATION
             request.RequestedShipment.TotalInsuredValue = new Money();
             request.RequestedShipment.TotalInsuredValue.Amount = orderSubTotal;
-            request.RequestedShipment.TotalInsuredValue.Currency = IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency.CurrencyCode.ToString();
+            request.RequestedShipment.TotalInsuredValue.Currency = IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode.ToString();
             request.RequestedShipment.ShipTimestamp = DateTime.Now; // Shipping date and time
             request.RequestedShipment.ShipTimestampSpecified = true;
             request.RequestedShipment.RateRequestTypes = new RateRequestType[2];
@@ -160,18 +160,18 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.FedEx
             // Passing individual pieces rate request
             // ------------------------------------------
 
-            var usedMeasureWeight = IoCFactory.Resolve<IMeasureManager>().GetMeasureWeightBySystemKeyword(MEASUREWEIGHTSYSTEMKEYWORD);
+            var usedMeasureWeight = IoCFactory.Resolve<IMeasureService>().GetMeasureWeightBySystemKeyword(MEASUREWEIGHTSYSTEMKEYWORD);
             if (usedMeasureWeight == null)
                 throw new NopException(string.Format("FedEx shipping service. Could not load \"{0}\" measure weight", MEASUREWEIGHTSYSTEMKEYWORD));
 
-            var usedMeasureDimension = IoCFactory.Resolve<IMeasureManager>().GetMeasureDimensionBySystemKeyword(MEASUREDIMENSIONSYSTEMKEYWORD);
+            var usedMeasureDimension = IoCFactory.Resolve<IMeasureService>().GetMeasureDimensionBySystemKeyword(MEASUREDIMENSIONSYSTEMKEYWORD);
             if (usedMeasureDimension == null)
                 throw new NopException(string.Format("FedEx shipping service. Could not load \"{0}\" measure dimension", MEASUREDIMENSIONSYSTEMKEYWORD));
 
-            int length = Convert.ToInt32(Math.Ceiling(IoCFactory.Resolve<IMeasureManager>().ConvertDimension(ShipmentPackage.GetTotalLength(), IoCFactory.Resolve<IMeasureManager>().BaseDimensionIn, usedMeasureDimension)));
-            int height = Convert.ToInt32(Math.Ceiling(IoCFactory.Resolve<IMeasureManager>().ConvertDimension(ShipmentPackage.GetTotalHeight(), IoCFactory.Resolve<IMeasureManager>().BaseDimensionIn, usedMeasureDimension)));
-            int width = Convert.ToInt32(Math.Ceiling(IoCFactory.Resolve<IMeasureManager>().ConvertDimension(ShipmentPackage.GetTotalWidth(), IoCFactory.Resolve<IMeasureManager>().BaseDimensionIn, usedMeasureDimension)));
-            int weight = Convert.ToInt32(Math.Ceiling(IoCFactory.Resolve<IMeasureManager>().ConvertWeight(IoCFactory.Resolve<IShippingManager>().GetShoppingCartTotalWeight(ShipmentPackage.Items, ShipmentPackage.Customer), IoCFactory.Resolve<IMeasureManager>().BaseWeightIn, usedMeasureWeight)));
+            int length = Convert.ToInt32(Math.Ceiling(IoCFactory.Resolve<IMeasureService>().ConvertDimension(ShipmentPackage.GetTotalLength(), IoCFactory.Resolve<IMeasureService>().BaseDimensionIn, usedMeasureDimension)));
+            int height = Convert.ToInt32(Math.Ceiling(IoCFactory.Resolve<IMeasureService>().ConvertDimension(ShipmentPackage.GetTotalHeight(), IoCFactory.Resolve<IMeasureService>().BaseDimensionIn, usedMeasureDimension)));
+            int width = Convert.ToInt32(Math.Ceiling(IoCFactory.Resolve<IMeasureService>().ConvertDimension(ShipmentPackage.GetTotalWidth(), IoCFactory.Resolve<IMeasureService>().BaseDimensionIn, usedMeasureDimension)));
+            int weight = Convert.ToInt32(Math.Ceiling(IoCFactory.Resolve<IMeasureService>().ConvertWeight(IoCFactory.Resolve<IShippingService>().GetShoppingCartTotalWeight(ShipmentPackage.Items, ShipmentPackage.Customer), IoCFactory.Resolve<IMeasureService>().BaseWeightIn, usedMeasureWeight)));
             if (length < 1)
                 length = 1;
             if (height < 1)
@@ -200,7 +200,7 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.FedEx
                 request.RequestedShipment.RequestedPackageLineItems[0].Dimensions.Units = LinearUnits.IN;
                 request.RequestedShipment.RequestedPackageLineItems[0].InsuredValue = new Money(); // insured value
                 request.RequestedShipment.RequestedPackageLineItems[0].InsuredValue.Amount = orderSubTotal;
-                request.RequestedShipment.RequestedPackageLineItems[0].InsuredValue.Currency = IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency.CurrencyCode.ToString();
+                request.RequestedShipment.RequestedPackageLineItems[0].InsuredValue.Currency = IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode.ToString();
 
             }
             else
@@ -254,7 +254,7 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.FedEx
                     request.RequestedShipment.RequestedPackageLineItems[i].Dimensions.Units = LinearUnits.IN;
                     request.RequestedShipment.RequestedPackageLineItems[i].InsuredValue = new Money(); // insured value
                     request.RequestedShipment.RequestedPackageLineItems[i].InsuredValue.Amount = orderSubTotal2;
-                    request.RequestedShipment.RequestedPackageLineItems[i].InsuredValue.Currency = IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency.CurrencyCode.ToString();
+                    request.RequestedShipment.RequestedPackageLineItems[i].InsuredValue.Currency = IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode.ToString();
                 }
             }
         }

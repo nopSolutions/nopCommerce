@@ -35,7 +35,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             Setting setting = ctrlSettingInfo.SaveInfo();
 
-            IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
+            IoCFactory.Resolve<ICustomerActivityService>().InsertActivity(
                 "AddNewSetting",
                 GetLocaleResourceString("ActivityLog.AddNewSetting"),
                 setting.Name);

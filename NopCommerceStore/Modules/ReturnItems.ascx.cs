@@ -92,14 +92,14 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 string loginURL = SEOHelper.GetLoginPageUrl(true);
                 Response.Redirect(loginURL);
             }
-            order = IoCFactory.Resolve<IOrderManager>().GetOrderById(this.OrderId);
+            order = IoCFactory.Resolve<IOrderService>().GetOrderById(this.OrderId);
             if (order == null || order.Deleted || NopContext.Current.User.CustomerId != order.CustomerId)
             {
                 string loginURL = SEOHelper.GetLoginPageUrl(true);
                 Response.Redirect(loginURL);
             }
 
-            if (!IoCFactory.Resolve<IOrderManager>().IsReturnRequestAllowed(order))
+            if (!IoCFactory.Resolve<IOrderService>().IsReturnRequestAllowed(order))
             {
                 Response.Redirect(CommonHelper.GetStoreLocation());
             }
@@ -125,7 +125,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     if (quantity > 0)
                     {
                         int opvId = Convert.ToInt32(hfOpvId.Value);
-                        var opv = IoCFactory.Resolve<IOrderManager>().GetOrderProductVariantById(opvId);
+                        var opv = IoCFactory.Resolve<IOrderService>().GetOrderProductVariantById(opvId);
                         if (opv != null)
                         {
                             if (opv.Order.CustomerId == NopContext.Current.User.CustomerId)
@@ -144,7 +144,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                                     CreatedOn = dtNow,
                                     UpdatedOn = dtNow
                                 };
-                                IoCFactory.Resolve<IOrderManager>().InsertReturnRequest(rr, true);
+                                IoCFactory.Resolve<IOrderService>().InsertReturnRequest(rr, true);
                                 count++; 
                             }
                         }
@@ -188,7 +188,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
         #region Methods
         public string GetProductVariantName(int productVariantId)
         {
-            var productVariant = IoCFactory.Resolve<IProductManager>().GetProductVariantById(productVariantId);
+            var productVariant = IoCFactory.Resolve<IProductService>().GetProductVariantById(productVariantId);
             if (productVariant != null)
                 return productVariant.LocalizedFullProductName;
             return "Not available. ID=" + productVariantId.ToString();
@@ -204,7 +204,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         public string GetProductUrl(int productVariantId)
         {
-            var productVariant = IoCFactory.Resolve<IProductManager>().GetProductVariantById(productVariantId);
+            var productVariant = IoCFactory.Resolve<IProductService>().GetProductVariantById(productVariantId);
             if (productVariant != null)
                 return SEOHelper.GetProductUrl(productVariant.ProductId);
             return string.Empty;

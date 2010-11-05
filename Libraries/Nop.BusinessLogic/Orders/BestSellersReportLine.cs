@@ -66,7 +66,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             get
             {
                 if (_pv == null)
-                    _pv = IoCFactory.Resolve<IProductManager>().GetProductVariantById(this.ProductVariantId);
+                    _pv = IoCFactory.Resolve<IProductService>().GetProductVariantById(this.ProductVariantId);
                 return _pv;
             }
         }

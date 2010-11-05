@@ -81,7 +81,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
         {
             get
             {
-                return IoCFactory.Resolve<INewsManager>().GetNewsById(this.NewsId);
+                return IoCFactory.Resolve<INewsService>().GetNewsById(this.NewsId);
             }
         }
 
@@ -92,7 +92,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
         {
             get
             {
-                return IoCFactory.Resolve<ICustomerManager>().GetCustomerById(this.CustomerId);
+                return IoCFactory.Resolve<ICustomerService>().GetCustomerById(this.CustomerId);
             }
         }
         #endregion

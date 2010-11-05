@@ -94,7 +94,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Moneybookers
             //supported moneybookers languages (EN, DE, ES, FR, IT, PL, GR, RO, RU, TR, CN, CZ or NL)
             remotePostHelper.Add("language", "EN");
             remotePostHelper.Add("amount", order.OrderTotal.ToString(new CultureInfo("en-US", false).NumberFormat));
-            remotePostHelper.Add("currency", IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency.CurrencyCode);
+            remotePostHelper.Add("currency", IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode);
             remotePostHelper.Add("detail1_description", "Order ID:");
             remotePostHelper.Add("detail1_text", order.OrderId.ToString());
 
@@ -104,12 +104,12 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Moneybookers
             remotePostHelper.Add("phone_number", order.BillingPhoneNumber);
             remotePostHelper.Add("postal_code", order.BillingZipPostalCode);
             remotePostHelper.Add("city", order.BillingCity);
-            StateProvince billingStateProvince = IoCFactory.Resolve<IStateProvinceManager>().GetStateProvinceById(order.BillingStateProvinceId);
+            StateProvince billingStateProvince = IoCFactory.Resolve<IStateProvinceService>().GetStateProvinceById(order.BillingStateProvinceId);
             if (billingStateProvince != null)
                 remotePostHelper.Add("state", billingStateProvince.Abbreviation);
             else
                 remotePostHelper.Add("state", order.BillingStateProvince);
-            Country billingCountry = IoCFactory.Resolve<ICountryManager>().GetCountryById(order.BillingCountryId);
+            Country billingCountry = IoCFactory.Resolve<ICountryService>().GetCountryById(order.BillingCountryId);
             if (billingCountry != null)
                 remotePostHelper.Add("country", billingCountry.ThreeLetterIsoCode);
             else

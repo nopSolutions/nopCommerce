@@ -38,7 +38,7 @@ namespace NopSolutions.NopCommerce.Web
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!IoCFactory.Resolve<IBlogManager>().BlogEnabled)
+            if (!IoCFactory.Resolve<IBlogService>().BlogEnabled)
             {
                 Response.Redirect(CommonHelper.GetStoreLocation());
             }

@@ -53,7 +53,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         private void BindRecurringPayments()
         {
-            var recurringPayments = IoCFactory.Resolve<IOrderManager>().SearchRecurringPayments(NopContext.Current.User.CustomerId,
+            var recurringPayments = IoCFactory.Resolve<IOrderService>().SearchRecurringPayments(NopContext.Current.User.CustomerId,
                 0, null);
             if (recurringPayments.Count > 0)
             {
@@ -133,10 +133,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 var hfRecurringPaymentId = row.FindControl("hfRecurringPaymentId") as HiddenField;
 
                 int recurringPaymentId = int.Parse(hfRecurringPaymentId.Value);
-                var rp = IoCFactory.Resolve<IOrderManager>().GetRecurringPaymentById(recurringPaymentId);
-                if (IoCFactory.Resolve<IOrderManager>().CanCancelRecurringPayment(NopContext.Current.User, rp))
+                var rp = IoCFactory.Resolve<IOrderService>().GetRecurringPaymentById(recurringPaymentId);
+                if (IoCFactory.Resolve<IOrderService>().CanCancelRecurringPayment(NopContext.Current.User, rp))
                 {
-                    rp = IoCFactory.Resolve<IOrderManager>().CancelRecurringPayment(rp.RecurringPaymentId);
+                    rp = IoCFactory.Resolve<IOrderService>().CancelRecurringPayment(rp.RecurringPaymentId);
                 }
                 BindRecurringPayments();
             }
@@ -152,7 +152,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 if (btnCancelRecurringPayment != null)
                 {
                     btnCancelRecurringPayment.CommandArgument = e.Row.RowIndex.ToString();
-                    btnCancelRecurringPayment.Visible = IoCFactory.Resolve<IOrderManager>().CanCancelRecurringPayment(NopContext.Current.User, rp);
+                    btnCancelRecurringPayment.Visible = IoCFactory.Resolve<IOrderService>().CanCancelRecurringPayment(NopContext.Current.User, rp);
                 }
             }
         }
@@ -165,7 +165,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 var phReturnRequest = (PlaceHolder)e.Item.FindControl("phReturnRequest");
                 if (phReturnRequest != null)
                 {
-                    phReturnRequest.Visible = IoCFactory.Resolve<IOrderManager>().IsReturnRequestAllowed(order);
+                    phReturnRequest.Visible = IoCFactory.Resolve<IOrderService>().IsReturnRequestAllowed(order);
                 }
             }
         }

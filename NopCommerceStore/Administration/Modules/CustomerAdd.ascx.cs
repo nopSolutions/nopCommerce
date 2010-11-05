@@ -37,7 +37,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             Customer customer = ctrlCustomerInfo.SaveInfo();
             ctrlCustomerRoleMappings.SaveInfo(customer.CustomerId);
 
-            IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
+            IoCFactory.Resolve<ICustomerActivityService>().InsertActivity(
                 "AddNewCustomer",
                 GetLocaleResourceString("ActivityLog.AddNewCustomer"),
                 customer.CustomerId);

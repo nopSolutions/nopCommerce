@@ -77,7 +77,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         {
             get
             {
-                return IoCFactory.Resolve<ICustomerManager>().GetCustomerById(this.UserId);
+                return IoCFactory.Resolve<ICustomerService>().GetCustomerById(this.UserId);
             }
         }
         
@@ -88,7 +88,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         {
             get
             {
-                return IoCFactory.Resolve<IForumManager>().GetForumById(this.ForumId);
+                return IoCFactory.Resolve<IForumService>().GetForumById(this.ForumId);
             }
         }
 
@@ -99,7 +99,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         {
             get
             {
-                return IoCFactory.Resolve<IForumManager>().GetTopicById(this.TopicId);
+                return IoCFactory.Resolve<IForumService>().GetTopicById(this.TopicId);
             }
         }
 

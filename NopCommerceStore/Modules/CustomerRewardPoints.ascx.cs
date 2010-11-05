@@ -59,16 +59,16 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         private void BindData()
         {
-            if (!IoCFactory.Resolve<IOrderManager>().RewardPointsEnabled)
+            if (!IoCFactory.Resolve<IOrderService>().RewardPointsEnabled)
             {
                 this.Visible = false;
                 return;
             }
             int rewardPointsBalance = NopContext.Current.User.RewardPointsBalance;
-            decimal rewardPointsAmountBase = IoCFactory.Resolve<IOrderManager>().ConvertRewardPointsToAmount(rewardPointsBalance);
-            decimal rewardPointsAmount = IoCFactory.Resolve<ICurrencyManager>().ConvertCurrency(rewardPointsAmountBase, IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+            decimal rewardPointsAmountBase = IoCFactory.Resolve<IOrderService>().ConvertRewardPointsToAmount(rewardPointsBalance);
+            decimal rewardPointsAmount = IoCFactory.Resolve<ICurrencyService>().ConvertCurrency(rewardPointsAmountBase, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
             lblBalance.Text = GetLocaleResourceString("Customer.RewardPoints.CurrentBalance", rewardPointsBalance, PriceHelper.FormatPrice(rewardPointsAmount, true, false));
-            //lblRate.Text = GetLocaleResourceString("Customer.RewardPoints.CurrentRate", PriceHelper.FormatPrice(IoCFactory.Resolve<ICurrencyManager>().ConvertCurrency(IoCFactory.Resolve<IOrderManager>().RewardPointsForPurchases_Amount, IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency), true, false), IoCFactory.Resolve<IOrderManager>().RewardPointsForPurchases_Points);
+            //lblRate.Text = GetLocaleResourceString("Customer.RewardPoints.CurrentRate", PriceHelper.FormatPrice(IoCFactory.Resolve<ICurrencyService>().ConvertCurrency(IoCFactory.Resolve<IOrderService>().RewardPointsForPurchases_Amount, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency), true, false), IoCFactory.Resolve<IOrderService>().RewardPointsForPurchases_Points);
             lblRate.Visible = false;
 
             var rphc = NopContext.Current.User.RewardPointsHistory;

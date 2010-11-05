@@ -62,7 +62,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 var phComments = (PlaceHolder)e.Item.FindControl("phComments");
                 var lComments = (Literal)e.Item.FindControl("lComments");
 
-                lRequestTitle.Text = string.Format(GetLocaleResourceString("CustomerReturnRequests.RequestTitle"), returnRequest.ReturnRequestId, IoCFactory.Resolve<IOrderManager>().GetReturnRequestStatusName(returnRequest.ReturnStatus));
+                lRequestTitle.Text = string.Format(GetLocaleResourceString("CustomerReturnRequests.RequestTitle"), returnRequest.ReturnRequestId, IoCFactory.Resolve<IOrderService>().GetReturnRequestStatusName(returnRequest.ReturnStatus));
                 string prodLink = string.Format("<a href=\"{0}\">{1}</a>", SEOHelper.GetProductUrl(returnRequest.OrderProductVariant.ProductVariant.Product), returnRequest.OrderProductVariant.ProductVariant.LocalizedFullProductName);
                 lItem.Text = string.Format(GetLocaleResourceString("CustomerReturnRequests.Item"), returnRequest.Quantity, prodLink);
                 lReason.Text = string.Format(GetLocaleResourceString("CustomerReturnRequests.Reason"), Server.HtmlEncode(returnRequest.ReasonForReturn));
@@ -71,7 +71,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 if (!string.IsNullOrEmpty(returnRequest.CustomerComments))
                 {
                     phComments.Visible = true;
-                    lComments.Text = IoCFactory.Resolve<IOrderManager>().FormatReturnRequestCommentsText(returnRequest.CustomerComments);
+                    lComments.Text = IoCFactory.Resolve<IOrderService>().FormatReturnRequestCommentsText(returnRequest.CustomerComments);
                 }
                 else
                 {
@@ -84,7 +84,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
         {
             if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("ReturnRequests.Enable"))
             {
-                var returnRequests = IoCFactory.Resolve<IOrderManager>().SearchReturnRequests(NopContext.Current.User.CustomerId, 0, null);
+                var returnRequests = IoCFactory.Resolve<IOrderService>().SearchReturnRequests(NopContext.Current.User.CustomerId, 0, null);
                 if (returnRequests.Count > 0)
                 {
                     rptrRequests.DataSource = returnRequests;

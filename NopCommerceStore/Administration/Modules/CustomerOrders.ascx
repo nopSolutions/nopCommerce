@@ -13,13 +13,13 @@
             <%#DateTimeHelper.ConvertToUserTime((DateTime)Eval("CreatedOn"), DateTimeKind.Utc).ToString()%>
             <br />
             <%#GetLocaleResourceString("Admin.CustomerOrders.OrderStatus")%>
-            <%#IoCFactory.Resolve<IOrderManager>().GetOrderStatusName(Convert.ToInt32(Eval("OrderStatusId")))%>
+            <%#IoCFactory.Resolve<IOrderService>().GetOrderStatusName(Convert.ToInt32(Eval("OrderStatusId")))%>
             <br />
             <%#GetLocaleResourceString("Admin.CustomerOrders.PaymentStatus")%>
-            <%#IoCFactory.Resolve<IPaymentManager>().GetPaymentStatusName(Convert.ToInt32(Eval("PaymentStatusId")))%>
+            <%#IoCFactory.Resolve<IPaymentService>().GetPaymentStatusName(Convert.ToInt32(Eval("PaymentStatusId")))%>
             <br />
             <%#GetLocaleResourceString("Admin.CustomerOrders.ShippingStatus")%>
-            <%#IoCFactory.Resolve<IShippingManager>().GetShippingStatusName(Convert.ToInt32(Eval("ShippingStatusId")))%>
+            <%#IoCFactory.Resolve<IShippingService>().GetShippingStatusName(Convert.ToInt32(Eval("ShippingStatusId")))%>
             <br />
             <%#GetLocaleResourceString("Admin.CustomerOrders.OrderTotal")%>
             <%#Server.HtmlEncode(PriceHelper.FormatPrice(Convert.ToDecimal(Eval("OrderTotal")), true, false))%>

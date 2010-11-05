@@ -79,7 +79,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         {
             get
             {
-                TaxProvider activeTaxProvider = IoCFactory.Resolve<ITaxManager>().ActiveTaxProvider;
+                TaxProvider activeTaxProvider = IoCFactory.Resolve<ITaxService>().ActiveTaxProvider;
                 return ((activeTaxProvider != null && activeTaxProvider.TaxProviderId == this.TaxProviderId));
             }
         }

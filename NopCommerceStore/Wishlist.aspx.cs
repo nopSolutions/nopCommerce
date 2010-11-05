@@ -47,11 +47,11 @@ namespace NopSolutions.NopCommerce.Web
 
             if (!Page.IsPostBack)
             {
-                Customer customer = IoCFactory.Resolve<ICustomerManager>().GetCustomerByGuid(this.CustomerGuid.HasValue ? this.CustomerGuid.Value : Guid.Empty);
+                Customer customer = IoCFactory.Resolve<ICustomerService>().GetCustomerByGuid(this.CustomerGuid.HasValue ? this.CustomerGuid.Value : Guid.Empty);
                 if (customer != null)
                 {
                     lTitle.Text = string.Format(GetLocaleResourceString("Wishlist.WishlistOf"), Server.HtmlEncode(customer.FullName), Server.HtmlEncode(customer.Email));
-                    CustomerSession customerSession = IoCFactory.Resolve<ICustomerManager>().GetCustomerSessionByCustomerId(customer.CustomerId);
+                    CustomerSession customerSession = IoCFactory.Resolve<ICustomerService>().GetCustomerSessionByCustomerId(customer.CustomerId);
                     if (customerSession != null)
                         ctrlWishlist.CustomerSessionGuid = customerSession.CustomerSessionGuid;
                     ctrlWishlist.IsEditable = false;

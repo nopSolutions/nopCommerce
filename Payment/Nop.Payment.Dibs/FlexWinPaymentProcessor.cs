@@ -54,8 +54,8 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Dibs
             }
             post.Add("uniqueoid", "yes");
 
-            Language lang = IoCFactory.Resolve<ILanguageManager>().GetLanguageById(order.CustomerLanguageId);
-            int currency = DibsHelper.GetCurrencyNumberByCode(IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency.CurrencyCode);
+            Language lang = IoCFactory.Resolve<ILanguageService>().GetLanguageById(order.CustomerLanguageId);
+            int currency = DibsHelper.GetCurrencyNumberByCode(IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode);
             int amount = (int)((double)order.OrderTotal * 100);
             int merhcantID = FlexWinSettings.MerchantId;
 

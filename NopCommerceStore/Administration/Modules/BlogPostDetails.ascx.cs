@@ -74,7 +74,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                IoCFactory.Resolve<IBlogManager>().DeleteBlogPost(this.BlogPostId);
+                IoCFactory.Resolve<IBlogService>().DeleteBlogPost(this.BlogPostId);
                 Response.Redirect("Blog.aspx");
             }
             catch (Exception exc)

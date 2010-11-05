@@ -67,10 +67,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
         protected string GetUnreadPrivateMessages()
         {
             string result = string.Empty;
-            if (IoCFactory.Resolve<IForumManager>().AllowPrivateMessages &&
+            if (IoCFactory.Resolve<IForumService>().AllowPrivateMessages &&
                 NopContext.Current.User != null && !NopContext.Current.User.IsGuest)
             {
-                var privateMessages = IoCFactory.Resolve<IForumManager>().GetAllPrivateMessages(0,
+                var privateMessages = IoCFactory.Resolve<IForumService>().GetAllPrivateMessages(0,
                     NopContext.Current.User.CustomerId, false, null, false, string.Empty, 0, 1);
 
                 if (privateMessages.TotalCount > 0)

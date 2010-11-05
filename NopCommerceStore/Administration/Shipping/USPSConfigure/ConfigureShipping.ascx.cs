@@ -60,7 +60,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.USPSConfigure
                 {
                     ListItem cblItem = new ListItem(service);
                     string serviceId = USPSServices.GetServiceIdDomestic(service);
-
+                    if (serviceId.Equals("NONE", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        cblItem.Attributes["style"] = "font-weight:bold";
+                    }
                     if (!String.IsNullOrEmpty(serviceId) && !String.IsNullOrEmpty(carrierServicesOfferedDomestic))
                     {
                         // Add delimiters [] so that single digit IDs aren't found in multi-digit IDs
@@ -89,7 +92,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.USPSConfigure
                 {
                     ListItem cblItem = new ListItem(service);
                     string serviceId = USPSServices.GetServiceIdInternational(service);
-
+                    if (serviceId.Equals("NONE", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        cblItem.Attributes["style"] = "font-weight:bold";
+                    }
                     if (!String.IsNullOrEmpty(serviceId) && !String.IsNullOrEmpty(carrierServicesOfferedInternational))
                     {
                         // Add delimiters [] so that single digit IDs aren't found in multi-digit IDs
@@ -119,13 +125,22 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.USPSConfigure
             {
                 if (li.Selected == true)
                 {
+                    carrierServicesDomesticSelectedCount++;
+
                     string serviceId = USPSServices.GetServiceIdDomestic(li.Text);
+                    // unselect any other services if NONE is selected
+                    if (serviceId.Equals("NONE"))
+                    {
+                        carrierServicesOfferedDomestic.Clear();
+                        carrierServicesOfferedDomestic.AppendFormat("[{0}]:", serviceId);
+                        break;
+                    }
+
                     if (!String.IsNullOrEmpty(serviceId))
                     {
                         // Add delimiters [] so that single digit IDs aren't found in multi-digit IDs
                         carrierServicesOfferedDomestic.AppendFormat("[{0}]:", serviceId);
                     }
-                    carrierServicesDomesticSelectedCount++;
                 }
             }
             // Add default options if no services were selected (Priority, Express, and Parcel Post)
@@ -145,13 +160,21 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.USPSConfigure
             {
                 if (li.Selected == true)
                 {
+                    carrierServicesInternationalSelectedCount++;
+
                     string serviceId = USPSServices.GetServiceIdInternational(li.Text);
+                    // unselect other services if NONE is selected
+                    if (serviceId.Equals("NONE"))
+                    {
+                        carrierServicesOfferedInternational.Clear();
+                        carrierServicesOfferedInternational.AppendFormat("[{0}]:", serviceId);
+                        break;
+                    }
                     if (!String.IsNullOrEmpty(serviceId))
                     {
                         // Add delimiters [] so that single digit IDs aren't found in multi-digit IDs
                         carrierServicesOfferedInternational.AppendFormat("[{0}]:", serviceId);
                     }
-                    carrierServicesInternationalSelectedCount++;
                 }
             }
             // Add default options if no services were selected (Priority Mail International, First-Class Mail International Package, and Express Mail International)

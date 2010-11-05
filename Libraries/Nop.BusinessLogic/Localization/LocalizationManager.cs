@@ -70,7 +70,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Localization
                 }
             }
 
-            if (showCurrency && IoCFactory.Resolve<ICurrencyManager>().GetAllCurrencies().Count > 1)
+            if (showCurrency && IoCFactory.Resolve<ICurrencyService>().GetAllCurrencies().Count > 1)
                 result = String.Format("{0} ({1})", result, targetCurrency.CurrencyCode);
             return result;
         }
@@ -142,7 +142,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Localization
             {
                 if (logIfNotFound)
                 {
-                    IoCFactory.Resolve<ILogManager>().InsertLog(LogTypeEnum.CommonError, "Resource string is not found", string.Format("Resource string ({0}) is not found. Language Id ={1}", resourceKey, languageId));
+                    IoCFactory.Resolve<ILogService>().InsertLog(LogTypeEnum.CommonError, "Resource string is not found", string.Format("Resource string ({0}) is not found. Language Id ={1}", resourceKey, languageId));
                 }
 
                 if (!String.IsNullOrEmpty(defaultValue))
@@ -190,14 +190,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Localization
             {
                 int defaultAdminLanguageId = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Localization.DefaultAdminLanguageId");
 
-                var language = IoCFactory.Resolve<ILanguageManager>().GetLanguageById(defaultAdminLanguageId);
+                var language = IoCFactory.Resolve<ILanguageService>().GetLanguageById(defaultAdminLanguageId);
                 if (language != null && language.Published)
                 {
                     return language;
                 }
                 else
                 {
-                    var publishedLanguages = IoCFactory.Resolve<ILanguageManager>().GetAllLanguages(false);
+                    var publishedLanguages = IoCFactory.Resolve<ILanguageService>().GetAllLanguages(false);
                     foreach (Language publishedLanguage in publishedLanguages)
                         return publishedLanguage;
                 }

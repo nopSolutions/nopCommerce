@@ -121,9 +121,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         {
             get
             {
-                var emailAccount = IoCFactory.Resolve<IMessageManager>().GetEmailAccountById(this.EmailAccountId);
+                var emailAccount = IoCFactory.Resolve<IMessageService>().GetEmailAccountById(this.EmailAccountId);
                 if (emailAccount == null)
-                    emailAccount = IoCFactory.Resolve<IMessageManager>().DefaultEmailAccount;
+                    emailAccount = IoCFactory.Resolve<IMessageService>().DefaultEmailAccount;
                 return emailAccount;
             }
         }

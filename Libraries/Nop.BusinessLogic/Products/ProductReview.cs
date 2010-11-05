@@ -101,7 +101,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         {
             get
             {
-                return IoCFactory.Resolve<IProductManager>().GetProductById(this.ProductId);
+                return IoCFactory.Resolve<IProductService>().GetProductById(this.ProductId);
             }
         }
 
@@ -112,7 +112,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         {
             get
             {
-                return IoCFactory.Resolve<ICustomerManager>().GetCustomerById(this.CustomerId);
+                return IoCFactory.Resolve<ICustomerService>().GetCustomerById(this.CustomerId);
             }
         }
         #endregion

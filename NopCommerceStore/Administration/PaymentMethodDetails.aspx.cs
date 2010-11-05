@@ -36,12 +36,12 @@ namespace NopSolutions.NopCommerce.Web.Administration
     {
         protected override bool ValidatePageSecurity()
         {
-            return IoCFactory.Resolve<IACLManager>().IsActionAllowed("ManagePaymentSettings");
+            return IoCFactory.Resolve<IACLService>().IsActionAllowed("ManagePaymentSettings");
         }
 
         private void BindData()
         {
-            PaymentMethod paymentMethod = IoCFactory.Resolve<IPaymentManager>().GetPaymentMethodById(this.PaymentMethodId);
+            PaymentMethod paymentMethod = IoCFactory.Resolve<IPaymentService>().GetPaymentMethodById(this.PaymentMethodId);
             if (paymentMethod != null)
             {
                 this.txtName.Text = paymentMethod.Name;
@@ -55,11 +55,11 @@ namespace NopSolutions.NopCommerce.Web.Administration
                 this.txtDisplayOrder.Value = paymentMethod.DisplayOrder;
                 try
                 {
-                    lblCanCapture.Text = IoCFactory.Resolve<IPaymentManager>().CanCapture(this.PaymentMethodId) ? GetLocaleResourceString("Admin.Common.Yes") : GetLocaleResourceString("Admin.Common.No");
-                    lblCanRefund.Text = IoCFactory.Resolve<IPaymentManager>().CanRefund(this.PaymentMethodId) ? GetLocaleResourceString("Admin.Common.Yes") : GetLocaleResourceString("Admin.Common.No");
-                    lblCanPartiallyRefund.Text = IoCFactory.Resolve<IPaymentManager>().CanPartiallyRefund(this.PaymentMethodId) ? GetLocaleResourceString("Admin.Common.Yes") : GetLocaleResourceString("Admin.Common.No");
-                    lblCanVoid.Text = IoCFactory.Resolve<IPaymentManager>().CanVoid(this.PaymentMethodId) ? GetLocaleResourceString("Admin.Common.Yes") : GetLocaleResourceString("Admin.Common.No");
-                    lblSupportRecurringPayments.Text = CommonHelper.ConvertEnum(IoCFactory.Resolve<IPaymentManager>().SupportRecurringPayments(this.PaymentMethodId).ToString());
+                    lblCanCapture.Text = IoCFactory.Resolve<IPaymentService>().CanCapture(this.PaymentMethodId) ? GetLocaleResourceString("Admin.Common.Yes") : GetLocaleResourceString("Admin.Common.No");
+                    lblCanRefund.Text = IoCFactory.Resolve<IPaymentService>().CanRefund(this.PaymentMethodId) ? GetLocaleResourceString("Admin.Common.Yes") : GetLocaleResourceString("Admin.Common.No");
+                    lblCanPartiallyRefund.Text = IoCFactory.Resolve<IPaymentService>().CanPartiallyRefund(this.PaymentMethodId) ? GetLocaleResourceString("Admin.Common.Yes") : GetLocaleResourceString("Admin.Common.No");
+                    lblCanVoid.Text = IoCFactory.Resolve<IPaymentService>().CanVoid(this.PaymentMethodId) ? GetLocaleResourceString("Admin.Common.Yes") : GetLocaleResourceString("Admin.Common.No");
+                    lblSupportRecurringPayments.Text = CommonHelper.ConvertEnum(IoCFactory.Resolve<IPaymentService>().SupportRecurringPayments(this.PaymentMethodId).ToString());
                 }
                 catch (Exception exc)
                 {
@@ -77,7 +77,7 @@ namespace NopSolutions.NopCommerce.Web.Administration
         
         private void CreateChildControlsTree()
         {
-            PaymentMethod paymentMethod = IoCFactory.Resolve<IPaymentManager>().GetPaymentMethodById(this.PaymentMethodId);
+            PaymentMethod paymentMethod = IoCFactory.Resolve<IPaymentService>().GetPaymentMethodById(this.PaymentMethodId);
             if (paymentMethod != null)
             {
                 Control child = null;
@@ -117,7 +117,7 @@ namespace NopSolutions.NopCommerce.Web.Administration
 
         protected PaymentMethod Save()
         {
-            PaymentMethod paymentMethod = IoCFactory.Resolve<IPaymentManager>().GetPaymentMethodById(this.PaymentMethodId);
+            PaymentMethod paymentMethod = IoCFactory.Resolve<IPaymentService>().GetPaymentMethodById(this.PaymentMethodId);
 
             paymentMethod.Name = txtName.Text;
             paymentMethod.VisibleName = txtVisibleName.Text;
@@ -129,13 +129,13 @@ namespace NopSolutions.NopCommerce.Web.Administration
             paymentMethod.IsActive = cbActive.Checked;
             paymentMethod.DisplayOrder = txtDisplayOrder.Value;
 
-            IoCFactory.Resolve<IPaymentManager>().UpdatePaymentMethod(paymentMethod);
+            IoCFactory.Resolve<IPaymentService>().UpdatePaymentMethod(paymentMethod);
 
             var configureModule = GetConfigureModule();
             if (configureModule != null)
                 configureModule.Save();
 
-            IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
+            IoCFactory.Resolve<ICustomerActivityService>().InsertActivity(
                 "EditPaymentMethod",
                 GetLocaleResourceString("ActivityLog.EditPaymentMethod"),
                 paymentMethod.Name);
@@ -179,7 +179,7 @@ namespace NopSolutions.NopCommerce.Web.Administration
         {
             try
             {
-                IoCFactory.Resolve<IPaymentManager>().DeletePaymentMethod(this.PaymentMethodId);
+                IoCFactory.Resolve<IPaymentService>().DeletePaymentMethod(this.PaymentMethodId);
                 Response.Redirect("PaymentMethods.aspx");
             }
             catch (Exception exc)

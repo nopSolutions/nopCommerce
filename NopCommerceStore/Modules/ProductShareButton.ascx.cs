@@ -37,7 +37,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
     {
         protected override void OnPreRender(EventArgs e)
         {
-            if (IoCFactory.Resolve<IProductManager>().ShowShareButton)
+            if (IoCFactory.Resolve<IProductService>().ShowShareButton)
             {
                 string shareCode = IoCFactory.Resolve<ISettingManager>().GetSettingValue("Products.AddThisSharing.Code");
                 if (CommonHelper.IsCurrentConnectionSecured())

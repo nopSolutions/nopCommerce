@@ -38,7 +38,7 @@ namespace NopSolutions.NopCommerce.Web
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            var productTag = IoCFactory.Resolve<IProductManager>().GetProductTagById(this.ProductTagId);
+            var productTag = IoCFactory.Resolve<IProductService>().GetProductTagById(this.ProductTagId);
             if (productTag != null)
             {
                 string title = string.Format(GetLocaleResourceString("PageTitle.ProductTags"), productTag.Name);

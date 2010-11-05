@@ -92,7 +92,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         {
             get
             {
-                return IoCFactory.Resolve<ILanguageManager>().GetLanguageById(this.LanguageId);
+                return IoCFactory.Resolve<ILanguageService>().GetLanguageById(this.LanguageId);
             }
         }
 
@@ -103,7 +103,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         {
             get
             {
-                return IoCFactory.Resolve<IMessageManager>().GetMessageTemplateById(this.MessageTemplateId);
+                return IoCFactory.Resolve<IMessageService>().GetMessageTemplateById(this.MessageTemplateId);
             }
         }
         #endregion
@@ -117,9 +117,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         {
             get
             {
-                var emailAccount = IoCFactory.Resolve<IMessageManager>().GetEmailAccountById(this.EmailAccountId);
+                var emailAccount = IoCFactory.Resolve<IMessageService>().GetEmailAccountById(this.EmailAccountId);
                 if (emailAccount == null)
-                    emailAccount = IoCFactory.Resolve<IMessageManager>().DefaultEmailAccount;
+                    emailAccount = IoCFactory.Resolve<IMessageService>().DefaultEmailAccount;
                 return emailAccount;
             }
         }

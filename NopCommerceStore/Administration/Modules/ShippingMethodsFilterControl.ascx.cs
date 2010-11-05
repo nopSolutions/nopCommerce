@@ -144,7 +144,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
             StringBuilder scriptBuilder = new StringBuilder();
             scriptBuilder.Append("$(document).ready(function() {");
-            foreach(ShippingMethod shippingMethod in IoCFactory.Resolve<IShippingManager>().GetAllShippingMethods())
+            foreach(ShippingMethod shippingMethod in IoCFactory.Resolve<IShippingService>().GetAllShippingMethods())
             {
                 TemplateField tf = new TemplateField();
                 tf.ItemTemplate = new NopGridViewCustomTemplate(DataControlRowType.DataRow, "Restrict", "Checkbox", shippingMethod.ShippingMethodId);
@@ -162,8 +162,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected void BindGrid()
         {
-            var countryCollection = IoCFactory.Resolve<ICountryManager>().GetAllCountries();
-            var shippingMethodCollection = IoCFactory.Resolve<IShippingManager>().GetAllShippingMethods();
+            var countryCollection = IoCFactory.Resolve<ICountryService>().GetAllCountries();
+            var shippingMethodCollection = IoCFactory.Resolve<IShippingService>().GetAllShippingMethods();
 
             if(countryCollection.Count == 0)
             {
@@ -184,7 +184,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                 foreach(ShippingMethod shippingMethod in shippingMethodCollection)
                 {
-                    map1.Restrict.Add(shippingMethod.ShippingMethodId, IoCFactory.Resolve<IShippingManager>().DoesShippingMethodCountryMappingExist(shippingMethod.ShippingMethodId, country.CountryId));
+                    map1.Restrict.Add(shippingMethod.ShippingMethodId, IoCFactory.Resolve<IShippingService>().DoesShippingMethodCountryMappingExist(shippingMethod.ShippingMethodId, country.CountryId));
                 }
 
                 dt.Add(map1);
@@ -211,7 +211,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public void SaveInfo()
         {
-            var shippingMethods = IoCFactory.Resolve<IShippingManager>().GetAllShippingMethods();
+            var shippingMethods = IoCFactory.Resolve<IShippingService>().GetAllShippingMethods();
             foreach (GridViewRow row in gvShippingMethodCountryMap.Rows)
             {
                 foreach (ShippingMethod shippingMethod in shippingMethods)
@@ -225,13 +225,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                     if (cbRestrict.Checked)
                     {
-                        IoCFactory.Resolve<IShippingManager>().CreateShippingMethodCountryMapping(shippingMethod.ShippingMethodId, countryId);
+                        IoCFactory.Resolve<IShippingService>().CreateShippingMethodCountryMapping(shippingMethod.ShippingMethodId, countryId);
                     }
                     else
                     {
-                        if (IoCFactory.Resolve<IShippingManager>().DoesShippingMethodCountryMappingExist(shippingMethod.ShippingMethodId, countryId))
+                        if (IoCFactory.Resolve<IShippingService>().DoesShippingMethodCountryMappingExist(shippingMethod.ShippingMethodId, countryId))
                         {
-                            IoCFactory.Resolve<IShippingManager>().DeleteShippingMethodCountryMapping(shippingMethod.ShippingMethodId, countryId);
+                            IoCFactory.Resolve<IShippingService>().DeleteShippingMethodCountryMapping(shippingMethod.ShippingMethodId, countryId);
                         }
                     }
                 }

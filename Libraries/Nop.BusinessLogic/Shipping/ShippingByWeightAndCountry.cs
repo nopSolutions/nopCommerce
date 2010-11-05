@@ -86,7 +86,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         {
             get
             {
-                return IoCFactory.Resolve<IShippingManager>().GetShippingMethodById(this.ShippingMethodId);
+                return IoCFactory.Resolve<IShippingService>().GetShippingMethodById(this.ShippingMethodId);
             }
         }
 
@@ -97,7 +97,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         {
             get
             {
-                return IoCFactory.Resolve<ICountryManager>().GetCountryById(this.CountryId);
+                return IoCFactory.Resolve<ICountryService>().GetCountryById(this.CountryId);
             }
         }
         #endregion

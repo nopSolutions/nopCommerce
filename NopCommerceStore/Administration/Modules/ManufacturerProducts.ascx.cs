@@ -39,7 +39,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            Manufacturer manufacturer = IoCFactory.Resolve<IManufacturerManager>().GetManufacturerById(this.ManufacturerId);
+            Manufacturer manufacturer = IoCFactory.Resolve<IManufacturerService>().GetManufacturerById(this.ManufacturerId);
             if (manufacturer != null)
             {
                 var existingProductManufacturerCollection = manufacturer.ProductManufacturers;
@@ -62,7 +62,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public void SaveInfo()
         {
-            Manufacturer manufacturer = IoCFactory.Resolve<IManufacturerManager>().GetManufacturerById(this.ManufacturerId);
+            Manufacturer manufacturer = IoCFactory.Resolve<IManufacturerService>().GetManufacturerById(this.ManufacturerId);
 
             if (manufacturer != null)
             {
@@ -80,17 +80,17 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     int displayOrder = txtRowDisplayOrder.Value;
 
                     if (productManufacturerId > 0 && !cbProductInfo.Checked)
-                        IoCFactory.Resolve<IManufacturerManager>().DeleteProductManufacturer(productManufacturerId);
+                        IoCFactory.Resolve<IManufacturerService>().DeleteProductManufacturer(productManufacturerId);
                     if (productManufacturerId > 0 && cbProductInfo.Checked)
                     {
-                        var pm  = IoCFactory.Resolve<IManufacturerManager>().GetProductManufacturerById(productManufacturerId);
+                        var pm  = IoCFactory.Resolve<IManufacturerService>().GetProductManufacturerById(productManufacturerId);
                         if (pm != null)
                         {
                             pm.ProductId = productId;
                             pm.ManufacturerId = manufacturer.ManufacturerId;
                             pm.IsFeaturedProduct = featured;
                             pm.DisplayOrder = displayOrder;
-                            IoCFactory.Resolve<IManufacturerManager>().UpdateProductManufacturer(pm);
+                            IoCFactory.Resolve<IManufacturerService>().UpdateProductManufacturer(pm);
                         }
                     }
                 }
@@ -139,11 +139,11 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             var picture = product.DefaultPicture;
             if (picture != null)
             {
-                return IoCFactory.Resolve<IPictureManager>().GetPictureUrl(picture, IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.ShoppingCart.ThumbnailImageSize", 80));
+                return IoCFactory.Resolve<IPictureService>().GetPictureUrl(picture, IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.ShoppingCart.ThumbnailImageSize", 80));
             }
             else
             {
-                return IoCFactory.Resolve<IPictureManager>().GetDefaultPictureUrl(IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.ShoppingCart.ThumbnailImageSize", 80));
+                return IoCFactory.Resolve<IPictureService>().GetDefaultPictureUrl(IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.ShoppingCart.ThumbnailImageSize", 80));
             }
         }
 

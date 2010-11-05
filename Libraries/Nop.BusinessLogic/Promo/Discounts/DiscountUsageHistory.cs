@@ -75,7 +75,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         {
             get
             {
-                return IoCFactory.Resolve<IDiscountManager>().GetDiscountById(this.DiscountId);
+                return IoCFactory.Resolve<IDiscountService>().GetDiscountById(this.DiscountId);
             }
         }
 
@@ -86,7 +86,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         {
             get
             {
-                return IoCFactory.Resolve<ICustomerManager>().GetCustomerById(this.CustomerId);
+                return IoCFactory.Resolve<ICustomerService>().GetCustomerById(this.CustomerId);
             }
         }
 
@@ -97,7 +97,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         {
             get
             {
-                return IoCFactory.Resolve<IOrderManager>().GetOrderById(this.OrderId);
+                return IoCFactory.Resolve<IOrderService>().GetOrderById(this.OrderId);
             }
         }
         #endregion

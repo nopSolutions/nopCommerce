@@ -41,7 +41,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         protected void btnPlaceOrder_Click(object sender, EventArgs e)
         {
-            var customer = IoCFactory.Resolve<ICustomerManager>().GetCustomerById(this.CustomerId);
+            var customer = IoCFactory.Resolve<ICustomerService>().GetCustomerById(this.CustomerId);
             if (customer != null)
             {
                 if (NopContext.Current.User != null)

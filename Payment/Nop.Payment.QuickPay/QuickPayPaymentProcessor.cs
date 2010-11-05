@@ -222,7 +222,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.QuickPay
             string language = cultureInfo.TwoLetterISOLanguageName;
             string amount = (order.OrderTotal * 100).ToString("0", CultureInfo.InvariantCulture); //NOTE: Primary store should be changed to DKK, if you do not have internatinal agreement with pbs and quickpay. Otherwise you need to do currency conversion here.
 
-            string currencyCode = IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency.CurrencyCode; //NOTE: Primary store should be changed to DKK, if you do not have internatinal agreement with pbs and quickpay. Otherwise you need to do currency conversion here.
+            string currencyCode = IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode; //NOTE: Primary store should be changed to DKK, if you do not have internatinal agreement with pbs and quickpay. Otherwise you need to do currency conversion here.
             string protocol = "3";
             string autocapture = "0";
             string cardtypelock = IoCFactory.Resolve<ISettingManager>().GetSettingValue(QuickPayConstants.SETTING_CREDITCARD_CODE_PROPERTY, "dankort");
@@ -291,7 +291,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.QuickPay
             string capturePostUrl = "https://secure.quickpay.dk/api";
             string msgtype = "capture";
             string ordernumber = FormatOrderNumber(order.OrderId.ToString());
-            string currencyCode = IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency.CurrencyCode; //NOTE: Primary store should be changed to DKK, if you do not have internatinal agreement with pbs and quickpay. Otherwise you need to do currency conversion here.
+            string currencyCode = IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode; //NOTE: Primary store should be changed to DKK, if you do not have internatinal agreement with pbs and quickpay. Otherwise you need to do currency conversion here.
             string amount = (order.OrderTotal * 100).ToString("0", CultureInfo.InvariantCulture); //NOTE: Primary store should be changed to DKK, if you do not have internatinal agreement with pbs and quickpay. Otherwise you need to do currency conversion here.
             string transaction = order.AuthorizationTransactionId;
             string md5secret = IoCFactory.Resolve<ISettingManager>().GetSettingValue(QuickPayConstants.SETTING_MD5SECRET);
@@ -325,12 +325,12 @@ namespace NopSolutions.NopCommerce.Payment.Methods.QuickPay
                 //caputre successful
                 if (rep_qpstat == "000")
                 {
-                    if (IoCFactory.Resolve<IOrderManager>().CanMarkOrderAsPaid(order))
+                    if (IoCFactory.Resolve<IOrderService>().CanMarkOrderAsPaid(order))
                     {
-                        IoCFactory.Resolve<IOrderManager>().MarkOrderAsPaid(order.OrderId);
+                        IoCFactory.Resolve<IOrderService>().MarkOrderAsPaid(order.OrderId);
                         processPaymentResult.PaymentStatus = PaymentStatusEnum.Paid;
                     }
-                    //IoCFactory.Resolve<IOrderManager>().SetCaptureResults(order.OrderId, rep_transaction, rep_qpstatmsg);
+                    //IoCFactory.Resolve<IOrderService>().SetCaptureResults(order.OrderId, rep_transaction, rep_qpstatmsg);
                 }
                 else
                 {

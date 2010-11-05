@@ -54,12 +54,12 @@ namespace NopSolutions.NopCommerce.Web.Modules
             else
             {
                 string email = CommonHelper.QueryString("Email");
-                var customer = IoCFactory.Resolve<ICustomerManager>().GetCustomerByEmail(email);
+                var customer = IoCFactory.Resolve<ICustomerService>().GetCustomerByEmail(email);
                 if (customer != null)
                 {
                     if (customer.AccountActivationToken.ToLower() == accountActivationToken.Value.ToString().ToLower())
                     {
-                        IoCFactory.Resolve<ICustomerManager>().Activate(customer.CustomerId, true);
+                        IoCFactory.Resolve<ICustomerService>().Activate(customer.CustomerId, true);
                         customer.AccountActivationToken = string.Empty;
                         lResult.Text = GetLocaleResourceString("Account.AccountHasBeenActivated");
                     }

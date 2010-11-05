@@ -42,7 +42,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             List<int> _discountIds = new List<int>();
 
-            var category = IoCFactory.Resolve<ICategoryManager>().GetCategoryById(this.CategoryId);
+            var category = IoCFactory.Resolve<ICategoryService>().GetCategoryById(this.CategoryId);
             if (category != null)
             {
                 var discounts = category.Discounts;                
@@ -69,28 +69,28 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public void SaveInfo(int catId)
         {
-            var category = IoCFactory.Resolve<ICategoryManager>().GetCategoryById(catId);
+            var category = IoCFactory.Resolve<ICategoryService>().GetCategoryById(catId);
 
             if (category != null)
             {
                 List<int> selectedDiscountIds = this.DiscountMappingControl.SelectedDiscountIds;
-                var existingDiscounts = IoCFactory.Resolve<IDiscountManager>().GetDiscountsByCategoryId(category.CategoryId);
+                var existingDiscounts = IoCFactory.Resolve<IDiscountService>().GetDiscountsByCategoryId(category.CategoryId);
 
-                var allDiscounts = IoCFactory.Resolve<IDiscountManager>().GetAllDiscounts(DiscountTypeEnum.AssignedToCategories);
+                var allDiscounts = IoCFactory.Resolve<IDiscountService>().GetAllDiscounts(DiscountTypeEnum.AssignedToCategories);
                 foreach (Discount discount in allDiscounts)
                 {
                     if (selectedDiscountIds.Contains(discount.DiscountId))
                     {
                         if (existingDiscounts.Find(d => d.DiscountId == discount.DiscountId) == null)
                         {
-                            IoCFactory.Resolve<IDiscountManager>().AddDiscountToCategory(category.CategoryId, discount.DiscountId);
+                            IoCFactory.Resolve<IDiscountService>().AddDiscountToCategory(category.CategoryId, discount.DiscountId);
                         }
                     }
                     else
                     {
                         if (existingDiscounts.Find(d => d.DiscountId == discount.DiscountId) != null)
                         {
-                            IoCFactory.Resolve<IDiscountManager>().RemoveDiscountFromCategory(category.CategoryId, discount.DiscountId);
+                            IoCFactory.Resolve<IDiscountService>().RemoveDiscountFromCategory(category.CategoryId, discount.DiscountId);
                         }
                     }
                 }

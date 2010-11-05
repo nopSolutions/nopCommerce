@@ -63,12 +63,12 @@ namespace NopSolutions.NopCommerce.Web.Modules
             string pictureUrl = string.Empty;
             if (customerAvatar != null)
             {
-                pictureUrl = IoCFactory.Resolve<IPictureManager>().GetPictureUrl(customerAvatar, avatarSize, false);
+                pictureUrl = IoCFactory.Resolve<IPictureService>().GetPictureUrl(customerAvatar, avatarSize, false);
                 this.btnRemoveAvatar.Visible = true;
             }
             else
             {
-                pictureUrl = IoCFactory.Resolve<IPictureManager>().GetDefaultPictureUrl(PictureTypeEnum.Avatar, avatarSize);
+                pictureUrl = IoCFactory.Resolve<IPictureService>().GetDefaultPictureUrl(PictureTypeEnum.Avatar, avatarSize);
                 this.btnRemoveAvatar.Visible = false;
             }
             this.iAvatar.ImageUrl = pictureUrl;
@@ -78,10 +78,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
         {
             try
             {
-                IoCFactory.Resolve<IPictureManager>().DeletePicture(NopContext.Current.User.AvatarId);
+                IoCFactory.Resolve<IPictureService>().DeletePicture(NopContext.Current.User.AvatarId);
 
                 NopContext.Current.User.AvatarId = 0;
-                IoCFactory.Resolve<ICustomerManager>().UpdateCustomer(NopContext.Current.User);
+                IoCFactory.Resolve<ICustomerService>().UpdateCustomer(NopContext.Current.User);
                 BindData();
             }
             catch (Exception exc)
@@ -97,7 +97,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             {
                 if (Page.IsValid)
                 {
-                    if (!IoCFactory.Resolve<ICustomerManager>().AllowCustomersToUploadAvatars)
+                    if (!IoCFactory.Resolve<ICustomerService>().AllowCustomersToUploadAvatars)
                         throw new NopException("Uploading avatars is not allowed");
 
                     var customerAvatar = NopContext.Current.User.Avatar;
@@ -109,18 +109,18 @@ namespace NopSolutions.NopCommerce.Web.Modules
                         if (customerPictureFile.ContentLength > avatarMaxSize)
                             throw new NopException(string.Format("Maximum avatar size is {0} bytes", avatarMaxSize));
 
-                        byte[] customerPictureBinary = IoCFactory.Resolve<IPictureManager>().GetPictureBits(customerPictureFile.InputStream, customerPictureFile.ContentLength);
+                        byte[] customerPictureBinary = IoCFactory.Resolve<IPictureService>().GetPictureBits(customerPictureFile.InputStream, customerPictureFile.ContentLength);
                         if (customerAvatar != null)
-                            customerAvatar = IoCFactory.Resolve<IPictureManager>().UpdatePicture(customerAvatar.PictureId, customerPictureBinary, customerPictureFile.ContentType, true);
+                            customerAvatar = IoCFactory.Resolve<IPictureService>().UpdatePicture(customerAvatar.PictureId, customerPictureBinary, customerPictureFile.ContentType, true);
                         else
-                            customerAvatar = IoCFactory.Resolve<IPictureManager>().InsertPicture(customerPictureBinary, customerPictureFile.ContentType, true);
+                            customerAvatar = IoCFactory.Resolve<IPictureService>().InsertPicture(customerPictureBinary, customerPictureFile.ContentType, true);
                     }
                     int customerAvatarId = 0;
                     if (customerAvatar != null)
                         customerAvatarId = customerAvatar.PictureId;
 
                     NopContext.Current.User.AvatarId = customerAvatarId;
-                    IoCFactory.Resolve<ICustomerManager>().UpdateCustomer(NopContext.Current.User);
+                    IoCFactory.Resolve<ICustomerService>().UpdateCustomer(NopContext.Current.User);
 
                     BindData();
                 }

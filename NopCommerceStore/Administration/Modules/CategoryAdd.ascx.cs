@@ -49,7 +49,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             ctrlCategoryDiscount.SaveInfo(category.CategoryId);
             ctrlCategoryACL.SaveInfo(category.CategoryId);
 
-            IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
+            IoCFactory.Resolve<ICustomerActivityService>().InsertActivity(
                 "AddNewCategory",
                 GetLocaleResourceString("ActivityLog.AddNewCategory"),
                 category.Name);

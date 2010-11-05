@@ -39,7 +39,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected void BindData()
         {
-            Language language = IoCFactory.Resolve<ILanguageManager>().GetLanguageById(this.LanguageId);
+            Language language = IoCFactory.Resolve<ILanguageService>().GetLanguageById(this.LanguageId);
             if (language != null)
             {
                 hlBackToResources.NavigateUrl = CommonHelper.GetStoreAdminLocation() + "LocaleStringResources.aspx?LanguageID=" + language.LanguageId.ToString();

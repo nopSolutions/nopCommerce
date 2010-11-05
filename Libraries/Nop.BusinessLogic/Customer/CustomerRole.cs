@@ -77,7 +77,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         {
             get
             {
-                return IoCFactory.Resolve<ICustomerManager>().GetCustomersByCustomerRoleId(this.CustomerRoleId);
+                return IoCFactory.Resolve<ICustomerService>().GetCustomersByCustomerRoleId(this.CustomerRoleId);
             }
         }
 

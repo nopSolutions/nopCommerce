@@ -62,13 +62,13 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 var picture = product.DefaultPicture;
                 if (picture != null)
                 {
-                    hlImageLink.ImageUrl = IoCFactory.Resolve<IPictureManager>().GetPictureUrl(picture, this.ProductImageSize, true);
+                    hlImageLink.ImageUrl = IoCFactory.Resolve<IPictureService>().GetPictureUrl(picture, this.ProductImageSize, true);
                     hlImageLink.ToolTip = String.Format(GetLocaleResourceString("Media.Product.ImageLinkTitleFormat"), product.LocalizedName);
                     hlImageLink.Text = String.Format(GetLocaleResourceString("Media.Product.ImageAlternateTextFormat"), product.LocalizedName);
                 }
                 else
                 {
-                    hlImageLink.ImageUrl = IoCFactory.Resolve<IPictureManager>().GetDefaultPictureUrl(this.ProductImageSize);
+                    hlImageLink.ImageUrl = IoCFactory.Resolve<IPictureService>().GetDefaultPictureUrl(this.ProductImageSize);
                     hlImageLink.ToolTip = String.Format(GetLocaleResourceString("Media.Product.ImageLinkTitleFormat"), product.LocalizedName);
                     hlImageLink.Text = String.Format(GetLocaleResourceString("Media.Product.ImageAlternateTextFormat"), product.LocalizedName);
                 }
@@ -117,9 +117,9 @@ namespace NopSolutions.NopCommerce.Web.Modules
         {
             int productId = Convert.ToInt32(e.CommandArgument);
             int productVariantId = 0;
-            if (IoCFactory.Resolve<IProductManager>().DirectAddToCartAllowed(productId, out productVariantId))
+            if (IoCFactory.Resolve<IProductService>().DirectAddToCartAllowed(productId, out productVariantId))
             {
-                var addToCartWarnings = IoCFactory.Resolve<IShoppingCartManager>().AddToCart(ShoppingCartTypeEnum.ShoppingCart,
+                var addToCartWarnings = IoCFactory.Resolve<IShoppingCartService>().AddToCart(ShoppingCartTypeEnum.ShoppingCart,
                     productVariantId, string.Empty, decimal.Zero, 1);
                 if (addToCartWarnings.Count == 0)
                 {

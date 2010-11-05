@@ -41,7 +41,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            var category = IoCFactory.Resolve<ICategoryManager>().GetCategoryById(this.CategoryId);
+            var category = IoCFactory.Resolve<ICategoryService>().GetCategoryById(this.CategoryId);
 
             if (category != null)
             {
@@ -65,7 +65,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public void SaveInfo()
         {
-            var category = IoCFactory.Resolve<ICategoryManager>().GetCategoryById(this.CategoryId);
+            var category = IoCFactory.Resolve<ICategoryService>().GetCategoryById(this.CategoryId);
 
             if (category != null)
             {
@@ -83,17 +83,17 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     int displayOrder = txtRowDisplayOrder.Value;
 
                     if (productCategoryId > 0 && !cbProductInfo.Checked)
-                        IoCFactory.Resolve<ICategoryManager>().DeleteProductCategory(productCategoryId);
+                        IoCFactory.Resolve<ICategoryService>().DeleteProductCategory(productCategoryId);
                     if (productCategoryId > 0 && cbProductInfo.Checked)
                     {
-                        var productCategory = IoCFactory.Resolve<ICategoryManager>().GetProductCategoryById(productCategoryId);
+                        var productCategory = IoCFactory.Resolve<ICategoryService>().GetProductCategoryById(productCategoryId);
                         if (productCategory != null)
                         {
                             productCategory.ProductId = productId;
                             productCategory.CategoryId = category.CategoryId;
                             productCategory.IsFeaturedProduct = featured;
                             productCategory.DisplayOrder = displayOrder;
-                            IoCFactory.Resolve<ICategoryManager>().UpdateProductCategory(productCategory);
+                            IoCFactory.Resolve<ICategoryService>().UpdateProductCategory(productCategory);
                         }
                     }
                 }
@@ -142,11 +142,11 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             var picture = product.DefaultPicture;
             if (picture != null)
             {
-                return IoCFactory.Resolve<IPictureManager>().GetPictureUrl(picture, IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.ShoppingCart.ThumbnailImageSize", 80));
+                return IoCFactory.Resolve<IPictureService>().GetPictureUrl(picture, IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.ShoppingCart.ThumbnailImageSize", 80));
             }
             else
             {
-                return IoCFactory.Resolve<IPictureManager>().GetDefaultPictureUrl(IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.ShoppingCart.ThumbnailImageSize", 80));
+                return IoCFactory.Resolve<IPictureService>().GetDefaultPictureUrl(IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.ShoppingCart.ThumbnailImageSize", 80));
             }
         }
 

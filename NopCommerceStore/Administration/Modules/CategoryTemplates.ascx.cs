@@ -42,7 +42,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         void BindGrid()
         {
-            var categoryTemplateCollection = IoCFactory.Resolve<ITemplateManager>().GetAllCategoryTemplates();
+            var categoryTemplateCollection = IoCFactory.Resolve<ITemplateService>().GetAllCategoryTemplates();
             gvCategoryTemplates.DataSource = categoryTemplateCollection;
             gvCategoryTemplates.DataBind();
         }

@@ -83,7 +83,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO.Sitemaps
 
         private void WriteCategories(int parentCategoryId)
         {
-            var categories = IoCFactory.Resolve<ICategoryManager>().GetAllCategoriesByParentCategoryId(parentCategoryId, false);
+            var categories = IoCFactory.Resolve<ICategoryService>().GetAllCategoriesByParentCategoryId(parentCategoryId, false);
             foreach (var category in categories)
             {
                 var url = SEOHelper.GetCategoryUrl(category);
@@ -97,7 +97,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO.Sitemaps
 
         private void WriteManufacturers()
         {
-            var manufacturers = IoCFactory.Resolve<IManufacturerManager>().GetAllManufacturers(false);
+            var manufacturers = IoCFactory.Resolve<IManufacturerService>().GetAllManufacturers(false);
             foreach (var manufacturer in manufacturers)
             {
                 var url = SEOHelper.GetManufacturerUrl(manufacturer);
@@ -109,7 +109,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO.Sitemaps
 
         private void WriteProducts()
         {
-            var products = IoCFactory.Resolve<IProductManager>().GetAllProducts(false);
+            var products = IoCFactory.Resolve<IProductService>().GetAllProducts(false);
             foreach (var product in products)
             {
                 var url = SEOHelper.GetProductUrl(product);
@@ -121,11 +121,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO.Sitemaps
 
         private void WriteTopics()
         {
-            var topics = IoCFactory.Resolve<ITopicManager>().GetAllTopics();
+            var topics = IoCFactory.Resolve<ITopicService>().GetAllTopics();
             topics = topics.FindAll(t => t.IncludeInSitemap);
             foreach (Topic topic in topics)
             {
-                var localizedTopics = IoCFactory.Resolve<ITopicManager>().GetAllLocalizedTopics(topic.Name);
+                var localizedTopics = IoCFactory.Resolve<ITopicService>().GetAllLocalizedTopics(topic.Name);
                 if (localizedTopics.Count > 0)
                 {
                     //UNDONE add topic of one language only (they have the same URL now)

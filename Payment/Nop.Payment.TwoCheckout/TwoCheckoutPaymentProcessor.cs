@@ -136,13 +136,13 @@ namespace NopSolutions.NopCommerce.Payment.Methods.TwoCheckout
             builder.AppendFormat("&x_Last_Name={0}",  HttpUtility.UrlEncode(order.BillingLastName));
             builder.AppendFormat("&x_Address={0}",  HttpUtility.UrlEncode(order.BillingAddress1));
             builder.AppendFormat("&x_City={0}", HttpUtility.UrlEncode(order.BillingCity));
-            StateProvince billingStateProvince = IoCFactory.Resolve<IStateProvinceManager>().GetStateProvinceById(order.BillingStateProvinceId);
+            StateProvince billingStateProvince = IoCFactory.Resolve<IStateProvinceService>().GetStateProvinceById(order.BillingStateProvinceId);
             if (billingStateProvince != null)
                  builder.AppendFormat("&x_State={0}", HttpUtility.UrlEncode(billingStateProvince.Abbreviation));
             else
                 builder.AppendFormat("&x_State={0}", HttpUtility.UrlEncode(order.BillingStateProvince));
             builder.AppendFormat("&x_Zip={0}", HttpUtility.UrlEncode(order.BillingZipPostalCode));
-            Country billingCountry = IoCFactory.Resolve<ICountryManager>().GetCountryById(order.BillingCountryId);
+            Country billingCountry = IoCFactory.Resolve<ICountryService>().GetCountryById(order.BillingCountryId);
             if (billingCountry != null)
                 builder.AppendFormat("&x_Country={0}", HttpUtility.UrlEncode(billingCountry.ThreeLetterIsoCode));
             else

@@ -137,19 +137,19 @@
                                 <asp:TemplateField HeaderText="<% $NopResources:Admin.RecurringPaymentInfo.History.OrderStatusColumn %>"
                                     ItemStyle-Width="10%">
                                     <ItemTemplate>
-                                        <%#IoCFactory.Resolve<IOrderManager>().GetOrderStatusName(((Order)(Eval("Order"))).OrderStatusId)%>
+                                        <%#IoCFactory.Resolve<IOrderService>().GetOrderStatusName(((Order)(Eval("Order"))).OrderStatusId)%>
                                     </ItemTemplate>
                                 </asp:TemplateField>
                                 <asp:TemplateField HeaderText="<% $NopResources:Admin.RecurringPaymentInfo.History.PaymentStatusColumn %>"
                                     ItemStyle-Width="20%">
                                     <ItemTemplate>
-                                        <%#IoCFactory.Resolve<IPaymentManager>().GetPaymentStatusName(((Order)(Eval("Order"))).PaymentStatusId)%>
+                                        <%#IoCFactory.Resolve<IPaymentService>().GetPaymentStatusName(((Order)(Eval("Order"))).PaymentStatusId)%>
                                     </ItemTemplate>
                                 </asp:TemplateField>
                                 <asp:TemplateField HeaderText="<% $NopResources:Admin.RecurringPaymentInfo.History.ShippingStatusColumn %>"
                                     ItemStyle-Width="15%">
                                     <ItemTemplate>
-                                        <%#IoCFactory.Resolve<IShippingManager>().GetShippingStatusName(((Order)(Eval("Order"))).ShippingStatusId)%>
+                                        <%#IoCFactory.Resolve<IShippingService>().GetShippingStatusName(((Order)(Eval("Order"))).ShippingStatusId)%>
                                     </ItemTemplate>
                                 </asp:TemplateField>
                                 <asp:TemplateField HeaderText="<% $NopResources:Admin.RecurringPaymentInfo.History.CreatedOnColumn %>"

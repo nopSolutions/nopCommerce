@@ -84,7 +84,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     IoCFactory.Resolve<ISettingManager>().SetParam("Mobile.SMS.Clickatell.Password", txtClickatellPassword.Text);
                     IoCFactory.Resolve<ISettingManager>().SetParam("Mobile.SMS.Verizon.Email", txtVerizonEmail.Text);
 
-                    IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity("EditSMSProviders", GetLocaleResourceString("ActivityLog.EditSMSProviders"));
+                    IoCFactory.Resolve<ICustomerActivityService>().InsertActivity("EditSMSProviders", GetLocaleResourceString("ActivityLog.EditSMSProviders"));
 
                     Response.Redirect(string.Format("SMSProviders.aspx?TabID={0}", GetActiveTabId(SMSProvidersTabs)));
                 }
@@ -99,7 +99,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                SMSProvider smsProvider = IoCFactory.Resolve<ISMSManager>().GetSMSProviderBySystemKeyword("SMSPROVIDERS_CLICKATELL");
+                SMSProvider smsProvider = IoCFactory.Resolve<ISMSService>().GetSMSProviderBySystemKeyword("SMSPROVIDERS_CLICKATELL");
                 if (smsProvider == null)
                 {
                     ShowError(GetLocaleResourceString("Admin.SMSProviders.Clickatell.TestMessage.Failed"));
@@ -130,7 +130,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                SMSProvider smsProvider = IoCFactory.Resolve<ISMSManager>().GetSMSProviderBySystemKeyword("SMSPROVIDERS_VERIZON");
+                SMSProvider smsProvider = IoCFactory.Resolve<ISMSService>().GetSMSProviderBySystemKeyword("SMSPROVIDERS_VERIZON");
                 if (smsProvider == null)
                 {
                     ShowError(GetLocaleResourceString("Admin.SMSProviders.Verizon.TestMessage.Failed"));

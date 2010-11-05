@@ -81,7 +81,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             if (shippingStatusId > 0)
                 shippingStatus = (ShippingStatusEnum)Enum.ToObject(typeof(ShippingStatusEnum), shippingStatusId);
 
-            return IoCFactory.Resolve<ICustomerManager>().GetBestCustomersReport(startDate,
+            return IoCFactory.Resolve<ICustomerService>().GetBestCustomersReport(startDate,
                 endDate, orderStatus, paymentStatus, shippingStatus, 1);
         }
 
@@ -113,15 +113,15 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             if (shippingStatusId > 0)
                 shippingStatus = (ShippingStatusEnum)Enum.ToObject(typeof(ShippingStatusEnum), shippingStatusId);
 
-            return IoCFactory.Resolve<ICustomerManager>().GetBestCustomersReport(startDate,
+            return IoCFactory.Resolve<ICustomerService>().GetBestCustomersReport(startDate,
                 endDate, orderStatus, paymentStatus, shippingStatus, 2);
         }
 
         protected void FillDropDowns()
         {
-            var orderStatuses = IoCFactory.Resolve<IOrderManager>().GetAllOrderStatuses();
-            var paymentStatuses = IoCFactory.Resolve<IPaymentManager>().GetAllPaymentStatuses();
-            var shippingStatuses = IoCFactory.Resolve<IShippingManager>().GetAllShippingStatuses();
+            var orderStatuses = IoCFactory.Resolve<IOrderService>().GetAllOrderStatuses();
+            var paymentStatuses = IoCFactory.Resolve<IPaymentService>().GetAllPaymentStatuses();
+            var shippingStatuses = IoCFactory.Resolve<IShippingService>().GetAllShippingStatuses();
 
             //by order total
             this.ddlOrderStatusByOrderTotal.Items.Clear();
@@ -129,7 +129,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             this.ddlOrderStatusByOrderTotal.Items.Add(itemOrderStatusByOrderTotal);
             foreach (OrderStatus orderStatus in orderStatuses)
             {
-                ListItem item2 = new ListItem(IoCFactory.Resolve<IOrderManager>().GetOrderStatusName(orderStatus.OrderStatusId), orderStatus.OrderStatusId.ToString());
+                ListItem item2 = new ListItem(IoCFactory.Resolve<IOrderService>().GetOrderStatusName(orderStatus.OrderStatusId), orderStatus.OrderStatusId.ToString());
                 this.ddlOrderStatusByOrderTotal.Items.Add(item2);
             }
 
@@ -138,7 +138,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             this.ddlPaymentStatusByOrderTotal.Items.Add(itemPaymentStatusByOrderTotal);
             foreach (PaymentStatus paymentStatus in paymentStatuses)
             {
-                ListItem item2 = new ListItem(IoCFactory.Resolve<IPaymentManager>().GetPaymentStatusName(paymentStatus.PaymentStatusId), paymentStatus.PaymentStatusId.ToString());
+                ListItem item2 = new ListItem(IoCFactory.Resolve<IPaymentService>().GetPaymentStatusName(paymentStatus.PaymentStatusId), paymentStatus.PaymentStatusId.ToString());
                 this.ddlPaymentStatusByOrderTotal.Items.Add(item2);
             }
 
@@ -147,7 +147,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             this.ddlShippingStatusByOrderTotal.Items.Add(itemShippingStatusByOrderTotal);
             foreach (ShippingStatus shippingStatus in shippingStatuses)
             {
-                ListItem item2 = new ListItem(IoCFactory.Resolve<IShippingManager>().GetShippingStatusName(shippingStatus.ShippingStatusId), shippingStatus.ShippingStatusId.ToString());
+                ListItem item2 = new ListItem(IoCFactory.Resolve<IShippingService>().GetShippingStatusName(shippingStatus.ShippingStatusId), shippingStatus.ShippingStatusId.ToString());
                 this.ddlShippingStatusByOrderTotal.Items.Add(item2);
             }
 
@@ -158,7 +158,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             this.ddlOrderStatusByNumberOfOrder.Items.Add(itemOrderStatusByNumberOfOrder);
             foreach (OrderStatus orderStatus in orderStatuses)
             {
-                ListItem item2 = new ListItem(IoCFactory.Resolve<IOrderManager>().GetOrderStatusName(orderStatus.OrderStatusId), orderStatus.OrderStatusId.ToString());
+                ListItem item2 = new ListItem(IoCFactory.Resolve<IOrderService>().GetOrderStatusName(orderStatus.OrderStatusId), orderStatus.OrderStatusId.ToString());
                 this.ddlOrderStatusByNumberOfOrder.Items.Add(item2);
             }
 
@@ -167,7 +167,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             this.ddlPaymentStatusByNumberOfOrder.Items.Add(itemPaymentStatusByNumberOfOrder);
             foreach (PaymentStatus paymentStatus in paymentStatuses)
             {
-                ListItem item2 = new ListItem(IoCFactory.Resolve<IPaymentManager>().GetPaymentStatusName(paymentStatus.PaymentStatusId), paymentStatus.PaymentStatusId.ToString());
+                ListItem item2 = new ListItem(IoCFactory.Resolve<IPaymentService>().GetPaymentStatusName(paymentStatus.PaymentStatusId), paymentStatus.PaymentStatusId.ToString());
                 this.ddlPaymentStatusByNumberOfOrder.Items.Add(item2);
             }
 
@@ -176,7 +176,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             this.ddlShippingStatusByNumberOfOrder.Items.Add(itemShippingStatusByNumberOfOrder);
             foreach (ShippingStatus shippingStatus in shippingStatuses)
             {
-                ListItem item2 = new ListItem(IoCFactory.Resolve<IShippingManager>().GetShippingStatusName(shippingStatus.ShippingStatusId), shippingStatus.ShippingStatusId.ToString());
+                ListItem item2 = new ListItem(IoCFactory.Resolve<IShippingService>().GetShippingStatusName(shippingStatus.ShippingStatusId), shippingStatus.ShippingStatusId.ToString());
                 this.ddlShippingStatusByNumberOfOrder.Items.Add(item2);
             }
         }
@@ -233,7 +233,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected void BindGridByLanguage()
         {
-            var report = IoCFactory.Resolve<ICustomerManager>().GetCustomerReportByLanguage();
+            var report = IoCFactory.Resolve<ICustomerService>().GetCustomerReportByLanguage();
             if (report.Count == 0)
             {
                 chartCustomersByLanguage.Visible = false;
@@ -258,7 +258,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected void BindGridByGender()
         {
-            var report = IoCFactory.Resolve<ICustomerManager>().GetCustomerReportByAttributeKey("Gender");
+            var report = IoCFactory.Resolve<ICustomerService>().GetCustomerReportByAttributeKey("Gender");
             if (report.Count == 0)
             {
                 chartCustomerByGender.Visible = false;
@@ -283,7 +283,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected void BindGridByCountry()
         {
-            var report = IoCFactory.Resolve<ICustomerManager>().GetCustomerReportByAttributeKey("CountryId");
+            var report = IoCFactory.Resolve<ICustomerService>().GetCustomerReportByAttributeKey("CountryId");
             if (report.Count == 0)
             {
                 chartCustomerByCountry.Visible = false;
@@ -309,7 +309,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         protected string GetCustomerInfo(int customerId)
         {
             string customerInfo = string.Empty;
-            Customer customer = IoCFactory.Resolve<ICustomerManager>().GetCustomerById(customerId);
+            Customer customer = IoCFactory.Resolve<ICustomerService>().GetCustomerById(customerId);
             if (customer != null)
             {
                 if (customer.IsGuest)
@@ -327,7 +327,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         protected string GetCustomerName(int customerId)
         {
             string customerName = string.Empty;
-            Customer customer = IoCFactory.Resolve<ICustomerManager>().GetCustomerById(customerId);
+            Customer customer = IoCFactory.Resolve<ICustomerService>().GetCustomerById(customerId);
             if (customer != null)
             {
                 if (customer.IsGuest)
@@ -345,7 +345,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         protected string GetLanguageInfo(int languageId)
         {
             string languageInfo = string.Empty;
-            var language = IoCFactory.Resolve<ILanguageManager>().GetLanguageById(languageId);
+            var language = IoCFactory.Resolve<ILanguageService>().GetLanguageById(languageId);
             if (language != null)
             {
                 languageInfo = language.Name;
@@ -387,7 +387,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 int countryId = 0;
                 if (int.TryParse(attributeKey, out countryId))
                 {
-                    var country = IoCFactory.Resolve<ICountryManager>().GetCountryById(countryId);
+                    var country = IoCFactory.Resolve<ICountryService>().GetCountryById(countryId);
                     if (country != null)
                     {
                         countryInfo = country.Name;

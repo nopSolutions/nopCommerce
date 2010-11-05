@@ -47,7 +47,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             Manufacturer manufacturer = ctrlManufacturerInfo.SaveInfo();
             ctrlManufacturerSEO.SaveInfo(manufacturer.ManufacturerId);
 
-            IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
+            IoCFactory.Resolve<ICustomerActivityService>().InsertActivity(
                 "AddNewManufacturer",
                 GetLocaleResourceString("ActivityLog.AddNewManufacturer"),
                 manufacturer.Name);

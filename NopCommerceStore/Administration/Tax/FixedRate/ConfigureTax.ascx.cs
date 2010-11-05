@@ -42,7 +42,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Tax.FixedRate
 
         private void BindData()
         {
-            var taxCategories = IoCFactory.Resolve<ITaxCategoryManager>().GetAllTaxCategories();
+            var taxCategories = IoCFactory.Resolve<ITaxCategoryService>().GetAllTaxCategories();
             gvTaxCategories.DataSource = taxCategories;
             gvTaxCategories.DataBind();
         }

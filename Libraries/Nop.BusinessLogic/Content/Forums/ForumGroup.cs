@@ -75,7 +75,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         {
             get
             {
-                return IoCFactory.Resolve<IForumManager>().GetAllForumsByGroupId(this.ForumGroupId);
+                return IoCFactory.Resolve<IForumService>().GetAllForumsByGroupId(this.ForumGroupId);
             }
         }
 

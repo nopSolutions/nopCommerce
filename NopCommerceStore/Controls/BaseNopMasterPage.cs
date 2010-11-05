@@ -84,7 +84,7 @@ namespace NopSolutions.NopCommerce.Web
 
         protected void CheckAffiliate()
         {
-            Affiliate affiliate = IoCFactory.Resolve<IAffiliateManager>().GetAffiliateById(CommonHelper.QueryStringInt("AffiliateId"));
+            Affiliate affiliate = IoCFactory.Resolve<IAffiliateService>().GetAffiliateById(CommonHelper.QueryStringInt("AffiliateId"));
             if (affiliate != null && affiliate.Active)
             {
                 if (NopContext.Current.User == null)
@@ -100,7 +100,7 @@ namespace NopSolutions.NopCommerce.Web
                 else if (NopContext.Current.User.AffiliateId != affiliate.AffiliateId)
                 {
                     NopContext.Current.User.AffiliateId = affiliate.AffiliateId;
-                    IoCFactory.Resolve<ICustomerManager>().UpdateCustomer(NopContext.Current.User);
+                    IoCFactory.Resolve<ICustomerService>().UpdateCustomer(NopContext.Current.User);
                 }
             }
         }

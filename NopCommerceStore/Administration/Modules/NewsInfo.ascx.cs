@@ -36,7 +36,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         private void FillDropDowns()
         {
             this.ddlLanguage.Items.Clear();
-            var languages = IoCFactory.Resolve<ILanguageManager>().GetAllLanguages();
+            var languages = IoCFactory.Resolve<ILanguageService>().GetAllLanguages();
             foreach (Language language in languages)
             {
                 ListItem item2 = new ListItem(language.Name, language.LanguageId.ToString());
@@ -46,7 +46,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         private void BindData()
         {
-            News news = IoCFactory.Resolve<INewsManager>().GetNewsById(this.NewsId);
+            News news = IoCFactory.Resolve<INewsService>().GetNewsById(this.NewsId);
             if (news != null)
             {
                 CommonHelper.SelectListItem(this.ddlLanguage, news.LanguageId);
@@ -87,7 +87,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public News SaveInfo()
         {
-            News news = IoCFactory.Resolve<INewsManager>().GetNewsById(NewsId);
+            News news = IoCFactory.Resolve<INewsService>().GetNewsById(NewsId);
             if (news != null)
             {
                 news.LanguageId = int.Parse(this.ddlLanguage.SelectedItem.Value);
@@ -98,7 +98,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 news.AllowComments = cbAllowComments.Checked;
                 news.CreatedOn = DateTime.UtcNow;
 
-                IoCFactory.Resolve<INewsManager>().UpdateNews(news);
+                IoCFactory.Resolve<INewsService>().UpdateNews(news);
             }
             else
             {
@@ -112,7 +112,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     AllowComments = cbAllowComments.Checked,
                     CreatedOn = DateTime.UtcNow
                 };
-                IoCFactory.Resolve<INewsManager>().InsertNews(news);
+                IoCFactory.Resolve<INewsService>().InsertNews(news);
             }
             return news;
         }

@@ -46,7 +46,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages.SMS
             }
             catch (Exception ex)
             {
-                IoCFactory.Resolve<ILogManager>().InsertLog(LogTypeEnum.Unknown, ex.Message, ex);
+                IoCFactory.Resolve<ILogService>().InsertLog(LogTypeEnum.Unknown, ex.Message, ex);
             }
             return false;
         }

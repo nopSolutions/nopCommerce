@@ -34,7 +34,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            Warehouse warehouse = IoCFactory.Resolve<IWarehouseManager>().GetWarehouseById(this.WarehouseId);
+            Warehouse warehouse = IoCFactory.Resolve<IWarehouseService>().GetWarehouseById(this.WarehouseId);
             if (warehouse != null)
             {
                 this.txtName.Text = warehouse.Name;
@@ -62,7 +62,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         private void FillDropDowns()
         {
             this.ddlCountry.Items.Clear();
-            var countryCollection = IoCFactory.Resolve<ICountryManager>().GetAllCountries();
+            var countryCollection = IoCFactory.Resolve<ICountryService>().GetAllCountries();
             foreach (Country country in countryCollection)
             {
                 ListItem ddlCountryItem2 = new ListItem(country.Name, country.CountryId.ToString());
@@ -81,7 +81,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public Warehouse SaveInfo()
         {
-            Warehouse warehouse = IoCFactory.Resolve<IWarehouseManager>().GetWarehouseById(this.WarehouseId);
+            Warehouse warehouse = IoCFactory.Resolve<IWarehouseService>().GetWarehouseById(this.WarehouseId);
 
             if (warehouse != null)
             {
@@ -97,7 +97,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 warehouse.CountryId = int.Parse(this.ddlCountry.SelectedItem.Value);
                 warehouse.UpdatedOn = DateTime.UtcNow;
 
-                IoCFactory.Resolve<IWarehouseManager>().UpdateWarehouse(warehouse);
+                IoCFactory.Resolve<IWarehouseService>().UpdateWarehouse(warehouse);
 
             }
             else
@@ -118,7 +118,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     CreatedOn = now,
                     UpdatedOn = now
                 };
-                IoCFactory.Resolve<IWarehouseManager>().InsertWarehouse(warehouse);
+                IoCFactory.Resolve<IWarehouseService>().InsertWarehouse(warehouse);
             }
 
             return warehouse;

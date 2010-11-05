@@ -100,7 +100,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                 if (languageId > 0)
                 {
                     if (_checkoutAttributeLocalized == null)
-                        _checkoutAttributeLocalized = IoCFactory.Resolve<ICheckoutAttributeManager>().GetCheckoutAttributeLocalizedByCheckoutAttributeId(this.CheckoutAttributeId);
+                        _checkoutAttributeLocalized = IoCFactory.Resolve<ICheckoutAttributeService>().GetCheckoutAttributeLocalizedByCheckoutAttributeId(this.CheckoutAttributeId);
 
                     var temp1 = _checkoutAttributeLocalized.FirstOrDefault(cal => cal.LanguageId == languageId);
                     if (temp1 != null && !String.IsNullOrWhiteSpace(temp1.Name))
@@ -134,7 +134,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                 if (languageId > 0)
                 {
                     if (_checkoutAttributeLocalized == null)
-                        _checkoutAttributeLocalized = IoCFactory.Resolve<ICheckoutAttributeManager>().GetCheckoutAttributeLocalizedByCheckoutAttributeId(this.CheckoutAttributeId);
+                        _checkoutAttributeLocalized = IoCFactory.Resolve<ICheckoutAttributeService>().GetCheckoutAttributeLocalizedByCheckoutAttributeId(this.CheckoutAttributeId);
 
                     var temp1 = _checkoutAttributeLocalized.FirstOrDefault(cal => cal.LanguageId == languageId);
                     if (temp1 != null && !String.IsNullOrWhiteSpace(temp1.TextPrompt))
@@ -198,7 +198,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         {
             get
             {
-                return IoCFactory.Resolve<ICheckoutAttributeManager>().GetCheckoutAttributeValues(this.CheckoutAttributeId);
+                return IoCFactory.Resolve<ICheckoutAttributeService>().GetCheckoutAttributeValues(this.CheckoutAttributeId);
             }
         }
 

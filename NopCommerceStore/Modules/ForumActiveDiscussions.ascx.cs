@@ -47,12 +47,12 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         private void BindData()
         {
-            if (!IoCFactory.Resolve<IForumManager>().ForumsEnabled)
+            if (!IoCFactory.Resolve<IForumService>().ForumsEnabled)
             {
                 this.Visible = false;
                 return;
             }
-            var forumTopics = IoCFactory.Resolve<IForumManager>().GetActiveTopics(this.ForumId, this.TopicCount);
+            var forumTopics = IoCFactory.Resolve<IForumService>().GetActiveTopics(this.ForumId, this.TopicCount);
             if (forumTopics.Count > 0)
             {
                 rptrTopics.DataSource = forumTopics;
@@ -81,9 +81,9 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 var hlTopicStarter = e.Item.FindControl("hlTopicStarter") as HyperLink;
                 if(hlTopicStarter != null)
                 {
-                    if(customer != null && IoCFactory.Resolve<ICustomerManager>().AllowViewingProfiles && !customer.IsGuest)
+                    if(customer != null && IoCFactory.Resolve<ICustomerService>().AllowViewingProfiles && !customer.IsGuest)
                     {
-                        hlTopicStarter.Text = Server.HtmlEncode(IoCFactory.Resolve<ICustomerManager>().FormatUserName(customer, true));
+                        hlTopicStarter.Text = Server.HtmlEncode(IoCFactory.Resolve<ICustomerService>().FormatUserName(customer, true));
                         hlTopicStarter.NavigateUrl = SEOHelper.GetUserProfileUrl(customer.CustomerId);
                     }
                     else
@@ -95,9 +95,9 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 var lblTopicStarter = e.Item.FindControl("lblTopicStarter") as Label;
                 if(lblTopicStarter != null)
                 {
-                    if(customer != null && (!IoCFactory.Resolve<ICustomerManager>().AllowViewingProfiles || customer.IsGuest))
+                    if(customer != null && (!IoCFactory.Resolve<ICustomerService>().AllowViewingProfiles || customer.IsGuest))
                     {
-                        lblTopicStarter.Text = Server.HtmlEncode(IoCFactory.Resolve<ICustomerManager>().FormatUserName(customer, true));
+                        lblTopicStarter.Text = Server.HtmlEncode(IoCFactory.Resolve<ICustomerService>().FormatUserName(customer, true));
                     }
                     else
                     {

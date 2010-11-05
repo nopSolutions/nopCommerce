@@ -77,7 +77,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         private void BindData()
         {
-            Currency currency = IoCFactory.Resolve<ICurrencyManager>().GetCurrencyById(this.CurrencyId);
+            Currency currency = IoCFactory.Resolve<ICurrencyService>().GetCurrencyById(this.CurrencyId);
             if (currency != null)
             {
                 this.txtName.Text = currency.Name;
@@ -125,7 +125,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 throw new NopException("Specified display locale culture is not supported");
             }
 
-            Currency currency = IoCFactory.Resolve<ICurrencyManager>().GetCurrencyById(this.CurrencyId);
+            Currency currency = IoCFactory.Resolve<ICurrencyService>().GetCurrencyById(this.CurrencyId);
             if (currency != null)
             {
                 currency.Name = txtName.Text;
@@ -137,7 +137,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 currency.DisplayOrder = txtDisplayOrder.Value;
                 currency.UpdatedOn = DateTime.UtcNow;
 
-                IoCFactory.Resolve<ICurrencyManager>().UpdateCurrency(currency);
+                IoCFactory.Resolve<ICurrencyService>().UpdateCurrency(currency);
             }
             else
             {
@@ -153,7 +153,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     CreatedOn = DateTime.UtcNow,
                     UpdatedOn = DateTime.UtcNow
                 };
-                IoCFactory.Resolve<ICurrencyManager>().InsertCurrency(currency);
+                IoCFactory.Resolve<ICurrencyService>().InsertCurrency(currency);
             }
 
             return currency;

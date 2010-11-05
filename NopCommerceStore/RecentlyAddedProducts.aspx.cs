@@ -37,7 +37,7 @@ namespace NopSolutions.NopCommerce.Web
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!IoCFactory.Resolve<IProductManager>().RecentlyAddedProductsEnabled)
+            if (!IoCFactory.Resolve<IProductService>().RecentlyAddedProductsEnabled)
             {
                 Response.Redirect(CommonHelper.GetStoreLocation());
             }

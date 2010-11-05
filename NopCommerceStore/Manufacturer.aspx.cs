@@ -40,7 +40,7 @@ namespace NopSolutions.NopCommerce.Web
 
         private void CreateChildControlsTree()
         {
-            manufacturer = IoCFactory.Resolve<IManufacturerManager>().GetManufacturerById(this.ManufacturerId);
+            manufacturer = IoCFactory.Resolve<IManufacturerService>().GetManufacturerById(this.ManufacturerId);
             if (manufacturer != null)
             {
                 Control child = null;

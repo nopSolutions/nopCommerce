@@ -81,7 +81,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         {
             get
             {
-                return IoCFactory.Resolve<IForumManager>().GetTopicById(this.TopicId);
+                return IoCFactory.Resolve<IForumService>().GetTopicById(this.TopicId);
             }
         }
 
@@ -92,7 +92,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         {
             get
             {
-                return IoCFactory.Resolve<ICustomerManager>().GetCustomerById(this.UserId);
+                return IoCFactory.Resolve<ICustomerService>().GetCustomerById(this.UserId);
             }
         }
         #endregion

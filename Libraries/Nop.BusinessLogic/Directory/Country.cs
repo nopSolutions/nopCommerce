@@ -104,7 +104,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
         {
             get
             {
-                return IoCFactory.Resolve<IStateProvinceManager>().GetStateProvincesByCountryId(this.CountryId);
+                return IoCFactory.Resolve<IStateProvinceService>().GetStateProvincesByCountryId(this.CountryId);
             }
         }
 

@@ -65,7 +65,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Localization
         {
             get
             {
-                return IoCFactory.Resolve<ILanguageManager>().GetLanguageById(this.LanguageId);
+                return IoCFactory.Resolve<ILanguageService>().GetLanguageById(this.LanguageId);
             }
         }
         #endregion

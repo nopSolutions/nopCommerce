@@ -107,7 +107,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         {
             get
             {
-                var defaultEmailAccount = IoCFactory.Resolve<IMessageManager>().DefaultEmailAccount;
+                var defaultEmailAccount = IoCFactory.Resolve<IMessageService>().DefaultEmailAccount;
                 return ((defaultEmailAccount != null && defaultEmailAccount.EmailAccountId == this.EmailAccountId));
             }
         }

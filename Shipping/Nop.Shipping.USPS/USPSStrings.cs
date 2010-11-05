@@ -45,7 +45,7 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.USPS
                                     // "Library",
                                     // "BPM",
                                     // "Media",
-                                    "ALL",
+                                    "ALL",  //USPSStrings Elements should only have "ALL" uncommented as rates are filtered on response, not request
                                     // "ONLINE" 
                                  };
 

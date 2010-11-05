@@ -95,7 +95,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Worldpay
                 remotePostHelper.Add("MC_WorldPayCSSName", IoCFactory.Resolve<ISettingManager>().GetSettingValue(WorldpayConstants.SETTING_WorldPayCSSName));
             }
 
-            remotePostHelper.Add("currency", IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency.CurrencyCode);
+            remotePostHelper.Add("currency", IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode);
             remotePostHelper.Add("email", order.BillingEmail);
             remotePostHelper.Add("hideContact", "true");
             remotePostHelper.Add("noLanguageMenu", "true");
@@ -114,7 +114,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Worldpay
             CultureInfo cultureInfo = new CultureInfo(NopContext.Current.WorkingLanguage.LanguageCulture);
             remotePostHelper.Add("lang", cultureInfo.TwoLetterISOLanguageName);
 
-            StateProvince billingStateProvince = IoCFactory.Resolve<IStateProvinceManager>().GetStateProvinceById(order.BillingStateProvinceId);
+            StateProvince billingStateProvince = IoCFactory.Resolve<IStateProvinceService>().GetStateProvinceById(order.BillingStateProvinceId);
             if (billingStateProvince != null)
                 remotePostHelper.Add("M_StateCounty", billingStateProvince.Abbreviation);
             else
@@ -124,7 +124,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Worldpay
             else
                 remotePostHelper.Add("testMode", "100");
             remotePostHelper.Add("postcode", order.BillingZipPostalCode);
-            Country billingCountry = IoCFactory.Resolve<ICountryManager>().GetCountryById(order.BillingCountryId);
+            Country billingCountry = IoCFactory.Resolve<ICountryService>().GetCountryById(order.BillingCountryId);
             if (billingCountry != null)
                 remotePostHelper.Add("country", billingCountry.TwoLetterIsoCode);
             else
@@ -141,7 +141,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Worldpay
                 delvAddress += (!string.IsNullOrEmpty(order.ShippingAddress2)) ? " " + order.ShippingAddress2 : string.Empty;
                 remotePostHelper.Add("delvAddress", delvAddress);
                 remotePostHelper.Add("delvPostcode", order.ShippingZipPostalCode);
-                Country shippingCountry = IoCFactory.Resolve<ICountryManager>().GetCountryById(order.ShippingCountryId);
+                Country shippingCountry = IoCFactory.Resolve<ICountryService>().GetCountryById(order.ShippingCountryId);
                 remotePostHelper.Add("delvCountry", shippingCountry.TwoLetterIsoCode);
             }
 

@@ -34,7 +34,7 @@ namespace NopSolutions.NopCommerce.Web
 
             if(!Page.IsPostBack)
             {
-                Order order = IoCFactory.Resolve<IOrderManager>().GetOrderById(CommonHelper.QueryStringInt("Order_IDP"));
+                Order order = IoCFactory.Resolve<IOrderService>().GetOrderById(CommonHelper.QueryStringInt("Order_IDP"));
                 if(order == null || NopContext.Current.User.CustomerId != order.CustomerId)
                 {
                     Response.Redirect(CommonHelper.GetStoreLocation());
@@ -42,16 +42,16 @@ namespace NopSolutions.NopCommerce.Web
 
                 if(HostedPaymentSettings.AuthorizeOnly)
                 {
-                    if(IoCFactory.Resolve<IOrderManager>().CanMarkOrderAsAuthorized(order))
+                    if(IoCFactory.Resolve<IOrderService>().CanMarkOrderAsAuthorized(order))
                     {
-                        IoCFactory.Resolve<IOrderManager>().MarkAsAuthorized(order.OrderId);
+                        IoCFactory.Resolve<IOrderService>().MarkAsAuthorized(order.OrderId);
                     }
                 }
                 else
                 {
-                    if(IoCFactory.Resolve<IOrderManager>().CanMarkOrderAsPaid(order))
+                    if(IoCFactory.Resolve<IOrderService>().CanMarkOrderAsPaid(order))
                     {
-                        IoCFactory.Resolve<IOrderManager>().MarkOrderAsPaid(order.OrderId);
+                        IoCFactory.Resolve<IOrderService>().MarkOrderAsPaid(order.OrderId);
                     }
                 }
 

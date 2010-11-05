@@ -149,7 +149,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
                 if (languageId > 0)
                 {
                     if (_categoryLocalized == null)
-                        _categoryLocalized = IoCFactory.Resolve<ICategoryManager>().GetCategoryLocalizedByCategoryId(this.CategoryId);
+                        _categoryLocalized = IoCFactory.Resolve<ICategoryService>().GetCategoryLocalizedByCategoryId(this.CategoryId);
 
                     var temp1 = _categoryLocalized.FirstOrDefault(cl => cl.LanguageId == languageId);
                     if (temp1 != null && !String.IsNullOrWhiteSpace(temp1.Name))
@@ -183,7 +183,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
                 if (languageId > 0)
                 {
                     if (_categoryLocalized == null)
-                        _categoryLocalized = IoCFactory.Resolve<ICategoryManager>().GetCategoryLocalizedByCategoryId(this.CategoryId);
+                        _categoryLocalized = IoCFactory.Resolve<ICategoryService>().GetCategoryLocalizedByCategoryId(this.CategoryId);
 
                     var temp1 = _categoryLocalized.FirstOrDefault(cl => cl.LanguageId == languageId);
                     if (temp1 != null && !String.IsNullOrWhiteSpace(temp1.Description))
@@ -217,7 +217,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
                 if (languageId > 0)
                 {
                     if (_categoryLocalized == null)
-                        _categoryLocalized = IoCFactory.Resolve<ICategoryManager>().GetCategoryLocalizedByCategoryId(this.CategoryId);
+                        _categoryLocalized = IoCFactory.Resolve<ICategoryService>().GetCategoryLocalizedByCategoryId(this.CategoryId);
 
                     var temp1 = _categoryLocalized.FirstOrDefault(cl => cl.LanguageId == languageId);
                     if (temp1 != null && !String.IsNullOrWhiteSpace(temp1.MetaKeywords))
@@ -251,7 +251,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
                 if (languageId > 0)
                 {
                     if (_categoryLocalized == null)
-                        _categoryLocalized = IoCFactory.Resolve<ICategoryManager>().GetCategoryLocalizedByCategoryId(this.CategoryId);
+                        _categoryLocalized = IoCFactory.Resolve<ICategoryService>().GetCategoryLocalizedByCategoryId(this.CategoryId);
 
                     var temp1 = _categoryLocalized.FirstOrDefault(cl => cl.LanguageId == languageId);
                     if (temp1 != null && !String.IsNullOrWhiteSpace(temp1.MetaDescription))
@@ -285,7 +285,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
                 if (languageId > 0)
                 {
                     if (_categoryLocalized == null)
-                        _categoryLocalized = IoCFactory.Resolve<ICategoryManager>().GetCategoryLocalizedByCategoryId(this.CategoryId);
+                        _categoryLocalized = IoCFactory.Resolve<ICategoryService>().GetCategoryLocalizedByCategoryId(this.CategoryId);
 
                     var temp1 = _categoryLocalized.FirstOrDefault(cl => cl.LanguageId == languageId);
                     if (temp1 != null && !String.IsNullOrWhiteSpace(temp1.MetaTitle))
@@ -319,7 +319,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
                 if (languageId > 0)
                 {
                     if (_categoryLocalized == null)
-                        _categoryLocalized = IoCFactory.Resolve<ICategoryManager>().GetCategoryLocalizedByCategoryId(this.CategoryId);
+                        _categoryLocalized = IoCFactory.Resolve<ICategoryService>().GetCategoryLocalizedByCategoryId(this.CategoryId);
 
                     var temp1 = _categoryLocalized.FirstOrDefault(cl => cl.LanguageId == languageId);
                     if (temp1 != null && !String.IsNullOrWhiteSpace(temp1.SEName))
@@ -352,7 +352,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
         {
             get
             {
-                return IoCFactory.Resolve<ICategoryManager>().GetCategoryById(this.ParentCategoryId);
+                return IoCFactory.Resolve<ICategoryService>().GetCategoryById(this.ParentCategoryId);
             }
         }
 
@@ -363,7 +363,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
         {
             get
             {
-                return IoCFactory.Resolve<ITemplateManager>().GetCategoryTemplateById(this.TemplateId);
+                return IoCFactory.Resolve<ITemplateService>().GetCategoryTemplateById(this.TemplateId);
             }
         }
 
@@ -374,7 +374,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
         {
             get
             {
-                return IoCFactory.Resolve<ICategoryManager>().GetProductCategoriesByCategoryId(this.CategoryId);
+                return IoCFactory.Resolve<ICategoryService>().GetProductCategoriesByCategoryId(this.CategoryId);
             }
         }
 
@@ -385,7 +385,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
         {
             get
             {
-                return IoCFactory.Resolve<IPictureManager>().GetPictureById(this.PictureId);
+                return IoCFactory.Resolve<IPictureService>().GetPictureById(this.PictureId);
             }
         }
 
@@ -396,7 +396,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
         {
             get
             {
-                return IoCFactory.Resolve<IDiscountManager>().GetDiscountsByCategoryId(this.CategoryId);
+                return IoCFactory.Resolve<IDiscountService>().GetDiscountsByCategoryId(this.CategoryId);
             }
         }
 
@@ -408,7 +408,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
             get
             {
                 int totalFeaturedRecords = 0;
-                var featuredProducts = IoCFactory.Resolve<IProductManager>().GetAllProducts(this.CategoryId,
+                var featuredProducts = IoCFactory.Resolve<IProductService>().GetAllProducts(this.CategoryId,
                     0, 0, true, int.MaxValue - 1, 0, out totalFeaturedRecords);
                 return featuredProducts;
             }

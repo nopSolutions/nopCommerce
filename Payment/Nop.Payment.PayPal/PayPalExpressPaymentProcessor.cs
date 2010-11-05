@@ -165,7 +165,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.PayPal
             req.DoCaptureRequest.AuthorizationID = authorizationID;
             req.DoCaptureRequest.Amount = new BasicAmountType();
             req.DoCaptureRequest.Amount.Value = order.OrderTotal.ToString("N", new CultureInfo("en-us"));
-            req.DoCaptureRequest.Amount.currencyID = PaypalHelper.GetPaypalCurrency(IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency);
+            req.DoCaptureRequest.Amount.currencyID = PaypalHelper.GetPaypalCurrency(IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency);
             req.DoCaptureRequest.CompleteType = CompleteCodeType.Complete;
             DoCaptureResponseType response = service2.DoCapture(req);
 
@@ -208,7 +208,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.PayPal
             details.PaymentActionSpecified = true;
             details.OrderTotal = new BasicAmountType();
             details.OrderTotal.Value = OrderTotal.ToString("N", new CultureInfo("en-us"));
-            details.OrderTotal.currencyID = PaypalHelper.GetPaypalCurrency(IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency);
+            details.OrderTotal.currencyID = PaypalHelper.GetPaypalCurrency(IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency);
             details.ReturnURL = ReturnURL;
             details.CancelURL = CancelURL;
             SetExpressCheckoutResponseType response = service2.SetExpressCheckout(req);
@@ -288,7 +288,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.PayPal
             details.PaymentDetails[0] = paymentDetails1;
             paymentDetails1.OrderTotal = new BasicAmountType();
             paymentDetails1.OrderTotal.Value = paymentInfo.OrderTotal.ToString("N", new CultureInfo("en-us"));
-            paymentDetails1.OrderTotal.currencyID = PaypalHelper.GetPaypalCurrency(IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency);
+            paymentDetails1.OrderTotal.currencyID = PaypalHelper.GetPaypalCurrency(IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency);
             paymentDetails1.Custom = orderGuid.ToString();
             paymentDetails1.ButtonSource = "nopCommerceCart";
             

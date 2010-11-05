@@ -72,7 +72,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                IoCFactory.Resolve<ITopicManager>().DeleteTopic(this.TopicId);
+                IoCFactory.Resolve<ITopicService>().DeleteTopic(this.TopicId);
                 Response.Redirect("Topics.aspx");
             }
             catch (Exception exc)

@@ -72,7 +72,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         private void FillDropDowns()
         {
-            var currencies = IoCFactory.Resolve<ICurrencyManager>().GetAllCurrencies(false);
+            var currencies = IoCFactory.Resolve<ICurrencyService>().GetAllCurrencies(false);
 
             //Froogle
             this.ddlFroogleCurrency.Items.Clear();
@@ -119,18 +119,18 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     IoCFactory.Resolve<ISettingManager>().SetParam("Froogle.FTPFilename", txtFroogleFTPFilename.Text);
                     IoCFactory.Resolve<ISettingManager>().SetParam("Froogle.FTPUsername", txtFroogleFTPUsername.Text);
                     IoCFactory.Resolve<ISettingManager>().SetParam("Froogle.FTPPassword", txtFroogleFTPPassword.Text);
-                    FroogleService.UsedCurrency = IoCFactory.Resolve<ICurrencyManager>().GetCurrencyById(int.Parse(this.ddlFroogleCurrency.SelectedItem.Value));
+                    FroogleService.UsedCurrency = IoCFactory.Resolve<ICurrencyService>().GetCurrencyById(int.Parse(this.ddlFroogleCurrency.SelectedItem.Value));
 
                     //price grabber
                     IoCFactory.Resolve<ISettingManager>().SetParam("PromotionProvider.PriceGrabber.ProductThumbnailImageSize", txtPriceGrabberProductThumbSize.Value.ToString());
-                    PriceGrabberService.UsedCurrency = IoCFactory.Resolve<ICurrencyManager>().GetCurrencyById(int.Parse(this.ddlPriceGrabberCurrency.SelectedItem.Value));
+                    PriceGrabberService.UsedCurrency = IoCFactory.Resolve<ICurrencyService>().GetCurrencyById(int.Parse(this.ddlPriceGrabberCurrency.SelectedItem.Value));
 
                     //become.com
                     IoCFactory.Resolve<ISettingManager>().SetParam("PromotionProvider.BecomeCom.ProductThumbnailImageSize", txtBecomeProductThumbSize.Value.ToString());
-                    BecomeService.UsedCurrency = IoCFactory.Resolve<ICurrencyManager>().GetCurrencyById(int.Parse(this.ddlBecomeCurrency.SelectedItem.Value));
+                    BecomeService.UsedCurrency = IoCFactory.Resolve<ICurrencyService>().GetCurrencyById(int.Parse(this.ddlBecomeCurrency.SelectedItem.Value));
 
                     //activity log
-                    IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity("EditPromotionProviders", GetLocaleResourceString("ActivityLog.EditPromotionProviders"));
+                    IoCFactory.Resolve<ICustomerActivityService>().InsertActivity("EditPromotionProviders", GetLocaleResourceString("ActivityLog.EditPromotionProviders"));
 
                     //redirect
                     Response.Redirect(string.Format("PromotionProviders.aspx?TabID={0}", GetActiveTabId(PromotionProvidersTabs)));

@@ -48,10 +48,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected void BindData()
         {
-            cbEnableBlog.Checked = IoCFactory.Resolve<IBlogManager>().BlogEnabled;
-            cbAllowNotRegisteredUsersToLeaveComments.Checked = IoCFactory.Resolve<IBlogManager>().AllowNotRegisteredUsersToLeaveComments;
-            cbNotifyAboutNewBlogComments.Checked = IoCFactory.Resolve<IBlogManager>().NotifyAboutNewBlogComments;
-            txtPostsPageSize.Value = IoCFactory.Resolve<IBlogManager>().PostsPageSize;
+            cbEnableBlog.Checked = IoCFactory.Resolve<IBlogService>().BlogEnabled;
+            cbAllowNotRegisteredUsersToLeaveComments.Checked = IoCFactory.Resolve<IBlogService>().AllowNotRegisteredUsersToLeaveComments;
+            cbNotifyAboutNewBlogComments.Checked = IoCFactory.Resolve<IBlogService>().NotifyAboutNewBlogComments;
+            txtPostsPageSize.Value = IoCFactory.Resolve<IBlogService>().PostsPageSize;
         }
 
         protected void btnSave_Click(object sender, EventArgs e)
@@ -60,10 +60,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 try
                 {
-                    IoCFactory.Resolve<IBlogManager>().BlogEnabled = cbEnableBlog.Checked;
-                    IoCFactory.Resolve<IBlogManager>().AllowNotRegisteredUsersToLeaveComments = cbAllowNotRegisteredUsersToLeaveComments.Checked;
-                    IoCFactory.Resolve<IBlogManager>().NotifyAboutNewBlogComments = cbNotifyAboutNewBlogComments.Checked;
-                    IoCFactory.Resolve<IBlogManager>().PostsPageSize = txtPostsPageSize.Value;
+                    IoCFactory.Resolve<IBlogService>().BlogEnabled = cbEnableBlog.Checked;
+                    IoCFactory.Resolve<IBlogService>().AllowNotRegisteredUsersToLeaveComments = cbAllowNotRegisteredUsersToLeaveComments.Checked;
+                    IoCFactory.Resolve<IBlogService>().NotifyAboutNewBlogComments = cbNotifyAboutNewBlogComments.Checked;
+                    IoCFactory.Resolve<IBlogService>().PostsPageSize = txtPostsPageSize.Value;
 
                     Response.Redirect("BlogSettings.aspx");
                 }

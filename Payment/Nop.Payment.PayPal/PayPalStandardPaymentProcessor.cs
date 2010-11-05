@@ -217,7 +217,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.PayPal
                 var caValues = CheckoutAttributeHelper.ParseCheckoutAttributeValues(order.CheckoutAttributesXml);
                 foreach (var val in caValues)
                 {
-                    var attPrice = IoCFactory.Resolve<ITaxManager>().GetCheckoutAttributePrice(val, false, order.Customer);
+                    var attPrice = IoCFactory.Resolve<ITaxService>().GetCheckoutAttributePrice(val, false, order.Customer);
                     if (attPrice > decimal.Zero) //if it has a price
                     {
                         var ca = val.CheckoutAttribute;
@@ -287,7 +287,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.PayPal
             }
 
             builder.AppendFormat("&custom={0}", order.OrderGuid);
-            builder.Append(string.Format("&no_note=1&currency_code={0}", HttpUtility.UrlEncode(IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency.CurrencyCode)));
+            builder.Append(string.Format("&no_note=1&currency_code={0}", HttpUtility.UrlEncode(IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode)));
             builder.AppendFormat("&invoice={0}", order.OrderId);
             builder.AppendFormat("&rm=2", new object[0]);
             if (order.ShippingStatus != ShippingStatusEnum.ShippingNotRequired)
@@ -316,12 +316,12 @@ namespace NopSolutions.NopCommerce.Payment.Methods.PayPal
             //        builder.AppendFormat("&night_phone_c={0}", HttpUtility.UrlEncode(billingPhoneNumber.Substring(6, 4)));
             //    }
             //}
-            StateProvince billingStateProvince = IoCFactory.Resolve<IStateProvinceManager>().GetStateProvinceById(order.BillingStateProvinceId);
+            StateProvince billingStateProvince = IoCFactory.Resolve<IStateProvinceService>().GetStateProvinceById(order.BillingStateProvinceId);
             if (billingStateProvince != null)
                 builder.AppendFormat("&state={0}", HttpUtility.UrlEncode(billingStateProvince.Abbreviation));
             else
                 builder.AppendFormat("&state={0}", HttpUtility.UrlEncode(order.BillingStateProvince));
-            Country billingCountry = IoCFactory.Resolve<ICountryManager>().GetCountryById(order.BillingCountryId);
+            Country billingCountry = IoCFactory.Resolve<ICountryService>().GetCountryById(order.BillingCountryId);
             if (billingCountry != null)
                 builder.AppendFormat("&country={0}", HttpUtility.UrlEncode(billingCountry.TwoLetterIsoCode));
             else

@@ -29,7 +29,7 @@ namespace NopSolutions.NopCommerce.Web
                 XmlDocument doc = new XmlDocument();
                 doc.Load(Request.InputStream);
                 //// Try to find the order the notification is posted about
-                Order o = IoCFactory.Resolve<IOrderManager>().GetOrderById(Convert.ToInt32(doc.ChildNodes[1]["purchaseID"].InnerText));
+                Order o = IoCFactory.Resolve<IOrderService>().GetOrderById(Convert.ToInt32(doc.ChildNodes[1]["purchaseID"].InnerText));
                 if (o == null)
                 {
                     throw new NullReferenceException("No order");
@@ -39,17 +39,17 @@ namespace NopSolutions.NopCommerce.Web
                 switch (status.ToLower())
                 {
                     case "success":
-                        if (IoCFactory.Resolve<IOrderManager>().CanMarkOrderAsPaid(o))
+                        if (IoCFactory.Resolve<IOrderService>().CanMarkOrderAsPaid(o))
                         {
-                            IoCFactory.Resolve<IOrderManager>().MarkOrderAsPaid(o.OrderId);
+                            IoCFactory.Resolve<IOrderService>().MarkOrderAsPaid(o.OrderId);
                         }
                         break;
                     case "Expired":
                     case "Cancelled":
                     case "Failure":
-                        if (IoCFactory.Resolve<IOrderManager>().CanCancelOrder(o))
+                        if (IoCFactory.Resolve<IOrderService>().CanCancelOrder(o))
                         {
-                            IoCFactory.Resolve<IOrderManager>().CancelOrder(o.OrderId, true);
+                            IoCFactory.Resolve<IOrderService>().CancelOrder(o.OrderId, true);
                         }
                         break;
                     default:
@@ -58,7 +58,7 @@ namespace NopSolutions.NopCommerce.Web
             }
             catch (Exception exc)
             {
-                IoCFactory.Resolve<ILogManager>().InsertLog(LogTypeEnum.OrderError, "iDeal payment error" + exc.Message, exc);
+                IoCFactory.Resolve<ILogService>().InsertLog(LogTypeEnum.OrderError, "iDeal payment error" + exc.Message, exc);
             }
         }
 

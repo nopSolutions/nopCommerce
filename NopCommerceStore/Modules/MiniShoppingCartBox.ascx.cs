@@ -50,7 +50,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
         {
             if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Common.ShowMiniShoppingCart"))
             {
-                var shoppingCart = IoCFactory.Resolve<IShoppingCartManager>().GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
+                var shoppingCart = IoCFactory.Resolve<IShoppingCartService>().GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
                 if (shoppingCart.TotalProducts == 0)
                 {
                     phCheckoutInfo.Visible = false;
@@ -104,13 +104,13 @@ namespace NopSolutions.NopCommerce.Web.Modules
             Discount orderSubTotalAppliedDiscount = null;
             decimal subTotalWithoutDiscountBase = decimal.Zero;
             decimal subTotalWithDiscountBase = decimal.Zero;
-            string SubTotalError = IoCFactory.Resolve<IShoppingCartManager>().GetShoppingCartSubTotal(shoppingCart,
+            string SubTotalError = IoCFactory.Resolve<IShoppingCartService>().GetShoppingCartSubTotal(shoppingCart,
                 NopContext.Current.User, out orderSubTotalDiscountAmount, out orderSubTotalAppliedDiscount,
                 out subTotalWithoutDiscountBase, out subTotalWithDiscountBase);
             subtotalBase = subTotalWithoutDiscountBase;
             if (String.IsNullOrEmpty(SubTotalError))
             {
-                decimal subTotal = IoCFactory.Resolve<ICurrencyManager>().ConvertCurrency(subtotalBase, IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                decimal subTotal = IoCFactory.Resolve<ICurrencyService>().ConvertCurrency(subtotalBase, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
                 return PriceHelper.FormatPrice(subTotal);
             }
             else

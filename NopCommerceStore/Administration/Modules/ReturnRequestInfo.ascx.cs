@@ -46,14 +46,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             foreach (string status in statuses)
             {
                 int enumValue = (int)Enum.Parse(typeof(ReturnStatusEnum), status, true);
-                ListItem ddlItem = new ListItem(IoCFactory.Resolve<IOrderManager>().GetReturnRequestStatusName((ReturnStatusEnum)enumValue), enumValue.ToString());
+                ListItem ddlItem = new ListItem(IoCFactory.Resolve<IOrderService>().GetReturnRequestStatusName((ReturnStatusEnum)enumValue), enumValue.ToString());
                 ddlStatus.Items.Add(ddlItem);
             }
         }
 
         private void BindData()
         {
-            ReturnRequest rr = IoCFactory.Resolve<IOrderManager>().GetReturnRequestById(this.ReturnRequestId);
+            ReturnRequest rr = IoCFactory.Resolve<IOrderService>().GetReturnRequestById(this.ReturnRequestId);
             if (rr != null)
             {
                 this.lblReturnRequestId.Text = rr.ReturnRequestId.ToString();
@@ -76,7 +76,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public ReturnRequest SaveInfo()
         {
-            ReturnRequest rr = IoCFactory.Resolve<IOrderManager>().GetReturnRequestById(this.ReturnRequestId);
+            ReturnRequest rr = IoCFactory.Resolve<IOrderService>().GetReturnRequestById(this.ReturnRequestId);
 
             if (rr != null)
             {
@@ -85,7 +85,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 rr.CustomerComments = txtCustomerComments.Text;
                 rr.StaffNotes = txtStaffNotes.Text;
                 rr.ReturnStatusId = (int)int.Parse(this.ddlStatus.SelectedItem.Value);
-                IoCFactory.Resolve<IOrderManager>().UpdateReturnRequest(rr);
+                IoCFactory.Resolve<IOrderService>().UpdateReturnRequest(rr);
             }
             else
             {

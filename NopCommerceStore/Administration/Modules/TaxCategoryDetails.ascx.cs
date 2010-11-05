@@ -70,7 +70,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected void DeleteButton_Click(object sender, EventArgs e)
         {
-            IoCFactory.Resolve<ITaxCategoryManager>().DeleteTaxCategory(this.TaxCategoryId);
+            IoCFactory.Resolve<ITaxCategoryService>().DeleteTaxCategory(this.TaxCategoryId);
             Response.Redirect("TaxCategories.aspx");
         }
 

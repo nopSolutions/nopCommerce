@@ -45,7 +45,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected void BindData()
         {
-            var campaignCollection = IoCFactory.Resolve<ICampaignManager>().GetAllCampaigns();
+            var campaignCollection = IoCFactory.Resolve<ICampaignService>().GetAllCampaigns();
             gvCampaigns.DataSource = campaignCollection;
             gvCampaigns.DataBind();
         }

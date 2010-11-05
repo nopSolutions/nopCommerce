@@ -36,7 +36,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.FixedRateConfigur
 
         private void BindData()
         {
-            var shippingMethods = IoCFactory.Resolve<IShippingManager>().GetAllShippingMethods();
+            var shippingMethods = IoCFactory.Resolve<IShippingService>().GetAllShippingMethods();
             gvShippingMethods.DataSource = shippingMethods;
             gvShippingMethods.DataBind();
         }

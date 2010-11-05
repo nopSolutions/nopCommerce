@@ -142,7 +142,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.PayFlowPro
                 
                 invoice.InvNum = orderGuid.ToString();
                 decimal orderTotal = Math.Round(paymentInfo.OrderTotal, 2);
-                invoice.Amt = new PayPal.Payments.DataObjects.Currency(orderTotal, IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency.CurrencyCode);
+                invoice.Amt = new PayPal.Payments.DataObjects.Currency(orderTotal, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode);
 
                 string creditCardExp = string.Empty;
                 if (paymentInfo.CreditCardExpireMonth < 10)

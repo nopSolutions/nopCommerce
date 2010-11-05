@@ -33,7 +33,7 @@ namespace NopSolutions.NopCommerce.Web.Administration
     {
         protected override bool ValidatePageSecurity()
         {
-            return IoCFactory.Resolve<IACLManager>().IsActionAllowed("ManageMaintenance");
+            return IoCFactory.Resolve<IACLService>().IsActionAllowed("ManageMaintenance");
         }
     }
 }

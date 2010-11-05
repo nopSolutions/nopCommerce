@@ -65,16 +65,16 @@ namespace NopSolutions.NopCommerce.Web.Modules
         protected string GetToInfo(int customerId)
         {
             string customerInfo = string.Empty;
-            var customer = IoCFactory.Resolve<ICustomerManager>().GetCustomerById(customerId);
+            var customer = IoCFactory.Resolve<ICustomerService>().GetCustomerById(customerId);
             if (customer != null && !customer.IsGuest)
             {
-                if (IoCFactory.Resolve<ICustomerManager>().AllowViewingProfiles)
+                if (IoCFactory.Resolve<ICustomerService>().AllowViewingProfiles)
                 {
-                    customerInfo = string.Format("<a href=\"{0}\">{1}</a>", SEOHelper.GetUserProfileUrl(customer.CustomerId), Server.HtmlEncode(IoCFactory.Resolve<ICustomerManager>().FormatUserName(customer)));
+                    customerInfo = string.Format("<a href=\"{0}\">{1}</a>", SEOHelper.GetUserProfileUrl(customer.CustomerId), Server.HtmlEncode(IoCFactory.Resolve<ICustomerService>().FormatUserName(customer)));
                 }
                 else
                 {
-                    customerInfo = Server.HtmlEncode(IoCFactory.Resolve<ICustomerManager>().FormatUserName(customer));
+                    customerInfo = Server.HtmlEncode(IoCFactory.Resolve<ICustomerService>().FormatUserName(customer));
                 }           
             }
             return customerInfo; 
@@ -104,13 +104,13 @@ namespace NopSolutions.NopCommerce.Web.Modules
                             int pmId = int.Parse(hfPrivateMessageId.Value);
                             if (selected)
                             {
-                                var pm = IoCFactory.Resolve<IForumManager>().GetPrivateMessageById(pmId);
+                                var pm = IoCFactory.Resolve<IForumService>().GetPrivateMessageById(pmId);
                                 if (pm != null)
                                 {
                                     if (pm.FromUserId == NopContext.Current.User.CustomerId)
                                     {
                                         pm.IsDeletedByAuthor = true;
-                                        IoCFactory.Resolve<IForumManager>().UpdatePrivateMessage(pm);
+                                        IoCFactory.Resolve<IForumService>().UpdatePrivateMessage(pm);
                                     }
                                 }
                             }
@@ -121,7 +121,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 }
                 catch (Exception exc)
                 {
-                    IoCFactory.Resolve<ILogManager>().InsertLog(LogTypeEnum.CustomerError, exc.Message, exc);
+                    IoCFactory.Resolve<ILogService>().InsertLog(LogTypeEnum.CustomerError, exc.Message, exc);
                 }
             }
         }

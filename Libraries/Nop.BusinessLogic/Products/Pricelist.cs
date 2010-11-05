@@ -63,15 +63,15 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                 case PriceListExportModeEnum.All:
                     {
                         blnOverrideAdjustment = true;
-                        foreach (Product product in IoCFactory.Resolve<IProductManager>().GetAllProducts(false))
+                        foreach (Product product in IoCFactory.Resolve<IProductService>().GetAllProducts(false))
                         {
-                            productVariants.AddRange(IoCFactory.Resolve<IProductManager>().GetProductVariantsByProductId(product.ProductId, false));
+                            productVariants.AddRange(IoCFactory.Resolve<IProductService>().GetProductVariantsByProductId(product.ProductId, false));
                         }
                     }
                     break;
                 case PriceListExportModeEnum.AssignedProducts:
                     {
-                        productVariants = IoCFactory.Resolve<IProductManager>().GetProductVariantsByPricelistId(this.PricelistId);
+                        productVariants = IoCFactory.Resolve<IProductService>().GetProductVariantsByPricelistId(this.PricelistId);
                     }
                     break;
                 default:
@@ -100,7 +100,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                 }
                 else
                 {
-                    ProductVariantPricelist productVariantPricelist = IoCFactory.Resolve<IProductManager>().GetProductVariantPricelist(productVariant.ProductVariantId, this.PricelistId);
+                    ProductVariantPricelist productVariantPricelist = IoCFactory.Resolve<IProductService>().GetProductVariantPricelist(productVariant.ProductVariantId, this.PricelistId);
                     if (productVariantPricelist != null)
                     {
                         newPrice = GetAdjustedPrice(productVariant.Price, productVariantPricelist.PriceAdjustmentType, productVariantPricelist.PriceAdjustment);
@@ -237,7 +237,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                                 var pictures = productVariant.Product.ProductPictures;
                                 if (pictures.Count > 0)
                                 {
-                                    tokens.Add(strToken + strFormat, String.Format(locProvider, "{0" + strFormat + "}", IoCFactory.Resolve<IPictureManager>().GetPictureUrl(pictures[0].PictureId)));
+                                    tokens.Add(strToken + strFormat, String.Format(locProvider, "{0" + strFormat + "}", IoCFactory.Resolve<IPictureService>().GetPictureUrl(pictures[0].PictureId)));
                                 }
                                 else
                                 {

@@ -44,18 +44,18 @@ namespace NopSolutions.NopCommerce.Web
         {
             if (!Page.IsPostBack)
             {
-                Customer customer = IoCFactory.Resolve<ICustomerManager>().GetCustomerById(this.CustomerId);
+                Customer customer = IoCFactory.Resolve<ICustomerService>().GetCustomerById(this.CustomerId);
                 if (customer == null || customer.IsGuest)
                 {
                     Response.Redirect(CommonHelper.GetStoreLocation());
                 }
 
-                if (!IoCFactory.Resolve<ICustomerManager>().AllowViewingProfiles)
+                if (!IoCFactory.Resolve<ICustomerService>().AllowViewingProfiles)
                 {
                     Response.Redirect(CommonHelper.GetStoreLocation());
                 }
 
-                string name = IoCFactory.Resolve<ICustomerManager>().FormatUserName(customer);
+                string name = IoCFactory.Resolve<ICustomerService>().FormatUserName(customer);
                 lTitle.Text = string.Format(GetLocaleResourceString("Profile.ProfileOf"), Server.HtmlEncode(name));
             }
 

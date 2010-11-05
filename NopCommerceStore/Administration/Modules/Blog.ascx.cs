@@ -42,7 +42,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         private void BindGrid()
         {
-            var blogPosts = IoCFactory.Resolve<IBlogManager>().GetAllBlogPosts(0);
+            var blogPosts = IoCFactory.Resolve<IBlogService>().GetAllBlogPosts(0);
             gvBlogPosts.DataSource = blogPosts;
             gvBlogPosts.DataBind();
         }

@@ -66,7 +66,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         {
             get
             {
-                return IoCFactory.Resolve<IPictureManager>().GetPictureById(this.PictureId);
+                return IoCFactory.Resolve<IPictureService>().GetPictureById(this.PictureId);
             }
         }
         #endregion

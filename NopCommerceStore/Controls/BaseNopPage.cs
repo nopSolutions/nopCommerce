@@ -99,7 +99,7 @@ namespace NopSolutions.NopCommerce.Web
             }
 
             //allow navigation only for registered customers
-            if (IoCFactory.Resolve<ICustomerManager>().AllowNavigationOnlyRegisteredCustomers)
+            if (IoCFactory.Resolve<ICustomerService>().AllowNavigationOnlyRegisteredCustomers)
             {
                 if (NopContext.Current.User == null || NopContext.Current.User.IsGuest)
                 {
@@ -190,7 +190,7 @@ namespace NopSolutions.NopCommerce.Web
             //online user tracking
             if (this.TrackedByOnlineCustomersModule)
             {
-                IoCFactory.Resolve<IOnlineUserManager>().TrackCurrentUser();
+                IoCFactory.Resolve<IOnlineUserService>().TrackCurrentUser();
             }
 
             base.OnPreRender(e);

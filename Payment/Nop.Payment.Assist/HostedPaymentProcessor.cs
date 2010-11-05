@@ -61,7 +61,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Assist
             post.Add("Order_IDP", order.OrderId.ToString());
             post.Add("Subtotal_P", String.Format(CultureInfo.InvariantCulture, "{0:0.00}", order.OrderTotal));
 
-            post.Add("Currency", IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency.CurrencyCode);
+            post.Add("Currency", IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode);
             post.Add("Delay", HostedPaymentSettings.AuthorizeOnly ? "1" : "0");
             post.Add("URL_RETURN", CommonHelper.GetStoreLocation(false));
             post.Add("URL_RETURN_OK", String.Format("{0}AssistHostedPaymentReturn.aspx", CommonHelper.GetStoreLocation(false)));
@@ -74,13 +74,13 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Assist
             post.Add("Zip", order.BillingZipPostalCode);
             post.Add("Phone", order.BillingPhoneNumber);
 
-            StateProvince state = IoCFactory.Resolve<IStateProvinceManager>().GetStateProvinceById(order.BillingStateProvinceId);
+            StateProvince state = IoCFactory.Resolve<IStateProvinceService>().GetStateProvinceById(order.BillingStateProvinceId);
             if(state != null)
             {
                 post.Add("State", state.Abbreviation);
             }
 
-            Country country = IoCFactory.Resolve<ICountryManager>().GetCountryById(order.BillingCountryId);
+            Country country = IoCFactory.Resolve<ICountryService>().GetCountryById(order.BillingCountryId);
             if(country != null)
             {
                 post.Add("Country", country.ThreeLetterIsoCode);

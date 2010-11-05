@@ -41,7 +41,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             if (!Page.IsPostBack)
             {
-                Customer customer = IoCFactory.Resolve<ICustomerManager>().GetCustomerById(this.CustomerId);
+                Customer customer = IoCFactory.Resolve<ICustomerService>().GetCustomerById(this.CustomerId);
                 if (customer != null)
                 {
                     lblTitle.Text = Server.HtmlEncode(customer.Email);
@@ -49,14 +49,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                 this.SelectTab(this.CustomerTabs, this.TabId);
 
-                pnlCustomerAvatar.Visible = IoCFactory.Resolve<ICustomerManager>().AllowCustomersToUploadAvatars;
-                pnlCustomerForumSubscriptions.Visible = IoCFactory.Resolve<IForumManager>().AllowCustomersToManageSubscriptions;
+                pnlCustomerAvatar.Visible = IoCFactory.Resolve<ICustomerService>().AllowCustomersToUploadAvatars;
+                pnlCustomerForumSubscriptions.Visible = IoCFactory.Resolve<IForumService>().AllowCustomersToManageSubscriptions;
             }
         }
 
         protected Customer Save()
         {
-            Customer customer = IoCFactory.Resolve<ICustomerManager>().GetCustomerById(this.CustomerId);
+            Customer customer = IoCFactory.Resolve<ICustomerService>().GetCustomerById(this.CustomerId);
 
             customer = ctrlCustomerInfo.SaveInfo();
             ctrlCustomerBillingAddresses.SaveInfo();
@@ -68,7 +68,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             ctrlCustomerRewardPoints.SaveInfo();
             ctrlCustomerForumSubscriptions.SaveInfo();
 
-            IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
+            IoCFactory.Resolve<ICustomerActivityService>().InsertActivity(
                 "EditCustomer",
                 GetLocaleResourceString("ActivityLog.EditCustomer"),
                 customer.CustomerId);
@@ -112,9 +112,9 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                IoCFactory.Resolve<ICustomerManager>().MarkCustomerAsDeleted(this.CustomerId);
+                IoCFactory.Resolve<ICustomerService>().MarkCustomerAsDeleted(this.CustomerId);
 
-                IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
+                IoCFactory.Resolve<ICustomerActivityService>().InsertActivity(
                     "DeleteCustomer",
                     GetLocaleResourceString("ActivityLog.DeleteCustomer"),
                     this.CustomerId);

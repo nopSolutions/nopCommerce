@@ -71,7 +71,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
                 if (languageId > 0)
                 {
                     if (_saLocalized == null)
-                        _saLocalized = IoCFactory.Resolve<ISpecificationAttributeManager>().GetSpecificationAttributeLocalizedBySpecificationAttributeId(this.SpecificationAttributeId);
+                        _saLocalized = IoCFactory.Resolve<ISpecificationAttributeService>().GetSpecificationAttributeLocalizedBySpecificationAttributeId(this.SpecificationAttributeId);
 
                     var temp1 = _saLocalized.FirstOrDefault(cl => cl.LanguageId == languageId);
                     if (temp1 != null && !String.IsNullOrWhiteSpace(temp1.Name))

@@ -41,9 +41,9 @@ namespace NopSolutions.NopCommerce.Web
 
         private void BindData()
         {
-            if (IoCFactory.Resolve<INewsManager>().NewsEnabled)
+            if (IoCFactory.Resolve<INewsService>().NewsEnabled)
             {
-                var newsCollection = IoCFactory.Resolve<INewsManager>().GetAllNews(LanguageId);
+                var newsCollection = IoCFactory.Resolve<INewsService>().GetAllNews(LanguageId);
                 rptrNews.DataSource = newsCollection;
                 rptrNews.DataBind();
             }

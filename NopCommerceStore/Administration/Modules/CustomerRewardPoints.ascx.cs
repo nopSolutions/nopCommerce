@@ -40,9 +40,9 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            if (IoCFactory.Resolve<IOrderManager>().RewardPointsEnabled)
+            if (IoCFactory.Resolve<IOrderService>().RewardPointsEnabled)
             {
-                Customer customer = IoCFactory.Resolve<ICustomerManager>().GetCustomerById(this.CustomerId);
+                Customer customer = IoCFactory.Resolve<ICustomerService>().GetCustomerById(this.CustomerId);
                 if (customer != null)
                 {
                     gvRewardPointsHistory.DataSource = customer.RewardPointsHistory;
@@ -83,12 +83,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                Customer customer = IoCFactory.Resolve<ICustomerManager>().GetCustomerById(this.CustomerId);
+                Customer customer = IoCFactory.Resolve<ICustomerService>().GetCustomerById(this.CustomerId);
                 if (customer != null)
                 {
                     int points = txtNewPoints.Value;
                     string message = txtNewMessage.Text;
-                    RewardPointsHistory rph = IoCFactory.Resolve<IOrderManager>().InsertRewardPointsHistory(
+                    RewardPointsHistory rph = IoCFactory.Resolve<IOrderService>().InsertRewardPointsHistory(
                         this.CustomerId, 0, points, decimal.Zero, decimal.Zero,
                         string.Empty, message, DateTime.UtcNow);
 

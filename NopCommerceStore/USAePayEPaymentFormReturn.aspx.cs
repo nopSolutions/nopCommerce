@@ -41,7 +41,7 @@ namespace NopSolutions.NopCommerce.Web
                 {
                     Response.Redirect(CommonHelper.GetStoreLocation());
                 }
-                Order order = IoCFactory.Resolve<IOrderManager>().GetOrderById(orderId);
+                Order order = IoCFactory.Resolve<IOrderService>().GetOrderById(orderId);
                 if(order == null || NopContext.Current.User.CustomerId != order.CustomerId)
                 {
                     Response.Redirect(CommonHelper.GetStoreLocation());
@@ -53,22 +53,22 @@ namespace NopSolutions.NopCommerce.Web
                 {
                     //set AuthorizationTransactionID
                     order.AuthorizationTransactionId = transactionId;
-                    IoCFactory.Resolve<IOrderManager>().UpdateOrder(order);
+                    IoCFactory.Resolve<IOrderService>().UpdateOrder(order);
 
-                    if(IoCFactory.Resolve<IOrderManager>().CanMarkOrderAsAuthorized(order))
+                    if(IoCFactory.Resolve<IOrderService>().CanMarkOrderAsAuthorized(order))
                     {
-                        IoCFactory.Resolve<IOrderManager>().MarkAsAuthorized(order.OrderId);
+                        IoCFactory.Resolve<IOrderService>().MarkAsAuthorized(order.OrderId);
                     }
                 }
                 else
                 {
                     //set CaptureTransactionID
                     order.CaptureTransactionId = transactionId;
-                    IoCFactory.Resolve<IOrderManager>().UpdateOrder(order);
+                    IoCFactory.Resolve<IOrderService>().UpdateOrder(order);
 
-                    if(IoCFactory.Resolve<IOrderManager>().CanMarkOrderAsPaid(order))
+                    if(IoCFactory.Resolve<IOrderService>().CanMarkOrderAsPaid(order))
                     {
-                        IoCFactory.Resolve<IOrderManager>().MarkOrderAsPaid(order.OrderId);
+                        IoCFactory.Resolve<IOrderService>().MarkOrderAsPaid(order.OrderId);
                     }
                 }
 

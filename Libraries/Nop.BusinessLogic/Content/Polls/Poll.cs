@@ -92,7 +92,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
         {
             get
             {
-                return IoCFactory.Resolve<ILanguageManager>().GetLanguageById(this.LanguageId);
+                return IoCFactory.Resolve<ILanguageService>().GetLanguageById(this.LanguageId);
             }
         }
 
@@ -117,7 +117,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
         {
             get
             {
-                return IoCFactory.Resolve<IPollManager>().GetPollAnswersByPollId(this.PollId);
+                return IoCFactory.Resolve<IPollService>().GetPollAnswersByPollId(this.PollId);
             }
         }
 

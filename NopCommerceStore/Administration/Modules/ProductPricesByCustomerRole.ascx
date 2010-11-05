@@ -27,7 +27,7 @@
                                 RequiredErrorMessage="<% $NopResources:Admin.ProductPricesByCustomerRole.Price.RequiredErrorMessage %>"
                                 MinimumValue="0" MaximumValue="100000000" RangeErrorMessage="<% $NopResources:Admin.ProductPricesByCustomerRole.Price.RangeErrorMessage %>"
                                 ValidationGroup="CustomerRolePrice" Width="100px"></nopCommerce:DecimalTextBox>
-                            [<%=IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency.CurrencyCode%>]
+                            [<%=IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode%>]
                         </ItemTemplate>
                     </asp:TemplateField>
                     <asp:TemplateField HeaderText="<% $NopResources:Admin.ProductPricesByCustomerRole.Update %>"
@@ -74,7 +74,7 @@
                             Value="0" RequiredErrorMessage="<% $NopResources:Admin.ProductPricesByCustomerRole.New.Price.RequiredErrorMessage %>"
                             MinimumValue="0" MaximumValue="100000000" RangeErrorMessage="<% $NopResources:Admin.ProductPricesByCustomerRole.New.Price.RangeErrorMessage %>"
                             ValidationGroup="NewCustomerRolePrice" Width="50px"></nopCommerce:DecimalTextBox>
-                        [<%=IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency.CurrencyCode%>]
+                        [<%=IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode%>]
                     </td>
                 </tr>
                 <tr>

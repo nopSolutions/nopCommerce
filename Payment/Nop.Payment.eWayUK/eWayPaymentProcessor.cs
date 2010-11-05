@@ -172,7 +172,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.eWayUK
             strPost += Format("UserName", username);
             //send amounts to the generator in DOLLAR FORM. ie 10.05
             strPost += Format("Amount", order.OrderTotal.ToString("0.00", CultureInfo.InvariantCulture));
-            strPost += Format("Currency", IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency.CurrencyCode);
+            strPost += Format("Currency", IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode);
 
 
             // supported languages: 

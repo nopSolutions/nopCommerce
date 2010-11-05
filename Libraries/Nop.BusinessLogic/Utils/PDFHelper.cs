@@ -75,7 +75,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Utils
 
                 section.AddParagraph();
 
-                var pictures = IoCFactory.Resolve<IPictureManager>().GetPicturesByProductId(product.ProductId);
+                var pictures = IoCFactory.Resolve<IPictureService>().GetPicturesByProductId(product.ProductId);
                 if (pictures.Count > 0)
                 {
                     Table table = section.AddTable();
@@ -92,7 +92,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Utils
 
                         if (pic != null && pic.LoadPictureBinary() != null && pic.LoadPictureBinary().Length > 0)
                         {
-                            row.Cells[cellNum].AddImage(IoCFactory.Resolve<IPictureManager>().GetPictureLocalPath(pic, 200, true));
+                            row.Cells[cellNum].AddImage(IoCFactory.Resolve<IPictureService>().GetPictureLocalPath(pic, 200, true));
                         }
 
                         if(i != 0 && i % 2 == 0)
@@ -122,15 +122,15 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Utils
                     var pic = productVariant.Picture;
                     if (pic != null && pic.LoadPictureBinary() != null && pic.LoadPictureBinary().Length > 0)
                     {
-                        section.AddImage(IoCFactory.Resolve<IPictureManager>().GetPictureLocalPath(pic, 200, true));
+                        section.AddImage(IoCFactory.Resolve<IPictureService>().GetPictureLocalPath(pic, 200, true));
                     }
 
-                    section.AddParagraph(String.Format("{0}: {1} {2}", LocalizationManager.GetLocaleResourceString("PDFProductCatalog.Price"), productVariant.Price, IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency.CurrencyCode));
+                    section.AddParagraph(String.Format("{0}: {1} {2}", LocalizationManager.GetLocaleResourceString("PDFProductCatalog.Price"), productVariant.Price, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode));
                     section.AddParagraph(String.Format("{0}: {1}", LocalizationManager.GetLocaleResourceString("PDFProductCatalog.SKU"), productVariant.SKU));
 
                     if(productVariant.Weight > Decimal.Zero)
                     {
-                        section.AddParagraph(String.Format("{0}: {1} {2}", LocalizationManager.GetLocaleResourceString("PDFProductCatalog.Weight"), productVariant.Weight, IoCFactory.Resolve<IMeasureManager>().BaseWeightIn.Name));
+                        section.AddParagraph(String.Format("{0}: {1} {2}", LocalizationManager.GetLocaleResourceString("PDFProductCatalog.Weight"), productVariant.Weight, IoCFactory.Resolve<IMeasureService>().BaseWeightIn.Name));
                     }
 
                     if(productVariant.ManageInventory == (int)ManageInventoryMethodEnum.ManageStock)
@@ -171,7 +171,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Utils
             if(String.IsNullOrEmpty(filePath))
                 throw new ArgumentNullException("filePath");
 
-            Language lang = IoCFactory.Resolve<ILanguageManager>().GetLanguageById(languageId);
+            Language lang = IoCFactory.Resolve<ILanguageService>().GetLanguageById(languageId);
 
             if (lang == null)
                 throw new NopException("Language could not be loaded");
@@ -313,7 +313,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Utils
                 Row prodRow = tbl.AddRow();
 
                 string name = String.Format("Not available. Id={0}", orderProductVariant.ProductVariantId);
-                var pv = IoCFactory.Resolve<IProductManager>().GetProductVariantById(orderProductVariant.ProductVariantId);
+                var pv = IoCFactory.Resolve<IProductService>().GetProductVariantById(orderProductVariant.ProductVariantId);
                 if(pv != null)
                 {
                     name = pv.GetLocalizedFullProductName(languageId);
@@ -465,13 +465,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Utils
             SortedDictionary<decimal, decimal> taxRates = new SortedDictionary<decimal, decimal>();
             bool displayTax = true;
             bool displayTaxRates = true;
-            if(IoCFactory.Resolve<ITaxManager>().HideTaxInOrderSummary && order.CustomerTaxDisplayType == TaxDisplayTypeEnum.IncludingTax)
+            if(IoCFactory.Resolve<ITaxService>().HideTaxInOrderSummary && order.CustomerTaxDisplayType == TaxDisplayTypeEnum.IncludingTax)
             {
                 displayTax = false;
             }
             else
             {
-                if(order.OrderTax == 0 && IoCFactory.Resolve<ITaxManager>().HideZeroTax)
+                if(order.OrderTax == 0 && IoCFactory.Resolve<ITaxService>().HideZeroTax)
                 {
                     displayTax = false;
                     displayTaxRates = false;
@@ -480,7 +480,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Utils
                 {
                     taxRates = order.TaxRatesDictionaryInCustomerCurrency;
 
-                    displayTaxRates = IoCFactory.Resolve<ITaxManager>().DisplayTaxRates && taxRates.Count > 0;
+                    displayTaxRates = IoCFactory.Resolve<ITaxService>().DisplayTaxRates && taxRates.Count > 0;
                     displayTax = !displayTaxRates;
 
                     taxStr = PriceHelper.FormatPrice(order.OrderTaxInCustomerCurrency, true, order.CustomerCurrencyCode, false);
@@ -495,7 +495,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Utils
             {
                 foreach (var item in taxRates)
                 {
-                    string taxRate = String.Format(LocalizationManager.GetLocaleResourceString("PDFInvoice.Totals.TaxRate"), IoCFactory.Resolve<ITaxManager>().FormatTaxRate(item.Key));
+                    string taxRate = String.Format(LocalizationManager.GetLocaleResourceString("PDFInvoice.Totals.TaxRate"), IoCFactory.Resolve<ITaxService>().FormatTaxRate(item.Key));
                     string taxValue = PriceHelper.FormatPrice(item.Value, true, false);
 
                     var p13 = sec.AddParagraph(String.Format("{0} {1}", taxRate, taxValue));
@@ -512,7 +512,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Utils
             }
 
             //gift cards
-            var gcuhC = IoCFactory.Resolve<IOrderManager>().GetAllGiftCardUsageHistoryEntries(null, null, order.OrderId);
+            var gcuhC = IoCFactory.Resolve<IOrderService>().GetAllGiftCardUsageHistoryEntries(null, null, order.OrderId);
             foreach (var giftCardUsageHistory in gcuhC)
             {
                 string gcTitle = string.Format(LocalizationManager.GetLocaleResourceString("PDFInvoice.GiftCardInfo", languageId), giftCardUsageHistory.GiftCard.GiftCardCouponCode);
@@ -542,7 +542,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Utils
             bool printOrderNotesToPDF = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("PDFInvoice.RenderOrderNotes");
             if (printOrderNotesToPDF)
             {
-                var orderNotes = IoCFactory.Resolve<IOrderManager>().GetOrderNoteByOrderId(order.OrderId, false);
+                var orderNotes = IoCFactory.Resolve<IOrderService>().GetOrderNoteByOrderId(order.OrderId, false);
                 if (orderNotes.Count > 0)
                 {
                     Paragraph p14 = sec.AddParagraph(LocalizationManager.GetLocaleResourceString("PDFInvoice.OrderNotes", languageId));
@@ -572,7 +572,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Utils
                         Row noteRow = tbl1.AddRow();
 
                         noteRow.Cells[0].AddParagraph(DateTimeHelper.ConvertToUserTime(orderNote.CreatedOn, DateTimeKind.Utc).ToString());
-                        noteRow.Cells[1].AddParagraph(HtmlHelper.ConvertHtmlToPlainText(IoCFactory.Resolve<IOrderManager>().FormatOrderNoteText(orderNote.Note)).ToString());
+                        noteRow.Cells[1].AddParagraph(HtmlHelper.ConvertHtmlToPlainText(IoCFactory.Resolve<IOrderService>().FormatOrderNoteText(orderNote.Note)).ToString());
                     }
                 }
             }
@@ -654,7 +654,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Utils
                     row.Cells[0].AddParagraph(orderProductVariant.Quantity.ToString());
 
                     string name = String.Format("Not available. ID={0}", orderProductVariant.ProductVariantId);
-                    var pv = IoCFactory.Resolve<IProductManager>().GetProductVariantById(orderProductVariant.ProductVariantId);
+                    var pv = IoCFactory.Resolve<IProductService>().GetProductVariantById(orderProductVariant.ProductVariantId);
                     if(pv != null)
                     {
                         name = pv.LocalizedFullProductName;

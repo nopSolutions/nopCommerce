@@ -54,9 +54,9 @@
             </GroupTemplate>
             <ItemTemplate>
                 <td align="left">
-                    <a href="<%#IoCFactory.Resolve<IPictureManager>().GetPictureUrl((Picture)Container.DataItem)%>" rel="lightbox-p"
+                    <a href="<%#IoCFactory.Resolve<IPictureService>().GetPictureUrl((Picture)Container.DataItem)%>" rel="lightbox-p"
                         title="<%= lProductName.Text%>">
-                        <img src="<%#IoCFactory.Resolve<IPictureManager>().GetPictureUrl((Picture)Container.DataItem, 70)%>" alt="Product image" /></a>
+                        <img src="<%#IoCFactory.Resolve<IPictureService>().GetPictureUrl((Picture)Container.DataItem, 70)%>" alt="Product image" /></a>
                 </td>
             </ItemTemplate>
         </asp:ListView>

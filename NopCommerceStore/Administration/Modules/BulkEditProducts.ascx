@@ -93,7 +93,7 @@
                     ID="txtPrice" RequiredErrorMessage="<% $NopResources:Admin.BulkEditProducts.PriceColumn.RequiredErrorMessage %>"
                     MinimumValue="0" MaximumValue="100000000" RangeErrorMessage="<% $NopResources:Admin.BulkEditProducts.PriceColumn.RangeErrorMessage %>">
                 </nopCommerce:DecimalTextBox>
-                [<%=IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency.CurrencyCode%>]
+                [<%=IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode%>]
             </ItemTemplate>
         </asp:TemplateField>
         <asp:TemplateField HeaderText="<% $NopResources:Admin.BulkEditProducts.OldPriceColumn %>"
@@ -103,7 +103,7 @@
                     ID="txtOldPrice" RequiredErrorMessage="<% $NopResources:Admin.BulkEditProducts.OldPriceColumn.RequiredErrorMessage %>"
                     MinimumValue="0" MaximumValue="100000000" RangeErrorMessage="<% $NopResources:Admin.BulkEditProducts.OldPriceColumn.RangeErrorMessage %>">
                 </nopCommerce:DecimalTextBox>
-                [<%=IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency.CurrencyCode%>]
+                [<%=IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode%>]
             </ItemTemplate>
         </asp:TemplateField>
         <asp:TemplateField HeaderText="<% $NopResources:Admin.BulkEditProducts.PublishedColumn %>"

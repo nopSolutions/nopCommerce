@@ -126,7 +126,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Affiliates
         {
             get
             {
-                return IoCFactory.Resolve<ICountryManager>().GetCountryById(this.CountryId);
+                return IoCFactory.Resolve<ICountryService>().GetCountryById(this.CountryId);
             }
         }
 

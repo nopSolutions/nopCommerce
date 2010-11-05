@@ -49,7 +49,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         private void BindData()
         {
-            var pm = IoCFactory.Resolve<IForumManager>().GetPrivateMessageById(this.PrivateMessageId);
+            var pm = IoCFactory.Resolve<IForumService>().GetPrivateMessageById(this.PrivateMessageId);
             if (pm != null)
             {
                 if (pm.ToUserId != NopContext.Current.User.CustomerId && pm.FromUserId != NopContext.Current.User.CustomerId)
@@ -60,7 +60,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 if (!pm.IsRead && pm.ToUserId == NopContext.Current.User.CustomerId)
                 {
                     pm.IsRead = true;
-                    IoCFactory.Resolve<IForumManager>().UpdatePrivateMessage(pm);
+                    IoCFactory.Resolve<IForumService>().UpdatePrivateMessage(pm);
                 }
             }
             else
@@ -68,15 +68,15 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 Response.Redirect(CommonHelper.GetStoreLocation() + "privatemessages.aspx");
             }
 
-            lblFrom.Text = Server.HtmlEncode(IoCFactory.Resolve<ICustomerManager>().FormatUserName(pm.FromUser));
-            lblTo.Text = Server.HtmlEncode(IoCFactory.Resolve<ICustomerManager>().FormatUserName(pm.ToUser));
+            lblFrom.Text = Server.HtmlEncode(IoCFactory.Resolve<ICustomerService>().FormatUserName(pm.FromUser));
+            lblTo.Text = Server.HtmlEncode(IoCFactory.Resolve<ICustomerService>().FormatUserName(pm.ToUser));
             lblSubject.Text = Server.HtmlEncode(pm.Subject);
-            lblMessage.Text = IoCFactory.Resolve<IForumManager>().FormatPrivateMessageText(pm.Text);
+            lblMessage.Text = IoCFactory.Resolve<IForumService>().FormatPrivateMessageText(pm.Text);
         }
 
         protected void btnReply_Click(object sender, EventArgs e)
         {
-            var pm = IoCFactory.Resolve<IForumManager>().GetPrivateMessageById(this.PrivateMessageId);
+            var pm = IoCFactory.Resolve<IForumService>().GetPrivateMessageById(this.PrivateMessageId);
             if (pm != null)
             {
                 string replyURL = string.Format("{0}sendpm.aspx?r={1}", CommonHelper.GetStoreLocation(), pm.PrivateMessageId);
@@ -90,13 +90,13 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void btnDelete_Click(object sender, EventArgs e)
         {
-            var pm = IoCFactory.Resolve<IForumManager>().GetPrivateMessageById(this.PrivateMessageId);
+            var pm = IoCFactory.Resolve<IForumService>().GetPrivateMessageById(this.PrivateMessageId);
             if (pm != null)
             {
                 if (pm.FromUserId == NopContext.Current.User.CustomerId)
                 {
                     pm.IsDeletedByAuthor = true;
-                    IoCFactory.Resolve<IForumManager>().UpdatePrivateMessage(pm);
+                    IoCFactory.Resolve<IForumService>().UpdatePrivateMessage(pm);
                 }
 
                 if (pm != null)
@@ -104,7 +104,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     if (pm.ToUserId == NopContext.Current.User.CustomerId)
                     {
                         pm.IsDeletedByRecipient = true;
-                        IoCFactory.Resolve<IForumManager>().UpdatePrivateMessage(pm);
+                        IoCFactory.Resolve<IForumService>().UpdatePrivateMessage(pm);
                     }
                 }
             }

@@ -56,7 +56,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             else
             {
                 string email = CommonHelper.QueryString("Email");
-                var customer = IoCFactory.Resolve<ICustomerManager>().GetCustomerByEmail(email);
+                var customer = IoCFactory.Resolve<ICustomerService>().GetCustomerByEmail(email);
                 if (customer != null)
                 {
                     if (customer.PasswordRecoveryToken.ToLower() == passwordRecoveryToken.Value.ToString().ToLower())
@@ -79,12 +79,12 @@ namespace NopSolutions.NopCommerce.Web.Modules
             {
                 try
                 {
-                    var customer = IoCFactory.Resolve<ICustomerManager>().GetCustomerByEmail(txtEmail.Text);
+                    var customer = IoCFactory.Resolve<ICustomerService>().GetCustomerByEmail(txtEmail.Text);
                     if (customer != null && !customer.IsGuest)
                     {
                         var passwordRecoveryToken = Guid.NewGuid();
                         customer.PasswordRecoveryToken = passwordRecoveryToken.ToString();
-                        IoCFactory.Resolve<IMessageManager>().SendCustomerPasswordRecoveryMessage(customer, NopContext.Current.WorkingLanguage.LanguageId);
+                        IoCFactory.Resolve<IMessageService>().SendCustomerPasswordRecoveryMessage(customer, NopContext.Current.WorkingLanguage.LanguageId);
 
                         lResult.Text = GetLocaleResourceString("Account.PasswordRecovery.EmailHasBeenSent");
                         pnlResult.Visible = true;
@@ -101,7 +101,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 }
                 catch (Exception exc)
                 {
-                    IoCFactory.Resolve<ILogManager>().InsertLog(LogTypeEnum.MailError, string.Format("Error sending \"Password recovery\" email."), exc);
+                    IoCFactory.Resolve<ILogService>().InsertLog(LogTypeEnum.MailError, string.Format("Error sending \"Password recovery\" email."), exc);
 
                     lResult.Text = exc.Message;
                     pnlResult.Visible = true;
@@ -121,12 +121,12 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     string email = CommonHelper.QueryString("Email");
                     if (passwordRecoveryToken.HasValue && !String.IsNullOrEmpty(email))
                     {
-                        var customer = IoCFactory.Resolve<ICustomerManager>().GetCustomerByEmail(email);
+                        var customer = IoCFactory.Resolve<ICustomerService>().GetCustomerByEmail(email);
                         if (customer != null)
                         {
                             if (customer.PasswordRecoveryToken.ToLower() == passwordRecoveryToken.Value.ToString().ToLower())
                             {
-                                IoCFactory.Resolve<ICustomerManager>().ModifyPassword(email, txtNewPassword.Text);
+                                IoCFactory.Resolve<ICustomerService>().ModifyPassword(email, txtNewPassword.Text);
                                 customer.PasswordRecoveryToken = string.Empty;
 
                                 pnlResult.Visible = true;
@@ -146,7 +146,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     pnlRecover.Visible = false;
                     pnlNewPassword.Visible = false;
 
-                    IoCFactory.Resolve<ILogManager>().InsertLog(LogTypeEnum.MailError, string.Format("Error recovering password."), exc);
+                    IoCFactory.Resolve<ILogService>().InsertLog(LogTypeEnum.MailError, string.Format("Error recovering password."), exc);
                 }
             }
         }

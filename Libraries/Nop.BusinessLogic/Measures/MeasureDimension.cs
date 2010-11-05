@@ -72,7 +72,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Measures
         {
             get
             {
-                MeasureDimension primaryMeasureDimension = IoCFactory.Resolve<IMeasureManager>().BaseDimensionIn;
+                MeasureDimension primaryMeasureDimension = IoCFactory.Resolve<IMeasureService>().BaseDimensionIn;
                 return ((primaryMeasureDimension != null && primaryMeasureDimension.MeasureDimensionId == this.MeasureDimensionId));
             }
         }

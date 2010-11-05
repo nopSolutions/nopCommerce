@@ -116,7 +116,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Warehouses
         {
             get
             {
-                return IoCFactory.Resolve<ICountryManager>().GetCountryById(this.CountryId);
+                return IoCFactory.Resolve<ICountryService>().GetCountryById(this.CountryId);
             }
         }
         #endregion

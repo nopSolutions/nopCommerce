@@ -33,7 +33,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            ForumGroup forumGroup = IoCFactory.Resolve<IForumManager>().GetForumGroupById(this.ForumGroupId);
+            ForumGroup forumGroup = IoCFactory.Resolve<IForumService>().GetForumGroupById(this.ForumGroupId);
             if (forumGroup != null)
             {
                 this.txtName.Text = forumGroup.Name;
@@ -63,7 +63,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public ForumGroup SaveInfo()
         {
-            ForumGroup forumGroup = IoCFactory.Resolve<IForumManager>().GetForumGroupById(this.ForumGroupId);
+            ForumGroup forumGroup = IoCFactory.Resolve<IForumService>().GetForumGroupById(this.ForumGroupId);
             DateTime nowDT = DateTime.UtcNow;
             if (forumGroup != null)
             {
@@ -72,7 +72,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 forumGroup.DisplayOrder = txtDisplayOrder.Value;
                 forumGroup.UpdatedOn = nowDT;
 
-                IoCFactory.Resolve<IForumManager>().UpdateForumGroup(forumGroup);
+                IoCFactory.Resolve<IForumService>().UpdateForumGroup(forumGroup);
             }
             else
             {
@@ -86,7 +86,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     UpdatedOn = nowDT
                 };
 
-                IoCFactory.Resolve<IForumManager>().InsertForumGroup(forumGroup);
+                IoCFactory.Resolve<IForumService>().InsertForumGroup(forumGroup);
             }
 
             return forumGroup;
@@ -96,7 +96,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                IoCFactory.Resolve<IForumManager>().DeleteForumGroup(this.ForumGroupId);
+                IoCFactory.Resolve<IForumService>().DeleteForumGroup(this.ForumGroupId);
                 Response.Redirect("Forums.aspx");
             }
             catch (Exception exc)

@@ -32,7 +32,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            ShippingMethod shippingMethod = IoCFactory.Resolve<IShippingManager>().GetShippingMethodById(this.ShippingMethodId);
+            ShippingMethod shippingMethod = IoCFactory.Resolve<IShippingService>().GetShippingMethodById(this.ShippingMethodId);
             if (shippingMethod != null)
             {
                 this.txtName.Text = shippingMethod.Name;
@@ -51,14 +51,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public ShippingMethod SaveInfo()
         {
-            ShippingMethod shippingMethod = IoCFactory.Resolve<IShippingManager>().GetShippingMethodById(this.ShippingMethodId);
+            ShippingMethod shippingMethod = IoCFactory.Resolve<IShippingService>().GetShippingMethodById(this.ShippingMethodId);
 
             if (shippingMethod != null)
             {
                 shippingMethod.Name = txtName.Text;
                 shippingMethod.Description =  txtDescription.Text;
                 shippingMethod.DisplayOrder = txtDisplayOrder.Value;
-                IoCFactory.Resolve<IShippingManager>().UpdateShippingMethod(shippingMethod);
+                IoCFactory.Resolve<IShippingService>().UpdateShippingMethod(shippingMethod);
             }
             else
             {
@@ -68,7 +68,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     Description = txtDescription.Text,
                     DisplayOrder = txtDisplayOrder.Value
                 };
-                IoCFactory.Resolve<IShippingManager>().InsertShippingMethod(shippingMethod);
+                IoCFactory.Resolve<IShippingService>().InsertShippingMethod(shippingMethod);
             }
 
             return shippingMethod;
@@ -78,7 +78,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                IoCFactory.Resolve<IShippingManager>().DeleteShippingMethod(this.ShippingMethodId);
+                IoCFactory.Resolve<IShippingService>().DeleteShippingMethod(this.ShippingMethodId);
                 Response.Redirect("ShippingMethods.aspx");
             }
             catch (Exception exc)

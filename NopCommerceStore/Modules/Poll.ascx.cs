@@ -63,7 +63,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 bool showResults = false;
                 if (customer != null)
                 {
-                    showResults = IoCFactory.Resolve<IPollManager>().PollVotingRecordExists(poll.PollId, customer.CustomerId);
+                    showResults = IoCFactory.Resolve<IPollService>().PollVotingRecordExists(poll.PollId, customer.CustomerId);
                 }
 
                 //bind info (answers or results)
@@ -99,7 +99,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             //create anonymous user if required
             if (NopContext.Current.User == null && IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Common.AllowAnonymousUsersToVotePolls"))
             {
-                IoCFactory.Resolve<ICustomerManager>().CreateAnonymousUser();
+                IoCFactory.Resolve<ICustomerService>().CreateAnonymousUser();
             }
 
             if (NopContext.Current.User == null || (NopContext.Current.User.IsGuest && !IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Common.AllowAnonymousUsersToVotePolls")))
@@ -111,10 +111,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
             var poll = GetPoll();
             if (poll != null && poll.Published)
             {
-                if (!IoCFactory.Resolve<IPollManager>().PollVotingRecordExists(poll.PollId, NopContext.Current.User.CustomerId))
+                if (!IoCFactory.Resolve<IPollService>().PollVotingRecordExists(poll.PollId, NopContext.Current.User.CustomerId))
                 {
                     int pollAnswerId = Convert.ToInt32(rblPollAnswers.SelectedItem.Value);
-                    IoCFactory.Resolve<IPollManager>().CreatePollVotingRecord(pollAnswerId, NopContext.Current.User.CustomerId);
+                    IoCFactory.Resolve<IPollService>().CreatePollVotingRecord(pollAnswerId, NopContext.Current.User.CustomerId);
                 }
             }
             BindData();
@@ -149,9 +149,9 @@ namespace NopSolutions.NopCommerce.Web.Modules
         {
             if (_pollCached == null)
             {
-                _pollCached = IoCFactory.Resolve<IPollManager>().GetPollById(this.PollId);
+                _pollCached = IoCFactory.Resolve<IPollService>().GetPollById(this.PollId);
                 if (_pollCached == null && !String.IsNullOrEmpty(this.SystemKeyword))
-                    _pollCached = IoCFactory.Resolve<IPollManager>().GetPollBySystemKeyword(this.SystemKeyword);
+                    _pollCached = IoCFactory.Resolve<IPollService>().GetPollBySystemKeyword(this.SystemKeyword);
             }
             return _pollCached;
         }

@@ -63,7 +63,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     }
                     else
                     {
-                        IoCFactory.Resolve<ICustomerManager>().ModifyPassword(NopContext.Current.User.Email, oldPassword, password);
+                        IoCFactory.Resolve<ICustomerService>().ModifyPassword(NopContext.Current.User.Email, oldPassword, password);
                         pnlChangePasswordError.Visible = true;
                         lChangePasswordErrorMessage.Text = GetLocaleResourceString("Account.PasswordWasChanged");
                     }

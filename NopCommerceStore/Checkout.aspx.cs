@@ -50,24 +50,24 @@ namespace NopSolutions.NopCommerce.Web
                 Response.Redirect(SEOHelper.GetShoppingCartUrl());
 
             //user validation
-            if (NopContext.Current.User == null && IoCFactory.Resolve<ICustomerManager>().AnonymousCheckoutAllowed)
+            if (NopContext.Current.User == null && IoCFactory.Resolve<ICustomerService>().AnonymousCheckoutAllowed)
             {
                 //create anonymous record
-                IoCFactory.Resolve<ICustomerManager>().CreateAnonymousUser();
+                IoCFactory.Resolve<ICustomerService>().CreateAnonymousUser();
             }
 
-            if ((NopContext.Current.User == null) || (NopContext.Current.User.IsGuest && !IoCFactory.Resolve<ICustomerManager>().AnonymousCheckoutAllowed))
+            if ((NopContext.Current.User == null) || (NopContext.Current.User.IsGuest && !IoCFactory.Resolve<ICustomerService>().AnonymousCheckoutAllowed))
             {
                 string loginURL = SEOHelper.GetLoginPageUrl(true);
                 Response.Redirect(loginURL);
             }
 
             //reset checkout data
-            IoCFactory.Resolve<ICustomerManager>().ResetCheckoutData(NopContext.Current.User.CustomerId, false);
+            IoCFactory.Resolve<ICustomerService>().ResetCheckoutData(NopContext.Current.User.CustomerId, false);
 
 
             //validation
-            var scWarnings = IoCFactory.Resolve<IShoppingCartManager>().GetShoppingCartWarnings(Cart, NopContext.Current.User.CheckoutAttributes, true);
+            var scWarnings = IoCFactory.Resolve<IShoppingCartService>().GetShoppingCartWarnings(Cart, NopContext.Current.User.CheckoutAttributes, true);
             if (scWarnings.Count > 0)
             {
                 Response.Redirect(SEOHelper.GetShoppingCartUrl());
@@ -76,7 +76,7 @@ namespace NopSolutions.NopCommerce.Web
             {
                 foreach (ShoppingCartItem sci in this.Cart)
                 {
-                    var sciWarnings = IoCFactory.Resolve<IShoppingCartManager>().GetShoppingCartItemWarnings(
+                    var sciWarnings = IoCFactory.Resolve<IShoppingCartService>().GetShoppingCartItemWarnings(
                         sci.ShoppingCartType,
                             sci.ProductVariantId, 
                             sci.AttributesXml, 
@@ -105,7 +105,7 @@ namespace NopSolutions.NopCommerce.Web
             {
                 if (cart == null)
                 {
-                    cart = IoCFactory.Resolve<IShoppingCartManager>().GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
+                    cart = IoCFactory.Resolve<IShoppingCartService>().GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
                 }
                 return cart;
             }

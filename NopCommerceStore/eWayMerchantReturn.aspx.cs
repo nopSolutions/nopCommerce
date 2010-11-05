@@ -94,12 +94,12 @@ namespace NopSolutions.NopCommerce.Web
 
 
                     int orderId = Convert.ToInt32(_MerchnatOption1);
-                    Order order = IoCFactory.Resolve<IOrderManager>().GetOrderById(orderId);
+                    Order order = IoCFactory.Resolve<IOrderService>().GetOrderById(orderId);
                     if (String.IsNullOrEmpty(_ErrorMessage) && order != null)
                     {
-                        if (IoCFactory.Resolve<IOrderManager>().CanMarkOrderAsPaid(order))
+                        if (IoCFactory.Resolve<IOrderService>().CanMarkOrderAsPaid(order))
                         {
-                            IoCFactory.Resolve<IOrderManager>().MarkOrderAsPaid(order.OrderId);
+                            IoCFactory.Resolve<IOrderService>().MarkOrderAsPaid(order.OrderId);
                         }
                         Response.Redirect("~/checkoutcompleted.aspx");
                     }

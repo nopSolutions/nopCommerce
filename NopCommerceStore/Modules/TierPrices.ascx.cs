@@ -49,7 +49,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         private void BindData()
         {
-            var productVariant = IoCFactory.Resolve<IProductManager>().GetProductVariantById(this.ProductVariantId);
+            var productVariant = IoCFactory.Resolve<IProductService>().GetProductVariantById(this.ProductVariantId);
             
             if (productVariant != null)
             {
@@ -78,8 +78,8 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 var lblPrice = (Label)currentItem.FindControl("lblPrice");
 
                 decimal taxRate = decimal.Zero;
-                decimal priceBase = IoCFactory.Resolve<ITaxManager>().GetPrice(productVariant, tierPrice.Price, out taxRate);
-                decimal price = IoCFactory.Resolve<ICurrencyManager>().ConvertCurrency(priceBase, IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                decimal priceBase = IoCFactory.Resolve<ITaxService>().GetPrice(productVariant, tierPrice.Price, out taxRate);
+                decimal price = IoCFactory.Resolve<ICurrencyService>().ConvertCurrency(priceBase, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
 
                 string priceStr = PriceHelper.FormatPrice(price, false, false);
                 lblQuantity.Text = string.Format(GetLocaleResourceString("Products.TierPricesQuantityFormat"), tierPrice.Quantity);

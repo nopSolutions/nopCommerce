@@ -177,7 +177,7 @@
             <nopCommerce:DecimalTextBox runat="server" CssClass="adminInput" ID="txtNewPriceAdjustment"
                 Value="0" RequiredErrorMessage="<% $NopResources:Admin.ProductVariantAttributeValues.New.PriceAdjustment.RequiredErrorMessage %>"
                 MinimumValue="-100000000" MaximumValue="100000000" RangeErrorMessage="<% $NopResources:Admin.ProductVariantAttributeValues.New.PriceAdjustment.RangeErrorMessage %>"
-                ValidationGroup="NewProductVariantAttributeValue"></nopCommerce:DecimalTextBox> [<%=IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency.CurrencyCode%>]
+                ValidationGroup="NewProductVariantAttributeValue"></nopCommerce:DecimalTextBox> [<%=IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode%>]
         </td>
     </tr>
     <tr>
@@ -191,7 +191,7 @@
             <nopCommerce:DecimalTextBox runat="server" CssClass="adminInput" ID="txtNewWeightAdjustment"
                 Value="0" RequiredErrorMessage="<% $NopResources:Admin.ProductVariantAttributeValues.New.WeightAdjustment.RequiredErrorMessage %>"
                 MinimumValue="0" MaximumValue="999999" RangeErrorMessage="<% $NopResources:Admin.ProductVariantAttributeValues.New.WeightAdjustment.RangeErrorMessage %>"
-                ValidationGroup="NewProductVariantAttributeValue"></nopCommerce:DecimalTextBox> [<%=IoCFactory.Resolve<IMeasureManager>().BaseWeightIn.Name%>]
+                ValidationGroup="NewProductVariantAttributeValue"></nopCommerce:DecimalTextBox> [<%=IoCFactory.Resolve<IMeasureService>().BaseWeightIn.Name%>]
         </td>
     </tr>
     <tr>

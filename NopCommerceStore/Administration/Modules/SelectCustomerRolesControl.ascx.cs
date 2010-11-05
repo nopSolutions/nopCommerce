@@ -35,7 +35,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public void BindData()
         {
-            var customerRoles = IoCFactory.Resolve<ICustomerManager>().GetAllCustomerRoles();
+            var customerRoles = IoCFactory.Resolve<ICustomerService>().GetAllCustomerRoles();
             foreach (CustomerRole customerRole in customerRoles)
             {
                 ListItem item = new ListItem(customerRole.Name, customerRole.CustomerRoleId.ToString());

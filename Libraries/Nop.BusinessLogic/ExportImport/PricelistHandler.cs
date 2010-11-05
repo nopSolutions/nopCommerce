@@ -56,7 +56,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
             Pricelist pl = null;
 
             if (PricelistGuid.Length != 0)
-                pl = IoCFactory.Resolve<IProductManager>().GetPricelistByGuid(PricelistGuid);
+                pl = IoCFactory.Resolve<IProductService>().GetPricelistByGuid(PricelistGuid);
 
             else
                 throw new MissingFieldException();

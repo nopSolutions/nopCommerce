@@ -47,7 +47,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
         {
             pnlError.Visible = false;
 
-            var news = IoCFactory.Resolve<INewsManager>().GetNewsById(this.NewsId);
+            var news = IoCFactory.Resolve<INewsService>().GetNewsById(this.NewsId);
             if (news != null && news.Published)
             {
                 this.lTitle.Text = Server.HtmlEncode(news.Title);
@@ -56,7 +56,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
                 if (news.AllowComments)
                 {
-                    if (!IoCFactory.Resolve<INewsManager>().AllowNotRegisteredUsersToLeaveComments
+                    if (!IoCFactory.Resolve<INewsService>().AllowNotRegisteredUsersToLeaveComments
                         && (NopContext.Current.User == null || NopContext.Current.User.IsGuest))
                     {
                         lblLeaveYourComment.Text = GetLocaleResourceString("News.OnlyRegisteredUsersCanLeaveComments");
@@ -94,10 +94,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
             {
                 if (Page.IsValid)
                 {
-                    var news = IoCFactory.Resolve<INewsManager>().GetNewsById(this.NewsId);
+                    var news = IoCFactory.Resolve<INewsService>().GetNewsById(this.NewsId);
                     if (news != null && news.AllowComments)
                     {
-                        if (!IoCFactory.Resolve<INewsManager>().AllowNotRegisteredUsersToLeaveComments
+                        if (!IoCFactory.Resolve<INewsService>().AllowNotRegisteredUsersToLeaveComments
                                && (NopContext.Current.User == null || NopContext.Current.User.IsGuest))
                         {
                             lblLeaveYourComment.Text = GetLocaleResourceString("News.OnlyRegisteredUsersCanLeaveComments");
@@ -115,7 +115,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                         if (NopContext.Current.User != null && !NopContext.Current.User.IsGuest)
                             customerId = NopContext.Current.User.CustomerId;
 
-                        IoCFactory.Resolve<INewsManager>().InsertNewsComment(news.NewsId, customerId, title, comment, DateTime.UtcNow);
+                        IoCFactory.Resolve<INewsService>().InsertNewsComment(news.NewsId, customerId, title, comment, DateTime.UtcNow);
                         txtTitle.Text = string.Empty;
                         txtComment.Text = string.Empty;
                         BindData();

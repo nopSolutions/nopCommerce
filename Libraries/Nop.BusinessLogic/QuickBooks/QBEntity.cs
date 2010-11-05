@@ -140,9 +140,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
                     case EntityTypeEnum.Invoice:
                     case EntityTypeEnum.TxnDel:
                     case EntityTypeEnum.TxnVoid:
-                        return IoCFactory.Resolve<IOrderManager>().GetOrderById(NopEntityId);
+                        return IoCFactory.Resolve<IOrderService>().GetOrderById(NopEntityId);
                     case EntityTypeEnum.Customer:
-                        return IoCFactory.Resolve<ICustomerManager>().GetCustomerById(NopEntityId);
+                        return IoCFactory.Resolve<ICustomerService>().GetCustomerById(NopEntityId);
                     default:
                         return null;
                 }

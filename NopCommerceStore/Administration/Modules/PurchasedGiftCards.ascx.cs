@@ -50,10 +50,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             this.ddlOrderStatus.Items.Clear();
             ListItem itemOrderStatus = new ListItem(GetLocaleResourceString("Admin.Common.All"), "0");
             this.ddlOrderStatus.Items.Add(itemOrderStatus);
-            var orderStatuses = IoCFactory.Resolve<IOrderManager>().GetAllOrderStatuses();
+            var orderStatuses = IoCFactory.Resolve<IOrderService>().GetAllOrderStatuses();
             foreach (OrderStatus orderStatus in orderStatuses)
             {
-                ListItem item2 = new ListItem(IoCFactory.Resolve<IOrderManager>().GetOrderStatusName(orderStatus.OrderStatusId), orderStatus.OrderStatusId.ToString());
+                ListItem item2 = new ListItem(IoCFactory.Resolve<IOrderService>().GetOrderStatusName(orderStatus.OrderStatusId), orderStatus.OrderStatusId.ToString());
                 this.ddlOrderStatus.Items.Add(item2);
             }
         }
@@ -88,7 +88,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             //coupon code filter
             string giftCardCouponCode = txtGiftCardCouponCode.Text;
 
-            var giftCards = IoCFactory.Resolve<IOrderManager>().GetAllGiftCards(null,
+            var giftCards = IoCFactory.Resolve<IOrderService>().GetAllGiftCards(null,
                 null, startDate, endDate, orderStatus, null, null, isGiftCardActivated, giftCardCouponCode);
             return giftCards;
         }
@@ -120,7 +120,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected string GetOrderStatusInfo(GiftCard gc)
         {
-            string result = IoCFactory.Resolve<IOrderManager>().GetOrderStatusName(gc.PurchasedOrderProductVariant.Order.OrderStatusId);
+            string result = IoCFactory.Resolve<IOrderService>().GetOrderStatusName(gc.PurchasedOrderProductVariant.Order.OrderStatusId);
             return result;
         }
 

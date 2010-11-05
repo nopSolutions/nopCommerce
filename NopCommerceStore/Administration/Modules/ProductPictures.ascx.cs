@@ -39,7 +39,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            var product = IoCFactory.Resolve<IProductManager>().GetProductById(this.ProductId);
+            var product = IoCFactory.Resolve<IProductService>().GetProductById(this.ProductId);
             if (product != null)
             {
                 pnlData.Visible = true;
@@ -78,12 +78,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                var product = IoCFactory.Resolve<IProductManager>().GetProductById(this.ProductId);
+                var product = IoCFactory.Resolve<IProductService>().GetProductById(this.ProductId);
                 if(product != null)
                 {
                     if(fuProductPicture1.HasFile)
                     {
-                        Picture picture = IoCFactory.Resolve<IPictureManager>().InsertPicture(fuProductPicture1.FileBytes, fuProductPicture1.PostedFile.ContentType, true);
+                        Picture picture = IoCFactory.Resolve<IPictureService>().InsertPicture(fuProductPicture1.FileBytes, fuProductPicture1.PostedFile.ContentType, true);
                         if (picture != null)
                         {
                             var productPicture = new ProductPicture()
@@ -92,12 +92,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                                 PictureId = picture.PictureId,
                                 DisplayOrder = txtProductPictureDisplayOrder1.Value
                             };
-                            IoCFactory.Resolve<IProductManager>().InsertProductPicture(productPicture);
+                            IoCFactory.Resolve<IProductService>().InsertProductPicture(productPicture);
                         }
                     }
                     if(fuProductPicture2.HasFile)
                     {
-                        Picture picture = IoCFactory.Resolve<IPictureManager>().InsertPicture(fuProductPicture2.FileBytes, fuProductPicture2.PostedFile.ContentType, true);
+                        Picture picture = IoCFactory.Resolve<IPictureService>().InsertPicture(fuProductPicture2.FileBytes, fuProductPicture2.PostedFile.ContentType, true);
                         if(picture != null)
                         {
                             var productPicture = new ProductPicture()
@@ -106,12 +106,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                                 PictureId = picture.PictureId,
                                 DisplayOrder = txtProductPictureDisplayOrder2.Value
                             };
-                            IoCFactory.Resolve<IProductManager>().InsertProductPicture(productPicture);
+                            IoCFactory.Resolve<IProductService>().InsertProductPicture(productPicture);
                         }
                     }
                     if(fuProductPicture3.HasFile)
                     {
-                        Picture picture = IoCFactory.Resolve<IPictureManager>().InsertPicture(fuProductPicture3.FileBytes, fuProductPicture3.PostedFile.ContentType, true);
+                        Picture picture = IoCFactory.Resolve<IPictureService>().InsertPicture(fuProductPicture3.FileBytes, fuProductPicture3.PostedFile.ContentType, true);
                         if(picture != null)
                         {
                             var productPicture = new ProductPicture()
@@ -120,7 +120,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                                 PictureId = picture.PictureId,
                                 DisplayOrder = txtProductPictureDisplayOrder3.Value
                             };
-                            IoCFactory.Resolve<IProductManager>().InsertProductPicture(productPicture);
+                            IoCFactory.Resolve<IProductService>().InsertProductPicture(productPicture);
                         }
                     }
                     BindData();
@@ -143,12 +143,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                 int displayOrder = txtProductPictureDisplayOrder.Value;
                 int productPictureId = int.Parse(hfProductPictureId.Value);
-                ProductPicture productPicture = IoCFactory.Resolve<IProductManager>().GetProductPictureById(productPictureId);
+                ProductPicture productPicture = IoCFactory.Resolve<IProductService>().GetProductPictureById(productPictureId);
 
                 if (productPicture != null)
                 {
                     productPicture.DisplayOrder = displayOrder;
-                    IoCFactory.Resolve<IProductManager>().UpdateProductPicture(productPicture);
+                    IoCFactory.Resolve<IProductService>().UpdateProductPicture(productPicture);
                 }
 
                 BindData();
@@ -162,7 +162,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 ProductPicture productPicture = (ProductPicture)e.Row.DataItem;
                 Image iProductPicture = e.Row.FindControl("iProductPicture") as Image;
                 if (iProductPicture != null)
-                    iProductPicture.ImageUrl = IoCFactory.Resolve<IPictureManager>().GetPictureUrl(productPicture.PictureId);
+                    iProductPicture.ImageUrl = IoCFactory.Resolve<IPictureService>().GetPictureUrl(productPicture.PictureId);
 
                 Button btnUpdate = e.Row.FindControl("btnUpdate") as Button;
                 if (btnUpdate != null)
@@ -173,11 +173,11 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         protected void gvwImages_RowDeleting(object sender, GridViewDeleteEventArgs e)
         {
             int productPictureId = (int)gvwImages.DataKeys[e.RowIndex]["ProductPictureId"];
-            ProductPicture productPicture = IoCFactory.Resolve<IProductManager>().GetProductPictureById(productPictureId);
+            ProductPicture productPicture = IoCFactory.Resolve<IProductService>().GetProductPictureById(productPictureId);
             if (productPicture != null)
             {
-                IoCFactory.Resolve<IProductManager>().DeleteProductPicture(productPicture.ProductPictureId);
-                IoCFactory.Resolve<IPictureManager>().DeletePicture(productPicture.PictureId);
+                IoCFactory.Resolve<IProductService>().DeleteProductPicture(productPicture.ProductPictureId);
+                IoCFactory.Resolve<IPictureService>().DeletePicture(productPicture.PictureId);
                 BindData();
             }
         }

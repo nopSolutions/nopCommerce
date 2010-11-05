@@ -70,7 +70,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             bool displayButton = true;
 
             //validate payment method availablity
-            var ppePaymentMethod = IoCFactory.Resolve<IPaymentManager>().GetPaymentMethodBySystemKeyword("PayPalExpress");
+            var ppePaymentMethod = IoCFactory.Resolve<IPaymentService>().GetPaymentMethodBySystemKeyword("PayPalExpress");
             if (ppePaymentMethod == null || !ppePaymentMethod.IsActive)
             {
                 displayButton = false;
@@ -80,7 +80,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             ShoppingCart cart = null;
             if (displayButton)
             {
-                cart = IoCFactory.Resolve<IShoppingCartManager>().GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
+                cart = IoCFactory.Resolve<IShoppingCartService>().GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
                 if (cart.Count == 0)
                 {
                     displayButton = false;
@@ -90,7 +90,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             //order total validation
             if (displayButton)
             {
-                decimal? cartTotal = IoCFactory.Resolve<IShoppingCartManager>().GetShoppingCartTotal(cart,
+                decimal? cartTotal = IoCFactory.Resolve<IShoppingCartService>().GetShoppingCartTotal(cart,
                     ppePaymentMethod.PaymentMethodId, NopContext.Current.User);
                 if (!cartTotal.HasValue || cartTotal.Value == decimal.Zero)
                 {
@@ -101,7 +101,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             //recurring order support
             if (displayButton)
             {
-                if (cart.IsRecurring && IoCFactory.Resolve<IPaymentManager>().SupportRecurringPayments(ppePaymentMethod.PaymentMethodId) == RecurringPaymentTypeEnum.NotSupported)
+                if (cart.IsRecurring && IoCFactory.Resolve<IPaymentService>().SupportRecurringPayments(ppePaymentMethod.PaymentMethodId) == RecurringPaymentTypeEnum.NotSupported)
                 {
                     displayButton = false;
                 }
@@ -112,14 +112,14 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void btnPaypalExpress_Click(object sender, EventArgs e)
         {
-            if ((NopContext.Current.User == null) || (NopContext.Current.User.IsGuest && !IoCFactory.Resolve<ICustomerManager>().AnonymousCheckoutAllowed))
+            if ((NopContext.Current.User == null) || (NopContext.Current.User.IsGuest && !IoCFactory.Resolve<ICustomerService>().AnonymousCheckoutAllowed))
             {
                 string loginURL = SEOHelper.GetLoginPageUrl(true);
                 Response.Redirect(loginURL);
             }
 
             var payPalExpress = new PayPalExpressPaymentProcessor();
-            var ppePaymentMethod = IoCFactory.Resolve<IPaymentManager>().GetPaymentMethodBySystemKeyword("PayPalExpress");
+            var ppePaymentMethod = IoCFactory.Resolve<IPaymentService>().GetPaymentMethodBySystemKeyword("PayPalExpress");
             if (ppePaymentMethod != null && ppePaymentMethod.IsActive)
             {
                 //apply reward points
@@ -128,8 +128,8 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     checkoutPaymentMethodControl.ApplyRewardPoints();
 
                 //payment
-                var cart = IoCFactory.Resolve<IShoppingCartManager>().GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
-                decimal? cartTotal = IoCFactory.Resolve<IShoppingCartManager>().GetShoppingCartTotal(cart,
+                var cart = IoCFactory.Resolve<IShoppingCartService>().GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
+                decimal? cartTotal = IoCFactory.Resolve<IShoppingCartService>().GetShoppingCartTotal(cart,
                     ppePaymentMethod.PaymentMethodId, NopContext.Current.User);
                 if (cartTotal.HasValue && cartTotal.Value > decimal.Zero)
                 {

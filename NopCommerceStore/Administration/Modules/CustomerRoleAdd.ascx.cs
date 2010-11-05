@@ -35,7 +35,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             CustomerRole customerRole = ctrlCustomerRoleInfo.SaveInfo();
 
-            IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
+            IoCFactory.Resolve<ICustomerActivityService>().InsertActivity(
                 "AddNewCustomerRole",
                 GetLocaleResourceString("ActivityLog.AddNewCustomerRole"),
                 customerRole.Name);

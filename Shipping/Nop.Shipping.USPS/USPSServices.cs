@@ -37,6 +37,7 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.USPS
         /// V3 USPS Domestic Services
         /// </summary>
         private string[] _domesticServices = {
+                                                "NONE (disable all domestic services)",
                                                 "First-Class",
                                                 "Express Mail Sunday/Holiday Guarantee",
                                                 "Express Mail Flat-Rate Envelope Sunday/Holiday Guarantee",
@@ -58,7 +59,8 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.USPS
         /// <summary>
         /// V3 USPS International services
         /// </summary>
-        private string[] _internationalServices = {                                    
+        private string[] _internationalServices = {    
+                                                    "NONE (disable all international services)",                                
                                                     "Global Express Guaranteed (GXG)",
                                                     "Global Express Guaranteed Non-Document Rectangular",
                                                     "Global Express Guaranteed Non-Document Non-Rectangular",
@@ -106,6 +108,9 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.USPS
             string serviceId = string.Empty;
             switch (service)
             {
+                case "NONE (disable all domestic services)":
+                    serviceId = "NONE";
+                    break;
                 case "First-Class":
                     serviceId = "0";
                     break;
@@ -170,6 +175,9 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.USPS
             string serviceId = string.Empty;
             switch (service)
             {
+                case "NONE (disable all international services)":
+                    serviceId = "NONE";
+                    break;
                 case "Global Express Guaranteed (GXG)":
                     serviceId = "4";
                     break;

@@ -61,7 +61,7 @@ namespace NopSolutions.NopCommerce.Web
             if (NopContext.Current.User == null)
                 return new List<PrivateMessage>();
 
-            var result = IoCFactory.Resolve<IForumManager>().GetAllPrivateMessages(
+            var result = IoCFactory.Resolve<IForumService>().GetAllPrivateMessages(
                 NopContext.Current.User.CustomerId, 0, null, false, null,
                 string.Empty, PageIndex, PageSize);
             totalRecords = result.TotalCount;
@@ -98,7 +98,7 @@ namespace NopSolutions.NopCommerce.Web
             if (NopContext.Current.User == null)
                 return new List<PrivateMessage>();
 
-            var result = IoCFactory.Resolve<IForumManager>().GetAllPrivateMessages(0, NopContext.Current.User.CustomerId, null, null, false,
+            var result = IoCFactory.Resolve<IForumService>().GetAllPrivateMessages(0, NopContext.Current.User.CustomerId, null, null, false,
                 string.Empty, PageIndex, PageSize);
             totalRecords = result.TotalCount;
             return result;
@@ -134,7 +134,7 @@ namespace NopSolutions.NopCommerce.Web
             if (NopContext.Current.User == null)
                 return new List<ForumSubscription>();
 
-            var result = IoCFactory.Resolve<IForumManager>().GetAllSubscriptions(NopContext.Current.User.CustomerId, 0, 0, PageSize, PageIndex, out totalRecords);
+            var result = IoCFactory.Resolve<IForumService>().GetAllSubscriptions(NopContext.Current.User.CustomerId, 0, 0, PageSize, PageIndex, out totalRecords);
             return result;
         }
         
@@ -166,11 +166,11 @@ namespace NopSolutions.NopCommerce.Web
             totalRecords = 0;
             //it's used on profile.aspx page, so we're using UserId query string parameter
             int userId = CommonHelper.QueryStringInt("UserId");
-            var user = IoCFactory.Resolve<ICustomerManager>().GetCustomerById(userId);
+            var user = IoCFactory.Resolve<ICustomerService>().GetCustomerById(userId);
             if (user == null)
                 return new List<ForumPost>();
 
-            var result = IoCFactory.Resolve<IForumManager>().GetAllPosts(0,
+            var result = IoCFactory.Resolve<IForumService>().GetAllPosts(0,
                     user.CustomerId, string.Empty, false, PageSize, PageIndex, out totalRecords);
             return result;
         }

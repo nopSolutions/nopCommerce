@@ -71,7 +71,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected void DeleteButton_Click(object sender, EventArgs e)
         {
-            IoCFactory.Resolve<IWarehouseManager>().MarkWarehouseAsDeleted(this.WarehouseId);
+            IoCFactory.Resolve<IWarehouseService>().MarkWarehouseAsDeleted(this.WarehouseId);
 
             Response.Redirect("Warehouses.aspx");
         }

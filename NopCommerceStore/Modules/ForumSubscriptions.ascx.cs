@@ -126,11 +126,11 @@ namespace NopSolutions.NopCommerce.Web.Modules
                         if (cbSelect != null && cbSelect.Checked && hfForumSubscriptionId != null)
                         {
                             int forumSubscriptionId = int.Parse(hfForumSubscriptionId.Value);
-                            ForumSubscription subscription = IoCFactory.Resolve<IForumManager>().GetSubscriptionById(forumSubscriptionId);
+                            ForumSubscription subscription = IoCFactory.Resolve<IForumService>().GetSubscriptionById(forumSubscriptionId);
 
                             if (subscription != null && subscription.UserId == NopContext.Current.User.CustomerId)
                             {
-                                IoCFactory.Resolve<IForumManager>().DeleteSubscription(forumSubscriptionId);
+                                IoCFactory.Resolve<IForumService>().DeleteSubscription(forumSubscriptionId);
                             }
                         }
                     }
@@ -139,7 +139,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 }
                 catch (Exception exc)
                 {
-                    IoCFactory.Resolve<ILogManager>().InsertLog(LogTypeEnum.CustomerError, exc.Message, exc);
+                    IoCFactory.Resolve<ILogService>().InsertLog(LogTypeEnum.CustomerError, exc.Message, exc);
                 }
             }
         }

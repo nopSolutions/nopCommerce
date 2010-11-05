@@ -41,7 +41,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            Product product = IoCFactory.Resolve<IProductManager>().GetProductById(this.ProductId);
+            Product product = IoCFactory.Resolve<IProductService>().GetProductById(this.ProductId);
 
             if (this.HasLocalizableContent)
             {
@@ -75,14 +75,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 else
                     hlViewReviews.Visible = false;
 
-                this.txtProductTags.Text = GenerateListOfProductTagss(IoCFactory.Resolve<IProductManager>().GetAllProductTags(product.ProductId, string.Empty));
+                this.txtProductTags.Text = GenerateListOfProductTagss(IoCFactory.Resolve<IProductService>().GetAllProductTags(product.ProductId, string.Empty));
             }
         }
 
         private void FillDropDowns()
         {
             this.ddlTemplate.Items.Clear();
-            var productTemplateCollection = IoCFactory.Resolve<ITemplateManager>().GetAllProductTemplates();
+            var productTemplateCollection = IoCFactory.Resolve<ITemplateService>().GetAllProductTemplates();
             foreach (ProductTemplate productTemplate in productTemplateCollection)
             {
                 ListItem item2 = new ListItem(productTemplate.Name, productTemplate.ProductTemplateId.ToString());
@@ -138,7 +138,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public Product SaveInfo()
         {
-            Product product = IoCFactory.Resolve<IProductManager>().GetProductById(this.ProductId);
+            Product product = IoCFactory.Resolve<IProductService>().GetProductById(this.ProductId);
             if (product != null)
             {
                 product.Name = txtName.Text;
@@ -152,21 +152,21 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 product.Published = cbPublished.Checked;
                 product.UpdatedOn = DateTime.UtcNow;
 
-                IoCFactory.Resolve<IProductManager>().UpdateProduct(product);
+                IoCFactory.Resolve<IProductService>().UpdateProduct(product);
 
                 SaveLocalizableContent(product);
 
                 //product tags
-                var productTags1 = IoCFactory.Resolve<IProductManager>().GetAllProductTags(product.ProductId, string.Empty);
+                var productTags1 = IoCFactory.Resolve<IProductService>().GetAllProductTags(product.ProductId, string.Empty);
                 foreach (var productTag in productTags1)
                 {
-                    IoCFactory.Resolve<IProductManager>().RemoveProductTagMapping(product.ProductId, productTag.ProductTagId);
+                    IoCFactory.Resolve<IProductService>().RemoveProductTagMapping(product.ProductId, productTag.ProductTagId);
                 }
                 string[] productTagNames = ParseProductTags(txtProductTags.Text);
                 foreach (string productTagName in productTagNames)
                 {
                     ProductTag productTag = null;
-                    var productTags2 = IoCFactory.Resolve<IProductManager>().GetAllProductTags(0,
+                    var productTags2 = IoCFactory.Resolve<IProductService>().GetAllProductTags(0,
                         productTagName);
                     if (productTags2.Count == 0)
                     {
@@ -175,13 +175,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                             Name = productTagName,
                             ProductCount = 0
                         };
-                        IoCFactory.Resolve<IProductManager>().InsertProductTag(productTag);
+                        IoCFactory.Resolve<IProductService>().InsertProductTag(productTag);
                     }
                     else
                     {
                         productTag = productTags2[0];
                     }
-                    IoCFactory.Resolve<IProductManager>().AddProductTagMapping(product.ProductId, productTag.ProductTagId);
+                    IoCFactory.Resolve<IProductService>().AddProductTagMapping(product.ProductId, productTag.ProductTagId);
                 }
             }
 
@@ -214,7 +214,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         string.IsNullOrEmpty(shortDescription) &&
                         string.IsNullOrEmpty(fullDescription));
 
-                    var content = IoCFactory.Resolve<IProductManager>().GetProductLocalizedByProductIdAndLanguageId(product.ProductId, languageId);
+                    var content = IoCFactory.Resolve<IProductService>().GetProductLocalizedByProductIdAndLanguageId(product.ProductId, languageId);
                     if (content == null)
                     {
                         if (!allFieldsAreEmpty && languageId > 0)
@@ -228,7 +228,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                                 ShortDescription = shortDescription,
                                 FullDescription = fullDescription
                             };
-                            IoCFactory.Resolve<IProductManager>().InsertProductLocalized(content);
+                            IoCFactory.Resolve<IProductService>().InsertProductLocalized(content);
                         }
                     }
                     else
@@ -239,7 +239,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                             content.Name = name;
                             content.ShortDescription = shortDescription;
                             content.FullDescription = fullDescription;
-                            IoCFactory.Resolve<IProductManager>().UpdateProductLocalized(content);
+                            IoCFactory.Resolve<IProductService>().UpdateProductLocalized(content);
                         }
                     }
                 }
@@ -257,7 +257,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                 int languageId = int.Parse(lblLanguageId.Text);
 
-                var content = IoCFactory.Resolve<IProductManager>().GetProductLocalizedByProductIdAndLanguageId(this.ProductId, languageId);
+                var content = IoCFactory.Resolve<IProductService>().GetProductLocalizedByProductIdAndLanguageId(this.ProductId, languageId);
                 if (content != null)
                 {
                     txtLocalizedName.Text = content.Name;

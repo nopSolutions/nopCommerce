@@ -72,7 +72,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
         {
             get
             {
-                return IoCFactory.Resolve<IPollManager>().GetPollById(this.PollId);
+                return IoCFactory.Resolve<IPollService>().GetPollById(this.PollId);
             }
         }
 

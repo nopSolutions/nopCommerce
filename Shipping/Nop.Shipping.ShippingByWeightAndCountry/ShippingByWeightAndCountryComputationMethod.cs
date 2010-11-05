@@ -40,7 +40,7 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.ShippingByWeightAndCountryCM
             bool limitMethodsToCreated = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("ShippingByWeightAndCountry.LimitMethodsToCreated");
 
             ShippingByWeightAndCountry shippingByWeightAndCountry = null;
-            var shippingByWeightAndCountryCollection = IoCFactory.Resolve<IShippingByWeightAndCountryManager>().GetAllByShippingMethodIdAndCountryId(ShippingMethodID, CountryID);
+            var shippingByWeightAndCountryCollection = IoCFactory.Resolve<IShippingByWeightAndCountryService>().GetAllByShippingMethodIdAndCountryId(ShippingMethodID, CountryID);
             foreach (var shippingByWeightAndCountry2 in shippingByWeightAndCountryCollection)
             {
                 if ((weight >= shippingByWeightAndCountry2.From) && (weight <= shippingByWeightAndCountry2.To))
@@ -68,7 +68,7 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.ShippingByWeightAndCountryCM
                 shippingTotal = Math.Round((decimal)((((float)subTotal) * ((float)shippingByWeightAndCountry.ShippingChargePercentage)) / 100f), 2);
             else
             {
-                if (IoCFactory.Resolve<IShippingByWeightAndCountryManager>().CalculatePerWeightUnit)
+                if (IoCFactory.Resolve<IShippingByWeightAndCountryService>().CalculatePerWeightUnit)
                 {
                     shippingTotal = shippingByWeightAndCountry.ShippingChargeAmount * weight;
                 }
@@ -117,9 +117,9 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.ShippingByWeightAndCountryCM
                     continue;
                 subTotal += PriceHelper.GetSubTotal(shoppingCartItem, shipmentPackage.Customer, true);
             }
-            decimal weight = IoCFactory.Resolve<IShippingManager>().GetShoppingCartTotalWeight(shipmentPackage.Items, shipmentPackage.Customer);
+            decimal weight = IoCFactory.Resolve<IShippingService>().GetShoppingCartTotalWeight(shipmentPackage.Items, shipmentPackage.Customer);
 
-            var shippingMethods = IoCFactory.Resolve<IShippingManager>().GetAllShippingMethods(shipmentPackage.ShippingAddress.CountryId);
+            var shippingMethods = IoCFactory.Resolve<IShippingService>().GetAllShippingMethods(shipmentPackage.ShippingAddress.CountryId);
             foreach (var shippingMethod in shippingMethods)
             {
                 decimal? rate = GetRate(subTotal, weight, shippingMethod.ShippingMethodId, shipmentPackage.ShippingAddress.Country.CountryId);

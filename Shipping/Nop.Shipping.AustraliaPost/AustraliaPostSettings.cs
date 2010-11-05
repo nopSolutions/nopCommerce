@@ -62,7 +62,7 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.AustraliaPost
         {
             get
             {
-                return IoCFactory.Resolve<IMeasureManager>().GetMeasureWeightBySystemKeyword("grams");
+                return IoCFactory.Resolve<IMeasureService>().GetMeasureWeightBySystemKeyword("grams");
             }
         }
 
@@ -70,7 +70,7 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.AustraliaPost
         {
             get
             {
-                return IoCFactory.Resolve<IMeasureManager>().GetMeasureDimensionBySystemKeyword("millimetres");
+                return IoCFactory.Resolve<IMeasureService>().GetMeasureDimensionBySystemKeyword("millimetres");
             }
         }
         #endregion

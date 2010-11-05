@@ -46,9 +46,9 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         private void BindData()
         {
-            int number = IoCFactory.Resolve<IProductManager>().RecentlyViewedProductsNumber;
-            var products = IoCFactory.Resolve<IProductManager>().GetRecentlyViewedProducts(number);
-            if (IoCFactory.Resolve<IProductManager>().RecentlyViewedProductsEnabled && products.Count > 0)
+            int number = IoCFactory.Resolve<IProductService>().RecentlyViewedProductsNumber;
+            var products = IoCFactory.Resolve<IProductService>().GetRecentlyViewedProducts(number);
+            if (IoCFactory.Resolve<IProductService>().RecentlyViewedProductsEnabled && products.Count > 0)
             {
                 dlCatalog.DataSource = products;
                 dlCatalog.DataBind();

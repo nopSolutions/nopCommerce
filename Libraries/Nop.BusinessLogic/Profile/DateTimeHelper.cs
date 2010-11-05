@@ -241,7 +241,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Profile
                 if (customer != null)
                 {
                     customer.TimeZoneId = timeZoneId;
-                    IoCFactory.Resolve<ICustomerManager>().UpdateCustomer(customer);
+                    IoCFactory.Resolve<ICustomerService>().UpdateCustomer(customer);
                 }
             }
         }

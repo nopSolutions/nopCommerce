@@ -32,12 +32,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.ShippingByWeightC
         {
             if (!Page.IsPostBack)
             {
-                gvShippingByWeights.Columns[1].HeaderText = string.Format("From [{0}]", IoCFactory.Resolve<IMeasureManager>().BaseWeightIn.Name);
-                gvShippingByWeights.Columns[2].HeaderText = string.Format("To [{0}]", IoCFactory.Resolve<IMeasureManager>().BaseWeightIn.Name);
+                gvShippingByWeights.Columns[1].HeaderText = string.Format("From [{0}]", IoCFactory.Resolve<IMeasureService>().BaseWeightIn.Name);
+                gvShippingByWeights.Columns[2].HeaderText = string.Format("To [{0}]", IoCFactory.Resolve<IMeasureService>().BaseWeightIn.Name);
                 gvShippingByWeights.Columns[5].HeaderText = "Charge amount";
-                if (IoCFactory.Resolve<IShippingByWeightManager>().CalculatePerWeightUnit)
+                if (IoCFactory.Resolve<IShippingByWeightService>().CalculatePerWeightUnit)
                 {
-                    gvShippingByWeights.Columns[5].HeaderText += string.Format(" per {0}", IoCFactory.Resolve<IMeasureManager>().BaseWeightIn.Name);
+                    gvShippingByWeights.Columns[5].HeaderText += string.Format(" per {0}", IoCFactory.Resolve<IMeasureService>().BaseWeightIn.Name);
                 }
 
                 FillDropDowns();
@@ -49,7 +49,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.ShippingByWeightC
         private void FillDropDowns()
         {
             ddlShippingMethod.Items.Clear();
-            var shippingMethodCollection = IoCFactory.Resolve<IShippingManager>().GetAllShippingMethods();
+            var shippingMethodCollection = IoCFactory.Resolve<IShippingService>().GetAllShippingMethods();
             foreach (ShippingMethod shippingMethod in shippingMethodCollection)
             {
                 ListItem item = new ListItem(shippingMethod.Name, shippingMethod.ShippingMethodId.ToString());
@@ -59,7 +59,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.ShippingByWeightC
 
         private void BindData()
         {
-            var shippingByWeightCollection = IoCFactory.Resolve<IShippingByWeightManager>().GetAll();
+            var shippingByWeightCollection = IoCFactory.Resolve<IShippingByWeightService>().GetAll();
             gvShippingByWeights.DataSource = shippingByWeightCollection;
             gvShippingByWeights.DataBind();
         }
@@ -83,7 +83,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.ShippingByWeightC
                     ShippingChargePercentage = txtShippingChargePercentage.Value,
                     ShippingChargeAmount = txtShippingChargeAmount.Value
                 };
-                IoCFactory.Resolve<IShippingByWeightManager>().InsertShippingByWeight(shippingByWeight);
+                IoCFactory.Resolve<IShippingByWeightService>().InsertShippingByWeight(shippingByWeight);
 
                 BindData();
             }
@@ -110,7 +110,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.ShippingByWeightC
 
                 int shippingByWeightId = int.Parse(hfShippingByWeightId.Value);
                 int shippingMethodId = int.Parse(ddlShippingMethod.SelectedItem.Value);
-                ShippingByWeight shippingByWeight = IoCFactory.Resolve<IShippingByWeightManager>().GetById(shippingByWeightId);
+                ShippingByWeight shippingByWeight = IoCFactory.Resolve<IShippingByWeightService>().GetById(shippingByWeightId);
 
                 if (shippingByWeight != null)
                 {
@@ -121,7 +121,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.ShippingByWeightC
                     shippingByWeight.ShippingChargePercentage = txtShippingChargePercentage.Value;
                     shippingByWeight.ShippingChargeAmount = txtShippingChargeAmount.Value;
 
-                    IoCFactory.Resolve<IShippingByWeightManager>().UpdateShippingByWeight(shippingByWeight);
+                    IoCFactory.Resolve<IShippingByWeightService>().UpdateShippingByWeight(shippingByWeight);
                 }
 
                 BindData();
@@ -140,7 +140,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.ShippingByWeightC
 
                 DropDownList ddlShippingMethod = e.Row.FindControl("ddlShippingMethod") as DropDownList;
                 ddlShippingMethod.Items.Clear();
-                var shippingMethodCollection = IoCFactory.Resolve<IShippingManager>().GetAllShippingMethods();
+                var shippingMethodCollection = IoCFactory.Resolve<IShippingService>().GetAllShippingMethods();
                 foreach (ShippingMethod shippingMethod in shippingMethodCollection)
                 {
                     ListItem item = new ListItem(shippingMethod.Name, shippingMethod.ShippingMethodId.ToString());
@@ -154,10 +154,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.ShippingByWeightC
         protected void gvShippingByWeights_RowDeleting(object sender, GridViewDeleteEventArgs e)
         {
             int shippingByWeightId = (int)gvShippingByWeights.DataKeys[e.RowIndex]["ShippingByWeightId"];
-            ShippingByWeight shippingByWeight = IoCFactory.Resolve<IShippingByWeightManager>().GetById(shippingByWeightId);
+            ShippingByWeight shippingByWeight = IoCFactory.Resolve<IShippingByWeightService>().GetById(shippingByWeightId);
             if (shippingByWeight != null)
             {
-                IoCFactory.Resolve<IShippingByWeightManager>().DeleteShippingByWeight(shippingByWeight.ShippingByWeightId);
+                IoCFactory.Resolve<IShippingByWeightService>().DeleteShippingByWeight(shippingByWeight.ShippingByWeightId);
                 BindData();
             }
         }

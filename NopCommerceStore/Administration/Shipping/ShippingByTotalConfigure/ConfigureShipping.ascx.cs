@@ -38,7 +38,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.ShippingByTotalCo
         private void FillDropDowns()
         {
             ddlShippingMethod.Items.Clear();
-            var shippingMethodCollection = IoCFactory.Resolve<IShippingManager>().GetAllShippingMethods();
+            var shippingMethodCollection = IoCFactory.Resolve<IShippingService>().GetAllShippingMethods();
             foreach (ShippingMethod shippingMethod in shippingMethodCollection)
             {
                 ListItem item = new ListItem(shippingMethod.Name, shippingMethod.ShippingMethodId.ToString());
@@ -48,7 +48,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.ShippingByTotalCo
 
         private void BindData()
         {
-            var shippingByTotalCollection = IoCFactory.Resolve<IShippingByTotalManager>().GetAll();
+            var shippingByTotalCollection = IoCFactory.Resolve<IShippingByTotalService>().GetAll();
             gvShippingByTotals.DataSource = shippingByTotalCollection;
             gvShippingByTotals.DataBind();
         }
@@ -72,7 +72,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.ShippingByTotalCo
                     ShippingChargePercentage = txtShippingChargePercentage.Value,
                     ShippingChargeAmount = txtShippingChargeAmount.Value
                 };
-                IoCFactory.Resolve<IShippingByTotalManager>().InsertShippingByTotal(shippingByTotal);
+                IoCFactory.Resolve<IShippingByTotalService>().InsertShippingByTotal(shippingByTotal);
 
                 BindData();
             }
@@ -99,7 +99,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.ShippingByTotalCo
 
                 int shippingByTotalId = int.Parse(hfShippingByTotalId.Value);
                 int shippingMethodId = int.Parse(ddlShippingMethod.SelectedItem.Value);
-                ShippingByTotal shippingByTotal = IoCFactory.Resolve<IShippingByTotalManager>().GetById(shippingByTotalId);
+                ShippingByTotal shippingByTotal = IoCFactory.Resolve<IShippingByTotalService>().GetById(shippingByTotalId);
 
                 if (shippingByTotal != null)
                 {
@@ -109,7 +109,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.ShippingByTotalCo
                     shippingByTotal.UsePercentage = cbUsePercentage.Checked;
                     shippingByTotal.ShippingChargePercentage = txtShippingChargePercentage.Value;
                     shippingByTotal.ShippingChargeAmount = txtShippingChargeAmount.Value;
-                    IoCFactory.Resolve<IShippingByTotalManager>().UpdateShippingByTotal(shippingByTotal);
+                    IoCFactory.Resolve<IShippingByTotalService>().UpdateShippingByTotal(shippingByTotal);
                 }
                 BindData();
             }
@@ -127,7 +127,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.ShippingByTotalCo
 
                 DropDownList ddlShippingMethod = e.Row.FindControl("ddlShippingMethod") as DropDownList;
                 ddlShippingMethod.Items.Clear();
-                var shippingMethodCollection = IoCFactory.Resolve<IShippingManager>().GetAllShippingMethods();
+                var shippingMethodCollection = IoCFactory.Resolve<IShippingService>().GetAllShippingMethods();
                 foreach (ShippingMethod shippingMethod in shippingMethodCollection)
                 {
                     ListItem item = new ListItem(shippingMethod.Name, shippingMethod.ShippingMethodId.ToString());
@@ -141,10 +141,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.ShippingByTotalCo
         protected void gvShippingByTotals_RowDeleting(object sender, GridViewDeleteEventArgs e)
         {
             int shippingByTotalId = (int)gvShippingByTotals.DataKeys[e.RowIndex]["ShippingByTotalId"];
-            ShippingByTotal shippingByTotal = IoCFactory.Resolve<IShippingByTotalManager>().GetById(shippingByTotalId);
+            ShippingByTotal shippingByTotal = IoCFactory.Resolve<IShippingByTotalService>().GetById(shippingByTotalId);
             if (shippingByTotal != null)
             {
-                IoCFactory.Resolve<IShippingByTotalManager>().DeleteShippingByTotal(shippingByTotal.ShippingByTotalId);
+                IoCFactory.Resolve<IShippingByTotalService>().DeleteShippingByTotal(shippingByTotal.ShippingByTotalId);
                 BindData();
             }
         }

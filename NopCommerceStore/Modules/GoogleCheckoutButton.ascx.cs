@@ -53,21 +53,21 @@ namespace NopSolutions.NopCommerce.Web.Modules
     {
         protected override void OnPreRender(EventArgs e)
         {
-            var gcPaymentMethod = IoCFactory.Resolve<IPaymentManager>().GetPaymentMethodBySystemKeyword("GoogleCheckout");
+            var gcPaymentMethod = IoCFactory.Resolve<IPaymentService>().GetPaymentMethodBySystemKeyword("GoogleCheckout");
             if (gcPaymentMethod == null || !gcPaymentMethod.IsActive)
             {
                 this.Visible = false;
                 return;
             }
 
-            var cart = IoCFactory.Resolve<IShoppingCartManager>().GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
+            var cart = IoCFactory.Resolve<IShoppingCartService>().GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
             if (cart.Count == 0)
             {
                 this.Visible = false;
                 return;
             }
 
-            if (cart.IsRecurring && IoCFactory.Resolve<IPaymentManager>().SupportRecurringPayments(gcPaymentMethod.PaymentMethodId) == RecurringPaymentTypeEnum.NotSupported)
+            if (cart.IsRecurring && IoCFactory.Resolve<IPaymentService>().SupportRecurringPayments(gcPaymentMethod.PaymentMethodId) == RecurringPaymentTypeEnum.NotSupported)
             {
                 this.Visible = false;
                 return;
@@ -81,24 +81,24 @@ namespace NopSolutions.NopCommerce.Web.Modules
         protected void PostCartToGoogle(object sender, ImageClickEventArgs e)
         { 
             //user validation
-            if (NopContext.Current.User == null && IoCFactory.Resolve<ICustomerManager>().AnonymousCheckoutAllowed)
+            if (NopContext.Current.User == null && IoCFactory.Resolve<ICustomerService>().AnonymousCheckoutAllowed)
             {
                 //create anonymous record
-                IoCFactory.Resolve<ICustomerManager>().CreateAnonymousUser();
+                IoCFactory.Resolve<ICustomerService>().CreateAnonymousUser();
             }
 
-            if ((NopContext.Current.User == null) || (NopContext.Current.User.IsGuest && !IoCFactory.Resolve<ICustomerManager>().AnonymousCheckoutAllowed))
+            if ((NopContext.Current.User == null) || (NopContext.Current.User.IsGuest && !IoCFactory.Resolve<ICustomerService>().AnonymousCheckoutAllowed))
             {
                 string loginURL = SEOHelper.GetLoginPageUrl(true);
                 Response.Redirect(loginURL);
             }
 
             //USD for US dollars, GBP for British pounds, SEK for Swedish krona, EUR for Euro etc
-            GCheckoutButton1.Currency = IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency.CurrencyCode;
+            GCheckoutButton1.Currency = IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode;
             var Req = GCheckoutButton1.CreateRequest();
             var googleCheckoutPaymentProcessor = new GoogleCheckoutPaymentProcessor();
 
-            NopSolutions.NopCommerce.BusinessLogic.Orders.ShoppingCart cart = IoCFactory.Resolve<IShoppingCartManager>().GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
+            NopSolutions.NopCommerce.BusinessLogic.Orders.ShoppingCart cart = IoCFactory.Resolve<IShoppingCartService>().GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
             var Resp = googleCheckoutPaymentProcessor.PostCartToGoogle(Req, cart);
             if (Resp.IsGood)
             {

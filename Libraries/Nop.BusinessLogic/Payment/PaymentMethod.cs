@@ -109,7 +109,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
                 {
                     try
                     {
-                        this.paymentMethodType = IoCFactory.Resolve<IPaymentManager>().GetPaymentMethodType(this.PaymentMethodId);
+                        this.paymentMethodType = IoCFactory.Resolve<IPaymentService>().GetPaymentMethodType(this.PaymentMethodId);
                     }
                     catch { }
                 }

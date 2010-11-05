@@ -82,10 +82,10 @@ namespace NopSolutions.NopCommerce.Web
                      setting database status, informing logistics etc etc
                 */
 
-                Order order = IoCFactory.Resolve<IOrderManager>().GetOrderById(Convert.ToInt32(Order_Id));
-                if (IoCFactory.Resolve<IOrderManager>().CanMarkOrderAsPaid(order))
+                Order order = IoCFactory.Resolve<IOrderService>().GetOrderById(Convert.ToInt32(Order_Id));
+                if (IoCFactory.Resolve<IOrderService>().CanMarkOrderAsPaid(order))
                 {
-                    IoCFactory.Resolve<IOrderManager>().MarkOrderAsPaid(order.OrderId);
+                    IoCFactory.Resolve<IOrderService>().MarkOrderAsPaid(order.OrderId);
                 }
                 lInfo.Text = "<br>Thank you for shopping with us. Your credit card has been charged and your transaction is successful.";
 

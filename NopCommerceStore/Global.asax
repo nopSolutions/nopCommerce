@@ -46,7 +46,7 @@
         {
             if (InstallerHelper.ConnectionStringIsSet())
             {
-                IoCFactory.Resolve<ILogManager>().InsertLog(LogTypeEnum.Unknown, ex.Message, ex);
+                IoCFactory.Resolve<ILogService>().InsertLog(LogTypeEnum.Unknown, ex.Message, ex);
             }
         }
     }

@@ -120,7 +120,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         {
             get
             {
-                return IoCFactory.Resolve<IForumManager>().GetForumById(this.ForumId);
+                return IoCFactory.Resolve<IForumService>().GetForumById(this.ForumId);
             }
         }
 
@@ -131,7 +131,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         {
             get
             {
-                return IoCFactory.Resolve<ICustomerManager>().GetCustomerById(this.UserId);
+                return IoCFactory.Resolve<ICustomerService>().GetCustomerById(this.UserId);
             }
         }
 
@@ -154,7 +154,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
             get
             {
                 int totalPostRecords =0;
-                var forumPosts = IoCFactory.Resolve<IForumManager>().GetAllPosts(this.ForumTopicId, 0, string.Empty, 1, 0, out totalPostRecords);
+                var forumPosts = IoCFactory.Resolve<IForumService>().GetAllPosts(this.ForumTopicId, 0, string.Empty, 1, 0, out totalPostRecords);
                 if (forumPosts.Count > 0)
                 {
                     return forumPosts[0];
@@ -171,7 +171,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         {
             get
             {
-                return IoCFactory.Resolve<IForumManager>().GetPostById(this.LastPostId);
+                return IoCFactory.Resolve<IForumService>().GetPostById(this.LastPostId);
             }
         }
 
@@ -182,7 +182,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         {
             get
             {
-                return IoCFactory.Resolve<ICustomerManager>().GetCustomerById(this.LastPostUserId);
+                return IoCFactory.Resolve<ICustomerService>().GetCustomerById(this.LastPostUserId);
             }
         }
 

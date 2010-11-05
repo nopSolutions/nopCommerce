@@ -44,7 +44,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected void BindGrid()
         {
-            var manufacturers = IoCFactory.Resolve<IManufacturerManager>().GetAllManufacturers();
+            var manufacturers = IoCFactory.Resolve<IManufacturerService>().GetAllManufacturers();
             gvManufacturers.DataSource = manufacturers;
             gvManufacturers.DataBind();
         }
@@ -61,7 +61,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 try
                 {
-                    var manufacturers = IoCFactory.Resolve<IManufacturerManager>().GetAllManufacturers();
+                    var manufacturers = IoCFactory.Resolve<IManufacturerService>().GetAllManufacturers();
                     string xml = ExportManager.ExportManufacturersToXml(manufacturers);
                     string fileName = string.Format("manufacturers_{0}.xml", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"));
                     CommonHelper.WriteResponseXml(xml, fileName);

@@ -72,7 +72,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         {
             get
             {
-                return IoCFactory.Resolve<IProductManager>().GetProductVariantById(this.ProductVariantId);
+                return IoCFactory.Resolve<IProductService>().GetProductVariantById(this.ProductVariantId);
             }
         }
         #endregion

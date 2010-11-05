@@ -75,7 +75,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
             }
             else
             {
-                result = IoCFactory.Resolve<IPictureManager>().LoadPictureFromFile(this.PictureId, this.MimeType);
+                result = IoCFactory.Resolve<IPictureService>().LoadPictureFromFile(this.PictureId, this.MimeType);
             }
             return result;
         }
@@ -86,7 +86,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
         /// <returns>Picture binary</returns>
         public byte[] LoadPictureBinary()
         {
-            return LoadPictureBinary(IoCFactory.Resolve<IPictureManager>().StoreInDB);
+            return LoadPictureBinary(IoCFactory.Resolve<IPictureService>().StoreInDB);
         }
 
         #endregion

@@ -158,7 +158,7 @@ namespace NopSolutions.NopCommerce.Web
             //online user tracking
             if (this.TrackedByOnlineCustomersModule)
             {
-                IoCFactory.Resolve<IOnlineUserManager>().TrackCurrentUser();
+                IoCFactory.Resolve<IOnlineUserService>().TrackCurrentUser();
             }
 
             base.OnPreRender(e);
@@ -171,7 +171,7 @@ namespace NopSolutions.NopCommerce.Web
 
         protected void ProcessException(Exception exc, bool showError)
         {
-            IoCFactory.Resolve<ILogManager>().InsertLog(LogTypeEnum.AdministrationArea, exc.Message, exc);
+            IoCFactory.Resolve<ILogService>().InsertLog(LogTypeEnum.AdministrationArea, exc.Message, exc);
             if (showError)
             {
                 if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Display.AdminArea.ShowFullErrors"))

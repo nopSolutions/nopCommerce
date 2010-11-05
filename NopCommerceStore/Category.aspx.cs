@@ -41,7 +41,7 @@ namespace NopSolutions.NopCommerce.Web
 
         private void CreateChildControlsTree()
         {
-            category = IoCFactory.Resolve<ICategoryManager>().GetCategoryById(this.CategoryId);
+            category = IoCFactory.Resolve<ICategoryService>().GetCategoryById(this.CategoryId);
             if (category != null)
             {
                 Control child = null;

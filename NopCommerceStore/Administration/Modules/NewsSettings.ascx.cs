@@ -48,12 +48,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected void BindData()
         {
-            cbNewsEnabled.Checked = IoCFactory.Resolve<INewsManager>().NewsEnabled;
-            cbAllowNotRegisteredUsersToLeaveComments.Checked = IoCFactory.Resolve<INewsManager>().AllowNotRegisteredUsersToLeaveComments;
-            cbNotifyAboutNewNewsComments.Checked = IoCFactory.Resolve<INewsManager>().NotifyAboutNewNewsComments;
-            cbShowNewsOnMainPage.Checked = IoCFactory.Resolve<INewsManager>().ShowNewsOnMainPage;
-            txtMainPageNewsCount.Value = IoCFactory.Resolve<INewsManager>().MainPageNewsCount;
-            txtNewsArchivePageSize.Value = IoCFactory.Resolve<INewsManager>().NewsArchivePageSize;
+            cbNewsEnabled.Checked = IoCFactory.Resolve<INewsService>().NewsEnabled;
+            cbAllowNotRegisteredUsersToLeaveComments.Checked = IoCFactory.Resolve<INewsService>().AllowNotRegisteredUsersToLeaveComments;
+            cbNotifyAboutNewNewsComments.Checked = IoCFactory.Resolve<INewsService>().NotifyAboutNewNewsComments;
+            cbShowNewsOnMainPage.Checked = IoCFactory.Resolve<INewsService>().ShowNewsOnMainPage;
+            txtMainPageNewsCount.Value = IoCFactory.Resolve<INewsService>().MainPageNewsCount;
+            txtNewsArchivePageSize.Value = IoCFactory.Resolve<INewsService>().NewsArchivePageSize;
         }
 
         protected void btnSave_Click(object sender, EventArgs e)
@@ -62,12 +62,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 try
                 {
-                    IoCFactory.Resolve<INewsManager>().NewsEnabled = cbNewsEnabled.Checked;
-                    IoCFactory.Resolve<INewsManager>().AllowNotRegisteredUsersToLeaveComments = cbAllowNotRegisteredUsersToLeaveComments.Checked;
-                    IoCFactory.Resolve<INewsManager>().NotifyAboutNewNewsComments = cbNotifyAboutNewNewsComments.Checked;
-                    IoCFactory.Resolve<INewsManager>().ShowNewsOnMainPage = cbShowNewsOnMainPage.Checked;
-                    IoCFactory.Resolve<INewsManager>().MainPageNewsCount = txtMainPageNewsCount.Value;
-                    IoCFactory.Resolve<INewsManager>().NewsArchivePageSize = txtNewsArchivePageSize.Value;
+                    IoCFactory.Resolve<INewsService>().NewsEnabled = cbNewsEnabled.Checked;
+                    IoCFactory.Resolve<INewsService>().AllowNotRegisteredUsersToLeaveComments = cbAllowNotRegisteredUsersToLeaveComments.Checked;
+                    IoCFactory.Resolve<INewsService>().NotifyAboutNewNewsComments = cbNotifyAboutNewNewsComments.Checked;
+                    IoCFactory.Resolve<INewsService>().ShowNewsOnMainPage = cbShowNewsOnMainPage.Checked;
+                    IoCFactory.Resolve<INewsService>().MainPageNewsCount = txtMainPageNewsCount.Value;
+                    IoCFactory.Resolve<INewsService>().NewsArchivePageSize = txtNewsArchivePageSize.Value;
 
                     Response.Redirect("NewsSettings.aspx");
                 }

@@ -36,7 +36,7 @@ namespace NopSolutions.NopCommerce.Web
                 }
 
                 int orderId = CommonHelper.QueryStringInt("trnOrderNumber");
-                Order order = IoCFactory.Resolve<IOrderManager>().GetOrderById(orderId);
+                Order order = IoCFactory.Resolve<IOrderService>().GetOrderById(orderId);
                 if(order == null)
                 {
                     Response.Redirect(CommonHelper.GetStoreLocation());
@@ -46,9 +46,9 @@ namespace NopSolutions.NopCommerce.Web
                     Response.Redirect(CommonHelper.GetStoreLocation());
                 }
 
-                if(IoCFactory.Resolve<IOrderManager>().CanMarkOrderAsPaid(order))
+                if(IoCFactory.Resolve<IOrderService>().CanMarkOrderAsPaid(order))
                 {
-                    IoCFactory.Resolve<IOrderManager>().MarkOrderAsPaid(order.OrderId);
+                    IoCFactory.Resolve<IOrderService>().MarkOrderAsPaid(order.OrderId);
                 }
                 Response.Redirect("~/checkoutcompleted.aspx");
             }

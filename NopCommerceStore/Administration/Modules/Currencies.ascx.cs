@@ -52,14 +52,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected void BindCurrencyGrid()
         {
-            var currencyCollection = IoCFactory.Resolve<ICurrencyManager>().GetAllCurrencies();
+            var currencyCollection = IoCFactory.Resolve<ICurrencyService>().GetAllCurrencies();
             gvCurrencies.DataSource = currencyCollection;
             gvCurrencies.DataBind();
         }
 
         protected void BindLiveRateGrid()
         {
-            var exchangeRates = IoCFactory.Resolve<ICurrencyManager>().GetCurrencyLiveRates(IoCFactory.Resolve<ICurrencyManager>().PrimaryExchangeRateCurrency.CurrencyCode);
+            var exchangeRates = IoCFactory.Resolve<ICurrencyService>().GetCurrencyLiveRates(IoCFactory.Resolve<ICurrencyService>().PrimaryExchangeRateCurrency.CurrencyCode);
             gvLiveRates.DataSource = exchangeRates;
             gvLiveRates.DataBind();
         }
@@ -81,9 +81,9 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     RadioButton rdbIsPrimaryExchangeRateCurrency = (RadioButton)row.FindControl("rdbIsPrimaryExchangeRateCurrency");
                     RadioButton rdbIsPrimaryStoreCurrency = (RadioButton)row.FindControl("rdbIsPrimaryStoreCurrency");
                     if (rdbIsPrimaryExchangeRateCurrency.Checked)
-                        IoCFactory.Resolve<ICurrencyManager>().PrimaryExchangeRateCurrency = IoCFactory.Resolve<ICurrencyManager>().GetCurrencyById(currencyId);
+                        IoCFactory.Resolve<ICurrencyService>().PrimaryExchangeRateCurrency = IoCFactory.Resolve<ICurrencyService>().GetCurrencyById(currencyId);
                     if (rdbIsPrimaryStoreCurrency.Checked)
-                        IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency = IoCFactory.Resolve<ICurrencyManager>().GetCurrencyById(currencyId);
+                        IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency = IoCFactory.Resolve<ICurrencyService>().GetCurrencyById(currencyId);
                 }
 
                 BindCurrencyGrid();
@@ -119,13 +119,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 Label lblCurrencyCode = row.FindControl("lblCurrencyCode") as Label;
                 DecimalTextBox txtRate = row.FindControl("txtRate") as DecimalTextBox;
 
-                Currency currency = IoCFactory.Resolve<ICurrencyManager>().GetCurrencyByCode(lblCurrencyCode.Text);
+                Currency currency = IoCFactory.Resolve<ICurrencyService>().GetCurrencyByCode(lblCurrencyCode.Text);
                 if (currency != null)
                 {
                     currency.Rate = txtRate.Value;
                     currency.UpdatedOn = DateTime.UtcNow;
 
-                    IoCFactory.Resolve<ICurrencyManager>().UpdateCurrency(currency);
+                    IoCFactory.Resolve<ICurrencyService>().UpdateCurrency(currency);
                     BindCurrencyGrid();
                 }
             }

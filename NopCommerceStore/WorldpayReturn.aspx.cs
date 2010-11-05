@@ -122,7 +122,7 @@ namespace NopSolutions.NopCommerce.Web
                 string transResult = CommonHelper.QueryString("msg");
                 string instanceId = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Worldpay.InstanceId");
 
-                Order order = IoCFactory.Resolve<IOrderManager>().GetOrderById(Convert.ToInt32(orderId));
+                Order order = IoCFactory.Resolve<IOrderService>().GetOrderById(Convert.ToInt32(orderId));
                 if (order == null)
                     throw new NopException(string.Format("The order ID {0} doesn't exists", orderId));
 
@@ -142,9 +142,9 @@ namespace NopSolutions.NopCommerce.Web
                 if (returnedcallbackPW.Trim() != callbackPassword.Trim())
                     throw new NopException(string.Format("The callback password ({0}) received within the Worldpay Callback for the order {1} does not match that stored in your database.", returnedcallbackPW, orderId));
 
-                if (IoCFactory.Resolve<IOrderManager>().CanMarkOrderAsPaid(order))
+                if (IoCFactory.Resolve<IOrderService>().CanMarkOrderAsPaid(order))
                 {
-                    IoCFactory.Resolve<IOrderManager>().MarkOrderAsPaid(order.OrderId);
+                    IoCFactory.Resolve<IOrderService>().MarkOrderAsPaid(order.OrderId);
                 }
 
                 string retURL = CommonHelper.GetStoreLocation() + "checkoutcompleted.aspx";

@@ -77,7 +77,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         {
             get
             {
-                return IoCFactory.Resolve<ITaxCategoryManager>().GetTaxCategoryById(this.TaxCategoryId);
+                return IoCFactory.Resolve<ITaxCategoryService>().GetTaxCategoryById(this.TaxCategoryId);
             }
         }
 
@@ -88,7 +88,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         {
             get
             {
-                return IoCFactory.Resolve<ICountryManager>().GetCountryById(this.CountryId);
+                return IoCFactory.Resolve<ICountryService>().GetCountryById(this.CountryId);
             }
         }
 
@@ -99,7 +99,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         {
             get
             {
-                return IoCFactory.Resolve<IStateProvinceManager>().GetStateProvinceById(this.StateProvinceId);
+                return IoCFactory.Resolve<IStateProvinceService>().GetStateProvinceById(this.StateProvinceId);
             }
         }
 

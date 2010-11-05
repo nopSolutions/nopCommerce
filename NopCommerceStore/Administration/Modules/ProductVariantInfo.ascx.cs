@@ -44,7 +44,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            ProductVariant productVariant = IoCFactory.Resolve<IProductManager>().GetProductVariantById(this.ProductVariantId);
+            ProductVariant productVariant = IoCFactory.Resolve<IProductService>().GetProductVariantById(this.ProductVariantId);
 
             if (this.HasLocalizableContent)
             {
@@ -83,7 +83,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     {
                         btnRemoveProductVariantDownload.Visible = true;
                         hlProductVariantDownload.Visible = true;
-                        string adminDownloadUrl = IoCFactory.Resolve<IDownloadManager>().GetAdminDownloadUrl(productVariantDownload);
+                        string adminDownloadUrl = IoCFactory.Resolve<IDownloadService>().GetAdminDownloadUrl(productVariantDownload);
                         hlProductVariantDownload.NavigateUrl = adminDownloadUrl;
                     }
                     else
@@ -118,7 +118,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     {
                         btnRemoveProductVariantSampleDownload.Visible = true;
                         hlProductVariantSampleDownload.Visible = true;
-                        string adminSampleDownloadUrl = IoCFactory.Resolve<IDownloadManager>().GetAdminDownloadUrl(productVariantSampleDownload);
+                        string adminSampleDownloadUrl = IoCFactory.Resolve<IDownloadService>().GetAdminDownloadUrl(productVariantSampleDownload);
                         hlProductVariantSampleDownload.NavigateUrl = adminSampleDownloadUrl;
                     }
                     else
@@ -179,7 +179,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 //picture
                 Picture productVariantPicture = productVariant.Picture;
                 btnRemoveProductVariantImage.Visible = productVariantPicture != null;
-                string pictureUrl = IoCFactory.Resolve<IPictureManager>().GetPictureUrl(productVariantPicture, 100);
+                string pictureUrl = IoCFactory.Resolve<IPictureService>().GetPictureUrl(productVariantPicture, 100);
                 this.iProductVariantPicture.Visible = true;
                 this.iProductVariantPicture.ImageUrl = pictureUrl;
 
@@ -222,7 +222,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             this.ddlTaxCategory.Items.Clear();
             ListItem itemTaxCategory = new ListItem("---", "0");
             this.ddlTaxCategory.Items.Add(itemTaxCategory);
-            var taxCategoryCollection = IoCFactory.Resolve<ITaxCategoryManager>().GetAllTaxCategories();
+            var taxCategoryCollection = IoCFactory.Resolve<ITaxCategoryService>().GetAllTaxCategories();
             foreach (TaxCategory taxCategory in taxCategoryCollection)
             {
                 ListItem item2 = new ListItem(taxCategory.Name, taxCategory.TaxCategoryId.ToString());
@@ -232,7 +232,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             this.ddlWarehouse.Items.Clear();
             ListItem itemWarehouse = new ListItem("---", "0");
             this.ddlWarehouse.Items.Add(itemWarehouse);
-            var warehouseCollection = IoCFactory.Resolve<IWarehouseManager>().GetAllWarehouses();
+            var warehouseCollection = IoCFactory.Resolve<IWarehouseService>().GetAllWarehouses();
             foreach (Warehouse warehouse in warehouseCollection)
             {
                 ListItem item2 = new ListItem(warehouse.Name, warehouse.WarehouseId.ToString());
@@ -347,7 +347,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             bool published = cbPublished.Checked;
             int displayOrder = txtDisplayOrder.Value;
 
-            ProductVariant productVariant = IoCFactory.Resolve<IProductManager>().GetProductVariantById(ProductVariantId);
+            ProductVariant productVariant = IoCFactory.Resolve<IProductService>().GetProductVariantById(ProductVariantId);
             if (productVariant != null)
             {
                 #region Update
@@ -355,11 +355,11 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 HttpPostedFile productVariantPictureFile = fuProductVariantPicture.PostedFile;
                 if ((productVariantPictureFile != null) && (!String.IsNullOrEmpty(productVariantPictureFile.FileName)))
                 {
-                    byte[] productVariantPictureBinary = IoCFactory.Resolve<IPictureManager>().GetPictureBits(productVariantPictureFile.InputStream, productVariantPictureFile.ContentLength);
+                    byte[] productVariantPictureBinary = IoCFactory.Resolve<IPictureService>().GetPictureBits(productVariantPictureFile.InputStream, productVariantPictureFile.ContentLength);
                     if (productVariantPicture != null)
-                        productVariantPicture = IoCFactory.Resolve<IPictureManager>().UpdatePicture(productVariantPicture.PictureId, productVariantPictureBinary, productVariantPictureFile.ContentType, true);
+                        productVariantPicture = IoCFactory.Resolve<IPictureService>().UpdatePicture(productVariantPicture.PictureId, productVariantPictureBinary, productVariantPictureFile.ContentType, true);
                     else
-                        productVariantPicture = IoCFactory.Resolve<IPictureManager>().InsertPicture(productVariantPictureBinary, productVariantPictureFile.ContentType, true);
+                        productVariantPicture = IoCFactory.Resolve<IPictureService>().InsertPicture(productVariantPictureBinary, productVariantPictureFile.ContentType, true);
                 }
                 int productVariantPictureId = 0;
                 if (productVariantPicture != null)
@@ -386,7 +386,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     HttpPostedFile productVariantDownloadFile = fuProductVariantDownload.PostedFile;
                     if ((productVariantDownloadFile != null) && (!String.IsNullOrEmpty(productVariantDownloadFile.FileName)))
                     {
-                        productVariantDownloadBinary = IoCFactory.Resolve<IDownloadManager>().GetDownloadBits(productVariantDownloadFile.InputStream, productVariantDownloadFile.ContentLength);
+                        productVariantDownloadBinary = IoCFactory.Resolve<IDownloadService>().GetDownloadBits(productVariantDownloadFile.InputStream, productVariantDownloadFile.ContentLength);
                         downloadContentType = productVariantDownloadFile.ContentType;
                         downloadFilename = Path.GetFileNameWithoutExtension(productVariantDownloadFile.FileName);
                         downloadExtension = Path.GetExtension(productVariantDownloadFile.FileName);
@@ -401,7 +401,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         productVariantDownload.Filename = downloadFilename;
                         productVariantDownload.Extension = downloadExtension;
                         productVariantDownload.IsNew = true;
-                        IoCFactory.Resolve<IDownloadManager>().UpdateDownload(productVariantDownload);
+                        IoCFactory.Resolve<IDownloadService>().UpdateDownload(productVariantDownload);
                     }
                     else
                     {
@@ -415,7 +415,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                             Extension = downloadExtension,
                             IsNew = true
                         };
-                        IoCFactory.Resolve<IDownloadManager>().InsertDownload(productVariantDownload);
+                        IoCFactory.Resolve<IDownloadService>().InsertDownload(productVariantDownload);
                     }
 
                     productVariantDownloadId = productVariantDownload.DownloadId;
@@ -442,7 +442,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     HttpPostedFile productVariantSampleDownloadFile = fuProductVariantSampleDownload.PostedFile;
                     if ((productVariantSampleDownloadFile != null) && (!String.IsNullOrEmpty(productVariantSampleDownloadFile.FileName)))
                     {
-                        productVariantSampleDownloadBinary = IoCFactory.Resolve<IDownloadManager>().GetDownloadBits(productVariantSampleDownloadFile.InputStream, productVariantSampleDownloadFile.ContentLength);
+                        productVariantSampleDownloadBinary = IoCFactory.Resolve<IDownloadService>().GetDownloadBits(productVariantSampleDownloadFile.InputStream, productVariantSampleDownloadFile.ContentLength);
                         sampleDownloadContentType = productVariantSampleDownloadFile.ContentType;
                         sampleDownloadFilename = Path.GetFileNameWithoutExtension(productVariantSampleDownloadFile.FileName);
                         sampleDownloadExtension = Path.GetExtension(productVariantSampleDownloadFile.FileName);
@@ -457,7 +457,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         productVariantSampleDownload.Filename = sampleDownloadFilename;
                         productVariantSampleDownload.Extension = sampleDownloadExtension;
                         productVariantSampleDownload.IsNew = true;
-                        IoCFactory.Resolve<IDownloadManager>().UpdateDownload(productVariantSampleDownload);
+                        IoCFactory.Resolve<IDownloadService>().UpdateDownload(productVariantSampleDownload);
                     }
                     else
                     {
@@ -471,7 +471,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                             Extension = sampleDownloadExtension,
                             IsNew = true
                         };
-                        IoCFactory.Resolve<IDownloadManager>().InsertDownload(productVariantSampleDownload);
+                        IoCFactory.Resolve<IDownloadService>().InsertDownload(productVariantSampleDownload);
                     }
 
                     productVariantSampleDownloadId = productVariantSampleDownload.DownloadId;
@@ -534,22 +534,22 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 productVariant.DisplayOrder = displayOrder;
                 productVariant.UpdatedOn = nowDT;
 
-                IoCFactory.Resolve<IProductManager>().UpdateProductVariant(productVariant);
+                IoCFactory.Resolve<IProductService>().UpdateProductVariant(productVariant);
 
                 #endregion
             }
             else
             {
                 #region Insert
-                Product product = IoCFactory.Resolve<IProductManager>().GetProductById(this.ProductId);
+                Product product = IoCFactory.Resolve<IProductService>().GetProductById(this.ProductId);
                 if (product != null)
                 {
                     Picture productVariantPicture = null;
                     HttpPostedFile productVariantPictureFile = fuProductVariantPicture.PostedFile;
                     if ((productVariantPictureFile != null) && (!String.IsNullOrEmpty(productVariantPictureFile.FileName)))
                     {
-                        byte[] productVariantPictureBinary = IoCFactory.Resolve<IPictureManager>().GetPictureBits(productVariantPictureFile.InputStream, productVariantPictureFile.ContentLength);
-                        productVariantPicture = IoCFactory.Resolve<IPictureManager>().InsertPicture(productVariantPictureBinary, productVariantPictureFile.ContentType, true);
+                        byte[] productVariantPictureBinary = IoCFactory.Resolve<IPictureService>().GetPictureBits(productVariantPictureFile.InputStream, productVariantPictureFile.ContentLength);
+                        productVariantPicture = IoCFactory.Resolve<IPictureService>().InsertPicture(productVariantPictureBinary, productVariantPictureFile.ContentType, true);
                     }
                     int productVariantPictureId = 0;
                     if (productVariantPicture != null)
@@ -568,7 +568,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         HttpPostedFile productVariantDownloadFile = fuProductVariantDownload.PostedFile;
                         if ((productVariantDownloadFile != null) && (!String.IsNullOrEmpty(productVariantDownloadFile.FileName)))
                         {
-                            productVariantDownloadBinary = IoCFactory.Resolve<IDownloadManager>().GetDownloadBits(productVariantDownloadFile.InputStream, productVariantDownloadFile.ContentLength);
+                            productVariantDownloadBinary = IoCFactory.Resolve<IDownloadService>().GetDownloadBits(productVariantDownloadFile.InputStream, productVariantDownloadFile.ContentLength);
                             downloadContentType = productVariantDownloadFile.ContentType;
                             downloadFilename = Path.GetFileNameWithoutExtension(productVariantDownloadFile.FileName);
                             downloadExtension = Path.GetExtension(productVariantDownloadFile.FileName);
@@ -585,7 +585,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                             Extension = downloadExtension,
                             IsNew = true
                         };
-                        IoCFactory.Resolve<IDownloadManager>().InsertDownload(productVariantDownload);
+                        IoCFactory.Resolve<IDownloadService>().InsertDownload(productVariantDownload);
                         productVariantDownloadId = productVariantDownload.DownloadId;
                     }
 
@@ -602,7 +602,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         HttpPostedFile productVariantSampleDownloadFile = fuProductVariantSampleDownload.PostedFile;
                         if ((productVariantSampleDownloadFile != null) && (!String.IsNullOrEmpty(productVariantSampleDownloadFile.FileName)))
                         {
-                            productVariantSampleDownloadBinary = IoCFactory.Resolve<IDownloadManager>().GetDownloadBits(productVariantSampleDownloadFile.InputStream, productVariantSampleDownloadFile.ContentLength);
+                            productVariantSampleDownloadBinary = IoCFactory.Resolve<IDownloadService>().GetDownloadBits(productVariantSampleDownloadFile.InputStream, productVariantSampleDownloadFile.ContentLength);
                             sampleDownloadContentType = productVariantSampleDownloadFile.ContentType;
                             sampleDownloadFilename = Path.GetFileNameWithoutExtension(productVariantSampleDownloadFile.FileName);
                             sampleDownloadExtension = Path.GetExtension(productVariantSampleDownloadFile.FileName);
@@ -618,7 +618,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                             Extension = sampleDownloadExtension,
                             IsNew = true
                         };
-                        IoCFactory.Resolve<IDownloadManager>().InsertDownload(productVariantSampleDownload);
+                        IoCFactory.Resolve<IDownloadService>().InsertDownload(productVariantSampleDownload);
                         productVariantSampleDownloadId = productVariantSampleDownload.DownloadId;
                     }
 
@@ -684,7 +684,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         UpdatedOn = nowDT
                     };
 
-                    IoCFactory.Resolve<IProductManager>().InsertProductVariant(productVariant);
+                    IoCFactory.Resolve<IProductService>().InsertProductVariant(productVariant);
                 }
                 else
                 {
@@ -720,7 +720,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                     bool allFieldsAreEmpty = (string.IsNullOrEmpty(name) && string.IsNullOrEmpty(description));
 
-                    var content = IoCFactory.Resolve<IProductManager>().GetProductVariantLocalizedByProductVariantIdAndLanguageId(productVariant.ProductVariantId, languageId);
+                    var content = IoCFactory.Resolve<IProductService>().GetProductVariantLocalizedByProductVariantIdAndLanguageId(productVariant.ProductVariantId, languageId);
                     if (content == null)
                     {
                         if (!allFieldsAreEmpty && languageId > 0)
@@ -733,7 +733,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                                 Name = name,
                                 Description = description
                             };
-                            IoCFactory.Resolve<IProductManager>().InsertProductVariantLocalized(content);
+                            IoCFactory.Resolve<IProductService>().InsertProductVariantLocalized(content);
                         }
                     }
                     else
@@ -743,7 +743,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                             content.LanguageId = languageId;
                             content.Name = name;
                             content.Description = description;
-                            IoCFactory.Resolve<IProductManager>().UpdateProductVariantLocalized(content);
+                            IoCFactory.Resolve<IProductService>().UpdateProductVariantLocalized(content);
                         }
                     }
                 }
@@ -760,7 +760,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                 int languageId = int.Parse(lblLanguageId.Text);
 
-                var content = IoCFactory.Resolve<IProductManager>().GetProductVariantLocalizedByProductVariantIdAndLanguageId(this.ProductVariantId, languageId);
+                var content = IoCFactory.Resolve<IProductService>().GetProductVariantLocalizedByProductVariantIdAndLanguageId(this.ProductVariantId, languageId);
 
                 if (content != null)
                 {
@@ -774,13 +774,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                ProductVariant productVariant = IoCFactory.Resolve<IProductManager>().GetProductVariantById(this.ProductVariantId);
+                ProductVariant productVariant = IoCFactory.Resolve<IProductService>().GetProductVariantById(this.ProductVariantId);
                 if (productVariant != null)
                 {
-                    IoCFactory.Resolve<IPictureManager>().DeletePicture(productVariant.PictureId);
+                    IoCFactory.Resolve<IPictureService>().DeletePicture(productVariant.PictureId);
 
                     productVariant.PictureId = 0;
-                    IoCFactory.Resolve<IProductManager>().UpdateProductVariant(productVariant);
+                    IoCFactory.Resolve<IProductService>().UpdateProductVariant(productVariant);
                     BindData();
                 }
             }
@@ -794,7 +794,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                ProductVariant productVariant = IoCFactory.Resolve<IProductManager>().GetProductVariantById(this.ProductVariantId);
+                ProductVariant productVariant = IoCFactory.Resolve<IProductService>().GetProductVariantById(this.ProductVariantId);
                 if (productVariant != null)
                 {
                     Download download = productVariant.Download;
@@ -805,7 +805,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         download.Filename = string.Empty;
                         download.Extension = string.Empty;
                         download.IsNew = true;
-                        IoCFactory.Resolve<IDownloadManager>().UpdateDownload(download);
+                        IoCFactory.Resolve<IDownloadService>().UpdateDownload(download);
                     }
 
                     BindData();
@@ -821,7 +821,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                ProductVariant productVariant = IoCFactory.Resolve<IProductManager>().GetProductVariantById(this.ProductVariantId);
+                ProductVariant productVariant = IoCFactory.Resolve<IProductService>().GetProductVariantById(this.ProductVariantId);
                 if (productVariant != null)
                 {
                     Download download = productVariant.SampleDownload;
@@ -832,7 +832,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         download.Filename = string.Empty;
                         download.Extension = string.Empty;
                         download.IsNew = true;
-                        IoCFactory.Resolve<IDownloadManager>().UpdateDownload(download);
+                        IoCFactory.Resolve<IDownloadService>().UpdateDownload(download);
                     }
                     BindData();
                 }

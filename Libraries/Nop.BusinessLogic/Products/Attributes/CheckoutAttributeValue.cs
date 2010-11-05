@@ -91,7 +91,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                 if (languageId > 0)
                 {
                     if (_cavLocalized == null)
-                        _cavLocalized = IoCFactory.Resolve<ICheckoutAttributeManager>().GetCheckoutAttributeValueLocalizedByCheckoutAttributeValueId(this.CheckoutAttributeValueId);
+                        _cavLocalized = IoCFactory.Resolve<ICheckoutAttributeService>().GetCheckoutAttributeValueLocalizedByCheckoutAttributeValueId(this.CheckoutAttributeValueId);
 
                     var temp1 = _cavLocalized.FirstOrDefault(cavl => cavl.LanguageId == languageId);
                     if (temp1 != null && !String.IsNullOrWhiteSpace(temp1.Name))
@@ -123,7 +123,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         {
             get
             {
-                return IoCFactory.Resolve<ICheckoutAttributeManager>().GetCheckoutAttributeById(this.CheckoutAttributeId);
+                return IoCFactory.Resolve<ICheckoutAttributeService>().GetCheckoutAttributeById(this.CheckoutAttributeId);
             }
         }
 

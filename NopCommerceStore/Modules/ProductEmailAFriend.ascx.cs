@@ -51,19 +51,19 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void BindData()
         {
-            var product = IoCFactory.Resolve<IProductManager>().GetProductById(this.ProductId);
+            var product = IoCFactory.Resolve<IProductService>().GetProductById(this.ProductId);
             if (product != null)
             {
                 hlProduct.NavigateUrl = SEOHelper.GetProductUrl(product);
                 hlProduct.Text = Server.HtmlEncode(product.LocalizedName);
                 lShortDescription.Text = product.LocalizedShortDescription;
 
-                if(NopContext.Current.User == null && IoCFactory.Resolve<ICustomerManager>().AllowAnonymousUsersToEmailAFriend)
+                if(NopContext.Current.User == null && IoCFactory.Resolve<ICustomerService>().AllowAnonymousUsersToEmailAFriend)
                 {
-                    IoCFactory.Resolve<ICustomerManager>().CreateAnonymousUser();
+                    IoCFactory.Resolve<ICustomerService>().CreateAnonymousUser();
                 }
 
-                if(NopContext.Current.User == null || (NopContext.Current.User.IsGuest && !IoCFactory.Resolve<ICustomerManager>().AllowAnonymousUsersToEmailAFriend))
+                if(NopContext.Current.User == null || (NopContext.Current.User.IsGuest && !IoCFactory.Resolve<ICustomerService>().AllowAnonymousUsersToEmailAFriend))
                 {
                     lblEmailAFriend.Text = GetLocaleResourceString("Products.OnlyRegisteredUsersCanEmailAFriend");
                     pnlFriendsEmail.Visible = false;
@@ -91,15 +91,15 @@ namespace NopSolutions.NopCommerce.Web.Modules
             {
                 try
                 {
-                    var product = IoCFactory.Resolve<IProductManager>().GetProductById(this.ProductId);
+                    var product = IoCFactory.Resolve<IProductService>().GetProductById(this.ProductId);
                     if (product != null)
                     {
-                        if (NopContext.Current.User == null && IoCFactory.Resolve<ICustomerManager>().AllowAnonymousUsersToEmailAFriend)
+                        if (NopContext.Current.User == null && IoCFactory.Resolve<ICustomerService>().AllowAnonymousUsersToEmailAFriend)
                         {
-                            IoCFactory.Resolve<ICustomerManager>().CreateAnonymousUser();
+                            IoCFactory.Resolve<ICustomerService>().CreateAnonymousUser();
                         }
 
-                        if (NopContext.Current.User == null || (NopContext.Current.User.IsGuest && !IoCFactory.Resolve<ICustomerManager>().AllowAnonymousUsersToEmailAFriend))
+                        if (NopContext.Current.User == null || (NopContext.Current.User.IsGuest && !IoCFactory.Resolve<ICustomerService>().AllowAnonymousUsersToEmailAFriend))
                         {
                             lblEmailAFriend.Text = GetLocaleResourceString("Products.OnlyRegisteredUsersCanEmailAFriend");
                             return;
@@ -107,9 +107,9 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
                         string friendsEmail = txtFriendsEmail.Text.Trim();
                         string personalMessage = txtPersonalMessage.Text.Trim();
-                        personalMessage = IoCFactory.Resolve<IProductManager>().FormatEmailAFriendText(personalMessage);
+                        personalMessage = IoCFactory.Resolve<IProductService>().FormatEmailAFriendText(personalMessage);
 
-                        IoCFactory.Resolve<IMessageManager>().SendProductEmailAFriendMessage(NopContext.Current.User,
+                        IoCFactory.Resolve<IMessageService>().SendProductEmailAFriendMessage(NopContext.Current.User,
                             NopContext.Current.WorkingLanguage.LanguageId, product,
                             friendsEmail, personalMessage);
 

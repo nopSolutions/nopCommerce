@@ -98,7 +98,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
         {
             get
             {
-                return IoCFactory.Resolve<ICustomerManager>().GetCustomerById(this.CustomerId);
+                return IoCFactory.Resolve<ICustomerService>().GetCustomerById(this.CustomerId);
             }
         }
 

@@ -47,9 +47,9 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void BindData()
         {
-            if (IoCFactory.Resolve<INewsManager>().NewsEnabled && IoCFactory.Resolve<INewsManager>().ShowNewsOnMainPage)
+            if (IoCFactory.Resolve<INewsService>().NewsEnabled && IoCFactory.Resolve<INewsService>().ShowNewsOnMainPage)
             {
-                var newsCollection = IoCFactory.Resolve<INewsManager>().GetAllNews(NopContext.Current.WorkingLanguage.LanguageId, IoCFactory.Resolve<INewsManager>().MainPageNewsCount);
+                var newsCollection = IoCFactory.Resolve<INewsService>().GetAllNews(NopContext.Current.WorkingLanguage.LanguageId, IoCFactory.Resolve<INewsService>().MainPageNewsCount);
                 if (newsCollection.Count > 0)
                 {
                     rptrNews.DataSource = newsCollection;

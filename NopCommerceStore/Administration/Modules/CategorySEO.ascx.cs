@@ -40,7 +40,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            var category = IoCFactory.Resolve<ICategoryManager>().GetCategoryById(this.CategoryId);
+            var category = IoCFactory.Resolve<ICategoryService>().GetCategoryById(this.CategoryId);
 
             if (this.HasLocalizableContent)
             {
@@ -84,7 +84,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public void SaveInfo(int catId)
         {
-            var category = IoCFactory.Resolve<ICategoryManager>().GetCategoryById(catId);
+            var category = IoCFactory.Resolve<ICategoryService>().GetCategoryById(catId);
 
             if (category != null)
             {
@@ -94,7 +94,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 category.SEName = txtSEName.Text;
                 category.PageSize = txtPageSize.Value;
                 category.UpdatedOn = DateTime.UtcNow;
-                IoCFactory.Resolve<ICategoryManager>().UpdateCategory(category);
+                IoCFactory.Resolve<ICategoryService>().UpdateCategory(category);
             }
 
             SaveLocalizableContent(category);
@@ -129,7 +129,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         string.IsNullOrEmpty(metaTitle) && 
                         string.IsNullOrEmpty(seName));
 
-                    var content = IoCFactory.Resolve<ICategoryManager>().GetCategoryLocalizedByCategoryIdAndLanguageId(category.CategoryId, languageId);
+                    var content = IoCFactory.Resolve<ICategoryService>().GetCategoryLocalizedByCategoryIdAndLanguageId(category.CategoryId, languageId);
                     if (content == null)
                     {
                         if (!allFieldsAreEmpty && languageId > 0)
@@ -145,7 +145,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                                 SEName = seName
                             };
 
-                            IoCFactory.Resolve<ICategoryManager>().InsertCategoryLocalized(content);
+                            IoCFactory.Resolve<ICategoryService>().InsertCategoryLocalized(content);
                         }
                     }
                     else
@@ -158,7 +158,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                             content.MetaTitle = metaTitle;
                             content.SEName = seName;
 
-                            IoCFactory.Resolve<ICategoryManager>().UpdateCategoryLocalized(content);
+                            IoCFactory.Resolve<ICategoryService>().UpdateCategoryLocalized(content);
                         }
                     }
                 }
@@ -177,7 +177,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                 int languageId = int.Parse(lblLanguageId.Text);
 
-                var content = IoCFactory.Resolve<ICategoryManager>().GetCategoryLocalizedByCategoryIdAndLanguageId(this.CategoryId, languageId);
+                var content = IoCFactory.Resolve<ICategoryService>().GetCategoryLocalizedByCategoryIdAndLanguageId(this.CategoryId, languageId);
                 if (content != null)
                 {
                     txtLocalizedMetaKeywords.Text = content.MetaKeywords;

@@ -72,7 +72,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             }
             this.lblAllowedTokens.Text = allowedTokensString.ToString();
 
-            Pricelist pricelist = IoCFactory.Resolve<IProductManager>().GetPricelistById(this.PricelistId);
+            Pricelist pricelist = IoCFactory.Resolve<IProductService>().GetPricelistById(this.PricelistId);
             if (pricelist != null)
             {
                 this.txtAdminNotes.Text = pricelist.AdminNotes;
@@ -93,7 +93,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 this.ddlFormatLocalization.SelectedValue = pricelist.FormatLocalization;
 
                 var productVariants = new List<ProductVariant>();
-                var products = IoCFactory.Resolve<IProductManager>().GetAllProducts();
+                var products = IoCFactory.Resolve<IProductService>().GetAllProducts();
                 foreach (Product product in products)
                 {
                     productVariants.AddRange(product.ProductVariants);
@@ -109,7 +109,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 ddlFormatLocalization.SelectedValue = System.Globalization.CultureInfo.CurrentCulture.IetfLanguageTag;
 
                 var productVariants = new List<ProductVariant>();
-                var products = IoCFactory.Resolve<IProductManager>().GetAllProducts();
+                var products = IoCFactory.Resolve<IProductService>().GetAllProducts();
                 foreach (Product product in products)
                 {
                     productVariants.AddRange(product.ProductVariants);
@@ -143,7 +143,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             this.ddlAffiliate.Items.Clear();
             ListItem ddlAffiliateItem = new ListItem(GetLocaleResourceString("Admin.PricelistInfo.Affiliate.None"), "0");
             this.ddlAffiliate.Items.Add(ddlAffiliateItem);
-            var affiliateCollection = IoCFactory.Resolve<IAffiliateManager>().GetAllAffiliates();
+            var affiliateCollection = IoCFactory.Resolve<IAffiliateService>().GetAllAffiliates();
             foreach (var affiliate in affiliateCollection)
             {
                 ListItem ddlAffiliateItem2 = new ListItem(affiliate.LastName + " (ID=" + affiliate.AffiliateId.ToString() + ")", affiliate.AffiliateId.ToString());
@@ -182,7 +182,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     int productVariantPricelistId = 0;
                     int.TryParse(hfProductVariantPricelistId.Value, out productVariantPricelistId);
 
-                    ProductVariantPricelist productVariantPricelist = IoCFactory.Resolve<IProductManager>().GetProductVariantPricelistById(productVariantPricelistId);
+                    ProductVariantPricelist productVariantPricelist = IoCFactory.Resolve<IProductService>().GetProductVariantPricelistById(productVariantPricelistId);
                     if (chkSelected.Checked)
                     {
                         int productVariantId = 0;
@@ -198,7 +198,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                             productVariantPricelist.PriceAdjustmentTypeId = (int)priceAdjustmentType;
                             productVariantPricelist.PriceAdjustment = priceAdjustment;
                             productVariantPricelist.UpdatedOn = DateTime.UtcNow;
-                            IoCFactory.Resolve<IProductManager>().UpdateProductVariantPricelist(productVariantPricelist);
+                            IoCFactory.Resolve<IProductService>().UpdateProductVariantPricelist(productVariantPricelist);
                         }
                         else
                         {
@@ -208,14 +208,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                             productVariantPricelist.PriceAdjustmentTypeId = (int)priceAdjustmentType;
                             productVariantPricelist.PriceAdjustment = priceAdjustment;
                             productVariantPricelist.UpdatedOn = DateTime.UtcNow;
-                            IoCFactory.Resolve<IProductManager>().InsertProductVariantPricelist(productVariantPricelist);
+                            IoCFactory.Resolve<IProductService>().InsertProductVariantPricelist(productVariantPricelist);
                         }
                     }
                     else
                     {
                         if (productVariantPricelist != null)
                         {
-                            IoCFactory.Resolve<IProductManager>().DeleteProductVariantPricelist(productVariantPricelistId);
+                            IoCFactory.Resolve<IProductService>().DeleteProductVariantPricelist(productVariantPricelistId);
                         }
                     }
                 }
@@ -237,7 +237,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 {
                     CommonHelper.FillDropDownWithEnum(ddlPriceAdjustmentType, typeof(PriceAdjustmentTypeEnum));
 
-                    ProductVariantPricelist productVariantPricelist = IoCFactory.Resolve<IProductManager>().GetProductVariantPricelist(
+                    ProductVariantPricelist productVariantPricelist = IoCFactory.Resolve<IProductService>().GetProductVariantPricelist(
                         productVariant.ProductVariantId, this.PricelistId);
 
                     if (productVariantPricelist != null)
@@ -265,7 +265,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             PriceAdjustmentTypeEnum priceAdjustmentType = (PriceAdjustmentTypeEnum)Enum.ToObject(typeof(PriceAdjustmentTypeEnum), int.Parse(this.ddlPriceAdjustmentType.SelectedItem.Value));
             decimal priceAdjustment = txtPriceAdjustment.Value;
 
-            Pricelist pricelist = IoCFactory.Resolve<IProductManager>().GetPricelistById(this.PricelistId);
+            Pricelist pricelist = IoCFactory.Resolve<IProductService>().GetPricelistById(this.PricelistId);
             if (pricelist != null)
             {
                 pricelist.ExportModeId = (int)exportMode;
@@ -286,7 +286,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 pricelist.OverrideIndivAdjustment = chkOverrideIndivAdjustment.Checked;
                 pricelist.UpdatedOn = DateTime.UtcNow;
 
-                IoCFactory.Resolve<IProductManager>().UpdatePricelist(pricelist);
+                IoCFactory.Resolve<IProductService>().UpdatePricelist(pricelist);
 
                 SavePricelistChanges(pricelist.PricelistId);
 
@@ -313,7 +313,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 pricelist.CreatedOn = DateTime.UtcNow;
                 pricelist.UpdatedOn = DateTime.UtcNow;
 
-                IoCFactory.Resolve<IProductManager>().InsertPricelist(pricelist);
+                IoCFactory.Resolve<IProductService>().InsertPricelist(pricelist);
 
                 SavePricelistChanges(pricelist.PricelistId);
             }

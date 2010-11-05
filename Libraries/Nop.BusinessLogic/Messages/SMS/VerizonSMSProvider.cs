@@ -24,19 +24,19 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages.SMS
         {
             try
             {
-                var emailAccount = IoCFactory.Resolve<IMessageManager>().DefaultEmailAccount;
+                var emailAccount = IoCFactory.Resolve<IMessageService>().DefaultEmailAccount;
 
                 var from = new MailAddress(emailAccount.Email, emailAccount.DisplayName);
                 var to = new MailAddress(VerizonEmail);
 
-                IoCFactory.Resolve<IMessageManager>().InsertQueuedEmail(5, from, to,
+                IoCFactory.Resolve<IMessageService>().InsertQueuedEmail(5, from, to,
                     string.Empty, string.Empty, IoCFactory.Resolve<ISettingManager>().StoreName, text, 
                     DateTime.UtcNow, 0, null, emailAccount.EmailAccountId);
                 return true;
             }
             catch (Exception ex)
             {
-                IoCFactory.Resolve<ILogManager>().InsertLog(LogTypeEnum.Unknown, ex.Message, ex);
+                IoCFactory.Resolve<ILogService>().InsertLog(LogTypeEnum.Unknown, ex.Message, ex);
                 return false;
             }
         }

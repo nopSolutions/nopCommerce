@@ -44,9 +44,9 @@ namespace NopSolutions.NopCommerce.Web.Modules
         protected void BindData()
         {
             //get poll
-            var poll = IoCFactory.Resolve<IPollManager>().GetPollById(this.PollId);
+            var poll = IoCFactory.Resolve<IPollService>().GetPollById(this.PollId);
             if (poll == null && !String.IsNullOrEmpty(this.SystemKeyword))
-                poll = IoCFactory.Resolve<IPollManager>().GetPollBySystemKeyword(this.SystemKeyword);
+                poll = IoCFactory.Resolve<IPollService>().GetPollBySystemKeyword(this.SystemKeyword);
 
             this.Visible = poll != null && poll.Published;
         }

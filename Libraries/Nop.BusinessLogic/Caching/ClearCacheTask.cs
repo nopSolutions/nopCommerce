@@ -38,7 +38,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Caching
             }
             catch (Exception ex)
             {
-                IoCFactory.Resolve<ILogManager>().InsertLog(LogTypeEnum.AdministrationArea, "Error clearing cache.", ex);
+                IoCFactory.Resolve<ILogService>().InsertLog(LogTypeEnum.AdministrationArea, "Error clearing cache.", ex);
             }
         }
     }

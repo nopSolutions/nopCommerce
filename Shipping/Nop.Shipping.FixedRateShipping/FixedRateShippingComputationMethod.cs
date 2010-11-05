@@ -65,7 +65,7 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.FisedRateShippingCM
                 return shippingOptions;
             }
 
-            var shippingMethods = IoCFactory.Resolve<IShippingManager>().GetAllShippingMethods(shipmentPackage.ShippingAddress.CountryId);
+            var shippingMethods = IoCFactory.Resolve<IShippingService>().GetAllShippingMethods(shipmentPackage.ShippingAddress.CountryId);
             foreach (var shippingMethod in shippingMethods)
             {
                 var shippingOption = new ShippingOption();
@@ -95,7 +95,7 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.FisedRateShippingCM
                 return null;
 
 
-            var shippingMethods = IoCFactory.Resolve<IShippingManager>().GetAllShippingMethods(shipmentPackage.ShippingAddress.CountryId);
+            var shippingMethods = IoCFactory.Resolve<IShippingService>().GetAllShippingMethods(shipmentPackage.ShippingAddress.CountryId);
             List<decimal> rates = new List<decimal>();
             foreach (var shippingMethod in shippingMethods)
             {

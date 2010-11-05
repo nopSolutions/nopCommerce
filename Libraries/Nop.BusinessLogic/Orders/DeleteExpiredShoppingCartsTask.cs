@@ -46,7 +46,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
 
             DateTime olderThan = DateTime.UtcNow;
             olderThan = olderThan.AddMinutes(-(double)this._deleteExpiredShoppingCartsOlderThanMinutes);
-            IoCFactory.Resolve<IShoppingCartManager>().DeleteExpiredShoppingCartItems(olderThan);
+            IoCFactory.Resolve<IShoppingCartService>().DeleteExpiredShoppingCartItems(olderThan);
         }
     }
 }

@@ -56,7 +56,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         void BindGrid()
         {
-            var paymentMethods = IoCFactory.Resolve<IPaymentManager>().GetAllPaymentMethods();
+            var paymentMethods = IoCFactory.Resolve<IPaymentService>().GetAllPaymentMethods();
             gvPaymentMethods.DataSource = paymentMethods;
             gvPaymentMethods.DataBind();
         }

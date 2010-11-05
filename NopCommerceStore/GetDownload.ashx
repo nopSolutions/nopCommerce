@@ -28,21 +28,21 @@ public class GetDownload : IHttpHandler
 {
     private void processOrderProductVariantDownload(HttpContext context, Guid orderProductVariantGuid)
     {
-        OrderProductVariant orderProductVariant = IoCFactory.Resolve<IOrderManager>().GetOrderProductVariantByGuid(orderProductVariantGuid);
+        OrderProductVariant orderProductVariant = IoCFactory.Resolve<IOrderService>().GetOrderProductVariantByGuid(orderProductVariantGuid);
         if (orderProductVariant == null)
         {
             returnError(context, "Order product variant doesn't exist.");
             return;
         }
 
-        Order order = IoCFactory.Resolve<IOrderManager>().GetOrderById(orderProductVariant.OrderId);
+        Order order = IoCFactory.Resolve<IOrderService>().GetOrderById(orderProductVariant.OrderId);
         if (order == null)
         {
             returnError(context, "Order doesn't exist.");
             return;
         }
 
-        if (!IoCFactory.Resolve<IOrderManager>().IsDownloadAllowed(orderProductVariant))
+        if (!IoCFactory.Resolve<IOrderService>().IsDownloadAllowed(orderProductVariant))
         {
             returnError(context, "Downloads are not allowed");
             return;
@@ -102,7 +102,7 @@ public class GetDownload : IHttpHandler
             }
 
             orderProductVariant.DownloadCount++;
-            IoCFactory.Resolve<IOrderManager>().UpdateOrderProductVariant(orderProductVariant);
+            IoCFactory.Resolve<IOrderService>().UpdateOrderProductVariant(orderProductVariant);
 
             context.Response.Redirect(download.DownloadUrl);
         }
@@ -148,13 +148,13 @@ public class GetDownload : IHttpHandler
             }
 
             orderProductVariant.DownloadCount++;
-            IoCFactory.Resolve<IOrderManager>().UpdateOrderProductVariant(orderProductVariant);
+            IoCFactory.Resolve<IOrderService>().UpdateOrderProductVariant(orderProductVariant);
         }
     }
 
     private void processSampleDownloadProductVariant(HttpContext context, int productVariantId)
     {
-        ProductVariant productVariant = IoCFactory.Resolve<IProductManager>().GetProductVariantById(productVariantId);
+        ProductVariant productVariant = IoCFactory.Resolve<IProductService>().GetProductVariantById(productVariantId);
         if (productVariant == null)
         {
             returnError(context, string.Format("Product variant doesn't exist."));

@@ -73,7 +73,7 @@ namespace NopSolutions.NopCommerce.HttpModules
                         var clientIP = new BannedIpAddress();
                         clientIP.Address = application.Request.UserHostAddress;
                         // On any unexpected error we let visitor to visit website
-                        if (IoCFactory.Resolve<IBlacklistManager>().IsIpAddressBanned(clientIP))
+                        if (IoCFactory.Resolve<IBlacklistService>().IsIpAddressBanned(clientIP))
                         {
                             // Blocking process
 

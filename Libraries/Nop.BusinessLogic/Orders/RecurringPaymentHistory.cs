@@ -65,7 +65,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         {
             get
             {
-                return IoCFactory.Resolve<IOrderManager>().GetOrderById(this.OrderId);
+                return IoCFactory.Resolve<IOrderService>().GetOrderById(this.OrderId);
             }
         }
 

@@ -39,7 +39,7 @@ namespace NopSolutions.NopCommerce.Web
         {
             CommonHelper.SetResponseNoCache(Response);
 
-            if (!IoCFactory.Resolve<IProductManager>().RecentlyViewedProductsEnabled)
+            if (!IoCFactory.Resolve<IProductService>().RecentlyViewedProductsEnabled)
             {
                 Response.Redirect(CommonHelper.GetStoreLocation());
             }

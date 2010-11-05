@@ -100,14 +100,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         private void BindGrid()
         {
-            var pictures = IoCFactory.Resolve<IPictureManager>().GetPictures(int.MaxValue, 0);
+            var pictures = IoCFactory.Resolve<IPictureService>().GetPictures(int.MaxValue, 0);
             gvPictures.DataSource = pictures;
             gvPictures.DataBind();
         }
 
         private void BindSizeRepeater(int pictureID)
         {
-            List<String> urls = IoCFactory.Resolve<IPictureManager>().GetPictureUrls(pictureID);
+            List<String> urls = IoCFactory.Resolve<IPictureService>().GetPictureUrls(pictureID);
             repeaterPictureSizes.DataSource = urls;
             repeaterPictureSizes.DataBind();
         }
@@ -126,7 +126,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 Image imagePicture = e.Row.FindControl("imagePicture") as Image;
                 if (imagePicture != null)
-                    imagePicture.ImageUrl = IoCFactory.Resolve<IPictureManager>().GetPictureUrl(picture, 100);
+                    imagePicture.ImageUrl = IoCFactory.Resolve<IPictureService>().GetPictureUrl(picture, 100);
 
             }
         }
@@ -146,7 +146,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             
             if (width > 10 && PictureID > 0)
             {
-                IoCFactory.Resolve<IPictureManager>().GetPictureUrl(PictureID, width);
+                IoCFactory.Resolve<IPictureService>().GetPictureUrl(PictureID, width);
                 BindSizeRepeater(PictureID);
 
             }
@@ -158,9 +158,9 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
             if (!string.IsNullOrEmpty(fuNewPicture.FileName))
             {
-                byte[] categoryPictureBinary = IoCFactory.Resolve<IPictureManager>().GetPictureBits(categoryPictureFile.InputStream, categoryPictureFile.ContentLength);
+                byte[] categoryPictureBinary = IoCFactory.Resolve<IPictureService>().GetPictureBits(categoryPictureFile.InputStream, categoryPictureFile.ContentLength);
 
-                Picture picture = IoCFactory.Resolve<IPictureManager>().InsertPicture(categoryPictureBinary,
+                Picture picture = IoCFactory.Resolve<IPictureService>().InsertPicture(categoryPictureBinary,
                     categoryPictureFile.ContentType, true);
 
                 if (picture != null)

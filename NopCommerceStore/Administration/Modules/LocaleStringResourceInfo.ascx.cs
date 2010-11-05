@@ -36,7 +36,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             var localeStringResource = IoCFactory.Resolve<ILocaleStringResourceManager>().GetLocaleStringResourceById(this.LocaleStringResourceId);
             if (localeStringResource != null)
             {
-                Language language = IoCFactory.Resolve<ILanguageManager>().GetLanguageById(localeStringResource.LanguageId);
+                Language language = IoCFactory.Resolve<ILanguageService>().GetLanguageById(localeStringResource.LanguageId);
                 if (language != null)
                     lblLanguage.Text = Server.HtmlEncode(language.Name);
                 else
@@ -47,7 +47,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             }
             else
             {
-                Language language = IoCFactory.Resolve<ILanguageManager>().GetLanguageById(this.LanguageId);
+                Language language = IoCFactory.Resolve<ILanguageService>().GetLanguageById(this.LanguageId);
                 if (language != null)
                     lblLanguage.Text = Server.HtmlEncode(language.Name);
                 else

@@ -42,7 +42,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         void BindGrid()
         {
-            var taxCategoryCollection = IoCFactory.Resolve<ITaxCategoryManager>().GetAllTaxCategories();
+            var taxCategoryCollection = IoCFactory.Resolve<ITaxCategoryService>().GetAllTaxCategories();
             gvTaxCategories.DataSource = taxCategoryCollection;
             gvTaxCategories.DataBind();
         }

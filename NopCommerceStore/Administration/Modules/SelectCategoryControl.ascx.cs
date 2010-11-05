@@ -29,7 +29,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             ddlCategories.Items.Clear();
             ddlCategories.Items.Add(new ListItem(this.EmptyItemText, "0"));
 
-            var categories = IoCFactory.Resolve<ICategoryManager>().GetAllCategories();
+            var categories = IoCFactory.Resolve<ICategoryService>().GetAllCategories();
             foreach (var category in categories)
             {
                 string catName = GetCategoryFullName(category);

@@ -45,16 +45,16 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory.ExchangeRates
             if (lastUpdateTime.AddHours(1) < DateTime.UtcNow)
             {
                 //update rates each one hour
-                var exchangeRates = IoCFactory.Resolve<ICurrencyManager>().GetCurrencyLiveRates(IoCFactory.Resolve<ICurrencyManager>().PrimaryExchangeRateCurrency.CurrencyCode);
+                var exchangeRates = IoCFactory.Resolve<ICurrencyService>().GetCurrencyLiveRates(IoCFactory.Resolve<ICurrencyService>().PrimaryExchangeRateCurrency.CurrencyCode);
 
                 foreach (var exchageRate in exchangeRates)
                 {
-                    Currency currency = IoCFactory.Resolve<ICurrencyManager>().GetCurrencyByCode(exchageRate.CurrencyCode);
+                    Currency currency = IoCFactory.Resolve<ICurrencyService>().GetCurrencyByCode(exchageRate.CurrencyCode);
                     if (currency != null)
                     {
                         currency.Rate = exchageRate.Rate;
                         currency.UpdatedOn = DateTime.UtcNow;
-                        IoCFactory.Resolve<ICurrencyManager>().UpdateCurrency(currency);
+                        IoCFactory.Resolve<ICurrencyService>().UpdateCurrency(currency);
                     }
                 }
 

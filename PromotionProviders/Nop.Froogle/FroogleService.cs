@@ -60,10 +60,10 @@ namespace NopSolutions.NopCommerce.Froogle
                 writer.WriteElementString("description", "Information about products");
 
 
-                var products = IoCFactory.Resolve<IProductManager>().GetAllProducts(false);
+                var products = IoCFactory.Resolve<IProductService>().GetAllProducts(false);
                 foreach (var product in products)
                 {
-                    var productVariants = IoCFactory.Resolve<IProductManager>().GetProductVariantsByProductId(product.ProductId, false);
+                    var productVariants = IoCFactory.Resolve<IProductService>().GetProductVariantsByProductId(product.ProductId, false);
 
                     foreach (var productVariant in productVariants)
                     {
@@ -86,11 +86,11 @@ namespace NopSolutions.NopCommerce.Froogle
                         writer.WriteElementString("g", "expiration_date", googleBaseNamespace, DateTime.Now.AddDays(28).ToString("yyyy-MM-dd"));
                         writer.WriteElementString("g", "id", googleBaseNamespace, productVariant.ProductVariantId.ToString());
                         string imageUrl = string.Empty;
-                        var pictures = IoCFactory.Resolve<IPictureManager>().GetPicturesByProductId(product.ProductId, 1);
+                        var pictures = IoCFactory.Resolve<IPictureService>().GetPicturesByProductId(product.ProductId, 1);
                         if (pictures.Count > 0)
-                            imageUrl = IoCFactory.Resolve<IPictureManager>().GetPictureUrl(pictures[0], IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("PromotionProvider.Froogle.ProductThumbnailImageSize"), true);
+                            imageUrl = IoCFactory.Resolve<IPictureService>().GetPictureUrl(pictures[0], IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("PromotionProvider.Froogle.ProductThumbnailImageSize"), true);
                         writer.WriteElementString("g", "image_link", googleBaseNamespace, imageUrl);
-                        decimal price = IoCFactory.Resolve<ICurrencyManager>().ConvertCurrency(productVariant.Price, IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency, FroogleService.UsedCurrency);
+                        decimal price = IoCFactory.Resolve<ICurrencyService>().ConvertCurrency(productVariant.Price, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency, FroogleService.UsedCurrency);
                         writer.WriteElementString("g", "price", googleBaseNamespace, price.ToString(new CultureInfo("en-US", false).NumberFormat));
                         
                         //uncomment and set your product_type attribute
@@ -101,7 +101,7 @@ namespace NopSolutions.NopCommerce.Froogle
 
                         //if (productVariant.Weight != decimal.Zero)
                         //{
-                        //    writer.WriteElementString("g", "weight", googleBaseNamespace, string.Format(CultureInfo.InvariantCulture, "{0} {1}", productVariant.Weight.ToString(new CultureInfo("en-US", false).NumberFormat), IoCFactory.Resolve<IMeasureManager>().BaseWeightIn.SystemKeyword));
+                        //    writer.WriteElementString("g", "weight", googleBaseNamespace, string.Format(CultureInfo.InvariantCulture, "{0} {1}", productVariant.Weight.ToString(new CultureInfo("en-US", false).NumberFormat), IoCFactory.Resolve<IMeasureService>().BaseWeightIn.SystemKeyword));
                         //}
                         writer.WriteEndElement(); // item
                     }
@@ -121,9 +121,9 @@ namespace NopSolutions.NopCommerce.Froogle
             get
             {
                 int currencyId = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("PromotionProvider.Froogle.Currency");
-                var currency = IoCFactory.Resolve<ICurrencyManager>().GetCurrencyById(currencyId);
+                var currency = IoCFactory.Resolve<ICurrencyService>().GetCurrencyById(currencyId);
                 if (currency == null || !currency.Published)
-                    currency = IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency;
+                    currency = IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency;
                 return currency;
             }
             set

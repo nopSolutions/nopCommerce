@@ -72,7 +72,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                IoCFactory.Resolve<ICountryManager>().DeleteCountry(this.CountryId);
+                IoCFactory.Resolve<ICountryService>().DeleteCountry(this.CountryId);
                 Response.Redirect("Countries.aspx");
             }
             catch (Exception exc)

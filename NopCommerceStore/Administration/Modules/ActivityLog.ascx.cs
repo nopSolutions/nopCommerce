@@ -93,7 +93,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             var allItem = new ListItem(GetLocaleResourceString("Admin.ActivityLog.AllActivityLogType"), "0");
             ddlActivityLogType.Items.Add(allItem);
 
-            var activityLogTypes = IoCFactory.Resolve<ICustomerActivityManager>().GetAllActivityTypes();
+            var activityLogTypes = IoCFactory.Resolve<ICustomerActivityService>().GetAllActivityTypes();
             foreach (var activityType in activityLogTypes)
             {
                 var item = new ListItem(activityType.Name, activityType.ActivityLogTypeId.ToString());
@@ -120,7 +120,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             string customerName = txtCustomerName.Text.Trim();
 
             int activityLogTypeId = int.Parse(this.ddlActivityLogType.SelectedItem.Value);
-            var activityLogs = IoCFactory.Resolve<ICustomerActivityManager>().GetAllActivities(
+            var activityLogs = IoCFactory.Resolve<ICustomerActivityService>().GetAllActivities(
                 startDate, endDate, customerEmail, customerName, activityLogTypeId,
                  0, int.MaxValue);
 
@@ -152,7 +152,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         private void BindData()
         {
             FillActivityLogTypesDropDowns();
-            phCustomerName.Visible = IoCFactory.Resolve<ICustomerManager>().UsernamesEnabled;
+            phCustomerName.Visible = IoCFactory.Resolve<ICustomerService>().UsernamesEnabled;
         }
 
         protected void gvActivityLog_PageIndexChanging(object sender, GridViewPageEventArgs e)
@@ -180,7 +180,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             if (e.CommandName == "DeleteActivityLog")
             {
-                IoCFactory.Resolve<ICustomerActivityManager>().DeleteActivity(Convert.ToInt32(e.CommandArgument));
+                IoCFactory.Resolve<ICustomerActivityService>().DeleteActivity(Convert.ToInt32(e.CommandArgument));
                 BindGrid();
             }
         }
@@ -189,7 +189,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                IoCFactory.Resolve<ICustomerActivityManager>().ClearAllActivities();
+                IoCFactory.Resolve<ICustomerActivityService>().ClearAllActivities();
                 BindGrid();
             }
             catch (Exception exc)

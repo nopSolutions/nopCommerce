@@ -39,7 +39,7 @@ namespace NopSolutions.NopCommerce.Web.Boards
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            ForumTopic forumTopic = IoCFactory.Resolve<IForumManager>().GetTopicById(this.TopicId);
+            ForumTopic forumTopic = IoCFactory.Resolve<IForumService>().GetTopicById(this.TopicId);
             if (forumTopic != null)
             {
                 string title = forumTopic.Subject;

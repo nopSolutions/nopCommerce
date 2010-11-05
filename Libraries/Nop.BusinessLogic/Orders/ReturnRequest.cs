@@ -126,7 +126,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             get
             {
                 if (_opv == null)
-                    _opv = IoCFactory.Resolve<IOrderManager>().GetOrderProductVariantById(this.OrderProductVariantId);
+                    _opv = IoCFactory.Resolve<IOrderService>().GetOrderProductVariantById(this.OrderProductVariantId);
                 return _opv;
             }
         }
@@ -139,7 +139,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             get
             {
                 if (_customer == null)
-                    _customer = IoCFactory.Resolve<ICustomerManager>().GetCustomerById(this.CustomerId);
+                    _customer = IoCFactory.Resolve<ICustomerService>().GetCustomerById(this.CustomerId);
                 return _customer;
             }
         }

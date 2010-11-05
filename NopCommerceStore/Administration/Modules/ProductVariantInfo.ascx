@@ -322,7 +322,7 @@
                 requirederrormessage="<% $NopResources:Admin.ProductVariantInfo.Price.RequiredErrorMessage %>"
                 minimumvalue="0" maximumvalue="100000000" rangeerrormessage="<% $NopResources:Admin.ProductVariantInfo.Price.RangeErrorMessage %>">
             </nopcommerce:decimaltextbox>
-            [<%=IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency.CurrencyCode%>]
+            [<%=IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode%>]
         </td>
     </tr>
     <tr>
@@ -335,7 +335,7 @@
                 value="0" requirederrormessage="<% $NopResources:Admin.ProductVariantInfo.OldPrice.RequiredErrorMessage %>"
                 minimumvalue="0" maximumvalue="100000000" rangeerrormessage="<% $NopResources:Admin.ProductVariantInfo.OldPrice.RangeErrorMessage %>">
             </nopcommerce:decimaltextbox>
-            [<%=IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency.CurrencyCode%>]
+            [<%=IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode%>]
         </td>
     </tr>
     <tr>
@@ -348,7 +348,7 @@
                 value="0" requirederrormessage="<% $NopResources:Admin.ProductVariantInfo.ProductCost.RequiredErrorMessage %>"
                 minimumvalue="0" maximumvalue="100000000" rangeerrormessage="<% $NopResources:Admin.ProductVariantInfo.ProductCost.RangeErrorMessage %>">
             </nopcommerce:decimaltextbox>
-            [<%=IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency.CurrencyCode%>]
+            [<%=IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode%>]
         </td>
     </tr>
     <tr>
@@ -391,7 +391,7 @@
                 value="0" requirederrormessage="<% $NopResources:Admin.ProductVariantInfo.MinimumCustomerEnteredPrice.RequiredErrorMessage%>"
                 minimumvalue="0" maximumvalue="100000000" rangeerrormessage="<% $NopResources:Admin.ProductVariantInfo.MinimumCustomerEnteredPrice.RangeErrorMessage %>">
             </nopcommerce:numerictextbox>
-            [<%=IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency.CurrencyCode%>]
+            [<%=IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode%>]
         </td>
     </tr>
     <tr id="pnlMaximumCustomerEnteredPrice">
@@ -405,7 +405,7 @@
                 value="1000" requirederrormessage="<% $NopResources:Admin.ProductVariantInfo.MaximumCustomerEnteredPrice.RequiredErrorMessage%>"
                 minimumvalue="0" maximumvalue="100000000" rangeerrormessage="<% $NopResources:Admin.ProductVariantInfo.MaximumCustomerEnteredPrice.RangeErrorMessage %>">
             </nopcommerce:numerictextbox>
-            [<%=IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency.CurrencyCode%>]
+            [<%=IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode%>]
         </td>
     </tr>
     <tr>
@@ -695,7 +695,7 @@
                 Value="0" RequiredErrorMessage="<% $NopResources:Admin.ProductVariantInfo.AdditionalShippingCharge.RequiredErrorMessage %>"
                 MinimumValue="0" MaximumValue="100000000" RangeErrorMessage="<% $NopResources:Admin.ProductVariantInfo.AdditionalShippingCharge.RangeErrorMessage %>">
             </nopCommerce:DecimalTextBox>
-            [<%=IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency.CurrencyCode%>]
+            [<%=IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode%>]
         </td>
     </tr>
     <tr id="pnlWeight">
@@ -707,7 +707,7 @@
             <nopCommerce:DecimalTextBox runat="server" CssClass="adminInput" ID="txtWeight" Value="0"
                 RequiredErrorMessage="<% $NopResources:Admin.ProductVariantInfo.Weight.RequiredErrorMessage %>"
                 MinimumValue="0" MaximumValue="999999" RangeErrorMessage="<% $NopResources:Admin.ProductVariantInfo.Weight.RangeErrorMessage %>">
-            </nopcommerce:decimaltextbox> [<%=IoCFactory.Resolve<IMeasureManager>().BaseWeightIn.Name%>]
+            </nopcommerce:decimaltextbox> [<%=IoCFactory.Resolve<IMeasureService>().BaseWeightIn.Name%>]
         </td>
     </tr>
     <tr id="pnlLength">
@@ -720,7 +720,7 @@
                 RequiredErrorMessage="<% $NopResources:Admin.ProductVariantInfo.Length.RequiredErrorMessage %>"
                 MinimumValue="0" MaximumValue="999999" RangeErrorMessage="<% $NopResources:Admin.ProductVariantInfo.Length.RangeErrorMessage %>">
             </nopCommerce:DecimalTextBox>
-            [<%=IoCFactory.Resolve<IMeasureManager>().BaseDimensionIn.Name%>]
+            [<%=IoCFactory.Resolve<IMeasureService>().BaseDimensionIn.Name%>]
         </td>
     </tr>
     <tr id="pnlWidth">
@@ -733,7 +733,7 @@
                 RequiredErrorMessage="<% $NopResources:Admin.ProductVariantInfo.Width.RequiredErrorMessage %>"
                 MinimumValue="0" MaximumValue="999999" RangeErrorMessage="<% $NopResources:Admin.ProductVariantInfo.Width.RangeErrorMessage %>">
             </nopCommerce:DecimalTextBox>
-            [<%=IoCFactory.Resolve<IMeasureManager>().BaseDimensionIn.Name%>]
+            [<%=IoCFactory.Resolve<IMeasureService>().BaseDimensionIn.Name%>]
         </td>
     </tr>
     <tr id="pnlHeight">
@@ -746,7 +746,7 @@
                 RequiredErrorMessage="<% $NopResources:Admin.ProductVariantInfo.Height.RequiredErrorMessage %>"
                 MinimumValue="0" MaximumValue="999999" RangeErrorMessage="<% $NopResources:Admin.ProductVariantInfo.Height.RangeErrorMessage %>">
             </nopCommerce:DecimalTextBox>
-            [<%=IoCFactory.Resolve<IMeasureManager>().BaseDimensionIn.Name%>]
+            [<%=IoCFactory.Resolve<IMeasureService>().BaseDimensionIn.Name%>]
         </td>
     </tr>
     <tr class="adminSeparator">

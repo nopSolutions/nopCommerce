@@ -132,7 +132,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         {
             get
             {
-                return IoCFactory.Resolve<ICustomerManager>().GetCustomerById(this.CustomerId);
+                return IoCFactory.Resolve<ICustomerService>().GetCustomerById(this.CustomerId);
             }
         }
 
@@ -143,7 +143,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         {
             get
             {
-                return IoCFactory.Resolve<IStateProvinceManager>().GetStateProvinceById(this.StateProvinceId);
+                return IoCFactory.Resolve<IStateProvinceService>().GetStateProvinceById(this.StateProvinceId);
             }
         }
 
@@ -154,7 +154,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         {
             get
             {
-                return IoCFactory.Resolve<ICountryManager>().GetCountryById(this.CountryId);
+                return IoCFactory.Resolve<ICountryService>().GetCountryById(this.CountryId);
             }
         }
         #endregion

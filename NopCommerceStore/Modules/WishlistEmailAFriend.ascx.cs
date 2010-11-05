@@ -58,7 +58,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             {
                 Response.Redirect(CommonHelper.GetStoreLocation());
             }
-            var cart = IoCFactory.Resolve<IShoppingCartManager>().GetShoppingCartByCustomerSessionGuid(ShoppingCartTypeEnum.Wishlist, NopContext.Current.Session.CustomerSessionGuid);
+            var cart = IoCFactory.Resolve<IShoppingCartService>().GetShoppingCartByCustomerSessionGuid(ShoppingCartTypeEnum.Wishlist, NopContext.Current.Session.CustomerSessionGuid);
             if (cart.Count > 0)
             {
                 lblDescription.Text = string.Format(GetLocaleResourceString("EmailWishlist.Description"), cart.TotalProducts);
@@ -96,7 +96,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     {
                         Response.Redirect(CommonHelper.GetStoreLocation());
                     }
-                    var cart = IoCFactory.Resolve<IShoppingCartManager>().GetShoppingCartByCustomerSessionGuid(ShoppingCartTypeEnum.Wishlist, NopContext.Current.Session.CustomerSessionGuid);
+                    var cart = IoCFactory.Resolve<IShoppingCartService>().GetShoppingCartByCustomerSessionGuid(ShoppingCartTypeEnum.Wishlist, NopContext.Current.Session.CustomerSessionGuid);
                     if (cart.Count == 0)
                     {
                         Response.Redirect(CommonHelper.GetStoreLocation());
@@ -111,9 +111,9 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
                     string friendsEmail = txtFriendsEmail.Text.Trim();
                     string personalMessage = txtPersonalMessage.Text.Trim();
-                    personalMessage = IoCFactory.Resolve<IProductManager>().FormatEmailAFriendText(personalMessage);
+                    personalMessage = IoCFactory.Resolve<IProductService>().FormatEmailAFriendText(personalMessage);
 
-                    IoCFactory.Resolve<IMessageManager>().SendWishlistEmailAFriendMessage(NopContext.Current.User,
+                    IoCFactory.Resolve<IMessageService>().SendWishlistEmailAFriendMessage(NopContext.Current.User,
                         cart, NopContext.Current.WorkingLanguage.LanguageId,
                         friendsEmail, personalMessage);
 

@@ -27,10 +27,10 @@ namespace NopSolutions.NopCommerce.Web
                     int orderId = 0;
                     if(Int32.TryParse(Request.Form["cs1"], out orderId))
                     {
-                        Order order = IoCFactory.Resolve<IOrderManager>().GetOrderById(orderId);
-                        if(order != null && IoCFactory.Resolve<IOrderManager>().CanMarkOrderAsPaid(order))
+                        Order order = IoCFactory.Resolve<IOrderService>().GetOrderById(orderId);
+                        if(order != null && IoCFactory.Resolve<IOrderService>().CanMarkOrderAsPaid(order))
                         {
-                            IoCFactory.Resolve<IOrderManager>().MarkOrderAsPaid(order.OrderId);
+                            IoCFactory.Resolve<IOrderService>().MarkOrderAsPaid(order.OrderId);
                         }
                     }
                 }

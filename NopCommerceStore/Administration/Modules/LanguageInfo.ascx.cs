@@ -80,7 +80,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         private void BindData()
         {
-            Language language = IoCFactory.Resolve<ILanguageManager>().GetLanguageById(this.LanguageId);
+            Language language = IoCFactory.Resolve<ILanguageService>().GetLanguageById(this.LanguageId);
 
             if (language != null)
             {
@@ -113,7 +113,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public Language SaveInfo()
         {
-            Language language = IoCFactory.Resolve<ILanguageManager>().GetLanguageById(this.LanguageId);
+            Language language = IoCFactory.Resolve<ILanguageService>().GetLanguageById(this.LanguageId);
 
             string name = txtName.Text;
             string languageCulture = ddlLanguageCulture.SelectedItem.Value;
@@ -128,7 +128,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 language.FlagImageFileName = flagImageFileName;
                 language.Published = published;
                 language.DisplayOrder = displayOrder;
-                IoCFactory.Resolve<ILanguageManager>().UpdateLanguage(language);
+                IoCFactory.Resolve<ILanguageService>().UpdateLanguage(language);
             }
             else
             {
@@ -140,7 +140,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     Published = published,
                     DisplayOrder = displayOrder
                 };
-                IoCFactory.Resolve<ILanguageManager>().InsertLanguage(language);
+                IoCFactory.Resolve<ILanguageService>().InsertLanguage(language);
 
             }
 
@@ -153,7 +153,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 try
                 {
-                    Language language = IoCFactory.Resolve<ILanguageManager>().GetLanguageById(this.LanguageId);
+                    Language language = IoCFactory.Resolve<ILanguageService>().GetLanguageById(this.LanguageId);
 
                     if (language != null)
                     {

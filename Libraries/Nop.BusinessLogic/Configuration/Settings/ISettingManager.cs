@@ -27,7 +27,7 @@ using NopSolutions.NopCommerce.Common.Utils;
 namespace NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings
 {
     /// <summary>
-    /// Setting manager interface
+    /// Setting service interface
     /// </summary>
     public partial interface ISettingManager
     {

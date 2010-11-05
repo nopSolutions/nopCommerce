@@ -72,7 +72,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                IoCFactory.Resolve<IStateProvinceManager>().DeleteStateProvince(this.StateProvinceId);
+                IoCFactory.Resolve<IStateProvinceService>().DeleteStateProvince(this.StateProvinceId);
                 Response.Redirect("StateProvinces.aspx");
             }
             catch (Exception exc)

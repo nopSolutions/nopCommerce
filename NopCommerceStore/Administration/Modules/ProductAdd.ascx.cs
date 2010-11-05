@@ -55,7 +55,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 ctrlProductCategory.SaveInfo(product.ProductId);
                 ctrlProductManufacturer.SaveInfo(product.ProductId);
 
-                IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
+                IoCFactory.Resolve<ICustomerActivityService>().InsertActivity(
                     "AddNewProduct",
                     GetLocaleResourceString("ActivityLog.AddNewProduct"),
                     product.Name);

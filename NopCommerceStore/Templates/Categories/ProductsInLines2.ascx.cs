@@ -70,13 +70,13 @@ namespace NopSolutions.NopCommerce.Web.Templates.Categories
 
         protected void BindData()
         {
-            var category = IoCFactory.Resolve<ICategoryManager>().GetCategoryById(this.CategoryId);
+            var category = IoCFactory.Resolve<ICategoryService>().GetCategoryById(this.CategoryId);
 
             lName.Text = Server.HtmlEncode(category.LocalizedName);
             lDescription.Text = category.LocalizedDescription;
 
             //subcategories
-            var subCategories = IoCFactory.Resolve<ICategoryManager>().GetAllCategoriesByParentCategoryId(this.CategoryId);
+            var subCategories = IoCFactory.Resolve<ICategoryService>().GetAllCategoriesByParentCategoryId(this.CategoryId);
             if (subCategories.Count > 0)
             {
                 rptrSubCategories.DataSource = subCategories;
@@ -106,13 +106,13 @@ namespace NopSolutions.NopCommerce.Web.Templates.Categories
                 minPrice = ctrlPriceRangeFilter.SelectedPriceRange.From;
                 if (minPrice.HasValue)
                 {
-                    minPriceConverted = IoCFactory.Resolve<ICurrencyManager>().ConvertCurrency(minPrice.Value, NopContext.Current.WorkingCurrency, IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency);
+                    minPriceConverted = IoCFactory.Resolve<ICurrencyService>().ConvertCurrency(minPrice.Value, NopContext.Current.WorkingCurrency, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency);
                 }
 
                 maxPrice = ctrlPriceRangeFilter.SelectedPriceRange.To;
                 if (maxPrice.HasValue)
                 {
-                    maxPriceConverted = IoCFactory.Resolve<ICurrencyManager>().ConvertCurrency(maxPrice.Value, NopContext.Current.WorkingCurrency, IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency);
+                    maxPriceConverted = IoCFactory.Resolve<ICurrencyService>().ConvertCurrency(maxPrice.Value, NopContext.Current.WorkingCurrency, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency);
                 }
             }
 
@@ -129,7 +129,7 @@ namespace NopSolutions.NopCommerce.Web.Templates.Categories
 
             //featured products are not supported by this template
             //that's hwhy we load all featured and non-featured products
-            var productCollection = IoCFactory.Resolve<IProductManager>().GetAllProducts(this.CategoryId,
+            var productCollection = IoCFactory.Resolve<IProductService>().GetAllProducts(this.CategoryId,
                 0, 0, null, minPriceConverted, maxPriceConverted,
                 string.Empty, false, pageSize, this.CurrentPageIndex,
                 psoFilterOption, orderBy, out totalRecords);

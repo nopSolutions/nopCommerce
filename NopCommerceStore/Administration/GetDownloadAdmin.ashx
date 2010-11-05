@@ -32,7 +32,7 @@ public class GetDownloadAdmin : IHttpHandler
         }
 
         int downloadId = CommonHelper.QueryStringInt("DownloadId");
-        Download download = IoCFactory.Resolve<IDownloadManager>().GetDownloadById(downloadId);
+        Download download = IoCFactory.Resolve<IDownloadService>().GetDownloadById(downloadId);
         if (download == null)
         {
             returnError(context, string.Format("Download is not available any more. Download ID={0}", downloadId));

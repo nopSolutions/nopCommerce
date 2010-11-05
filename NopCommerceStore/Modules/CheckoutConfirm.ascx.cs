@@ -74,9 +74,9 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     paymentInfo.CustomerCurrency = NopContext.Current.WorkingCurrency;
 
                     int orderId = 0;
-                    string result = IoCFactory.Resolve<IOrderManager>().PlaceOrder(paymentInfo, NopContext.Current.User, out orderId);
+                    string result = IoCFactory.Resolve<IOrderService>().PlaceOrder(paymentInfo, NopContext.Current.User, out orderId);
                     this.PaymentInfo = null;
-                    var order = IoCFactory.Resolve<IOrderManager>().GetOrderById(orderId);
+                    var order = IoCFactory.Resolve<IOrderService>().GetOrderById(orderId);
                     if (!String.IsNullOrEmpty(result))
                     {
                         lConfirmOrderError.Text = Server.HtmlEncode(result);
@@ -84,7 +84,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     }
                     else
                     {
-                        IoCFactory.Resolve<IPaymentManager>().PostProcessPayment(order);
+                        IoCFactory.Resolve<IPaymentService>().PostProcessPayment(order);
                     }
                     var args2 = new CheckoutStepEventArgs() { OrderConfirmed = true };
                     OnCheckoutStepChanged(args2);
@@ -93,7 +93,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 }
                 catch (Exception exc)
                 {
-                    IoCFactory.Resolve<ILogManager>().InsertLog(LogTypeEnum.OrderError, exc.Message, exc);
+                    IoCFactory.Resolve<ILogService>().InsertLog(LogTypeEnum.OrderError, exc.Message, exc);
                     lConfirmOrderError.Text = Server.HtmlEncode(exc.ToString());
                 }
             }
@@ -101,7 +101,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if ((NopContext.Current.User == null) || (NopContext.Current.User.IsGuest && !IoCFactory.Resolve<ICustomerManager>().AnonymousCheckoutAllowed))
+            if ((NopContext.Current.User == null) || (NopContext.Current.User.IsGuest && !IoCFactory.Resolve<ICustomerService>().AnonymousCheckoutAllowed))
             {
                 string loginURL = SEOHelper.GetLoginPageUrl(true);
                 Response.Redirect(loginURL);
@@ -140,7 +140,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
         public void BindData()
         {
             //min order amount validation
-            bool minOrderTotalAmountOK = IoCFactory.Resolve<IOrderManager>().ValidateMinOrderTotalAmount(this.Cart, NopContext.Current.User);
+            bool minOrderTotalAmountOK = IoCFactory.Resolve<IOrderService>().ValidateMinOrderTotalAmount(this.Cart, NopContext.Current.User);
             if (minOrderTotalAmountOK)
             {
                 lMinOrderTotalAmount.Visible = false;
@@ -148,7 +148,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             }
             else
             {
-                decimal minOrderTotalAmount = IoCFactory.Resolve<ICurrencyManager>().ConvertCurrency(IoCFactory.Resolve<IOrderManager>().MinOrderTotalAmount, IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                decimal minOrderTotalAmount = IoCFactory.Resolve<ICurrencyService>().ConvertCurrency(IoCFactory.Resolve<IOrderService>().MinOrderTotalAmount, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
                 lMinOrderTotalAmount.Text = string.Format(GetLocaleResourceString("Checkout.MinOrderTotalAmount"), PriceHelper.FormatPrice(minOrderTotalAmount, true, false));
                 lMinOrderTotalAmount.Visible = true;
                 btnNextStep.Visible = false;
@@ -187,7 +187,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             {
                 if (cart == null)
                 {
-                    cart = IoCFactory.Resolve<IShoppingCartManager>().GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
+                    cart = IoCFactory.Resolve<IShoppingCartService>().GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
                 }
                 return cart;
             }

@@ -72,7 +72,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                IoCFactory.Resolve<ITemplateManager>().DeleteCategoryTemplate(this.CategoryTemplateId);
+                IoCFactory.Resolve<ITemplateService>().DeleteCategoryTemplate(this.CategoryTemplateId);
                 Response.Redirect("CategoryTemplates.aspx");
             }
             catch (Exception exc)

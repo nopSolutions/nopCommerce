@@ -35,7 +35,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Maintenance
         /// <param name="node">Xml node that represents a task description</param>
         public void Execute(XmlNode node)
         {
-            IoCFactory.Resolve<IMaintenanceManager>().Reindex();
+            IoCFactory.Resolve<IMaintenanceService>().Reindex();
         }
 
     }

@@ -73,16 +73,16 @@ namespace NopSolutions.NopCommerce.Web.Templates.Categories
 
         protected void BindData()
         {
-            var category = IoCFactory.Resolve<ICategoryManager>().GetCategoryById(this.CategoryId);
+            var category = IoCFactory.Resolve<ICategoryService>().GetCategoryById(this.CategoryId);
 
             //breadcrumb
-            rptrCategoryBreadcrumb.DataSource = IoCFactory.Resolve<ICategoryManager>().GetBreadCrumb(this.CategoryId);
+            rptrCategoryBreadcrumb.DataSource = IoCFactory.Resolve<ICategoryService>().GetBreadCrumb(this.CategoryId);
             rptrCategoryBreadcrumb.DataBind();
 
             lDescription.Text = category.LocalizedDescription;
 
             //subcategories
-            var subCategories = IoCFactory.Resolve<ICategoryManager>().GetAllCategoriesByParentCategoryId(category.CategoryId);
+            var subCategories = IoCFactory.Resolve<ICategoryService>().GetAllCategoriesByParentCategoryId(category.CategoryId);
             if (subCategories.Count > 0)
             {
                 dlSubCategories.DataSource = subCategories;
@@ -124,13 +124,13 @@ namespace NopSolutions.NopCommerce.Web.Templates.Categories
                 minPrice = ctrlPriceRangeFilter.SelectedPriceRange.From;
                 if (minPrice.HasValue)
                 {
-                    minPriceConverted = IoCFactory.Resolve<ICurrencyManager>().ConvertCurrency(minPrice.Value, NopContext.Current.WorkingCurrency, IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency);
+                    minPriceConverted = IoCFactory.Resolve<ICurrencyService>().ConvertCurrency(minPrice.Value, NopContext.Current.WorkingCurrency, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency);
                 }
 
                 maxPrice = ctrlPriceRangeFilter.SelectedPriceRange.To;
                 if (maxPrice.HasValue)
                 {
-                    maxPriceConverted = IoCFactory.Resolve<ICurrencyManager>().ConvertCurrency(maxPrice.Value, NopContext.Current.WorkingCurrency, IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency);
+                    maxPriceConverted = IoCFactory.Resolve<ICurrencyService>().ConvertCurrency(maxPrice.Value, NopContext.Current.WorkingCurrency, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency);
                 }
             }
 
@@ -145,7 +145,7 @@ namespace NopSolutions.NopCommerce.Web.Templates.Categories
                 orderBy = (ProductSortingEnum)Enum.ToObject(typeof(ProductSortingEnum), int.Parse(ddlSorting.SelectedItem.Value));
             }
 
-            var productCollection = IoCFactory.Resolve<IProductManager>().GetAllProducts(this.CategoryId,
+            var productCollection = IoCFactory.Resolve<IProductService>().GetAllProducts(this.CategoryId,
                 0, 0, false, minPriceConverted, maxPriceConverted,
                 string.Empty, false, pageSize, this.CurrentPageIndex, 
                 psoFilterOption, orderBy, out totalRecords);
@@ -205,7 +205,7 @@ namespace NopSolutions.NopCommerce.Web.Templates.Categories
                 var hlImageLink = e.Item.FindControl("hlImageLink") as HyperLink;
                 if (hlImageLink != null)
                 {
-                    hlImageLink.ImageUrl = IoCFactory.Resolve<IPictureManager>().GetPictureUrl(category.PictureId, IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.Category.ThumbnailImageSize", 125), true);
+                    hlImageLink.ImageUrl = IoCFactory.Resolve<IPictureService>().GetPictureUrl(category.PictureId, IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.Category.ThumbnailImageSize", 125), true);
                     hlImageLink.NavigateUrl = categoryURL;
                     hlImageLink.ToolTip = String.Format(GetLocaleResourceString("Media.Category.ImageLinkTitleFormat"), category.LocalizedName);
                     hlImageLink.Text = String.Format(GetLocaleResourceString("Media.Category.ImageAlternateTextFormat"), category.LocalizedName);

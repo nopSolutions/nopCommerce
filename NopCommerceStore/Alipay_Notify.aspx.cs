@@ -80,10 +80,10 @@ namespace NopSolutions.NopCommerce.Web
                     int orderId = 0;
                     if (Int32.TryParse(strOrderNO, out orderId))
                     {
-                        Order order = IoCFactory.Resolve<IOrderManager>().GetOrderById(orderId);
-                        if (order != null && IoCFactory.Resolve<IOrderManager>().CanMarkOrderAsPaid(order))
+                        Order order = IoCFactory.Resolve<IOrderService>().GetOrderById(orderId);
+                        if (order != null && IoCFactory.Resolve<IOrderService>().CanMarkOrderAsPaid(order))
                         {
-                            IoCFactory.Resolve<IOrderManager>().MarkOrderAsPaid(order.OrderId);
+                            IoCFactory.Resolve<IOrderService>().MarkOrderAsPaid(order.OrderId);
                         }
                     }
                 }
@@ -97,7 +97,7 @@ namespace NopSolutions.NopCommerce.Web
             {
                 Response.Write("fail");
                 string logStr = "MD5:mysign=" + mysign + ",sign=" + sign + ",responseTxt=" + responseTxt;
-                IoCFactory.Resolve<ILogManager>().InsertLog(LogTypeEnum.OrderError, logStr, logStr);
+                IoCFactory.Resolve<ILogService>().InsertLog(LogTypeEnum.OrderError, logStr, logStr);
             }
         }
 

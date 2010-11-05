@@ -43,7 +43,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void BindData()
         {
-            var productReview = IoCFactory.Resolve<IProductManager>().GetProductReviewById(this.ProductReviewId);
+            var productReview = IoCFactory.Resolve<IProductService>().GetProductReviewById(this.ProductReviewId);
             if (productReview != null)
             {
                 lblHelpfulYesTotal.Text = productReview.HelpfulYesTotal.ToString();
@@ -55,19 +55,19 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         private void SetHelpful(bool WasHelpful)
         {
-            var productReview = IoCFactory.Resolve<IProductManager>().GetProductReviewById(this.ProductReviewId);
+            var productReview = IoCFactory.Resolve<IProductService>().GetProductReviewById(this.ProductReviewId);
             if (productReview != null)
             {
-                if (NopContext.Current.User == null && IoCFactory.Resolve<ICustomerManager>().AllowAnonymousUsersToReviewProduct)
-                    IoCFactory.Resolve<ICustomerManager>().CreateAnonymousUser();
+                if (NopContext.Current.User == null && IoCFactory.Resolve<ICustomerService>().AllowAnonymousUsersToReviewProduct)
+                    IoCFactory.Resolve<ICustomerService>().CreateAnonymousUser();
 
-                if (NopContext.Current.User == null || (NopContext.Current.User.IsGuest && !IoCFactory.Resolve<ICustomerManager>().AllowAnonymousUsersToReviewProduct))
+                if (NopContext.Current.User == null || (NopContext.Current.User.IsGuest && !IoCFactory.Resolve<ICustomerService>().AllowAnonymousUsersToReviewProduct))
                 {
                     string loginURL = SEOHelper.GetLoginPageUrl(true);
                     Response.Redirect(loginURL);
                 }
                 
-                IoCFactory.Resolve<IProductManager>().SetProductRatingHelpfulness(productReview.ProductReviewId, WasHelpful);
+                IoCFactory.Resolve<IProductService>().SetProductRatingHelpfulness(productReview.ProductReviewId, WasHelpful);
                 BindData();
             }
             else

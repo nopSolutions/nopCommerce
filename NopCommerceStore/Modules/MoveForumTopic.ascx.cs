@@ -51,14 +51,14 @@ namespace NopSolutions.NopCommerce.Web.Modules
         {
             pnlError.Visible = false;
 
-            var forumTopic = IoCFactory.Resolve<IForumManager>().GetTopicById(this.ForumTopicId);
+            var forumTopic = IoCFactory.Resolve<IForumService>().GetTopicById(this.ForumTopicId);
 
             if (forumTopic == null)
             {
                 Response.Redirect(SEOHelper.GetForumMainUrl());
             }
 
-            if (!IoCFactory.Resolve<IForumManager>().IsUserAllowedToMoveTopic(NopContext.Current.User, forumTopic))
+            if (!IoCFactory.Resolve<IForumService>().IsUserAllowedToMoveTopic(NopContext.Current.User, forumTopic))
             {
                 string loginURL = SEOHelper.GetLoginPageUrl(true);
                 Response.Redirect(loginURL);
@@ -75,13 +75,13 @@ namespace NopSolutions.NopCommerce.Web.Modules
         {
             try
             {
-                var forumTopic = IoCFactory.Resolve<IForumManager>().GetTopicById(this.ForumTopicId);
+                var forumTopic = IoCFactory.Resolve<IForumService>().GetTopicById(this.ForumTopicId);
                 if (forumTopic == null)
                 {
                     Response.Redirect(SEOHelper.GetForumMainUrl());
                 }
 
-                IoCFactory.Resolve<IForumManager>().MoveTopic(forumTopic.ForumTopicId, ctrlForumSelector.SelectedForumId);
+                IoCFactory.Resolve<IForumService>().MoveTopic(forumTopic.ForumTopicId, ctrlForumSelector.SelectedForumId);
                 string topicURL = SEOHelper.GetForumTopicUrl(forumTopic);
                 Response.Redirect(topicURL);
             }
@@ -96,7 +96,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
         {
             try
             {
-                var forumTopic = IoCFactory.Resolve<IForumManager>().GetTopicById(this.ForumTopicId);
+                var forumTopic = IoCFactory.Resolve<IForumService>().GetTopicById(this.ForumTopicId);
                 if (forumTopic != null)
                 {
                     string topicUrl = SEOHelper.GetForumTopicUrl(forumTopic);

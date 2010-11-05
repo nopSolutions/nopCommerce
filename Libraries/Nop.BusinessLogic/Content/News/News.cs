@@ -87,7 +87,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
         {
             get
             {
-                return IoCFactory.Resolve<ILanguageManager>().GetLanguageById(this.LanguageId);
+                return IoCFactory.Resolve<ILanguageService>().GetLanguageById(this.LanguageId);
             }
         }
 
@@ -98,7 +98,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
         {
             get
             {
-                return IoCFactory.Resolve<INewsManager>().GetNewsCommentsByNewsId(this.NewsId);
+                return IoCFactory.Resolve<INewsService>().GetNewsCommentsByNewsId(this.NewsId);
             }
         }
         #endregion

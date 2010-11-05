@@ -50,7 +50,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void BindData()
         {
-            var product = IoCFactory.Resolve<IProductManager>().GetProductById(this.ProductId);
+            var product = IoCFactory.Resolve<IProductService>().GetProductById(this.ProductId);
             if (product != null)
             {
                 var productVariants = product.ProductVariants;
@@ -77,13 +77,13 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 var ctrlGiftCardAttributes = e.Item.FindControl("ctrlGiftCardAttributes") as GiftCardAttributesControl;                
                 var lblError = e.Item.FindControl("lblError") as Label;
 
-                var pv = IoCFactory.Resolve<IProductManager>().GetProductVariantById(Convert.ToInt32(productVariantId.Text));
+                var pv = IoCFactory.Resolve<IProductService>().GetProductVariantById(Convert.ToInt32(productVariantId.Text));
                 if (pv == null)
                     return;
 
                 string attributes = ctrlProductAttributes.SelectedAttributes;
                 decimal customerEnteredPrice = txtCustomerEnteredPrice.Value;
-                decimal customerEnteredPriceConverted = IoCFactory.Resolve<ICurrencyManager>().ConvertCurrency(customerEnteredPrice, NopContext.Current.WorkingCurrency, IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency);
+                decimal customerEnteredPriceConverted = IoCFactory.Resolve<ICurrencyService>().ConvertCurrency(customerEnteredPrice, NopContext.Current.WorkingCurrency, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency);
                 int quantity = txtQuantity.Value;
 
                 //gift cards
@@ -104,7 +104,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     if (e.CommandName == "AddToCart")
                     {
                         string sep = "<br />";
-                        List<string> addToCartWarnings = IoCFactory.Resolve<IShoppingCartManager>().AddToCart(
+                        List<string> addToCartWarnings = IoCFactory.Resolve<IShoppingCartService>().AddToCart(
                             ShoppingCartTypeEnum.ShoppingCart,
                             pv.ProductVariantId, 
                             attributes,
@@ -146,7 +146,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     if (e.CommandName == "AddToWishlist")
                     {
                         string sep = "<br />";
-                        var addToCartWarnings = IoCFactory.Resolve<IShoppingCartManager>().AddToCart(
+                        var addToCartWarnings = IoCFactory.Resolve<IShoppingCartService>().AddToCart(
                             ShoppingCartTypeEnum.Wishlist,
                             pv.ProductVariantId, 
                             attributes,
@@ -178,7 +178,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 }
                 catch (Exception exc)
                 {
-                    IoCFactory.Resolve<ILogManager>().InsertLog(LogTypeEnum.CustomerError, exc.Message, exc);
+                    IoCFactory.Resolve<ILogService>().InsertLog(LogTypeEnum.CustomerError, exc.Message, exc);
                     lblError.Text = Server.HtmlEncode(exc.Message);
                 }
             }
@@ -206,7 +206,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 if (iProductVariantPicture != null)
                 {
                     var productVariantPicture = productVariant.Picture;
-                    string pictureUrl = IoCFactory.Resolve<IPictureManager>().GetPictureUrl(productVariantPicture, IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.Product.VariantImageSize", 125), false);
+                    string pictureUrl = IoCFactory.Resolve<IPictureService>().GetPictureUrl(productVariantPicture, IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.Product.VariantImageSize", 125), false);
                     if (String.IsNullOrEmpty(pictureUrl))
                         iProductVariantPicture.Visible = false;
                     else
@@ -258,8 +258,8 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 //price entered by a customer
                 if (productVariant.CustomerEntersPrice)
                 {
-                    decimal minimumCustomerEnteredPrice = IoCFactory.Resolve<ICurrencyManager>().ConvertCurrency(productVariant.MinimumCustomerEnteredPrice, IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
-                    decimal maximumCustomerEnteredPrice = IoCFactory.Resolve<ICurrencyManager>().ConvertCurrency(productVariant.MaximumCustomerEnteredPrice, IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                    decimal minimumCustomerEnteredPrice = IoCFactory.Resolve<ICurrencyService>().ConvertCurrency(productVariant.MinimumCustomerEnteredPrice, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                    decimal maximumCustomerEnteredPrice = IoCFactory.Resolve<ICurrencyService>().ConvertCurrency(productVariant.MaximumCustomerEnteredPrice, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
                     txtCustomerEnteredPrice.Visible = true;
                     txtCustomerEnteredPrice.ValidationGroup = string.Format("ProductVariant{0}", productVariant.ProductVariantId);
                     txtCustomerEnteredPrice.Value = minimumCustomerEnteredPrice;
@@ -296,7 +296,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     if (productVariant.IsDownload && productVariant.HasSampleDownload)
                     {
                         pnlDownloadSample.Visible = true;
-                        hlDownloadSample.NavigateUrl = IoCFactory.Resolve<IDownloadManager>().GetSampleDownloadUrl(productVariant);
+                        hlDownloadSample.NavigateUrl = IoCFactory.Resolve<IDownloadService>().GetSampleDownloadUrl(productVariant);
                     }
                     else
                     {

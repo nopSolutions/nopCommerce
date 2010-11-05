@@ -47,7 +47,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             var EmailRequired = CreateUserWizardStep1.ContentTemplateContainer.FindControl("EmailRequired") as RequiredFieldValidator;
             if (EmailRequired != null)
             {
-                if (IoCFactory.Resolve<ICustomerManager>().UsernamesEnabled)
+                if (IoCFactory.Resolve<ICustomerService>().UsernamesEnabled)
                 {
                     EmailRequired.ErrorMessage = GetLocaleResourceString("Account.E-MailRequired");
                     EmailRequired.ToolTip = GetLocaleResourceString("Account.E-MailRequired");
@@ -61,7 +61,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             var revEmail = CreateUserWizardStep1.ContentTemplateContainer.FindControl("revEmail") as RegularExpressionValidator;
             if (revEmail != null)
             {
-                if (IoCFactory.Resolve<ICustomerManager>().UsernamesEnabled)
+                if (IoCFactory.Resolve<ICustomerService>().UsernamesEnabled)
                 {
                     revEmail.ErrorMessage = GetLocaleResourceString("Account.InvalidEmail");
                     revEmail.ToolTip = GetLocaleResourceString("Account.InvalidEmail");
@@ -76,7 +76,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             var lUsernameOrEmail = CreateUserWizardStep1.ContentTemplateContainer.FindControl("lUsernameOrEmail") as Literal;
             if (lUsernameOrEmail != null)
             {
-                if (IoCFactory.Resolve<ICustomerManager>().UsernamesEnabled)
+                if (IoCFactory.Resolve<ICustomerService>().UsernamesEnabled)
                 {
                     lUsernameOrEmail.Text = GetLocaleResourceString("Account.Username");
                 }
@@ -89,7 +89,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             var UserNameOrEmailRequired = CreateUserWizardStep1.ContentTemplateContainer.FindControl("UserNameOrEmailRequired") as RequiredFieldValidator;
             if (UserNameOrEmailRequired != null)
             {
-                if (IoCFactory.Resolve<ICustomerManager>().UsernamesEnabled)
+                if (IoCFactory.Resolve<ICustomerService>().UsernamesEnabled)
                 {
                     UserNameOrEmailRequired.ErrorMessage = GetLocaleResourceString("Account.UserNameRequired");
                     UserNameOrEmailRequired.ToolTip = GetLocaleResourceString("Account.UserNameRequired");
@@ -104,7 +104,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             var refUserNameOrEmail = CreateUserWizardStep1.ContentTemplateContainer.FindControl("refUserNameOrEmail") as RegularExpressionValidator;
             if (refUserNameOrEmail != null)
             {
-                if (IoCFactory.Resolve<ICustomerManager>().UsernamesEnabled)
+                if (IoCFactory.Resolve<ICustomerService>().UsernamesEnabled)
                 {
                     //refUserNameOrEmail is not enabled
                 }
@@ -118,7 +118,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             var lblCompleteStep = CompleteWizardStep1.ContentTemplateContainer.FindControl("lblCompleteStep") as Label;
             if (lblCompleteStep != null)
             {
-                switch (IoCFactory.Resolve<ICustomerManager>().CustomerRegistrationType)
+                switch (IoCFactory.Resolve<ICustomerService>().CustomerRegistrationType)
                 {
                     case CustomerRegistrationTypeEnum.Standard:
                         {
@@ -179,49 +179,49 @@ namespace NopSolutions.NopCommerce.Web.Modules
             var phPreferences = (PlaceHolder)CreateUserWizardStep1.ContentTemplateContainer.FindControl("phPreferences");
             var trTimeZone = (HtmlTableRow)CreateUserWizardStep1.ContentTemplateContainer.FindControl("trTimeZone");
             
-            phGender.Visible = IoCFactory.Resolve<ICustomerManager>().FormFieldGenderEnabled;
-            phDateOfBirth.Visible = IoCFactory.Resolve<ICustomerManager>().FormFieldDateOfBirthEnabled;
+            phGender.Visible = IoCFactory.Resolve<ICustomerService>().FormFieldGenderEnabled;
+            phDateOfBirth.Visible = IoCFactory.Resolve<ICustomerService>().FormFieldDateOfBirthEnabled;
 
-            phCompanyName.Visible = IoCFactory.Resolve<ICustomerManager>().FormFieldCompanyEnabled;
-            rfvCompany.Enabled = IoCFactory.Resolve<ICustomerManager>().FormFieldCompanyEnabled &&
-                IoCFactory.Resolve<ICustomerManager>().FormFieldCompanyRequired;
-            phVatNumber.Visible = IoCFactory.Resolve<ITaxManager>().EUVatEnabled;
-            phCompanyDetails.Visible = IoCFactory.Resolve<ICustomerManager>().FormFieldCompanyEnabled ||
-                IoCFactory.Resolve<ITaxManager>().EUVatEnabled;
+            phCompanyName.Visible = IoCFactory.Resolve<ICustomerService>().FormFieldCompanyEnabled;
+            rfvCompany.Enabled = IoCFactory.Resolve<ICustomerService>().FormFieldCompanyEnabled &&
+                IoCFactory.Resolve<ICustomerService>().FormFieldCompanyRequired;
+            phVatNumber.Visible = IoCFactory.Resolve<ITaxService>().EUVatEnabled;
+            phCompanyDetails.Visible = IoCFactory.Resolve<ICustomerService>().FormFieldCompanyEnabled ||
+                IoCFactory.Resolve<ITaxService>().EUVatEnabled;
 
-            phStreetAddress.Visible = IoCFactory.Resolve<ICustomerManager>().FormFieldStreetAddressEnabled;
-            rfvStreetAddress.Enabled = IoCFactory.Resolve<ICustomerManager>().FormFieldStreetAddressEnabled &&
-                IoCFactory.Resolve<ICustomerManager>().FormFieldStreetAddressRequired;
-            phStreetAddress2.Visible = IoCFactory.Resolve<ICustomerManager>().FormFieldStreetAddress2Enabled;
-            rfvStreetAddress2.Enabled = IoCFactory.Resolve<ICustomerManager>().FormFieldStreetAddress2Enabled &&
-                IoCFactory.Resolve<ICustomerManager>().FormFieldStreetAddress2Required;
-            phPostCode.Visible = IoCFactory.Resolve<ICustomerManager>().FormFieldPostCodeEnabled;
-            rfvZipPostalCode.Enabled = IoCFactory.Resolve<ICustomerManager>().FormFieldPostCodeEnabled &&
-                IoCFactory.Resolve<ICustomerManager>().FormFieldPostCodeRequired;
-            phCity.Visible = IoCFactory.Resolve<ICustomerManager>().FormFieldCityEnabled;
-            rfvCity.Enabled = IoCFactory.Resolve<ICustomerManager>().FormFieldCityEnabled &&
-                IoCFactory.Resolve<ICustomerManager>().FormFieldCityRequired;
-            phCountry.Visible = IoCFactory.Resolve<ICustomerManager>().FormFieldCountryEnabled;
-            phStateProvince.Visible = IoCFactory.Resolve<ICustomerManager>().FormFieldCountryEnabled &&
-                IoCFactory.Resolve<ICustomerManager>().FormFieldStateEnabled;
-            phYourAddress.Visible = IoCFactory.Resolve<ICustomerManager>().FormFieldStreetAddressEnabled ||
-                IoCFactory.Resolve<ICustomerManager>().FormFieldStreetAddress2Enabled ||
-                IoCFactory.Resolve<ICustomerManager>().FormFieldPostCodeEnabled ||
-                IoCFactory.Resolve<ICustomerManager>().FormFieldCityEnabled ||
-                IoCFactory.Resolve<ICustomerManager>().FormFieldCountryEnabled;
+            phStreetAddress.Visible = IoCFactory.Resolve<ICustomerService>().FormFieldStreetAddressEnabled;
+            rfvStreetAddress.Enabled = IoCFactory.Resolve<ICustomerService>().FormFieldStreetAddressEnabled &&
+                IoCFactory.Resolve<ICustomerService>().FormFieldStreetAddressRequired;
+            phStreetAddress2.Visible = IoCFactory.Resolve<ICustomerService>().FormFieldStreetAddress2Enabled;
+            rfvStreetAddress2.Enabled = IoCFactory.Resolve<ICustomerService>().FormFieldStreetAddress2Enabled &&
+                IoCFactory.Resolve<ICustomerService>().FormFieldStreetAddress2Required;
+            phPostCode.Visible = IoCFactory.Resolve<ICustomerService>().FormFieldPostCodeEnabled;
+            rfvZipPostalCode.Enabled = IoCFactory.Resolve<ICustomerService>().FormFieldPostCodeEnabled &&
+                IoCFactory.Resolve<ICustomerService>().FormFieldPostCodeRequired;
+            phCity.Visible = IoCFactory.Resolve<ICustomerService>().FormFieldCityEnabled;
+            rfvCity.Enabled = IoCFactory.Resolve<ICustomerService>().FormFieldCityEnabled &&
+                IoCFactory.Resolve<ICustomerService>().FormFieldCityRequired;
+            phCountry.Visible = IoCFactory.Resolve<ICustomerService>().FormFieldCountryEnabled;
+            phStateProvince.Visible = IoCFactory.Resolve<ICustomerService>().FormFieldCountryEnabled &&
+                IoCFactory.Resolve<ICustomerService>().FormFieldStateEnabled;
+            phYourAddress.Visible = IoCFactory.Resolve<ICustomerService>().FormFieldStreetAddressEnabled ||
+                IoCFactory.Resolve<ICustomerService>().FormFieldStreetAddress2Enabled ||
+                IoCFactory.Resolve<ICustomerService>().FormFieldPostCodeEnabled ||
+                IoCFactory.Resolve<ICustomerService>().FormFieldCityEnabled ||
+                IoCFactory.Resolve<ICustomerService>().FormFieldCountryEnabled;
 
-            phTelephoneNumber.Visible = IoCFactory.Resolve<ICustomerManager>().FormFieldPhoneEnabled;
-            rfvPhoneNumber.Enabled = IoCFactory.Resolve<ICustomerManager>().FormFieldPhoneEnabled &&
-                IoCFactory.Resolve<ICustomerManager>().FormFieldPhoneRequired;
-            phFaxNumber.Visible = IoCFactory.Resolve<ICustomerManager>().FormFieldFaxEnabled;
-            rfvFaxNumber.Enabled = IoCFactory.Resolve<ICustomerManager>().FormFieldFaxEnabled &&
-                IoCFactory.Resolve<ICustomerManager>().FormFieldFaxRequired;
-            phYourContactInformation.Visible = IoCFactory.Resolve<ICustomerManager>().FormFieldPhoneEnabled ||
-                IoCFactory.Resolve<ICustomerManager>().FormFieldFaxEnabled;
+            phTelephoneNumber.Visible = IoCFactory.Resolve<ICustomerService>().FormFieldPhoneEnabled;
+            rfvPhoneNumber.Enabled = IoCFactory.Resolve<ICustomerService>().FormFieldPhoneEnabled &&
+                IoCFactory.Resolve<ICustomerService>().FormFieldPhoneRequired;
+            phFaxNumber.Visible = IoCFactory.Resolve<ICustomerService>().FormFieldFaxEnabled;
+            rfvFaxNumber.Enabled = IoCFactory.Resolve<ICustomerService>().FormFieldFaxEnabled &&
+                IoCFactory.Resolve<ICustomerService>().FormFieldFaxRequired;
+            phYourContactInformation.Visible = IoCFactory.Resolve<ICustomerService>().FormFieldPhoneEnabled ||
+                IoCFactory.Resolve<ICustomerService>().FormFieldFaxEnabled;
 
-            phNewsletter.Visible = IoCFactory.Resolve<ICustomerManager>().FormFieldNewsletterEnabled;
+            phNewsletter.Visible = IoCFactory.Resolve<ICustomerService>().FormFieldNewsletterEnabled;
 
-            trTimeZone.Visible = DateTimeHelper.AllowCustomersToSetTimeZone && IoCFactory.Resolve<ICustomerManager>().FormFieldTimeZoneEnabled;
+            trTimeZone.Visible = DateTimeHelper.AllowCustomersToSetTimeZone && IoCFactory.Resolve<ICustomerService>().FormFieldTimeZoneEnabled;
             phPreferences.Visible = trTimeZone.Visible;
             
             base.OnInit(e);
@@ -250,15 +250,15 @@ namespace NopSolutions.NopCommerce.Web.Modules
             var ddlTimeZone = (DropDownList)CreateUserWizardStep1.ContentTemplateContainer.FindControl("ddlTimeZone");
             
             Customer customer = null;
-            if (IoCFactory.Resolve<ICustomerManager>().UsernamesEnabled)
+            if (IoCFactory.Resolve<ICustomerService>().UsernamesEnabled)
             {
-                customer = IoCFactory.Resolve<ICustomerManager>().GetCustomerByUsername(UserName.Text.Trim());
+                customer = IoCFactory.Resolve<ICustomerService>().GetCustomerByUsername(UserName.Text.Trim());
             }
             else
             {
-                customer = IoCFactory.Resolve<ICustomerManager>().GetCustomerByEmail(UserName.Text.Trim());
+                customer = IoCFactory.Resolve<ICustomerService>().GetCustomerByEmail(UserName.Text.Trim());
             }
-            if (IoCFactory.Resolve<ICustomerManager>().FormFieldGenderEnabled)
+            if (IoCFactory.Resolve<ICustomerService>().FormFieldGenderEnabled)
             {
                 if (rbGenderM.Checked)
                     customer.Gender = "M";
@@ -267,75 +267,75 @@ namespace NopSolutions.NopCommerce.Web.Modules
             }
             customer.FirstName = txtFirstName.Text;
             customer.LastName = txtLastName.Text;
-            if (IoCFactory.Resolve<ICustomerManager>().FormFieldDateOfBirthEnabled)
+            if (IoCFactory.Resolve<ICustomerService>().FormFieldDateOfBirthEnabled)
             {
                 customer.DateOfBirth = dtDateOfBirth.SelectedDate;
-                IoCFactory.Resolve<ICustomerManager>().UpdateCustomer(customer);
+                IoCFactory.Resolve<ICustomerService>().UpdateCustomer(customer);
             }
-            if (IoCFactory.Resolve<ICustomerManager>().FormFieldCompanyEnabled)
+            if (IoCFactory.Resolve<ICustomerService>().FormFieldCompanyEnabled)
             {
                 customer.Company = txtCompany.Text;
             }
-            if (IoCFactory.Resolve<ICustomerManager>().FormFieldStreetAddressEnabled)
+            if (IoCFactory.Resolve<ICustomerService>().FormFieldStreetAddressEnabled)
             {
                 customer.StreetAddress = txtStreetAddress.Text;
             }
-            if (IoCFactory.Resolve<ICustomerManager>().FormFieldStreetAddress2Enabled)
+            if (IoCFactory.Resolve<ICustomerService>().FormFieldStreetAddress2Enabled)
             {
                 customer.StreetAddress2 = txtStreetAddress2.Text;
             }
-            if (IoCFactory.Resolve<ICustomerManager>().FormFieldPostCodeEnabled)
+            if (IoCFactory.Resolve<ICustomerService>().FormFieldPostCodeEnabled)
             {
                 customer.ZipPostalCode = txtZipPostalCode.Text;
             }
-            if (IoCFactory.Resolve<ICustomerManager>().FormFieldCityEnabled)
+            if (IoCFactory.Resolve<ICustomerService>().FormFieldCityEnabled)
             {
                 customer.City = txtCity.Text;
             }
-            if (IoCFactory.Resolve<ICustomerManager>().FormFieldCountryEnabled)
+            if (IoCFactory.Resolve<ICustomerService>().FormFieldCountryEnabled)
             {
                 customer.CountryId = int.Parse(ddlCountry.SelectedItem.Value);
             }
-            if (IoCFactory.Resolve<ICustomerManager>().FormFieldCountryEnabled &&
-                        IoCFactory.Resolve<ICustomerManager>().FormFieldStateEnabled)
+            if (IoCFactory.Resolve<ICustomerService>().FormFieldCountryEnabled &&
+                        IoCFactory.Resolve<ICustomerService>().FormFieldStateEnabled)
             {
                 customer.StateProvinceId = int.Parse(ddlStateProvince.SelectedItem.Value);
             }
-            if (IoCFactory.Resolve<ICustomerManager>().FormFieldPhoneEnabled)
+            if (IoCFactory.Resolve<ICustomerService>().FormFieldPhoneEnabled)
             {
                 customer.PhoneNumber = txtPhoneNumber.Text;
             }
-            if (IoCFactory.Resolve<ICustomerManager>().FormFieldFaxEnabled)
+            if (IoCFactory.Resolve<ICustomerService>().FormFieldFaxEnabled)
             {
                 customer.FaxNumber = txtFaxNumber.Text;
             }
-            if (IoCFactory.Resolve<ICustomerManager>().FormFieldNewsletterEnabled)
+            if (IoCFactory.Resolve<ICustomerService>().FormFieldNewsletterEnabled)
             {
                 customer.ReceiveNewsletter = cbNewsletter.Checked;
             }
-            if (DateTimeHelper.AllowCustomersToSetTimeZone && IoCFactory.Resolve<ICustomerManager>().FormFieldTimeZoneEnabled)
+            if (DateTimeHelper.AllowCustomersToSetTimeZone && IoCFactory.Resolve<ICustomerService>().FormFieldTimeZoneEnabled)
             {
                 if (ddlTimeZone.SelectedItem != null && !String.IsNullOrEmpty(ddlTimeZone.SelectedItem.Value))
                 {
                     string timeZoneId = ddlTimeZone.SelectedItem.Value;
                     customer.TimeZoneId = DateTimeHelper.FindTimeZoneById(timeZoneId).Id;
-                    IoCFactory.Resolve<ICustomerManager>().UpdateCustomer(customer);
+                    IoCFactory.Resolve<ICustomerService>().UpdateCustomer(customer);
                 }
             }
 
             //set VAT number after country is saved
-            if (IoCFactory.Resolve<ITaxManager>().EUVatEnabled)
+            if (IoCFactory.Resolve<ITaxService>().EUVatEnabled)
             {
                 string vatName = string.Empty;
                 string vatAddress = string.Empty;
 
                 customer.VatNumber = txtVatNumber.Text;
-                customer.VatNumberStatus = IoCFactory.Resolve<ITaxManager>().GetVatNumberStatus(IoCFactory.Resolve<ICountryManager>().GetCountryById(customer.CountryId),
+                customer.VatNumberStatus = IoCFactory.Resolve<ITaxService>().GetVatNumberStatus(IoCFactory.Resolve<ICountryService>().GetCountryById(customer.CountryId),
                     customer.VatNumber, out vatName, out vatAddress);
                 //admin notification
-                if (!String.IsNullOrEmpty(customer.VatNumber) && IoCFactory.Resolve<ITaxManager>().EUVatEmailAdminWhenNewVATSubmitted)
+                if (!String.IsNullOrEmpty(customer.VatNumber) && IoCFactory.Resolve<ITaxService>().EUVatEmailAdminWhenNewVATSubmitted)
                 {
-                    IoCFactory.Resolve<IMessageManager>().SendNewVATSubmittedStoreOwnerNotification(customer,
+                    IoCFactory.Resolve<IMessageService>().SendNewVATSubmittedStoreOwnerNotification(customer,
                         vatName, vatAddress, LocalizationManager.DefaultAdminLanguage.LanguageId);
                 }
             }
@@ -360,13 +360,13 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 CreatedOn = customer.RegistrationDate,
                 UpdatedOn = customer.RegistrationDate
             };
-            if (IoCFactory.Resolve<ICustomerManager>().CanUseAddressAsBillingAddress(billingAddress))
+            if (IoCFactory.Resolve<ICustomerService>().CanUseAddressAsBillingAddress(billingAddress))
             {
-                IoCFactory.Resolve<ICustomerManager>().InsertAddress(billingAddress);
+                IoCFactory.Resolve<ICustomerService>().InsertAddress(billingAddress);
 
                 //set default billing address
                 customer.BillingAddressId = billingAddress.AddressId;
-                IoCFactory.Resolve<ICustomerManager>().UpdateCustomer(customer);
+                IoCFactory.Resolve<ICustomerService>().UpdateCustomer(customer);
             }
 
             //shipping address
@@ -389,19 +389,19 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 CreatedOn = customer.RegistrationDate,
                 UpdatedOn = customer.RegistrationDate
             };
-            if (IoCFactory.Resolve<ICustomerManager>().CanUseAddressAsShippingAddress(shippingAddress))
+            if (IoCFactory.Resolve<ICustomerService>().CanUseAddressAsShippingAddress(shippingAddress))
             {
-                IoCFactory.Resolve<ICustomerManager>().InsertAddress(shippingAddress);
+                IoCFactory.Resolve<ICustomerService>().InsertAddress(shippingAddress);
 
                 //set default shipping address
                 customer.ShippingAddressId = shippingAddress.AddressId;
-                IoCFactory.Resolve<ICustomerManager>().UpdateCustomer(customer);
+                IoCFactory.Resolve<ICustomerService>().UpdateCustomer(customer);
             }
 
             //notification
-            if (IoCFactory.Resolve<ICustomerManager>().NotifyNewCustomerRegistration)
+            if (IoCFactory.Resolve<ICustomerService>().NotifyNewCustomerRegistration)
             {
-                IoCFactory.Resolve<IMessageManager>().SendNewCustomerNotificationMessage(customer, LocalizationManager.DefaultAdminLanguage.LanguageId);
+                IoCFactory.Resolve<IMessageService>().SendNewCustomerNotificationMessage(customer, LocalizationManager.DefaultAdminLanguage.LanguageId);
             }
         }
 
@@ -436,7 +436,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
         {
             var ddlCountry = (DropDownList)CreateUserWizardStep1.ContentTemplateContainer.FindControl("ddlCountry");
             ddlCountry.Items.Clear();
-            var countryCollection = IoCFactory.Resolve<ICountryManager>().GetAllCountriesForRegistration();
+            var countryCollection = IoCFactory.Resolve<ICountryService>().GetAllCountriesForRegistration();
             foreach (var country in countryCollection)
             {
                 var ddlCountryItem2 = new ListItem(country.Name, country.CountryId.ToString());
@@ -453,7 +453,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             if (ddlCountry.SelectedItem != null)
                 countryId = int.Parse(ddlCountry.SelectedItem.Value);
 
-            var stateProvinceCollection = IoCFactory.Resolve<IStateProvinceManager>().GetStateProvincesByCountryId(countryId);
+            var stateProvinceCollection = IoCFactory.Resolve<IStateProvinceService>().GetStateProvincesByCountryId(countryId);
             foreach (var stateProvince in stateProvinceCollection)
             {
                 var ddlStateProviceItem2 = new ListItem(stateProvince.Name, stateProvince.StateProvinceId.ToString());
@@ -468,7 +468,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         private void FillTimeZones()
         {
-            if (DateTimeHelper.AllowCustomersToSetTimeZone && IoCFactory.Resolve<ICustomerManager>().FormFieldTimeZoneEnabled)
+            if (DateTimeHelper.AllowCustomersToSetTimeZone && IoCFactory.Resolve<ICustomerService>().FormFieldTimeZoneEnabled)
             {
                 var ddlTimeZone = (DropDownList)CreateUserWizardStep1.ContentTemplateContainer.FindControl("ddlTimeZone");
 
@@ -493,7 +493,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
         {
             this.ApplyLocalization();
 
-            if (IoCFactory.Resolve<ICustomerManager>().CustomerRegistrationType == CustomerRegistrationTypeEnum.Disabled)
+            if (IoCFactory.Resolve<ICustomerService>().CustomerRegistrationType == CustomerRegistrationTypeEnum.Disabled)
             {
                 CreateUserForm.Visible = false;
                 topicRegistrationNotAllowed.Visible = true;
@@ -508,7 +508,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             {
                 if (NopContext.Current.User != null && !NopContext.Current.User.IsGuest)
                 {
-                    IoCFactory.Resolve<ICustomerManager>().Logout();
+                    IoCFactory.Resolve<ICustomerService>().Logout();
                     Response.Redirect("~/register.aspx");
                 }
 
@@ -516,12 +516,12 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 var pnlEmail = CreateUserWizardStep1.ContentTemplateContainer.FindControl("pnlEmail") as HtmlTableRow;
                 if (pnlEmail != null)
                 {
-                    pnlEmail.Visible = IoCFactory.Resolve<ICustomerManager>().UsernamesEnabled;
+                    pnlEmail.Visible = IoCFactory.Resolve<ICustomerService>().UsernamesEnabled;
                 }
                 var refUserNameOrEmail = CreateUserWizardStep1.ContentTemplateContainer.FindControl("refUserNameOrEmail") as RegularExpressionValidator;
                 if (refUserNameOrEmail != null)
                 {
-                    refUserNameOrEmail.Enabled = !IoCFactory.Resolve<ICustomerManager>().UsernamesEnabled;
+                    refUserNameOrEmail.Enabled = !IoCFactory.Resolve<ICustomerService>().UsernamesEnabled;
                 }
                 #endregion
 

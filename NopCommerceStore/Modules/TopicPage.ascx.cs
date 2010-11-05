@@ -140,7 +140,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             {
                 if (localizedTopic == null)
                 {
-                    localizedTopic = IoCFactory.Resolve<ITopicManager>().GetLocalizedTopic(this.TopicId, NopContext.Current.WorkingLanguage.LanguageId);
+                    localizedTopic = IoCFactory.Resolve<ITopicService>().GetLocalizedTopic(this.TopicId, NopContext.Current.WorkingLanguage.LanguageId);
                 }
                 return localizedTopic;
             }
@@ -153,7 +153,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             {
                 if (topic == null)
                 {
-                    topic = IoCFactory.Resolve<ITopicManager>().GetTopicById(this.TopicId);
+                    topic = IoCFactory.Resolve<ITopicService>().GetTopicById(this.TopicId);
                 }
                 return topic;
             }

@@ -34,7 +34,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            Log log = IoCFactory.Resolve<ILogManager>().GetLogById(this.LogId);
+            Log log = IoCFactory.Resolve<ILogService>().GetLogById(this.LogId);
             if (log != null)
             {
                 this.lblLogType.Text = Server.HtmlEncode(log.LogType.ToString());
@@ -65,7 +65,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                IoCFactory.Resolve<ILogManager>().DeleteLog(this.LogId);
+                IoCFactory.Resolve<ILogService>().DeleteLog(this.LogId);
                 Response.Redirect("Logs.aspx");
             }
             catch (Exception exc)

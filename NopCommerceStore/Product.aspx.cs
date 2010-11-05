@@ -40,7 +40,7 @@ namespace NopSolutions.NopCommerce.Web
 
         private void CreateChildControlsTree()
         {
-            product = IoCFactory.Resolve<IProductManager>().GetProductById(this.ProductId);
+            product = IoCFactory.Resolve<IProductService>().GetProductById(this.ProductId);
             if (product != null)
             {
                 Control child = null;
@@ -89,7 +89,7 @@ namespace NopSolutions.NopCommerce.Web
 
             if (!Page.IsPostBack)
             {
-                IoCFactory.Resolve<IProductManager>().AddProductToRecentlyViewedList(product.ProductId);
+                IoCFactory.Resolve<IProductService>().AddProductToRecentlyViewedList(product.ProductId);
             }
         }
 

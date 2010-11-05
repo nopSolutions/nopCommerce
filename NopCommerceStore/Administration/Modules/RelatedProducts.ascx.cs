@@ -40,7 +40,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            Product product = IoCFactory.Resolve<IProductManager>().GetProductById(this.ProductId);
+            Product product = IoCFactory.Resolve<IProductService>().GetProductById(this.ProductId);
             if (product != null)
             {
                 pnlData.Visible = true;
@@ -89,11 +89,11 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             var picture = product.DefaultPicture;
             if (picture != null)
             {
-                return IoCFactory.Resolve<IPictureManager>().GetPictureUrl(picture, IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.ShoppingCart.ThumbnailImageSize", 80));
+                return IoCFactory.Resolve<IPictureService>().GetPictureUrl(picture, IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.ShoppingCart.ThumbnailImageSize", 80));
             }
             else
             {
-                return IoCFactory.Resolve<IPictureManager>().GetDefaultPictureUrl(IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.ShoppingCart.ThumbnailImageSize", 80));
+                return IoCFactory.Resolve<IPictureService>().GetDefaultPictureUrl(IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.ShoppingCart.ThumbnailImageSize", 80));
             }
         }
 
@@ -110,7 +110,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public void SaveInfo()
         {
-            Product product = IoCFactory.Resolve<IProductManager>().GetProductById(this.ProductId);
+            Product product = IoCFactory.Resolve<IProductService>().GetProductById(this.ProductId);
             if (product != null)
             {
                 foreach (GridViewRow row in gvRelatedProducts.Rows)
@@ -124,16 +124,16 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     int displayOrder = txtRowDisplayOrder.Value;
 
                     if (relatedProductId > 0 && !cbProductInfo2.Checked)
-                        IoCFactory.Resolve<IProductManager>().DeleteRelatedProduct(relatedProductId);
+                        IoCFactory.Resolve<IProductService>().DeleteRelatedProduct(relatedProductId);
                     if (relatedProductId > 0 && cbProductInfo2.Checked)
                     {
-                        var rp = IoCFactory.Resolve<IProductManager>().GetRelatedProductById(relatedProductId);
+                        var rp = IoCFactory.Resolve<IProductService>().GetRelatedProductById(relatedProductId);
                         if (rp!=null)
                         {
                             rp.ProductId1 = product.ProductId;
                             rp.ProductId2 = productId2;
                             rp.DisplayOrder = displayOrder;
-                            IoCFactory.Resolve<IProductManager>().UpdateRelatedProduct(rp);
+                            IoCFactory.Resolve<IProductService>().UpdateRelatedProduct(rp);
                         }
                     }
                 }

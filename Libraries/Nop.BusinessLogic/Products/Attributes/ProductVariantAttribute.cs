@@ -80,7 +80,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         {
             get
             {
-                return IoCFactory.Resolve<IProductManager>().GetProductVariantById(this.ProductVariantId);
+                return IoCFactory.Resolve<IProductService>().GetProductVariantById(this.ProductVariantId);
             }
         }
 
@@ -91,7 +91,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         {
             get
             {
-                return IoCFactory.Resolve<IProductAttributeManager>().GetProductAttributeById(this.ProductAttributeId);
+                return IoCFactory.Resolve<IProductAttributeService>().GetProductAttributeById(this.ProductAttributeId);
             }
         }
         
@@ -102,7 +102,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         {
             get
             {
-                return IoCFactory.Resolve<IProductAttributeManager>().GetProductVariantAttributeValues(this.ProductVariantAttributeId);
+                return IoCFactory.Resolve<IProductAttributeService>().GetProductVariantAttributeValues(this.ProductVariantAttributeId);
             }
         }
 

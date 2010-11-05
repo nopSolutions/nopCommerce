@@ -58,7 +58,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             try
             {
                 string keywords = txtSearchTerm.Text.Trim();
-                pagerProducts.PageSize = IoCFactory.Resolve<IProductManager>().SearchPageProductsPerPage;
+                pagerProducts.PageSize = IoCFactory.Resolve<IProductService>().SearchPageProductsPerPage;
 
                 if (!String.IsNullOrEmpty(keywords))
                 {
@@ -91,7 +91,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                                 minPrice = decimal.Parse(txtPriceFrom.Text.Trim());
                                 if (minPrice.HasValue)
                                 {
-                                    minPriceConverted = IoCFactory.Resolve<ICurrencyManager>().ConvertCurrency(minPrice.Value, NopContext.Current.WorkingCurrency, IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency);
+                                    minPriceConverted = IoCFactory.Resolve<ICurrencyService>().ConvertCurrency(minPrice.Value, NopContext.Current.WorkingCurrency, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency);
                                 }
                             }
                         }
@@ -109,7 +109,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                                 maxPrice = decimal.Parse(txtPriceTo.Text.Trim());
                                 if (maxPrice.HasValue)
                                 {
-                                    maxPriceConverted = IoCFactory.Resolve<ICurrencyManager>().ConvertCurrency(maxPrice.Value, NopContext.Current.WorkingCurrency, IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency);
+                                    maxPriceConverted = IoCFactory.Resolve<ICurrencyService>().ConvertCurrency(maxPrice.Value, NopContext.Current.WorkingCurrency, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency);
                                 }
                             }
                         }
@@ -123,7 +123,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     }
 
                     int totalRecords = 0;
-                    var products = IoCFactory.Resolve<IProductManager>().GetAllProducts(categoryId,
+                    var products = IoCFactory.Resolve<IProductService>().GetAllProducts(categoryId,
                         manufacturerId, 0, null,
                         minPriceConverted, maxPriceConverted,
                         keywords, searchInProductDescriptions,
@@ -146,7 +146,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                         CreatedOn = DateTime.UtcNow
                     };
 
-                    IoCFactory.Resolve<ISearchLogManager>().InsertSearchLog(searchLog);
+                    IoCFactory.Resolve<ISearchLogService>().InsertSearchLog(searchLog);
                 }
                 else
                 {
@@ -164,7 +164,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void BindCategories()
         {
-            var categories = IoCFactory.Resolve<ICategoryManager>().GetAllCategories();
+            var categories = IoCFactory.Resolve<ICategoryService>().GetAllCategories();
 
             if (categories.Count > 0)
             {
@@ -207,7 +207,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void BindManufacturers()
         {
-            var manufacturers = IoCFactory.Resolve<IManufacturerManager>().GetAllManufacturers();
+            var manufacturers = IoCFactory.Resolve<IManufacturerService>().GetAllManufacturers();
             if (manufacturers.Count > 0)
             {
                 this.ddlManufacturers.Items.Clear();

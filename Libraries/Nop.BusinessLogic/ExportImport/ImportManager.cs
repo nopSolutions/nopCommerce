@@ -109,11 +109,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                     bool receiveNewsletter = Convert.ToBoolean(dr["ReceiveNewsletter"]);
 
 
-                    var customer = IoCFactory.Resolve<ICustomerManager>().GetCustomerByEmail(email);
+                    var customer = IoCFactory.Resolve<ICustomerService>().GetCustomerByEmail(email);
                     if (customer == null)
                     {
                         //no customers found
-                        customer = IoCFactory.Resolve<ICustomerManager>().AddCustomerForced(customerGuid, email, username,
+                        customer = IoCFactory.Resolve<ICustomerService>().AddCustomerForced(customerGuid, email, username,
                             passwordHash, saltKey, affiliateId, billingAddressId, shippingAddressId, lastPaymentMethodId,
                             lastAppliedCouponCode, string.Empty, string.Empty,
                             languageId, currencyId, (TaxDisplayTypeEnum)taxDisplayTypeId, isTaxExempt,
@@ -149,15 +149,15 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                             customer.RegistrationDate = registrationDate;
                             customer.TimeZoneId = timeZoneId;
                             customer.AvatarId = avatarId;
-                            IoCFactory.Resolve<ICustomerManager>().UpdateCustomer(customer);
+                            IoCFactory.Resolve<ICustomerService>().UpdateCustomer(customer);
                         }
                         else
                         {
                             //customer is a guest
-                            customer = IoCFactory.Resolve<ICustomerManager>().GetCustomerByGuid(customerGuid);
+                            customer = IoCFactory.Resolve<ICustomerService>().GetCustomerByGuid(customerGuid);
                             if (customer == null)
                             {
-                                customer = IoCFactory.Resolve<ICustomerManager>().AddCustomerForced(customerGuid, email, username,
+                                customer = IoCFactory.Resolve<ICustomerService>().AddCustomerForced(customerGuid, email, username,
                                     passwordHash, saltKey, affiliateId, billingAddressId, shippingAddressId, lastPaymentMethodId,
                                     lastAppliedCouponCode, string.Empty,
                                     string.Empty, languageId, currencyId,
@@ -192,37 +192,37 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                                 customer.TimeZoneId = timeZoneId;
                                 customer.AvatarId = avatarId;
 
-                                IoCFactory.Resolve<ICustomerManager>().UpdateCustomer(customer);
+                                IoCFactory.Resolve<ICustomerService>().UpdateCustomer(customer);
                             }
                         }
                     }
 
-                    if (IoCFactory.Resolve<ICustomerManager>().FormFieldGenderEnabled)
+                    if (IoCFactory.Resolve<ICustomerService>().FormFieldGenderEnabled)
                         customer.Gender = gender;
                     customer.FirstName = firstName;
                     customer.LastName = lastName;
-                    if (IoCFactory.Resolve<ICustomerManager>().FormFieldCompanyEnabled)
+                    if (IoCFactory.Resolve<ICustomerService>().FormFieldCompanyEnabled)
                         customer.Company = company;
-                    if (IoCFactory.Resolve<ICustomerManager>().FormFieldStreetAddressEnabled)
+                    if (IoCFactory.Resolve<ICustomerService>().FormFieldStreetAddressEnabled)
                         customer.StreetAddress = streetAddress;
-                    if (IoCFactory.Resolve<ICustomerManager>().FormFieldStreetAddress2Enabled)
+                    if (IoCFactory.Resolve<ICustomerService>().FormFieldStreetAddress2Enabled)
                         customer.StreetAddress2 = streetAddress2;
-                    if (IoCFactory.Resolve<ICustomerManager>().FormFieldPostCodeEnabled)
+                    if (IoCFactory.Resolve<ICustomerService>().FormFieldPostCodeEnabled)
                         customer.ZipPostalCode = zipPostalCode;
-                    if (IoCFactory.Resolve<ICustomerManager>().FormFieldCityEnabled)
+                    if (IoCFactory.Resolve<ICustomerService>().FormFieldCityEnabled)
                         customer.City = city;
-                    if (IoCFactory.Resolve<ICustomerManager>().FormFieldPhoneEnabled)
+                    if (IoCFactory.Resolve<ICustomerService>().FormFieldPhoneEnabled)
                         customer.PhoneNumber = phoneNumber;
-                    if (IoCFactory.Resolve<ICustomerManager>().FormFieldFaxEnabled)
+                    if (IoCFactory.Resolve<ICustomerService>().FormFieldFaxEnabled)
                         customer.FaxNumber = faxNumber;
-                    if (IoCFactory.Resolve<ICustomerManager>().FormFieldCountryEnabled)
+                    if (IoCFactory.Resolve<ICustomerService>().FormFieldCountryEnabled)
                         customer.CountryId = countryId;
-                    if (IoCFactory.Resolve<ICustomerManager>().FormFieldStateEnabled)
+                    if (IoCFactory.Resolve<ICustomerService>().FormFieldStateEnabled)
                         customer.StateProvinceId = stateProvinceId;
-                    if (IoCFactory.Resolve<ICustomerManager>().FormFieldNewsletterEnabled)
+                    if (IoCFactory.Resolve<ICustomerService>().FormFieldNewsletterEnabled)
                         customer.ReceiveNewsletter = receiveNewsletter;
 
-                    if (IoCFactory.Resolve<ITaxManager>().EUVatEnabled)
+                    if (IoCFactory.Resolve<ITaxService>().EUVatEnabled)
                     {
                         customer.VatNumber = vatNumber;
                         customer.VatNumberStatus = vatNumberStatus;
@@ -302,10 +302,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                     decimal Height = Convert.ToDecimal(dr["Height"]);
                     DateTime CreatedOn = DateTime.FromOADate(Convert.ToDouble(dr["CreatedOn"]));
                     
-                    var productVariant = IoCFactory.Resolve<IProductManager>().GetProductVariantBySKU(SKU);
+                    var productVariant = IoCFactory.Resolve<IProductService>().GetProductVariantBySKU(SKU);
                     if (productVariant != null)
                     {
-                        var product = IoCFactory.Resolve<IProductManager>().GetProductById(productVariant.ProductId);
+                        var product = IoCFactory.Resolve<IProductService>().GetProductById(productVariant.ProductId);
                         product.Name = Name;
                         product.ShortDescription = ShortDescription;
                         product.FullDescription = FullDescription;
@@ -320,7 +320,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                         product.CreatedOn = CreatedOn;
                         product.UpdatedOn = DateTime.UtcNow;
 
-                        IoCFactory.Resolve<IProductManager>().UpdateProduct(product);
+                        IoCFactory.Resolve<IProductService>().UpdateProduct(product);
                         
                         productVariant.SKU = SKU;
                         productVariant.ManufacturerPartNumber = ManufacturerPartNumber;
@@ -370,7 +370,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                         productVariant.CreatedOn = CreatedOn;
                         productVariant.UpdatedOn = DateTime.UtcNow;
 
-                        IoCFactory.Resolve<IProductManager>().UpdateProductVariant(productVariant);
+                        IoCFactory.Resolve<IProductService>().UpdateProductVariant(productVariant);
                     }
                     else
                     {
@@ -390,7 +390,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                             CreatedOn = CreatedOn,
                             UpdatedOn = DateTime.UtcNow
                         };
-                        IoCFactory.Resolve<IProductManager>().InsertProduct(product);
+                        IoCFactory.Resolve<IProductService>().InsertProduct(product);
 
                         productVariant = new ProductVariant()
                         {
@@ -444,7 +444,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                             UpdatedOn = DateTime.UtcNow
                         };
 
-                        IoCFactory.Resolve<IProductManager>().InsertProductVariant(productVariant);
+                        IoCFactory.Resolve<IProductService>().InsertProductVariant(productVariant);
                     }
                 }
             }

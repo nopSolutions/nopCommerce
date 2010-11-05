@@ -73,7 +73,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
         {
             get
             {
-                return IoCFactory.Resolve<IManufacturerManager>().GetManufacturerById(this.ManufacturerId);
+                return IoCFactory.Resolve<IManufacturerService>().GetManufacturerById(this.ManufacturerId);
             }
         }
 
@@ -84,7 +84,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
         {
             get
             {
-                return IoCFactory.Resolve<IProductManager>().GetProductById(this.ProductId);
+                return IoCFactory.Resolve<IProductService>().GetProductById(this.ProductId);
             }
         }
 

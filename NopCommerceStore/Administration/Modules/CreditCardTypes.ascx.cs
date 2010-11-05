@@ -42,7 +42,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         void BindGrid()
         {
-            var creditCardTypeCollection = IoCFactory.Resolve<IPaymentManager>().GetAllCreditCardTypes();
+            var creditCardTypeCollection = IoCFactory.Resolve<IPaymentService>().GetAllCreditCardTypes();
             gvCreditCardTypes.DataSource = creditCardTypeCollection;
             gvCreditCardTypes.DataBind();
         }

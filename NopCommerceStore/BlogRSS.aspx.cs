@@ -41,9 +41,9 @@ namespace NopSolutions.NopCommerce.Web
 
         private void BindData()
         {
-            if (IoCFactory.Resolve<IBlogManager>().BlogEnabled)
+            if (IoCFactory.Resolve<IBlogService>().BlogEnabled)
             {
-                var blogPosts = IoCFactory.Resolve<IBlogManager>().GetAllBlogPosts(LanguageId);
+                var blogPosts = IoCFactory.Resolve<IBlogService>().GetAllBlogPosts(LanguageId);
                 rptrBlogPosts.DataSource = blogPosts;
                 rptrBlogPosts.DataBind();
             }

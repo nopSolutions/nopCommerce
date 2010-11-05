@@ -39,7 +39,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         void BindGrid()
         {
-            var warehouseCollection = IoCFactory.Resolve<IWarehouseManager>().GetAllWarehouses();
+            var warehouseCollection = IoCFactory.Resolve<IWarehouseService>().GetAllWarehouses();
             gvWarehouses.DataSource = warehouseCollection;
             gvWarehouses.DataBind();
         }

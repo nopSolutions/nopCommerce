@@ -64,7 +64,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.UPSConfigure
             }
 
             this.ddlShippedFromCountry.Items.Clear();
-            var countries = IoCFactory.Resolve<ICountryManager>().GetAllCountries();
+            var countries = IoCFactory.Resolve<ICountryService>().GetAllCountries();
             foreach (Country country in countries)
             {
                 ListItem ddlItem1 = new ListItem(country.Name, country.CountryId.ToString());

@@ -39,7 +39,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             var lblUsernameOrEmail = LoginForm.FindControl("lblUsernameOrEmail") as Label;
             if (lblUsernameOrEmail != null)
             {
-                if (IoCFactory.Resolve<ICustomerManager>().UsernamesEnabled)
+                if (IoCFactory.Resolve<ICustomerService>().UsernamesEnabled)
                 {
                     lblUsernameOrEmail.Text = GetLocaleResourceString("Login.Username");
                 }
@@ -51,7 +51,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             var UserNameOrEmailRequired = LoginForm.FindControl("UserNameOrEmailRequired") as RequiredFieldValidator;
             if (UserNameOrEmailRequired != null)
             {
-                if (IoCFactory.Resolve<ICustomerManager>().UsernamesEnabled)
+                if (IoCFactory.Resolve<ICustomerService>().UsernamesEnabled)
                 {
                     UserNameOrEmailRequired.ErrorMessage = GetLocaleResourceString("Login.UserNameRequired");
                     UserNameOrEmailRequired.ToolTip = GetLocaleResourceString("Login.UserNameRequired");
@@ -140,7 +140,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             get
             {
                 bool checkoutAsGuest = CommonHelper.QueryStringBool("CheckoutAsGuest");
-                return checkoutAsGuest && IoCFactory.Resolve<ICustomerManager>().AnonymousCheckoutAllowed;
+                return checkoutAsGuest && IoCFactory.Resolve<ICustomerService>().AnonymousCheckoutAllowed;
             }
         }
     }

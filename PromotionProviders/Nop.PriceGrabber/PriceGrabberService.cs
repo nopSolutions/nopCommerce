@@ -30,9 +30,9 @@ namespace NopSolutions.NopCommerce.PriceGrabber
             {
                 writer.WriteLine("Unique Retailer SKU;Manufacturer Name;Manufacturer Part Number;Product Title;Categorization;Product URL;Image URL;Detailed Description;Selling Price;Condition;Availability");
 
-                foreach(Product p in IoCFactory.Resolve<IProductManager>().GetAllProducts(false))
+                foreach(Product p in IoCFactory.Resolve<IProductService>().GetAllProducts(false))
                 {
-                    foreach (ProductVariant pv in IoCFactory.Resolve<IProductManager>().GetProductVariantsByProductId(p.ProductId, false))
+                    foreach (ProductVariant pv in IoCFactory.Resolve<IProductService>().GetProductVariantsByProductId(p.ProductId, false))
                     {
                         string sku = pv.ProductVariantId.ToString();
                         string manufacturerName = p.ProductManufacturers.Count > 0 ? p.ProductManufacturers[0].Manufacturer.Name : String.Empty;
@@ -41,14 +41,14 @@ namespace NopSolutions.NopCommerce.PriceGrabber
                         string productUrl = SEOHelper.GetProductUrl(p);
 
                         string imageUrl = string.Empty;
-                        var pictures = IoCFactory.Resolve<IPictureManager>().GetPicturesByProductId(p.ProductId, 1);
+                        var pictures = IoCFactory.Resolve<IPictureService>().GetPicturesByProductId(p.ProductId, 1);
                         if (pictures.Count > 0)
-                            imageUrl = IoCFactory.Resolve<IPictureManager>().GetPictureUrl(pictures[0], IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("PromotionProvider.PriceGrabber.ProductThumbnailImageSize"), true);
+                            imageUrl = IoCFactory.Resolve<IPictureService>().GetPictureUrl(pictures[0], IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("PromotionProvider.PriceGrabber.ProductThumbnailImageSize"), true);
                         else
-                            imageUrl = IoCFactory.Resolve<IPictureManager>().GetDefaultPictureUrl(PictureTypeEnum.Entity, IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("PromotionProvider.PriceGrabber.ProductThumbnailImageSize"));
+                            imageUrl = IoCFactory.Resolve<IPictureService>().GetDefaultPictureUrl(PictureTypeEnum.Entity, IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("PromotionProvider.PriceGrabber.ProductThumbnailImageSize"));
 
                         string description = pv.Description;
-                        string price = IoCFactory.Resolve<ICurrencyManager>().ConvertCurrency(pv.Price, IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency, PriceGrabberService.UsedCurrency).ToString(new CultureInfo("en-US", false).NumberFormat);
+                        string price = IoCFactory.Resolve<ICurrencyService>().ConvertCurrency(pv.Price, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency, PriceGrabberService.UsedCurrency).ToString(new CultureInfo("en-US", false).NumberFormat);
                         string availability = pv.StockQuantity > 0 ? "Yes" : "No";
                         string categorization = "no category";
 
@@ -69,7 +69,7 @@ namespace NopSolutions.NopCommerce.PriceGrabber
                         if (productCategories.Count > 0)
                         {
                             StringBuilder sb = new StringBuilder();
-                            foreach (Category cat in IoCFactory.Resolve<ICategoryManager>().GetBreadCrumb(productCategories[0].CategoryId))
+                            foreach (Category cat in IoCFactory.Resolve<ICategoryService>().GetBreadCrumb(productCategories[0].CategoryId))
                             {
                                 sb.AppendFormat("{0}>", cat.Name);
                             }
@@ -116,9 +116,9 @@ namespace NopSolutions.NopCommerce.PriceGrabber
             get
             {
                 int currencyId = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("PromotionProvider.PriceGrabber.Currency");
-                var currency = IoCFactory.Resolve<ICurrencyManager>().GetCurrencyById(currencyId);
+                var currency = IoCFactory.Resolve<ICurrencyService>().GetCurrencyById(currencyId);
                 if (currency == null || !currency.Published)
-                    currency = IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency;
+                    currency = IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency;
                 return currency;
             }
             set

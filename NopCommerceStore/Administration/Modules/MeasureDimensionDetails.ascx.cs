@@ -72,7 +72,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                IoCFactory.Resolve<IMeasureManager>().DeleteMeasureDimension(this.MeasureDimensionId);
+                IoCFactory.Resolve<IMeasureService>().DeleteMeasureDimension(this.MeasureDimensionId);
                 Response.Redirect("Measures.aspx");
             }
             catch (Exception exc)

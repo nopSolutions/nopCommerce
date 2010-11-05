@@ -42,7 +42,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            ProductVariant productVariant = IoCFactory.Resolve<IProductManager>().GetProductVariantById(this.ProductVariantId);
+            ProductVariant productVariant = IoCFactory.Resolve<IProductService>().GetProductVariantById(this.ProductVariantId);
             if (productVariant != null)
             {
                 Product product = productVariant.Product;
@@ -72,7 +72,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             ctrlProductVariantAttributes.SaveInfo();
             ctrlProductVariantDiscounts.SaveInfo();
 
-            IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
+            IoCFactory.Resolve<ICustomerActivityService>().InsertActivity(
                 "EditProductVariant",
                 GetLocaleResourceString("ActivityLog.EditProductVariant"),
                 productVariant.FullProductName);
@@ -118,12 +118,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                ProductVariant productVariant = IoCFactory.Resolve<IProductManager>().GetProductVariantById(this.ProductVariantId);
+                ProductVariant productVariant = IoCFactory.Resolve<IProductService>().GetProductVariantById(this.ProductVariantId);
                 if (productVariant != null)
                 {
-                    IoCFactory.Resolve<IProductManager>().MarkProductVariantAsDeleted(productVariant.ProductVariantId);
+                    IoCFactory.Resolve<IProductService>().MarkProductVariantAsDeleted(productVariant.ProductVariantId);
 
-                    IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
+                    IoCFactory.Resolve<ICustomerActivityService>().InsertActivity(
                         "DeleteProductVariant",
                         GetLocaleResourceString("ActivityLog.DeleteProductVariant"),
                         productVariant.FullProductName);
@@ -144,7 +144,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         
         protected override void OnPreRender(EventArgs e)
         {
-            ProductVariant productVariant = IoCFactory.Resolve<IProductManager>().GetProductVariantById(this.ProductVariantId);
+            ProductVariant productVariant = IoCFactory.Resolve<IProductService>().GetProductVariantById(this.ProductVariantId);
             if (productVariant != null)
             {
                 PreviewButton.OnClientClick = string.Format("javascript:OpenWindow('{0}', 800, 600, true); return false;", SEOHelper.GetProductUrl(productVariant.ProductId));

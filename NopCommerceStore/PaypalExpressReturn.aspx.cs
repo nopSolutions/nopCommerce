@@ -54,7 +54,7 @@ namespace NopSolutions.NopCommerce.Web
 
                     PaymentInfo paymentInfo = new PaymentInfo();
 
-                    PaymentMethod paypalExpressPaymentMethod = IoCFactory.Resolve<IPaymentManager>().GetPaymentMethodBySystemKeyword("PayPalExpress");
+                    PaymentMethod paypalExpressPaymentMethod = IoCFactory.Resolve<IPaymentService>().GetPaymentMethodBySystemKeyword("PayPalExpress");
             
                     paymentInfo.PaymentMethodId = paypalExpressPaymentMethod.PaymentMethodId;
                     paymentInfo.BillingAddress = NopContext.Current.User.BillingAddress;
@@ -65,9 +65,9 @@ namespace NopSolutions.NopCommerce.Web
                     paymentInfo.CustomerCurrency = NopContext.Current.WorkingCurrency;
 
                     int orderId = 0;
-                    string result = IoCFactory.Resolve<IOrderManager>().PlaceOrder(paymentInfo, NopContext.Current.User, out orderId);
+                    string result = IoCFactory.Resolve<IOrderService>().PlaceOrder(paymentInfo, NopContext.Current.User, out orderId);
 
-                    Order order = IoCFactory.Resolve<IOrderManager>().GetOrderById(orderId);
+                    Order order = IoCFactory.Resolve<IOrderService>().GetOrderById(orderId);
                     if (!String.IsNullOrEmpty(result))
                     {
                         lConfirmOrderError.Text = Server.HtmlEncode(result);
@@ -75,12 +75,12 @@ namespace NopSolutions.NopCommerce.Web
                         return;
                     }
                     else
-                        IoCFactory.Resolve<IPaymentManager>().PostProcessPayment(order);
+                        IoCFactory.Resolve<IPaymentService>().PostProcessPayment(order);
                     Response.Redirect("~/checkoutcompleted.aspx");
                 }
                 catch (Exception exc)
                 {
-                    IoCFactory.Resolve<ILogManager>().InsertLog(LogTypeEnum.OrderError, exc.Message, exc);
+                    IoCFactory.Resolve<ILogService>().InsertLog(LogTypeEnum.OrderError, exc.Message, exc);
                     lConfirmOrderError.Text = Server.HtmlEncode(exc.ToString());
                     btnNextStep.Visible = false;
                 }
@@ -91,13 +91,13 @@ namespace NopSolutions.NopCommerce.Web
         {
             CommonHelper.SetResponseNoCache(Response);
 
-            if ((NopContext.Current.User == null) || (NopContext.Current.User.IsGuest && !IoCFactory.Resolve<ICustomerManager>().AnonymousCheckoutAllowed))
+            if ((NopContext.Current.User == null) || (NopContext.Current.User.IsGuest && !IoCFactory.Resolve<ICustomerService>().AnonymousCheckoutAllowed))
             {
                 string loginURL = SEOHelper.GetLoginPageUrl(true);
                 Response.Redirect(loginURL);
             }
 
-            ShoppingCart cart = IoCFactory.Resolve<IShoppingCartManager>().GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
+            ShoppingCart cart = IoCFactory.Resolve<IShoppingCartService>().GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
             if (cart.Count == 0)
                 Response.Redirect(SEOHelper.GetShoppingCartUrl());
 

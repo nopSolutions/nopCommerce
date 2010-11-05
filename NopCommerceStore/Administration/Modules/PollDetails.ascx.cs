@@ -75,7 +75,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                IoCFactory.Resolve<IPollManager>().DeletePoll(this.PollId);
+                IoCFactory.Resolve<IPollService>().DeletePoll(this.PollId);
                 Response.Redirect("Polls.aspx");
             }
             catch (Exception exc)

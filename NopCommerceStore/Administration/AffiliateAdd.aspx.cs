@@ -35,7 +35,7 @@ namespace NopSolutions.NopCommerce.Web.Administration
     {
         protected override bool ValidatePageSecurity()
         {
-            return IoCFactory.Resolve<IACLManager>().IsActionAllowed("ManageAffiliates");
+            return IoCFactory.Resolve<IACLService>().IsActionAllowed("ManageAffiliates");
         }
     }
 }

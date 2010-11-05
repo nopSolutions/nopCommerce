@@ -34,7 +34,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            CustomerRole customerRole = IoCFactory.Resolve<ICustomerManager>().GetCustomerRoleById(this.CustomerRoleId);
+            CustomerRole customerRole = IoCFactory.Resolve<ICustomerService>().GetCustomerRoleById(this.CustomerRoleId);
             if (customerRole != null)
             {
                 this.txtName.Text = customerRole.Name;
@@ -54,7 +54,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public CustomerRole SaveInfo()
         {
-            CustomerRole customerRole = IoCFactory.Resolve<ICustomerManager>().GetCustomerRoleById(this.CustomerRoleId);
+            CustomerRole customerRole = IoCFactory.Resolve<ICustomerService>().GetCustomerRoleById(this.CustomerRoleId);
 
             if (customerRole != null)
             {
@@ -62,7 +62,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 customerRole.FreeShipping = cbFreeShipping.Checked;
                 customerRole.TaxExempt = cbTaxExempt.Checked;
                 customerRole.Active = cbActive.Checked;
-                IoCFactory.Resolve<ICustomerManager>().UpdateCustomerRole(customerRole);
+                IoCFactory.Resolve<ICustomerService>().UpdateCustomerRole(customerRole);
             }
             else
             {
@@ -73,7 +73,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     TaxExempt = cbTaxExempt.Checked,
                     Active = cbActive.Checked
                 };
-                IoCFactory.Resolve<ICustomerManager>().InsertCustomerRole(customerRole);
+                IoCFactory.Resolve<ICustomerService>().InsertCustomerRole(customerRole);
             }
             return customerRole;
         }

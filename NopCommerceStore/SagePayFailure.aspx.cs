@@ -40,7 +40,7 @@ namespace NopSolutions.NopCommerce.Web
                 {
                     // this is a very serious error - it means that the SagePay message is corrupt
                     string message = "Error in response from SagePay - expected failure, but saw OK - status is " + status;
-                    IoCFactory.Resolve<ILogManager>().InsertLog(LogTypeEnum.OrderError, message, decrypted);
+                    IoCFactory.Resolve<ILogService>().InsertLog(LogTypeEnum.OrderError, message, decrypted);
                     throw new NopException("Response Incorrect");
                 }
 
@@ -59,21 +59,21 @@ namespace NopSolutions.NopCommerce.Web
                 {
                     // this is a very serious error - it means that the SagePay message is corrupt :(
                     string message = "Error in VendorTxCode response from SagePay - status is " + status;
-                    IoCFactory.Resolve<ILogManager>().InsertLog(LogTypeEnum.OrderError, message, decrypted);
+                    IoCFactory.Resolve<ILogService>().InsertLog(LogTypeEnum.OrderError, message, decrypted);
                     throw new NopException("Response Incorrect");
                 }
 
                 // we've got here and we have a valid VendorTxCode and a valid order id
-                Order order = IoCFactory.Resolve<IOrderManager>().GetOrderById((int)Convert.ToDouble(VendorTxCode));
+                Order order = IoCFactory.Resolve<IOrderService>().GetOrderById((int)Convert.ToDouble(VendorTxCode));
                 if (order == null)
                     throw new NopException(string.Format("The order ID {0} doesn't exists", VendorTxCode));
 
                 // would be nice to let the user have another go here - e.g. with a different card
 
                 // cancel the order and let the customer know
-                if (IoCFactory.Resolve<IOrderManager>().CanCancelOrder(order))
+                if (IoCFactory.Resolve<IOrderService>().CanCancelOrder(order))
                 {
-                    IoCFactory.Resolve<IOrderManager>().CancelOrder(order.OrderId, true);
+                    IoCFactory.Resolve<IOrderService>().CancelOrder(order.OrderId, true);
                 }
             }
         }

@@ -13,7 +13,7 @@ namespace NopSolutions.NopCommerce.Web.Administration
     {
         protected override bool ValidatePageSecurity()
         {
-            return IoCFactory.Resolve<IACLManager>().IsActionAllowed("ManagePromotionProviders");
+            return IoCFactory.Resolve<IACLService>().IsActionAllowed("ManagePromotionProviders");
         } 
     }
 }

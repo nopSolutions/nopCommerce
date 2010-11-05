@@ -44,7 +44,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
                 this._maxTries = int.Parse(attribute1.Value);
             }
 
-            var queuedEmails = IoCFactory.Resolve<IMessageManager>().GetAllQueuedEmails(10000, true, _maxTries);
+            var queuedEmails = IoCFactory.Resolve<IMessageService>().GetAllQueuedEmails(10000, true, _maxTries);
             foreach (QueuedEmail queuedEmail in queuedEmails)
             {
                 List<string> bcc = new List<string>();
@@ -60,20 +60,20 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
 
                 try
                 {
-                    IoCFactory.Resolve<IMessageManager>().SendEmail(queuedEmail.Subject, queuedEmail.Body,
+                    IoCFactory.Resolve<IMessageService>().SendEmail(queuedEmail.Subject, queuedEmail.Body,
                        new MailAddress(queuedEmail.From, queuedEmail.FromName),
                        new MailAddress(queuedEmail.To, queuedEmail.ToName), bcc, cc, queuedEmail.EmailAccount);
 
                     queuedEmail.SendTries = queuedEmail.SendTries + 1;
                     queuedEmail.SentOn = DateTime.UtcNow;
-                    IoCFactory.Resolve<IMessageManager>().UpdateQueuedEmail(queuedEmail);
+                    IoCFactory.Resolve<IMessageService>().UpdateQueuedEmail(queuedEmail);
                 }
                 catch (Exception exc)
                 {
                     queuedEmail.SendTries = queuedEmail.SendTries + 1;
-                    IoCFactory.Resolve<IMessageManager>().UpdateQueuedEmail(queuedEmail);
+                    IoCFactory.Resolve<IMessageService>().UpdateQueuedEmail(queuedEmail);
 
-                    IoCFactory.Resolve<ILogManager>().InsertLog(LogTypeEnum.MailError, string.Format("Error sending e-mail. {0}", exc.Message), exc);
+                    IoCFactory.Resolve<ILogService>().InsertLog(LogTypeEnum.MailError, string.Format("Error sending e-mail. {0}", exc.Message), exc);
                 }
             }
         }

@@ -41,17 +41,17 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         private void BindData()
         {
             //pending
-            var orders_os_pending = IoCFactory.Resolve<IOrderManager>().GetOrderReport(OrderStatusEnum.Pending, null, null);
+            var orders_os_pending = IoCFactory.Resolve<IOrderService>().GetOrderReport(OrderStatusEnum.Pending, null, null);
             lblTotalIncomplete.Text = orders_os_pending.Count.ToString();
             lblTotalIncompleteValue.Text = PriceHelper.FormatPrice(orders_os_pending.Total, true, false);
 
             //not paid
-            var orders_ps_pending = IoCFactory.Resolve<IOrderManager>().GetOrderReport(null, PaymentStatusEnum.Pending, null);
+            var orders_ps_pending = IoCFactory.Resolve<IOrderService>().GetOrderReport(null, PaymentStatusEnum.Pending, null);
             lblTotalUnpaid.Text = orders_ps_pending.Count.ToString();
             lblTotalUnpaidValue.Text = PriceHelper.FormatPrice(orders_ps_pending.Total, true, false);
 
             //not shipped
-            var orders_ss_pending = IoCFactory.Resolve<IOrderManager>().GetOrderReport(null, null, ShippingStatusEnum.NotYetShipped);
+            var orders_ss_pending = IoCFactory.Resolve<IOrderService>().GetOrderReport(null, null, ShippingStatusEnum.NotYetShipped);
             lblTotalUnshipped.Text = orders_ss_pending.Count.ToString();
             lblTotalUnshippedValue.Text = PriceHelper.FormatPrice(orders_ss_pending.Total, true, false);
         }

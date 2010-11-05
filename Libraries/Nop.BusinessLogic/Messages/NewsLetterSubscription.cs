@@ -65,7 +65,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         {
             get
             {
-                return IoCFactory.Resolve<ICustomerManager>().GetCustomerByEmail(Email);
+                return IoCFactory.Resolve<ICustomerService>().GetCustomerByEmail(Email);
             }
         }
 

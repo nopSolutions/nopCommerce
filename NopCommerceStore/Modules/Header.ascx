@@ -24,7 +24,7 @@
                             <% if (NopContext.Current.IsCurrentCustomerImpersonated)
                                { 
                             %>
-                            <span class="impersonate">(<%=string.Format(GetLocaleResourceString("Account.ImpersonatedAs"), IoCFactory.Resolve<ICustomerManager>().UsernamesEnabled ? Server.HtmlEncode(NopContext.Current.User.Username) : Server.HtmlEncode(NopContext.Current.User.Email))%>
+                            <span class="impersonate">(<%=string.Format(GetLocaleResourceString("Account.ImpersonatedAs"), IoCFactory.Resolve<ICustomerService>().UsernamesEnabled ? Server.HtmlEncode(NopContext.Current.User.Username) : Server.HtmlEncode(NopContext.Current.User.Email))%>
                                 -
                                 <asp:LinkButton runat="server" ID="lFinishImpersonate" Text="<% $NopResources:Account.ImpersonatedAs.Finish %>"
                                     ToolTip="<% $NopResources:Account.ImpersonatedAs.Finish.Tooltip %>" OnClick="lFinishImpersonate_Click"
@@ -33,7 +33,7 @@
                         </li>
                         <li><a href="<%=Page.ResolveUrl("~/logout.aspx")%>" class="ico-logout">
                             <%=GetLocaleResourceString("Account.Logout")%></a> </li>
-                        <% if (IoCFactory.Resolve<IForumManager>().AllowPrivateMessages)
+                        <% if (IoCFactory.Resolve<IForumService>().AllowPrivateMessages)
                            { %>
                         <li><a href="<%=Page.ResolveUrl("~/privatemessages.aspx")%>" class="ico-inbox">
                             <%=GetLocaleResourceString("PrivateMessages.Inbox")%></a>
@@ -44,13 +44,13 @@
                 </asp:LoginView>
                 <li><a href="<%= SEOHelper.GetShoppingCartUrl()%>" class="ico-cart">
                     <%=GetLocaleResourceString("Account.ShoppingCart")%>
-                </a><a href="<%= SEOHelper.GetShoppingCartUrl()%>">(<%=IoCFactory.Resolve<IShoppingCartManager>().GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart).TotalProducts%>)</a>
+                </a><a href="<%= SEOHelper.GetShoppingCartUrl()%>">(<%=IoCFactory.Resolve<IShoppingCartService>().GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart).TotalProducts%>)</a>
                 </li>
                 <% if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Common.EnableWishlist"))
                    { %>
                 <li><a href="<%= SEOHelper.GetWishlistUrl()%>" class="ico-wishlist">
                     <%=GetLocaleResourceString("Wishlist.Wishlist")%></a> <a href="<%= SEOHelper.GetWishlistUrl()%>">
-                        (<%=IoCFactory.Resolve<IShoppingCartManager>().GetCurrentShoppingCart(ShoppingCartTypeEnum.Wishlist).TotalProducts%>)</a></li>
+                        (<%=IoCFactory.Resolve<IShoppingCartService>().GetCurrentShoppingCart(ShoppingCartTypeEnum.Wishlist).TotalProducts%>)</a></li>
                 <%} %>
                 <% if (NopContext.Current.User != null && NopContext.Current.User.IsAdmin)
                    { %>

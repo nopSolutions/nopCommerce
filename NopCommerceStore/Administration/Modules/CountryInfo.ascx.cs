@@ -32,7 +32,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            Country country = IoCFactory.Resolve<ICountryManager>().GetCountryById(this.CountryId);
+            Country country = IoCFactory.Resolve<ICountryService>().GetCountryById(this.CountryId);
             if (country != null)
             {
                 this.txtName.Text = country.Name;
@@ -58,7 +58,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public Country SaveInfo()
         {
-            Country country = IoCFactory.Resolve<ICountryManager>().GetCountryById(this.CountryId);
+            Country country = IoCFactory.Resolve<ICountryService>().GetCountryById(this.CountryId);
 
             if (country != null)
             {
@@ -72,7 +72,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 country.SubjectToVAT = cbSubjectToVAT.Checked;
                 country.Published = cbPublished.Checked;
                 country.DisplayOrder = txtDisplayOrder.Value;
-                IoCFactory.Resolve<ICountryManager>().UpdateCountry(country);
+                IoCFactory.Resolve<ICountryService>().UpdateCountry(country);
             }
             else
             {
@@ -89,7 +89,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     Published = cbPublished.Checked,
                     DisplayOrder = txtDisplayOrder.Value
                 };
-                IoCFactory.Resolve<ICountryManager>().InsertCountry(country);
+                IoCFactory.Resolve<ICountryService>().InsertCountry(country);
             }
 
             return country;

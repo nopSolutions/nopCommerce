@@ -23,14 +23,14 @@ namespace NopSolutions.NopCommerce.Web.Modules
         {
             try
             {
-                var subscription = IoCFactory.Resolve<IMessageManager>().GetNewsLetterSubscriptionByEmail(txtEmail.Text);
+                var subscription = IoCFactory.Resolve<IMessageService>().GetNewsLetterSubscriptionByEmail(txtEmail.Text);
                 if(subscription != null)
                 {
                     if(rbSubscribe.Checked)
                     {
                         if (!subscription.Active)
                         {
-                            IoCFactory.Resolve<IMessageManager>().SendNewsLetterSubscriptionActivationMessage(subscription.NewsLetterSubscriptionId, NopContext.Current.WorkingLanguage.LanguageId);
+                            IoCFactory.Resolve<IMessageService>().SendNewsLetterSubscriptionActivationMessage(subscription.NewsLetterSubscriptionId, NopContext.Current.WorkingLanguage.LanguageId);
                         }
                         lblResult.Text = GetLocaleResourceString("NewsLetterSubscriptionBox.SubscriptionCreated");
                     }
@@ -38,7 +38,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     {
                         if (subscription.Active)
                         {
-                            IoCFactory.Resolve<IMessageManager>().SendNewsLetterSubscriptionDeactivationMessage(subscription.NewsLetterSubscriptionId, NopContext.Current.WorkingLanguage.LanguageId);
+                            IoCFactory.Resolve<IMessageService>().SendNewsLetterSubscriptionDeactivationMessage(subscription.NewsLetterSubscriptionId, NopContext.Current.WorkingLanguage.LanguageId);
                         }
                         lblResult.Text = GetLocaleResourceString("NewsLetterSubscriptionBox.SubscriptionDeactivated");
                     }
@@ -52,8 +52,8 @@ namespace NopSolutions.NopCommerce.Web.Modules
                         Active = false,
                         CreatedOn = DateTime.UtcNow
                     };
-                    IoCFactory.Resolve<IMessageManager>().InsertNewsLetterSubscription(subscription);
-                    IoCFactory.Resolve<IMessageManager>().SendNewsLetterSubscriptionActivationMessage(subscription.NewsLetterSubscriptionId, NopContext.Current.WorkingLanguage.LanguageId);
+                    IoCFactory.Resolve<IMessageService>().InsertNewsLetterSubscription(subscription);
+                    IoCFactory.Resolve<IMessageService>().SendNewsLetterSubscriptionActivationMessage(subscription.NewsLetterSubscriptionId, NopContext.Current.WorkingLanguage.LanguageId);
                     lblResult.Text = GetLocaleResourceString("NewsLetterSubscriptionBox.SubscriptionCreated");
                 }
                 else

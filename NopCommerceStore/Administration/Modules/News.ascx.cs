@@ -40,7 +40,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         void BindData()
         {
-            var newsCollection = IoCFactory.Resolve<INewsManager>().GetAllNews(0);
+            var newsCollection = IoCFactory.Resolve<INewsService>().GetAllNews(0);
             gvNews.DataSource = newsCollection;
             gvNews.DataBind();
         }

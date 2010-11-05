@@ -42,10 +42,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void BindData()
         {
-            var product = IoCFactory.Resolve<IProductManager>().GetProductById(this.ProductId);
+            var product = IoCFactory.Resolve<IProductService>().GetProductById(this.ProductId);
             if (product != null)
             {
-                this.Visible = IoCFactory.Resolve<IProductManager>().CompareProductsEnabled;
+                this.Visible = IoCFactory.Resolve<IProductService>().CompareProductsEnabled;
             }
             else
                 this.Visible = false;
@@ -53,10 +53,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void btnAddToCompareList_Click(object sender, EventArgs e)
         {
-            var product = IoCFactory.Resolve<IProductManager>().GetProductById(this.ProductId);
+            var product = IoCFactory.Resolve<IProductService>().GetProductById(this.ProductId);
             if (product != null)
             {
-                IoCFactory.Resolve<IProductManager>().AddProductToCompareList(product.ProductId);
+                IoCFactory.Resolve<IProductService>().AddProductToCompareList(product.ProductId);
                 Response.Redirect("~/compareproducts.aspx");
             }
             else

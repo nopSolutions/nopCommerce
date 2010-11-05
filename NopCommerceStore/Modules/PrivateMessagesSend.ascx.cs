@@ -58,7 +58,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
         private void BindData()
         {
             Customer toCustomer = null;
-            var replyToPM = IoCFactory.Resolve<IForumManager>().GetPrivateMessageById(this.ReplyToMessageId);
+            var replyToPM = IoCFactory.Resolve<IForumService>().GetPrivateMessageById(this.ReplyToMessageId);
             if (replyToPM != null)
             {
                 if (replyToPM.ToUserId == NopContext.Current.User.CustomerId || replyToPM.FromUserId == NopContext.Current.User.CustomerId)
@@ -73,7 +73,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             }
             else
             {
-                toCustomer = IoCFactory.Resolve<ICustomerManager>().GetCustomerById(this.ToCustomerId);
+                toCustomer = IoCFactory.Resolve<ICustomerService>().GetCustomerById(this.ToCustomerId);
             }
 
             if (toCustomer == null || toCustomer.IsGuest)
@@ -81,7 +81,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 Response.Redirect(CommonHelper.GetStoreLocation() + "privatemessages.aspx");
             }
 
-            lblSendTo.Text = Server.HtmlEncode(IoCFactory.Resolve<ICustomerManager>().FormatUserName(toCustomer));
+            lblSendTo.Text = Server.HtmlEncode(IoCFactory.Resolve<ICustomerService>().FormatUserName(toCustomer));
         }
 
         protected void btnSend_Click(object sender, EventArgs e)
@@ -98,7 +98,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     throw new NopException(GetLocaleResourceString("PrivateMessages.MessageCannotBeEmpty"));
 
                 Customer toCustomer = null;
-                var replyToPM = IoCFactory.Resolve<IForumManager>().GetPrivateMessageById(this.ReplyToMessageId);
+                var replyToPM = IoCFactory.Resolve<IForumService>().GetPrivateMessageById(this.ReplyToMessageId);
                 if (replyToPM != null)
                 {
                     if (replyToPM.ToUserId == NopContext.Current.User.CustomerId || replyToPM.FromUserId == NopContext.Current.User.CustomerId)
@@ -112,7 +112,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 }
                 else
                 {
-                    toCustomer = IoCFactory.Resolve<ICustomerManager>().GetCustomerById(this.ToCustomerId);
+                    toCustomer = IoCFactory.Resolve<ICustomerService>().GetCustomerById(this.ToCustomerId);
                 }
 
                 if (toCustomer == null || toCustomer.IsGuest)
@@ -128,7 +128,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     Text = message,
                     CreatedOn = DateTime.UtcNow
                 };
-                IoCFactory.Resolve<IForumManager>().InsertPrivateMessage(pm);
+                IoCFactory.Resolve<IForumService>().InsertPrivateMessage(pm);
 
                 Response.Redirect(CommonHelper.GetStoreLocation() + "privatemessages.aspx?tab=sent");
             }

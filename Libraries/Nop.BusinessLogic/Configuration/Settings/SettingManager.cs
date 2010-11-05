@@ -438,12 +438,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings
         {
             get
             {
-                string storeName = IoCFactory.Resolve<ISettingManager>().GetSettingValue("Common.StoreName");
+                string storeName = GetSettingValue("Common.StoreName");
                 return storeName;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Common.StoreName", value);
+                SetParam("Common.StoreName", value);
             }
         }
 
@@ -454,14 +454,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings
         {
             get
             {
-                string storeUrl = IoCFactory.Resolve<ISettingManager>().GetSettingValue("Common.StoreURL");
+                string storeUrl = GetSettingValue("Common.StoreURL");
                 if (!storeUrl.EndsWith("/"))
                     storeUrl += "/";
                 return storeUrl;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Common.StoreURL", value);
+                SetParam("Common.StoreURL", value);
             }
         }
 
@@ -473,7 +473,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValue("Common.CurrentVersion");
+                return GetSettingValue("Common.CurrentVersion");
             }
         }
         #endregion

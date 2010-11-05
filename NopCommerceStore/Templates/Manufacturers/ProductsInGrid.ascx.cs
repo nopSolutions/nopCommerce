@@ -69,7 +69,7 @@ namespace NopSolutions.NopCommerce.Web.Templates.Manufacturers
 
         protected void BindData()
         {
-            var manufacturer = IoCFactory.Resolve<IManufacturerManager>().GetManufacturerById(this.ManufacturerId);
+            var manufacturer = IoCFactory.Resolve<IManufacturerService>().GetManufacturerById(this.ManufacturerId);
             lName.Text = Server.HtmlEncode(manufacturer.LocalizedName);
             lDescription.Text = manufacturer.LocalizedDescription;
 
@@ -109,13 +109,13 @@ namespace NopSolutions.NopCommerce.Web.Templates.Manufacturers
                 minPrice = ctrlPriceRangeFilter.SelectedPriceRange.From;
                 if (minPrice.HasValue)
                 {
-                    minPriceConverted = IoCFactory.Resolve<ICurrencyManager>().ConvertCurrency(minPrice.Value, NopContext.Current.WorkingCurrency, IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency);
+                    minPriceConverted = IoCFactory.Resolve<ICurrencyService>().ConvertCurrency(minPrice.Value, NopContext.Current.WorkingCurrency, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency);
                 }
 
                 maxPrice = ctrlPriceRangeFilter.SelectedPriceRange.To;
                 if (maxPrice.HasValue)
                 {
-                    maxPriceConverted = IoCFactory.Resolve<ICurrencyManager>().ConvertCurrency(maxPrice.Value, NopContext.Current.WorkingCurrency, IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency);
+                    maxPriceConverted = IoCFactory.Resolve<ICurrencyService>().ConvertCurrency(maxPrice.Value, NopContext.Current.WorkingCurrency, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency);
                 }
             }
             
@@ -127,7 +127,7 @@ namespace NopSolutions.NopCommerce.Web.Templates.Manufacturers
                 orderBy = (ProductSortingEnum)Enum.ToObject(typeof(ProductSortingEnum), int.Parse(ddlSorting.SelectedItem.Value));
             }
 
-            var productCollection = IoCFactory.Resolve<IProductManager>().GetAllProducts(0,
+            var productCollection = IoCFactory.Resolve<IProductService>().GetAllProducts(0,
                 this.ManufacturerId, 0, false, minPriceConverted, maxPriceConverted,
                 string.Empty, false, pageSize, this.CurrentPageIndex,
                 null, orderBy, out totalRecords);

@@ -89,7 +89,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
         {
             get
             {
-                return IoCFactory.Resolve<ILanguageManager>().GetLanguageById(this.LanguageId);
+                return IoCFactory.Resolve<ILanguageService>().GetLanguageById(this.LanguageId);
             }
         }
 
@@ -100,7 +100,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
         {
             get
             {
-                return IoCFactory.Resolve<ICustomerManager>().GetCustomerById(this.CreatedById);
+                return IoCFactory.Resolve<ICustomerService>().GetCustomerById(this.CreatedById);
             }
         }
 
@@ -111,7 +111,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
         {
             get
             {
-                return IoCFactory.Resolve<IBlogManager>().GetBlogCommentsByBlogPostId(this.BlogPostId);
+                return IoCFactory.Resolve<IBlogService>().GetBlogCommentsByBlogPostId(this.BlogPostId);
             }
         }
 

@@ -77,7 +77,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
         {
             get
             {
-                return IoCFactory.Resolve<ICustomerManager>().GetCustomerById(this.CustomerId);
+                return IoCFactory.Resolve<ICustomerService>().GetCustomerById(this.CustomerId);
             }
         }
 
@@ -88,7 +88,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
         {
             get
             {
-                return IoCFactory.Resolve<IBlogManager>().GetBlogPostById(this.BlogPostId);
+                return IoCFactory.Resolve<IBlogService>().GetBlogPostById(this.BlogPostId);
             }
         }
         #endregion

@@ -48,7 +48,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         public void CreateAttributeControls()
         {
-            var productVariant = IoCFactory.Resolve<IProductManager>().GetProductVariantById(this.ProductVariantId);
+            var productVariant = IoCFactory.Resolve<IProductService>().GetProductVariantById(this.ProductVariantId);
             if (productVariant != null)
             {
                 this.phAttributes.Controls.Clear();
@@ -146,8 +146,8 @@ namespace NopSolutions.NopCommerce.Web.Modules
                                             !NopContext.Current.User.IsGuest)))
                                         {
                                             decimal taxRate = decimal.Zero;
-                                            decimal priceAdjustmentBase = IoCFactory.Resolve<ITaxManager>().GetPrice(productVariant, pvaValue.PriceAdjustment, out taxRate);
-                                            decimal priceAdjustment = IoCFactory.Resolve<ICurrencyManager>().ConvertCurrency(priceAdjustmentBase, IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                                            decimal priceAdjustmentBase = IoCFactory.Resolve<ITaxService>().GetPrice(productVariant, pvaValue.PriceAdjustment, out taxRate);
+                                            decimal priceAdjustment = IoCFactory.Resolve<ICurrencyService>().ConvertCurrency(priceAdjustmentBase, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
                                             if (priceAdjustmentBase > decimal.Zero)
                                             {
                                                 pvaValueName += string.Format(" [+{0}]", PriceHelper.FormatPrice(priceAdjustment, false, false));
@@ -213,8 +213,8 @@ namespace NopSolutions.NopCommerce.Web.Modules
                                             !NopContext.Current.User.IsGuest)))
                                         {
                                             decimal taxRate = decimal.Zero;
-                                            decimal priceAdjustmentBase = IoCFactory.Resolve<ITaxManager>().GetPrice(productVariant, pvaValue.PriceAdjustment, out taxRate);
-                                            decimal priceAdjustment = IoCFactory.Resolve<ICurrencyManager>().ConvertCurrency(priceAdjustmentBase, IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                                            decimal priceAdjustmentBase = IoCFactory.Resolve<ITaxService>().GetPrice(productVariant, pvaValue.PriceAdjustment, out taxRate);
+                                            decimal priceAdjustment = IoCFactory.Resolve<ICurrencyService>().ConvertCurrency(priceAdjustmentBase, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
                                             if (priceAdjustmentBase > decimal.Zero)
                                             {
                                                 pvaValueName += string.Format(" [+{0}]",PriceHelper.FormatPrice(priceAdjustment, false, false));
@@ -262,8 +262,8 @@ namespace NopSolutions.NopCommerce.Web.Modules
                                             !NopContext.Current.User.IsGuest)))
                                         {
                                             decimal taxRate = decimal.Zero;
-                                            decimal priceAdjustmentBase = IoCFactory.Resolve<ITaxManager>().GetPrice(productVariant, pvaValue.PriceAdjustment, out taxRate);
-                                            decimal priceAdjustment = IoCFactory.Resolve<ICurrencyManager>().ConvertCurrency(priceAdjustmentBase, IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                                            decimal priceAdjustmentBase = IoCFactory.Resolve<ITaxService>().GetPrice(productVariant, pvaValue.PriceAdjustment, out taxRate);
+                                            decimal priceAdjustment = IoCFactory.Resolve<ICurrencyService>().ConvertCurrency(priceAdjustmentBase, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
                                             if (priceAdjustmentBase > decimal.Zero)
                                             {
                                                 pvaValueName += string.Format(" [+{0}]", PriceHelper.FormatPrice(priceAdjustment, false, false));
@@ -361,7 +361,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             get
             {
                 string selectedAttributes = string.Empty;
-                var productVariantAttributes = IoCFactory.Resolve<IProductAttributeManager>().GetProductVariantAttributesByProductVariantId(this.ProductVariantId);
+                var productVariantAttributes = IoCFactory.Resolve<IProductAttributeService>().GetProductVariantAttributesByProductVariantId(this.ProductVariantId);
                 foreach (ProductVariantAttribute attribute in productVariantAttributes)
                 {
                     string controlId = string.Format("{0}_{1}", attribute.ProductAttribute.ProductAttributeId, attribute.ProductVariantAttributeId);

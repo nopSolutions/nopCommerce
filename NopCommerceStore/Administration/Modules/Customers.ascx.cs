@@ -41,9 +41,9 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             if (!Page.IsPostBack)
             {
                 SetDefaultValues();
-                phUsername.Visible = IoCFactory.Resolve<ICustomerManager>().UsernamesEnabled;
-                phDateOfBirth.Visible = IoCFactory.Resolve<ICustomerManager>().FormFieldDateOfBirthEnabled;
-                gvCustomers.Columns[2].Visible = IoCFactory.Resolve<ICustomerManager>().UsernamesEnabled;
+                phUsername.Visible = IoCFactory.Resolve<ICustomerService>().UsernamesEnabled;
+                phDateOfBirth.Visible = IoCFactory.Resolve<ICustomerService>().FormFieldDateOfBirthEnabled;
+                gvCustomers.Columns[2].Visible = IoCFactory.Resolve<ICustomerService>().UsernamesEnabled;
 
                 //buttons
                 btnExportXLS.Visible = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Features.SupportExcel");
@@ -79,7 +79,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             int dateOfBirthDay = int.Parse(this.ddlDateOfBirthDay.SelectedValue);
             int dateOfBirthMonth = int.Parse(this.ddlDateOfBirthMonth.SelectedValue);
             int totalRecords = 0;
-            var customers = IoCFactory.Resolve<ICustomerManager>().GetAllCustomers(startDate,
+            var customers = IoCFactory.Resolve<ICustomerService>().GetAllCustomers(startDate,
                 endDate, email, username, dontLoadGuestCustomers,
                 dateOfBirthMonth, dateOfBirthDay, int.MaxValue, 0, out totalRecords);
             return customers;

@@ -37,7 +37,7 @@ namespace NopSolutions.NopCommerce.Web.Administration
     {
         protected override bool ValidatePageSecurity()
         {
-            return IoCFactory.Resolve<IACLManager>().IsActionAllowed("ManageCatalog");
+            return IoCFactory.Resolve<IACLService>().IsActionAllowed("ManageCatalog");
         }
     }
 }

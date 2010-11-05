@@ -98,7 +98,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.SagePay
             cryptBuilder.AppendFormat("VendorTxCode={0}", order.OrderId.ToString());
             cryptBuilder.AppendFormat("&ReferrerID={0}", partnerID);
             cryptBuilder.AppendFormat("&Amount={0:0.00}", order.OrderTotal); // FormatNumber(order.OrderTotal, 2, -1, 0, 0)); // ** Formatted to 2 decimal places with leading digit **
-            cryptBuilder.AppendFormat("&Currency={0}", IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency.CurrencyCode);
+            cryptBuilder.AppendFormat("&Currency={0}", IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode);
             cryptBuilder.AppendFormat("&Description={0}", vendorDescription); // ** Up to 100 chars of free format description **
 
             // ** The SuccessURL is the page to which Form returns the customer if the transaction is successful **
@@ -114,7 +114,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.SagePay
             // ** Pass the Customer's name for use within confirmation emails and the Sage Pay Admin area.
             cryptBuilder.AppendFormat("&CustomerName={0} {1}", order.BillingFirstName, order.BillingLastName);
             cryptBuilder.AppendFormat("&CustomerEMail={0}", order.BillingEmail);
-            cryptBuilder.AppendFormat("&VendorEMail={0}", IoCFactory.Resolve<IMessageManager>().DefaultEmailAccount.Email);
+            cryptBuilder.AppendFormat("&VendorEMail={0}", IoCFactory.Resolve<IMessageService>().DefaultEmailAccount.Email);
 
             // SendEMail ** Optional setting. 0 = Do not send either customer or vendor e-mails, 1 = Send customer and vendor e-mails if address(es) are provided(DEFAULT). 
             cryptBuilder.AppendFormat("&SendEMail={0}", sendEmails ? "1" : "0");
@@ -131,13 +131,13 @@ namespace NopSolutions.NopCommerce.Payment.Methods.SagePay
                 cryptBuilder.AppendFormat("&BillingAddress2={0}", order.BillingAddress2);
             cryptBuilder.AppendFormat("&BillingCity={0}", order.BillingCity);
             cryptBuilder.AppendFormat("&BillingPostCode={0}", order.BillingZipPostalCode);
-            var billingCountryCode = IoCFactory.Resolve<ICountryManager>().GetCountryById(order.BillingCountryId).TwoLetterIsoCode;
+            var billingCountryCode = IoCFactory.Resolve<ICountryService>().GetCountryById(order.BillingCountryId).TwoLetterIsoCode;
             cryptBuilder.AppendFormat("&BillingCountry={0}", billingCountryCode);
             if (!string.IsNullOrEmpty(order.BillingStateProvince))
             {
                 if (billingCountryCode == "US")
                 {
-                    var stateProvince = IoCFactory.Resolve<IStateProvinceManager>().GetStateProvinceById(order.BillingStateProvinceId);
+                    var stateProvince = IoCFactory.Resolve<IStateProvinceService>().GetStateProvinceById(order.BillingStateProvinceId);
                     if (stateProvince != null)
                     {
                         cryptBuilder.AppendFormat("&BillingState={0}", stateProvince.Abbreviation);
@@ -156,13 +156,13 @@ namespace NopSolutions.NopCommerce.Payment.Methods.SagePay
                     cryptBuilder.AppendFormat("&DeliveryAddress2={0}", order.ShippingAddress2);
                 cryptBuilder.AppendFormat("&DeliveryCity={0}", order.ShippingCity);
                 cryptBuilder.AppendFormat("&DeliveryPostCode={0}", order.ShippingZipPostalCode);
-                var shippingCountryCode = IoCFactory.Resolve<ICountryManager>().GetCountryById(order.ShippingCountryId).TwoLetterIsoCode;
+                var shippingCountryCode = IoCFactory.Resolve<ICountryService>().GetCountryById(order.ShippingCountryId).TwoLetterIsoCode;
                 cryptBuilder.AppendFormat("&DeliveryCountry={0}", shippingCountryCode);
                 if (!string.IsNullOrEmpty(order.ShippingStateProvince))
                 {
                     if (shippingCountryCode == "US")
                     {
-                        var stateProvince = IoCFactory.Resolve<IStateProvinceManager>().GetStateProvinceById(order.ShippingStateProvinceId);
+                        var stateProvince = IoCFactory.Resolve<IStateProvinceService>().GetStateProvinceById(order.ShippingStateProvinceId);
                         if (stateProvince != null)
                         {
                             cryptBuilder.AppendFormat("&DeliveryState={0}", stateProvince.Abbreviation);
@@ -414,7 +414,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.SagePay
             }
             catch (Exception exc)
             {
-                IoCFactory.Resolve<ILogManager>().InsertLog(LogTypeEnum.OrderError, "Error seen while decoding SagePay crypt string " + exc.Message, exc);
+                IoCFactory.Resolve<ILogService>().InsertLog(LogTypeEnum.OrderError, "Error seen while decoding SagePay crypt string " + exc.Message, exc);
                 return string.Empty;
             }
         }

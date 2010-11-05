@@ -23,7 +23,7 @@ namespace NopSolutions.NopCommerce.Web
 
             if(!Page.IsPostBack)
             {
-                Order order = IoCFactory.Resolve<IOrderManager>().GetOrderById(CommonHelper.QueryStringInt("OrderId"));
+                Order order = IoCFactory.Resolve<IOrderService>().GetOrderById(CommonHelper.QueryStringInt("OrderId"));
                 if(order == null)
                 {
                     Response.Redirect(CommonHelper.GetStoreLocation());
@@ -52,14 +52,14 @@ namespace NopSolutions.NopCommerce.Web
                         error += string.Format("Svea error code: {0}.", errorCode);
                     }
 
-                    IoCFactory.Resolve<IOrderManager>().InsertOrderNote(order.OrderId, error, DateTime.UtcNow);
+                    IoCFactory.Resolve<IOrderService>().InsertOrderNote(order.OrderId, error, DateTime.UtcNow);
 
                     Response.Redirect(CommonHelper.GetStoreLocation());
                 }
 
-                if (IoCFactory.Resolve<IOrderManager>().CanMarkOrderAsPaid(order))
+                if (IoCFactory.Resolve<IOrderService>().CanMarkOrderAsPaid(order))
                 {
-                    IoCFactory.Resolve<IOrderManager>().MarkOrderAsPaid(order.OrderId);
+                    IoCFactory.Resolve<IOrderService>().MarkOrderAsPaid(order.OrderId);
                 }
 
                 Response.Redirect("~/checkoutcompleted.aspx");

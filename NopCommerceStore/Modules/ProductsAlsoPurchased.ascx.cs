@@ -54,12 +54,12 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void BindData()
         {
-            if (IoCFactory.Resolve<IProductManager>().ProductsAlsoPurchasedEnabled)
+            if (IoCFactory.Resolve<IProductService>().ProductsAlsoPurchasedEnabled)
             {
-                var product = IoCFactory.Resolve<IProductManager>().GetProductById(this.ProductId);
+                var product = IoCFactory.Resolve<IProductService>().GetProductById(this.ProductId);
                 if (product != null)
                 {
-                    var productsAlsoPurchased = IoCFactory.Resolve<IProductManager>().GetProductsAlsoPurchasedById(product.ProductId);
+                    var productsAlsoPurchased = IoCFactory.Resolve<IProductService>().GetProductsAlsoPurchasedById(product.ProductId);
                     if (productsAlsoPurchased.Count > 0)
                     {
                         this.Visible = true;
@@ -97,9 +97,9 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     {
                         var picture = product.DefaultPicture;
                         if (picture != null)
-                            hlImageLink.ImageUrl = IoCFactory.Resolve<IPictureManager>().GetPictureUrl(picture, IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.Product.ThumbnailImageSize", 125), true);
+                            hlImageLink.ImageUrl = IoCFactory.Resolve<IPictureService>().GetPictureUrl(picture, IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.Product.ThumbnailImageSize", 125), true);
                         else
-                            hlImageLink.ImageUrl = IoCFactory.Resolve<IPictureManager>().GetDefaultPictureUrl(IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.Product.ThumbnailImageSize", 125));
+                            hlImageLink.ImageUrl = IoCFactory.Resolve<IPictureService>().GetDefaultPictureUrl(IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.Product.ThumbnailImageSize", 125));
                         hlImageLink.NavigateUrl = productURL;
                         hlImageLink.ToolTip = String.Format(GetLocaleResourceString("Media.Product.ImageLinkTitleFormat"), product.LocalizedName);
                         hlImageLink.Text = String.Format(GetLocaleResourceString("Media.Product.ImageAlternateTextFormat"), product.LocalizedName);

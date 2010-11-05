@@ -28,21 +28,21 @@ public class GetLicense : IHttpHandler
 {
     private void processLicenseDownload(HttpContext context, Guid orderProductVariantGuid)
     {
-        OrderProductVariant orderProductVariant = IoCFactory.Resolve<IOrderManager>().GetOrderProductVariantByGuid(orderProductVariantGuid);
+        OrderProductVariant orderProductVariant = IoCFactory.Resolve<IOrderService>().GetOrderProductVariantByGuid(orderProductVariantGuid);
         if (orderProductVariant == null)
         {
             returnError(context, "Order product variant doesn't exist.");
             return;
         }
 
-        Order order = IoCFactory.Resolve<IOrderManager>().GetOrderById(orderProductVariant.OrderId);
+        Order order = IoCFactory.Resolve<IOrderService>().GetOrderById(orderProductVariant.OrderId);
         if (order == null)
         {
             returnError(context, "Order doesn't exist.");
             return;
         }
 
-        if (!IoCFactory.Resolve<IOrderManager>().IsLicenseDownloadAllowed(orderProductVariant))
+        if (!IoCFactory.Resolve<IOrderService>().IsLicenseDownloadAllowed(orderProductVariant))
         {
             returnError(context, "Downloads are not allowed");
             return;

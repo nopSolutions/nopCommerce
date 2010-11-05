@@ -72,7 +72,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.iDeal
             remotePostHelper.Add("description", "Order " + order.OrderId);
 
             remotePostHelper.Add("language", "nl");
-            remotePostHelper.Add("currency", IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency.CurrencyCode);
+            remotePostHelper.Add("currency", IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode);
             remotePostHelper.Add("paymentType", "ideal");
 
             remotePostHelper.Add("purchaseID", order.OrderId.ToString());

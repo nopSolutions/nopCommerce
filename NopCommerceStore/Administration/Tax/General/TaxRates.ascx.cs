@@ -38,7 +38,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Tax.GeneralTaxConfigure
         protected void FillTaxCategoryDropDown()
         {
             this.ddlTaxCategory.Items.Clear();
-            var taxCategories = IoCFactory.Resolve<ITaxCategoryManager>().GetAllTaxCategories();
+            var taxCategories = IoCFactory.Resolve<ITaxCategoryService>().GetAllTaxCategories();
             foreach (TaxCategory taxCategory in taxCategories)
             {
                 ListItem ddlTaxCategoryItem2 = new ListItem(taxCategory.Name, taxCategory.TaxCategoryId.ToString());
@@ -49,7 +49,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Tax.GeneralTaxConfigure
         protected void FillCountryDropDowns()
         {
             this.ddlCountry.Items.Clear();
-            var countryCollection = IoCFactory.Resolve<ICountryManager>().GetAllCountries();
+            var countryCollection = IoCFactory.Resolve<ICountryService>().GetAllCountries();
             foreach (Country country in countryCollection)
             {
                 ListItem ddlCountryItem2 = new ListItem(country.Name, country.CountryId.ToString());
@@ -62,7 +62,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Tax.GeneralTaxConfigure
             this.ddlStateProvince.Items.Clear();
             int countryId = int.Parse(this.ddlCountry.SelectedItem.Value);
 
-            var stateProvinceCollection = IoCFactory.Resolve<IStateProvinceManager>().GetStateProvincesByCountryId(countryId);
+            var stateProvinceCollection = IoCFactory.Resolve<IStateProvinceService>().GetStateProvincesByCountryId(countryId);
             ListItem ddlStateProvinceItem = new ListItem("*", "0");
             this.ddlStateProvince.Items.Add(ddlStateProvinceItem);
             foreach (StateProvince stateProvince in stateProvinceCollection)
@@ -74,7 +74,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Tax.GeneralTaxConfigure
 
         protected void BindGrid()
         {
-            var taxRates = IoCFactory.Resolve<ITaxRateManager>().GetAllTaxRates();
+            var taxRates = IoCFactory.Resolve<ITaxRateService>().GetAllTaxRates();
             gvTaxRates.DataSource = taxRates;
             gvTaxRates.DataBind();
             if (taxRates.Count > 10)
@@ -106,13 +106,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Tax.GeneralTaxConfigure
         {
             HiddenField hfTaxRateId = gvTaxRates.Rows[e.RowIndex].Cells[0].FindControl("hfTaxRateId") as HiddenField;
             int taxRateId = int.Parse(hfTaxRateId.Value);
-            IoCFactory.Resolve<ITaxRateManager>().DeleteTaxRate(taxRateId);
+            IoCFactory.Resolve<ITaxRateService>().DeleteTaxRate(taxRateId);
             BindGrid();
         }
         
         protected string GetStateProvinceInfo(int stateProvinceId)
         {
-            StateProvince stateProvince = IoCFactory.Resolve<IStateProvinceManager>().GetStateProvinceById(stateProvinceId);
+            StateProvince stateProvince = IoCFactory.Resolve<IStateProvinceService>().GetStateProvinceById(stateProvinceId);
             if (stateProvince != null)
                 return stateProvince.Name;
             else
@@ -137,7 +137,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Tax.GeneralTaxConfigure
         {
             ToggleGrid(false);
             
-            TaxRate taxRate = IoCFactory.Resolve<ITaxRateManager>().GetTaxRateById(taxRateId);
+            TaxRate taxRate = IoCFactory.Resolve<ITaxRateService>().GetTaxRateById(taxRateId);
             if (taxRate != null)
             {
                 lblTaxRateId.Text = taxRate.TaxRateId.ToString();
@@ -191,7 +191,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Tax.GeneralTaxConfigure
                     string zipPostalCode = txtZip.Text;
                     decimal percentage = txtPercentage.Value;
 
-                    TaxRate taxRate = IoCFactory.Resolve<ITaxRateManager>().GetTaxRateById(taxRateId);
+                    TaxRate taxRate = IoCFactory.Resolve<ITaxRateService>().GetTaxRateById(taxRateId);
 
                     if (taxRate != null)
                     {
@@ -201,7 +201,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Tax.GeneralTaxConfigure
                         taxRate.Zip = zipPostalCode;
                         taxRate.Percentage = percentage;
 
-                        IoCFactory.Resolve<ITaxRateManager>().UpdateTaxRate(taxRate);
+                        IoCFactory.Resolve<ITaxRateService>().UpdateTaxRate(taxRate);
                     }
                     else
                     {
@@ -213,7 +213,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Tax.GeneralTaxConfigure
                             Zip = zipPostalCode,
                             Percentage = percentage
                         };
-                        IoCFactory.Resolve<ITaxRateManager>().InsertTaxRate(taxRate);
+                        IoCFactory.Resolve<ITaxRateService>().InsertTaxRate(taxRate);
                     }
 
                     BindGrid();

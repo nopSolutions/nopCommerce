@@ -36,14 +36,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         private void BindDimensions()
         {
-            var dimensions = IoCFactory.Resolve<IMeasureManager>().GetAllMeasureDimensions();
+            var dimensions = IoCFactory.Resolve<IMeasureService>().GetAllMeasureDimensions();
             gvDimensions.DataSource = dimensions;
             gvDimensions.DataBind();
         }
 
         private void BindWeights()
         {
-            var weights = IoCFactory.Resolve<IMeasureManager>().GetAllMeasureWeights();
+            var weights = IoCFactory.Resolve<IMeasureService>().GetAllMeasureWeights();
             gvWeights.DataSource = weights;
             gvWeights.DataBind();
         }
@@ -69,7 +69,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     HiddenField hfMeasureDimensionId = (HiddenField)row.FindControl("hfMeasureDimensionId");
                     int measureDimensionId = int.Parse(hfMeasureDimensionId.Value);
                     if (rdbIsPrimaryDimension.Checked)
-                        IoCFactory.Resolve<IMeasureManager>().BaseDimensionIn = IoCFactory.Resolve<IMeasureManager>().GetMeasureDimensionById(measureDimensionId);
+                        IoCFactory.Resolve<IMeasureService>().BaseDimensionIn = IoCFactory.Resolve<IMeasureService>().GetMeasureDimensionById(measureDimensionId);
                 }
 
                 //weights
@@ -79,7 +79,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     HiddenField hfMeasureWeightId = (HiddenField)row.FindControl("hfMeasureWeightId");
                     int measureWeightId = int.Parse(hfMeasureWeightId.Value);
                     if (rdbIsPrimaryWeight.Checked)
-                        IoCFactory.Resolve<IMeasureManager>().BaseWeightIn = IoCFactory.Resolve<IMeasureManager>().GetMeasureWeightById(measureWeightId);
+                        IoCFactory.Resolve<IMeasureService>().BaseWeightIn = IoCFactory.Resolve<IMeasureService>().GetMeasureWeightById(measureWeightId);
                 }
 
                 BindDimensions();

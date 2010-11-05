@@ -43,7 +43,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected void BindGrid()
         {
-            var productVariants = IoCFactory.Resolve<IProductManager>().GetLowStockProductVariants();
+            var productVariants = IoCFactory.Resolve<IProductService>().GetLowStockProductVariants();
 
             gvProductVariants.DataSource = productVariants;
             gvProductVariants.DataBind();

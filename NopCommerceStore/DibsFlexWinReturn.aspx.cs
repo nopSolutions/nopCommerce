@@ -30,7 +30,7 @@ namespace NopSolutions.NopCommerce.Web
             if(!Page.IsPostBack)
             {
                 int orderId = Convert.ToInt32(Request.Form["x"]);
-                Order order = IoCFactory.Resolve<IOrderManager>().GetOrderById(orderId);
+                Order order = IoCFactory.Resolve<IOrderService>().GetOrderById(orderId);
                 if(order == null)
                 {
                     Response.Redirect(CommonHelper.GetStoreLocation());
@@ -42,7 +42,7 @@ namespace NopSolutions.NopCommerce.Web
 
                 string authkey = Request.Form["authkey"];
                 int transact = Int32.Parse(Request.Form["transact"]);
-                int currency = DibsHelper.GetCurrencyNumberByCode(IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency.CurrencyCode);
+                int currency = DibsHelper.GetCurrencyNumberByCode(IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode);
                 int amount = (int)((double)order.OrderTotal * 100);
 
                 if(!authkey.Equals(FlexWinHelper.CalcAuthKey(transact, amount, currency)))
@@ -50,9 +50,9 @@ namespace NopSolutions.NopCommerce.Web
                     Response.Redirect(CommonHelper.GetStoreLocation());
                 }
 
-                if (IoCFactory.Resolve<IOrderManager>().CanMarkOrderAsPaid(order))
+                if (IoCFactory.Resolve<IOrderService>().CanMarkOrderAsPaid(order))
                 {
-                    IoCFactory.Resolve<IOrderManager>().MarkOrderAsPaid(order.OrderId);
+                    IoCFactory.Resolve<IOrderService>().MarkOrderAsPaid(order.OrderId);
                 }
 
                 Response.Redirect("~/checkoutcompleted.aspx");

@@ -74,7 +74,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             get
             {
                 if (_customer == null)
-                    _customer = IoCFactory.Resolve<ICustomerManager>().GetCustomerById(this.CustomerId);
+                    _customer = IoCFactory.Resolve<ICustomerService>().GetCustomerById(this.CustomerId);
                 return _customer;
             }
         }

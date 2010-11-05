@@ -95,7 +95,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Topics
         {
             get
             {
-                return IoCFactory.Resolve<ILanguageManager>().GetLanguageById(this.LanguageId);
+                return IoCFactory.Resolve<ILanguageService>().GetLanguageById(this.LanguageId);
             }
         }
 
@@ -106,7 +106,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Topics
         {
             get
             {
-                return IoCFactory.Resolve<ITopicManager>().GetTopicById(this.TopicId);
+                return IoCFactory.Resolve<ITopicService>().GetTopicById(this.TopicId);
             }
         }
         #endregion

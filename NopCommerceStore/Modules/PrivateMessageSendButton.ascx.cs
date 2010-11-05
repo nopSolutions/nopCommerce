@@ -41,9 +41,9 @@ namespace NopSolutions.NopCommerce.Web.Modules
     {
         protected override void OnPreRender(EventArgs e)
         {
-            if (IoCFactory.Resolve<IForumManager>().AllowPrivateMessages)
+            if (IoCFactory.Resolve<IForumService>().AllowPrivateMessages)
             {
-                var customer = IoCFactory.Resolve<ICustomerManager>().GetCustomerById(this.CustomerId);
+                var customer = IoCFactory.Resolve<ICustomerService>().GetCustomerById(this.CustomerId);
                 if (customer != null && !customer.IsGuest)
                 {
                     this.Visible = true;
@@ -63,7 +63,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void btnSendPM_Click(object sender, EventArgs e)
         {
-            var customer = IoCFactory.Resolve<ICustomerManager>().GetCustomerById(this.CustomerId);
+            var customer = IoCFactory.Resolve<ICustomerService>().GetCustomerById(this.CustomerId);
             if (customer != null)
             {
                 string url = string.Format("{0}SendPM.aspx?ToID={1}", CommonHelper.GetStoreLocation(), customer.CustomerId).ToLowerInvariant();

@@ -48,18 +48,18 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.UPS
             ShipmentPackage ShipmentPackage, UPSCustomerClassification customerClassification,
             UPSPickupType pickupType, UPSPackagingType packagingType)
         {
-            var usedMeasureWeight = IoCFactory.Resolve<IMeasureManager>().GetMeasureWeightBySystemKeyword(MEASUREWEIGHTSYSTEMKEYWORD);
+            var usedMeasureWeight = IoCFactory.Resolve<IMeasureService>().GetMeasureWeightBySystemKeyword(MEASUREWEIGHTSYSTEMKEYWORD);
             if (usedMeasureWeight == null)
                 throw new NopException(string.Format("UPS shipping service. Could not load \"{0}\" measure weight", MEASUREWEIGHTSYSTEMKEYWORD));
 
-            var usedMeasureDimension = IoCFactory.Resolve<IMeasureManager>().GetMeasureDimensionBySystemKeyword(MEASUREDIMENSIONSYSTEMKEYWORD);
+            var usedMeasureDimension = IoCFactory.Resolve<IMeasureService>().GetMeasureDimensionBySystemKeyword(MEASUREDIMENSIONSYSTEMKEYWORD);
             if (usedMeasureDimension == null)
                 throw new NopException(string.Format("UPS shipping service. Could not load \"{0}\" measure dimension", MEASUREDIMENSIONSYSTEMKEYWORD));
 
-            int length = Convert.ToInt32(Math.Ceiling(IoCFactory.Resolve<IMeasureManager>().ConvertDimension(ShipmentPackage.GetTotalLength(), IoCFactory.Resolve<IMeasureManager>().BaseDimensionIn, usedMeasureDimension)));
-            int height = Convert.ToInt32(Math.Ceiling(IoCFactory.Resolve<IMeasureManager>().ConvertDimension(ShipmentPackage.GetTotalHeight(), IoCFactory.Resolve<IMeasureManager>().BaseDimensionIn, usedMeasureDimension)));
-            int width = Convert.ToInt32(Math.Ceiling(IoCFactory.Resolve<IMeasureManager>().ConvertDimension(ShipmentPackage.GetTotalWidth(), IoCFactory.Resolve<IMeasureManager>().BaseDimensionIn, usedMeasureDimension)));
-            int weight = Convert.ToInt32(Math.Ceiling(IoCFactory.Resolve<IMeasureManager>().ConvertWeight(IoCFactory.Resolve<IShippingManager>().GetShoppingCartTotalWeight(ShipmentPackage.Items, ShipmentPackage.Customer), IoCFactory.Resolve<IMeasureManager>().BaseWeightIn, usedMeasureWeight)));
+            int length = Convert.ToInt32(Math.Ceiling(IoCFactory.Resolve<IMeasureService>().ConvertDimension(ShipmentPackage.GetTotalLength(), IoCFactory.Resolve<IMeasureService>().BaseDimensionIn, usedMeasureDimension)));
+            int height = Convert.ToInt32(Math.Ceiling(IoCFactory.Resolve<IMeasureService>().ConvertDimension(ShipmentPackage.GetTotalHeight(), IoCFactory.Resolve<IMeasureService>().BaseDimensionIn, usedMeasureDimension)));
+            int width = Convert.ToInt32(Math.Ceiling(IoCFactory.Resolve<IMeasureService>().ConvertDimension(ShipmentPackage.GetTotalWidth(), IoCFactory.Resolve<IMeasureService>().BaseDimensionIn, usedMeasureDimension)));
+            int weight = Convert.ToInt32(Math.Ceiling(IoCFactory.Resolve<IMeasureService>().ConvertWeight(IoCFactory.Resolve<IShippingService>().GetShoppingCartTotalWeight(ShipmentPackage.Items, ShipmentPackage.Customer), IoCFactory.Resolve<IMeasureService>().BaseWeightIn, usedMeasureWeight)));
             if (length < 1)
                 length = 1;
             if (height < 1)
@@ -469,7 +469,7 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.UPS
             if (shipmentPackage.CountryFrom == null)
             {
                 int defaultShippedFromCountryID = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("ShippingRateComputationMethod.UPS.DefaultShippedFromCountryID");
-                shipmentPackage.CountryFrom = IoCFactory.Resolve<ICountryManager>().GetCountryById(defaultShippedFromCountryID);
+                shipmentPackage.CountryFrom = IoCFactory.Resolve<ICountryService>().GetCountryById(defaultShippedFromCountryID);
             }
             if (String.IsNullOrEmpty(shipmentPackage.ZipPostalCodeFrom))
                 shipmentPackage.ZipPostalCodeFrom = IoCFactory.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.UPS.DefaultShippedFromZipPostalCode");

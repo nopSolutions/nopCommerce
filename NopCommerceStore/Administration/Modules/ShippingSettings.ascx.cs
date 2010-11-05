@@ -61,7 +61,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             this.ddlShippingOriginCountry.Items.Clear();
             ListItem selectCountryItem = new ListItem(GetLocaleResourceString("Admin.ShippingSettings.OriginCountry.SelectCountry"), "0");
             this.ddlShippingOriginCountry.Items.Add(selectCountryItem);
-            var countryCollection = IoCFactory.Resolve<ICountryManager>().GetAllCountries();
+            var countryCollection = IoCFactory.Resolve<ICountryService>().GetAllCountries();
             foreach (Country country in countryCollection)
             {
                 ListItem ddlCountryItem2 = new ListItem(country.Name, country.CountryId.ToString());
@@ -74,7 +74,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             this.ddlShippingOriginStateProvince.Items.Clear();
             int countryId = int.Parse(this.ddlShippingOriginCountry.SelectedItem.Value);
 
-            var stateProvinceCollection = IoCFactory.Resolve<IStateProvinceManager>().GetStateProvincesByCountryId(countryId);
+            var stateProvinceCollection = IoCFactory.Resolve<IStateProvinceService>().GetStateProvincesByCountryId(countryId);
             foreach (StateProvince stateProvince in stateProvinceCollection)
             {
                 ListItem ddlStateProviceItem2 = new ListItem(stateProvince.Name, stateProvince.StateProvinceId.ToString());
@@ -93,7 +93,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             cbFreeShippingOverX.Checked = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Shipping.FreeShippingOverX.Enabled");
             txtFreeShippingOverX.Value = IoCFactory.Resolve<ISettingManager>().GetSettingValueDecimalNative("Shipping.FreeShippingOverX.Value");
 
-            Address shippingOriginAddress = IoCFactory.Resolve<IShippingManager>().ShippingOrigin;
+            Address shippingOriginAddress = IoCFactory.Resolve<IShippingService>().ShippingOrigin;
             this.FillCountryDropDowns();
             CommonHelper.SelectListItem(this.ddlShippingOriginCountry, shippingOriginAddress.CountryId);
             this.FillStateProvinceDropDowns();
@@ -120,9 +120,9 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     shippingOriginAddress.CountryId = int.Parse(this.ddlShippingOriginCountry.SelectedItem.Value);
                     shippingOriginAddress.StateProvinceId = int.Parse(this.ddlShippingOriginStateProvince.SelectedItem.Value);
                     shippingOriginAddress.ZipPostalCode = txtShippingOriginZipPostalCode.Text;
-                    IoCFactory.Resolve<IShippingManager>().ShippingOrigin = shippingOriginAddress;
+                    IoCFactory.Resolve<IShippingService>().ShippingOrigin = shippingOriginAddress;
 
-                    IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
+                    IoCFactory.Resolve<ICustomerActivityService>().InsertActivity(
                         "EditShippingSettings",
                         GetLocaleResourceString("ActivityLog.EditShippingSettings"));
 

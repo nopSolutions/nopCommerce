@@ -92,7 +92,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         {
             get
             {
-                return IoCFactory.Resolve<ICustomerManager>().GetCustomerById(this.FromUserId);
+                return IoCFactory.Resolve<ICustomerService>().GetCustomerById(this.FromUserId);
             }
         }
 
@@ -103,7 +103,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         {
             get
             {
-                return IoCFactory.Resolve<ICustomerManager>().GetCustomerById(this.ToUserId);
+                return IoCFactory.Resolve<ICustomerService>().GetCustomerById(this.ToUserId);
             }
         }
 

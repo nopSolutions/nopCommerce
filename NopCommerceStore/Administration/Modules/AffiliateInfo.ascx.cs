@@ -36,7 +36,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            Affiliate affiliate = IoCFactory.Resolve<IAffiliateManager>().GetAffiliateById(this.AffiliateId);
+            Affiliate affiliate = IoCFactory.Resolve<IAffiliateService>().GetAffiliateById(this.AffiliateId);
 
             if (affiliate != null)
             {
@@ -69,7 +69,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         private void FillDropDowns()
         {
             this.ddlCountry.Items.Clear();
-            List<Country> countryCollection = IoCFactory.Resolve<ICountryManager>().GetAllCountriesForRegistration();
+            List<Country> countryCollection = IoCFactory.Resolve<ICountryService>().GetAllCountriesForRegistration();
             foreach (Country country in countryCollection)
             {
                 ListItem ddlCountryItem2 = new ListItem(country.Name, country.CountryId.ToString());
@@ -88,7 +88,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public Affiliate SaveInfo()
         {
-            Affiliate affiliate = IoCFactory.Resolve<IAffiliateManager>().GetAffiliateById(this.AffiliateId);
+            Affiliate affiliate = IoCFactory.Resolve<IAffiliateService>().GetAffiliateById(this.AffiliateId);
 
             if (affiliate != null)
             {
@@ -106,7 +106,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 affiliate.ZipPostalCode =  txtZipPostalCode.Text;
                 affiliate.CountryId = int.Parse(this.ddlCountry.SelectedItem.Value);
                 affiliate.Active = cbActive.Checked;
-                IoCFactory.Resolve<IAffiliateManager>().UpdateAffiliate(affiliate);
+                IoCFactory.Resolve<IAffiliateService>().UpdateAffiliate(affiliate);
             }
             else
             {
@@ -127,7 +127,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     CountryId = int.Parse(this.ddlCountry.SelectedItem.Value),
                     Active = cbActive.Checked
                 };
-                IoCFactory.Resolve<IAffiliateManager>().InsertAffiliate(affiliate);
+                IoCFactory.Resolve<IAffiliateService>().InsertAffiliate(affiliate);
             }
 
             return affiliate;

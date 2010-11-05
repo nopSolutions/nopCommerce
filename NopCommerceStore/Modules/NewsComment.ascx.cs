@@ -54,38 +54,38 @@ namespace NopSolutions.NopCommerce.Web.Modules
             {
                 lblCreatedOn.Text = DateTimeHelper.ConvertToUserTime(newsComment.CreatedOn, DateTimeKind.Utc).ToString("g");
                 lblTitle.Text = Server.HtmlEncode(newsComment.Title);
-                lblComment.Text = IoCFactory.Resolve<INewsManager>().FormatCommentText(newsComment.Comment);
+                lblComment.Text = IoCFactory.Resolve<INewsService>().FormatCommentText(newsComment.Comment);
                 lblNewsCommentId.Text = newsComment.NewsCommentId.ToString();
 
                 var customer = newsComment.Customer;
                 if (customer != null)
                 {
-                    if (IoCFactory.Resolve<ICustomerManager>().AllowViewingProfiles)
+                    if (IoCFactory.Resolve<ICustomerService>().AllowViewingProfiles)
                     {
-                        hlUser.Text = Server.HtmlEncode(IoCFactory.Resolve<ICustomerManager>().FormatUserName(customer, true));
+                        hlUser.Text = Server.HtmlEncode(IoCFactory.Resolve<ICustomerService>().FormatUserName(customer, true));
                         hlUser.NavigateUrl = SEOHelper.GetUserProfileUrl(customer.CustomerId);
                         lblUser.Visible = false;
                     }
                     else
                     {
-                        lblUser.Text = Server.HtmlEncode(IoCFactory.Resolve<ICustomerManager>().FormatUserName(customer, true));
+                        lblUser.Text = Server.HtmlEncode(IoCFactory.Resolve<ICustomerService>().FormatUserName(customer, true));
                         hlUser.Visible = false;
                     }
 
-                    if (IoCFactory.Resolve<ICustomerManager>().AllowCustomersToUploadAvatars)
+                    if (IoCFactory.Resolve<ICustomerService>().AllowCustomersToUploadAvatars)
                     {
                         var customerAvatar = customer.Avatar;
                         int avatarSize = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.Customer.AvatarSize", 85);
                         if (customerAvatar != null)
                         {
-                            string pictureUrl = IoCFactory.Resolve<IPictureManager>().GetPictureUrl(customerAvatar, avatarSize, false);
+                            string pictureUrl = IoCFactory.Resolve<IPictureService>().GetPictureUrl(customerAvatar, avatarSize, false);
                             this.imgAvatar.ImageUrl = pictureUrl;
                         }
                         else
                         {
-                            if (IoCFactory.Resolve<ICustomerManager>().DefaultAvatarEnabled)
+                            if (IoCFactory.Resolve<ICustomerService>().DefaultAvatarEnabled)
                             {
-                                string pictureUrl = IoCFactory.Resolve<IPictureManager>().GetDefaultPictureUrl(PictureTypeEnum.Avatar, avatarSize);
+                                string pictureUrl = IoCFactory.Resolve<IPictureService>().GetDefaultPictureUrl(PictureTypeEnum.Avatar, avatarSize);
                                 this.imgAvatar.ImageUrl = pictureUrl;
                             }
                             else
@@ -103,10 +103,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 {
                     lblUser.Text = GetLocaleResourceString("Customer.NotRegistered");
                     hlUser.Visible = false;
-                    if (IoCFactory.Resolve<ICustomerManager>().AllowCustomersToUploadAvatars && IoCFactory.Resolve<ICustomerManager>().DefaultAvatarEnabled)
+                    if (IoCFactory.Resolve<ICustomerService>().AllowCustomersToUploadAvatars && IoCFactory.Resolve<ICustomerService>().DefaultAvatarEnabled)
                     {
                         int avatarSize = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.Customer.AvatarSize", 85);
-                        string pictureUrl = IoCFactory.Resolve<IPictureManager>().GetDefaultPictureUrl(PictureTypeEnum.Avatar, avatarSize);
+                        string pictureUrl = IoCFactory.Resolve<IPictureService>().GetDefaultPictureUrl(PictureTypeEnum.Avatar, avatarSize);
                         this.imgAvatar.ImageUrl = pictureUrl;
                     }
                     else

@@ -109,10 +109,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
         protected void CreateMenu()
         {
             List<Category> breadCrumb = null;
-            var currentCategory = IoCFactory.Resolve<ICategoryManager>().GetCategoryById(CommonHelper.QueryStringInt("CategoryId"));
+            var currentCategory = IoCFactory.Resolve<ICategoryService>().GetCategoryById(CommonHelper.QueryStringInt("CategoryId"));
             if (currentCategory == null)
             {
-                var product = IoCFactory.Resolve<IProductManager>().GetProductById(CommonHelper.QueryStringInt("ProductId"));
+                var product = IoCFactory.Resolve<IProductService>().GetProductById(CommonHelper.QueryStringInt("ProductId"));
                 if (product != null)
                 {
                     var productCategories = product.ProductCategories;
@@ -124,7 +124,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             }
 
             if (currentCategory != null)
-                breadCrumb = IoCFactory.Resolve<ICategoryManager>().GetBreadCrumb(currentCategory.CategoryId);
+                breadCrumb = IoCFactory.Resolve<ICategoryService>().GetBreadCrumb(currentCategory.CategoryId);
             else
                 breadCrumb = new List<Category>();
 
@@ -134,13 +134,13 @@ namespace NopSolutions.NopCommerce.Web.Modules
         protected int GetNumberOfProducts(Category category, bool includeSubCategories)
         {
             int numberOfProducts = 0;
-            var products = IoCFactory.Resolve<IProductManager>().GetAllProducts(category.CategoryId,
+            var products = IoCFactory.Resolve<IProductService>().GetAllProducts(category.CategoryId,
                         0, 0, null, null, null, string.Empty, false, 1, 0,
                         null, ProductSortingEnum.Position, out numberOfProducts);
 
             if (includeSubCategories)
             {
-                var subCategories = IoCFactory.Resolve<ICategoryManager>().GetAllCategoriesByParentCategoryId(category.CategoryId);
+                var subCategories = IoCFactory.Resolve<ICategoryService>().GetAllCategoriesByParentCategoryId(category.CategoryId);
                 foreach (var subCategory in subCategories)
                 {
                     int tmp1 = GetNumberOfProducts(subCategory, includeSubCategories);
@@ -153,7 +153,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
         protected void CreateChildMenu(List<Category> breadCrumb, int rootCategoryId, Category currentCategory, int level)
         {
             int padding = level++ * 15;
-            foreach (var category in IoCFactory.Resolve<ICategoryManager>().GetAllCategoriesByParentCategoryId(rootCategoryId))
+            foreach (var category in IoCFactory.Resolve<ICategoryService>().GetAllCategoriesByParentCategoryId(rootCategoryId))
             {
                 var link = new NopCommerceLi();
                 phCategories.Controls.Add(link);

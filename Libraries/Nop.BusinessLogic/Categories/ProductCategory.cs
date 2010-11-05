@@ -71,7 +71,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
         {
             get
             {
-                return IoCFactory.Resolve<ICategoryManager>().GetCategoryById(this.CategoryId);
+                return IoCFactory.Resolve<ICategoryService>().GetCategoryById(this.CategoryId);
             }
         }
 
@@ -82,7 +82,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
         {
             get
             {
-                return IoCFactory.Resolve<IProductManager>().GetProductById(this.ProductId);
+                return IoCFactory.Resolve<IProductService>().GetProductById(this.ProductId);
             }
         }
 

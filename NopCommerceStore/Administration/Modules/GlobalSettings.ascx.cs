@@ -64,7 +64,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             txtStoreURL.Text = IoCFactory.Resolve<ISettingManager>().StoreUrl;
             cbStoreClosed.Checked = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Common.StoreClosed");
             cbStoreClosedForAdmins.Checked = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Common.StoreClosed.AllowAdminAccess");
-            cbAnonymousCheckoutAllowed.Checked = IoCFactory.Resolve<ICustomerManager>().AnonymousCheckoutAllowed;
+            cbAnonymousCheckoutAllowed.Checked = IoCFactory.Resolve<ICustomerService>().AnonymousCheckoutAllowed;
             cbUseOnePageCheckout.Checked = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Checkout.UseOnePageCheckout");
             cbCheckoutTermsOfService.Checked = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Checkout.TermsOfServiceEnabled");
 
@@ -105,7 +105,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             txtForumTopicUrlRewriteFormat.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue("SEO.ForumTopic.UrlRewriteFormat");
 
 
-            lStoreImagesInDBStorage.Text = IoCFactory.Resolve<IPictureManager>().StoreInDB ? GetLocaleResourceString("Admin.GlobalSettings.Media.StoreImagesInDB.DB") : GetLocaleResourceString("Admin.GlobalSettings.Media.StoreImagesInDB.FS");
+            lStoreImagesInDBStorage.Text = IoCFactory.Resolve<IPictureService>().StoreInDB ? GetLocaleResourceString("Admin.GlobalSettings.Media.StoreImagesInDB.DB") : GetLocaleResourceString("Admin.GlobalSettings.Media.StoreImagesInDB.FS");
             txtMaxImageSize.Value = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.MaximumImageSize");
             txtProductThumbSize.Value = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.Product.ThumbnailImageSize");
             txtProductDetailSize.Value = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.Product.DetailImageSize");
@@ -121,14 +121,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             cbEnableLoginCaptchaImage.Checked = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Common.LoginCaptchaImageEnabled");
             cbEnableRegisterCaptchaImage.Checked = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Common.RegisterCaptchaImageEnabled");
             
-            CommonHelper.SelectListItem(this.ddlCustomerNameFormat, (int)IoCFactory.Resolve<ICustomerManager>().CustomerNameFormatting);
-            cbShowCustomersLocation.Checked = IoCFactory.Resolve<ICustomerManager>().ShowCustomersLocation;
-            cbShowCustomersJoinDate.Checked = IoCFactory.Resolve<ICustomerManager>().ShowCustomersJoinDate;
-            cbAllowPM.Checked = IoCFactory.Resolve<IForumManager>().AllowPrivateMessages;
-            cbNotifyAboutPrivateMessages.Checked = IoCFactory.Resolve<IForumManager>().NotifyAboutPrivateMessages;
-            cbAllowViewingProfiles.Checked = IoCFactory.Resolve<ICustomerManager>().AllowViewingProfiles;
-            cbCustomersAllowedToUploadAvatars.Checked = IoCFactory.Resolve<ICustomerManager>().AllowCustomersToUploadAvatars;
-            cbDefaultAvatarEnabled.Checked = IoCFactory.Resolve<ICustomerManager>().DefaultAvatarEnabled;
+            CommonHelper.SelectListItem(this.ddlCustomerNameFormat, (int)IoCFactory.Resolve<ICustomerService>().CustomerNameFormatting);
+            cbShowCustomersLocation.Checked = IoCFactory.Resolve<ICustomerService>().ShowCustomersLocation;
+            cbShowCustomersJoinDate.Checked = IoCFactory.Resolve<ICustomerService>().ShowCustomersJoinDate;
+            cbAllowPM.Checked = IoCFactory.Resolve<IForumService>().AllowPrivateMessages;
+            cbNotifyAboutPrivateMessages.Checked = IoCFactory.Resolve<IForumService>().NotifyAboutPrivateMessages;
+            cbAllowViewingProfiles.Checked = IoCFactory.Resolve<ICustomerService>().AllowViewingProfiles;
+            cbCustomersAllowedToUploadAvatars.Checked = IoCFactory.Resolve<ICustomerService>().AllowCustomersToUploadAvatars;
+            cbDefaultAvatarEnabled.Checked = IoCFactory.Resolve<ICustomerService>().DefaultAvatarEnabled;
             lblCurrentTimeZone.Text = DateTimeHelper.CurrentTimeZone.DisplayName;
             TimeZoneInfo defaultStoreTimeZone = DateTimeHelper.DefaultStoreTimeZone;
             if (defaultStoreTimeZone != null)
@@ -136,17 +136,17 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             cbAllowCustomersToSetTimeZone.Checked = DateTimeHelper.AllowCustomersToSetTimeZone;
 
 
-            cbUsernamesEnabled.Checked = IoCFactory.Resolve<ICustomerManager>().UsernamesEnabled;
-            cbAllowCustomersToChangeUsernames.Checked = IoCFactory.Resolve<ICustomerManager>().AllowCustomersToChangeUsernames;
-            cbNotifyAboutNewCustomerRegistration.Checked = IoCFactory.Resolve<ICustomerManager>().NotifyNewCustomerRegistration;
-            CommonHelper.SelectListItem(this.ddlRegistrationMethod, (int)IoCFactory.Resolve<ICustomerManager>().CustomerRegistrationType);
-            cbAllowNavigationOnlyRegisteredCustomers.Checked = IoCFactory.Resolve<ICustomerManager>().AllowNavigationOnlyRegisteredCustomers;
+            cbUsernamesEnabled.Checked = IoCFactory.Resolve<ICustomerService>().UsernamesEnabled;
+            cbAllowCustomersToChangeUsernames.Checked = IoCFactory.Resolve<ICustomerService>().AllowCustomersToChangeUsernames;
+            cbNotifyAboutNewCustomerRegistration.Checked = IoCFactory.Resolve<ICustomerService>().NotifyNewCustomerRegistration;
+            CommonHelper.SelectListItem(this.ddlRegistrationMethod, (int)IoCFactory.Resolve<ICustomerService>().CustomerRegistrationType);
+            cbAllowNavigationOnlyRegisteredCustomers.Checked = IoCFactory.Resolve<ICustomerService>().AllowNavigationOnlyRegisteredCustomers;
             cbHideNewsletterBox.Checked = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Display.HideNewsletterBox");
 
             cbShowCategoryProductNumber.Checked = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Display.Products.ShowCategoryProductNumber");
             cbHidePricesForNonRegistered.Checked = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Common.HidePricesForNonRegistered");
-            txtMinOrderSubtotalAmount.Value = IoCFactory.Resolve<IOrderManager>().MinOrderSubtotalAmount;
-            txtMinOrderTotalAmount.Value = IoCFactory.Resolve<IOrderManager>().MinOrderTotalAmount;
+            txtMinOrderSubtotalAmount.Value = IoCFactory.Resolve<IOrderService>().MinOrderSubtotalAmount;
+            txtMinOrderTotalAmount.Value = IoCFactory.Resolve<IOrderService>().MinOrderTotalAmount;
             cbShowDiscountCouponBox.Checked = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Display.Checkout.DiscountCouponBox");
             cbShowGiftCardBox.Checked = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Display.Checkout.GiftCardBox");
             cbShowSKU.Checked = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Display.Products.ShowSKU");
@@ -154,32 +154,32 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             cbDisplayCartAfterAddingProduct.Checked = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Display.Products.DisplayCartAfterAddingProduct");
             cbEnableDynamicPriceUpdate.Checked = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("ProductAttribute.EnableDynamicPriceUpdate");
             cbAllowProductSorting.Checked = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Common.AllowProductSorting");
-            cbShowShareButton.Checked = IoCFactory.Resolve<IProductManager>().ShowShareButton;
+            cbShowShareButton.Checked = IoCFactory.Resolve<IProductService>().ShowShareButton;
             cbDownloadableProductsTab.Checked = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Display.DownloadableProductsTab");
             cbUseImagesForLanguageSelection.Checked = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Common.UseImagesForLanguageSelection", false);
-            cbEnableCompareProducts.Checked = IoCFactory.Resolve<IProductManager>().CompareProductsEnabled;
+            cbEnableCompareProducts.Checked = IoCFactory.Resolve<IProductService>().CompareProductsEnabled;
             cbEnableWishlist.Checked = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Common.EnableWishlist");
             cbEmailWishlist.Checked = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Common.EmailWishlist");
-            cbIsReOrderAllowed.Checked = IoCFactory.Resolve<IOrderManager>().IsReOrderAllowed;
+            cbIsReOrderAllowed.Checked = IoCFactory.Resolve<IOrderService>().IsReOrderAllowed;
             cbEnableEmailAFriend.Checked = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Common.EnableEmailAFirend");
             cbShowMiniShoppingCart.Checked = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Common.ShowMiniShoppingCart");
-            cbRecentlyViewedProductsEnabled.Checked = IoCFactory.Resolve<IProductManager>().RecentlyViewedProductsEnabled;
-            txtRecentlyViewedProductsNumber.Value = IoCFactory.Resolve<IProductManager>().RecentlyViewedProductsNumber;
-            cbRecentlyAddedProductsEnabled.Checked = IoCFactory.Resolve<IProductManager>().RecentlyAddedProductsEnabled;
-            txtRecentlyAddedProductsNumber.Value = IoCFactory.Resolve<IProductManager>().RecentlyAddedProductsNumber;
-            cbNotifyAboutNewProductReviews.Checked = IoCFactory.Resolve<IProductManager>().NotifyAboutNewProductReviews;
-            cbProductReviewsMustBeApproved.Checked = IoCFactory.Resolve<ICustomerManager>().ProductReviewsMustBeApproved;
-            cbAllowAnonymousUsersToReviewProduct.Checked = IoCFactory.Resolve<ICustomerManager>().AllowAnonymousUsersToReviewProduct;
-            cbAllowAnonymousUsersToEmailAFriend.Checked = IoCFactory.Resolve<ICustomerManager>().AllowAnonymousUsersToEmailAFriend;
+            cbRecentlyViewedProductsEnabled.Checked = IoCFactory.Resolve<IProductService>().RecentlyViewedProductsEnabled;
+            txtRecentlyViewedProductsNumber.Value = IoCFactory.Resolve<IProductService>().RecentlyViewedProductsNumber;
+            cbRecentlyAddedProductsEnabled.Checked = IoCFactory.Resolve<IProductService>().RecentlyAddedProductsEnabled;
+            txtRecentlyAddedProductsNumber.Value = IoCFactory.Resolve<IProductService>().RecentlyAddedProductsNumber;
+            cbNotifyAboutNewProductReviews.Checked = IoCFactory.Resolve<IProductService>().NotifyAboutNewProductReviews;
+            cbProductReviewsMustBeApproved.Checked = IoCFactory.Resolve<ICustomerService>().ProductReviewsMustBeApproved;
+            cbAllowAnonymousUsersToReviewProduct.Checked = IoCFactory.Resolve<ICustomerService>().AllowAnonymousUsersToReviewProduct;
+            cbAllowAnonymousUsersToEmailAFriend.Checked = IoCFactory.Resolve<ICustomerService>().AllowAnonymousUsersToEmailAFriend;
             cbAllowAnonymousUsersToVotePolls.Checked = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Common.AllowAnonymousUsersToVotePolls");
 
-            cbAllowAnonymousUsersToSetProductRatings.Checked = IoCFactory.Resolve<ICustomerManager>().AllowAnonymousUsersToSetProductRatings;
+            cbAllowAnonymousUsersToSetProductRatings.Checked = IoCFactory.Resolve<ICustomerService>().AllowAnonymousUsersToSetProductRatings;
             cbShowBestsellersOnHomePage.Checked = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Display.ShowBestsellersOnMainPage");
             txtShowBestsellersOnHomePageNumber.Value = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Display.ShowBestsellersOnMainPageNumber");
-            cbProductsAlsoPurchased.Checked = IoCFactory.Resolve<IProductManager>().ProductsAlsoPurchasedEnabled;
-            txtProductsAlsoPurchasedNumber.Value = IoCFactory.Resolve<IProductManager>().ProductsAlsoPurchasedNumber;
-            txtCrossSellsNumber.Value = IoCFactory.Resolve<IProductManager>().CrossSellsNumber;
-            txtSearchPageProductsPerPage.Value = IoCFactory.Resolve<IProductManager>().SearchPageProductsPerPage;
+            cbProductsAlsoPurchased.Checked = IoCFactory.Resolve<IProductService>().ProductsAlsoPurchasedEnabled;
+            txtProductsAlsoPurchasedNumber.Value = IoCFactory.Resolve<IProductService>().ProductsAlsoPurchasedNumber;
+            txtCrossSellsNumber.Value = IoCFactory.Resolve<IProductService>().CrossSellsNumber;
+            txtSearchPageProductsPerPage.Value = IoCFactory.Resolve<IProductService>().SearchPageProductsPerPage;
             txtMaxShoppingCartItems.Value = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Common.MaximumShoppingCartItems");
             txtMaxWishlistItems.Value = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Common.MaximumWishlistItems");
 
@@ -210,45 +210,45 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             }
 
             //reward point
-            cbRewardPointsEnabled.Checked = IoCFactory.Resolve<IOrderManager>().RewardPointsEnabled;
-            txtRewardPointsRate.Value = IoCFactory.Resolve<IOrderManager>().RewardPointsExchangeRate;
-            txtRewardPointsForRegistration.Value = IoCFactory.Resolve<IOrderManager>().RewardPointsForRegistration;
-            txtRewardPointsForPurchases_Amount.Value = IoCFactory.Resolve<IOrderManager>().RewardPointsForPurchases_Amount;
-            txtRewardPointsForPurchases_Points.Value = IoCFactory.Resolve<IOrderManager>().RewardPointsForPurchases_Points;
-            CommonHelper.SelectListItem(ddlRewardPointsAwardedOrderStatus, ((int)IoCFactory.Resolve<IOrderManager>().RewardPointsForPurchases_Awarded).ToString());
-            CommonHelper.SelectListItem(ddlRewardPointsCanceledOrderStatus, ((int)IoCFactory.Resolve<IOrderManager>().RewardPointsForPurchases_Canceled).ToString());
+            cbRewardPointsEnabled.Checked = IoCFactory.Resolve<IOrderService>().RewardPointsEnabled;
+            txtRewardPointsRate.Value = IoCFactory.Resolve<IOrderService>().RewardPointsExchangeRate;
+            txtRewardPointsForRegistration.Value = IoCFactory.Resolve<IOrderService>().RewardPointsForRegistration;
+            txtRewardPointsForPurchases_Amount.Value = IoCFactory.Resolve<IOrderService>().RewardPointsForPurchases_Amount;
+            txtRewardPointsForPurchases_Points.Value = IoCFactory.Resolve<IOrderService>().RewardPointsForPurchases_Points;
+            CommonHelper.SelectListItem(ddlRewardPointsAwardedOrderStatus, ((int)IoCFactory.Resolve<IOrderService>().RewardPointsForPurchases_Awarded).ToString());
+            CommonHelper.SelectListItem(ddlRewardPointsCanceledOrderStatus, ((int)IoCFactory.Resolve<IOrderService>().RewardPointsForPurchases_Canceled).ToString());
 
             //gift cards
-            if (IoCFactory.Resolve<IOrderManager>().GiftCards_Activated.HasValue)
-                CommonHelper.SelectListItem(ddlGiftCardsActivationOrderStatus, ((int)IoCFactory.Resolve<IOrderManager>().GiftCards_Activated).ToString());
+            if (IoCFactory.Resolve<IOrderService>().GiftCards_Activated.HasValue)
+                CommonHelper.SelectListItem(ddlGiftCardsActivationOrderStatus, ((int)IoCFactory.Resolve<IOrderService>().GiftCards_Activated).ToString());
             else
                 CommonHelper.SelectListItem(ddlGiftCardsActivationOrderStatus, 0);
-            if (IoCFactory.Resolve<IOrderManager>().GiftCards_Deactivated.HasValue)
-                CommonHelper.SelectListItem(ddlGiftCardsDeactivationOrderStatus, ((int)IoCFactory.Resolve<IOrderManager>().GiftCards_Deactivated).ToString());
+            if (IoCFactory.Resolve<IOrderService>().GiftCards_Deactivated.HasValue)
+                CommonHelper.SelectListItem(ddlGiftCardsDeactivationOrderStatus, ((int)IoCFactory.Resolve<IOrderService>().GiftCards_Deactivated).ToString());
             else
                 CommonHelper.SelectListItem(ddlGiftCardsDeactivationOrderStatus, 0);
 
             //form fields
-            cbffGenderEnabled.Checked = IoCFactory.Resolve<ICustomerManager>().FormFieldGenderEnabled;
-            cbffDateOfBirthEnabled.Checked = IoCFactory.Resolve<ICustomerManager>().FormFieldDateOfBirthEnabled;
-            cbffCompanyEnabled.Checked = IoCFactory.Resolve<ICustomerManager>().FormFieldCompanyEnabled;
-            cbffCompanyRequired.Checked = IoCFactory.Resolve<ICustomerManager>().FormFieldCompanyRequired;
-            cbffStreetAddressEnabled.Checked = IoCFactory.Resolve<ICustomerManager>().FormFieldStreetAddressEnabled;
-            cbffStreetAddressRequired.Checked = IoCFactory.Resolve<ICustomerManager>().FormFieldStreetAddressRequired;
-            cbffStreetAddress2Enabled.Checked = IoCFactory.Resolve<ICustomerManager>().FormFieldStreetAddress2Enabled;
-            cbffStreetAddress2Required.Checked = IoCFactory.Resolve<ICustomerManager>().FormFieldStreetAddress2Required;
-            cbffPostCodeEnabled.Checked = IoCFactory.Resolve<ICustomerManager>().FormFieldPostCodeEnabled;
-            cbffPostCodeRequired.Checked = IoCFactory.Resolve<ICustomerManager>().FormFieldPostCodeRequired;
-            cbffCityEnabled.Checked = IoCFactory.Resolve<ICustomerManager>().FormFieldCityEnabled;
-            cbffCityRequired.Checked = IoCFactory.Resolve<ICustomerManager>().FormFieldCityRequired;
-            cbffCountryEnabled.Checked = IoCFactory.Resolve<ICustomerManager>().FormFieldCountryEnabled;
-            cbffStateEnabled.Checked = IoCFactory.Resolve<ICustomerManager>().FormFieldStateEnabled;
-            cbffPhoneEnabled.Checked = IoCFactory.Resolve<ICustomerManager>().FormFieldPhoneEnabled;
-            cbffPhoneRequired.Checked = IoCFactory.Resolve<ICustomerManager>().FormFieldPhoneRequired;
-            cbffFaxEnabled.Checked = IoCFactory.Resolve<ICustomerManager>().FormFieldFaxEnabled;
-            cbffFaxRequired.Checked = IoCFactory.Resolve<ICustomerManager>().FormFieldFaxRequired;
-            cbffNewsletterBoxEnabled.Checked = IoCFactory.Resolve<ICustomerManager>().FormFieldNewsletterEnabled;
-            cbffTimeZoneEnabled.Checked = IoCFactory.Resolve<ICustomerManager>().FormFieldTimeZoneEnabled;
+            cbffGenderEnabled.Checked = IoCFactory.Resolve<ICustomerService>().FormFieldGenderEnabled;
+            cbffDateOfBirthEnabled.Checked = IoCFactory.Resolve<ICustomerService>().FormFieldDateOfBirthEnabled;
+            cbffCompanyEnabled.Checked = IoCFactory.Resolve<ICustomerService>().FormFieldCompanyEnabled;
+            cbffCompanyRequired.Checked = IoCFactory.Resolve<ICustomerService>().FormFieldCompanyRequired;
+            cbffStreetAddressEnabled.Checked = IoCFactory.Resolve<ICustomerService>().FormFieldStreetAddressEnabled;
+            cbffStreetAddressRequired.Checked = IoCFactory.Resolve<ICustomerService>().FormFieldStreetAddressRequired;
+            cbffStreetAddress2Enabled.Checked = IoCFactory.Resolve<ICustomerService>().FormFieldStreetAddress2Enabled;
+            cbffStreetAddress2Required.Checked = IoCFactory.Resolve<ICustomerService>().FormFieldStreetAddress2Required;
+            cbffPostCodeEnabled.Checked = IoCFactory.Resolve<ICustomerService>().FormFieldPostCodeEnabled;
+            cbffPostCodeRequired.Checked = IoCFactory.Resolve<ICustomerService>().FormFieldPostCodeRequired;
+            cbffCityEnabled.Checked = IoCFactory.Resolve<ICustomerService>().FormFieldCityEnabled;
+            cbffCityRequired.Checked = IoCFactory.Resolve<ICustomerService>().FormFieldCityRequired;
+            cbffCountryEnabled.Checked = IoCFactory.Resolve<ICustomerService>().FormFieldCountryEnabled;
+            cbffStateEnabled.Checked = IoCFactory.Resolve<ICustomerService>().FormFieldStateEnabled;
+            cbffPhoneEnabled.Checked = IoCFactory.Resolve<ICustomerService>().FormFieldPhoneEnabled;
+            cbffPhoneRequired.Checked = IoCFactory.Resolve<ICustomerService>().FormFieldPhoneRequired;
+            cbffFaxEnabled.Checked = IoCFactory.Resolve<ICustomerService>().FormFieldFaxEnabled;
+            cbffFaxRequired.Checked = IoCFactory.Resolve<ICustomerService>().FormFieldFaxRequired;
+            cbffNewsletterBoxEnabled.Checked = IoCFactory.Resolve<ICustomerService>().FormFieldNewsletterEnabled;
+            cbffTimeZoneEnabled.Checked = IoCFactory.Resolve<ICustomerService>().FormFieldTimeZoneEnabled;
 
             //return requests (RMA)
             cbReturnRequestsEnabled.Checked = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("ReturnRequests.Enable");
@@ -262,17 +262,17 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             //reward points
             this.ddlRewardPointsAwardedOrderStatus.Items.Clear();
-            var orderStatuses1 = IoCFactory.Resolve<IOrderManager>().GetAllOrderStatuses();
+            var orderStatuses1 = IoCFactory.Resolve<IOrderService>().GetAllOrderStatuses();
             foreach (OrderStatus orderStatus in orderStatuses1)
             {
-                ListItem item2 = new ListItem(IoCFactory.Resolve<IOrderManager>().GetOrderStatusName(orderStatus.OrderStatusId), orderStatus.OrderStatusId.ToString());
+                ListItem item2 = new ListItem(IoCFactory.Resolve<IOrderService>().GetOrderStatusName(orderStatus.OrderStatusId), orderStatus.OrderStatusId.ToString());
                 this.ddlRewardPointsAwardedOrderStatus.Items.Add(item2);
             }
             this.ddlRewardPointsCanceledOrderStatus.Items.Clear();
-            var orderStatuses2 = IoCFactory.Resolve<IOrderManager>().GetAllOrderStatuses();
+            var orderStatuses2 = IoCFactory.Resolve<IOrderService>().GetAllOrderStatuses();
             foreach (OrderStatus orderStatus in orderStatuses2)
             {
-                ListItem item2 = new ListItem(IoCFactory.Resolve<IOrderManager>().GetOrderStatusName(orderStatus.OrderStatusId), orderStatus.OrderStatusId.ToString());
+                ListItem item2 = new ListItem(IoCFactory.Resolve<IOrderService>().GetOrderStatusName(orderStatus.OrderStatusId), orderStatus.OrderStatusId.ToString());
                 this.ddlRewardPointsCanceledOrderStatus.Items.Add(item2);
             }
 
@@ -280,19 +280,19 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             this.ddlGiftCardsActivationOrderStatus.Items.Clear();
             ListItem gcaosEmpty = new ListItem("---", "0");
             this.ddlGiftCardsActivationOrderStatus.Items.Add(gcaosEmpty);
-            var orderStatuses3 = IoCFactory.Resolve<IOrderManager>().GetAllOrderStatuses();
+            var orderStatuses3 = IoCFactory.Resolve<IOrderService>().GetAllOrderStatuses();
             foreach (OrderStatus orderStatus in orderStatuses3)
             {
-                ListItem item2 = new ListItem(IoCFactory.Resolve<IOrderManager>().GetOrderStatusName(orderStatus.OrderStatusId), orderStatus.OrderStatusId.ToString());
+                ListItem item2 = new ListItem(IoCFactory.Resolve<IOrderService>().GetOrderStatusName(orderStatus.OrderStatusId), orderStatus.OrderStatusId.ToString());
                 this.ddlGiftCardsActivationOrderStatus.Items.Add(item2);
             }
             this.ddlGiftCardsDeactivationOrderStatus.Items.Clear();
             ListItem gcdosEmpty = new ListItem("---", "0");
             this.ddlGiftCardsDeactivationOrderStatus.Items.Add(gcdosEmpty);
-            var orderStatuses4 = IoCFactory.Resolve<IOrderManager>().GetAllOrderStatuses();
+            var orderStatuses4 = IoCFactory.Resolve<IOrderService>().GetAllOrderStatuses();
             foreach (OrderStatus orderStatus in orderStatuses4)
             {
-                ListItem item2 = new ListItem(IoCFactory.Resolve<IOrderManager>().GetOrderStatusName(orderStatus.OrderStatusId), orderStatus.OrderStatusId.ToString());
+                ListItem item2 = new ListItem(IoCFactory.Resolve<IOrderService>().GetOrderStatusName(orderStatus.OrderStatusId), orderStatus.OrderStatusId.ToString());
                 this.ddlGiftCardsDeactivationOrderStatus.Items.Add(item2);
             }
 
@@ -346,7 +346,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     {
                         foreach (string s in ipList.Split(new char[1] { ',' }))
                         {
-                            if (!IoCFactory.Resolve<IBlacklistManager>().IsValidIp(s.Trim()))
+                            if (!IoCFactory.Resolve<IBlacklistService>().IsValidIp(s.Trim()))
                             {
                                 throw new NopException("IP list is not valid.");
                             }
@@ -357,7 +357,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     IoCFactory.Resolve<ISettingManager>().StoreUrl = txtStoreURL.Text;
                     IoCFactory.Resolve<ISettingManager>().SetParam("Common.StoreClosed", cbStoreClosed.Checked.ToString());
                     IoCFactory.Resolve<ISettingManager>().SetParam("Common.StoreClosed.AllowAdminAccess", cbStoreClosedForAdmins.Checked.ToString());
-                    IoCFactory.Resolve<ICustomerManager>().AnonymousCheckoutAllowed = cbAnonymousCheckoutAllowed.Checked;
+                    IoCFactory.Resolve<ICustomerService>().AnonymousCheckoutAllowed = cbAnonymousCheckoutAllowed.Checked;
                     IoCFactory.Resolve<ISettingManager>().SetParam("Checkout.UseOnePageCheckout", cbUseOnePageCheckout.Checked.ToString());
                     IoCFactory.Resolve<ISettingManager>().SetParam("Checkout.TermsOfServiceEnabled", cbCheckoutTermsOfService.Checked.ToString());
 
@@ -415,30 +415,30 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     IoCFactory.Resolve<ISettingManager>().SetParam("Common.RegisterCaptchaImageEnabled", cbEnableRegisterCaptchaImage.Checked.ToString());
 
 
-                    IoCFactory.Resolve<ICustomerManager>().CustomerNameFormatting = (CustomerNameFormatEnum)Enum.ToObject(typeof(CustomerNameFormatEnum), int.Parse(this.ddlCustomerNameFormat.SelectedItem.Value));
-                    IoCFactory.Resolve<ICustomerManager>().ShowCustomersLocation = cbShowCustomersLocation.Checked;
-                    IoCFactory.Resolve<ICustomerManager>().ShowCustomersJoinDate = cbShowCustomersJoinDate.Checked;
-                    IoCFactory.Resolve<IForumManager>().AllowPrivateMessages = cbAllowPM.Checked;
-                    IoCFactory.Resolve<IForumManager>().NotifyAboutPrivateMessages = cbNotifyAboutPrivateMessages.Checked;
-                    IoCFactory.Resolve<ICustomerManager>().AllowViewingProfiles = cbAllowViewingProfiles.Checked;
-                    IoCFactory.Resolve<ICustomerManager>().AllowCustomersToUploadAvatars = cbCustomersAllowedToUploadAvatars.Checked;
-                    IoCFactory.Resolve<ICustomerManager>().DefaultAvatarEnabled = cbDefaultAvatarEnabled.Checked;
+                    IoCFactory.Resolve<ICustomerService>().CustomerNameFormatting = (CustomerNameFormatEnum)Enum.ToObject(typeof(CustomerNameFormatEnum), int.Parse(this.ddlCustomerNameFormat.SelectedItem.Value));
+                    IoCFactory.Resolve<ICustomerService>().ShowCustomersLocation = cbShowCustomersLocation.Checked;
+                    IoCFactory.Resolve<ICustomerService>().ShowCustomersJoinDate = cbShowCustomersJoinDate.Checked;
+                    IoCFactory.Resolve<IForumService>().AllowPrivateMessages = cbAllowPM.Checked;
+                    IoCFactory.Resolve<IForumService>().NotifyAboutPrivateMessages = cbNotifyAboutPrivateMessages.Checked;
+                    IoCFactory.Resolve<ICustomerService>().AllowViewingProfiles = cbAllowViewingProfiles.Checked;
+                    IoCFactory.Resolve<ICustomerService>().AllowCustomersToUploadAvatars = cbCustomersAllowedToUploadAvatars.Checked;
+                    IoCFactory.Resolve<ICustomerService>().DefaultAvatarEnabled = cbDefaultAvatarEnabled.Checked;
                     string defaultStoreTimeZoneId = ddlDefaultStoreTimeZone.SelectedItem.Value;
                     DateTimeHelper.DefaultStoreTimeZone = DateTimeHelper.FindTimeZoneById(defaultStoreTimeZoneId);
                     DateTimeHelper.AllowCustomersToSetTimeZone = cbAllowCustomersToSetTimeZone.Checked;
 
 
-                    IoCFactory.Resolve<ICustomerManager>().UsernamesEnabled = cbUsernamesEnabled.Checked;
-                    IoCFactory.Resolve<ICustomerManager>().AllowCustomersToChangeUsernames = cbAllowCustomersToChangeUsernames.Checked;
-                    IoCFactory.Resolve<ICustomerManager>().NotifyNewCustomerRegistration = cbNotifyAboutNewCustomerRegistration.Checked;
-                    IoCFactory.Resolve<ICustomerManager>().CustomerRegistrationType = (CustomerRegistrationTypeEnum)Enum.ToObject(typeof(CustomerRegistrationTypeEnum), int.Parse(this.ddlRegistrationMethod.SelectedItem.Value));
-                    IoCFactory.Resolve<ICustomerManager>().AllowNavigationOnlyRegisteredCustomers = cbAllowNavigationOnlyRegisteredCustomers.Checked;
+                    IoCFactory.Resolve<ICustomerService>().UsernamesEnabled = cbUsernamesEnabled.Checked;
+                    IoCFactory.Resolve<ICustomerService>().AllowCustomersToChangeUsernames = cbAllowCustomersToChangeUsernames.Checked;
+                    IoCFactory.Resolve<ICustomerService>().NotifyNewCustomerRegistration = cbNotifyAboutNewCustomerRegistration.Checked;
+                    IoCFactory.Resolve<ICustomerService>().CustomerRegistrationType = (CustomerRegistrationTypeEnum)Enum.ToObject(typeof(CustomerRegistrationTypeEnum), int.Parse(this.ddlRegistrationMethod.SelectedItem.Value));
+                    IoCFactory.Resolve<ICustomerService>().AllowNavigationOnlyRegisteredCustomers = cbAllowNavigationOnlyRegisteredCustomers.Checked;
                     IoCFactory.Resolve<ISettingManager>().SetParam("Display.HideNewsletterBox", cbHideNewsletterBox.Checked.ToString());
 
                     IoCFactory.Resolve<ISettingManager>().SetParam("Display.Products.ShowCategoryProductNumber", cbShowCategoryProductNumber.Checked.ToString());
                     IoCFactory.Resolve<ISettingManager>().SetParam("Common.HidePricesForNonRegistered", cbHidePricesForNonRegistered.Checked.ToString());
-                    IoCFactory.Resolve<IOrderManager>().MinOrderSubtotalAmount = txtMinOrderSubtotalAmount.Value;
-                    IoCFactory.Resolve<IOrderManager>().MinOrderTotalAmount = txtMinOrderTotalAmount.Value;
+                    IoCFactory.Resolve<IOrderService>().MinOrderSubtotalAmount = txtMinOrderSubtotalAmount.Value;
+                    IoCFactory.Resolve<IOrderService>().MinOrderTotalAmount = txtMinOrderTotalAmount.Value;
                     IoCFactory.Resolve<ISettingManager>().SetParam("Display.Checkout.DiscountCouponBox", cbShowDiscountCouponBox.Checked.ToString());
                     IoCFactory.Resolve<ISettingManager>().SetParam("Display.Checkout.GiftCardBox", cbShowGiftCardBox.Checked.ToString());
                     IoCFactory.Resolve<ISettingManager>().SetParam("Display.Products.ShowSKU", cbShowSKU.Checked.ToString());
@@ -446,32 +446,32 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     IoCFactory.Resolve<ISettingManager>().SetParam("Display.Products.DisplayCartAfterAddingProduct", cbDisplayCartAfterAddingProduct.Checked.ToString());
                     IoCFactory.Resolve<ISettingManager>().SetParam("ProductAttribute.EnableDynamicPriceUpdate", cbEnableDynamicPriceUpdate.Checked.ToString());
                     IoCFactory.Resolve<ISettingManager>().SetParam("Common.AllowProductSorting", cbAllowProductSorting.Checked.ToString());
-                    IoCFactory.Resolve<IProductManager>().ShowShareButton = cbShowShareButton.Checked;
+                    IoCFactory.Resolve<IProductService>().ShowShareButton = cbShowShareButton.Checked;
                     IoCFactory.Resolve<ISettingManager>().SetParam("Display.DownloadableProductsTab", cbDownloadableProductsTab.Checked.ToString());
                     IoCFactory.Resolve<ISettingManager>().SetParam("Common.UseImagesForLanguageSelection", cbUseImagesForLanguageSelection.Checked.ToString());
-                    IoCFactory.Resolve<IProductManager>().CompareProductsEnabled = cbEnableCompareProducts.Checked;
+                    IoCFactory.Resolve<IProductService>().CompareProductsEnabled = cbEnableCompareProducts.Checked;
                     IoCFactory.Resolve<ISettingManager>().SetParam("Common.EnableWishlist", cbEnableWishlist.Checked.ToString());
                     IoCFactory.Resolve<ISettingManager>().SetParam("Common.EmailWishlist", cbEmailWishlist.Checked.ToString());
-                    IoCFactory.Resolve<IOrderManager>().IsReOrderAllowed = cbIsReOrderAllowed.Checked;
+                    IoCFactory.Resolve<IOrderService>().IsReOrderAllowed = cbIsReOrderAllowed.Checked;
                     IoCFactory.Resolve<ISettingManager>().SetParam("Common.EnableEmailAFirend", cbEnableEmailAFriend.Checked.ToString());
                     IoCFactory.Resolve<ISettingManager>().SetParam("Common.ShowMiniShoppingCart", cbShowMiniShoppingCart.Checked.ToString());
-                    IoCFactory.Resolve<IProductManager>().RecentlyViewedProductsEnabled = cbRecentlyViewedProductsEnabled.Checked;
-                    IoCFactory.Resolve<IProductManager>().RecentlyViewedProductsNumber = txtRecentlyViewedProductsNumber.Value;
-                    IoCFactory.Resolve<IProductManager>().RecentlyAddedProductsEnabled = cbRecentlyAddedProductsEnabled.Checked;
-                    IoCFactory.Resolve<IProductManager>().RecentlyAddedProductsNumber = txtRecentlyAddedProductsNumber.Value;
-                    IoCFactory.Resolve<IProductManager>().NotifyAboutNewProductReviews = cbNotifyAboutNewProductReviews.Checked;
-                    IoCFactory.Resolve<ICustomerManager>().ProductReviewsMustBeApproved = cbProductReviewsMustBeApproved.Checked;
-                    IoCFactory.Resolve<ICustomerManager>().AllowAnonymousUsersToReviewProduct = cbAllowAnonymousUsersToReviewProduct.Checked;
-                    IoCFactory.Resolve<ICustomerManager>().AllowAnonymousUsersToEmailAFriend = cbAllowAnonymousUsersToEmailAFriend.Checked;
+                    IoCFactory.Resolve<IProductService>().RecentlyViewedProductsEnabled = cbRecentlyViewedProductsEnabled.Checked;
+                    IoCFactory.Resolve<IProductService>().RecentlyViewedProductsNumber = txtRecentlyViewedProductsNumber.Value;
+                    IoCFactory.Resolve<IProductService>().RecentlyAddedProductsEnabled = cbRecentlyAddedProductsEnabled.Checked;
+                    IoCFactory.Resolve<IProductService>().RecentlyAddedProductsNumber = txtRecentlyAddedProductsNumber.Value;
+                    IoCFactory.Resolve<IProductService>().NotifyAboutNewProductReviews = cbNotifyAboutNewProductReviews.Checked;
+                    IoCFactory.Resolve<ICustomerService>().ProductReviewsMustBeApproved = cbProductReviewsMustBeApproved.Checked;
+                    IoCFactory.Resolve<ICustomerService>().AllowAnonymousUsersToReviewProduct = cbAllowAnonymousUsersToReviewProduct.Checked;
+                    IoCFactory.Resolve<ICustomerService>().AllowAnonymousUsersToEmailAFriend = cbAllowAnonymousUsersToEmailAFriend.Checked;
                     IoCFactory.Resolve<ISettingManager>().SetParam("Common.AllowAnonymousUsersToVotePolls", cbAllowAnonymousUsersToVotePolls.Checked.ToString());
 
-                    IoCFactory.Resolve<ICustomerManager>().AllowAnonymousUsersToSetProductRatings = cbAllowAnonymousUsersToSetProductRatings.Checked;
+                    IoCFactory.Resolve<ICustomerService>().AllowAnonymousUsersToSetProductRatings = cbAllowAnonymousUsersToSetProductRatings.Checked;
                     IoCFactory.Resolve<ISettingManager>().SetParam("Display.ShowBestsellersOnMainPage", cbShowBestsellersOnHomePage.Checked.ToString());
                     IoCFactory.Resolve<ISettingManager>().SetParam("Display.ShowBestsellersOnMainPageNumber", txtShowBestsellersOnHomePageNumber.Value.ToString());
-                    IoCFactory.Resolve<IProductManager>().ProductsAlsoPurchasedEnabled = cbProductsAlsoPurchased.Checked;
-                    IoCFactory.Resolve<IProductManager>().ProductsAlsoPurchasedNumber = txtProductsAlsoPurchasedNumber.Value;
-                    IoCFactory.Resolve<IProductManager>().CrossSellsNumber = txtCrossSellsNumber.Value;
-                    IoCFactory.Resolve<IProductManager>().SearchPageProductsPerPage = txtSearchPageProductsPerPage.Value;
+                    IoCFactory.Resolve<IProductService>().ProductsAlsoPurchasedEnabled = cbProductsAlsoPurchased.Checked;
+                    IoCFactory.Resolve<IProductService>().ProductsAlsoPurchasedNumber = txtProductsAlsoPurchasedNumber.Value;
+                    IoCFactory.Resolve<IProductService>().CrossSellsNumber = txtCrossSellsNumber.Value;
+                    IoCFactory.Resolve<IProductService>().SearchPageProductsPerPage = txtSearchPageProductsPerPage.Value;
                     IoCFactory.Resolve<ISettingManager>().SetParam("Common.MaximumShoppingCartItems", txtMaxShoppingCartItems.Value.ToString());
                     IoCFactory.Resolve<ISettingManager>().SetParam("Common.MaximumWishlistItems", txtMaxWishlistItems.Value.ToString());
                     
@@ -501,15 +501,15 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     }
 
                     //reward point
-                    IoCFactory.Resolve<IOrderManager>().RewardPointsEnabled = cbRewardPointsEnabled.Checked;
-                    IoCFactory.Resolve<IOrderManager>().RewardPointsExchangeRate = txtRewardPointsRate.Value;
-                    IoCFactory.Resolve<IOrderManager>().RewardPointsForRegistration = txtRewardPointsForRegistration.Value;
-                    IoCFactory.Resolve<IOrderManager>().RewardPointsForPurchases_Amount = txtRewardPointsForPurchases_Amount.Value;
-                    IoCFactory.Resolve<IOrderManager>().RewardPointsForPurchases_Points = txtRewardPointsForPurchases_Points.Value;
+                    IoCFactory.Resolve<IOrderService>().RewardPointsEnabled = cbRewardPointsEnabled.Checked;
+                    IoCFactory.Resolve<IOrderService>().RewardPointsExchangeRate = txtRewardPointsRate.Value;
+                    IoCFactory.Resolve<IOrderService>().RewardPointsForRegistration = txtRewardPointsForRegistration.Value;
+                    IoCFactory.Resolve<IOrderService>().RewardPointsForPurchases_Amount = txtRewardPointsForPurchases_Amount.Value;
+                    IoCFactory.Resolve<IOrderService>().RewardPointsForPurchases_Points = txtRewardPointsForPurchases_Points.Value;
                     OrderStatusEnum rppa = (OrderStatusEnum)int.Parse(ddlRewardPointsAwardedOrderStatus.SelectedItem.Value);
                     if (rppa != OrderStatusEnum.Pending)
                     {
-                        IoCFactory.Resolve<IOrderManager>().RewardPointsForPurchases_Awarded = rppa;
+                        IoCFactory.Resolve<IOrderService>().RewardPointsForPurchases_Awarded = rppa;
                     }
                     else
                     {
@@ -519,7 +519,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     OrderStatusEnum rppc = (OrderStatusEnum)int.Parse(ddlRewardPointsCanceledOrderStatus.SelectedItem.Value);
                     if (rppc != OrderStatusEnum.Pending)
                     {
-                        IoCFactory.Resolve<IOrderManager>().RewardPointsForPurchases_Canceled = rppc;
+                        IoCFactory.Resolve<IOrderService>().RewardPointsForPurchases_Canceled = rppc;
                     }
                     else
                     {
@@ -533,7 +533,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     {
                         if ((OrderStatusEnum)gcaos != OrderStatusEnum.Pending)
                         {
-                            IoCFactory.Resolve<IOrderManager>().GiftCards_Activated = (OrderStatusEnum)gcaos;
+                            IoCFactory.Resolve<IOrderService>().GiftCards_Activated = (OrderStatusEnum)gcaos;
                         }
                         else
                         {
@@ -543,14 +543,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     }
                     else
                     {
-                        IoCFactory.Resolve<IOrderManager>().GiftCards_Activated = null;
+                        IoCFactory.Resolve<IOrderService>().GiftCards_Activated = null;
                     }
                     int gcdos = int.Parse(ddlGiftCardsDeactivationOrderStatus.SelectedItem.Value);
                     if (gcdos > 0)
                     {
                         if ((OrderStatusEnum)gcdos != OrderStatusEnum.Pending)
                         {
-                            IoCFactory.Resolve<IOrderManager>().GiftCards_Deactivated = (OrderStatusEnum)gcdos;
+                            IoCFactory.Resolve<IOrderService>().GiftCards_Deactivated = (OrderStatusEnum)gcdos;
                         }
                         else
                         {
@@ -560,30 +560,30 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     }
                     else
                     {
-                        IoCFactory.Resolve<IOrderManager>().GiftCards_Deactivated = null;
+                        IoCFactory.Resolve<IOrderService>().GiftCards_Deactivated = null;
                     }
 
                     //form fields
-                    IoCFactory.Resolve<ICustomerManager>().FormFieldGenderEnabled = cbffGenderEnabled.Checked;
-                    IoCFactory.Resolve<ICustomerManager>().FormFieldDateOfBirthEnabled = cbffDateOfBirthEnabled.Checked;
-                    IoCFactory.Resolve<ICustomerManager>().FormFieldCompanyEnabled = cbffCompanyEnabled.Checked;
-                    IoCFactory.Resolve<ICustomerManager>().FormFieldCompanyRequired = cbffCompanyRequired.Checked;
-                    IoCFactory.Resolve<ICustomerManager>().FormFieldStreetAddressEnabled = cbffStreetAddressEnabled.Checked;
-                    IoCFactory.Resolve<ICustomerManager>().FormFieldStreetAddressRequired = cbffStreetAddressRequired.Checked;
-                    IoCFactory.Resolve<ICustomerManager>().FormFieldStreetAddress2Enabled = cbffStreetAddress2Enabled.Checked;
-                    IoCFactory.Resolve<ICustomerManager>().FormFieldStreetAddress2Required = cbffStreetAddress2Required.Checked;
-                    IoCFactory.Resolve<ICustomerManager>().FormFieldPostCodeEnabled = cbffPostCodeEnabled.Checked;
-                    IoCFactory.Resolve<ICustomerManager>().FormFieldPostCodeRequired = cbffPostCodeRequired.Checked;
-                    IoCFactory.Resolve<ICustomerManager>().FormFieldCityEnabled = cbffCityEnabled.Checked;
-                    IoCFactory.Resolve<ICustomerManager>().FormFieldCityRequired = cbffCityRequired.Checked;
-                    IoCFactory.Resolve<ICustomerManager>().FormFieldCountryEnabled = cbffCountryEnabled.Checked;
-                    IoCFactory.Resolve<ICustomerManager>().FormFieldStateEnabled = cbffStateEnabled.Checked;
-                    IoCFactory.Resolve<ICustomerManager>().FormFieldPhoneEnabled = cbffPhoneEnabled.Checked;
-                    IoCFactory.Resolve<ICustomerManager>().FormFieldPhoneRequired = cbffPhoneRequired.Checked;
-                    IoCFactory.Resolve<ICustomerManager>().FormFieldFaxEnabled = cbffFaxEnabled.Checked;
-                    IoCFactory.Resolve<ICustomerManager>().FormFieldFaxRequired = cbffFaxRequired.Checked;
-                    IoCFactory.Resolve<ICustomerManager>().FormFieldNewsletterEnabled = cbffNewsletterBoxEnabled.Checked;
-                    IoCFactory.Resolve<ICustomerManager>().FormFieldTimeZoneEnabled = cbffTimeZoneEnabled.Checked;
+                    IoCFactory.Resolve<ICustomerService>().FormFieldGenderEnabled = cbffGenderEnabled.Checked;
+                    IoCFactory.Resolve<ICustomerService>().FormFieldDateOfBirthEnabled = cbffDateOfBirthEnabled.Checked;
+                    IoCFactory.Resolve<ICustomerService>().FormFieldCompanyEnabled = cbffCompanyEnabled.Checked;
+                    IoCFactory.Resolve<ICustomerService>().FormFieldCompanyRequired = cbffCompanyRequired.Checked;
+                    IoCFactory.Resolve<ICustomerService>().FormFieldStreetAddressEnabled = cbffStreetAddressEnabled.Checked;
+                    IoCFactory.Resolve<ICustomerService>().FormFieldStreetAddressRequired = cbffStreetAddressRequired.Checked;
+                    IoCFactory.Resolve<ICustomerService>().FormFieldStreetAddress2Enabled = cbffStreetAddress2Enabled.Checked;
+                    IoCFactory.Resolve<ICustomerService>().FormFieldStreetAddress2Required = cbffStreetAddress2Required.Checked;
+                    IoCFactory.Resolve<ICustomerService>().FormFieldPostCodeEnabled = cbffPostCodeEnabled.Checked;
+                    IoCFactory.Resolve<ICustomerService>().FormFieldPostCodeRequired = cbffPostCodeRequired.Checked;
+                    IoCFactory.Resolve<ICustomerService>().FormFieldCityEnabled = cbffCityEnabled.Checked;
+                    IoCFactory.Resolve<ICustomerService>().FormFieldCityRequired = cbffCityRequired.Checked;
+                    IoCFactory.Resolve<ICustomerService>().FormFieldCountryEnabled = cbffCountryEnabled.Checked;
+                    IoCFactory.Resolve<ICustomerService>().FormFieldStateEnabled = cbffStateEnabled.Checked;
+                    IoCFactory.Resolve<ICustomerService>().FormFieldPhoneEnabled = cbffPhoneEnabled.Checked;
+                    IoCFactory.Resolve<ICustomerService>().FormFieldPhoneRequired = cbffPhoneRequired.Checked;
+                    IoCFactory.Resolve<ICustomerService>().FormFieldFaxEnabled = cbffFaxEnabled.Checked;
+                    IoCFactory.Resolve<ICustomerService>().FormFieldFaxRequired = cbffFaxRequired.Checked;
+                    IoCFactory.Resolve<ICustomerService>().FormFieldNewsletterEnabled = cbffNewsletterBoxEnabled.Checked;
+                    IoCFactory.Resolve<ICustomerService>().FormFieldTimeZoneEnabled = cbffTimeZoneEnabled.Checked;
 
 
                     IoCFactory.Resolve<ISettingManager>().SetParam("Display.PageExecutionTimeInfoEnabled", cbDisplayPageExecutionTime.Checked.ToString());
@@ -593,7 +593,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     IoCFactory.Resolve<ISettingManager>().SetParam("ReturnRequests.ReturnReasons", txtReturnReasons.Text);
                     IoCFactory.Resolve<ISettingManager>().SetParam("ReturnRequests.ReturnActions", txtReturnActions.Text);
 
-                    IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
+                    IoCFactory.Resolve<ICustomerActivityService>().InsertActivity(
                         "EditGlobalSettings",
                         GetLocaleResourceString("ActivityLog.EditGlobalSettings"));
 
@@ -610,7 +610,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                IoCFactory.Resolve<IPictureManager>().StoreInDB = !IoCFactory.Resolve<IPictureManager>().StoreInDB;
+                IoCFactory.Resolve<IPictureService>().StoreInDB = !IoCFactory.Resolve<IPictureService>().StoreInDB;
 
                 Response.Redirect(string.Format("GlobalSettings.aspx?TabID={0}", this.GetActiveTabId(this.CommonSettingsTabs)));
             }

@@ -41,7 +41,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             ReturnRequest rr = ctrlReturnRequestInfo.SaveInfo();
 
-            IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
+            IoCFactory.Resolve<ICustomerActivityService>().InsertActivity(
                 "EditReturnRequest",
                 GetLocaleResourceString("ActivityLog.EditReturnRequest"),
                 rr.ReturnRequestId);
@@ -85,12 +85,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                ReturnRequest rr = IoCFactory.Resolve<IOrderManager>().GetReturnRequestById(this.ReturnRequestId);
+                ReturnRequest rr = IoCFactory.Resolve<IOrderService>().GetReturnRequestById(this.ReturnRequestId);
                 if (rr != null)
                 {
-                    IoCFactory.Resolve<IOrderManager>().DeleteReturnRequest(rr.ReturnRequestId);
+                    IoCFactory.Resolve<IOrderService>().DeleteReturnRequest(rr.ReturnRequestId);
 
-                    IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
+                    IoCFactory.Resolve<ICustomerActivityService>().InsertActivity(
                         "DeleteReturnRequest",
                         GetLocaleResourceString("ActivityLog.DeleteReturnRequest"),
                         rr.ReturnRequestId);
@@ -110,10 +110,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 try
                 {
-                    ReturnRequest rr = IoCFactory.Resolve<IOrderManager>().GetReturnRequestById(this.ReturnRequestId);
+                    ReturnRequest rr = IoCFactory.Resolve<IOrderService>().GetReturnRequestById(this.ReturnRequestId);
                     if (rr != null)
                     {
-                        IoCFactory.Resolve<IMessageManager>().SendReturnRequestStatusChangedCustomerNotification(rr, LocalizationManager.DefaultAdminLanguage.LanguageId);
+                        IoCFactory.Resolve<IMessageService>().SendReturnRequestStatusChangedCustomerNotification(rr, LocalizationManager.DefaultAdminLanguage.LanguageId);
                     }
                 }
                 catch (Exception exc)

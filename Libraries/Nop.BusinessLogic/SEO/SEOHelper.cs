@@ -1381,7 +1381,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO
         /// <returns>Product URL</returns>
         public static string GetProductUrl(int productId)
         {
-            var product = IoCFactory.Resolve<IProductManager>().GetProductById(productId);
+            var product = IoCFactory.Resolve<IProductService>().GetProductById(productId);
             return GetProductUrl(product);
         }
 
@@ -1446,7 +1446,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO
         /// <returns>Manufacturer URL</returns>
         public static string GetManufacturerUrl(int manufacturerId)
         {
-            var manufacturer = IoCFactory.Resolve<IManufacturerManager>().GetManufacturerById(manufacturerId);
+            var manufacturer = IoCFactory.Resolve<IManufacturerService>().GetManufacturerById(manufacturerId);
             return GetManufacturerUrl(manufacturer);
         }
 
@@ -1490,7 +1490,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO
         /// <returns>Category URL</returns>
         public static string GetCategoryUrl(int categoryId)
         {
-            var category = IoCFactory.Resolve<ICategoryManager>().GetCategoryById(categoryId);
+            var category = IoCFactory.Resolve<ICategoryService>().GetCategoryById(categoryId);
             return GetCategoryUrl(category);
         }
 
@@ -1517,7 +1517,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO
         /// <returns>product tag URL</returns>
         public static string GetProductTagUrl(int productTagId)
         {
-            var productTag = IoCFactory.Resolve<IProductManager>().GetProductTagById(productTagId);
+            var productTag = IoCFactory.Resolve<IProductService>().GetProductTagById(productTagId);
             return GetProductTagUrl(productTag);
         }
 
@@ -1578,7 +1578,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO
         /// <returns>Blog post URL</returns>
         public static string GetBlogPostUrl(int blogPostId)
         {
-            var blogPost = IoCFactory.Resolve<IBlogManager>().GetBlogPostById(blogPostId);
+            var blogPost = IoCFactory.Resolve<IBlogService>().GetBlogPostById(blogPostId);
             return GetBlogPostUrl(blogPost);
         }
 
@@ -1604,7 +1604,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO
         /// <returns>News URL</returns>
         public static string GetNewsUrl(int newsId)
         {
-            var news = IoCFactory.Resolve<INewsManager>().GetNewsById(newsId);
+            var news = IoCFactory.Resolve<INewsService>().GetNewsById(newsId);
             return GetNewsUrl(news);
         }
 
@@ -1690,7 +1690,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO
         /// <returns>Forum group URL</returns>
         public static string GetForumGroupUrl(int forumGroupId)
         {
-            var forumGroup = IoCFactory.Resolve<IForumManager>().GetForumGroupById(forumGroupId);
+            var forumGroup = IoCFactory.Resolve<IForumService>().GetForumGroupById(forumGroupId);
             return GetForumGroupUrl(forumGroup);
         }
 
@@ -1718,7 +1718,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO
         /// <returns>Forum URL</returns>
         public static string GetForumUrl(int forumId)
         {
-            var forum = IoCFactory.Resolve<IForumManager>().GetForumById(forumId);
+            var forum = IoCFactory.Resolve<IForumService>().GetForumById(forumId);
             return GetForumUrl(forum);
         }
 
@@ -1782,7 +1782,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO
         /// <returns>Forum topic URL</returns>
         public static string GetForumTopicUrl(int topicId)
         {
-            var topic = IoCFactory.Resolve<IForumManager>().GetTopicById(topicId);
+            var topic = IoCFactory.Resolve<IForumService>().GetTopicById(topicId);
             return GetForumTopicUrl(topic); 
         }
 
@@ -1806,7 +1806,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO
         public static string GetForumTopicUrl(int topicId, 
             string queryStringProperty, int? pageIndex)
         {
-            var topic = IoCFactory.Resolve<IForumManager>().GetTopicById(topicId);
+            var topic = IoCFactory.Resolve<IForumService>().GetTopicById(topicId);
             return GetForumTopicUrl(topic, queryStringProperty, pageIndex);
         }
 
@@ -1834,7 +1834,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO
         public static string GetForumTopicUrl(int topicId, string queryStringProperty, 
             int? pageIndex, int? postId)
         {
-            var topic = IoCFactory.Resolve<IForumManager>().GetTopicById(topicId);
+            var topic = IoCFactory.Resolve<IForumService>().GetTopicById(topicId);
             return GetForumTopicUrl(topic, queryStringProperty, pageIndex, postId);
         }
 

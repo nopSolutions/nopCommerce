@@ -150,7 +150,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Manual
             //restore credit cart info
             if (paymentInfo.IsRecurringPayment)
             {
-                Order initialOrder = IoCFactory.Resolve<IOrderManager>().GetOrderById(paymentInfo.InitialOrderId);
+                Order initialOrder = IoCFactory.Resolve<IOrderService>().GetOrderById(paymentInfo.InitialOrderId);
                 if (initialOrder != null)
                 {
                     paymentInfo.CreditCardType = processPaymentResult.AllowStoringCreditCardNumber ? SecurityHelper.Decrypt(initialOrder.CardType) : string.Empty;

@@ -121,7 +121,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         private void TestPrimaryExchangeRateCurrency()
         {
-            if (IoCFactory.Resolve<ICurrencyManager>().PrimaryExchangeRateCurrency != null)
+            if (IoCFactory.Resolve<ICurrencyService>().PrimaryExchangeRateCurrency != null)
             {
                 MarkAsPass(lblPrimaryExchangeRateCurrency);
             }
@@ -133,7 +133,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         private void TestPrimaryStoreCurrency()
         {
-            if (IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency != null)
+            if (IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency != null)
             {
                 MarkAsPass(lblPrimaryStoreCurrency);
             }
@@ -145,7 +145,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         private void TestBaseWeight()
         {
-            if (IoCFactory.Resolve<IMeasureManager>().BaseWeightIn != null)
+            if (IoCFactory.Resolve<IMeasureService>().BaseWeightIn != null)
             {
                 MarkAsPass(lblDefaultWeight);
             }
@@ -157,7 +157,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         private void TestBaseDimension()
         {
-            if (IoCFactory.Resolve<IMeasureManager>().BaseDimensionIn != null)
+            if (IoCFactory.Resolve<IMeasureService>().BaseDimensionIn != null)
             {
                 MarkAsPass(lblDefaultDimension);
             }
@@ -170,12 +170,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         private void TestMessageTemplates()
         {
             StringBuilder warningResult = new StringBuilder();
-            var publishedLanguages = IoCFactory.Resolve<ILanguageManager>().GetAllLanguages(false);
-            foreach (var messageTemplate in IoCFactory.Resolve<IMessageManager>().GetAllMessageTemplates())
+            var publishedLanguages = IoCFactory.Resolve<ILanguageService>().GetAllLanguages(false);
+            foreach (var messageTemplate in IoCFactory.Resolve<IMessageService>().GetAllMessageTemplates())
             {
                 foreach (var language in publishedLanguages)
                 {
-                    var localizedMessageTemplate = IoCFactory.Resolve<IMessageManager>().GetLocalizedMessageTemplate(messageTemplate.Name, language.LanguageId);
+                    var localizedMessageTemplate = IoCFactory.Resolve<IMessageService>().GetLocalizedMessageTemplate(messageTemplate.Name, language.LanguageId);
                     if (localizedMessageTemplate == null)
                     {
                         warningResult.AppendFormat("You don't have localized version of \"{0}\" message template for {1}.", messageTemplate.Name, language.Name);
@@ -199,7 +199,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         private void TestShippingMethods()
         {
             StringBuilder warningResult = new StringBuilder();
-            var srcmList = IoCFactory.Resolve<IShippingManager>().GetAllShippingRateComputationMethods(false);
+            var srcmList = IoCFactory.Resolve<IShippingService>().GetAllShippingRateComputationMethods(false);
             int offlineSrcmCount = 0;
             foreach (var srcm in srcmList)
             {

@@ -75,13 +75,13 @@ namespace NopSolutions.NopCommerce.Payment.Methods.ChronoPay
             post.Add("phone", order.BillingPhoneNumber);
             post.Add("email", order.BillingEmail);
 
-            StateProvince state = IoCFactory.Resolve<IStateProvinceManager>().GetStateProvinceById(order.BillingStateProvinceId);
+            StateProvince state = IoCFactory.Resolve<IStateProvinceService>().GetStateProvinceById(order.BillingStateProvinceId);
             if(state != null)
             {
                 post.Add("state", state.Abbreviation);
             }
 
-            Country country = IoCFactory.Resolve<ICountryManager>().GetCountryById(order.BillingCountryId);
+            Country country = IoCFactory.Resolve<ICountryService>().GetCountryById(order.BillingCountryId);
             if(country != null)
             {
                 post.Add("country", country.ThreeLetterIsoCode);

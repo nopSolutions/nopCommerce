@@ -44,7 +44,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             SpecificationAttribute specificationAttribute = ctrlSpecificationAttributeInfo.SaveInfo();
             ctrlSpecificationAttributeOptions.SaveInfo();
 
-            IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
+            IoCFactory.Resolve<ICustomerActivityService>().InsertActivity(
                 "EditSpecAttribute",
                 GetLocaleResourceString("ActivityLog.EditSpecAttribute"),
                 specificationAttribute.Name);
@@ -88,12 +88,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                SpecificationAttribute specificationAttribute = IoCFactory.Resolve<ISpecificationAttributeManager>().GetSpecificationAttributeById(this.SpecificationAttributeId);
+                SpecificationAttribute specificationAttribute = IoCFactory.Resolve<ISpecificationAttributeService>().GetSpecificationAttributeById(this.SpecificationAttributeId);
                 if (specificationAttribute != null)
                 {
-                    IoCFactory.Resolve<ISpecificationAttributeManager>().DeleteSpecificationAttribute(this.SpecificationAttributeId);
+                    IoCFactory.Resolve<ISpecificationAttributeService>().DeleteSpecificationAttribute(this.SpecificationAttributeId);
 
-                    IoCFactory.Resolve<ICustomerActivityManager>().InsertActivity(
+                    IoCFactory.Resolve<ICustomerActivityService>().InsertActivity(
                         "DeleteSpecAttribute",
                         GetLocaleResourceString("ActivityLog.DeleteSpecAttribute"),
                         specificationAttribute.Name);

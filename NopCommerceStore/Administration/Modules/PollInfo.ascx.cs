@@ -35,7 +35,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         private void FillDropDowns()
         {
             this.ddlLanguage.Items.Clear();
-            var languages = IoCFactory.Resolve<ILanguageManager>().GetAllLanguages();
+            var languages = IoCFactory.Resolve<ILanguageService>().GetAllLanguages();
             foreach (Language language in languages)
             {
                 ListItem item2 = new ListItem(language.Name, language.LanguageId.ToString());
@@ -45,7 +45,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         private void BindData()
         {
-            Poll poll = IoCFactory.Resolve<IPollManager>().GetPollById(this.PollId);
+            Poll poll = IoCFactory.Resolve<IPollService>().GetPollById(this.PollId);
             if (poll != null)
             {
                 CommonHelper.SelectListItem(this.ddlLanguage, poll.LanguageId);
@@ -93,7 +93,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     Name = txtPollAnswerName.Text,
                     DisplayOrder = txtPollAnswerDisplayOrder.Value
                 };
-                IoCFactory.Resolve<IPollManager>().InsertPollAnswer(pollAnswer);
+                IoCFactory.Resolve<IPollService>().InsertPollAnswer(pollAnswer);
 
                 BindData();
             }
@@ -115,13 +115,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 NumericTextBox txtDisplayOrder = row.FindControl("txtDisplayOrder") as NumericTextBox;
 
                 int pollAnswerId = int.Parse(hfPollAnswerId.Value);
-                PollAnswer pollAnswer = IoCFactory.Resolve<IPollManager>().GetPollAnswerById(pollAnswerId);
+                PollAnswer pollAnswer = IoCFactory.Resolve<IPollService>().GetPollAnswerById(pollAnswerId);
 
                 if (pollAnswer != null)
                 {
                     pollAnswer.Name = txtName.Text;
                     pollAnswer.DisplayOrder = txtDisplayOrder.Value;
-                    IoCFactory.Resolve<IPollManager>().UpdatePollAnswer(pollAnswer);
+                    IoCFactory.Resolve<IPollService>().UpdatePollAnswer(pollAnswer);
                 }
 
                 BindData();
@@ -143,10 +143,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         protected void gvPollAnswers_RowDeleting(object sender, GridViewDeleteEventArgs e)
         {
             int pollAnswerId = (int)gvPollAnswers.DataKeys[e.RowIndex]["PollAnswerId"];
-            PollAnswer pollAnswer = IoCFactory.Resolve<IPollManager>().GetPollAnswerById(pollAnswerId);
+            PollAnswer pollAnswer = IoCFactory.Resolve<IPollService>().GetPollAnswerById(pollAnswerId);
             if (pollAnswer != null)
             {
-                IoCFactory.Resolve<IPollManager>().DeletePollAnswer(pollAnswer.PollAnswerId);
+                IoCFactory.Resolve<IPollService>().DeletePollAnswer(pollAnswer.PollAnswerId);
                 BindData();
             }
         }
@@ -160,7 +160,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public Poll SaveInfo()
         {
-            Poll poll = IoCFactory.Resolve<IPollManager>().GetPollById(this.PollId);
+            Poll poll = IoCFactory.Resolve<IPollService>().GetPollById(this.PollId);
             DateTime? startDate = ctrlStartDate.SelectedDate;
             DateTime? endDate = ctrlEndDate.SelectedDate;
             if (startDate.HasValue)
@@ -182,7 +182,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 poll.DisplayOrder = txtDisplayOrder.Value;
                 poll.StartDate = startDate;
                 poll.EndDate = endDate;
-                IoCFactory.Resolve<IPollManager>().UpdatePoll(poll);
+                IoCFactory.Resolve<IPollService>().UpdatePoll(poll);
             }
             else
             {
@@ -198,7 +198,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     EndDate = endDate
                 };
 
-                IoCFactory.Resolve<IPollManager>().InsertPoll(poll);
+                IoCFactory.Resolve<IPollService>().InsertPoll(poll);
             }
             return poll;
         }

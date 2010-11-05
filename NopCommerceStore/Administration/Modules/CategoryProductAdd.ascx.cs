@@ -50,11 +50,11 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             var picture = product.DefaultPicture;
             if (picture != null)
             {
-                return IoCFactory.Resolve<IPictureManager>().GetPictureUrl(picture, IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.ShoppingCart.ThumbnailImageSize", 80));
+                return IoCFactory.Resolve<IPictureService>().GetPictureUrl(picture, IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.ShoppingCart.ThumbnailImageSize", 80));
             }
             else
             {
-                return IoCFactory.Resolve<IPictureManager>().GetDefaultPictureUrl(IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.ShoppingCart.ThumbnailImageSize", 80));
+                return IoCFactory.Resolve<IPictureService>().GetDefaultPictureUrl(IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.ShoppingCart.ThumbnailImageSize", 80));
             }
         }
 
@@ -66,7 +66,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             this.ddlManufacturer.Items.Clear();
             ListItem itemEmptyManufacturer = new ListItem(GetLocaleResourceString("Admin.Common.All"), "0");
             this.ddlManufacturer.Items.Add(itemEmptyManufacturer);
-            var manufacturers = IoCFactory.Resolve<IManufacturerManager>().GetAllManufacturers();
+            var manufacturers = IoCFactory.Resolve<IManufacturerService>().GetAllManufacturers();
             foreach (Manufacturer manufacturer in manufacturers)
             {
                 ListItem item2 = new ListItem(manufacturer.Name, manufacturer.ManufacturerId.ToString());
@@ -81,7 +81,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             int manufacturerId = int.Parse(this.ddlManufacturer.SelectedItem.Value);
 
             int totalRecords = 0;
-            var products = IoCFactory.Resolve<IProductManager>().GetAllProducts(categoryId, 
+            var products = IoCFactory.Resolve<IProductService>().GetAllProducts(categoryId, 
                 manufacturerId, 0, null,
                 null, null, productName, false, 1000, 0, null, out totalRecords);
             return products;
@@ -132,7 +132,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected void btnSave_Click(object sender, EventArgs e)
         {
-            var category = IoCFactory.Resolve<ICategoryManager>().GetCategoryById(this.CategoryId);
+            var category = IoCFactory.Resolve<ICategoryService>().GetCategoryById(this.CategoryId);
             if (category != null)
             {
                 var existingProductCategories = category.ProductCategories;
@@ -158,7 +158,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                                     DisplayOrder = displayOrder
                                 };
 
-                                IoCFactory.Resolve<ICategoryManager>().InsertProductCategory(productCategory);
+                                IoCFactory.Resolve<ICategoryService>().InsertProductCategory(productCategory);
                             }
                         }
                     }

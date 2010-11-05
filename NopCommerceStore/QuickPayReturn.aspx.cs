@@ -141,14 +141,14 @@ namespace NopSolutions.NopCommerce.Web
                 if (string.IsNullOrEmpty(merchant))
                     throw new NopException("Quickpay merchant is not set");
 
-                Order order = IoCFactory.Resolve<IOrderManager>().GetOrderById(Convert.ToInt32(ordernumber));
+                Order order = IoCFactory.Resolve<IOrderService>().GetOrderById(Convert.ToInt32(ordernumber));
 
                 if (order == null)
                     throw new NopException(string.Format("The order ID {0} doesn't exists", ordernumber));
                 
-                if (IoCFactory.Resolve<IOrderManager>().CanMarkOrderAsPaid(order))
+                if (IoCFactory.Resolve<IOrderService>().CanMarkOrderAsPaid(order))
                 {
-                    IoCFactory.Resolve<IOrderManager>().MarkOrderAsPaid(order.OrderId);
+                    IoCFactory.Resolve<IOrderService>().MarkOrderAsPaid(order.OrderId);
                 }
             }
         }

@@ -41,7 +41,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected void BindGrid()
         {
-            var messageTemplateCollection = IoCFactory.Resolve<IMessageManager>().GetAllMessageTemplates();
+            var messageTemplateCollection = IoCFactory.Resolve<IMessageService>().GetAllMessageTemplates();
             gvMessageTemplates.DataSource = messageTemplateCollection;
             gvMessageTemplates.DataBind();
         }

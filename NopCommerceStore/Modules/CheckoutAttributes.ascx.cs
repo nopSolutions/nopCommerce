@@ -44,7 +44,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
     {
         protected ShoppingCart GetCart()
         {
-            return IoCFactory.Resolve<IShoppingCartManager>().GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
+            return IoCFactory.Resolve<IShoppingCartService>().GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
         }
 
         protected List<CheckoutAttribute> GetCheckoutAttributes()
@@ -53,8 +53,8 @@ namespace NopSolutions.NopCommerce.Web.Modules
             if (cart == null || cart.Count == 0)
                 return new List<CheckoutAttribute>();
 
-            bool shoppingCartRequiresShipping = IoCFactory.Resolve<IShippingManager>().ShoppingCartRequiresShipping(cart);
-            var checkoutAttributes = IoCFactory.Resolve<ICheckoutAttributeManager>().GetAllCheckoutAttributes(!shoppingCartRequiresShipping);
+            bool shoppingCartRequiresShipping = IoCFactory.Resolve<IShippingService>().ShoppingCartRequiresShipping(cart);
+            var checkoutAttributes = IoCFactory.Resolve<ICheckoutAttributeService>().GetAllCheckoutAttributes(!shoppingCartRequiresShipping);
             return checkoutAttributes;
         }
 
@@ -130,8 +130,8 @@ namespace NopSolutions.NopCommerce.Web.Modules
                                     string caValueName = caValue.LocalizedName;
                                     if (!this.HidePrices)
                                     {
-                                        decimal priceAdjustmentBase = IoCFactory.Resolve<ITaxManager>().GetCheckoutAttributePrice(caValue);
-                                        decimal priceAdjustment = IoCFactory.Resolve<ICurrencyManager>().ConvertCurrency(priceAdjustmentBase, IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                                        decimal priceAdjustmentBase = IoCFactory.Resolve<ITaxService>().GetCheckoutAttributePrice(caValue);
+                                        decimal priceAdjustment = IoCFactory.Resolve<ICurrencyService>().ConvertCurrency(priceAdjustmentBase, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
                                         if (priceAdjustmentBase > decimal.Zero)
                                             caValueName += string.Format(" [+{0}]", PriceHelper.FormatPrice(priceAdjustment));
                                     }
@@ -184,8 +184,8 @@ namespace NopSolutions.NopCommerce.Web.Modules
                                     string caValueName = caValue.LocalizedName;
                                     if (!this.HidePrices)
                                     {
-                                        decimal priceAdjustmentBase = IoCFactory.Resolve<ITaxManager>().GetCheckoutAttributePrice(caValue);
-                                        decimal priceAdjustment = IoCFactory.Resolve<ICurrencyManager>().ConvertCurrency(priceAdjustmentBase, IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                                        decimal priceAdjustmentBase = IoCFactory.Resolve<ITaxService>().GetCheckoutAttributePrice(caValue);
+                                        decimal priceAdjustment = IoCFactory.Resolve<ICurrencyService>().ConvertCurrency(priceAdjustmentBase, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
                                         if (priceAdjustmentBase > decimal.Zero)
                                             caValueName += string.Format(" [+{0}]", PriceHelper.FormatPrice(priceAdjustment));
                                     }
@@ -236,8 +236,8 @@ namespace NopSolutions.NopCommerce.Web.Modules
                                     string caValueName = caValue.LocalizedName;
                                     if (!this.HidePrices)
                                     {
-                                        decimal priceAdjustmentBase = IoCFactory.Resolve<ITaxManager>().GetCheckoutAttributePrice(caValue);
-                                        decimal priceAdjustment = IoCFactory.Resolve<ICurrencyManager>().ConvertCurrency(priceAdjustmentBase, IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                                        decimal priceAdjustmentBase = IoCFactory.Resolve<ITaxService>().GetCheckoutAttributePrice(caValue);
+                                        decimal priceAdjustment = IoCFactory.Resolve<ICurrencyService>().ConvertCurrency(priceAdjustmentBase, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
                                         if (priceAdjustmentBase > decimal.Zero)
                                             caValueName += string.Format(" [+{0}]", PriceHelper.FormatPrice(priceAdjustment));
                                     }

@@ -67,7 +67,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             get
             {
                 if (_gc == null)
-                    _gc = IoCFactory.Resolve<IOrderManager>().GetGiftCardById(this.GiftCardId);
+                    _gc = IoCFactory.Resolve<IOrderService>().GetGiftCardById(this.GiftCardId);
                 return _gc;
             }
         }

@@ -96,7 +96,7 @@
                             Value="0" RequiredErrorMessage="<% $NopResources:Admin.DiscountInfo.RequirementSpentAmount.RequiredErrorMessage %>"
                             MinimumValue="0" MaximumValue="100000000" RangeErrorMessage="<% $NopResources:Admin.DiscountInfo.RequirementSpentAmount.RangeErrorMessage %>">
                         </nopCommerce:DecimalTextBox>
-                        [<%=IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency.CurrencyCode%>]
+                        [<%=IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode%>]
                     </td>
                 </tr>                
                 <tr runat="server" id="pnlRequirementBillingCountryIs">
@@ -183,7 +183,7 @@
                             Value="0" RequiredErrorMessage="<% $NopResources:Admin.DiscountInfo.DiscountAmount.RequiredErrorMessage %>"
                             MinimumValue="0" MaximumValue="100000000" RangeErrorMessage="<% $NopResources:Admin.DiscountInfo.DiscountAmount.RangeErrorMessage %>">
                         </nopCommerce:DecimalTextBox>
-                        [<%=IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency.CurrencyCode%>]
+                        [<%=IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode%>]
                     </td>
                 </tr>
                 <tr>

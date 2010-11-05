@@ -47,7 +47,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void btnClearCompareProductsList_Click(object sender, EventArgs e)
         {
-            IoCFactory.Resolve<IProductManager>().ClearCompareProducts();
+            IoCFactory.Resolve<IProductService>().ClearCompareProducts();
             Page.Response.Redirect(CommonHelper.GetStoreLocation());
         }
 
@@ -71,7 +71,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
         {
             if (e.CommandName == "Remove")
             {
-                IoCFactory.Resolve<IProductManager>().RemoveProductFromCompareList(Convert.ToInt32(e.CommandArgument));
+                IoCFactory.Resolve<IProductService>().RemoveProductFromCompareList(Convert.ToInt32(e.CommandArgument));
                 Page.Response.Redirect("~/compareproducts.aspx");
             }
         }
@@ -88,7 +88,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
         {
             this.tblCompareProducts.Rows.Clear();
             this.tblCompareProducts.Width = "100%";
-            var compareProducts = IoCFactory.Resolve<IProductManager>().GetCompareProducts();
+            var compareProducts = IoCFactory.Resolve<IProductService>().GetCompareProducts();
             if (compareProducts.Count > 0)
             {
                 var headerRow = new HtmlTableRow();
@@ -104,7 +104,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 var specificationAttributeIds = new List<int>();
                 foreach (var product in compareProducts)
                 {
-                    var productSpecificationAttributes = IoCFactory.Resolve<ISpecificationAttributeManager>().GetProductSpecificationAttributesByProductId(product.ProductId, null, true);
+                    var productSpecificationAttributes = IoCFactory.Resolve<ISpecificationAttributeService>().GetProductSpecificationAttributesByProductId(product.ProductId, null, true);
                     foreach (var attribute in productSpecificationAttributes)
                         if (!specificationAttributeIds.Contains(attribute.SpecificationAttribute.SpecificationAttributeId))
                             specificationAttributeIds.Add(attribute.SpecificationAttribute.SpecificationAttributeId);
@@ -136,9 +136,9 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     productImage.Alt = "Product image";
                     var picture = product.DefaultPicture;
                     if (picture != null)
-                        productImage.Src = IoCFactory.Resolve<IPictureManager>().GetPictureUrl(picture, IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.Product.ThumbnailImageSize", 125), true);
+                        productImage.Src = IoCFactory.Resolve<IPictureService>().GetPictureUrl(picture, IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.Product.ThumbnailImageSize", 125), true);
                     else
-                        productImage.Src = IoCFactory.Resolve<IPictureManager>().GetDefaultPictureUrl(IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.Product.ThumbnailImageSize", 125));
+                        productImage.Src = IoCFactory.Resolve<IPictureService>().GetDefaultPictureUrl(IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.Product.ThumbnailImageSize", 125));
                     productImagePanel.Controls.Add(productImage);
                     headerCellDiv.Controls.Add(productImagePanel);
                     
@@ -161,8 +161,8 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     {
                         var productVariant = productVariantCollection[0];
                         decimal taxRate = decimal.Zero;
-                        decimal finalPriceWithoutDiscountBase = IoCFactory.Resolve<ITaxManager>().GetPrice(productVariant, PriceHelper.GetFinalPrice(productVariant, false), out taxRate);
-                        decimal finalPriceWithoutDiscount = IoCFactory.Resolve<ICurrencyManager>().ConvertCurrency(finalPriceWithoutDiscountBase, IoCFactory.Resolve<ICurrencyManager>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                        decimal finalPriceWithoutDiscountBase = IoCFactory.Resolve<ITaxService>().GetPrice(productVariant, PriceHelper.GetFinalPrice(productVariant, false), out taxRate);
+                        decimal finalPriceWithoutDiscount = IoCFactory.Resolve<ICurrencyService>().ConvertCurrency(finalPriceWithoutDiscountBase, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
                         priceCell.InnerText = PriceHelper.FormatPrice(finalPriceWithoutDiscount);
                     }
                     priceRow.Cells.Add(priceCell);
@@ -179,7 +179,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
                 foreach (int specificationAttributeId in specificationAttributeIds)
                 {
-                    var specificationAttribute = IoCFactory.Resolve<ISpecificationAttributeManager>().GetSpecificationAttributeById(specificationAttributeId);
+                    var specificationAttribute = IoCFactory.Resolve<ISpecificationAttributeService>().GetSpecificationAttributeById(specificationAttributeId);
                     var productRow = new HtmlTableRow();
                     this.AddCell(productRow, Server.HtmlEncode(specificationAttribute.LocalizedName)).Align = "left";
 
@@ -187,7 +187,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     {
                         var productCell = new HtmlTableCell();
                         {
-                            var productSpecificationAttributes2 = IoCFactory.Resolve<ISpecificationAttributeManager>().GetProductSpecificationAttributesByProductId(product2.ProductId, null, true);
+                            var productSpecificationAttributes2 = IoCFactory.Resolve<ISpecificationAttributeService>().GetProductSpecificationAttributesByProductId(product2.ProductId, null, true);
                             foreach (var psa2 in productSpecificationAttributes2)
                             {
                                 if (specificationAttribute.SpecificationAttributeId == psa2.SpecificationAttribute.SpecificationAttributeId)

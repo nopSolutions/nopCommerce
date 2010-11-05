@@ -33,11 +33,11 @@ namespace NopSolutions.NopCommerce.Web
         {
             //topics
             var sitemapTopics = new List<SitemapTopic>();
-            var topics = IoCFactory.Resolve<ITopicManager>().GetAllTopics();
+            var topics = IoCFactory.Resolve<ITopicService>().GetAllTopics();
             topics = topics.FindAll(t => t.IncludeInSitemap);
             foreach (var topic in topics)
             {
-                LocalizedTopic localizedTopic = IoCFactory.Resolve<ITopicManager>().GetLocalizedTopic(topic.TopicId, NopContext.Current.WorkingLanguage.LanguageId);
+                LocalizedTopic localizedTopic = IoCFactory.Resolve<ITopicService>().GetLocalizedTopic(topic.TopicId, NopContext.Current.WorkingLanguage.LanguageId);
                 if (localizedTopic != null && !String.IsNullOrEmpty(localizedTopic.Title))
                 {
                     string topicURL = SEOHelper.GetTopicUrl(localizedTopic.TopicId, localizedTopic.Title);
@@ -71,7 +71,7 @@ namespace NopSolutions.NopCommerce.Web
             if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Sitemap.IncludeCategories", true))
             {
                 //root categories only here
-                var categories = IoCFactory.Resolve<ICategoryManager>().GetAllCategoriesByParentCategoryId(0);
+                var categories = IoCFactory.Resolve<ICategoryService>().GetAllCategoriesByParentCategoryId(0);
                 if (categories.Count > 0)
                 {
                     dlCategories.DataSource = categories;
@@ -90,10 +90,10 @@ namespace NopSolutions.NopCommerce.Web
             //manufacturers
             if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Sitemap.IncludeManufacturers", true))
             {
-                var manufacturers = IoCFactory.Resolve<IManufacturerManager>().GetAllManufacturers();
+                var manufacturers = IoCFactory.Resolve<IManufacturerService>().GetAllManufacturers();
                 if (manufacturers.Count > 0)
                 {
-                    dlManufacturers.DataSource = IoCFactory.Resolve<IManufacturerManager>().GetAllManufacturers();
+                    dlManufacturers.DataSource = IoCFactory.Resolve<IManufacturerService>().GetAllManufacturers();
                     dlManufacturers.DataBind();
                 }
                 else
@@ -109,7 +109,7 @@ namespace NopSolutions.NopCommerce.Web
             //products
             if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Sitemap.IncludeProducts", true))
             {
-                var products = IoCFactory.Resolve<IProductManager>().GetAllProducts();
+                var products = IoCFactory.Resolve<IProductService>().GetAllProducts();
                 if (products.Count > 0)
                 {
                     dlProducts.DataSource = products;

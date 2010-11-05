@@ -78,7 +78,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                IoCFactory.Resolve<ILanguageManager>().DeleteLanguage(this.LanguageId);
+                IoCFactory.Resolve<ILanguageService>().DeleteLanguage(this.LanguageId);
                 Response.Redirect("Languages.aspx");
             }
             catch (Exception exc)

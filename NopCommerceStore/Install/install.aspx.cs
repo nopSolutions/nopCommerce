@@ -504,7 +504,7 @@ namespace NopSolutions.NopCommerce.Web.Install
                 }
                 if (!IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("InstallationWizard.AdminAccountChanged", false))
                 {
-                    Customer admin = IoCFactory.Resolve<ICustomerManager>().GetCustomerByEmail(this.AdminUserEmail);
+                    Customer admin = IoCFactory.Resolve<ICustomerService>().GetCustomerByEmail(this.AdminUserEmail);
 
                     if (admin == null || !admin.IsAdmin)
                     {
@@ -513,11 +513,11 @@ namespace NopSolutions.NopCommerce.Web.Install
 
                     admin.Email = email;
                     admin.Username = email;
-                    IoCFactory.Resolve<ICustomerManager>().UpdateCustomer(admin);
+                    IoCFactory.Resolve<ICustomerService>().UpdateCustomer(admin);
 
                     this.AdminUserEmail = admin.Email;
 
-                    IoCFactory.Resolve<ICustomerManager>().ModifyPassword(admin.CustomerId, txtAdminPassword.Text);
+                    IoCFactory.Resolve<ICustomerService>().ModifyPassword(admin.CustomerId, txtAdminPassword.Text);
 
                     IoCFactory.Resolve<ISettingManager>().SetParam("InstallationWizard.AdminAccountChanged", "true");
 
