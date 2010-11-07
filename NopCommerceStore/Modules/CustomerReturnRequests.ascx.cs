@@ -71,7 +71,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 if (!string.IsNullOrEmpty(returnRequest.CustomerComments))
                 {
                     phComments.Visible = true;
-                    lComments.Text = IoCFactory.Resolve<IOrderService>().FormatReturnRequestCommentsText(returnRequest.CustomerComments);
+                    lComments.Text = returnRequest.FormatReturnRequestCommentsText();
                 }
                 else
                 {

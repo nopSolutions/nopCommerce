@@ -647,21 +647,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             int customerId, DateTime lastAccessed, bool isExpired);
 
         /// <summary>
-        /// Formats customer name
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        /// <returns>Name</returns>
-        string FormatUserName(Customer customer);
-
-        /// <summary>
-        /// Formats customer name
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        /// <param name="stripTooLong">Strip too long customer name</param>
-        /// <returns>Name</returns>
-        string FormatUserName(Customer customer, bool stripTooLong);
-
-        /// <summary>
         /// Gets or sets a value indicating whether anonymous checkout allowed
         /// </summary>
         bool AnonymousCheckoutAllowed {get;set;}

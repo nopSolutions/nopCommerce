@@ -439,21 +439,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
 
             _context.SaveChanges();
         }
-
-        /// <summary>
-        /// Formats the text
-        /// </summary>
-        /// <param name="text">Text</param>
-        /// <returns>Formatted text</returns>
-        public string FormatCommentText(string text)
-        {
-            if (String.IsNullOrEmpty(text))
-                return string.Empty;
-
-            text = HtmlHelper.FormatText(text, false, true, false, false, false, false);
-            return text;
-        }
-        
+                
         #endregion
 
         #region Properties

@@ -390,13 +390,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// <returns>VAT Number status name</returns>
         string GetVatNumberStatusName(VatNumberStatusEnum status);
 
-        /// <summary>
-        /// Formats a tax rate
-        /// </summary>
-        /// <param name="taxRate">Tax rate</param>
-        /// <returns>Formatted tax rate</returns>
-        string FormatTaxRate(decimal taxRate);
-
         #endregion
 
         #region Properties

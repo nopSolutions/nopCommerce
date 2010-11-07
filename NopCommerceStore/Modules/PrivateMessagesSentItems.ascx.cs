@@ -70,11 +70,11 @@ namespace NopSolutions.NopCommerce.Web.Modules
             {
                 if (IoCFactory.Resolve<ICustomerService>().AllowViewingProfiles)
                 {
-                    customerInfo = string.Format("<a href=\"{0}\">{1}</a>", SEOHelper.GetUserProfileUrl(customer.CustomerId), Server.HtmlEncode(IoCFactory.Resolve<ICustomerService>().FormatUserName(customer)));
+                    customerInfo = string.Format("<a href=\"{0}\">{1}</a>", SEOHelper.GetUserProfileUrl(customer.CustomerId), Server.HtmlEncode(customer.FormatUserName()));
                 }
                 else
                 {
-                    customerInfo = Server.HtmlEncode(IoCFactory.Resolve<ICustomerService>().FormatUserName(customer));
+                    customerInfo = Server.HtmlEncode(customer.FormatUserName());
                 }           
             }
             return customerInfo; 

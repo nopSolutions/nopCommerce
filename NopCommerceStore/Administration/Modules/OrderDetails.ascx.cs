@@ -874,8 +874,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 var item = (KeyValuePair<decimal, decimal>)e.Item.DataItem;
 
                 var lblTaxRateTitle = e.Item.FindControl("lblTaxRateTitle") as NopSolutions.NopCommerce.Web.Administration.Modules.ToolTipLabelControl;
-                lblTaxRateTitle.Text = String.Format(GetLocaleResourceString("Admin.OrderDetails.Totals.TaxRate"), IoCFactory.Resolve<ITaxService>().FormatTaxRate(item.Key));
-                lblTaxRateTitle.ToolTip = String.Format(GetLocaleResourceString("Admin.OrderDetails.Totals.TaxRate.Tooltip"), IoCFactory.Resolve<ITaxService>().FormatTaxRate(item.Key));
+                lblTaxRateTitle.Text = String.Format(GetLocaleResourceString("Admin.OrderDetails.Totals.TaxRate"), PriceHelper.FormatTaxRate(item.Key));
+                lblTaxRateTitle.ToolTip = String.Format(GetLocaleResourceString("Admin.OrderDetails.Totals.TaxRate.Tooltip"), PriceHelper.FormatTaxRate(item.Key));
 
                 var lTaxRateValue = e.Item.FindControl("lTaxRateValue") as Literal;
                 lTaxRateValue.Text = PriceHelper.FormatPrice(item.Value, true, false);

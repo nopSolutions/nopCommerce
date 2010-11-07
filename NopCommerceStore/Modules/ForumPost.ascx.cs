@@ -67,7 +67,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 lblDate.Text = dateStr;
 
                 //forum text
-                lText.Text = IoCFactory.Resolve<IForumService>().FormatPostText(forumPost.Text);
+                lText.Text = forumPost.FormatPostText();
                 lblForumPostId.Text = forumPost.ForumPostId.ToString();
 
                 var customer = forumPost.User;
@@ -75,13 +75,13 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 {
                     if (IoCFactory.Resolve<ICustomerService>().AllowViewingProfiles && !customer.IsGuest)
                     {
-                        hlUser.Text = Server.HtmlEncode(IoCFactory.Resolve<ICustomerService>().FormatUserName(customer, true));
+                        hlUser.Text = Server.HtmlEncode(customer.FormatUserName(true));
                         hlUser.NavigateUrl = SEOHelper.GetUserProfileUrl(customer.CustomerId);
                         lblUser.Visible = false;
                     }
                     else
                     {
-                        lblUser.Text = Server.HtmlEncode(IoCFactory.Resolve<ICustomerService>().FormatUserName(customer, true));
+                        lblUser.Text = Server.HtmlEncode(customer.FormatUserName(true));
                         hlUser.Visible = false;
                     }
 
@@ -168,7 +168,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
                     if (IoCFactory.Resolve<IForumService>().SignaturesEnabled && !String.IsNullOrEmpty(customer.Signature))
                     {
-                        lblSignature.Text = IoCFactory.Resolve<IForumService>().FormatSignatureText(customer.Signature);
+                        lblSignature.Text = customer.Signature.FormatForumSignatureText();
                     }
                     else
                     {

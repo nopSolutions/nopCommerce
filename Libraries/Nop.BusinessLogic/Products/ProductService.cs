@@ -3092,39 +3092,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
 
         #endregion
         
-        #region Etc
-
-        /// <summary>
-        /// Formats the text
-        /// </summary>
-        /// <param name="text">Text</param>
-        /// <returns>Formatted text</returns>
-        public string FormatProductReviewText(string text)
-        {
-            if (String.IsNullOrEmpty(text))
-                return string.Empty;
-
-            text = HtmlHelper.FormatText(text, false, true, false, false, false, false);
-
-            return text;
-        }
-
-        /// <summary>
-        /// Formats the email a friend text
-        /// </summary>
-        /// <param name="text">Text</param>
-        /// <returns>Formatted text</returns>
-        public string FormatEmailAFriendText(string text)
-        {
-            if (String.IsNullOrEmpty(text))
-                return string.Empty;
-
-            text = HtmlHelper.FormatText(text, false, true, false, false, false, false);
-            return text;
-        }
-
-        #endregion 
-
         #endregion
 
         #region Properties

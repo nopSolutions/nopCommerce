@@ -19,7 +19,7 @@ using System.Text;
 using NopSolutions.NopCommerce.Common.Utils.Html;
 
 
-namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
+namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
 {
     /// <summary>
     /// Extensions
@@ -27,35 +27,16 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
     public static class Extensions
     {
         /// <summary>
-        /// Returns all posts published between the two dates.
-        /// </summary>
-        /// <param name="source">Source</param>
-        /// <param name="dateFrom">Date from</param>
-        /// <param name="dateTo">Date to</param>
-        /// <returns>Filtered posts</returns>
-        public static List<BlogPost> GetPostsByDate(this List<BlogPost> source,
-            DateTime dateFrom, DateTime dateTo)
-        {
-            var list = source.FindAll(delegate(BlogPost p)
-            {
-                return (dateFrom.Date <= p.CreatedOn && p.CreatedOn.Date <= dateTo);
-            });
-
-            list.TrimExcess();
-            return list;
-        }
-
-        /// <summary>
         /// Formats the comment text
         /// </summary>
         /// <param name="source">Source</param>
         /// <returns>Formatted text</returns>
-        public static string FormatCommentText(this BlogComment source)
+        public static string FormatCommentText(this NewsComment source)
         {
-            if (String.IsNullOrEmpty(source.CommentText))
+            if (String.IsNullOrEmpty(source.Comment))
                 return string.Empty;
 
-            string result = HtmlHelper.FormatText(source.CommentText, false, true, false, false, false, false);
+            string result = HtmlHelper.FormatText(source.Comment, false, true, false, false, false, false);
             return result;
         }
     }

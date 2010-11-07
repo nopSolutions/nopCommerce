@@ -187,14 +187,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
         /// </summary>
         /// <param name="newsComment">News comment</param>
         void UpdateNewsComment(NewsComment newsComment);
-
-        /// <summary>
-        /// Formats the text
-        /// </summary>
-        /// <param name="text">Text</param>
-        /// <returns>Formatted text</returns>
-        string FormatCommentText(string text);
-
+        
         /// <summary>
         /// Gets or sets a value indicating whether news are enabled
         /// </summary>

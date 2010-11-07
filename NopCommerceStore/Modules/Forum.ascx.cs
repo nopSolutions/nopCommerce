@@ -218,7 +218,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 {
                     if(customer != null && IoCFactory.Resolve<ICustomerService>().AllowViewingProfiles && !customer.IsGuest)
                     {
-                        hlTopicStarter.Text = Server.HtmlEncode(IoCFactory.Resolve<ICustomerService>().FormatUserName(customer, true));
+                        hlTopicStarter.Text = Server.HtmlEncode(customer.FormatUserName(true));
                         hlTopicStarter.NavigateUrl = SEOHelper.GetUserProfileUrl(customer.CustomerId);
                     }
                     else
@@ -232,7 +232,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 {
                     if(customer != null && (!IoCFactory.Resolve<ICustomerService>().AllowViewingProfiles || customer.IsGuest))
                     {
-                        lblTopicStarter.Text = Server.HtmlEncode(IoCFactory.Resolve<ICustomerService>().FormatUserName(customer, true));
+                        lblTopicStarter.Text = Server.HtmlEncode(customer.FormatUserName(true));
                     }
                     else
                     {

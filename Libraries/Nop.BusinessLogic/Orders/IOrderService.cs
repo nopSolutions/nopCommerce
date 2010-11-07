@@ -626,13 +626,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="returnRequest">Return request</param>
         void UpdateReturnRequest(ReturnRequest returnRequest);
 
-        /// <summary>
-        /// Formats the comments text of a return request
-        /// </summary>
-        /// <param name="text">Text</param>
-        /// <returns>Formatted text</returns>
-        string FormatReturnRequestCommentsText(string text);
-
         #endregion
 
         #region Etc
@@ -649,14 +642,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="orderProductVariant">Order produvt variant to check</param>
         /// <returns>True if license download is allowed; otherwise, false.</returns>
         bool IsLicenseDownloadAllowed(OrderProductVariant orderProductVariant);
-
-        /// <summary>
-        /// Formats the order note text
-        /// </summary>
-        /// <param name="text">Text</param>
-        /// <returns>Formatted text</returns>
-        string FormatOrderNoteText(string text);
-
+        
         /// <summary>
         /// Places an order
         /// </summary>

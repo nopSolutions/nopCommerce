@@ -2158,60 +2158,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             return customerSession;
         }
 
-        /// <summary>
-        /// Formats customer name
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        /// <returns>Name</returns>
-        public string FormatUserName(Customer customer)
-        {
-            return FormatUserName(customer, false);
-        }
-        
-        /// <summary>
-        /// Formats customer name
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        /// <param name="stripTooLong">Strip too long customer name</param>
-        /// <returns>Name</returns>
-        public string FormatUserName(Customer customer, bool stripTooLong)
-        {
-            if (customer == null)
-                return string.Empty;
-
-            if (customer.IsGuest)
-            {
-                return LocalizationManager.GetLocaleResourceString("Customer.Guest");
-            }
-
-            string result = string.Empty;
-            switch (this.CustomerNameFormatting)
-            {
-                case CustomerNameFormatEnum.ShowEmails:
-                    result = customer.Email;
-                    break;
-                case CustomerNameFormatEnum.ShowFullNames:
-                    result = customer.FullName;
-                    break;
-                case CustomerNameFormatEnum.ShowUsernames:
-                    result = customer.Username;
-                    break;
-                default:
-                    break;
-            }
-
-            if (stripTooLong)
-            {
-                int maxLength = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Customer.FormatNameMaxLength", 0);
-                if (maxLength > 0 && result.Length > maxLength)
-                {
-                    result = result.Substring(0, maxLength);
-                }
-            }
-
-            return result;
-        }
-
         #endregion
 
         #region Properties

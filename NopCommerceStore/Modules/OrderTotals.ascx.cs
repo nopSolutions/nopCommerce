@@ -263,7 +263,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 var item = (KeyValuePair<decimal, decimal>)e.Item.DataItem;
                 
                 var lTaxRateTitle = e.Item.FindControl("lTaxRateTitle") as Literal;
-                lTaxRateTitle.Text = String.Format(GetLocaleResourceString("ShoppingCart.Totals.TaxRate"), IoCFactory.Resolve<ITaxService>().FormatTaxRate(item.Key));
+                lTaxRateTitle.Text = String.Format(GetLocaleResourceString("ShoppingCart.Totals.TaxRate"), PriceHelper.FormatTaxRate(item.Key));
 
                 var lTaxRateValue = e.Item.FindControl("lTaxRateValue") as Literal;
                 decimal taxValue = IoCFactory.Resolve<ICurrencyService>().ConvertCurrency(item.Value, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);

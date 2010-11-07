@@ -74,7 +74,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             var customer = IoCFactory.Resolve<ICustomerService>().GetCustomerById(customerId);
             if (customer != null)
             {
-                customerInfo = IoCFactory.Resolve<ICustomerService>().FormatUserName(customer);
+                customerInfo = customer.FormatUserName();
             }
             else
             {

@@ -495,7 +495,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Utils
             {
                 foreach (var item in taxRates)
                 {
-                    string taxRate = String.Format(LocalizationManager.GetLocaleResourceString("PDFInvoice.Totals.TaxRate"), IoCFactory.Resolve<ITaxService>().FormatTaxRate(item.Key));
+                    string taxRate = String.Format(LocalizationManager.GetLocaleResourceString("PDFInvoice.Totals.TaxRate"), PriceHelper.FormatTaxRate(item.Key));
                     string taxValue = PriceHelper.FormatPrice(item.Value, true, false);
 
                     var p13 = sec.AddParagraph(String.Format("{0} {1}", taxRate, taxValue));
@@ -572,7 +572,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Utils
                         Row noteRow = tbl1.AddRow();
 
                         noteRow.Cells[0].AddParagraph(DateTimeHelper.ConvertToUserTime(orderNote.CreatedOn, DateTimeKind.Utc).ToString());
-                        noteRow.Cells[1].AddParagraph(HtmlHelper.ConvertHtmlToPlainText(IoCFactory.Resolve<IOrderService>().FormatOrderNoteText(orderNote.Note)).ToString());
+                        noteRow.Cells[1].AddParagraph(HtmlHelper.ConvertHtmlToPlainText(orderNote.FormatOrderNoteText(), true).ToString());
                     }
                 }
             }

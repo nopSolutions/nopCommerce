@@ -1006,16 +1006,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
             return LocalizationManager.GetLocaleResourceString(string.Format("VatNumberStatus.{0}", status.ToString()));
         }
 
-        /// <summary>
-        /// Formats a tax rate
-        /// </summary>
-        /// <param name="taxRate">Tax rate</param>
-        /// <returns>Formatted tax rate</returns>
-        public string FormatTaxRate(decimal taxRate)
-        {
-            return taxRate.ToString("G29");
-        }
-
         #endregion
 
         #region Properties

@@ -848,6 +848,17 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
 
 
         /// <summary>
+        /// Formats a tax rate
+        /// </summary>
+        /// <param name="taxRate">Tax rate</param>
+        /// <returns>Formatted tax rate</returns>
+        public static string FormatTaxRate(decimal taxRate)
+        {
+            return taxRate.ToString("G29");
+        }
+
+
+        /// <summary>
         /// Formats the stock availability/quantity message
         /// </summary>
         /// <param name="productVariant">Product variant</param>

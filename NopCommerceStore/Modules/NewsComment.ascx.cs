@@ -54,7 +54,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             {
                 lblCreatedOn.Text = DateTimeHelper.ConvertToUserTime(newsComment.CreatedOn, DateTimeKind.Utc).ToString("g");
                 lblTitle.Text = Server.HtmlEncode(newsComment.Title);
-                lblComment.Text = IoCFactory.Resolve<INewsService>().FormatCommentText(newsComment.Comment);
+                lblComment.Text = newsComment.FormatCommentText();
                 lblNewsCommentId.Text = newsComment.NewsCommentId.ToString();
 
                 var customer = newsComment.Customer;
@@ -62,13 +62,13 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 {
                     if (IoCFactory.Resolve<ICustomerService>().AllowViewingProfiles)
                     {
-                        hlUser.Text = Server.HtmlEncode(IoCFactory.Resolve<ICustomerService>().FormatUserName(customer, true));
+                        hlUser.Text = Server.HtmlEncode(customer.FormatUserName(true));
                         hlUser.NavigateUrl = SEOHelper.GetUserProfileUrl(customer.CustomerId);
                         lblUser.Visible = false;
                     }
                     else
                     {
-                        lblUser.Text = Server.HtmlEncode(IoCFactory.Resolve<ICustomerService>().FormatUserName(customer, true));
+                        lblUser.Text = Server.HtmlEncode(customer.FormatUserName(true));
                         hlUser.Visible = false;
                     }
 

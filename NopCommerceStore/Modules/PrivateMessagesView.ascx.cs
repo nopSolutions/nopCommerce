@@ -68,10 +68,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 Response.Redirect(CommonHelper.GetStoreLocation() + "privatemessages.aspx");
             }
 
-            lblFrom.Text = Server.HtmlEncode(IoCFactory.Resolve<ICustomerService>().FormatUserName(pm.FromUser));
-            lblTo.Text = Server.HtmlEncode(IoCFactory.Resolve<ICustomerService>().FormatUserName(pm.ToUser));
+            lblFrom.Text = Server.HtmlEncode(pm.FromUser.FormatUserName());
+            lblTo.Text = Server.HtmlEncode(pm.ToUser.FormatUserName());
             lblSubject.Text = Server.HtmlEncode(pm.Subject);
-            lblMessage.Text = IoCFactory.Resolve<IForumService>().FormatPrivateMessageText(pm.Text);
+            lblMessage.Text = pm.FormatPrivateMessageText();
         }
 
         protected void btnReply_Click(object sender, EventArgs e)

@@ -19,7 +19,7 @@ using System.Text;
 using NopSolutions.NopCommerce.Common.Utils.Html;
 
 
-namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
+namespace NopSolutions.NopCommerce.BusinessLogic.Orders
 {
     /// <summary>
     /// Extensions
@@ -27,35 +27,30 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
     public static class Extensions
     {
         /// <summary>
-        /// Returns all posts published between the two dates.
+        /// Formats the order note text
         /// </summary>
-        /// <param name="source">Source</param>
-        /// <param name="dateFrom">Date from</param>
-        /// <param name="dateTo">Date to</param>
-        /// <returns>Filtered posts</returns>
-        public static List<BlogPost> GetPostsByDate(this List<BlogPost> source,
-            DateTime dateFrom, DateTime dateTo)
+        /// <param name="orderNote">Order note</param>
+        /// <returns>Formatted text</returns>
+        public static string FormatOrderNoteText(this OrderNote orderNote)
         {
-            var list = source.FindAll(delegate(BlogPost p)
-            {
-                return (dateFrom.Date <= p.CreatedOn && p.CreatedOn.Date <= dateTo);
-            });
+            if (orderNote == null || String.IsNullOrEmpty(orderNote.Note))
+                return string.Empty;
 
-            list.TrimExcess();
-            return list;
+            string result = HtmlHelper.FormatText(orderNote.Note, false, true, false, false, false, false);
+            return result;
         }
 
         /// <summary>
-        /// Formats the comment text
+        ///  Formats the comments text of a return request
         /// </summary>
-        /// <param name="source">Source</param>
+        /// <param name="returnRequest">Return request</param>
         /// <returns>Formatted text</returns>
-        public static string FormatCommentText(this BlogComment source)
+        public static string FormatReturnRequestCommentsText(this ReturnRequest returnRequest)
         {
-            if (String.IsNullOrEmpty(source.CommentText))
+            if (returnRequest == null || String.IsNullOrEmpty(returnRequest.CustomerComments))
                 return string.Empty;
 
-            string result = HtmlHelper.FormatText(source.CommentText, false, true, false, false, false, false);
+            string result = HtmlHelper.FormatText(returnRequest.CustomerComments, false, true, false, false, false, false);
             return result;
         }
     }

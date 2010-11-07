@@ -401,34 +401,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         bool IsUserAllowedToSubscribe(Customer customer);
 
         /// <summary>
-        /// Formats the posts text
-        /// </summary>
-        /// <param name="text">Text</param>
-        /// <returns>Formatted text</returns>
-        string FormatPostText(string text);
-
-        /// <summary>
-        /// Formats the signature text
-        /// </summary>
-        /// <param name="text">Text</param>
-        /// <returns>Formatted text</returns>
-        string FormatSignatureText(string text);
-
-        /// <summary>
-        /// Formats the private message text
-        /// </summary>
-        /// <param name="text">Text</param>
-        /// <returns>Formatted text</returns>
-        string FormatPrivateMessageText(string text);
-
-        /// <summary>
-        /// Strips topic subject
-        /// </summary>
-        /// <param name="subject">Subject</param>
-        /// <returns>Formatted subject</returns>
-        string StripTopicSubject(string subject);
-
-        /// <summary>
         /// Calculates topic page index by post identifier
         /// </summary>
         /// <param name="forumTopicId">Topic identifier</param>

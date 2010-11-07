@@ -943,24 +943,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
 
         #endregion
         
-        #region Etc
-
-        /// <summary>
-        /// Formats the text
-        /// </summary>
-        /// <param name="text">Text</param>
-        /// <returns>Formatted text</returns>
-        string FormatProductReviewText(string text);
-
-        /// <summary>
-        /// Formats the email a friend text
-        /// </summary>
-        /// <param name="text">Text</param>
-        /// <returns>Formatted text</returns>
-        string FormatEmailAFriendText(string text);
-
-        #endregion 
-
         #endregion
 
         #region Properties

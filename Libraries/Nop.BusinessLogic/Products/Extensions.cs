@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using NopSolutions.NopCommerce.Common.Utils.Html;
 
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Products
@@ -55,6 +56,34 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                 if (crossSellProduct.ProductId1 == productId1 && crossSellProduct.ProductId2 == productId2)
                     return crossSellProduct;
             return null;
+        }
+        
+        /// <summary>
+        ///  Formats the product review text
+        /// </summary>
+        /// <param name="productReview">Product review</param>
+        /// <returns>Formatted text</returns>
+        public static string FormatProductReviewText(this ProductReview productReview)
+        {
+            if (productReview == null || String.IsNullOrEmpty(productReview.ReviewText))
+                return string.Empty;
+
+            string result = HtmlHelper.FormatText(productReview.ReviewText, false, true, false, false, false, false);
+            return result;
+        }
+
+        /// <summary>
+        ///  Formats the email a friend text
+        /// </summary>
+        /// <param name="productReview">Product review</param>
+        /// <returns>Formatted text</returns>
+        public static string FormatEmailAFriendText(this string text)
+        {
+            if (String.IsNullOrEmpty(text))
+                return string.Empty;
+
+            string result = HtmlHelper.FormatText(text, false, true, false, false, false, false);
+            return result;
         }
     }
 }

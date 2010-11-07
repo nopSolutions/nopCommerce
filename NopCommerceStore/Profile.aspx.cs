@@ -55,7 +55,7 @@ namespace NopSolutions.NopCommerce.Web
                     Response.Redirect(CommonHelper.GetStoreLocation());
                 }
 
-                string name = IoCFactory.Resolve<ICustomerService>().FormatUserName(customer);
+                string name = customer.FormatUserName();
                 lTitle.Text = string.Format(GetLocaleResourceString("Profile.ProfileOf"), Server.HtmlEncode(name));
             }
 

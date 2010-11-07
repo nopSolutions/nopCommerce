@@ -354,7 +354,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             {
                 foreach (var item in taxRates)
                 {
-                    string taxRate = String.Format(LocalizationManager.GetLocaleResourceString("Order.Totals.TaxRate"), IoCFactory.Resolve<ITaxService>().FormatTaxRate(item.Key));
+                    string taxRate = String.Format(LocalizationManager.GetLocaleResourceString("Order.Totals.TaxRate"), PriceHelper.FormatTaxRate(item.Key));
                     string taxValue = PriceHelper.FormatPrice(item.Value, true, order.CustomerCurrencyCode, false);
                     sb.AppendLine(string.Format("<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{1}</strong></td> <td style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{2}</strong></td></tr>", color3, taxRate, taxValue));
                 }
@@ -631,8 +631,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
 
             if (forumPost != null)
             {
-                tokens.Add("Forums.PostAuthor", HttpUtility.HtmlEncode(IoCFactory.Resolve<ICustomerService>().FormatUserName(forumPost.User)));
-                tokens.Add("Forums.PostBody", IoCFactory.Resolve<IForumService>().FormatPostText(forumPost.Text));
+                tokens.Add("Forums.PostAuthor", HttpUtility.HtmlEncode(forumPost.User.FormatUserName()));
+                tokens.Add("Forums.PostBody", forumPost.FormatPostText());
             }
             if (forumTopic != null)
             {
@@ -766,7 +766,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             tokens.Add("Store.Email", this.DefaultEmailAccount.Email);
 
             tokens.Add("PrivateMessage.Subject", HttpUtility.HtmlEncode(privateMessage.Subject));
-            tokens.Add("PrivateMessage.Text", IoCFactory.Resolve<IForumService>().FormatPrivateMessageText(privateMessage.Text));
+            tokens.Add("PrivateMessage.Text", privateMessage.FormatPrivateMessageText());
 
             foreach (string token in tokens.Keys)
             {
@@ -828,7 +828,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             tokens.Add("ReturnRequest.Product.Name", HttpUtility.HtmlEncode(returnRequest.OrderProductVariant.ProductVariant.FullProductName));
             tokens.Add("ReturnRequest.Reason", HttpUtility.HtmlEncode(returnRequest.ReasonForReturn));
             tokens.Add("ReturnRequest.RequestedAction", HttpUtility.HtmlEncode(returnRequest.RequestedAction));
-            tokens.Add("ReturnRequest.CustomerComment", IoCFactory.Resolve<IOrderService>().FormatReturnRequestCommentsText(returnRequest.CustomerComments));
+            tokens.Add("ReturnRequest.CustomerComment", returnRequest.FormatReturnRequestCommentsText());
 
             foreach (string token in tokens.Keys)
             {

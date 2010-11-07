@@ -176,13 +176,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
         void UpdateBlogComment(BlogComment blogComment);
         
         /// <summary>
-        /// Formats the text
-        /// </summary>
-        /// <param name="text">Text</param>
-        /// <returns>Formatted text</returns>
-        string FormatCommentText(string text);
-
-        /// <summary>
         /// Gets or sets a value indicating whether blog is enabled
         /// </summary>
         bool BlogEnabled {get;set;}

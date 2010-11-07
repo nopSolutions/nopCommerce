@@ -81,7 +81,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 Response.Redirect(CommonHelper.GetStoreLocation() + "privatemessages.aspx");
             }
 
-            lblSendTo.Text = Server.HtmlEncode(IoCFactory.Resolve<ICustomerService>().FormatUserName(toCustomer));
+            lblSendTo.Text = Server.HtmlEncode(toCustomer.FormatUserName());
         }
 
         protected void btnSend_Click(object sender, EventArgs e)

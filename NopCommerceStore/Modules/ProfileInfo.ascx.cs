@@ -210,7 +210,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 Label lblPost = e.Row.FindControl("lblPost") as Label;
                 if (lblPost != null)
                 {
-                    lblPost.Text = IoCFactory.Resolve<IForumService>().FormatPostText(forumPost.Text);
+                    lblPost.Text = forumPost.FormatPostText();
                 }
             }
         }

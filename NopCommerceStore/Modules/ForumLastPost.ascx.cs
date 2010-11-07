@@ -67,7 +67,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 var forumTopic = forumPost.Topic;
                 if (forumTopic != null)
                 {
-                    hlTopic.Text = Server.HtmlEncode(IoCFactory.Resolve<IForumService>().StripTopicSubject(forumTopic.Subject));
+                    hlTopic.Text = Server.HtmlEncode(forumTopic.StripTopicSubject());
                     hlTopic.ToolTip = Server.HtmlEncode(forumTopic.Subject);
                     hlTopic.NavigateUrl = SEOHelper.GetForumTopicUrl(forumTopic);
                 }
@@ -78,13 +78,13 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 {
                     if(IoCFactory.Resolve<ICustomerService>().AllowViewingProfiles && !customer.IsGuest)
                     {
-                        hlUser.Text = Server.HtmlEncode(IoCFactory.Resolve<ICustomerService>().FormatUserName(customer, true));
+                        hlUser.Text = Server.HtmlEncode(customer.FormatUserName(true));
                         hlUser.NavigateUrl = SEOHelper.GetUserProfileUrl(customer.CustomerId);
                         lblUser.Visible = false;
                     }
                     else
                     {
-                        lblUser.Text = Server.HtmlEncode(IoCFactory.Resolve<ICustomerService>().FormatUserName(customer, true));
+                        lblUser.Text = Server.HtmlEncode(customer.FormatUserName(true));
                         hlUser.Visible = false;
                     }
                 }

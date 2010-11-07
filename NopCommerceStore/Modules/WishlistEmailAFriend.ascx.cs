@@ -111,7 +111,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
                     string friendsEmail = txtFriendsEmail.Text.Trim();
                     string personalMessage = txtPersonalMessage.Text.Trim();
-                    personalMessage = IoCFactory.Resolve<IProductService>().FormatEmailAFriendText(personalMessage);
+                    personalMessage = personalMessage.FormatEmailAFriendText();
 
                     IoCFactory.Resolve<IMessageService>().SendWishlistEmailAFriendMessage(NopContext.Current.User,
                         cart, NopContext.Current.WorkingLanguage.LanguageId,

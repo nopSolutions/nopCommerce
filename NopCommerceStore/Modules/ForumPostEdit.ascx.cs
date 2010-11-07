@@ -257,13 +257,13 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     switch(IoCFactory.Resolve<IForumService>().ForumEditor)
                     {
                         case EditorTypeEnum.SimpleTextBox:
-                            txtTopicBodySimple.Text = String.Format("{0}:\n{1}\n", IoCFactory.Resolve<ICustomerService>().FormatUserName(quotePost.User), quotePost.Text);
+                            txtTopicBodySimple.Text = String.Format("{0}:\n{1}\n", quotePost.User.FormatUserName(), quotePost.Text);
                             break;
                         case EditorTypeEnum.BBCodeEditor:
-                            txtTopicBodyBBCode.Text = String.Format("[quote={0}]{1}[/quote]", IoCFactory.Resolve<ICustomerService>().FormatUserName(quotePost.User), BBCodeHelper.RemoveQuotes(quotePost.Text));
+                            txtTopicBodyBBCode.Text = String.Format("[quote={0}]{1}[/quote]", quotePost.User.FormatUserName(), BBCodeHelper.RemoveQuotes(quotePost.Text));
                             break;
                         case EditorTypeEnum.HtmlEditor:
-                            txtTopicBodyHtml.Value = String.Format("<b>{0}:</b><p style=\"padding: 5px 5px 5px 5px; border: dashed 1px black; background-color: #ffffff;\">{1}</p>", IoCFactory.Resolve<ICustomerService>().FormatUserName(quotePost.User), quotePost.Text);
+                            txtTopicBodyHtml.Value = String.Format("<b>{0}:</b><p style=\"padding: 5px 5px 5px 5px; border: dashed 1px black; background-color: #ffffff;\">{1}</p>", quotePost.User.FormatUserName(), quotePost.Text);
                             break;
                     }
                 }

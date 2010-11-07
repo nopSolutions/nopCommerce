@@ -14,7 +14,7 @@
                         <%#Server.HtmlEncode(Eval("Title").ToString())%></strong>
                 </p>
                 <p>
-                    <%#IoCFactory.Resolve<IProductService>().FormatProductReviewText((string)Eval("ReviewText"))%>
+                    <%# ((ProductReview)Container.DataItem).FormatProductReviewText()%>
                 </p>
                 <p>
                     <%#DateTimeHelper.ConvertToUserTime((DateTime)Eval("CreatedOn"), DateTimeKind.Utc).ToString()%>

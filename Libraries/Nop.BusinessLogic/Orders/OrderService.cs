@@ -2066,21 +2066,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
 
             return IsDownloadAllowed(orderProductVariant) && orderProductVariant.LicenseDownloadId > 0;
         }
-
-        /// <summary>
-        /// Formats the order note text
-        /// </summary>
-        /// <param name="text">Text</param>
-        /// <returns>Formatted text</returns>
-        public string FormatOrderNoteText(string text)
-        {
-            if (String.IsNullOrEmpty(text))
-                return string.Empty;
-
-            text = HtmlHelper.FormatText(text, false, true, false, false, false, false);
-            return text;
-        }
-
+        
         /// <summary>
         /// Places an order
         /// </summary>

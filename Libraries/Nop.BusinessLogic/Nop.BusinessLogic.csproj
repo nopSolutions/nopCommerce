@@ -159,6 +159,7 @@
     <Compile Include="Content\Blog\IBlogService.cs" />
     <Compile Include="Content\Blog\Extensions.cs" />
     <Compile Include="Content\Blog\BlogPostTag.cs" />
+    <Compile Include="Content\Forums\Extensions.cs" />
     <Compile Include="Content\Forums\IForumService.cs" />
     <Compile Include="Content\Forums\ForumSearchTypeEnum.cs" />
     <Compile Include="Content\Forums\ForumSubscription.cs" />
@@ -169,6 +170,7 @@
     <Compile Include="Content\Forums\ForumPost.cs" />
     <Compile Include="Content\Forums\ForumTopic.cs" />
     <Compile Include="Content\Forums\Forum.cs" />
+    <Compile Include="Content\News\Extensions.cs" />
     <Compile Include="Content\News\INewsService.cs" />
     <Compile Include="Content\Polls\IPollService.cs" />
     <Compile Include="Content\Polls\PollVotingRecord.cs" />
@@ -232,6 +234,7 @@
     <Compile Include="Messages\SMS\SMSService.cs" />
     <Compile Include="Orders\BestSellersReportLine.cs" />
     <Compile Include="Orders\AppliedGiftCard.cs" />
+    <Compile Include="Orders\Extensions.cs" />
     <Compile Include="Orders\IShoppingCartService.cs" />
     <Compile Include="Orders\IOrderService.cs" />
     <Compile Include="Orders\ReturnStatusEnum.cs" />

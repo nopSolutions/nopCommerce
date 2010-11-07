@@ -1462,7 +1462,7 @@
                                     ItemStyle-Width="60%">
                                     <ItemTemplate>
                                         <div style="padding-left: 10px; padding-right: 10px; text-align: left;">
-                                            <%#IoCFactory.Resolve<IOrderService>().FormatOrderNoteText((string)Eval("Note"))%>
+                                            <%# ((OrderNote)Container.DataItem).FormatOrderNoteText() %>
                                         </div>
                                     </ItemTemplate>
                                 </asp:TemplateField>
