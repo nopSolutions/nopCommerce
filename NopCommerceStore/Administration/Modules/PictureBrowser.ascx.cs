@@ -158,7 +158,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
             if (!string.IsNullOrEmpty(fuNewPicture.FileName))
             {
-                byte[] categoryPictureBinary = IoCFactory.Resolve<IPictureService>().GetPictureBits(categoryPictureFile.InputStream, categoryPictureFile.ContentLength);
+                byte[] categoryPictureBinary = categoryPictureFile.GetPictureBits();
 
                 Picture picture = IoCFactory.Resolve<IPictureService>().InsertPicture(categoryPictureBinary,
                     categoryPictureFile.ContentType, true);

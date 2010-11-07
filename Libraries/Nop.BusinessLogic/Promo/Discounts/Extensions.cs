@@ -16,6 +16,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Orders;
+using NopSolutions.NopCommerce.BusinessLogic.Products;
 
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
@@ -61,6 +65,322 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
                     return discount;
 
             return null;
+        }
+
+
+        /// <summary>
+        /// Gets a value indicating whether the discount is active now
+        /// </summary>
+        /// <param name="discount">Discount</param>
+        /// <returns>A value indicating whether the discount is active now</returns>
+        public static bool IsActive(this Discount discount)
+        {
+            return IsActive(discount, string.Empty);
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the discount is active now
+        /// </summary>
+        /// <param name="discount">Discount</param>
+        /// <param name="couponCodeToValidate">Coupon code to validate</param>
+        /// <returns>A value indicating whether the discount is active now</returns>
+        public static bool IsActive(this Discount discount, string couponCodeToValidate)
+        {
+            if (discount.RequiresCouponCode && !String.IsNullOrEmpty(discount.CouponCode))
+            {
+                if (!discount.CouponCode.Equals(couponCodeToValidate, StringComparison.InvariantCultureIgnoreCase))
+                    return false;
+            }
+            DateTime _now = DateTime.UtcNow;
+            DateTime _startDate = DateTime.SpecifyKind(discount.StartDate, DateTimeKind.Utc);
+            DateTime _endDate = DateTime.SpecifyKind(discount.EndDate, DateTimeKind.Utc);
+            bool isActive = (!discount.Deleted) &&
+                (_startDate.CompareTo(_now) < 0) &&
+                (_endDate.CompareTo(_now) > 0);
+            return isActive;
+        }
+
+        /// <summary>
+        /// Gets the discount amount for the specified value
+        /// </summary>
+        /// <param name="discount">Discount</param>
+        /// <param name="price">Price</param>
+        /// <returns>The discount amount</returns>
+        public static decimal GetDiscountAmount(this Discount discount, decimal price)
+        {
+            decimal result = decimal.Zero;
+            if (discount.UsePercentage)
+                result = Math.Round((decimal)((((float)price) * ((float)discount.DiscountPercentage)) / 100f), 2);
+            else
+                result = Math.Round(discount.DiscountAmount, 2);
+
+            if (result < decimal.Zero)
+                result = decimal.Zero;
+
+            return result;
+        }
+
+        /// <summary>
+        /// Checks requirements for customer
+        /// </summary>
+        /// <param name="discount">Discount</param>
+        /// <param name="customer">Customer</param>
+        /// <returns>Value indicating whether all requirements are met</returns>
+        public static bool CheckDiscountRequirements(this Discount discount, Customer customer)
+        {
+            switch (discount.DiscountRequirement)
+            {
+                case DiscountRequirementEnum.None:
+                    {
+                        return true;
+                    }
+                    break;
+                case DiscountRequirementEnum.MustBeAssignedToCustomerRole:
+                    {
+                        if (customer != null)
+                        {
+                            var customerRoles = customer.CustomerRoles;
+                            var assignedRoles = discount.CustomerRoles;
+                            foreach (CustomerRole _customerRole in customerRoles)
+                                foreach (CustomerRole _assignedRole in assignedRoles)
+                                {
+                                    if (_customerRole.Name == _assignedRole.Name)
+                                    {
+                                        return true;
+                                    }
+                                }
+                        }
+                    }
+                    break;
+                case DiscountRequirementEnum.MustBeRegistered:
+                    {
+                        bool result = customer != null && !customer.IsGuest;
+                        return result;
+                    }
+                    break;
+                case DiscountRequirementEnum.HasAllOfTheseProductVariantsInTheCart:
+                    {
+                        if (customer != null)
+                        {
+                            CustomerSession customerSession = IoCFactory.Resolve<ICustomerService>().GetCustomerSessionByCustomerId(customer.CustomerId);
+                            if (customerSession != null)
+                            {
+                                var restrictedProductVariants = IoCFactory.Resolve<IProductService>().GetProductVariantsRestrictedByDiscountId(discount.DiscountId);
+                                var cart = IoCFactory.Resolve<IShoppingCartService>().GetShoppingCartByCustomerSessionGuid(ShoppingCartTypeEnum.ShoppingCart, customerSession.CustomerSessionGuid);
+
+                                bool allFound = true;
+                                foreach (ProductVariant restrictedPV in restrictedProductVariants)
+                                {
+                                    bool found1 = false;
+                                    foreach (ShoppingCartItem sci in cart)
+                                    {
+                                        if (restrictedPV.ProductVariantId == sci.ProductVariantId)
+                                        {
+                                            found1 = true;
+                                            break;
+                                        }
+                                    }
+
+                                    if (!found1)
+                                    {
+                                        allFound = false;
+                                        break;
+                                    }
+                                }
+
+                                if (allFound)
+                                    return true;
+
+                            }
+                        }
+                    }
+                    break;
+                case DiscountRequirementEnum.HasOneOfTheseProductVariantsInTheCart:
+                    {
+                        if (customer != null)
+                        {
+                            CustomerSession customerSession = IoCFactory.Resolve<ICustomerService>().GetCustomerSessionByCustomerId(customer.CustomerId);
+                            if (customerSession != null)
+                            {
+                                var restrictedProductVariants = IoCFactory.Resolve<IProductService>().GetProductVariantsRestrictedByDiscountId(discount.DiscountId);
+                                var cart = IoCFactory.Resolve<IShoppingCartService>().GetShoppingCartByCustomerSessionGuid(ShoppingCartTypeEnum.ShoppingCart, customerSession.CustomerSessionGuid);
+
+                                bool found = false;
+                                foreach (ProductVariant restrictedPV in restrictedProductVariants)
+                                {
+                                    foreach (ShoppingCartItem sci in cart)
+                                    {
+                                        if (restrictedPV.ProductVariantId == sci.ProductVariantId)
+                                        {
+                                            found = true;
+                                            break;
+                                        }
+                                    }
+
+                                    if (found)
+                                    {
+                                        break;
+                                    }
+                                }
+
+                                if (found)
+                                    return true;
+                            }
+                        }
+                    }
+                    break;
+                case DiscountRequirementEnum.HadPurchasedAllOfTheseProductVariants:
+                    {
+                        if (customer != null)
+                        {
+                            var restrictedProductVariants = IoCFactory.Resolve<IProductService>().GetProductVariantsRestrictedByDiscountId(discount.DiscountId);
+                            var purchasedProductVariants = IoCFactory.Resolve<IOrderService>().GetAllOrderProductVariants(null, customer.CustomerId, null, null, OrderStatusEnum.Complete, null, null);
+
+                            bool allFound = true;
+                            foreach (ProductVariant restrictedPV in restrictedProductVariants)
+                            {
+                                bool found1 = false;
+                                foreach (OrderProductVariant purchasedPV in purchasedProductVariants)
+                                {
+                                    if (restrictedPV.ProductVariantId == purchasedPV.ProductVariantId)
+                                    {
+                                        found1 = true;
+                                        break;
+                                    }
+                                }
+
+                                if (!found1)
+                                {
+                                    allFound = false;
+                                    break;
+                                }
+                            }
+
+                            if (allFound)
+                                return true;
+                        }
+                    }
+                    break;
+                case DiscountRequirementEnum.HadPurchasedOneOfTheseProductVariants:
+                    {
+                        if (customer != null)
+                        {
+                            var restrictedProductVariants = IoCFactory.Resolve<IProductService>().GetProductVariantsRestrictedByDiscountId(discount.DiscountId);
+                            var purchasedProductVariants = IoCFactory.Resolve<IOrderService>().GetAllOrderProductVariants(null, customer.CustomerId, null, null, OrderStatusEnum.Complete, null, null);
+
+                            bool found = false;
+                            foreach (ProductVariant restrictedPV in restrictedProductVariants)
+                            {
+                                foreach (OrderProductVariant purchasedPV in purchasedProductVariants)
+                                {
+                                    if (restrictedPV.ProductVariantId == purchasedPV.ProductVariantId)
+                                    {
+                                        found = true;
+                                        break;
+                                    }
+                                }
+
+                                if (found)
+                                {
+                                    break;
+                                }
+                            }
+
+                            if (found)
+                                return true;
+                        }
+                    }
+                    break;
+                case DiscountRequirementEnum.HadSpentAmount:
+                    {
+                        if (customer != null)
+                        {
+                            var orders = customer.Orders.FindAll(o => o.OrderStatus == OrderStatusEnum.Complete);
+                            decimal spentAmount = orders.Sum(o => o.OrderTotal);
+                            return spentAmount > discount.RequirementSpentAmount;
+                        }
+                    }
+                    break;
+                case DiscountRequirementEnum.BillingCountryIs:
+                    {
+                        if (customer != null &&
+                            customer.BillingAddress != null &&
+                            customer.BillingAddress.CountryId > 0 &&
+                            discount.RequirementBillingCountryIs > 0)
+                        {
+                            return customer.BillingAddress.CountryId == discount.RequirementBillingCountryIs;
+                        }
+                    }
+                    break;
+                case DiscountRequirementEnum.ShippingCountryIs:
+                    {
+                        if (customer != null &&
+                            customer.ShippingAddress != null &&
+                            customer.ShippingAddress.CountryId > 0 &&
+                            discount.RequirementShippingCountryIs > 0)
+                        {
+                            return customer.ShippingAddress.CountryId == discount.RequirementShippingCountryIs;
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Checks discount limitations for customer
+        /// </summary>
+        /// <param name="discount">Discount</param>
+        /// <param name="customer">Customer</param>
+        /// <returns>Value indicating whether discount can be used</returns>
+        public static bool CheckDiscountLimitations(this Discount discount, Customer customer)
+        {
+            switch (discount.DiscountLimitation)
+            {
+                case DiscountLimitationEnum.Unlimited:
+                    {
+                        return true;
+                    }
+                case DiscountLimitationEnum.OneTimeOnly:
+                    {
+                        var usageHistory = IoCFactory.Resolve<IDiscountService>().GetAllDiscountUsageHistoryEntries(discount.DiscountId, null, null);
+                        return usageHistory.Count < 1;
+                    }
+                case DiscountLimitationEnum.NTimesOnly:
+                    {
+                        var usageHistory = IoCFactory.Resolve<IDiscountService>().GetAllDiscountUsageHistoryEntries(discount.DiscountId, null, null);
+                        return usageHistory.Count < discount.LimitationTimes;
+                    }
+                case DiscountLimitationEnum.OneTimePerCustomer:
+                    {
+                        if (customer != null)
+                        {
+                            var usageHistory = IoCFactory.Resolve<IDiscountService>().GetAllDiscountUsageHistoryEntries(discount.DiscountId, customer.CustomerId, null);
+                            return usageHistory.Count < 1;
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
+                case DiscountLimitationEnum.NTimesPerCustomer:
+                    {
+                        if (customer != null)
+                        {
+                            var usageHistory = IoCFactory.Resolve<IDiscountService>().GetAllDiscountUsageHistoryEntries(discount.DiscountId, customer.CustomerId, null);
+                            return usageHistory.Count < discount.LimitationTimes;
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
+                default:
+                    break;
+            }
+            return false;
         }
     }
 }

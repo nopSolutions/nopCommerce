@@ -81,13 +81,5 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
         /// </summary>
         /// <param name="download">Download</param>
         void UpdateDownload(Download download);
-
-        /// <summary>
-        /// Gets the download binary array
-        /// </summary>
-        /// <param name="fs">File stream</param>
-        /// <param name="size">Download size</param>
-        /// <returns>Download binary array</returns>
-        byte[] GetDownloadBits(Stream fs, int size);
     }
 }

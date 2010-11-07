@@ -120,7 +120,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 HttpPostedFile categoryPictureFile = fuCategoryPicture.PostedFile;
                 if ((categoryPictureFile != null) && (!String.IsNullOrEmpty(categoryPictureFile.FileName)))
                 {
-                    byte[] categoryPictureBinary = IoCFactory.Resolve<IPictureService>().GetPictureBits(categoryPictureFile.InputStream, categoryPictureFile.ContentLength);
+                    byte[] categoryPictureBinary = categoryPictureFile.GetPictureBits();
                     if (categoryPicture != null)
                         categoryPicture = IoCFactory.Resolve<IPictureService>().UpdatePicture(categoryPicture.PictureId, categoryPictureBinary, categoryPictureFile.ContentType, true);
                     else
@@ -149,7 +149,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 HttpPostedFile categoryPictureFile = fuCategoryPicture.PostedFile;
                 if ((categoryPictureFile != null) && (!String.IsNullOrEmpty(categoryPictureFile.FileName)))
                 {
-                    byte[] categoryPictureBinary = IoCFactory.Resolve<IPictureService>().GetPictureBits(categoryPictureFile.InputStream, categoryPictureFile.ContentLength);
+                    byte[] categoryPictureBinary = categoryPictureFile.GetPictureBits();
                     categoryPicture = IoCFactory.Resolve<IPictureService>().InsertPicture(categoryPictureBinary, categoryPictureFile.ContentType, true);
                 }
                 int categoryPictureId = 0;

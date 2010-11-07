@@ -1463,7 +1463,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 HttpPostedFile licenseDownloadFile = fuLicenseDownload.PostedFile;
                 if ((licenseDownloadFile != null) && (!String.IsNullOrEmpty(licenseDownloadFile.FileName)))
                 {
-                    byte[] licenseDownloadBinary = IoCFactory.Resolve<IDownloadService>().GetDownloadBits(licenseDownloadFile.InputStream, licenseDownloadFile.ContentLength);
+                    byte[] licenseDownloadBinary = licenseDownloadFile.GetDownloadBits();
                     string downloadContentType = licenseDownloadFile.ContentType;
                     string downloadFilename = Path.GetFileNameWithoutExtension(licenseDownloadFile.FileName);
                     string downloadExtension = Path.GetExtension(licenseDownloadFile.FileName);

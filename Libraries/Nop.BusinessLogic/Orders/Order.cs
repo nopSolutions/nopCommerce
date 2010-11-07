@@ -48,7 +48,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
 
         #endregion
 
-        #region Methods
+        #region Utilities
 
         protected SortedDictionary<decimal, decimal> ParseTaxRates(string taxRatesStr)
         {

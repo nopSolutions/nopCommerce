@@ -796,7 +796,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             tokens.Add("GiftCard.RecipientEmail", HttpUtility.HtmlEncode(giftCard.RecipientEmail));
             tokens.Add("GiftCard.Amount", HttpUtility.HtmlEncode(PriceHelper.FormatPrice(giftCard.Amount, true, false)));
             tokens.Add("GiftCard.CouponCode", HttpUtility.HtmlEncode(giftCard.GiftCardCouponCode));
-            tokens.Add("GiftCard.Message", this.FormatContactUsFormText(giftCard.Message));
+            tokens.Add("GiftCard.Message", giftCard.FormatGiftCardMessageText());
 
             foreach (string token in tokens.Keys)
             {
@@ -2451,20 +2451,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             else
                 smtpClient.Credentials = new NetworkCredential(emailAccount.Username, emailAccount.Password);
             smtpClient.Send(message);
-        }
-
-        /// <summary>
-        /// Formats the contact us form text
-        /// </summary>
-        /// <param name="text">Text</param>
-        /// <returns>Formatted text</returns>
-        public string FormatContactUsFormText(string text)
-        {
-            if (String.IsNullOrEmpty(text))
-                return string.Empty;
-
-            text = HtmlHelper.FormatText(text, false, true, false, false, false, false);
-            return text;
         }
 
         #endregion

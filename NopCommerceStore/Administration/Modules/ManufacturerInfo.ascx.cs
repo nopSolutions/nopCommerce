@@ -111,7 +111,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 HttpPostedFile manufacturerPictureFile = fuManufacturerPicture.PostedFile;
                 if ((manufacturerPictureFile != null) && (!String.IsNullOrEmpty(manufacturerPictureFile.FileName)))
                 {
-                    byte[] manufacturerPictureBinary = IoCFactory.Resolve<IPictureService>().GetPictureBits(manufacturerPictureFile.InputStream, manufacturerPictureFile.ContentLength);
+                    byte[] manufacturerPictureBinary = manufacturerPictureFile.GetPictureBits();
                     if (manufacturerPicture != null)
                         manufacturerPicture = IoCFactory.Resolve<IPictureService>().UpdatePicture(manufacturerPicture.PictureId, manufacturerPictureBinary, manufacturerPictureFile.ContentType, true);
                     else
@@ -137,7 +137,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 HttpPostedFile manufacturerPictureFile = fuManufacturerPicture.PostedFile;
                 if ((manufacturerPictureFile != null) && (!String.IsNullOrEmpty(manufacturerPictureFile.FileName)))
                 {
-                    byte[] manufacturerPictureBinary = IoCFactory.Resolve<IPictureService>().GetPictureBits(manufacturerPictureFile.InputStream, manufacturerPictureFile.ContentLength);
+                    byte[] manufacturerPictureBinary = manufacturerPictureFile.GetPictureBits();
                     manufacturerPicture = IoCFactory.Resolve<IPictureService>().InsertPicture(manufacturerPictureBinary, manufacturerPictureFile.ContentType, true);
                 }
                 int manufacturerPictureId = 0;

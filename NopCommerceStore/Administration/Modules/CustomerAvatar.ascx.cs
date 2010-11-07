@@ -86,7 +86,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                             if(customerPictureFile.ContentLength > avatarMaxSize)
                                 throw new NopException(string.Format("Maximum avatar size is {0} bytes", avatarMaxSize));
 
-                            byte[] customerPictureBinary = IoCFactory.Resolve<IPictureService>().GetPictureBits(customerPictureFile.InputStream, customerPictureFile.ContentLength);
+                            byte[] customerPictureBinary = customerPictureFile.GetPictureBits();
                             if(customerAvatar != null)
                                 customerAvatar = IoCFactory.Resolve<IPictureService>().UpdatePicture(customerAvatar.PictureId, customerPictureBinary, customerPictureFile.ContentType, true);
                             else

@@ -140,6 +140,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
         /// <param name="paymentMethodId">The payment method identifier</param>
         /// <param name="countryId">The country identifier</param>
         void DeletePaymentMethodCountryMapping(int paymentMethodId, int countryId);
+
         #endregion
 
         #region Payment Statuses

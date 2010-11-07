@@ -14,23 +14,30 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
-using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
-using NopSolutions.NopCommerce.BusinessLogic.Orders;
+using NopSolutions.NopCommerce.Common.Utils.Html;
 
 
-
-namespace NopSolutions.NopCommerce.BusinessLogic.Messages.SMS
+namespace NopSolutions.NopCommerce.BusinessLogic.Messages
 {
     /// <summary>
-    /// Provides an interface for SMS providers
+    /// Extensions
     /// </summary>
-    public partial interface ISMSProvider
+    public static class Extensions
     {
         /// <summary>
-        /// Sends SMS
+        /// Formats the contact us form text
         /// </summary>
         /// <param name="text">Text</param>
-        bool SendSMS(string text);
+        /// <returns>Formatted text</returns>
+        public static string FormatContactUsFormText(this string text)
+        {
+            if (String.IsNullOrEmpty(text))
+                return string.Empty;
+
+            text = HtmlHelper.FormatText(text, false, true, false, false, false, false);
+            return text;
+        }
     }
 }

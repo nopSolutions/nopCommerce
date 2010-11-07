@@ -176,7 +176,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 HttpPostedFile productVariantDownloadFile = fuProductVariantDownload.PostedFile;
                 if ((productVariantDownloadFile != null) && (!String.IsNullOrEmpty(productVariantDownloadFile.FileName)))
                 {
-                    productVariantDownloadBinary = IoCFactory.Resolve<IDownloadService>().GetDownloadBits(productVariantDownloadFile.InputStream, productVariantDownloadFile.ContentLength);
+                    productVariantDownloadBinary = productVariantDownloadFile.GetDownloadBits();
                     downloadContentType = productVariantDownloadFile.ContentType;
                     downloadFilename = Path.GetFileNameWithoutExtension(productVariantDownloadFile.FileName);
                     downloadExtension = Path.GetExtension(productVariantDownloadFile.FileName);
@@ -219,7 +219,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 HttpPostedFile productVariantSampleDownloadFile = fuProductVariantSampleDownload.PostedFile;
                 if ((productVariantSampleDownloadFile != null) && (!String.IsNullOrEmpty(productVariantSampleDownloadFile.FileName)))
                 {
-                    productVariantSampleDownloadBinary = IoCFactory.Resolve<IDownloadService>().GetDownloadBits(productVariantSampleDownloadFile.InputStream, productVariantSampleDownloadFile.ContentLength);
+                    productVariantSampleDownloadBinary = productVariantSampleDownloadFile.GetDownloadBits();
                     sampleDownloadContentType = productVariantSampleDownloadFile.ContentType;
                     sampleDownloadFilename = Path.GetFileNameWithoutExtension(productVariantSampleDownloadFile.FileName);
                     sampleDownloadExtension = Path.GetExtension(productVariantSampleDownloadFile.FileName);

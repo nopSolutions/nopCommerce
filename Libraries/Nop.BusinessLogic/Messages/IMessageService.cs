@@ -552,13 +552,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             List<string> cc, EmailAccount emailAccount);
 
         /// <summary>
-        /// Formats the contact us form text
-        /// </summary>
-        /// <param name="text">Text</param>
-        /// <returns>Formatted text</returns>
-        string FormatContactUsFormText(string text);
-
-        /// <summary>
         /// Gets or sets a primary store currency
         /// </summary>
         EmailAccount DefaultEmailAccount { get; set; }

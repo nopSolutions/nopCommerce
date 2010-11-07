@@ -122,14 +122,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
         string GetPictureLocalPath(Picture picture, int targetSize, bool showDefaultPicture);
 
         /// <summary>
-        /// Calculates picture dimensions whilst maintaining aspect
-        /// </summary>
-        /// <param name="originalSize">The original picture size</param>
-        /// <param name="targetSize">The target picture size (longest side)</param>
-        /// <returns></returns>
-        Size CalculateDimensions(Size originalSize, int targetSize);
-
-        /// <summary>
         /// Gets a picture
         /// </summary>
         /// <param name="pictureId">Picture identifier</param>
@@ -194,14 +186,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
         Picture UpdatePicture(int pictureId, byte[] pictureBinary,
             string mimeType, bool isNew);
 
-        /// <summary>
-        /// Gets the picture binary array
-        /// </summary>
-        /// <param name="fs">File stream</param>
-        /// <param name="size">Picture size</param>
-        /// <returns>Picture binary array</returns>
-        byte[] GetPictureBits(Stream fs, int size);
-        
         /// <summary>
         /// Gets an image quality
         /// </summary>

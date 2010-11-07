@@ -160,6 +160,28 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
             }
         }
 
+        /// <summary>
+        /// Calculates picture dimensions whilst maintaining aspect
+        /// </summary>
+        /// <param name="originalSize">The original picture size</param>
+        /// <param name="targetSize">The target picture size (longest side)</param>
+        /// <returns></returns>
+        private Size CalculateDimensions(Size originalSize, int targetSize)
+        {
+            var newSize = new Size();
+            if (originalSize.Height > originalSize.Width) // portrait 
+            {
+                newSize.Width = (int)(originalSize.Width * (float)(targetSize / (float)originalSize.Height));
+                newSize.Height = targetSize;
+            }
+            else // landscape or square
+            {
+                newSize.Height = (int)(originalSize.Height * (float)(targetSize / (float)originalSize.Width));
+                newSize.Width = targetSize;
+            }
+            return newSize;
+        }
+
         #endregion
 
         #region Methods
@@ -491,28 +513,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
         }
 
         /// <summary>
-        /// Calculates picture dimensions whilst maintaining aspect
-        /// </summary>
-        /// <param name="originalSize">The original picture size</param>
-        /// <param name="targetSize">The target picture size (longest side)</param>
-        /// <returns></returns>
-        public Size CalculateDimensions(Size originalSize, int targetSize)
-        {
-            var newSize = new Size();
-            if (originalSize.Height > originalSize.Width) // portrait 
-            {
-                newSize.Width = (int)(originalSize.Width * (float)(targetSize / (float)originalSize.Height));
-                newSize.Height = targetSize;
-            }
-            else // landscape or square
-            {
-                newSize.Height = (int)(originalSize.Height * (float)(targetSize / (float)originalSize.Width));
-                newSize.Width = targetSize;
-            }
-            return newSize;
-        }
-
-        /// <summary>
         /// Gets a picture
         /// </summary>
         /// <param name="pictureId">Picture identifier</param>
@@ -734,18 +734,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
             return picture;
         }
 
-        /// <summary>
-        /// Gets the picture binary array
-        /// </summary>
-        /// <param name="fs">File stream</param>
-        /// <param name="size">Picture size</param>
-        /// <returns>Picture binary array</returns>
-        public byte[] GetPictureBits(Stream fs, int size)
-        {
-            byte[] img = new byte[size];
-            fs.Read(img, 0, size);
-            return img;
-        }
         #endregion
 
         #region Properties

@@ -212,19 +212,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
 
             _context.SaveChanges();
         }
-
-        /// <summary>
-        /// Gets the download binary array
-        /// </summary>
-        /// <param name="fs">File stream</param>
-        /// <param name="size">Download size</param>
-        /// <returns>Download binary array</returns>
-        public byte[] GetDownloadBits(Stream fs, int size)
-        {
-            byte[] binary = new byte[size];
-            fs.Read(binary, 0, size);
-            return binary;
-        }
         #endregion
     }
 }

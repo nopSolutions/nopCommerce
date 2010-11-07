@@ -65,7 +65,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     string email = txtEmail.Text.Trim();
                     string fullName = txtFullName.Text.Trim();
                     string subject = string.Format("{0}. {1}", IoCFactory.Resolve<ISettingManager>().StoreName, "Contact us");
-                    string body = IoCFactory.Resolve<IMessageService>().FormatContactUsFormText(txtEnquiry.Text);
+                    string body = txtEnquiry.Text.FormatContactUsFormText();
 
                     var from = new MailAddress(email, fullName);
                     

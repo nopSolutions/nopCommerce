@@ -27,6 +27,20 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
     public static class Extensions
     {
         /// <summary>
+        /// Formats the gift card message text
+        /// </summary>
+        /// <param name="gc">Gift card</param>
+        /// <returns>Formatted text</returns>
+        public static string FormatGiftCardMessageText(this GiftCard gc)
+        {
+            if (gc == null || String.IsNullOrEmpty(gc.Message))
+                return string.Empty;
+
+            string result = HtmlHelper.FormatText(gc.Message, false, true, false, false, false, false);
+            return result;
+        }
+
+        /// <summary>
         /// Formats the order note text
         /// </summary>
         /// <param name="orderNote">Order note</param>

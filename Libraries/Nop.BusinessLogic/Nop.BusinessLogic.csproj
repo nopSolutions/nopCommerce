@@ -221,8 +221,10 @@
     <Compile Include="Manufacturers\Extensions.cs" />
     <Compile Include="Manufacturers\ManufacturerLocalized.cs" />
     <Compile Include="Measures\IMeasureService.cs" />
+    <Compile Include="Media\Extensions.cs" />
     <Compile Include="Media\IPictureService.cs" />
     <Compile Include="Media\IDownloadService.cs" />
+    <Compile Include="Messages\Extensions.cs" />
     <Compile Include="Messages\IMessageService.cs" />
     <Compile Include="Messages\EmailAccount.cs" />
     <Compile Include="Messages\SMS\ClickatellSMSProvider.cs" />
