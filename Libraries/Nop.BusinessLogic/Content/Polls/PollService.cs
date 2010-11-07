@@ -108,8 +108,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
         {
             if (String.IsNullOrWhiteSpace(systemKeyword))
                 return null;
-
-            
+                        
             var query = from p in _context.Polls
                         where p.SystemKeyword == systemKeyword
                         select p;

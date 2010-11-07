@@ -85,12 +85,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         public string GetOrderUrl(OrderProductVariant opv)
         {
-            string result = string.Empty;
-            Order order = opv.Order;
-            if (order!=null)
-            {
-                result = string.Format("<a class=\"link\" href=\"{0}OrderDetails.aspx?OrderID={1}\" >{1}</a>", CommonHelper.GetStoreLocation(), order.OrderId);
-            }
+            string result = string.Format("<a class=\"link\" href=\"{0}OrderDetails.aspx?OrderID={1}\">{1}</a>", CommonHelper.GetStoreLocation(), opv.OrderId);
             return result.ToLowerInvariant();
         }
 
