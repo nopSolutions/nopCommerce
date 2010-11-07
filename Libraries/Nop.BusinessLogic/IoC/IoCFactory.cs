@@ -71,7 +71,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.IoC
         #region Fields
 
         private static IDictionary<string, IUnityContainer> _containersDictionary;
-
+        private static object _lock = new object();
+        private static bool _initialized = false;
         #endregion
 
         #region Constructor
@@ -90,32 +91,43 @@ namespace NopSolutions.NopCommerce.BusinessLogic.IoC
 
         static void InitContainers()
         {
-            /*
-             * CREATE DICTIONARY
-             */
-            _containersDictionary = new Dictionary<string, IUnityContainer>();
+            if (_initialized == false)
+            {
+                lock (_lock)
+                {
+                    if (_initialized == false)
+                    {
+                        /*
+                         * CREATE DICTIONARY
+                         */
+                        _containersDictionary = new Dictionary<string, IUnityContainer>();
 
-            /*
-             * CREATE CONTAINERS 
-             */
-            //Create root container
-            IUnityContainer rootContainer = new UnityContainer();
-            _containersDictionary.Add("RootContext", rootContainer);
+                        /*
+                         * CREATE CONTAINERS 
+                         */
+                        //Create root container
+                        IUnityContainer rootContainer = new UnityContainer();
+                        _containersDictionary.Add("RootContext", rootContainer);
 
-            //Create container for real context, child of root container
-            IUnityContainer realAppContainer = rootContainer.CreateChildContainer();
-            _containersDictionary.Add("RealAppContext", realAppContainer);
+                        //Create container for real context, child of root container
+                        IUnityContainer realAppContainer = rootContainer.CreateChildContainer();
+                        _containersDictionary.Add("RealAppContext", realAppContainer);
 
-            //Create container for testing, child of root container
-            IUnityContainer fakeAppContainer = rootContainer.CreateChildContainer();
-            _containersDictionary.Add("FakeAppContext", fakeAppContainer);
+                        //Create container for testing, child of root container
+                        IUnityContainer fakeAppContainer = rootContainer.CreateChildContainer();
+                        _containersDictionary.Add("FakeAppContext", fakeAppContainer);
 
-            /*
-             * CONFIGURE CONTAINERS
-             */
-            ConfigureRootContainer(rootContainer);
-            ConfigureRealContainer(realAppContainer);
-            ConfigureFakeContainer(fakeAppContainer);
+                        /*
+                         * CONFIGURE CONTAINERS
+                         */
+                        ConfigureRootContainer(rootContainer);
+                        ConfigureRealContainer(realAppContainer);
+                        ConfigureFakeContainer(fakeAppContainer);
+
+                        _initialized = true;
+                    }
+                }
+            }
         }
 
         /// <summary>
