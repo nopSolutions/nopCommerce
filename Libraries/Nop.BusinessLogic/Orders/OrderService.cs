@@ -2151,8 +2151,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 paymentInfo.CreditCardType = CommonHelper.EnsureNotNull(paymentInfo.CreditCardType);
                 paymentInfo.CreditCardName = CommonHelper.EnsureNotNull(paymentInfo.CreditCardName);
                 paymentInfo.CreditCardName = CommonHelper.EnsureMaximumLength(paymentInfo.CreditCardName, 100);
+                paymentInfo.CreditCardName = paymentInfo.CreditCardName.Trim();
                 paymentInfo.CreditCardNumber = CommonHelper.EnsureNotNull(paymentInfo.CreditCardNumber);
+                paymentInfo.CreditCardNumber = paymentInfo.CreditCardNumber.Trim();
                 paymentInfo.CreditCardCvv2 = CommonHelper.EnsureNotNull(paymentInfo.CreditCardCvv2);
+                paymentInfo.CreditCardCvv2 = paymentInfo.CreditCardCvv2.Trim();
                 paymentInfo.PaypalToken = CommonHelper.EnsureNotNull(paymentInfo.PaypalToken);
                 paymentInfo.PaypalPayerId = CommonHelper.EnsureNotNull(paymentInfo.PaypalPayerId);
                 paymentInfo.GoogleOrderNumber = CommonHelper.EnsureNotNull(paymentInfo.GoogleOrderNumber);                

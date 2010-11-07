@@ -9,7 +9,7 @@
 // The Initial Developer of the Original Code is NopSolutions.
 // All Rights Reserved.
 // 
-// Contributor(s): _______. 
+// Contributor(s): Bruce Leggett. 
 //------------------------------------------------------------------------------
 
 using System;
@@ -31,7 +31,7 @@ namespace NopSolutions.NopCommerce.Controls.Payment.Validators
         /// <returns>true if the value in the input control is valid; otherwise, false.</returns>
         protected override bool EvaluateIsValid()
         {
-            string valueToValidate = base.GetControlValidationValue(base.ControlToValidate);
+            string valueToValidate = base.GetControlValidationValue(base.ControlToValidate).Trim();
             int indicator = 1;
             int firstNumToAdd = 0;
             int secondNumToAdd = 0;
