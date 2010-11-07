@@ -142,7 +142,6 @@
     <Compile Include="Audit\ICustomerActivityService.cs" />
     <Compile Include="Audit\ISearchLogService.cs" />
     <Compile Include="Audit\SearchTermReportLine.cs" />
-    <Compile Include="Audit\LogType.cs" />
     <Compile Include="Audit\CustomerActivityService.cs" />
     <Compile Include="Audit\Extensions.cs" />
     <Compile Include="Audit\UsersOnline\IOnlineUserService.cs" />
@@ -254,6 +253,7 @@
     <Compile Include="Orders\DeleteExpiredShoppingCartsTask.cs" />
     <Compile Include="Orders\OrderAverageReportLine.cs" />
     <Compile Include="Payment\CancelPaymentResult.cs" />
+    <Compile Include="Payment\Extensions.cs" />
     <Compile Include="Payment\IPaymentService.cs" />
     <Compile Include="Payment\PaymentMethodTypeEnum.cs" />
     <Compile Include="Payment\RecurringPaymentTypeEnum.cs" />
@@ -274,8 +274,6 @@
     <Compile Include="Products\ProductRating.cs" />
     <Compile Include="Products\ProductReviewHelpfulness.cs" />
     <Compile Include="Products\Extensions.cs" />
-    <Compile Include="Products\ShoppingCartType.cs" />
-    <Compile Include="Products\LowStockActivity.cs" />
     <Compile Include="Products\ProductTag.cs" />
     <Compile Include="Products\ProductSortingEnum.cs" />
     <Compile Include="Products\CustomerRoleProductPrice.cs" />
@@ -310,10 +308,8 @@
     <Compile Include="Messages\SendQueuedMessagesTask.cs" />
     <Compile Include="Content\Blog\BlogPost.cs" />
     <Compile Include="Content\Blog\BlogComment.cs" />
-    <Compile Include="Orders\OrderStatus.cs" />
     <Compile Include="Orders\OrderStatusEnum.cs" />
     <Compile Include="Orders\OrderNote.cs" />
-    <Compile Include="Payment\PaymentStatus.cs" />
     <Compile Include="Products\Attributes\AttributeControlTypeEnum.cs" />
     <Compile Include="Products\PriceRange.cs" />
     <Compile Include="Products\PriceHelper.cs" />
@@ -323,12 +319,9 @@
     <Compile Include="Promo\Campaigns\Campaign.cs" />
     <Compile Include="Promo\Campaigns\ICampaignService.cs" />
     <Compile Include="Promo\Discounts\IDiscountService.cs" />
-    <Compile Include="Promo\Discounts\DiscountLimitation.cs" />
     <Compile Include="Promo\Discounts\DiscountLimitationEnum.cs" />
     <Compile Include="Promo\Discounts\DiscountUsageHistory.cs" />
-    <Compile Include="Promo\Discounts\DiscountRequirement.cs" />
     <Compile Include="Promo\Discounts\DiscountRequirementEnum.cs" />
-    <Compile Include="Promo\Discounts\DiscountType.cs" />
     <Compile Include="Promo\Discounts\Extensions.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -358,12 +351,12 @@
     <Compile Include="SEO\Sitemaps\BaseSitemapGenerator.cs" />
     <Compile Include="SEO\Sitemaps\SitemapGenerator.cs" />
     <Compile Include="SEO\Sitemaps\UpdateFrequency.cs" />
+    <Compile Include="Shipping\Extensions.cs" />
     <Compile Include="Shipping\IShippingService.cs" />
     <Compile Include="Shipping\IShippingByWeightService.cs" />
     <Compile Include="Shipping\IShippingByWeightAndCountryService.cs" />
     <Compile Include="Shipping\IShippingByTotalService.cs" />
     <Compile Include="Shipping\ShippingRateComputationMethodTypeEnum.cs" />
-    <Compile Include="Shipping\ShippingStatus.cs" />
     <Compile Include="Shipping\ShippingStatusEnum.cs" />
     <Compile Include="Tasks\ITask.cs" />
     <Compile Include="Tasks\Task.cs" />

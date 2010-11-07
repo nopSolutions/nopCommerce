@@ -86,33 +86,36 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected void FillDropDowns()
         {
+            //order statuses
             this.ddlOrderStatus.Items.Clear();
             ListItem itemOrderStatus = new ListItem(GetLocaleResourceString("Admin.Common.All"), "0");
             this.ddlOrderStatus.Items.Add(itemOrderStatus);
-            var orderStatuses = IoCFactory.Resolve<IOrderService>().GetAllOrderStatuses();
-            foreach (OrderStatus orderStatus in orderStatuses)
+            OrderStatusEnum[] orderStatuses = (OrderStatusEnum[])Enum.GetValues(typeof(OrderStatusEnum));            
+            foreach (OrderStatusEnum orderStatus in orderStatuses)
             {
-                ListItem item2 = new ListItem(IoCFactory.Resolve<IOrderService>().GetOrderStatusName(orderStatus.OrderStatusId), orderStatus.OrderStatusId.ToString());
+                ListItem item2 = new ListItem(orderStatus.GetOrderStatusName(), ((int)orderStatus).ToString());
                 this.ddlOrderStatus.Items.Add(item2);
             }
 
+            //payment statuses
             this.ddlPaymentStatus.Items.Clear();
             ListItem itemPaymentStatus = new ListItem(GetLocaleResourceString("Admin.Common.All"), "0");
             this.ddlPaymentStatus.Items.Add(itemPaymentStatus);
-            var paymentStatuses = IoCFactory.Resolve<IPaymentService>().GetAllPaymentStatuses();
-            foreach (PaymentStatus paymentStatus in paymentStatuses)
+            PaymentStatusEnum[] paymentStatuses = (PaymentStatusEnum[])Enum.GetValues(typeof(PaymentStatusEnum));
+            foreach (PaymentStatusEnum paymentStatus in paymentStatuses)
             {
-                ListItem item2 = new ListItem(IoCFactory.Resolve<IPaymentService>().GetPaymentStatusName(paymentStatus.PaymentStatusId), paymentStatus.PaymentStatusId.ToString());
+                ListItem item2 = new ListItem(paymentStatus.GetPaymentStatusName(), ((int)paymentStatus).ToString());
                 this.ddlPaymentStatus.Items.Add(item2);
             }
 
+            //shipping statuses
             this.ddlShippingStatus.Items.Clear();
             ListItem itemShippingStatus = new ListItem(GetLocaleResourceString("Admin.Common.All"), "0");
             this.ddlShippingStatus.Items.Add(itemShippingStatus);
-            var shippingStatuses = IoCFactory.Resolve<IShippingService>().GetAllShippingStatuses();
-            foreach (ShippingStatus shippingStatus in shippingStatuses)
+            ShippingStatusEnum[] shippingStatuses = (ShippingStatusEnum[])Enum.GetValues(typeof(ShippingStatusEnum));
+            foreach (ShippingStatusEnum shippingStatus in shippingStatuses)
             {
-                ListItem item2 = new ListItem(IoCFactory.Resolve<IShippingService>().GetShippingStatusName(shippingStatus.ShippingStatusId), shippingStatus.ShippingStatusId.ToString());
+                ListItem item2 = new ListItem(shippingStatus.GetShippingStatusName(), ((int)shippingStatus).ToString());
                 this.ddlShippingStatus.Items.Add(item2);
             }
         }

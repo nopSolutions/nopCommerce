@@ -143,30 +143,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
 
         #endregion
 
-        #region Payment Statuses
-
-        /// <summary>
-        /// Gets a payment status full name
-        /// </summary>
-        /// <param name="paymentStatusId">Payment status identifier</param>
-        /// <returns>Payment status name</returns>
-        string GetPaymentStatusName(int paymentStatusId);
-
-        /// <summary>
-        /// Gets a payment status by identifier
-        /// </summary>
-        /// <param name="paymentStatusId">payment status identifier</param>
-        /// <returns>Payment status</returns>
-        PaymentStatus GetPaymentStatusById(int paymentStatusId);
-
-        /// <summary>
-        /// Gets all payment statuses
-        /// </summary>
-        /// <returns>Payment status collection</returns>
-        List<PaymentStatus> GetAllPaymentStatuses();
-
-        #endregion
-
         #region Workflow
 
         /// <summary>

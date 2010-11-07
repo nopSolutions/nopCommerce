@@ -38,10 +38,7 @@
           <EntitySet Name="Nop_CustomerRole_ProductPrice" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_CustomerRole_ProductPrice" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Nop_CustomerSession" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_CustomerSession" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Nop_Discount" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_Discount" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="Nop_DiscountLimitation" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_DiscountLimitation" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="Nop_DiscountRequirement" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_DiscountRequirement" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Nop_DiscountRestriction" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_DiscountRestriction" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="Nop_DiscountType" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_DiscountType" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Nop_DiscountUsageHistory" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_DiscountUsageHistory" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Nop_Download" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_Download" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Nop_EmailAccount" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_EmailAccount" store:Type="Tables" Schema="dbo" />
@@ -56,8 +53,6 @@
           <EntitySet Name="Nop_Language" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_Language" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Nop_LocaleStringResource" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_LocaleStringResource" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Nop_Log" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_Log" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="Nop_LogType" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_LogType" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="Nop_LowStockActivity" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_LowStockActivity" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Nop_Manufacturer" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_Manufacturer" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Nop_ManufacturerLocalized" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_ManufacturerLocalized" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Nop_ManufacturerTemplate" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_ManufacturerTemplate" store:Type="Tables" Schema="dbo" />
@@ -71,10 +66,8 @@
           <EntitySet Name="Nop_Order" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_Order" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Nop_OrderNote" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_OrderNote" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Nop_OrderProductVariant" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_OrderProductVariant" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="Nop_OrderStatus" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_OrderStatus" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Nop_PaymentMethod" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_PaymentMethod" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Nop_PaymentMethod_RestrictedCountries" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_PaymentMethod_RestrictedCountries" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="Nop_PaymentStatus" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_PaymentStatus" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Nop_Picture" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_Picture" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Nop_Poll" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_Poll" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Nop_PollAnswer" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_PollAnswer" store:Type="Tables" Schema="dbo" />
@@ -117,9 +110,7 @@
           <EntitySet Name="Nop_ShippingMethod" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_ShippingMethod" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Nop_ShippingMethod_RestrictedCountries" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_ShippingMethod_RestrictedCountries" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Nop_ShippingRateComputationMethod" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_ShippingRateComputationMethod" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="Nop_ShippingStatus" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_ShippingStatus" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Nop_ShoppingCartItem" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_ShoppingCartItem" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="Nop_ShoppingCartType" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_ShoppingCartType" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Nop_SMSProvider" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_SMSProvider" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Nop_SpecificationAttribute" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_SpecificationAttribute" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Nop_SpecificationAttributeLocalized" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_SpecificationAttributeLocalized" store:Type="Tables" Schema="dbo" />
@@ -241,18 +232,6 @@
             <End Role="Nop_ProductVariant" EntitySet="Nop_ProductVariant" />
             <End Role="Nop_CustomerRole_ProductPrice" EntitySet="Nop_CustomerRole_ProductPrice" />
           </AssociationSet>
-          <AssociationSet Name="FK_Nop_Discount_Nop_DiscountLimitation" Association="NopSolutions.NopCommerce.BusinessLogic.Data.Store.FK_Nop_Discount_Nop_DiscountLimitation">
-            <End Role="Nop_DiscountLimitation" EntitySet="Nop_DiscountLimitation" />
-            <End Role="Nop_Discount" EntitySet="Nop_Discount" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Nop_Discount_Nop_DiscountRequirement" Association="NopSolutions.NopCommerce.BusinessLogic.Data.Store.FK_Nop_Discount_Nop_DiscountRequirement">
-            <End Role="Nop_DiscountRequirement" EntitySet="Nop_DiscountRequirement" />
-            <End Role="Nop_Discount" EntitySet="Nop_Discount" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Nop_Discount_Nop_DiscountType" Association="NopSolutions.NopCommerce.BusinessLogic.Data.Store.FK_Nop_Discount_Nop_DiscountType">
-            <End Role="Nop_DiscountType" EntitySet="Nop_DiscountType" />
-            <End Role="Nop_Discount" EntitySet="Nop_Discount" />
-          </AssociationSet>
           <AssociationSet Name="FK_Nop_DiscountRestriction_Nop_Discount" Association="NopSolutions.NopCommerce.BusinessLogic.Data.Store.FK_Nop_DiscountRestriction_Nop_Discount">
             <End Role="Nop_Discount" EntitySet="Nop_Discount" />
             <End Role="Nop_DiscountRestriction" EntitySet="Nop_DiscountRestriction" />
@@ -301,10 +280,6 @@
             <End Role="Nop_Language" EntitySet="Nop_Language" />
             <End Role="Nop_LocaleStringResource" EntitySet="Nop_LocaleStringResource" />
           </AssociationSet>
-          <AssociationSet Name="FK_Nop_Log_Nop_LogType" Association="NopSolutions.NopCommerce.BusinessLogic.Data.Store.FK_Nop_Log_Nop_LogType">
-            <End Role="Nop_LogType" EntitySet="Nop_LogType" />
-            <End Role="Nop_Log" EntitySet="Nop_Log" />
-          </AssociationSet>
           <AssociationSet Name="FK_Nop_Manufacturer_Nop_ManufacturerTemplate" Association="NopSolutions.NopCommerce.BusinessLogic.Data.Store.FK_Nop_Manufacturer_Nop_ManufacturerTemplate">
             <End Role="Nop_ManufacturerTemplate" EntitySet="Nop_ManufacturerTemplate" />
             <End Role="Nop_Manufacturer" EntitySet="Nop_Manufacturer" />
@@ -332,18 +307,6 @@
           <AssociationSet Name="FK_Nop_NewsComment_Nop_News" Association="NopSolutions.NopCommerce.BusinessLogic.Data.Store.FK_Nop_NewsComment_Nop_News">
             <End Role="Nop_News" EntitySet="Nop_News" />
             <End Role="Nop_NewsComment" EntitySet="Nop_NewsComment" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Nop_Order_Nop_OrderStatus" Association="NopSolutions.NopCommerce.BusinessLogic.Data.Store.FK_Nop_Order_Nop_OrderStatus">
-            <End Role="Nop_OrderStatus" EntitySet="Nop_OrderStatus" />
-            <End Role="Nop_Order" EntitySet="Nop_Order" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Nop_Order_Nop_PaymentStatus" Association="NopSolutions.NopCommerce.BusinessLogic.Data.Store.FK_Nop_Order_Nop_PaymentStatus">
-            <End Role="Nop_PaymentStatus" EntitySet="Nop_PaymentStatus" />
-            <End Role="Nop_Order" EntitySet="Nop_Order" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Nop_Order_Nop_ShippingStatus" Association="NopSolutions.NopCommerce.BusinessLogic.Data.Store.FK_Nop_Order_Nop_ShippingStatus">
-            <End Role="Nop_ShippingStatus" EntitySet="Nop_ShippingStatus" />
-            <End Role="Nop_Order" EntitySet="Nop_Order" />
           </AssociationSet>
           <AssociationSet Name="FK_Nop_OrderNote_Nop_Order" Association="NopSolutions.NopCommerce.BusinessLogic.Data.Store.FK_Nop_OrderNote_Nop_Order">
             <End Role="Nop_Order" EntitySet="Nop_Order" />
@@ -469,10 +432,6 @@
             <End Role="Nop_ProductVariant" EntitySet="Nop_ProductVariant" />
             <End Role="Nop_ProductVariant_Discount_Mapping" EntitySet="Nop_ProductVariant_Discount_Mapping" />
           </AssociationSet>
-          <AssociationSet Name="FK_Nop_ProductVariant_Nop_LowStockActivity" Association="NopSolutions.NopCommerce.BusinessLogic.Data.Store.FK_Nop_ProductVariant_Nop_LowStockActivity">
-            <End Role="Nop_LowStockActivity" EntitySet="Nop_LowStockActivity" />
-            <End Role="Nop_ProductVariant" EntitySet="Nop_ProductVariant" />
-          </AssociationSet>
           <AssociationSet Name="FK_Nop_ProductVariant_Nop_Product1" Association="NopSolutions.NopCommerce.BusinessLogic.Data.Store.FK_Nop_ProductVariant_Nop_Product1">
             <End Role="Nop_Product" EntitySet="Nop_Product" />
             <End Role="Nop_ProductVariant" EntitySet="Nop_ProductVariant" />
@@ -567,10 +526,6 @@
           </AssociationSet>
           <AssociationSet Name="FK_Nop_ShoppingCart_Nop_ProductVariant" Association="NopSolutions.NopCommerce.BusinessLogic.Data.Store.FK_Nop_ShoppingCart_Nop_ProductVariant">
             <End Role="Nop_ProductVariant" EntitySet="Nop_ProductVariant" />
-            <End Role="Nop_ShoppingCartItem" EntitySet="Nop_ShoppingCartItem" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Nop_ShoppingCart_Nop_ShoppingCartType" Association="NopSolutions.NopCommerce.BusinessLogic.Data.Store.FK_Nop_ShoppingCart_Nop_ShoppingCartType">
-            <End Role="Nop_ShoppingCartType" EntitySet="Nop_ShoppingCartType" />
             <End Role="Nop_ShoppingCartItem" EntitySet="Nop_ShoppingCartItem" />
           </AssociationSet>
           <AssociationSet Name="FK_Nop_SpecificationAttributeLocalized_Nop_Language" Association="NopSolutions.NopCommerce.BusinessLogic.Data.Store.FK_Nop_SpecificationAttributeLocalized_Nop_Language">
@@ -1025,20 +980,6 @@
           <Property Name="CouponCode" Type="nvarchar" Nullable="false" MaxLength="100" />
           <Property Name="Deleted" Type="bit" Nullable="false" />
         </EntityType>
-        <EntityType Name="Nop_DiscountLimitation">
-          <Key>
-            <PropertyRef Name="DiscountLimitationID" />
-          </Key>
-          <Property Name="DiscountLimitationID" Type="int" Nullable="false" />
-          <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="100" />
-        </EntityType>
-        <EntityType Name="Nop_DiscountRequirement">
-          <Key>
-            <PropertyRef Name="DiscountRequirementID" />
-          </Key>
-          <Property Name="DiscountRequirementID" Type="int" Nullable="false" />
-          <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="100" />
-        </EntityType>
         <EntityType Name="Nop_DiscountRestriction">
           <Key>
             <PropertyRef Name="ProductVariantID" />
@@ -1046,13 +987,6 @@
           </Key>
           <Property Name="ProductVariantID" Type="int" Nullable="false" />
           <Property Name="DiscountID" Type="int" Nullable="false" />
-        </EntityType>
-        <EntityType Name="Nop_DiscountType">
-          <Key>
-            <PropertyRef Name="DiscountTypeID" />
-          </Key>
-          <Property Name="DiscountTypeID" Type="int" Nullable="false" />
-          <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="100" />
         </EntityType>
         <EntityType Name="Nop_DiscountUsageHistory">
           <Key>
@@ -1237,20 +1171,6 @@
           <Property Name="PageURL" Type="nvarchar" Nullable="false" MaxLength="100" />
           <Property Name="ReferrerURL" Type="nvarchar" Nullable="false" MaxLength="100" />
           <Property Name="CreatedOn" Type="datetime" Nullable="false" />
-        </EntityType>
-        <EntityType Name="Nop_LogType">
-          <Key>
-            <PropertyRef Name="LogTypeID" />
-          </Key>
-          <Property Name="LogTypeID" Type="int" Nullable="false" />
-          <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="1000" />
-        </EntityType>
-        <EntityType Name="Nop_LowStockActivity">
-          <Key>
-            <PropertyRef Name="LowStockActivityID" />
-          </Key>
-          <Property Name="LowStockActivityID" Type="int" Nullable="false" />
-          <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="100" />
         </EntityType>
         <EntityType Name="Nop_Manufacturer">
           <Key>
@@ -1506,13 +1426,6 @@
           <Property Name="IsDownloadActivated" Type="bit" Nullable="false" />
           <Property Name="LicenseDownloadID" Type="int" Nullable="false" />
         </EntityType>
-        <EntityType Name="Nop_OrderStatus">
-          <Key>
-            <PropertyRef Name="OrderStatusID" />
-          </Key>
-          <Property Name="OrderStatusID" Type="int" Nullable="false" />
-          <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="100" />
-        </EntityType>
         <EntityType Name="Nop_PaymentMethod">
           <Key>
             <PropertyRef Name="PaymentMethodID" />
@@ -1535,13 +1448,6 @@
           </Key>
           <Property Name="PaymentMethodID" Type="int" Nullable="false" />
           <Property Name="CountryID" Type="int" Nullable="false" />
-        </EntityType>
-        <EntityType Name="Nop_PaymentStatus">
-          <Key>
-            <PropertyRef Name="PaymentStatusID" />
-          </Key>
-          <Property Name="PaymentStatusID" Type="int" Nullable="false" />
-          <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="100" />
         </EntityType>
         <EntityType Name="Nop_Picture">
           <Key>
@@ -2082,13 +1988,6 @@
           <Property Name="IsActive" Type="bit" Nullable="false" />
           <Property Name="DisplayOrder" Type="int" Nullable="false" />
         </EntityType>
-        <EntityType Name="Nop_ShippingStatus">
-          <Key>
-            <PropertyRef Name="ShippingStatusID" />
-          </Key>
-          <Property Name="ShippingStatusID" Type="int" Nullable="false" />
-          <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="100" />
-        </EntityType>
         <EntityType Name="Nop_ShoppingCartItem">
           <Key>
             <PropertyRef Name="ShoppingCartItemID" />
@@ -2102,13 +2001,6 @@
           <Property Name="Quantity" Type="int" Nullable="false" />
           <Property Name="CreatedOn" Type="datetime" Nullable="false" />
           <Property Name="UpdatedOn" Type="datetime" Nullable="false" />
-        </EntityType>
-        <EntityType Name="Nop_ShoppingCartType">
-          <Key>
-            <PropertyRef Name="ShoppingCartTypeID" />
-          </Key>
-          <Property Name="ShoppingCartTypeID" Type="int" Nullable="false" />
-          <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="100" />
         </EntityType>
         <EntityType Name="Nop_SMSProvider">
           <Key>
@@ -2626,48 +2518,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Nop_Discount_Nop_DiscountLimitation">
-          <End Role="Nop_DiscountLimitation" Type="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_DiscountLimitation" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="Nop_Discount" Type="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_Discount" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Nop_DiscountLimitation">
-              <PropertyRef Name="DiscountLimitationID" />
-            </Principal>
-            <Dependent Role="Nop_Discount">
-              <PropertyRef Name="DiscountLimitationID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Nop_Discount_Nop_DiscountRequirement">
-          <End Role="Nop_DiscountRequirement" Type="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_DiscountRequirement" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="Nop_Discount" Type="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_Discount" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Nop_DiscountRequirement">
-              <PropertyRef Name="DiscountRequirementID" />
-            </Principal>
-            <Dependent Role="Nop_Discount">
-              <PropertyRef Name="DiscountRequirementID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Nop_Discount_Nop_DiscountType">
-          <End Role="Nop_DiscountType" Type="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_DiscountType" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="Nop_Discount" Type="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_Discount" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Nop_DiscountType">
-              <PropertyRef Name="DiscountTypeID" />
-            </Principal>
-            <Dependent Role="Nop_Discount">
-              <PropertyRef Name="DiscountTypeID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Nop_DiscountRestriction_Nop_Discount">
           <End Role="Nop_Discount" Type="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_Discount" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -2836,20 +2686,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Nop_Log_Nop_LogType">
-          <End Role="Nop_LogType" Type="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_LogType" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="Nop_Log" Type="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_Log" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Nop_LogType">
-              <PropertyRef Name="LogTypeID" />
-            </Principal>
-            <Dependent Role="Nop_Log">
-              <PropertyRef Name="LogTypeID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Nop_Manufacturer_Nop_ManufacturerTemplate">
           <End Role="Nop_ManufacturerTemplate" Type="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_ManufacturerTemplate" Multiplicity="1" />
           <End Role="Nop_Manufacturer" Type="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_Manufacturer" Multiplicity="*" />
@@ -2943,48 +2779,6 @@
             </Principal>
             <Dependent Role="Nop_NewsComment">
               <PropertyRef Name="NewsID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Nop_Order_Nop_OrderStatus">
-          <End Role="Nop_OrderStatus" Type="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_OrderStatus" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="Nop_Order" Type="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_Order" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Nop_OrderStatus">
-              <PropertyRef Name="OrderStatusID" />
-            </Principal>
-            <Dependent Role="Nop_Order">
-              <PropertyRef Name="OrderStatusID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Nop_Order_Nop_PaymentStatus">
-          <End Role="Nop_PaymentStatus" Type="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_PaymentStatus" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="Nop_Order" Type="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_Order" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Nop_PaymentStatus">
-              <PropertyRef Name="PaymentStatusID" />
-            </Principal>
-            <Dependent Role="Nop_Order">
-              <PropertyRef Name="PaymentStatusID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Nop_Order_Nop_ShippingStatus">
-          <End Role="Nop_ShippingStatus" Type="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_ShippingStatus" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="Nop_Order" Type="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_Order" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Nop_ShippingStatus">
-              <PropertyRef Name="ShippingStatusID" />
-            </Principal>
-            <Dependent Role="Nop_Order">
-              <PropertyRef Name="ShippingStatusID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -3418,18 +3212,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Nop_ProductVariant_Nop_LowStockActivity">
-          <End Role="Nop_LowStockActivity" Type="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_LowStockActivity" Multiplicity="1" />
-          <End Role="Nop_ProductVariant" Type="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_ProductVariant" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Nop_LowStockActivity">
-              <PropertyRef Name="LowStockActivityID" />
-            </Principal>
-            <Dependent Role="Nop_ProductVariant">
-              <PropertyRef Name="LowStockActivityID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Nop_ProductVariant_Nop_Product1">
           <End Role="Nop_Product" Type="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_Product" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -3763,20 +3545,6 @@
             </Principal>
             <Dependent Role="Nop_ShoppingCartItem">
               <PropertyRef Name="ProductVariantID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Nop_ShoppingCart_Nop_ShoppingCartType">
-          <End Role="Nop_ShoppingCartType" Type="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_ShoppingCartType" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="Nop_ShoppingCartItem" Type="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_ShoppingCartItem" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Nop_ShoppingCartType">
-              <PropertyRef Name="ShoppingCartTypeID" />
-            </Principal>
-            <Dependent Role="Nop_ShoppingCartItem">
-              <PropertyRef Name="ShoppingCartTypeID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -4221,23 +3989,14 @@
           <EntitySet Name="CategoryTemplates" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.CategoryTemplate" />
           <EntitySet Name="CreditCardTypes" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.CreditCardType" />
           <EntitySet Name="CustomerActions" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.CustomerAction" />
-          <EntitySet Name="LowStockActivities" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.LowStockActivity" />
           <EntitySet Name="ManufacturerTemplates" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.ManufacturerTemplate" />
           <EntitySet Name="ProductTemplates" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.ProductTemplate" />
           <EntitySet Name="Warehouses" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Warehouse" />
           <EntitySet Name="Campaigns" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Campaign" />
           <EntitySet Name="Currencies" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Currency" />
-          <EntitySet Name="DiscountLimitations" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.DiscountLimitation" />
-          <EntitySet Name="DiscountRequirements" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.DiscountRequirement" />
-          <EntitySet Name="DiscountTypes" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.DiscountType" />
           <EntitySet Name="Downloads" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Download" />
-          <EntitySet Name="LogTypes" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.LogType" />
-          <EntitySet Name="OrderStatuses" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.OrderStatus" />
           <EntitySet Name="PaymentMethods" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.PaymentMethod" />
-          <EntitySet Name="PaymentStatuses" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.PaymentStatus" />
           <EntitySet Name="ShippingRateComputationMethods" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.ShippingRateComputationMethod" />
-          <EntitySet Name="ShippingStatuses" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.ShippingStatus" />
-          <EntitySet Name="ShoppingCartTypes" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.ShoppingCartType" />
           <EntitySet Name="TaxCategories" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.TaxCategory" />
           <EntitySet Name="TaxProviders" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.TaxProvider" />
           <EntitySet Name="LocaleStringResources" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.LocaleStringResource" />
@@ -4367,10 +4126,6 @@
             <End Role="Language" EntitySet="Languages" />
             <End Role="Nop_Poll" EntitySet="Polls" />
           </AssociationSet>
-          <AssociationSet Name="FK_Nop_Log_Nop_LogType" Association="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_Log_Nop_LogType">
-            <End Role="LogType" EntitySet="LogTypes" />
-            <End Role="Nop_Log" EntitySet="Log" />
-          </AssociationSet>
           <AssociationSet Name="FK_Nop_PollAnswer_Nop_Poll" Association="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_PollAnswer_Nop_Poll">
             <End Role="Nop_Poll" EntitySet="Polls" />
             <End Role="Nop_PollAnswer" EntitySet="PollAnswers" />
@@ -4382,18 +4137,6 @@
           <EntitySet Name="Discounts" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Discount" />
           <EntitySet Name="NewsLetterSubscriptions" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.NewsLetterSubscription" />
           <EntitySet Name="Pricelists" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Pricelist" />
-          <AssociationSet Name="FK_Nop_Discount_Nop_DiscountLimitation" Association="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_Discount_Nop_DiscountLimitation">
-            <End Role="DiscountLimitation" EntitySet="DiscountLimitations" />
-            <End Role="Nop_Discount" EntitySet="Discounts" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Nop_Discount_Nop_DiscountRequirement" Association="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_Discount_Nop_DiscountRequirement">
-            <End Role="DiscountRequirement" EntitySet="DiscountRequirements" />
-            <End Role="Nop_Discount" EntitySet="Discounts" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Nop_Discount_Nop_DiscountType" Association="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_Discount_Nop_DiscountType">
-            <End Role="DiscountType" EntitySet="DiscountTypes" />
-            <End Role="Nop_Discount" EntitySet="Discounts" />
-          </AssociationSet>
           <AssociationSet Name="Nop_PaymentMethod_RestrictedCountries" Association="NopSolutions.NopCommerce.BusinessLogic.Data.Nop_PaymentMethod_RestrictedCountries">
             <End Role="Country" EntitySet="Countries" />
             <End Role="PaymentMethod" EntitySet="PaymentMethods" />
@@ -4421,10 +4164,6 @@
           <AssociationSet Name="FK_Nop_ProductVariantLocalized_Nop_Language" Association="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_ProductVariantLocalized_Nop_Language">
             <End Role="Language" EntitySet="Languages" />
             <End Role="Nop_ProductVariantLocalized" EntitySet="ProductVariantLocalized" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Nop_ProductVariant_Nop_LowStockActivity" Association="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_ProductVariant_Nop_LowStockActivity">
-            <End Role="LowStockActivity" EntitySet="LowStockActivities" />
-            <End Role="Nop_ProductVariant" EntitySet="ProductVariants" />
           </AssociationSet>
           <AssociationSet Name="FK_Nop_ProductVariant_Nop_Product1" Association="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_ProductVariant_Nop_Product1">
             <End Role="Product" EntitySet="Products" />
@@ -4548,10 +4287,6 @@
             <End Role="ProductVariant" EntitySet="ProductVariants" />
             <End Role="Nop_TierPrice" EntitySet="TierPrices" />
           </AssociationSet>
-          <AssociationSet Name="FK_Nop_ShoppingCart_Nop_ShoppingCartType" Association="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_ShoppingCart_Nop_ShoppingCartType">
-            <End Role="ShoppingCartType" EntitySet="ShoppingCartTypes" />
-            <End Role="Nop_ShoppingCartItem" EntitySet="ShoppingCartItems" />
-          </AssociationSet>
           <AssociationSet Name="Nop_Category_Discount_Mapping" Association="NopSolutions.NopCommerce.BusinessLogic.Data.Nop_Category_Discount_Mapping">
             <End Role="Category" EntitySet="Categories" />
             <End Role="Discount" EntitySet="Discounts" />
@@ -4672,18 +4407,6 @@
           <EntitySet Name="Orders" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Order" />
           <EntitySet Name="OrderNotes" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.OrderNote" />
           <EntitySet Name="OrderProductVariants" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.OrderProductVariant" />
-          <AssociationSet Name="FK_Nop_Order_Nop_OrderStatus" Association="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_Order_Nop_OrderStatus">
-            <End Role="OrderStatus" EntitySet="OrderStatuses" />
-            <End Role="Nop_Order" EntitySet="Orders" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Nop_Order_Nop_PaymentStatus" Association="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_Order_Nop_PaymentStatus">
-            <End Role="PaymentStatus" EntitySet="PaymentStatuses" />
-            <End Role="Nop_Order" EntitySet="Orders" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Nop_Order_Nop_ShippingStatus" Association="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_Order_Nop_ShippingStatus">
-            <End Role="ShippingStatus" EntitySet="ShippingStatuses" />
-            <End Role="Nop_Order" EntitySet="Orders" />
-          </AssociationSet>
           <AssociationSet Name="FK_Nop_OrderNote_Nop_Order" Association="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_OrderNote_Nop_Order">
             <End Role="Nop_Order" EntitySet="Orders" />
             <End Role="Nop_OrderNote" EntitySet="OrderNotes" />
@@ -5216,13 +4939,6 @@
           <Property Type="String" Name="Comment" Nullable="false" MaxLength="1000" FixedLength="false" Unicode="true" />
           <Property Type="Int32" Name="DisplayOrder" Nullable="false" />
         </EntityType>
-        <EntityType Name="LowStockActivity">
-          <Key>
-            <PropertyRef Name="LowStockActivityId" />
-          </Key>
-          <Property Type="Int32" Name="LowStockActivityId" Nullable="false" />
-          <Property Type="String" Name="Name" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
-        </EntityType>
         <EntityType Name="ManufacturerTemplate">
           <Key>
             <PropertyRef Name="ManufacturerTemplateId" />
@@ -5289,27 +5005,6 @@
           <Property Type="DateTime" Name="CreatedOn" Nullable="false" />
           <Property Type="DateTime" Name="UpdatedOn" Nullable="false" />
         </EntityType>
-        <EntityType Name="DiscountLimitation">
-          <Key>
-            <PropertyRef Name="DiscountLimitationId" />
-          </Key>
-          <Property Type="Int32" Name="DiscountLimitationId" Nullable="false" />
-          <Property Type="String" Name="Name" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
-        </EntityType>
-        <EntityType Name="DiscountRequirement">
-          <Key>
-            <PropertyRef Name="DiscountRequirementId" />
-          </Key>
-          <Property Type="Int32" Name="DiscountRequirementId" Nullable="false" />
-          <Property Type="String" Name="Name" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
-        </EntityType>
-        <EntityType Name="DiscountType">
-          <Key>
-            <PropertyRef Name="DiscountTypeId" />
-          </Key>
-          <Property Type="Int32" Name="DiscountTypeId" Nullable="false" />
-          <Property Type="String" Name="Name" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
-        </EntityType>
         <EntityType Name="Download">
           <Key>
             <PropertyRef Name="DownloadId" />
@@ -5322,20 +5017,6 @@
           <Property Type="String" Name="Filename" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="Extension" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Type="Boolean" Name="IsNew" Nullable="false" />
-        </EntityType>
-        <EntityType Name="LogType">
-          <Key>
-            <PropertyRef Name="LogTypeId" />
-          </Key>
-          <Property Type="Int32" Name="LogTypeId" Nullable="false" />
-          <Property Type="String" Name="Name" Nullable="false" MaxLength="1000" FixedLength="false" Unicode="true" />
-        </EntityType>
-        <EntityType Name="OrderStatus">
-          <Key>
-            <PropertyRef Name="OrderStatusId" />
-          </Key>
-          <Property Type="Int32" Name="OrderStatusId" Nullable="false" />
-          <Property Type="String" Name="Name" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="PaymentMethod">
           <Key>
@@ -5353,13 +5034,6 @@
           <Property Type="Int32" Name="DisplayOrder" Nullable="false" />
           <NavigationProperty Name="NpRestrictedCountries" Relationship="NopSolutions.NopCommerce.BusinessLogic.Data.Nop_PaymentMethod_RestrictedCountries" FromRole="PaymentMethod" ToRole="Country" />          
         </EntityType>
-        <EntityType Name="PaymentStatus">
-          <Key>
-            <PropertyRef Name="PaymentStatusId" />
-          </Key>
-          <Property Type="Int32" Name="PaymentStatusId" Nullable="false" />
-          <Property Type="String" Name="Name" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
-        </EntityType>
         <EntityType Name="ShippingRateComputationMethod">
           <Key>
             <PropertyRef Name="ShippingRateComputationMethodId" />
@@ -5371,20 +5045,6 @@
           <Property Type="String" Name="ClassName" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Type="Boolean" Name="IsActive" Nullable="false" />
           <Property Type="Int32" Name="DisplayOrder" Nullable="false" />
-        </EntityType>
-        <EntityType Name="ShippingStatus">
-          <Key>
-            <PropertyRef Name="ShippingStatusId" />
-          </Key>
-          <Property Type="Int32" Name="ShippingStatusId" Nullable="false" />
-          <Property Type="String" Name="Name" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
-        </EntityType>
-        <EntityType Name="ShoppingCartType">
-          <Key>
-            <PropertyRef Name="ShoppingCartTypeId" />
-          </Key>
-          <Property Type="Int32" Name="ShoppingCartTypeId" Nullable="false" />
-          <Property Type="String" Name="Name" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="TaxCategory">
           <Key>
@@ -6098,18 +5758,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Nop_Log_Nop_LogType">
-          <End Type="NopSolutions.NopCommerce.BusinessLogic.Data.LogType" Role="LogType" Multiplicity="1" />
-          <End Type="NopSolutions.NopCommerce.BusinessLogic.Data.Log" Role="Nop_Log" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="LogType">
-              <PropertyRef Name="LogTypeId" />
-            </Principal>
-            <Dependent Role="Nop_Log">
-              <PropertyRef Name="LogTypeId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Nop_PollAnswer_Nop_Poll">
           <End Type="NopSolutions.NopCommerce.BusinessLogic.Data.Poll" Role="Nop_Poll" Multiplicity="1" />
           <End Type="NopSolutions.NopCommerce.BusinessLogic.Data.PollAnswer" Role="Nop_PollAnswer" Multiplicity="*" />
@@ -6196,42 +5844,6 @@
           <Property Type="DateTime" Name="UpdatedOn" Nullable="false" />
           <NavigationProperty Name="NpProductVariantPricelists" Relationship="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_ProductVariant_Pricelist_Mapping_Nop_Pricelist" FromRole="Pricelist" ToRole="Nop_ProductVariant_Pricelist_Mapping" />
         </EntityType>
-        <Association Name="FK_Nop_Discount_Nop_DiscountLimitation">
-          <End Type="NopSolutions.NopCommerce.BusinessLogic.Data.DiscountLimitation" Role="DiscountLimitation" Multiplicity="1" />
-          <End Type="NopSolutions.NopCommerce.BusinessLogic.Data.Discount" Role="Nop_Discount" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="DiscountLimitation">
-              <PropertyRef Name="DiscountLimitationId" />
-            </Principal>
-            <Dependent Role="Nop_Discount">
-              <PropertyRef Name="DiscountLimitationId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Nop_Discount_Nop_DiscountRequirement">
-          <End Type="NopSolutions.NopCommerce.BusinessLogic.Data.DiscountRequirement" Role="DiscountRequirement" Multiplicity="1" />
-          <End Type="NopSolutions.NopCommerce.BusinessLogic.Data.Discount" Role="Nop_Discount" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="DiscountRequirement">
-              <PropertyRef Name="DiscountRequirementId" />
-            </Principal>
-            <Dependent Role="Nop_Discount">
-              <PropertyRef Name="DiscountRequirementId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Nop_Discount_Nop_DiscountType">
-          <End Type="NopSolutions.NopCommerce.BusinessLogic.Data.DiscountType" Role="DiscountType" Multiplicity="1" />
-          <End Type="NopSolutions.NopCommerce.BusinessLogic.Data.Discount" Role="Nop_Discount" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="DiscountType">
-              <PropertyRef Name="DiscountTypeId" />
-            </Principal>
-            <Dependent Role="Nop_Discount">
-              <PropertyRef Name="DiscountTypeId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="Nop_PaymentMethod_RestrictedCountries">
           <End Type="NopSolutions.NopCommerce.BusinessLogic.Data.Country" Role="Country" Multiplicity="*" />
           <End Type="NopSolutions.NopCommerce.BusinessLogic.Data.PaymentMethod" Role="PaymentMethod" Multiplicity="*" />
@@ -6417,18 +6029,6 @@
             </Principal>
             <Dependent Role="Nop_ProductVariantLocalized">
               <PropertyRef Name="LanguageId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Nop_ProductVariant_Nop_LowStockActivity">
-          <End Type="NopSolutions.NopCommerce.BusinessLogic.Data.LowStockActivity" Role="LowStockActivity" Multiplicity="1" />
-          <End Type="NopSolutions.NopCommerce.BusinessLogic.Data.ProductVariant" Role="Nop_ProductVariant" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="LowStockActivity">
-              <PropertyRef Name="LowStockActivityId" />
-            </Principal>
-            <Dependent Role="Nop_ProductVariant">
-              <PropertyRef Name="LowStockActivityId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -6976,18 +6576,6 @@
             </Principal>
             <Dependent Role="Nop_TierPrice">
               <PropertyRef Name="ProductVariantId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Nop_ShoppingCart_Nop_ShoppingCartType">
-          <End Type="NopSolutions.NopCommerce.BusinessLogic.Data.ShoppingCartType" Role="ShoppingCartType" Multiplicity="1" />
-          <End Type="NopSolutions.NopCommerce.BusinessLogic.Data.ShoppingCartItem" Role="Nop_ShoppingCartItem" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="ShoppingCartType">
-              <PropertyRef Name="ShoppingCartTypeId" />
-            </Principal>
-            <Dependent Role="Nop_ShoppingCartItem">
-              <PropertyRef Name="ShoppingCartTypeId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -7563,42 +7151,6 @@
           <NavigationProperty Name="NpProductVariant" Relationship="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_OrderProductVariant_Nop_ProductVariant" FromRole="Nop_OrderProductVariant" ToRole="ProductVariant" />
           <NavigationProperty Name="NpGiftCard" Relationship="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_GiftCard_Nop_OrderProductVariant" FromRole="Nop_OrderProductVariant" ToRole="Nop_GiftCard" />
         </EntityType>
-        <Association Name="FK_Nop_Order_Nop_OrderStatus">
-          <End Type="NopSolutions.NopCommerce.BusinessLogic.Data.OrderStatus" Role="OrderStatus" Multiplicity="1" />
-          <End Type="NopSolutions.NopCommerce.BusinessLogic.Data.Order" Role="Nop_Order" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="OrderStatus">
-              <PropertyRef Name="OrderStatusId" />
-            </Principal>
-            <Dependent Role="Nop_Order">
-              <PropertyRef Name="OrderStatusId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Nop_Order_Nop_PaymentStatus">
-          <End Type="NopSolutions.NopCommerce.BusinessLogic.Data.PaymentStatus" Role="PaymentStatus" Multiplicity="1" />
-          <End Type="NopSolutions.NopCommerce.BusinessLogic.Data.Order" Role="Nop_Order" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="PaymentStatus">
-              <PropertyRef Name="PaymentStatusId" />
-            </Principal>
-            <Dependent Role="Nop_Order">
-              <PropertyRef Name="PaymentStatusId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Nop_Order_Nop_ShippingStatus">
-          <End Type="NopSolutions.NopCommerce.BusinessLogic.Data.ShippingStatus" Role="ShippingStatus" Multiplicity="1" />
-          <End Type="NopSolutions.NopCommerce.BusinessLogic.Data.Order" Role="Nop_Order" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="ShippingStatus">
-              <PropertyRef Name="ShippingStatusId" />
-            </Principal>
-            <Dependent Role="Nop_Order">
-              <PropertyRef Name="ShippingStatusId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Nop_OrderNote_Nop_Order">
           <End Type="NopSolutions.NopCommerce.BusinessLogic.Data.Order" Role="Nop_Order" Multiplicity="1" />
           <End Type="NopSolutions.NopCommerce.BusinessLogic.Data.OrderNote" Role="Nop_OrderNote" Multiplicity="*" />
@@ -8193,14 +7745,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="LowStockActivities">
-            <EntityTypeMapping TypeName="NopSolutions.NopCommerce.BusinessLogic.Data.LowStockActivity">
-              <MappingFragment StoreEntitySet="Nop_LowStockActivity">
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="LowStockActivityId" ColumnName="LowStockActivityID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="ManufacturerTemplates">
             <EntityTypeMapping TypeName="NopSolutions.NopCommerce.BusinessLogic.Data.ManufacturerTemplate">
               <MappingFragment StoreEntitySet="Nop_ManufacturerTemplate">
@@ -8272,30 +7816,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="DiscountLimitations">
-            <EntityTypeMapping TypeName="NopSolutions.NopCommerce.BusinessLogic.Data.DiscountLimitation">
-              <MappingFragment StoreEntitySet="Nop_DiscountLimitation">
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="DiscountLimitationId" ColumnName="DiscountLimitationID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="DiscountRequirements">
-            <EntityTypeMapping TypeName="NopSolutions.NopCommerce.BusinessLogic.Data.DiscountRequirement">
-              <MappingFragment StoreEntitySet="Nop_DiscountRequirement">
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="DiscountRequirementId" ColumnName="DiscountRequirementID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="DiscountTypes">
-            <EntityTypeMapping TypeName="NopSolutions.NopCommerce.BusinessLogic.Data.DiscountType">
-              <MappingFragment StoreEntitySet="Nop_DiscountType">
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="DiscountTypeId" ColumnName="DiscountTypeID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Downloads">
             <EntityTypeMapping TypeName="NopSolutions.NopCommerce.BusinessLogic.Data.Download">
               <MappingFragment StoreEntitySet="Nop_Download">
@@ -8307,22 +7827,6 @@
                 <ScalarProperty Name="DownloadUrl" ColumnName="DownloadURL" />
                 <ScalarProperty Name="UseDownloadUrl" ColumnName="UseDownloadURL" />
                 <ScalarProperty Name="DownloadId" ColumnName="DownloadID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="LogTypes">
-            <EntityTypeMapping TypeName="NopSolutions.NopCommerce.BusinessLogic.Data.LogType">
-              <MappingFragment StoreEntitySet="Nop_LogType">
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="LogTypeId" ColumnName="LogTypeID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="OrderStatuses">
-            <EntityTypeMapping TypeName="NopSolutions.NopCommerce.BusinessLogic.Data.OrderStatus">
-              <MappingFragment StoreEntitySet="Nop_OrderStatus">
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="OrderStatusId" ColumnName="OrderStatusID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -8342,14 +7846,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="PaymentStatuses">
-            <EntityTypeMapping TypeName="NopSolutions.NopCommerce.BusinessLogic.Data.PaymentStatus">
-              <MappingFragment StoreEntitySet="Nop_PaymentStatus">
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="PaymentStatusId" ColumnName="PaymentStatusID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="ShippingRateComputationMethods">
             <EntityTypeMapping TypeName="NopSolutions.NopCommerce.BusinessLogic.Data.ShippingRateComputationMethod">
               <MappingFragment StoreEntitySet="Nop_ShippingRateComputationMethod">
@@ -8360,22 +7856,6 @@
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="ShippingRateComputationMethodId" ColumnName="ShippingRateComputationMethodID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="ShippingStatuses">
-            <EntityTypeMapping TypeName="NopSolutions.NopCommerce.BusinessLogic.Data.ShippingStatus">
-              <MappingFragment StoreEntitySet="Nop_ShippingStatus">
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="ShippingStatusId" ColumnName="ShippingStatusID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="ShoppingCartTypes">
-            <EntityTypeMapping TypeName="NopSolutions.NopCommerce.BusinessLogic.Data.ShoppingCartType">
-              <MappingFragment StoreEntitySet="Nop_ShoppingCartType">
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="ShoppingCartTypeId" ColumnName="ShoppingCartTypeID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -9958,23 +9438,14 @@
         <EntityTypeShape EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.CategoryTemplate" Width="2" PointX="0.5" PointY="25.125" Height="1.9210009765625031" />
         <EntityTypeShape EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.CreditCardType" Width="1.875" PointX="11" PointY="52.125" Height="1.7566536458333388" />
         <EntityTypeShape EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.CustomerAction" Width="2" PointX="41.125" PointY="13.125" Height="1.7566536458333335" />
-        <EntityTypeShape EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.LowStockActivity" Width="2.25" PointX="10.5" PointY="25.25" Height="1.2636116536458317" />
         <EntityTypeShape EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.ManufacturerTemplate" Width="2.375" PointX="0.5" PointY="14.375" Height="1.9210009765625031" />
         <EntityTypeShape EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.ProductTemplate" Width="2.125" PointX="13.625" PointY="13.25" Height="1.9210009765625031" />
         <EntityTypeShape EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Warehouse" Width="1.75" PointX="2.75" PointY="57.625" Height="3.2357796223958388" />
         <EntityTypeShape EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Campaign" Width="2" PointX="2.875" PointY="46.375" Height="1.7566536458333388" />
         <EntityTypeShape EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Currency" Width="1.5" PointX="14.625" PointY="54.875" Height="2.5783902994791674" />
-        <EntityTypeShape EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.DiscountLimitation" Width="2.125" PointX="46.625" PointY="44.75" Height="1.2636116536458353" />
-        <EntityTypeShape EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.DiscountRequirement" Width="2.25" PointX="49.375" PointY="44.75" Height="1.2636116536458353" />
-        <EntityTypeShape EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.DiscountType" Width="1.875" PointX="52.125" PointY="44.75" Height="1.2636116536458353" />
         <EntityTypeShape EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Download" Width="1.5" PointX="11" PointY="54.375" Height="2.2496956380208246" />
-        <EntityTypeShape EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.LogType" Width="1.5" PointX="14.625" PointY="52.625" Height="1.2636116536458353" />
-        <EntityTypeShape EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.OrderStatus" Width="1.75" PointX="49.625" PointY="26.875" Height="1.2636116536458353" />
         <EntityTypeShape EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.PaymentMethod" Width="1.875" PointX="70.875" PointY="10.875" Height="2.7427376302083353" />
-        <EntityTypeShape EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.PaymentStatus" Width="2.125" PointX="51.875" PointY="26.875" Height="1.2636116536458353" />
         <EntityTypeShape EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.ShippingRateComputationMethod" Width="3" PointX="66.75" PointY="27.5" Height="2.0853483072916674" />
-        <EntityTypeShape EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.ShippingStatus" Width="2.125" PointX="54.375" PointY="26.875" Height="1.2636116536458353" />
-        <EntityTypeShape EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.ShoppingCartType" Width="2.125" PointX="18.625" PointY="50.5" Height="1.2636116536458335" />
         <EntityTypeShape EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.TaxCategory" Width="2" PointX="73.5" PointY="16.625" Height="1.7566536458333353" />
         <EntityTypeShape EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.TaxProvider" Width="2.125" PointX="71.125" PointY="19.25" Height="1.9210009765625102" />
         <EntityTypeShape EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.LocaleStringResource" Width="2.5" PointX="17" PointY="0.5" Height="1.5923063151041657" />
@@ -10143,10 +9614,6 @@
           <ConnectorPoint PointX="31.208333333333332" PointY="6.00431396484375" />
           <ConnectorPoint PointX="34.375" PointY="6.00431396484375" />
         </AssociationConnector>
-        <AssociationConnector Association="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_Log_Nop_LogType" >
-          <ConnectorPoint PointX="15.375" PointY="52.625" />
-          <ConnectorPoint PointX="15.375" PointY="52.203390299479167" />
-        </AssociationConnector>
         <AssociationConnector Association="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_PollAnswer_Nop_Poll" >
           <ConnectorPoint PointX="35.125" PointY="3.5" />
           <ConnectorPoint PointX="35.125" PointY="2.4210009765625" />
@@ -10158,19 +9625,6 @@
         <EntityTypeShape EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Discount" Width="2.625" PointX="48.25" PointY="38.375" Height="3.8931689453124996" />
         <EntityTypeShape EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.NewsLetterSubscription" Width="2.125" PointX="7.375" PointY="57.75" Height="1.7566536458333246" />
         <EntityTypeShape EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Pricelist" Width="2" PointX="34.375" PointY="25.5" Height="4.2218636067708353" />
-        <AssociationConnector Association="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_Discount_Nop_DiscountLimitation" >
-          <ConnectorPoint PointX="48.5" PointY="44.75" />
-          <ConnectorPoint PointX="48.5" PointY="42.268168945312496" />
-        </AssociationConnector>
-        <AssociationConnector Association="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_Discount_Nop_DiscountRequirement" >
-          <ConnectorPoint PointX="49.625" PointY="44.75" />
-          <ConnectorPoint PointX="49.625" PointY="42.268168945312496" />
-        </AssociationConnector>
-        <AssociationConnector Association="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_Discount_Nop_DiscountType" >
-          <ConnectorPoint PointX="53.0625" PointY="44.75" />
-          <ConnectorPoint PointX="53.0625" PointY="40.321584472656248" />
-          <ConnectorPoint PointX="50.875" PointY="40.321584472656248" />
-        </AssociationConnector>
         <AssociationConnector Association="NopSolutions.NopCommerce.BusinessLogic.Data.Nop_PaymentMethod_RestrictedCountries" >
           <ConnectorPoint PointX="65.03125" PointY="16.75" />
           <ConnectorPoint PointX="65.03125" PointY="12.363119303385417" />
@@ -10217,17 +9671,6 @@
           <ConnectorPoint PointX="17.852357735036211" PointY="22.913622988281254" />
           <ConnectorPoint PointX="17.685691068369547" PointY="22.913622988281254" />
           <ConnectorPoint PointX="12.625" PointY="22.913622988281254" />
-        </AssociationConnector>
-        <AssociationConnector Association="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_ProductVariant_Nop_LowStockActivity" >
-          <ConnectorPoint PointX="12.75" PointY="25.761573834635481" />
-          <ConnectorPoint PointX="17.311868473307293" PointY="25.761573834635481" />
-          <ConnectorPoint PointX="17.478535139973957" PointY="25.761573834635481" />
-          <ConnectorPoint PointX="18.669623751627604" PointY="25.761573834635481" />
-          <ConnectorPoint PointX="18.836290418294269" PointY="25.761573834635481" />
-          <ConnectorPoint PointX="19.092309862467449" PointY="25.761573834635481" />
-          <ConnectorPoint PointX="19.258976529134113" PointY="25.761573834635481" />
-          <ConnectorPoint PointX="19.598329306640625" PointY="25.761573834635481" />
-          <ConnectorPoint PointX="19.598329306640625" PointY="26.5" />
         </AssociationConnector>
         <AssociationConnector Association="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_ProductVariant_Nop_Product1" >
           <ConnectorPoint PointX="19.474086658325191" PointY="21.747294921875" />
@@ -10428,10 +9871,6 @@
         <AssociationConnector Association="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_TierPrice_Nop_ProductVariant" >
           <ConnectorPoint PointX="16.875" PointY="28.003326822916677" />
           <ConnectorPoint PointX="12.125" PointY="28.003326822916677" />
-        </AssociationConnector>
-        <AssociationConnector Association="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_ShoppingCart_Nop_ShoppingCartType" >
-          <ConnectorPoint PointX="19.4375" PointY="50.5" />
-          <ConnectorPoint PointX="19.4375" PointY="48.78904296875" />
         </AssociationConnector>
         <AssociationConnector Association="NopSolutions.NopCommerce.BusinessLogic.Data.Nop_Category_Discount_Mapping" >
           <ConnectorPoint PointX="4.5625" PointY="28.0112109375" />
@@ -10684,20 +10123,6 @@
         <EntityTypeShape EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.Order" Width="2.875" PointX="51.375" PointY="10.375" Height="15.397482096354167" />
         <EntityTypeShape EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.OrderNote" Width="1.5" PointX="51" PointY="0.75" Height="1.9210009765624818" />
         <EntityTypeShape EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.OrderProductVariant" Width="2.5" PointX="55.625" PointY="13.5" Height="4.7149055989583353" />
-        <AssociationConnector Association="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_Order_Nop_OrderStatus" >
-          <ConnectorPoint PointX="50.46875" PointY="26.875" />
-          <ConnectorPoint PointX="50.46875" PointY="18.155914713541666" />
-          <ConnectorPoint PointX="51.375" PointY="18.155914713541666" />
-        </AssociationConnector>
-        <AssociationConnector Association="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_Order_Nop_PaymentStatus" >
-          <ConnectorPoint PointX="52.9375" PointY="26.875" />
-          <ConnectorPoint PointX="52.9375" PointY="25.936829427083332" />
-        </AssociationConnector>
-        <AssociationConnector Association="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_Order_Nop_ShippingStatus" >
-          <ConnectorPoint PointX="54.96875" PointY="26.875" />
-          <ConnectorPoint PointX="54.96875" PointY="22.107117513020832" />
-          <ConnectorPoint PointX="54.25" PointY="22.107117513020832" />
-        </AssociationConnector>
         <AssociationConnector Association="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_OrderNote_Nop_Order" >
           <ConnectorPoint PointX="51.9375" PointY="10.375" />
           <ConnectorPoint PointX="51.9375" PointY="2.6710009765624818" />

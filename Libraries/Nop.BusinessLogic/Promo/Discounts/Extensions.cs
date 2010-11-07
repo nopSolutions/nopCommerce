@@ -18,8 +18,10 @@ using System.Linq;
 using System.Text;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Localization;
 using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
+using NopSolutions.NopCommerce.Common.Utils;
 
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
@@ -381,6 +383,55 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
                     break;
             }
             return false;
+        }
+
+
+        /// <summary>
+        /// Get discount limitation name
+        /// </summary>
+        /// <param name="dl">Discount limitation</param>
+        /// <returns>Discount limitation name</returns>
+        public static string GetDiscountLimitationName(this DiscountLimitationEnum dl)
+        {
+            string name = LocalizationManager.GetLocaleResourceString(
+                string.Format("DiscountLimitation.{0}", (int)dl),
+                NopContext.Current.WorkingLanguage.LanguageId,
+                true,
+                CommonHelper.ConvertEnum(dl.ToString()));
+
+            return name;
+        }
+
+        /// <summary>
+        /// Get discount requirement name
+        /// </summary>
+        /// <param name="dr">Discount requirement</param>
+        /// <returns>Discount requirement name</returns>
+        public static string GetDiscountRequirementName(this DiscountRequirementEnum dr)
+        {
+            string name = LocalizationManager.GetLocaleResourceString(
+                string.Format("DiscountRequirement.{0}", (int)dr),
+                NopContext.Current.WorkingLanguage.LanguageId,
+                true,
+                CommonHelper.ConvertEnum(dr.ToString()));
+
+            return name;
+        }
+
+        /// <summary>
+        /// Get discount type name
+        /// </summary>
+        /// <param name="dt">Discount type</param>
+        /// <returns>Discount type name</returns>
+        public static string GetDiscountTypeName(this DiscountTypeEnum dt)
+        {
+            string name = LocalizationManager.GetLocaleResourceString(
+                string.Format("DiscountType.{0}", (int)dt),
+                NopContext.Current.WorkingLanguage.LanguageId,
+                true,
+                CommonHelper.ConvertEnum(dt.ToString()));
+
+            return name;
         }
     }
 }

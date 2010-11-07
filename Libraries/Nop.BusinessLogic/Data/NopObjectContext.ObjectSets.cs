@@ -355,22 +355,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        public ObjectSet<LowStockActivity> LowStockActivities
-        {
-            get
-            {
-                if ((_LowStockActivities == null))
-                {
-                    _LowStockActivities = base.CreateObjectSet<LowStockActivity>("LowStockActivities");
-                }
-                return _LowStockActivities;
-            }
-        }
-        private ObjectSet<LowStockActivity> _LowStockActivities;
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
         public ObjectSet<ManufacturerTemplate> ManufacturerTemplates
         {
             get
@@ -451,54 +435,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        public ObjectSet<DiscountLimitation> DiscountLimitations
-        {
-            get
-            {
-                if ((_DiscountLimitations == null))
-                {
-                    _DiscountLimitations = base.CreateObjectSet<DiscountLimitation>("DiscountLimitations");
-                }
-                return _DiscountLimitations;
-            }
-        }
-        private ObjectSet<DiscountLimitation> _DiscountLimitations;
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        public ObjectSet<DiscountRequirement> DiscountRequirements
-        {
-            get
-            {
-                if ((_DiscountRequirements == null))
-                {
-                    _DiscountRequirements = base.CreateObjectSet<DiscountRequirement>("DiscountRequirements");
-                }
-                return _DiscountRequirements;
-            }
-        }
-        private ObjectSet<DiscountRequirement> _DiscountRequirements;
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        public ObjectSet<DiscountType> DiscountTypes
-        {
-            get
-            {
-                if ((_DiscountTypes == null))
-                {
-                    _DiscountTypes = base.CreateObjectSet<DiscountType>("DiscountTypes");
-                }
-                return _DiscountTypes;
-            }
-        }
-        private ObjectSet<DiscountType> _DiscountTypes;
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
         public ObjectSet<Download> Downloads
         {
             get
@@ -511,38 +447,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
             }
         }
         private ObjectSet<Download> _Downloads;
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        public ObjectSet<LogType> LogTypes
-        {
-            get
-            {
-                if ((_LogTypes == null))
-                {
-                    _LogTypes = base.CreateObjectSet<LogType>("LogTypes");
-                }
-                return _LogTypes;
-            }
-        }
-        private ObjectSet<LogType> _LogTypes;
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        public ObjectSet<OrderStatus> OrderStatuses
-        {
-            get
-            {
-                if ((_OrderStatuses == null))
-                {
-                    _OrderStatuses = base.CreateObjectSet<OrderStatus>("OrderStatuses");
-                }
-                return _OrderStatuses;
-            }
-        }
-        private ObjectSet<OrderStatus> _OrderStatuses;
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -563,22 +467,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        public ObjectSet<PaymentStatus> PaymentStatuses
-        {
-            get
-            {
-                if ((_PaymentStatuses == null))
-                {
-                    _PaymentStatuses = base.CreateObjectSet<PaymentStatus>("PaymentStatuses");
-                }
-                return _PaymentStatuses;
-            }
-        }
-        private ObjectSet<PaymentStatus> _PaymentStatuses;
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
         public ObjectSet<ShippingRateComputationMethod> ShippingRateComputationMethods
         {
             get
@@ -591,38 +479,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
             }
         }
         private ObjectSet<ShippingRateComputationMethod> _ShippingRateComputationMethods;
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        public ObjectSet<ShippingStatus> ShippingStatuses
-        {
-            get
-            {
-                if ((_ShippingStatuses == null))
-                {
-                    _ShippingStatuses = base.CreateObjectSet<ShippingStatus>("ShippingStatuses");
-                }
-                return _ShippingStatuses;
-            }
-        }
-        private ObjectSet<ShippingStatus> _ShippingStatuses;
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        public ObjectSet<ShoppingCartType> ShoppingCartTypes
-        {
-            get
-            {
-                if ((_ShoppingCartTypes == null))
-                {
-                    _ShoppingCartTypes = base.CreateObjectSet<ShoppingCartType>("ShoppingCartTypes");
-                }
-                return _ShoppingCartTypes;
-            }
-        }
-        private ObjectSet<ShoppingCartType> _ShoppingCartTypes;
     
         /// <summary>
         /// No Metadata Documentation available.

@@ -57,7 +57,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             this.lnkPrint.NavigateUrl = Page.ResolveUrl("~/PrintOrderDetails.aspx?OrderID=" + this.OrderId).ToLowerInvariant();
             this.lblOrderId.Text = order.OrderId.ToString();
             this.lblCreatedOn.Text = DateTimeHelper.ConvertToUserTime(order.CreatedOn, DateTimeKind.Utc).ToString("D");
-            this.lblOrderStatus.Text = IoCFactory.Resolve<IOrderService>().GetOrderStatusName(order.OrderStatusId);
+            this.lblOrderStatus.Text = order.OrderStatus.GetOrderStatusName();
             this.btnReOrder.Visible = IoCFactory.Resolve<IOrderService>().IsReOrderAllowed;
             this.phReturnRequest.Visible = IoCFactory.Resolve<IOrderService>().IsReturnRequestAllowed(order);
 

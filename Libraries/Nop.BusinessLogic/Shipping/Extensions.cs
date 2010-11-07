@@ -14,39 +14,33 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
-using NopSolutions.NopCommerce.BusinessLogic.Directory;
+using NopSolutions.NopCommerce.BusinessLogic.Localization;
+using NopSolutions.NopCommerce.Common.Utils;
 
 
-namespace NopSolutions.NopCommerce.BusinessLogic.Products
+namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
 {
     /// <summary>
-    /// Represents a shopping cart type
+    /// Extensions
     /// </summary>
-    public partial class ShoppingCartType : BaseEntity
+    public static class Extensions
     {
-        #region Ctor
         /// <summary>
-        /// Creates a new instance of the ShoppingCartType class
+        /// Get shipping status name
         /// </summary>
-        public ShoppingCartType()
+        /// <param name="ss">Shipping status</param>
+        /// <returns>Shipping status name</returns>
+        public static string GetShippingStatusName(this ShippingStatusEnum ss)
         {
+            string name = LocalizationManager.GetLocaleResourceString(
+                string.Format("ShippingStatus.{0}", ss.ToString()),
+                NopContext.Current.WorkingLanguage.LanguageId,
+                true, 
+                CommonHelper.ConvertEnum(ss.ToString()));
+            
+            return name;
         }
-        #endregion
-
-        #region Properties
-
-        /// <summary>
-        /// Gets or sets the identifier
-        /// </summary>
-        public int ShoppingCartTypeId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the name
-        /// </summary>
-        public string Name { get; set; }
-
-        #endregion 
     }
-
 }

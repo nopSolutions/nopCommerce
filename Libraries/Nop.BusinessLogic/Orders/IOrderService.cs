@@ -279,30 +279,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
 
         #endregion
 
-        #region Order statuses
-
-        /// <summary>
-        /// Gets an order status full name
-        /// </summary>
-        /// <param name="orderStatusId">Order status identifier</param>
-        /// <returns>Order status name</returns>
-        string GetOrderStatusName(int orderStatusId);
-
-        /// <summary>
-        /// Gets an order status by Id
-        /// </summary>
-        /// <param name="orderStatusId">Order status identifier</param>
-        /// <returns>Order status</returns>
-        OrderStatus GetOrderStatusById(int orderStatusId);
-
-        /// <summary>
-        /// Gets all order statuses
-        /// </summary>
-        /// <returns>Order status collection</returns>
-        List<OrderStatus> GetAllOrderStatuses();
-
-        #endregion
-
         #region Reports
 
         /// <summary>

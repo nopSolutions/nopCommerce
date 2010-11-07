@@ -16,6 +16,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using NopSolutions.NopCommerce.BusinessLogic.Localization;
+using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Common.Utils.Html;
 
 
@@ -66,6 +68,22 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
 
             string result = HtmlHelper.FormatText(returnRequest.CustomerComments, false, true, false, false, false, false);
             return result;
+        }
+
+        /// <summary>
+        /// Get order status name
+        /// </summary>
+        /// <param name="os">Order status</param>
+        /// <returns>Order status name</returns>
+        public static string GetOrderStatusName(this OrderStatusEnum os)
+        {
+            string name = LocalizationManager.GetLocaleResourceString(
+                string.Format("OrderStatus.{0}", os.ToString()),
+                NopContext.Current.WorkingLanguage.LanguageId,
+                true,
+                CommonHelper.ConvertEnum(os.ToString()));
+
+            return name;
         }
     }
 }

@@ -43,10 +43,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         private const string SHIPPINGMETHODS_BY_ID_KEY = "Nop.shippingMethod.id-{0}";
         private const string SHIPPINGMETHODS_PATTERN_KEY = "Nop.shippingMethod.";
         
-        private const string SHIPPINGTATUSES_ALL_KEY = "Nop.shippingstatus.all";
-        private const string SHIPPINGTATUSES_BY_ID_KEY = "Nop.shippingstatus.id-{0}";
-        private const string SHIPPINGTATUSES_PATTERN_KEY = "Nop.shippingstatus.";
-        
         private const string SHIPPINGRATECOMPUTATIONMETHODS_ALL_KEY = "Nop.shippingratecomputationmethod.all-{0}";
         private const string SHIPPINGRATECOMPUTATIONMETHODS_BY_ID_KEY = "Nop.shippingratecomputationmethod.id-{0}";
         private const string SHIPPINGRATECOMPUTATIONMETHODS_PATTERN_KEY = "Nop.shippingratecomputationmethod.";
@@ -330,93 +326,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
             return iMethod.ShippingRateComputationMethodType;
         }
         
-        #endregion
-
-        #region Shipping statuses
-        
-        /// <summary>
-        /// Gets a shipping status full name
-        /// </summary>
-        /// <param name="shippingStatusId">Shipping status identifier</param>
-        /// <returns>Shipping status name</returns>
-        public string GetShippingStatusName(int shippingStatusId)
-        {
-            var shippingStatus = GetShippingStatusById(shippingStatusId);
-            if (shippingStatus != null)
-            {
-                string name = string.Empty;
-                if (NopContext.Current != null)
-                {
-                    name = LocalizationManager.GetLocaleResourceString(string.Format("ShippingStatus.{0}", (ShippingStatusEnum)shippingStatus.ShippingStatusId), NopContext.Current.WorkingLanguage.LanguageId, true, shippingStatus.Name);
-                }
-                else
-                {
-                    name = shippingStatus.Name;
-                }
-                return name;
-            }
-            else
-            {
-                return ((ShippingStatusEnum)shippingStatusId).ToString();
-            }
-        }
-
-        /// <summary>
-        /// Gets a shipping status by identifier
-        /// </summary>
-        /// <param name="shippingStatusId">Shipping status identifier</param>
-        /// <returns>Shipping status</returns>
-        public ShippingStatus GetShippingStatusById(int shippingStatusId)
-        {
-            if (shippingStatusId == 0)
-                return null;
-
-            string key = string.Format(SHIPPINGTATUSES_BY_ID_KEY, shippingStatusId);
-            object obj2 = _cacheManager.Get(key);
-            if (this.CacheEnabled && (obj2 != null))
-            {
-                return (ShippingStatus)obj2;
-            }
-
-            
-            var query = from ss in _context.ShippingStatuses
-                        where ss.ShippingStatusId == shippingStatusId
-                        select ss;
-            var shippingStatus = query.SingleOrDefault();
-
-            if (this.CacheEnabled)
-            {
-                _cacheManager.Add(key, shippingStatus);
-            }
-            return shippingStatus;
-        }
-
-        /// <summary>
-        /// Gets all shipping statuses
-        /// </summary>
-        /// <returns>Shipping status collection</returns>
-        public List<ShippingStatus> GetAllShippingStatuses()
-        {
-            string key = string.Format(SHIPPINGTATUSES_ALL_KEY);
-            object obj2 = _cacheManager.Get(key);
-            if (this.CacheEnabled && (obj2 != null))
-            {
-                return (List<ShippingStatus>)obj2;
-            }
-
-            
-            var query = from ss in _context.ShippingStatuses
-                        orderby ss.ShippingStatusId
-                        select ss;
-            var shippingStatuses = query.ToList();
-            
-            if (this.CacheEnabled)
-            {
-                _cacheManager.Add(key, shippingStatuses);
-            }
-            return shippingStatuses;
-        }
-
         #endregion
 
         #region Shipping methods

@@ -10,17 +10,17 @@
         </asp:TemplateField>
         <asp:TemplateField HeaderText="<% $NopResources:Admin.AffiliateOrders.OrderStatus %>" ItemStyle-Width="10%">
             <ItemTemplate>
-                <%#IoCFactory.Resolve<IOrderService>().GetOrderStatusName(Convert.ToInt32(Eval("OrderStatusId")))%>
+                <%#((Order)Container.DataItem).OrderStatus.GetOrderStatusName()%>
             </ItemTemplate>
         </asp:TemplateField>
         <asp:TemplateField HeaderText="<% $NopResources:Admin.AffiliateOrders.PaymentStatus %>" ItemStyle-Width="20%">
             <ItemTemplate>
-                <%#IoCFactory.Resolve<IPaymentService>().GetPaymentStatusName(Convert.ToInt32(Eval("PaymentStatusId")))%>
+                <%#((Order)Container.DataItem).PaymentStatus.GetPaymentStatusName()%>
             </ItemTemplate>
         </asp:TemplateField>
         <asp:TemplateField HeaderText="<% $NopResources:Admin.AffiliateOrders.ShippingStatus %>" ItemStyle-Width="10%">
             <ItemTemplate>
-                <%#IoCFactory.Resolve<IShippingService>().GetShippingStatusName(Convert.ToInt32(Eval("ShippingStatusId")))%>
+                <%#((Order)Container.DataItem).ShippingStatus.GetShippingStatusName()%>
             </ItemTemplate>
         </asp:TemplateField>
         <asp:TemplateField HeaderText="<% $NopResources:Admin.AffiliateOrders.Customer %>" ItemStyle-Width="15%">

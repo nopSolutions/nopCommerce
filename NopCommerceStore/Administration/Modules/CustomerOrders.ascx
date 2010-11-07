@@ -13,13 +13,13 @@
             <%#DateTimeHelper.ConvertToUserTime((DateTime)Eval("CreatedOn"), DateTimeKind.Utc).ToString()%>
             <br />
             <%#GetLocaleResourceString("Admin.CustomerOrders.OrderStatus")%>
-            <%#IoCFactory.Resolve<IOrderService>().GetOrderStatusName(Convert.ToInt32(Eval("OrderStatusId")))%>
+            <%#((Order)Container.DataItem).OrderStatus.GetOrderStatusName()%>
             <br />
             <%#GetLocaleResourceString("Admin.CustomerOrders.PaymentStatus")%>
-            <%#IoCFactory.Resolve<IPaymentService>().GetPaymentStatusName(Convert.ToInt32(Eval("PaymentStatusId")))%>
+            <%#((Order)Container.DataItem).PaymentStatus.GetPaymentStatusName()%>
             <br />
             <%#GetLocaleResourceString("Admin.CustomerOrders.ShippingStatus")%>
-            <%#IoCFactory.Resolve<IShippingService>().GetShippingStatusName(Convert.ToInt32(Eval("ShippingStatusId")))%>
+            <%#((Order)Container.DataItem).ShippingStatus.GetShippingStatusName() %>
             <br />
             <%#GetLocaleResourceString("Admin.CustomerOrders.OrderTotal")%>
             <%#Server.HtmlEncode(PriceHelper.FormatPrice(Convert.ToDecimal(Eval("OrderTotal")), true, false))%>

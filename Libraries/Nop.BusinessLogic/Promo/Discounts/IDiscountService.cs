@@ -144,28 +144,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
 
         #endregion
 
-        #region Etc
-
-        /// <summary>
-        /// Gets all discount requirements
-        /// </summary>
-        /// <returns>Discount requirement collection</returns>
-        List<DiscountRequirement> GetAllDiscountRequirements();
-
-        /// <summary>
-        /// Gets all discount types
-        /// </summary>
-        /// <returns>Discount type collection</returns>
-        List<DiscountType> GetAllDiscountTypes();
-        
-        /// <summary>
-        /// Gets all discount limitations
-        /// </summary>
-        /// <returns>Discount limitation collection</returns>
-        List<DiscountLimitation> GetAllDiscountLimitations();
-
-        #endregion
-
         #region Discount History
 
         /// <summary>

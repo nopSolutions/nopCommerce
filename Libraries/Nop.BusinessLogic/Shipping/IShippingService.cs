@@ -81,30 +81,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         
         #endregion
 
-        #region Shipping statuses
-
-        /// <summary>
-        /// Gets a shipping status full name
-        /// </summary>
-        /// <param name="shippingStatusId">Shipping status identifier</param>
-        /// <returns>Shipping status name</returns>
-        string GetShippingStatusName(int shippingStatusId);
-
-        /// <summary>
-        /// Gets a shipping status by identifier
-        /// </summary>
-        /// <param name="shippingStatusId">Shipping status identifier</param>
-        /// <returns>Shipping status</returns>
-        ShippingStatus GetShippingStatusById(int shippingStatusId);
-
-        /// <summary>
-        /// Gets all shipping statuses
-        /// </summary>
-        /// <returns>Shipping status collection</returns>
-        List<ShippingStatus> GetAllShippingStatuses();
-
-        #endregion
-
         #region Shipping methods
 
         /// <summary>

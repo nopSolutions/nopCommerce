@@ -8,7 +8,7 @@
         <asp:TemplateField HeaderText="<% $NopResources:Admin.OrderAverageReport.OrderStatus %>"
             ItemStyle-Width="20%">
             <ItemTemplate>
-                <%#IoCFactory.Resolve<IOrderService>().GetOrderStatusName(Convert.ToInt32(Eval("OrderStatus")))%>
+                <%#((OrderStatusEnum)(Convert.ToInt32(Eval("OrderStatus")))).GetOrderStatusName()%>
             </ItemTemplate>
         </asp:TemplateField>
         <asp:TemplateField HeaderText="<% $NopResources:Admin.OrderAverageReport.Today %>"

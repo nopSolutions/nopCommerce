@@ -260,19 +260,20 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         private void FillDropDowns()
         {
+            OrderStatusEnum[] orderStatuses = (OrderStatusEnum[])Enum.GetValues(typeof(OrderStatusEnum));            
+            
+
             //reward points
             this.ddlRewardPointsAwardedOrderStatus.Items.Clear();
-            var orderStatuses1 = IoCFactory.Resolve<IOrderService>().GetAllOrderStatuses();
-            foreach (OrderStatus orderStatus in orderStatuses1)
+            foreach (OrderStatusEnum orderStatus in orderStatuses)
             {
-                ListItem item2 = new ListItem(IoCFactory.Resolve<IOrderService>().GetOrderStatusName(orderStatus.OrderStatusId), orderStatus.OrderStatusId.ToString());
+                ListItem item2 = new ListItem(orderStatus.GetOrderStatusName(), ((int)orderStatus).ToString());
                 this.ddlRewardPointsAwardedOrderStatus.Items.Add(item2);
             }
             this.ddlRewardPointsCanceledOrderStatus.Items.Clear();
-            var orderStatuses2 = IoCFactory.Resolve<IOrderService>().GetAllOrderStatuses();
-            foreach (OrderStatus orderStatus in orderStatuses2)
+            foreach (OrderStatusEnum orderStatus in orderStatuses)
             {
-                ListItem item2 = new ListItem(IoCFactory.Resolve<IOrderService>().GetOrderStatusName(orderStatus.OrderStatusId), orderStatus.OrderStatusId.ToString());
+                ListItem item2 = new ListItem(orderStatus.GetOrderStatusName(), ((int)orderStatus).ToString());
                 this.ddlRewardPointsCanceledOrderStatus.Items.Add(item2);
             }
 
@@ -280,19 +281,17 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             this.ddlGiftCardsActivationOrderStatus.Items.Clear();
             ListItem gcaosEmpty = new ListItem("---", "0");
             this.ddlGiftCardsActivationOrderStatus.Items.Add(gcaosEmpty);
-            var orderStatuses3 = IoCFactory.Resolve<IOrderService>().GetAllOrderStatuses();
-            foreach (OrderStatus orderStatus in orderStatuses3)
+            foreach (OrderStatusEnum orderStatus in orderStatuses)
             {
-                ListItem item2 = new ListItem(IoCFactory.Resolve<IOrderService>().GetOrderStatusName(orderStatus.OrderStatusId), orderStatus.OrderStatusId.ToString());
+                ListItem item2 = new ListItem(orderStatus.GetOrderStatusName(), ((int)orderStatus).ToString());
                 this.ddlGiftCardsActivationOrderStatus.Items.Add(item2);
             }
             this.ddlGiftCardsDeactivationOrderStatus.Items.Clear();
             ListItem gcdosEmpty = new ListItem("---", "0");
             this.ddlGiftCardsDeactivationOrderStatus.Items.Add(gcdosEmpty);
-            var orderStatuses4 = IoCFactory.Resolve<IOrderService>().GetAllOrderStatuses();
-            foreach (OrderStatus orderStatus in orderStatuses4)
+            foreach (OrderStatusEnum orderStatus in orderStatuses)
             {
-                ListItem item2 = new ListItem(IoCFactory.Resolve<IOrderService>().GetOrderStatusName(orderStatus.OrderStatusId), orderStatus.OrderStatusId.ToString());
+                ListItem item2 = new ListItem(orderStatus.GetOrderStatusName(), ((int)orderStatus).ToString());
                 this.ddlGiftCardsDeactivationOrderStatus.Items.Add(item2);
             }
 

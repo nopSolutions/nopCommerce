@@ -53,12 +53,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
     /// </summary>
     public partial class OrderService : IOrderService
     {
-        #region Constants
-        private const string ORDERSTATUSES_ALL_KEY = "Nop.orderstatus.all";
-        private const string ORDERSTATUSES_BY_ID_KEY = "Nop.orderstatus.id-{0}";
-        private const string ORDERSTATUSES_PATTERN_KEY = "Nop.orderstatus.";
-        #endregion
-
         #region Fields
 
         /// <summary>
@@ -1005,93 +999,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 _context.OrderNotes.Attach(orderNote);
 
             _context.SaveChanges();
-        }
-
-        #endregion
-
-        #region Order statuses
-
-        /// <summary>
-        /// Gets an order status full name
-        /// </summary>
-        /// <param name="orderStatusId">Order status identifier</param>
-        /// <returns>Order status name</returns>
-        public string GetOrderStatusName(int orderStatusId)
-        {
-            var orderStatus = GetOrderStatusById(orderStatusId);
-            if (orderStatus != null)
-            {
-                string name = string.Empty;
-                if (NopContext.Current != null)
-                {
-                    name = LocalizationManager.GetLocaleResourceString(string.Format("OrderStatus.{0}", (OrderStatusEnum)orderStatus.OrderStatusId), NopContext.Current.WorkingLanguage.LanguageId, true, orderStatus.Name);
-                }
-                else
-                {
-                    name = orderStatus.Name;
-                }
-                return name;
-            }
-            else
-            {
-                return ((OrderStatusEnum)orderStatusId).ToString();
-            }
-        }
-
-        /// <summary>
-        /// Gets an order status by Id
-        /// </summary>
-        /// <param name="orderStatusId">Order status identifier</param>
-        /// <returns>Order status</returns>
-        public OrderStatus GetOrderStatusById(int orderStatusId)
-        {
-            if (orderStatusId == 0)
-                return null;
-
-            string key = string.Format(ORDERSTATUSES_BY_ID_KEY, orderStatusId);
-            object obj2 = _cacheManager.Get(key);
-            if (this.CacheEnabled && (obj2 != null))
-            {
-                return (OrderStatus)obj2;
-            }
-
-            
-            var query = from os in _context.OrderStatuses
-                        where os.OrderStatusId == orderStatusId
-                        select os;
-            var orderStatus = query.SingleOrDefault();
-
-            if (this.CacheEnabled)
-            {
-                _cacheManager.Add(key, orderStatus);
-            }
-            return orderStatus;
-        }
-
-        /// <summary>
-        /// Gets all order statuses
-        /// </summary>
-        /// <returns>Order status collection</returns>
-        public List<OrderStatus> GetAllOrderStatuses()
-        {
-            string key = string.Format(ORDERSTATUSES_ALL_KEY);
-            object obj2 = _cacheManager.Get(key);
-            if (this.CacheEnabled && (obj2 != null))
-            {
-                return (List<OrderStatus>)obj2;
-            }
-
-            
-            var query = from os in _context.OrderStatuses
-                        orderby os.OrderStatusId
-                        select os;
-            var orderStatuses = query.ToList();
-
-            if (this.CacheEnabled)
-            {
-                _cacheManager.Add(key, orderStatuses);
-            }
-            return orderStatuses;
         }
 
         #endregion

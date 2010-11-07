@@ -121,7 +121,7 @@ namespace NopSolutions.NopCommerce.Web
                     sb.AppendLine("invoice_status: " + invoice_status);
                     sb.AppendLine("fraud_status: " + fraud_status);
                     sb.AppendLine("payment_type: " + payment_type);
-                    sb.AppendLine("New payment status: " + IoCFactory.Resolve<IPaymentService>().GetPaymentStatusName((int)newPaymentStatus));
+                    sb.AppendLine("New payment status: " + newPaymentStatus.GetPaymentStatusName());
                     IoCFactory.Resolve<IOrderService>().InsertOrderNote(order.OrderId, sb.ToString(), false, DateTime.UtcNow);
 
                     //new payment status

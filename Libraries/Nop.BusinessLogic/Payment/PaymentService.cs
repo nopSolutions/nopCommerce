@@ -45,10 +45,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
         private const string PAYMENTMETHODS_BY_ID_KEY = "Nop.paymentmethod.id-{0}";
         private const string PAYMENTMETHODS_PATTERN_KEY = "Nop.paymentmethod.";
 
-        private const string PAYMENTSTATUSES_ALL_KEY = "Nop.paymentstatus.all";
-        private const string PAYMENTSTATUSES_BY_ID_KEY = "Nop.paymentstatus.id-{0}";
-        private const string PAYMENTSTATUSES_PATTERN_KEY = "Nop.paymentstatus.";
-
         #endregion
 
         #region Fields
@@ -473,94 +469,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
             _context.SaveChanges();
         }
         #endregion
-
-        #region Payment Statuses
-
-        /// <summary>
-        /// Gets a payment status full name
-        /// </summary>
-        /// <param name="paymentStatusId">Payment status identifier</param>
-        /// <returns>Payment status name</returns>
-        public string GetPaymentStatusName(int paymentStatusId)
-        {
-            var paymentStatus = GetPaymentStatusById(paymentStatusId);
-            if (paymentStatus != null)
-            {
-                string name = string.Empty;
-                if (NopContext.Current != null)
-                {
-                    name = LocalizationManager.GetLocaleResourceString(string.Format("PaymentStatus.{0}", (PaymentStatusEnum)paymentStatus.PaymentStatusId), NopContext.Current.WorkingLanguage.LanguageId, true, paymentStatus.Name);
-                }
-                else
-                {
-                    name = paymentStatus.Name;
-                }
-                return name;
-            }
-            else
-            {
-                return ((PaymentStatusEnum)paymentStatusId).ToString();
-            }
-        }
-
-        /// <summary>
-        /// Gets a payment status by identifier
-        /// </summary>
-        /// <param name="paymentStatusId">payment status identifier</param>
-        /// <returns>Payment status</returns>
-        public PaymentStatus GetPaymentStatusById(int paymentStatusId)
-        {
-            if (paymentStatusId == 0)
-                return null;
-
-            string key = string.Format(PAYMENTSTATUSES_BY_ID_KEY, paymentStatusId);
-            object obj2 = _cacheManager.Get(key);
-            if (this.CacheEnabled && (obj2 != null))
-            {
-                return (PaymentStatus)obj2;
-            }
-
-
-            var query = from ps in _context.PaymentStatuses
-                        where ps.PaymentStatusId == paymentStatusId
-                        select ps;
-            var paymentStatus = query.SingleOrDefault();
-
-            if (this.CacheEnabled)
-            {
-                _cacheManager.Add(key, paymentStatus);
-            }
-            return paymentStatus;
-        }
-
-        /// <summary>
-        /// Gets all payment statuses
-        /// </summary>
-        /// <returns>Payment status collection</returns>
-        public List<PaymentStatus> GetAllPaymentStatuses()
-        {
-            string key = string.Format(PAYMENTSTATUSES_ALL_KEY);
-            object obj2 = _cacheManager.Get(key);
-            if (this.CacheEnabled && (obj2 != null))
-            {
-                return (List<PaymentStatus>)obj2;
-            }
-
-
-            var query = from ps in _context.PaymentStatuses
-                        orderby ps.PaymentStatusId
-                        select ps;
-            var paymentStatuses = query.ToList();
-
-            if (this.CacheEnabled)
-            {
-                _cacheManager.Add(key, paymentStatuses);
-            }
-            return paymentStatuses;
-        }
-
-        #endregion
-
+                
         #region Workflow
 
         /// <summary>

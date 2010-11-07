@@ -42,13 +42,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         private const string DISCOUNTS_BY_ID_KEY = "Nop.discount.id-{0}";
         private const string DISCOUNTS_BY_PRODUCTVARIANTID_KEY = "Nop.discount.byproductvariantid-{0}-{1}";
         private const string DISCOUNTS_BY_CATEGORYID_KEY = "Nop.discount.bycategoryid-{0}-{1}";
-        private const string DISCOUNTTYPES_ALL_KEY = "Nop.discounttype.all";
-        private const string DISCOUNTREQUIREMENT_ALL_KEY = "Nop.discountrequirement.all";
-        private const string DISCOUNTLIMITATION_ALL_KEY = "Nop.discountlimitation.all";
         private const string DISCOUNTS_PATTERN_KEY = "Nop.discount.";
-        private const string DISCOUNTTYPES_PATTERN_KEY = "Nop.discounttype.";
-        private const string DISCOUNTREQUIREMENT_PATTERN_KEY = "Nop.discountrequirement.";
-        private const string DISCOUNTLIMITATION_PATTERN_KEY = "Nop.discountlimitation.";
         #endregion
 
         #region Fields
@@ -498,88 +492,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
 
             discount.NpRestrictedProductVariants.Remove(productVariant);
             _context.SaveChanges();
-        }
-
-        #endregion
-
-        #region Etc
-
-        /// <summary>
-        /// Gets all discount requirements
-        /// </summary>
-        /// <returns>Discount requirement collection</returns>
-        public List<DiscountRequirement> GetAllDiscountRequirements()
-        {
-            string key = string.Format(DISCOUNTREQUIREMENT_ALL_KEY);
-            object obj2 = _cacheManager.Get(key);
-            if (this.CacheEnabled && (obj2 != null))
-            {
-                return (List<DiscountRequirement>)obj2;
-            }
-
-            
-            var query = from dr in _context.DiscountRequirements
-                        orderby dr.DiscountRequirementId
-                        select dr;
-            var discountRequirements = query.ToList();
-
-            if (this.CacheEnabled)
-            {
-                _cacheManager.Add(key, discountRequirements);
-            }
-            return discountRequirements;
-        }
-
-        /// <summary>
-        /// Gets all discount types
-        /// </summary>
-        /// <returns>Discount type collection</returns>
-        public List<DiscountType> GetAllDiscountTypes()
-        {
-            string key = string.Format(DISCOUNTTYPES_ALL_KEY);
-            object obj2 = _cacheManager.Get(key);
-            if (this.CacheEnabled && (obj2 != null))
-            {
-                return (List<DiscountType>)obj2;
-            }
-
-            
-            var query = from dt in _context.DiscountTypes
-                        orderby dt.DiscountTypeId
-                        select dt;
-            var discountTypes = query.ToList();
-
-            if (this.CacheEnabled)
-            {
-                _cacheManager.Add(key, discountTypes);
-            }
-            return discountTypes;
-        }
-        
-        /// <summary>
-        /// Gets all discount limitations
-        /// </summary>
-        /// <returns>Discount limitation collection</returns>
-        public List<DiscountLimitation> GetAllDiscountLimitations()
-        {
-            string key = string.Format(DISCOUNTLIMITATION_ALL_KEY);
-            object obj2 = _cacheManager.Get(key);
-            if (this.CacheEnabled && (obj2 != null))
-            {
-                return (List<DiscountLimitation>)obj2;
-            }
-
-            
-            var query = from dl in _context.DiscountLimitations
-                        orderby dl.DiscountLimitationId
-                        select dl;
-            var discountLimitations = query.ToList();
-
-            if (this.CacheEnabled)
-            {
-                _cacheManager.Add(key, discountLimitations);
-            }
-            return discountLimitations;
         }
 
         #endregion

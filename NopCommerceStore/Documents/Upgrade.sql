@@ -1020,3 +1020,130 @@ BEGIN
 	VALUES (N'Cache.CustomerActivityManager.CacheEnabled', N'true', N'')
 END
 GO
+
+IF EXISTS (SELECT 1
+           FROM   sysobjects
+           WHERE  name = 'FK_Nop_Discount_Nop_DiscountLimitation'
+           AND parent_obj = Object_id('Nop_Discount')
+           AND Objectproperty(id,N'IsForeignKey') = 1)
+ALTER TABLE dbo.Nop_Discount
+DROP CONSTRAINT FK_Nop_Discount_Nop_DiscountLimitation
+GO
+if exists (select 1 from sysobjects where id = object_id(N'[dbo].[Nop_DiscountLimitation]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+BEGIN
+DROP TABLE [Nop_DiscountLimitation]
+END
+GO
+
+IF EXISTS (SELECT 1
+           FROM   sysobjects
+           WHERE  name = 'FK_Nop_Discount_Nop_DiscountRequirement'
+           AND parent_obj = Object_id('Nop_Discount')
+           AND Objectproperty(id,N'IsForeignKey') = 1)
+ALTER TABLE dbo.Nop_Discount
+DROP CONSTRAINT FK_Nop_Discount_Nop_DiscountRequirement
+GO
+if exists (select 1 from sysobjects where id = object_id(N'[dbo].[Nop_DiscountRequirement]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+BEGIN
+DROP TABLE [Nop_DiscountRequirement]
+END
+GO
+
+IF EXISTS (SELECT 1
+           FROM   sysobjects
+           WHERE  name = 'FK_Nop_Discount_Nop_DiscountType'
+           AND parent_obj = Object_id('Nop_Discount')
+           AND Objectproperty(id,N'IsForeignKey') = 1)
+ALTER TABLE dbo.Nop_Discount
+DROP CONSTRAINT FK_Nop_Discount_Nop_DiscountType
+GO
+if exists (select 1 from sysobjects where id = object_id(N'[dbo].[Nop_DiscountType]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+BEGIN
+DROP TABLE [Nop_DiscountType]
+END
+GO
+
+
+IF EXISTS (SELECT 1
+           FROM   sysobjects
+           WHERE  name = 'FK_Nop_Log_Nop_LogType'
+           AND parent_obj = Object_id('Nop_Log')
+           AND Objectproperty(id,N'IsForeignKey') = 1)
+ALTER TABLE dbo.Nop_Log
+DROP CONSTRAINT FK_Nop_Log_Nop_LogType
+GO
+if exists (select 1 from sysobjects where id = object_id(N'[dbo].[Nop_LogType]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+BEGIN
+DROP TABLE [Nop_LogType]
+END
+GO
+
+IF EXISTS (SELECT 1
+           FROM   sysobjects
+           WHERE  name = 'FK_Nop_ProductVariant_Nop_LowStockActivity'
+           AND parent_obj = Object_id('Nop_ProductVariant')
+           AND Objectproperty(id,N'IsForeignKey') = 1)
+ALTER TABLE dbo.Nop_ProductVariant
+DROP CONSTRAINT FK_Nop_ProductVariant_Nop_LowStockActivity
+GO
+if exists (select 1 from sysobjects where id = object_id(N'[dbo].[Nop_LowStockActivity]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+BEGIN
+DROP TABLE [Nop_LowStockActivity]
+END
+GO
+
+IF EXISTS (SELECT 1
+           FROM   sysobjects
+           WHERE  name = 'FK_Nop_ShoppingCart_Nop_ShoppingCartType'
+           AND parent_obj = Object_id('Nop_ShoppingCartItem')
+           AND Objectproperty(id,N'IsForeignKey') = 1)
+ALTER TABLE dbo.Nop_ShoppingCartItem
+DROP CONSTRAINT FK_Nop_ShoppingCart_Nop_ShoppingCartType
+GO
+if exists (select 1 from sysobjects where id = object_id(N'[dbo].[Nop_ShoppingCartType]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+BEGIN
+DROP TABLE [Nop_ShoppingCartType]
+END
+GO
+
+IF EXISTS (SELECT 1
+           FROM   sysobjects
+           WHERE  name = 'FK_Nop_Order_Nop_ShippingStatus'
+           AND parent_obj = Object_id('Nop_Order')
+           AND Objectproperty(id,N'IsForeignKey') = 1)
+ALTER TABLE dbo.Nop_Order
+DROP CONSTRAINT FK_Nop_Order_Nop_ShippingStatus
+GO
+if exists (select 1 from sysobjects where id = object_id(N'[dbo].[Nop_ShippingStatus]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+BEGIN
+DROP TABLE [Nop_ShippingStatus]
+END
+GO
+
+IF EXISTS (SELECT 1
+           FROM   sysobjects
+           WHERE  name = 'FK_Nop_Order_Nop_PaymentStatus'
+           AND parent_obj = Object_id('Nop_Order')
+           AND Objectproperty(id,N'IsForeignKey') = 1)
+ALTER TABLE dbo.Nop_Order
+DROP CONSTRAINT FK_Nop_Order_Nop_PaymentStatus
+GO
+if exists (select 1 from sysobjects where id = object_id(N'[dbo].[Nop_PaymentStatus]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+BEGIN
+DROP TABLE [Nop_PaymentStatus]
+END
+GO
+
+IF EXISTS (SELECT 1
+           FROM   sysobjects
+           WHERE  name = 'FK_Nop_Order_Nop_OrderStatus'
+           AND parent_obj = Object_id('Nop_Order')
+           AND Objectproperty(id,N'IsForeignKey') = 1)
+ALTER TABLE dbo.Nop_Order
+DROP CONSTRAINT FK_Nop_Order_Nop_OrderStatus
+GO
+if exists (select 1 from sysobjects where id = object_id(N'[dbo].[Nop_OrderStatus]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+BEGIN
+DROP TABLE [Nop_OrderStatus]
+END
+GO

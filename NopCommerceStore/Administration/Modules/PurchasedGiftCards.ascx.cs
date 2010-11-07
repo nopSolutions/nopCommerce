@@ -50,10 +50,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             this.ddlOrderStatus.Items.Clear();
             ListItem itemOrderStatus = new ListItem(GetLocaleResourceString("Admin.Common.All"), "0");
             this.ddlOrderStatus.Items.Add(itemOrderStatus);
-            var orderStatuses = IoCFactory.Resolve<IOrderService>().GetAllOrderStatuses();
-            foreach (OrderStatus orderStatus in orderStatuses)
+            OrderStatusEnum[] orderStatuses = (OrderStatusEnum[])Enum.GetValues(typeof(OrderStatusEnum));
+            foreach (OrderStatusEnum orderStatus in orderStatuses)
             {
-                ListItem item2 = new ListItem(IoCFactory.Resolve<IOrderService>().GetOrderStatusName(orderStatus.OrderStatusId), orderStatus.OrderStatusId.ToString());
+                ListItem item2 = new ListItem(orderStatus.GetOrderStatusName(), ((int)orderStatus).ToString());
                 this.ddlOrderStatus.Items.Add(item2);
             }
         }
@@ -120,7 +120,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected string GetOrderStatusInfo(GiftCard gc)
         {
-            string result = IoCFactory.Resolve<IOrderService>().GetOrderStatusName(gc.PurchasedOrderProductVariant.Order.OrderStatusId);
+            string result = gc.PurchasedOrderProductVariant.Order.OrderStatus.GetOrderStatusName();
             return result;
         }
 

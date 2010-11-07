@@ -55,7 +55,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             Order order = IoCFactory.Resolve<IOrderService>().GetOrderById(this.OrderId);
             if (order != null && !order.Deleted)
             {
-                this.lblOrderStatus.Text = IoCFactory.Resolve<IOrderService>().GetOrderStatusName(order.OrderStatusId);
+                this.lblOrderStatus.Text = order.OrderStatus.GetOrderStatusName();
                 this.CancelOrderButton.Visible = IoCFactory.Resolve<IOrderService>().CanCancelOrder(order);
                 this.lblOrderId.Text = order.OrderId.ToString();
                 this.lblOrderGuid.Text = order.OrderGuid.ToString();
@@ -257,7 +257,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
             //payment method info
             this.lblPaymentMethodName.Text = Server.HtmlEncode(order.PaymentMethodName);
-            this.lblPaymentStatus.Text = IoCFactory.Resolve<IPaymentService>().GetPaymentStatusName(order.PaymentStatusId);
+            this.lblPaymentStatus.Text = order.PaymentStatus.GetPaymentStatusName();
 
             //payment method buttons
             this.btnCapture.Visible = IoCFactory.Resolve<IOrderService>().CanCapture(order);

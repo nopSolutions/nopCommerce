@@ -866,6 +866,75 @@ set @resources='
   <LocaleResource Name="Admin.MessageQueueDetails.SaveAndStayButton.Text">
     <Value>Save and Continue Edit</Value>
   </LocaleResource>
+  <LocaleResource Name="DiscountLimitation.0">
+    <Value>Unlimited</Value>
+  </LocaleResource>
+  <LocaleResource Name="DiscountLimitation.10">
+    <Value>One Time Only</Value>
+  </LocaleResource>
+  <LocaleResource Name="DiscountLimitation.15">
+    <Value>N Times Only</Value>
+  </LocaleResource>
+  <LocaleResource Name="DiscountLimitation.20">
+    <Value>One Time Per Customer</Value>
+  </LocaleResource>
+  <LocaleResource Name="DiscountLimitation.25">
+    <Value>N Times Per Customer</Value>
+  </LocaleResource>
+  <LocaleResource Name="DiscountRequirement.1">
+    <Value>None</Value>
+  </LocaleResource>
+  <LocaleResource Name="DiscountRequirement.2">
+    <Value>Must be assigned to customer role</Value>
+  </LocaleResource>
+  <LocaleResource Name="DiscountRequirement.5">
+    <Value>Customer must be registered</Value>
+  </LocaleResource>
+  <LocaleResource Name="DiscountRequirement.7">
+    <Value>Has all of these product variants in the cart</Value>
+  </LocaleResource>
+  <LocaleResource Name="DiscountRequirement.8">
+    <Value>Has one of these product variants in the cart</Value>
+  </LocaleResource>
+  <LocaleResource Name="DiscountRequirement.10">
+    <Value>Had purchased all of these product variants</Value>
+  </LocaleResource>
+  <LocaleResource Name="DiscountRequirement.20">
+    <Value>Had purchased one of these product variants</Value>
+  </LocaleResource>
+  <LocaleResource Name="DiscountRequirement.30">
+    <Value>Had spent x.xx amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="DiscountRequirement.60">
+    <Value>Billing country is</Value>
+  </LocaleResource>
+  <LocaleResource Name="DiscountRequirement.70">
+    <Value>Shipping country is</Value>
+  </LocaleResource>
+  <LocaleResource Name="DiscountType.1">
+    <Value>Assigned to order total</Value>
+  </LocaleResource>
+  <LocaleResource Name="DiscountType.2">
+    <Value>Assigned to product variants (SKUs)</Value>
+  </LocaleResource>
+  <LocaleResource Name="DiscountType.5">
+    <Value>Assigned to categories</Value>
+  </LocaleResource>
+  <LocaleResource Name="DiscountType.10">
+    <Value>Assigned to shipping</Value>
+  </LocaleResource>
+  <LocaleResource Name="DiscountType.20">
+    <Value>Assigned to order subtotal</Value>
+  </LocaleResource>
+  <LocaleResource Name="LowStockActivity.0">
+    <Value>Nothing</Value>
+  </LocaleResource>
+  <LocaleResource Name="LowStockActivity.1">
+    <Value>Disable buy button</Value>
+  </LocaleResource>
+  <LocaleResource Name="LowStockActivity.2">
+    <Value>Unpublish</Value>
+  </LocaleResource>
 </Language>
 '
 

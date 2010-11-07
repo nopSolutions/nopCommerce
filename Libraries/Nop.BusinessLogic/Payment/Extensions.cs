@@ -14,38 +14,33 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using NopSolutions.NopCommerce.BusinessLogic.Localization;
+using NopSolutions.NopCommerce.Common.Utils;
 
 
-namespace NopSolutions.NopCommerce.BusinessLogic.Orders
+namespace NopSolutions.NopCommerce.BusinessLogic.Payment
 {
     /// <summary>
-    /// Represents an order status
+    /// Extensions
     /// </summary>
-    public partial class OrderStatus : BaseEntity
+    public static class Extensions
     {
-        #region Ctor
         /// <summary>
-        /// Creates a new instance of the OrderStatus class
+        /// Get payment status name
         /// </summary>
-        public OrderStatus()
+        /// <param name="ps">Payment status</param>
+        /// <returns>Payment status name</returns>
+        public static string GetPaymentStatusName(this PaymentStatusEnum ps)
         {
+            string name = LocalizationManager.GetLocaleResourceString(
+                string.Format("PaymentStatus.{0}", ps.ToString()),
+                NopContext.Current.WorkingLanguage.LanguageId,
+                true,
+                CommonHelper.ConvertEnum(ps.ToString()));
+            
+            return name;
         }
-        #endregion
-
-        #region Properties
-
-        /// <summary>
-        /// Gets or sets the order status identifier
-        /// </summary>
-        public int OrderStatusId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the name
-        /// </summary>
-        public string Name { get; set; }
-
-        #endregion 
     }
-
 }

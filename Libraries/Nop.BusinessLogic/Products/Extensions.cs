@@ -16,6 +16,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using NopSolutions.NopCommerce.BusinessLogic.Localization;
+using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Common.Utils.Html;
 
 
@@ -84,6 +86,22 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
 
             string result = HtmlHelper.FormatText(text, false, true, false, false, false, false);
             return result;
+        }
+
+        /// <summary>
+        /// Get low stock activity name
+        /// </summary>
+        /// <param name="lsa">Low stock activity</param>
+        /// <returns>Low stock activity name</returns>
+        public static string GetLowStockActivityName(this LowStockActivityEnum lsa)
+        {
+            string name = LocalizationManager.GetLocaleResourceString(
+                string.Format("LowStockActivity.{0}", (int)lsa),
+                NopContext.Current.WorkingLanguage.LanguageId,
+                true,
+                CommonHelper.ConvertEnum(lsa.ToString()));
+
+            return name;
         }
     }
 }

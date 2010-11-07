@@ -39,33 +39,34 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void FillDropDowns()
         {
-            //discunt types
+            //discount types
             this.ddlDiscountType.Items.Clear();
-            var discountTypes = IoCFactory.Resolve<IDiscountService>().GetAllDiscountTypes();
-            foreach (DiscountType discountType in discountTypes)
+            DiscountTypeEnum[] discountTypes = (DiscountTypeEnum[])Enum.GetValues(typeof(DiscountTypeEnum));
+            foreach (DiscountTypeEnum dt in discountTypes)
             {
-                ListItem item2 = new ListItem(discountType.Name, discountType.DiscountTypeId.ToString());
-                this.ddlDiscountType.Items.Add(item2);
+                ListItem item2 = new ListItem(dt.GetDiscountTypeName(), ((int)dt).ToString());
+                ddlDiscountType.Items.Add(item2);
             }
+            
 
             //discount requirements
             this.ddlDiscountRequirement.Items.Clear();
-            var discountRequirements = IoCFactory.Resolve<IDiscountService>().GetAllDiscountRequirements();
-            foreach (DiscountRequirement discountRequirement in discountRequirements)
+            DiscountRequirementEnum[] discountRequirements = (DiscountRequirementEnum[])Enum.GetValues(typeof(DiscountRequirementEnum));
+            foreach (DiscountRequirementEnum dr in discountRequirements)
             {
-                ListItem item2 = new ListItem(discountRequirement.Name, discountRequirement.DiscountRequirementId.ToString());
-                this.ddlDiscountRequirement.Items.Add(item2);
+                ListItem item2 = new ListItem(dr.GetDiscountRequirementName(), ((int)dr).ToString());
+                ddlDiscountRequirement.Items.Add(item2);
             }
 
             //discount limitations
             this.ddlDiscountLimitation.Items.Clear();
-            var discountLimitations = IoCFactory.Resolve<IDiscountService>().GetAllDiscountLimitations();
-            foreach (DiscountLimitation discountLimitation in discountLimitations)
+            DiscountLimitationEnum[] discountLimitations = (DiscountLimitationEnum[])Enum.GetValues(typeof(DiscountLimitationEnum));
+            foreach (DiscountLimitationEnum dl in discountLimitations)
             {
-                ListItem item2 = new ListItem(discountLimitation.Name, discountLimitation.DiscountLimitationId.ToString());
-                this.ddlDiscountLimitation.Items.Add(item2);
+                ListItem item2 = new ListItem(dl.GetDiscountLimitationName(), ((int)dl).ToString());
+                ddlDiscountLimitation.Items.Add(item2);
             }
-            
+  
             //required billing countries
             this.ddlRequirementBillingCountryIs.Items.Clear();
             ListItem rbciEmpty = new ListItem(GetLocaleResourceString("Admin.DiscountInfo.RequirementBillingCountryIs.SelectCountry"), "0");

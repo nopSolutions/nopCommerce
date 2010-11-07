@@ -119,19 +119,19 @@
         <asp:TemplateField HeaderText="<% $NopResources:Admin.Orders.OrderStatusColumn %>"
             ItemStyle-Width="10%">
             <ItemTemplate>
-                <%#IoCFactory.Resolve<IOrderService>().GetOrderStatusName(Convert.ToInt32(Eval("OrderStatusId")))%>
+                <%#((Order)Container.DataItem).OrderStatus.GetOrderStatusName()%>
             </ItemTemplate>
         </asp:TemplateField>
         <asp:TemplateField HeaderText="<% $NopResources:Admin.Orders.PaymentStatusColumn %>"
             ItemStyle-Width="20%">
             <ItemTemplate>
-                <%#IoCFactory.Resolve<IPaymentService>().GetPaymentStatusName(Convert.ToInt32(Eval("PaymentStatusId")))%>
+                <%#((Order)Container.DataItem).PaymentStatus.GetPaymentStatusName()%>
             </ItemTemplate>
         </asp:TemplateField>
         <asp:TemplateField HeaderText="<% $NopResources:Admin.Orders.ShippingStatusColumn %>"
             ItemStyle-Width="15%">
             <ItemTemplate>
-                <%#IoCFactory.Resolve<IShippingService>().GetShippingStatusName(Convert.ToInt32(Eval("ShippingStatusId")))%>
+                <%#((Order)Container.DataItem).ShippingStatus.GetShippingStatusName()%>
             </ItemTemplate>
         </asp:TemplateField>
         <asp:TemplateField HeaderText="<% $NopResources:Admin.Orders.CustomerColumn %>" ItemStyle-Width="15%">

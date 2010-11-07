@@ -63,6 +63,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
             CommonHelper.FillDropDownWithEnum(this.ddlCyclePeriod, typeof(RecurringProductCyclePeriodEnum));
             
+            //template
             this.ddlTemplate.Items.Clear();
             var productTemplateCollection = IoCFactory.Resolve<ITemplateService>().GetAllProductTemplates();
             foreach (ProductTemplate productTemplate in productTemplateCollection)
@@ -71,6 +72,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 this.ddlTemplate.Items.Add(item2);
             }
 
+            //tax categories
             this.ddlTaxCategory.Items.Clear();
             ListItem itemTaxCategory = new ListItem("---", "0");
             this.ddlTaxCategory.Items.Add(itemTaxCategory);
@@ -81,6 +83,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 this.ddlTaxCategory.Items.Add(item2);
             }
 
+            //warehouses
             this.ddlWarehouse.Items.Clear();
             ListItem itemWarehouse = new ListItem("---", "0");
             this.ddlWarehouse.Items.Add(itemWarehouse);
@@ -91,8 +94,15 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 this.ddlWarehouse.Items.Add(item2);
             }
 
-            CommonHelper.FillDropDownWithEnum(this.ddlLowStockActivity, typeof(LowStockActivityEnum));
-            
+
+            //Low stock activity
+            this.ddlLowStockActivity.Items.Clear();
+            LowStockActivityEnum[] lowStockActivities = (LowStockActivityEnum[])Enum.GetValues(typeof(LowStockActivityEnum));
+            foreach (LowStockActivityEnum lsa in lowStockActivities)
+            {
+                ListItem item2 = new ListItem(lsa.GetLowStockActivityName(), ((int)lsa).ToString());
+                ddlLowStockActivity.Items.Add(item2);
+            }
         }
 
         protected void Page_Load(object sender, EventArgs e)
