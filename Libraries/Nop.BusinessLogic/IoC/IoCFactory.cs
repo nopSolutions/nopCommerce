@@ -239,7 +239,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.IoC
         {
             //We use the default container specified in AppSettings
             string containerName = ConfigurationManager.AppSettings["defaultIoCContainer"];
-
             return Resolve<T>(containerName);
         }
         
@@ -248,6 +247,30 @@ namespace NopSolutions.NopCommerce.BusinessLogic.IoC
         /// It uses provided IoC Container passed as parameter
         /// </summary>
         public static T Resolve<T>(string containerName)
+        {
+            IUnityContainer container = GetContainer(containerName);
+            return container.Resolve<T>();
+        }
+        
+        /// <summary>
+        /// Returns an unity container
+        /// IMPORTANT: It uses default IoC Container defined in AppSettings
+        /// </summary>
+        /// <exception cref="System.Configuration.ConfigurationErrorsException">
+        /// defaultIocContainer AppSetting key not found
+        /// </exception>
+        public static IUnityContainer GetContainer()
+        {
+            //We use the default container specified in AppSettings
+            string containerName = ConfigurationManager.AppSettings["defaultIoCContainer"];
+            return GetContainer(containerName);
+        }
+
+        /// <summary>
+        /// Returns an unity container
+        /// It uses provided IoC Container name passed as parameter
+        /// </summary>
+        public static IUnityContainer GetContainer(string containerName)
         {
             //check preconditions
             if (String.IsNullOrEmpty(containerName)
@@ -261,8 +284,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.IoC
                 throw new InvalidOperationException("IoC container is not found");
 
             IUnityContainer container = _containersDictionary[containerName];
-
-            return container.Resolve<T>();
+            return container;
         }
 
         #endregion
