@@ -211,8 +211,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
         public ActivityLog InsertActivity(string systemKeyword, 
             string comment, params object[] commentParams)
         {
-            if (NopContext.Current == null || 
-                NopContext.Current.User == null ||
+            if (NopContext.Current.User == null ||
                 NopContext.Current.User.IsGuest)
                 return null;
 

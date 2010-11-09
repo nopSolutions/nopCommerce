@@ -82,7 +82,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Localization
         /// <returns>A string representing the requested resource string.</returns>
         public static string GetLocaleResourceString(string resourceKey)
         {
-            if (NopContext.Current != null && NopContext.Current.WorkingLanguage != null)
+            if (NopContext.Current.WorkingLanguage != null)
             {
                 var language = NopContext.Current.WorkingLanguage;
                 return GetLocaleResourceString(resourceKey, language.LanguageId);

@@ -63,81 +63,74 @@ namespace NopSolutions.NopCommerce.HttpModules
         /// <param name="e">The instance containing the event data.</param>
         private void Application_AuthenticateRequest(object sender, EventArgs e)
         {
-            if (InstallerHelper.ConnectionStringIsSet())
-            {
-                //exit if a request for a .net mapping that isn't a content page is made i.e. axd
-                if (!CommonHelper.IsContentPageRequested())
-                {
-                    return;
-                }
-                
-                //authentication
-                bool authenticated = false;
-                if (HttpContext.Current.User != null && HttpContext.Current.User.Identity != null)
-                    authenticated = HttpContext.Current.User.Identity.IsAuthenticated;
+            if (!InstallerHelper.ConnectionStringIsSet())
+                return;
+            //exit if a request for a .net mapping that isn't a content page is made i.e. axd
+            if (!CommonHelper.IsContentPageRequested())
+                return;
 
-                if (authenticated)
+            //authentication
+            bool authenticated = false;
+            if (HttpContext.Current.User != null && HttpContext.Current.User.Identity != null)
+                authenticated = HttpContext.Current.User.Identity.IsAuthenticated;
+
+            if (authenticated)
+            {
+                Customer customer = null;
+                string name = HttpContext.Current.User.Identity.Name;
+                if (IoCFactory.Resolve<ICustomerService>().UsernamesEnabled)
                 {
-                    Customer customer = null;
-                    string name = HttpContext.Current.User.Identity.Name;
-                    if (IoCFactory.Resolve<ICustomerService>().UsernamesEnabled)
+                    customer = IoCFactory.Resolve<ICustomerService>().GetCustomerByUsername(name);
+                }
+                else
+                {
+                    customer = IoCFactory.Resolve<ICustomerService>().GetCustomerByEmail(name);
+                }
+
+                if (customer != null)
+                {
+                    if (!String.IsNullOrEmpty(HttpContext.Current.User.Identity.Name)
+                        && customer.Active
+                        && !customer.Deleted && !customer.IsGuest)
                     {
-                        customer = IoCFactory.Resolve<ICustomerService>().GetCustomerByUsername(name);
-                    }
-                    else
-                    {
-                        customer = IoCFactory.Resolve<ICustomerService>().GetCustomerByEmail(name);
-                    }
-                    
-                    if (customer != null)
-                    {
-                        if (!String.IsNullOrEmpty(HttpContext.Current.User.Identity.Name)
-                            && customer.Active
-                            && !customer.Deleted && !customer.IsGuest)
+                        //impersonate user if required (currently used for 'phone order' support)
+                        //and validate that the current user is admin
+                        //and validate that we're in public store
+                        if (customer.IsAdmin &&
+                            !CommonHelper.IsAdmin() &&
+                            customer.ImpersonatedCustomerGuid != Guid.Empty)
                         {
-                            //impersonate user if required (currently used for 'phone order' support)
-                            //and validate that the current user is admin
-                            //and validate that we're in public store
-                            if (customer.IsAdmin &&
-                                !CommonHelper.IsAdmin() &&
-                                customer.ImpersonatedCustomerGuid != Guid.Empty)
+                            //set impersonated customer
+                            var impersonatedCustomer = IoCFactory.Resolve<ICustomerService>().GetCustomerByGuid(customer.ImpersonatedCustomerGuid);
+                            if (impersonatedCustomer != null)
                             {
-                                //set impersonated customer
-                                var impersonatedCustomer = IoCFactory.Resolve<ICustomerService>().GetCustomerByGuid(customer.ImpersonatedCustomerGuid);
-                                if (impersonatedCustomer != null)
-                                {
-                                    NopContext.Current.User = impersonatedCustomer;
-                                    NopContext.Current.IsCurrentCustomerImpersonated = true;
-                                    NopContext.Current.OriginalUser = customer;
-                                }
-                                else
-                                {
-                                    //set current customer
-                                    NopContext.Current.User = customer;
-                                }
+                                NopContext.Current.User = impersonatedCustomer;
+                                NopContext.Current.IsCurrentCustomerImpersonated = true;
+                                NopContext.Current.OriginalUser = customer;
                             }
                             else
                             {
                                 //set current customer
                                 NopContext.Current.User = customer;
                             }
-
-                            //set current customer session
-                            var customerSession = IoCFactory.Resolve<ICustomerService>().GetCustomerSessionByCustomerId(NopContext.Current.User.CustomerId);
-                            if (customerSession == null)
-                            {
-                                customerSession = NopContext.Current.GetSession(true);
-                                customerSession.IsExpired = false;
-                                customerSession.LastAccessed = DateTime.UtcNow;
-                                customerSession.CustomerId = NopContext.Current.User.CustomerId;
-                                customerSession = IoCFactory.Resolve<ICustomerService>().SaveCustomerSession(customerSession.CustomerSessionGuid, customerSession.CustomerId, customerSession.LastAccessed, customerSession.IsExpired);
-                            }
-                            NopContext.Current.Session = customerSession;
                         }
                         else
                         {
-                            logout();
+                            //set current customer
+                            NopContext.Current.User = customer;
                         }
+
+                        //set current customer session
+                        var customerSession = IoCFactory.Resolve<ICustomerService>().GetCustomerSessionByCustomerId(NopContext.Current.User.CustomerId);
+                        if (customerSession == null)
+                        {
+                            customerSession = NopContext.Current.GetSession(true);
+                            customerSession.IsExpired = false;
+                            customerSession.LastAccessed = DateTime.UtcNow;
+                            customerSession.CustomerId = NopContext.Current.User.CustomerId;
+                            customerSession = IoCFactory.Resolve<ICustomerService>().SaveCustomerSession(customerSession.CustomerSessionGuid, customerSession.CustomerId, customerSession.LastAccessed, customerSession.IsExpired);
+                        }
+                        NopContext.Current.Session = customerSession;
                     }
                     else
                     {
@@ -146,15 +139,26 @@ namespace NopSolutions.NopCommerce.HttpModules
                 }
                 else
                 {
-                    if (NopContext.Current.Session != null)
+                    logout();
+                }
+            }
+            else
+            {
+                if (NopContext.Current.Session != null)
+                {
+                    var guestCustomer = NopContext.Current.Session.Customer;
+                    if (guestCustomer != null && guestCustomer.Active && !guestCustomer.Deleted && guestCustomer.IsGuest)
                     {
-                        var guestCustomer = NopContext.Current.Session.Customer;
-                        if (guestCustomer != null && guestCustomer.Active && !guestCustomer.Deleted && guestCustomer.IsGuest)
-                        {
-                            NopContext.Current.User = guestCustomer;
-                        }
+                        NopContext.Current.User = guestCustomer;
                     }
                 }
+            }
+            
+            //set current culture (after current user is loaded)
+            var currentLanguage = NopContext.Current.WorkingLanguage;
+            if (currentLanguage != null)
+            {
+                NopContext.Current.SetCulture(new CultureInfo(currentLanguage.LanguageCulture));
             }
         }
 
@@ -165,34 +169,24 @@ namespace NopSolutions.NopCommerce.HttpModules
         /// <param name="e">The instance containing the event data.</param>
         private void Application_BeginRequest(object sender, EventArgs e)
         {
-            if (InstallerHelper.ConnectionStringIsSet())
-            {
-                //exit if a request for a .net mapping that isn't a content page is made i.e. axd
-                if (!CommonHelper.IsContentPageRequested()) 
-                {
-                    return;
-                }
-                
-                //set current culture
-                var currentLanguage = NopContext.Current.WorkingLanguage;
-                if (currentLanguage != null)
-                {
-                    NopContext.Current.SetCulture(new CultureInfo(currentLanguage.LanguageCulture));
-                }
+            if (!InstallerHelper.ConnectionStringIsSet())
+                return;
+            //exit if a request for a .net mapping that isn't a content page is made i.e. axd
+            if (!CommonHelper.IsContentPageRequested())
+                return;
 
-                //session workflow
-                if (NopContext.Current.Session != null)
+            //update session last access time
+            if (NopContext.Current.Session != null)
+            {
+                var dtNow = DateTime.UtcNow;
+                if (NopContext.Current.Session.LastAccessed.AddMinutes(1.0) < dtNow)
                 {
-                    var dtNow = DateTime.UtcNow;
-                    if (NopContext.Current.Session.LastAccessed.AddMinutes(1.0) < dtNow)
-                    {
-                        NopContext.Current.Session.LastAccessed = dtNow;
-                        NopContext.Current.Session = IoCFactory.Resolve<ICustomerService>().SaveCustomerSession(
-                            NopContext.Current.Session.CustomerSessionGuid, 
-                            NopContext.Current.Session.CustomerId, 
-                            NopContext.Current.Session.LastAccessed,
-                            false);
-                    }
+                    NopContext.Current.Session.LastAccessed = dtNow;
+                    NopContext.Current.Session = IoCFactory.Resolve<ICustomerService>().SaveCustomerSession(
+                        NopContext.Current.Session.CustomerSessionGuid,
+                        NopContext.Current.Session.CustomerId,
+                        NopContext.Current.Session.LastAccessed,
+                        false);
                 }
             }
         }
@@ -204,32 +198,30 @@ namespace NopSolutions.NopCommerce.HttpModules
         /// <param name="e">The instance containing the event data.</param>
         private void Application_EndRequest(object sender, EventArgs e)
         {
-            if (InstallerHelper.ConnectionStringIsSet())
-            {
-                try
-                {
-                    //exit if a request for a .net mapping that isn't a content page is made i.e. axd
-                    if (!CommonHelper.IsContentPageRequested())
-                    {
-                        return;
-                    }
+            if (!InstallerHelper.ConnectionStringIsSet())
+                return;
+            //exit if a request for a .net mapping that isn't a content page is made i.e. axd
+            if (!CommonHelper.IsContentPageRequested())
+                return;
 
-                    //session workflow
-                    bool sessionReseted = false;
-                    if (NopContext.Current["Nop.SessionReseted"] != null)
-                    {
-                        sessionReseted = Convert.ToBoolean(NopContext.Current["Nop.SessionReseted"]);
-                    }
-                    if (!sessionReseted)
-                    {
-                        NopContext.Current.SessionSaveToClient();
-                    }
-                }
-                catch (Exception exc)
+            try
+            {
+
+                //session workflow
+                bool sessionReseted = false;
+                if (NopContext.Current["Nop.SessionReseted"] != null)
                 {
-                    //LogManager.InsertLog(LogTypeEnum.Unknown, exc.Message, exc);
-                    Debug.WriteLine(exc.Message);
+                    sessionReseted = Convert.ToBoolean(NopContext.Current["Nop.SessionReseted"]);
                 }
+                if (!sessionReseted)
+                {
+                    NopContext.Current.SessionSaveToClient();
+                }
+            }
+            catch (Exception exc)
+            {
+                //LogManager.InsertLog(LogTypeEnum.Unknown, exc.Message, exc);
+                Debug.WriteLine(exc.Message);
             }
         }
 

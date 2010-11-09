@@ -289,9 +289,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             bool searchDescriptions, int pageSize, int pageIndex,
             List<int> filteredSpecs, ProductSortingEnum orderBy, out int totalRecords)
         {
-            int languageId = 0;
-            if (NopContext.Current != null)
-                languageId = NopContext.Current.WorkingLanguage.LanguageId;
+            int languageId = NopContext.Current.WorkingLanguage.LanguageId;
 
             return GetAllProducts(categoryId, manufacturerId, productTagId,
                 featuredProducts, priceMin, priceMax, keywords, searchDescriptions,
@@ -403,12 +401,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         public List<Product> GetAllProductsDisplayedOnHomePage()
         {
             bool showHidden = NopContext.Current.IsAdmin;
-
-            int languageId = 0;
-            if (NopContext.Current != null)
-                languageId = NopContext.Current.WorkingLanguage.LanguageId;
-
-            
+            int languageId = NopContext.Current.WorkingLanguage.LanguageId;
+                        
             var query = from p in _context.Products
                         orderby p.Name
                         where (showHidden || p.Published) &&

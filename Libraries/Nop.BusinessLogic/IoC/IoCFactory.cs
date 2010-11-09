@@ -73,6 +73,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.IoC
         private static IDictionary<string, IUnityContainer> _containersDictionary;
         private static object _lock = new object();
         private static bool _initialized = false;
+        private static string containerName = ConfigurationManager.AppSettings["defaultIoCContainer"];
         #endregion
 
         #region Constructor
@@ -237,8 +238,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.IoC
         /// </exception>
         public static T Resolve<T>()
         {
-            //We use the default container specified in AppSettings
-            string containerName = ConfigurationManager.AppSettings["defaultIoCContainer"];
             return Resolve<T>(containerName);
         }
         
@@ -261,8 +260,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.IoC
         /// </exception>
         public static IUnityContainer GetContainer()
         {
-            //We use the default container specified in AppSettings
-            string containerName = ConfigurationManager.AppSettings["defaultIoCContainer"];
             return GetContainer(containerName);
         }
 

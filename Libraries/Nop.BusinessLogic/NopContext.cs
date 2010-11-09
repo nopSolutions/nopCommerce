@@ -47,6 +47,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic
         private Customer _originalCustomer;
         private bool? _isAdmin;
         private HttpContext _context = HttpContext.Current;
+        private Language _workingLanguage;
+        private Currency _workingCurrency;
+        private bool? _localizedEntityPropertiesEnabled;
+        private TaxDisplayTypeEnum? _taxDisplayType;
         #endregion
 
         #region Ctor
@@ -334,19 +338,26 @@ namespace NopSolutions.NopCommerce.BusinessLogic
         {
             get
             {
-                if (NopContext.Current == null || NopContext.Current.IsAdmin)
+                //cached value
+                if (this._workingCurrency != null)
+                    return this._workingCurrency;
+
+                if (this.IsAdmin)
                 {
-                    return IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency;
+                    this._workingCurrency = IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency;
+                    return this._workingCurrency;
                 }
-                var customer = NopContext.Current.User;
                 var publishedCurrencies = IoCFactory.Resolve<ICurrencyService>().GetAllCurrencies();
-                if (customer != null)
+                if (this.User != null)
                 {
-                    var customerCurrency = customer.Currency;
+                    var customerCurrency = this.User.Currency;
                     if (customerCurrency != null)
                         foreach (Currency _currency in publishedCurrencies)
                             if (_currency.CurrencyId == customerCurrency.CurrencyId)
-                                return customerCurrency;
+                            {
+                                this._workingCurrency = customerCurrency;
+                                return this._workingCurrency;
+                            }
                 }
                 else if (CommonHelper.GetCookieInt("Nop.CustomerCurrency") > 0)
                 {
@@ -354,28 +365,35 @@ namespace NopSolutions.NopCommerce.BusinessLogic
                     if (customerCurrency != null)
                         foreach (Currency _currency in publishedCurrencies)
                             if (_currency.CurrencyId == customerCurrency.CurrencyId)
-                                return customerCurrency;
+                            {
+                                this._workingCurrency = customerCurrency;
+                                return this._workingCurrency;
+                            }
                 }
-                foreach (var _currency in publishedCurrencies)
-                    return _currency;
-                return IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency;
+                foreach (var currency in publishedCurrencies)
+                {
+                    this._workingCurrency = currency;
+                    return this._workingCurrency;
+                }
+
+                throw new NopException("Currencies could not be loaded");
             }
             set
             {
                 if (value == null)
                     return;
-                var customer = NopContext.Current.User;
-                if (customer != null)
+                if (this.User != null)
                 {
-                    customer.CurrencyId = value.CurrencyId;
-                    IoCFactory.Resolve<ICustomerService>().UpdateCustomer(customer);
-
-                    NopContext.Current.User = customer;
+                    this.User.CurrencyId = value.CurrencyId;
+                    IoCFactory.Resolve<ICustomerService>().UpdateCustomer(this.User);
                 }
-                if (!NopContext.Current.IsAdmin)
+                if (!this.IsAdmin)
                 {
                     CommonHelper.SetCookie("Nop.CustomerCurrency", value.CurrencyId.ToString(), new TimeSpan(365, 0, 0, 0, 0));
                 }
+
+                //reset cached value
+                this._workingCurrency = null;
             }
         }
 
@@ -386,23 +404,36 @@ namespace NopSolutions.NopCommerce.BusinessLogic
         {
             get
             {
-                var customer = NopContext.Current.User;
-                if (customer != null)
+                //cached value
+                if (this._workingLanguage != null)
+                    return this._workingLanguage;
+
+                //customer language
+                if (this.User != null)
                 {
-                    var customerLanguage = customer.Language;
+                    var customerLanguage = this.User.Language;
                     if (customerLanguage != null && customerLanguage.Published)
-                        return customerLanguage;
+                    {
+                        this._workingLanguage = customerLanguage;
+                        return this._workingLanguage;
+                    }
                 }
                 else if (CommonHelper.GetCookieInt("Nop.CustomerLanguage") > 0)
                 {
                     var customerLanguage = IoCFactory.Resolve<ILanguageService>().GetLanguageById(CommonHelper.GetCookieInt("Nop.CustomerLanguage"));
                     if (customerLanguage != null)
                         if (customerLanguage != null && customerLanguage.Published)
-                            return customerLanguage;
+                        {
+                            this._workingLanguage = customerLanguage;
+                            return this._workingLanguage;
+                        }
                 }
                 var publishedLanguages = IoCFactory.Resolve<ILanguageService>().GetAllLanguages(false);
-                foreach (var _language in publishedLanguages)
-                    return _language;
+                foreach (var language in publishedLanguages)
+                {
+                    this._workingLanguage = language;
+                    return this._workingLanguage;
+                }
 
                 throw new NopException("Languages could not be loaded");
             }
@@ -410,16 +441,17 @@ namespace NopSolutions.NopCommerce.BusinessLogic
             {
                 if (value == null)
                     return;
-                var customer = NopContext.Current.User;
-                if (customer != null)
-                {
-                    customer.LanguageId = value.LanguageId;
-                    IoCFactory.Resolve<ICustomerService>().UpdateCustomer(customer);
 
-                    NopContext.Current.User = customer;
+                if (this.User != null)
+                {
+                    this.User.LanguageId = value.LanguageId;
+                    IoCFactory.Resolve<ICustomerService>().UpdateCustomer(this.User);
                 }
 
                 CommonHelper.SetCookie("Nop.CustomerLanguage", value.LanguageId.ToString(), new TimeSpan(365, 0, 0, 0, 0));
+
+                //reset cached value
+                this._workingLanguage = null;
             }
         }
 
@@ -468,11 +500,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic
         {
             get
             {
-                bool showHidden = NopContext.Current.IsAdmin;
-                var languages = IoCFactory.Resolve<ILanguageService>().GetAllLanguages(showHidden);
+                if (!_localizedEntityPropertiesEnabled.HasValue)
+                {
+                    bool showHidden = this.IsAdmin;
+                    var languages = IoCFactory.Resolve<ILanguageService>().GetAllLanguages(showHidden);
 
-                bool result = languages.Count > 1;
-                return result;
+                    this._localizedEntityPropertiesEnabled = languages.Count > 1;
+                }
+                return this._localizedEntityPropertiesEnabled.Value;
             }
         }
 
@@ -483,40 +518,49 @@ namespace NopSolutions.NopCommerce.BusinessLogic
         {
             get
             {
-                //if (NopContext.Current.IsAdmin)
+                //cached value
+                if (this._taxDisplayType.HasValue)
+                    return this._taxDisplayType.Value;
+                //if (this.IsAdmin)
                 //{
-                //    return IoCFactory.Resolve<ITaxService>().TaxDisplayType;
+                //    this._taxDisplayType =  IoCFactory.Resolve<ITaxService>().TaxDisplayType;
+                //    return this._taxDisplayType.Value;
                 //}
 
                 if (IoCFactory.Resolve<ITaxService>().AllowCustomersToSelectTaxDisplayType)
                 {
-                    var customer = NopContext.Current.User;
-                    if (customer != null)
+                    if (this.User != null)
                     {
-                        return customer.TaxDisplayType;
+                        this._taxDisplayType = this.User.TaxDisplayType;
+                        return this._taxDisplayType.Value;
                     }
                     else if (CommonHelper.GetCookieInt("Nop.TaxDisplayTypeId") > 0)
                     {
-                        return (TaxDisplayTypeEnum)Enum.ToObject(typeof(TaxDisplayTypeEnum), CommonHelper.GetCookieInt("Nop.TaxDisplayTypeId"));
+                        this._taxDisplayType = (TaxDisplayTypeEnum)Enum.ToObject(typeof(TaxDisplayTypeEnum), CommonHelper.GetCookieInt("Nop.TaxDisplayTypeId"));
+                        return this._taxDisplayType.Value;
                     }
                 }
-                return IoCFactory.Resolve<ITaxService>().TaxDisplayType;
+
+                this._taxDisplayType = IoCFactory.Resolve<ITaxService>().TaxDisplayType;
+                return this._taxDisplayType.Value;
             }
             set
             {
                 if (!IoCFactory.Resolve<ITaxService>().AllowCustomersToSelectTaxDisplayType)
                     return;
 
-                var customer = NopContext.Current.User;
-                if (customer != null)
+                if (this.User != null)
                 {
-                    customer.TaxDisplayTypeId = (int)value;
-                    IoCFactory.Resolve<ICustomerService>().UpdateCustomer(customer);
+                    this.User.TaxDisplayTypeId = (int)value;
+                    IoCFactory.Resolve<ICustomerService>().UpdateCustomer(this.User);
                 }
-                if (!NopContext.Current.IsAdmin)
+                if (!this.IsAdmin)
                 {
                     CommonHelper.SetCookie("Nop.TaxDisplayTypeId", ((int)value).ToString(), new TimeSpan(365, 0, 0, 0, 0));
                 }
+
+                //reset cached value
+                this._taxDisplayType = null;
             }
         }
 

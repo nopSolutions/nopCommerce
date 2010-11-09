@@ -107,9 +107,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
         /// <returns>Specification attribute collection</returns>
         public List<SpecificationAttribute> GetSpecificationAttributes()
         {
-            int languageId = 0;
-            if (NopContext.Current != null)
-                languageId = NopContext.Current.WorkingLanguage.LanguageId;
+            int languageId = NopContext.Current.WorkingLanguage.LanguageId;
             return GetSpecificationAttributes(languageId);
         }
 
@@ -723,9 +721,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
         /// <returns>Product specification attribute mapping collection</returns>
         public List<SpecificationAttributeOptionFilter> GetSpecificationAttributeOptionFilter(int categoryId)
         {
-            int languageId = 0;
-            if (NopContext.Current != null)
-                languageId = NopContext.Current.WorkingLanguage.LanguageId;
+            int languageId = NopContext.Current.WorkingLanguage.LanguageId;
             return GetSpecificationAttributeOptionFilter(categoryId, languageId);
         }
 

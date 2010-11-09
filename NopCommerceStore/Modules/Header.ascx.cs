@@ -40,8 +40,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
         
         protected void lFinishImpersonate_Click(object sender, EventArgs e)
         {
-            if (NopContext.Current != null &&
-                NopContext.Current.IsCurrentCustomerImpersonated &&
+            if (NopContext.Current.IsCurrentCustomerImpersonated &&
                 NopContext.Current.OriginalUser != null)
             {
                 NopContext.Current.OriginalUser.ImpersonatedCustomerGuid = Guid.Empty;

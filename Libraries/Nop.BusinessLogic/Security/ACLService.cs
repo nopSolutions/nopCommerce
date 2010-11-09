@@ -253,8 +253,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
         public bool IsActionAllowed(string actionSystemKeyword)
         {
             int userId = 0;
-            if (NopContext.Current != null &&
-                NopContext.Current.User != null)
+            if (NopContext.Current.User != null)
                 userId = NopContext.Current.User.CustomerId;
             return IsActionAllowed(userId, actionSystemKeyword);
         }
