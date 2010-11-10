@@ -31,7 +31,7 @@ using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.BusinessLogic.Utils;
 using NopSolutions.NopCommerce.Common.Utils;
 
-namespace NopSolutions.NopCommerce.HttpModules
+namespace NopSolutions.NopCommerce.BusinessLogic.Profile
 {
     /// <summary>
     /// nopCommerce membership module

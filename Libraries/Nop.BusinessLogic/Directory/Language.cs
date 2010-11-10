@@ -73,16 +73,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
         #endregion
 
         #region Custom Properties
-        /// <summary>
-        /// Gets the locale string dictionary
-        /// </summary>
-        public Dictionary<string, LocaleStringResource> LocaleStringResources
-        {
-            get
-            {
-                return IoCFactory.Resolve<ILocalizationManager>().GetAllResourcesByLanguageId(this.LanguageId);
-            }
-        }
 
         /// <summary>
         /// Gets an icon URL

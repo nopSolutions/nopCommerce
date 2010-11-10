@@ -20,7 +20,7 @@ using NopSolutions.NopCommerce.BusinessLogic.IoC;
 using NopSolutions.NopCommerce.BusinessLogic.Security;
 using NopSolutions.NopCommerce.Common.Utils;
 
-namespace NopSolutions.NopCommerce.HttpModules
+namespace NopSolutions.NopCommerce.BusinessLogic.Security
 {
     public partial class BlacklistHttpModule : IHttpModule
     {
@@ -63,9 +63,10 @@ namespace NopSolutions.NopCommerce.HttpModules
                 {
                     //exit if a request for a .net mapping that isn't a content page is made i.e. axd
                     if (!CommonHelper.IsContentPageRequested())
-                    {
                         return;
-                    }
+                    //exit if a request for a .net mapping that isn't a content page is made i.e. axd
+                    if (!CommonHelper.IsContentPageRequested())
+                        return;
 
                     if (HttpContext.Current != null && !HttpContext.Current.Request.Url.IsLoopback)
                     {

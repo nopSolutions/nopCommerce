@@ -5695,14 +5695,6 @@
       <Project>{E682693C-DC17-4C46-BB57-6DC2C2B02555}</Project>
       <Name>Nop.Controls</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Libraries\Nop.HttpModules.BlacklistModule\Nop.HttpModules.BlacklistModule.csproj">
-      <Project>{4D26AD7F-0482-4B2D-A5A6-A1AE338B4F4D}</Project>
-      <Name>Nop.HttpModules.BlacklistModule</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Libraries\Nop.HttpModules.MembershipModule\Nop.HttpModules.MembershipModule.csproj">
-      <Project>{ADC07038-4AAC-45E4-B652-75A971A413A5}</Project>
-      <Name>Nop.HttpModules.MembershipModule</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Libraries\UrlRewritingNet.UrlRewriter\UrlRewritingNet.UrlRewriter.csproj">
       <Project>{44697772-09C1-4B28-B3F5-C28B693B06F7}</Project>
       <Name>UrlRewritingNet.UrlRewriter</Name>

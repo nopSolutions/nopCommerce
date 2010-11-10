@@ -65,7 +65,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             Language language = IoCFactory.Resolve<ILanguageService>().GetLanguageById(int.Parse(this.ddlLanguage.SelectedItem.Value));
             if (language != null)
             {
-                var allResources = language.LocaleStringResources;
+                var allResources = IoCFactory.Resolve<ILocalizationManager>().GetAllResourcesByLanguageId(language.LanguageId);
                 var filteredResources = new List<LocaleStringResource>();
 
                 string filterByResourceName = txtResourceName.Text.Trim();

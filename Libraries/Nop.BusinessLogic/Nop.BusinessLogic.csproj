@@ -316,6 +316,7 @@
     <Compile Include="Products\PriceHelper.cs" />
     <Compile Include="Profile\DateTimeHelper.cs" />
     <Compile Include="Profile\Extensions.cs" />
+    <Compile Include="Profile\MembershipHttpModule.cs" />
     <Compile Include="Promo\Affiliates\IAffiliateService.cs" />
     <Compile Include="Promo\Campaigns\Campaign.cs" />
     <Compile Include="Promo\Campaigns\ICampaignService.cs" />
@@ -342,6 +343,7 @@
     <Compile Include="Security\BannedIpAddress.cs" />
     <Compile Include="Security\ACL.cs" />
     <Compile Include="Security\ACLPerObject.cs" />
+    <Compile Include="Security\BlacklistHttpModule.cs" />
     <Compile Include="Security\IBlacklistService.cs" />
     <Compile Include="Security\IACLService.cs" />
     <Compile Include="Security\ObjectTypeEnum.cs" />
