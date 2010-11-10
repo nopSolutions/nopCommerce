@@ -571,15 +571,15 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
 
                     if (htmlEncode)
                     {
-                        result.Append(HttpUtility.HtmlEncode(string.Format(LocalizationManager.GetLocaleResourceString("GiftCardAttribute.For"), giftCardRecipientName)));
+                        result.Append(HttpUtility.HtmlEncode(string.Format(IoCFactory.Resolve<ILocalizationManager>().GetLocaleResourceString("GiftCardAttribute.For"), giftCardRecipientName)));
                         result.Append(serapator);
-                        result.Append(HttpUtility.HtmlEncode(string.Format(LocalizationManager.GetLocaleResourceString("GiftCardAttribute.From"), giftCardSenderName)));
+                        result.Append(HttpUtility.HtmlEncode(string.Format(IoCFactory.Resolve<ILocalizationManager>().GetLocaleResourceString("GiftCardAttribute.From"), giftCardSenderName)));
                     }
                     else
                     {
-                        result.Append(string.Format(LocalizationManager.GetLocaleResourceString("GiftCardAttribute.For"), giftCardRecipientName));
+                        result.Append(string.Format(IoCFactory.Resolve<ILocalizationManager>().GetLocaleResourceString("GiftCardAttribute.For"), giftCardRecipientName));
                         result.Append(serapator);
-                        result.Append(string.Format(LocalizationManager.GetLocaleResourceString("GiftCardAttribute.From"), giftCardSenderName));
+                        result.Append(string.Format(IoCFactory.Resolve<ILocalizationManager>().GetLocaleResourceString("GiftCardAttribute.From"), giftCardSenderName));
                     }
                 }
             }

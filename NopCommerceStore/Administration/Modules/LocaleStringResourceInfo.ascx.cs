@@ -33,7 +33,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            var localeStringResource = IoCFactory.Resolve<ILocaleStringResourceManager>().GetLocaleStringResourceById(this.LocaleStringResourceId);
+            var localeStringResource = IoCFactory.Resolve<ILocalizationManager>().GetLocaleStringResourceById(this.LocaleStringResourceId);
             if (localeStringResource != null)
             {
                 Language language = IoCFactory.Resolve<ILanguageService>().GetLanguageById(localeStringResource.LanguageId);
@@ -65,13 +65,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public LocaleStringResource SaveInfo()
         {
-            LocaleStringResource localeStringResource = IoCFactory.Resolve<ILocaleStringResourceManager>().GetLocaleStringResourceById(this.LocaleStringResourceId);
+            LocaleStringResource localeStringResource = IoCFactory.Resolve<ILocalizationManager>().GetLocaleStringResourceById(this.LocaleStringResourceId);
 
             if (localeStringResource != null)
             {
                 localeStringResource.ResourceName = txtResourceName.Text;
                 localeStringResource.ResourceValue = txtResourceValue.Text;
-                IoCFactory.Resolve<ILocaleStringResourceManager>().UpdateLocaleStringResource(localeStringResource);
+                IoCFactory.Resolve<ILocalizationManager>().UpdateLocaleStringResource(localeStringResource);
             }
             else
             {
@@ -81,7 +81,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     ResourceName = txtResourceName.Text,
                     ResourceValue = txtResourceValue.Text
                 };
-                IoCFactory.Resolve<ILocaleStringResourceManager>().InsertLocaleStringResource(localeStringResource);
+                IoCFactory.Resolve<ILocalizationManager>().InsertLocaleStringResource(localeStringResource);
             }
 
             return localeStringResource;

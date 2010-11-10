@@ -213,7 +213,7 @@ namespace NopSolutions.NopCommerce.Web
         protected string GetLocaleResourceString(string ResourceName)
         {
             Language language = NopContext.Current.WorkingLanguage;
-            return LocalizationManager.GetLocaleResourceString(ResourceName, language.LanguageId);
+            return this.LocalizationManager.GetLocaleResourceString(ResourceName, language.LanguageId);
         }
         #endregion
 
@@ -251,7 +251,20 @@ namespace NopSolutions.NopCommerce.Web
                 return true;
             }
         }
-  
+
+
+        private ILocalizationManager _localizationManager;
+        public ILocalizationManager LocalizationManager
+        {
+            get
+            {
+                if (_localizationManager == null)
+                {
+                    _localizationManager = IoCFactory.Resolve<ILocalizationManager>();
+                }
+                return _localizationManager;
+            }
+        }
         #endregion
     }
 }

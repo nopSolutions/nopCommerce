@@ -20,6 +20,7 @@ using System.Web;
 using System.Web.Compilation;
 using System.Web.UI;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Localization
@@ -50,7 +51,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Localization
             string resourceValue = string.Empty;
             try
             {
-                resourceValue = LocalizationManager.GetLocaleResourceString(resourceKey);
+                resourceValue = IoCFactory.Resolve<ILocalizationManager>().GetLocaleResourceString(resourceKey);
             }
             catch
             {

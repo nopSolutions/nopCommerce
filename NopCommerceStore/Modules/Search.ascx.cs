@@ -64,7 +64,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 {
                     int searchTermMinimumLength = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Search.ProductSearchTermMinimumLength", 3);
                     if (keywords.Length < searchTermMinimumLength)
-                        throw new NopException(string.Format(LocalizationManager.GetLocaleResourceString("Search.SearchTermMinimumLengthIsNCharacters"), searchTermMinimumLength));
+                        throw new NopException(string.Format(GetLocaleResourceString("Search.SearchTermMinimumLengthIsNCharacters"), searchTermMinimumLength));
 
                     bool advSearch = cbAdvancedSearch.Checked;
                     int categoryId = 0;

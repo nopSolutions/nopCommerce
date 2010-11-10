@@ -110,7 +110,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             {
                 IoCFactory.Resolve<ICustomerActivityService>().InsertActivity(
                     "RemoveFromShoppingCart",
-                    LocalizationManager.GetLocaleResourceString("ActivityLog.RemoveFromShoppingCart"),
+                    IoCFactory.Resolve<ILocalizationManager>().GetLocaleResourceString("ActivityLog.RemoveFromShoppingCart"),
                     shoppingCartItem.ProductVariant.FullProductName);
             }
 
@@ -182,7 +182,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 {
                     IoCFactory.Resolve<ICustomerActivityService>().InsertActivity(
                         "AddToShoppingCart",
-                        LocalizationManager.GetLocaleResourceString("ActivityLog.AddToShoppingCart"),
+                        IoCFactory.Resolve<ILocalizationManager>().GetLocaleResourceString("ActivityLog.AddToShoppingCart"),
                         shoppingCartItem.ProductVariant.FullProductName);
                 }
             }
@@ -791,7 +791,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             if (shoppingCartType == ShoppingCartTypeEnum.ShoppingCart &&
                 productVariant.CallForPrice)
             {
-                warnings.Add(LocalizationManager.GetLocaleResourceString("Products.CallForPrice"));
+                warnings.Add(IoCFactory.Resolve<ILocalizationManager>().GetLocaleResourceString("Products.CallForPrice"));
             }
 
             if (productVariant.CustomerEntersPrice)
@@ -801,7 +801,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 {
                     decimal minimumCustomerEnteredPrice = IoCFactory.Resolve<ICurrencyService>().ConvertCurrency(productVariant.MinimumCustomerEnteredPrice, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
                     decimal maximumCustomerEnteredPrice = IoCFactory.Resolve<ICurrencyService>().ConvertCurrency(productVariant.MaximumCustomerEnteredPrice, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
-                    warnings.Add(string.Format(LocalizationManager.GetLocaleResourceString("ShoppingCart.CustomerEnteredPrice.RangeError"),
+                    warnings.Add(string.Format(IoCFactory.Resolve<ILocalizationManager>().GetLocaleResourceString("ShoppingCart.CustomerEnteredPrice.RangeError"),
                         PriceHelper.FormatPrice(minimumCustomerEnteredPrice, false, false),
                         PriceHelper.FormatPrice(maximumCustomerEnteredPrice, false, false)));
                 }
@@ -809,12 +809,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
 
             if (quantity < productVariant.OrderMinimumQuantity)
             {
-                warnings.Add(string.Format(LocalizationManager.GetLocaleResourceString("ShoppingCart.MinimumQuantity"), productVariant.OrderMinimumQuantity));
+                warnings.Add(string.Format(IoCFactory.Resolve<ILocalizationManager>().GetLocaleResourceString("ShoppingCart.MinimumQuantity"), productVariant.OrderMinimumQuantity));
             }
 
             if (quantity > productVariant.OrderMaximumQuantity)
             {
-                warnings.Add(string.Format(LocalizationManager.GetLocaleResourceString("ShoppingCart.MaximumQuantity"), productVariant.OrderMaximumQuantity));
+                warnings.Add(string.Format(IoCFactory.Resolve<ILocalizationManager>().GetLocaleResourceString("ShoppingCart.MaximumQuantity"), productVariant.OrderMaximumQuantity));
             }
 
             switch ((ManageInventoryMethodEnum)productVariant.ManageInventory)
@@ -831,9 +831,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                             {
                                 int maximumQuantityCanBeAdded = productVariant.StockQuantity;
                                 if (maximumQuantityCanBeAdded <= 0)
-                                    warnings.Add(LocalizationManager.GetLocaleResourceString("ShoppingCart.OutOfStock"));
+                                    warnings.Add(IoCFactory.Resolve<ILocalizationManager>().GetLocaleResourceString("ShoppingCart.OutOfStock"));
                                 else
-                                    warnings.Add(string.Format(LocalizationManager.GetLocaleResourceString("ShoppingCart.QuantityExceedsStock"), maximumQuantityCanBeAdded));
+                                    warnings.Add(string.Format(IoCFactory.Resolve<ILocalizationManager>().GetLocaleResourceString("ShoppingCart.QuantityExceedsStock"), maximumQuantityCanBeAdded));
                             }
                         }
                     }
@@ -849,9 +849,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                                 {
                                     int maximumQuantityCanBeAdded = combination.StockQuantity;
                                     if (maximumQuantityCanBeAdded <= 0)
-                                        warnings.Add(LocalizationManager.GetLocaleResourceString("ShoppingCart.OutOfStock"));
+                                        warnings.Add(IoCFactory.Resolve<ILocalizationManager>().GetLocaleResourceString("ShoppingCart.OutOfStock"));
                                     else
-                                        warnings.Add(string.Format(LocalizationManager.GetLocaleResourceString("ShoppingCart.QuantityExceedsStock"), maximumQuantityCanBeAdded));
+                                        warnings.Add(string.Format(IoCFactory.Resolve<ILocalizationManager>().GetLocaleResourceString("ShoppingCart.QuantityExceedsStock"), maximumQuantityCanBeAdded));
                                 }
                             }
                         }
@@ -979,7 +979,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                         }
                         else
                         {
-                            warnings.Add(string.Format(LocalizationManager.GetLocaleResourceString("ShoppingCart.SelectAttribute"), pva2.ProductAttribute.LocalizedName));
+                            warnings.Add(string.Format(IoCFactory.Resolve<ILocalizationManager>().GetLocaleResourceString("ShoppingCart.SelectAttribute"), pva2.ProductAttribute.LocalizedName));
                         }
                     }
                 }
@@ -1019,23 +1019,23 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                     out giftCardSenderName, out giftCardSenderEmail, out giftCardMessage);
 
                 if (String.IsNullOrEmpty(giftCardRecipientName))
-                    warnings.Add(LocalizationManager.GetLocaleResourceString("ShoppingCartWarning.RecipientNameError"));
+                    warnings.Add(IoCFactory.Resolve<ILocalizationManager>().GetLocaleResourceString("ShoppingCartWarning.RecipientNameError"));
 
                 if ((GiftCardTypeEnum)productVariant.GiftCardType == GiftCardTypeEnum.Virtual)
                 {
                     //validate for virtual gift cards only
                     if (String.IsNullOrEmpty(giftCardRecipientEmail) || !CommonHelper.IsValidEmail(giftCardRecipientEmail))
-                        warnings.Add(LocalizationManager.GetLocaleResourceString("ShoppingCartWarning.RecipientEmailError"));
+                        warnings.Add(IoCFactory.Resolve<ILocalizationManager>().GetLocaleResourceString("ShoppingCartWarning.RecipientEmailError"));
                 }
 
                 if (String.IsNullOrEmpty(giftCardSenderName))
-                    warnings.Add(LocalizationManager.GetLocaleResourceString("ShoppingCartWarning.SenderNameError"));
+                    warnings.Add(IoCFactory.Resolve<ILocalizationManager>().GetLocaleResourceString("ShoppingCartWarning.SenderNameError"));
 
                 if ((GiftCardTypeEnum)productVariant.GiftCardType == GiftCardTypeEnum.Virtual)
                 {
                     //validate for virtual gift cards only
                     if (String.IsNullOrEmpty(giftCardSenderEmail) || !CommonHelper.IsValidEmail(giftCardSenderEmail))
-                        warnings.Add(LocalizationManager.GetLocaleResourceString("ShoppingCartWarning.SenderEmailError"));
+                        warnings.Add(IoCFactory.Resolve<ILocalizationManager>().GetLocaleResourceString("ShoppingCartWarning.SenderEmailError"));
                 }
             }
 
@@ -1080,7 +1080,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
 
             if (hasStandartProducts && hasRecurringProducts)
             {
-                warnings.Add(LocalizationManager.GetLocaleResourceString("ShoppingCart.CannotMixStandardAndAutoshipProducts"));
+                warnings.Add(IoCFactory.Resolve<ILocalizationManager>().GetLocaleResourceString("ShoppingCart.CannotMixStandardAndAutoshipProducts"));
             }
 
             if (hasRecurringProducts)
@@ -1133,7 +1133,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                             }
                             else
                             {
-                                warnings.Add(string.Format(LocalizationManager.GetLocaleResourceString("ShoppingCart.SelectAttribute"), ca2.LocalizedName));
+                                warnings.Add(string.Format(IoCFactory.Resolve<ILocalizationManager>().GetLocaleResourceString("ShoppingCart.SelectAttribute"), ca2.LocalizedName));
                             }
                         }
                     }
@@ -1177,7 +1177,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                     //cycle length
                     if (_cycleLength.HasValue && _cycleLength.Value != productVariant.CycleLength)
                     {
-                        error = LocalizationManager.GetLocaleResourceString("ShoppingCart.ConflictingShipmentSchedules");
+                        error = IoCFactory.Resolve<ILocalizationManager>().GetLocaleResourceString("ShoppingCart.ConflictingShipmentSchedules");
                         return error;
                     }
                     else
@@ -1188,7 +1188,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                     //cycle period
                     if (_cyclePeriod.HasValue && _cyclePeriod.Value != productVariant.CyclePeriod)
                     {
-                        error = LocalizationManager.GetLocaleResourceString("ShoppingCart.ConflictingShipmentSchedules");
+                        error = IoCFactory.Resolve<ILocalizationManager>().GetLocaleResourceString("ShoppingCart.ConflictingShipmentSchedules");
                         return error;
                     }
                     else
@@ -1199,7 +1199,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                     //total cycles
                     if (_totalCycles.HasValue && _totalCycles.Value != productVariant.TotalCycles)
                     {
-                        error = LocalizationManager.GetLocaleResourceString("ShoppingCart.ConflictingShipmentSchedules");
+                        error = IoCFactory.Resolve<ILocalizationManager>().GetLocaleResourceString("ShoppingCart.ConflictingShipmentSchedules");
                         return error;
                     }
                     else

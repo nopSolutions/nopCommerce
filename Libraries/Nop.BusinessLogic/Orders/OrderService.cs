@@ -141,7 +141,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                             var rph = InsertRewardPointsHistory(order.CustomerId,
                                 0, points, decimal.Zero,
                                 decimal.Zero, string.Empty,
-                                string.Format(LocalizationManager.GetLocaleResourceString("RewardPoints.Message.EarnedForOrder"), order.OrderId),
+                                string.Format(IoCFactory.Resolve<ILocalizationManager>().GetLocaleResourceString("RewardPoints.Message.EarnedForOrder"), order.OrderId),
                                 DateTime.UtcNow);
                         }
 
@@ -151,7 +151,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                             var rph = InsertRewardPointsHistory(order.CustomerId,
                                 0, -points, decimal.Zero,
                                 decimal.Zero, string.Empty,
-                                string.Format(LocalizationManager.GetLocaleResourceString("RewardPoints.Message.ReducedForOrder"), order.OrderId),
+                                string.Format(IoCFactory.Resolve<ILocalizationManager>().GetLocaleResourceString("RewardPoints.Message.ReducedForOrder"), order.OrderId),
                                 DateTime.UtcNow);
                         }
                     }
@@ -1716,25 +1716,25 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             switch (rs)
             {
                 case ReturnStatusEnum.Pending:
-                    name = LocalizationManager.GetLocaleResourceString("ReturnStatus.Pending");
+                    name = IoCFactory.Resolve<ILocalizationManager>().GetLocaleResourceString("ReturnStatus.Pending");
                     break;
                 case ReturnStatusEnum.Received:
-                    name = LocalizationManager.GetLocaleResourceString("ReturnStatus.Received");
+                    name = IoCFactory.Resolve<ILocalizationManager>().GetLocaleResourceString("ReturnStatus.Received");
                     break;
                 case ReturnStatusEnum.ReturnAuthorized:
-                    name = LocalizationManager.GetLocaleResourceString("ReturnStatus.ReturnAuthorized");
+                    name = IoCFactory.Resolve<ILocalizationManager>().GetLocaleResourceString("ReturnStatus.ReturnAuthorized");
                     break;
                 case ReturnStatusEnum.ItemsRepaired:
-                    name = LocalizationManager.GetLocaleResourceString("ReturnStatus.ItemsRepaired");
+                    name = IoCFactory.Resolve<ILocalizationManager>().GetLocaleResourceString("ReturnStatus.ItemsRepaired");
                     break;
                 case ReturnStatusEnum.ItemsRefunded:
-                    name = LocalizationManager.GetLocaleResourceString("ReturnStatus.ItemsRefunded");
+                    name = IoCFactory.Resolve<ILocalizationManager>().GetLocaleResourceString("ReturnStatus.ItemsRefunded");
                     break;
                 case ReturnStatusEnum.RequestRejected:
-                    name = LocalizationManager.GetLocaleResourceString("ReturnStatus.RequestRejected");
+                    name = IoCFactory.Resolve<ILocalizationManager>().GetLocaleResourceString("ReturnStatus.RequestRejected");
                     break;
                 case ReturnStatusEnum.Cancelled:
-                    name = LocalizationManager.GetLocaleResourceString("ReturnStatus.Cancelled");
+                    name = IoCFactory.Resolve<ILocalizationManager>().GetLocaleResourceString("ReturnStatus.Cancelled");
                     break;
                 default:
                     name = CommonHelper.ConvertEnum(rs.ToString());
@@ -1845,7 +1845,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
 
             if (notifyStoreOwner)
             {
-                IoCFactory.Resolve<IMessageService>().SendNewReturnRequestStoreOwnerNotification(returnRequest, LocalizationManager.DefaultAdminLanguage.LanguageId);
+                IoCFactory.Resolve<IMessageService>().SendNewReturnRequestStoreOwnerNotification(returnRequest, IoCFactory.Resolve<ILocalizationManager>().DefaultAdminLanguage.LanguageId);
             }
         }
         
@@ -2942,7 +2942,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                         if (redeemedRewardPointsAmount > decimal.Zero)
                         {
                             decimal redeemedRewardPointsAmountInCustomerCurrency = IoCFactory.Resolve<ICurrencyService>().ConvertCurrency(redeemedRewardPointsAmount, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
-                            string message = string.Format(LocalizationManager.GetLocaleResourceString("RewardPoints.Message.RedeemedForOrder", order.CustomerLanguageId), order.OrderId);
+                            string message = string.Format(IoCFactory.Resolve<ILocalizationManager>().GetLocaleResourceString("RewardPoints.Message.RedeemedForOrder", order.CustomerLanguageId), order.OrderId);
 
                             RewardPointsHistory rph = this.InsertRewardPointsHistory(customer.CustomerId,
                                 order.OrderId, -redeemedRewardPoints,
@@ -3008,7 +3008,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                         //notes, messages
                         InsertOrderNote(order.OrderId, string.Format("Order placed"), false, DateTime.UtcNow);
 
-                        int orderPlacedStoreOwnerNotificationQueuedEmailId = IoCFactory.Resolve<IMessageService>().SendOrderPlacedStoreOwnerNotification(order, LocalizationManager.DefaultAdminLanguage.LanguageId);
+                        int orderPlacedStoreOwnerNotificationQueuedEmailId = IoCFactory.Resolve<IMessageService>().SendOrderPlacedStoreOwnerNotification(order, IoCFactory.Resolve<ILocalizationManager>().DefaultAdminLanguage.LanguageId);
                         if (orderPlacedStoreOwnerNotificationQueuedEmailId > 0)
                         {
                             InsertOrderNote(order.OrderId, string.Format("\"Order placed\" email (to store owner) has been queued. Queued email identifier: {0}.", orderPlacedStoreOwnerNotificationQueuedEmailId), false, DateTime.UtcNow);
@@ -3036,7 +3036,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                         {
                             IoCFactory.Resolve<ICustomerActivityService>().InsertActivity(
                                 "PlaceOrder",
-                                LocalizationManager.GetLocaleResourceString("ActivityLog.PlaceOrder"),
+                                IoCFactory.Resolve<ILocalizationManager>().GetLocaleResourceString("ActivityLog.PlaceOrder"),
                                 order.OrderId);
                         }
 

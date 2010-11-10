@@ -51,10 +51,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     switch ((TaxDisplayTypeEnum)taxDisplayTypeId)
                     {
                         case TaxDisplayTypeEnum.IncludingTax:
-                            taxDisplayTypeName = LocalizationManager.GetLocaleResourceString("Products.TaxInclusive");
+                            taxDisplayTypeName = GetLocaleResourceString("Products.TaxInclusive");
                             break;
                         case TaxDisplayTypeEnum.ExcludingTax:
-                            taxDisplayTypeName = LocalizationManager.GetLocaleResourceString("Products.TaxExclusive");
+                            taxDisplayTypeName = GetLocaleResourceString("Products.TaxExclusive");
                             break;
                         default:
                             taxDisplayTypeName = CommonHelper.ConvertEnum(taxDisplayTypeStr);

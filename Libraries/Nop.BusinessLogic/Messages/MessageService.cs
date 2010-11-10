@@ -131,6 +131,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
                 languageId = language.LanguageId;
             }
 
+            var localizationManager = IoCFactory.Resolve<ILocalizationManager>();
+
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("<table border=\"0\" style=\"width:100%;\">");
             string color1 = IoCFactory.Resolve<ISettingManager>().GetSettingValue("MessageTemplate.Color1", "#b9babe");
@@ -139,10 +141,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
            
             #region Products
             sb.AppendLine(string.Format("<tr style=\"background-color:{0};text-align:center;\">", color1));
-            sb.AppendLine(string.Format("<th>{0}</th>", LocalizationManager.GetLocaleResourceString("Order.ProductsGrid.Name", languageId)));
-            sb.AppendLine(string.Format("<th>{0}</th>", LocalizationManager.GetLocaleResourceString("Order.ProductsGrid.Price", languageId)));
-            sb.AppendLine(string.Format("<th>{0}</th>", LocalizationManager.GetLocaleResourceString("Order.ProductsGrid.Quantity", languageId)));
-            sb.AppendLine(string.Format("<th>{0}</th>", LocalizationManager.GetLocaleResourceString("Order.ProductsGrid.Total", languageId)));
+            sb.AppendLine(string.Format("<th>{0}</th>", localizationManager.GetLocaleResourceString("Order.ProductsGrid.Name", languageId)));
+            sb.AppendLine(string.Format("<th>{0}</th>", localizationManager.GetLocaleResourceString("Order.ProductsGrid.Price", languageId)));
+            sb.AppendLine(string.Format("<th>{0}</th>", localizationManager.GetLocaleResourceString("Order.ProductsGrid.Quantity", languageId)));
+            sb.AppendLine(string.Format("<th>{0}</th>", localizationManager.GetLocaleResourceString("Order.ProductsGrid.Total", languageId)));
             sb.AppendLine("</tr>");
 
             var table = order.OrderProductVariants;
@@ -159,7 +161,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
                 //download link
                 if (IoCFactory.Resolve<IOrderService>().IsDownloadAllowed(opv))
                 {
-                    string downloadUrl = string.Format("<a class=\"link\" href=\"{0}\" >{1}</a>", IoCFactory.Resolve<IDownloadService>().GetDownloadUrl(opv), LocalizationManager.GetLocaleResourceString("Order.Download", languageId));
+                    string downloadUrl = string.Format("<a class=\"link\" href=\"{0}\" >{1}</a>", IoCFactory.Resolve<IDownloadService>().GetDownloadUrl(opv), localizationManager.GetLocaleResourceString("Order.Download", languageId));
                     sb.AppendLine("&nbsp;&nbsp;(");
                     sb.AppendLine(downloadUrl);
                     sb.AppendLine(")");
@@ -176,7 +178,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
                     if (!String.IsNullOrEmpty(opv.ProductVariant.SKU))
                     {
                         sb.AppendLine("<br />");
-                        string sku = string.Format(LocalizationManager.GetLocaleResourceString("MessageToken.OrderProducts.SKU", languageId), HttpUtility.HtmlEncode(opv.ProductVariant.SKU));
+                        string sku = string.Format(localizationManager.GetLocaleResourceString("MessageToken.OrderProducts.SKU", languageId), HttpUtility.HtmlEncode(opv.ProductVariant.SKU));
                         sb.AppendLine(sku);
                     }
                 }
@@ -323,38 +325,38 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
 
 
             //subtotal
-            sb.AppendLine(string.Format("<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{1}</strong></td> <td style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{2}</strong></td></tr>", color3, LocalizationManager.GetLocaleResourceString("Order.Sub-Total", languageId), CusSubTotal));
+            sb.AppendLine(string.Format("<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{1}</strong></td> <td style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{2}</strong></td></tr>", color3, localizationManager.GetLocaleResourceString("Order.Sub-Total", languageId), CusSubTotal));
             
             //discount (applied to order subtotal)
             if (dislaySubTotalDiscount)
             {
-                sb.AppendLine(string.Format("<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{1}</strong></td> <td style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{2}</strong></td></tr>", color3, LocalizationManager.GetLocaleResourceString("Order.Discount", languageId), CusSubTotalDiscount));
+                sb.AppendLine(string.Format("<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{1}</strong></td> <td style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{2}</strong></td></tr>", color3, localizationManager.GetLocaleResourceString("Order.Discount", languageId), CusSubTotalDiscount));
             }
             
 
             //shipping
             if (dislayShipping)
             {
-                sb.AppendLine(string.Format("<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{1}</strong></td> <td style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{2}</strong></td></tr>", color3, LocalizationManager.GetLocaleResourceString("Order.Shipping", languageId), CusShipTotal));
+                sb.AppendLine(string.Format("<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{1}</strong></td> <td style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{2}</strong></td></tr>", color3, localizationManager.GetLocaleResourceString("Order.Shipping", languageId), CusShipTotal));
             }
 
             //payment method fee
             if (displayPaymentMethodFee)
             {
-                string paymentMethodFeeTitle = LocalizationManager.GetLocaleResourceString("Order.PaymentMethodAdditionalFee", languageId);
+                string paymentMethodFeeTitle = localizationManager.GetLocaleResourceString("Order.PaymentMethodAdditionalFee", languageId);
                 sb.AppendLine(string.Format("<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{1}</strong></td> <td style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{2}</strong></td></tr>", color3, paymentMethodFeeTitle, CusPaymentMethodAdditionalFee));
             }
 
             //tax
             if (displayTax)
             {
-                sb.AppendLine(string.Format("<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{1}</strong></td> <td style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{2}</strong></td></tr>", color3, LocalizationManager.GetLocaleResourceString("Order.Tax", languageId), CusTaxTotal));
+                sb.AppendLine(string.Format("<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{1}</strong></td> <td style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{2}</strong></td></tr>", color3, localizationManager.GetLocaleResourceString("Order.Tax", languageId), CusTaxTotal));
             }
             if (displayTaxRates)
             {
                 foreach (var item in taxRates)
                 {
-                    string taxRate = String.Format(LocalizationManager.GetLocaleResourceString("Order.Totals.TaxRate"), PriceHelper.FormatTaxRate(item.Key));
+                    string taxRate = String.Format(localizationManager.GetLocaleResourceString("Order.Totals.TaxRate"), PriceHelper.FormatTaxRate(item.Key));
                     string taxValue = PriceHelper.FormatPrice(item.Value, true, order.CustomerCurrencyCode, false);
                     sb.AppendLine(string.Format("<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{1}</strong></td> <td style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{2}</strong></td></tr>", color3, taxRate, taxValue));
                 }
@@ -363,14 +365,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             //discount
             if (dislayDiscount)
             {
-                sb.AppendLine(string.Format("<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{1}</strong></td> <td style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{2}</strong></td></tr>", color3, LocalizationManager.GetLocaleResourceString("Order.Discount", languageId), CusDiscount));
+                sb.AppendLine(string.Format("<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{1}</strong></td> <td style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{2}</strong></td></tr>", color3, localizationManager.GetLocaleResourceString("Order.Discount", languageId), CusDiscount));
             }
             
             //gift cards
             var gcuhC = IoCFactory.Resolve<IOrderService>().GetAllGiftCardUsageHistoryEntries(null, null, order.OrderId);
             foreach (var giftCardUsageHistory in gcuhC)
             {
-                string giftCardText = String.Format(LocalizationManager.GetLocaleResourceString("Order.GiftCardInfo", languageId), HttpUtility.HtmlEncode(giftCardUsageHistory.GiftCard.GiftCardCouponCode));
+                string giftCardText = String.Format(localizationManager.GetLocaleResourceString("Order.GiftCardInfo", languageId), HttpUtility.HtmlEncode(giftCardUsageHistory.GiftCard.GiftCardCouponCode));
                 string giftCardAmount = PriceHelper.FormatPrice(-giftCardUsageHistory.UsedValueInCustomerCurrency, true, order.CustomerCurrencyCode, false);
                 sb.AppendLine(string.Format("<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{1}</strong></td> <td style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{2}</strong></td></tr>", color3, giftCardText, giftCardAmount));
             }
@@ -378,13 +380,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             //reward points
             if (order.RedeemedRewardPoints != null)
             {
-                string rpTitle = string.Format(LocalizationManager.GetLocaleResourceString("Order.Totals.RewardPoints", languageId), -order.RedeemedRewardPoints.Points);
+                string rpTitle = string.Format(localizationManager.GetLocaleResourceString("Order.Totals.RewardPoints", languageId), -order.RedeemedRewardPoints.Points);
                 string rpAmount = PriceHelper.FormatPrice(-order.RedeemedRewardPoints.UsedAmountInCustomerCurrency, true, order.CustomerCurrencyCode, false);
                 sb.AppendLine(string.Format("<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{1}</strong></td> <td style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{2}</strong></td></tr>", color3, rpTitle, rpAmount));
             }
 
             //total
-            sb.AppendLine(string.Format("<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{1}</strong></td> <td style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{2}</strong></td></tr>", color3, LocalizationManager.GetLocaleResourceString("Order.OrderTotal", languageId), CusTotal));
+            sb.AppendLine(string.Format("<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{1}</strong></td> <td style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{2}</strong></td></tr>", color3, localizationManager.GetLocaleResourceString("Order.OrderTotal", languageId), CusTotal));
             #endregion
             
             sb.AppendLine("</table>");

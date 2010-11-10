@@ -72,11 +72,11 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 {
                     //can be removed
                     if (String.IsNullOrEmpty(keywords))
-                        throw new NopException(LocalizationManager.GetLocaleResourceString("Forum.SearchTermCouldNotBeEmpty"));
+                        throw new NopException(GetLocaleResourceString("Forum.SearchTermCouldNotBeEmpty"));
 
                     int searchTermMinimumLength = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Search.ForumSearchTermMinimumLength", 3);
                     if (keywords.Length < searchTermMinimumLength)
-                        throw new NopException(string.Format(LocalizationManager.GetLocaleResourceString("Forum.SearchTermMinimumLengthIsNCharacters"), searchTermMinimumLength));
+                        throw new NopException(string.Format(GetLocaleResourceString("Forum.SearchTermMinimumLengthIsNCharacters"), searchTermMinimumLength));
 
                     int forumId = 0;
                     ForumSearchTypeEnum searchWithin = 0;

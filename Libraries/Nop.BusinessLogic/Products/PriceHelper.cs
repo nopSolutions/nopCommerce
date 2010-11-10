@@ -656,14 +656,15 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         public static string FormatPrice(decimal price, bool showCurrency, 
             Currency targetCurrency, Language language, bool priceIncludesTax, bool showTax)
         {
-            string currencyString = LocalizationManager.GetCurrencyString(price, showCurrency, targetCurrency);
+            var localizationManager= IoCFactory.Resolve<ILocalizationManager>();
+            string currencyString = localizationManager.GetCurrencyString(price, showCurrency, targetCurrency);
 
             if (showTax)
             {
                 string formatStr = string.Empty;
                 if (priceIncludesTax)
                 {
-                    formatStr = LocalizationManager.GetLocaleResourceString("Products.InclTaxSuffix", language.LanguageId, false);
+                    formatStr = localizationManager.GetLocaleResourceString("Products.InclTaxSuffix", language.LanguageId, false);
                     if (String.IsNullOrEmpty(formatStr))
                     {
                         formatStr = "{0} incl tax";
@@ -671,7 +672,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                 }
                 else
                 {
-                    formatStr = LocalizationManager.GetLocaleResourceString("Products.ExclTaxSuffix", language.LanguageId, false);
+                    formatStr = localizationManager.GetLocaleResourceString("Products.ExclTaxSuffix", language.LanguageId, false);
                     if (String.IsNullOrEmpty(formatStr))
                     {
                         formatStr = "{0} excl tax";
@@ -870,6 +871,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
 
             string stockMessage = string.Empty;
 
+            var localizationManager = IoCFactory.Resolve<ILocalizationManager>();
+
             if (productVariant.ManageInventory == (int)ManageInventoryMethodEnum.ManageStock
                 && productVariant.DisplayStockAvailability)
             {
@@ -882,18 +885,18 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                                 if (productVariant.DisplayStockQuantity)
                                 {
                                     //display "in stock" with stock quantity
-                                    stockMessage = string.Format(LocalizationManager.GetLocaleResourceString("Products.Availability"), string.Format(LocalizationManager.GetLocaleResourceString("Products.InStockWithQuantity"), productVariant.StockQuantity));
+                                    stockMessage = string.Format(localizationManager.GetLocaleResourceString("Products.Availability"), string.Format(localizationManager.GetLocaleResourceString("Products.InStockWithQuantity"), productVariant.StockQuantity));
                                 }
                                 else
                                 {
                                     //display "in stock" without stock quantity
-                                    stockMessage = string.Format(LocalizationManager.GetLocaleResourceString("Products.Availability"), LocalizationManager.GetLocaleResourceString("Products.InStock"));
+                                    stockMessage = string.Format(localizationManager.GetLocaleResourceString("Products.Availability"), localizationManager.GetLocaleResourceString("Products.InStock"));
                                 }
                             }
                             else
                             {
                                 //display "out of stock"
-                                stockMessage = string.Format(LocalizationManager.GetLocaleResourceString("Products.Availability"), LocalizationManager.GetLocaleResourceString("Products.OutOfStock"));
+                                stockMessage = string.Format(localizationManager.GetLocaleResourceString("Products.Availability"), localizationManager.GetLocaleResourceString("Products.OutOfStock"));
                             }
                         }
                         break;
@@ -904,18 +907,18 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                                 if (productVariant.DisplayStockQuantity)
                                 {
                                     //display "in stock" with stock quantity
-                                    stockMessage = string.Format(LocalizationManager.GetLocaleResourceString("Products.Availability"), string.Format(LocalizationManager.GetLocaleResourceString("Products.InStockWithQuantity"), productVariant.StockQuantity));
+                                    stockMessage = string.Format(localizationManager.GetLocaleResourceString("Products.Availability"), string.Format(localizationManager.GetLocaleResourceString("Products.InStockWithQuantity"), productVariant.StockQuantity));
                                 }
                                 else
                                 {
                                     //display "in stock" without stock quantity
-                                    stockMessage = string.Format(LocalizationManager.GetLocaleResourceString("Products.Availability"), LocalizationManager.GetLocaleResourceString("Products.InStock"));
+                                    stockMessage = string.Format(localizationManager.GetLocaleResourceString("Products.Availability"), localizationManager.GetLocaleResourceString("Products.InStock"));
                                 }
                             }
                             else
                             {
                                 //display "in stock" without stock quantity
-                                stockMessage = string.Format(LocalizationManager.GetLocaleResourceString("Products.Availability"), LocalizationManager.GetLocaleResourceString("Products.InStock"));
+                                stockMessage = string.Format(localizationManager.GetLocaleResourceString("Products.Availability"), localizationManager.GetLocaleResourceString("Products.InStock"));
                             }
                         }
                         break;
@@ -926,18 +929,18 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                                 if (productVariant.DisplayStockQuantity)
                                 {
                                     //display "in stock" with stock quantity
-                                    stockMessage = string.Format(LocalizationManager.GetLocaleResourceString("Products.Availability"), string.Format(LocalizationManager.GetLocaleResourceString("Products.InStockWithQuantity"), productVariant.StockQuantity));
+                                    stockMessage = string.Format(localizationManager.GetLocaleResourceString("Products.Availability"), string.Format(localizationManager.GetLocaleResourceString("Products.InStockWithQuantity"), productVariant.StockQuantity));
                                 }
                                 else
                                 {
                                     //display "in stock" without stock quantity
-                                    stockMessage = string.Format(LocalizationManager.GetLocaleResourceString("Products.Availability"), LocalizationManager.GetLocaleResourceString("Products.InStock"));
+                                    stockMessage = string.Format(localizationManager.GetLocaleResourceString("Products.Availability"), localizationManager.GetLocaleResourceString("Products.InStock"));
                                 }
                             }
                             else
                             {
                                 //display "backorder" without stock quantity
-                                stockMessage = string.Format(LocalizationManager.GetLocaleResourceString("Products.Availability"), LocalizationManager.GetLocaleResourceString("Products.Backordering"));
+                                stockMessage = string.Format(localizationManager.GetLocaleResourceString("Products.Availability"), localizationManager.GetLocaleResourceString("Products.Backordering"));
                             }
                         }
                         break;

@@ -211,7 +211,7 @@
     <Compile Include="Installation\NopSqlDataHelper.cs" />
     <Compile Include="IoC\IoCFactory.cs" />
     <Compile Include="IoC\PerExecutionContextLifetimeManager.cs" />
-    <Compile Include="Localization\ILocaleStringResourceManager.cs" />
+    <Compile Include="Localization\ILocalizationManager.cs" />
     <Compile Include="Localization\NopResourceExpressionBuilder.cs" />
     <Compile Include="Maintenance\BackupFile.cs" />
     <Compile Include="Maintenance\IMaintenanceService.cs" />
@@ -462,7 +462,6 @@
     <Compile Include="Promo\Affiliates\AffiliateService.cs" />
     <Compile Include="Categories\CategoryService.cs" />
     <Compile Include="Templates\TemplateService.cs" />
-    <Compile Include="Localization\LocaleStringResourceManager.cs" />
     <Compile Include="Directory\CountryService.cs" />
     <Compile Include="Directory\CurrencyService.cs" />
     <Compile Include="Customer\CustomerService.cs" />

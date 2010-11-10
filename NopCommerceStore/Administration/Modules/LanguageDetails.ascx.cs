@@ -99,7 +99,9 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                CommonHelper.WriteResponseXml(ExportManager.ExportResources(this.LanguageId), String.Format("language_{0}.xml", LanguageId));
+                string pack = IoCFactory.Resolve<ILocalizationManager>().LanguagePackExport(this.LanguageId);
+                string fileName = String.Format("language_{0}.xml", LanguageId);
+                CommonHelper.WriteResponseXml(pack, fileName);
             }
             catch(Exception ex)
             {

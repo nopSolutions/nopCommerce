@@ -33,7 +33,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            var localeStringResource = IoCFactory.Resolve<ILocaleStringResourceManager>().GetLocaleStringResourceById(this.LocaleStringResourceId);
+            var localeStringResource = IoCFactory.Resolve<ILocalizationManager>().GetLocaleStringResourceById(this.LocaleStringResourceId);
             if (localeStringResource != null)
             {
                 Language language = IoCFactory.Resolve<ILanguageService>().GetLanguageById(localeStringResource.LanguageId);
@@ -96,8 +96,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                IoCFactory.Resolve<ILocaleStringResourceManager>().DeleteLocaleStringResource(this.LocaleStringResourceId);
-                LocaleStringResource localeStringResource = IoCFactory.Resolve<ILocaleStringResourceManager>().GetLocaleStringResourceById(this.LocaleStringResourceId);
+                IoCFactory.Resolve<ILocalizationManager>().DeleteLocaleStringResource(this.LocaleStringResourceId);
+                LocaleStringResource localeStringResource = IoCFactory.Resolve<ILocalizationManager>().GetLocaleStringResourceById(this.LocaleStringResourceId);
                 if (localeStringResource != null)
                     Response.Redirect("LocaleStringResources.aspx?LanguageID=" + localeStringResource.LanguageId.ToString());
                 else

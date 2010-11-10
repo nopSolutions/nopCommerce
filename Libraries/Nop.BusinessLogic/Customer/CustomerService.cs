@@ -1249,7 +1249,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             {
                 var rph = IoCFactory.Resolve<IOrderService>().InsertRewardPointsHistory(customer.CustomerId, 0,
                     IoCFactory.Resolve<IOrderService>().RewardPointsForRegistration, decimal.Zero, decimal.Zero,
-                    string.Empty, LocalizationManager.GetLocaleResourceString("RewardPoints.Message.EarnedForRegistration"),
+                    string.Empty, IoCFactory.Resolve<ILocalizationManager>().GetLocaleResourceString("RewardPoints.Message.EarnedForRegistration"),
                     DateTime.UtcNow);
             }
 
@@ -1348,7 +1348,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         public void ModifyPassword(int customerId, string newPassword)
         {
             if (String.IsNullOrWhiteSpace(newPassword))
-                throw new NopException(LocalizationManager.GetLocaleResourceString("Customer.PasswordIsRequired"));
+                throw new NopException(IoCFactory.Resolve<ILocalizationManager>().GetLocaleResourceString("Customer.PasswordIsRequired"));
             newPassword = newPassword.Trim();
 
             var customer = GetCustomerById(customerId);

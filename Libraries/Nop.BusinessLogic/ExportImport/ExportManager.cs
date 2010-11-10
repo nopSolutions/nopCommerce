@@ -103,16 +103,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
         #endregion
 
         #region Methods
-        /// <summary>
-        /// Export all string resources and message templates as XML
-        /// </summary>
-        /// <param name="languageId">Language identifier</param>
-        /// <returns>XML content</returns>
-        public static string ExportResources(int languageId)
-        {
-            return LocalizationManager.LanguagePackExport(languageId);
-
-        }
 
         /// <summary>
         /// Export customer list to xml

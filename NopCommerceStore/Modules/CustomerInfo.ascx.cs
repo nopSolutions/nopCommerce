@@ -265,7 +265,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                             if (!String.IsNullOrEmpty(customer.VatNumber) && IoCFactory.Resolve<ITaxService>().EUVatEmailAdminWhenNewVATSubmitted)
                             {
                                 IoCFactory.Resolve<IMessageService>().SendNewVATSubmittedStoreOwnerNotification(customer,
-                                    vatName, vatAddress, LocalizationManager.DefaultAdminLanguage.LanguageId);
+                                    vatName, vatAddress, IoCFactory.Resolve<ILocalizationManager>().DefaultAdminLanguage.LanguageId);
                             }
                         }
                     }

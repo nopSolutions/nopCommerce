@@ -163,7 +163,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.IoC
             container.RegisterType<ICurrencyService, CurrencyService>(new PerExecutionContextLifetimeManager());
             container.RegisterType<ILanguageService, LanguageService>(new PerExecutionContextLifetimeManager());
             container.RegisterType<IStateProvinceService, StateProvinceService>(new PerExecutionContextLifetimeManager());
-            container.RegisterType<ILocaleStringResourceManager, LocaleStringResourceManager>(new PerExecutionContextLifetimeManager());
+            container.RegisterType<ILocalizationManager, LocalizationManager>(new PerExecutionContextLifetimeManager());
             container.RegisterType<IMaintenanceService, MaintenanceService>(new PerExecutionContextLifetimeManager());
             container.RegisterType<IManufacturerService, ManufacturerService>(new PerExecutionContextLifetimeManager());
             container.RegisterType<IMeasureService, MeasureService>(new PerExecutionContextLifetimeManager());

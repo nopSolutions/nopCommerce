@@ -1895,7 +1895,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
 
                         if (decrease && productVariant.NotifyAdminForQuantityBelow > newStockQuantity)
                         {
-                            IoCFactory.Resolve<IMessageService>().SendQuantityBelowStoreOwnerNotification(productVariant, LocalizationManager.DefaultAdminLanguage.LanguageId);
+                            IoCFactory.Resolve<IMessageService>().SendQuantityBelowStoreOwnerNotification(productVariant, IoCFactory.Resolve<ILocalizationManager>().DefaultAdminLanguage.LanguageId);
                         }
 
                         productVariant.StockQuantity = newStockQuantity;
@@ -2203,13 +2203,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             //activity log
             IoCFactory.Resolve<ICustomerActivityService>().InsertActivity(
                 "WriteProductReview",
-                LocalizationManager.GetLocaleResourceString("ActivityLog.WriteProductReview"),
+                IoCFactory.Resolve<ILocalizationManager>().GetLocaleResourceString("ActivityLog.WriteProductReview"),
                 productId);
 
             //notify store owner
             if (notify)
             {
-                IoCFactory.Resolve<IMessageService>().SendProductReviewNotificationMessage(productReview, LocalizationManager.DefaultAdminLanguage.LanguageId);
+                IoCFactory.Resolve<IMessageService>().SendProductReviewNotificationMessage(productReview, IoCFactory.Resolve<ILocalizationManager>().DefaultAdminLanguage.LanguageId);
             }
 
             return productReview;

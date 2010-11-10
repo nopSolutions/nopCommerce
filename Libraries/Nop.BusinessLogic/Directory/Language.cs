@@ -69,6 +69,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
         /// Gets or sets the display order
         /// </summary>
         public int DisplayOrder { get; set; }
+
         #endregion
 
         #region Custom Properties
@@ -79,7 +80,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
         {
             get
             {
-                return IoCFactory.Resolve<ILocaleStringResourceManager>().GetAllResourcesByLanguageId(this.LanguageId);
+                return IoCFactory.Resolve<ILocalizationManager>().GetAllResourcesByLanguageId(this.LanguageId);
             }
         }
 

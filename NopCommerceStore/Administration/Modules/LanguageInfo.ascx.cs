@@ -163,7 +163,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                             using (StreamReader sr = new StreamReader(importResourcesFile.InputStream, Encoding.UTF8))
                             {
                                 string content = sr.ReadToEnd();
-                                ImportManager.ImportResources(this.LanguageId, content);
+                                IoCFactory.Resolve<ILocalizationManager>().LanguagePackImport(this.LanguageId, content);
                                 ShowMessage(GetLocaleResourceString("Admin.LanguageInfo.ResourcesImported"));
                             }
                         }

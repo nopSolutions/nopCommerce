@@ -412,7 +412,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
             //notifications
             if (notify)
             {
-                IoCFactory.Resolve<IMessageService>().SendNewsCommentNotificationMessage(newsComment, LocalizationManager.DefaultAdminLanguage.LanguageId);
+                IoCFactory.Resolve<IMessageService>().SendNewsCommentNotificationMessage(newsComment, IoCFactory.Resolve<ILocalizationManager>().DefaultAdminLanguage.LanguageId);
             }
 
             return newsComment;

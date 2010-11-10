@@ -1003,7 +1003,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// <returns>VAT Number status name</returns>
         public string GetVatNumberStatusName(VatNumberStatusEnum status)
         {
-            return LocalizationManager.GetLocaleResourceString(string.Format("VatNumberStatus.{0}", status.ToString()));
+            return IoCFactory.Resolve<ILocalizationManager>().GetLocaleResourceString(string.Format("VatNumberStatus.{0}", status.ToString()));
         }
 
         #endregion

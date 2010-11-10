@@ -26,6 +26,7 @@ using System.Xml.Linq;
 using NopSolutions.NopCommerce.BusinessLogic;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.BusinessLogic.Localization;
+using NopSolutions.NopCommerce.BusinessLogic.IoC;
 
 namespace NopSolutions.NopCommerce.Web
 {
@@ -50,7 +51,20 @@ namespace NopSolutions.NopCommerce.Web
         protected string GetLocaleResourceString(string resourceName)
         {
             Language language = NopContext.Current.WorkingLanguage;
-            return LocalizationManager.GetLocaleResourceString(resourceName, language.LanguageId);
+            return this.LocalizationManager.GetLocaleResourceString(resourceName, language.LanguageId);
+        }
+        
+        private ILocalizationManager _localizationManager;
+        public ILocalizationManager LocalizationManager
+        {
+            get
+            {
+                if (_localizationManager == null)
+                {
+                    _localizationManager = IoCFactory.Resolve<ILocalizationManager>();
+                }
+                return _localizationManager;
+            }
         }
     }
 }

@@ -113,7 +113,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     ReturnRequest rr = IoCFactory.Resolve<IOrderService>().GetReturnRequestById(this.ReturnRequestId);
                     if (rr != null)
                     {
-                        IoCFactory.Resolve<IMessageService>().SendReturnRequestStatusChangedCustomerNotification(rr, LocalizationManager.DefaultAdminLanguage.LanguageId);
+                        IoCFactory.Resolve<IMessageService>().SendReturnRequestStatusChangedCustomerNotification(rr, IoCFactory.Resolve<ILocalizationManager>().DefaultAdminLanguage.LanguageId);
                     }
                 }
                 catch (Exception exc)

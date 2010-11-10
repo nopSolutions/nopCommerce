@@ -421,7 +421,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
 
             if (notify)
             {
-                IoCFactory.Resolve<IMessageService>().SendBlogCommentNotificationMessage(blogComment, LocalizationManager.DefaultAdminLanguage.LanguageId);
+                IoCFactory.Resolve<IMessageService>().SendBlogCommentNotificationMessage(blogComment, IoCFactory.Resolve<ILocalizationManager>().DefaultAdminLanguage.LanguageId);
             }
 
             return blogComment;

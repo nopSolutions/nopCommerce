@@ -40,15 +40,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
     public partial class ImportManager
     {
         #region Methods
-        /// <summary>
-        /// Import string resources and message templates from XML
-        /// </summary>
-        /// <param name="languageId">Language identifier</param>
-        /// <param name="content">XML content</param>
-        public static void ImportResources(int languageId, string content)
-        {
-            LocalizationManager.LanguagePackImport(languageId, content);
-        }
 
         /// <summary>
         /// Import customer list from XLS file

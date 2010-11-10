@@ -393,7 +393,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         /// <returns>Discount limitation name</returns>
         public static string GetDiscountLimitationName(this DiscountLimitationEnum dl)
         {
-            string name = LocalizationManager.GetLocaleResourceString(
+            string name = IoCFactory.Resolve<ILocalizationManager>().GetLocaleResourceString(
                 string.Format("DiscountLimitation.{0}", (int)dl),
                 NopContext.Current.WorkingLanguage.LanguageId,
                 true,
@@ -409,7 +409,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         /// <returns>Discount requirement name</returns>
         public static string GetDiscountRequirementName(this DiscountRequirementEnum dr)
         {
-            string name = LocalizationManager.GetLocaleResourceString(
+            string name = IoCFactory.Resolve<ILocalizationManager>().GetLocaleResourceString(
                 string.Format("DiscountRequirement.{0}", (int)dr),
                 NopContext.Current.WorkingLanguage.LanguageId,
                 true,
@@ -425,7 +425,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         /// <returns>Discount type name</returns>
         public static string GetDiscountTypeName(this DiscountTypeEnum dt)
         {
-            string name = LocalizationManager.GetLocaleResourceString(
+            string name = IoCFactory.Resolve<ILocalizationManager>().GetLocaleResourceString(
                 string.Format("DiscountType.{0}", (int)dt),
                 NopContext.Current.WorkingLanguage.LanguageId,
                 true,

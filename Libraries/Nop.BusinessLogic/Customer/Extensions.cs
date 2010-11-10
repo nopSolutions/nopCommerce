@@ -108,7 +108,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
 
             if (customer.IsGuest)
             {
-                return LocalizationManager.GetLocaleResourceString("Customer.Guest");
+                return IoCFactory.Resolve<ILocalizationManager>().GetLocaleResourceString("Customer.Guest");
             }
 
             string result = string.Empty;
