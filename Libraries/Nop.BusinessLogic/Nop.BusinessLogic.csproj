@@ -209,6 +209,10 @@
     <Compile Include="ExportImport\ExcelHelper.cs" />
     <Compile Include="ExportImport\ExcelHelperReadTableMode.cs" />
     <Compile Include="Installation\NopSqlDataHelper.cs" />
+    <Compile Include="IoC\UnityDependencyResolver.cs" />
+    <Compile Include="IoC\DependencyResolverFactory.cs" />
+    <Compile Include="IoC\IDependencyResolverFactory.cs" />
+    <Compile Include="IoC\IDependencyResolver.cs" />
     <Compile Include="IoC\IoCFactory.cs" />
     <Compile Include="IoC\PerExecutionContextLifetimeManager.cs" />
     <Compile Include="Localization\ILocalizationManager.cs" />

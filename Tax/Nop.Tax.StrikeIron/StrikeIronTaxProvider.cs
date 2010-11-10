@@ -23,7 +23,6 @@ using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.Tax;
 using NopSolutions.NopCommerce.Tax.TaxDataBasic;
 using NopSolutions.NopCommerce.BusinessLogic.IoC;
-using Microsoft.Practices.Unity;
 
 namespace NopSolutions.NopCommerce.Tax
 {

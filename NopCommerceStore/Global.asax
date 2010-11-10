@@ -25,6 +25,10 @@
         NopConfig.Init();
         if (InstallerHelper.ConnectionStringIsSet())
         {
+            //initialize IoC
+            IoCFactory.InitializeWith(new DependencyResolverFactory());
+            
+            //initialize task manager
             TaskManager.Instance.Initialize(NopConfig.ScheduleTasks);
             TaskManager.Instance.Start();
         }
