@@ -1942,8 +1942,20 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO
         /// <returns>Topic page URL</returns>
         public static string GetTopicUrl(int topicId, string title)
         {
-            string url2 = SEOHelper.EnableUrlRewriting ? IoCFactory.Resolve<ISettingManager>().GetSettingValue("SEO.Topic.UrlRewriteFormat") : "{0}Topic.aspx?TopicId={1}";            
-            string url = string.Format(url2, CommonHelper.GetStoreLocation(), topicId, GetSEName(title));
+            return GetTopicUrl(topicId, title, CommonHelper.IsCurrentConnectionSecured());
+        }
+
+        /// <summary>
+        /// Gets Topic page URL
+        /// </summary>
+        /// <param name="topicId">Topic identifier</param>
+        /// <param name="title">Localized topic title</param>
+        /// <param name="httpSecured">HTTP secured URL</param>
+        /// <returns>Topic page URL</returns>
+        public static string GetTopicUrl(int topicId, string title, bool httpSecured)
+        {
+            string url2 = SEOHelper.EnableUrlRewriting ? IoCFactory.Resolve<ISettingManager>().GetSettingValue("SEO.Topic.UrlRewriteFormat") : "{0}Topic.aspx?TopicId={1}";
+            string url = string.Format(url2, CommonHelper.GetStoreLocation(httpSecured), topicId, GetSEName(title));
             return url.ToLowerInvariant();
         }
 

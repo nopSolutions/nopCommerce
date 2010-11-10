@@ -92,7 +92,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         txtTitle.Text = content.Title;
                         txtBody.Value = content.Body;
                         pnlUrl.Visible = true;
-                        string url = SEOHelper.GetTopicUrl(content.TopicId, content.Title);
+                        string url = SEOHelper.GetTopicUrl(content.TopicId, content.Title, false);
                         hlUrl.Text = url;
                         hlUrl.NavigateUrl = url;
                     }
