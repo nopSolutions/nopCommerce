@@ -24,10 +24,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
     public enum LogTypeEnum : int
     {
         /// <summary>
-        /// Unknown log item type
-        /// </summary>
-        Unknown = 0,
-        /// <summary>
         /// Customer error log item type
         /// </summary>
         CustomerError = 1,
@@ -55,5 +51,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
         /// Tax error log item type
         /// </summary>
         TaxError = 7,
+        /// <summary>
+        /// Unknown log item type
+        /// </summary>
+        Unknown = 20,
     }
 }

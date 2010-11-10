@@ -1147,3 +1147,8 @@ BEGIN
 DROP TABLE [Nop_OrderStatus]
 END
 GO
+
+UPDATE dbo.Nop_Log
+SET LogTypeId=20
+WHERE LogTypeId=0
+GO
