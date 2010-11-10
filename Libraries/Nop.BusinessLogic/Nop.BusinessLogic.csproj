@@ -214,7 +214,7 @@
     <Compile Include="IoC\IDependencyResolverFactory.cs" />
     <Compile Include="IoC\IDependencyResolver.cs" />
     <Compile Include="IoC\IoCFactory.cs" />
-    <Compile Include="IoC\PerExecutionContextLifetimeManager.cs" />
+    <Compile Include="IoC\UnityPerExecutionContextLifetimeManager.cs" />
     <Compile Include="Localization\ILocalizationManager.cs" />
     <Compile Include="Localization\NopResourceExpressionBuilder.cs" />
     <Compile Include="Maintenance\BackupFile.cs" />

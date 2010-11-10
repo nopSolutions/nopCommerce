@@ -30,7 +30,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.IoC
     /// execution environment. For example, in  a WCF request or ASP.NET request, diferent
     /// call to resolve method return the same instance
     /// </summary>
-    public class PerExecutionContextLifetimeManager : LifetimeManager
+    public class UnityPerExecutionContextLifetimeManager : LifetimeManager
     {
         #region Nested
 
@@ -72,13 +72,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.IoC
         /// <summary>
         /// Default constructor
         /// </summary>
-        public PerExecutionContextLifetimeManager() : this(Guid.NewGuid()) { }
+        public UnityPerExecutionContextLifetimeManager() : this(Guid.NewGuid()) { }
 
         /// <summary>
         ///  Constructor
         /// </summary>
         /// <param name="key">A key for this lifetimemanager resolver</param>
-        PerExecutionContextLifetimeManager(Guid key)
+        UnityPerExecutionContextLifetimeManager(Guid key)
         {
             if (key == Guid.Empty)
                 throw new ArgumentException("Key cannot be empty");
@@ -148,6 +148,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.IoC
                 CallContext.FreeNamedDataSlot(_key.ToString());
             }
         }
+
         /// <summary>
         /// <see cref="M:Microsoft.Practices.Unity.LifetimeManager.SetValue"/>
         /// </summary>
