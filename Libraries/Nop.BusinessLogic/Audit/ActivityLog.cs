@@ -63,6 +63,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
         #endregion
 
         #region Custom properties
+
         /// <summary>
         /// Gets the activity log type
         /// </summary>
@@ -73,6 +74,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
                 return IoCFactory.Resolve<ICustomerActivityService>().GetActivityTypeById(this.ActivityLogTypeId);
             }
         }
+
         /// <summary>
         /// Gers the customer
         /// </summary>
@@ -83,6 +85,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
                 return IoCFactory.Resolve<ICustomerService>().GetCustomerById(this.CustomerId);
             }
         }
+
         #endregion
 
         #region Navigation Properties

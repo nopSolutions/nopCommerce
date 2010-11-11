@@ -156,6 +156,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
                     break;
                 case DiscountRequirementEnum.MustBeRegistered:
                     {
+                        //customer should be registered
                         bool result = customer != null && !customer.IsGuest;
                         return result;
                     }
@@ -233,7 +234,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
                     break;
                 case DiscountRequirementEnum.HadPurchasedAllOfTheseProductVariants:
                     {
-                        if (customer != null)
+                        //customer should be registered
+                        if (customer != null && !customer.IsGuest)
                         {
                             var restrictedProductVariants = IoCFactory.Resolve<IProductService>().GetProductVariantsRestrictedByDiscountId(discount.DiscountId);
                             var purchasedProductVariants = IoCFactory.Resolve<IOrderService>().GetAllOrderProductVariants(null, customer.CustomerId, null, null, OrderStatusEnum.Complete, null, null);
@@ -265,7 +267,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
                     break;
                 case DiscountRequirementEnum.HadPurchasedOneOfTheseProductVariants:
                     {
-                        if (customer != null)
+                        //customer should be registered
+                        if (customer != null && !customer.IsGuest)
                         {
                             var restrictedProductVariants = IoCFactory.Resolve<IProductService>().GetProductVariantsRestrictedByDiscountId(discount.DiscountId);
                             var purchasedProductVariants = IoCFactory.Resolve<IOrderService>().GetAllOrderProductVariants(null, customer.CustomerId, null, null, OrderStatusEnum.Complete, null, null);
@@ -295,7 +298,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
                     break;
                 case DiscountRequirementEnum.HadSpentAmount:
                     {
-                        if (customer != null)
+                        //customer should be registered
+                        if (customer != null && !customer.IsGuest)
                         {
                             var orders = customer.Orders.FindAll(o => o.OrderStatus == OrderStatusEnum.Complete);
                             decimal spentAmount = orders.Sum(o => o.OrderTotal);
@@ -357,26 +361,30 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
                     }
                 case DiscountLimitationEnum.OneTimePerCustomer:
                     {
-                        if (customer != null)
+                        if (customer != null && !customer.IsGuest)
                         {
+                            //registered customer
                             var usageHistory = IoCFactory.Resolve<IDiscountService>().GetAllDiscountUsageHistoryEntries(discount.DiscountId, customer.CustomerId, null);
                             return usageHistory.Count < 1;
                         }
                         else
                         {
-                            return false;
+                            //guest
+                            return true;
                         }
                     }
                 case DiscountLimitationEnum.NTimesPerCustomer:
                     {
-                        if (customer != null)
+                        if (customer != null && !customer.IsGuest)
                         {
+                            //registered customer
                             var usageHistory = IoCFactory.Resolve<IDiscountService>().GetAllDiscountUsageHistoryEntries(discount.DiscountId, customer.CustomerId, null);
                             return usageHistory.Count < discount.LimitationTimes;
                         }
                         else
                         {
-                            return false;
+                            //guest
+                            return true;
                         }
                     }
                 default:
