@@ -143,7 +143,7 @@ namespace NopSolutions.NopCommerce.Web.Templates.Products
             ctrlProductPrice.ProductVariantId = productVariant.ProductVariantId;
 
             //stock
-            string stockMessage = PriceHelper.FormatStockMessage(productVariant);
+            string stockMessage = productVariant.FormatStockMessage();
             if (!String.IsNullOrEmpty(stockMessage))
             {
                 lblStockAvailablity.Text = stockMessage;

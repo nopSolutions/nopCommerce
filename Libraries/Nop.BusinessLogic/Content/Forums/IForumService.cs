@@ -389,13 +389,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// <summary>
         /// Check whether user is allowed to watch topics
         /// </summary>
-        /// <param name="customerId">Customer identifier</param>
-        /// <returns>True if allowed, otherwise false</returns>
-        bool IsUserAllowedToSubscribe(int customerId);
-
-        /// <summary>
-        /// Check whether user is allowed to watch topics
-        /// </summary>
         /// <param name="customer">Customer</param>
         /// <returns>True if allowed, otherwise false</returns>
         bool IsUserAllowedToSubscribe(Customer customer);

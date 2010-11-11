@@ -114,7 +114,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             get
             {
                 if (_opv == null)
-                    _opv = IoC.Resolve<IOrderService>().GetOrderProductVariantById(PurchasedOrderProductVariantId);
+                    _opv = IoC.Resolve<IOrderService>().GetOrderProductVariantById(this.PurchasedOrderProductVariantId);
                 return _opv;
             }
         }

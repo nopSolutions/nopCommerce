@@ -62,6 +62,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Shipping;
 using NopSolutions.NopCommerce.BusinessLogic.Tax;
 using NopSolutions.NopCommerce.BusinessLogic.Templates;
 using NopSolutions.NopCommerce.BusinessLogic.Warehouses;
+using NopSolutions.NopCommerce.BusinessLogic.Installation;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Infrastructure
 {
@@ -158,18 +159,20 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Infrastructure
             container.RegisterType<ITemplateService, TemplateService>(new UnityPerExecutionContextLifetimeManager());
             container.RegisterType<IWarehouseService, WarehouseService>(new UnityPerExecutionContextLifetimeManager());
 
-
             //Object context
 
             //Connection string
-            var ecsbuilder = new EntityConnectionStringBuilder();
-            ecsbuilder.Provider = "System.Data.SqlClient";
-            ecsbuilder.ProviderConnectionString = NopConfig.ConnectionString;
-            ecsbuilder.Metadata = @"res://*/Data.NopModel.csdl|res://*/Data.NopModel.ssdl|res://*/Data.NopModel.msl";
-            string connectionString = ecsbuilder.ToString();
-            InjectionConstructor connectionStringParam = new InjectionConstructor(connectionString);
-            //Registering object context
-            container.RegisterType<NopObjectContext>(new UnityPerExecutionContextLifetimeManager(), connectionStringParam);
+            if (InstallerHelper.ConnectionStringIsSet())
+            {
+                var ecsbuilder = new EntityConnectionStringBuilder();
+                ecsbuilder.Provider = "System.Data.SqlClient";
+                ecsbuilder.ProviderConnectionString = NopConfig.ConnectionString;
+                ecsbuilder.Metadata = @"res://*/Data.NopModel.csdl|res://*/Data.NopModel.ssdl|res://*/Data.NopModel.msl";
+                string connectionString = ecsbuilder.ToString();
+                InjectionConstructor connectionStringParam = new InjectionConstructor(connectionString);
+                //Registering object context
+                container.RegisterType<NopObjectContext>(new UnityPerExecutionContextLifetimeManager(), connectionStringParam);
+            }
         }
 
         #endregion

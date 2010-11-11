@@ -82,23 +82,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Localization
         void LanguagePackImport(int languageId, string xml);
 
         /// <summary>
-        /// Gets currency string
-        /// </summary>
-        /// <param name="amount">Amount</param>
-        /// <returns>Currency string without exchange rate</returns>
-        string GetCurrencyString(decimal amount);
-
-        /// <summary>
-        /// Gets currency string
-        /// </summary>
-        /// <param name="amount">Amount</param>
-        /// <param name="showCurrency">A value indicating whether to show a currency</param>
-        /// <param name="targetCurrency">Target currency</param>
-        /// <returns>Currency string without exchange rate</returns>
-        string GetCurrencyString(decimal amount,
-            bool showCurrency, Currency targetCurrency);
-
-        /// <summary>
         /// Gets a resource string based on the specified ResourceKey property.
         /// </summary>
         /// <param name="resourceKey">A string representing a ResourceKey.</param>

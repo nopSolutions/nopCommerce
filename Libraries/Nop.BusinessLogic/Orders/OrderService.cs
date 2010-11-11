@@ -133,26 +133,30 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             {
                 if (this.RewardPointsForPurchases_Amount > decimal.Zero)
                 {
-                    int points = (int)Math.Truncate(order.OrderTotal / this.RewardPointsForPurchases_Amount * this.RewardPointsForPurchases_Points);
-                    if (points != 0)
+                    //Ensure that reward points are applied only to registered users
+                    if (order.Customer != null && !order.Customer.IsGuest)
                     {
-                        if (this.RewardPointsForPurchases_Awarded == order.OrderStatus)
+                        int points = (int)Math.Truncate(order.OrderTotal / this.RewardPointsForPurchases_Amount * this.RewardPointsForPurchases_Points);
+                        if (points != 0)
                         {
-                            var rph = InsertRewardPointsHistory(order.CustomerId,
-                                0, points, decimal.Zero,
-                                decimal.Zero, string.Empty,
-                                string.Format(IoC.Resolve<ILocalizationManager>().GetLocaleResourceString("RewardPoints.Message.EarnedForOrder"), order.OrderId),
-                                DateTime.UtcNow);
-                        }
+                            if (this.RewardPointsForPurchases_Awarded == order.OrderStatus)
+                            {
+                                var rph = InsertRewardPointsHistory(order.CustomerId,
+                                    0, points, decimal.Zero,
+                                    decimal.Zero, string.Empty,
+                                    string.Format(IoC.Resolve<ILocalizationManager>().GetLocaleResourceString("RewardPoints.Message.EarnedForOrder"), order.OrderId),
+                                    DateTime.UtcNow);
+                            }
 
 
-                        if (this.RewardPointsForPurchases_Canceled == order.OrderStatus)
-                        {
-                            var rph = InsertRewardPointsHistory(order.CustomerId,
-                                0, -points, decimal.Zero,
-                                decimal.Zero, string.Empty,
-                                string.Format(IoC.Resolve<ILocalizationManager>().GetLocaleResourceString("RewardPoints.Message.ReducedForOrder"), order.OrderId),
-                                DateTime.UtcNow);
+                            if (this.RewardPointsForPurchases_Canceled == order.OrderStatus)
+                            {
+                                var rph = InsertRewardPointsHistory(order.CustomerId,
+                                    0, -points, decimal.Zero,
+                                    decimal.Zero, string.Empty,
+                                    string.Format(IoC.Resolve<ILocalizationManager>().GetLocaleResourceString("RewardPoints.Message.ReducedForOrder"), order.OrderId),
+                                    DateTime.UtcNow);
+                            }
                         }
                     }
                 }

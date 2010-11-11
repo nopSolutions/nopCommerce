@@ -220,7 +220,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 //stock
                 if (pnlStockAvailablity != null && lblStockAvailablity != null)
                 {
-                    string stockMessage = PriceHelper.FormatStockMessage(productVariant);
+                    string stockMessage = productVariant.FormatStockMessage();
                     if (!String.IsNullOrEmpty(stockMessage))
                     {
                         lblStockAvailablity.Text = stockMessage;

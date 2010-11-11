@@ -1290,18 +1290,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
 
             return false;
         }
-
-        /// <summary>
-        /// Check whether user is allowed to watch topics
-        /// </summary>
-        /// <param name="customerId">Customer identifier</param>
-        /// <returns>True if allowed, otherwise false</returns>
-        public bool IsUserAllowedToSubscribe(int customerId)
-        {
-            var customer = IoC.Resolve<ICustomerService>().GetCustomerById(customerId);
-            return IsUserAllowedToSubscribe(customer);
-        }
-
+        
         /// <summary>
         /// Check whether user is allowed to watch topics
         /// </summary>

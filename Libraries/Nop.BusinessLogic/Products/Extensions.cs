@@ -104,5 +104,98 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
 
             return name;
         }
+
+        /// <summary>
+        /// Formats the stock availability/quantity message
+        /// </summary>
+        /// <param name="productVariant">Product variant</param>
+        /// <returns>The stock message</returns>
+        public static string FormatStockMessage(this ProductVariant productVariant)
+        {
+            if (productVariant == null)
+                throw new ArgumentNullException("productVariant");
+
+            string stockMessage = string.Empty;
+
+            var localizationManager = IoC.Resolve<ILocalizationManager>();
+
+            if (productVariant.ManageInventory == (int)ManageInventoryMethodEnum.ManageStock
+                && productVariant.DisplayStockAvailability)
+            {
+                switch (productVariant.Backorders)
+                {
+                    case (int)BackordersModeEnum.NoBackorders:
+                        {
+                            if (productVariant.StockQuantity > 0)
+                            {
+                                if (productVariant.DisplayStockQuantity)
+                                {
+                                    //display "in stock" with stock quantity
+                                    stockMessage = string.Format(localizationManager.GetLocaleResourceString("Products.Availability"), string.Format(localizationManager.GetLocaleResourceString("Products.InStockWithQuantity"), productVariant.StockQuantity));
+                                }
+                                else
+                                {
+                                    //display "in stock" without stock quantity
+                                    stockMessage = string.Format(localizationManager.GetLocaleResourceString("Products.Availability"), localizationManager.GetLocaleResourceString("Products.InStock"));
+                                }
+                            }
+                            else
+                            {
+                                //display "out of stock"
+                                stockMessage = string.Format(localizationManager.GetLocaleResourceString("Products.Availability"), localizationManager.GetLocaleResourceString("Products.OutOfStock"));
+                            }
+                        }
+                        break;
+                    case (int)BackordersModeEnum.AllowQtyBelow0:
+                        {
+                            if (productVariant.StockQuantity > 0)
+                            {
+                                if (productVariant.DisplayStockQuantity)
+                                {
+                                    //display "in stock" with stock quantity
+                                    stockMessage = string.Format(localizationManager.GetLocaleResourceString("Products.Availability"), string.Format(localizationManager.GetLocaleResourceString("Products.InStockWithQuantity"), productVariant.StockQuantity));
+                                }
+                                else
+                                {
+                                    //display "in stock" without stock quantity
+                                    stockMessage = string.Format(localizationManager.GetLocaleResourceString("Products.Availability"), localizationManager.GetLocaleResourceString("Products.InStock"));
+                                }
+                            }
+                            else
+                            {
+                                //display "in stock" without stock quantity
+                                stockMessage = string.Format(localizationManager.GetLocaleResourceString("Products.Availability"), localizationManager.GetLocaleResourceString("Products.InStock"));
+                            }
+                        }
+                        break;
+                    case (int)BackordersModeEnum.AllowQtyBelow0AndNotifyCustomer:
+                        {
+                            if (productVariant.StockQuantity > 0)
+                            {
+                                if (productVariant.DisplayStockQuantity)
+                                {
+                                    //display "in stock" with stock quantity
+                                    stockMessage = string.Format(localizationManager.GetLocaleResourceString("Products.Availability"), string.Format(localizationManager.GetLocaleResourceString("Products.InStockWithQuantity"), productVariant.StockQuantity));
+                                }
+                                else
+                                {
+                                    //display "in stock" without stock quantity
+                                    stockMessage = string.Format(localizationManager.GetLocaleResourceString("Products.Availability"), localizationManager.GetLocaleResourceString("Products.InStock"));
+                                }
+                            }
+                            else
+                            {
+                                //display "backorder" without stock quantity
+                                stockMessage = string.Format(localizationManager.GetLocaleResourceString("Products.Availability"), localizationManager.GetLocaleResourceString("Products.Backordering"));
+                            }
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            return stockMessage;
+        }
     }
 }

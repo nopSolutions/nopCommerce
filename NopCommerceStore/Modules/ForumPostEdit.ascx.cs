@@ -206,7 +206,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
                 phPriority.Visible = IoC.Resolve<IForumService>().IsUserAllowedToSetTopicPriority(NopContext.Current.User);
                 //subscription
-                if (IoC.Resolve<IForumService>().IsUserAllowedToSubscribe(NopContext.Current.User.CustomerId))
+                if (IoC.Resolve<IForumService>().IsUserAllowedToSubscribe(NopContext.Current.User))
                 {
                     phSubscribe.Visible = true;
                     var forumSubscription = IoC.Resolve<IForumService>().GetAllSubscriptions(NopContext.Current.User.CustomerId,
@@ -341,7 +341,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
                 phPriority.Visible = false;
                 //subscription
-                if (IoC.Resolve<IForumService>().IsUserAllowedToSubscribe(NopContext.Current.User.CustomerId))
+                if (IoC.Resolve<IForumService>().IsUserAllowedToSubscribe(NopContext.Current.User))
                 {
                     phSubscribe.Visible = true;
                     var forumSubscription = IoC.Resolve<IForumService>().GetAllSubscriptions(NopContext.Current.User.CustomerId,
@@ -525,7 +525,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     }
 
                     //subscription
-                    if (IoC.Resolve<IForumService>().IsUserAllowedToSubscribe(NopContext.Current.User.CustomerId))
+                    if (IoC.Resolve<IForumService>().IsUserAllowedToSubscribe(NopContext.Current.User))
                     {
                         var forumSubscription = IoC.Resolve<IForumService>().GetAllSubscriptions(NopContext.Current.User.CustomerId,
                             0, forumTopic.ForumTopicId, 1, 0).FirstOrDefault();
@@ -585,7 +585,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     IoC.Resolve<IForumService>().InsertPost(forumPost, true);
 
                     //subscription
-                    if (IoC.Resolve<IForumService>().IsUserAllowedToSubscribe(NopContext.Current.User.CustomerId))
+                    if (IoC.Resolve<IForumService>().IsUserAllowedToSubscribe(NopContext.Current.User))
                     {
                         var forumSubscription = IoC.Resolve<IForumService>().GetAllSubscriptions(NopContext.Current.User.CustomerId,
                             0, forumPost.TopicId, 1, 0).FirstOrDefault();
@@ -644,7 +644,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     IoC.Resolve<IForumService>().UpdatePost(forumPost);
 
                     //subscription
-                    if (IoC.Resolve<IForumService>().IsUserAllowedToSubscribe(NopContext.Current.User.CustomerId))
+                    if (IoC.Resolve<IForumService>().IsUserAllowedToSubscribe(NopContext.Current.User))
                     {
                         var forumSubscription = IoC.Resolve<IForumService>().GetAllSubscriptions(NopContext.Current.User.CustomerId,
                             0, forumPost.TopicId, 1, 0).FirstOrDefault();

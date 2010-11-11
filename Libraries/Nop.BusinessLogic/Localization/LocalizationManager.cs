@@ -236,51 +236,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Localization
         }
 
         /// <summary>
-        /// Gets currency string
-        /// </summary>
-        /// <param name="amount">Amount</param>
-        /// <returns>Currency string without exchange rate</returns>
-        public string GetCurrencyString(decimal amount)
-        {
-            bool showCurrency = true;
-            var targetCurrency = NopContext.Current.WorkingCurrency;
-            return GetCurrencyString(amount, showCurrency, targetCurrency);
-        }
-
-        /// <summary>
-        /// Gets currency string
-        /// </summary>
-        /// <param name="amount">Amount</param>
-        /// <param name="showCurrency">A value indicating whether to show a currency</param>
-        /// <param name="targetCurrency">Target currency</param>
-        /// <returns>Currency string without exchange rate</returns>
-        public string GetCurrencyString(decimal amount,
-            bool showCurrency, Currency targetCurrency)
-        {
-            string result = string.Empty;
-            if (!String.IsNullOrEmpty(targetCurrency.CustomFormatting))
-            {
-                result = amount.ToString(targetCurrency.CustomFormatting);
-            }
-            else
-            {
-                if (!String.IsNullOrEmpty(targetCurrency.DisplayLocale))
-                {
-                    result = amount.ToString("C", new CultureInfo(targetCurrency.DisplayLocale));
-                }
-                else
-                {
-                    result = String.Format("{0} ({1})", amount.ToString("N"), targetCurrency.CurrencyCode);
-                    return result;
-                }
-            }
-
-            if (showCurrency && IoC.Resolve<ICurrencyService>().GetAllCurrencies().Count > 1)
-                result = String.Format("{0} ({1})", result, targetCurrency.CurrencyCode);
-            return result;
-        }
-
-        /// <summary>
         /// Gets a resource string based on the specified ResourceKey property.
         /// </summary>
         /// <param name="resourceKey">A string representing a ResourceKey.</param>

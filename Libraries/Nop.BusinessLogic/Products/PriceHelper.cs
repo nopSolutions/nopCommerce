@@ -14,12 +14,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using System.Web.Compilation;
 using NopSolutions.NopCommerce.BusinessLogic.Categories;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 using NopSolutions.NopCommerce.BusinessLogic.Localization;
 using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
@@ -27,7 +29,6 @@ using NopSolutions.NopCommerce.BusinessLogic.Products.Attributes;
 using NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts;
 using NopSolutions.NopCommerce.BusinessLogic.Shipping;
 using NopSolutions.NopCommerce.BusinessLogic.Tax;
-using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Products
 {
@@ -195,6 +196,51 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                     }
                 }
             }
+            return result;
+        }
+
+        /// <summary>
+        /// Gets currency string
+        /// </summary>
+        /// <param name="amount">Amount</param>
+        /// <returns>Currency string without exchange rate</returns>
+        protected static string GetCurrencyString(decimal amount)
+        {
+            bool showCurrency = true;
+            var targetCurrency = NopContext.Current.WorkingCurrency;
+            return GetCurrencyString(amount, showCurrency, targetCurrency);
+        }
+
+        /// <summary>
+        /// Gets currency string
+        /// </summary>
+        /// <param name="amount">Amount</param>
+        /// <param name="showCurrency">A value indicating whether to show a currency</param>
+        /// <param name="targetCurrency">Target currency</param>
+        /// <returns>Currency string without exchange rate</returns>
+        protected static string GetCurrencyString(decimal amount,
+            bool showCurrency, Currency targetCurrency)
+        {
+            string result = string.Empty;
+            if (!String.IsNullOrEmpty(targetCurrency.CustomFormatting))
+            {
+                result = amount.ToString(targetCurrency.CustomFormatting);
+            }
+            else
+            {
+                if (!String.IsNullOrEmpty(targetCurrency.DisplayLocale))
+                {
+                    result = amount.ToString("C", new CultureInfo(targetCurrency.DisplayLocale));
+                }
+                else
+                {
+                    result = String.Format("{0} ({1})", amount.ToString("N"), targetCurrency.CurrencyCode);
+                    return result;
+                }
+            }
+
+            if (showCurrency && IoC.Resolve<ICurrencyService>().GetAllCurrencies().Count > 1)
+                result = String.Format("{0} ({1})", result, targetCurrency.CurrencyCode);
             return result;
         }
 
@@ -656,11 +702,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         public static string FormatPrice(decimal price, bool showCurrency, 
             Currency targetCurrency, Language language, bool priceIncludesTax, bool showTax)
         {
-            var localizationManager= IoC.Resolve<ILocalizationManager>();
-            string currencyString = localizationManager.GetCurrencyString(price, showCurrency, targetCurrency);
+            string currencyString = GetCurrencyString(price, showCurrency, targetCurrency);
 
             if (showTax)
             {
+                var localizationManager = IoC.Resolve<ILocalizationManager>();
+
                 string formatStr = string.Empty;
                 if (priceIncludesTax)
                 {
@@ -686,7 +733,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                 return currencyString;
             }
         }
-
 
 
         /// <summary>
@@ -856,100 +902,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         public static string FormatTaxRate(decimal taxRate)
         {
             return taxRate.ToString("G29");
-        }
-
-
-        /// <summary>
-        /// Formats the stock availability/quantity message
-        /// </summary>
-        /// <param name="productVariant">Product variant</param>
-        /// <returns>The stock message</returns>
-        public static string FormatStockMessage(ProductVariant productVariant)
-        {
-            if (productVariant == null)
-                throw new ArgumentNullException("productVariant");
-
-            string stockMessage = string.Empty;
-
-            var localizationManager = IoC.Resolve<ILocalizationManager>();
-
-            if (productVariant.ManageInventory == (int)ManageInventoryMethodEnum.ManageStock
-                && productVariant.DisplayStockAvailability)
-            {
-                switch (productVariant.Backorders)
-                {
-                    case (int)BackordersModeEnum.NoBackorders:
-                        {
-                            if (productVariant.StockQuantity > 0)
-                            {
-                                if (productVariant.DisplayStockQuantity)
-                                {
-                                    //display "in stock" with stock quantity
-                                    stockMessage = string.Format(localizationManager.GetLocaleResourceString("Products.Availability"), string.Format(localizationManager.GetLocaleResourceString("Products.InStockWithQuantity"), productVariant.StockQuantity));
-                                }
-                                else
-                                {
-                                    //display "in stock" without stock quantity
-                                    stockMessage = string.Format(localizationManager.GetLocaleResourceString("Products.Availability"), localizationManager.GetLocaleResourceString("Products.InStock"));
-                                }
-                            }
-                            else
-                            {
-                                //display "out of stock"
-                                stockMessage = string.Format(localizationManager.GetLocaleResourceString("Products.Availability"), localizationManager.GetLocaleResourceString("Products.OutOfStock"));
-                            }
-                        }
-                        break;
-                    case (int)BackordersModeEnum.AllowQtyBelow0:
-                        {
-                            if (productVariant.StockQuantity > 0)
-                            {
-                                if (productVariant.DisplayStockQuantity)
-                                {
-                                    //display "in stock" with stock quantity
-                                    stockMessage = string.Format(localizationManager.GetLocaleResourceString("Products.Availability"), string.Format(localizationManager.GetLocaleResourceString("Products.InStockWithQuantity"), productVariant.StockQuantity));
-                                }
-                                else
-                                {
-                                    //display "in stock" without stock quantity
-                                    stockMessage = string.Format(localizationManager.GetLocaleResourceString("Products.Availability"), localizationManager.GetLocaleResourceString("Products.InStock"));
-                                }
-                            }
-                            else
-                            {
-                                //display "in stock" without stock quantity
-                                stockMessage = string.Format(localizationManager.GetLocaleResourceString("Products.Availability"), localizationManager.GetLocaleResourceString("Products.InStock"));
-                            }
-                        }
-                        break;
-                    case (int)BackordersModeEnum.AllowQtyBelow0AndNotifyCustomer:
-                        {
-                            if (productVariant.StockQuantity > 0)
-                            {
-                                if (productVariant.DisplayStockQuantity)
-                                {
-                                    //display "in stock" with stock quantity
-                                    stockMessage = string.Format(localizationManager.GetLocaleResourceString("Products.Availability"), string.Format(localizationManager.GetLocaleResourceString("Products.InStockWithQuantity"), productVariant.StockQuantity));
-                                }
-                                else
-                                {
-                                    //display "in stock" without stock quantity
-                                    stockMessage = string.Format(localizationManager.GetLocaleResourceString("Products.Availability"), localizationManager.GetLocaleResourceString("Products.InStock"));
-                                }
-                            }
-                            else
-                            {
-                                //display "backorder" without stock quantity
-                                stockMessage = string.Format(localizationManager.GetLocaleResourceString("Products.Availability"), localizationManager.GetLocaleResourceString("Products.Backordering"));
-                            }
-                        }
-                        break;
-                    default:
-                        break;
-                }
-            }
-
-            return stockMessage;
         }
 
         #endregion
