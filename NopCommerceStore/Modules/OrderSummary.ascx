@@ -9,53 +9,6 @@
     <%=GetLocaleResourceString("ShoppingCart.CartIsEmpty")%>
 </asp:Panel>
 <asp:Panel class="order-summary-content" runat="server" ID="pnlCart">
-    <%if (this.IsShoppingCart)
-      { %>
-    <%if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Display.Checkout.DiscountCouponBox"))
-      { %>
-    <asp:Panel runat="server" ID="phCoupon" CssClass="coupon-box">
-        <b>
-            <%=GetLocaleResourceString("ShoppingCart.DiscountCouponCode")%></b>
-        <br />
-        <%=GetLocaleResourceString("ShoppingCart.DiscountCouponCode.Tooltip")%>
-        <br />
-        <asp:TextBox ID="txtDiscountCouponCode" runat="server" Width="125px" />&nbsp;
-        <asp:Button runat="server" ID="btnApplyDiscountCouponCode" OnClick="btnApplyDiscountCouponCode_Click"
-            Text="<% $NopResources:ShoppingCart.ApplyDiscountCouponCodeButton %>" CssClass="applycouponcodebutton"
-            CausesValidation="false" />
-        <asp:Panel runat="server" ID="pnlDiscountWarnings" CssClass="warning-box" EnableViewState="false"
-            Visible="false">
-            <br />
-            <asp:Label runat="server" ID="lblDiscountWarning" CssClass="warning-text" EnableViewState="false"
-                Visible="false"></asp:Label>
-        </asp:Panel>
-    </asp:Panel>
-    <%} %>
-    <div class="clear">
-    </div>
-    <%if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Display.Checkout.GiftCardBox"))
-      { %>
-    <asp:Panel runat="server" ID="phGiftCards" CssClass="coupon-box">
-        <b>
-            <%=GetLocaleResourceString("ShoppingCart.GiftCards")%></b>
-        <br />
-        <%=GetLocaleResourceString("ShoppingCart.GiftCards.Tooltip")%>
-        <br />
-        <asp:TextBox ID="txtGiftCardCouponCode" runat="server" Width="125px" />&nbsp;
-        <asp:Button runat="server" ID="btnApplyGiftCardsCouponCode" OnClick="btnApplyGiftCardCouponCode_Click"
-            Text="<% $NopResources:ShoppingCart.ApplyGiftCardCouponCodeButton %>" CssClass="applycouponcodebutton"
-            CausesValidation="false" />
-        <asp:Panel runat="server" ID="pnlGiftCardWarnings" CssClass="warning-box" EnableViewState="false"
-            Visible="false">
-            <br />
-            <asp:Label runat="server" ID="lblGiftCardWarning" CssClass="warning-text" EnableViewState="false"
-                Visible="false"></asp:Label>
-        </asp:Panel>
-    </asp:Panel>
-    <%} %>
-    <div class="clear">
-    </div>
-    <%} %>
     <asp:Panel runat="server" ID="pnlCommonWarnings" CssClass="warning-box" EnableViewState="false"
         Visible="false">
         <asp:Label runat="server" ID="lblCommonWarning" CssClass="warning-text" EnableViewState="false"
@@ -145,10 +98,10 @@
                                     Visible="false"></asp:Label>
                             </asp:Panel>
                         </td>
-                        <td style="white-space: nowrap;" >
+                        <td style="white-space: nowrap;">
                             <%#GetShoppingCartItemUnitPriceString((ShoppingCartItem)Container.DataItem)%>
                         </td>
-                        <td style="white-space: nowrap;" >
+                        <td style="white-space: nowrap;">
                             <%if (IsShoppingCart)
                               { %>
                             <asp:TextBox ID="txtQuantity" size="4" runat="server" Text='<%# Eval("Quantity") %>'
@@ -159,7 +112,7 @@
                             <asp:Label ID="lblQuantity" runat="server" Text='<%# Eval("Quantity") %>' CssClass="Label" />
                             <%} %>
                         </td>
-                        <td style="white-space: nowrap;"  class="end">
+                        <td style="white-space: nowrap;" class="end">
                             <%#GetShoppingCartItemSubTotalString((ShoppingCartItem)Container.DataItem)%>
                             <asp:Label ID="lblShoppingCartItemId" runat="server" Visible="false" Text='<%# Eval("ShoppingCartItemId") %>' />
                         </td>
@@ -178,18 +131,36 @@
     <div class="cart-footer">
         <%if (this.IsShoppingCart)
           { %>
+        <div class="common-buttons">
+            <asp:Button ID="btnUpdate" OnClick="btnUpdate_Click" runat="server" Text="<% $NopResources:ShoppingCart.UpdateCart %>"
+                CssClass="updatecartbutton" />
+            <asp:Button ID="btnContinueShopping" OnClick="btnContinueShopping_Click" runat="server"
+                Text="<% $NopResources:ShoppingCart.ContinueShopping %>" CssClass="continueshoppingbutton" />
+        </div>
         <div class="clear">
         </div>
-        <nopCommerce:CheckoutAttributes ID="ctrlCheckoutAttributes" runat="server"></nopCommerce:CheckoutAttributes>
+        <asp:PlaceHolder runat="server" ID="phMinOrderSubtotalAmount">
+            <div class="min-amount-warning">
+                <asp:Label runat="server" ID="lMinOrderSubtotalAmount" />
+            </div>
+        </asp:PlaceHolder>
+        <%} %>
         <div class="clear">
         </div>
-        <nopCommerce:EstimateShipping ID="ctrlEstimateShipping" runat="server"></nopCommerce:EstimateShipping>
+        <%if (this.IsShoppingCart)
+          { %>
+        <nopCommerce:CheckoutAttributes ID="ctrlCheckoutAttributes" runat="server" />
         <div class="clear">
         </div>
-        <div class="buttons">
+        <%} %>
+        <div class="totals">
+            <nopCommerce:OrderTotals runat="server" ID="ctrlOrderTotals" />
+            <%if (this.IsShoppingCart)
+              { %>
+            <div class="clear">
+            </div>
             <%if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Checkout.TermsOfServiceEnabled"))
               { %>
-
             <script language="javascript" type="text/javascript">
                 function accepttermsofservice(msg) {
                     if (!document.getElementById('<%=cbTermsOfService.ClientID%>').checked) {
@@ -206,41 +177,80 @@
             </div>
             <%} %>
             <div class="clear">
-            </div><div class="terms-of-service">
-                <asp:Label runat="server" ID="lMinOrderSubtotalAmount" />
             </div>
-
-            <div class="clear">
-            </div>
-            <div class="common-buttons">
-                <asp:Button ID="btnUpdate" OnClick="btnUpdate_Click" runat="server" Text="<% $NopResources:ShoppingCart.UpdateCart %>"
-                    CssClass="updatecartbutton" />
-                <asp:Button ID="btnContinueShopping" OnClick="btnContinueShopping_Click" runat="server"
-                    Text="<% $NopResources:ShoppingCart.ContinueShopping %>" CssClass="continueshoppingbutton" />
+            <div class="checkout-buttons">
                 <asp:Button ID="btnCheckout" OnClick="btnCheckout_Click" runat="server" Text="<% $NopResources:ShoppingCart.Checkout %>"
                     CssClass="checkoutbutton" />
             </div>
             <div class="addon-buttons">
                 <nopCommerce:GoogleCheckoutButton runat="server" ID="btnGoogleCheckoutButton"></nopCommerce:GoogleCheckoutButton>
             </div>
+            <%} %>
+        </div>
+        <div class="cart-collaterals">
+            <%if (this.IsShoppingCart)
+              { %>
+            <div class="deals">
+                <%if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Display.Checkout.DiscountCouponBox"))
+                  { %>
+                <asp:Panel runat="server" ID="phCoupon" CssClass="coupon-box">
+                    <b>
+                        <%=GetLocaleResourceString("ShoppingCart.DiscountCouponCode")%></b>
+                    <br />
+                    <%=GetLocaleResourceString("ShoppingCart.DiscountCouponCode.Tooltip")%>
+                    <br />
+                    <asp:TextBox ID="txtDiscountCouponCode" runat="server" Width="125px" />&nbsp;
+                    <asp:Button runat="server" ID="btnApplyDiscountCouponCode" OnClick="btnApplyDiscountCouponCode_Click"
+                        Text="<% $NopResources:ShoppingCart.ApplyDiscountCouponCodeButton %>" CssClass="applycouponcodebutton"
+                        CausesValidation="false" />
+                    <asp:Panel runat="server" ID="pnlDiscountWarnings" CssClass="warning-box" EnableViewState="false"
+                        Visible="false">
+                        <br />
+                        <asp:Label runat="server" ID="lblDiscountWarning" CssClass="warning-text" EnableViewState="false"
+                            Visible="false"></asp:Label>
+                    </asp:Panel>
+                </asp:Panel>
+                <%} %>
+                <%if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Display.Checkout.GiftCardBox"))
+                  { %>
+                <asp:Panel runat="server" ID="phGiftCards" CssClass="giftcard-box">
+                    <b>
+                        <%=GetLocaleResourceString("ShoppingCart.GiftCards")%></b>
+                    <br />
+                    <%=GetLocaleResourceString("ShoppingCart.GiftCards.Tooltip")%>
+                    <br />
+                    <asp:TextBox ID="txtGiftCardCouponCode" runat="server" Width="125px" />&nbsp;
+                    <asp:Button runat="server" ID="btnApplyGiftCardsCouponCode" OnClick="btnApplyGiftCardCouponCode_Click"
+                        Text="<% $NopResources:ShoppingCart.ApplyGiftCardCouponCodeButton %>" CssClass="applycouponcodebutton"
+                        CausesValidation="false" />
+                    <asp:Panel runat="server" ID="pnlGiftCardWarnings" CssClass="warning-box" EnableViewState="false"
+                        Visible="false">
+                        <br />
+                        <asp:Label runat="server" ID="lblGiftCardWarning" CssClass="warning-text" EnableViewState="false"
+                            Visible="false"></asp:Label>
+                    </asp:Panel>
+                </asp:Panel>
+                <%} %>
+            </div>
+            <div class="shipping">
+                <nopCommerce:EstimateShipping ID="ctrlEstimateShipping" runat="server" />
+            </div>
+            <%} %>
         </div>
         <div class="clear">
         </div>
-        <%} %>
-        <nopCommerce:OrderTotals runat="server" ID="ctrlOrderTotals" />
         <%if (this.IsShoppingCart)
           { %>
-        <div class="clear">
-        </div>
         <div class="product-grid">
             <asp:DataList ID="dlCrossSells" runat="server" RepeatColumns="2" RepeatDirection="Horizontal"
                 RepeatLayout="Table" ItemStyle-CssClass="item-box">
                 <HeaderTemplate>
-                    <span class="crosssells-title"><%=GetLocaleResourceString("ShoppingCart.CrossSells")%></span>
+                    <span class="crosssells-title">
+                        <%=GetLocaleResourceString("ShoppingCart.CrossSells")%></span>
                 </HeaderTemplate>
                 <ItemTemplate>
                     <nopCommerce:ProductBox1 ID="ctrlProductBox" Product='<%# Container.DataItem %>'
-                        runat="server" RedirectCartAfterAddingProduct="True"  />
+                        runat="server" RedirectCartAfterAddingProduct="True" />
                 </ItemTemplate>
             </asp:DataList>
         </div>

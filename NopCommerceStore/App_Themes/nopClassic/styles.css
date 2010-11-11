@@ -1055,6 +1055,7 @@ ul.languagelist li .selected
 	font-size: 11px;
 	color: #555;
 }
+
 .wishlist-content
 {
 	margin: 0px;
@@ -1063,15 +1064,49 @@ ul.languagelist li .selected
 	background-color: inherit;
 }
 
-.order-summary-content .coupon-box
+.order-summary-content .totals 
 {
-	margin: 0px;
+    float: right;
+    padding: 23px 5px 0 5px;
+    width: 330px;
+}
+
+.order-summary-content  .cart-collaterals 
+{
+    padding: 20px 0 10px;
+    width: 550px;
+}
+
+.order-summary-content .deals
+{
+    display: inline;
+    float: left;
+    margin: 0 20px 0 0;
+    width: 250px;
+}
+
+.order-summary-content .shipping
+{
+    display: inline;
+    float: left;
+    margin: 0;
+    width: 280px;
+}
+
+.order-summary-content .coupon-box, .order-summary-content .giftcard-box
+{
 	padding: 10px 10px 10px 10px;
 	font-size: 11px;
 	color: #555;
 	background: #F7F5E8;
-	margin-bottom: 10px;
+	margin: 0 0 10px 0px;
 	border: dotted 1px #d3d3d3;
+}
+
+.order-summary-content .giftcard-box
+{
+    position:relative;
+    z-index:1;
 }
 
 .order-summary-content .cart, .wishlist-content .cart
@@ -1159,7 +1194,6 @@ ul.languagelist li .selected
 .order-summary-content .total-info
 {
 	margin: 0px;
-	padding: 10px 0px 10px 0px;
 }
 
 .cart_total_left
@@ -1212,10 +1246,16 @@ ul.languagelist li .selected
     border:1px dotted #D3D3D3;
 }
 
+.order-summary-content .min-amount-warning
+{
+	margin: 0px;
+	padding: 10px 0px 10px 10px;
+}
+
 .order-summary-content .terms-of-service
 {
 	margin: 0px;
-	padding: 10px 10px 10px 10px;
+	padding: 10px 0px 10px 10px;
 }
 
 .order-summary-content .terms-of-service .read
@@ -1228,24 +1268,26 @@ ul.languagelist li .selected
 	cursor: pointer;
 }
 
-.order-summary-content .buttons
+.order-summary-content .common-buttons
 {
 	margin: 0px;
-	padding: 10px 10px 10px 10px;
-}
-
-.order-summary-content .buttons .common-buttons
-{
+	padding: 10px 10px 10px 0px;
 	float: left;
-	margin: 0px;
-	padding: 10px 10px 10px 10px;
 }
 
-.order-summary-content .buttons .addon-buttons
+.order-summary-content .checkout-buttons
 {
 	float: right;
 	margin: 0px;
-	padding: 10px 10px 10px 10px;
+	padding: 10px 0px 10px 10px;
+}
+
+.order-summary-content .addon-buttons
+{
+    clear: both;
+	float: right;
+	margin: 0px;
+	padding: 10px 0px 10px 10px;
 	text-align: right;
 }
 
@@ -1270,7 +1312,6 @@ ul.languagelist li .selected
 	font-size: 11px;
 	color: #555;
 	background: #F7F5E8;
-	margin-bottom: 10px;
 	border: dotted 1px #d3d3d3;
 }
 .estimate-shipping .shipping-options

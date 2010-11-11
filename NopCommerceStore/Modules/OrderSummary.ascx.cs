@@ -84,6 +84,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 bool minOrderSubtotalAmountOK = IoC.Resolve<IOrderService>().ValidateMinOrderSubtotalAmount(cart, NopContext.Current.User);
                 if (minOrderSubtotalAmountOK)
                 {
+                    phMinOrderSubtotalAmount.Visible = false;
                     lMinOrderSubtotalAmount.Visible = false;
                     btnCheckout.Visible = true;
                 }
@@ -91,6 +92,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 {
                     decimal minOrderSubtotalAmount = IoC.Resolve<ICurrencyService>().ConvertCurrency(IoC.Resolve<IOrderService>().MinOrderSubtotalAmount, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
                     lMinOrderSubtotalAmount.Text = string.Format(GetLocaleResourceString("Checkout.MinOrderSubtotalAmount"), PriceHelper.FormatPrice(minOrderSubtotalAmount, true, false));
+                    phMinOrderSubtotalAmount.Visible = true;
                     lMinOrderSubtotalAmount.Visible = true;
                     btnCheckout.Visible = false;
                 }

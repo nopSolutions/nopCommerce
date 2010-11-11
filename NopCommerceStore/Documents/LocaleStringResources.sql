@@ -935,6 +935,12 @@ set @resources='
   <LocaleResource Name="LowStockActivity.2">
     <Value>Unpublish</Value>
   </LocaleResource>
+  <LocaleResource Name="ShoppingCart.ContinueShopping">
+    <Value>Continue shopping</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.UpdateCart">
+    <Value>Update shopping cart</Value>
+  </LocaleResource>
 </Language>
 '
 

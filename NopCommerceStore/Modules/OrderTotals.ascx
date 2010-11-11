@@ -5,8 +5,8 @@
         <tbody>
             <tr>
                 <td class="cart_total_left">
-                    <strong>
-                        <%=GetLocaleResourceString("ShoppingCart.Sub-Total")%>:</strong>
+                    <strong><span style="white-space: nowrap;">
+                        <%=GetLocaleResourceString("ShoppingCart.Sub-Total")%>:</span></strong>
                 </td>
                 <td class="cart_total_right">
                     <span style="white-space: nowrap;">
@@ -17,10 +17,10 @@
             <asp:PlaceHolder runat="server" ID="phOrderSubTotalDiscount" Visible="false">
                 <tr>
                     <td class="cart_total_left">
-                        <strong>
+                        <strong><span style="white-space: nowrap;">
                             <%=GetLocaleResourceString("ShoppingCart.OrderDiscount")%><asp:LinkButton runat="server"
                                 ID="btnRemoveOrderSubTotalDiscount" Text="" CommandName="remove" OnCommand="btnRemoveOrderSubTotalDiscount_Command"
-                                CssClass="removediscountbutton" />:</strong>
+                                CssClass="removediscountbutton" />: </span></strong>
                     </td>
                     <td class="cart_total_right">
                         <span style="white-space: nowrap;">
@@ -31,8 +31,8 @@
             </asp:PlaceHolder>
             <tr>
                 <td class="cart_total_left">
-                    <strong>
-                        <%=GetLocaleResourceString("ShoppingCart.Shipping")%>:</strong>
+                    <strong><span style="white-space: nowrap;">
+                        <%=GetLocaleResourceString("ShoppingCart.Shipping")%>: </span></strong>
                 </td>
                 <td class="cart_total_right">
                     <span style="white-space: nowrap;">
@@ -43,8 +43,9 @@
             <asp:PlaceHolder runat="server" ID="phPaymentMethodAdditionalFee">
                 <tr>
                     <td class="cart_total_left">
-                        <strong>
-                            <%=GetLocaleResourceString("ShoppingCart.PaymentMethodAdditionalFee")%>:</strong>
+                        <strong><span style="white-space: nowrap;">
+                            <%=GetLocaleResourceString("ShoppingCart.PaymentMethodAdditionalFee")%>: </span>
+                        </strong>
                     </td>
                     <td class="cart_total_right">
                         <span style="white-space: nowrap;">
@@ -57,8 +58,8 @@
                 <ItemTemplate>
                     <tr>
                         <td class="cart_total_left">
-                            <strong>
-                                <asp:Literal runat="server" ID="lTaxRateTitle"></asp:Literal>:</strong>
+                            <strong><span style="white-space: nowrap;">
+                                <asp:Literal runat="server" ID="lTaxRateTitle"></asp:Literal>: </span></strong>
                         </td>
                         <td class="cart_total_right">
                             <span style="white-space: nowrap;">
@@ -71,8 +72,8 @@
             <asp:PlaceHolder runat="server" ID="phTaxTotal">
                 <tr>
                     <td class="cart_total_left">
-                        <strong>
-                            <%=GetLocaleResourceString("ShoppingCart.Tax")%>:</strong>
+                        <strong><span style="white-space: nowrap;">
+                            <%=GetLocaleResourceString("ShoppingCart.Tax")%>: </span></strong>
                     </td>
                     <td class="cart_total_right">
                         <span style="white-space: nowrap;">
@@ -84,10 +85,10 @@
             <asp:PlaceHolder runat="server" ID="phOrderTotalDiscount" Visible="false">
                 <tr>
                     <td class="cart_total_left">
-                        <strong>
+                        <strong><span style="white-space: nowrap;">
                             <%=GetLocaleResourceString("ShoppingCart.OrderDiscount")%><asp:LinkButton runat="server"
                                 ID="btnRemoveOrderTotalDiscount" Text="" CommandName="remove" OnCommand="btnRemoveOrderTotalDiscount_Command"
-                                CssClass="removediscountbutton" />:</strong>
+                                CssClass="removediscountbutton" />:</span></strong>
                     </td>
                     <td class="cart_total_right">
                         <span style="white-space: nowrap;">
@@ -101,10 +102,10 @@
                 <ItemTemplate>
                     <tr>
                         <td class="cart_total_left">
-                            <strong>
+                            <strong><span style="white-space: nowrap;">
                                 <asp:Literal runat="server" ID="lGiftCard"></asp:Literal><asp:LinkButton runat="server"
                                     ID="btnRemoveGC" Text="" CommandName="remove" CommandArgument='<%# Eval("GiftCardId")%>'
-                                    CssClass="removegiftcardbutton" />:</strong>
+                                    CssClass="removegiftcardbutton" />:</span></strong>
                         </td>
                         <td class="cart_total_right">
                             <span style="white-space: nowrap;">
@@ -114,7 +115,8 @@
                     </tr>
                     <tr>
                         <td class="cart_total_left_below">
-                            <asp:Literal runat="server" ID="lGiftCardRemaining"></asp:Literal>
+                            <span style="white-space: nowrap;">
+                                <asp:Literal runat="server" ID="lGiftCardRemaining"></asp:Literal></span>
                         </td>
                         <td>
                         </td>
@@ -124,8 +126,8 @@
             <asp:PlaceHolder runat="server" ID="phRewardPoints">
                 <tr>
                     <td class="cart_total_left">
-                        <strong>
-                            <asp:Literal runat="server" ID="lRewardPointsTitle"></asp:Literal>:</strong>
+                        <strong><span style="white-space: nowrap;">
+                            <asp:Literal runat="server" ID="lRewardPointsTitle"></asp:Literal>:</span></strong>
                     </td>
                     <td class="cart_total_right">
                         <span style="white-space: nowrap;">
@@ -136,8 +138,8 @@
             </asp:PlaceHolder>
             <tr>
                 <td class="cart_total_left">
-                    <strong>
-                        <%=GetLocaleResourceString("ShoppingCart.OrderTotal")%>:</strong>
+                    <strong><span style="white-space: nowrap;">
+                        <%=GetLocaleResourceString("ShoppingCart.OrderTotal")%>:</span></strong>
                 </td>
                 <td class="cart_total_right">
                     <span style="white-space: nowrap;">
