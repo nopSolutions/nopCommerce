@@ -28,7 +28,7 @@ using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.Measures;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -36,7 +36,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            MeasureWeight measureWeight = IoCFactory.Resolve<IMeasureService>().GetMeasureWeightById(this.MeasureWeightId);
+            MeasureWeight measureWeight = IoC.Resolve<IMeasureService>().GetMeasureWeightById(this.MeasureWeightId);
             if (measureWeight != null)
             {
                 this.txtName.Text = measureWeight.Name;
@@ -61,14 +61,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             decimal ratio = txtRatio.Value;
             int displayOrder = txtDisplayOrder.Value;
 
-            MeasureWeight measureWeight = IoCFactory.Resolve<IMeasureService>().GetMeasureWeightById(this.MeasureWeightId);
+            MeasureWeight measureWeight = IoC.Resolve<IMeasureService>().GetMeasureWeightById(this.MeasureWeightId);
             if (measureWeight != null)
             {
                 measureWeight.Name = name;
                 measureWeight.SystemKeyword = systemKeyword;
                 measureWeight.Ratio = ratio;
                 measureWeight.DisplayOrder = displayOrder;
-                IoCFactory.Resolve<IMeasureService>().UpdateMeasureWeight(measureWeight);
+                IoC.Resolve<IMeasureService>().UpdateMeasureWeight(measureWeight);
             }
             else
             {
@@ -79,7 +79,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     Ratio = ratio,
                     DisplayOrder = displayOrder
                 };
-                IoCFactory.Resolve<IMeasureService>().InsertMeasureWeight(measureWeight);
+                IoC.Resolve<IMeasureService>().InsertMeasureWeight(measureWeight);
             }
 
             return measureWeight;

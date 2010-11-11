@@ -29,7 +29,7 @@ using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.BusinessLogic.Shipping;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.Orders;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
  
 
 namespace NopSolutions.NopCommerce.Web
@@ -40,7 +40,7 @@ namespace NopSolutions.NopCommerce.Web
         {
             CommonHelper.SetResponseNoCache(Response);
             
-            if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Checkout.UseOnePageCheckout"))
+            if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Checkout.UseOnePageCheckout"))
             {
                 Response.Redirect("~/checkout.aspx");
             }

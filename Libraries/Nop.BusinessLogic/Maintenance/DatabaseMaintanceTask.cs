@@ -20,7 +20,7 @@ using System.Text;
 using System.Xml;
 using NopSolutions.NopCommerce.BusinessLogic.Audit;
 using NopSolutions.NopCommerce.BusinessLogic.Tasks;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Maintenance
 {
@@ -35,7 +35,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Maintenance
         /// <param name="node">Xml node that represents a task description</param>
         public void Execute(XmlNode node)
         {
-            IoCFactory.Resolve<IMaintenanceService>().Reindex();
+            IoC.Resolve<IMaintenanceService>().Reindex();
         }
 
     }

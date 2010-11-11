@@ -33,7 +33,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Localization;
 using NopSolutions.NopCommerce.BusinessLogic.Payment;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Payment.Methods.GoogleCheckout;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web
 {
@@ -56,7 +56,7 @@ namespace NopSolutions.NopCommerce.Web
                 Response.End();
             }
 
-            if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.GoogleCheckout.DebugModeEnabled"))
+            if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.GoogleCheckout.DebugModeEnabled"))
             {
                 if (CommonHelper.QueryStringInt("nopCommerceTestNewOrder1") > 0)
                 {

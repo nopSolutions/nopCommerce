@@ -36,7 +36,7 @@ using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.Utils.Html;
 using NopSolutions.NopCommerce.Common.Xml;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -52,13 +52,13 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected override void OnInit(EventArgs e)
         {
-            gvLP.PageSize = IoCFactory.Resolve<IForumService>().LatestUserPostsPageSize;
+            gvLP.PageSize = IoC.Resolve<IForumService>().LatestUserPostsPageSize;
             base.OnInit(e);
         }
 
         protected override void OnPreRender(EventArgs e)
         {
-            pnlLatestPosts.Visible = IoCFactory.Resolve<IForumService>().ForumsEnabled;
+            pnlLatestPosts.Visible = IoC.Resolve<IForumService>().ForumsEnabled;
 
             base.OnPreRender(e);
         }
@@ -66,7 +66,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
         private void BindData()
         {
             //general info
-            var customer = IoCFactory.Resolve<ICustomerService>().GetCustomerById(this.CustomerId);
+            var customer = IoC.Resolve<ICustomerService>().GetCustomerById(this.CustomerId);
             if (customer == null)
             {
                 this.Visible = false;
@@ -74,21 +74,21 @@ namespace NopSolutions.NopCommerce.Web.Modules
             }
 
             //avatar
-            if (IoCFactory.Resolve<ICustomerService>().AllowCustomersToUploadAvatars)
+            if (IoC.Resolve<ICustomerService>().AllowCustomersToUploadAvatars)
             {
                 phAvatar.Visible = true;
                 var customerAvatar = customer.Avatar;
-                int avatarSize = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.Customer.AvatarSize", 85);
+                int avatarSize = IoC.Resolve<ISettingManager>().GetSettingValueInteger("Media.Customer.AvatarSize", 85);
                 if (customerAvatar != null)
                 {
-                    string pictureUrl = IoCFactory.Resolve<IPictureService>().GetPictureUrl(customerAvatar, avatarSize, false);
+                    string pictureUrl = IoC.Resolve<IPictureService>().GetPictureUrl(customerAvatar, avatarSize, false);
                     this.imgAvatar.ImageUrl = pictureUrl;
                 }
                 else
                 {
-                    if (IoCFactory.Resolve<ICustomerService>().DefaultAvatarEnabled)
+                    if (IoC.Resolve<ICustomerService>().DefaultAvatarEnabled)
                     {
-                        string pictureUrl = IoCFactory.Resolve<IPictureService>().GetDefaultPictureUrl(PictureTypeEnum.Avatar, avatarSize);
+                        string pictureUrl = IoC.Resolve<IPictureService>().GetDefaultPictureUrl(PictureTypeEnum.Avatar, avatarSize);
                         this.imgAvatar.ImageUrl = pictureUrl;
                     }
                     else
@@ -106,10 +106,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
             phFullName.Visible = false;
 
             //location
-            if (IoCFactory.Resolve<ICustomerService>().ShowCustomersLocation)
+            if (IoC.Resolve<ICustomerService>().ShowCustomersLocation)
             {
                 phLocation.Visible = true;
-                var country = IoCFactory.Resolve<ICountryService>().GetCountryById(customer.CountryId);
+                var country = IoC.Resolve<ICountryService>().GetCountryById(customer.CountryId);
                 if (country != null)
                 {
                     lblCountry.Text = Server.HtmlEncode(country.Name);
@@ -125,7 +125,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             }
 
             //private message
-            if (IoCFactory.Resolve<IForumService>().AllowPrivateMessages)
+            if (IoC.Resolve<IForumService>().AllowPrivateMessages)
             {
                 if (customer != null && !customer.IsGuest)
                 {
@@ -143,7 +143,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             }
 
             //total forum posts
-            if (IoCFactory.Resolve<IForumService>().ForumsEnabled && IoCFactory.Resolve<IForumService>().ShowCustomersPostCount)
+            if (IoC.Resolve<IForumService>().ForumsEnabled && IoC.Resolve<IForumService>().ShowCustomersPostCount)
             {
                 phTotalPosts.Visible = true;
                 lblTotalPosts.Text = customer.TotalForumPosts.ToString();
@@ -154,7 +154,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             }
 
             //registration date
-            if (IoCFactory.Resolve<ICustomerService>().ShowCustomersJoinDate)
+            if (IoC.Resolve<ICustomerService>().ShowCustomersJoinDate)
             {
                 phJoinDate.Visible = true;
                 lblJoinDate.Text = DateTimeHelper.ConvertToUserTime(customer.RegistrationDate, DateTimeKind.Utc).ToString("f");
@@ -198,7 +198,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 if (lblPosted != null)
                 {
                     string dateStr = string.Empty;
-                    if (IoCFactory.Resolve<IForumService>().RelativeDateTimeFormattingEnabled)
+                    if (IoC.Resolve<IForumService>().RelativeDateTimeFormattingEnabled)
                         dateStr = forumPost.CreatedOn.RelativeFormat(true, "f");
                     else
                         dateStr = DateTimeHelper.ConvertToUserTime(forumPost.CreatedOn, DateTimeKind.Utc).ToString("f");

@@ -25,7 +25,7 @@ using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.Audit;
 using NopSolutions.NopCommerce.BusinessLogic.Categories;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 using NopSolutions.NopCommerce.BusinessLogic.Localization;
 using NopSolutions.NopCommerce.BusinessLogic.Manufacturers;
 using NopSolutions.NopCommerce.BusinessLogic.Media;
@@ -44,7 +44,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             if (!Page.IsPostBack)
             {
-                Product product = IoCFactory.Resolve<IProductService>().GetProductById(this.ProductId);
+                Product product = IoC.Resolve<IProductService>().GetProductById(this.ProductId);
                 if (product != null)
                 {
                     lblTitle.Text = Server.HtmlEncode(product.Name);
@@ -62,7 +62,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 txtProductCopyName.Text = "Copy of " + txtName.Text;
             }
 
-            Product product = IoCFactory.Resolve<IProductService>().GetProductById(this.ProductId);
+            Product product = IoC.Resolve<IProductService>().GetProductById(this.ProductId);
             if (product != null)
             {
                 PreviewButton.OnClientClick = string.Format("javascript:OpenWindow('{0}', 800, 600, true); return false;", SEOHelper.GetProductUrl(product.ProductId));
@@ -87,7 +87,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 ctrlProductPictures.SaveInfo();
                 ctrlProductSpecifications.SaveInfo();
 
-                IoCFactory.Resolve<ICustomerActivityService>().InsertActivity(
+                IoC.Resolve<ICustomerActivityService>().InsertActivity(
                     "EditProduct",
                     GetLocaleResourceString("ActivityLog.EditProduct"),
                     product.Name);
@@ -137,12 +137,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                Product product = IoCFactory.Resolve<IProductService>().GetProductById(this.ProductId);
+                Product product = IoC.Resolve<IProductService>().GetProductById(this.ProductId);
                 if (product != null)
                 {
-                    IoCFactory.Resolve<IProductService>().MarkProductAsDeleted(this.ProductId);
+                    IoC.Resolve<IProductService>().MarkProductAsDeleted(this.ProductId);
 
-                    IoCFactory.Resolve<ICustomerActivityService>().InsertActivity(
+                    IoC.Resolve<ICustomerActivityService>().InsertActivity(
                         "DeleteProduct",
                         GetLocaleResourceString("ActivityLog.DeleteProduct"),
                         product.Name);
@@ -160,10 +160,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                Product productCopy = IoCFactory.Resolve<IProductService>().DuplicateProduct(ProductId, txtProductCopyName.Text, cbIsProductCopyPublished.Checked, cbCopyImages.Checked);
+                Product productCopy = IoC.Resolve<IProductService>().DuplicateProduct(ProductId, txtProductCopyName.Text, cbIsProductCopyPublished.Checked, cbCopyImages.Checked);
                 if(productCopy != null)
                 {
-                    IoCFactory.Resolve<ICustomerActivityService>().InsertActivity(
+                    IoC.Resolve<ICustomerActivityService>().InsertActivity(
                         "AddNewProduct",
                         GetLocaleResourceString("ActivityLog.AddNewProduct"),
                         productCopy.Name);

@@ -30,7 +30,7 @@ using NopSolutions.NopCommerce.BusinessLogic;
 using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.Payment;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 namespace NopSolutions.NopCommerce.Web
 {
     public partial class MoneybookersReturnPage : BaseNopPage
@@ -57,10 +57,10 @@ namespace NopSolutions.NopCommerce.Web
 
                 if (status == "2")
                 {
-                    Order order = IoCFactory.Resolve<IOrderService>().GetOrderById(Convert.ToInt32(mb_transaction_id));
-                    if (IoCFactory.Resolve<IOrderService>().CanMarkOrderAsPaid(order))
+                    Order order = IoC.Resolve<IOrderService>().GetOrderById(Convert.ToInt32(mb_transaction_id));
+                    if (IoC.Resolve<IOrderService>().CanMarkOrderAsPaid(order))
                     {
-                        IoCFactory.Resolve<IOrderService>().MarkOrderAsPaid(order.OrderId);
+                        IoC.Resolve<IOrderService>().MarkOrderAsPaid(order.OrderId);
                     }
                     Response.Redirect("~/checkoutcompleted.aspx");
                 }

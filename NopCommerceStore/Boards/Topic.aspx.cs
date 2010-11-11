@@ -31,7 +31,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Localization;
 using NopSolutions.NopCommerce.BusinessLogic.Payment;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Boards
 {
@@ -39,7 +39,7 @@ namespace NopSolutions.NopCommerce.Web.Boards
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            ForumTopic forumTopic = IoCFactory.Resolve<IForumService>().GetTopicById(this.TopicId);
+            ForumTopic forumTopic = IoC.Resolve<IForumService>().GetTopicById(this.TopicId);
             if (forumTopic != null)
             {
                 string title = forumTopic.Subject;

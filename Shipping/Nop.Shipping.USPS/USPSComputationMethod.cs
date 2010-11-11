@@ -25,7 +25,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Measures;
 using NopSolutions.NopCommerce.BusinessLogic.Shipping;
 using NopSolutions.NopCommerce.Common;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Shipping.Methods.USPS
 {
@@ -73,18 +73,18 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.USPS
 
         private string CreateRequest(string username, string password, ShipmentPackage shipmentPackage)
         {
-            var usedMeasureWeight = IoCFactory.Resolve<IMeasureService>().GetMeasureWeightBySystemKeyword(MEASUREWEIGHTSYSTEMKEYWORD);
+            var usedMeasureWeight = IoC.Resolve<IMeasureService>().GetMeasureWeightBySystemKeyword(MEASUREWEIGHTSYSTEMKEYWORD);
             if (usedMeasureWeight == null)
                 throw new NopException(string.Format("USPS shipping service. Could not load \"{0}\" measure weight", MEASUREWEIGHTSYSTEMKEYWORD));
 
-            var usedMeasureDimension = IoCFactory.Resolve<IMeasureService>().GetMeasureDimensionBySystemKeyword(MEASUREDIMENSIONSYSTEMKEYWORD);
+            var usedMeasureDimension = IoC.Resolve<IMeasureService>().GetMeasureDimensionBySystemKeyword(MEASUREDIMENSIONSYSTEMKEYWORD);
             if (usedMeasureDimension == null)
                 throw new NopException(string.Format("USPS shipping service. Could not load \"{0}\" measure dimension", MEASUREDIMENSIONSYSTEMKEYWORD));
 
-            int length = Convert.ToInt32(Math.Ceiling(IoCFactory.Resolve<IMeasureService>().ConvertDimension(shipmentPackage.GetTotalLength(), IoCFactory.Resolve<IMeasureService>().BaseDimensionIn, usedMeasureDimension)));
-            int height = Convert.ToInt32(Math.Ceiling(IoCFactory.Resolve<IMeasureService>().ConvertDimension(shipmentPackage.GetTotalHeight(), IoCFactory.Resolve<IMeasureService>().BaseDimensionIn, usedMeasureDimension)));
-            int width = Convert.ToInt32(Math.Ceiling(IoCFactory.Resolve<IMeasureService>().ConvertDimension(shipmentPackage.GetTotalWidth(), IoCFactory.Resolve<IMeasureService>().BaseDimensionIn, usedMeasureDimension)));
-            int weight = Convert.ToInt32(Math.Ceiling(IoCFactory.Resolve<IMeasureService>().ConvertWeight(IoCFactory.Resolve<IShippingService>().GetShoppingCartTotalWeight(shipmentPackage.Items, shipmentPackage.Customer), IoCFactory.Resolve<IMeasureService>().BaseWeightIn, usedMeasureWeight)));
+            int length = Convert.ToInt32(Math.Ceiling(IoC.Resolve<IMeasureService>().ConvertDimension(shipmentPackage.GetTotalLength(), IoC.Resolve<IMeasureService>().BaseDimensionIn, usedMeasureDimension)));
+            int height = Convert.ToInt32(Math.Ceiling(IoC.Resolve<IMeasureService>().ConvertDimension(shipmentPackage.GetTotalHeight(), IoC.Resolve<IMeasureService>().BaseDimensionIn, usedMeasureDimension)));
+            int width = Convert.ToInt32(Math.Ceiling(IoC.Resolve<IMeasureService>().ConvertDimension(shipmentPackage.GetTotalWidth(), IoC.Resolve<IMeasureService>().BaseDimensionIn, usedMeasureDimension)));
+            int weight = Convert.ToInt32(Math.Ceiling(IoC.Resolve<IMeasureService>().ConvertWeight(IoC.Resolve<IShippingService>().GetShoppingCartTotalWeight(shipmentPackage.Items, shipmentPackage.Customer), IoC.Resolve<IMeasureService>().BaseWeightIn, usedMeasureWeight)));
             if (length < 1)
                 length = 1;
             if (height < 1)
@@ -367,11 +367,11 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.USPS
 
             if (isDomestic)
             {
-                carrierServicesOffered = IoCFactory.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.USPS.CarrierServicesOfferedDomestic", string.Empty);
+                carrierServicesOffered = IoC.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.USPS.CarrierServicesOfferedDomestic", string.Empty);
             }
             else
             {
-                carrierServicesOffered = IoCFactory.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.USPS.CarrierServicesOfferedInternational", string.Empty);
+                carrierServicesOffered = IoC.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.USPS.CarrierServicesOfferedInternational", string.Empty);
             }
 
             using (var sr = new StringReader(response))
@@ -487,11 +487,11 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.USPS
                 return shippingOptions;
             }
 
-            string url = IoCFactory.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.USPS.URL");
-            string username = IoCFactory.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.USPS.Username");
-            string password = IoCFactory.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.USPS.Password");
-            decimal additionalHandlingCharge = IoCFactory.Resolve<ISettingManager>().GetSettingValueDecimalNative("ShippingRateComputationMethod.USPS.AdditionalHandlingCharge");
-            shipmentPackage.ZipPostalCodeFrom = IoCFactory.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.USPS.DefaultShippedFromZipPostalCode");
+            string url = IoC.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.USPS.URL");
+            string username = IoC.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.USPS.Username");
+            string password = IoC.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.USPS.Password");
+            decimal additionalHandlingCharge = IoC.Resolve<ISettingManager>().GetSettingValueDecimalNative("ShippingRateComputationMethod.USPS.AdditionalHandlingCharge");
+            shipmentPackage.ZipPostalCodeFrom = IoC.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.USPS.DefaultShippedFromZipPostalCode");
 
 
             bool isDomestic = IsDomesticRequest(shipmentPackage);

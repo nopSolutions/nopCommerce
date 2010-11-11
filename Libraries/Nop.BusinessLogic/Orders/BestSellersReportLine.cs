@@ -16,7 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Orders
@@ -66,7 +66,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             get
             {
                 if (_pv == null)
-                    _pv = IoCFactory.Resolve<IProductService>().GetProductVariantById(this.ProductVariantId);
+                    _pv = IoC.Resolve<IProductService>().GetProductVariantById(this.ProductVariantId);
                 return _pv;
             }
         }

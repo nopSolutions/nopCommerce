@@ -17,7 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Payment.Methods.Amazon
 {
@@ -34,11 +34,11 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Amazon
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Amazon.SimplePay.GatewayUrl", "https://authorize.payments-sandbox.amazon.com/pba/paypipeline");
+                return IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Amazon.SimplePay.GatewayUrl", "https://authorize.payments-sandbox.amazon.com/pba/paypipeline");
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.Amazon.SimplePay.GatewayUrl", value);
+                IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.Amazon.SimplePay.GatewayUrl", value);
             }
         }
 
@@ -49,11 +49,11 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Amazon
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Amazon.SimplePay.AccountId");
+                return IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Amazon.SimplePay.AccountId");
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.Amazon.SimplePay.AccountId", value);
+                IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.Amazon.SimplePay.AccountId", value);
             }
         }
 
@@ -64,11 +64,11 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Amazon
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Amazon.SimplePay.AccessKey");
+                return IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Amazon.SimplePay.AccessKey");
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.Amazon.SimplePay.AccessKey", value);
+                IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.Amazon.SimplePay.AccessKey", value);
             }
         }
 
@@ -79,11 +79,11 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Amazon
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Amazon.SimplePay.SecretKey");
+                return IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Amazon.SimplePay.SecretKey");
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.Amazon.SimplePay.SecretKey", value);
+                IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.Amazon.SimplePay.SecretKey", value);
             }
         }
 
@@ -94,11 +94,11 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Amazon
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.Amazon.SimplePay.SettleImmediately", false);
+                return IoC.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.Amazon.SimplePay.SettleImmediately", false);
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.Amazon.SimplePay.SettleImmediately", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.Amazon.SimplePay.SettleImmediately", value.ToString());
             }
         }
 
@@ -109,11 +109,11 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Amazon
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.Amazon.SimplePay.AdditionalFee");
+                return IoC.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.Amazon.SimplePay.AdditionalFee");
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParamNative("PaymentMethod.Amazon.SimplePay.AdditionalFee", value);
+                IoC.Resolve<ISettingManager>().SetParamNative("PaymentMethod.Amazon.SimplePay.AdditionalFee", value);
             }
         }
         #endregion

@@ -29,7 +29,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.BusinessLogic.Utils;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
  
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
@@ -55,7 +55,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                dsNopCommerceNews.Url = string.Format("http://www.nopCommerce.com/NewsRSS.aspx?Version={0}&Localhost={1}&HideAdvertisements={2}&StoreURL={3}", IoCFactory.Resolve<ISettingManager>().CurrentVersion, HttpContext.Current.Request.Url.IsLoopback, IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Common.HideAdvertisementsOnAdminArea"), IoCFactory.Resolve<ISettingManager>().StoreUrl);
+                dsNopCommerceNews.Url = string.Format("http://www.nopCommerce.com/NewsRSS.aspx?Version={0}&Localhost={1}&HideAdvertisements={2}&StoreURL={3}", IoC.Resolve<ISettingManager>().CurrentVersion, HttpContext.Current.Request.Url.IsLoopback, IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Common.HideAdvertisementsOnAdminArea"), IoC.Resolve<ISettingManager>().StoreUrl);
                 lvNopCommerceNews.DataBind();
             }
             catch (Exception)

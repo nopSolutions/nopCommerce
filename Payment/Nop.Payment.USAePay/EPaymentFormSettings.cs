@@ -17,7 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Payment.Methods.USAePay
 {
@@ -28,11 +28,11 @@ namespace NopSolutions.NopCommerce.Payment.Methods.USAePay
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.USAePay.EPaymentForm.GatewayUrl", "https://sandbox.usaepay.com/interface/epayform/");
+                return IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.USAePay.EPaymentForm.GatewayUrl", "https://sandbox.usaepay.com/interface/epayform/");
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.USAePay.EPaymentForm.GatewayUrl", value);
+                IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.USAePay.EPaymentForm.GatewayUrl", value);
             }
         }
 
@@ -40,11 +40,11 @@ namespace NopSolutions.NopCommerce.Payment.Methods.USAePay
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.USAePay.EPaymentForm.ServiceUrl", "https://sandbox.usaepay.com/soap/gate/3213EA2A");
+                return IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.USAePay.EPaymentForm.ServiceUrl", "https://sandbox.usaepay.com/soap/gate/3213EA2A");
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.USAePay.EPaymentForm.ServiceUrl", value);
+                IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.USAePay.EPaymentForm.ServiceUrl", value);
             }
         }
 
@@ -52,11 +52,11 @@ namespace NopSolutions.NopCommerce.Payment.Methods.USAePay
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.USAePay.EPaymentForm.SourceKey");
+                return IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.USAePay.EPaymentForm.SourceKey");
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.USAePay.EPaymentForm.SourceKey", value);
+                IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.USAePay.EPaymentForm.SourceKey", value);
             }
         }
 
@@ -64,11 +64,11 @@ namespace NopSolutions.NopCommerce.Payment.Methods.USAePay
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.USAePay.EPaymentForm.AuthorizeOnly", false);
+                return IoC.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.USAePay.EPaymentForm.AuthorizeOnly", false);
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.USAePay.EPaymentForm.AuthorizeOnly", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.USAePay.EPaymentForm.AuthorizeOnly", value.ToString());
             }
         }
 
@@ -76,11 +76,11 @@ namespace NopSolutions.NopCommerce.Payment.Methods.USAePay
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.USAePay.EPaymentForm.UsePIN", true);
+                return IoC.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.USAePay.EPaymentForm.UsePIN", true);
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.USAePay.EPaymentForm.UsePIN", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.USAePay.EPaymentForm.UsePIN", value.ToString());
             }
         }
 
@@ -88,11 +88,11 @@ namespace NopSolutions.NopCommerce.Payment.Methods.USAePay
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.USAePay.EPaymentForm.PIN");
+                return IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.USAePay.EPaymentForm.PIN");
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.USAePay.EPaymentForm.PIN", value);
+                IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.USAePay.EPaymentForm.PIN", value);
             }
         }
 
@@ -100,11 +100,11 @@ namespace NopSolutions.NopCommerce.Payment.Methods.USAePay
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.USAePay.EPaymentForm.AdditionalFee");
+                return IoC.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.USAePay.EPaymentForm.AdditionalFee");
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParamNative("PaymentMethod.USAePay.EPaymentForm.AdditionalFee", value);
+                IoC.Resolve<ISettingManager>().SetParamNative("PaymentMethod.USAePay.EPaymentForm.AdditionalFee", value);
             }
         }
         #endregion

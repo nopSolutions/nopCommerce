@@ -29,7 +29,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Audit;
 using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
  
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
@@ -47,10 +47,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         protected void BindData()
         {
             var report = new List<OrderAverageReportLineSummary>();
-            report.Add(IoCFactory.Resolve<IOrderService>().OrderAverageReport(OrderStatusEnum.Pending));
-            report.Add(IoCFactory.Resolve<IOrderService>().OrderAverageReport(OrderStatusEnum.Processing));
-            report.Add(IoCFactory.Resolve<IOrderService>().OrderAverageReport(OrderStatusEnum.Complete));
-            report.Add(IoCFactory.Resolve<IOrderService>().OrderAverageReport(OrderStatusEnum.Cancelled));
+            report.Add(IoC.Resolve<IOrderService>().OrderAverageReport(OrderStatusEnum.Pending));
+            report.Add(IoC.Resolve<IOrderService>().OrderAverageReport(OrderStatusEnum.Processing));
+            report.Add(IoC.Resolve<IOrderService>().OrderAverageReport(OrderStatusEnum.Complete));
+            report.Add(IoC.Resolve<IOrderService>().OrderAverageReport(OrderStatusEnum.Cancelled));
             gvOrders.DataSource = report;
             gvOrders.DataBind();
         }

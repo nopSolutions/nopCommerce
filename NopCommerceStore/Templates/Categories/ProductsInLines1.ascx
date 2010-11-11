@@ -5,7 +5,7 @@
 <%@ Register TagPrefix="nopCommerce" TagName="PriceRangeFilter" Src="~/Modules/PriceRangeFilter.ascx" %>
 <%@ Register TagPrefix="nopCommerce" TagName="ProductSpecificationFilter" Src="~/Modules/ProductSpecificationFilter.ascx" %>
 <div class="category-page">
-    <% if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Media.CategoryBreadcrumbEnabled"))
+    <% if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Media.CategoryBreadcrumbEnabled"))
        { %>
     <div class="breadcrumb">
         <a href='<%=CommonHelper.GetStoreLocation()%>'>

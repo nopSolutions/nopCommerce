@@ -25,7 +25,7 @@ using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.BusinessLogic.Templates;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -33,7 +33,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            ManufacturerTemplate manufacturerTemplate = IoCFactory.Resolve<ITemplateService>().GetManufacturerTemplateById(this.ManufacturerTemplateId);
+            ManufacturerTemplate manufacturerTemplate = IoC.Resolve<ITemplateService>().GetManufacturerTemplateById(this.ManufacturerTemplateId);
             if (manufacturerTemplate != null)
             {
                 this.txtName.Text = manufacturerTemplate.Name;
@@ -61,7 +61,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public ManufacturerTemplate SaveInfo()
         {
-            ManufacturerTemplate manufacturerTemplate = IoCFactory.Resolve<ITemplateService>().GetManufacturerTemplateById(this.ManufacturerTemplateId);
+            ManufacturerTemplate manufacturerTemplate = IoC.Resolve<ITemplateService>().GetManufacturerTemplateById(this.ManufacturerTemplateId);
             if (manufacturerTemplate != null)
             {
                 manufacturerTemplate.Name = txtName.Text;
@@ -69,7 +69,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 manufacturerTemplate.DisplayOrder =  txtDisplayOrder.Value;
                 manufacturerTemplate.UpdatedOn = DateTime.UtcNow;
 
-                IoCFactory.Resolve<ITemplateService>().UpdateManufacturerTemplate(manufacturerTemplate);
+                IoC.Resolve<ITemplateService>().UpdateManufacturerTemplate(manufacturerTemplate);
             }
             else
             {
@@ -82,7 +82,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     CreatedOn = now,
                     UpdatedOn = now
                 };
-                IoCFactory.Resolve<ITemplateService>().InsertManufacturerTemplate(manufacturerTemplate);
+                IoC.Resolve<ITemplateService>().InsertManufacturerTemplate(manufacturerTemplate);
             }
 
             return manufacturerTemplate;

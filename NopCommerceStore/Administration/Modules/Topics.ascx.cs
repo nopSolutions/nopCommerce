@@ -25,7 +25,7 @@ using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.Content.Topics;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -41,7 +41,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected void BindGrid()
         {
-            var topics = IoCFactory.Resolve<ITopicService>().GetAllTopics();
+            var topics = IoC.Resolve<ITopicService>().GetAllTopics();
             gvTopics.DataSource = topics;
             gvTopics.DataBind();
         }

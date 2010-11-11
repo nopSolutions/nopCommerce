@@ -32,7 +32,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.Payment;
 using NopSolutions.NopCommerce.Common;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Security
 {
@@ -74,7 +74,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
         /// <returns>Decrypted string</returns>
         public static string Decrypt(string cipherText)
         {
-            string encryptionPrivateKey = IoCFactory.Resolve<ISettingManager>().GetSettingValue("Security.EncryptionPrivateKey");
+            string encryptionPrivateKey = IoC.Resolve<ISettingManager>().GetSettingValue("Security.EncryptionPrivateKey");
             return Decrypt(cipherText, encryptionPrivateKey);
         }
 
@@ -105,7 +105,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
         /// <returns>Encrypted string</returns>
         public static string Encrypt(string plainText)
         {
-            string encryptionPrivateKey = IoCFactory.Resolve<ISettingManager>().GetSettingValue("Security.EncryptionPrivateKey");
+            string encryptionPrivateKey = IoC.Resolve<ISettingManager>().GetSettingValue("Security.EncryptionPrivateKey");
             return Encrypt(plainText, encryptionPrivateKey);
         }
 
@@ -138,12 +138,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
             if (String.IsNullOrEmpty(newEncryptionPrivateKey) || newEncryptionPrivateKey.Length != 16)
                 throw new NopException("Encryption private key must be 16 characters long");
 
-            string oldEncryptionPrivateKey = IoCFactory.Resolve<ISettingManager>().GetSettingValue("Security.EncryptionPrivateKey");
+            string oldEncryptionPrivateKey = IoC.Resolve<ISettingManager>().GetSettingValue("Security.EncryptionPrivateKey");
 
             if (oldEncryptionPrivateKey == newEncryptionPrivateKey)
                 return;
 
-            var orders = IoCFactory.Resolve<IOrderService>().LoadAllOrders();
+            var orders = IoC.Resolve<IOrderService>().LoadAllOrders();
             //uncomment this line to support transactions
             //using (var scope = new System.Transactions.TransactionScope())
             {
@@ -172,10 +172,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
                     order.CardCvv2 = encryptedCardCvv2;
                     order.CardExpirationMonth = encryptedCardExpirationMonth;
                     order.CardExpirationYear = encryptedCardExpirationYear;
-                    IoCFactory.Resolve<IOrderService>().UpdateOrder(order);
+                    IoC.Resolve<IOrderService>().UpdateOrder(order);
                 }
 
-                IoCFactory.Resolve<ISettingManager>().SetParam("Security.EncryptionPrivateKey", newEncryptionPrivateKey);
+                IoC.Resolve<ISettingManager>().SetParam("Security.EncryptionPrivateKey", newEncryptionPrivateKey);
 
                 //uncomment this line to support transactions
                 //scope.Complete();

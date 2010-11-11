@@ -1,7 +1,7 @@
 ﻿using System;
 using NopSolutions.NopCommerce.BusinessLogic.Messages;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -18,14 +18,14 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     Response.Redirect(CommonHelper.GetStoreLocation());
                 }
 
-                var subscription = IoCFactory.Resolve<IMessageService>().GetNewsLetterSubscriptionByGuid(NewsLetterSubscriptionGuid.Value);
+                var subscription = IoC.Resolve<IMessageService>().GetNewsLetterSubscriptionByGuid(NewsLetterSubscriptionGuid.Value);
                 if(subscription == null)
                 {
                     Response.Redirect(CommonHelper.GetStoreLocation());
                 }
 
                 subscription.Active = IsActive;
-               IoCFactory.Resolve<IMessageService>().UpdateNewsLetterSubscription(subscription);
+               IoC.Resolve<IMessageService>().UpdateNewsLetterSubscription(subscription);
 
                 if(subscription.Active)
                 {

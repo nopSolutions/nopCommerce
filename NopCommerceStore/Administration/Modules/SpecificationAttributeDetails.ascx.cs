@@ -25,7 +25,7 @@ using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.Audit;
 using NopSolutions.NopCommerce.BusinessLogic.Products.Specs;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC; 
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure; 
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -44,7 +44,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             SpecificationAttribute specificationAttribute = ctrlSpecificationAttributeInfo.SaveInfo();
             ctrlSpecificationAttributeOptions.SaveInfo();
 
-            IoCFactory.Resolve<ICustomerActivityService>().InsertActivity(
+            IoC.Resolve<ICustomerActivityService>().InsertActivity(
                 "EditSpecAttribute",
                 GetLocaleResourceString("ActivityLog.EditSpecAttribute"),
                 specificationAttribute.Name);
@@ -88,12 +88,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                SpecificationAttribute specificationAttribute = IoCFactory.Resolve<ISpecificationAttributeService>().GetSpecificationAttributeById(this.SpecificationAttributeId);
+                SpecificationAttribute specificationAttribute = IoC.Resolve<ISpecificationAttributeService>().GetSpecificationAttributeById(this.SpecificationAttributeId);
                 if (specificationAttribute != null)
                 {
-                    IoCFactory.Resolve<ISpecificationAttributeService>().DeleteSpecificationAttribute(this.SpecificationAttributeId);
+                    IoC.Resolve<ISpecificationAttributeService>().DeleteSpecificationAttribute(this.SpecificationAttributeId);
 
-                    IoCFactory.Resolve<ICustomerActivityService>().InsertActivity(
+                    IoC.Resolve<ICustomerActivityService>().InsertActivity(
                         "DeleteSpecAttribute",
                         GetLocaleResourceString("ActivityLog.DeleteSpecAttribute"),
                         specificationAttribute.Name);

@@ -24,7 +24,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using System.Globalization;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Payment.Methods.Amazon
 {
@@ -66,7 +66,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Amazon
             post.Add(AmazonHelper.SIGNATURE_METHOD_KEYNAME, AmazonHelper.HMAC_SHA256_ALGORITHM);
             post.Add("accessKey", SimplePaySettings.AccessKey);
             post.Add("amount", String.Format(CultureInfo.InvariantCulture, "USD {0:0.00}", order.OrderTotal));
-            post.Add("description", string.Format("{0}, {1}", IoCFactory.Resolve<ISettingManager>().StoreName, order.OrderId));
+            post.Add("description", string.Format("{0}, {1}", IoC.Resolve<ISettingManager>().StoreName, order.OrderId));
             post.Add("amazonPaymentsAccountId", SimplePaySettings.AccountId);
             post.Add("returnUrl", String.Format("{0}AmazonSimplePayReturn.aspx", CommonHelper.GetStoreLocation(false)));
             post.Add("processImmediate", (SimplePaySettings.SettleImmediately ? "1" : "0"));

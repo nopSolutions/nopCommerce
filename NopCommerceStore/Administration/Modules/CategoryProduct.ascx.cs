@@ -32,7 +32,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Templates;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Web.Administration.Modules;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
  
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
@@ -41,13 +41,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            var category = IoCFactory.Resolve<ICategoryService>().GetCategoryById(this.CategoryId);
+            var category = IoC.Resolve<ICategoryService>().GetCategoryById(this.CategoryId);
 
             if (category != null)
             {
                 var existingProductCategoryCollection = category.ProductCategories;
                 List<ProductCategoryMappingHelperClass> productCategoryMappings = GetProductCategoryMappings(existingProductCategoryCollection);
-                gvProductCategoryMappings.Columns[1].Visible = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Display.ShowAdminProductImages");
+                gvProductCategoryMappings.Columns[1].Visible = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Display.ShowAdminProductImages");
                 gvProductCategoryMappings.DataSource = productCategoryMappings;
                 gvProductCategoryMappings.DataBind();
             }
@@ -65,7 +65,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public void SaveInfo()
         {
-            var category = IoCFactory.Resolve<ICategoryService>().GetCategoryById(this.CategoryId);
+            var category = IoC.Resolve<ICategoryService>().GetCategoryById(this.CategoryId);
 
             if (category != null)
             {
@@ -83,17 +83,17 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     int displayOrder = txtRowDisplayOrder.Value;
 
                     if (productCategoryId > 0 && !cbProductInfo.Checked)
-                        IoCFactory.Resolve<ICategoryService>().DeleteProductCategory(productCategoryId);
+                        IoC.Resolve<ICategoryService>().DeleteProductCategory(productCategoryId);
                     if (productCategoryId > 0 && cbProductInfo.Checked)
                     {
-                        var productCategory = IoCFactory.Resolve<ICategoryService>().GetProductCategoryById(productCategoryId);
+                        var productCategory = IoC.Resolve<ICategoryService>().GetProductCategoryById(productCategoryId);
                         if (productCategory != null)
                         {
                             productCategory.ProductId = productId;
                             productCategory.CategoryId = category.CategoryId;
                             productCategory.IsFeaturedProduct = featured;
                             productCategory.DisplayOrder = displayOrder;
-                            IoCFactory.Resolve<ICategoryService>().UpdateProductCategory(productCategory);
+                            IoC.Resolve<ICategoryService>().UpdateProductCategory(productCategory);
                         }
                     }
                 }
@@ -122,7 +122,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     ProductCategoryMappingHelperClass pcmhc = new ProductCategoryMappingHelperClass();
                     pcmhc.ProductCategoryId = pc.ProductCategoryId;
                     pcmhc.ProductId = pc.ProductId;
-                    if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Display.ShowAdminProductImages"))
+                    if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Display.ShowAdminProductImages"))
                     {
                         pcmhc.ProductImage = GetProductImageUrl(product);
                     }
@@ -142,11 +142,11 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             var picture = product.DefaultPicture;
             if (picture != null)
             {
-                return IoCFactory.Resolve<IPictureService>().GetPictureUrl(picture, IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.ShoppingCart.ThumbnailImageSize", 80));
+                return IoC.Resolve<IPictureService>().GetPictureUrl(picture, IoC.Resolve<ISettingManager>().GetSettingValueInteger("Media.ShoppingCart.ThumbnailImageSize", 80));
             }
             else
             {
-                return IoCFactory.Resolve<IPictureService>().GetDefaultPictureUrl(IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.ShoppingCart.ThumbnailImageSize", 80));
+                return IoC.Resolve<IPictureService>().GetDefaultPictureUrl(IoC.Resolve<ISettingManager>().GetSettingValueInteger("Media.ShoppingCart.ThumbnailImageSize", 80));
             }
         }
 

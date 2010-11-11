@@ -15,7 +15,7 @@ using System.Web.UI.WebControls.WebParts;
 using System.Web.UI.HtmlControls;
 using NopSolutions.NopCommerce.BusinessLogic;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Froogle;
 
@@ -29,7 +29,7 @@ public class Froogle : IHttpHandler
         context.Response.Cache.SetCacheability(HttpCacheability.Public);
         context.Response.Cache.SetExpires(DateTime.Now.AddHours(1));
 
-        if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Froogle.AllowPublicFroogleAccess"))
+        if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Froogle.AllowPublicFroogleAccess"))
         {
             FroogleService.GenerateFeed(context.Response.OutputStream);
         }

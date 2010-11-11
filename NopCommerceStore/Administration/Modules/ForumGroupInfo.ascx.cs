@@ -25,7 +25,7 @@ using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.Content.Forums;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -33,7 +33,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            ForumGroup forumGroup = IoCFactory.Resolve<IForumService>().GetForumGroupById(this.ForumGroupId);
+            ForumGroup forumGroup = IoC.Resolve<IForumService>().GetForumGroupById(this.ForumGroupId);
             if (forumGroup != null)
             {
                 this.txtName.Text = forumGroup.Name;
@@ -63,7 +63,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public ForumGroup SaveInfo()
         {
-            ForumGroup forumGroup = IoCFactory.Resolve<IForumService>().GetForumGroupById(this.ForumGroupId);
+            ForumGroup forumGroup = IoC.Resolve<IForumService>().GetForumGroupById(this.ForumGroupId);
             DateTime nowDT = DateTime.UtcNow;
             if (forumGroup != null)
             {
@@ -72,7 +72,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 forumGroup.DisplayOrder = txtDisplayOrder.Value;
                 forumGroup.UpdatedOn = nowDT;
 
-                IoCFactory.Resolve<IForumService>().UpdateForumGroup(forumGroup);
+                IoC.Resolve<IForumService>().UpdateForumGroup(forumGroup);
             }
             else
             {
@@ -86,7 +86,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     UpdatedOn = nowDT
                 };
 
-                IoCFactory.Resolve<IForumService>().InsertForumGroup(forumGroup);
+                IoC.Resolve<IForumService>().InsertForumGroup(forumGroup);
             }
 
             return forumGroup;
@@ -96,7 +96,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                IoCFactory.Resolve<IForumService>().DeleteForumGroup(this.ForumGroupId);
+                IoC.Resolve<IForumService>().DeleteForumGroup(this.ForumGroupId);
                 Response.Redirect("Forums.aspx");
             }
             catch (Exception exc)

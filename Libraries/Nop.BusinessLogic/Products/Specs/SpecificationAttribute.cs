@@ -15,7 +15,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
 {
@@ -71,7 +71,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
                 if (languageId > 0)
                 {
                     if (_saLocalized == null)
-                        _saLocalized = IoCFactory.Resolve<ISpecificationAttributeService>().GetSpecificationAttributeLocalizedBySpecificationAttributeId(this.SpecificationAttributeId);
+                        _saLocalized = IoC.Resolve<ISpecificationAttributeService>().GetSpecificationAttributeLocalizedBySpecificationAttributeId(this.SpecificationAttributeId);
 
                     var temp1 = _saLocalized.FirstOrDefault(cl => cl.LanguageId == languageId);
                     if (temp1 != null && !String.IsNullOrWhiteSpace(temp1.Name))

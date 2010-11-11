@@ -16,7 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 
 
@@ -92,7 +92,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
         {
             get
             {
-                return IoCFactory.Resolve<ILanguageService>().GetLanguageById(this.LanguageId);
+                return IoC.Resolve<ILanguageService>().GetLanguageById(this.LanguageId);
             }
         }
 
@@ -117,7 +117,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Polls
         {
             get
             {
-                return IoCFactory.Resolve<IPollService>().GetPollAnswersByPollId(this.PollId);
+                return IoC.Resolve<IPollService>().GetPollAnswersByPollId(this.PollId);
             }
         }
 

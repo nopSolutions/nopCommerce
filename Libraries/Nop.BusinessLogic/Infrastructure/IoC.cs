@@ -14,23 +14,13 @@
 
 using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Diagnostics;
-using System.IO;
-using System.Runtime.Remoting.Messaging;
-using System.ServiceModel;
-using System.Text;
-using System.Web;
-using System.Web.Compilation;
-using System.Xml;
 
-namespace NopSolutions.NopCommerce.BusinessLogic.IoC
+namespace NopSolutions.NopCommerce.BusinessLogic.Infrastructure
 {
     /// <summary>
     /// Inversion of Control factory implementation.
-    /// This is a simple factory built with Microsoft Unity    
     /// </summary>
-    public static class IoCFactory
+    public static class IoC
     {
         #region Fields
 

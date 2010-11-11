@@ -32,7 +32,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Modules 
 {
@@ -46,11 +46,11 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void BindData()
         {
-            var product = IoCFactory.Resolve<IProductService>().GetProductById(this.ProductId);
+            var product = IoC.Resolve<IProductService>().GetProductById(this.ProductId);
             if (product != null)
             {
                 int totalRecords = 0;
-                var products = IoCFactory.Resolve<IProductService>().GetAllProducts(0,
+                var products = IoC.Resolve<IProductService>().GetAllProducts(0,
                     0, 0, null, null, null, this.ProductId, string.Empty, false, int.MaxValue,
                     0, null, NopContext.Current.WorkingLanguage.LanguageId,
                     ProductSortingEnum.Position, out totalRecords);
@@ -86,9 +86,9 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     {
                         var picture = product.DefaultPicture;
                         if (picture != null)
-                            hlImageLink.ImageUrl = IoCFactory.Resolve<IPictureService>().GetPictureUrl(picture, IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.Product.ThumbnailImageSize", 125), true);
+                            hlImageLink.ImageUrl = IoC.Resolve<IPictureService>().GetPictureUrl(picture, IoC.Resolve<ISettingManager>().GetSettingValueInteger("Media.Product.ThumbnailImageSize", 125), true);
                         else
-                            hlImageLink.ImageUrl = IoCFactory.Resolve<IPictureService>().GetDefaultPictureUrl(IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.Product.ThumbnailImageSize", 125));
+                            hlImageLink.ImageUrl = IoC.Resolve<IPictureService>().GetDefaultPictureUrl(IoC.Resolve<ISettingManager>().GetSettingValueInteger("Media.Product.ThumbnailImageSize", 125));
                         hlImageLink.NavigateUrl = productURL;
                         hlImageLink.ToolTip = String.Format(GetLocaleResourceString("Media.Product.ImageLinkTitleFormat"), product.LocalizedName);
                         hlImageLink.Text = String.Format(GetLocaleResourceString("Media.Product.ImageAlternateTextFormat"), product.LocalizedName);

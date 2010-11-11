@@ -31,7 +31,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Content.Blog;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -39,7 +39,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
     {
         private void BindData()
         {
-            var blogPosts = IoCFactory.Resolve<IBlogService>().GetAllBlogPosts(NopContext.Current.WorkingLanguage.LanguageId);
+            var blogPosts = IoC.Resolve<IBlogService>().GetAllBlogPosts(NopContext.Current.WorkingLanguage.LanguageId);
             if (blogPosts.Count > 0)
             {
                 var months = new SortedDictionary<DateTime, int>();

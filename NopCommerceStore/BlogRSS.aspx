@@ -7,15 +7,15 @@
     <HeaderTemplate>
         <rss version="2.0">
          <channel>
-            <title><![CDATA[<%# IoCFactory.Resolve<ISettingManager>().StoreName%>: Blog]]></title>
+            <title><![CDATA[<%# IoC.Resolve<ISettingManager>().StoreName%>: Blog]]></title>
             <link><%# CommonHelper.GetStoreLocation(false)%></link>
-            <description><%# IoCFactory.Resolve<ISettingManager>().StoreName%></description>
-            <copyright>Copyright <%= DateTime.Now.Year.ToString()%> by <%# IoCFactory.Resolve<ISettingManager>().StoreName%></copyright>
+            <description><%# IoC.Resolve<ISettingManager>().StoreName%></description>
+            <copyright>Copyright <%= DateTime.Now.Year.ToString()%> by <%# IoC.Resolve<ISettingManager>().StoreName%></copyright>
     </HeaderTemplate>
     <ItemTemplate>
         <item>
          <title><![CDATA[<%# Eval("BlogPostTitle") %>]]></title>
-         <author><![CDATA[<%# IoCFactory.Resolve<ISettingManager>().StoreName%>]]></author>
+         <author><![CDATA[<%# IoC.Resolve<ISettingManager>().StoreName%>]]></author>
          <description><![CDATA[<%# Eval("BlogPostBody") %>]]></description>
          <link><![CDATA[<%# SEOHelper.GetBlogPostUrl(Convert.ToInt32(Eval("BlogPostId"))) %>]]></link>
          <pubDate><%# string.Format("{0:R}", DateTimeHelper.ConvertToUserTime((DateTime)Eval("CreatedOn"), DateTimeKind.Utc))%></pubDate>

@@ -30,7 +30,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.Localization;
 using NopSolutions.NopCommerce.BusinessLogic.ExportImport;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -78,7 +78,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                IoCFactory.Resolve<ILanguageService>().DeleteLanguage(this.LanguageId);
+                IoC.Resolve<ILanguageService>().DeleteLanguage(this.LanguageId);
                 Response.Redirect("Languages.aspx");
             }
             catch (Exception exc)
@@ -99,7 +99,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                string pack = IoCFactory.Resolve<ILocalizationManager>().LanguagePackExport(this.LanguageId);
+                string pack = IoC.Resolve<ILocalizationManager>().LanguagePackExport(this.LanguageId);
                 string fileName = String.Format("language_{0}.xml", LanguageId);
                 CommonHelper.WriteResponseXml(pack, fileName);
             }

@@ -29,7 +29,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using System.Collections.Generic;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -37,13 +37,13 @@ namespace NopSolutions.NopCommerce.Web.Modules
     {
         private void BindLanguages()
         {
-            var languages = IoCFactory.Resolve<ILanguageService>().GetAllLanguages();
+            var languages = IoC.Resolve<ILanguageService>().GetAllLanguages();
             if(languages.Count > 1)
             {
                 var customerLanguage = NopContext.Current.WorkingLanguage;
                 Visible = true;
 
-                if(IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Common.UseImagesForLanguageSelection", false))
+                if(IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Common.UseImagesForLanguageSelection", false))
                 {
                     rptLanguages.Visible = true;
                     ddlLanguages.Visible = false;
@@ -95,7 +95,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
         protected void ddlLanguages_OnSelectedIndexChanged(object sender, EventArgs e)
         {
             int languagesId = int.Parse(this.ddlLanguages.SelectedItem.Value);
-            var language = IoCFactory.Resolve<ILanguageService>().GetLanguageById(languagesId);
+            var language = IoC.Resolve<ILanguageService>().GetLanguageById(languagesId);
             if (language != null && language.Published)
             {
                 NopContext.Current.WorkingLanguage = language;
@@ -108,7 +108,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             if(e.CommandName.Equals("SelectLanguage"))
             {
                 int languageId = Int32.Parse(e.CommandArgument.ToString());
-                var language = IoCFactory.Resolve<ILanguageService>().GetLanguageById(languageId);
+                var language = IoC.Resolve<ILanguageService>().GetLanguageById(languageId);
                 if(language != null && language.Published)
                 {
                     NopContext.Current.WorkingLanguage = language;

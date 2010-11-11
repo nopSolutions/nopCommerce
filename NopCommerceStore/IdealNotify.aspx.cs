@@ -12,7 +12,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Payment.Methods.Moneris;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web
 {
@@ -29,7 +29,7 @@ namespace NopSolutions.NopCommerce.Web
                 XmlDocument doc = new XmlDocument();
                 doc.Load(Request.InputStream);
                 //// Try to find the order the notification is posted about
-                Order o = IoCFactory.Resolve<IOrderService>().GetOrderById(Convert.ToInt32(doc.ChildNodes[1]["purchaseID"].InnerText));
+                Order o = IoC.Resolve<IOrderService>().GetOrderById(Convert.ToInt32(doc.ChildNodes[1]["purchaseID"].InnerText));
                 if (o == null)
                 {
                     throw new NullReferenceException("No order");
@@ -39,17 +39,17 @@ namespace NopSolutions.NopCommerce.Web
                 switch (status.ToLower())
                 {
                     case "success":
-                        if (IoCFactory.Resolve<IOrderService>().CanMarkOrderAsPaid(o))
+                        if (IoC.Resolve<IOrderService>().CanMarkOrderAsPaid(o))
                         {
-                            IoCFactory.Resolve<IOrderService>().MarkOrderAsPaid(o.OrderId);
+                            IoC.Resolve<IOrderService>().MarkOrderAsPaid(o.OrderId);
                         }
                         break;
                     case "Expired":
                     case "Cancelled":
                     case "Failure":
-                        if (IoCFactory.Resolve<IOrderService>().CanCancelOrder(o))
+                        if (IoC.Resolve<IOrderService>().CanCancelOrder(o))
                         {
-                            IoCFactory.Resolve<IOrderService>().CancelOrder(o.OrderId, true);
+                            IoC.Resolve<IOrderService>().CancelOrder(o.OrderId, true);
                         }
                         break;
                     default:
@@ -58,7 +58,7 @@ namespace NopSolutions.NopCommerce.Web
             }
             catch (Exception exc)
             {
-                IoCFactory.Resolve<ILogService>().InsertLog(LogTypeEnum.OrderError, "iDeal payment error" + exc.Message, exc);
+                IoC.Resolve<ILogService>().InsertLog(LogTypeEnum.OrderError, "iDeal payment error" + exc.Message, exc);
             }
         }
 

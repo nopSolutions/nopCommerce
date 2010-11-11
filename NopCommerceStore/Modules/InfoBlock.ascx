@@ -12,27 +12,27 @@
                 <%=GetLocaleResourceString("ContactUs.ContactUs")%></a> </li>
             <li><a href="<%=Page.ResolveUrl("~/aboutus.aspx")%>">
                 <%=GetLocaleResourceString("Content.AboutUs")%></a></li>
-            <% if (IoCFactory.Resolve<IBlogService>().BlogEnabled)
+            <% if (IoC.Resolve<IBlogService>().BlogEnabled)
                { %>
             <li><a href="<%= SEOHelper.GetBlogUrl()%>">
                 <%=GetLocaleResourceString("Blog.Blog")%></a></li>
             <%} %>
-            <% if (IoCFactory.Resolve<IForumService>().ForumsEnabled)
+            <% if (IoC.Resolve<IForumService>().ForumsEnabled)
                { %>
             <li><a href="<%= SEOHelper.GetForumMainUrl()%> ">
                 <%=GetLocaleResourceString("Forum.Forums")%></a></li>
             <%} %>
-            <% if (IoCFactory.Resolve<IProductService>().RecentlyAddedProductsEnabled)
+            <% if (IoC.Resolve<IProductService>().RecentlyAddedProductsEnabled)
                { %>
             <li><a href="<%=Page.ResolveUrl("~/recentlyaddedproducts.aspx")%>">
                 <%=GetLocaleResourceString("Products.NewProducts")%></a></li>
             <%} %>
-            <% if (IoCFactory.Resolve<IProductService>().RecentlyViewedProductsEnabled)
+            <% if (IoC.Resolve<IProductService>().RecentlyViewedProductsEnabled)
                { %>
             <li><a href="<%=Page.ResolveUrl("~/recentlyviewedproducts.aspx")%>">
                 <%=GetLocaleResourceString("Products.RecentlyViewedProducts")%></a></li>
             <%} %>
-            <% if (IoCFactory.Resolve<IProductService>().CompareProductsEnabled)
+            <% if (IoC.Resolve<IProductService>().CompareProductsEnabled)
                { %>
             <li><a href="<%=Page.ResolveUrl("~/compareproducts.aspx")%>">
                 <%=GetLocaleResourceString("Products.CompareProductsList")%></a></li>

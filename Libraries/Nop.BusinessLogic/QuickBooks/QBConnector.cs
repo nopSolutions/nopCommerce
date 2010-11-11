@@ -14,7 +14,7 @@ using System.Text.RegularExpressions;
 using System.Text;
 using System.Xml;
 using NopSolutions.NopCommerce.BusinessLogic.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
 {
@@ -34,7 +34,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
         [WebMethod]
         public string serverVersion()
         {
-            return IoCFactory.Resolve<ISettingManager>().CurrentVersion;
+            return IoC.Resolve<ISettingManager>().CurrentVersion;
         }
 
         /// <summary>
@@ -76,7 +76,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
         {
             string[] rsp = new string[4];
 
-            if (!IoCFactory.Resolve<IQBService>().QBIsEnabled || !strUserName.Equals(IoCFactory.Resolve<IQBService>().QBUsername) || !strPassword.Equals(IoCFactory.Resolve<IQBService>().QBPassword))
+            if (!IoC.Resolve<IQBService>().QBIsEnabled || !strUserName.Equals(IoC.Resolve<IQBService>().QBUsername) || !strPassword.Equals(IoC.Resolve<IQBService>().QBPassword))
             {
                 rsp[1] = "nvu";
             }
@@ -106,12 +106,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
         {
             try
             {
-                if(!IoCFactory.Resolve<IQBService>().QBIsEnabled || !Ticket.Equals(ticket) || !IsTicketActive)
+                if(!IoC.Resolve<IQBService>().QBIsEnabled || !Ticket.Equals(ticket) || !IsTicketActive)
                 {
                     return String.Empty;
                 }
 
-                QBEntity entity = IoCFactory.Resolve<IQBService>().GetQBEntityForSynchronization();
+                QBEntity entity = IoC.Resolve<IQBService>().GetQBEntityForSynchronization();
                 if(entity == null)
                 {
                     return String.Empty;
@@ -150,7 +150,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
             }
             catch(Exception ex)
             {
-                IoCFactory.Resolve<ILogService>().InsertLog(LogTypeEnum.CommonError, ex.Message, ex);
+                IoC.Resolve<ILogService>().InsertLog(LogTypeEnum.CommonError, ex.Message, ex);
                 return String.Empty;
             }
         }
@@ -169,14 +169,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
         {
             try
             {
-                if (!IoCFactory.Resolve<IQBService>().QBIsEnabled || !Ticket.Equals(ticket) || !IsTicketActive)
+                if (!IoC.Resolve<IQBService>().QBIsEnabled || !Ticket.Equals(ticket) || !IsTicketActive)
                 {
                     return -1;
                 }
 
                 if(!String.IsNullOrEmpty(hresult))
                 {
-                    IoCFactory.Resolve<ILogService>().InsertLog(LogTypeEnum.CommonError, message, hresult);
+                    IoC.Resolve<ILogService>().InsertLog(LogTypeEnum.CommonError, message, hresult);
                     return -1;
                 }
 
@@ -184,7 +184,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
                 xml.LoadXml(response);
 
                 int requestId = QBXMLHelper.GetRequestId(xml);
-                QBEntity entity = IoCFactory.Resolve<IQBService>().GetQBEntityById(requestId);
+                QBEntity entity = IoC.Resolve<IQBService>().GetQBEntityById(requestId);
                 if(entity == null)
                 {
                     return -1;
@@ -227,21 +227,21 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
                             entity.SynStateId = (int)SynStateEnum.Success;
                             entity.SeqNum = seqNum;
                             entity.UpdatedOn = DateTime.UtcNow;
-                            IoCFactory.Resolve<IQBService>().UpdateQBEntity(entity);
+                            IoC.Resolve<IQBService>().UpdateQBEntity(entity);
                         }
                         break;
                     case 3175:
                         {
-                            IoCFactory.Resolve<ILogService>().InsertLog(LogTypeEnum.CommonError, QBXMLHelper.GetStatusMessage(xml), statusCode.ToString());
+                            IoC.Resolve<ILogService>().InsertLog(LogTypeEnum.CommonError, QBXMLHelper.GetStatusMessage(xml), statusCode.ToString());
                         }
                         break;
                     default:
                         {
-                            IoCFactory.Resolve<ILogService>().InsertLog(LogTypeEnum.CommonError, QBXMLHelper.GetStatusMessage(xml), statusCode.ToString());
+                            IoC.Resolve<ILogService>().InsertLog(LogTypeEnum.CommonError, QBXMLHelper.GetStatusMessage(xml), statusCode.ToString());
 
                             entity.SynStateId = (int)SynStateEnum.Failed;
                             entity.UpdatedOn = DateTime.UtcNow;
-                            IoCFactory.Resolve<IQBService>().UpdateQBEntity(entity);
+                            IoC.Resolve<IQBService>().UpdateQBEntity(entity);
                         }
                         break;
                 }
@@ -249,7 +249,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
             }
             catch(Exception ex)
             {
-                IoCFactory.Resolve<ILogService>().InsertLog(LogTypeEnum.CommonError, ex.Message, ex);
+                IoC.Resolve<ILogService>().InsertLog(LogTypeEnum.CommonError, ex.Message, ex);
                 return -1;
             }
         }
@@ -265,7 +265,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://developer.intuit.com/connectionError", RequestNamespace = "http://developer.intuit.com/", ResponseNamespace = "http://developer.intuit.com/", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         public string connectionError(string ticket, string hresult, string message)
         {
-            IoCFactory.Resolve<ILogService>().InsertLog(LogTypeEnum.CommonError, message, hresult);
+            IoC.Resolve<ILogService>().InsertLog(LogTypeEnum.CommonError, message, hresult);
             return String.Empty;
         }
 
@@ -300,10 +300,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
         {
             get
             {
-                Setting setting = IoCFactory.Resolve<ISettingManager>().GetSettingByName("QB.Ticket");
+                Setting setting = IoC.Resolve<ISettingManager>().GetSettingByName("QB.Ticket");
                 if (setting == null)
                 {
-                    setting = IoCFactory.Resolve<ISettingManager>().SetParam("QB.Ticket", Guid.NewGuid().ToString());
+                    setting = IoC.Resolve<ISettingManager>().SetParam("QB.Ticket", Guid.NewGuid().ToString());
                 }
                 return setting.Value;
             }
@@ -313,11 +313,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("QB.Ticket.IsActive", false);
+                return IoC.Resolve<ISettingManager>().GetSettingValueBoolean("QB.Ticket.IsActive", false);
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("QB.Ticket.IsActive", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("QB.Ticket.IsActive", value.ToString());
             }
         }
         #endregion

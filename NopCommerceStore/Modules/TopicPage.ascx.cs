@@ -30,7 +30,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Content.Topics;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 
 namespace NopSolutions.NopCommerce.Web.Modules
@@ -140,7 +140,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             {
                 if (localizedTopic == null)
                 {
-                    localizedTopic = IoCFactory.Resolve<ITopicService>().GetLocalizedTopic(this.TopicId, NopContext.Current.WorkingLanguage.LanguageId);
+                    localizedTopic = IoC.Resolve<ITopicService>().GetLocalizedTopic(this.TopicId, NopContext.Current.WorkingLanguage.LanguageId);
                 }
                 return localizedTopic;
             }
@@ -153,7 +153,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             {
                 if (topic == null)
                 {
-                    topic = IoCFactory.Resolve<ITopicService>().GetTopicById(this.TopicId);
+                    topic = IoC.Resolve<ITopicService>().GetTopicById(this.TopicId);
                 }
                 return topic;
             }

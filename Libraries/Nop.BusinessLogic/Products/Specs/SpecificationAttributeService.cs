@@ -21,7 +21,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Caching;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Data;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
 {
@@ -750,7 +750,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.SpecificationAttributeManager.CacheEnabled");
+                return IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.SpecificationAttributeManager.CacheEnabled");
             }
         }
         #endregion

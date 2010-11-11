@@ -15,7 +15,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.BusinessLogic.Products.Attributes;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Web.Modules;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -31,7 +31,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void BindData()
         {
-            var pv = IoCFactory.Resolve<IProductService>().GetProductVariantById(this.ProductVariantId);
+            var pv = IoC.Resolve<IProductService>().GetProductVariantById(this.ProductVariantId);
             if (pv == null || !pv.IsGiftCard)
             {
                 this.Visible = false;

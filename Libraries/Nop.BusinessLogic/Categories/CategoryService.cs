@@ -25,7 +25,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Data;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.BusinessLogic.Security;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Categories
 {
@@ -663,7 +663,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.CategoryManager.CategoriesCacheEnabled");
+                return IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.CategoryManager.CategoriesCacheEnabled");
             }
         }
 
@@ -674,7 +674,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.CategoryManager.MappingsCacheEnabled");
+                return IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.CategoryManager.MappingsCacheEnabled");
             }
         }
 

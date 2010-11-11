@@ -16,7 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using NopSolutions.NopCommerce.BusinessLogic.Products.Attributes;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
@@ -72,7 +72,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         {
             get
             {
-                return IoCFactory.Resolve<IProductService>().GetProductVariantById(this.ProductVariantId);
+                return IoC.Resolve<IProductService>().GetProductVariantById(this.ProductVariantId);
             }
         }
         #endregion

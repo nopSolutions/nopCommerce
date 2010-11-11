@@ -17,7 +17,7 @@ using System.Collections.Generic;
 using System.Text;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Orders;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Orders
@@ -105,7 +105,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             get
             {
                 if (_customer == null)
-                    _customer = IoCFactory.Resolve<ICustomerService>().GetCustomerById(this.CustomerId);
+                    _customer = IoC.Resolve<ICustomerService>().GetCustomerById(this.CustomerId);
                 return _customer;
             }
         }
@@ -118,7 +118,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             get
             {
                 if (_order == null)
-                    _order = IoCFactory.Resolve<IOrderService>().GetOrderById(this.OrderId);
+                    _order = IoC.Resolve<IOrderService>().GetOrderById(this.OrderId);
                 return _order;
             }
         }

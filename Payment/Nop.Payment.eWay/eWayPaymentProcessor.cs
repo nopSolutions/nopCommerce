@@ -26,7 +26,7 @@ using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.Payment;
 using NopSolutions.NopCommerce.Common;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Payment.Methods.eWay
 {
@@ -60,9 +60,9 @@ namespace NopSolutions.NopCommerce.Payment.Methods.eWay
         /// </summary>
         private void InitSettings()
         {
-            useSandBox = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.eWay.UseSandbox");
-            ewayTestCustomerID = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.eWay.TestCustomerID");
-            ewayLiveCustomerID = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.eWay.LiveCustomerID");
+            useSandBox = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.eWay.UseSandbox");
+            ewayTestCustomerID = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.eWay.TestCustomerID");
+            ewayLiveCustomerID = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.eWay.LiveCustomerID");
         }
 
         /// <summary>
@@ -108,7 +108,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.eWay
             eWAYRequest.PurchaserAddress = paymentInfo.BillingAddress.Address1;
             eWAYRequest.PurchaserPostalCode = paymentInfo.BillingAddress.ZipPostalCode;
             eWAYRequest.InvoiceReference = orderGuid.ToString();
-            eWAYRequest.InvoiceDescription = IoCFactory.Resolve<ISettingManager>().GetSettingValue("Common.StoreName") + ". Order #" + orderGuid.ToString();
+            eWAYRequest.InvoiceDescription = IoC.Resolve<ISettingManager>().GetSettingValue("Common.StoreName") + ". Order #" + orderGuid.ToString();
             eWAYRequest.TransactionNumber = orderGuid.ToString();
             eWAYRequest.CVN = paymentInfo.CreditCardCvv2;
             eWAYRequest.EwayOption1 = string.Empty;
@@ -159,7 +159,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.eWay
         /// <returns>Additional handling fee</returns>
         public decimal GetAdditionalHandlingFee()
         {
-            return IoCFactory.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.eWay.AdditionalFee");
+            return IoC.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.eWay.AdditionalFee");
         }
 
         /// <summary>

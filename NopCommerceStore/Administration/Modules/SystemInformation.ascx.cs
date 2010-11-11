@@ -34,7 +34,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.BusinessLogic.Tax;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.Utils.Html;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -51,7 +51,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected void BindData()
         {
-            lblNopVersion.Text = Server.HtmlEncode(IoCFactory.Resolve<ISettingManager>().CurrentVersion);
+            lblNopVersion.Text = Server.HtmlEncode(IoC.Resolve<ISettingManager>().CurrentVersion);
             try
             {
                 lblOperatingSystem.Text = Server.HtmlEncode(Environment.OSVersion.VersionString);

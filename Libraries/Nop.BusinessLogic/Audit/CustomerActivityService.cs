@@ -22,7 +22,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Data;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Audit
@@ -335,7 +335,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.CustomerActivityManager.CacheEnabled");
+                return IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.CustomerActivityManager.CacheEnabled");
             }
         }
         #endregion

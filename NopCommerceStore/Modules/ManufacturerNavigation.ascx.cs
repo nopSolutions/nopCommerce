@@ -27,7 +27,7 @@ using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.Manufacturers;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 
 namespace NopSolutions.NopCommerce.Web.Modules
@@ -41,7 +41,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void BindData()
         {
-            var manufacturers = IoCFactory.Resolve<IManufacturerService>().GetAllManufacturers();
+            var manufacturers = IoC.Resolve<IManufacturerService>().GetAllManufacturers();
             if (manufacturers.Count > 0)
             {
                 rptrManufacturers.DataSource = manufacturers;

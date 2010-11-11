@@ -17,7 +17,7 @@ using System.Collections.Generic;
 using System.Text;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Orders;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
@@ -75,7 +75,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         {
             get
             {
-                return IoCFactory.Resolve<IDiscountService>().GetDiscountById(this.DiscountId);
+                return IoC.Resolve<IDiscountService>().GetDiscountById(this.DiscountId);
             }
         }
 
@@ -86,7 +86,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         {
             get
             {
-                return IoCFactory.Resolve<ICustomerService>().GetCustomerById(this.CustomerId);
+                return IoC.Resolve<ICustomerService>().GetCustomerById(this.CustomerId);
             }
         }
 
@@ -97,7 +97,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         {
             get
             {
-                return IoCFactory.Resolve<IOrderService>().GetOrderById(this.OrderId);
+                return IoC.Resolve<IOrderService>().GetOrderById(this.OrderId);
             }
         }
         #endregion

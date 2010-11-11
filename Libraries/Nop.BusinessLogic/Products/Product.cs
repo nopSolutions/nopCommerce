@@ -16,7 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using NopSolutions.NopCommerce.BusinessLogic.Categories;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 using NopSolutions.NopCommerce.BusinessLogic.Manufacturers;
 using NopSolutions.NopCommerce.BusinessLogic.Media;
 using NopSolutions.NopCommerce.BusinessLogic.Products.Specs;
@@ -156,7 +156,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                 if (languageId > 0)
                 {
                     if (_productLocalized == null)
-                        _productLocalized = IoCFactory.Resolve<IProductService>().GetProductLocalizedByProductId(this.ProductId);
+                        _productLocalized = IoC.Resolve<IProductService>().GetProductLocalizedByProductId(this.ProductId);
 
                     var temp1 = _productLocalized.FirstOrDefault(cl => cl.LanguageId == languageId);
                     if (temp1 != null && !String.IsNullOrWhiteSpace(temp1.Name))
@@ -190,7 +190,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                 if (languageId > 0)
                 {
                     if (_productLocalized == null)
-                        _productLocalized = IoCFactory.Resolve<IProductService>().GetProductLocalizedByProductId(this.ProductId);
+                        _productLocalized = IoC.Resolve<IProductService>().GetProductLocalizedByProductId(this.ProductId);
 
                     var temp1 = _productLocalized.FirstOrDefault(cl => cl.LanguageId == languageId);
                     if (temp1 != null && !String.IsNullOrWhiteSpace(temp1.ShortDescription))
@@ -224,7 +224,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                 if (languageId > 0)
                 {
                     if (_productLocalized == null)
-                        _productLocalized = IoCFactory.Resolve<IProductService>().GetProductLocalizedByProductId(this.ProductId);
+                        _productLocalized = IoC.Resolve<IProductService>().GetProductLocalizedByProductId(this.ProductId);
 
                     var temp1 = _productLocalized.FirstOrDefault(cl => cl.LanguageId == languageId);
                     if (temp1 != null && !String.IsNullOrWhiteSpace(temp1.FullDescription))
@@ -258,7 +258,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                 if (languageId > 0)
                 {
                     if (_productLocalized == null)
-                        _productLocalized = IoCFactory.Resolve<IProductService>().GetProductLocalizedByProductId(this.ProductId);
+                        _productLocalized = IoC.Resolve<IProductService>().GetProductLocalizedByProductId(this.ProductId);
 
                     var temp1 = _productLocalized.FirstOrDefault(cl => cl.LanguageId == languageId);
                     if (temp1 != null && !String.IsNullOrWhiteSpace(temp1.MetaKeywords))
@@ -292,7 +292,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                 if (languageId > 0)
                 {
                     if (_productLocalized == null)
-                        _productLocalized = IoCFactory.Resolve<IProductService>().GetProductLocalizedByProductId(this.ProductId);
+                        _productLocalized = IoC.Resolve<IProductService>().GetProductLocalizedByProductId(this.ProductId);
 
                     var temp1 = _productLocalized.FirstOrDefault(cl => cl.LanguageId == languageId);
                     if (temp1 != null && !String.IsNullOrWhiteSpace(temp1.MetaDescription))
@@ -326,7 +326,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                 if (languageId > 0)
                 {
                     if (_productLocalized == null)
-                        _productLocalized = IoCFactory.Resolve<IProductService>().GetProductLocalizedByProductId(this.ProductId);
+                        _productLocalized = IoC.Resolve<IProductService>().GetProductLocalizedByProductId(this.ProductId);
 
                     var temp1 = _productLocalized.FirstOrDefault(cl => cl.LanguageId == languageId);
                     if (temp1 != null && !String.IsNullOrWhiteSpace(temp1.MetaTitle))
@@ -360,7 +360,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                 if (languageId > 0)
                 {
                     if (_productLocalized == null)
-                        _productLocalized = IoCFactory.Resolve<IProductService>().GetProductLocalizedByProductId(this.ProductId);
+                        _productLocalized = IoC.Resolve<IProductService>().GetProductLocalizedByProductId(this.ProductId);
 
                     var temp1 = _productLocalized.FirstOrDefault(cl => cl.LanguageId == languageId);
                     if (temp1 != null && !String.IsNullOrWhiteSpace(temp1.SEName))
@@ -392,7 +392,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         {
             get
             {
-                return IoCFactory.Resolve<IProductService>().GetProductVariantsByProductId(this.ProductId);
+                return IoC.Resolve<IProductService>().GetProductVariantsByProductId(this.ProductId);
             }
         }
 
@@ -414,7 +414,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         {
             get
             {
-                return IoCFactory.Resolve<ITemplateService>().GetProductTemplateById(this.TemplateId);
+                return IoC.Resolve<ITemplateService>().GetProductTemplateById(this.TemplateId);
             }
         }
 
@@ -425,7 +425,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         {
             get
             {
-                return IoCFactory.Resolve<IProductService>().GetRelatedProductsByProductId1(this.ProductId);
+                return IoC.Resolve<IProductService>().GetRelatedProductsByProductId1(this.ProductId);
             }
         }
 
@@ -436,7 +436,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         {
             get
             {
-                return IoCFactory.Resolve<IProductService>().GetCrossSellProductsByProductId1(this.ProductId);
+                return IoC.Resolve<IProductService>().GetCrossSellProductsByProductId1(this.ProductId);
             }
         }
 
@@ -447,7 +447,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         {
             get
             {
-                var picture = IoCFactory.Resolve<IPictureService>().GetPicturesByProductId(this.ProductId, 1).FirstOrDefault();
+                var picture = IoC.Resolve<IPictureService>().GetPicturesByProductId(this.ProductId, 1).FirstOrDefault();
                 return picture;
             }
         }
@@ -459,7 +459,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         {
             get
             {
-                return IoCFactory.Resolve<IProductService>().GetProductPicturesByProductId(this.ProductId);
+                return IoC.Resolve<IProductService>().GetProductPicturesByProductId(this.ProductId);
             }
         }
 
@@ -470,7 +470,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         {
             get
             {
-                return IoCFactory.Resolve<ICategoryService>().GetProductCategoriesByProductId(this.ProductId);
+                return IoC.Resolve<ICategoryService>().GetProductCategoriesByProductId(this.ProductId);
             }
         }
 
@@ -481,7 +481,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         {
             get
             {
-                return IoCFactory.Resolve<IManufacturerService>().GetProductManufacturersByProductId(this.ProductId);
+                return IoC.Resolve<IManufacturerService>().GetProductManufacturersByProductId(this.ProductId);
             }
         }
 
@@ -492,7 +492,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         {
             get
             {
-                return IoCFactory.Resolve<IProductService>().GetProductReviewByProductId(this.ProductId);
+                return IoC.Resolve<IProductService>().GetProductReviewByProductId(this.ProductId);
             }
         }
 

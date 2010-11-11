@@ -32,7 +32,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.BusinessLogic.ExportImport;
 using NopSolutions.NopCommerce.BusinessLogic.Localization;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -80,7 +80,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         private void BindData()
         {
-            Language language = IoCFactory.Resolve<ILanguageService>().GetLanguageById(this.LanguageId);
+            Language language = IoC.Resolve<ILanguageService>().GetLanguageById(this.LanguageId);
 
             if (language != null)
             {
@@ -113,7 +113,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public Language SaveInfo()
         {
-            Language language = IoCFactory.Resolve<ILanguageService>().GetLanguageById(this.LanguageId);
+            Language language = IoC.Resolve<ILanguageService>().GetLanguageById(this.LanguageId);
 
             string name = txtName.Text;
             string languageCulture = ddlLanguageCulture.SelectedItem.Value;
@@ -128,7 +128,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 language.FlagImageFileName = flagImageFileName;
                 language.Published = published;
                 language.DisplayOrder = displayOrder;
-                IoCFactory.Resolve<ILanguageService>().UpdateLanguage(language);
+                IoC.Resolve<ILanguageService>().UpdateLanguage(language);
             }
             else
             {
@@ -140,7 +140,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     Published = published,
                     DisplayOrder = displayOrder
                 };
-                IoCFactory.Resolve<ILanguageService>().InsertLanguage(language);
+                IoC.Resolve<ILanguageService>().InsertLanguage(language);
 
             }
 
@@ -153,7 +153,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 try
                 {
-                    Language language = IoCFactory.Resolve<ILanguageService>().GetLanguageById(this.LanguageId);
+                    Language language = IoC.Resolve<ILanguageService>().GetLanguageById(this.LanguageId);
 
                     if (language != null)
                     {
@@ -163,7 +163,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                             using (StreamReader sr = new StreamReader(importResourcesFile.InputStream, Encoding.UTF8))
                             {
                                 string content = sr.ReadToEnd();
-                                IoCFactory.Resolve<ILocalizationManager>().LanguagePackImport(this.LanguageId, content);
+                                IoC.Resolve<ILocalizationManager>().LanguagePackImport(this.LanguageId, content);
                                 ShowMessage(GetLocaleResourceString("Admin.LanguageInfo.ResourcesImported"));
                             }
                         }

@@ -31,7 +31,7 @@ using PayPal.Payments.Common.Utility;
 using PayPal.Payments.Transactions;
 using System.Threading;
 using NopSolutions.NopCommerce.Common;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 
 namespace NopSolutions.NopCommerce.Payment.Methods.PayFlowPro
@@ -80,7 +80,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.PayFlowPro
         private TransactMode GetCurrentTransactionMode()
         {
             TransactMode transactionModeEnum = TransactMode.Authorize;
-            string transactionMode = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.PayFlowPro.TransactionMode");
+            string transactionMode = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.PayFlowPro.TransactionMode");
             if (!String.IsNullOrEmpty(transactionMode))
                 transactionModeEnum = (TransactMode)Enum.Parse(typeof(TransactMode), transactionMode);
             return transactionModeEnum;
@@ -91,11 +91,11 @@ namespace NopSolutions.NopCommerce.Payment.Methods.PayFlowPro
         /// </summary>
         private void InitSettings()
         {
-            useSandBox = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.PayFlowPro.UseSandbox");
-            user = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.PayFlowPro.User");
-            vendor = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.PayFlowPro.Vendor");
-            partner = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.PayFlowPro.Partner");
-            password = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.PayFlowPro.Password");
+            useSandBox = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.PayFlowPro.UseSandbox");
+            user = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.PayFlowPro.User");
+            vendor = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.PayFlowPro.Vendor");
+            partner = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.PayFlowPro.Partner");
+            password = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.PayFlowPro.Password");
         }
 
         /// <summary>
@@ -142,7 +142,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.PayFlowPro
                 
                 invoice.InvNum = orderGuid.ToString();
                 decimal orderTotal = Math.Round(paymentInfo.OrderTotal, 2);
-                invoice.Amt = new PayPal.Payments.DataObjects.Currency(orderTotal, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode);
+                invoice.Amt = new PayPal.Payments.DataObjects.Currency(orderTotal, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode);
 
                 string creditCardExp = string.Empty;
                 if (paymentInfo.CreditCardExpireMonth < 10)
@@ -228,7 +228,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.PayFlowPro
         /// <returns>Additional handling fee</returns>
         public decimal GetAdditionalHandlingFee()
         {
-            return IoCFactory.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.PayFlowPro.AdditionalFee");
+            return IoC.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.PayFlowPro.AdditionalFee");
         }
 
         /// <summary>

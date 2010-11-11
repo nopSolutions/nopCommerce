@@ -24,7 +24,7 @@ using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.Tax;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -70,7 +70,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected void DeleteButton_Click(object sender, EventArgs e)
         {
-            IoCFactory.Resolve<ITaxCategoryService>().DeleteTaxCategory(this.TaxCategoryId);
+            IoC.Resolve<ITaxCategoryService>().DeleteTaxCategory(this.TaxCategoryId);
             Response.Redirect("TaxCategories.aspx");
         }
 

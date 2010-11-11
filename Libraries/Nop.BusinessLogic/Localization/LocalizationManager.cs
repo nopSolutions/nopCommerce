@@ -23,7 +23,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Caching;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Data;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
  
@@ -275,7 +275,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Localization
                 }
             }
 
-            if (showCurrency && IoCFactory.Resolve<ICurrencyService>().GetAllCurrencies().Count > 1)
+            if (showCurrency && IoC.Resolve<ICurrencyService>().GetAllCurrencies().Count > 1)
                 result = String.Format("{0} ({1})", result, targetCurrency.CurrencyCode);
             return result;
         }
@@ -347,7 +347,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Localization
             {
                 if (logIfNotFound)
                 {
-                    IoCFactory.Resolve<ILogService>().InsertLog(LogTypeEnum.CommonError, "Resource string is not found", string.Format("Resource string ({0}) is not found. Language Id ={1}", resourceKey, languageId));
+                    IoC.Resolve<ILogService>().InsertLog(LogTypeEnum.CommonError, "Resource string is not found", string.Format("Resource string ({0}) is not found. Language Id ={1}", resourceKey, languageId));
                 }
 
                 if (!String.IsNullOrEmpty(defaultValue))
@@ -373,7 +373,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Localization
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.LocaleStringResourceManager.CacheEnabled");
+                return IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.LocaleStringResourceManager.CacheEnabled");
             }
         }
 
@@ -384,16 +384,16 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Localization
         {
             get
             {
-                int defaultAdminLanguageId = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Localization.DefaultAdminLanguageId");
+                int defaultAdminLanguageId = IoC.Resolve<ISettingManager>().GetSettingValueInteger("Localization.DefaultAdminLanguageId");
 
-                var language = IoCFactory.Resolve<ILanguageService>().GetLanguageById(defaultAdminLanguageId);
+                var language = IoC.Resolve<ILanguageService>().GetLanguageById(defaultAdminLanguageId);
                 if (language != null && language.Published)
                 {
                     return language;
                 }
                 else
                 {
-                    var publishedLanguages = IoCFactory.Resolve<ILanguageService>().GetAllLanguages(false);
+                    var publishedLanguages = IoC.Resolve<ILanguageService>().GetAllLanguages(false);
                     foreach (Language publishedLanguage in publishedLanguages)
                         return publishedLanguage;
                 }
@@ -402,7 +402,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Localization
             set
             {
                 if (value != null)
-                    IoCFactory.Resolve<ISettingManager>().SetParam("Localization.DefaultAdminLanguageId", value.LanguageId.ToString());
+                    IoC.Resolve<ISettingManager>().SetParam("Localization.DefaultAdminLanguageId", value.LanguageId.ToString());
             }
         }
         #endregion

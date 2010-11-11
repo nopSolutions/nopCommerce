@@ -22,7 +22,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.Payment;
 using NopSolutions.NopCommerce.BusinessLogic.Security;
 using NopSolutions.NopCommerce.Common;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Payment.Methods.Manual
 {
@@ -39,7 +39,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Manual
         public static TransactMode GetCurrentTransactionMode()
         {
             TransactMode transactionModeEnum = TransactMode.Authorize;
-            string transactionMode = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Manual.TransactionMode");
+            string transactionMode = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Manual.TransactionMode");
             if (!String.IsNullOrEmpty(transactionMode))
                 transactionModeEnum = (TransactMode)Enum.Parse(typeof(TransactMode), transactionMode);
             return transactionModeEnum;
@@ -88,7 +88,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Manual
         /// <returns>Additional handling fee</returns>
         public decimal GetAdditionalHandlingFee()
         {
-            return IoCFactory.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.Manual.AdditionalFee");
+            return IoC.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.Manual.AdditionalFee");
         }
 
         /// <summary>
@@ -150,7 +150,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Manual
             //restore credit cart info
             if (paymentInfo.IsRecurringPayment)
             {
-                Order initialOrder = IoCFactory.Resolve<IOrderService>().GetOrderById(paymentInfo.InitialOrderId);
+                Order initialOrder = IoC.Resolve<IOrderService>().GetOrderById(paymentInfo.InitialOrderId);
                 if (initialOrder != null)
                 {
                     paymentInfo.CreditCardType = processPaymentResult.AllowStoringCreditCardNumber ? SecurityHelper.Decrypt(initialOrder.CardType) : string.Empty;

@@ -24,7 +24,7 @@ using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.Content.Forums;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -72,7 +72,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                IoCFactory.Resolve<IForumService>().DeleteForum(this.ForumId);
+                IoC.Resolve<IForumService>().DeleteForum(this.ForumId);
                 Response.Redirect("Forums.aspx");
             }
             catch (Exception exc)

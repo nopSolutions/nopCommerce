@@ -9,7 +9,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Payment.Methods.Moneris;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web
 {
@@ -25,7 +25,7 @@ namespace NopSolutions.NopCommerce.Web
             if (Request.QueryString["s"] != null && Int32.TryParse(Request.QueryString["s"], out failure) &&
                 Request.QueryString["o"] != null && Int32.TryParse(Request.QueryString["o"], out orderid))
             {
-                Order o = IoCFactory.Resolve<IOrderService>().GetOrderById(orderid);
+                Order o = IoC.Resolve<IOrderService>().GetOrderById(orderid);
                 if (o != null)
                 {
                     switch (failure)
@@ -34,9 +34,9 @@ namespace NopSolutions.NopCommerce.Web
                         case 1:
                             //this.plCancel.Visible = true;
                             //this.plError.Visible = false;
-                            if (IoCFactory.Resolve<IOrderService>().CanCancelOrder(o))
+                            if (IoC.Resolve<IOrderService>().CanCancelOrder(o))
                             {
-                                IoCFactory.Resolve<IOrderService>().CancelOrder(orderid, false);
+                                IoC.Resolve<IOrderService>().CancelOrder(orderid, false);
                             }
                             return;
                         //Ideal error

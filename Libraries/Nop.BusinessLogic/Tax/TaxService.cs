@@ -23,7 +23,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Data;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 using NopSolutions.NopCommerce.BusinessLogic.Localization;
 using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.Payment;
@@ -231,7 +231,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
                     break;
                 case TaxBasedOnEnum.ShippingOrigin:
                     {
-                        address = IoCFactory.Resolve<IShippingService>().ShippingOrigin;
+                        address = IoC.Resolve<IShippingService>().ShippingOrigin;
                     }
                     break;
             }
@@ -319,7 +319,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
             decimal subTotalWithoutDiscountBase = decimal.Zero;
             decimal subTotalWithDiscountBase = decimal.Zero;
             SortedDictionary<decimal, decimal> orderSubTotalTaxRates = null;
-            string SubTotalError = IoCFactory.Resolve<IShoppingCartService>().GetShoppingCartSubTotal(cart,
+            string SubTotalError = IoC.Resolve<IShoppingCartService>().GetShoppingCartSubTotal(cart,
                 customer, false, out orderSubTotalDiscountAmount, out orderSubTotalAppliedDiscount,
                 out subTotalWithoutDiscountBase, out subTotalWithDiscountBase, out orderSubTotalTaxRates);
             foreach (KeyValuePair<decimal,decimal> kvp in orderSubTotalTaxRates)
@@ -349,8 +349,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
                 string error1 = string.Empty;
                 string error2 = string.Empty;
 
-                decimal? shippingExclTax = IoCFactory.Resolve<IShippingService>().GetShoppingCartShippingTotal(cart, customer, false, out taxRate, ref error1);
-                decimal? shippingInclTax = IoCFactory.Resolve<IShippingService>().GetShoppingCartShippingTotal(cart, customer, true, out taxRate, ref error2);
+                decimal? shippingExclTax = IoC.Resolve<IShippingService>().GetShoppingCartShippingTotal(cart, customer, false, out taxRate, ref error1);
+                decimal? shippingInclTax = IoC.Resolve<IShippingService>().GetShoppingCartShippingTotal(cart, customer, true, out taxRate, ref error2);
                 if (!String.IsNullOrEmpty(error1))
                 {
                     error = error1;
@@ -386,7 +386,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
                 string error1 = string.Empty;
                 string error2 = string.Empty;
 
-                decimal paymentMethodAdditionalFee = IoCFactory.Resolve<IPaymentService>().GetAdditionalHandlingFee(paymentMethodId);
+                decimal paymentMethodAdditionalFee = IoC.Resolve<IPaymentService>().GetAdditionalHandlingFee(paymentMethodId);
                 decimal? paymentMethodAdditionalFeeExclTax = this.GetPaymentMethodAdditionalFee(paymentMethodAdditionalFee, false, customer, out taxRate, ref error1);
                 decimal? paymentMethodAdditionalFeeInclTax = this.GetPaymentMethodAdditionalFee(paymentMethodAdditionalFee, true, customer, out taxRate, ref error2);
                 if (!String.IsNullOrEmpty(error1))
@@ -1003,7 +1003,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         /// <returns>VAT Number status name</returns>
         public string GetVatNumberStatusName(VatNumberStatusEnum status)
         {
-            return IoCFactory.Resolve<ILocalizationManager>().GetLocaleResourceString(string.Format("VatNumberStatus.{0}", status.ToString()));
+            return IoC.Resolve<ILocalizationManager>().GetLocaleResourceString(string.Format("VatNumberStatus.{0}", status.ToString()));
         }
 
         #endregion
@@ -1017,12 +1017,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         {
             get
             {
-                int taxBasedOn = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Tax.TaxBasedOn");
+                int taxBasedOn = IoC.Resolve<ISettingManager>().GetSettingValueInteger("Tax.TaxBasedOn");
                 return (TaxBasedOnEnum)taxBasedOn;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Tax.TaxBasedOn", ((int)value).ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Tax.TaxBasedOn", ((int)value).ToString());
             }
         }
 
@@ -1033,12 +1033,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         {
             get
             {
-                int taxBasedOn = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Tax.TaxDisplayType");
+                int taxBasedOn = IoC.Resolve<ISettingManager>().GetSettingValueInteger("Tax.TaxDisplayType");
                 return (TaxDisplayTypeEnum)taxBasedOn;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Tax.TaxDisplayType", ((int)value).ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Tax.TaxDisplayType", ((int)value).ToString());
             }
         }
         
@@ -1049,13 +1049,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         {
             get
             {
-                int taxProviderId = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Tax.TaxProvider.ActiveId");
-                return IoCFactory.Resolve<ITaxProviderService>().GetTaxProviderById(taxProviderId);
+                int taxProviderId = IoC.Resolve<ISettingManager>().GetSettingValueInteger("Tax.TaxProvider.ActiveId");
+                return IoC.Resolve<ITaxProviderService>().GetTaxProviderById(taxProviderId);
             }
             set
             {
                 if (value != null)
-                    IoCFactory.Resolve<ISettingManager>().SetParam("Tax.TaxProvider.ActiveId", value.TaxProviderId.ToString());
+                    IoC.Resolve<ISettingManager>().SetParam("Tax.TaxProvider.ActiveId", value.TaxProviderId.ToString());
             }
         }
 
@@ -1066,9 +1066,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         {
             get
             {
-                int countryId = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Tax.DefaultTaxAddress.CountryId");
-                int stateProvinceId = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Tax.DefaultTaxAddress.StateProvinceId");
-                string zipPostalCode = IoCFactory.Resolve<ISettingManager>().GetSettingValue("Tax.DefaultTaxAddress.ZipPostalCode");
+                int countryId = IoC.Resolve<ISettingManager>().GetSettingValueInteger("Tax.DefaultTaxAddress.CountryId");
+                int stateProvinceId = IoC.Resolve<ISettingManager>().GetSettingValueInteger("Tax.DefaultTaxAddress.StateProvinceId");
+                string zipPostalCode = IoC.Resolve<ISettingManager>().GetSettingValue("Tax.DefaultTaxAddress.ZipPostalCode");
                 Address address = new Address();
                 address.CountryId = countryId;
                 address.StateProvinceId = stateProvinceId;
@@ -1088,9 +1088,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
                     zipPostalCode = value.ZipPostalCode;
                 }
 
-                IoCFactory.Resolve<ISettingManager>().SetParam("Tax.DefaultTaxAddress.CountryId", countryId.ToString());
-                IoCFactory.Resolve<ISettingManager>().SetParam("Tax.DefaultTaxAddress.StateProvinceId", stateProvinceId.ToString());
-                IoCFactory.Resolve<ISettingManager>().SetParam("Tax.DefaultTaxAddress.ZipPostalCode", zipPostalCode);
+                IoC.Resolve<ISettingManager>().SetParam("Tax.DefaultTaxAddress.CountryId", countryId.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Tax.DefaultTaxAddress.StateProvinceId", stateProvinceId.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Tax.DefaultTaxAddress.ZipPostalCode", zipPostalCode);
             }
         }
 
@@ -1101,12 +1101,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         {
             get
             {
-                bool displayTaxSuffix = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Tax.DisplayTaxSuffix");
+                bool displayTaxSuffix = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Tax.DisplayTaxSuffix");
                 return displayTaxSuffix;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Tax.DisplayTaxSuffix", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Tax.DisplayTaxSuffix", value.ToString());
             }
         }
 
@@ -1117,12 +1117,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         {
             get
             {
-                bool displayTaxRate = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Tax.DisplayTaxRates", false);
+                bool displayTaxRate = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Tax.DisplayTaxRates", false);
                 return displayTaxRate;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Tax.DisplayTaxRates", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Tax.DisplayTaxRates", value.ToString());
             }
         }
 
@@ -1133,12 +1133,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         {
             get
             {
-                bool pricesIncludeTax = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Tax.PricesIncludeTax");
+                bool pricesIncludeTax = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Tax.PricesIncludeTax");
                 return pricesIncludeTax;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Tax.PricesIncludeTax", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Tax.PricesIncludeTax", value.ToString());
             }
         }
 
@@ -1149,12 +1149,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         {
             get
             {
-                bool allowCustomersToSelectTaxDisplayType = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Tax.AllowCustomersToSelectTaxDisplayType");
+                bool allowCustomersToSelectTaxDisplayType = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Tax.AllowCustomersToSelectTaxDisplayType");
                 return allowCustomersToSelectTaxDisplayType;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Tax.AllowCustomersToSelectTaxDisplayType", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Tax.AllowCustomersToSelectTaxDisplayType", value.ToString());
             }
         }
 
@@ -1165,12 +1165,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         {
             get
             {
-                bool hideZeroTax = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Tax.HideZeroTax");
+                bool hideZeroTax = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Tax.HideZeroTax");
                 return hideZeroTax;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Tax.HideZeroTax", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Tax.HideZeroTax", value.ToString());
             }
         }
 
@@ -1181,12 +1181,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         {
             get
             {
-                bool hideTaxInOrderSummary = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Tax.HideTaxInOrderSummary");
+                bool hideTaxInOrderSummary = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Tax.HideTaxInOrderSummary");
                 return hideTaxInOrderSummary;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Tax.HideTaxInOrderSummary", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Tax.HideTaxInOrderSummary", value.ToString());
             }
         }
 
@@ -1197,12 +1197,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         {
             get
             {
-                bool shippingIsTaxable = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Tax.ShippingIsTaxable");
+                bool shippingIsTaxable = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Tax.ShippingIsTaxable");
                 return shippingIsTaxable;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Tax.ShippingIsTaxable", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Tax.ShippingIsTaxable", value.ToString());
             }
         }
 
@@ -1213,12 +1213,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         {
             get
             {
-                bool shippingPriceIncludesTax = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Tax.ShippingPriceIncludesTax");
+                bool shippingPriceIncludesTax = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Tax.ShippingPriceIncludesTax");
                 return shippingPriceIncludesTax;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Tax.ShippingPriceIncludesTax", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Tax.ShippingPriceIncludesTax", value.ToString());
             }
         }
 
@@ -1229,12 +1229,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         {
             get
             {
-                int shippingTaxClassId = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Tax.ShippingTaxClassId");
+                int shippingTaxClassId = IoC.Resolve<ISettingManager>().GetSettingValueInteger("Tax.ShippingTaxClassId");
                 return shippingTaxClassId;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Tax.ShippingTaxClassId", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Tax.ShippingTaxClassId", value.ToString());
             }
         }
 
@@ -1245,12 +1245,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         {
             get
             {
-                bool paymentMethodAdditionalFeeIsTaxable = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Tax.PaymentMethodAdditionalFeeIsTaxable");
+                bool paymentMethodAdditionalFeeIsTaxable = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Tax.PaymentMethodAdditionalFeeIsTaxable");
                 return paymentMethodAdditionalFeeIsTaxable;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Tax.PaymentMethodAdditionalFeeIsTaxable", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Tax.PaymentMethodAdditionalFeeIsTaxable", value.ToString());
             }
         }
 
@@ -1261,12 +1261,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         {
             get
             {
-                bool paymentMethodAdditionalFeeIncludesTax = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Tax.PaymentMethodAdditionalFeeIncludesTax");
+                bool paymentMethodAdditionalFeeIncludesTax = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Tax.PaymentMethodAdditionalFeeIncludesTax");
                 return paymentMethodAdditionalFeeIncludesTax;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Tax.PaymentMethodAdditionalFeeIncludesTax", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Tax.PaymentMethodAdditionalFeeIncludesTax", value.ToString());
             }
         }
 
@@ -1277,12 +1277,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         {
             get
             {
-                int paymentMethodAdditionalFeeTaxClassId = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Tax.PaymentMethodAdditionalFeeTaxClassId");
+                int paymentMethodAdditionalFeeTaxClassId = IoC.Resolve<ISettingManager>().GetSettingValueInteger("Tax.PaymentMethodAdditionalFeeTaxClassId");
                 return paymentMethodAdditionalFeeTaxClassId;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Tax.PaymentMethodAdditionalFeeTaxClassId", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Tax.PaymentMethodAdditionalFeeTaxClassId", value.ToString());
             }
         }
 
@@ -1293,12 +1293,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         {
             get
             {
-                bool result = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Tax.EUVat.Enabled");
+                bool result = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Tax.EUVat.Enabled");
                 return result;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Tax.EUVat.Enabled", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Tax.EUVat.Enabled", value.ToString());
             }
         }
 
@@ -1309,12 +1309,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         {
             get
             {
-                int result = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Tax.EUVat.EUVatShopCountryId");
+                int result = IoC.Resolve<ISettingManager>().GetSettingValueInteger("Tax.EUVat.EUVatShopCountryId");
                 return result;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Tax.EUVat.EUVatShopCountryId", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Tax.EUVat.EUVatShopCountryId", value.ToString());
             }
         }
 
@@ -1325,12 +1325,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         {
             get
             {
-                bool result = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Tax.EUVat.AllowVATExemption", true);
+                bool result = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Tax.EUVat.AllowVATExemption", true);
                 return result;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Tax.EUVat.AllowVATExemption", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Tax.EUVat.AllowVATExemption", value.ToString());
             }
         }
 
@@ -1341,12 +1341,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         {
             get
             {
-                bool result = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Tax.EUVat.UseWebService");
+                bool result = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Tax.EUVat.UseWebService");
                 return result;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Tax.EUVat.UseWebService", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Tax.EUVat.UseWebService", value.ToString());
             }
         }
 
@@ -1357,12 +1357,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         {
             get
             {
-                bool result = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Tax.EUVat.EUVatEmailAdminWhenNewVATSubmitted");
+                bool result = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Tax.EUVat.EUVatEmailAdminWhenNewVATSubmitted");
                 return result;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Tax.EUVat.EUVatEmailAdminWhenNewVATSubmitted", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Tax.EUVat.EUVatEmailAdminWhenNewVATSubmitted", value.ToString());
             }
         }
 

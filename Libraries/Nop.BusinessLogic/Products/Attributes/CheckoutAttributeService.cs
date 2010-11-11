@@ -23,7 +23,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Caching;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Data;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
 {
@@ -594,7 +594,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.CheckoutAttributeManager.CacheEnabled");
+                return IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.CheckoutAttributeManager.CacheEnabled");
             }
         }
 

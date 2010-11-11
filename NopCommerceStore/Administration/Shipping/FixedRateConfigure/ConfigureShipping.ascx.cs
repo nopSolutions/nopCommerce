@@ -21,7 +21,7 @@ using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Shipping.Methods.UPS;
 using NopSolutions.NopCommerce.Web.Administration.Modules;
 using NopSolutions.NopCommerce.Web.Templates.Shipping;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 using NopSolutions.NopCommerce.BusinessLogic.Shipping;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Shipping.FixedRateConfigure
@@ -36,7 +36,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.FixedRateConfigur
 
         private void BindData()
         {
-            var shippingMethods = IoCFactory.Resolve<IShippingService>().GetAllShippingMethods();
+            var shippingMethods = IoC.Resolve<IShippingService>().GetAllShippingMethods();
             gvShippingMethods.DataSource = shippingMethods;
             gvShippingMethods.DataBind();
         }
@@ -50,7 +50,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.FixedRateConfigur
                 DecimalTextBox txtRate = e.Row.FindControl("txtRate") as DecimalTextBox;
                 if (txtRate != null)
                 {
-                    txtRate.Value = IoCFactory.Resolve<ISettingManager>().GetSettingValueDecimalNative(string.Format("ShippingRateComputationMethod.FixedRate.Rate.ShippingMethodId{0}", shippingMethod.ShippingMethodId));
+                    txtRate.Value = IoC.Resolve<ISettingManager>().GetSettingValueDecimalNative(string.Format("ShippingRateComputationMethod.FixedRate.Rate.ShippingMethodId{0}", shippingMethod.ShippingMethodId));
                 }
             }
         }
@@ -65,7 +65,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.FixedRateConfigur
                 int shippingMethodId = int.Parse(hfShippingMethodId.Value);
                 decimal rate = txtRate.Value;
 
-                IoCFactory.Resolve<ISettingManager>().SetParamNative(string.Format("ShippingRateComputationMethod.FixedRate.Rate.ShippingMethodId{0}", shippingMethodId), rate);
+                IoC.Resolve<ISettingManager>().SetParamNative(string.Format("ShippingRateComputationMethod.FixedRate.Rate.ShippingMethodId{0}", shippingMethodId), rate);
             }
         }
     }

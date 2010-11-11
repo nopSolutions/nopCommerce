@@ -30,14 +30,14 @@ using NopSolutions.NopCommerce.BusinessLogic.Payment;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 namespace NopSolutions.NopCommerce.Web
 {
     public partial class RecentlyAddedProductsPage : BaseNopPage
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!IoCFactory.Resolve<IProductService>().RecentlyAddedProductsEnabled)
+            if (!IoC.Resolve<IProductService>().RecentlyAddedProductsEnabled)
             {
                 Response.Redirect(CommonHelper.GetStoreLocation());
             }

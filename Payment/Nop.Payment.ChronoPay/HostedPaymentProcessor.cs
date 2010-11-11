@@ -23,7 +23,7 @@ using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using System.Globalization;
 using NopSolutions.NopCommerce.BusinessLogic;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Payment.Methods.ChronoPay
 {
@@ -75,13 +75,13 @@ namespace NopSolutions.NopCommerce.Payment.Methods.ChronoPay
             post.Add("phone", order.BillingPhoneNumber);
             post.Add("email", order.BillingEmail);
 
-            StateProvince state = IoCFactory.Resolve<IStateProvinceService>().GetStateProvinceById(order.BillingStateProvinceId);
+            StateProvince state = IoC.Resolve<IStateProvinceService>().GetStateProvinceById(order.BillingStateProvinceId);
             if(state != null)
             {
                 post.Add("state", state.Abbreviation);
             }
 
-            Country country = IoCFactory.Resolve<ICountryService>().GetCountryById(order.BillingCountryId);
+            Country country = IoC.Resolve<ICountryService>().GetCountryById(order.BillingCountryId);
             if(country != null)
             {
                 post.Add("country", country.ThreeLetterIsoCode);

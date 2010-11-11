@@ -30,7 +30,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Localization;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -47,7 +47,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void BindData()
         {
-            var productTag = IoCFactory.Resolve<IProductService>().GetProductTagById(this.ProductTagId);
+            var productTag = IoC.Resolve<IProductService>().GetProductTagById(this.ProductTagId);
             if (productTag == null)
             {
                 string url = CommonHelper.GetStoreLocation();
@@ -60,7 +60,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             int totalRecords = 0;
             int pageSize = 6;
 
-            var productCollection = IoCFactory.Resolve<IProductService>().GetAllProducts(0, 0, 
+            var productCollection = IoC.Resolve<IProductService>().GetAllProducts(0, 0, 
                 productTag.ProductTagId, false, null, null,
                 string.Empty, false, pageSize, this.CurrentPageIndex,
                 null, ProductSortingEnum.Position, out totalRecords);

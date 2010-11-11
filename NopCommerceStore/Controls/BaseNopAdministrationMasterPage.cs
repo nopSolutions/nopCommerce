@@ -26,7 +26,7 @@ using System.Xml.Linq;
 using NopSolutions.NopCommerce.BusinessLogic;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.BusinessLogic.Localization;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web
 {
@@ -61,7 +61,7 @@ namespace NopSolutions.NopCommerce.Web
             {
                 if (_localizationManager == null)
                 {
-                    _localizationManager = IoCFactory.Resolve<ILocalizationManager>();
+                    _localizationManager = IoC.Resolve<ILocalizationManager>();
                 }
                 return _localizationManager;
             }

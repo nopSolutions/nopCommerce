@@ -27,7 +27,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Products.Attributes;
 using NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts;
 using NopSolutions.NopCommerce.BusinessLogic.Shipping;
 using NopSolutions.NopCommerce.BusinessLogic.Tax;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Products
 {
@@ -67,11 +67,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                 }
             }
 
-            var productCategories = IoCFactory.Resolve<ICategoryService>().GetProductCategoriesByProductId(productVariant.ProductId);
+            var productCategories = IoC.Resolve<ICategoryService>().GetProductCategoriesByProductId(productVariant.ProductId);
             foreach (var _productCategory in productCategories)
             {
                 //UNDONE should we filter categories by ACL here?
-                var _categoryDiscounts = IoCFactory.Resolve<IDiscountService>().GetDiscountsByCategoryId(_productCategory.CategoryId);
+                var _categoryDiscounts = IoC.Resolve<IDiscountService>().GetDiscountsByCategoryId(_productCategory.CategoryId);
                 foreach (var _discount in _categoryDiscounts)
                 {
                     if (_discount.IsActive(customerCouponCode) &&
@@ -128,7 +128,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         {
             var allowedDiscounts = GetAllowedDiscounts(productVariant, customer);
             decimal finalPriceWithoutDiscount = GetFinalPrice(productVariant, customer, additionalCharge, false, quantity);
-            var preferredDiscount = IoCFactory.Resolve<IDiscountService>().GetPreferredDiscount(allowedDiscounts, finalPriceWithoutDiscount);
+            var preferredDiscount = IoC.Resolve<IDiscountService>().GetPreferredDiscount(allowedDiscounts, finalPriceWithoutDiscount);
             return preferredDiscount;
         }
       
@@ -583,7 +583,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         public static string FormatPrice(decimal price, bool showCurrency, 
             string currencyCode, bool showTax)
         {
-            var currency = IoCFactory.Resolve<ICurrencyService>().GetCurrencyByCode(currencyCode);
+            var currency = IoC.Resolve<ICurrencyService>().GetCurrencyByCode(currencyCode);
             if (currency == null)
             {
                 currency = new Currency();
@@ -617,7 +617,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         public static string FormatPrice(decimal price, bool showCurrency,
             string currencyCode, Language language, bool priceIncludesTax)
         {
-            var currency = IoCFactory.Resolve<ICurrencyService>().GetCurrencyByCode(currencyCode);
+            var currency = IoC.Resolve<ICurrencyService>().GetCurrencyByCode(currencyCode);
             if (currency == null)
             {
                 currency = new Currency();
@@ -638,7 +638,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         public static string FormatPrice(decimal price, bool showCurrency, 
             Currency targetCurrency, Language language, bool priceIncludesTax)
         {
-            bool showTax = IoCFactory.Resolve<ITaxService>().DisplayTaxSuffix;
+            bool showTax = IoC.Resolve<ITaxService>().DisplayTaxSuffix;
             return FormatPrice(price, showCurrency, targetCurrency, language, 
                 priceIncludesTax, showTax);
         }
@@ -656,7 +656,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         public static string FormatPrice(decimal price, bool showCurrency, 
             Currency targetCurrency, Language language, bool priceIncludesTax, bool showTax)
         {
-            var localizationManager= IoCFactory.Resolve<ILocalizationManager>();
+            var localizationManager= IoC.Resolve<ILocalizationManager>();
             string currencyString = localizationManager.GetCurrencyString(price, showCurrency, targetCurrency);
 
             if (showTax)
@@ -724,7 +724,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         public static string FormatShippingPrice(decimal price, bool showCurrency, 
             Currency targetCurrency, Language language, bool priceIncludesTax)
         {
-            bool showTax = IoCFactory.Resolve<ITaxService>().ShippingIsTaxable && IoCFactory.Resolve<ITaxService>().DisplayTaxSuffix;
+            bool showTax = IoC.Resolve<ITaxService>().ShippingIsTaxable && IoC.Resolve<ITaxService>().DisplayTaxSuffix;
             return FormatShippingPrice(price, showCurrency, targetCurrency, language, priceIncludesTax, showTax);
         }
 
@@ -756,7 +756,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         public static string FormatShippingPrice(decimal price, bool showCurrency, 
             string currencyCode, Language language, bool priceIncludesTax)
         {
-            var currency = IoCFactory.Resolve<ICurrencyService>().GetCurrencyByCode(currencyCode);
+            var currency = IoC.Resolve<ICurrencyService>().GetCurrencyByCode(currencyCode);
             if (currency == null)
             {
                 currency = new Currency();
@@ -803,7 +803,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         public static string FormatPaymentMethodAdditionalFee(decimal price, bool showCurrency,
             Currency targetCurrency, Language language, bool priceIncludesTax)
         {
-            bool showTax = IoCFactory.Resolve<ITaxService>().PaymentMethodAdditionalFeeIsTaxable && IoCFactory.Resolve<ITaxService>().DisplayTaxSuffix;
+            bool showTax = IoC.Resolve<ITaxService>().PaymentMethodAdditionalFeeIsTaxable && IoC.Resolve<ITaxService>().DisplayTaxSuffix;
             return FormatPaymentMethodAdditionalFee(price, showCurrency, targetCurrency, language, priceIncludesTax, showTax);
         }
 
@@ -836,7 +836,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         public static string FormatPaymentMethodAdditionalFee(decimal price, bool showCurrency, 
             string currencyCode, Language language, bool priceIncludesTax)
         {
-            var currency = IoCFactory.Resolve<ICurrencyService>().GetCurrencyByCode(currencyCode);
+            var currency = IoC.Resolve<ICurrencyService>().GetCurrencyByCode(currencyCode);
             if (currency == null)
             {
                 currency = new Currency();
@@ -871,7 +871,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
 
             string stockMessage = string.Empty;
 
-            var localizationManager = IoCFactory.Resolve<ILocalizationManager>();
+            var localizationManager = IoC.Resolve<ILocalizationManager>();
 
             if (productVariant.ManageInventory == (int)ManageInventoryMethodEnum.ManageStock
                 && productVariant.DisplayStockAvailability)

@@ -16,7 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
@@ -70,7 +70,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                 if (languageId > 0)
                 {
                     if (_paLocalized == null)
-                        _paLocalized = IoCFactory.Resolve<IProductAttributeService>().GetProductAttributeLocalizedByProductAttributeId(this.ProductAttributeId);
+                        _paLocalized = IoC.Resolve<IProductAttributeService>().GetProductAttributeLocalizedByProductAttributeId(this.ProductAttributeId);
 
                     var temp1 = _paLocalized.FirstOrDefault(cl => cl.LanguageId == languageId);
                     if (temp1 != null && !String.IsNullOrWhiteSpace(temp1.Name))
@@ -104,7 +104,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                 if (languageId > 0)
                 {
                     if (_paLocalized == null)
-                        _paLocalized = IoCFactory.Resolve<IProductAttributeService>().GetProductAttributeLocalizedByProductAttributeId(this.ProductAttributeId);
+                        _paLocalized = IoC.Resolve<IProductAttributeService>().GetProductAttributeLocalizedByProductAttributeId(this.ProductAttributeId);
 
                     var temp1 = _paLocalized.FirstOrDefault(cl => cl.LanguageId == languageId);
                     if (temp1 != null && !String.IsNullOrWhiteSpace(temp1.Description))

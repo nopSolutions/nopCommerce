@@ -18,7 +18,7 @@ using System.Linq;
 using System.Text;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Tax;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Tax
 {
@@ -62,7 +62,7 @@ namespace NopSolutions.NopCommerce.Tax
         /// <returns>Tax rate</returns>
         protected decimal GetTaxRate(int taxCategoryId)
         {
-            decimal rate = IoCFactory.Resolve<ISettingManager>().GetSettingValueDecimalNative(string.Format("Tax.TaxProvider.FixedRate.TaxCategoryId{0}", taxCategoryId));
+            decimal rate = IoC.Resolve<ISettingManager>().GetSettingValueDecimalNative(string.Format("Tax.TaxProvider.FixedRate.TaxCategoryId{0}", taxCategoryId));
             return rate;
         }
     }

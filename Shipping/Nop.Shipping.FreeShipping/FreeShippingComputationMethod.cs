@@ -19,7 +19,7 @@ using System.Text;
 using NopSolutions.NopCommerce.BusinessLogic;
 using NopSolutions.NopCommerce.BusinessLogic.Shipping;
 using NopSolutions.NopCommerce.Common;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
  
 
 namespace NopSolutions.NopCommerce.Shipping.Methods.FreeShippingCM
@@ -56,7 +56,7 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.FreeShippingCM
                 return shippingOptions;
             }
 
-            var shippingMethods = IoCFactory.Resolve<IShippingService>().GetAllShippingMethods(shipmentPackage.ShippingAddress.CountryId);
+            var shippingMethods = IoC.Resolve<IShippingService>().GetAllShippingMethods(shipmentPackage.ShippingAddress.CountryId);
             foreach (var shippingMethod in shippingMethods)
             {
                 var shippingOption = new ShippingOption();

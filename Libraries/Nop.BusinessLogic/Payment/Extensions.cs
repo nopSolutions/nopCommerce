@@ -18,7 +18,7 @@ using System.Linq;
 using System.Text;
 using NopSolutions.NopCommerce.BusinessLogic.Localization;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Payment
@@ -35,7 +35,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
         /// <returns>Payment status name</returns>
         public static string GetPaymentStatusName(this PaymentStatusEnum ps)
         {
-            string name = IoCFactory.Resolve<ILocalizationManager>().GetLocaleResourceString(
+            string name = IoC.Resolve<ILocalizationManager>().GetLocaleResourceString(
                 string.Format("PaymentStatus.{0}", ps.ToString()),
                 NopContext.Current.WorkingLanguage.LanguageId,
                 true,

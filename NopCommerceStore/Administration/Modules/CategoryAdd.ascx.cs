@@ -28,7 +28,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Localization;
 using NopSolutions.NopCommerce.BusinessLogic.Media;
 using NopSolutions.NopCommerce.BusinessLogic.Templates;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -49,7 +49,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             ctrlCategoryDiscount.SaveInfo(category.CategoryId);
             ctrlCategoryACL.SaveInfo(category.CategoryId);
 
-            IoCFactory.Resolve<ICustomerActivityService>().InsertActivity(
+            IoC.Resolve<ICustomerActivityService>().InsertActivity(
                 "AddNewCategory",
                 GetLocaleResourceString("ActivityLog.AddNewCategory"),
                 category.Name);

@@ -26,7 +26,7 @@ using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.Audit;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -37,7 +37,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             Customer customer = ctrlCustomerInfo.SaveInfo();
             ctrlCustomerRoleMappings.SaveInfo(customer.CustomerId);
 
-            IoCFactory.Resolve<ICustomerActivityService>().InsertActivity(
+            IoC.Resolve<ICustomerActivityService>().InsertActivity(
                 "AddNewCustomer",
                 GetLocaleResourceString("ActivityLog.AddNewCustomer"),
                 customer.CustomerId);

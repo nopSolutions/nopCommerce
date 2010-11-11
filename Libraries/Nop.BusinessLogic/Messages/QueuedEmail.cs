@@ -19,7 +19,7 @@ using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Promo.Affiliates;
 using NopSolutions.NopCommerce.BusinessLogic.Payment;
 using NopSolutions.NopCommerce.BusinessLogic.Shipping;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 
 
@@ -121,9 +121,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         {
             get
             {
-                var emailAccount = IoCFactory.Resolve<IMessageService>().GetEmailAccountById(this.EmailAccountId);
+                var emailAccount = IoC.Resolve<IMessageService>().GetEmailAccountById(this.EmailAccountId);
                 if (emailAccount == null)
-                    emailAccount = IoCFactory.Resolve<IMessageService>().DefaultEmailAccount;
+                    emailAccount = IoC.Resolve<IMessageService>().DefaultEmailAccount;
                 return emailAccount;
             }
         }

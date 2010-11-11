@@ -29,7 +29,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.Common.Utils;
 using System.Net.Mail;
 using NopSolutions.NopCommerce.BusinessLogic;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -53,18 +53,18 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 try
                 {
-                    var customer = IoCFactory.Resolve<ICustomerService>().GetCustomerById(this.CustomerId);
+                    var customer = IoC.Resolve<ICustomerService>().GetCustomerById(this.CustomerId);
 
                     if (customer != null)
                     {
-                        var emailAccount = IoCFactory.Resolve<IMessageService>().DefaultEmailAccount;
+                        var emailAccount = IoC.Resolve<IMessageService>().DefaultEmailAccount;
 
                         var from = new MailAddress(emailAccount.Email, emailAccount.DisplayName);
                         var to = new MailAddress(customer.Email, customer.FullName);
                         var subject = txtSubject.Text;
                         var body = txtBody.Value;
 
-                        var email = IoCFactory.Resolve<IMessageService>().InsertQueuedEmail(5, from, to, string.Empty,
+                        var email = IoC.Resolve<IMessageService>().InsertQueuedEmail(5, from, to, string.Empty,
                             string.Empty, subject, body, DateTime.UtcNow, 0, null, emailAccount.EmailAccountId);
                     }
                 }

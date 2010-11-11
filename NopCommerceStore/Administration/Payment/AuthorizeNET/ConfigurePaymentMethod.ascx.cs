@@ -27,7 +27,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Payment.Methods.AuthorizeNET;
 using NopSolutions.NopCommerce.Web.Templates.Payment;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Payment.AuthorizeNET
 {
@@ -36,7 +36,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Payment.AuthorizeNET
         public static TransactMode GetCurrentTransactionMode()
         {
             TransactMode transactionModeEnum = TransactMode.Authorize;
-            string transactionMode = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.AuthorizeNET.TransactionMode");
+            string transactionMode = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.AuthorizeNET.TransactionMode");
             if (!String.IsNullOrEmpty(transactionMode))
             {
                 transactionModeEnum = (TransactMode)Enum.Parse(typeof(TransactMode), transactionMode);
@@ -47,7 +47,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Payment.AuthorizeNET
 
         public static void SetTransactionMode(TransactMode transactionMode)
         {
-            IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.AuthorizeNET.TransactionMode", transactionMode.ToString());
+            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.AuthorizeNET.TransactionMode", transactionMode.ToString());
         }
 
         protected void Page_Load(object sender, EventArgs e)
@@ -71,11 +71,11 @@ namespace NopSolutions.NopCommerce.Web.Administration.Payment.AuthorizeNET
                     break;
             }
 
-            cbUseSandbox.Checked = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.AuthorizeNET.UseSandbox");
-            txtTransactionKey.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.AuthorizeNET.TransactionKey");
-            txtLoginId.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.AuthorizeNET.LoginId");
+            cbUseSandbox.Checked = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.AuthorizeNET.UseSandbox");
+            txtTransactionKey.Text = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.AuthorizeNET.TransactionKey");
+            txtLoginId.Text = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.AuthorizeNET.LoginId");
 
-            txtAdditionalFee.Value = IoCFactory.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.AuthorizeNET.AdditionalFee");
+            txtAdditionalFee.Value = IoC.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.AuthorizeNET.AdditionalFee");
         }
 
         public void Save()
@@ -91,11 +91,11 @@ namespace NopSolutions.NopCommerce.Web.Administration.Payment.AuthorizeNET
             }
             SetTransactionMode(transactionMode);
 
-            IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.AuthorizeNET.UseSandbox", cbUseSandbox.Checked.ToString());
-            IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.AuthorizeNET.TransactionKey", txtTransactionKey.Text);
-            IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.AuthorizeNET.LoginId", txtLoginId.Text);
+            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.AuthorizeNET.UseSandbox", cbUseSandbox.Checked.ToString());
+            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.AuthorizeNET.TransactionKey", txtTransactionKey.Text);
+            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.AuthorizeNET.LoginId", txtLoginId.Text);
 
-            IoCFactory.Resolve<ISettingManager>().SetParamNative("PaymentMethod.AuthorizeNET.AdditionalFee", txtAdditionalFee.Value);
+            IoC.Resolve<ISettingManager>().SetParamNative("PaymentMethod.AuthorizeNET.AdditionalFee", txtAdditionalFee.Value);
         }
     }
 }

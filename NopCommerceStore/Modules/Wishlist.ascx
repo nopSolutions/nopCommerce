@@ -15,11 +15,11 @@
         <col width="1" />
         <%} %>
         <col width="1" />
-        <%if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Display.Products.ShowSKU"))
+        <%if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Display.Products.ShowSKU"))
                   {%>
         <col width="1" />
         <%} %>
-        <%if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Display.ShowProductImagesOnWishList"))
+        <%if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Display.ShowProductImagesOnWishList"))
                   {%>
         <col width="1" class="picture" />
         <%} %>
@@ -38,13 +38,13 @@
                 <th>
                     <%=GetLocaleResourceString("Wishlist.AddToCart")%>
                 </th>
-                <%if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Display.Products.ShowSKU"))
+                <%if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Display.Products.ShowSKU"))
                   {%>
                 <th>
                     <%=GetLocaleResourceString("ShoppingCart.SKU")%>
                 </th>
                 <%} %>
-                <%if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Display.ShowProductImagesOnWishList"))
+                <%if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Display.ShowProductImagesOnWishList"))
                   {%>
                 <th class="picture">
                 </th>
@@ -76,13 +76,13 @@
                         <td>
                             <asp:CheckBox runat="server" ID="cbAddToCart" />
                         </td>
-                        <%if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Display.Products.ShowSKU"))
+                        <%if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Display.Products.ShowSKU"))
                           {%>
                         <td style="white-space: nowrap;">
                             <%#Server.HtmlEncode(((ShoppingCartItem)Container.DataItem).ProductVariant.SKU)%>
                         </td>
                         <%} %>
-                        <%if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Display.ShowProductImagesOnWishList"))
+                        <%if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Display.ShowProductImagesOnWishList"))
                           {%>
                         <td class="productpicture">
                             <asp:Image ID="iProductVariantPicture" runat="server" ImageUrl='<%#GetProductVariantImageUrl((ShoppingCartItem)Container.DataItem)%>'

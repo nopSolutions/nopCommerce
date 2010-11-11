@@ -33,7 +33,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Utils.Html;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Common.Utils.Html;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
 {
@@ -519,7 +519,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
                     if (subscription.UserId == forumTopic.UserId)
                         continue;
 
-                    IoCFactory.Resolve<IMessageService>().SendNewForumTopicMessage(subscription.User, 
+                    IoC.Resolve<IMessageService>().SendNewForumTopicMessage(subscription.User, 
                         forumTopic, forum, NopContext.Current.WorkingLanguage.LanguageId);
                 }
             }
@@ -753,7 +753,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
                     if (subscription.UserId == forumPost.UserId)
                         continue;
 
-                    IoCFactory.Resolve<IMessageService>().SendNewForumPostMessage(subscription.User,
+                    IoC.Resolve<IMessageService>().SendNewForumPostMessage(subscription.User,
                         forumPost, forumTopic, forum, 
                         NopContext.Current.WorkingLanguage.LanguageId);
                 }
@@ -908,7 +908,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
                     privateMessage.Text = privateMessage.Text.Substring(0, this.PMTextMaxLength);
             }
 
-            Customer customerTo = IoCFactory.Resolve<ICustomerService>().GetCustomerById(privateMessage.ToUserId);
+            Customer customerTo = IoC.Resolve<ICustomerService>().GetCustomerById(privateMessage.ToUserId);
             if (customerTo == null)
                 throw new NopException("Recipient could not be loaded");
 
@@ -922,7 +922,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
             //Email notification
             if (this.NotifyAboutPrivateMessages)
             {
-                IoCFactory.Resolve<IMessageService>().SendPrivateMessageNotification(privateMessage, NopContext.Current.WorkingLanguage.LanguageId);
+                IoC.Resolve<IMessageService>().SendPrivateMessageNotification(privateMessage, NopContext.Current.WorkingLanguage.LanguageId);
             }
         }
 
@@ -1298,7 +1298,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// <returns>True if allowed, otherwise false</returns>
         public bool IsUserAllowedToSubscribe(int customerId)
         {
-            var customer = IoCFactory.Resolve<ICustomerService>().GetCustomerById(customerId);
+            var customer = IoC.Resolve<ICustomerService>().GetCustomerById(customerId);
             return IsUserAllowedToSubscribe(customer);
         }
 
@@ -1357,7 +1357,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.ForumManager.CacheEnabled");
+                return IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.ForumManager.CacheEnabled");
             }
         }
 
@@ -1368,12 +1368,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         {
             get
             {
-                bool result = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Forums.ForumsEnabled");
+                bool result = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Forums.ForumsEnabled");
                 return result;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Forums.ForumsEnabled", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Forums.ForumsEnabled", value.ToString());
             }
         }
 
@@ -1384,12 +1384,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         {
             get
             {
-                bool result = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Forums.RelativeDateTimeFormattingEnabled", false);
+                bool result = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Forums.RelativeDateTimeFormattingEnabled", false);
                 return result;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Forums.RelativeDateTimeFormattingEnabled", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Forums.RelativeDateTimeFormattingEnabled", value.ToString());
             }
         }
 
@@ -1400,12 +1400,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         {
             get
             {
-                bool result = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Forums.CustomersAllowedToEditPosts");
+                bool result = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Forums.CustomersAllowedToEditPosts");
                 return result;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Forums.CustomersAllowedToEditPosts", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Forums.CustomersAllowedToEditPosts", value.ToString());
             }
         }
         
@@ -1416,11 +1416,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Forums.CustomersAllowedToManageSubscriptions");
+                return IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Forums.CustomersAllowedToManageSubscriptions");
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Forums.CustomersAllowedToManageSubscriptions", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Forums.CustomersAllowedToManageSubscriptions", value.ToString());
             }
         }
 
@@ -1431,11 +1431,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Forums.GuestsAllowedToCreatePosts");
+                return IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Forums.GuestsAllowedToCreatePosts");
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Forums.GuestsAllowedToCreatePosts", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Forums.GuestsAllowedToCreatePosts", value.ToString());
             }
         }
 
@@ -1446,11 +1446,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Forums.GuestsAllowedToCreateTopics");
+                return IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Forums.GuestsAllowedToCreateTopics");
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Forums.GuestsAllowedToCreateTopics", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Forums.GuestsAllowedToCreateTopics", value.ToString());
             }
         }
 
@@ -1461,12 +1461,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         {
             get
             {
-                bool result = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Forums.CustomersAllowedToDeletePosts");
+                bool result = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Forums.CustomersAllowedToDeletePosts");
                 return result;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Forums.CustomersAllowedToDeletePosts", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Forums.CustomersAllowedToDeletePosts", value.ToString());
             }
         }
 
@@ -1477,12 +1477,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         {
             get
             {
-                int result = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Forums.TopicSubjectMaxLength");
+                int result = IoC.Resolve<ISettingManager>().GetSettingValueInteger("Forums.TopicSubjectMaxLength");
                 return result;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Forums.TopicSubjectMaxLength", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Forums.TopicSubjectMaxLength", value.ToString());
             }
         }
 
@@ -1493,12 +1493,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         {
             get
             {
-                int result = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Forums.PostMaxLength");
+                int result = IoC.Resolve<ISettingManager>().GetSettingValueInteger("Forums.PostMaxLength");
                 return result;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Forums.PostMaxLength", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Forums.PostMaxLength", value.ToString());
             }
         }
 
@@ -1509,12 +1509,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         {
             get
             {
-                int result = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Forums.TopicsPageSize");
+                int result = IoC.Resolve<ISettingManager>().GetSettingValueInteger("Forums.TopicsPageSize");
                 return result;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Forums.TopicsPageSize", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Forums.TopicsPageSize", value.ToString());
             }
         }
 
@@ -1525,12 +1525,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         {
             get
             {
-                int result = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Forums.PostsPageSize");
+                int result = IoC.Resolve<ISettingManager>().GetSettingValueInteger("Forums.PostsPageSize");
                 return result;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Forums.PostsPageSize", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Forums.PostsPageSize", value.ToString());
             }
         }
 
@@ -1541,12 +1541,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         {
             get
             {
-                int result = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Forums.SearchResultsPageSize");
+                int result = IoC.Resolve<ISettingManager>().GetSettingValueInteger("Forums.SearchResultsPageSize");
                 return result;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Forums.SearchResultsPageSize", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Forums.SearchResultsPageSize", value.ToString());
             }
         }
 
@@ -1557,12 +1557,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         {
             get
             {
-                int result = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Forums.LatestUserPostsPageSize");
+                int result = IoC.Resolve<ISettingManager>().GetSettingValueInteger("Forums.LatestUserPostsPageSize");
                 return result;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Forums.LatestUserPostsPageSize", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Forums.LatestUserPostsPageSize", value.ToString());
             }
         }
 
@@ -1573,12 +1573,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         {
             get
             {
-                bool result = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Forums.ShowCustomersPostCount");
+                bool result = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Forums.ShowCustomersPostCount");
                 return result;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Forums.ShowCustomersPostCount", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Forums.ShowCustomersPostCount", value.ToString());
             }
         }
 
@@ -1589,12 +1589,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         {
             get
             {
-                int forumEditorTypeId = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Forums.EditorType");
+                int forumEditorTypeId = IoC.Resolve<ISettingManager>().GetSettingValueInteger("Forums.EditorType");
                 return (EditorTypeEnum)Enum.ToObject(typeof(EditorTypeEnum), forumEditorTypeId);
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Forums.EditorType", ((int)value).ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Forums.EditorType", ((int)value).ToString());
             }
         }
 
@@ -1605,12 +1605,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         {
             get
             {
-                bool result = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Forums.SignatureEnabled");
+                bool result = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Forums.SignatureEnabled");
                 return result;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Forums.SignatureEnabled", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Forums.SignatureEnabled", value.ToString());
             }
         }
 
@@ -1621,12 +1621,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         {
             get
             {
-                bool result = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Messaging.AllowPM");
+                bool result = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Messaging.AllowPM");
                 return result;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Messaging.AllowPM", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Messaging.AllowPM", value.ToString());
             }
         }
 
@@ -1637,12 +1637,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         {
             get
             {
-                bool result = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Messaging.NotifyAboutPrivateMessages");
+                bool result = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Messaging.NotifyAboutPrivateMessages");
                 return result;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Messaging.NotifyAboutPrivateMessages", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Messaging.NotifyAboutPrivateMessages", value.ToString());
             }
         }
 
@@ -1653,12 +1653,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         {
             get
             {
-                int result = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Messaging.PMSubjectMaxLength");
+                int result = IoC.Resolve<ISettingManager>().GetSettingValueInteger("Messaging.PMSubjectMaxLength");
                 return result;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Messaging.PMSubjectMaxLength", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Messaging.PMSubjectMaxLength", value.ToString());
             }
         }
 
@@ -1669,12 +1669,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         {
             get
             {
-                int result = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Messaging.PMTextMaxLength");
+                int result = IoC.Resolve<ISettingManager>().GetSettingValueInteger("Messaging.PMTextMaxLength");
                 return result;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Messaging.PMTextMaxLength", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Messaging.PMTextMaxLength", value.ToString());
             }
         }
 

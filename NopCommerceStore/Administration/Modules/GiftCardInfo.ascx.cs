@@ -33,7 +33,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
  
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -41,7 +41,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            GiftCard gc = IoCFactory.Resolve<IOrderService>().GetGiftCardById(this.GiftCardId);
+            GiftCard gc = IoC.Resolve<IOrderService>().GetGiftCardById(this.GiftCardId);
             if (gc != null)
             {
                 this.lblOrder.Text = string.Format("<a href=\"OrderDetails.aspx?OrderID={0}\">{1}</a>", gc.PurchasedOrderProductVariant.OrderId, GetLocaleResourceString("Admin.GiftCardInfo.Order.View"));
@@ -79,10 +79,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         private void BindUsageHistory()
         {
-            GiftCard gc = IoCFactory.Resolve<IOrderService>().GetGiftCardById(this.GiftCardId);
+            GiftCard gc = IoC.Resolve<IOrderService>().GetGiftCardById(this.GiftCardId);
             if (gc != null)
             {
-                var giftCardUsageHistory = IoCFactory.Resolve<IOrderService>().GetAllGiftCardUsageHistoryEntries(gc.GiftCardId, null, null);
+                var giftCardUsageHistory = IoC.Resolve<IOrderService>().GetAllGiftCardUsageHistoryEntries(gc.GiftCardId, null, null);
                 gvUsageHistory.DataSource = giftCardUsageHistory;
                 gvUsageHistory.DataBind();
             }
@@ -90,7 +90,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public GiftCard SaveInfo()
         {
-            GiftCard gc = IoCFactory.Resolve<IOrderService>().GetGiftCardById(this.GiftCardId);
+            GiftCard gc = IoC.Resolve<IOrderService>().GetGiftCardById(this.GiftCardId);
 
             decimal initialValue = txtInitialValue.Value;
             bool isGiftCardActivated = cbIsGiftCardActivated.Checked;
@@ -111,7 +111,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 gc.SenderName = senderName;
                 gc.SenderEmail = senderEmail;
                 gc.Message = message;
-                IoCFactory.Resolve<IOrderService>().UpdateGiftCard(gc);
+                IoC.Resolve<IOrderService>().UpdateGiftCard(gc);
             }
             else
             {
@@ -178,14 +178,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             try
             {
                 GiftCard gc = SaveInfo();
-                Language customerLang = IoCFactory.Resolve<ILanguageService>().GetLanguageById(gc.PurchasedOrderProductVariant.Order.CustomerLanguageId);
+                Language customerLang = IoC.Resolve<ILanguageService>().GetLanguageById(gc.PurchasedOrderProductVariant.Order.CustomerLanguageId);
                 if (customerLang==null)
                     customerLang = NopContext.Current.WorkingLanguage;
-                int queuedEmailId = IoCFactory.Resolve<IMessageService>().SendGiftCardNotification(gc, customerLang.LanguageId);
+                int queuedEmailId = IoC.Resolve<IMessageService>().SendGiftCardNotification(gc, customerLang.LanguageId);
                 if (queuedEmailId > 0)
                 {
                     gc.IsRecipientNotified = true;
-                    IoCFactory.Resolve<IOrderService>().UpdateGiftCard(gc);
+                    IoC.Resolve<IOrderService>().UpdateGiftCard(gc);
                     BindData();
                 }
             }

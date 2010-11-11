@@ -19,7 +19,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Shipping;
 using NopSolutions.NopCommerce.Web.Administration.Modules;
 using NopSolutions.NopCommerce.Web.Templates.Shipping;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Shipping.ShippingByTotalConfigure
 {
@@ -38,7 +38,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.ShippingByTotalCo
         private void FillDropDowns()
         {
             ddlShippingMethod.Items.Clear();
-            var shippingMethodCollection = IoCFactory.Resolve<IShippingService>().GetAllShippingMethods();
+            var shippingMethodCollection = IoC.Resolve<IShippingService>().GetAllShippingMethods();
             foreach (ShippingMethod shippingMethod in shippingMethodCollection)
             {
                 ListItem item = new ListItem(shippingMethod.Name, shippingMethod.ShippingMethodId.ToString());
@@ -48,14 +48,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.ShippingByTotalCo
 
         private void BindData()
         {
-            var shippingByTotalCollection = IoCFactory.Resolve<IShippingByTotalService>().GetAll();
+            var shippingByTotalCollection = IoC.Resolve<IShippingByTotalService>().GetAll();
             gvShippingByTotals.DataSource = shippingByTotalCollection;
             gvShippingByTotals.DataBind();
         }
 
         private void BindSettings()
         {
-            cbLimitMethodsToCreated.Checked = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("ShippingByTotal.LimitMethodsToCreated");
+            cbLimitMethodsToCreated.Checked = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("ShippingByTotal.LimitMethodsToCreated");
         }
         
         protected void btnAdd_Click(object sender, EventArgs e)
@@ -72,7 +72,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.ShippingByTotalCo
                     ShippingChargePercentage = txtShippingChargePercentage.Value,
                     ShippingChargeAmount = txtShippingChargeAmount.Value
                 };
-                IoCFactory.Resolve<IShippingByTotalService>().InsertShippingByTotal(shippingByTotal);
+                IoC.Resolve<IShippingByTotalService>().InsertShippingByTotal(shippingByTotal);
 
                 BindData();
             }
@@ -99,7 +99,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.ShippingByTotalCo
 
                 int shippingByTotalId = int.Parse(hfShippingByTotalId.Value);
                 int shippingMethodId = int.Parse(ddlShippingMethod.SelectedItem.Value);
-                ShippingByTotal shippingByTotal = IoCFactory.Resolve<IShippingByTotalService>().GetById(shippingByTotalId);
+                ShippingByTotal shippingByTotal = IoC.Resolve<IShippingByTotalService>().GetById(shippingByTotalId);
 
                 if (shippingByTotal != null)
                 {
@@ -109,7 +109,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.ShippingByTotalCo
                     shippingByTotal.UsePercentage = cbUsePercentage.Checked;
                     shippingByTotal.ShippingChargePercentage = txtShippingChargePercentage.Value;
                     shippingByTotal.ShippingChargeAmount = txtShippingChargeAmount.Value;
-                    IoCFactory.Resolve<IShippingByTotalService>().UpdateShippingByTotal(shippingByTotal);
+                    IoC.Resolve<IShippingByTotalService>().UpdateShippingByTotal(shippingByTotal);
                 }
                 BindData();
             }
@@ -127,7 +127,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.ShippingByTotalCo
 
                 DropDownList ddlShippingMethod = e.Row.FindControl("ddlShippingMethod") as DropDownList;
                 ddlShippingMethod.Items.Clear();
-                var shippingMethodCollection = IoCFactory.Resolve<IShippingService>().GetAllShippingMethods();
+                var shippingMethodCollection = IoC.Resolve<IShippingService>().GetAllShippingMethods();
                 foreach (ShippingMethod shippingMethod in shippingMethodCollection)
                 {
                     ListItem item = new ListItem(shippingMethod.Name, shippingMethod.ShippingMethodId.ToString());
@@ -141,10 +141,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.ShippingByTotalCo
         protected void gvShippingByTotals_RowDeleting(object sender, GridViewDeleteEventArgs e)
         {
             int shippingByTotalId = (int)gvShippingByTotals.DataKeys[e.RowIndex]["ShippingByTotalId"];
-            ShippingByTotal shippingByTotal = IoCFactory.Resolve<IShippingByTotalService>().GetById(shippingByTotalId);
+            ShippingByTotal shippingByTotal = IoC.Resolve<IShippingByTotalService>().GetById(shippingByTotalId);
             if (shippingByTotal != null)
             {
-                IoCFactory.Resolve<IShippingByTotalService>().DeleteShippingByTotal(shippingByTotal.ShippingByTotalId);
+                IoC.Resolve<IShippingByTotalService>().DeleteShippingByTotal(shippingByTotal.ShippingByTotalId);
                 BindData();
             }
         }
@@ -158,7 +158,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.ShippingByTotalCo
 
         public void Save()
         {
-            IoCFactory.Resolve<ISettingManager>().SetParam("ShippingByTotal.LimitMethodsToCreated", cbLimitMethodsToCreated.Checked.ToString());
+            IoC.Resolve<ISettingManager>().SetParam("ShippingByTotal.LimitMethodsToCreated", cbLimitMethodsToCreated.Checked.ToString());
         }
     }
 }

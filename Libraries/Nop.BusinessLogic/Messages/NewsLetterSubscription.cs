@@ -1,6 +1,6 @@
 ﻿using System;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Messages
 {
@@ -65,7 +65,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         {
             get
             {
-                return IoCFactory.Resolve<ICustomerService>().GetCustomerByEmail(Email);
+                return IoC.Resolve<ICustomerService>().GetCustomerByEmail(Email);
             }
         }
 

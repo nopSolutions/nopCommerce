@@ -29,7 +29,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Localization;
 using NopSolutions.NopCommerce.BusinessLogic.Payment;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 namespace NopSolutions.NopCommerce.Web
 {
     public partial class NewsRSSPage : BaseNopPage
@@ -41,9 +41,9 @@ namespace NopSolutions.NopCommerce.Web
 
         private void BindData()
         {
-            if (IoCFactory.Resolve<INewsService>().NewsEnabled)
+            if (IoC.Resolve<INewsService>().NewsEnabled)
             {
-                var newsCollection = IoCFactory.Resolve<INewsService>().GetAllNews(LanguageId);
+                var newsCollection = IoC.Resolve<INewsService>().GetAllNews(LanguageId);
                 rptrNews.DataSource = newsCollection;
                 rptrNews.DataBind();
             }

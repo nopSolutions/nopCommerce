@@ -26,7 +26,7 @@ using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.Content.Blog;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
@@ -47,7 +47,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             if (e.CommandName == "DeleteItem")
             {
                 int blogCommentId = Convert.ToInt32(e.CommandArgument);
-                IoCFactory.Resolve<IBlogService>().DeleteBlogComment(blogCommentId);
+                IoC.Resolve<IBlogService>().DeleteBlogComment(blogCommentId);
                 BindData();
             }
         }
@@ -67,7 +67,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         protected string GetCustomerInfo(int customerId)
         {
             string customerInfo = string.Empty;
-            Customer customer = IoCFactory.Resolve<ICustomerService>().GetCustomerById(customerId);
+            Customer customer = IoC.Resolve<ICustomerService>().GetCustomerById(customerId);
             if (customer != null)
             {
                 if (customer.IsGuest)
@@ -86,9 +86,9 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             List<BlogComment> blogComments = null;
             if (this.BlogPostId > 0)
-                blogComments = IoCFactory.Resolve<IBlogService>().GetBlogCommentsByBlogPostId(this.BlogPostId);
+                blogComments = IoC.Resolve<IBlogService>().GetBlogCommentsByBlogPostId(this.BlogPostId);
             else
-                blogComments = IoCFactory.Resolve<IBlogService>().GetAllBlogComments();
+                blogComments = IoC.Resolve<IBlogService>().GetAllBlogComments();
 
             gvBlogComments.DataSource = blogComments;
             gvBlogComments.DataBind();

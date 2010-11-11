@@ -26,7 +26,7 @@ using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using System.Xml;
 using NopSolutions.NopCommerce.BusinessLogic.Templates;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
  
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -42,7 +42,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         void BindGrid()
         {
-            var productTemplateCollection = IoCFactory.Resolve<ITemplateService>().GetAllProductTemplates();
+            var productTemplateCollection = IoC.Resolve<ITemplateService>().GetAllProductTemplates();
             gvProductTemplates.DataSource = productTemplateCollection;
             gvProductTemplates.DataBind();
         }

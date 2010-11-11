@@ -30,7 +30,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Media;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Maintenance
 {
@@ -83,7 +83,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Maintenance
         /// </summary>
         public void Backup()
         {
-            string path = IoCFactory.Resolve<ISettingManager>().GetSettingValue("Maintenance.BackupPath").Trim();
+            string path = IoC.Resolve<ISettingManager>().GetSettingValue("Maintenance.BackupPath").Trim();
             if (String.IsNullOrEmpty(path))
                 path = string.Format("{0}{1}", HttpContext.Current.Request.PhysicalApplicationPath, "Administration\\backups\\");
 
@@ -104,7 +104,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Maintenance
             string fileName = string.Format("{0}Administration\\backups\\images_{1}_{2}.zip", HttpContext.Current.Request.PhysicalApplicationPath, DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), CommonHelper.GenerateRandomDigitCode(4));
             using (ZipFile zipFile = new ZipFile())
             {
-                zipFile.AddDirectory(IoCFactory.Resolve<IPictureService>().LocalImagePath);
+                zipFile.AddDirectory(IoC.Resolve<IPictureService>().LocalImagePath);
                 zipFile.Save(fileName);
             }
         }
@@ -153,7 +153,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Maintenance
                         {
                             using (ZipFile zipFile = new ZipFile(fileName))
                             {
-                                zipFile.ExtractAll(IoCFactory.Resolve<IPictureService>().LocalImagePath, ExtractExistingFileAction.OverwriteSilently);
+                                zipFile.ExtractAll(IoC.Resolve<IPictureService>().LocalImagePath, ExtractExistingFileAction.OverwriteSilently);
                             }
                         }
                         break;

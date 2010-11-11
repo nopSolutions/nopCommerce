@@ -19,7 +19,7 @@ using System.Text;
 using NopSolutions.NopCommerce.BusinessLogic.Localization;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Common.Utils.Html;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Products
@@ -96,7 +96,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         /// <returns>Low stock activity name</returns>
         public static string GetLowStockActivityName(this LowStockActivityEnum lsa)
         {
-            string name = IoCFactory.Resolve<ILocalizationManager>().GetLocaleResourceString(
+            string name = IoC.Resolve<ILocalizationManager>().GetLocaleResourceString(
                 string.Format("LowStockActivity.{0}", (int)lsa),
                 NopContext.Current.WorkingLanguage.LanguageId,
                 true,

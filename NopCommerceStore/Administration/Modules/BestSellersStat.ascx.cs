@@ -27,7 +27,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Audit;
 using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
  
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
@@ -44,14 +44,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected void BindData()
         {
-            gvBestSellers.DataSource = IoCFactory.Resolve<IOrderService>().BestSellersReport(720, 5, 1);
+            gvBestSellers.DataSource = IoC.Resolve<IOrderService>().BestSellersReport(720, 5, 1);
             gvBestSellers.DataBind();
         }
 
         public string GetProductVariantUrl(int productVariantId)
         {
             string result = string.Empty;
-            ProductVariant productVariant = IoCFactory.Resolve<IProductService>().GetProductVariantById(productVariantId);
+            ProductVariant productVariant = IoC.Resolve<IProductService>().GetProductVariantById(productVariantId);
             if (productVariant != null)
                 result = "ProductVariantDetails.aspx?ProductVariantID=" + productVariant.ProductVariantId.ToString();
             else
@@ -61,7 +61,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public string GetProductVariantName(int productVariantId)
         {
-            ProductVariant productVariant = IoCFactory.Resolve<IProductService>().GetProductVariantById(productVariantId);
+            ProductVariant productVariant = IoC.Resolve<IProductService>().GetProductVariantById(productVariantId);
             if (productVariant != null)
                 return productVariant.FullProductName;
             return "Not available. ID=" + productVariantId.ToString();

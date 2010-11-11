@@ -7,7 +7,7 @@ using System.Web.UI.WebControls;
 using NopSolutions.NopCommerce.BusinessLogic.Payment;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using System.Text;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -51,7 +51,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                     case "Checkbox":
                         PaymentMethodCountryMappingHelperClass map1 = row.DataItem as PaymentMethodCountryMappingHelperClass;
-                        PaymentMethod pm = IoCFactory.Resolve<IPaymentService>().GetPaymentMethodById(_paymentMethodId);
+                        PaymentMethod pm = IoC.Resolve<IPaymentService>().GetPaymentMethodById(_paymentMethodId);
                         if (pm != null)
                         {
                             switch (pm.PaymentMethodType)
@@ -164,7 +164,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
             StringBuilder scriptBuilder = new StringBuilder();
             scriptBuilder.Append("$(document).ready(function() {");
-            foreach(PaymentMethod paymentMethod in IoCFactory.Resolve<IPaymentService>().GetAllPaymentMethods(null, false))
+            foreach(PaymentMethod paymentMethod in IoC.Resolve<IPaymentService>().GetAllPaymentMethods(null, false))
             {
                 TemplateField tf = new TemplateField();
                 tf.ItemTemplate = new NopGridViewCustomTemplate(DataControlRowType.DataRow, "Restrict", "Checkbox", paymentMethod.PaymentMethodId);
@@ -182,8 +182,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected void BindGrid()
         {
-            var countryCollection = IoCFactory.Resolve<ICountryService>().GetAllCountries();
-            var paymentMethodCollection = IoCFactory.Resolve<IPaymentService>().GetAllPaymentMethods(null, false);
+            var countryCollection = IoC.Resolve<ICountryService>().GetAllCountries();
+            var paymentMethodCollection = IoC.Resolve<IPaymentService>().GetAllPaymentMethods(null, false);
 
             if(countryCollection.Count == 0)
             {
@@ -204,7 +204,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                 foreach(PaymentMethod paymentMethod in paymentMethodCollection)
                 {
-                    map1.Restrict.Add(paymentMethod.PaymentMethodId, IoCFactory.Resolve<IPaymentService>().DoesPaymentMethodCountryMappingExist(paymentMethod.PaymentMethodId, country.CountryId));
+                    map1.Restrict.Add(paymentMethod.PaymentMethodId, IoC.Resolve<IPaymentService>().DoesPaymentMethodCountryMappingExist(paymentMethod.PaymentMethodId, country.CountryId));
                 }
 
                 dt.Add(map1);
@@ -231,7 +231,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public void SaveInfo()
         {
-            var paymentMethods = IoCFactory.Resolve<IPaymentService>().GetAllPaymentMethods(null, false);
+            var paymentMethods = IoC.Resolve<IPaymentService>().GetAllPaymentMethods(null, false);
             foreach (GridViewRow row in gvPaymentMethodCountryMap.Rows)
             {
                 foreach (PaymentMethod paymentMethod in paymentMethods)
@@ -245,13 +245,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                     if (cbRestrict.Checked)
                     {
-                        IoCFactory.Resolve<IPaymentService>().CreatePaymentMethodCountryMapping(paymentMethod.PaymentMethodId, countryId);
+                        IoC.Resolve<IPaymentService>().CreatePaymentMethodCountryMapping(paymentMethod.PaymentMethodId, countryId);
                     }
                     else
                     {
-                        if (IoCFactory.Resolve<IPaymentService>().DoesPaymentMethodCountryMappingExist(paymentMethod.PaymentMethodId, countryId))
+                        if (IoC.Resolve<IPaymentService>().DoesPaymentMethodCountryMappingExist(paymentMethod.PaymentMethodId, countryId))
                         {
-                            IoCFactory.Resolve<IPaymentService>().DeletePaymentMethodCountryMapping(paymentMethod.PaymentMethodId, countryId);
+                            IoC.Resolve<IPaymentService>().DeletePaymentMethodCountryMapping(paymentMethod.PaymentMethodId, countryId);
                         }
                     }
                 }

@@ -43,7 +43,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Tax;
 using NopSolutions.NopCommerce.BusinessLogic.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.Utils.Html;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
@@ -52,11 +52,11 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            Order order = IoCFactory.Resolve<IOrderService>().GetOrderById(this.OrderId);
+            Order order = IoC.Resolve<IOrderService>().GetOrderById(this.OrderId);
             if (order != null && !order.Deleted)
             {
                 this.lblOrderStatus.Text = order.OrderStatus.GetOrderStatusName();
-                this.CancelOrderButton.Visible = IoCFactory.Resolve<IOrderService>().CanCancelOrder(order);
+                this.CancelOrderButton.Visible = IoC.Resolve<IOrderService>().CanCancelOrder(order);
                 this.lblOrderId.Text = order.OrderId.ToString();
                 this.lblOrderGuid.Text = order.OrderGuid.ToString();
 
@@ -219,7 +219,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             }
 
             //purchase order number
-            PaymentMethod pm = IoCFactory.Resolve<IPaymentService>().GetPaymentMethodById(order.PaymentMethodId);
+            PaymentMethod pm = IoC.Resolve<IPaymentService>().GetPaymentMethodById(order.PaymentMethodId);
             if (pm != null && pm.SystemKeyword == "PURCHASEORDER")
             {
                 this.lblPONumber.Text = Server.HtmlEncode(order.PurchaseOrderNumber);
@@ -260,14 +260,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             this.lblPaymentStatus.Text = order.PaymentStatus.GetPaymentStatusName();
 
             //payment method buttons
-            this.btnCapture.Visible = IoCFactory.Resolve<IOrderService>().CanCapture(order);
-            this.btnMarkAsPaid.Visible = IoCFactory.Resolve<IOrderService>().CanMarkOrderAsPaid(order);
-            this.btnRefund.Visible = IoCFactory.Resolve<IOrderService>().CanRefund(order);
-            this.btnRefundOffline.Visible = IoCFactory.Resolve<IOrderService>().CanRefundOffline(order);
-            this.btnPartialRefund.Visible = IoCFactory.Resolve<IOrderService>().CanPartiallyRefund(order, decimal.Zero);
-            this.btnPartialRefundOffline.Visible = IoCFactory.Resolve<IOrderService>().CanPartiallyRefundOffline(order, decimal.Zero);
-            this.btnVoid.Visible = IoCFactory.Resolve<IOrderService>().CanVoid(order);
-            this.btnVoidOffline.Visible = IoCFactory.Resolve<IOrderService>().CanVoidOffline(order);
+            this.btnCapture.Visible = IoC.Resolve<IOrderService>().CanCapture(order);
+            this.btnMarkAsPaid.Visible = IoC.Resolve<IOrderService>().CanMarkOrderAsPaid(order);
+            this.btnRefund.Visible = IoC.Resolve<IOrderService>().CanRefund(order);
+            this.btnRefundOffline.Visible = IoC.Resolve<IOrderService>().CanRefundOffline(order);
+            this.btnPartialRefund.Visible = IoC.Resolve<IOrderService>().CanPartiallyRefund(order, decimal.Zero);
+            this.btnPartialRefundOffline.Visible = IoC.Resolve<IOrderService>().CanPartiallyRefundOffline(order, decimal.Zero);
+            this.btnVoid.Visible = IoC.Resolve<IOrderService>().CanVoid(order);
+            this.btnVoidOffline.Visible = IoC.Resolve<IOrderService>().CanVoidOffline(order);
         }
 
         protected void BindBillingInfo(Order order)
@@ -343,7 +343,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                 this.txtTrackingNumber.Text = order.TrackingNumber;
 
-                this.btnSetAsShipped.Visible = IoCFactory.Resolve<IOrderService>().CanShip(order);
+                this.btnSetAsShipped.Visible = IoC.Resolve<IOrderService>().CanShip(order);
                 if (order.ShippedDate.HasValue)
                 {
                     this.lblShippedDate.Text = DateTimeHelper.ConvertToUserTime(order.ShippedDate.Value, DateTimeKind.Utc).ToString();
@@ -353,7 +353,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     this.lblShippedDate.Text = GetLocaleResourceString("Admin.OrderDetails.ShippedDate.NotYet");
                 }
 
-                this.btnSetAsDelivered.Visible = IoCFactory.Resolve<IOrderService>().CanDeliver(order);
+                this.btnSetAsDelivered.Visible = IoC.Resolve<IOrderService>().CanDeliver(order);
                 if (order.DeliveryDate.HasValue)
                 {
                     this.lblDeliveryDate.Text = DateTimeHelper.ConvertToUserTime(order.DeliveryDate.Value, DateTimeKind.Utc).ToString();
@@ -363,7 +363,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     this.lblDeliveryDate.Text = GetLocaleResourceString("Admin.OrderDetails.DeliveryDate.NotYet");
                 }
 
-                this.lblOrderWeight.Text = string.Format("{0:F2} [{1}]", order.OrderWeight, IoCFactory.Resolve<IMeasureService>().BaseWeightIn.Name);
+                this.lblOrderWeight.Text = string.Format("{0:F2} [{1}]", order.OrderWeight, IoC.Resolve<IMeasureService>().BaseWeightIn.Name);
 
                 this.divShippingNotRequired.Visible = false;
                 this.divShippingAddress.Visible = true;
@@ -414,11 +414,11 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 return;
 
             //subtotal
-            string orderSubtotalInclTaxStr = PriceHelper.FormatPrice(order.OrderSubtotalInclTax, true, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingLanguage, true);
-            string orderSubtotalExclTaxStr = PriceHelper.FormatPrice(order.OrderSubtotalExclTax, true, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingLanguage, false);
-            string orderSubtotalDiscountInclTaxStr = PriceHelper.FormatPrice(order.OrderSubTotalDiscountInclTax, true, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingLanguage, true);
-            string orderSubtotalDiscountExclTaxStr = PriceHelper.FormatPrice(order.OrderSubTotalDiscountExclTax, true, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingLanguage, false);            
-            if (IoCFactory.Resolve<ITaxService>().AllowCustomersToSelectTaxDisplayType)
+            string orderSubtotalInclTaxStr = PriceHelper.FormatPrice(order.OrderSubtotalInclTax, true, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingLanguage, true);
+            string orderSubtotalExclTaxStr = PriceHelper.FormatPrice(order.OrderSubtotalExclTax, true, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingLanguage, false);
+            string orderSubtotalDiscountInclTaxStr = PriceHelper.FormatPrice(order.OrderSubTotalDiscountInclTax, true, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingLanguage, true);
+            string orderSubtotalDiscountExclTaxStr = PriceHelper.FormatPrice(order.OrderSubTotalDiscountExclTax, true, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingLanguage, false);            
+            if (IoC.Resolve<ITaxService>().AllowCustomersToSelectTaxDisplayType)
             {
                 //subtotal
                 this.lblOrderSubtotalInclTax.Text = orderSubtotalInclTaxStr;
@@ -447,7 +447,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             }
             else
             {
-                switch (IoCFactory.Resolve<ITaxService>().TaxDisplayType)
+                switch (IoC.Resolve<ITaxService>().TaxDisplayType)
                 {
                     case TaxDisplayTypeEnum.ExcludingTax:
                         {
@@ -502,11 +502,11 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             }
 
             //shipping
-            string orderShippingInclTaxStr = PriceHelper.FormatShippingPrice(order.OrderShippingInclTax, true, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingLanguage, true);
-            string orderShippingExclTaxStr = PriceHelper.FormatShippingPrice(order.OrderShippingExclTax, true, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingLanguage, false);
-            if (IoCFactory.Resolve<ITaxService>().ShippingIsTaxable)
+            string orderShippingInclTaxStr = PriceHelper.FormatShippingPrice(order.OrderShippingInclTax, true, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingLanguage, true);
+            string orderShippingExclTaxStr = PriceHelper.FormatShippingPrice(order.OrderShippingExclTax, true, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingLanguage, false);
+            if (IoC.Resolve<ITaxService>().ShippingIsTaxable)
             {
-                if (IoCFactory.Resolve<ITaxService>().AllowCustomersToSelectTaxDisplayType)
+                if (IoC.Resolve<ITaxService>().AllowCustomersToSelectTaxDisplayType)
                 {
                     this.lblOrderShippingInclTax.Text = orderShippingInclTaxStr;
                     this.lblOrderShippingExclTax.Text = orderShippingExclTaxStr;
@@ -515,7 +515,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 }
                 else
                 {
-                    switch (IoCFactory.Resolve<ITaxService>().TaxDisplayType)
+                    switch (IoC.Resolve<ITaxService>().TaxDisplayType)
                     {
                         case TaxDisplayTypeEnum.ExcludingTax:
                             {
@@ -542,7 +542,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             }
             else
             {
-                switch (IoCFactory.Resolve<ITaxService>().TaxDisplayType)
+                switch (IoC.Resolve<ITaxService>().TaxDisplayType)
                 {
                     case TaxDisplayTypeEnum.ExcludingTax:
                         {
@@ -568,13 +568,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             }
 
             //payment method additional fee
-            string paymentMethodAdditionalFeeInclTaxStr = PriceHelper.FormatPaymentMethodAdditionalFee(order.PaymentMethodAdditionalFeeInclTax, true, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingLanguage, true);
-            string paymentMethodAdditionalFeeExclTaxStr = PriceHelper.FormatPaymentMethodAdditionalFee(order.PaymentMethodAdditionalFeeExclTax, true, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingLanguage, false);
+            string paymentMethodAdditionalFeeInclTaxStr = PriceHelper.FormatPaymentMethodAdditionalFee(order.PaymentMethodAdditionalFeeInclTax, true, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingLanguage, true);
+            string paymentMethodAdditionalFeeExclTaxStr = PriceHelper.FormatPaymentMethodAdditionalFee(order.PaymentMethodAdditionalFeeExclTax, true, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingLanguage, false);
             if (order.PaymentMethodAdditionalFeeInclTax > decimal.Zero)
             {
-                if (IoCFactory.Resolve<ITaxService>().PaymentMethodAdditionalFeeIsTaxable)
+                if (IoC.Resolve<ITaxService>().PaymentMethodAdditionalFeeIsTaxable)
                 {
-                    if (IoCFactory.Resolve<ITaxService>().AllowCustomersToSelectTaxDisplayType)
+                    if (IoC.Resolve<ITaxService>().AllowCustomersToSelectTaxDisplayType)
                     {
                         this.lblPaymentMethodAdditionalFeeInclTax.Text = paymentMethodAdditionalFeeInclTaxStr;
                         this.lblPaymentMethodAdditionalFeeExclTax.Text = paymentMethodAdditionalFeeExclTaxStr;
@@ -583,7 +583,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     }
                     else
                     {
-                        switch (IoCFactory.Resolve<ITaxService>().TaxDisplayType)
+                        switch (IoC.Resolve<ITaxService>().TaxDisplayType)
                         {
                             case TaxDisplayTypeEnum.ExcludingTax:
                                 {
@@ -610,7 +610,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 }
                 else
                 {
-                    switch (IoCFactory.Resolve<ITaxService>().TaxDisplayType)
+                    switch (IoC.Resolve<ITaxService>().TaxDisplayType)
                     {
                         case TaxDisplayTypeEnum.ExcludingTax:
                             {
@@ -644,7 +644,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             //tax
             this.lblOrderTax.Text = PriceHelper.FormatPrice(order.OrderTax, true, false);
             SortedDictionary<decimal, decimal> taxRates = order.TaxRatesDictionary;
-            bool displayTaxRates = IoCFactory.Resolve<ITaxService>().DisplayTaxRates && taxRates.Count > 0;
+            bool displayTaxRates = IoC.Resolve<ITaxService>().DisplayTaxRates && taxRates.Count > 0;
             bool displayTax = !displayTaxRates;
             rptrTaxRates.DataSource = taxRates;
             rptrTaxRates.DataBind();
@@ -663,7 +663,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             }
 
             //gift cards
-            var gcuhC = IoCFactory.Resolve<IOrderService>().GetAllGiftCardUsageHistoryEntries(null, null, order.OrderId);
+            var gcuhC = IoC.Resolve<IOrderService>().GetAllGiftCardUsageHistoryEntries(null, null, order.OrderId);
             if (gcuhC.Count > 0)
             {
                 rptrGiftCards.Visible = true;
@@ -696,7 +696,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
             //edit order
             //subtotal
-            this.lblOrderSubtotalInPrimaryCurrencyTitle.Text = string.Format(GetLocaleResourceString("Admin.OrderDetails.EditOrderTotals.Subtotal.InPrimaryCurrency"), IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode);
+            this.lblOrderSubtotalInPrimaryCurrencyTitle.Text = string.Format(GetLocaleResourceString("Admin.OrderDetails.EditOrderTotals.Subtotal.InPrimaryCurrency"), IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode);
             this.txtOrderSubtotalInPrimaryCurrencyInclTax.Text = order.OrderSubtotalInclTax.ToString();
             this.txtOrderSubtotalInPrimaryCurrencyExclTax.Text = order.OrderSubtotalExclTax.ToString();
             this.lblOrderSubtotalInCustomerCurrencyTitle.Text = string.Format(GetLocaleResourceString("Admin.OrderDetails.EditOrderTotals.Subtotal.InCustomerCurrency"), order.CustomerCurrencyCode);
@@ -704,7 +704,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             this.txtOrderSubtotalInCustomerCurrencyExclTax.Text = order.OrderSubtotalExclTaxInCustomerCurrency.ToString();
 
             //discount (applied to order subtotal)
-            this.lblOrderSubtotalDiscountInPrimaryCurrencyTitle.Text = string.Format(GetLocaleResourceString("Admin.OrderDetails.EditOrderTotals.SubtotalDiscount.InPrimaryCurrency"), IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode);
+            this.lblOrderSubtotalDiscountInPrimaryCurrencyTitle.Text = string.Format(GetLocaleResourceString("Admin.OrderDetails.EditOrderTotals.SubtotalDiscount.InPrimaryCurrency"), IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode);
             this.txtOrderSubtotalDiscountInPrimaryCurrencyInclTax.Text = order.OrderSubTotalDiscountInclTax.ToString();
             this.txtOrderSubtotalDiscountInPrimaryCurrencyExclTax.Text = order.OrderSubTotalDiscountExclTax.ToString();
             this.lblOrderSubtotalDiscountInCustomerCurrencyTitle.Text = string.Format(GetLocaleResourceString("Admin.OrderDetails.EditOrderTotals.SubtotalDiscount.InCustomerCurrency"), order.CustomerCurrencyCode);
@@ -712,7 +712,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             this.txtOrderSubtotalDiscountInCustomerCurrencyExclTax.Text = order.OrderSubTotalDiscountExclTaxInCustomerCurrency.ToString();
 
             //shipping
-            this.lblOrderShippingInPrimaryCurrencyTitle.Text = string.Format(GetLocaleResourceString("Admin.OrderDetails.EditOrderTotals.Shipping.InPrimaryCurrency"), IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode);
+            this.lblOrderShippingInPrimaryCurrencyTitle.Text = string.Format(GetLocaleResourceString("Admin.OrderDetails.EditOrderTotals.Shipping.InPrimaryCurrency"), IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode);
             this.txtOrderShippingInPrimaryCurrencyInclTax.Text = order.OrderShippingInclTax.ToString();
             this.txtOrderShippingInPrimaryCurrencyExclTax.Text = order.OrderShippingExclTax.ToString();
             this.lblOrderShippingInCustomerCurrencyTitle.Text = string.Format(GetLocaleResourceString("Admin.OrderDetails.EditOrderTotals.Shipping.InCustomerCurrency"), order.CustomerCurrencyCode);
@@ -720,7 +720,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             this.txtOrderShippingInCustomerCurrencyExclTax.Text = order.OrderShippingExclTaxInCustomerCurrency.ToString();
 
             //payment method additional fee
-            this.lblOrderPaymentMethodAdditionalFeeInPrimaryCurrencyTitle.Text = string.Format(GetLocaleResourceString("Admin.OrderDetails.EditOrderTotals.PaymentMethodAdditionalFee.InPrimaryCurrency"), IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode);
+            this.lblOrderPaymentMethodAdditionalFeeInPrimaryCurrencyTitle.Text = string.Format(GetLocaleResourceString("Admin.OrderDetails.EditOrderTotals.PaymentMethodAdditionalFee.InPrimaryCurrency"), IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode);
             this.txtOrderPaymentMethodAdditionalFeeInPrimaryCurrencyInclTax.Text = order.PaymentMethodAdditionalFeeInclTax.ToString();
             this.txtOrderPaymentMethodAdditionalFeeInPrimaryCurrencyExclTax.Text = order.PaymentMethodAdditionalFeeExclTax.ToString();
             this.lblOrderPaymentMethodAdditionalFeeInCustomerCurrencyTitle.Text = string.Format(GetLocaleResourceString("Admin.OrderDetails.EditOrderTotals.PaymentMethodAdditionalFee.InCustomerCurrency"), order.CustomerCurrencyCode);
@@ -728,23 +728,23 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             this.txtOrderPaymentMethodAdditionalFeeInCustomerCurrencyExclTax.Text = order.PaymentMethodAdditionalFeeExclTaxInCustomerCurrency.ToString();
 
             //tax rates
-            this.lblOrderTaxRatesInPrimaryCurrencyTitle.Text = string.Format(GetLocaleResourceString("Admin.OrderDetails.EditOrderTotals.TaxRates.InPrimaryCurrency"), IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode);
+            this.lblOrderTaxRatesInPrimaryCurrencyTitle.Text = string.Format(GetLocaleResourceString("Admin.OrderDetails.EditOrderTotals.TaxRates.InPrimaryCurrency"), IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode);
             this.txtOrderTaxRatesInPrimaryCurrency.Text = order.TaxRates;
             this.lblOrderTaxRatesInCustomerCurrencyTitle.Text = string.Format(GetLocaleResourceString("Admin.OrderDetails.EditOrderTotals.TaxRates.InCustomerCurrency"), order.CustomerCurrencyCode);
             this.txtOrderTaxRatesInCustomerCurrency.Text = order.TaxRatesInCustomerCurrency;
-            this.lblOrderTaxInPrimaryCurrencyTitle.Text = string.Format(GetLocaleResourceString("Admin.OrderDetails.EditOrderTotals.Tax.InPrimaryCurrency"), IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode);
+            this.lblOrderTaxInPrimaryCurrencyTitle.Text = string.Format(GetLocaleResourceString("Admin.OrderDetails.EditOrderTotals.Tax.InPrimaryCurrency"), IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode);
             this.txtOrderTaxInPrimaryCurrency.Text = order.OrderTax.ToString();
             this.lblOrderTaxInCustomerCurrencyTitle.Text = string.Format(GetLocaleResourceString("Admin.OrderDetails.EditOrderTotals.Tax.InCustomerCurrency"), order.CustomerCurrencyCode);
             this.txtOrderTaxInCustomerCurrency.Text = order.OrderTaxInCustomerCurrency.ToString();
 
             //discount (applied to order total)
-            this.lblOrderDiscountInPrimaryCurrencyTitle.Text = string.Format(GetLocaleResourceString("Admin.OrderDetails.EditOrderTotals.Discount.InPrimaryCurrency"), IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode);
+            this.lblOrderDiscountInPrimaryCurrencyTitle.Text = string.Format(GetLocaleResourceString("Admin.OrderDetails.EditOrderTotals.Discount.InPrimaryCurrency"), IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode);
             this.txtOrderDiscountInPrimaryCurrency.Text = order.OrderDiscount.ToString();
             this.lblOrderDiscountInCustomerCurrencyTitle.Text = string.Format(GetLocaleResourceString("Admin.OrderDetails.EditOrderTotals.Discount.InCustomerCurrency"), order.CustomerCurrencyCode);
             this.txtOrderDiscountInCustomerCurrency.Text = order.OrderDiscountInCustomerCurrency.ToString();
 
             //total
-            this.lblOrderTotalInPrimaryCurrencyTitle.Text = string.Format(GetLocaleResourceString("Admin.OrderDetails.EditOrderTotals.Total.InPrimaryCurrency"), IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode);
+            this.lblOrderTotalInPrimaryCurrencyTitle.Text = string.Format(GetLocaleResourceString("Admin.OrderDetails.EditOrderTotals.Total.InPrimaryCurrency"), IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode);
             this.txtOrderTotalInPrimaryCurrency.Text = order.OrderTotal.ToString();
             this.lblOrderTotalInCustomerCurrencyTitle.Text = string.Format(GetLocaleResourceString("Admin.OrderDetails.EditOrderTotals.Total.InCustomerCurrency"), order.CustomerCurrencyCode);
             this.txtOrderTotalInCustomerCurrency.Text = order.OrderTotalInCustomerCurrency.ToString();
@@ -753,7 +753,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         private void BindOrderNotes()
         {
-            Order order = IoCFactory.Resolve<IOrderService>().GetOrderById(this.OrderId);
+            Order order = IoC.Resolve<IOrderService>().GetOrderById(this.OrderId);
             BindOrderNotes(order);
         }
 
@@ -776,8 +776,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             }
 
             //buttons
-            btnGetInvoicePDF.Visible = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Features.SupportPDF");
-            btnPrintPdfPackagingSlip.Visible = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Features.SupportPDF");
+            btnGetInvoicePDF.Visible = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Features.SupportPDF");
+            btnPrintPdfPackagingSlip.Visible = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Features.SupportPDF");
         }
         
         protected override void OnPreRender(EventArgs e)
@@ -900,7 +900,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                var order = IoCFactory.Resolve<IOrderService>().GetOrderById(this.OrderId);
+                var order = IoC.Resolve<IOrderService>().GetOrderById(this.OrderId);
                 if (order != null && order.AllowStoringCreditCardNumber)
                 {
                     string cardType = this.txtCardType.Text.Trim();
@@ -913,11 +913,11 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     order.CardType = SecurityHelper.Encrypt(cardType);
                     order.CardName = SecurityHelper.Encrypt(cardName);
                     order.CardNumber = SecurityHelper.Encrypt(cardNumber);
-                    order.CardNumber = SecurityHelper.Encrypt(IoCFactory.Resolve<IPaymentService>().GetMaskedCreditCardNumber(cardNumber));
+                    order.CardNumber = SecurityHelper.Encrypt(IoC.Resolve<IPaymentService>().GetMaskedCreditCardNumber(cardNumber));
                     order.CardCvv2 = SecurityHelper.Encrypt(cardCVV2);
                     order.CardExpirationMonth = SecurityHelper.Encrypt(cardExpirationMonth);
                     order.CardExpirationYear = SecurityHelper.Encrypt(cardExpirationYear);
-                    IoCFactory.Resolve<IOrderService>().UpdateOrder(order);
+                    IoC.Resolve<IOrderService>().UpdateOrder(order);
                 }
 
                 string url = string.Format("{0}OrderDetails.aspx?OrderID={1}&TabID={2}", CommonHelper.GetStoreAdminLocation(), this.OrderId, this.GetActiveTabId(this.OrderTabs));
@@ -933,7 +933,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                IoCFactory.Resolve<IOrderService>().Ship(this.OrderId, true);
+                IoC.Resolve<IOrderService>().Ship(this.OrderId, true);
                 BindData();
             }
             catch (Exception exc)
@@ -946,7 +946,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                IoCFactory.Resolve<IOrderService>().Deliver(this.OrderId, true);
+                IoC.Resolve<IOrderService>().Deliver(this.OrderId, true);
                 BindData();
             }
             catch (Exception exc)
@@ -959,7 +959,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                var order = IoCFactory.Resolve<IOrderService>().GetOrderById(this.OrderId);
+                var order = IoC.Resolve<IOrderService>().GetOrderById(this.OrderId);
                 if (order != null)
                 {
                     string billingFirstName = txtBillingFirstName.Text;
@@ -973,14 +973,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     string billingCity = this.txtBillingCity.Text;
                     int billingCountryId = int.Parse(ddlBillingCountry.SelectedItem.Value);
                     string billingCountryStr = string.Empty;
-                    var billingCountry = IoCFactory.Resolve<ICountryService>().GetCountryById(billingCountryId);
+                    var billingCountry = IoC.Resolve<ICountryService>().GetCountryById(billingCountryId);
                     if (billingCountry != null)
                     {
                         billingCountryStr = billingCountry.Name;
                     }
                     int billingStateProvinceId = int.Parse(ddlBillingStateProvince.SelectedItem.Value);
                     string billingStateProvinceStr = string.Empty;
-                    var billingStateProvince = IoCFactory.Resolve<IStateProvinceService>().GetStateProvinceById(billingStateProvinceId);
+                    var billingStateProvince = IoC.Resolve<IStateProvinceService>().GetStateProvinceById(billingStateProvinceId);
                     if (billingStateProvince != null)
                     {
                         billingStateProvinceStr = billingStateProvince.Name;
@@ -1001,7 +1001,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     order.BillingZipPostalCode = billingZipPostalCode;
                     order.BillingCountry = billingCountryStr;
                     order.BillingCountryId = billingCountryId;
-                    IoCFactory.Resolve<IOrderService>().UpdateOrder(order);
+                    IoC.Resolve<IOrderService>().UpdateOrder(order);
                 }
 
                 string url = string.Format("{0}OrderDetails.aspx?OrderID={1}&TabID={2}", CommonHelper.GetStoreAdminLocation(), this.OrderId, this.GetActiveTabId(this.OrderTabs));
@@ -1017,7 +1017,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                var order = IoCFactory.Resolve<IOrderService>().GetOrderById(this.OrderId);
+                var order = IoC.Resolve<IOrderService>().GetOrderById(this.OrderId);
                 if (order != null)
                 {
                     string shippingFirstName = txtShippingFirstName.Text;
@@ -1031,14 +1031,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     string shippingCity = this.txtShippingCity.Text;
                     int shippingCountryId = int.Parse(ddlShippingCountry.SelectedItem.Value);
                     string shippingCountryStr = string.Empty;
-                    var shippingCountry = IoCFactory.Resolve<ICountryService>().GetCountryById(shippingCountryId);
+                    var shippingCountry = IoC.Resolve<ICountryService>().GetCountryById(shippingCountryId);
                     if (shippingCountry != null)
                     {
                         shippingCountryStr = shippingCountry.Name;
                     }
                     int shippingStateProvinceId = int.Parse(ddlShippingStateProvince.SelectedItem.Value);
                     string shippingStateProvinceStr = string.Empty;
-                    var shippingStateProvince = IoCFactory.Resolve<IStateProvinceService>().GetStateProvinceById(shippingStateProvinceId);
+                    var shippingStateProvince = IoC.Resolve<IStateProvinceService>().GetStateProvinceById(shippingStateProvinceId);
                     if (shippingStateProvince != null)
                     {
                         shippingStateProvinceStr = shippingStateProvince.Name;
@@ -1061,7 +1061,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     order.ShippingCountry = shippingCountryStr;
                     order.ShippingCountryId = shippingCountryId;
 
-                    IoCFactory.Resolve<IOrderService>().UpdateOrder(order);
+                    IoC.Resolve<IOrderService>().UpdateOrder(order);
                 }
 
                 string url = string.Format("{0}OrderDetails.aspx?OrderID={1}&TabID={2}", CommonHelper.GetStoreAdminLocation(), this.OrderId, this.GetActiveTabId(this.OrderTabs));
@@ -1077,7 +1077,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                IoCFactory.Resolve<IOrderService>().CancelOrder(this.OrderId, true);
+                IoC.Resolve<IOrderService>().CancelOrder(this.OrderId, true);
                 BindData();
             }
             catch (Exception exc)
@@ -1090,7 +1090,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                Order order = IoCFactory.Resolve<IOrderService>().GetOrderById(this.OrderId);
+                Order order = IoC.Resolve<IOrderService>().GetOrderById(this.OrderId);
 
                 string fileName = string.Format("order_{0}_{1}.pdf", order.OrderGuid, DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"));
                 string filePath = string.Format("{0}files\\ExportImport\\{1}", HttpContext.Current.Request.PhysicalApplicationPath, fileName);
@@ -1108,7 +1108,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                IoCFactory.Resolve<IOrderService>().MarkOrderAsDeleted(this.OrderId);
+                IoC.Resolve<IOrderService>().MarkOrderAsDeleted(this.OrderId);
                 Response.Redirect("Orders.aspx");
             }
             catch (Exception exc)
@@ -1121,7 +1121,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                var order = IoCFactory.Resolve<IOrderService>().GetOrderById(this.OrderId);
+                var order = IoC.Resolve<IOrderService>().GetOrderById(this.OrderId);
                 if (order != null)
                 {
                     decimal orderSubtotalInclTax = order.OrderSubtotalInclTax;
@@ -1199,7 +1199,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     order.OrderTotalInCustomerCurrency = orderTotalInCustomerCurrency;
                     order.OrderDiscountInCustomerCurrency = orderDiscountInCustomerCurrency;
 
-                    IoCFactory.Resolve<IOrderService>().UpdateOrder(order);
+                    IoC.Resolve<IOrderService>().UpdateOrder(order);
                     BindData();
                 }
             }
@@ -1214,7 +1214,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             try
             {
                 string error = string.Empty;
-                IoCFactory.Resolve<IOrderService>().Capture(this.OrderId, ref error);
+                IoC.Resolve<IOrderService>().Capture(this.OrderId, ref error);
                 if (String.IsNullOrEmpty(error))
                 {
                     BindData();
@@ -1234,7 +1234,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                IoCFactory.Resolve<IOrderService>().MarkOrderAsPaid(this.OrderId);
+                IoC.Resolve<IOrderService>().MarkOrderAsPaid(this.OrderId);
                 BindData();
             }
             catch (Exception exc)
@@ -1248,7 +1248,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             try
             {
                 string error = string.Empty;
-                IoCFactory.Resolve<IOrderService>().Refund(this.OrderId, ref error);
+                IoC.Resolve<IOrderService>().Refund(this.OrderId, ref error);
                 if (String.IsNullOrEmpty(error))
                 {
                     BindData();
@@ -1268,7 +1268,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                IoCFactory.Resolve<IOrderService>().RefundOffline(this.OrderId);
+                IoC.Resolve<IOrderService>().RefundOffline(this.OrderId);
                 BindData();
             }
             catch (Exception exc)
@@ -1282,7 +1282,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             try
             {
                 string error = string.Empty;
-                IoCFactory.Resolve<IOrderService>().Void(this.OrderId, ref error);
+                IoC.Resolve<IOrderService>().Void(this.OrderId, ref error);
                 if (String.IsNullOrEmpty(error))
                 {
                     BindData();
@@ -1302,7 +1302,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                IoCFactory.Resolve<IOrderService>().VoidOffline(this.OrderId);
+                IoC.Resolve<IOrderService>().VoidOffline(this.OrderId);
                 BindData();
             }
             catch (Exception exc)
@@ -1315,11 +1315,11 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                var order = IoCFactory.Resolve<IOrderService>().GetOrderById(this.OrderId);
+                var order = IoC.Resolve<IOrderService>().GetOrderById(this.OrderId);
                 if (order != null)
                 {
                     order.TrackingNumber = txtTrackingNumber.Text.Trim();
-                    IoCFactory.Resolve<IOrderService>().UpdateOrder(order);
+                    IoC.Resolve<IOrderService>().UpdateOrder(order);
                 }
                 BindData();
             }
@@ -1345,7 +1345,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                Order order = IoCFactory.Resolve<IOrderService>().GetOrderById(this.OrderId);
+                Order order = IoC.Resolve<IOrderService>().GetOrderById(this.OrderId);
                 if(order != null)
                 {
                     var orderCollection = new List<Order>();
@@ -1367,14 +1367,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected void BtnBanByCustomerIP_OnClick(object sender, EventArgs e)
         {
-            Order order = IoCFactory.Resolve<IOrderService>().GetOrderById(this.OrderId);
+            Order order = IoC.Resolve<IOrderService>().GetOrderById(this.OrderId);
             if(order != null && !String.IsNullOrEmpty(order.CustomerIP))
             {
                 BannedIpAddress banItem = new BannedIpAddress();
                 banItem.Address = order.CustomerIP;
-                if(!IoCFactory.Resolve<IBlacklistService>().IsIpAddressBanned(banItem))
+                if(!IoC.Resolve<IBlacklistService>().IsIpAddressBanned(banItem))
                 {
-                    IoCFactory.Resolve<IBlacklistService>().InsertBannedIpAddress(
+                    IoC.Resolve<IBlacklistService>().InsertBannedIpAddress(
                         new BannedIpAddress()
                         {
                             Address = order.CustomerIP,
@@ -1396,7 +1396,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                 bool displayToCustomer = cbNewDisplayToCustomer.Checked;
 
-                OrderNote orderNote = IoCFactory.Resolve<IOrderService>().InsertOrderNote(this.OrderId, note, displayToCustomer, DateTime.UtcNow);
+                OrderNote orderNote = IoC.Resolve<IOrderService>().InsertOrderNote(this.OrderId, note, displayToCustomer, DateTime.UtcNow);
                 BindData();
                 txtNewOrderNote.Text = string.Empty;
             }
@@ -1409,7 +1409,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         protected void gvOrderNotes_RowDeleting(object sender, GridViewDeleteEventArgs e)
         {
             int orderNoteId = (int)gvOrderNotes.DataKeys[e.RowIndex]["OrderNoteId"];
-            IoCFactory.Resolve<IOrderService>().DeleteOrderNote(orderNoteId);
+            IoC.Resolve<IOrderService>().DeleteOrderNote(orderNoteId);
             BindOrderNotes();
         }
 
@@ -1423,12 +1423,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 HiddenField hfOrderProductVariantId = row.FindControl("hfOrderProductVariantId") as HiddenField;
 
                 int orderProductVariantId = int.Parse(hfOrderProductVariantId.Value);
-                OrderProductVariant orderProductVariant = IoCFactory.Resolve<IOrderService>().GetOrderProductVariantById(orderProductVariantId);
+                OrderProductVariant orderProductVariant = IoC.Resolve<IOrderService>().GetOrderProductVariantById(orderProductVariantId);
 
                 if (orderProductVariant != null)
                 {
                     orderProductVariant.IsDownloadActivated = !orderProductVariant.IsDownloadActivated;
-                    IoCFactory.Resolve<IOrderService>().UpdateOrderProductVariant(orderProductVariant);
+                    IoC.Resolve<IOrderService>().UpdateOrderProductVariant(orderProductVariant);
                 }
 
             }
@@ -1440,12 +1440,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 HiddenField hfOrderProductVariantId = row.FindControl("hfOrderProductVariantId") as HiddenField;
 
                 int orderProductVariantId = int.Parse(hfOrderProductVariantId.Value);
-                OrderProductVariant orderProductVariant = IoCFactory.Resolve<IOrderService>().GetOrderProductVariantById(orderProductVariantId);
+                OrderProductVariant orderProductVariant = IoC.Resolve<IOrderService>().GetOrderProductVariantById(orderProductVariantId);
 
                 if (orderProductVariant != null)
                 {
                     orderProductVariant.LicenseDownloadId = 0;
-                    IoCFactory.Resolve<IOrderService>().UpdateOrderProductVariant(orderProductVariant);
+                    IoC.Resolve<IOrderService>().UpdateOrderProductVariant(orderProductVariant);
                 }
             }
             else if (e.CommandName == "UploadLicenseDownload")
@@ -1456,7 +1456,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 HiddenField hfOrderProductVariantId = row.FindControl("hfOrderProductVariantId") as HiddenField;
 
                 int orderProductVariantId = int.Parse(hfOrderProductVariantId.Value);
-                OrderProductVariant orderProductVariant = IoCFactory.Resolve<IOrderService>().GetOrderProductVariantById(orderProductVariantId);
+                OrderProductVariant orderProductVariant = IoC.Resolve<IOrderService>().GetOrderProductVariantById(orderProductVariantId);
 
 
                 FileUpload fuLicenseDownload = row.FindControl("fuLicenseDownload") as FileUpload;
@@ -1478,12 +1478,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         Extension = downloadExtension,
                         IsNew = true
                     };
-                    IoCFactory.Resolve<IDownloadService>().InsertDownload(licenseDownload);
+                    IoC.Resolve<IDownloadService>().InsertDownload(licenseDownload);
 
                     if (orderProductVariant != null)
                     {
                         orderProductVariant.LicenseDownloadId = licenseDownload.DownloadId;
-                        IoCFactory.Resolve<IOrderService>().UpdateOrderProductVariant(orderProductVariant);
+                        IoC.Resolve<IOrderService>().UpdateOrderProductVariant(orderProductVariant);
                     }
                 }
             }
@@ -1497,7 +1497,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     HiddenField hfOrderProductVariantId = row.FindControl("hfOrderProductVariantId") as HiddenField;
 
                     int orderProductVariantId = int.Parse(hfOrderProductVariantId.Value);
-                    OrderProductVariant orderProductVariant = IoCFactory.Resolve<IOrderService>().GetOrderProductVariantById(orderProductVariantId);
+                    OrderProductVariant orderProductVariant = IoC.Resolve<IOrderService>().GetOrderProductVariantById(orderProductVariantId);
 
                     TextBox txtPvUnitPriceInclTax = row.FindControl("txtPvUnitPriceInclTax") as TextBox;
                     TextBox txtPvUnitPriceExclTax = row.FindControl("txtPvUnitPriceExclTax") as TextBox;
@@ -1548,11 +1548,11 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         orderProductVariant.Quantity = quantity;
                         orderProductVariant.DiscountAmountInclTax = discountInclTax;
                         orderProductVariant.DiscountAmountExclTax = discountExclTax;
-                        IoCFactory.Resolve<IOrderService>().UpdateOrderProductVariant(orderProductVariant);
+                        IoC.Resolve<IOrderService>().UpdateOrderProductVariant(orderProductVariant);
                     }
                     else
                     {
-                        IoCFactory.Resolve<IOrderService>().DeleteOrderProductVariant(orderProductVariant.OrderProductVariantId);
+                        IoC.Resolve<IOrderService>().DeleteOrderProductVariant(orderProductVariant.OrderProductVariantId);
                     }
                 }
                 catch (Exception exc)
@@ -1571,7 +1571,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                     int orderProductVariantId = int.Parse(hfOrderProductVariantId.Value);
                     
-                    IoCFactory.Resolve<IOrderService>().DeleteOrderProductVariant(orderProductVariantId);
+                    IoC.Resolve<IOrderService>().DeleteOrderProductVariant(orderProductVariantId);
                 }
                 catch (Exception exc)
                 {
@@ -1630,7 +1630,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                             fuLicenseDownload.Visible = false;
                             btnUploadLicenseDownload.Visible = false;
 
-                            hlLicenseDownload.NavigateUrl = IoCFactory.Resolve<IDownloadService>().GetAdminDownloadUrl(licenseDownload);
+                            hlLicenseDownload.NavigateUrl = IoC.Resolve<IDownloadService>().GetAdminDownloadUrl(licenseDownload);
                             btnRemoveLicenseDownload.CommandArgument = e.Row.RowIndex.ToString();
                         }
                         else
@@ -1664,7 +1664,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         protected void FillBillingCountryDropDowns(Order order)
         {
             this.ddlBillingCountry.Items.Clear();
-            var countryCollection = IoCFactory.Resolve<ICountryService>().GetAllCountriesForBilling();
+            var countryCollection = IoC.Resolve<ICountryService>().GetAllCountriesForBilling();
             foreach (var country in countryCollection)
             {
                 ListItem ddlCountryItem2 = new ListItem(country.Name, country.CountryId.ToString());
@@ -1677,7 +1677,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             this.ddlBillingStateProvince.Items.Clear();
             int countryId = int.Parse(this.ddlBillingCountry.SelectedItem.Value);
 
-            var stateProvinces = IoCFactory.Resolve<IStateProvinceService>().GetStateProvincesByCountryId(countryId);
+            var stateProvinces = IoC.Resolve<IStateProvinceService>().GetStateProvincesByCountryId(countryId);
             foreach (StateProvince stateProvince in stateProvinces)
             {
                 ListItem ddlStateProviceItem2 = new ListItem(stateProvince.Name, stateProvince.StateProvinceId.ToString());
@@ -1698,7 +1698,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         protected void FillShippingCountryDropDowns(Order order)
         {
             this.ddlShippingCountry.Items.Clear();
-            var countryCollection = IoCFactory.Resolve<ICountryService>().GetAllCountriesForShipping();
+            var countryCollection = IoC.Resolve<ICountryService>().GetAllCountriesForShipping();
             foreach (var country in countryCollection)
             {
                 ListItem ddlCountryItem2 = new ListItem(country.Name, country.CountryId.ToString());
@@ -1711,7 +1711,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             this.ddlShippingStateProvince.Items.Clear();
             int countryId = int.Parse(this.ddlShippingCountry.SelectedItem.Value);
 
-            var stateProvinces = IoCFactory.Resolve<IStateProvinceService>().GetStateProvincesByCountryId(countryId);
+            var stateProvinces = IoC.Resolve<IStateProvinceService>().GetStateProvincesByCountryId(countryId);
             foreach (StateProvince stateProvince in stateProvinces)
             {
                 ListItem ddlStateProviceItem2 = new ListItem(stateProvince.Name, stateProvince.StateProvinceId.ToString());
@@ -1732,7 +1732,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         public string GetProductUrl(int productVariantId)
         {
             string result = string.Empty;
-            ProductVariant productVariant = IoCFactory.Resolve<IProductService>().GetProductVariantById(productVariantId);
+            ProductVariant productVariant = IoC.Resolve<IProductService>().GetProductVariantById(productVariantId);
             if (productVariant != null)
                 result = "ProductVariantDetails.aspx?ProductVariantID=" + productVariant.ProductVariantId.ToString();
             else
@@ -1742,7 +1742,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public string GetProductVariantName(int productVariantId)
         {
-            ProductVariant productVariant = IoCFactory.Resolve<IProductService>().GetProductVariantById(productVariantId);
+            ProductVariant productVariant = IoC.Resolve<IProductService>().GetProductVariantById(productVariantId);
             if (productVariant != null)
                 return productVariant.FullProductName;
             return "Not available. ID=" + productVariantId.ToString();
@@ -1771,7 +1771,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         public string GetReturnRequests(OrderProductVariant opv)
         {
             string result = string.Empty;
-            var returnRequests = IoCFactory.Resolve<IOrderService>().SearchReturnRequests(0, opv.OrderProductVariantId, null);
+            var returnRequests = IoC.Resolve<IOrderService>().SearchReturnRequests(0, opv.OrderProductVariantId, null);
             if (returnRequests.Count > 0)
             {
                 string Ids = string.Empty;
@@ -1804,7 +1804,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 {
                     Download download = productVariant.Download;
                     if (download != null)
-                        result = string.Format("<a href=\"{0}\" >{1}</a>", IoCFactory.Resolve<IDownloadService>().GetAdminDownloadUrl(download), GetLocaleResourceString("Admin.OrderDetails.Products.Download"));
+                        result = string.Format("<a href=\"{0}\" >{1}</a>", IoC.Resolve<IDownloadService>().GetAdminDownloadUrl(download), GetLocaleResourceString("Admin.OrderDetails.Products.Download"));
                     else
                         result = "Not available anymore";
                 }
@@ -1819,10 +1819,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             string result = string.Empty;
 
             Order order = orderProductVariant.Order;
-            if (IoCFactory.Resolve<ITaxService>().AllowCustomersToSelectTaxDisplayType)
+            if (IoC.Resolve<ITaxService>().AllowCustomersToSelectTaxDisplayType)
             {
-                string unitPriceInclTaxStr = PriceHelper.FormatPrice(orderProductVariant.UnitPriceInclTax, true, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingLanguage, true, true);
-                string unitPriceExclTaxStr = PriceHelper.FormatPrice(orderProductVariant.UnitPriceExclTax, true, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingLanguage, false, true);
+                string unitPriceInclTaxStr = PriceHelper.FormatPrice(orderProductVariant.UnitPriceInclTax, true, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingLanguage, true, true);
+                string unitPriceExclTaxStr = PriceHelper.FormatPrice(orderProductVariant.UnitPriceExclTax, true, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingLanguage, false, true);
 
                 result = unitPriceInclTaxStr;
                 result += "<br />";
@@ -1830,17 +1830,17 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             }
             else
             {
-                switch (IoCFactory.Resolve<ITaxService>().TaxDisplayType)
+                switch (IoC.Resolve<ITaxService>().TaxDisplayType)
                 {
                     case TaxDisplayTypeEnum.ExcludingTax:
                         {
-                            string unitPriceExclTaxStr = PriceHelper.FormatPrice(orderProductVariant.UnitPriceExclTax, true, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingLanguage, false);
+                            string unitPriceExclTaxStr = PriceHelper.FormatPrice(orderProductVariant.UnitPriceExclTax, true, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingLanguage, false);
                             result += unitPriceExclTaxStr;
                         }
                         break;
                     case TaxDisplayTypeEnum.IncludingTax:
                         {
-                            string unitPriceInclTaxStr = PriceHelper.FormatPrice(orderProductVariant.UnitPriceInclTax, true, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingLanguage, true);
+                            string unitPriceInclTaxStr = PriceHelper.FormatPrice(orderProductVariant.UnitPriceInclTax, true, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingLanguage, true);
                             result = unitPriceInclTaxStr;
                         }
                         break;
@@ -1857,10 +1857,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             string result = string.Empty;
 
             Order order = orderProductVariant.Order;
-            if (IoCFactory.Resolve<ITaxService>().AllowCustomersToSelectTaxDisplayType)
+            if (IoC.Resolve<ITaxService>().AllowCustomersToSelectTaxDisplayType)
             {
-                string discountAmountInclTaxStr = PriceHelper.FormatPrice(orderProductVariant.DiscountAmountInclTax, true, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingLanguage, true, true);
-                string discountAmountExclTaxStr = PriceHelper.FormatPrice(orderProductVariant.DiscountAmountExclTax, true, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingLanguage, false, true);
+                string discountAmountInclTaxStr = PriceHelper.FormatPrice(orderProductVariant.DiscountAmountInclTax, true, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingLanguage, true, true);
+                string discountAmountExclTaxStr = PriceHelper.FormatPrice(orderProductVariant.DiscountAmountExclTax, true, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingLanguage, false, true);
 
                 result = discountAmountInclTaxStr;
                 result += "<br />";
@@ -1868,17 +1868,17 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             }
             else
             {
-                switch (IoCFactory.Resolve<ITaxService>().TaxDisplayType)
+                switch (IoC.Resolve<ITaxService>().TaxDisplayType)
                 {
                     case TaxDisplayTypeEnum.ExcludingTax:
                         {
-                            string discountAmountExclTaxStr = PriceHelper.FormatPrice(orderProductVariant.DiscountAmountExclTax, true, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingLanguage, false);
+                            string discountAmountExclTaxStr = PriceHelper.FormatPrice(orderProductVariant.DiscountAmountExclTax, true, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingLanguage, false);
                             result += discountAmountExclTaxStr;
                         }
                         break;
                     case TaxDisplayTypeEnum.IncludingTax:
                         {
-                            string discountAmountInclTaxStr = PriceHelper.FormatPrice(orderProductVariant.DiscountAmountInclTax, true, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingLanguage, true);
+                            string discountAmountInclTaxStr = PriceHelper.FormatPrice(orderProductVariant.DiscountAmountInclTax, true, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingLanguage, true);
                             result = discountAmountInclTaxStr;
                         }
                         break;
@@ -1895,10 +1895,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             string result = string.Empty;
 
             Order order = orderProductVariant.Order;
-            if (IoCFactory.Resolve<ITaxService>().AllowCustomersToSelectTaxDisplayType)
+            if (IoC.Resolve<ITaxService>().AllowCustomersToSelectTaxDisplayType)
             {
-                string subTotalInclTaxStr = PriceHelper.FormatPrice(orderProductVariant.PriceInclTax, true, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingLanguage, true, true);
-                string subTotalExclTaxStr = PriceHelper.FormatPrice(orderProductVariant.PriceExclTax, true, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingLanguage, false, true);
+                string subTotalInclTaxStr = PriceHelper.FormatPrice(orderProductVariant.PriceInclTax, true, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingLanguage, true, true);
+                string subTotalExclTaxStr = PriceHelper.FormatPrice(orderProductVariant.PriceExclTax, true, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingLanguage, false, true);
 
                 result = subTotalInclTaxStr;
                 result += "<br />";
@@ -1906,17 +1906,17 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             }
             else
             {
-                switch (IoCFactory.Resolve<ITaxService>().TaxDisplayType)
+                switch (IoC.Resolve<ITaxService>().TaxDisplayType)
                 {
                     case TaxDisplayTypeEnum.ExcludingTax:
                         {
-                            string subTotalExclTaxStr = PriceHelper.FormatPrice(orderProductVariant.PriceExclTax, true, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingLanguage, false);
+                            string subTotalExclTaxStr = PriceHelper.FormatPrice(orderProductVariant.PriceExclTax, true, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingLanguage, false);
                             result += subTotalExclTaxStr;
                         }
                         break;
                     case TaxDisplayTypeEnum.IncludingTax:
                         {
-                            string subTotalInclTaxStr = PriceHelper.FormatPrice(orderProductVariant.PriceInclTax, true, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingLanguage, true);
+                            string subTotalInclTaxStr = PriceHelper.FormatPrice(orderProductVariant.PriceInclTax, true, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingLanguage, true);
                             result = subTotalInclTaxStr;
                         }
                         break;

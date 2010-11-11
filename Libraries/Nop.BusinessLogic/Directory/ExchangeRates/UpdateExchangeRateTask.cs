@@ -21,7 +21,7 @@ using System.Xml;
 using NopSolutions.NopCommerce.BusinessLogic.Audit;
 using NopSolutions.NopCommerce.BusinessLogic.Tasks;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Directory.ExchangeRates
 {
@@ -36,30 +36,30 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory.ExchangeRates
         /// <param name="node">Xml node that represents a task description</param>
         public void Execute(XmlNode node)
         {
-            if (!IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("ExchangeRateProvider.AutoUpdateEnabled", false))
+            if (!IoC.Resolve<ISettingManager>().GetSettingValueBoolean("ExchangeRateProvider.AutoUpdateEnabled", false))
                 return;
 
-            long lastUpdateTimeTicks = IoCFactory.Resolve<ISettingManager>().GetSettingValueLong("ExchangeRateProvider.LastUpdateTime", 0);
+            long lastUpdateTimeTicks = IoC.Resolve<ISettingManager>().GetSettingValueLong("ExchangeRateProvider.LastUpdateTime", 0);
             DateTime lastUpdateTime = DateTime.FromBinary(lastUpdateTimeTicks);
             lastUpdateTime = DateTime.SpecifyKind(lastUpdateTime, DateTimeKind.Utc);
             if (lastUpdateTime.AddHours(1) < DateTime.UtcNow)
             {
                 //update rates each one hour
-                var exchangeRates = IoCFactory.Resolve<ICurrencyService>().GetCurrencyLiveRates(IoCFactory.Resolve<ICurrencyService>().PrimaryExchangeRateCurrency.CurrencyCode);
+                var exchangeRates = IoC.Resolve<ICurrencyService>().GetCurrencyLiveRates(IoC.Resolve<ICurrencyService>().PrimaryExchangeRateCurrency.CurrencyCode);
 
                 foreach (var exchageRate in exchangeRates)
                 {
-                    Currency currency = IoCFactory.Resolve<ICurrencyService>().GetCurrencyByCode(exchageRate.CurrencyCode);
+                    Currency currency = IoC.Resolve<ICurrencyService>().GetCurrencyByCode(exchageRate.CurrencyCode);
                     if (currency != null)
                     {
                         currency.Rate = exchageRate.Rate;
                         currency.UpdatedOn = DateTime.UtcNow;
-                        IoCFactory.Resolve<ICurrencyService>().UpdateCurrency(currency);
+                        IoC.Resolve<ICurrencyService>().UpdateCurrency(currency);
                     }
                 }
 
                 //save new update time value
-                IoCFactory.Resolve<ISettingManager>().SetParam("ExchangeRateProvider.LastUpdateTime", DateTime.UtcNow.ToBinary().ToString());
+                IoC.Resolve<ISettingManager>().SetParam("ExchangeRateProvider.LastUpdateTime", DateTime.UtcNow.ToBinary().ToString());
             }
         }
     }

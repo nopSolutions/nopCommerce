@@ -20,7 +20,7 @@ using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.BusinessLogic.Tax;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Tax
 {
@@ -83,7 +83,7 @@ namespace NopSolutions.NopCommerce.Tax
                 StateProvinceID = address.StateProvince.StateProvinceId;
             }
             decimal tr = decimal.Zero;
-            var taxRates = IoCFactory.Resolve<ITaxRateService>().GetAllTaxRates(taxCategoryID, CountryID, StateProvinceID, address.ZipPostalCode);
+            var taxRates = IoC.Resolve<ITaxRateService>().GetAllTaxRates(taxCategoryID, CountryID, StateProvinceID, address.ZipPostalCode);
             if (taxRates.Count > 0)
                 tr += taxRates[0].Percentage;
             return tr;

@@ -26,7 +26,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Content.Polls;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Web.Administration.Modules;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -75,7 +75,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                IoCFactory.Resolve<IPollService>().DeletePoll(this.PollId);
+                IoC.Resolve<IPollService>().DeletePoll(this.PollId);
                 Response.Redirect("Polls.aspx");
             }
             catch (Exception exc)

@@ -29,7 +29,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Controls;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 
 namespace NopSolutions.NopCommerce.Web.Modules
@@ -48,7 +48,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
         {
             //get all tags
             int maxItems = 15;
-            var productTags = IoCFactory.Resolve<IProductService>().GetAllProductTags(0, string.Empty);
+            var productTags = IoC.Resolve<IProductService>().GetAllProductTags(0, string.Empty);
             List<ProductTag> cloudItems = new List<ProductTag>();
             for (int i = 0; i < productTags.Count; i++)
             {

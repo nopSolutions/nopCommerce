@@ -40,7 +40,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Tax;
 using NopSolutions.NopCommerce.BusinessLogic.Utils;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Payment.Methods.GoogleCheckout
 {
@@ -55,7 +55,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.GoogleCheckout
         {
             try
             {
-                if (!IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.GoogleCheckout.DebugModeEnabled"))
+                if (!IoC.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.GoogleCheckout.DebugModeEnabled"))
                     return;
                 message = string.Format("{0}*******{1}{2}", DateTime.Now, Environment.NewLine, message);
                 string logPath = HttpContext.Current.Server.MapPath("google/google_log.txt");
@@ -67,7 +67,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.GoogleCheckout
             }
             catch (Exception exc)
             {
-                IoCFactory.Resolve<ILogService>().InsertLog(LogTypeEnum.CommonError, exc.Message, exc);
+                IoC.Resolve<ILogService>().InsertLog(LogTypeEnum.CommonError, exc.Message, exc);
             }
         }
 
@@ -82,9 +82,9 @@ namespace NopSolutions.NopCommerce.Payment.Methods.GoogleCheckout
                 int CustomerID = Convert.ToInt32(CustomerInfo.Attributes["CustomerID"].Value);
                 int CustomerLanguageID = Convert.ToInt32(CustomerInfo.Attributes["CustomerLanguageID"].Value);
                 int CustomerCurrencyID = Convert.ToInt32(CustomerInfo.Attributes["CustomerCurrencyID"].Value);
-                Customer customer = IoCFactory.Resolve<ICustomerService>().GetCustomerById(CustomerID);
+                Customer customer = IoC.Resolve<ICustomerService>().GetCustomerById(CustomerID);
 
-                NopSolutions.NopCommerce.BusinessLogic.Orders.ShoppingCart Cart = IoCFactory.Resolve<IShoppingCartService>().GetCustomerShoppingCart(customer.CustomerId, ShoppingCartTypeEnum.ShoppingCart);
+                NopSolutions.NopCommerce.BusinessLogic.Orders.ShoppingCart Cart = IoC.Resolve<IShoppingCartService>().GetCustomerShoppingCart(customer.CustomerId, ShoppingCartTypeEnum.ShoppingCart);
 
                 if (customer == null)
                 {
@@ -135,12 +135,12 @@ namespace NopSolutions.NopCommerce.Payment.Methods.GoogleCheckout
                 string billingPhoneNumber = newOrderNotification.buyerbillingaddress.phone.Trim();
                 string billingCity = newOrderNotification.buyerbillingaddress.city.Trim();
                 int billingStateProvinceID = 0;
-                StateProvince billingStateProvince = IoCFactory.Resolve<IStateProvinceService>().GetStateProvinceByAbbreviation(newOrderNotification.buyerbillingaddress.region.Trim());
+                StateProvince billingStateProvince = IoC.Resolve<IStateProvinceService>().GetStateProvinceByAbbreviation(newOrderNotification.buyerbillingaddress.region.Trim());
                 if (billingStateProvince != null)
                     billingStateProvinceID = billingStateProvince.StateProvinceId;
                 string billingZipPostalCode = newOrderNotification.buyerbillingaddress.postalcode.Trim();
                 int billingCountryID = 0;
-                Country billingCountry = IoCFactory.Resolve<ICountryService>().GetCountryByTwoLetterIsoCode(newOrderNotification.buyerbillingaddress.countrycode.Trim());
+                Country billingCountry = IoC.Resolve<ICountryService>().GetCountryByTwoLetterIsoCode(newOrderNotification.buyerbillingaddress.countrycode.Trim());
                 if (billingCountry != null)
                     billingCountryID = billingCountry.CountryId;
 
@@ -168,15 +168,15 @@ namespace NopSolutions.NopCommerce.Payment.Methods.GoogleCheckout
                         CreatedOn = DateTime.UtcNow,
                         UpdatedOn = DateTime.UtcNow
                     };
-                    IoCFactory.Resolve<ICustomerService>().InsertAddress(billingAddress);
+                    IoC.Resolve<ICustomerService>().InsertAddress(billingAddress);
                 }
                 //set default billing address
                 customer.BillingAddressId = billingAddress.AddressId;
-                IoCFactory.Resolve<ICustomerService>().UpdateCustomer(customer);
+                IoC.Resolve<ICustomerService>().UpdateCustomer(customer);
 
                 NopSolutions.NopCommerce.BusinessLogic.CustomerManagement.Address shippingAddress = null;
                 customer.LastShippingOption = null;
-                bool shoppingCartRequiresShipping = IoCFactory.Resolve<IShippingService>().ShoppingCartRequiresShipping(Cart);
+                bool shoppingCartRequiresShipping = IoC.Resolve<IShippingService>().ShoppingCartRequiresShipping(Cart);
                 if (shoppingCartRequiresShipping)
                 {
                     string[] shippingFullname = newOrderNotification.buyershippingaddress.contactname.Trim().Split(new char[] { ' ' }, 2, StringSplitOptions.RemoveEmptyEntries);
@@ -190,12 +190,12 @@ namespace NopSolutions.NopCommerce.Payment.Methods.GoogleCheckout
                     string shippingPhoneNumber = newOrderNotification.buyershippingaddress.phone.Trim();
                     string shippingCity = newOrderNotification.buyershippingaddress.city.Trim();
                     int shippingStateProvinceID = 0;
-                    StateProvince shippingStateProvince = IoCFactory.Resolve<IStateProvinceService>().GetStateProvinceByAbbreviation(newOrderNotification.buyershippingaddress.region.Trim());
+                    StateProvince shippingStateProvince = IoC.Resolve<IStateProvinceService>().GetStateProvinceByAbbreviation(newOrderNotification.buyershippingaddress.region.Trim());
                     if (shippingStateProvince != null)
                         shippingStateProvinceID = shippingStateProvince.StateProvinceId;
                     int shippingCountryID = 0;
                     string shippingZipPostalCode = newOrderNotification.buyershippingaddress.postalcode.Trim();
-                    Country shippingCountry = IoCFactory.Resolve<ICountryService>().GetCountryByTwoLetterIsoCode(newOrderNotification.buyershippingaddress.countrycode.Trim());
+                    Country shippingCountry = IoC.Resolve<ICountryService>().GetCountryByTwoLetterIsoCode(newOrderNotification.buyershippingaddress.countrycode.Trim());
                     if (shippingCountry != null)
                         shippingCountryID = shippingCountry.CountryId;
 
@@ -223,11 +223,11 @@ namespace NopSolutions.NopCommerce.Payment.Methods.GoogleCheckout
                             CreatedOn = DateTime.UtcNow,
                             UpdatedOn = DateTime.UtcNow
                         };
-                        IoCFactory.Resolve<ICustomerService>().InsertAddress(shippingAddress);
+                        IoC.Resolve<ICustomerService>().InsertAddress(shippingAddress);
                     }
                     //set default shipping address
                     customer.ShippingAddressId =  shippingAddress.AddressId;
-                    IoCFactory.Resolve<ICustomerService>().UpdateCustomer(customer);
+                    IoC.Resolve<ICustomerService>().UpdateCustomer(customer);
 
                     string shippingMethod = string.Empty;
                     decimal shippingCost = decimal.Zero;
@@ -249,24 +249,24 @@ namespace NopSolutions.NopCommerce.Payment.Methods.GoogleCheckout
 
                 //customer.LastCalculatedTax = decimal.Zero;
 
-                PaymentMethod googleCheckoutPaymentMethod = IoCFactory.Resolve<IPaymentService>().GetPaymentMethodBySystemKeyword("GoogleCheckout");
+                PaymentMethod googleCheckoutPaymentMethod = IoC.Resolve<IPaymentService>().GetPaymentMethodBySystemKeyword("GoogleCheckout");
 
                 PaymentInfo paymentInfo = new PaymentInfo();
                 paymentInfo.PaymentMethodId = googleCheckoutPaymentMethod.PaymentMethodId;
                 paymentInfo.BillingAddress = billingAddress;
                 paymentInfo.ShippingAddress = shippingAddress;
-                paymentInfo.CustomerLanguage = IoCFactory.Resolve<ILanguageService>().GetLanguageById(CustomerLanguageID);
-                paymentInfo.CustomerCurrency = IoCFactory.Resolve<ICurrencyService>().GetCurrencyById(CustomerCurrencyID);
+                paymentInfo.CustomerLanguage = IoC.Resolve<ILanguageService>().GetLanguageById(CustomerLanguageID);
+                paymentInfo.CustomerCurrency = IoC.Resolve<ICurrencyService>().GetCurrencyById(CustomerCurrencyID);
                 paymentInfo.GoogleOrderNumber = googleOrderNumber;
                 int orderID = 0;
-                string result = IoCFactory.Resolve<IOrderService>().PlaceOrder(paymentInfo, customer, out orderID);
+                string result = IoC.Resolve<IOrderService>().PlaceOrder(paymentInfo, customer, out orderID);
                 if (!String.IsNullOrEmpty(result))
                 {
                     logMessage("new-order-notification received. CreateOrder() error: Order Number " + orderID + ". " + result);
                     return;
                 }
 
-                Order order = IoCFactory.Resolve<IOrderService>().GetOrderById(orderID);
+                Order order = IoC.Resolve<IOrderService>().GetOrderById(orderID);
                 logMessage("new-order-notification received and saved: Order Number " + orderID);
 
             }
@@ -287,7 +287,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.GoogleCheckout
                 {
                     string message = string.Format("Order status {0} from Google: Order Number {1}", orderState, changeOrder.googleordernumber);
                     logMessage(message);
-                    IoCFactory.Resolve<IOrderService>().InsertOrderNote(order.OrderId, message, false, DateTime.UtcNow);
+                    IoC.Resolve<IOrderService>().InsertOrderNote(order.OrderId, message, false, DateTime.UtcNow);
 
                     if (orderState == FinancialOrderState.CHARGING ||
                         orderState == FinancialOrderState.REVIEWING)
@@ -296,15 +296,15 @@ namespace NopSolutions.NopCommerce.Payment.Methods.GoogleCheckout
 
                     if (orderState == FinancialOrderState.CHARGEABLE)
                     {
-                        order = IoCFactory.Resolve<IOrderService>().MarkAsAuthorized(order.OrderId);
+                        order = IoC.Resolve<IOrderService>().MarkAsAuthorized(order.OrderId);
                     }
                     if (orderState == FinancialOrderState.CHARGED)
                     {
-                        order = IoCFactory.Resolve<IOrderService>().MarkOrderAsPaid(order.OrderId);
+                        order = IoC.Resolve<IOrderService>().MarkOrderAsPaid(order.OrderId);
                     }
                     if (orderState == FinancialOrderState.CANCELLED || orderState == FinancialOrderState.CANCELLED_BY_GOOGLE)
                     {
-                        order = IoCFactory.Resolve<IOrderService>().CancelOrder(order.OrderId, true);
+                        order = IoC.Resolve<IOrderService>().CancelOrder(order.OrderId, true);
                     }
                 }
             }
@@ -351,7 +351,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.GoogleCheckout
             Order order = getMerchantOrderByGoogleOrderID(riskInformationNotification.googleordernumber);
             if (order != null)
             {
-                IoCFactory.Resolve<IOrderService>().InsertOrderNote(order.OrderId, message, false, DateTime.UtcNow);
+                IoC.Resolve<IOrderService>().InsertOrderNote(order.OrderId, message, false, DateTime.UtcNow);
             }
         }
         private Order getMerchantOrderByGoogleOrderID(string GoogleOrderID)
@@ -359,11 +359,11 @@ namespace NopSolutions.NopCommerce.Payment.Methods.GoogleCheckout
             if (String.IsNullOrEmpty(GoogleOrderID))
                 return null;
 
-            PaymentMethod googleCheckoutPaymentMethod = IoCFactory.Resolve<IPaymentService>().GetPaymentMethodBySystemKeyword("GoogleCheckout");
+            PaymentMethod googleCheckoutPaymentMethod = IoC.Resolve<IPaymentService>().GetPaymentMethodBySystemKeyword("GoogleCheckout");
             if (googleCheckoutPaymentMethod == null)
                 return null;
 
-            return IoCFactory.Resolve<IOrderService>().GetOrderByAuthorizationTransactionIdAndPaymentMethodId(GoogleOrderID, googleCheckoutPaymentMethod.PaymentMethodId);
+            return IoC.Resolve<IOrderService>().GetOrderByAuthorizationTransactionIdAndPaymentMethodId(GoogleOrderID, googleCheckoutPaymentMethod.PaymentMethodId);
         }
 
         #endregion
@@ -481,30 +481,30 @@ namespace NopSolutions.NopCommerce.Payment.Methods.GoogleCheckout
                     decimal taxRate = decimal.Zero;
                     string description = ProductAttributeHelper.FormatAttributes(productVariant, sci.AttributesXml, NopContext.Current.User, ", ", false);
                     string fullName = productVariant.LocalizedFullProductName;
-                    decimal unitPrice = IoCFactory.Resolve<ITaxService>().GetPrice(sci.ProductVariant, PriceHelper.GetUnitPrice(sci, NopContext.Current.User, true), out taxRate);
+                    decimal unitPrice = IoC.Resolve<ITaxService>().GetPrice(sci.ProductVariant, PriceHelper.GetUnitPrice(sci, NopContext.Current.User, true), out taxRate);
                     req.AddItem(fullName, description, sci.ShoppingCartItemId.ToString(), unitPrice, sci.Quantity);
                 }
             }
 
 
-            bool shoppingCartRequiresShipping = IoCFactory.Resolve<IShippingService>().ShoppingCartRequiresShipping(cart);
+            bool shoppingCartRequiresShipping = IoC.Resolve<IShippingService>().ShoppingCartRequiresShipping(cart);
             if (shoppingCartRequiresShipping)
             {
                 string shippingError = string.Empty;
                 //AddMerchantCalculatedShippingMethod
                 //AddCarrierCalculatedShippingOption
-                List<ShippingOption> shippingOptions = IoCFactory.Resolve<IShippingService>().GetShippingOptions(cart, NopContext.Current.User, null, ref shippingError);
+                List<ShippingOption> shippingOptions = IoC.Resolve<IShippingService>().GetShippingOptions(cart, NopContext.Current.User, null, ref shippingError);
                 foreach (ShippingOption shippingOption in shippingOptions)
-                    req.AddFlatRateShippingMethod(shippingOption.Name, IoCFactory.Resolve<ITaxService>().GetShippingPrice(shippingOption.Rate, NopContext.Current.User));
+                    req.AddFlatRateShippingMethod(shippingOption.Name, IoC.Resolve<ITaxService>().GetShippingPrice(shippingOption.Rate, NopContext.Current.User));
             }
 
             //add only US, GB states
-            //CountryCollection countries = IoCFactory.Resolve<ICountryService>().GetAllCountries();                
+            //CountryCollection countries = IoC.Resolve<ICountryService>().GetAllCountries();                
             //foreach (Country country in countries)
             //{
             //    foreach (StateProvince state in country.StateProvinces)
             //    {
-            //        TaxByStateProvinceCollection taxByStateProvinceCollection = TaxByIoCFactory.Resolve<IStateProvinceService>().GetAllByStateProvinceID(state.StateProvinceID);
+            //        TaxByStateProvinceCollection taxByStateProvinceCollection = TaxByIoC.Resolve<IStateProvinceService>().GetAllByStateProvinceID(state.StateProvinceID);
             //        foreach (TaxByStateProvince taxByStateProvince in taxByStateProvinceCollection)
             //        {
             //            if (!String.IsNullOrEmpty(state.Abbreviation))

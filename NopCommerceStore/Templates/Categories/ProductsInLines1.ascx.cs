@@ -34,7 +34,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Media;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 
 namespace NopSolutions.NopCommerce.Web.Templates.Categories
@@ -52,7 +52,7 @@ namespace NopSolutions.NopCommerce.Web.Templates.Categories
 
         protected void FillDropDowns()
         {
-            if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Common.AllowProductSorting"))
+            if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Common.AllowProductSorting"))
             {
                 ddlSorting.Items.Clear();
 
@@ -74,16 +74,16 @@ namespace NopSolutions.NopCommerce.Web.Templates.Categories
 
         protected void BindData()
         {
-            var category = IoCFactory.Resolve<ICategoryService>().GetCategoryById(this.CategoryId);
+            var category = IoC.Resolve<ICategoryService>().GetCategoryById(this.CategoryId);
 
             //breadcrumb
-            rptrCategoryBreadcrumb.DataSource = IoCFactory.Resolve<ICategoryService>().GetBreadCrumb(this.CategoryId);
+            rptrCategoryBreadcrumb.DataSource = IoC.Resolve<ICategoryService>().GetBreadCrumb(this.CategoryId);
             rptrCategoryBreadcrumb.DataBind();
 
             lDescription.Text = category.LocalizedDescription;
 
             //subcategories
-            var subCategories = IoCFactory.Resolve<ICategoryService>().GetAllCategoriesByParentCategoryId(category.CategoryId);
+            var subCategories = IoC.Resolve<ICategoryService>().GetAllCategoriesByParentCategoryId(category.CategoryId);
             if (subCategories.Count > 0)
             {
                 dlSubCategories.DataSource = subCategories;
@@ -125,13 +125,13 @@ namespace NopSolutions.NopCommerce.Web.Templates.Categories
                 minPrice = ctrlPriceRangeFilter.SelectedPriceRange.From;
                 if (minPrice.HasValue)
                 {
-                    minPriceConverted = IoCFactory.Resolve<ICurrencyService>().ConvertCurrency(minPrice.Value, NopContext.Current.WorkingCurrency, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency);
+                    minPriceConverted = IoC.Resolve<ICurrencyService>().ConvertCurrency(minPrice.Value, NopContext.Current.WorkingCurrency, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency);
                 }
 
                 maxPrice = ctrlPriceRangeFilter.SelectedPriceRange.To;
                 if (maxPrice.HasValue)
                 {
-                    maxPriceConverted = IoCFactory.Resolve<ICurrencyService>().ConvertCurrency(maxPrice.Value, NopContext.Current.WorkingCurrency, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency);
+                    maxPriceConverted = IoC.Resolve<ICurrencyService>().ConvertCurrency(maxPrice.Value, NopContext.Current.WorkingCurrency, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency);
                 }
             }
 
@@ -140,13 +140,13 @@ namespace NopSolutions.NopCommerce.Web.Templates.Categories
 
             //sorting
             ProductSortingEnum orderBy = ProductSortingEnum.Position;
-            if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Common.AllowProductSorting"))
+            if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Common.AllowProductSorting"))
             {
                 CommonHelper.SelectListItem(this.ddlSorting, CommonHelper.QueryStringInt("orderby"));
                 orderBy = (ProductSortingEnum)Enum.ToObject(typeof(ProductSortingEnum), int.Parse(ddlSorting.SelectedItem.Value));
             }
 
-            var productCollection = IoCFactory.Resolve<IProductService>().GetAllProducts(this.CategoryId,
+            var productCollection = IoC.Resolve<IProductService>().GetAllProducts(this.CategoryId,
                 0, 0, false, minPriceConverted, maxPriceConverted,
                 string.Empty, false, pageSize, this.CurrentPageIndex, 
                 psoFilterOption, orderBy, out totalRecords);
@@ -205,7 +205,7 @@ namespace NopSolutions.NopCommerce.Web.Templates.Categories
                 var hlImageLink = e.Item.FindControl("hlImageLink") as HyperLink;
                 if (hlImageLink != null)
                 {
-                    hlImageLink.ImageUrl = IoCFactory.Resolve<IPictureService>().GetPictureUrl(category.PictureId, IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.Category.ThumbnailImageSize", 125), true);
+                    hlImageLink.ImageUrl = IoC.Resolve<IPictureService>().GetPictureUrl(category.PictureId, IoC.Resolve<ISettingManager>().GetSettingValueInteger("Media.Category.ThumbnailImageSize", 125), true);
                     hlImageLink.NavigateUrl = categoryURL;
                     hlImageLink.ToolTip = String.Format(GetLocaleResourceString("Media.Category.ImageLinkTitleFormat"), category.LocalizedName);
                     hlImageLink.Text = String.Format(GetLocaleResourceString("Media.Category.ImageAlternateTextFormat"), category.LocalizedName);

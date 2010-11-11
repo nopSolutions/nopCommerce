@@ -35,7 +35,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Products.Specs;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.BusinessLogic.Tax;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -47,7 +47,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void btnClearCompareProductsList_Click(object sender, EventArgs e)
         {
-            IoCFactory.Resolve<IProductService>().ClearCompareProducts();
+            IoC.Resolve<IProductService>().ClearCompareProducts();
             Page.Response.Redirect(CommonHelper.GetStoreLocation());
         }
 
@@ -71,7 +71,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
         {
             if (e.CommandName == "Remove")
             {
-                IoCFactory.Resolve<IProductService>().RemoveProductFromCompareList(Convert.ToInt32(e.CommandArgument));
+                IoC.Resolve<IProductService>().RemoveProductFromCompareList(Convert.ToInt32(e.CommandArgument));
                 Page.Response.Redirect("~/compareproducts.aspx");
             }
         }
@@ -88,7 +88,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
         {
             this.tblCompareProducts.Rows.Clear();
             this.tblCompareProducts.Width = "100%";
-            var compareProducts = IoCFactory.Resolve<IProductService>().GetCompareProducts();
+            var compareProducts = IoC.Resolve<IProductService>().GetCompareProducts();
             if (compareProducts.Count > 0)
             {
                 var headerRow = new HtmlTableRow();
@@ -104,7 +104,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 var specificationAttributeIds = new List<int>();
                 foreach (var product in compareProducts)
                 {
-                    var productSpecificationAttributes = IoCFactory.Resolve<ISpecificationAttributeService>().GetProductSpecificationAttributesByProductId(product.ProductId, null, true);
+                    var productSpecificationAttributes = IoC.Resolve<ISpecificationAttributeService>().GetProductSpecificationAttributesByProductId(product.ProductId, null, true);
                     foreach (var attribute in productSpecificationAttributes)
                         if (!specificationAttributeIds.Contains(attribute.SpecificationAttribute.SpecificationAttributeId))
                             specificationAttributeIds.Add(attribute.SpecificationAttribute.SpecificationAttributeId);
@@ -136,9 +136,9 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     productImage.Alt = "Product image";
                     var picture = product.DefaultPicture;
                     if (picture != null)
-                        productImage.Src = IoCFactory.Resolve<IPictureService>().GetPictureUrl(picture, IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.Product.ThumbnailImageSize", 125), true);
+                        productImage.Src = IoC.Resolve<IPictureService>().GetPictureUrl(picture, IoC.Resolve<ISettingManager>().GetSettingValueInteger("Media.Product.ThumbnailImageSize", 125), true);
                     else
-                        productImage.Src = IoCFactory.Resolve<IPictureService>().GetDefaultPictureUrl(IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.Product.ThumbnailImageSize", 125));
+                        productImage.Src = IoC.Resolve<IPictureService>().GetDefaultPictureUrl(IoC.Resolve<ISettingManager>().GetSettingValueInteger("Media.Product.ThumbnailImageSize", 125));
                     productImagePanel.Controls.Add(productImage);
                     headerCellDiv.Controls.Add(productImagePanel);
                     
@@ -161,8 +161,8 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     {
                         var productVariant = productVariantCollection[0];
                         decimal taxRate = decimal.Zero;
-                        decimal finalPriceWithoutDiscountBase = IoCFactory.Resolve<ITaxService>().GetPrice(productVariant, PriceHelper.GetFinalPrice(productVariant, false), out taxRate);
-                        decimal finalPriceWithoutDiscount = IoCFactory.Resolve<ICurrencyService>().ConvertCurrency(finalPriceWithoutDiscountBase, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                        decimal finalPriceWithoutDiscountBase = IoC.Resolve<ITaxService>().GetPrice(productVariant, PriceHelper.GetFinalPrice(productVariant, false), out taxRate);
+                        decimal finalPriceWithoutDiscount = IoC.Resolve<ICurrencyService>().ConvertCurrency(finalPriceWithoutDiscountBase, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
                         priceCell.InnerText = PriceHelper.FormatPrice(finalPriceWithoutDiscount);
                     }
                     priceRow.Cells.Add(priceCell);
@@ -170,7 +170,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 productNameRow.Attributes.Add("class", "product-name");
                 priceRow.Attributes.Add("class", "productPrice");
                 this.tblCompareProducts.Rows.Add(productNameRow);
-                if (!IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Common.HidePricesForNonRegistered") ||
+                if (!IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Common.HidePricesForNonRegistered") ||
                     (NopContext.Current.User != null &&
                     !NopContext.Current.User.IsGuest))
                 {
@@ -179,7 +179,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
                 foreach (int specificationAttributeId in specificationAttributeIds)
                 {
-                    var specificationAttribute = IoCFactory.Resolve<ISpecificationAttributeService>().GetSpecificationAttributeById(specificationAttributeId);
+                    var specificationAttribute = IoC.Resolve<ISpecificationAttributeService>().GetSpecificationAttributeById(specificationAttributeId);
                     var productRow = new HtmlTableRow();
                     this.AddCell(productRow, Server.HtmlEncode(specificationAttribute.LocalizedName)).Align = "left";
 
@@ -187,7 +187,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     {
                         var productCell = new HtmlTableCell();
                         {
-                            var productSpecificationAttributes2 = IoCFactory.Resolve<ISpecificationAttributeService>().GetProductSpecificationAttributesByProductId(product2.ProductId, null, true);
+                            var productSpecificationAttributes2 = IoC.Resolve<ISpecificationAttributeService>().GetProductSpecificationAttributesByProductId(product2.ProductId, null, true);
                             foreach (var psa2 in productSpecificationAttributes2)
                             {
                                 if (specificationAttribute.SpecificationAttributeId == psa2.SpecificationAttribute.SpecificationAttributeId)

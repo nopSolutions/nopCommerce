@@ -30,7 +30,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.BusinessLogic.Utils;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 
 namespace NopSolutions.NopCommerce.Payment.Methods.TwoCheckout
@@ -52,8 +52,8 @@ namespace NopSolutions.NopCommerce.Payment.Methods.TwoCheckout
         /// </summary>
         public TwoCheckoutPaymentProcessor()
         {
-            useSandBox = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.TwoCheckout.UseSandbox");
-            vendorID = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.TwoCheckout.VendorID");
+            useSandBox = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.TwoCheckout.UseSandbox");
+            vendorID = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.TwoCheckout.VendorID");
 
             if (string.IsNullOrEmpty(vendorID))
                 throw new NopException("2Checkout Vendor Id is empty");
@@ -136,13 +136,13 @@ namespace NopSolutions.NopCommerce.Payment.Methods.TwoCheckout
             builder.AppendFormat("&x_Last_Name={0}",  HttpUtility.UrlEncode(order.BillingLastName));
             builder.AppendFormat("&x_Address={0}",  HttpUtility.UrlEncode(order.BillingAddress1));
             builder.AppendFormat("&x_City={0}", HttpUtility.UrlEncode(order.BillingCity));
-            StateProvince billingStateProvince = IoCFactory.Resolve<IStateProvinceService>().GetStateProvinceById(order.BillingStateProvinceId);
+            StateProvince billingStateProvince = IoC.Resolve<IStateProvinceService>().GetStateProvinceById(order.BillingStateProvinceId);
             if (billingStateProvince != null)
                  builder.AppendFormat("&x_State={0}", HttpUtility.UrlEncode(billingStateProvince.Abbreviation));
             else
                 builder.AppendFormat("&x_State={0}", HttpUtility.UrlEncode(order.BillingStateProvince));
             builder.AppendFormat("&x_Zip={0}", HttpUtility.UrlEncode(order.BillingZipPostalCode));
-            Country billingCountry = IoCFactory.Resolve<ICountryService>().GetCountryById(order.BillingCountryId);
+            Country billingCountry = IoC.Resolve<ICountryService>().GetCountryById(order.BillingCountryId);
             if (billingCountry != null)
                 builder.AppendFormat("&x_Country={0}", HttpUtility.UrlEncode(billingCountry.ThreeLetterIsoCode));
             else
@@ -159,7 +159,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.TwoCheckout
         /// <returns>Additional handling fee</returns>
         public decimal GetAdditionalHandlingFee()
         {
-            return IoCFactory.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.TwoCheckout.AdditionalFee");
+            return IoC.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.TwoCheckout.AdditionalFee");
         }
 
         /// <summary>

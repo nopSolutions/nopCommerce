@@ -27,7 +27,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Caching;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Utils;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Administration
 {
@@ -43,7 +43,7 @@ namespace NopSolutions.NopCommerce.Web.Administration
 
         protected void BindData()
         {
-            string headerText = string.Format("nopCommerce {0}", IoCFactory.Resolve<ISettingManager>().CurrentVersion);
+            string headerText = string.Format("nopCommerce {0}", IoC.Resolve<ISettingManager>().CurrentVersion);
             lblHeader.Text = headerText;
         }
 

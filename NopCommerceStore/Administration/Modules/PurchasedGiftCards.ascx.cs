@@ -31,7 +31,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -88,7 +88,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             //coupon code filter
             string giftCardCouponCode = txtGiftCardCouponCode.Text;
 
-            var giftCards = IoCFactory.Resolve<IOrderService>().GetAllGiftCards(null,
+            var giftCards = IoC.Resolve<IOrderService>().GetAllGiftCards(null,
                 null, startDate, endDate, orderStatus, null, null, isGiftCardActivated, giftCardCouponCode);
             return giftCards;
         }

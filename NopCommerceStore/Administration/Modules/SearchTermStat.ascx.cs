@@ -26,7 +26,7 @@ using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.Audit;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 using NopSolutions.NopCommerce.BusinessLogic.Measures;
 using NopSolutions.NopCommerce.BusinessLogic.Messages;
 using NopSolutions.NopCommerce.Common.Utils;
@@ -46,7 +46,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected void BindData()
         {
-            gvSearchTermStat.DataSource = IoCFactory.Resolve<ISearchLogService>().SearchTermReport(null, null, 5);
+            gvSearchTermStat.DataSource = IoC.Resolve<ISearchLogService>().SearchTermReport(null, null, 5);
             gvSearchTermStat.DataBind();
         }
 
@@ -54,7 +54,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                IoCFactory.Resolve<ISearchLogService>().ClearSearchLog();
+                IoC.Resolve<ISearchLogService>().ClearSearchLog();
                 BindData();
             }
             catch (Exception exc)

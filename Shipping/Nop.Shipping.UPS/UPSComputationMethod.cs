@@ -26,7 +26,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.BusinessLogic.Measures;
 using NopSolutions.NopCommerce.BusinessLogic.Shipping;
 using NopSolutions.NopCommerce.Common;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Shipping.Methods.UPS
 {
@@ -48,18 +48,18 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.UPS
             ShipmentPackage ShipmentPackage, UPSCustomerClassification customerClassification,
             UPSPickupType pickupType, UPSPackagingType packagingType)
         {
-            var usedMeasureWeight = IoCFactory.Resolve<IMeasureService>().GetMeasureWeightBySystemKeyword(MEASUREWEIGHTSYSTEMKEYWORD);
+            var usedMeasureWeight = IoC.Resolve<IMeasureService>().GetMeasureWeightBySystemKeyword(MEASUREWEIGHTSYSTEMKEYWORD);
             if (usedMeasureWeight == null)
                 throw new NopException(string.Format("UPS shipping service. Could not load \"{0}\" measure weight", MEASUREWEIGHTSYSTEMKEYWORD));
 
-            var usedMeasureDimension = IoCFactory.Resolve<IMeasureService>().GetMeasureDimensionBySystemKeyword(MEASUREDIMENSIONSYSTEMKEYWORD);
+            var usedMeasureDimension = IoC.Resolve<IMeasureService>().GetMeasureDimensionBySystemKeyword(MEASUREDIMENSIONSYSTEMKEYWORD);
             if (usedMeasureDimension == null)
                 throw new NopException(string.Format("UPS shipping service. Could not load \"{0}\" measure dimension", MEASUREDIMENSIONSYSTEMKEYWORD));
 
-            int length = Convert.ToInt32(Math.Ceiling(IoCFactory.Resolve<IMeasureService>().ConvertDimension(ShipmentPackage.GetTotalLength(), IoCFactory.Resolve<IMeasureService>().BaseDimensionIn, usedMeasureDimension)));
-            int height = Convert.ToInt32(Math.Ceiling(IoCFactory.Resolve<IMeasureService>().ConvertDimension(ShipmentPackage.GetTotalHeight(), IoCFactory.Resolve<IMeasureService>().BaseDimensionIn, usedMeasureDimension)));
-            int width = Convert.ToInt32(Math.Ceiling(IoCFactory.Resolve<IMeasureService>().ConvertDimension(ShipmentPackage.GetTotalWidth(), IoCFactory.Resolve<IMeasureService>().BaseDimensionIn, usedMeasureDimension)));
-            int weight = Convert.ToInt32(Math.Ceiling(IoCFactory.Resolve<IMeasureService>().ConvertWeight(IoCFactory.Resolve<IShippingService>().GetShoppingCartTotalWeight(ShipmentPackage.Items, ShipmentPackage.Customer), IoCFactory.Resolve<IMeasureService>().BaseWeightIn, usedMeasureWeight)));
+            int length = Convert.ToInt32(Math.Ceiling(IoC.Resolve<IMeasureService>().ConvertDimension(ShipmentPackage.GetTotalLength(), IoC.Resolve<IMeasureService>().BaseDimensionIn, usedMeasureDimension)));
+            int height = Convert.ToInt32(Math.Ceiling(IoC.Resolve<IMeasureService>().ConvertDimension(ShipmentPackage.GetTotalHeight(), IoC.Resolve<IMeasureService>().BaseDimensionIn, usedMeasureDimension)));
+            int width = Convert.ToInt32(Math.Ceiling(IoC.Resolve<IMeasureService>().ConvertDimension(ShipmentPackage.GetTotalWidth(), IoC.Resolve<IMeasureService>().BaseDimensionIn, usedMeasureDimension)));
+            int weight = Convert.ToInt32(Math.Ceiling(IoC.Resolve<IMeasureService>().ConvertWeight(IoC.Resolve<IShippingService>().GetShoppingCartTotalWeight(ShipmentPackage.Items, ShipmentPackage.Customer), IoC.Resolve<IMeasureService>().BaseWeightIn, usedMeasureWeight)));
             if (length < 1)
                 length = 1;
             if (height < 1)
@@ -344,7 +344,7 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.UPS
         {
             var shippingOptions = new List<ShippingOption>();
 
-            string carrierServicesOffered = IoCFactory.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.UPS.CarrierServicesOffered", string.Empty);
+            string carrierServicesOffered = IoC.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.UPS.CarrierServicesOffered", string.Empty);
 
             using (var sr = new StringReader(response))
             using (var tr = new XmlTextReader(sr))
@@ -458,21 +458,21 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.UPS
                 return shippingOptions;
             }
 
-            string url = IoCFactory.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.UPS.URL");
-            string accessKey = IoCFactory.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.UPS.AccessKey");
-            string username = IoCFactory.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.UPS.Username");
-            string password = IoCFactory.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.UPS.Password");
-            var customerClassification = (UPSCustomerClassification)Enum.Parse(typeof(UPSCustomerClassification), IoCFactory.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.UPS.CustomerClassification"));
-            var pickupType = (UPSPickupType)Enum.Parse(typeof(UPSPickupType), IoCFactory.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.UPS.PickupType"));
-            var packagingType = (UPSPackagingType)Enum.Parse(typeof(UPSPackagingType), IoCFactory.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.UPS.PackagingType"));
-            decimal additionalHandlingCharge = IoCFactory.Resolve<ISettingManager>().GetSettingValueDecimalNative("ShippingRateComputationMethod.UPS.AdditionalHandlingCharge");
+            string url = IoC.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.UPS.URL");
+            string accessKey = IoC.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.UPS.AccessKey");
+            string username = IoC.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.UPS.Username");
+            string password = IoC.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.UPS.Password");
+            var customerClassification = (UPSCustomerClassification)Enum.Parse(typeof(UPSCustomerClassification), IoC.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.UPS.CustomerClassification"));
+            var pickupType = (UPSPickupType)Enum.Parse(typeof(UPSPickupType), IoC.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.UPS.PickupType"));
+            var packagingType = (UPSPackagingType)Enum.Parse(typeof(UPSPackagingType), IoC.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.UPS.PackagingType"));
+            decimal additionalHandlingCharge = IoC.Resolve<ISettingManager>().GetSettingValueDecimalNative("ShippingRateComputationMethod.UPS.AdditionalHandlingCharge");
             if (shipmentPackage.CountryFrom == null)
             {
-                int defaultShippedFromCountryID = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("ShippingRateComputationMethod.UPS.DefaultShippedFromCountryID");
-                shipmentPackage.CountryFrom = IoCFactory.Resolve<ICountryService>().GetCountryById(defaultShippedFromCountryID);
+                int defaultShippedFromCountryID = IoC.Resolve<ISettingManager>().GetSettingValueInteger("ShippingRateComputationMethod.UPS.DefaultShippedFromCountryID");
+                shipmentPackage.CountryFrom = IoC.Resolve<ICountryService>().GetCountryById(defaultShippedFromCountryID);
             }
             if (String.IsNullOrEmpty(shipmentPackage.ZipPostalCodeFrom))
-                shipmentPackage.ZipPostalCodeFrom = IoCFactory.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.UPS.DefaultShippedFromZipPostalCode");
+                shipmentPackage.ZipPostalCodeFrom = IoC.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.UPS.DefaultShippedFromZipPostalCode");
 
             string requestString = CreateRequest(accessKey, username, password, shipmentPackage,
                 customerClassification, pickupType, packagingType);

@@ -17,7 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 using NopSolutions.NopCommerce.BusinessLogic.Localization;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
 
@@ -108,11 +108,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
 
             if (customer.IsGuest)
             {
-                return IoCFactory.Resolve<ILocalizationManager>().GetLocaleResourceString("Customer.Guest");
+                return IoC.Resolve<ILocalizationManager>().GetLocaleResourceString("Customer.Guest");
             }
 
             string result = string.Empty;
-            switch (IoCFactory.Resolve<ICustomerService>().CustomerNameFormatting)
+            switch (IoC.Resolve<ICustomerService>().CustomerNameFormatting)
             {
                 case CustomerNameFormatEnum.ShowEmails:
                     result = customer.Email;
@@ -129,7 +129,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
 
             if (stripTooLong)
             {
-                int maxLength = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Customer.FormatNameMaxLength", 0);
+                int maxLength = IoC.Resolve<ISettingManager>().GetSettingValueInteger("Customer.FormatNameMaxLength", 0);
                 if (maxLength > 0 && result.Length > maxLength)
                 {
                     result = result.Substring(0, maxLength);

@@ -18,7 +18,7 @@ using System.Linq;
 using System.Text;
 using NopSolutions.NopCommerce.BusinessLogic.Localization;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
@@ -35,7 +35,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         /// <returns>Shipping status name</returns>
         public static string GetShippingStatusName(this ShippingStatusEnum ss)
         {
-            string name = IoCFactory.Resolve<ILocalizationManager>().GetLocaleResourceString(
+            string name = IoC.Resolve<ILocalizationManager>().GetLocaleResourceString(
                 string.Format("ShippingStatus.{0}", ss.ToString()),
                 NopContext.Current.WorkingLanguage.LanguageId,
                 true, 

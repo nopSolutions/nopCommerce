@@ -18,7 +18,7 @@ using System.Text;
 
 using NopSolutions.NopCommerce.BusinessLogic.Shipping;
 using NopSolutions.NopCommerce.BusinessLogic.Tax;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Tax
 {
@@ -79,7 +79,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
         {
             get
             {
-                TaxProvider activeTaxProvider = IoCFactory.Resolve<ITaxService>().ActiveTaxProvider;
+                TaxProvider activeTaxProvider = IoC.Resolve<ITaxService>().ActiveTaxProvider;
                 return ((activeTaxProvider != null && activeTaxProvider.TaxProviderId == this.TaxProviderId));
             }
         }

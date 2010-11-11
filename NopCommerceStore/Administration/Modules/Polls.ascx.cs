@@ -27,7 +27,7 @@ using System.Web.UI.WebControls.WebParts;
 using System.Xml;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Content.Polls;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
  
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -48,7 +48,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         void BindGrid()
         {
-            var pollCollection = IoCFactory.Resolve<IPollService>().GetAllPolls(0);
+            var pollCollection = IoC.Resolve<IPollService>().GetAllPolls(0);
             gvPolls.DataSource = pollCollection;
             gvPolls.DataBind();
         }

@@ -24,7 +24,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Data;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
 {
@@ -544,7 +544,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.ManufacturerManager.ManufacturersCacheEnabled");
+                return IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.ManufacturerManager.ManufacturersCacheEnabled");
             }
         }
 
@@ -555,7 +555,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Manufacturers
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.ManufacturerManager.MappingsCacheEnabled");
+                return IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.ManufacturerManager.MappingsCacheEnabled");
             }
         }
         #endregion

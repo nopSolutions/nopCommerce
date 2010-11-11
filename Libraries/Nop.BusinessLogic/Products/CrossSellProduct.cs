@@ -15,7 +15,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Products
@@ -61,7 +61,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         {
             get
             {
-                return IoCFactory.Resolve<IProductService>().GetProductById(this.ProductId1);
+                return IoC.Resolve<IProductService>().GetProductById(this.ProductId1);
             }
         }
 
@@ -72,7 +72,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         {
             get
             {
-                return IoCFactory.Resolve<IProductService>().GetProductById(this.ProductId2);
+                return IoC.Resolve<IProductService>().GetProductById(this.ProductId2);
             }
         }
         #endregion

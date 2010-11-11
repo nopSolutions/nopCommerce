@@ -36,7 +36,7 @@
                             Value="0" RequiredErrorMessage="<% $NopResources:Admin.GiftCardInfo.InitialValue.RequiredErrorMessage %>"
                             MinimumValue="0" MaximumValue="100000000" RangeErrorMessage="<% $NopResources:Admin.GiftCardInfo.InitialValue.RangeErrorMessage %>">
                         </nopCommerce:DecimalTextBox>
-                        [<%=IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode%>]
+                        [<%=IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode%>]
                     </td>
                 </tr>
                 <tr>

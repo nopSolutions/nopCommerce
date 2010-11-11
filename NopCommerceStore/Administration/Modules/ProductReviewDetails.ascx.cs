@@ -26,7 +26,7 @@ using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -34,7 +34,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            ProductReview productReview = IoCFactory.Resolve<IProductService>().GetProductReviewById(this.ProductReviewId);
+            ProductReview productReview = IoC.Resolve<IProductService>().GetProductReviewById(this.ProductReviewId);
             if (productReview != null)
             {
                 this.txtTitle.Text = productReview.Title;
@@ -53,7 +53,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected string GetCustomerInfo(int customerId)
         {
-            Customer customer = IoCFactory.Resolve<ICustomerService>().GetCustomerById(customerId);
+            Customer customer = IoC.Resolve<ICustomerService>().GetCustomerById(customerId);
             if (customer != null)
             {
                 string customerInfo = string.Format("<a href=\"CustomerDetails.aspx?CustomerID={0}\">{1}</a>", customer.CustomerId, Server.HtmlEncode(customer.Email));
@@ -65,7 +65,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected string GetProductInfo(int productId)
         {
-            Product product = IoCFactory.Resolve<IProductService>().GetProductById(productId);
+            Product product = IoC.Resolve<IProductService>().GetProductById(productId);
             if (product != null)
             {
                 string productInfo = string.Format("<a href=\"ProductDetails.aspx?ProductID={0}\">{1}</a>", product.ProductId, Server.HtmlEncode(product.Name));
@@ -89,13 +89,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 try
                 {
-                    ProductReview productReview = IoCFactory.Resolve<IProductService>().GetProductReviewById(this.ProductReviewId);
+                    ProductReview productReview = IoC.Resolve<IProductService>().GetProductReviewById(this.ProductReviewId);
                     if (productReview != null)
                     {
                         productReview.Title = txtTitle.Text.Trim();
                         productReview.ReviewText = txtReviewText.Text.Trim();
                         productReview.IsApproved = cbIsApproved.Checked;
-                        IoCFactory.Resolve<IProductService>().UpdateProductReview(productReview);
+                        IoC.Resolve<IProductService>().UpdateProductReview(productReview);
                         Response.Redirect("ProductReviewDetails.aspx?ProductReviewID=" + productReview.ProductReviewId.ToString());
                     }
                     else
@@ -112,7 +112,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                IoCFactory.Resolve<IProductService>().DeleteProductReview(this.ProductReviewId);
+                IoC.Resolve<IProductService>().DeleteProductReview(this.ProductReviewId);
                 Response.Redirect("ProductReviews.aspx");
             }
             catch (Exception exc)

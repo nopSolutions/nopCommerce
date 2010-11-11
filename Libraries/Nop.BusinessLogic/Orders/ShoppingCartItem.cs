@@ -17,7 +17,7 @@ using System.Collections.Generic;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.BusinessLogic.Products.Attributes;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Orders
@@ -109,7 +109,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             {
                 if (_cachedProductVariant == null)
                 {
-                    _cachedProductVariant = IoCFactory.Resolve<IProductService>().GetProductVariantById(this.ProductVariantId);
+                    _cachedProductVariant = IoC.Resolve<IProductService>().GetProductVariantById(this.ProductVariantId);
                 }
                 return _cachedProductVariant;
             }
@@ -206,7 +206,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         {
             get
             {
-                return IoCFactory.Resolve<ICustomerService>().GetCustomerSessionByGuid(this.CustomerSessionGuid);
+                return IoC.Resolve<ICustomerService>().GetCustomerSessionByGuid(this.CustomerSessionGuid);
             }
         }
         #endregion

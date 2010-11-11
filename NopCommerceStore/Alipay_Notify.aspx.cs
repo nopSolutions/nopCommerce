@@ -14,7 +14,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Payment.Methods.Alipay;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web
 {
@@ -25,10 +25,10 @@ namespace NopSolutions.NopCommerce.Web
             CommonHelper.SetResponseNoCache(Response);
 
             string alipayNotifyURL = "https://www.alipay.com/cooperate/gateway.do?service=notify_verify";
-            string partner = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Alipay.Partner");
+            string partner = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Alipay.Partner");
             if (string.IsNullOrEmpty(partner))
                 throw new Exception("Partner is not set");
-            string key = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Alipay.Key");
+            string key = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Alipay.Key");
             if (string.IsNullOrEmpty(key))
                 throw new Exception("Partner is not set");
             string _input_charset = "utf-8";
@@ -80,10 +80,10 @@ namespace NopSolutions.NopCommerce.Web
                     int orderId = 0;
                     if (Int32.TryParse(strOrderNO, out orderId))
                     {
-                        Order order = IoCFactory.Resolve<IOrderService>().GetOrderById(orderId);
-                        if (order != null && IoCFactory.Resolve<IOrderService>().CanMarkOrderAsPaid(order))
+                        Order order = IoC.Resolve<IOrderService>().GetOrderById(orderId);
+                        if (order != null && IoC.Resolve<IOrderService>().CanMarkOrderAsPaid(order))
                         {
-                            IoCFactory.Resolve<IOrderService>().MarkOrderAsPaid(order.OrderId);
+                            IoC.Resolve<IOrderService>().MarkOrderAsPaid(order.OrderId);
                         }
                     }
                 }
@@ -97,7 +97,7 @@ namespace NopSolutions.NopCommerce.Web
             {
                 Response.Write("fail");
                 string logStr = "MD5:mysign=" + mysign + ",sign=" + sign + ",responseTxt=" + responseTxt;
-                IoCFactory.Resolve<ILogService>().InsertLog(LogTypeEnum.OrderError, logStr, logStr);
+                IoC.Resolve<ILogService>().InsertLog(LogTypeEnum.OrderError, logStr, logStr);
             }
         }
 

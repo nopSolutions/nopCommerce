@@ -20,7 +20,7 @@
 
 <ajaxToolkit:ToolkitScriptManager runat="Server" EnableScriptGlobalization="true"
     EnableScriptLocalization="true" ID="sm1" ScriptMode="Release" CompositeScript-ScriptMode="Release" />
-<% if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Media.CategoryBreadcrumbEnabled"))
+<% if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Media.CategoryBreadcrumbEnabled"))
    { %>
 <nopCommerce:ProductCategoryBreadcrumb ID="ctrlProductCategoryBreadcrumb" runat="server" />
 <% } %>
@@ -53,9 +53,9 @@
                 </GroupTemplate>
                 <ItemTemplate>
                     <td align="left">
-                        <a href="<%#IoCFactory.Resolve<IPictureService>().GetPictureUrl((Picture)Container.DataItem)%>" rel="lightbox-p"
+                        <a href="<%#IoC.Resolve<IPictureService>().GetPictureUrl((Picture)Container.DataItem)%>" rel="lightbox-p"
                             title="<%= lProductName.Text%>">
-                            <img src="<%#IoCFactory.Resolve<IPictureService>().GetPictureUrl((Picture)Container.DataItem, 70)%>" alt="Product image" /></a>
+                            <img src="<%#IoC.Resolve<IPictureService>().GetPictureUrl((Picture)Container.DataItem, 70)%>" alt="Product image" /></a>
                     </td>
                 </ItemTemplate>
             </asp:ListView>

@@ -32,7 +32,7 @@ using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -48,10 +48,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected void BindData()
         {
-            cbEnableBlog.Checked = IoCFactory.Resolve<IBlogService>().BlogEnabled;
-            cbAllowNotRegisteredUsersToLeaveComments.Checked = IoCFactory.Resolve<IBlogService>().AllowNotRegisteredUsersToLeaveComments;
-            cbNotifyAboutNewBlogComments.Checked = IoCFactory.Resolve<IBlogService>().NotifyAboutNewBlogComments;
-            txtPostsPageSize.Value = IoCFactory.Resolve<IBlogService>().PostsPageSize;
+            cbEnableBlog.Checked = IoC.Resolve<IBlogService>().BlogEnabled;
+            cbAllowNotRegisteredUsersToLeaveComments.Checked = IoC.Resolve<IBlogService>().AllowNotRegisteredUsersToLeaveComments;
+            cbNotifyAboutNewBlogComments.Checked = IoC.Resolve<IBlogService>().NotifyAboutNewBlogComments;
+            txtPostsPageSize.Value = IoC.Resolve<IBlogService>().PostsPageSize;
         }
 
         protected void btnSave_Click(object sender, EventArgs e)
@@ -60,10 +60,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 try
                 {
-                    IoCFactory.Resolve<IBlogService>().BlogEnabled = cbEnableBlog.Checked;
-                    IoCFactory.Resolve<IBlogService>().AllowNotRegisteredUsersToLeaveComments = cbAllowNotRegisteredUsersToLeaveComments.Checked;
-                    IoCFactory.Resolve<IBlogService>().NotifyAboutNewBlogComments = cbNotifyAboutNewBlogComments.Checked;
-                    IoCFactory.Resolve<IBlogService>().PostsPageSize = txtPostsPageSize.Value;
+                    IoC.Resolve<IBlogService>().BlogEnabled = cbEnableBlog.Checked;
+                    IoC.Resolve<IBlogService>().AllowNotRegisteredUsersToLeaveComments = cbAllowNotRegisteredUsersToLeaveComments.Checked;
+                    IoC.Resolve<IBlogService>().NotifyAboutNewBlogComments = cbNotifyAboutNewBlogComments.Checked;
+                    IoC.Resolve<IBlogService>().PostsPageSize = txtPostsPageSize.Value;
 
                     Response.Redirect("BlogSettings.aspx");
                 }

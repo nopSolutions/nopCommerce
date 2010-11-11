@@ -17,7 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 using NopSolutions.NopCommerce.BusinessLogic.Localization;
 using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
@@ -165,11 +165,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
                     {
                         if (customer != null)
                         {
-                            CustomerSession customerSession = IoCFactory.Resolve<ICustomerService>().GetCustomerSessionByCustomerId(customer.CustomerId);
+                            CustomerSession customerSession = IoC.Resolve<ICustomerService>().GetCustomerSessionByCustomerId(customer.CustomerId);
                             if (customerSession != null)
                             {
-                                var restrictedProductVariants = IoCFactory.Resolve<IProductService>().GetProductVariantsRestrictedByDiscountId(discount.DiscountId);
-                                var cart = IoCFactory.Resolve<IShoppingCartService>().GetShoppingCartByCustomerSessionGuid(ShoppingCartTypeEnum.ShoppingCart, customerSession.CustomerSessionGuid);
+                                var restrictedProductVariants = IoC.Resolve<IProductService>().GetProductVariantsRestrictedByDiscountId(discount.DiscountId);
+                                var cart = IoC.Resolve<IShoppingCartService>().GetShoppingCartByCustomerSessionGuid(ShoppingCartTypeEnum.ShoppingCart, customerSession.CustomerSessionGuid);
 
                                 bool allFound = true;
                                 foreach (ProductVariant restrictedPV in restrictedProductVariants)
@@ -202,11 +202,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
                     {
                         if (customer != null)
                         {
-                            CustomerSession customerSession = IoCFactory.Resolve<ICustomerService>().GetCustomerSessionByCustomerId(customer.CustomerId);
+                            CustomerSession customerSession = IoC.Resolve<ICustomerService>().GetCustomerSessionByCustomerId(customer.CustomerId);
                             if (customerSession != null)
                             {
-                                var restrictedProductVariants = IoCFactory.Resolve<IProductService>().GetProductVariantsRestrictedByDiscountId(discount.DiscountId);
-                                var cart = IoCFactory.Resolve<IShoppingCartService>().GetShoppingCartByCustomerSessionGuid(ShoppingCartTypeEnum.ShoppingCart, customerSession.CustomerSessionGuid);
+                                var restrictedProductVariants = IoC.Resolve<IProductService>().GetProductVariantsRestrictedByDiscountId(discount.DiscountId);
+                                var cart = IoC.Resolve<IShoppingCartService>().GetShoppingCartByCustomerSessionGuid(ShoppingCartTypeEnum.ShoppingCart, customerSession.CustomerSessionGuid);
 
                                 bool found = false;
                                 foreach (ProductVariant restrictedPV in restrictedProductVariants)
@@ -237,8 +237,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
                         //customer should be registered
                         if (customer != null && !customer.IsGuest)
                         {
-                            var restrictedProductVariants = IoCFactory.Resolve<IProductService>().GetProductVariantsRestrictedByDiscountId(discount.DiscountId);
-                            var purchasedProductVariants = IoCFactory.Resolve<IOrderService>().GetAllOrderProductVariants(null, customer.CustomerId, null, null, OrderStatusEnum.Complete, null, null);
+                            var restrictedProductVariants = IoC.Resolve<IProductService>().GetProductVariantsRestrictedByDiscountId(discount.DiscountId);
+                            var purchasedProductVariants = IoC.Resolve<IOrderService>().GetAllOrderProductVariants(null, customer.CustomerId, null, null, OrderStatusEnum.Complete, null, null);
 
                             bool allFound = true;
                             foreach (ProductVariant restrictedPV in restrictedProductVariants)
@@ -270,8 +270,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
                         //customer should be registered
                         if (customer != null && !customer.IsGuest)
                         {
-                            var restrictedProductVariants = IoCFactory.Resolve<IProductService>().GetProductVariantsRestrictedByDiscountId(discount.DiscountId);
-                            var purchasedProductVariants = IoCFactory.Resolve<IOrderService>().GetAllOrderProductVariants(null, customer.CustomerId, null, null, OrderStatusEnum.Complete, null, null);
+                            var restrictedProductVariants = IoC.Resolve<IProductService>().GetProductVariantsRestrictedByDiscountId(discount.DiscountId);
+                            var purchasedProductVariants = IoC.Resolve<IOrderService>().GetAllOrderProductVariants(null, customer.CustomerId, null, null, OrderStatusEnum.Complete, null, null);
 
                             bool found = false;
                             foreach (ProductVariant restrictedPV in restrictedProductVariants)
@@ -351,12 +351,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
                     }
                 case DiscountLimitationEnum.OneTimeOnly:
                     {
-                        var usageHistory = IoCFactory.Resolve<IDiscountService>().GetAllDiscountUsageHistoryEntries(discount.DiscountId, null, null);
+                        var usageHistory = IoC.Resolve<IDiscountService>().GetAllDiscountUsageHistoryEntries(discount.DiscountId, null, null);
                         return usageHistory.Count < 1;
                     }
                 case DiscountLimitationEnum.NTimesOnly:
                     {
-                        var usageHistory = IoCFactory.Resolve<IDiscountService>().GetAllDiscountUsageHistoryEntries(discount.DiscountId, null, null);
+                        var usageHistory = IoC.Resolve<IDiscountService>().GetAllDiscountUsageHistoryEntries(discount.DiscountId, null, null);
                         return usageHistory.Count < discount.LimitationTimes;
                     }
                 case DiscountLimitationEnum.OneTimePerCustomer:
@@ -364,7 +364,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
                         if (customer != null && !customer.IsGuest)
                         {
                             //registered customer
-                            var usageHistory = IoCFactory.Resolve<IDiscountService>().GetAllDiscountUsageHistoryEntries(discount.DiscountId, customer.CustomerId, null);
+                            var usageHistory = IoC.Resolve<IDiscountService>().GetAllDiscountUsageHistoryEntries(discount.DiscountId, customer.CustomerId, null);
                             return usageHistory.Count < 1;
                         }
                         else
@@ -378,7 +378,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
                         if (customer != null && !customer.IsGuest)
                         {
                             //registered customer
-                            var usageHistory = IoCFactory.Resolve<IDiscountService>().GetAllDiscountUsageHistoryEntries(discount.DiscountId, customer.CustomerId, null);
+                            var usageHistory = IoC.Resolve<IDiscountService>().GetAllDiscountUsageHistoryEntries(discount.DiscountId, customer.CustomerId, null);
                             return usageHistory.Count < discount.LimitationTimes;
                         }
                         else
@@ -401,7 +401,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         /// <returns>Discount limitation name</returns>
         public static string GetDiscountLimitationName(this DiscountLimitationEnum dl)
         {
-            string name = IoCFactory.Resolve<ILocalizationManager>().GetLocaleResourceString(
+            string name = IoC.Resolve<ILocalizationManager>().GetLocaleResourceString(
                 string.Format("DiscountLimitation.{0}", (int)dl),
                 NopContext.Current.WorkingLanguage.LanguageId,
                 true,
@@ -417,7 +417,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         /// <returns>Discount requirement name</returns>
         public static string GetDiscountRequirementName(this DiscountRequirementEnum dr)
         {
-            string name = IoCFactory.Resolve<ILocalizationManager>().GetLocaleResourceString(
+            string name = IoC.Resolve<ILocalizationManager>().GetLocaleResourceString(
                 string.Format("DiscountRequirement.{0}", (int)dr),
                 NopContext.Current.WorkingLanguage.LanguageId,
                 true,
@@ -433,7 +433,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         /// <returns>Discount type name</returns>
         public static string GetDiscountTypeName(this DiscountTypeEnum dt)
         {
-            string name = IoCFactory.Resolve<ILocalizationManager>().GetLocaleResourceString(
+            string name = IoC.Resolve<ILocalizationManager>().GetLocaleResourceString(
                 string.Format("DiscountType.{0}", (int)dt),
                 NopContext.Current.WorkingLanguage.LanguageId,
                 true,

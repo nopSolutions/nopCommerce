@@ -8,7 +8,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Media;
 using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -23,13 +23,13 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     Response.Redirect(CommonHelper.GetStoreLocation());
                 }
 
-                var opv = IoCFactory.Resolve<IOrderService>().GetOrderProductVariantByGuid(this.OrderProductVariantGuid.Value);
+                var opv = IoC.Resolve<IOrderService>().GetOrderProductVariantByGuid(this.OrderProductVariantGuid.Value);
                 if (opv == null)
                 {
                     Response.Redirect(CommonHelper.GetStoreLocation());
                 }
 
-                var productVariant = IoCFactory.Resolve<IProductService>().GetProductVariantById(opv.ProductVariantId);
+                var productVariant = IoC.Resolve<IProductService>().GetProductVariantById(opv.ProductVariantId);
                 if (productVariant == null || !productVariant.HasUserAgreement)
                 {
                     Response.Redirect(CommonHelper.GetStoreLocation());
@@ -55,10 +55,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     Response.Redirect(CommonHelper.GetStoreLocation());
                 }
 
-                var opv = IoCFactory.Resolve<IOrderService>().GetOrderProductVariantByGuid(this.OrderProductVariantGuid.Value);
+                var opv = IoC.Resolve<IOrderService>().GetOrderProductVariantByGuid(this.OrderProductVariantGuid.Value);
                 if (opv != null)
                 {
-                    string url = IoCFactory.Resolve<IDownloadService>().GetDownloadUrl(opv);
+                    string url = IoC.Resolve<IDownloadService>().GetDownloadUrl(opv);
                     url = CommonHelper.ModifyQueryString(url, "Agree=true", null);
                     Response.Redirect(url);
                 }

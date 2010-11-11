@@ -26,7 +26,7 @@ using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.Payment;
 using NopSolutions.NopCommerce.Common;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Payment.Methods.CDGcommerce
 {
@@ -136,7 +136,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.CDGcommerce
         /// <returns>Additional handling fee</returns>
         public decimal GetAdditionalHandlingFee()
         {
-            return IoCFactory.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.CDGcommerce.AdditionalFee");
+            return IoC.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.CDGcommerce.AdditionalFee");
         }
 
 		/// <summary>
@@ -144,8 +144,8 @@ namespace NopSolutions.NopCommerce.Payment.Methods.CDGcommerce
 		/// </summary>
 		private void InitSettings()
 		{
-			RestrictKey = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.CDGcommerce.RestrictKey");
-			loginID = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.CDGcommerce.LoginID");
+			RestrictKey = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.CDGcommerce.RestrictKey");
+			loginID = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.CDGcommerce.LoginID");
 
 			if (string.IsNullOrEmpty(loginID))
                 throw new NopException("CDGcommerce API login ID is not set");

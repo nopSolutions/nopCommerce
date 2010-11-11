@@ -32,7 +32,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -59,16 +59,16 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         private void BindData()
         {
-            if (!IoCFactory.Resolve<IOrderService>().RewardPointsEnabled)
+            if (!IoC.Resolve<IOrderService>().RewardPointsEnabled)
             {
                 this.Visible = false;
                 return;
             }
             int rewardPointsBalance = NopContext.Current.User.RewardPointsBalance;
-            decimal rewardPointsAmountBase = IoCFactory.Resolve<IOrderService>().ConvertRewardPointsToAmount(rewardPointsBalance);
-            decimal rewardPointsAmount = IoCFactory.Resolve<ICurrencyService>().ConvertCurrency(rewardPointsAmountBase, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+            decimal rewardPointsAmountBase = IoC.Resolve<IOrderService>().ConvertRewardPointsToAmount(rewardPointsBalance);
+            decimal rewardPointsAmount = IoC.Resolve<ICurrencyService>().ConvertCurrency(rewardPointsAmountBase, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
             lblBalance.Text = GetLocaleResourceString("Customer.RewardPoints.CurrentBalance", rewardPointsBalance, PriceHelper.FormatPrice(rewardPointsAmount, true, false));
-            //lblRate.Text = GetLocaleResourceString("Customer.RewardPoints.CurrentRate", PriceHelper.FormatPrice(IoCFactory.Resolve<ICurrencyService>().ConvertCurrency(IoCFactory.Resolve<IOrderService>().RewardPointsForPurchases_Amount, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency), true, false), IoCFactory.Resolve<IOrderService>().RewardPointsForPurchases_Points);
+            //lblRate.Text = GetLocaleResourceString("Customer.RewardPoints.CurrentRate", PriceHelper.FormatPrice(IoC.Resolve<ICurrencyService>().ConvertCurrency(IoC.Resolve<IOrderService>().RewardPointsForPurchases_Amount, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency), true, false), IoC.Resolve<IOrderService>().RewardPointsForPurchases_Points);
             lblRate.Visible = false;
 
             var rphc = NopContext.Current.User.RewardPointsHistory;

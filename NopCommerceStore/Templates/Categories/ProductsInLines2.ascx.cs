@@ -30,7 +30,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 
 namespace NopSolutions.NopCommerce.Web.Templates.Categories
@@ -48,7 +48,7 @@ namespace NopSolutions.NopCommerce.Web.Templates.Categories
 
         protected void FillDropDowns()
         {
-            if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Common.AllowProductSorting"))
+            if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Common.AllowProductSorting"))
             {
                 ddlSorting.Items.Clear();
 
@@ -70,13 +70,13 @@ namespace NopSolutions.NopCommerce.Web.Templates.Categories
 
         protected void BindData()
         {
-            var category = IoCFactory.Resolve<ICategoryService>().GetCategoryById(this.CategoryId);
+            var category = IoC.Resolve<ICategoryService>().GetCategoryById(this.CategoryId);
 
             lName.Text = Server.HtmlEncode(category.LocalizedName);
             lDescription.Text = category.LocalizedDescription;
 
             //subcategories
-            var subCategories = IoCFactory.Resolve<ICategoryService>().GetAllCategoriesByParentCategoryId(this.CategoryId);
+            var subCategories = IoC.Resolve<ICategoryService>().GetAllCategoriesByParentCategoryId(this.CategoryId);
             if (subCategories.Count > 0)
             {
                 rptrSubCategories.DataSource = subCategories;
@@ -106,13 +106,13 @@ namespace NopSolutions.NopCommerce.Web.Templates.Categories
                 minPrice = ctrlPriceRangeFilter.SelectedPriceRange.From;
                 if (minPrice.HasValue)
                 {
-                    minPriceConverted = IoCFactory.Resolve<ICurrencyService>().ConvertCurrency(minPrice.Value, NopContext.Current.WorkingCurrency, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency);
+                    minPriceConverted = IoC.Resolve<ICurrencyService>().ConvertCurrency(minPrice.Value, NopContext.Current.WorkingCurrency, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency);
                 }
 
                 maxPrice = ctrlPriceRangeFilter.SelectedPriceRange.To;
                 if (maxPrice.HasValue)
                 {
-                    maxPriceConverted = IoCFactory.Resolve<ICurrencyService>().ConvertCurrency(maxPrice.Value, NopContext.Current.WorkingCurrency, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency);
+                    maxPriceConverted = IoC.Resolve<ICurrencyService>().ConvertCurrency(maxPrice.Value, NopContext.Current.WorkingCurrency, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency);
                 }
             }
 
@@ -121,7 +121,7 @@ namespace NopSolutions.NopCommerce.Web.Templates.Categories
 
             //sorting
             ProductSortingEnum orderBy = ProductSortingEnum.Position;
-            if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Common.AllowProductSorting"))
+            if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Common.AllowProductSorting"))
             {
                 CommonHelper.SelectListItem(this.ddlSorting, CommonHelper.QueryStringInt("orderby"));
                 orderBy = (ProductSortingEnum)Enum.ToObject(typeof(ProductSortingEnum), int.Parse(ddlSorting.SelectedItem.Value));
@@ -129,7 +129,7 @@ namespace NopSolutions.NopCommerce.Web.Templates.Categories
 
             //featured products are not supported by this template
             //that's hwhy we load all featured and non-featured products
-            var productCollection = IoCFactory.Resolve<IProductService>().GetAllProducts(this.CategoryId,
+            var productCollection = IoC.Resolve<IProductService>().GetAllProducts(this.CategoryId,
                 0, 0, null, minPriceConverted, maxPriceConverted,
                 string.Empty, false, pageSize, this.CurrentPageIndex,
                 psoFilterOption, orderBy, out totalRecords);

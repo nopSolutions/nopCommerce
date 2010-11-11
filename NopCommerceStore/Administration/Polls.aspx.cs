@@ -28,7 +28,7 @@ using System.Xml;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Content.Polls;
 using NopSolutions.NopCommerce.BusinessLogic.Security;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
  
 namespace NopSolutions.NopCommerce.Web.Administration
 {
@@ -36,7 +36,7 @@ namespace NopSolutions.NopCommerce.Web.Administration
     {
         protected override bool ValidatePageSecurity()
         {
-            return IoCFactory.Resolve<IACLService>().IsActionAllowed("ManagePolls");
+            return IoC.Resolve<IACLService>().IsActionAllowed("ManagePolls");
         }
     }
 }

@@ -23,7 +23,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.BusinessLogic.Security;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Common;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -42,7 +42,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         /// </summary>
         private void BindData()
         {
-            BannedIpAddress ipAddress = IoCFactory.Resolve<IBlacklistService>().GetBannedIpAddressById(this.BannedIpAddressId);
+            BannedIpAddress ipAddress = IoC.Resolve<IBlacklistService>().GetBannedIpAddressById(this.BannedIpAddressId);
             if (ipAddress != null)
             {
                 txtBannedIP.Text = ipAddress.Address;
@@ -66,10 +66,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         public BannedIpAddress SaveBannedIpAddressInfo()
         {
             DateTime nowDT = DateTime.UtcNow;
-            BannedIpAddress ipAddress = IoCFactory.Resolve<IBlacklistService>().GetBannedIpAddressById(this.BannedIpAddressId);
+            BannedIpAddress ipAddress = IoC.Resolve<IBlacklistService>().GetBannedIpAddressById(this.BannedIpAddressId);
 
             // Check if the IP is valid
-            if (!IoCFactory.Resolve<IBlacklistService>().IsValidIp(txtBannedIP.Text.Trim()))
+            if (!IoC.Resolve<IBlacklistService>().IsValidIp(txtBannedIP.Text.Trim()))
                 throw new NopException("The following isn't a valid IP address: " + txtBannedIP.Text);
 
             //if ip address is not null update
@@ -78,7 +78,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 ipAddress.Address = txtBannedIP.Text;
                 ipAddress.Comment = txtComment.Text;
                 ipAddress.UpdatedOn = nowDT;
-                IoCFactory.Resolve<IBlacklistService>().UpdateBannedIpAddress(ipAddress);
+                IoC.Resolve<IBlacklistService>().UpdateBannedIpAddress(ipAddress);
             }
             else //insert
             {
@@ -89,7 +89,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     CreatedOn = nowDT,
                     UpdatedOn = nowDT
                 };
-                IoCFactory.Resolve<IBlacklistService>().InsertBannedIpAddress(ipAddress);
+                IoC.Resolve<IBlacklistService>().InsertBannedIpAddress(ipAddress);
             }
 
             return ipAddress;

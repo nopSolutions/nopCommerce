@@ -26,7 +26,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.BusinessLogic.Messages;
 using NopSolutions.NopCommerce.BusinessLogic.Messages.SMS;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -34,7 +34,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            SMSProvider smsProvider = IoCFactory.Resolve<ISMSService>().GetSMSProviderBySystemKeyword(SMSProviderSystemKeyword);
+            SMSProvider smsProvider = IoC.Resolve<ISMSService>().GetSMSProviderBySystemKeyword(SMSProviderSystemKeyword);
             if (smsProvider != null)
             {
                 txtName.Text = smsProvider.Name;
@@ -54,7 +54,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public SMSProvider SaveInfo()
         {
-            SMSProvider smsProvider = IoCFactory.Resolve<ISMSService>().GetSMSProviderBySystemKeyword(SMSProviderSystemKeyword);
+            SMSProvider smsProvider = IoC.Resolve<ISMSService>().GetSMSProviderBySystemKeyword(SMSProviderSystemKeyword);
 
             if (smsProvider != null)
             {
@@ -62,7 +62,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 smsProvider.ClassName = txtClassName.Text;
                 smsProvider.SystemKeyword = txtSystemKeyword.Text;
                 smsProvider.IsActive = cbActive.Checked;
-                IoCFactory.Resolve<ISMSService>().UpdateSMSProvider(smsProvider);
+                IoC.Resolve<ISMSService>().UpdateSMSProvider(smsProvider);
             }
             else
             {
@@ -73,7 +73,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     SystemKeyword = txtSystemKeyword.Text,
                     IsActive = cbActive.Checked
                 };
-                IoCFactory.Resolve<ISMSService>().InsertSMSProvider(smsProvider);
+                IoC.Resolve<ISMSService>().InsertSMSProvider(smsProvider);
             }
 
             return smsProvider;

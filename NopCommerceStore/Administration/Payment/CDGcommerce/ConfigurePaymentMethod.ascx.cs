@@ -27,7 +27,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Payment.Methods.AuthorizeNET;
 using NopSolutions.NopCommerce.Web.Templates.Payment;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Payment.CDGcommerce
 {
@@ -41,16 +41,16 @@ namespace NopSolutions.NopCommerce.Web.Administration.Payment.CDGcommerce
 
         private void BindData()
         {
-            txtRestrictKey.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.CDGcommerce.RestrictKey");
-            txtLoginId.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.CDGcommerce.LoginId");
-            txtAdditionalFee.Value = IoCFactory.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.CDGcommerce.AdditionalFee");
+            txtRestrictKey.Text = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.CDGcommerce.RestrictKey");
+            txtLoginId.Text = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.CDGcommerce.LoginId");
+            txtAdditionalFee.Value = IoC.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.CDGcommerce.AdditionalFee");
         }
 
         public void Save()
         {
-            IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.CDGcommerce.RestrictKey", txtRestrictKey.Text);
-            IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.CDGcommerce.LoginId", txtLoginId.Text);
-            IoCFactory.Resolve<ISettingManager>().SetParamNative("PaymentMethod.CDGcommerce.AdditionalFee", txtAdditionalFee.Value);
+            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.CDGcommerce.RestrictKey", txtRestrictKey.Text);
+            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.CDGcommerce.LoginId", txtLoginId.Text);
+            IoC.Resolve<ISettingManager>().SetParamNative("PaymentMethod.CDGcommerce.AdditionalFee", txtAdditionalFee.Value);
         }
     }
 }

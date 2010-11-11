@@ -17,7 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Payment.Methods.iDeal
 {
@@ -31,11 +31,11 @@ namespace NopSolutions.NopCommerce.Payment.Methods.iDeal
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.iDeal.Basic.MerchantID");
+                return IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.iDeal.Basic.MerchantID");
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.iDeal.Basic.MerchantID", value);
+                IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.iDeal.Basic.MerchantID", value);
             }
         }
 
@@ -46,11 +46,11 @@ namespace NopSolutions.NopCommerce.Payment.Methods.iDeal
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.iDeal.Basic.SubID", "0");
+                return IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.iDeal.Basic.SubID", "0");
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.iDeal.Basic.SubID", value);
+                IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.iDeal.Basic.SubID", value);
             }
         }
 
@@ -61,11 +61,11 @@ namespace NopSolutions.NopCommerce.Payment.Methods.iDeal
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.iDeal.Basic.HashKey");
+                return IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.iDeal.Basic.HashKey");
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.iDeal.Basic.HashKey", value);
+                IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.iDeal.Basic.HashKey", value);
             }
         }
 
@@ -73,11 +73,11 @@ namespace NopSolutions.NopCommerce.Payment.Methods.iDeal
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.iDeal.Basic.Url", "https://idealtest.secure-ing.com/ideal/mpiPayInitIng.do");
+                return IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.iDeal.Basic.Url", "https://idealtest.secure-ing.com/ideal/mpiPayInitIng.do");
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.iDeal.Basic.Url", value);
+                IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.iDeal.Basic.Url", value);
             }
         }
 
@@ -85,11 +85,11 @@ namespace NopSolutions.NopCommerce.Payment.Methods.iDeal
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.iDeal.Basic.AdditionalFee");
+                return IoC.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.iDeal.Basic.AdditionalFee");
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParamNative("PaymentMethod.iDeal.Basic.AdditionalFee", value);
+                IoC.Resolve<ISettingManager>().SetParamNative("PaymentMethod.iDeal.Basic.AdditionalFee", value);
             }
         }
         #endregion

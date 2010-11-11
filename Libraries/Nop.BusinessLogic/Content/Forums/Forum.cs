@@ -16,7 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
@@ -111,7 +111,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         {
             get
             {
-                return IoCFactory.Resolve<IForumService>().GetForumGroupById(this.ForumGroupId);
+                return IoC.Resolve<IForumService>().GetForumGroupById(this.ForumGroupId);
             }
         }
 
@@ -122,7 +122,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         {
             get
             {
-                return IoCFactory.Resolve<IForumService>().GetTopicById(this.LastTopicId);
+                return IoC.Resolve<IForumService>().GetTopicById(this.LastTopicId);
             }
         }
 
@@ -133,7 +133,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         {
             get
             {
-                return IoCFactory.Resolve<IForumService>().GetPostById(this.LastPostId);
+                return IoC.Resolve<IForumService>().GetPostById(this.LastPostId);
             }
         }
 
@@ -144,7 +144,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         {
             get
             {
-                return IoCFactory.Resolve<ICustomerService>().GetCustomerById(this.LastPostUserId);
+                return IoC.Resolve<ICustomerService>().GetCustomerById(this.LastPostUserId);
             }
         }
         #endregion

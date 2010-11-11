@@ -26,7 +26,7 @@ using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Web.Templates.Payment;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Payment.eWayUK
 {
@@ -40,18 +40,18 @@ namespace NopSolutions.NopCommerce.Web.Administration.Payment.eWayUK
 
         private void BindData()
         {
-            txtCustomerId.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.eWayUK.CustomerId");
-            txtUsername.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.eWayUK.Username");
-            txtPaymentPage.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.eWayUK.PaymentPage");
-            txtAdditionalFee.Value = IoCFactory.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.eWayUK.AdditionalFee");
+            txtCustomerId.Text = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.eWayUK.CustomerId");
+            txtUsername.Text = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.eWayUK.Username");
+            txtPaymentPage.Text = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.eWayUK.PaymentPage");
+            txtAdditionalFee.Value = IoC.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.eWayUK.AdditionalFee");
         }
 
         public void Save()
         {
-            IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.eWayUK.CustomerId", txtCustomerId.Text);
-            IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.eWayUK.Username", txtUsername.Text);
-            IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.eWayUK.PaymentPage", txtPaymentPage.Text);
-            IoCFactory.Resolve<ISettingManager>().SetParamNative("PaymentMethod.eWayUK.AdditionalFee", txtAdditionalFee.Value);
+            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.eWayUK.CustomerId", txtCustomerId.Text);
+            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.eWayUK.Username", txtUsername.Text);
+            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.eWayUK.PaymentPage", txtPaymentPage.Text);
+            IoC.Resolve<ISettingManager>().SetParamNative("PaymentMethod.eWayUK.AdditionalFee", txtAdditionalFee.Value);
         }
     }
 }

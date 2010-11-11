@@ -29,7 +29,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.BusinessLogic.Utils;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Payment.Methods.PayPal.PayPalSvc;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 
 namespace NopSolutions.NopCommerce.Payment.Methods.PayPal
@@ -66,7 +66,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.PayPal
         private TransactMode GetCurrentTransactionMode()
         {
             TransactMode transactionModeEnum = TransactMode.Authorize;
-            string transactionMode = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.PaypalDirect.TransactionMode");
+            string transactionMode = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.PaypalDirect.TransactionMode");
             if (!String.IsNullOrEmpty(transactionMode))
                 transactionModeEnum = (TransactMode)Enum.Parse(typeof(TransactMode), transactionMode);
             return transactionModeEnum;
@@ -77,10 +77,10 @@ namespace NopSolutions.NopCommerce.Payment.Methods.PayPal
         /// </summary>
         private void InitSettings()
         {
-            useSandBox = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.PaypalDirect.UseSandbox");
-            APIAccountName = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.PaypalDirect.APIAccountName");
-            APIAccountPassword = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.PaypalDirect.APIAccountPassword");
-            Signature = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.PaypalDirect.Signature");
+            useSandBox = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.PaypalDirect.UseSandbox");
+            APIAccountName = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.PaypalDirect.APIAccountName");
+            APIAccountPassword = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.PaypalDirect.APIAccountPassword");
+            Signature = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.PaypalDirect.Signature");
 
             if (string.IsNullOrEmpty(APIAccountName))
                 throw new NopException("Paypal Direct API Account Name is empty");
@@ -159,7 +159,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.PayPal
         /// <returns>Additional handling fee</returns>
         public decimal GetAdditionalHandlingFee()
         {
-            return IoCFactory.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.PaypalDirect.AdditionalFee");
+            return IoC.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.PaypalDirect.AdditionalFee");
         }
 
         /// <summary>
@@ -178,7 +178,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.PayPal
             req.DoCaptureRequest.AuthorizationID = authorizationID;
             req.DoCaptureRequest.Amount = new BasicAmountType();
             req.DoCaptureRequest.Amount.Value = order.OrderTotal.ToString("N", new CultureInfo("en-us"));
-            req.DoCaptureRequest.Amount.currencyID = PaypalHelper.GetPaypalCurrency(IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency);
+            req.DoCaptureRequest.Amount.currencyID = PaypalHelper.GetPaypalCurrency(IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency);
             req.DoCaptureRequest.CompleteType = CompleteCodeType.Complete;
             DoCaptureResponseType response = service2.DoCapture(req);
 
@@ -249,12 +249,12 @@ namespace NopSolutions.NopCommerce.Payment.Methods.PayPal
             details.PaymentDetails = new PaymentDetailsType();
             details.PaymentDetails.OrderTotal = new BasicAmountType();
             details.PaymentDetails.OrderTotal.Value = paymentInfo.OrderTotal.ToString("N", new CultureInfo("en-us"));
-            details.PaymentDetails.OrderTotal.currencyID = PaypalHelper.GetPaypalCurrency(IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency);
+            details.PaymentDetails.OrderTotal.currencyID = PaypalHelper.GetPaypalCurrency(IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency);
             details.PaymentDetails.Custom = orderGuid.ToString();
             details.PaymentDetails.ButtonSource = "nopCommerceCart";
 
 
-            //ShoppingCart cart = IoCFactory.Resolve<IShoppingCartService>().GetShoppingCartByCustomerSessionGUID(ShoppingCartTypeEnum.ShoppingCart, NopContext.Current.Session.CustomerSessionGUID);
+            //ShoppingCart cart = IoC.Resolve<IShoppingCartService>().GetShoppingCartByCustomerSessionGUID(ShoppingCartTypeEnum.ShoppingCart, NopContext.Current.Session.CustomerSessionGUID);
             //PaymentDetailsItemType[] cartItems = new PaymentDetailsItemType[cart.Count];
             //for (int i = 0; i < cart.Count; i++)
             //{
@@ -266,7 +266,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.PayPal
             //        Quantity = item.Quantity.ToString(),
             //        Amount = new BasicAmountType()
             //        {
-            //            currencyID = PaypalHelper.GetPaypalCurrency(IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency),
+            //            currencyID = PaypalHelper.GetPaypalCurrency(IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency),
             //            Value = (item.Quantity * item.ProductVariant.Price).ToString("N", new CultureInfo("en-us"))
             //        }
             //    };
@@ -479,11 +479,11 @@ namespace NopSolutions.NopCommerce.Payment.Methods.PayPal
 
             //schedule
             details.ScheduleDetails = new ScheduleDetailsType();
-            details.ScheduleDetails.Description = string.Format("{0} - {1}", IoCFactory.Resolve<ISettingManager>().StoreName, "recurring payment");
+            details.ScheduleDetails.Description = string.Format("{0} - {1}", IoC.Resolve<ISettingManager>().StoreName, "recurring payment");
             details.ScheduleDetails.PaymentPeriod = new BillingPeriodDetailsType();
             details.ScheduleDetails.PaymentPeriod.Amount = new BasicAmountType();
             details.ScheduleDetails.PaymentPeriod.Amount.Value = paymentInfo.OrderTotal.ToString("N", new CultureInfo("en-us"));
-            details.ScheduleDetails.PaymentPeriod.Amount.currencyID = PaypalHelper.GetPaypalCurrency(IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency);
+            details.ScheduleDetails.PaymentPeriod.Amount.currencyID = PaypalHelper.GetPaypalCurrency(IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency);
             details.ScheduleDetails.PaymentPeriod.BillingFrequency = paymentInfo.RecurringCycleLength;
             switch (paymentInfo.RecurringCyclePeriod)
             {

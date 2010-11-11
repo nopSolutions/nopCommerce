@@ -29,7 +29,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Content.Forums;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -37,7 +37,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            this.Visible = IoCFactory.Resolve<IForumService>().ForumsEnabled;
+            this.Visible = IoC.Resolve<IForumService>().ForumsEnabled;
 
             if (!Page.IsPostBack)
             {
@@ -47,7 +47,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         private void BindData()
         {
-            var forumGroups = IoCFactory.Resolve<IForumService>().GetAllForumGroups();
+            var forumGroups = IoC.Resolve<IForumService>().GetAllForumGroups();
             rptrForumGroups.DataSource = forumGroups;
             rptrForumGroups.DataBind();
         }

@@ -17,7 +17,7 @@
                 <nopCommerce:DecimalTextBox runat="server" ID="txtRate" Value="0"
                 RequiredErrorMessage="Fixed rate is required" MinimumValue="0" MaximumValue="100000000"
                 RangeErrorMessage="The value must be from 0 to 100,000,000" Width="50px" CssClass="adminInput">
-            </nopCommerce:DecimalTextBox> [<%=IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode%>]
+            </nopCommerce:DecimalTextBox> [<%=IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode%>]
             </ItemTemplate>
         </asp:TemplateField>
     </Columns>

@@ -26,7 +26,7 @@ using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using System.Xml;
 using NopSolutions.NopCommerce.BusinessLogic.Shipping;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -56,7 +56,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         void BindGrid()
         {
-            var shippingMethodCollection = IoCFactory.Resolve<IShippingService>().GetAllShippingMethods();
+            var shippingMethodCollection = IoC.Resolve<IShippingService>().GetAllShippingMethods();
             gvShippingMethods.DataSource = shippingMethodCollection;
             gvShippingMethods.DataBind();
         }

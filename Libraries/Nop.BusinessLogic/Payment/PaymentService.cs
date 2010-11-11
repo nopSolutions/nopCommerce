@@ -22,7 +22,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.Payment;
 using NopSolutions.NopCommerce.BusinessLogic.Shipping;
 using NopSolutions.NopCommerce.Common;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 using NopSolutions.NopCommerce.BusinessLogic.Data;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
@@ -391,7 +391,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
             if (paymentMethod == null)
                 return;
 
-            var country = IoCFactory.Resolve<ICountryService>().GetCountryById(countryId);
+            var country = IoC.Resolve<ICountryService>().GetCountryById(countryId);
             if (country == null)
                 return;
 
@@ -451,7 +451,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
             if (paymentMethod == null)
                 return;
 
-            var country = IoCFactory.Resolve<ICountryService>().GetCountryById(countryId);
+            var country = IoC.Resolve<ICountryService>().GetCountryById(countryId);
             if (country == null)
                 return;
 
@@ -738,7 +738,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.PaymentManager.CacheEnabled");
+                return IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.PaymentManager.CacheEnabled");
             }
         }
         #endregion

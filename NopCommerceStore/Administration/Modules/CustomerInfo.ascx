@@ -37,7 +37,7 @@
                 OnClick="BtnChangePassword_OnClick" />
         </td>
     </tr>
-    <% if (IoCFactory.Resolve<ICustomerService>().FormFieldGenderEnabled)
+    <% if (IoC.Resolve<ICustomerService>().FormFieldGenderEnabled)
        { %>
     <tr>
         <td class="adminTitle">
@@ -69,7 +69,7 @@
             <asp:TextBox runat="server" ID="txtLastName" CssClass="adminInput" />
         </td>
     </tr>
-    <% if (IoCFactory.Resolve<ICustomerService>().FormFieldDateOfBirthEnabled)
+    <% if (IoC.Resolve<ICustomerService>().FormFieldDateOfBirthEnabled)
        { %>
     <tr>
         <td class="adminTitle">
@@ -81,7 +81,7 @@
         </td>
     </tr>
     <% } %>
-    <% if (IoCFactory.Resolve<ICustomerService>().FormFieldCompanyEnabled)
+    <% if (IoC.Resolve<ICustomerService>().FormFieldCompanyEnabled)
        { %>
     <tr>
         <td class="adminTitle">
@@ -93,7 +93,7 @@
         </td>
     </tr>
     <% } %>    
-    <% if (IoCFactory.Resolve<ITaxService>().EUVatEnabled)
+    <% if (IoC.Resolve<ITaxService>().EUVatEnabled)
        { %>
     <tr>
         <td class="adminTitle">
@@ -112,7 +112,7 @@
         </td>
     </tr>
     <% } %>
-    <% if (IoCFactory.Resolve<ICustomerService>().FormFieldStreetAddressEnabled)
+    <% if (IoC.Resolve<ICustomerService>().FormFieldStreetAddressEnabled)
        { %>
     <tr>
         <td class="adminTitle">
@@ -124,7 +124,7 @@
         </td>
     </tr>
     <% } %>
-    <% if (IoCFactory.Resolve<ICustomerService>().FormFieldStreetAddress2Enabled)
+    <% if (IoC.Resolve<ICustomerService>().FormFieldStreetAddress2Enabled)
        { %>
     <tr>
         <td class="adminTitle">
@@ -136,7 +136,7 @@
         </td>
     </tr>
     <% } %>
-    <% if (IoCFactory.Resolve<ICustomerService>().FormFieldPostCodeEnabled)
+    <% if (IoC.Resolve<ICustomerService>().FormFieldPostCodeEnabled)
        { %>
     <tr>
         <td class="adminTitle">
@@ -148,7 +148,7 @@
         </td>
     </tr>
     <% } %>
-    <% if (IoCFactory.Resolve<ICustomerService>().FormFieldCityEnabled)
+    <% if (IoC.Resolve<ICustomerService>().FormFieldCityEnabled)
        { %>
     <tr>
         <td class="adminTitle">
@@ -160,7 +160,7 @@
         </td>
     </tr>
     <% } %>
-    <% if (IoCFactory.Resolve<ICustomerService>().FormFieldCountryEnabled)
+    <% if (IoC.Resolve<ICustomerService>().FormFieldCountryEnabled)
        { %>
     <tr>
         <td class="adminTitle">
@@ -173,7 +173,7 @@
         </td>
     </tr>
     <% } %>
-    <% if (IoCFactory.Resolve<ICustomerService>().FormFieldCountryEnabled && IoCFactory.Resolve<ICustomerService>().FormFieldStateEnabled)
+    <% if (IoC.Resolve<ICustomerService>().FormFieldCountryEnabled && IoC.Resolve<ICustomerService>().FormFieldStateEnabled)
        { %>
     <tr>
         <td class="adminTitle">
@@ -186,7 +186,7 @@
         </td>
     </tr>
     <% } %>
-    <% if (IoCFactory.Resolve<ICustomerService>().FormFieldPhoneEnabled)
+    <% if (IoC.Resolve<ICustomerService>().FormFieldPhoneEnabled)
        { %>
     <tr>
         <td class="adminTitle">
@@ -198,7 +198,7 @@
         </td>
     </tr>
     <% } %>
-    <% if (IoCFactory.Resolve<ICustomerService>().FormFieldFaxEnabled)
+    <% if (IoC.Resolve<ICustomerService>().FormFieldFaxEnabled)
        { %>
     <tr runat="server" id="pnlFaxNumber">
         <td class="adminTitle">
@@ -210,7 +210,7 @@
         </td>
     </tr>
     <% } %>
-    <% if (IoCFactory.Resolve<ICustomerService>().FormFieldNewsletterEnabled)
+    <% if (IoC.Resolve<ICustomerService>().FormFieldNewsletterEnabled)
        { %>
     <tr>
         <td class="adminTitle">

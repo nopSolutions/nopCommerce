@@ -6,7 +6,7 @@ using System.Text;
 using NopSolutions.NopCommerce.BusinessLogic.Categories;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 using NopSolutions.NopCommerce.BusinessLogic.Media;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
@@ -30,9 +30,9 @@ namespace NopSolutions.NopCommerce.Become
             {
                 writer.WriteLine("UPC;Mfr Part #;Manufacturer;Product URL;Image URL;Product Title;Product Description;Category;Price;Condition;Stock Status");
 
-                foreach(Product p in IoCFactory.Resolve<IProductService>().GetAllProducts(false))
+                foreach(Product p in IoC.Resolve<IProductService>().GetAllProducts(false))
                 {
-                    foreach (ProductVariant pv in IoCFactory.Resolve<IProductService>().GetProductVariantsByProductId(p.ProductId, false))
+                    foreach (ProductVariant pv in IoC.Resolve<IProductService>().GetProductVariantsByProductId(p.ProductId, false))
                     {
                         string sku = pv.ProductVariantId.ToString("000000000000");
                         string manufacturerName = p.ProductManufacturers.Count > 0 ? p.ProductManufacturers[0].Manufacturer.Name : String.Empty;
@@ -41,14 +41,14 @@ namespace NopSolutions.NopCommerce.Become
                         string productUrl = SEOHelper.GetProductUrl(p);
 
                         string imageUrl = string.Empty;
-                        var pictures = IoCFactory.Resolve<IPictureService>().GetPicturesByProductId(p.ProductId, 1);
+                        var pictures = IoC.Resolve<IPictureService>().GetPicturesByProductId(p.ProductId, 1);
                         if (pictures.Count > 0)
-                            imageUrl = IoCFactory.Resolve<IPictureService>().GetPictureUrl(pictures[0], IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("PromotionProvider.BecomeCom.ProductThumbnailImageSize"), true);
+                            imageUrl = IoC.Resolve<IPictureService>().GetPictureUrl(pictures[0], IoC.Resolve<ISettingManager>().GetSettingValueInteger("PromotionProvider.BecomeCom.ProductThumbnailImageSize"), true);
                         else
-                            imageUrl = IoCFactory.Resolve<IPictureService>().GetDefaultPictureUrl(PictureTypeEnum.Entity, IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("PromotionProvider.BecomeCom.ProductThumbnailImageSize"));
+                            imageUrl = IoC.Resolve<IPictureService>().GetDefaultPictureUrl(PictureTypeEnum.Entity, IoC.Resolve<ISettingManager>().GetSettingValueInteger("PromotionProvider.BecomeCom.ProductThumbnailImageSize"));
 
                         string description = pv.Description;
-                        string price = IoCFactory.Resolve<ICurrencyService>().ConvertCurrency(pv.Price, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency, BecomeService.UsedCurrency).ToString(new CultureInfo("en-US", false).NumberFormat);
+                        string price = IoC.Resolve<ICurrencyService>().ConvertCurrency(pv.Price, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, BecomeService.UsedCurrency).ToString(new CultureInfo("en-US", false).NumberFormat);
                         string stockStatus = pv.StockQuantity > 0 ? "In Stock" : "Out of Stock";
                         string category = "no category";
 
@@ -69,7 +69,7 @@ namespace NopSolutions.NopCommerce.Become
                         if (productCategories.Count > 0)
                         {
                             StringBuilder sb = new StringBuilder();
-                            foreach (Category cat in IoCFactory.Resolve<ICategoryService>().GetBreadCrumb(productCategories[0].CategoryId))
+                            foreach (Category cat in IoC.Resolve<ICategoryService>().GetBreadCrumb(productCategories[0].CategoryId))
                             {
                                 sb.AppendFormat("{0}>", cat.Name);
                             }
@@ -120,10 +120,10 @@ namespace NopSolutions.NopCommerce.Become
         {
             get
             {
-                int currencyId = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("PromotionProvider.BecomeCom.Currency");
-                var currency = IoCFactory.Resolve<ICurrencyService>().GetCurrencyById(currencyId);
+                int currencyId = IoC.Resolve<ISettingManager>().GetSettingValueInteger("PromotionProvider.BecomeCom.Currency");
+                var currency = IoC.Resolve<ICurrencyService>().GetCurrencyById(currencyId);
                 if (currency == null || !currency.Published)
-                    currency = IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency;
+                    currency = IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency;
                 return currency;
             }
             set
@@ -131,7 +131,7 @@ namespace NopSolutions.NopCommerce.Become
                 int id = 0;
                 if (value != null)
                     id = value.CurrencyId;
-                IoCFactory.Resolve<ISettingManager>().SetParam("PromotionProvider.BecomeCom.Currency", id.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("PromotionProvider.BecomeCom.Currency", id.ToString());
             }
         }
     }

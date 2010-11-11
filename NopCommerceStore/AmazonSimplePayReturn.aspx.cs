@@ -9,7 +9,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Payment.Methods.Amazon;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web
 {
@@ -33,7 +33,7 @@ namespace NopSolutions.NopCommerce.Web
                 }
 
                 int orderId = Convert.ToInt32(CommonHelper.QueryStringInt("referenceId"));
-                Order order = IoCFactory.Resolve<IOrderService>().GetOrderById(orderId);
+                Order order = IoC.Resolve<IOrderService>().GetOrderById(orderId);
                 if(order == null)
                 {
                     Response.Redirect(CommonHelper.GetStoreLocation());
@@ -45,16 +45,16 @@ namespace NopSolutions.NopCommerce.Web
 
                 if (SimplePaySettings.SettleImmediately)
                 {
-                    if (IoCFactory.Resolve<IOrderService>().CanMarkOrderAsPaid(order))
+                    if (IoC.Resolve<IOrderService>().CanMarkOrderAsPaid(order))
                     {
-                        IoCFactory.Resolve<IOrderService>().MarkOrderAsPaid(order.OrderId);
+                        IoC.Resolve<IOrderService>().MarkOrderAsPaid(order.OrderId);
                     }
                 }
                 else
                 {
-                    if (IoCFactory.Resolve<IOrderService>().CanMarkOrderAsAuthorized(order))
+                    if (IoC.Resolve<IOrderService>().CanMarkOrderAsAuthorized(order))
                     {
-                        IoCFactory.Resolve<IOrderService>().MarkAsAuthorized(order.OrderId);
+                        IoC.Resolve<IOrderService>().MarkAsAuthorized(order.OrderId);
                     }
                 }
 

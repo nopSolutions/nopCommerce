@@ -19,7 +19,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using NopSolutions.NopCommerce.BusinessLogic.Measures;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -36,14 +36,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         private void BindDimensions()
         {
-            var dimensions = IoCFactory.Resolve<IMeasureService>().GetAllMeasureDimensions();
+            var dimensions = IoC.Resolve<IMeasureService>().GetAllMeasureDimensions();
             gvDimensions.DataSource = dimensions;
             gvDimensions.DataBind();
         }
 
         private void BindWeights()
         {
-            var weights = IoCFactory.Resolve<IMeasureService>().GetAllMeasureWeights();
+            var weights = IoC.Resolve<IMeasureService>().GetAllMeasureWeights();
             gvWeights.DataSource = weights;
             gvWeights.DataBind();
         }
@@ -69,7 +69,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     HiddenField hfMeasureDimensionId = (HiddenField)row.FindControl("hfMeasureDimensionId");
                     int measureDimensionId = int.Parse(hfMeasureDimensionId.Value);
                     if (rdbIsPrimaryDimension.Checked)
-                        IoCFactory.Resolve<IMeasureService>().BaseDimensionIn = IoCFactory.Resolve<IMeasureService>().GetMeasureDimensionById(measureDimensionId);
+                        IoC.Resolve<IMeasureService>().BaseDimensionIn = IoC.Resolve<IMeasureService>().GetMeasureDimensionById(measureDimensionId);
                 }
 
                 //weights
@@ -79,7 +79,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     HiddenField hfMeasureWeightId = (HiddenField)row.FindControl("hfMeasureWeightId");
                     int measureWeightId = int.Parse(hfMeasureWeightId.Value);
                     if (rdbIsPrimaryWeight.Checked)
-                        IoCFactory.Resolve<IMeasureService>().BaseWeightIn = IoCFactory.Resolve<IMeasureService>().GetMeasureWeightById(measureWeightId);
+                        IoC.Resolve<IMeasureService>().BaseWeightIn = IoC.Resolve<IMeasureService>().GetMeasureWeightById(measureWeightId);
                 }
 
                 BindDimensions();

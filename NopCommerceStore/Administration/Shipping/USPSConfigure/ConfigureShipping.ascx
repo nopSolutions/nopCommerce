@@ -28,7 +28,7 @@
     </tr>
     <tr>
         <td class="adminTitle">
-            Additional handling charge [<%=IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode%>]:
+            Additional handling charge [<%=IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode%>]:
         </td>
         <td class="adminData">
             <nopCommerce:DecimalTextBox runat="server" ID="txtAdditionalHandlingCharge" Value="0"

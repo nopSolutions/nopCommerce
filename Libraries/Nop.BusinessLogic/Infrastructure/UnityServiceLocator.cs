@@ -13,30 +13,32 @@
 //------------------------------------------------------------------------------
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Web;
-using System.Web.Security;
-using System.Web.UI;
-using System.Web.UI.HtmlControls;
-using System.Web.UI.WebControls;
-using System.Web.UI.WebControls.WebParts;
-using NopSolutions.NopCommerce.BusinessLogic;
-using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
-using NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts;
-using NopSolutions.NopCommerce.BusinessLogic.Security;
-using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
- 
-namespace NopSolutions.NopCommerce.Web.Administration
+using Microsoft.Practices.ServiceLocation;
+using Microsoft.Practices.Unity;
+
+namespace NopSolutions.NopCommerce.BusinessLogic.Infrastructure
 {
-    public partial class Administration_ReturnRequestDetails : BaseNopAdministrationPage
+    /// <summary>
+    /// Unity implemenation of the <see cref="ServiceLocatorImplBase" />
+    /// </summary>
+    public class UnityServiceLocator : ServiceLocatorImplBase
     {
-        protected override bool ValidatePageSecurity()
+        readonly IUnityContainer unityContainer;
+
+        public UnityServiceLocator(IUnityContainer unityContainer)
         {
-            return IoC.Resolve<IACLService>().IsActionAllowed("ManageReturnRequests");
+            this.unityContainer = unityContainer;
+        }
+
+        protected override object DoGetInstance(Type serviceType, string key)
+        {
+            return unityContainer.Resolve(serviceType, key);
+        }
+
+        protected override IEnumerable<object> DoGetAllInstances(Type serviceType)
+        {
+            return unityContainer.ResolveAll(serviceType);
         }
     }
 }

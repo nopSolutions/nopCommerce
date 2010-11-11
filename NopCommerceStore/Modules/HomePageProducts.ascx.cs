@@ -31,7 +31,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -44,7 +44,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         private void BindData()
         {
-            var products = IoCFactory.Resolve<IProductService>().GetAllProductsDisplayedOnHomePage();
+            var products = IoC.Resolve<IProductService>().GetAllProductsDisplayedOnHomePage();
             if (products.Count > 0)
             {
                 dlCatalog.DataSource = products;
@@ -70,9 +70,9 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     {
                         var picture = product.DefaultPicture;
                         if (picture != null)
-                            hlImageLink.ImageUrl = IoCFactory.Resolve<IPictureService>().GetPictureUrl(picture, IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.Product.ThumbnailImageSize", 125), true);
+                            hlImageLink.ImageUrl = IoC.Resolve<IPictureService>().GetPictureUrl(picture, IoC.Resolve<ISettingManager>().GetSettingValueInteger("Media.Product.ThumbnailImageSize", 125), true);
                         else
-                            hlImageLink.ImageUrl = IoCFactory.Resolve<IPictureService>().GetDefaultPictureUrl(IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.Product.ThumbnailImageSize", 125));
+                            hlImageLink.ImageUrl = IoC.Resolve<IPictureService>().GetDefaultPictureUrl(IoC.Resolve<ISettingManager>().GetSettingValueInteger("Media.Product.ThumbnailImageSize", 125));
 
                         hlImageLink.NavigateUrl = productURL;
                         hlImageLink.ToolTip = String.Format(GetLocaleResourceString("Media.Product.ImageLinkTitleFormat"), product.LocalizedName);

@@ -24,7 +24,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Data;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Measures
 {
@@ -502,13 +502,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Measures
         {
             get
             {
-                int baseDimensionIn = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Common.BaseDimensionIn");
+                int baseDimensionIn = IoC.Resolve<ISettingManager>().GetSettingValueInteger("Common.BaseDimensionIn");
                 return this.GetMeasureDimensionById(baseDimensionIn);
             }
             set
             {
                 if (value != null)
-                    IoCFactory.Resolve<ISettingManager>().SetParam("Common.BaseDimensionIn", value.MeasureDimensionId.ToString());
+                    IoC.Resolve<ISettingManager>().SetParam("Common.BaseDimensionIn", value.MeasureDimensionId.ToString());
             }
         }
 
@@ -519,13 +519,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Measures
         {
             get
             {
-                int baseWeightIn = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Common.BaseWeightIn");
+                int baseWeightIn = IoC.Resolve<ISettingManager>().GetSettingValueInteger("Common.BaseWeightIn");
                 return this.GetMeasureWeightById(baseWeightIn);
             }
             set
             {
                 if (value != null)
-                    IoCFactory.Resolve<ISettingManager>().SetParam("Common.BaseWeightIn", value.MeasureWeightId.ToString());
+                    IoC.Resolve<ISettingManager>().SetParam("Common.BaseWeightIn", value.MeasureWeightId.ToString());
             }
         }
 
@@ -536,7 +536,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Measures
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.MeasureManager.CacheEnabled");
+                return IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.MeasureManager.CacheEnabled");
             }
         }
         #endregion

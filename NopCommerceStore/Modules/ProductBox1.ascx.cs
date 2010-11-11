@@ -36,7 +36,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.BusinessLogic.Tax;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -62,13 +62,13 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 var picture = product.DefaultPicture;
                 if (picture != null)
                 {
-                    hlImageLink.ImageUrl = IoCFactory.Resolve<IPictureService>().GetPictureUrl(picture, this.ProductImageSize, true);
+                    hlImageLink.ImageUrl = IoC.Resolve<IPictureService>().GetPictureUrl(picture, this.ProductImageSize, true);
                     hlImageLink.ToolTip = String.Format(GetLocaleResourceString("Media.Product.ImageLinkTitleFormat"), product.LocalizedName);
                     hlImageLink.Text = String.Format(GetLocaleResourceString("Media.Product.ImageAlternateTextFormat"), product.LocalizedName);
                 }
                 else
                 {
-                    hlImageLink.ImageUrl = IoCFactory.Resolve<IPictureService>().GetDefaultPictureUrl(this.ProductImageSize);
+                    hlImageLink.ImageUrl = IoC.Resolve<IPictureService>().GetDefaultPictureUrl(this.ProductImageSize);
                     hlImageLink.ToolTip = String.Format(GetLocaleResourceString("Media.Product.ImageLinkTitleFormat"), product.LocalizedName);
                     hlImageLink.Text = String.Format(GetLocaleResourceString("Media.Product.ImageAlternateTextFormat"), product.LocalizedName);
                 }
@@ -83,7 +83,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     {
                         var productVariant = productVariantCollection[0];
                         btnAddToCart.Visible = (!productVariant.DisableBuyButton);
-                        if (!IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Common.HidePricesForNonRegistered") ||
+                        if (!IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Common.HidePricesForNonRegistered") ||
                             (NopContext.Current.User != null &&
                             !NopContext.Current.User.IsGuest))
                         {
@@ -117,9 +117,9 @@ namespace NopSolutions.NopCommerce.Web.Modules
         {
             int productId = Convert.ToInt32(e.CommandArgument);
             int productVariantId = 0;
-            if (IoCFactory.Resolve<IProductService>().DirectAddToCartAllowed(productId, out productVariantId))
+            if (IoC.Resolve<IProductService>().DirectAddToCartAllowed(productId, out productVariantId))
             {
-                var addToCartWarnings = IoCFactory.Resolve<IShoppingCartService>().AddToCart(ShoppingCartTypeEnum.ShoppingCart,
+                var addToCartWarnings = IoC.Resolve<IShoppingCartService>().AddToCart(ShoppingCartTypeEnum.ShoppingCart,
                     productVariantId, string.Empty, decimal.Zero, 1);
                 if (addToCartWarnings.Count == 0)
                 {
@@ -127,7 +127,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     if (this.RedirectCartAfterAddingProduct.HasValue)
                         displayCart = this.RedirectCartAfterAddingProduct.Value;
                     else
-                        displayCart = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Display.Products.DisplayCartAfterAddingProduct");
+                        displayCart = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Display.Products.DisplayCartAfterAddingProduct");
 
                     if (displayCart)
                     {
@@ -170,7 +170,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             get
             {
                 if (ViewState["ProductImageSize"] == null)
-                    return IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.Product.ThumbnailImageSize", 125);
+                    return IoC.Resolve<ISettingManager>().GetSettingValueInteger("Media.Product.ThumbnailImageSize", 125);
                 else
                     return (int)ViewState["ProductImageSize"];
             }

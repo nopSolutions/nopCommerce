@@ -25,7 +25,7 @@ using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 
 namespace NopSolutions.NopCommerce.Web.Administration
@@ -36,7 +36,7 @@ namespace NopSolutions.NopCommerce.Web.Administration
         {
             CommonHelper.SetResponseNoCache(Response);
 
-            IoCFactory.Resolve<ICustomerService>().Logout();
+            IoC.Resolve<ICustomerService>().Logout();
 
             string url = SEOHelper.GetAdminAreaLoginPageUrl();
             Response.Redirect(url);

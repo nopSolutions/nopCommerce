@@ -24,7 +24,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Data;
 using NopSolutions.NopCommerce.BusinessLogic.Installation;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
 
@@ -350,11 +350,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit.UsersOnline
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("OnlineUserManager.Enabled", false);
+                return IoC.Resolve<ISettingManager>().GetSettingValueBoolean("OnlineUserManager.Enabled", false);
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("OnlineUserManager.Enabled", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("OnlineUserManager.Enabled", value.ToString());
             }
         }
         
@@ -365,11 +365,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit.UsersOnline
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("OnlineUserManager.MaximumOnlineCustomers", 0);
+                return IoC.Resolve<ISettingManager>().GetSettingValueInteger("OnlineUserManager.MaximumOnlineCustomers", 0);
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("OnlineUserManager.MaximumOnlineCustomers", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("OnlineUserManager.MaximumOnlineCustomers", value.ToString());
             }
         }
         #endregion

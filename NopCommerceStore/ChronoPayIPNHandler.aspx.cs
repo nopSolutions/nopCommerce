@@ -10,7 +10,7 @@ using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Payment.Methods.ChronoPay;
 using NopSolutions.NopCommerce.BusinessLogic.Audit;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web
 {
@@ -27,10 +27,10 @@ namespace NopSolutions.NopCommerce.Web
                     int orderId = 0;
                     if(Int32.TryParse(Request.Form["cs1"], out orderId))
                     {
-                        Order order = IoCFactory.Resolve<IOrderService>().GetOrderById(orderId);
-                        if(order != null && IoCFactory.Resolve<IOrderService>().CanMarkOrderAsPaid(order))
+                        Order order = IoC.Resolve<IOrderService>().GetOrderById(orderId);
+                        if(order != null && IoC.Resolve<IOrderService>().CanMarkOrderAsPaid(order))
                         {
-                            IoCFactory.Resolve<IOrderService>().MarkOrderAsPaid(order.OrderId);
+                            IoC.Resolve<IOrderService>().MarkOrderAsPaid(order.OrderId);
                         }
                     }
                 }

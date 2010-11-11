@@ -25,7 +25,7 @@ using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.Web;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
  
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -35,7 +35,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public void BindData()
         {
-            var customerRoles = IoCFactory.Resolve<ICustomerService>().GetAllCustomerRoles();
+            var customerRoles = IoC.Resolve<ICustomerService>().GetAllCustomerRoles();
             foreach (CustomerRole customerRole in customerRoles)
             {
                 ListItem item = new ListItem(customerRole.Name, customerRole.CustomerRoleId.ToString());

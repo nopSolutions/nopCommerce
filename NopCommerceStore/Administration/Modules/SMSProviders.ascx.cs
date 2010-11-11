@@ -31,7 +31,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.BusinessLogic.Messages;
 using NopSolutions.NopCommerce.BusinessLogic.Messages.SMS;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
@@ -50,12 +50,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         private void BindData()
         {
-            txtClickatellPhoneNumber.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue("Mobile.SMS.Clickatell.PhoneNumber");
-            txtClickatellAPIId.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue("Mobile.SMS.Clickatell.APIID");
-            txtClickatellUsername.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue("Mobile.SMS.Clickatell.Username");
-            txtClickatellPassword.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue("Mobile.SMS.Clickatell.Password");
+            txtClickatellPhoneNumber.Text = IoC.Resolve<ISettingManager>().GetSettingValue("Mobile.SMS.Clickatell.PhoneNumber");
+            txtClickatellAPIId.Text = IoC.Resolve<ISettingManager>().GetSettingValue("Mobile.SMS.Clickatell.APIID");
+            txtClickatellUsername.Text = IoC.Resolve<ISettingManager>().GetSettingValue("Mobile.SMS.Clickatell.Username");
+            txtClickatellPassword.Text = IoC.Resolve<ISettingManager>().GetSettingValue("Mobile.SMS.Clickatell.Password");
 
-            txtVerizonEmail.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue("Mobile.SMS.Verizon.Email");
+            txtVerizonEmail.Text = IoC.Resolve<ISettingManager>().GetSettingValue("Mobile.SMS.Verizon.Email");
         }
 
         private void FillDropDowns()
@@ -78,13 +78,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     ctrlClickatellProviderInfo.SaveInfo();
                     ctrlVerizonProviderInfo.SaveInfo();
 
-                    IoCFactory.Resolve<ISettingManager>().SetParam("Mobile.SMS.Clickatell.PhoneNumber", txtClickatellPhoneNumber.Text);
-                    IoCFactory.Resolve<ISettingManager>().SetParam("Mobile.SMS.Clickatell.APIID", txtClickatellAPIId.Text);
-                    IoCFactory.Resolve<ISettingManager>().SetParam("Mobile.SMS.Clickatell.Username", txtClickatellUsername.Text);
-                    IoCFactory.Resolve<ISettingManager>().SetParam("Mobile.SMS.Clickatell.Password", txtClickatellPassword.Text);
-                    IoCFactory.Resolve<ISettingManager>().SetParam("Mobile.SMS.Verizon.Email", txtVerizonEmail.Text);
+                    IoC.Resolve<ISettingManager>().SetParam("Mobile.SMS.Clickatell.PhoneNumber", txtClickatellPhoneNumber.Text);
+                    IoC.Resolve<ISettingManager>().SetParam("Mobile.SMS.Clickatell.APIID", txtClickatellAPIId.Text);
+                    IoC.Resolve<ISettingManager>().SetParam("Mobile.SMS.Clickatell.Username", txtClickatellUsername.Text);
+                    IoC.Resolve<ISettingManager>().SetParam("Mobile.SMS.Clickatell.Password", txtClickatellPassword.Text);
+                    IoC.Resolve<ISettingManager>().SetParam("Mobile.SMS.Verizon.Email", txtVerizonEmail.Text);
 
-                    IoCFactory.Resolve<ICustomerActivityService>().InsertActivity("EditSMSProviders", GetLocaleResourceString("ActivityLog.EditSMSProviders"));
+                    IoC.Resolve<ICustomerActivityService>().InsertActivity("EditSMSProviders", GetLocaleResourceString("ActivityLog.EditSMSProviders"));
 
                     Response.Redirect(string.Format("SMSProviders.aspx?TabID={0}", GetActiveTabId(SMSProvidersTabs)));
                 }
@@ -99,7 +99,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                SMSProvider smsProvider = IoCFactory.Resolve<ISMSService>().GetSMSProviderBySystemKeyword("SMSPROVIDERS_CLICKATELL");
+                SMSProvider smsProvider = IoC.Resolve<ISMSService>().GetSMSProviderBySystemKeyword("SMSPROVIDERS_CLICKATELL");
                 if (smsProvider == null)
                 {
                     ShowError(GetLocaleResourceString("Admin.SMSProviders.Clickatell.TestMessage.Failed"));
@@ -130,7 +130,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                SMSProvider smsProvider = IoCFactory.Resolve<ISMSService>().GetSMSProviderBySystemKeyword("SMSPROVIDERS_VERIZON");
+                SMSProvider smsProvider = IoC.Resolve<ISMSService>().GetSMSProviderBySystemKeyword("SMSPROVIDERS_VERIZON");
                 if (smsProvider == null)
                 {
                     ShowError(GetLocaleResourceString("Admin.SMSProviders.Verizon.TestMessage.Failed"));

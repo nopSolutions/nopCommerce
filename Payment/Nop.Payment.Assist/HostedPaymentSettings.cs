@@ -17,7 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Payment.Methods.Assist
 {
@@ -28,11 +28,11 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Assist
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Assist.HostedPayment.GatewayUrl", "https://test.assist.ru/shops/cardpayment.cfm");
+                return IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Assist.HostedPayment.GatewayUrl", "https://test.assist.ru/shops/cardpayment.cfm");
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.Assist.HostedPayment.GatewayUrl", value);
+                IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.Assist.HostedPayment.GatewayUrl", value);
             }
         }
 
@@ -40,11 +40,11 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Assist
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Assist.HostedPayment.ShopID");
+                return IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Assist.HostedPayment.ShopID");
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.Assist.HostedPayment.ShopID", value);
+                IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.Assist.HostedPayment.ShopID", value);
             }
         }
 
@@ -52,11 +52,11 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Assist
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.Assist.HostedPayment.AuthorizeOnly", false);
+                return IoC.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.Assist.HostedPayment.AuthorizeOnly", false);
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.Assist.HostedPayment.AuthorizeOnly", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.Assist.HostedPayment.AuthorizeOnly", value.ToString());
             }
         }
 
@@ -64,11 +64,11 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Assist
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.Assist.HostedPayment.TestMode", true);
+                return IoC.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.Assist.HostedPayment.TestMode", true);
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.Assist.HostedPayment.TestMode", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.Assist.HostedPayment.TestMode", value.ToString());
             }
         }
 
@@ -76,11 +76,11 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Assist
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.Assist.HostedPayment.AdditionalFee");
+                return IoC.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.Assist.HostedPayment.AdditionalFee");
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParamNative("PaymentMethod.Assist.HostedPayment.AdditionalFee", value);
+                IoC.Resolve<ISettingManager>().SetParamNative("PaymentMethod.Assist.HostedPayment.AdditionalFee", value);
             }
         }
         #endregion

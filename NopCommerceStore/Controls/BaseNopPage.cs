@@ -35,7 +35,7 @@ using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.Installation;
 using NopSolutions.NopCommerce.BusinessLogic.Audit.UsersOnline;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web
 {
@@ -50,7 +50,7 @@ namespace NopSolutions.NopCommerce.Web
 
         public BaseNopPage()
         {
-            showExecutionTimer = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Display.PageExecutionTimeInfoEnabled");
+            showExecutionTimer = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Display.PageExecutionTimeInfoEnabled");
             if (showExecutionTimer)
             {
                 executionTimer = new Stopwatch();
@@ -64,11 +64,11 @@ namespace NopSolutions.NopCommerce.Web
         protected override void OnPreInit(EventArgs e)
         {
             //store is closed
-            if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Common.StoreClosed"))
+            if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Common.StoreClosed"))
             {
                 if (NopContext.Current.User != null &&
                     NopContext.Current.User.IsAdmin &&
-                    IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Common.StoreClosed.AllowAdminAccess"))
+                    IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Common.StoreClosed.AllowAdminAccess"))
                 {
                     //do nothing - allow admin access
                 }
@@ -99,7 +99,7 @@ namespace NopSolutions.NopCommerce.Web
             }
 
             //allow navigation only for registered customers
-            if (IoCFactory.Resolve<ICustomerService>().AllowNavigationOnlyRegisteredCustomers)
+            if (IoC.Resolve<ICustomerService>().AllowNavigationOnlyRegisteredCustomers)
             {
                 if (NopContext.Current.User == null || NopContext.Current.User.IsGuest)
                 {
@@ -190,7 +190,7 @@ namespace NopSolutions.NopCommerce.Web
             //online user tracking
             if (this.TrackedByOnlineCustomersModule)
             {
-                IoCFactory.Resolve<IOnlineUserService>().TrackCurrentUser();
+                IoC.Resolve<IOnlineUserService>().TrackCurrentUser();
             }
 
             base.OnPreRender(e);
@@ -260,7 +260,7 @@ namespace NopSolutions.NopCommerce.Web
             {
                 if (_localizationManager == null)
                 {
-                    _localizationManager = IoCFactory.Resolve<ILocalizationManager>();
+                    _localizationManager = IoC.Resolve<ILocalizationManager>();
                 }
                 return _localizationManager;
             }

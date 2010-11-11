@@ -21,7 +21,7 @@ using System.Xml;
 using NopSolutions.NopCommerce.BusinessLogic.Audit;
 using NopSolutions.NopCommerce.BusinessLogic.Tasks;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
 {
@@ -46,7 +46,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
 
             DateTime olderThan = DateTime.UtcNow;
             olderThan = olderThan.AddMinutes(-(double)this._deleteExpiredCustomerSessionsOlderThanMinutes);
-            IoCFactory.Resolve<ICustomerService>().DeleteExpiredCustomerSessions(olderThan);
+            IoC.Resolve<ICustomerService>().DeleteExpiredCustomerSessions(olderThan);
         }
     }
 }

@@ -25,7 +25,7 @@ using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using System.Globalization;
 using NopSolutions.NopCommerce.BusinessLogic.Shipping;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Payment.Methods.CCAvenue
 {
@@ -48,10 +48,10 @@ namespace NopSolutions.NopCommerce.Payment.Methods.CCAvenue
 
         private void InitSettings()
         {
-            _merchantID = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.CCAvenue.MerchantID");
-            _key = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.CCAvenue.Key");
-            _merchantParam = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.CCAvenue.MerchantParam");
-            _payURI = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.CCAvenue.PayURI");
+            _merchantID = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.CCAvenue.MerchantID");
+            _key = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.CCAvenue.Key");
+            _merchantParam = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.CCAvenue.MerchantParam");
+            _payURI = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.CCAvenue.PayURI");
 
             if (String.IsNullOrWhiteSpace(_merchantID))
                 throw new NopException("CCAvenue merchant ID is not set");
@@ -90,7 +90,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.CCAvenue
             remotePostHelper.Url = _payURI;
             remotePostHelper.Add("Merchant_Id", _merchantID.ToString());
             remotePostHelper.Add("Amount", order.OrderTotal.ToString(new CultureInfo("en-US", false).NumberFormat));
-            remotePostHelper.Add("Currency", IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode);
+            remotePostHelper.Add("Currency", IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode);
             remotePostHelper.Add("Order_Id", order.OrderId.ToString());
             remotePostHelper.Add("Redirect_Url", CommonHelper.GetStoreLocation(false) + "CCAvenueReturn.aspx");
             remotePostHelper.Add("Checksum", _myUtility.getchecksum(_merchantID.ToString(), order.OrderId.ToString(), order.OrderTotal.ToString(), CommonHelper.GetStoreLocation(false) + "CCAvenueReturn.aspx", _key));
@@ -102,13 +102,13 @@ namespace NopSolutions.NopCommerce.Payment.Methods.CCAvenue
             remotePostHelper.Add("billing_cust_tel", order.BillingPhoneNumber);
             remotePostHelper.Add("billing_cust_email", order.BillingEmail);
             remotePostHelper.Add("billing_cust_city", order.BillingCity);
-            StateProvince billingStateProvince = IoCFactory.Resolve<IStateProvinceService>().GetStateProvinceById(order.BillingStateProvinceId);
+            StateProvince billingStateProvince = IoC.Resolve<IStateProvinceService>().GetStateProvinceById(order.BillingStateProvinceId);
             if (billingStateProvince != null)
                 remotePostHelper.Add("billing_cust_state", billingStateProvince.Abbreviation);
             else
                 remotePostHelper.Add("billing_cust_state", order.BillingStateProvince);
             remotePostHelper.Add("billing_zip_code", order.BillingZipPostalCode);
-            Country billingCountry = IoCFactory.Resolve<ICountryService>().GetCountryById(order.BillingCountryId);
+            Country billingCountry = IoC.Resolve<ICountryService>().GetCountryById(order.BillingCountryId);
             if (billingCountry != null)
                 remotePostHelper.Add("billing_cust_country", billingCountry.ThreeLetterIsoCode);
             else
@@ -123,13 +123,13 @@ namespace NopSolutions.NopCommerce.Payment.Methods.CCAvenue
                 remotePostHelper.Add("delivery_cust_notes", string.Empty);
                 remotePostHelper.Add("delivery_cust_tel", order.ShippingPhoneNumber);
                 remotePostHelper.Add("delivery_cust_city", order.ShippingCity);
-                StateProvince deliveryStateProvince = IoCFactory.Resolve<IStateProvinceService>().GetStateProvinceById(order.ShippingStateProvinceId);
+                StateProvince deliveryStateProvince = IoC.Resolve<IStateProvinceService>().GetStateProvinceById(order.ShippingStateProvinceId);
                 if (deliveryStateProvince != null)
                     remotePostHelper.Add("delivery_cust_state", deliveryStateProvince.Abbreviation);
                 else
                     remotePostHelper.Add("delivery_cust_state", order.ShippingStateProvince);
                 remotePostHelper.Add("delivery_zip_code", order.ShippingZipPostalCode);
-                Country deliveryCountry = IoCFactory.Resolve<ICountryService>().GetCountryById(order.ShippingCountryId);
+                Country deliveryCountry = IoC.Resolve<ICountryService>().GetCountryById(order.ShippingCountryId);
                 if (deliveryCountry != null)
                     remotePostHelper.Add("delivery_cust_country", deliveryCountry.ThreeLetterIsoCode);
                 else
@@ -147,7 +147,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.CCAvenue
         /// <returns>Additional handling fee</returns>
         public decimal GetAdditionalHandlingFee()
         {
-            return IoCFactory.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.CCAvenue.AdditionalFee");
+            return IoC.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.CCAvenue.AdditionalFee");
         }
 
         /// <summary>

@@ -31,7 +31,7 @@ using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Media;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -39,7 +39,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            this.Visible = IoCFactory.Resolve<IForumService>().ForumsEnabled;
+            this.Visible = IoC.Resolve<IForumService>().ForumsEnabled;
 
             if (!Page.IsPostBack)
             {
@@ -56,10 +56,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void BindData()
         {
-            var forum = IoCFactory.Resolve<IForumService>().GetForumById(this.ForumId);
+            var forum = IoC.Resolve<IForumService>().GetForumById(this.ForumId);
             if (forum != null)
             {
-                //hlNewTopic.Visible = IoCFactory.Resolve<IForumService>().IsUserAllowedToCreateTopic(NopContext.Current.User, forum);
+                //hlNewTopic.Visible = IoC.Resolve<IForumService>().IsUserAllowedToCreateTopic(NopContext.Current.User, forum);
 
                 lblForumName.Text = Server.HtmlEncode(forum.Name);
                 lblForumDescription.Text = Server.HtmlEncode(forum.Description);
@@ -68,12 +68,12 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
                 int totalRecords = 0;
                 int pageSize = 10;
-                if (IoCFactory.Resolve<IForumService>().TopicsPageSize > 0)
+                if (IoC.Resolve<IForumService>().TopicsPageSize > 0)
                 {
-                    pageSize = IoCFactory.Resolve<IForumService>().TopicsPageSize;
+                    pageSize = IoC.Resolve<IForumService>().TopicsPageSize;
                 }
 
-                var forumTopics = IoCFactory.Resolve<IForumService>().GetAllTopics(forum.ForumId, 0, string.Empty,
+                var forumTopics = IoC.Resolve<IForumService>().GetAllTopics(forum.ForumId, 0, string.Empty,
                      ForumSearchTypeEnum.All, 0, pageSize, this.CurrentPageIndex, out totalRecords);
                 if (forumTopics.Count > 0)
                 {
@@ -90,9 +90,9 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 }
 
                 //subsciption
-                if (IoCFactory.Resolve<IForumService>().IsUserAllowedToSubscribe(NopContext.Current.User))
+                if (IoC.Resolve<IForumService>().IsUserAllowedToSubscribe(NopContext.Current.User))
                 {
-                    var forumSubscription = IoCFactory.Resolve<IForumService>().GetAllSubscriptions(NopContext.Current.User.CustomerId,
+                    var forumSubscription = IoC.Resolve<IForumService>().GetAllSubscriptions(NopContext.Current.User.CustomerId,
                         forum.ForumId, 0, 1, 0).FirstOrDefault();
 
                     if (forumSubscription == null)
@@ -117,17 +117,17 @@ namespace NopSolutions.NopCommerce.Web.Modules
         
         protected void btnWatchForum_Click(object sender, EventArgs e)
         {
-            var forum = IoCFactory.Resolve<IForumService>().GetForumById(this.ForumId);
+            var forum = IoC.Resolve<IForumService>().GetForumById(this.ForumId);
             if (forum == null)
                 return;
 
-            if (!IoCFactory.Resolve<IForumService>().IsUserAllowedToSubscribe(NopContext.Current.User))
+            if (!IoC.Resolve<IForumService>().IsUserAllowedToSubscribe(NopContext.Current.User))
             {
                 string loginURL = SEOHelper.GetLoginPageUrl(true);
                 Response.Redirect(loginURL);
             }
 
-            var forumSubscription = IoCFactory.Resolve<IForumService>().GetAllSubscriptions(NopContext.Current.User.CustomerId,
+            var forumSubscription = IoC.Resolve<IForumService>().GetAllSubscriptions(NopContext.Current.User.CustomerId,
                    forum.ForumId, 0, 1, 0).FirstOrDefault();
 
             if (forumSubscription == null)
@@ -139,11 +139,11 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     ForumId = forum.ForumId,
                     CreatedOn = DateTime.UtcNow
                 };
-                IoCFactory.Resolve<IForumService>().InsertSubscription(forumSubscription);
+                IoC.Resolve<IForumService>().InsertSubscription(forumSubscription);
             }
             else
             {
-                IoCFactory.Resolve<IForumService>().DeleteSubscription(forumSubscription.ForumSubscriptionId);
+                IoC.Resolve<IForumService>().DeleteSubscription(forumSubscription.ForumSubscriptionId);
             }
 
             CommonHelper.ReloadCurrentPage();
@@ -216,7 +216,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 var hlTopicStarter = e.Item.FindControl("hlTopicStarter") as HyperLink;
                 if(hlTopicStarter != null)
                 {
-                    if(customer != null && IoCFactory.Resolve<ICustomerService>().AllowViewingProfiles && !customer.IsGuest)
+                    if(customer != null && IoC.Resolve<ICustomerService>().AllowViewingProfiles && !customer.IsGuest)
                     {
                         hlTopicStarter.Text = Server.HtmlEncode(customer.FormatUserName(true));
                         hlTopicStarter.NavigateUrl = SEOHelper.GetUserProfileUrl(customer.CustomerId);
@@ -230,7 +230,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 var lblTopicStarter = e.Item.FindControl("lblTopicStarter") as Label;
                 if(lblTopicStarter != null)
                 {
-                    if(customer != null && (!IoCFactory.Resolve<ICustomerService>().AllowViewingProfiles || customer.IsGuest))
+                    if(customer != null && (!IoC.Resolve<ICustomerService>().AllowViewingProfiles || customer.IsGuest))
                     {
                         lblTopicStarter.Text = Server.HtmlEncode(customer.FormatUserName(true));
                     }
@@ -245,9 +245,9 @@ namespace NopSolutions.NopCommerce.Web.Modules
         protected string CreatePostPager(ForumTopic forumTopic)
         {
             int pageSize = 10;
-            if (IoCFactory.Resolve<IForumService>().PostsPageSize > 0)
+            if (IoC.Resolve<IForumService>().PostsPageSize > 0)
             {
-                pageSize = IoCFactory.Resolve<IForumService>().PostsPageSize;
+                pageSize = IoC.Resolve<IForumService>().PostsPageSize;
             }
             string queryStringParam = "p";
             string result = string.Empty;

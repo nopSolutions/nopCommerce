@@ -23,7 +23,7 @@ using System.Xml;
 using NopSolutions.NopCommerce.BusinessLogic.Audit;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Tasks;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Utils
 {
@@ -45,7 +45,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Utils
             {
                 this._path = attribute1.Value;
             }
-            string url = IoCFactory.Resolve<ISettingManager>().StoreUrl;
+            string url = IoC.Resolve<ISettingManager>().StoreUrl;
             url += _path;
 
             using (var wc = new WebClient())

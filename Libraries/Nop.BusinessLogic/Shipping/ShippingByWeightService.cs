@@ -22,7 +22,7 @@ using System.Text;
 using NopSolutions.NopCommerce.BusinessLogic.Caching;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Data;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
 {
@@ -167,12 +167,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         {
             get
             {
-                bool val1 = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("ShippingByWeight.CalculatePerWeightUnit");
+                bool val1 = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("ShippingByWeight.CalculatePerWeightUnit");
                 return val1;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("ShippingByWeight.CalculatePerWeightUnit", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("ShippingByWeight.CalculatePerWeightUnit", value.ToString());
             }
         }
 

@@ -20,7 +20,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.Security;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -68,7 +68,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                IoCFactory.Resolve<IBlacklistService>().DeleteBannedIpNetwork(this.BannedIpNetworkId);
+                IoC.Resolve<IBlacklistService>().DeleteBannedIpNetwork(this.BannedIpNetworkId);
                 Response.Redirect("Blacklist.aspx");
             }
             catch (Exception exc)

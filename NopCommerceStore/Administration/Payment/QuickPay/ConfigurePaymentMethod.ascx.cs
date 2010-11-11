@@ -28,7 +28,7 @@ using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Payment.Methods.Manual;
 using NopSolutions.NopCommerce.Payment.Methods.QuickPay;
 using NopSolutions.NopCommerce.Web.Templates.Payment;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Payment.QuickPay
 {
@@ -44,20 +44,20 @@ namespace NopSolutions.NopCommerce.Web.Administration.Payment.QuickPay
 
         private void BindData()
         {
-            cbUseSandbox.Checked = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean(QuickPayConstants.SETTING_USE_SANDBOX, true);
-            txtMD5Secret.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue(QuickPayConstants.SETTING_MD5SECRET);
-            txtCreditCard.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue(QuickPayConstants.SETTING_CREDITCARD_CODE_PROPERTY, "dankort");
-            txtMerchantId.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue(QuickPayConstants.SETTING_MERCHANTID);
-            txtAdditionalFee.Value = IoCFactory.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.QuickPay.AdditionalFee", decimal.Zero);
+            cbUseSandbox.Checked = IoC.Resolve<ISettingManager>().GetSettingValueBoolean(QuickPayConstants.SETTING_USE_SANDBOX, true);
+            txtMD5Secret.Text = IoC.Resolve<ISettingManager>().GetSettingValue(QuickPayConstants.SETTING_MD5SECRET);
+            txtCreditCard.Text = IoC.Resolve<ISettingManager>().GetSettingValue(QuickPayConstants.SETTING_CREDITCARD_CODE_PROPERTY, "dankort");
+            txtMerchantId.Text = IoC.Resolve<ISettingManager>().GetSettingValue(QuickPayConstants.SETTING_MERCHANTID);
+            txtAdditionalFee.Value = IoC.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.QuickPay.AdditionalFee", decimal.Zero);
         }
 
         public void Save()
         {
-            IoCFactory.Resolve<ISettingManager>().SetParam(QuickPayConstants.SETTING_USE_SANDBOX, cbUseSandbox.Checked.ToString());
-            IoCFactory.Resolve<ISettingManager>().SetParam(QuickPayConstants.SETTING_MD5SECRET, txtMD5Secret.Text);
-            IoCFactory.Resolve<ISettingManager>().SetParam(QuickPayConstants.SETTING_MERCHANTID, txtMerchantId.Text);
-            IoCFactory.Resolve<ISettingManager>().SetParam(QuickPayConstants.SETTING_CREDITCARD_CODE_PROPERTY, txtCreditCard.Text);
-            IoCFactory.Resolve<ISettingManager>().SetParamNative("PaymentMethod.QuickPay.AdditionalFee", txtAdditionalFee.Value);
+            IoC.Resolve<ISettingManager>().SetParam(QuickPayConstants.SETTING_USE_SANDBOX, cbUseSandbox.Checked.ToString());
+            IoC.Resolve<ISettingManager>().SetParam(QuickPayConstants.SETTING_MD5SECRET, txtMD5Secret.Text);
+            IoC.Resolve<ISettingManager>().SetParam(QuickPayConstants.SETTING_MERCHANTID, txtMerchantId.Text);
+            IoC.Resolve<ISettingManager>().SetParam(QuickPayConstants.SETTING_CREDITCARD_CODE_PROPERTY, txtCreditCard.Text);
+            IoC.Resolve<ISettingManager>().SetParamNative("PaymentMethod.QuickPay.AdditionalFee", txtAdditionalFee.Value);
         }
     }
 }

@@ -30,7 +30,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Payment;
 using NopSolutions.NopCommerce.BusinessLogic.Utils;
 using NopSolutions.NopCommerce.Common;
 using USAePayAPI;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Payment.Methods.USAePay
 {
@@ -62,8 +62,8 @@ namespace NopSolutions.NopCommerce.Payment.Methods.USAePay
 
         private void InitSettings()
         {
-            sourceKey = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.USAePayIntegrated.SourceKey");
-            pin = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymenthMethod.USAePayIntegrated.Pin");
+            sourceKey = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.USAePayIntegrated.SourceKey");
+            pin = IoC.Resolve<ISettingManager>().GetSettingValue("PaymenthMethod.USAePayIntegrated.Pin");
         }
         
         /// <summary>
@@ -82,7 +82,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.USAePay
         private TransactMode GetCurrentTransactionMode()
         {
             TransactMode transactionModeEnum = TransactMode.Authorize;
-            string transactionMode = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.USAePayIntegrated.TransactionMode");
+            string transactionMode = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.USAePayIntegrated.TransactionMode");
             if (!String.IsNullOrEmpty(transactionMode))
                 transactionModeEnum = (TransactMode)Enum.Parse(typeof(TransactMode), transactionMode);
             return transactionModeEnum;
@@ -182,7 +182,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.USAePay
 
         public decimal GetAdditionalHandlingFee()
         {
-            return IoCFactory.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.USAePayIntegrated.AdditionalFee");
+            return IoC.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.USAePayIntegrated.AdditionalFee");
         }
 
         public void Capture(Order order, ref ProcessPaymentResult processPaymentResult)

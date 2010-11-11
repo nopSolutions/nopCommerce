@@ -21,7 +21,7 @@ using System.Xml;
 using NopSolutions.NopCommerce.BusinessLogic.Audit;
 using NopSolutions.NopCommerce.BusinessLogic.Tasks;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Orders
 {
@@ -46,7 +46,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
 
             DateTime olderThan = DateTime.UtcNow;
             olderThan = olderThan.AddMinutes(-(double)this._deleteExpiredShoppingCartsOlderThanMinutes);
-            IoCFactory.Resolve<IShoppingCartService>().DeleteExpiredShoppingCartItems(olderThan);
+            IoC.Resolve<IShoppingCartService>().DeleteExpiredShoppingCartItems(olderThan);
         }
     }
 }

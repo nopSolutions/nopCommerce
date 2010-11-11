@@ -23,7 +23,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.BusinessLogic.Localization;
 using NopSolutions.NopCommerce.BusinessLogic.Tax;
 using NopSolutions.NopCommerce.Common.Utils.Html;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
 {
@@ -78,7 +78,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
             var Ids = ParseProductVariantAttributeIds(attributes);
             foreach (int id in Ids)
             {
-                var pva = IoCFactory.Resolve<IProductAttributeService>().GetProductVariantAttributeById(id);
+                var pva = IoC.Resolve<IProductAttributeService>().GetProductVariantAttributeById(id);
                 if (pva != null)
                 {
                     pvaCollection.Add(pva);
@@ -109,7 +109,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                         int pvaValueId = 0;
                         if (int.TryParse(pvaValueStr, out pvaValueId))
                         {
-                            var pvaValue = IoCFactory.Resolve<IProductAttributeService>().GetProductVariantAttributeValueById(pvaValueId);
+                            var pvaValue = IoC.Resolve<IProductAttributeService>().GetProductVariantAttributeValueById(pvaValueId);
                             if (pvaValue != null)
                                 pvaValues.Add(pvaValue);
                         }
@@ -506,15 +506,15 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                         }
                         else
                         {
-                            var pvaValue = IoCFactory.Resolve<IProductAttributeService>().GetProductVariantAttributeValueById(Convert.ToInt32(valueStr));
+                            var pvaValue = IoC.Resolve<IProductAttributeService>().GetProductVariantAttributeValueById(Convert.ToInt32(valueStr));
                             if (pvaValue != null)
                             {
                                 pvaAttribute = string.Format("{0}: {1}", pva.ProductAttribute.LocalizedName, pvaValue.LocalizedName);
                                 if (renderPrices)
                                 {
                                     decimal taxRate = decimal.Zero;
-                                    decimal priceAdjustmentBase = IoCFactory.Resolve<ITaxService>().GetPrice(productVariant, pvaValue.PriceAdjustment, customer, out taxRate);
-                                    decimal priceAdjustment = IoCFactory.Resolve<ICurrencyService>().ConvertCurrency(priceAdjustmentBase, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                                    decimal priceAdjustmentBase = IoC.Resolve<ITaxService>().GetPrice(productVariant, pvaValue.PriceAdjustment, customer, out taxRate);
+                                    decimal priceAdjustment = IoC.Resolve<ICurrencyService>().ConvertCurrency(priceAdjustmentBase, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
                                     if (priceAdjustmentBase > 0)
                                     {
                                         string priceAdjustmentStr = PriceHelper.FormatPrice(priceAdjustment, false, false);
@@ -571,15 +571,15 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
 
                     if (htmlEncode)
                     {
-                        result.Append(HttpUtility.HtmlEncode(string.Format(IoCFactory.Resolve<ILocalizationManager>().GetLocaleResourceString("GiftCardAttribute.For"), giftCardRecipientName)));
+                        result.Append(HttpUtility.HtmlEncode(string.Format(IoC.Resolve<ILocalizationManager>().GetLocaleResourceString("GiftCardAttribute.For"), giftCardRecipientName)));
                         result.Append(serapator);
-                        result.Append(HttpUtility.HtmlEncode(string.Format(IoCFactory.Resolve<ILocalizationManager>().GetLocaleResourceString("GiftCardAttribute.From"), giftCardSenderName)));
+                        result.Append(HttpUtility.HtmlEncode(string.Format(IoC.Resolve<ILocalizationManager>().GetLocaleResourceString("GiftCardAttribute.From"), giftCardSenderName)));
                     }
                     else
                     {
-                        result.Append(string.Format(IoCFactory.Resolve<ILocalizationManager>().GetLocaleResourceString("GiftCardAttribute.For"), giftCardRecipientName));
+                        result.Append(string.Format(IoC.Resolve<ILocalizationManager>().GetLocaleResourceString("GiftCardAttribute.For"), giftCardRecipientName));
                         result.Append(serapator);
-                        result.Append(string.Format(IoCFactory.Resolve<ILocalizationManager>().GetLocaleResourceString("GiftCardAttribute.From"), giftCardSenderName));
+                        result.Append(string.Format(IoC.Resolve<ILocalizationManager>().GetLocaleResourceString("GiftCardAttribute.From"), giftCardSenderName));
                     }
                 }
             }

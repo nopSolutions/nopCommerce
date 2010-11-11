@@ -28,7 +28,7 @@ using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts;
 using NopSolutions.NopCommerce.BusinessLogic.Security;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
  
 namespace NopSolutions.NopCommerce.Web.Administration
 {
@@ -36,7 +36,7 @@ namespace NopSolutions.NopCommerce.Web.Administration
     {
         protected override bool ValidatePageSecurity()
         {
-            return IoCFactory.Resolve<IACLService>().IsActionAllowed("ManageDiscounts");
+            return IoC.Resolve<IACLService>().IsActionAllowed("ManageDiscounts");
         }
     }
 }

@@ -28,7 +28,7 @@ using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Messages;
 using NopSolutions.NopCommerce.BusinessLogic.Promo.Campaigns;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC; 
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure; 
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -76,7 +76,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                IoCFactory.Resolve<ICampaignService>().DeleteCampaign(this.CampaignId);
+                IoC.Resolve<ICampaignService>().DeleteCampaign(this.CampaignId);
                 Response.Redirect("Campaigns.aspx");
             }
             catch (Exception exc)

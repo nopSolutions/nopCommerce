@@ -24,7 +24,7 @@ using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Content.Forums;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -45,7 +45,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         void BindData()
         {
-            var forumGroups = IoCFactory.Resolve<IForumService>().GetAllForumGroups();
+            var forumGroups = IoC.Resolve<IForumService>().GetAllForumGroups();
             btnAddNewForum.Visible = forumGroups.Count > 0;
 
             rptrForumGroups.DataSource = forumGroups;

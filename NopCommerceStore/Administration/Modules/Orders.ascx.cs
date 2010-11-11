@@ -26,7 +26,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Shipping;
 using NopSolutions.NopCommerce.BusinessLogic.Utils;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -40,8 +40,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 SetDefaultValues();
 
                 //buttons
-                btnPrintPdfPackagingSlips.Visible = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Features.SupportPDF");
-                btnExportXLS.Visible = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Features.SupportExcel");
+                btnPrintPdfPackagingSlips.Visible = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Features.SupportPDF");
+                btnExportXLS.Visible = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Features.SupportExcel");
             }
         }
 
@@ -79,7 +79,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
             string orderGuid = txtOrderGuid.Text.Trim();
 
-            var orders = IoCFactory.Resolve<IOrderService>().SearchOrders(startDate, endDate,
+            var orders = IoC.Resolve<IOrderService>().SearchOrders(startDate, endDate,
                 txtCustomerEmail.Text, orderStatus, paymentStatus, shippingStatus, orderGuid);
             return orders;
         }
@@ -196,7 +196,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         protected string GetCustomerInfo(int customerId)
         {
             string customerInfo = string.Empty;
-            Customer customer = IoCFactory.Resolve<ICustomerService>().GetCustomerById(customerId);
+            Customer customer = IoC.Resolve<ICustomerService>().GetCustomerById(customerId);
             if (customer != null)
             {
                 if (customer.IsGuest)

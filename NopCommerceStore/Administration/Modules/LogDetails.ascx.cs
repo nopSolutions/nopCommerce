@@ -26,7 +26,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Audit;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -34,7 +34,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            Log log = IoCFactory.Resolve<ILogService>().GetLogById(this.LogId);
+            Log log = IoC.Resolve<ILogService>().GetLogById(this.LogId);
             if (log != null)
             {
                 this.lblLogType.Text = Server.HtmlEncode(log.LogType.ToString());
@@ -65,7 +65,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                IoCFactory.Resolve<ILogService>().DeleteLog(this.LogId);
+                IoC.Resolve<ILogService>().DeleteLog(this.LogId);
                 Response.Redirect("Logs.aspx");
             }
             catch (Exception exc)

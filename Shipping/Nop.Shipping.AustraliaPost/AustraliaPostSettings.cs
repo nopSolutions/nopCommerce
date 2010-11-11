@@ -15,7 +15,7 @@
 using System.Globalization;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Measures;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Shipping.Methods.AustraliaPost
 {
@@ -26,11 +26,11 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.AustraliaPost
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.AustraliaPost.GatewayUrl", "http://drc.edeliver.com.au/ratecalc.asp");
+                return IoC.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.AustraliaPost.GatewayUrl", "http://drc.edeliver.com.au/ratecalc.asp");
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("ShippingRateComputationMethod.AustraliaPost.GatewayUrl", value);
+                IoC.Resolve<ISettingManager>().SetParam("ShippingRateComputationMethod.AustraliaPost.GatewayUrl", value);
             }
         }
 
@@ -38,11 +38,11 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.AustraliaPost
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.AustraliaPost.DefaultShippedFromZipPostalCode");
+                return IoC.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.AustraliaPost.DefaultShippedFromZipPostalCode");
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("ShippingRateComputationMethod.AustraliaPost.DefaultShippedFromZipPostalCode", value);
+                IoC.Resolve<ISettingManager>().SetParam("ShippingRateComputationMethod.AustraliaPost.DefaultShippedFromZipPostalCode", value);
             }
         }
 
@@ -50,11 +50,11 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.AustraliaPost
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValueDecimalNative("ShippingRateComputationMethod.AustraliaPost.AdditionalHandlingCharge");
+                return IoC.Resolve<ISettingManager>().GetSettingValueDecimalNative("ShippingRateComputationMethod.AustraliaPost.AdditionalHandlingCharge");
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("ShippingRateComputationMethod.AustraliaPost.AdditionalHandlingCharge", value.ToString(new CultureInfo("en-US")));
+                IoC.Resolve<ISettingManager>().SetParam("ShippingRateComputationMethod.AustraliaPost.AdditionalHandlingCharge", value.ToString(new CultureInfo("en-US")));
             }
         }
 
@@ -62,7 +62,7 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.AustraliaPost
         {
             get
             {
-                return IoCFactory.Resolve<IMeasureService>().GetMeasureWeightBySystemKeyword("grams");
+                return IoC.Resolve<IMeasureService>().GetMeasureWeightBySystemKeyword("grams");
             }
         }
 
@@ -70,7 +70,7 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.AustraliaPost
         {
             get
             {
-                return IoCFactory.Resolve<IMeasureService>().GetMeasureDimensionBySystemKeyword("millimetres");
+                return IoC.Resolve<IMeasureService>().GetMeasureDimensionBySystemKeyword("millimetres");
             }
         }
         #endregion

@@ -1,7 +1,7 @@
 <%@ Application Language="C#" %>
 <%@ Import Namespace="NopSolutions.NopCommerce.BusinessLogic.Configuration" %>
 <%@ Import Namespace="NopSolutions.NopCommerce.BusinessLogic" %>
-<%@ Import Namespace="NopSolutions.NopCommerce.BusinessLogic.IoC" %>
+<%@ Import Namespace="NopSolutions.NopCommerce.BusinessLogic.Infrastructure" %>
 <%@ Import Namespace="NopSolutions.NopCommerce.BusinessLogic.Installation" %>
 <%@ Import Namespace="NopSolutions.NopCommerce.BusinessLogic.Utils" %>
 <%@ Import Namespace="System.Globalization" %>
@@ -26,7 +26,7 @@
         if (InstallerHelper.ConnectionStringIsSet())
         {
             //initialize IoC
-            IoCFactory.InitializeWith(new DependencyResolverFactory());
+            IoC.InitializeWith(new DependencyResolverFactory());
             
             //initialize task manager
             TaskManager.Instance.Initialize(NopConfig.ScheduleTasks);
@@ -50,7 +50,7 @@
         {
             if (InstallerHelper.ConnectionStringIsSet())
             {
-                IoCFactory.Resolve<ILogService>().InsertLog(LogTypeEnum.Unknown, ex.Message, ex);
+                IoC.Resolve<ILogService>().InsertLog(LogTypeEnum.Unknown, ex.Message, ex);
             }
         }
     }

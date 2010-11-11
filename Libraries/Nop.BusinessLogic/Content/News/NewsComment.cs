@@ -16,7 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
@@ -81,7 +81,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
         {
             get
             {
-                return IoCFactory.Resolve<INewsService>().GetNewsById(this.NewsId);
+                return IoC.Resolve<INewsService>().GetNewsById(this.NewsId);
             }
         }
 
@@ -92,7 +92,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
         {
             get
             {
-                return IoCFactory.Resolve<ICustomerService>().GetCustomerById(this.CustomerId);
+                return IoC.Resolve<ICustomerService>().GetCustomerById(this.CustomerId);
             }
         }
         #endregion

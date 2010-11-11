@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.MasterPages
 {
@@ -13,14 +13,14 @@ namespace NopSolutions.NopCommerce.Web.MasterPages
     {
         protected void RenderAnalyticsScript()
         {
-            if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Analytics.GoogleEnabled"))
+            if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Analytics.GoogleEnabled"))
             {
-                string googleJS = IoCFactory.Resolve<ISettingManager>().GetSettingValue("Analytics.GoogleJS");
-                //string googleId = IoCFactory.Resolve<ISettingManager>().GetSettingValue("Analytics.GoogleId");
+                string googleJS = IoC.Resolve<ISettingManager>().GetSettingValue("Analytics.GoogleJS");
+                //string googleId = IoC.Resolve<ISettingManager>().GetSettingValue("Analytics.GoogleId");
                 //string analyticsString = string.Format(googleJS, googleId);
 
                 Literal script = new Literal() { Text = googleJS };
-                string placement = IoCFactory.Resolve<ISettingManager>().GetSettingValue("Analytics.GooglePlacement").ToLowerInvariant();
+                string placement = IoC.Resolve<ISettingManager>().GetSettingValue("Analytics.GooglePlacement").ToLowerInvariant();
                 switch (placement)
                 {
                     case "head":

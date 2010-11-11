@@ -30,7 +30,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.BusinessLogic.Utils.Html;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Common.Utils.Html;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 using NopSolutions.NopCommerce.Common;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog

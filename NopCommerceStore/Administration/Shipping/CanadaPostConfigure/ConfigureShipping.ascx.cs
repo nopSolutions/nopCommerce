@@ -19,7 +19,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Web.Administration.Modules;
 using NopSolutions.NopCommerce.Web.Templates.Shipping;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Shipping.CanadaPostConfigure
 {
@@ -35,16 +35,16 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.CanadaPostConfigu
 
         private void BindData()
         {
-            txtCustomerId.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.CanadaPost.CustomerId");
-            txtURL.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.CanadaPost.URL");
-            txtPort.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.CanadaPost.Port");
+            txtCustomerId.Text = IoC.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.CanadaPost.CustomerId");
+            txtURL.Text = IoC.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.CanadaPost.URL");
+            txtPort.Text = IoC.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.CanadaPost.Port");
         }
 
         public void Save()
         {
-            IoCFactory.Resolve<ISettingManager>().SetParam("ShippingRateComputationMethod.CanadaPost.CustomerId", txtCustomerId.Text);
-            IoCFactory.Resolve<ISettingManager>().SetParam("ShippingRateComputationMethod.CanadaPost.URL", txtURL.Text);
-            IoCFactory.Resolve<ISettingManager>().SetParam("ShippingRateComputationMethod.CanadaPost.Port", txtPort.Text);
+            IoC.Resolve<ISettingManager>().SetParam("ShippingRateComputationMethod.CanadaPost.CustomerId", txtCustomerId.Text);
+            IoC.Resolve<ISettingManager>().SetParam("ShippingRateComputationMethod.CanadaPost.URL", txtURL.Text);
+            IoC.Resolve<ISettingManager>().SetParam("ShippingRateComputationMethod.CanadaPost.Port", txtPort.Text);
         }
     }
 }

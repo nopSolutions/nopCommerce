@@ -29,7 +29,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.BusinessLogic.Promo.Affiliates;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -37,7 +37,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            Customer customer = IoCFactory.Resolve<ICustomerService>().GetCustomerById(this.CustomerId);
+            Customer customer = IoC.Resolve<ICustomerService>().GetCustomerById(this.CustomerId);
             if (customer != null)
             {
                

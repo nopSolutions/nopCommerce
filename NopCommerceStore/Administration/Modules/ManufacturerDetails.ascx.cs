@@ -33,7 +33,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Templates;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Web.Administration.Modules;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -43,7 +43,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             if (!Page.IsPostBack)
             {
-                Manufacturer manufacturer = IoCFactory.Resolve<IManufacturerService>().GetManufacturerById(this.ManufacturerId);
+                Manufacturer manufacturer = IoC.Resolve<IManufacturerService>().GetManufacturerById(this.ManufacturerId);
                 if (manufacturer != null)
                 {
                     lblTitle.Text = Server.HtmlEncode(manufacturer.Name);
@@ -58,7 +58,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             ctrlManufacturerSEO.SaveInfo();
             ctrlManufacturerProducts.SaveInfo();
 
-            IoCFactory.Resolve<ICustomerActivityService>().InsertActivity(
+            IoC.Resolve<ICustomerActivityService>().InsertActivity(
                 "EditManufacturer",
                 GetLocaleResourceString("ActivityLog.EditManufacturer"),
                 manufacturer.Name);
@@ -102,12 +102,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                Manufacturer manufacturer = IoCFactory.Resolve<IManufacturerService>().GetManufacturerById(this.ManufacturerId);
+                Manufacturer manufacturer = IoC.Resolve<IManufacturerService>().GetManufacturerById(this.ManufacturerId);
                 if (manufacturer != null)
                 {
-                    IoCFactory.Resolve<IManufacturerService>().MarkManufacturerAsDeleted(manufacturer.ManufacturerId);
+                    IoC.Resolve<IManufacturerService>().MarkManufacturerAsDeleted(manufacturer.ManufacturerId);
 
-                    IoCFactory.Resolve<ICustomerActivityService>().InsertActivity(
+                    IoC.Resolve<ICustomerActivityService>().InsertActivity(
                         "DeleteManufacturer",
                         GetLocaleResourceString("ActivityLog.DeleteManufacturer"),
                         manufacturer.Name);
@@ -122,7 +122,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected override void OnPreRender(EventArgs e)
         {
-            Manufacturer manufacturer = IoCFactory.Resolve<IManufacturerService>().GetManufacturerById(this.ManufacturerId);
+            Manufacturer manufacturer = IoC.Resolve<IManufacturerService>().GetManufacturerById(this.ManufacturerId);
             if (manufacturer != null)
             {
                 PreviewButton.OnClientClick = string.Format("javascript:OpenWindow('{0}', 800, 600, true); return false;", SEOHelper.GetManufacturerUrl(manufacturer.ManufacturerId));

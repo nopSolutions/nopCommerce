@@ -23,7 +23,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Promo.Affiliates;
 using NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts;
 using NopSolutions.NopCommerce.BusinessLogic.Shipping;
 using NopSolutions.NopCommerce.BusinessLogic.Tax;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Orders
 {
@@ -565,7 +565,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             get
             {
                 if (_customer == null)
-                    _customer = IoCFactory.Resolve<ICustomerService>().GetCustomerById(this.CustomerId);
+                    _customer = IoC.Resolve<ICustomerService>().GetCustomerById(this.CustomerId);
                 return _customer;
             }
         }
@@ -592,7 +592,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         {
             get
             {
-                return IoCFactory.Resolve<IAffiliateService>().GetAffiliateById(this.AffiliateId);
+                return IoC.Resolve<IAffiliateService>().GetAffiliateById(this.AffiliateId);
             }
         }
 
@@ -603,7 +603,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         {
             get
             {
-                return IoCFactory.Resolve<IOrderService>().GetOrderProductVariantsByOrderId(this.OrderId);
+                return IoC.Resolve<IOrderService>().GetOrderProductVariantsByOrderId(this.OrderId);
             }
         }
 
@@ -614,7 +614,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         {
             get
             {
-                return IoCFactory.Resolve<IOrderService>().GetOrderNoteByOrderId(this.OrderId);
+                return IoC.Resolve<IOrderService>().GetOrderNoteByOrderId(this.OrderId);
             }
         }
 
@@ -703,7 +703,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                     if (this.CustomerId == 0)
                         return null;
 
-                    var rphc = IoCFactory.Resolve<IOrderService>().GetAllRewardPointsHistoryEntries(this.CustomerId,
+                    var rphc = IoC.Resolve<IOrderService>().GetAllRewardPointsHistoryEntries(this.CustomerId,
                         this.OrderId, 0, 1);
                     if (rphc.Count > 0)
                     {

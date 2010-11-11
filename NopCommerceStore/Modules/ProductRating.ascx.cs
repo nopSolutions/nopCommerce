@@ -28,7 +28,7 @@ using AjaxControlToolkit;
 using NopSolutions.NopCommerce.BusinessLogic;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 
 namespace NopSolutions.NopCommerce.Web.Modules
@@ -43,7 +43,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void BindData()
         {
-            var product = IoCFactory.Resolve<IProductService>().GetProductById(this.ProductId);
+            var product = IoC.Resolve<IProductService>().GetProductById(this.ProductId);
             if (product != null)
             {
                 decimal currentRating = 0;
@@ -62,17 +62,17 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void productRating_Changed(object sender, RatingEventArgs e)
         {
-            if (NopContext.Current.User == null && IoCFactory.Resolve<ICustomerService>().AllowAnonymousUsersToSetProductRatings)
-                IoCFactory.Resolve<ICustomerService>().CreateAnonymousUser();
+            if (NopContext.Current.User == null && IoC.Resolve<ICustomerService>().AllowAnonymousUsersToSetProductRatings)
+                IoC.Resolve<ICustomerService>().CreateAnonymousUser();
 
-            if (NopContext.Current.User == null || (NopContext.Current.User.IsGuest && !IoCFactory.Resolve<ICustomerService>().AllowAnonymousUsersToSetProductRatings))
+            if (NopContext.Current.User == null || (NopContext.Current.User.IsGuest && !IoC.Resolve<ICustomerService>().AllowAnonymousUsersToSetProductRatings))
             {
                 lblProductRatingResult.Text = GetLocaleResourceString("Products.OnlyRegisteredUsersCanRating");
                 e.CallbackResult = GetLocaleResourceString("Products.OnlyRegisteredUsersCanRating");
             }
             else
             {
-                IoCFactory.Resolve<IProductService>().SetProductRating(this.ProductId, int.Parse(e.Value));
+                IoC.Resolve<IProductService>().SetProductRating(this.ProductId, int.Parse(e.Value));
                 lblProductRatingResult.Text = GetLocaleResourceString("Products.RatingWillBeUpdatedVerySoon");
                 e.CallbackResult = "Update done. Value = " + e.Value;
             }

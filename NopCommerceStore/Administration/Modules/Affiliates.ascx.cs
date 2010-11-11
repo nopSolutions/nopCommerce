@@ -27,7 +27,7 @@ using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.BusinessLogic.Promo.Affiliates;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
  
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
@@ -44,7 +44,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         void BindGrid()
         {
-            var affiliateCollection = IoCFactory.Resolve<IAffiliateService>().GetAllAffiliates();
+            var affiliateCollection = IoC.Resolve<IAffiliateService>().GetAllAffiliates();
             gvAffiliates.DataSource = affiliateCollection;
             gvAffiliates.DataBind();
         }

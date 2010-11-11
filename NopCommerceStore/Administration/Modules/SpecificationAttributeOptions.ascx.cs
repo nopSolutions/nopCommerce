@@ -17,7 +17,7 @@ using System.Web.UI;
 using NopSolutions.NopCommerce.BusinessLogic.Products.Specs;
 using NopSolutions.NopCommerce.Common.Utils;
 using System.Web.UI.WebControls;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -25,7 +25,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            var specificationAttribute = IoCFactory.Resolve<ISpecificationAttributeService>().GetSpecificationAttributeById(this.SpecificationAttributeId);
+            var specificationAttribute = IoC.Resolve<ISpecificationAttributeService>().GetSpecificationAttributeById(this.SpecificationAttributeId);
             if (specificationAttribute != null)
             {
                 pnlData.Visible = true;
@@ -40,7 +40,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     rptrLanguageDivs.DataBind();
                 }
 
-                var saoCol = IoCFactory.Resolve<ISpecificationAttributeService>().GetSpecificationAttributeOptionsBySpecificationAttribute(SpecificationAttributeId);
+                var saoCol = IoC.Resolve<ISpecificationAttributeService>().GetSpecificationAttributeOptionsBySpecificationAttribute(SpecificationAttributeId);
                 if (saoCol.Count > 0)
                 {
                     grdSpecificationAttributeOptions.Visible = true;
@@ -84,7 +84,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                var specificationAttribute = IoCFactory.Resolve<ISpecificationAttributeService>().GetSpecificationAttributeById(this.SpecificationAttributeId);
+                var specificationAttribute = IoC.Resolve<ISpecificationAttributeService>().GetSpecificationAttributeById(this.SpecificationAttributeId);
                 if (specificationAttribute != null)
                 {
                     var sao = new SpecificationAttributeOption()
@@ -93,7 +93,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         Name= txtNewOptionName.Text,
                         DisplayOrder= txtNewOptionDisplayOrder.Value
                     };
-                    IoCFactory.Resolve<ISpecificationAttributeService>().InsertSpecificationAttributeOption(sao);
+                    IoC.Resolve<ISpecificationAttributeService>().InsertSpecificationAttributeOption(sao);
 
                     SaveLocalizableContent(sao);
 
@@ -127,7 +127,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                     bool allFieldsAreEmpty = string.IsNullOrEmpty(name);
 
-                    var content = IoCFactory.Resolve<ISpecificationAttributeService>().GetSpecificationAttributeOptionLocalizedBySpecificationAttributeOptionIdAndLanguageId(sao.SpecificationAttributeOptionId, languageId);
+                    var content = IoC.Resolve<ISpecificationAttributeService>().GetSpecificationAttributeOptionLocalizedBySpecificationAttributeOptionIdAndLanguageId(sao.SpecificationAttributeOptionId, languageId);
                     if (content == null)
                     {
                         if (!allFieldsAreEmpty && languageId > 0)
@@ -139,7 +139,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                                 LanguageId = languageId,
                                 Name = name
                             };
-                            IoCFactory.Resolve<ISpecificationAttributeService>().InsertSpecificationAttributeOptionLocalized(content);
+                            IoC.Resolve<ISpecificationAttributeService>().InsertSpecificationAttributeOptionLocalized(content);
                         }
                     }
                     else
@@ -148,7 +148,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         {
                             content.LanguageId = languageId;
                             content.Name= name;
-                            IoCFactory.Resolve<ISpecificationAttributeService>().UpdateSpecificationAttributeOptionLocalized(content);
+                            IoC.Resolve<ISpecificationAttributeService>().UpdateSpecificationAttributeOptionLocalized(content);
                         }
                     }
                 }
@@ -184,7 +184,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                                 bool allFieldsAreEmpty = string.IsNullOrEmpty(name);
 
-                                var content = IoCFactory.Resolve<ISpecificationAttributeService>().GetSpecificationAttributeOptionLocalizedBySpecificationAttributeOptionIdAndLanguageId(sao.SpecificationAttributeOptionId, languageId);
+                                var content = IoC.Resolve<ISpecificationAttributeService>().GetSpecificationAttributeOptionLocalizedBySpecificationAttributeOptionIdAndLanguageId(sao.SpecificationAttributeOptionId, languageId);
                                 if (content == null)
                                 {
                                     if (!allFieldsAreEmpty && languageId > 0)
@@ -196,7 +196,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                                             LanguageId = languageId,
                                             Name = name
                                         };
-                                        IoCFactory.Resolve<ISpecificationAttributeService>().InsertSpecificationAttributeOptionLocalized(content);
+                                        IoC.Resolve<ISpecificationAttributeService>().InsertSpecificationAttributeOptionLocalized(content);
                                     }
                                 }
                                 else
@@ -205,7 +205,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                                     {
                                         content.LanguageId = languageId;
                                         content.Name = name;
-                                        IoCFactory.Resolve<ISpecificationAttributeService>().UpdateSpecificationAttributeOptionLocalized(content);
+                                        IoC.Resolve<ISpecificationAttributeService>().UpdateSpecificationAttributeOptionLocalized(content);
                                     }
                                 }
                             }
@@ -230,10 +230,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                 int languageId = int.Parse(lblLanguageId.Text);
                 int saoId = Convert.ToInt32(hfSpecificationAttributeOptionId.Value);
-                SpecificationAttributeOption sao = IoCFactory.Resolve<ISpecificationAttributeService>().GetSpecificationAttributeOptionById(saoId);
+                SpecificationAttributeOption sao = IoC.Resolve<ISpecificationAttributeService>().GetSpecificationAttributeOptionById(saoId);
                 if (sao != null)
                 {
-                    var content = IoCFactory.Resolve<ISpecificationAttributeService>().GetSpecificationAttributeOptionLocalizedBySpecificationAttributeOptionIdAndLanguageId(saoId, languageId);
+                    var content = IoC.Resolve<ISpecificationAttributeService>().GetSpecificationAttributeOptionLocalizedBySpecificationAttributeOptionIdAndLanguageId(saoId, languageId);
                     if (content != null)
                     {
                         txtLocalizedOptionName.Text = content.Name;
@@ -256,12 +256,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 int displayOrder = txtDisplayOrder.Value;
                 int saoId = int.Parse(hfSpecificationAttributeOptionId.Value);
 
-                var sao = IoCFactory.Resolve<ISpecificationAttributeService>().GetSpecificationAttributeOptionById(saoId);
+                var sao = IoC.Resolve<ISpecificationAttributeService>().GetSpecificationAttributeOptionById(saoId);
                 if (sao != null)
                 {
                     sao.Name = name;
                     sao.DisplayOrder = displayOrder;
-                    IoCFactory.Resolve<ISpecificationAttributeService>().UpdateSpecificationAttributeOptions(sao);
+                    IoC.Resolve<ISpecificationAttributeService>().UpdateSpecificationAttributeOptions(sao);
                     SaveLocalizableContentGrid(sao);
                 }
 
@@ -272,7 +272,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         protected void OnSpecificationAttributeOptionsDeleting(object sender, GridViewDeleteEventArgs e)
         {
             int saoId = (int)grdSpecificationAttributeOptions.DataKeys[e.RowIndex]["SpecificationAttributeOptionId"];
-            IoCFactory.Resolve<ISpecificationAttributeService>().DeleteSpecificationAttributeOption(saoId);
+            IoC.Resolve<ISpecificationAttributeService>().DeleteSpecificationAttributeOption(saoId);
             BindData();
         }
 

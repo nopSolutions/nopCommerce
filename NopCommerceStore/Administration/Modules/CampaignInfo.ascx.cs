@@ -29,7 +29,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Messages;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.BusinessLogic.Promo.Campaigns;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC; 
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure; 
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -37,12 +37,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            Campaign campaign = IoCFactory.Resolve<ICampaignService>().GetCampaignById(this.CampaignId);
+            Campaign campaign = IoC.Resolve<ICampaignService>().GetCampaignById(this.CampaignId);
             if (campaign != null)
             {
                 this.pnlSendCampaign.Visible = true;
                 StringBuilder allowedTokensString = new StringBuilder();
-                string[] allowedTokens = IoCFactory.Resolve<IMessageService>().GetListOfCampaignAllowedTokens();
+                string[] allowedTokens = IoC.Resolve<IMessageService>().GetListOfCampaignAllowedTokens();
                 for (int i = 0; i < allowedTokens.Length; i++)
                 {
                     string token = allowedTokens[i];
@@ -77,14 +77,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public Campaign SaveInfo()
         {
-            Campaign campaign = IoCFactory.Resolve<ICampaignService>().GetCampaignById(this.CampaignId);
+            Campaign campaign = IoC.Resolve<ICampaignService>().GetCampaignById(this.CampaignId);
 
             if (campaign != null)
             {
                 campaign.Name = txtName.Text;
                 campaign.Subject = txtSubject.Text;
                 campaign.Body = txtBody.Value;
-                IoCFactory.Resolve<ICampaignService>().UpdateCampaign(campaign);
+                IoC.Resolve<ICampaignService>().UpdateCampaign(campaign);
             }
             else
             {
@@ -95,7 +95,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     Body = txtBody.Value,
                     CreatedOn = DateTime.UtcNow
                 };
-                IoCFactory.Resolve<ICampaignService>().InsertCampaign(campaign);
+                IoC.Resolve<ICampaignService>().InsertCampaign(campaign);
             }
 
             return campaign;
@@ -107,7 +107,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 try
                 {
-                    IoCFactory.Resolve<ICampaignService>().SendCampaign(this.CampaignId, txtSendTestEmailTo.Text);
+                    IoC.Resolve<ICampaignService>().SendCampaign(this.CampaignId, txtSendTestEmailTo.Text);
                     lblSendEmailResult.Text = GetLocaleResourceString("Admin.CampaignInfo.EmailSent");
                 }
                 catch (Exception exc)
@@ -125,8 +125,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 try
                 {
                     Server.ScriptTimeout = 300;
-                    var subscriptions = IoCFactory.Resolve<IMessageService>().GetAllNewsLetterSubscriptions(string.Empty, false);
-                    int totalEmailsSent = IoCFactory.Resolve<ICampaignService>().SendCampaign(this.CampaignId, subscriptions);
+                    var subscriptions = IoC.Resolve<IMessageService>().GetAllNewsLetterSubscriptions(string.Empty, false);
+                    int totalEmailsSent = IoC.Resolve<ICampaignService>().SendCampaign(this.CampaignId, subscriptions);
                     lblSendEmailResult.Text = string.Format(GetLocaleResourceString("Admin.CampaignInfo.EmailSentToCustomers"), totalEmailsSent);
                 }
                 catch (Exception exc)

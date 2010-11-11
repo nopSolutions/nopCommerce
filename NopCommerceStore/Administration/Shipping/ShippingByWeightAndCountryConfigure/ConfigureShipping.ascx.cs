@@ -22,7 +22,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Shipping;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Web.Administration.Modules;
 using NopSolutions.NopCommerce.Web.Templates.Shipping;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Shipping.ShippingByWeightAndCountryConfigure
 {
@@ -32,12 +32,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.ShippingByWeightA
         {
             if (!Page.IsPostBack)
             {
-                gvShippingByWeightAndCountry.Columns[2].HeaderText = string.Format("From [{0}]", IoCFactory.Resolve<IMeasureService>().BaseWeightIn.Name);
-                gvShippingByWeightAndCountry.Columns[3].HeaderText = string.Format("To [{0}]", IoCFactory.Resolve<IMeasureService>().BaseWeightIn.Name);
+                gvShippingByWeightAndCountry.Columns[2].HeaderText = string.Format("From [{0}]", IoC.Resolve<IMeasureService>().BaseWeightIn.Name);
+                gvShippingByWeightAndCountry.Columns[3].HeaderText = string.Format("To [{0}]", IoC.Resolve<IMeasureService>().BaseWeightIn.Name);
                 gvShippingByWeightAndCountry.Columns[6].HeaderText = "Charge amount";
-                if (IoCFactory.Resolve<IShippingByWeightAndCountryService>().CalculatePerWeightUnit)
+                if (IoC.Resolve<IShippingByWeightAndCountryService>().CalculatePerWeightUnit)
                 {
-                    gvShippingByWeightAndCountry.Columns[6].HeaderText += string.Format(" per {0}", IoCFactory.Resolve<IMeasureService>().BaseWeightIn.Name);
+                    gvShippingByWeightAndCountry.Columns[6].HeaderText += string.Format(" per {0}", IoC.Resolve<IMeasureService>().BaseWeightIn.Name);
                 }
                 FillDropDowns();
                 BindSettings();
@@ -48,7 +48,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.ShippingByWeightA
         private void FillDropDowns()
         {
             ddlShippingMethod.Items.Clear();
-            var shippingMethodCollection = IoCFactory.Resolve<IShippingService>().GetAllShippingMethods();
+            var shippingMethodCollection = IoC.Resolve<IShippingService>().GetAllShippingMethods();
             foreach (ShippingMethod shippingMethod in shippingMethodCollection)
             {
                 ListItem item = new ListItem(shippingMethod.Name, shippingMethod.ShippingMethodId.ToString());
@@ -56,7 +56,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.ShippingByWeightA
             }
 
             ddlCountry.Items.Clear();
-            var countryCollection = IoCFactory.Resolve<ICountryService>().GetAllCountries();
+            var countryCollection = IoC.Resolve<ICountryService>().GetAllCountries();
             foreach (Country country in countryCollection)
             {
                 ListItem item = new ListItem(country.Name, country.CountryId.ToString());
@@ -66,14 +66,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.ShippingByWeightA
 
         private void BindData()
         {
-            var shippingByWeightAndCountryCollection = IoCFactory.Resolve<IShippingByWeightAndCountryService>().GetAll();
+            var shippingByWeightAndCountryCollection = IoC.Resolve<IShippingByWeightAndCountryService>().GetAll();
             gvShippingByWeightAndCountry.DataSource = shippingByWeightAndCountryCollection;
             gvShippingByWeightAndCountry.DataBind();
         }
 
         private void BindSettings()
         {
-            cbLimitMethodsToCreated.Checked = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("ShippingByWeightAndCountry.LimitMethodsToCreated");
+            cbLimitMethodsToCreated.Checked = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("ShippingByWeightAndCountry.LimitMethodsToCreated");
         }
 
         protected void btnAdd_Click(object sender, EventArgs e)
@@ -92,7 +92,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.ShippingByWeightA
                     ShippingChargePercentage = txtShippingChargePercentage.Value,
                     ShippingChargeAmount = txtShippingChargeAmount.Value
                 };
-                IoCFactory.Resolve<IShippingByWeightAndCountryService>().InsertShippingByWeightAndCountry(shippingByWeightAndCountry);
+                IoC.Resolve<IShippingByWeightAndCountryService>().InsertShippingByWeightAndCountry(shippingByWeightAndCountry);
 
                 BindData();
             }
@@ -121,7 +121,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.ShippingByWeightA
                 int shippingByWeightAndCountryId = int.Parse(hfShippingByWeightAndCountryId.Value);
                 int shippingMethodId = int.Parse(ddlShippingMethod.SelectedItem.Value);
                 int countryId = int.Parse(ddlCountry.SelectedItem.Value);
-                ShippingByWeightAndCountry shippingByWeightAndCountry = IoCFactory.Resolve<IShippingByWeightAndCountryService>().GetById(shippingByWeightAndCountryId);
+                ShippingByWeightAndCountry shippingByWeightAndCountry = IoC.Resolve<IShippingByWeightAndCountryService>().GetById(shippingByWeightAndCountryId);
 
                 if (shippingByWeightAndCountry != null)
                 {
@@ -133,7 +133,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.ShippingByWeightA
                     shippingByWeightAndCountry.ShippingChargePercentage = txtShippingChargePercentage.Value;
                     shippingByWeightAndCountry.ShippingChargeAmount = txtShippingChargeAmount.Value;
 
-                    IoCFactory.Resolve<IShippingByWeightAndCountryService>().UpdateShippingByWeightAndCountry(shippingByWeightAndCountry);
+                    IoC.Resolve<IShippingByWeightAndCountryService>().UpdateShippingByWeightAndCountry(shippingByWeightAndCountry);
                 }
                 BindData();
             }
@@ -151,7 +151,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.ShippingByWeightA
 
                 DropDownList ddlShippingMethod = e.Row.FindControl("ddlShippingMethod") as DropDownList;
                 ddlShippingMethod.Items.Clear();
-                var shippingMethodCollection = IoCFactory.Resolve<IShippingService>().GetAllShippingMethods();
+                var shippingMethodCollection = IoC.Resolve<IShippingService>().GetAllShippingMethods();
                 foreach (ShippingMethod shippingMethod in shippingMethodCollection)
                 {
                     ListItem item = new ListItem(shippingMethod.Name, shippingMethod.ShippingMethodId.ToString());
@@ -163,7 +163,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.ShippingByWeightA
 
                 DropDownList ddlCountry = e.Row.FindControl("ddlCountry") as DropDownList;
                 ddlCountry.Items.Clear();
-                var countryCollection = IoCFactory.Resolve<ICountryService>().GetAllCountries();
+                var countryCollection = IoC.Resolve<ICountryService>().GetAllCountries();
                 foreach (Country country in countryCollection)
                 {
                     ListItem item = new ListItem(country.Name, country.CountryId.ToString());
@@ -177,10 +177,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.ShippingByWeightA
         protected void gvShippingByWeightAndCountry_RowDeleting(object sender, GridViewDeleteEventArgs e)
         {
             int shippingByWeightAndCountryId = (int)gvShippingByWeightAndCountry.DataKeys[e.RowIndex]["ShippingByWeightAndCountryId"];
-            ShippingByWeightAndCountry shippingByWeightAndCountry = IoCFactory.Resolve<IShippingByWeightAndCountryService>().GetById(shippingByWeightAndCountryId);
+            ShippingByWeightAndCountry shippingByWeightAndCountry = IoC.Resolve<IShippingByWeightAndCountryService>().GetById(shippingByWeightAndCountryId);
             if (shippingByWeightAndCountry != null)
             {
-                IoCFactory.Resolve<IShippingByWeightAndCountryService>().DeleteShippingByWeightAndCountry(shippingByWeightAndCountry.ShippingByWeightAndCountryId);
+                IoC.Resolve<IShippingByWeightAndCountryService>().DeleteShippingByWeightAndCountry(shippingByWeightAndCountry.ShippingByWeightAndCountryId);
                 BindData();
             }
         }
@@ -194,7 +194,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.ShippingByWeightA
         
         public void Save()
         {
-            IoCFactory.Resolve<ISettingManager>().SetParam("ShippingByWeightAndCountry.LimitMethodsToCreated", cbLimitMethodsToCreated.Checked.ToString());
+            IoC.Resolve<ISettingManager>().SetParam("ShippingByWeightAndCountry.LimitMethodsToCreated", cbLimitMethodsToCreated.Checked.ToString());
         }
     }
 }

@@ -120,7 +120,7 @@
             </tr>
             <tr>
                 <td class="adminTitle">
-                    Order weight from [<%=IoCFactory.Resolve<IMeasureService>().BaseWeightIn.Name%>]:
+                    Order weight from [<%=IoC.Resolve<IMeasureService>().BaseWeightIn.Name%>]:
                 </td>
                 <td class="adminData">
                     <nopCommerce:DecimalTextBox runat="server" ID="txtFrom" Value="0" RequiredErrorMessage="From is required"
@@ -131,7 +131,7 @@
             </tr>
             <tr>
                 <td class="adminTitle">
-                    Order weight to [<%=IoCFactory.Resolve<IMeasureService>().BaseWeightIn.Name%>]:
+                    Order weight to [<%=IoC.Resolve<IMeasureService>().BaseWeightIn.Name%>]:
                 </td>
                 <td class="adminData">
                     <nopCommerce:DecimalTextBox runat="server" ID="txtTo" Value="0" RequiredErrorMessage="To is required"
@@ -161,11 +161,11 @@
             </tr>
             <tr>
                 <td class="adminTitle">
-                    Charge amount [<%=IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode%>]
-                    <%if (IoCFactory.Resolve<IShippingByWeightService>().CalculatePerWeightUnit)
+                    Charge amount [<%=IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode%>]
+                    <%if (IoC.Resolve<IShippingByWeightService>().CalculatePerWeightUnit)
                       { %>
                     per
-                    <%=IoCFactory.Resolve<IMeasureService>().BaseWeightIn.Name%><%} %>:
+                    <%=IoC.Resolve<IMeasureService>().BaseWeightIn.Name%><%} %>:
                 </td>
                 <td class="adminData">
                     <nopCommerce:DecimalTextBox runat="server" ID="txtShippingChargeAmount" Value="0"

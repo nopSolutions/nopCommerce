@@ -17,7 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Payment.Methods.SecurePay
 {
@@ -28,11 +28,11 @@ namespace NopSolutions.NopCommerce.Payment.Methods.SecurePay
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.SecurePay.MerchantID");
+                return IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.SecurePay.MerchantID");
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.SecurePay.MerchantID", value);
+                IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.SecurePay.MerchantID", value);
             }
         }
 
@@ -40,11 +40,11 @@ namespace NopSolutions.NopCommerce.Payment.Methods.SecurePay
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.SecurePay.MerchantPassword");
+                return IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.SecurePay.MerchantPassword");
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.SecurePay.MerchantPassword", value);
+                IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.SecurePay.MerchantPassword", value);
             }
         }
 
@@ -52,11 +52,11 @@ namespace NopSolutions.NopCommerce.Payment.Methods.SecurePay
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.SecurePay.AdditionalFee");
+                return IoC.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.SecurePay.AdditionalFee");
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParamNative("PaymentMethod.SecurePay.AdditionalFee", value);
+                IoC.Resolve<ISettingManager>().SetParamNative("PaymentMethod.SecurePay.AdditionalFee", value);
             }
         }
         #endregion

@@ -16,7 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 
 namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
@@ -132,7 +132,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         {
             get
             {
-                return IoCFactory.Resolve<ICustomerService>().GetCustomerById(this.CustomerId);
+                return IoC.Resolve<ICustomerService>().GetCustomerById(this.CustomerId);
             }
         }
 
@@ -143,7 +143,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         {
             get
             {
-                return IoCFactory.Resolve<IStateProvinceService>().GetStateProvinceById(this.StateProvinceId);
+                return IoC.Resolve<IStateProvinceService>().GetStateProvinceById(this.StateProvinceId);
             }
         }
 
@@ -154,7 +154,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         {
             get
             {
-                return IoCFactory.Resolve<ICountryService>().GetCountryById(this.CountryId);
+                return IoC.Resolve<ICountryService>().GetCountryById(this.CountryId);
             }
         }
         #endregion

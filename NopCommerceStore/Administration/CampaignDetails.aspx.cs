@@ -29,7 +29,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Messages;
 using NopSolutions.NopCommerce.BusinessLogic.Promo.Campaigns;
 using NopSolutions.NopCommerce.BusinessLogic.Security;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 
 namespace NopSolutions.NopCommerce.Web.Administration
@@ -38,7 +38,7 @@ namespace NopSolutions.NopCommerce.Web.Administration
     {
         protected override bool ValidatePageSecurity()
         {
-            return IoCFactory.Resolve<IACLService>().IsActionAllowed("ManageCampaigns");
+            return IoC.Resolve<IACLService>().IsActionAllowed("ManageCampaigns");
         }
     }
 }

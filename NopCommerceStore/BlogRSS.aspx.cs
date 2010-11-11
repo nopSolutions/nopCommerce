@@ -29,7 +29,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Content.Blog;
 using NopSolutions.NopCommerce.BusinessLogic.Localization;
 using NopSolutions.NopCommerce.BusinessLogic.Payment;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 namespace NopSolutions.NopCommerce.Web
 {
     public partial class BlogRSSPage : BaseNopPage
@@ -41,9 +41,9 @@ namespace NopSolutions.NopCommerce.Web
 
         private void BindData()
         {
-            if (IoCFactory.Resolve<IBlogService>().BlogEnabled)
+            if (IoC.Resolve<IBlogService>().BlogEnabled)
             {
-                var blogPosts = IoCFactory.Resolve<IBlogService>().GetAllBlogPosts(LanguageId);
+                var blogPosts = IoC.Resolve<IBlogService>().GetAllBlogPosts(LanguageId);
                 rptrBlogPosts.DataSource = blogPosts;
                 rptrBlogPosts.DataBind();
             }

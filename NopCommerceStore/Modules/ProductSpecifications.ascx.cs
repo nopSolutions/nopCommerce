@@ -28,7 +28,7 @@ using NopSolutions.NopCommerce.BusinessLogic;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.BusinessLogic.Products.Specs;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -42,10 +42,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void BindData()
         {
-            var product = IoCFactory.Resolve<IProductService>().GetProductById(this.ProductId);
+            var product = IoC.Resolve<IProductService>().GetProductById(this.ProductId);
             if (product != null)
             {
-                var productSpecificationAttributes = IoCFactory.Resolve<ISpecificationAttributeService>().GetProductSpecificationAttributesByProductId(product.ProductId, null, true);
+                var productSpecificationAttributes = IoC.Resolve<ISpecificationAttributeService>().GetProductSpecificationAttributesByProductId(product.ProductId, null, true);
                 if (productSpecificationAttributes.Count > 0)
                 {
                     this.Visible = true;

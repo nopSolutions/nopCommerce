@@ -31,7 +31,7 @@ using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.BusinessLogic.Utils.Html;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -47,15 +47,15 @@ namespace NopSolutions.NopCommerce.Web.Modules
         {
             pnlError.Visible = false;
 
-            var product = IoCFactory.Resolve<IProductService>().GetProductById(this.ProductId);
+            var product = IoC.Resolve<IProductService>().GetProductById(this.ProductId);
             if (product != null && product.AllowCustomerReviews)
             {
                 FillRatingDropDowns();
 
-                if (NopContext.Current.User == null && IoCFactory.Resolve<ICustomerService>().AllowAnonymousUsersToReviewProduct)
-                    IoCFactory.Resolve<ICustomerService>().CreateAnonymousUser();
+                if (NopContext.Current.User == null && IoC.Resolve<ICustomerService>().AllowAnonymousUsersToReviewProduct)
+                    IoC.Resolve<ICustomerService>().CreateAnonymousUser();
 
-                if (NopContext.Current.User == null || (NopContext.Current.User.IsGuest && !IoCFactory.Resolve<ICustomerService>().AllowAnonymousUsersToReviewProduct))
+                if (NopContext.Current.User == null || (NopContext.Current.User.IsGuest && !IoC.Resolve<ICustomerService>().AllowAnonymousUsersToReviewProduct))
                 {
                     lblLeaveYourReview.Text = GetLocaleResourceString("Products.OnlyRegisteredUsersCanWriteReviews");
                     txtProductReviewTitle.Enabled = false;
@@ -92,13 +92,13 @@ namespace NopSolutions.NopCommerce.Web.Modules
             {
                 if (Page.IsValid)
                 {
-                    var product = IoCFactory.Resolve<IProductService>().GetProductById(this.ProductId);
+                    var product = IoC.Resolve<IProductService>().GetProductById(this.ProductId);
                     if (product != null && product.AllowCustomerReviews)
                     {
-                        if (NopContext.Current.User == null && IoCFactory.Resolve<ICustomerService>().AllowAnonymousUsersToReviewProduct)
-                            IoCFactory.Resolve<ICustomerService>().CreateAnonymousUser();
+                        if (NopContext.Current.User == null && IoC.Resolve<ICustomerService>().AllowAnonymousUsersToReviewProduct)
+                            IoC.Resolve<ICustomerService>().CreateAnonymousUser();
 
-                        if (NopContext.Current.User == null || (NopContext.Current.User.IsGuest && !IoCFactory.Resolve<ICustomerService>().AllowAnonymousUsersToReviewProduct)) 
+                        if (NopContext.Current.User == null || (NopContext.Current.User.IsGuest && !IoC.Resolve<ICustomerService>().AllowAnonymousUsersToReviewProduct)) 
                         {
                             lblLeaveYourReview.Text = GetLocaleResourceString("Products.OnlyRegisteredUsersCanWriteReviews");
                             return;
@@ -118,9 +118,9 @@ namespace NopSolutions.NopCommerce.Web.Modules
                         int rating = 4;
                         if (rblRating.SelectedItem != null)
                             rating = int.Parse(rblRating.SelectedItem.Value);
-                        bool isApproved = !IoCFactory.Resolve<ICustomerService>().ProductReviewsMustBeApproved;
+                        bool isApproved = !IoC.Resolve<ICustomerService>().ProductReviewsMustBeApproved;
                         
-                        IoCFactory.Resolve<IProductService>().InsertProductReview(product.ProductId, NopContext.Current.User.CustomerId,
+                        IoC.Resolve<IProductService>().InsertProductReview(product.ProductId, NopContext.Current.User.CustomerId,
                             productReviewTitle, productReviewText,
                             rating, 0, 0, isApproved, DateTime.UtcNow);
                         txtProductReviewTitle.Text = string.Empty;

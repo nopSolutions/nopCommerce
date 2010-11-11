@@ -17,7 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Payment.Methods.ChronoPay
 {
@@ -28,11 +28,11 @@ namespace NopSolutions.NopCommerce.Payment.Methods.ChronoPay
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.ChronoPay.HostedPayment.GatewayUrl", "https://secure.chronopay.com/index_shop.cgi");
+                return IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.ChronoPay.HostedPayment.GatewayUrl", "https://secure.chronopay.com/index_shop.cgi");
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.ChronoPay.HostedPayment.GatewayUrl", value);
+                IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.ChronoPay.HostedPayment.GatewayUrl", value);
             }
         }
 
@@ -40,11 +40,11 @@ namespace NopSolutions.NopCommerce.Payment.Methods.ChronoPay
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.ChronoPay.HostedPayment.ProductID");
+                return IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.ChronoPay.HostedPayment.ProductID");
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.ChronoPay.HostedPayment.ProductID", value);
+                IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.ChronoPay.HostedPayment.ProductID", value);
             }
         }
 
@@ -52,11 +52,11 @@ namespace NopSolutions.NopCommerce.Payment.Methods.ChronoPay
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.ChronoPay.HostedPayment.ProductName");
+                return IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.ChronoPay.HostedPayment.ProductName");
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.ChronoPay.HostedPayment.ProductName", value);
+                IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.ChronoPay.HostedPayment.ProductName", value);
             }
         }
 
@@ -64,11 +64,11 @@ namespace NopSolutions.NopCommerce.Payment.Methods.ChronoPay
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.ChronoPay.HostedPayment.SharedSecrect");
+                return IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.ChronoPay.HostedPayment.SharedSecrect");
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.ChronoPay.HostedPayment.SharedSecrect", value);
+                IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.ChronoPay.HostedPayment.SharedSecrect", value);
             }
         }
 
@@ -76,11 +76,11 @@ namespace NopSolutions.NopCommerce.Payment.Methods.ChronoPay
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.ChronoPay.HostedPayment.AdditionalFee");
+                return IoC.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.ChronoPay.HostedPayment.AdditionalFee");
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParamNative("PaymentMethod.ChronoPay.HostedPayment.AdditionalFee", value);
+                IoC.Resolve<ISettingManager>().SetParamNative("PaymentMethod.ChronoPay.HostedPayment.AdditionalFee", value);
             }
         }
         #endregion

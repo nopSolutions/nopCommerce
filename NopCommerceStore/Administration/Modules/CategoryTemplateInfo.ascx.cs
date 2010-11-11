@@ -25,7 +25,7 @@ using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.BusinessLogic.Templates;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -33,7 +33,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            CategoryTemplate categoryTemplate = IoCFactory.Resolve<ITemplateService>().GetCategoryTemplateById(this.CategoryTemplateId);
+            CategoryTemplate categoryTemplate = IoC.Resolve<ITemplateService>().GetCategoryTemplateById(this.CategoryTemplateId);
             if (categoryTemplate != null)
             {
                 this.txtName.Text = categoryTemplate.Name;
@@ -61,7 +61,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public CategoryTemplate SaveInfo()
         {
-            CategoryTemplate categoryTemplate = IoCFactory.Resolve<ITemplateService>().GetCategoryTemplateById(this.CategoryTemplateId);
+            CategoryTemplate categoryTemplate = IoC.Resolve<ITemplateService>().GetCategoryTemplateById(this.CategoryTemplateId);
 
             if (categoryTemplate != null)
             {
@@ -69,7 +69,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 categoryTemplate.TemplatePath = txtTemplatePath.Text;
                 categoryTemplate.DisplayOrder = txtDisplayOrder.Value;
                 categoryTemplate.UpdatedOn = DateTime.UtcNow;
-                IoCFactory.Resolve<ITemplateService>().UpdateCategoryTemplate(categoryTemplate);                
+                IoC.Resolve<ITemplateService>().UpdateCategoryTemplate(categoryTemplate);                
             }
             else
             {
@@ -82,7 +82,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     CreatedOn = now,
                     UpdatedOn = now
                 };
-                IoCFactory.Resolve<ITemplateService>().InsertCategoryTemplate(categoryTemplate);
+                IoC.Resolve<ITemplateService>().InsertCategoryTemplate(categoryTemplate);
             }
 
             return categoryTemplate;

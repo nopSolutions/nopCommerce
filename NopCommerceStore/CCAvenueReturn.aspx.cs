@@ -35,7 +35,7 @@ using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Payment.Methods.CCAvenue;
 using NopSolutions.NopCommerce.Payment.Methods.PayPal;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 namespace NopSolutions.NopCommerce.Web
 {
     public partial class CCAvenueReturnPage : BaseNopPage
@@ -61,7 +61,7 @@ namespace NopSolutions.NopCommerce.Web
             string WorkingKey, Order_Id, Merchant_Id, Amount, AuthDesc, checksum;
 
             //Assign following values to send it to verifychecksum function.
-            WorkingKey = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.CCAvenue.Key");   // put in the 32 bit working key in the quotes provided here
+            WorkingKey = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.CCAvenue.Key");   // put in the 32 bit working key in the quotes provided here
             if (String.IsNullOrWhiteSpace(WorkingKey))
                 throw new NopException("CCAvenue key is not set");
 
@@ -82,10 +82,10 @@ namespace NopSolutions.NopCommerce.Web
                      setting database status, informing logistics etc etc
                 */
 
-                Order order = IoCFactory.Resolve<IOrderService>().GetOrderById(Convert.ToInt32(Order_Id));
-                if (IoCFactory.Resolve<IOrderService>().CanMarkOrderAsPaid(order))
+                Order order = IoC.Resolve<IOrderService>().GetOrderById(Convert.ToInt32(Order_Id));
+                if (IoC.Resolve<IOrderService>().CanMarkOrderAsPaid(order))
                 {
-                    IoCFactory.Resolve<IOrderService>().MarkOrderAsPaid(order.OrderId);
+                    IoC.Resolve<IOrderService>().MarkOrderAsPaid(order.OrderId);
                 }
                 lInfo.Text = "<br>Thank you for shopping with us. Your credit card has been charged and your transaction is successful.";
 

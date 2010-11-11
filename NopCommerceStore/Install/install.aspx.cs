@@ -36,7 +36,7 @@ using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Installation;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Install
 {
@@ -502,9 +502,9 @@ namespace NopSolutions.NopCommerce.Web.Install
                     handleError("Email is not valid.");
                     return;
                 }
-                if (!IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("InstallationWizard.AdminAccountChanged", false))
+                if (!IoC.Resolve<ISettingManager>().GetSettingValueBoolean("InstallationWizard.AdminAccountChanged", false))
                 {
-                    Customer admin = IoCFactory.Resolve<ICustomerService>().GetCustomerByEmail(this.AdminUserEmail);
+                    Customer admin = IoC.Resolve<ICustomerService>().GetCustomerByEmail(this.AdminUserEmail);
 
                     if (admin == null || !admin.IsAdmin)
                     {
@@ -513,13 +513,13 @@ namespace NopSolutions.NopCommerce.Web.Install
 
                     admin.Email = email;
                     admin.Username = email;
-                    IoCFactory.Resolve<ICustomerService>().UpdateCustomer(admin);
+                    IoC.Resolve<ICustomerService>().UpdateCustomer(admin);
 
                     this.AdminUserEmail = admin.Email;
 
-                    IoCFactory.Resolve<ICustomerService>().ModifyPassword(admin.CustomerId, txtAdminPassword.Text);
+                    IoC.Resolve<ICustomerService>().ModifyPassword(admin.CustomerId, txtAdminPassword.Text);
 
-                    IoCFactory.Resolve<ISettingManager>().SetParam("InstallationWizard.AdminAccountChanged", "true");
+                    IoC.Resolve<ISettingManager>().SetParam("InstallationWizard.AdminAccountChanged", "true");
 
                     lblSaveAdminResult.Visible = true;
                     lblSaveAdminResult.Text = "Admin account has been changed";

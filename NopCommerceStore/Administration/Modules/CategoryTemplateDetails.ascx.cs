@@ -24,7 +24,7 @@ using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.Templates;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -72,7 +72,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                IoCFactory.Resolve<ITemplateService>().DeleteCategoryTemplate(this.CategoryTemplateId);
+                IoC.Resolve<ITemplateService>().DeleteCategoryTemplate(this.CategoryTemplateId);
                 Response.Redirect("CategoryTemplates.aspx");
             }
             catch (Exception exc)

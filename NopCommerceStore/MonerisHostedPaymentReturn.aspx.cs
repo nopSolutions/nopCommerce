@@ -9,7 +9,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Payment.Methods.Moneris;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web
 {
@@ -48,7 +48,7 @@ namespace NopSolutions.NopCommerce.Web
                 {
                     Response.Redirect(CommonHelper.GetStoreLocation());
                 }
-                Order order = IoCFactory.Resolve<IOrderService>().GetOrderByGuid(guid.Value);
+                Order order = IoC.Resolve<IOrderService>().GetOrderByGuid(guid.Value);
                 if(order == null)
                 {
                     Response.Redirect(CommonHelper.GetStoreLocation());
@@ -60,14 +60,14 @@ namespace NopSolutions.NopCommerce.Web
 
                 if(HostedPaymentSettings.AuthorizeOnly)
                 {
-                    if(IoCFactory.Resolve<IOrderService>().CanMarkOrderAsAuthorized(order))
+                    if(IoC.Resolve<IOrderService>().CanMarkOrderAsAuthorized(order))
                     {
-                        IoCFactory.Resolve<IOrderService>().MarkAsAuthorized(order.OrderId);
+                        IoC.Resolve<IOrderService>().MarkAsAuthorized(order.OrderId);
                     }
                 }
-                else if(IoCFactory.Resolve<IOrderService>().CanMarkOrderAsPaid(order))
+                else if(IoC.Resolve<IOrderService>().CanMarkOrderAsPaid(order))
                 {
-                    IoCFactory.Resolve<IOrderService>().MarkOrderAsPaid(order.OrderId);
+                    IoC.Resolve<IOrderService>().MarkOrderAsPaid(order.OrderId);
                 }
                 Response.Redirect("~/checkoutcompleted.aspx");
             }

@@ -16,7 +16,7 @@ using System;
 using System.Web;
 using NopSolutions.NopCommerce.BusinessLogic;
 using NopSolutions.NopCommerce.BusinessLogic.Installation;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 using NopSolutions.NopCommerce.BusinessLogic.Security;
 using NopSolutions.NopCommerce.Common.Utils;
 
@@ -74,7 +74,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
                         var clientIP = new BannedIpAddress();
                         clientIP.Address = application.Request.UserHostAddress;
                         // On any unexpected error we let visitor to visit website
-                        if (IoCFactory.Resolve<IBlacklistService>().IsIpAddressBanned(clientIP))
+                        if (IoC.Resolve<IBlacklistService>().IsIpAddressBanned(clientIP))
                         {
                             // Blocking process
 

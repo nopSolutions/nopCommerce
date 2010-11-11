@@ -13,7 +13,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -48,9 +48,9 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected override void OnPreRender(EventArgs e)
         {
-            if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Common.ShowMiniShoppingCart"))
+            if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Common.ShowMiniShoppingCart"))
             {
-                var shoppingCart = IoCFactory.Resolve<IShoppingCartService>().GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
+                var shoppingCart = IoC.Resolve<IShoppingCartService>().GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
                 if (shoppingCart.TotalProducts == 0)
                 {
                     phCheckoutInfo.Visible = false;
@@ -72,7 +72,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
                     lblOrderSubtotal.Text = GetLocaleResourceString("MiniShoppingCartBox.OrderSubtotal", GetOrderSubtotal(shoppingCart));
 
-                    if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Display.ItemsInMiniShoppingCart", false))
+                    if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Display.ItemsInMiniShoppingCart", false))
                     {
                         lvCart.Visible = true;
                         lvCart.DataSource = shoppingCart;
@@ -104,13 +104,13 @@ namespace NopSolutions.NopCommerce.Web.Modules
             Discount orderSubTotalAppliedDiscount = null;
             decimal subTotalWithoutDiscountBase = decimal.Zero;
             decimal subTotalWithDiscountBase = decimal.Zero;
-            string SubTotalError = IoCFactory.Resolve<IShoppingCartService>().GetShoppingCartSubTotal(shoppingCart,
+            string SubTotalError = IoC.Resolve<IShoppingCartService>().GetShoppingCartSubTotal(shoppingCart,
                 NopContext.Current.User, out orderSubTotalDiscountAmount, out orderSubTotalAppliedDiscount,
                 out subTotalWithoutDiscountBase, out subTotalWithDiscountBase);
             subtotalBase = subTotalWithoutDiscountBase;
             if (String.IsNullOrEmpty(SubTotalError))
             {
-                decimal subTotal = IoCFactory.Resolve<ICurrencyService>().ConvertCurrency(subtotalBase, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                decimal subTotal = IoC.Resolve<ICurrencyService>().ConvertCurrency(subtotalBase, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
                 return PriceHelper.FormatPrice(subTotal);
             }
             else

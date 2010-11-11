@@ -16,7 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Audit
@@ -67,7 +67,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
         {
             get
             {
-                return IoCFactory.Resolve<ICustomerService>().GetCustomerById(this.CustomerId);
+                return IoC.Resolve<ICustomerService>().GetCustomerById(this.CustomerId);
             }
         }
         #endregion

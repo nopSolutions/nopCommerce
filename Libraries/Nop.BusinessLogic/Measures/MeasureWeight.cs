@@ -15,7 +15,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Measures
@@ -71,7 +71,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Measures
         {
             get
             {
-                MeasureWeight primaryMeasureWeight = IoCFactory.Resolve<IMeasureService>().BaseWeightIn;
+                MeasureWeight primaryMeasureWeight = IoC.Resolve<IMeasureService>().BaseWeightIn;
                 return ((primaryMeasureWeight != null && primaryMeasureWeight.MeasureWeightId == this.MeasureWeightId));
             }
         }

@@ -32,7 +32,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.BusinessLogic.Localization;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web
 {
@@ -87,10 +87,10 @@ namespace NopSolutions.NopCommerce.Web
 
         protected void ProcessException(Exception exc, bool showError)
         {
-            IoCFactory.Resolve<ILogService>().InsertLog(LogTypeEnum.AdministrationArea, exc.Message, exc);
+            IoC.Resolve<ILogService>().InsertLog(LogTypeEnum.AdministrationArea, exc.Message, exc);
             if (showError)
             {
-                if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Display.AdminArea.ShowFullErrors"))
+                if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Display.AdminArea.ShowFullErrors"))
                 {
                     ShowError(exc.Message, exc.ToString());
                 }
@@ -142,7 +142,7 @@ namespace NopSolutions.NopCommerce.Web
 
         protected virtual List<Language> GetLocalizableLanguagesSupported()
         {
-            return IoCFactory.Resolve<ILanguageService>().GetAllLanguages(true);
+            return IoC.Resolve<ILanguageService>().GetAllLanguages(true);
         }
 
         protected virtual bool HasLocalizableContent
@@ -161,7 +161,7 @@ namespace NopSolutions.NopCommerce.Web
             {
                 if (_localizationManager == null)
                 {
-                    _localizationManager = IoCFactory.Resolve<ILocalizationManager>();
+                    _localizationManager = IoC.Resolve<ILocalizationManager>();
                 }
                 return _localizationManager;
             }

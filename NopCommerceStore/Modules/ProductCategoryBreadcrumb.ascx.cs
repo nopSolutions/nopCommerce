@@ -30,7 +30,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Categories;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -44,7 +44,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void BindData()
         {
-            var product = IoCFactory.Resolve<IProductService>().GetProductById(this.ProductId);
+            var product = IoC.Resolve<IProductService>().GetProductById(this.ProductId);
             if (product != null)
             {
                 hlProduct.NavigateUrl = SEOHelper.GetProductUrl(product);
@@ -55,7 +55,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     var category = productCategories[0].Category;
                     if (category != null)
                     {
-                        var breadCrumb = IoCFactory.Resolve<ICategoryService>().GetBreadCrumb(category.CategoryId);
+                        var breadCrumb = IoC.Resolve<ICategoryService>().GetBreadCrumb(category.CategoryId);
                         if (breadCrumb.Count > 0)
                         {
                             rptrCategoryBreadcrumb.DataSource = breadCrumb;

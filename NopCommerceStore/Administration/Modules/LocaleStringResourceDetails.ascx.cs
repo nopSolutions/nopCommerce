@@ -25,7 +25,7 @@ using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.BusinessLogic.Localization;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -33,10 +33,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            var localeStringResource = IoCFactory.Resolve<ILocalizationManager>().GetLocaleStringResourceById(this.LocaleStringResourceId);
+            var localeStringResource = IoC.Resolve<ILocalizationManager>().GetLocaleStringResourceById(this.LocaleStringResourceId);
             if (localeStringResource != null)
             {
-                Language language = IoCFactory.Resolve<ILanguageService>().GetLanguageById(localeStringResource.LanguageId);
+                Language language = IoC.Resolve<ILanguageService>().GetLanguageById(localeStringResource.LanguageId);
                 if (language != null)
                 {
                     hlBackToResources.NavigateUrl = CommonHelper.GetStoreAdminLocation() + "LocaleStringResources.aspx?LanguageID=" + localeStringResource.LanguageId.ToString();
@@ -96,8 +96,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                IoCFactory.Resolve<ILocalizationManager>().DeleteLocaleStringResource(this.LocaleStringResourceId);
-                LocaleStringResource localeStringResource = IoCFactory.Resolve<ILocalizationManager>().GetLocaleStringResourceById(this.LocaleStringResourceId);
+                IoC.Resolve<ILocalizationManager>().DeleteLocaleStringResource(this.LocaleStringResourceId);
+                LocaleStringResource localeStringResource = IoC.Resolve<ILocalizationManager>().GetLocaleStringResourceById(this.LocaleStringResourceId);
                 if (localeStringResource != null)
                     Response.Redirect("LocaleStringResources.aspx?LanguageID=" + localeStringResource.LanguageId.ToString());
                 else

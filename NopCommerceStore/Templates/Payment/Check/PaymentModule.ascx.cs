@@ -24,7 +24,7 @@ using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Payment;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Templates.Payment.Check
 {
@@ -38,7 +38,7 @@ namespace NopSolutions.NopCommerce.Web.Templates.Payment.Check
 
         private void BindData()
         {
-            lblInfo.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Check.Info");
+            lblInfo.Text = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Check.Info");
         }
 
         public bool ValidateForm()

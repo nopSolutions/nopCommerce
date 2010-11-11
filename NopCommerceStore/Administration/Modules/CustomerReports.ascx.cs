@@ -34,7 +34,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Shipping;
 using NopSolutions.NopCommerce.BusinessLogic.Utils;
 using NopSolutions.NopCommerce.Common.Utils;
 using System.Web.UI.DataVisualization.Charting;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -81,7 +81,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             if (shippingStatusId > 0)
                 shippingStatus = (ShippingStatusEnum)Enum.ToObject(typeof(ShippingStatusEnum), shippingStatusId);
 
-            return IoCFactory.Resolve<ICustomerService>().GetBestCustomersReport(startDate,
+            return IoC.Resolve<ICustomerService>().GetBestCustomersReport(startDate,
                 endDate, orderStatus, paymentStatus, shippingStatus, 1);
         }
 
@@ -113,7 +113,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             if (shippingStatusId > 0)
                 shippingStatus = (ShippingStatusEnum)Enum.ToObject(typeof(ShippingStatusEnum), shippingStatusId);
 
-            return IoCFactory.Resolve<ICustomerService>().GetBestCustomersReport(startDate,
+            return IoC.Resolve<ICustomerService>().GetBestCustomersReport(startDate,
                 endDate, orderStatus, paymentStatus, shippingStatus, 2);
         }
 
@@ -233,7 +233,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected void BindGridByLanguage()
         {
-            var report = IoCFactory.Resolve<ICustomerService>().GetCustomerReportByLanguage();
+            var report = IoC.Resolve<ICustomerService>().GetCustomerReportByLanguage();
             if (report.Count == 0)
             {
                 chartCustomersByLanguage.Visible = false;
@@ -258,7 +258,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected void BindGridByGender()
         {
-            var report = IoCFactory.Resolve<ICustomerService>().GetCustomerReportByAttributeKey("Gender");
+            var report = IoC.Resolve<ICustomerService>().GetCustomerReportByAttributeKey("Gender");
             if (report.Count == 0)
             {
                 chartCustomerByGender.Visible = false;
@@ -283,7 +283,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected void BindGridByCountry()
         {
-            var report = IoCFactory.Resolve<ICustomerService>().GetCustomerReportByAttributeKey("CountryId");
+            var report = IoC.Resolve<ICustomerService>().GetCustomerReportByAttributeKey("CountryId");
             if (report.Count == 0)
             {
                 chartCustomerByCountry.Visible = false;
@@ -309,7 +309,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         protected string GetCustomerInfo(int customerId)
         {
             string customerInfo = string.Empty;
-            Customer customer = IoCFactory.Resolve<ICustomerService>().GetCustomerById(customerId);
+            Customer customer = IoC.Resolve<ICustomerService>().GetCustomerById(customerId);
             if (customer != null)
             {
                 if (customer.IsGuest)
@@ -327,7 +327,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         protected string GetCustomerName(int customerId)
         {
             string customerName = string.Empty;
-            Customer customer = IoCFactory.Resolve<ICustomerService>().GetCustomerById(customerId);
+            Customer customer = IoC.Resolve<ICustomerService>().GetCustomerById(customerId);
             if (customer != null)
             {
                 if (customer.IsGuest)
@@ -345,7 +345,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         protected string GetLanguageInfo(int languageId)
         {
             string languageInfo = string.Empty;
-            var language = IoCFactory.Resolve<ILanguageService>().GetLanguageById(languageId);
+            var language = IoC.Resolve<ILanguageService>().GetLanguageById(languageId);
             if (language != null)
             {
                 languageInfo = language.Name;
@@ -387,7 +387,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 int countryId = 0;
                 if (int.TryParse(attributeKey, out countryId))
                 {
-                    var country = IoCFactory.Resolve<ICountryService>().GetCountryById(countryId);
+                    var country = IoC.Resolve<ICountryService>().GetCountryById(countryId);
                     if (country != null)
                     {
                         countryInfo = country.Name;

@@ -16,7 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using NopSolutions.NopCommerce.BusinessLogic.Tax;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 
 
@@ -73,7 +73,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
         {
             get
             {
-                return IoCFactory.Resolve<ICountryService>().GetCountryById(this.CountryId);
+                return IoC.Resolve<ICountryService>().GetCountryById(this.CountryId);
             }
         }
         #endregion

@@ -28,7 +28,7 @@ using NopSolutions.NopCommerce.BusinessLogic;
 using NopSolutions.NopCommerce.BusinessLogic.Content.Forums;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -48,7 +48,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             hlForumsHome.NavigateUrl = SEOHelper.GetForumMainUrl();
 
             //topic
-            var forumTopic = IoCFactory.Resolve<IForumService>().GetTopicById(this.ForumTopicId);
+            var forumTopic = IoC.Resolve<IForumService>().GetTopicById(this.ForumTopicId);
             if (forumTopic != null)
             {
                 hlForumTopic.NavigateUrl = SEOHelper.GetForumTopicUrl(forumTopic);
@@ -63,11 +63,11 @@ namespace NopSolutions.NopCommerce.Web.Modules
             Forum forum = null;
             if (forumTopic != null)
             {
-                forum = IoCFactory.Resolve<IForumService>().GetForumById(forumTopic.ForumId);
+                forum = IoC.Resolve<IForumService>().GetForumById(forumTopic.ForumId);
             }
             else
             {
-                forum = IoCFactory.Resolve<IForumService>().GetForumById(this.ForumId);
+                forum = IoC.Resolve<IForumService>().GetForumById(this.ForumId);
             }
 
             if (forum != null)
@@ -84,11 +84,11 @@ namespace NopSolutions.NopCommerce.Web.Modules
             ForumGroup forumGroup = null;
             if (forum != null)
             {
-                forumGroup = IoCFactory.Resolve<IForumService>().GetForumGroupById(forum.ForumGroupId);
+                forumGroup = IoC.Resolve<IForumService>().GetForumGroupById(forum.ForumGroupId);
             }
             else
             {
-                forumGroup = IoCFactory.Resolve<IForumService>().GetForumGroupById(this.ForumGroupId);
+                forumGroup = IoC.Resolve<IForumService>().GetForumGroupById(this.ForumGroupId);
             }
 
             if (forumGroup != null)

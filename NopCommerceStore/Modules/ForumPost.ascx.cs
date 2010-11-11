@@ -34,7 +34,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.Utils.Html;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -54,13 +54,13 @@ namespace NopSolutions.NopCommerce.Web.Modules
             {
                 lAnchor.Text = string.Format("<a name=\"{0}\"></a>", forumPost.ForumPostId);
 
-                btnEdit.Visible = IoCFactory.Resolve<IForumService>().IsUserAllowedToEditPost(NopContext.Current.User, forumPost);
-                btnDelete.Visible = IoCFactory.Resolve<IForumService>().IsUserAllowedToDeletePost(NopContext.Current.User, forumPost);
+                btnEdit.Visible = IoC.Resolve<IForumService>().IsUserAllowedToEditPost(NopContext.Current.User, forumPost);
+                btnDelete.Visible = IoC.Resolve<IForumService>().IsUserAllowedToDeletePost(NopContext.Current.User, forumPost);
                 btnDelete.OnClientClick = string.Format("return confirm('{0}')", GetLocaleResourceString("Common.AreYouSure"));
 
                 //post date
                 string dateStr = string.Empty;
-                if (IoCFactory.Resolve<IForumService>().RelativeDateTimeFormattingEnabled)
+                if (IoC.Resolve<IForumService>().RelativeDateTimeFormattingEnabled)
                     dateStr = forumPost.CreatedOn.RelativeFormat(true, "f");
                 else
                     dateStr = DateTimeHelper.ConvertToUserTime(forumPost.CreatedOn, DateTimeKind.Utc).ToString("f");
@@ -73,7 +73,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 var customer = forumPost.User;
                 if (customer != null)
                 {
-                    if (IoCFactory.Resolve<ICustomerService>().AllowViewingProfiles && !customer.IsGuest)
+                    if (IoC.Resolve<ICustomerService>().AllowViewingProfiles && !customer.IsGuest)
                     {
                         hlUser.Text = Server.HtmlEncode(customer.FormatUserName(true));
                         hlUser.NavigateUrl = SEOHelper.GetUserProfileUrl(customer.CustomerId);
@@ -85,20 +85,20 @@ namespace NopSolutions.NopCommerce.Web.Modules
                         hlUser.Visible = false;
                     }
 
-                    if (IoCFactory.Resolve<ICustomerService>().AllowCustomersToUploadAvatars)
+                    if (IoC.Resolve<ICustomerService>().AllowCustomersToUploadAvatars)
                     {
                         var customerAvatar = customer.Avatar;
-                        int avatarSize = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.Customer.AvatarSize", 85);
+                        int avatarSize = IoC.Resolve<ISettingManager>().GetSettingValueInteger("Media.Customer.AvatarSize", 85);
                         if (customerAvatar != null)
                         {
-                            string pictureUrl = IoCFactory.Resolve<IPictureService>().GetPictureUrl(customerAvatar, avatarSize, false);
+                            string pictureUrl = IoC.Resolve<IPictureService>().GetPictureUrl(customerAvatar, avatarSize, false);
                             this.imgAvatar.ImageUrl = pictureUrl;
                         }
                         else
                         {
-                            if (IoCFactory.Resolve<ICustomerService>().DefaultAvatarEnabled)
+                            if (IoC.Resolve<ICustomerService>().DefaultAvatarEnabled)
                             {
-                                string pictureUrl = IoCFactory.Resolve<IPictureService>().GetDefaultPictureUrl(PictureTypeEnum.Avatar, avatarSize);
+                                string pictureUrl = IoC.Resolve<IPictureService>().GetDefaultPictureUrl(PictureTypeEnum.Avatar, avatarSize);
                                 this.imgAvatar.ImageUrl = pictureUrl;
                             }
                             else
@@ -121,7 +121,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                         phStatus.Visible = false;
                     }
 
-                    if(IoCFactory.Resolve<IForumService>().ShowCustomersPostCount && !customer.IsGuest)
+                    if(IoC.Resolve<IForumService>().ShowCustomersPostCount && !customer.IsGuest)
                     {
                         lblTotalPosts.Text = customer.TotalForumPosts.ToString();
                     }
@@ -130,7 +130,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                         phTotalPosts.Visible = false;
                     }
 
-                    if(IoCFactory.Resolve<ICustomerService>().ShowCustomersJoinDate && !customer.IsGuest)
+                    if(IoC.Resolve<ICustomerService>().ShowCustomersJoinDate && !customer.IsGuest)
                     {
                         lblJoined.Text = DateTimeHelper.ConvertToUserTime(customer.RegistrationDate, DateTimeKind.Utc).ToString("d");
                     }
@@ -139,9 +139,9 @@ namespace NopSolutions.NopCommerce.Web.Modules
                         phJoined.Visible = false;
                     }
 
-                    if(IoCFactory.Resolve<ICustomerService>().ShowCustomersLocation && !customer.IsGuest)
+                    if(IoC.Resolve<ICustomerService>().ShowCustomersLocation && !customer.IsGuest)
                     {
-                        var country = IoCFactory.Resolve<ICountryService>().GetCountryById(customer.CountryId);
+                        var country = IoC.Resolve<ICountryService>().GetCountryById(customer.CountryId);
                         if (country != null)
                         {
                             lblLocation.Text = Server.HtmlEncode(country.Name);
@@ -156,7 +156,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                         phLocation.Visible = false;
                     }
 
-                    if(IoCFactory.Resolve<IForumService>().AllowPrivateMessages && !customer.IsGuest)
+                    if(IoC.Resolve<IForumService>().AllowPrivateMessages && !customer.IsGuest)
                     {
                         btnSendPM.CustomerId = customer.CustomerId;
                         phPM.Visible = true;
@@ -166,7 +166,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                         phPM.Visible = false;
                     }
 
-                    if (IoCFactory.Resolve<IForumService>().SignaturesEnabled && !String.IsNullOrEmpty(customer.Signature))
+                    if (IoC.Resolve<IForumService>().SignaturesEnabled && !String.IsNullOrEmpty(customer.Signature))
                     {
                         lblSignature.Text = customer.Signature.FormatForumSignatureText();
                     }
@@ -186,10 +186,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
         {
             int forumPostId = 0;
             int.TryParse(lblForumPostId.Text, out forumPostId);
-            var forumPost = IoCFactory.Resolve<IForumService>().GetPostById(forumPostId);
+            var forumPost = IoC.Resolve<IForumService>().GetPostById(forumPostId);
             if (forumPost != null)
             {
-                if (!IoCFactory.Resolve<IForumService>().IsUserAllowedToEditPost(NopContext.Current.User, forumPost))
+                if (!IoC.Resolve<IForumService>().IsUserAllowedToEditPost(NopContext.Current.User, forumPost))
                 {
                     string loginURL = SEOHelper.GetLoginPageUrl(true);
                     Response.Redirect(loginURL);
@@ -204,21 +204,21 @@ namespace NopSolutions.NopCommerce.Web.Modules
         {
             int forumPostId = 0;
             int.TryParse(lblForumPostId.Text, out forumPostId);
-            var forumPost = IoCFactory.Resolve<IForumService>().GetPostById(forumPostId);
+            var forumPost = IoC.Resolve<IForumService>().GetPostById(forumPostId);
             if (forumPost != null)
             {
                 var forumTopic = forumPost.Topic;
-                if (!IoCFactory.Resolve<IForumService>().IsUserAllowedToDeletePost(NopContext.Current.User, forumPost))
+                if (!IoC.Resolve<IForumService>().IsUserAllowedToDeletePost(NopContext.Current.User, forumPost))
                 {
                     string loginURL = SEOHelper.GetLoginPageUrl(true);
                     Response.Redirect(loginURL);
                 }
 
-                IoCFactory.Resolve<IForumService>().DeletePost(forumPost.ForumPostId);
+                IoC.Resolve<IForumService>().DeletePost(forumPost.ForumPostId);
 
                 string url = string.Empty;
                 //get topic one more time because it can be deleted
-                forumTopic = IoCFactory.Resolve<IForumService>().GetTopicById(forumPost.TopicId);
+                forumTopic = IoC.Resolve<IForumService>().GetTopicById(forumPost.TopicId);
                 if (forumTopic != null)
                 {
                     url = SEOHelper.GetForumTopicUrl(forumTopic);
@@ -235,7 +235,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
         {
             int forumPostId = 0;
             int.TryParse(lblForumPostId.Text, out forumPostId);
-            var forumPost = IoCFactory.Resolve<IForumService>().GetPostById(forumPostId);
+            var forumPost = IoC.Resolve<IForumService>().GetPostById(forumPostId);
             if(forumPost != null)
             {
                 Response.Redirect(SEOHelper.GetNewForumPostUrl(forumPost.TopicId, forumPost.ForumPostId));

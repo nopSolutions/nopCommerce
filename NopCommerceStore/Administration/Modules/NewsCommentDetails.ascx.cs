@@ -27,7 +27,7 @@ using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.Utils.Html;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -35,7 +35,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            NewsComment newsComment = IoCFactory.Resolve<INewsService>().GetNewsCommentById(this.NewsCommentId);
+            NewsComment newsComment = IoC.Resolve<INewsService>().GetNewsCommentById(this.NewsCommentId);
             if (newsComment != null)
             {
                 this.txtTitle.Text = newsComment.Title;
@@ -52,7 +52,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         protected string GetCustomerInfo(int customerId)
         {
             string customerInfo = string.Empty;
-            Customer customer = IoCFactory.Resolve<ICustomerService>().GetCustomerById(customerId);
+            Customer customer = IoC.Resolve<ICustomerService>().GetCustomerById(customerId);
             if (customer != null)
             {
                 if (customer.IsGuest)
@@ -69,7 +69,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected string GetNewsInfo(int newsId)
         {
-            News news = IoCFactory.Resolve<INewsService>().GetNewsById(newsId);
+            News news = IoC.Resolve<INewsService>().GetNewsById(newsId);
             if (news != null)
             {
                 string newsInfo = string.Format("<a href=\"NewsDetails.aspx?NewsID={0}\">{1}</a>", news.NewsId, Server.HtmlEncode(news.Title));
@@ -93,12 +93,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 try
                 {
-                    NewsComment newsComment = IoCFactory.Resolve<INewsService>().GetNewsCommentById(this.NewsCommentId);
+                    NewsComment newsComment = IoC.Resolve<INewsService>().GetNewsCommentById(this.NewsCommentId);
                     if (newsComment != null)
                     {
                         newsComment.Title = txtTitle.Text.Trim();
                         newsComment.Comment = txtComment.Text.Trim();
-                        IoCFactory.Resolve<INewsService>().UpdateNewsComment(newsComment);
+                        IoC.Resolve<INewsService>().UpdateNewsComment(newsComment);
 
                         Response.Redirect("NewsCommentDetails.aspx?NewsCommentID=" + newsComment.NewsCommentId.ToString());
                     }
@@ -114,7 +114,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected void DeleteButton_Click(object sender, EventArgs e)
         {
-            IoCFactory.Resolve<INewsService>().DeleteNewsComment(this.NewsCommentId);
+            IoC.Resolve<INewsService>().DeleteNewsComment(this.NewsCommentId);
             Response.Redirect("NewsComments.aspx");
         }
 

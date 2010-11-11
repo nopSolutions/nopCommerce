@@ -23,7 +23,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.BusinessLogic.Measures;
 using NopSolutions.NopCommerce.BusinessLogic.Shipping;
 using NopSolutions.NopCommerce.Common;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Shipping.Methods.AustraliaPost
 {
@@ -47,25 +47,25 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.AustraliaPost
 
         private static int GetWeight(ShipmentPackage shipmentPackage)
         {
-            int value = Convert.ToInt32(Math.Ceiling(IoCFactory.Resolve<IMeasureService>().ConvertWeight(IoCFactory.Resolve<IShippingService>().GetShoppingCartTotalWeight(shipmentPackage.Items, shipmentPackage.Customer), IoCFactory.Resolve<IMeasureService>().BaseWeightIn, AustraliaPostSettings.MeasureWeight)));
+            int value = Convert.ToInt32(Math.Ceiling(IoC.Resolve<IMeasureService>().ConvertWeight(IoC.Resolve<IShippingService>().GetShoppingCartTotalWeight(shipmentPackage.Items, shipmentPackage.Customer), IoC.Resolve<IMeasureService>().BaseWeightIn, AustraliaPostSettings.MeasureWeight)));
             return (value < MIN_WEIGHT ? MIN_WEIGHT : value);
         }
 
         private static int GetLength(ShipmentPackage shipmentPackage)
         {
-            int value = Convert.ToInt32(Math.Ceiling(IoCFactory.Resolve<IMeasureService>().ConvertDimension(shipmentPackage.GetTotalLength(), IoCFactory.Resolve<IMeasureService>().BaseDimensionIn, AustraliaPostSettings.MeasureDimension)));
+            int value = Convert.ToInt32(Math.Ceiling(IoC.Resolve<IMeasureService>().ConvertDimension(shipmentPackage.GetTotalLength(), IoC.Resolve<IMeasureService>().BaseDimensionIn, AustraliaPostSettings.MeasureDimension)));
             return (value < MIN_LENGTH ? MIN_LENGTH : value);
         }
 
         private static int GetWidth(ShipmentPackage shipmentPackage)
         {
-            int value = Convert.ToInt32(Math.Ceiling(IoCFactory.Resolve<IMeasureService>().ConvertDimension(shipmentPackage.GetTotalWidth(), IoCFactory.Resolve<IMeasureService>().BaseDimensionIn, AustraliaPostSettings.MeasureDimension)));
+            int value = Convert.ToInt32(Math.Ceiling(IoC.Resolve<IMeasureService>().ConvertDimension(shipmentPackage.GetTotalWidth(), IoC.Resolve<IMeasureService>().BaseDimensionIn, AustraliaPostSettings.MeasureDimension)));
             return (value < MIN_LENGTH ? MIN_LENGTH : value);
         }
 
         private static int GetHeight(ShipmentPackage shipmentPackage)
         {
-            int value = Convert.ToInt32(Math.Ceiling(IoCFactory.Resolve<IMeasureService>().ConvertDimension(shipmentPackage.GetTotalHeight(), IoCFactory.Resolve<IMeasureService>().BaseDimensionIn, AustraliaPostSettings.MeasureDimension)));
+            int value = Convert.ToInt32(Math.Ceiling(IoC.Resolve<IMeasureService>().ConvertDimension(shipmentPackage.GetTotalHeight(), IoC.Resolve<IMeasureService>().BaseDimensionIn, AustraliaPostSettings.MeasureDimension)));
             return (value < MIN_LENGTH ? MIN_LENGTH : value);
         }
         

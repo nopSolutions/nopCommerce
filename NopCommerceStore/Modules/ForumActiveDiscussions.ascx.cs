@@ -31,7 +31,7 @@ using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Media;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -47,12 +47,12 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         private void BindData()
         {
-            if (!IoCFactory.Resolve<IForumService>().ForumsEnabled)
+            if (!IoC.Resolve<IForumService>().ForumsEnabled)
             {
                 this.Visible = false;
                 return;
             }
-            var forumTopics = IoCFactory.Resolve<IForumService>().GetActiveTopics(this.ForumId, this.TopicCount);
+            var forumTopics = IoC.Resolve<IForumService>().GetActiveTopics(this.ForumId, this.TopicCount);
             if (forumTopics.Count > 0)
             {
                 rptrTopics.DataSource = forumTopics;
@@ -81,7 +81,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 var hlTopicStarter = e.Item.FindControl("hlTopicStarter") as HyperLink;
                 if(hlTopicStarter != null)
                 {
-                    if(customer != null && IoCFactory.Resolve<ICustomerService>().AllowViewingProfiles && !customer.IsGuest)
+                    if(customer != null && IoC.Resolve<ICustomerService>().AllowViewingProfiles && !customer.IsGuest)
                     {
                         hlTopicStarter.Text = Server.HtmlEncode(customer.FormatUserName(true));
                         hlTopicStarter.NavigateUrl = SEOHelper.GetUserProfileUrl(customer.CustomerId);
@@ -95,7 +95,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 var lblTopicStarter = e.Item.FindControl("lblTopicStarter") as Label;
                 if(lblTopicStarter != null)
                 {
-                    if(customer != null && (!IoCFactory.Resolve<ICustomerService>().AllowViewingProfiles || customer.IsGuest))
+                    if(customer != null && (!IoC.Resolve<ICustomerService>().AllowViewingProfiles || customer.IsGuest))
                     {
                         lblTopicStarter.Text = Server.HtmlEncode(customer.FormatUserName(true));
                     }
@@ -127,7 +127,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             get
             {
                 if (ViewState["TopicCount"] == null)
-                    return IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Forums.ActiveDiscussions.TopicCount");
+                    return IoC.Resolve<ISettingManager>().GetSettingValueInteger("Forums.ActiveDiscussions.TopicCount");
                 else
                     return (int)ViewState["TopicCount"];
             }

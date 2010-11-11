@@ -26,7 +26,7 @@ using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Web.Templates.Payment;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Payment.PSIGate
 {
@@ -40,18 +40,18 @@ namespace NopSolutions.NopCommerce.Web.Administration.Payment.PSIGate
 
         private void BindData()
         {
-            cbUseSandbox.Checked = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.PSIGate.UseSandbox");
-            txtStoreId.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.PSIGate.StoreId");
-            txtPassphrase.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.PSIGate.Passphrase");
-            txtAdditionalFee.Value = IoCFactory.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.PSIGate.AdditionalFee");
+            cbUseSandbox.Checked = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.PSIGate.UseSandbox");
+            txtStoreId.Text = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.PSIGate.StoreId");
+            txtPassphrase.Text = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.PSIGate.Passphrase");
+            txtAdditionalFee.Value = IoC.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.PSIGate.AdditionalFee");
         }
 
         public void Save()
         {
-            IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.PSIGate.UseSandbox", cbUseSandbox.Checked.ToString());
-            IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.PSIGate.StoreId", txtStoreId.Text);
-            IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.PSIGate.Passphrase", txtPassphrase.Text);
-            IoCFactory.Resolve<ISettingManager>().SetParamNative("PaymentMethod.PSIGate.AdditionalFee", txtAdditionalFee.Value);
+            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.PSIGate.UseSandbox", cbUseSandbox.Checked.ToString());
+            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.PSIGate.StoreId", txtStoreId.Text);
+            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.PSIGate.Passphrase", txtPassphrase.Text);
+            IoC.Resolve<ISettingManager>().SetParamNative("PaymentMethod.PSIGate.AdditionalFee", txtAdditionalFee.Value);
         }
     }
 }

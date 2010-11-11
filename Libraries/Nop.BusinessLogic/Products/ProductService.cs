@@ -23,7 +23,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Data;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 using NopSolutions.NopCommerce.BusinessLogic.Localization;
 using NopSolutions.NopCommerce.BusinessLogic.Manufacturers;
 using NopSolutions.NopCommerce.BusinessLogic.Media;
@@ -724,7 +724,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         /// <param name="rating">Rating</param>
         public void SetProductRating(int productId, int rating)
         {
-            if (NopContext.Current.User == null || (NopContext.Current.User.IsGuest && !IoCFactory.Resolve<ICustomerService>().AllowAnonymousUsersToSetProductRatings))
+            if (NopContext.Current.User == null || (NopContext.Current.User.IsGuest && !IoC.Resolve<ICustomerService>().AllowAnonymousUsersToSetProductRatings))
             {
                 return;
             }
@@ -955,7 +955,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             if (recentlyViewedCookie == null)
                 recentlyViewedCookie = new HttpCookie("NopCommerce.RecentlyViewedProducts");
             recentlyViewedCookie.Values.Clear();
-            int maxProducts = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Display.RecentlyViewedProductCount");
+            int maxProducts = IoC.Resolve<ISettingManager>().GetSettingValueInteger("Display.RecentlyViewedProductCount");
             if (maxProducts <= 0)
                 maxProducts = 10;
             int i = 1;
@@ -1004,7 +1004,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                     var defaultProductVariant = productVariants[0];
                     if (!defaultProductVariant.CustomerEntersPrice)
                     {
-                        var addToCartWarnings = IoCFactory.Resolve<IShoppingCartService>().GetShoppingCartItemWarnings(ShoppingCartTypeEnum.ShoppingCart,
+                        var addToCartWarnings = IoC.Resolve<IShoppingCartService>().GetShoppingCartItemWarnings(ShoppingCartTypeEnum.ShoppingCart,
                             defaultProductVariant.ProductVariantId, string.Empty, decimal.Zero, 1);
 
                         if (addToCartWarnings.Count == 0)
@@ -1062,7 +1062,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                 if (productCopy == null)
                     return null;
 
-                var languages = IoCFactory.Resolve<ILanguageService>().GetAllLanguages(true);
+                var languages = IoC.Resolve<ILanguageService>().GetAllLanguages(true);
 
                 //localization
                 foreach (var lang in languages)
@@ -1093,7 +1093,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                     {
                         var picture = productPicture.Picture;
 
-                        var pictureCopy = IoCFactory.Resolve<IPictureService>().InsertPicture(picture.PictureBinary,
+                        var pictureCopy = IoC.Resolve<IPictureService>().InsertPicture(picture.PictureBinary,
                             picture.MimeType,
                             picture.IsNew);
 
@@ -1117,7 +1117,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                         DisplayOrder = productCategory.DisplayOrder
                     };
 
-                    IoCFactory.Resolve<ICategoryService>().InsertProductCategory(productCategoryCopy);
+                    IoC.Resolve<ICategoryService>().InsertProductCategory(productCategoryCopy);
                 }
 
                 // product <-> manufacturers mappings
@@ -1131,7 +1131,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                         DisplayOrder = productManufacturers.DisplayOrder
                     };
 
-                    IoCFactory.Resolve<IManufacturerService>().InsertProductManufacturer(productManufacturerCopy);
+                    IoC.Resolve<IManufacturerService>().InsertProductManufacturer(productManufacturerCopy);
                 }
 
                 // product <-> releated products mappings
@@ -1147,7 +1147,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                 }
 
                 // product specifications
-                foreach (var productSpecificationAttribute in IoCFactory.Resolve<ISpecificationAttributeService>().GetProductSpecificationAttributesByProductId(product.ProductId))
+                foreach (var productSpecificationAttribute in IoC.Resolve<ISpecificationAttributeService>().GetProductSpecificationAttributesByProductId(product.ProductId))
                 {
                     var psaCopy = new ProductSpecificationAttribute()
                     {
@@ -1157,7 +1157,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                         ShowOnProductPage = productSpecificationAttribute.ShowOnProductPage,
                         DisplayOrder = productSpecificationAttribute.DisplayOrder
                     };
-                    IoCFactory.Resolve<ISpecificationAttributeService>().InsertProductSpecificationAttribute(psaCopy);
+                    IoC.Resolve<ISpecificationAttributeService>().InsertProductSpecificationAttribute(psaCopy);
                 }
 
                 // product variants
@@ -1171,7 +1171,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                         var picture = productVariant.Picture;
                         if (picture != null)
                         {
-                            var pictureCopy = IoCFactory.Resolve<IPictureService>().InsertPicture(picture.PictureBinary, picture.MimeType, picture.IsNew);
+                            var pictureCopy = IoC.Resolve<IPictureService>().InsertPicture(picture.PictureBinary, picture.MimeType, picture.IsNew);
                             pictureId = pictureCopy.PictureId;
                         }
                     }
@@ -1194,7 +1194,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                                     Extension = download.Extension,
                                     IsNew = download.IsNew
                                 };
-                            IoCFactory.Resolve<IDownloadService>().InsertDownload(downloadCopy);
+                            IoC.Resolve<IDownloadService>().InsertDownload(downloadCopy);
                             downloadId = downloadCopy.DownloadId;
                         }
 
@@ -1213,7 +1213,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                                     Extension = sampleDownload.Extension,
                                     IsNew = sampleDownload.IsNew
                                 };
-                                IoCFactory.Resolve<IDownloadService>().InsertDownload(sampleDownloadCopy);
+                                IoC.Resolve<IDownloadService>().InsertDownload(sampleDownloadCopy);
                                 sampleDownloadId = sampleDownloadCopy.DownloadId;
                             }
                         }
@@ -1302,7 +1302,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                     }
 
                     // product variant <-> attributes mappings
-                    foreach (var productVariantAttribute in IoCFactory.Resolve<IProductAttributeService>().GetProductVariantAttributesByProductVariantId(productVariant.ProductVariantId))
+                    foreach (var productVariantAttribute in IoC.Resolve<IProductAttributeService>().GetProductVariantAttributesByProductVariantId(productVariant.ProductVariantId))
                     {
                         var productVariantAttributeCopy = new ProductVariantAttribute()
                         {
@@ -1313,10 +1313,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                             AttributeControlTypeId = productVariantAttribute.AttributeControlTypeId,
                             DisplayOrder = productVariantAttribute.DisplayOrder
                         };
-                        IoCFactory.Resolve<IProductAttributeService>().InsertProductVariantAttribute(productVariantAttributeCopy);
+                        IoC.Resolve<IProductAttributeService>().InsertProductVariantAttribute(productVariantAttributeCopy);
 
                         // product variant attribute values
-                        var productVariantAttributeValues = IoCFactory.Resolve<IProductAttributeService>().GetProductVariantAttributeValues(productVariantAttribute.ProductVariantAttributeId);
+                        var productVariantAttributeValues = IoC.Resolve<IProductAttributeService>().GetProductVariantAttributeValues(productVariantAttribute.ProductVariantAttributeId);
                         foreach (var productVariantAttributeValue in productVariantAttributeValues)
                         {
                             var pvavCopy = new ProductVariantAttributeValue()
@@ -1328,12 +1328,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                                 IsPreSelected = productVariantAttributeValue.IsPreSelected,
                                 DisplayOrder = productVariantAttributeValue.DisplayOrder
                             };
-                            IoCFactory.Resolve<IProductAttributeService>().InsertProductVariantAttributeValue(pvavCopy);
+                            IoC.Resolve<IProductAttributeService>().InsertProductVariantAttributeValue(pvavCopy);
 
                             //localization
                             foreach (var lang in languages)
                             {
-                                var pvavLocalized = IoCFactory.Resolve<IProductAttributeService>().GetProductVariantAttributeValueLocalizedByProductVariantAttributeValueIdAndLanguageId(productVariantAttributeValue.ProductVariantAttributeValueId, lang.LanguageId);
+                                var pvavLocalized = IoC.Resolve<IProductAttributeService>().GetProductVariantAttributeValueLocalizedByProductVariantAttributeValueIdAndLanguageId(productVariantAttributeValue.ProductVariantAttributeValueId, lang.LanguageId);
                                 if (pvavLocalized != null)
                                 {
                                     var pvavLocalizedCopy = new ProductVariantAttributeValueLocalized()
@@ -1342,12 +1342,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                                         LanguageId = pvavLocalized.LanguageId,
                                         Name = pvavLocalized.Name
                                     };
-                                    IoCFactory.Resolve<IProductAttributeService>().InsertProductVariantAttributeValueLocalized(pvavLocalizedCopy);
+                                    IoC.Resolve<IProductAttributeService>().InsertProductVariantAttributeValueLocalized(pvavLocalizedCopy);
                                 }
                             }
                         }
                     }
-                    foreach (var combination in IoCFactory.Resolve<IProductAttributeService>().GetAllProductVariantAttributeCombinations(productVariant.ProductVariantId))
+                    foreach (var combination in IoC.Resolve<IProductAttributeService>().GetAllProductVariantAttributeCombinations(productVariant.ProductVariantId))
                     {
                         var combinationCopy = new ProductVariantAttributeCombination()
                         {
@@ -1356,7 +1356,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                             StockQuantity = combination.StockQuantity,
                             AllowOutOfStockOrders = combination.AllowOutOfStockOrders
                         };
-                        IoCFactory.Resolve<IProductAttributeService>().InsertProductVariantAttributeCombination(combinationCopy);
+                        IoC.Resolve<IProductAttributeService>().InsertProductVariantAttributeCombination(combinationCopy);
                     }
 
                     // product variant tier prices
@@ -1374,7 +1374,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                     // product variant <-> discounts mapping
                     foreach (var discount in productVariant.AllDiscounts)
                     {
-                        IoCFactory.Resolve<IDiscountService>().AddDiscountToProductVariant(productVariantCopy.ProductVariantId, discount.DiscountId);
+                        IoC.Resolve<IDiscountService>().AddDiscountToProductVariant(productVariantCopy.ProductVariantId, discount.DiscountId);
                     }
 
                     // prices by customer role
@@ -1895,7 +1895,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
 
                         if (decrease && productVariant.NotifyAdminForQuantityBelow > newStockQuantity)
                         {
-                            IoCFactory.Resolve<IMessageService>().SendQuantityBelowStoreOwnerNotification(productVariant, IoCFactory.Resolve<ILocalizationManager>().DefaultAdminLanguage.LanguageId);
+                            IoC.Resolve<IMessageService>().SendQuantityBelowStoreOwnerNotification(productVariant, IoC.Resolve<ILocalizationManager>().DefaultAdminLanguage.LanguageId);
                         }
 
                         productVariant.StockQuantity = newStockQuantity;
@@ -1926,7 +1926,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                     break;
                 case ManageInventoryMethodEnum.ManageStockByAttributes:
                     {
-                        var combination = IoCFactory.Resolve<IProductAttributeService>().FindProductVariantAttributeCombination(productVariant.ProductVariantId, attributesXml);
+                        var combination = IoC.Resolve<IProductAttributeService>().FindProductVariantAttributeCombination(productVariant.ProductVariantId, attributesXml);
                         if (combination != null)
                         {
                             int newStockQuantity = 0;
@@ -1936,7 +1936,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                                 newStockQuantity = combination.StockQuantity + quantity;
 
                             combination.StockQuantity = newStockQuantity;
-                            IoCFactory.Resolve<IProductAttributeService>().UpdateProductVariantAttributeCombination(combination);
+                            IoC.Resolve<IProductAttributeService>().UpdateProductVariantAttributeCombination(combination);
                         }
                     }
                     break;
@@ -2201,15 +2201,15 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             _context.SaveChanges();
 
             //activity log
-            IoCFactory.Resolve<ICustomerActivityService>().InsertActivity(
+            IoC.Resolve<ICustomerActivityService>().InsertActivity(
                 "WriteProductReview",
-                IoCFactory.Resolve<ILocalizationManager>().GetLocaleResourceString("ActivityLog.WriteProductReview"),
+                IoC.Resolve<ILocalizationManager>().GetLocaleResourceString("ActivityLog.WriteProductReview"),
                 productId);
 
             //notify store owner
             if (notify)
             {
-                IoCFactory.Resolve<IMessageService>().SendProductReviewNotificationMessage(productReview, IoCFactory.Resolve<ILocalizationManager>().DefaultAdminLanguage.LanguageId);
+                IoC.Resolve<IMessageService>().SendProductReviewNotificationMessage(productReview, IoC.Resolve<ILocalizationManager>().DefaultAdminLanguage.LanguageId);
             }
 
             return productReview;
@@ -2248,7 +2248,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             {
                 return;
             }
-            if (NopContext.Current.User.IsGuest && !IoCFactory.Resolve<ICustomerService>().AllowAnonymousUsersToReviewProduct)
+            if (NopContext.Current.User.IsGuest && !IoC.Resolve<ICustomerService>().AllowAnonymousUsersToReviewProduct)
             {
                 return;
             }
@@ -3096,7 +3096,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.ProductManager.CacheEnabled");
+                return IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.ProductManager.CacheEnabled");
             }
         }
 
@@ -3107,12 +3107,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         {
             get
             {
-                bool recentlyViewedProductsEnabled = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Display.RecentlyViewedProductsEnabled");
+                bool recentlyViewedProductsEnabled = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Display.RecentlyViewedProductsEnabled");
                 return recentlyViewedProductsEnabled;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Display.RecentlyViewedProductsEnabled", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Display.RecentlyViewedProductsEnabled", value.ToString());
             }
         }
 
@@ -3123,12 +3123,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         {
             get
             {
-                int recentlyViewedProductsNumber = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Display.RecentlyViewedProductsNumber");
+                int recentlyViewedProductsNumber = IoC.Resolve<ISettingManager>().GetSettingValueInteger("Display.RecentlyViewedProductsNumber");
                 return recentlyViewedProductsNumber;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Display.RecentlyViewedProductsNumber", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Display.RecentlyViewedProductsNumber", value.ToString());
             }
         }
 
@@ -3139,12 +3139,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         {
             get
             {
-                bool recentlyAddedProductsEnabled = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Display.RecentlyAddedProductsEnabled");
+                bool recentlyAddedProductsEnabled = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Display.RecentlyAddedProductsEnabled");
                 return recentlyAddedProductsEnabled;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Display.RecentlyAddedProductsEnabled", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Display.RecentlyAddedProductsEnabled", value.ToString());
             }
         }
 
@@ -3155,12 +3155,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         {
             get
             {
-                int recentlyAddedProductsNumber = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Display.RecentlyAddedProductsNumber");
+                int recentlyAddedProductsNumber = IoC.Resolve<ISettingManager>().GetSettingValueInteger("Display.RecentlyAddedProductsNumber");
                 return recentlyAddedProductsNumber;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Display.RecentlyAddedProductsNumber", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Display.RecentlyAddedProductsNumber", value.ToString());
             }
         }
 
@@ -3171,12 +3171,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         {
             get
             {
-                int result = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Display.CrossSellsNumber", 2);
+                int result = IoC.Resolve<ISettingManager>().GetSettingValueInteger("Display.CrossSellsNumber", 2);
                 return result;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Display.CrossSellsNumber", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Display.CrossSellsNumber", value.ToString());
             }
         }
 
@@ -3187,12 +3187,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         {
             get
             {
-                int result = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("SearchPage.ProductsPerPage", 10);
+                int result = IoC.Resolve<ISettingManager>().GetSettingValueInteger("SearchPage.ProductsPerPage", 10);
                 return result;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("SearchPage.ProductsPerPage", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("SearchPage.ProductsPerPage", value.ToString());
             }
         }
 
@@ -3203,12 +3203,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         {
             get
             {
-                bool showShareButton = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Products.AddThisSharing.Enabled");
+                bool showShareButton = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Products.AddThisSharing.Enabled");
                 return showShareButton;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Products.AddThisSharing.Enabled", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Products.AddThisSharing.Enabled", value.ToString());
             }
         }
 
@@ -3219,12 +3219,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         {
             get
             {
-                bool compareProductsEnabled = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Common.EnableCompareProducts");
+                bool compareProductsEnabled = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Common.EnableCompareProducts");
                 return compareProductsEnabled;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Common.EnableCompareProducts", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Common.EnableCompareProducts", value.ToString());
             }
         }
 
@@ -3235,12 +3235,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         {
             get
             {
-                bool productsAlsoPurchased = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Display.ListOfProductsAlsoPurchasedEnabled");
+                bool productsAlsoPurchased = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Display.ListOfProductsAlsoPurchasedEnabled");
                 return productsAlsoPurchased;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Display.ListOfProductsAlsoPurchasedEnabled", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Display.ListOfProductsAlsoPurchasedEnabled", value.ToString());
             }
         }
 
@@ -3251,12 +3251,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         {
             get
             {
-                int productsAlsoPurchasedNumber = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Display.ListOfProductsAlsoPurchasedNumberToDisplay");
+                int productsAlsoPurchasedNumber = IoC.Resolve<ISettingManager>().GetSettingValueInteger("Display.ListOfProductsAlsoPurchasedNumberToDisplay");
                 return productsAlsoPurchasedNumber;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Display.ListOfProductsAlsoPurchasedNumberToDisplay", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Display.ListOfProductsAlsoPurchasedNumberToDisplay", value.ToString());
             }
         }
         
@@ -3267,11 +3267,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Product.NotifyAboutNewProductReviews");
+                return IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Product.NotifyAboutNewProductReviews");
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Product.NotifyAboutNewProductReviews", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Product.NotifyAboutNewProductReviews", value.ToString());
             }
         }
         #endregion

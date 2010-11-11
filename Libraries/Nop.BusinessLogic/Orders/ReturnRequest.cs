@@ -18,7 +18,7 @@ using System.Text;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Media;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Orders
@@ -126,7 +126,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             get
             {
                 if (_opv == null)
-                    _opv = IoCFactory.Resolve<IOrderService>().GetOrderProductVariantById(this.OrderProductVariantId);
+                    _opv = IoC.Resolve<IOrderService>().GetOrderProductVariantById(this.OrderProductVariantId);
                 return _opv;
             }
         }
@@ -139,7 +139,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             get
             {
                 if (_customer == null)
-                    _customer = IoCFactory.Resolve<ICustomerService>().GetCustomerById(this.CustomerId);
+                    _customer = IoC.Resolve<ICustomerService>().GetCustomerById(this.CustomerId);
                 return _customer;
             }
         }

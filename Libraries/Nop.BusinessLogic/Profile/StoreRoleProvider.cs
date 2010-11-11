@@ -23,7 +23,7 @@ using System.Web.Security;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Installation;
 using NopSolutions.NopCommerce.BusinessLogic.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Profile
@@ -100,13 +100,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Profile
             if (InstallerHelper.ConnectionStringIsSet())
             {
                 Customer customer = null;
-                if (IoCFactory.Resolve<ICustomerService>().UsernamesEnabled)
+                if (IoC.Resolve<ICustomerService>().UsernamesEnabled)
                 {
-                    customer = IoCFactory.Resolve<ICustomerService>().GetCustomerByUsername(username);
+                    customer = IoC.Resolve<ICustomerService>().GetCustomerByUsername(username);
                 }
                 else
                 {
-                    customer = IoCFactory.Resolve<ICustomerService>().GetCustomerByEmail(username);
+                    customer = IoC.Resolve<ICustomerService>().GetCustomerByEmail(username);
                 }
                 if (customer == null)
                 {
@@ -114,7 +114,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Profile
                 }
                 else
                 {
-                    var customerRoles = IoCFactory.Resolve<ICustomerService>().GetCustomerRolesByCustomerId(customer.CustomerId, false);
+                    var customerRoles = IoC.Resolve<ICustomerService>().GetCustomerRolesByCustomerId(customer.CustomerId, false);
                     foreach (var cr in customerRoles)
                     {
                         if (cr.Active)
@@ -201,13 +201,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Profile
             if (InstallerHelper.ConnectionStringIsSet())
             {
                 Customer customer = null;
-                if (IoCFactory.Resolve<ICustomerService>().UsernamesEnabled)
+                if (IoC.Resolve<ICustomerService>().UsernamesEnabled)
                 {
-                    customer = IoCFactory.Resolve<ICustomerService>().GetCustomerByUsername(username);
+                    customer = IoC.Resolve<ICustomerService>().GetCustomerByUsername(username);
                 }
                 else
                 {
-                    customer = IoCFactory.Resolve<ICustomerService>().GetCustomerByEmail(username);
+                    customer = IoC.Resolve<ICustomerService>().GetCustomerByEmail(username);
                 }
 
                 if (customer == null)
@@ -215,7 +215,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Profile
                     return false;
                 }
 
-                var customerRoles = IoCFactory.Resolve<ICustomerService>().GetCustomerRolesByCustomerId(customer.CustomerId, false);
+                var customerRoles = IoC.Resolve<ICustomerService>().GetCustomerRolesByCustomerId(customer.CustomerId, false);
                 foreach (var cr in customerRoles)
                 {
                     if (cr.Active)

@@ -29,7 +29,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Directory.ExchangeRates;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Directory
 {
@@ -317,7 +317,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.CurrencyManager.CacheEnabled");
+                return IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.CurrencyManager.CacheEnabled");
             }
         }
 
@@ -328,13 +328,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
         {
             get
             {
-                int primaryStoreCurrencyId = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Currency.PrimaryStoreCurrency");
+                int primaryStoreCurrencyId = IoC.Resolve<ISettingManager>().GetSettingValueInteger("Currency.PrimaryStoreCurrency");
                 return GetCurrencyById(primaryStoreCurrencyId);
             }
             set
             {
                 if (value != null)
-                    IoCFactory.Resolve<ISettingManager>().SetParam("Currency.PrimaryStoreCurrency", value.CurrencyId.ToString());
+                    IoC.Resolve<ISettingManager>().SetParam("Currency.PrimaryStoreCurrency", value.CurrencyId.ToString());
             }
         }
 
@@ -345,13 +345,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
         {
             get
             {
-                int primaryExchangeRateCurrencyId = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Currency.PrimaryExchangeRateCurrency");
+                int primaryExchangeRateCurrencyId = IoC.Resolve<ISettingManager>().GetSettingValueInteger("Currency.PrimaryExchangeRateCurrency");
                 return GetCurrencyById(primaryExchangeRateCurrencyId);
             }
             set
             {
                 if (value != null)
-                    IoCFactory.Resolve<ISettingManager>().SetParam("Currency.PrimaryExchangeRateCurrency", value.CurrencyId.ToString());
+                    IoC.Resolve<ISettingManager>().SetParam("Currency.PrimaryExchangeRateCurrency", value.CurrencyId.ToString());
             }
         }
 
@@ -362,8 +362,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Directory
         {
             get
             {
-                int i = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("ExchangeRateProvider.Current");
-                string className = IoCFactory.Resolve<ISettingManager>().GetSettingValue(String.Format("ExchangeRateProvider{0}.Classname", i));
+                int i = IoC.Resolve<ISettingManager>().GetSettingValueInteger("ExchangeRateProvider.Current");
+                string className = IoC.Resolve<ISettingManager>().GetSettingValue(String.Format("ExchangeRateProvider{0}.Classname", i));
 
                 if (String.IsNullOrEmpty(className))
                 {

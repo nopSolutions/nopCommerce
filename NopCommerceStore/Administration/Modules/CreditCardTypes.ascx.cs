@@ -26,7 +26,7 @@ using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using System.Xml;
 using NopSolutions.NopCommerce.BusinessLogic.Payment;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -42,7 +42,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         void BindGrid()
         {
-            var creditCardTypeCollection = IoCFactory.Resolve<IPaymentService>().GetAllCreditCardTypes();
+            var creditCardTypeCollection = IoC.Resolve<IPaymentService>().GetAllCreditCardTypes();
             gvCreditCardTypes.DataSource = creditCardTypeCollection;
             gvCreditCardTypes.DataBind();
         }

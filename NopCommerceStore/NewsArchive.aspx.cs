@@ -31,7 +31,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Payment;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web
 {
@@ -39,7 +39,7 @@ namespace NopSolutions.NopCommerce.Web
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if(!IoCFactory.Resolve<INewsService>().NewsEnabled)
+            if(!IoC.Resolve<INewsService>().NewsEnabled)
             {
                 Response.Redirect(CommonHelper.GetStoreLocation());
             }

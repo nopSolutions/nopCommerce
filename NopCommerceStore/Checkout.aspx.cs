@@ -33,7 +33,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Shipping;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using System.Collections.Generic;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
  
 
 namespace NopSolutions.NopCommerce.Web
@@ -50,24 +50,24 @@ namespace NopSolutions.NopCommerce.Web
                 Response.Redirect(SEOHelper.GetShoppingCartUrl());
 
             //user validation
-            if (NopContext.Current.User == null && IoCFactory.Resolve<ICustomerService>().AnonymousCheckoutAllowed)
+            if (NopContext.Current.User == null && IoC.Resolve<ICustomerService>().AnonymousCheckoutAllowed)
             {
                 //create anonymous record
-                IoCFactory.Resolve<ICustomerService>().CreateAnonymousUser();
+                IoC.Resolve<ICustomerService>().CreateAnonymousUser();
             }
 
-            if ((NopContext.Current.User == null) || (NopContext.Current.User.IsGuest && !IoCFactory.Resolve<ICustomerService>().AnonymousCheckoutAllowed))
+            if ((NopContext.Current.User == null) || (NopContext.Current.User.IsGuest && !IoC.Resolve<ICustomerService>().AnonymousCheckoutAllowed))
             {
                 string loginURL = SEOHelper.GetLoginPageUrl(true);
                 Response.Redirect(loginURL);
             }
 
             //reset checkout data
-            IoCFactory.Resolve<ICustomerService>().ResetCheckoutData(NopContext.Current.User.CustomerId, false);
+            IoC.Resolve<ICustomerService>().ResetCheckoutData(NopContext.Current.User.CustomerId, false);
 
 
             //validation
-            var scWarnings = IoCFactory.Resolve<IShoppingCartService>().GetShoppingCartWarnings(Cart, NopContext.Current.User.CheckoutAttributes, true);
+            var scWarnings = IoC.Resolve<IShoppingCartService>().GetShoppingCartWarnings(Cart, NopContext.Current.User.CheckoutAttributes, true);
             if (scWarnings.Count > 0)
             {
                 Response.Redirect(SEOHelper.GetShoppingCartUrl());
@@ -76,7 +76,7 @@ namespace NopSolutions.NopCommerce.Web
             {
                 foreach (ShoppingCartItem sci in this.Cart)
                 {
-                    var sciWarnings = IoCFactory.Resolve<IShoppingCartService>().GetShoppingCartItemWarnings(
+                    var sciWarnings = IoC.Resolve<IShoppingCartService>().GetShoppingCartItemWarnings(
                         sci.ShoppingCartType,
                             sci.ProductVariantId, 
                             sci.AttributesXml, 
@@ -89,7 +89,7 @@ namespace NopSolutions.NopCommerce.Web
                 }
             }
             
-            if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Checkout.UseOnePageCheckout"))
+            if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Checkout.UseOnePageCheckout"))
             {
                 Response.Redirect("~/checkoutonepage.aspx");
             }
@@ -105,7 +105,7 @@ namespace NopSolutions.NopCommerce.Web
             {
                 if (cart == null)
                 {
-                    cart = IoCFactory.Resolve<IShoppingCartService>().GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
+                    cart = IoC.Resolve<IShoppingCartService>().GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
                 }
                 return cart;
             }

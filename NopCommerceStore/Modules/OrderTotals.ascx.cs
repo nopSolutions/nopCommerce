@@ -41,7 +41,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Shipping;
 using NopSolutions.NopCommerce.BusinessLogic.Tax;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.Media;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -50,7 +50,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
         public void BindData(bool isShoppingCart)
         {
             this.IsShoppingCart = isShoppingCart;
-            var cart = IoCFactory.Resolve<IShoppingCartService>().GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
+            var cart = IoC.Resolve<IShoppingCartService>().GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
 
             if (cart.Count > 0)
             {
@@ -65,20 +65,20 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 Discount orderSubTotalAppliedDiscount = null;
                 decimal subTotalWithoutDiscountBase = decimal.Zero;
                 decimal subTotalWithDiscountBase = decimal.Zero;
-                string SubTotalError = IoCFactory.Resolve<IShoppingCartService>().GetShoppingCartSubTotal(cart,
+                string SubTotalError = IoC.Resolve<IShoppingCartService>().GetShoppingCartSubTotal(cart,
                     NopContext.Current.User, out orderSubTotalDiscountAmountBase, out orderSubTotalAppliedDiscount,
                 out subTotalWithoutDiscountBase, out subTotalWithDiscountBase);
                 subtotalBase = subTotalWithoutDiscountBase;
                 if (String.IsNullOrEmpty(SubTotalError))
                 {
-                    decimal subtotal = IoCFactory.Resolve<ICurrencyService>().ConvertCurrency(subtotalBase, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                    decimal subtotal = IoC.Resolve<ICurrencyService>().ConvertCurrency(subtotalBase, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
                     lblSubTotalAmount.Text = PriceHelper.FormatPrice(subtotal);
                     lblSubTotalAmount.CssClass = "productPrice";
 
                     //order subtotal discount
                     if (orderSubTotalDiscountAmountBase > decimal.Zero)
                     {
-                        decimal orderSubTotalDiscountAmount = IoCFactory.Resolve<ICurrencyService>().ConvertCurrency(orderSubTotalDiscountAmountBase, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                        decimal orderSubTotalDiscountAmount = IoC.Resolve<ICurrencyService>().ConvertCurrency(orderSubTotalDiscountAmountBase, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
                         lblOrderSubTotalDiscountAmount.Text = PriceHelper.FormatPrice(-orderSubTotalDiscountAmount);
                         phOrderSubTotalDiscount.Visible = true;
                         btnRemoveOrderSubTotalDiscount.Visible = orderSubTotalAppliedDiscount != null &&
@@ -101,13 +101,13 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 }
 
                 //shipping info
-                bool shoppingCartRequiresShipping = IoCFactory.Resolve<IShippingService>().ShoppingCartRequiresShipping(cart);
+                bool shoppingCartRequiresShipping = IoC.Resolve<IShippingService>().ShoppingCartRequiresShipping(cart);
                 if (shoppingCartRequiresShipping)
                 {
-                    decimal? shoppingCartShippingBase = IoCFactory.Resolve<IShippingService>().GetShoppingCartShippingTotal(cart, NopContext.Current.User);
+                    decimal? shoppingCartShippingBase = IoC.Resolve<IShippingService>().GetShoppingCartShippingTotal(cart, NopContext.Current.User);
                     if (shoppingCartShippingBase.HasValue)
                     {
-                        decimal shoppingCartShipping = IoCFactory.Resolve<ICurrencyService>().ConvertCurrency(shoppingCartShippingBase.Value, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                        decimal shoppingCartShipping = IoC.Resolve<ICurrencyService>().ConvertCurrency(shoppingCartShippingBase.Value, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
                         lblShippingAmount.Text = PriceHelper.FormatShippingPrice(shoppingCartShipping, true);
                         lblShippingAmount.CssClass = "productPrice";
                     }
@@ -125,11 +125,11 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
                 //payment method fee
                 bool displayPaymentMethodFee = true;
-                decimal paymentMethodAdditionalFee = IoCFactory.Resolve<IPaymentService>().GetAdditionalHandlingFee(paymentMethodId);
-                decimal paymentMethodAdditionalFeeWithTaxBase = IoCFactory.Resolve<ITaxService>().GetPaymentMethodAdditionalFee(paymentMethodAdditionalFee, NopContext.Current.User);
+                decimal paymentMethodAdditionalFee = IoC.Resolve<IPaymentService>().GetAdditionalHandlingFee(paymentMethodId);
+                decimal paymentMethodAdditionalFeeWithTaxBase = IoC.Resolve<ITaxService>().GetPaymentMethodAdditionalFee(paymentMethodAdditionalFee, NopContext.Current.User);
                 if (paymentMethodAdditionalFeeWithTaxBase > decimal.Zero)
                 {
-                    decimal paymentMethodAdditionalFeeWithTax = IoCFactory.Resolve<ICurrencyService>().ConvertCurrency(paymentMethodAdditionalFeeWithTaxBase, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                    decimal paymentMethodAdditionalFeeWithTax = IoC.Resolve<ICurrencyService>().ConvertCurrency(paymentMethodAdditionalFeeWithTaxBase, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
                     lblPaymentMethodAdditionalFee.Text = PriceHelper.FormatPaymentMethodAdditionalFee(paymentMethodAdditionalFeeWithTax, true);
                 }
                 else
@@ -141,7 +141,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 //tax
                 bool displayTax = true;
                 bool displayTaxRates = true;
-                if (IoCFactory.Resolve<ITaxService>().HideTaxInOrderSummary && NopContext.Current.TaxDisplayType == TaxDisplayTypeEnum.IncludingTax)
+                if (IoC.Resolve<ITaxService>().HideTaxInOrderSummary && NopContext.Current.TaxDisplayType == TaxDisplayTypeEnum.IncludingTax)
                 {
                     displayTax = false;
                     displayTaxRates = false;
@@ -150,19 +150,19 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 {
                     string taxError = string.Empty;
                     SortedDictionary<decimal, decimal> taxRates = null;
-                    decimal shoppingCartTaxBase = IoCFactory.Resolve<ITaxService>().GetTaxTotal(cart, paymentMethodId, NopContext.Current.User, out taxRates, ref taxError);
-                    decimal shoppingCartTax = IoCFactory.Resolve<ICurrencyService>().ConvertCurrency(shoppingCartTaxBase, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                    decimal shoppingCartTaxBase = IoC.Resolve<ITaxService>().GetTaxTotal(cart, paymentMethodId, NopContext.Current.User, out taxRates, ref taxError);
+                    decimal shoppingCartTax = IoC.Resolve<ICurrencyService>().ConvertCurrency(shoppingCartTaxBase, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
 
                     if (String.IsNullOrEmpty(taxError))
                     {
-                        if (shoppingCartTaxBase == 0 && IoCFactory.Resolve<ITaxService>().HideZeroTax)
+                        if (shoppingCartTaxBase == 0 && IoC.Resolve<ITaxService>().HideZeroTax)
                         {
                             displayTax = false;
                             displayTaxRates = false;
                         }
                         else
                         {
-                            displayTaxRates = IoCFactory.Resolve<ITaxService>().DisplayTaxRates && taxRates.Count > 0;
+                            displayTaxRates = IoC.Resolve<ITaxService>().DisplayTaxRates && taxRates.Count > 0;
                             displayTax = !displayTaxRates;
 
                             lblTaxAmount.Text = PriceHelper.FormatPrice(shoppingCartTax, true, false);
@@ -190,14 +190,14 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 bool useRewardPoints = false;
                 if (NopContext.Current.User != null)
                     useRewardPoints = NopContext.Current.User.UseRewardPointsDuringCheckout;
-                decimal? shoppingCartTotalBase = IoCFactory.Resolve<IShoppingCartService>().GetShoppingCartTotal(cart,
+                decimal? shoppingCartTotalBase = IoC.Resolve<IShoppingCartService>().GetShoppingCartTotal(cart,
                     paymentMethodId, NopContext.Current.User,
                     out orderTotalDiscountAmountBase, out orderTotalAppliedDiscount, 
                     out appliedGiftCards, useRewardPoints,
                     out redeemedRewardPoints, out redeemedRewardPointsAmount);
                 if (shoppingCartTotalBase.HasValue)
                 {
-                    decimal shoppingCartTotal = IoCFactory.Resolve<ICurrencyService>().ConvertCurrency(shoppingCartTotalBase.Value, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                    decimal shoppingCartTotal = IoC.Resolve<ICurrencyService>().ConvertCurrency(shoppingCartTotalBase.Value, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
                     lblTotalAmount.Text = PriceHelper.FormatPrice(shoppingCartTotal, true, false);
                     lblTotalAmount.CssClass = "productPrice";
                 }
@@ -210,7 +210,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 //discount
                 if (orderTotalDiscountAmountBase > decimal.Zero)
                 {
-                    decimal orderTotalDiscountAmount = IoCFactory.Resolve<ICurrencyService>().ConvertCurrency(orderTotalDiscountAmountBase, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                    decimal orderTotalDiscountAmount = IoC.Resolve<ICurrencyService>().ConvertCurrency(orderTotalDiscountAmountBase, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
                     lblOrderTotalDiscountAmount.Text = PriceHelper.FormatPrice(-orderTotalDiscountAmount, true, false);
                     phOrderTotalDiscount.Visible = true;
                     btnRemoveOrderTotalDiscount.Visible = orderTotalAppliedDiscount != null &&
@@ -241,7 +241,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 {
                     phRewardPoints.Visible = true;
 
-                    decimal redeemedRewardPointsAmountInCustomerCurrency = IoCFactory.Resolve<ICurrencyService>().ConvertCurrency(redeemedRewardPointsAmount, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                    decimal redeemedRewardPointsAmountInCustomerCurrency = IoC.Resolve<ICurrencyService>().ConvertCurrency(redeemedRewardPointsAmount, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
                     lRewardPointsTitle.Text = string.Format(GetLocaleResourceString("ShoppingCart.Totals.RewardPoints"), redeemedRewardPoints);
                     lblRewardPointsAmount.Text = PriceHelper.FormatPrice(-redeemedRewardPointsAmountInCustomerCurrency, true, false);
                 }
@@ -266,7 +266,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 lTaxRateTitle.Text = String.Format(GetLocaleResourceString("ShoppingCart.Totals.TaxRate"), PriceHelper.FormatTaxRate(item.Key));
 
                 var lTaxRateValue = e.Item.FindControl("lTaxRateValue") as Literal;
-                decimal taxValue = IoCFactory.Resolve<ICurrencyService>().ConvertCurrency(item.Value, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                decimal taxValue = IoC.Resolve<ICurrencyService>().ConvertCurrency(item.Value, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
                 lTaxRateValue.Text = PriceHelper.FormatPrice(taxValue, true, false);
             }
         }
@@ -281,12 +281,12 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 lGiftCard.Text = String.Format(GetLocaleResourceString("ShoppingCart.Totals.GiftCardInfo"), Server.HtmlEncode(appliedGiftCard.GiftCard.GiftCardCouponCode));
 
                 var lblGiftCardAmount = e.Item.FindControl("lblGiftCardAmount") as Label;
-                decimal amountCanBeUsed = IoCFactory.Resolve<ICurrencyService>().ConvertCurrency(appliedGiftCard.AmountCanBeUsed, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                decimal amountCanBeUsed = IoC.Resolve<ICurrencyService>().ConvertCurrency(appliedGiftCard.AmountCanBeUsed, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
                 lblGiftCardAmount.Text = PriceHelper.FormatPrice(-amountCanBeUsed, true, false);
 
                 var lGiftCardRemaining = e.Item.FindControl("lGiftCardRemaining") as Literal;
                 decimal remainingAmountBase = GiftCardHelper.GetGiftCardRemainingAmount(appliedGiftCard.GiftCard) - appliedGiftCard.AmountCanBeUsed;
-                decimal remainingAmount = IoCFactory.Resolve<ICurrencyService>().ConvertCurrency(remainingAmountBase, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                decimal remainingAmount = IoC.Resolve<ICurrencyService>().ConvertCurrency(remainingAmountBase, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
                 lGiftCardRemaining.Text = string.Format(GetLocaleResourceString("ShoppingCart.Totals.GiftCardInfo.Remaining"), PriceHelper.FormatPrice(remainingAmount, true, false));
 
                 var btnRemoveGC = e.Item.FindControl("btnRemoveGC") as LinkButton;
@@ -301,14 +301,14 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 if (this.IsShoppingCart)
                 {
                     int giftCardId = Convert.ToInt32(e.CommandArgument);
-                    GiftCard gc = IoCFactory.Resolve<IOrderService>().GetGiftCardById(giftCardId);
+                    GiftCard gc = IoC.Resolve<IOrderService>().GetGiftCardById(giftCardId);
                     if (gc != null)
                     {
                         string couponCodesXML = string.Empty;
                         if (NopContext.Current.User != null)
                             couponCodesXML = NopContext.Current.User.GiftCardCouponCodes;
                         couponCodesXML = GiftCardHelper.RemoveCouponCode(couponCodesXML, gc.GiftCardCouponCode);
-                        IoCFactory.Resolve<ICustomerService>().ApplyGiftCardCouponCode(couponCodesXML);
+                        IoC.Resolve<ICustomerService>().ApplyGiftCardCouponCode(couponCodesXML);
                     }
                     this.BindData(this.IsShoppingCart);
                 }
@@ -326,7 +326,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     if (NopContext.Current.User != null)
                     {
                         //remove discount
-                        IoCFactory.Resolve<ICustomerService>().ApplyDiscountCouponCode(NopContext.Current.User.CustomerId, string.Empty);
+                        IoC.Resolve<ICustomerService>().ApplyDiscountCouponCode(NopContext.Current.User.CustomerId, string.Empty);
                     }
                     this.BindData(this.IsShoppingCart);
                 }
@@ -344,7 +344,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     if (NopContext.Current.User != null)
                     {
                         //remove discount
-                        IoCFactory.Resolve<ICustomerService>().ApplyDiscountCouponCode(NopContext.Current.User.CustomerId, string.Empty);
+                        IoC.Resolve<ICustomerService>().ApplyDiscountCouponCode(NopContext.Current.User.CustomerId, string.Empty);
                     }
                     this.BindData(this.IsShoppingCart);
                 }

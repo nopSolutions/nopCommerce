@@ -31,7 +31,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.Utils.Html;
 using NopSolutions.NopCommerce.Common;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -47,7 +47,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
         {
             pnlError.Visible = false;
 
-            var news = IoCFactory.Resolve<INewsService>().GetNewsById(this.NewsId);
+            var news = IoC.Resolve<INewsService>().GetNewsById(this.NewsId);
             if (news != null && news.Published)
             {
                 this.lTitle.Text = Server.HtmlEncode(news.Title);
@@ -56,7 +56,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
                 if (news.AllowComments)
                 {
-                    if (!IoCFactory.Resolve<INewsService>().AllowNotRegisteredUsersToLeaveComments
+                    if (!IoC.Resolve<INewsService>().AllowNotRegisteredUsersToLeaveComments
                         && (NopContext.Current.User == null || NopContext.Current.User.IsGuest))
                     {
                         lblLeaveYourComment.Text = GetLocaleResourceString("News.OnlyRegisteredUsersCanLeaveComments");
@@ -94,10 +94,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
             {
                 if (Page.IsValid)
                 {
-                    var news = IoCFactory.Resolve<INewsService>().GetNewsById(this.NewsId);
+                    var news = IoC.Resolve<INewsService>().GetNewsById(this.NewsId);
                     if (news != null && news.AllowComments)
                     {
-                        if (!IoCFactory.Resolve<INewsService>().AllowNotRegisteredUsersToLeaveComments
+                        if (!IoC.Resolve<INewsService>().AllowNotRegisteredUsersToLeaveComments
                                && (NopContext.Current.User == null || NopContext.Current.User.IsGuest))
                         {
                             lblLeaveYourComment.Text = GetLocaleResourceString("News.OnlyRegisteredUsersCanLeaveComments");
@@ -115,7 +115,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                         if (NopContext.Current.User != null && !NopContext.Current.User.IsGuest)
                             customerId = NopContext.Current.User.CustomerId;
 
-                        IoCFactory.Resolve<INewsService>().InsertNewsComment(news.NewsId, customerId, title, comment, DateTime.UtcNow);
+                        IoC.Resolve<INewsService>().InsertNewsComment(news.NewsId, customerId, title, comment, DateTime.UtcNow);
                         txtTitle.Text = string.Empty;
                         txtComment.Text = string.Empty;
                         BindData();

@@ -29,7 +29,7 @@ using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -45,7 +45,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected void BindGrid()
         {
-            var returnRequests = IoCFactory.Resolve<IOrderService>().SearchReturnRequests(0, 0, null);
+            var returnRequests = IoC.Resolve<IOrderService>().SearchReturnRequests(0, 0, null);
             gvReturnRequests.DataSource = returnRequests;
             gvReturnRequests.DataBind();
         }
@@ -86,7 +86,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         protected string GetCustomerInfo(int customerId)
         {
             string customerInfo = string.Empty;
-            Customer customer = IoCFactory.Resolve<ICustomerService>().GetCustomerById(customerId);
+            Customer customer = IoC.Resolve<ICustomerService>().GetCustomerById(customerId);
             if (customer != null)
             {
                 if (customer.IsGuest)
@@ -104,7 +104,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         protected string GetOrderInfo(int orderId)
         {
             string orderInfo = string.Empty;
-            Order order = IoCFactory.Resolve<IOrderService>().GetOrderById(orderId);
+            Order order = IoC.Resolve<IOrderService>().GetOrderById(orderId);
             if (order != null)
             {
                 orderInfo = string.Format("<a href=\"OrderDetails.aspx?OrderID={0}\">{1}</a>", order.OrderId, GetLocaleResourceString("Admin.ReturnRequests.OrderColumn.View"));

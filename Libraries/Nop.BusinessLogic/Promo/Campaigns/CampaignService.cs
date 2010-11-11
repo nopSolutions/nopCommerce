@@ -27,7 +27,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Messages;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
  
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Campaigns
@@ -176,15 +176,15 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Campaigns
             }
 
 
-            var emailAccount = IoCFactory.Resolve<IMessageService>().DefaultEmailAccount;
+            var emailAccount = IoC.Resolve<IMessageService>().DefaultEmailAccount;
 
             foreach (var subscription in subscriptions)
             {
-                string subject = IoCFactory.Resolve<IMessageService>().ReplaceMessageTemplateTokens(subscription, campaign.Subject);
-                string body = IoCFactory.Resolve<IMessageService>().ReplaceMessageTemplateTokens(subscription, campaign.Body);
+                string subject = IoC.Resolve<IMessageService>().ReplaceMessageTemplateTokens(subscription, campaign.Subject);
+                string body = IoC.Resolve<IMessageService>().ReplaceMessageTemplateTokens(subscription, campaign.Body);
                 var from = new MailAddress(emailAccount.Email, emailAccount.DisplayName);
                 var to = new MailAddress(subscription.Email);
-                IoCFactory.Resolve<IMessageService>().InsertQueuedEmail(3, from, to, string.Empty, string.Empty,
+                IoC.Resolve<IMessageService>().InsertQueuedEmail(3, from, to, string.Empty, string.Empty,
                     subject, body, DateTime.UtcNow, 0, null, emailAccount.EmailAccountId);
                 totalEmailsSent++;
             }
@@ -207,10 +207,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Campaigns
             string subject = campaign.Subject;
             string body = campaign.Body;
 
-            var emailAccount = IoCFactory.Resolve<IMessageService>().DefaultEmailAccount;
+            var emailAccount = IoC.Resolve<IMessageService>().DefaultEmailAccount;
             var from = new MailAddress(emailAccount.Email, emailAccount.DisplayName);
             var to = new MailAddress(email);
-            IoCFactory.Resolve<IMessageService>().SendEmail(subject, body, from, to, emailAccount);
+            IoC.Resolve<IMessageService>().SendEmail(subject, body, from, to, emailAccount);
         }
         #endregion
     }

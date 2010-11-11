@@ -20,7 +20,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Data;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 using NopSolutions.NopCommerce.BusinessLogic.Localization;
 using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
@@ -106,13 +106,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
             Discount orderSubTotalAppliedDiscount = null;
             decimal subTotalWithoutDiscountBase = decimal.Zero; 
             decimal subTotalWithDiscountBase = decimal.Zero;
-            string SubTotalError = IoCFactory.Resolve<IShoppingCartService>().GetShoppingCartSubTotal(cart,
+            string SubTotalError = IoC.Resolve<IShoppingCartService>().GetShoppingCartSubTotal(cart,
                 customer, out orderSubTotalDiscountAmount, out orderSubTotalAppliedDiscount,
                 out subTotalWithoutDiscountBase, out subTotalWithDiscountBase);
             subTotalBase = subTotalWithDiscountBase;
-            if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Shipping.FreeShippingOverX.Enabled"))
+            if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Shipping.FreeShippingOverX.Enabled"))
             {
-                decimal freeShippingOverX = IoCFactory.Resolve<ISettingManager>().GetSettingValueDecimalNative("Shipping.FreeShippingOverX.Value");
+                decimal freeShippingOverX = IoC.Resolve<ISettingManager>().GetSettingValueDecimalNative("Shipping.FreeShippingOverX.Value");
                 if (subTotalBase > freeShippingOverX)
                     return true;
             }
@@ -465,7 +465,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
             if (shippingMethod == null)
                 return;
 
-            var country = IoCFactory.Resolve<ICountryService>().GetCountryById(countryId);
+            var country = IoC.Resolve<ICountryService>().GetCountryById(countryId);
             if (country == null)
                 return;
 
@@ -525,7 +525,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
             if (shippingMethod == null)
                 return;
 
-            var country = IoCFactory.Resolve<ICountryService>().GetCountryById(countryId);
+            var country = IoC.Resolve<ICountryService>().GetCountryById(countryId);
             if (country == null)
                 return;
 
@@ -757,7 +757,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
             }
             else
             {
-                shippingTotalWithDiscountTaxed = IoCFactory.Resolve<ITaxService>().GetShippingPrice(shippingTotalWithDiscount.Value,
+                shippingTotalWithDiscountTaxed = IoC.Resolve<ITaxService>().GetShippingPrice(shippingTotalWithDiscount.Value,
                     includingTax,
                     customer,
                     out taxRate,
@@ -785,7 +785,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
             if (customer != null)
                 customerCouponCode = customer.LastAppliedCouponCode;
 
-            var allDiscounts = IoCFactory.Resolve<IDiscountService>().GetAllDiscounts(DiscountTypeEnum.AssignedToShipping);
+            var allDiscounts = IoC.Resolve<IDiscountService>().GetAllDiscounts(DiscountTypeEnum.AssignedToShipping);
             var allowedDiscounts = new List<Discount>();
             foreach (var _discount in allDiscounts)
             {
@@ -802,7 +802,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
                 }
             }
 
-            appliedDiscount = IoCFactory.Resolve<IDiscountService>().GetPreferredDiscount(allowedDiscounts, shippingTotal);
+            appliedDiscount = IoC.Resolve<IDiscountService>().GetPreferredDiscount(allowedDiscounts, shippingTotal);
             if (appliedDiscount != null)
             {
                 shippingDiscountAmount = appliedDiscount.GetDiscountAmount(shippingTotal);
@@ -942,7 +942,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.ShippingManager.CacheEnabled");
+                return IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.ShippingManager.CacheEnabled");
             }
         }
 
@@ -953,9 +953,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
         {
             get
             {
-                int countryId = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Shipping.ShippingOrigin.CountryId");
-                int stateProvinceId = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Shipping.ShippingOrigin.StateProvinceId");
-                string zipPostalCode = IoCFactory.Resolve<ISettingManager>().GetSettingValue("Shipping.ShippingOrigin.ZipPostalCode");
+                int countryId = IoC.Resolve<ISettingManager>().GetSettingValueInteger("Shipping.ShippingOrigin.CountryId");
+                int stateProvinceId = IoC.Resolve<ISettingManager>().GetSettingValueInteger("Shipping.ShippingOrigin.StateProvinceId");
+                string zipPostalCode = IoC.Resolve<ISettingManager>().GetSettingValue("Shipping.ShippingOrigin.ZipPostalCode");
                 var address = new Address();
                 address.CountryId = countryId;
                 address.StateProvinceId = stateProvinceId;
@@ -975,9 +975,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
                     zipPostalCode = value.ZipPostalCode;
                 }
 
-                IoCFactory.Resolve<ISettingManager>().SetParam("Shipping.ShippingOrigin.CountryId", countryId.ToString());
-                IoCFactory.Resolve<ISettingManager>().SetParam("Shipping.ShippingOrigin.StateProvinceId", stateProvinceId.ToString());
-                IoCFactory.Resolve<ISettingManager>().SetParam("Shipping.ShippingOrigin.ZipPostalCode", zipPostalCode);
+                IoC.Resolve<ISettingManager>().SetParam("Shipping.ShippingOrigin.CountryId", countryId.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Shipping.ShippingOrigin.StateProvinceId", stateProvinceId.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Shipping.ShippingOrigin.ZipPostalCode", zipPostalCode);
             }
         }
         #endregion

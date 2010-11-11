@@ -16,7 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Warehouses
@@ -116,7 +116,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Warehouses
         {
             get
             {
-                return IoCFactory.Resolve<ICountryService>().GetCountryById(this.CountryId);
+                return IoC.Resolve<ICountryService>().GetCountryById(this.CountryId);
             }
         }
         #endregion

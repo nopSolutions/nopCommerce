@@ -24,7 +24,7 @@ using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -32,7 +32,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            Country country = IoCFactory.Resolve<ICountryService>().GetCountryById(this.CountryId);
+            Country country = IoC.Resolve<ICountryService>().GetCountryById(this.CountryId);
             if (country != null)
             {
                 this.txtName.Text = country.Name;
@@ -58,7 +58,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public Country SaveInfo()
         {
-            Country country = IoCFactory.Resolve<ICountryService>().GetCountryById(this.CountryId);
+            Country country = IoC.Resolve<ICountryService>().GetCountryById(this.CountryId);
 
             if (country != null)
             {
@@ -72,7 +72,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 country.SubjectToVAT = cbSubjectToVAT.Checked;
                 country.Published = cbPublished.Checked;
                 country.DisplayOrder = txtDisplayOrder.Value;
-                IoCFactory.Resolve<ICountryService>().UpdateCountry(country);
+                IoC.Resolve<ICountryService>().UpdateCountry(country);
             }
             else
             {
@@ -89,7 +89,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     Published = cbPublished.Checked,
                     DisplayOrder = txtDisplayOrder.Value
                 };
-                IoCFactory.Resolve<ICountryService>().InsertCountry(country);
+                IoC.Resolve<ICountryService>().InsertCountry(country);
             }
 
             return country;

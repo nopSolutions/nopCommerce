@@ -9,7 +9,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Payment.Methods.Beanstream;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web
 {
@@ -36,7 +36,7 @@ namespace NopSolutions.NopCommerce.Web
                 }
 
                 int orderId = CommonHelper.QueryStringInt("trnOrderNumber");
-                Order order = IoCFactory.Resolve<IOrderService>().GetOrderById(orderId);
+                Order order = IoC.Resolve<IOrderService>().GetOrderById(orderId);
                 if(order == null)
                 {
                     Response.Redirect(CommonHelper.GetStoreLocation());
@@ -46,9 +46,9 @@ namespace NopSolutions.NopCommerce.Web
                     Response.Redirect(CommonHelper.GetStoreLocation());
                 }
 
-                if(IoCFactory.Resolve<IOrderService>().CanMarkOrderAsPaid(order))
+                if(IoC.Resolve<IOrderService>().CanMarkOrderAsPaid(order))
                 {
-                    IoCFactory.Resolve<IOrderService>().MarkOrderAsPaid(order.OrderId);
+                    IoC.Resolve<IOrderService>().MarkOrderAsPaid(order.OrderId);
                 }
                 Response.Redirect("~/checkoutcompleted.aspx");
             }

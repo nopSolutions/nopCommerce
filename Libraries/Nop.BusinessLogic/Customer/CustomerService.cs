@@ -38,7 +38,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Utils;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.QuickBooks;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 using System.Data.Objects;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
@@ -128,7 +128,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         private string CreatePasswordHash(string password, string salt)
         {
             //MD5, SHA1
-            string passwordFormat = IoCFactory.Resolve<ISettingManager>().GetSettingValue("Security.PasswordFormat");
+            string passwordFormat = IoC.Resolve<ISettingManager>().GetSettingValue("Security.PasswordFormat");
             if (String.IsNullOrEmpty(passwordFormat))
                 passwordFormat = "SHA1";
 
@@ -938,7 +938,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             HttpCookie affiliateCookie = HttpContext.Current.Request.Cookies.Get("NopCommerce.AffiliateId");
             if (affiliateCookie != null)
             {
-                Affiliate affiliate = IoCFactory.Resolve<IAffiliateService>().GetAffiliateById(Convert.ToInt32(affiliateCookie.Value));
+                Affiliate affiliate = IoC.Resolve<IAffiliateService>().GetAffiliateById(Convert.ToInt32(affiliateCookie.Value));
                 if (affiliate != null && affiliate.Active)
                     affiliateId = affiliate.AffiliateId;
             }
@@ -1128,7 +1128,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             {
                 if (active)
                 {
-                    IoCFactory.Resolve<IMessageService>().SendCustomerWelcomeMessage(customer, NopContext.Current.WorkingLanguage.LanguageId);
+                    IoC.Resolve<IMessageService>().SendCustomerWelcomeMessage(customer, NopContext.Current.WorkingLanguage.LanguageId);
                 }
                 else
                 {
@@ -1137,7 +1137,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                         Guid accountActivationToken = Guid.NewGuid();
                         customer.AccountActivationToken = accountActivationToken.ToString();
 
-                        IoCFactory.Resolve<IMessageService>().SendCustomerEmailValidationMessage(customer, NopContext.Current.WorkingLanguage.LanguageId);
+                        IoC.Resolve<IMessageService>().SendCustomerEmailValidationMessage(customer, NopContext.Current.WorkingLanguage.LanguageId);
                     }
                 }
             }
@@ -1244,12 +1244,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
 
             //reward points
             if (!isGuest &&
-                IoCFactory.Resolve<IOrderService>().RewardPointsEnabled &&
-                IoCFactory.Resolve<IOrderService>().RewardPointsForRegistration > 0)
+                IoC.Resolve<IOrderService>().RewardPointsEnabled &&
+                IoC.Resolve<IOrderService>().RewardPointsForRegistration > 0)
             {
-                var rph = IoCFactory.Resolve<IOrderService>().InsertRewardPointsHistory(customer.CustomerId, 0,
-                    IoCFactory.Resolve<IOrderService>().RewardPointsForRegistration, decimal.Zero, decimal.Zero,
-                    string.Empty, IoCFactory.Resolve<ILocalizationManager>().GetLocaleResourceString("RewardPoints.Message.EarnedForRegistration"),
+                var rph = IoC.Resolve<IOrderService>().InsertRewardPointsHistory(customer.CustomerId, 0,
+                    IoC.Resolve<IOrderService>().RewardPointsForRegistration, decimal.Zero, decimal.Zero,
+                    string.Empty, IoC.Resolve<ILocalizationManager>().GetLocaleResourceString("RewardPoints.Message.EarnedForRegistration"),
                     DateTime.UtcNow);
             }
 
@@ -1299,7 +1299,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             if (subscriptionOld != null && !customer.Email.ToLower().Equals(subscriptionOld.Email.ToLower()))
             {
                 subscriptionOld.Email = customer.Email;
-                IoCFactory.Resolve<IMessageService>().UpdateNewsLetterSubscription(subscriptionOld);
+                IoC.Resolve<IMessageService>().UpdateNewsLetterSubscription(subscriptionOld);
             }
 
             //raise event             
@@ -1348,7 +1348,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         public void ModifyPassword(int customerId, string newPassword)
         {
             if (String.IsNullOrWhiteSpace(newPassword))
-                throw new NopException(IoCFactory.Resolve<ILocalizationManager>().GetLocaleResourceString("Customer.PasswordIsRequired"));
+                throw new NopException(IoC.Resolve<ILocalizationManager>().GetLocaleResourceString("Customer.PasswordIsRequired"));
             newPassword = newPassword.Trim();
 
             var customer = GetCustomerById(customerId);
@@ -1400,7 +1400,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
 
                 if (sendCustomerWelcomeMessage)
                 {
-                    IoCFactory.Resolve<IMessageService>().SendCustomerWelcomeMessage(customer, NopContext.Current.WorkingLanguage.LanguageId);
+                    IoC.Resolve<IMessageService>().SendCustomerWelcomeMessage(customer, NopContext.Current.WorkingLanguage.LanguageId);
                 }
             }
         }
@@ -1467,8 +1467,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
                 {
                     registeredCustomerSession.IsExpired = false;
                     var anonCustomerSession = NopContext.Current.Session;
-                    var cart1 = IoCFactory.Resolve<IShoppingCartService>().GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
-                    var cart2 = IoCFactory.Resolve<IShoppingCartService>().GetCurrentShoppingCart(ShoppingCartTypeEnum.Wishlist);
+                    var cart1 = IoC.Resolve<IShoppingCartService>().GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
+                    var cart2 = IoC.Resolve<IShoppingCartService>().GetCurrentShoppingCart(ShoppingCartTypeEnum.Wishlist);
                     NopContext.Current.Session = registeredCustomerSession;
 
                     if ((anonCustomerSession != null) && (anonCustomerSession.CustomerSessionGuid != registeredCustomerSession.CustomerSessionGuid))
@@ -1481,23 +1481,23 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
 
                         foreach (ShoppingCartItem item in cart1)
                         {
-                            IoCFactory.Resolve<IShoppingCartService>().AddToCart(
+                            IoC.Resolve<IShoppingCartService>().AddToCart(
                                 item.ShoppingCartType,
                                 item.ProductVariantId,
                                 item.AttributesXml,
                                 item.CustomerEnteredPrice,
                                 item.Quantity);
-                            IoCFactory.Resolve<IShoppingCartService>().DeleteShoppingCartItem(item.ShoppingCartItemId, true);
+                            IoC.Resolve<IShoppingCartService>().DeleteShoppingCartItem(item.ShoppingCartItemId, true);
                         }
                         foreach (ShoppingCartItem item in cart2)
                         {
-                            IoCFactory.Resolve<IShoppingCartService>().AddToCart(
+                            IoC.Resolve<IShoppingCartService>().AddToCart(
                                 item.ShoppingCartType,
                                 item.ProductVariantId,
                                 item.AttributesXml,
                                 item.CustomerEnteredPrice,
                                 item.Quantity);
-                            IoCFactory.Resolve<IShoppingCartService>().DeleteShoppingCartItem(item.ShoppingCartItemId, true);
+                            IoC.Resolve<IShoppingCartService>().DeleteShoppingCartItem(item.ShoppingCartItemId, true);
                         }
                     }
                 }
@@ -1943,7 +1943,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// <param name="discountId">Discount identifier</param>
         public void AddDiscountToCustomerRole(int customerRoleId, int discountId)
         {
-            var discount = IoCFactory.Resolve<IDiscountService>().GetDiscountById(discountId);
+            var discount = IoC.Resolve<IDiscountService>().GetDiscountById(discountId);
             if (discount == null)
                 return;
 
@@ -1972,7 +1972,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// <param name="discountId">Discount identifier</param>
         public void RemoveDiscountFromCustomerRole(int customerRoleId, int discountId)
         {
-            var discount = IoCFactory.Resolve<IDiscountService>().GetDiscountById(discountId);
+            var discount = IoC.Resolve<IDiscountService>().GetDiscountById(discountId);
             if (discount == null)
                 return;
 
@@ -2169,7 +2169,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.CustomerManager.CacheEnabled");
+                return IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.CustomerManager.CacheEnabled");
             }
         }
 
@@ -2180,12 +2180,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         {
             get
             {
-                bool allowed = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Checkout.AnonymousCheckoutAllowed", false);
+                bool allowed = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Checkout.AnonymousCheckoutAllowed", false);
                 return allowed;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Checkout.AnonymousCheckoutAllowed", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Checkout.AnonymousCheckoutAllowed", value.ToString());
             }
         }
 
@@ -2196,12 +2196,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         {
             get
             {
-                bool usernamesEnabled = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Customer.UsernamesEnabled");
+                bool usernamesEnabled = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Customer.UsernamesEnabled");
                 return usernamesEnabled;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Customer.UsernamesEnabled", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Customer.UsernamesEnabled", value.ToString());
             }
         }
 
@@ -2212,12 +2212,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         {
             get
             {
-                bool result = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Customer.AllowCustomersToChangeUsernames");
+                bool result = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Customer.AllowCustomersToChangeUsernames");
                 return result;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Customer.AllowCustomersToChangeUsernames", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Customer.AllowCustomersToChangeUsernames", value.ToString());
             }
         }
 
@@ -2228,12 +2228,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         {
             get
             {
-                int customerNameFormatting = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Customer.CustomerNameFormatting");
+                int customerNameFormatting = IoC.Resolve<ISettingManager>().GetSettingValueInteger("Customer.CustomerNameFormatting");
                 return (CustomerNameFormatEnum)customerNameFormatting;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Customer.CustomerNameFormatting", ((int)value).ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Customer.CustomerNameFormatting", ((int)value).ToString());
             }
         }
 
@@ -2244,12 +2244,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         {
             get
             {
-                bool allowCustomersToUploadAvatars = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Customer.CustomersAllowedToUploadAvatars");
+                bool allowCustomersToUploadAvatars = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Customer.CustomersAllowedToUploadAvatars");
                 return allowCustomersToUploadAvatars;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Customer.CustomersAllowedToUploadAvatars", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Customer.CustomersAllowedToUploadAvatars", value.ToString());
             }
         }
 
@@ -2260,12 +2260,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         {
             get
             {
-                bool defaultAvatarEnabled = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Customer.DefaultAvatarEnabled");
+                bool defaultAvatarEnabled = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Customer.DefaultAvatarEnabled");
                 return defaultAvatarEnabled;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Customer.DefaultAvatarEnabled", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Customer.DefaultAvatarEnabled", value.ToString());
             }
         }
 
@@ -2276,12 +2276,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         {
             get
             {
-                bool showCustomersLocation = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Customer.ShowCustomersLocation");
+                bool showCustomersLocation = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Customer.ShowCustomersLocation");
                 return showCustomersLocation;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Customer.ShowCustomersLocation", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Customer.ShowCustomersLocation", value.ToString());
             }
         }
 
@@ -2292,12 +2292,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         {
             get
             {
-                bool showCustomersJoinDate = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Customer.ShowCustomersJoinDate");
+                bool showCustomersJoinDate = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Customer.ShowCustomersJoinDate");
                 return showCustomersJoinDate;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Customer.ShowCustomersJoinDate", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Customer.ShowCustomersJoinDate", value.ToString());
             }
         }
 
@@ -2308,12 +2308,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         {
             get
             {
-                bool allowViewingProfiles = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Customer.AllowViewingProfiles");
+                bool allowViewingProfiles = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Customer.AllowViewingProfiles");
                 return allowViewingProfiles;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Customer.AllowViewingProfiles", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Customer.AllowViewingProfiles", value.ToString());
             }
         }
 
@@ -2324,12 +2324,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         {
             get
             {
-                int customerRegistrationType = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Common.CustomerRegistrationType", (int)CustomerRegistrationTypeEnum.Standard);
+                int customerRegistrationType = IoC.Resolve<ISettingManager>().GetSettingValueInteger("Common.CustomerRegistrationType", (int)CustomerRegistrationTypeEnum.Standard);
                 return (CustomerRegistrationTypeEnum)customerRegistrationType;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Common.CustomerRegistrationType", ((int)value).ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Common.CustomerRegistrationType", ((int)value).ToString());
             }
         }
 
@@ -2340,12 +2340,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         {
             get
             {
-                bool allowOnlyRegisteredCustomers = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Common.AllowNavigationOnlyRegisteredCustomers");
+                bool allowOnlyRegisteredCustomers = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Common.AllowNavigationOnlyRegisteredCustomers");
                 return allowOnlyRegisteredCustomers;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Common.AllowNavigationOnlyRegisteredCustomers", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Common.AllowNavigationOnlyRegisteredCustomers", value.ToString());
             }
         }
 
@@ -2356,12 +2356,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         {
             get
             {
-                bool productReviewsMustBeApproved = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Common.ProductReviewsMustBeApproved");
+                bool productReviewsMustBeApproved = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Common.ProductReviewsMustBeApproved");
                 return productReviewsMustBeApproved;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Common.ProductReviewsMustBeApproved", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Common.ProductReviewsMustBeApproved", value.ToString());
             }
         }
 
@@ -2372,12 +2372,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         {
             get
             {
-                bool allowAnonymousUsersToReviewProduct = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Common.AllowAnonymousUsersToReviewProduct");
+                bool allowAnonymousUsersToReviewProduct = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Common.AllowAnonymousUsersToReviewProduct");
                 return allowAnonymousUsersToReviewProduct;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Common.AllowAnonymousUsersToReviewProduct", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Common.AllowAnonymousUsersToReviewProduct", value.ToString());
             }
         }
 
@@ -2388,11 +2388,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Common.AllowAnonymousUsersToEmailAFriend", false);
+                return IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Common.AllowAnonymousUsersToEmailAFriend", false);
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Common.AllowAnonymousUsersToEmailAFriend", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Common.AllowAnonymousUsersToEmailAFriend", value.ToString());
             }
         }
 
@@ -2403,12 +2403,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         {
             get
             {
-                bool allowAnonymousUsersToSetProductRatings = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Common.AllowAnonymousUsersToSetProductRatings");
+                bool allowAnonymousUsersToSetProductRatings = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Common.AllowAnonymousUsersToSetProductRatings");
                 return allowAnonymousUsersToSetProductRatings;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Common.AllowAnonymousUsersToSetProductRatings", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Common.AllowAnonymousUsersToSetProductRatings", value.ToString());
             }
         }
 
@@ -2419,11 +2419,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Common.NotifyNewCustomerRegistration", false);
+                return IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Common.NotifyNewCustomerRegistration", false);
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Common.NotifyNewCustomerRegistration", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Common.NotifyNewCustomerRegistration", value.ToString());
             }
         }
 
@@ -2434,12 +2434,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         {
             get
             {
-                bool setting = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("FormField.GenderEnabled", true);
+                bool setting = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("FormField.GenderEnabled", true);
                 return setting;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("FormField.GenderEnabled", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("FormField.GenderEnabled", value.ToString());
             }
         }
 
@@ -2450,12 +2450,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         {
             get
             {
-                bool setting = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("FormField.DateOfBirthEnabled", true);
+                bool setting = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("FormField.DateOfBirthEnabled", true);
                 return setting;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("FormField.DateOfBirthEnabled", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("FormField.DateOfBirthEnabled", value.ToString());
             }
         }
 
@@ -2466,12 +2466,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         {
             get
             {
-                bool setting = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("FormField.CompanyEnabled", true);
+                bool setting = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("FormField.CompanyEnabled", true);
                 return setting;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("FormField.CompanyEnabled", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("FormField.CompanyEnabled", value.ToString());
             }
         }
 
@@ -2482,12 +2482,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         {
             get
             {
-                bool setting = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("FormField.CompanyRequired", false);
+                bool setting = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("FormField.CompanyRequired", false);
                 return setting;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("FormField.CompanyRequired", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("FormField.CompanyRequired", value.ToString());
             }
         }
 
@@ -2498,12 +2498,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         {
             get
             {
-                bool setting = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("FormField.StreetAddressEnabled", true);
+                bool setting = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("FormField.StreetAddressEnabled", true);
                 return setting;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("FormField.StreetAddressEnabled", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("FormField.StreetAddressEnabled", value.ToString());
             }
         }
 
@@ -2514,12 +2514,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         {
             get
             {
-                bool setting = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("FormField.StreetAddressRequired", true);
+                bool setting = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("FormField.StreetAddressRequired", true);
                 return setting;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("FormField.StreetAddressRequired", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("FormField.StreetAddressRequired", value.ToString());
             }
         }
 
@@ -2530,12 +2530,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         {
             get
             {
-                bool setting = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("FormField.StreetAddress2Enabled", true);
+                bool setting = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("FormField.StreetAddress2Enabled", true);
                 return setting;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("FormField.StreetAddress2Enabled", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("FormField.StreetAddress2Enabled", value.ToString());
             }
         }
 
@@ -2546,12 +2546,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         {
             get
             {
-                bool setting = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("FormField.StreetAddress2Required", false);
+                bool setting = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("FormField.StreetAddress2Required", false);
                 return setting;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("FormField.StreetAddress2Required", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("FormField.StreetAddress2Required", value.ToString());
             }
         }
 
@@ -2562,12 +2562,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         {
             get
             {
-                bool setting = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("FormField.PostCodeEnabled", true);
+                bool setting = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("FormField.PostCodeEnabled", true);
                 return setting;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("FormField.PostCodeEnabled", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("FormField.PostCodeEnabled", value.ToString());
             }
         }
 
@@ -2578,12 +2578,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         {
             get
             {
-                bool setting = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("FormField.PostCodeRequired", true);
+                bool setting = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("FormField.PostCodeRequired", true);
                 return setting;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("FormField.PostCodeRequired", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("FormField.PostCodeRequired", value.ToString());
             }
         }
 
@@ -2594,12 +2594,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         {
             get
             {
-                bool setting = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("FormField.CityEnabled", true);
+                bool setting = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("FormField.CityEnabled", true);
                 return setting;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("FormField.CityEnabled", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("FormField.CityEnabled", value.ToString());
             }
         }
 
@@ -2610,12 +2610,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         {
             get
             {
-                bool setting = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("FormField.CityRequired", true);
+                bool setting = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("FormField.CityRequired", true);
                 return setting;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("FormField.CityRequired", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("FormField.CityRequired", value.ToString());
             }
         }
 
@@ -2626,12 +2626,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         {
             get
             {
-                bool setting = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("FormField.CountryEnabled", true);
+                bool setting = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("FormField.CountryEnabled", true);
                 return setting;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("FormField.CountryEnabled", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("FormField.CountryEnabled", value.ToString());
             }
         }
 
@@ -2642,12 +2642,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         {
             get
             {
-                bool setting = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("FormField.StateEnabled", true);
+                bool setting = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("FormField.StateEnabled", true);
                 return setting;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("FormField.StateEnabled", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("FormField.StateEnabled", value.ToString());
             }
         }
 
@@ -2658,12 +2658,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         {
             get
             {
-                bool setting = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("FormField.PhoneEnabled", true);
+                bool setting = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("FormField.PhoneEnabled", true);
                 return setting;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("FormField.PhoneEnabled", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("FormField.PhoneEnabled", value.ToString());
             }
         }
 
@@ -2674,12 +2674,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         {
             get
             {
-                bool setting = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("FormField.PhoneRequired", true);
+                bool setting = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("FormField.PhoneRequired", true);
                 return setting;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("FormField.PhoneRequired", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("FormField.PhoneRequired", value.ToString());
             }
         }
 
@@ -2690,12 +2690,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         {
             get
             {
-                bool setting = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("FormField.FaxEnabled", true);
+                bool setting = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("FormField.FaxEnabled", true);
                 return setting;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("FormField.FaxEnabled", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("FormField.FaxEnabled", value.ToString());
             }
         }
 
@@ -2706,12 +2706,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         {
             get
             {
-                bool setting = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("FormField.FaxRequired", false);
+                bool setting = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("FormField.FaxRequired", false);
                 return setting;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("FormField.FaxRequired", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("FormField.FaxRequired", value.ToString());
             }
         }
         
@@ -2722,12 +2722,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         {
             get
             {
-                bool setting = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("FormField.NewsletterEnabled", true);
+                bool setting = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("FormField.NewsletterEnabled", true);
                 return setting;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("FormField.NewsletterEnabled", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("FormField.NewsletterEnabled", value.ToString());
             }
         }
 
@@ -2738,12 +2738,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         {
             get
             {
-                bool setting = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("FormField.TimeZoneEnabled", false);
+                bool setting = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("FormField.TimeZoneEnabled", false);
                 return setting;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("FormField.TimeZoneEnabled", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("FormField.TimeZoneEnabled", value.ToString());
             }
         }
 

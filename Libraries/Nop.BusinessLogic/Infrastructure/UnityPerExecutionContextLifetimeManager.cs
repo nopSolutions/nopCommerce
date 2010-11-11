@@ -23,7 +23,7 @@ using System.Web.Compilation;
 using System.Xml;
 using Microsoft.Practices.Unity;
 
-namespace NopSolutions.NopCommerce.BusinessLogic.IoC
+namespace NopSolutions.NopCommerce.BusinessLogic.Infrastructure
 {
     /// <summary>
     /// This is a custom lifetime that preserve  instance on the same

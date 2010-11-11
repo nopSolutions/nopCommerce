@@ -10,7 +10,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Data;
 using NopSolutions.NopCommerce.BusinessLogic.Payment;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 using NopSolutions.NopCommerce.BusinessLogic.Caching;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
@@ -280,11 +280,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("QB.Enabled", false);
+                return IoC.Resolve<ISettingManager>().GetSettingValueBoolean("QB.Enabled", false);
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("QB.Enabled", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("QB.Enabled", value.ToString());
             }
         }
 
@@ -295,11 +295,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValue("QB.Username", "admin");
+                return IoC.Resolve<ISettingManager>().GetSettingValue("QB.Username", "admin");
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("QB.Username", value);
+                IoC.Resolve<ISettingManager>().SetParam("QB.Username", value);
             }
         }
 
@@ -310,11 +310,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValue("QB.Password", "admin");
+                return IoC.Resolve<ISettingManager>().GetSettingValue("QB.Password", "admin");
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("QB.Password", value);
+                IoC.Resolve<ISettingManager>().SetParam("QB.Password", value);
             }
         }
 
@@ -325,11 +325,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
         {
             get
             {
-                return (QBEditionEnum)IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("QB.Edition", (int)QBEditionEnum.SimpleStart);
+                return (QBEditionEnum)IoC.Resolve<ISettingManager>().GetSettingValueInteger("QB.Edition", (int)QBEditionEnum.SimpleStart);
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("QB.Edition", ((int)value).ToString());
+                IoC.Resolve<ISettingManager>().SetParam("QB.Edition", ((int)value).ToString());
             }
         }
 
@@ -340,11 +340,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValue("QB.ItemRef", "Sales");
+                return IoC.Resolve<ISettingManager>().GetSettingValue("QB.ItemRef", "Sales");
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("QB.ItemRef", value);
+                IoC.Resolve<ISettingManager>().SetParam("QB.ItemRef", value);
             }
         }
 
@@ -355,11 +355,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValue("QB.DiscountAccountRef", "Discounts Given");
+                return IoC.Resolve<ISettingManager>().GetSettingValue("QB.DiscountAccountRef", "Discounts Given");
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("QB.DiscountAccountRef", value);
+                IoC.Resolve<ISettingManager>().SetParam("QB.DiscountAccountRef", value);
             }
         }
 
@@ -370,11 +370,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValue("QB.ShippingAccountRef", "Sales");
+                return IoC.Resolve<ISettingManager>().GetSettingValue("QB.ShippingAccountRef", "Sales");
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("QB.ShippingAccountRef", value);
+                IoC.Resolve<ISettingManager>().SetParam("QB.ShippingAccountRef", value);
             }
         }
 
@@ -385,11 +385,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValue("QB.SalesTaxAccountRef", "Sales");
+                return IoC.Resolve<ISettingManager>().GetSettingValue("QB.SalesTaxAccountRef", "Sales");
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("QB.SalesTaxAccountRef", value);
+                IoC.Resolve<ISettingManager>().SetParam("QB.SalesTaxAccountRef", value);
             }
         }
 
@@ -400,11 +400,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.QuickBooks
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValue("QB.CultureName", "en-US");
+                return IoC.Resolve<ISettingManager>().GetSettingValue("QB.CultureName", "en-US");
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("QB.CultureName", value);
+                IoC.Resolve<ISettingManager>().SetParam("QB.CultureName", value);
             }
         }
         #endregion

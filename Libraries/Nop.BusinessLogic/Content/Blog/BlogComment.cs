@@ -16,7 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
@@ -77,7 +77,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
         {
             get
             {
-                return IoCFactory.Resolve<ICustomerService>().GetCustomerById(this.CustomerId);
+                return IoC.Resolve<ICustomerService>().GetCustomerById(this.CustomerId);
             }
         }
 
@@ -88,7 +88,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
         {
             get
             {
-                return IoCFactory.Resolve<IBlogService>().GetBlogPostById(this.BlogPostId);
+                return IoC.Resolve<IBlogService>().GetBlogPostById(this.BlogPostId);
             }
         }
         #endregion

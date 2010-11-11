@@ -33,7 +33,7 @@ using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.BusinessLogic.Tax;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -65,7 +65,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             CommonHelper.FillDropDownWithEnum(this.ddlTaxDisplayType, typeof(TaxDisplayTypeEnum));
             CommonHelper.FillDropDownWithEnum(this.ddlTaxBasedOn, typeof(TaxBasedOnEnum));
 
-            var taxCategoryCollection = IoCFactory.Resolve<ITaxCategoryService>().GetAllTaxCategories();
+            var taxCategoryCollection = IoC.Resolve<ITaxCategoryService>().GetAllTaxCategories();
 
             this.ddlShippingTaxClass.Items.Clear();
             ListItem itemShippingTaxCategory = new ListItem("---", "0");
@@ -88,7 +88,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected void FillCountryDropDowns()
         {
-            var countries = IoCFactory.Resolve<ICountryService>().GetAllCountries();
+            var countries = IoC.Resolve<ICountryService>().GetAllCountries();
 
             this.ddlTaxDefaultCountry.Items.Clear();
             ListItem noCountryItem1 = new ListItem(GetLocaleResourceString("Admin.TaxSettings.TaxDefaultCountry.SelectCountry"), "0");
@@ -105,7 +105,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             this.ddlTaxDefaultStateProvince.Items.Clear();
             int countryId = int.Parse(this.ddlTaxDefaultCountry.SelectedItem.Value);
 
-            var stateProvinceCollection = IoCFactory.Resolve<IStateProvinceService>().GetStateProvincesByCountryId(countryId);
+            var stateProvinceCollection = IoC.Resolve<IStateProvinceService>().GetStateProvincesByCountryId(countryId);
             foreach (StateProvince stateProvince in stateProvinceCollection)
             {
                 ListItem ddlStateProviceItem2 = new ListItem(stateProvince.Name, stateProvince.StateProvinceId.ToString());
@@ -120,7 +120,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected void FillEUVATCountryDropDowns()
         {
-            var countries = IoCFactory.Resolve<ICountryService>().GetAllCountries().Where(country => country.SubjectToVAT).ToList();
+            var countries = IoC.Resolve<ICountryService>().GetAllCountries().Where(country => country.SubjectToVAT).ToList();
 
             this.ddlEUVatShopCountry.Items.Clear();
             ListItem noCountryItem2 = new ListItem(GetLocaleResourceString("Admin.TaxSettings.EUVatShopCountry.SelectCountry"), "0");
@@ -135,17 +135,17 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         private void BindData()
         {
             //standard settings
-            cbPricesIncludeTax.Checked = IoCFactory.Resolve<ITaxService>().PricesIncludeTax;
-            cbAllowCustomersToSelectTaxDisplayType.Checked = IoCFactory.Resolve<ITaxService>().AllowCustomersToSelectTaxDisplayType;
-            CommonHelper.SelectListItem(this.ddlTaxDisplayType, (int)IoCFactory.Resolve<ITaxService>().TaxDisplayType);
-            cbDisplayTaxSuffix.Checked = IoCFactory.Resolve<ITaxService>().DisplayTaxSuffix;
-            cbDisplayTaxRates.Checked = IoCFactory.Resolve<ITaxService>().DisplayTaxRates;
-            cbHideZeroTax.Checked = IoCFactory.Resolve<ITaxService>().HideZeroTax;
-            cbHideTaxInOrderSummary.Checked = IoCFactory.Resolve<ITaxService>().HideTaxInOrderSummary;
-            CommonHelper.SelectListItem(this.ddlTaxBasedOn, (int)IoCFactory.Resolve<ITaxService>().TaxBasedOn);
+            cbPricesIncludeTax.Checked = IoC.Resolve<ITaxService>().PricesIncludeTax;
+            cbAllowCustomersToSelectTaxDisplayType.Checked = IoC.Resolve<ITaxService>().AllowCustomersToSelectTaxDisplayType;
+            CommonHelper.SelectListItem(this.ddlTaxDisplayType, (int)IoC.Resolve<ITaxService>().TaxDisplayType);
+            cbDisplayTaxSuffix.Checked = IoC.Resolve<ITaxService>().DisplayTaxSuffix;
+            cbDisplayTaxRates.Checked = IoC.Resolve<ITaxService>().DisplayTaxRates;
+            cbHideZeroTax.Checked = IoC.Resolve<ITaxService>().HideZeroTax;
+            cbHideTaxInOrderSummary.Checked = IoC.Resolve<ITaxService>().HideTaxInOrderSummary;
+            CommonHelper.SelectListItem(this.ddlTaxBasedOn, (int)IoC.Resolve<ITaxService>().TaxBasedOn);
 
             //tax address
-            Address defaultTaxAddress = IoCFactory.Resolve<ITaxService>().DefaultTaxAddress;
+            Address defaultTaxAddress = IoC.Resolve<ITaxService>().DefaultTaxAddress;
             this.FillCountryDropDowns();
             CommonHelper.SelectListItem(this.ddlTaxDefaultCountry, defaultTaxAddress.CountryId);
             this.FillStateProvinceDropDowns();
@@ -153,22 +153,22 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             txtTaxDefaultZipPostalCode.Text = defaultTaxAddress.ZipPostalCode;
 
             //shipping
-            cbShippingIsTaxable.Checked = IoCFactory.Resolve<ITaxService>().ShippingIsTaxable;
-            cbShippingPriceIncludesTax.Checked = IoCFactory.Resolve<ITaxService>().ShippingPriceIncludesTax;
-            CommonHelper.SelectListItem(this.ddlShippingTaxClass, IoCFactory.Resolve<ITaxService>().ShippingTaxClassId);
+            cbShippingIsTaxable.Checked = IoC.Resolve<ITaxService>().ShippingIsTaxable;
+            cbShippingPriceIncludesTax.Checked = IoC.Resolve<ITaxService>().ShippingPriceIncludesTax;
+            CommonHelper.SelectListItem(this.ddlShippingTaxClass, IoC.Resolve<ITaxService>().ShippingTaxClassId);
 
             //additional payment fee
-            cbPaymentMethodAdditionalFeeIsTaxable.Checked = IoCFactory.Resolve<ITaxService>().PaymentMethodAdditionalFeeIsTaxable;
-            cbPaymentMethodAdditionalFeeIncludesTax.Checked = IoCFactory.Resolve<ITaxService>().PaymentMethodAdditionalFeeIncludesTax;
-            CommonHelper.SelectListItem(this.ddlPaymentMethodAdditionalFeeTaxClass, IoCFactory.Resolve<ITaxService>().PaymentMethodAdditionalFeeTaxClassId);
+            cbPaymentMethodAdditionalFeeIsTaxable.Checked = IoC.Resolve<ITaxService>().PaymentMethodAdditionalFeeIsTaxable;
+            cbPaymentMethodAdditionalFeeIncludesTax.Checked = IoC.Resolve<ITaxService>().PaymentMethodAdditionalFeeIncludesTax;
+            CommonHelper.SelectListItem(this.ddlPaymentMethodAdditionalFeeTaxClass, IoC.Resolve<ITaxService>().PaymentMethodAdditionalFeeTaxClassId);
 
             //EU VAT support
-            cbEUVatEnabled.Checked = IoCFactory.Resolve<ITaxService>().EUVatEnabled;
+            cbEUVatEnabled.Checked = IoC.Resolve<ITaxService>().EUVatEnabled;
             this.FillEUVATCountryDropDowns();
-            CommonHelper.SelectListItem(this.ddlEUVatShopCountry, IoCFactory.Resolve<ITaxService>().EUVatShopCountryId);
-            cbEUVatAllowVATExemption.Checked = IoCFactory.Resolve<ITaxService>().EUVatAllowVATExemption;
-            cbEUVatUseWebService.Checked = IoCFactory.Resolve<ITaxService>().EUVatUseWebService;
-            cbEUVatEmailAdminWhenNewVATSubmitted.Checked = IoCFactory.Resolve<ITaxService>().EUVatEmailAdminWhenNewVATSubmitted;
+            CommonHelper.SelectListItem(this.ddlEUVatShopCountry, IoC.Resolve<ITaxService>().EUVatShopCountryId);
+            cbEUVatAllowVATExemption.Checked = IoC.Resolve<ITaxService>().EUVatAllowVATExemption;
+            cbEUVatUseWebService.Checked = IoC.Resolve<ITaxService>().EUVatUseWebService;
+            cbEUVatEmailAdminWhenNewVATSubmitted.Checked = IoC.Resolve<ITaxService>().EUVatEmailAdminWhenNewVATSubmitted;
         }
 
         protected void ddlTaxDefaultCountry_SelectedIndexChanged(object sender, EventArgs e)
@@ -183,41 +183,41 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 try
                 {
                     //standard settings
-                    IoCFactory.Resolve<ITaxService>().PricesIncludeTax = cbPricesIncludeTax.Checked;
-                    IoCFactory.Resolve<ITaxService>().AllowCustomersToSelectTaxDisplayType = cbAllowCustomersToSelectTaxDisplayType.Checked;
-                    IoCFactory.Resolve<ITaxService>().TaxDisplayType = (TaxDisplayTypeEnum)Enum.ToObject(typeof(TaxDisplayTypeEnum), int.Parse(this.ddlTaxDisplayType.SelectedItem.Value));
-                    IoCFactory.Resolve<ITaxService>().DisplayTaxSuffix = cbDisplayTaxSuffix.Checked;
-                    IoCFactory.Resolve<ITaxService>().DisplayTaxRates = cbDisplayTaxRates.Checked;
-                    IoCFactory.Resolve<ITaxService>().HideZeroTax= cbHideZeroTax.Checked;
-                    IoCFactory.Resolve<ITaxService>().HideTaxInOrderSummary = cbHideTaxInOrderSummary.Checked; 
-                    IoCFactory.Resolve<ITaxService>().TaxBasedOn = (TaxBasedOnEnum)Enum.ToObject(typeof(TaxBasedOnEnum), int.Parse(this.ddlTaxBasedOn.SelectedItem.Value));
+                    IoC.Resolve<ITaxService>().PricesIncludeTax = cbPricesIncludeTax.Checked;
+                    IoC.Resolve<ITaxService>().AllowCustomersToSelectTaxDisplayType = cbAllowCustomersToSelectTaxDisplayType.Checked;
+                    IoC.Resolve<ITaxService>().TaxDisplayType = (TaxDisplayTypeEnum)Enum.ToObject(typeof(TaxDisplayTypeEnum), int.Parse(this.ddlTaxDisplayType.SelectedItem.Value));
+                    IoC.Resolve<ITaxService>().DisplayTaxSuffix = cbDisplayTaxSuffix.Checked;
+                    IoC.Resolve<ITaxService>().DisplayTaxRates = cbDisplayTaxRates.Checked;
+                    IoC.Resolve<ITaxService>().HideZeroTax= cbHideZeroTax.Checked;
+                    IoC.Resolve<ITaxService>().HideTaxInOrderSummary = cbHideTaxInOrderSummary.Checked; 
+                    IoC.Resolve<ITaxService>().TaxBasedOn = (TaxBasedOnEnum)Enum.ToObject(typeof(TaxBasedOnEnum), int.Parse(this.ddlTaxBasedOn.SelectedItem.Value));
 
                     //tax address
                     Address defaultTaxAddress = new Address();
                     defaultTaxAddress.CountryId = int.Parse(this.ddlTaxDefaultCountry.SelectedItem.Value);
                     defaultTaxAddress.StateProvinceId = int.Parse(this.ddlTaxDefaultStateProvince.SelectedItem.Value);
                     defaultTaxAddress.ZipPostalCode = txtTaxDefaultZipPostalCode.Text;
-                    IoCFactory.Resolve<ITaxService>().DefaultTaxAddress = defaultTaxAddress;
+                    IoC.Resolve<ITaxService>().DefaultTaxAddress = defaultTaxAddress;
 
                     //shipping
-                    IoCFactory.Resolve<ITaxService>().ShippingIsTaxable = cbShippingIsTaxable.Checked;
-                    IoCFactory.Resolve<ITaxService>().ShippingPriceIncludesTax = cbShippingPriceIncludesTax.Checked;
-                    IoCFactory.Resolve<ITaxService>().ShippingTaxClassId = int.Parse(this.ddlShippingTaxClass.SelectedItem.Value);
+                    IoC.Resolve<ITaxService>().ShippingIsTaxable = cbShippingIsTaxable.Checked;
+                    IoC.Resolve<ITaxService>().ShippingPriceIncludesTax = cbShippingPriceIncludesTax.Checked;
+                    IoC.Resolve<ITaxService>().ShippingTaxClassId = int.Parse(this.ddlShippingTaxClass.SelectedItem.Value);
 
                     //additional payment fee
-                    IoCFactory.Resolve<ITaxService>().PaymentMethodAdditionalFeeIsTaxable = cbPaymentMethodAdditionalFeeIsTaxable.Checked;
-                    IoCFactory.Resolve<ITaxService>().PaymentMethodAdditionalFeeIncludesTax = cbPaymentMethodAdditionalFeeIncludesTax.Checked;
-                    IoCFactory.Resolve<ITaxService>().PaymentMethodAdditionalFeeTaxClassId = int.Parse(this.ddlPaymentMethodAdditionalFeeTaxClass.SelectedItem.Value);
+                    IoC.Resolve<ITaxService>().PaymentMethodAdditionalFeeIsTaxable = cbPaymentMethodAdditionalFeeIsTaxable.Checked;
+                    IoC.Resolve<ITaxService>().PaymentMethodAdditionalFeeIncludesTax = cbPaymentMethodAdditionalFeeIncludesTax.Checked;
+                    IoC.Resolve<ITaxService>().PaymentMethodAdditionalFeeTaxClassId = int.Parse(this.ddlPaymentMethodAdditionalFeeTaxClass.SelectedItem.Value);
 
                     //EU VAT support
-                    IoCFactory.Resolve<ITaxService>().EUVatEnabled = cbEUVatEnabled.Checked;
-                    IoCFactory.Resolve<ITaxService>().EUVatShopCountryId = int.Parse(this.ddlEUVatShopCountry.SelectedItem.Value);
-                    IoCFactory.Resolve<ITaxService>().EUVatAllowVATExemption = cbEUVatAllowVATExemption.Checked;
-                    IoCFactory.Resolve<ITaxService>().EUVatUseWebService = cbEUVatUseWebService.Checked;
-                    IoCFactory.Resolve<ITaxService>().EUVatEmailAdminWhenNewVATSubmitted = cbEUVatEmailAdminWhenNewVATSubmitted.Checked;
+                    IoC.Resolve<ITaxService>().EUVatEnabled = cbEUVatEnabled.Checked;
+                    IoC.Resolve<ITaxService>().EUVatShopCountryId = int.Parse(this.ddlEUVatShopCountry.SelectedItem.Value);
+                    IoC.Resolve<ITaxService>().EUVatAllowVATExemption = cbEUVatAllowVATExemption.Checked;
+                    IoC.Resolve<ITaxService>().EUVatUseWebService = cbEUVatUseWebService.Checked;
+                    IoC.Resolve<ITaxService>().EUVatEmailAdminWhenNewVATSubmitted = cbEUVatEmailAdminWhenNewVATSubmitted.Checked;
 
                     //logging
-                    IoCFactory.Resolve<ICustomerActivityService>().InsertActivity(
+                    IoC.Resolve<ICustomerActivityService>().InsertActivity(
                         "EditTaxSettings",
                         GetLocaleResourceString("ActivityLog.EditTaxSettings"));
 

@@ -30,7 +30,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.BusinessLogic.Utils.Html;
 using NopSolutions.NopCommerce.Common.Utils.Html;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 using System.Data.Objects;
 using NopSolutions.NopCommerce.Common;
 
@@ -412,7 +412,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
             //notifications
             if (notify)
             {
-                IoCFactory.Resolve<IMessageService>().SendNewsCommentNotificationMessage(newsComment, IoCFactory.Resolve<ILocalizationManager>().DefaultAdminLanguage.LanguageId);
+                IoC.Resolve<IMessageService>().SendNewsCommentNotificationMessage(newsComment, IoC.Resolve<ILocalizationManager>().DefaultAdminLanguage.LanguageId);
             }
 
             return newsComment;
@@ -451,7 +451,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.NewsManager.CacheEnabled");
+                return IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.NewsManager.CacheEnabled");
             }
         }
         
@@ -462,12 +462,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
         {
             get
             {
-                bool newsEnabled = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("News.NewsEnabled");
+                bool newsEnabled = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("News.NewsEnabled");
                 return newsEnabled;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("News.NewsEnabled", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("News.NewsEnabled", value.ToString());
             }
         }
 
@@ -478,11 +478,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("News.AllowNotRegisteredUsersToLeaveComments");
+                return IoC.Resolve<ISettingManager>().GetSettingValueBoolean("News.AllowNotRegisteredUsersToLeaveComments");
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("News.AllowNotRegisteredUsersToLeaveComments", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("News.AllowNotRegisteredUsersToLeaveComments", value.ToString());
             }
         }
 
@@ -493,11 +493,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("News.NotifyAboutNewNewsComments");
+                return IoC.Resolve<ISettingManager>().GetSettingValueBoolean("News.NotifyAboutNewNewsComments");
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("News.NotifyAboutNewNewsComments", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("News.NotifyAboutNewNewsComments", value.ToString());
             }
         }
 
@@ -508,12 +508,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
         {
             get
             {
-                bool showNewsOnMainPage = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Display.ShowNewsOnMainPage");
+                bool showNewsOnMainPage = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Display.ShowNewsOnMainPage");
                 return showNewsOnMainPage;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Display.ShowNewsOnMainPage", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Display.ShowNewsOnMainPage", value.ToString());
             }
         }
 
@@ -524,12 +524,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
         {
             get
             {
-                int mainPageNewsCount = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Display.MainPageNewsCount");
+                int mainPageNewsCount = IoC.Resolve<ISettingManager>().GetSettingValueInteger("Display.MainPageNewsCount");
                 return mainPageNewsCount;
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Display.MainPageNewsCount", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Display.MainPageNewsCount", value.ToString());
             }
         }
 
@@ -540,11 +540,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Display.NewsArchivePageSize", 10);
+                return IoC.Resolve<ISettingManager>().GetSettingValueInteger("Display.NewsArchivePageSize", 10);
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Display.NewsArchivePageSize", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Display.NewsArchivePageSize", value.ToString());
             }
         }
 

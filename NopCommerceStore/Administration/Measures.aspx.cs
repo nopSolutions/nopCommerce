@@ -20,7 +20,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using NopSolutions.NopCommerce.BusinessLogic.Security;
 using NopSolutions.NopCommerce.Web;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Administration
 {
@@ -28,7 +28,7 @@ namespace NopSolutions.NopCommerce.Web.Administration
     {
         protected override bool ValidatePageSecurity()
         {
-            return IoCFactory.Resolve<IACLService>().IsActionAllowed("ManageMeasures");
+            return IoC.Resolve<IACLService>().IsActionAllowed("ManageMeasures");
         }
     }
 }

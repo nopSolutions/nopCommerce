@@ -34,7 +34,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Media;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.BusinessLogic.Utils;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -45,7 +45,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             if (!Page.IsPostBack)
             {
                 FillDropDowns();
-                if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Admin.LoadAllProducts"))
+                if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Admin.LoadAllProducts"))
                 {
                     BindGrid();
                 }
@@ -73,7 +73,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             this.ddlManufacturer.Items.Clear();
             ListItem itemEmptyManufacturer = new ListItem(GetLocaleResourceString("Admin.Common.All"), "0");
             this.ddlManufacturer.Items.Add(itemEmptyManufacturer);
-            var manufacturers = IoCFactory.Resolve<IManufacturerService>().GetAllManufacturers();
+            var manufacturers = IoC.Resolve<IManufacturerService>().GetAllManufacturers();
             foreach (Manufacturer manufacturer in manufacturers)
             {
                 ListItem item2 = new ListItem(manufacturer.Name, manufacturer.ManufacturerId.ToString());
@@ -89,7 +89,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             int manufacturerId = int.Parse(this.ddlManufacturer.SelectedItem.Value);
 
             int totalRecords = 0;
-            var productVariants = IoCFactory.Resolve<IProductService>().GetAllProductVariants(categoryId, 
+            var productVariants = IoC.Resolve<IProductService>().GetAllProductVariants(categoryId, 
                 manufacturerId, productName, int.MaxValue, 0, out totalRecords);
             return productVariants;
         }
@@ -144,13 +144,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         decimal price = txtPrice.Value;
                         decimal oldPrice = txtOldPrice.Value;
                         bool published = cbPublished.Checked;
-                        var productVariant = IoCFactory.Resolve<IProductService>().GetProductVariantById(pvId);
+                        var productVariant = IoC.Resolve<IProductService>().GetProductVariantById(pvId);
                         if (productVariant != null)
                         {
                             productVariant.Price = price;
                             productVariant.OldPrice = oldPrice;
                             productVariant.Published = published;
-                            IoCFactory.Resolve<IProductService>().UpdateProductVariant(productVariant);
+                            IoC.Resolve<IProductService>().UpdateProductVariant(productVariant);
                         }
                     }
                 }

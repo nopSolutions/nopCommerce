@@ -32,7 +32,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Payment;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Web.Templates.Payment;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
  
 
 namespace NopSolutions.NopCommerce.Web.Modules
@@ -124,7 +124,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             //check whether order total equals zero
             if (NopContext.Current.User != null)
             {
-                decimal? shoppingCartTotalBase = IoCFactory.Resolve<IShoppingCartService>().GetShoppingCartTotal(this.Cart,
+                decimal? shoppingCartTotalBase = IoC.Resolve<IShoppingCartService>().GetShoppingCartTotal(this.Cart,
                 NopContext.Current.User.LastPaymentMethodId, NopContext.Current.User);
 
                 if (shoppingCartTotalBase.HasValue && shoppingCartTotalBase.Value == decimal.Zero)
@@ -163,7 +163,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if ((NopContext.Current.User == null) || (NopContext.Current.User.IsGuest && !IoCFactory.Resolve<ICustomerService>().AnonymousCheckoutAllowed))
+            if ((NopContext.Current.User == null) || (NopContext.Current.User.IsGuest && !IoC.Resolve<ICustomerService>().AnonymousCheckoutAllowed))
             {
                 string loginURL = SEOHelper.GetLoginPageUrl(true);
                 Response.Redirect(loginURL);
@@ -199,7 +199,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             {
                 if (cart == null)
                 {
-                    cart = IoCFactory.Resolve<IShoppingCartService>().GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
+                    cart = IoC.Resolve<IShoppingCartService>().GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
                 }
                 return cart;
             }

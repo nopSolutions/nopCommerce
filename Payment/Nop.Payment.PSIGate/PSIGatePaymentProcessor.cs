@@ -28,7 +28,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.Payment;
 using NopSolutions.NopCommerce.Common.Xml;
 using NopSolutions.NopCommerce.Common;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Payment.Methods.PSIGate
 {
@@ -60,9 +60,9 @@ namespace NopSolutions.NopCommerce.Payment.Methods.PSIGate
         /// </summary>
         private void InitSettings()
         {
-            useSandBox = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.PSIGate.UseSandbox");
-            storeID = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.PSIGate.StoreID");
-            passphrase = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.PSIGate.Passphrase");
+            useSandBox = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.PSIGate.UseSandbox");
+            storeID = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.PSIGate.StoreID");
+            passphrase = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.PSIGate.Passphrase");
         }
 
         /// <summary>
@@ -215,7 +215,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.PSIGate
         /// <returns>Additional handling fee</returns>
         public decimal GetAdditionalHandlingFee()
         {
-            return IoCFactory.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.PSIGate.AdditionalFee");
+            return IoC.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.PSIGate.AdditionalFee");
         }
 
         /// <summary>

@@ -24,7 +24,7 @@ using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
  
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -40,7 +40,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         void BindData()
         {
-            var newsCollection = IoCFactory.Resolve<INewsService>().GetAllNews(0);
+            var newsCollection = IoC.Resolve<INewsService>().GetAllNews(0);
             gvNews.DataSource = newsCollection;
             gvNews.DataBind();
         }

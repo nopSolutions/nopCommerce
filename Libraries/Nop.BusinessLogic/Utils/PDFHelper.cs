@@ -35,7 +35,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Tax;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Common.Utils.Html;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Utils
 {
@@ -57,7 +57,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Utils
                 throw new ArgumentNullException("filePath");
             }
 
-            var localizationManager = IoCFactory.Resolve<ILocalizationManager>();
+            var localizationManager = IoC.Resolve<ILocalizationManager>();
 
             Document doc = new Document();
             Section section = doc.AddSection();
@@ -77,7 +77,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Utils
 
                 section.AddParagraph();
 
-                var pictures = IoCFactory.Resolve<IPictureService>().GetPicturesByProductId(product.ProductId);
+                var pictures = IoC.Resolve<IPictureService>().GetPicturesByProductId(product.ProductId);
                 if (pictures.Count > 0)
                 {
                     Table table = section.AddTable();
@@ -94,7 +94,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Utils
 
                         if (pic != null && pic.LoadPictureBinary() != null && pic.LoadPictureBinary().Length > 0)
                         {
-                            row.Cells[cellNum].AddImage(IoCFactory.Resolve<IPictureService>().GetPictureLocalPath(pic, 200, true));
+                            row.Cells[cellNum].AddImage(IoC.Resolve<IPictureService>().GetPictureLocalPath(pic, 200, true));
                         }
 
                         if(i != 0 && i % 2 == 0)
@@ -124,15 +124,15 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Utils
                     var pic = productVariant.Picture;
                     if (pic != null && pic.LoadPictureBinary() != null && pic.LoadPictureBinary().Length > 0)
                     {
-                        section.AddImage(IoCFactory.Resolve<IPictureService>().GetPictureLocalPath(pic, 200, true));
+                        section.AddImage(IoC.Resolve<IPictureService>().GetPictureLocalPath(pic, 200, true));
                     }
 
-                    section.AddParagraph(String.Format("{0}: {1} {2}", localizationManager.GetLocaleResourceString("PDFProductCatalog.Price"), productVariant.Price, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode));
+                    section.AddParagraph(String.Format("{0}: {1} {2}", localizationManager.GetLocaleResourceString("PDFProductCatalog.Price"), productVariant.Price, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode));
                     section.AddParagraph(String.Format("{0}: {1}", localizationManager.GetLocaleResourceString("PDFProductCatalog.SKU"), productVariant.SKU));
 
                     if(productVariant.Weight > Decimal.Zero)
                     {
-                        section.AddParagraph(String.Format("{0}: {1} {2}", localizationManager.GetLocaleResourceString("PDFProductCatalog.Weight"), productVariant.Weight, IoCFactory.Resolve<IMeasureService>().BaseWeightIn.Name));
+                        section.AddParagraph(String.Format("{0}: {1} {2}", localizationManager.GetLocaleResourceString("PDFProductCatalog.Weight"), productVariant.Weight, IoC.Resolve<IMeasureService>().BaseWeightIn.Name));
                     }
 
                     if(productVariant.ManageInventory == (int)ManageInventoryMethodEnum.ManageStock)
@@ -173,12 +173,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Utils
             if(String.IsNullOrEmpty(filePath))
                 throw new ArgumentNullException("filePath");
 
-            Language lang = IoCFactory.Resolve<ILanguageService>().GetLanguageById(languageId);
+            Language lang = IoC.Resolve<ILanguageService>().GetLanguageById(languageId);
 
             if (lang == null)
                 throw new NopException("Language could not be loaded");
 
-            var localizationManager = IoCFactory.Resolve<ILocalizationManager>();
+            var localizationManager = IoC.Resolve<ILocalizationManager>();
 
             Document doc = new Document();
 
@@ -201,7 +201,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Utils
             Paragraph p1 = ordRow[rownum].AddParagraph(String.Format(localizationManager.GetLocaleResourceString("PDFInvoice.Order#", languageId), order.OrderId));
             p1.Format.Font.Bold = true;
             p1.Format.Font.Color = Colors.Black;
-            ordRow[rownum].AddParagraph(IoCFactory.Resolve<ISettingManager>().StoreUrl.Trim(new char[] { '/' })).AddHyperlink(IoCFactory.Resolve<ISettingManager>().StoreUrl, HyperlinkType.Url);
+            ordRow[rownum].AddParagraph(IoC.Resolve<ISettingManager>().StoreUrl.Trim(new char[] { '/' })).AddHyperlink(IoC.Resolve<ISettingManager>().StoreUrl, HyperlinkType.Url);
             ordRow[rownum].AddParagraph(String.Format(localizationManager.GetLocaleResourceString("PDFInvoice.OrderDate", languageId), DateTimeHelper.ConvertToUserTime(order.CreatedOn, DateTimeKind.Utc).ToString("D")));
 
             if(File.Exists(PDFHelper.LogoFilePath))
@@ -317,7 +317,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Utils
                 Row prodRow = tbl.AddRow();
 
                 string name = String.Format("Not available. Id={0}", orderProductVariant.ProductVariantId);
-                var pv = IoCFactory.Resolve<IProductService>().GetProductVariantById(orderProductVariant.ProductVariantId);
+                var pv = IoC.Resolve<IProductService>().GetProductVariantById(orderProductVariant.ProductVariantId);
                 if(pv != null)
                 {
                     name = pv.GetLocalizedFullProductName(languageId);
@@ -469,13 +469,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Utils
             SortedDictionary<decimal, decimal> taxRates = new SortedDictionary<decimal, decimal>();
             bool displayTax = true;
             bool displayTaxRates = true;
-            if(IoCFactory.Resolve<ITaxService>().HideTaxInOrderSummary && order.CustomerTaxDisplayType == TaxDisplayTypeEnum.IncludingTax)
+            if(IoC.Resolve<ITaxService>().HideTaxInOrderSummary && order.CustomerTaxDisplayType == TaxDisplayTypeEnum.IncludingTax)
             {
                 displayTax = false;
             }
             else
             {
-                if(order.OrderTax == 0 && IoCFactory.Resolve<ITaxService>().HideZeroTax)
+                if(order.OrderTax == 0 && IoC.Resolve<ITaxService>().HideZeroTax)
                 {
                     displayTax = false;
                     displayTaxRates = false;
@@ -484,7 +484,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Utils
                 {
                     taxRates = order.TaxRatesDictionaryInCustomerCurrency;
 
-                    displayTaxRates = IoCFactory.Resolve<ITaxService>().DisplayTaxRates && taxRates.Count > 0;
+                    displayTaxRates = IoC.Resolve<ITaxService>().DisplayTaxRates && taxRates.Count > 0;
                     displayTax = !displayTaxRates;
 
                     taxStr = PriceHelper.FormatPrice(order.OrderTaxInCustomerCurrency, true, order.CustomerCurrencyCode, false);
@@ -516,7 +516,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Utils
             }
 
             //gift cards
-            var gcuhC = IoCFactory.Resolve<IOrderService>().GetAllGiftCardUsageHistoryEntries(null, null, order.OrderId);
+            var gcuhC = IoC.Resolve<IOrderService>().GetAllGiftCardUsageHistoryEntries(null, null, order.OrderId);
             foreach (var giftCardUsageHistory in gcuhC)
             {
                 string gcTitle = string.Format(localizationManager.GetLocaleResourceString("PDFInvoice.GiftCardInfo", languageId), giftCardUsageHistory.GiftCard.GiftCardCouponCode);
@@ -543,10 +543,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Utils
             p12.Format.Alignment = ParagraphAlignment.Right;
 
             //order notes
-            bool printOrderNotesToPDF = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("PDFInvoice.RenderOrderNotes");
+            bool printOrderNotesToPDF = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("PDFInvoice.RenderOrderNotes");
             if (printOrderNotesToPDF)
             {
-                var orderNotes = IoCFactory.Resolve<IOrderService>().GetOrderNoteByOrderId(order.OrderId, false);
+                var orderNotes = IoC.Resolve<IOrderService>().GetOrderNoteByOrderId(order.OrderId, false);
                 if (orderNotes.Count > 0)
                 {
                     Paragraph p14 = sec.AddParagraph(localizationManager.GetLocaleResourceString("PDFInvoice.OrderNotes", languageId));
@@ -600,7 +600,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Utils
                 throw new ArgumentNullException("filePath");
             }
 
-            var localizationManager = IoCFactory.Resolve<ILocalizationManager>();
+            var localizationManager = IoC.Resolve<ILocalizationManager>();
 
             Document doc = new Document();
             Section section = doc.AddSection();
@@ -660,7 +660,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Utils
                     row.Cells[0].AddParagraph(orderProductVariant.Quantity.ToString());
 
                     string name = String.Format("Not available. ID={0}", orderProductVariant.ProductVariantId);
-                    var pv = IoCFactory.Resolve<IProductService>().GetProductVariantById(orderProductVariant.ProductVariantId);
+                    var pv = IoC.Resolve<IProductService>().GetProductVariantById(orderProductVariant.ProductVariantId);
                     if(pv != null)
                     {
                         name = pv.LocalizedFullProductName;

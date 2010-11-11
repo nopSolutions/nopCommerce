@@ -469,7 +469,7 @@ namespace NopSolutions.NopCommerce.Common.Utils
                     {
                         //shared SSL
 
-                        /* we need to set a store URL here (IoCFactory.Resolve<ISettingManager>().StoreUrl property)
+                        /* we need to set a store URL here (IoC.Resolve<ISettingManager>().StoreUrl property)
                          * but we cannot reference Nop.BusinessLogic.dll assembly.
                          * So we are using one more app config settings - <add key="NonSharedSSLUrl" value="http://www.yourStore.com" />
                          */

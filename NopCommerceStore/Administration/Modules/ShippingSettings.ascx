@@ -51,7 +51,7 @@
             <nopCommerce:DecimalTextBox runat="server" CssClass="adminInput" ID="txtFreeShippingOverX"
                 Value="0" RequiredErrorMessage="<% $NopResources:Admin.ShippingSettings.ValueOfX.RequiredErrorMessage %>"
                 MinimumValue="0" MaximumValue="100000000" RangeErrorMessage="<% $NopResources:Admin.ShippingSettings.ValueOfX.RangeErrorMessage %>">
-            </nopCommerce:DecimalTextBox> [<%=IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode%>]
+            </nopCommerce:DecimalTextBox> [<%=IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode%>]
         </td>
     </tr>
     <tr class="adminSeparator">

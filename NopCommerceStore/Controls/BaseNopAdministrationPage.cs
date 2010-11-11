@@ -34,7 +34,7 @@ using NopSolutions.NopCommerce.Common.Utils;
 using System.Collections.Generic;
 using AjaxControlToolkit;
 using NopSolutions.NopCommerce.BusinessLogic.Audit.UsersOnline;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 
 namespace NopSolutions.NopCommerce.Web
@@ -128,7 +128,7 @@ namespace NopSolutions.NopCommerce.Web
 
         protected virtual bool ValidateIP()
         {
-            string ipList = IoCFactory.Resolve<ISettingManager>().GetSettingValue("Security.AdminAreaAllowedIP").Trim();
+            string ipList = IoC.Resolve<ISettingManager>().GetSettingValue("Security.AdminAreaAllowedIP").Trim();
             if(String.IsNullOrEmpty(ipList))
             {
                 return true;
@@ -158,7 +158,7 @@ namespace NopSolutions.NopCommerce.Web
             //online user tracking
             if (this.TrackedByOnlineCustomersModule)
             {
-                IoCFactory.Resolve<IOnlineUserService>().TrackCurrentUser();
+                IoC.Resolve<IOnlineUserService>().TrackCurrentUser();
             }
 
             base.OnPreRender(e);
@@ -171,10 +171,10 @@ namespace NopSolutions.NopCommerce.Web
 
         protected void ProcessException(Exception exc, bool showError)
         {
-            IoCFactory.Resolve<ILogService>().InsertLog(LogTypeEnum.AdministrationArea, exc.Message, exc);
+            IoC.Resolve<ILogService>().InsertLog(LogTypeEnum.AdministrationArea, exc.Message, exc);
             if (showError)
             {
-                if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Display.AdminArea.ShowFullErrors"))
+                if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Display.AdminArea.ShowFullErrors"))
                 {
                     ShowError(exc.Message, exc.ToString());
                 }
@@ -256,7 +256,7 @@ namespace NopSolutions.NopCommerce.Web
             {
                 if (_localizationManager == null)
                 {
-                    _localizationManager = IoCFactory.Resolve<ILocalizationManager>();
+                    _localizationManager = IoC.Resolve<ILocalizationManager>();
                 }
                 return _localizationManager;
             }

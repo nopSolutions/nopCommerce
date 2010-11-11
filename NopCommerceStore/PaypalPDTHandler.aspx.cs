@@ -33,7 +33,7 @@ using NopSolutions.NopCommerce.Payment.Methods.PayPal;
 using NopSolutions.NopCommerce.BusinessLogic.Payment;
 using NopSolutions.NopCommerce.BusinessLogic.Audit;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 namespace NopSolutions.NopCommerce.Web
 {
     public partial class PaypalPDTHandlerPage : BaseNopPage
@@ -59,7 +59,7 @@ namespace NopSolutions.NopCommerce.Web
                         orderNumberGuid = new Guid(orderNumber);
                     }
                     catch { }
-                    Order order = IoCFactory.Resolve<IOrderService>().GetOrderByGuid(orderNumberGuid);
+                    Order order = IoC.Resolve<IOrderService>().GetOrderByGuid(orderNumberGuid);
                     if (order != null)
                     {
                         decimal total = decimal.Zero;
@@ -69,7 +69,7 @@ namespace NopSolutions.NopCommerce.Web
                         }
                         catch (Exception exc)
                         {
-                            IoCFactory.Resolve<ILogService>().InsertLog(LogTypeEnum.OrderError, "PayPal PDT. Error getting mc_gross", exc);
+                            IoC.Resolve<ILogService>().InsertLog(LogTypeEnum.OrderError, "PayPal PDT. Error getting mc_gross", exc);
                         }
 
                         string payer_status = string.Empty;
@@ -107,22 +107,22 @@ namespace NopSolutions.NopCommerce.Web
                         sb.AppendLine("invoice: " + invoice);
                         sb.AppendLine("payment_fee: " + payment_fee);
 
-                        IoCFactory.Resolve<IOrderService>().InsertOrderNote(order.OrderId, sb.ToString(), false, DateTime.UtcNow);
+                        IoC.Resolve<IOrderService>().InsertOrderNote(order.OrderId, sb.ToString(), false, DateTime.UtcNow);
 
                         //validate order total
-                        bool validateOrderTotal = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.PaypalStandard.ValidateOrderTotal", true);
+                        bool validateOrderTotal = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.PaypalStandard.ValidateOrderTotal", true);
                         if (validateOrderTotal &&
                             !total.Equals(order.OrderTotal))
                         {
                             string errorStr = string.Format("PayPal PDT. Returned order total {0} doesn't equal order total {1}", total, order.OrderTotal);
-                            IoCFactory.Resolve<ILogService>().InsertLog(LogTypeEnum.OrderError, errorStr, errorStr);
+                            IoC.Resolve<ILogService>().InsertLog(LogTypeEnum.OrderError, errorStr, errorStr);
                             Response.Redirect(CommonHelper.GetStoreLocation());
                         }
                         
                         //mark order as paid
-                        if (IoCFactory.Resolve<IOrderService>().CanMarkOrderAsPaid(order))
+                        if (IoC.Resolve<IOrderService>().CanMarkOrderAsPaid(order))
                         {
-                            IoCFactory.Resolve<IOrderService>().MarkOrderAsPaid(order.OrderId);
+                            IoC.Resolve<IOrderService>().MarkOrderAsPaid(order.OrderId);
                         }
                     }
                     Response.Redirect("~/checkoutcompleted.aspx");
@@ -137,10 +137,10 @@ namespace NopSolutions.NopCommerce.Web
                         orderNumberGuid = new Guid(orderNumber);
                     }
                     catch { }
-                    Order order = IoCFactory.Resolve<IOrderService>().GetOrderByGuid(orderNumberGuid);
+                    Order order = IoC.Resolve<IOrderService>().GetOrderByGuid(orderNumberGuid);
                     if (order != null)
                     {
-                        IoCFactory.Resolve<IOrderService>().InsertOrderNote(order.OrderId, "PayPal PDT failed. " + response, false, DateTime.UtcNow);
+                        IoC.Resolve<IOrderService>().InsertOrderNote(order.OrderId, "PayPal PDT failed. " + response, false, DateTime.UtcNow);
                     }
                     Response.Redirect(CommonHelper.GetStoreLocation());
                 }

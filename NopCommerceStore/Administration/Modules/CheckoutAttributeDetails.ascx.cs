@@ -27,7 +27,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Audit;
 using NopSolutions.NopCommerce.BusinessLogic.Products.Attributes;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Web.Administration.Modules;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -47,7 +47,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             attribute = ctrlCheckoutAttributeInfo.SaveInfo();
             ctrlCheckoutAttributeValues.SaveInfo();
 
-            IoCFactory.Resolve<ICustomerActivityService>().InsertActivity(
+            IoC.Resolve<ICustomerActivityService>().InsertActivity(
                 "EditCheckoutAttribute",
                 GetLocaleResourceString("ActivityLog.EditCheckoutAttribute"),
                 attribute.Name);
@@ -91,12 +91,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                var attribute = IoCFactory.Resolve<ICheckoutAttributeService>().GetCheckoutAttributeById(this.CheckoutAttributeId);
+                var attribute = IoC.Resolve<ICheckoutAttributeService>().GetCheckoutAttributeById(this.CheckoutAttributeId);
                 if (attribute != null)
                 {
-                    IoCFactory.Resolve<ICheckoutAttributeService>().DeleteCheckoutAttribute(this.CheckoutAttributeId);
+                    IoC.Resolve<ICheckoutAttributeService>().DeleteCheckoutAttribute(this.CheckoutAttributeId);
 
-                    IoCFactory.Resolve<ICustomerActivityService>().InsertActivity(
+                    IoC.Resolve<ICustomerActivityService>().InsertActivity(
                         "DeleteCheckoutAttribute",
                         GetLocaleResourceString("ActivityLog.DeleteCheckoutAttribute"),
                         attribute.Name);

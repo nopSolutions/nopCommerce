@@ -31,7 +31,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Tax;
 using NopSolutions.NopCommerce.BusinessLogic.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.Warehouses;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Products
 {
@@ -63,15 +63,15 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                 case PriceListExportModeEnum.All:
                     {
                         blnOverrideAdjustment = true;
-                        foreach (Product product in IoCFactory.Resolve<IProductService>().GetAllProducts(false))
+                        foreach (Product product in IoC.Resolve<IProductService>().GetAllProducts(false))
                         {
-                            productVariants.AddRange(IoCFactory.Resolve<IProductService>().GetProductVariantsByProductId(product.ProductId, false));
+                            productVariants.AddRange(IoC.Resolve<IProductService>().GetProductVariantsByProductId(product.ProductId, false));
                         }
                     }
                     break;
                 case PriceListExportModeEnum.AssignedProducts:
                     {
-                        productVariants = IoCFactory.Resolve<IProductService>().GetProductVariantsByPricelistId(this.PricelistId);
+                        productVariants = IoC.Resolve<IProductService>().GetProductVariantsByPricelistId(this.PricelistId);
                     }
                     break;
                 default:
@@ -100,7 +100,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                 }
                 else
                 {
-                    ProductVariantPricelist productVariantPricelist = IoCFactory.Resolve<IProductService>().GetProductVariantPricelist(productVariant.ProductVariantId, this.PricelistId);
+                    ProductVariantPricelist productVariantPricelist = IoC.Resolve<IProductService>().GetProductVariantPricelist(productVariant.ProductVariantId, this.PricelistId);
                     if (productVariantPricelist != null)
                     {
                         newPrice = GetAdjustedPrice(productVariant.Price, productVariantPricelist.PriceAdjustmentType, productVariantPricelist.PriceAdjustment);
@@ -229,7 +229,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                     {
                         case "store.name":
                             {
-                                tokens.Add(strToken + strFormat, String.Format(locProvider, "{0" + strFormat + "}", IoCFactory.Resolve<ISettingManager>().StoreName));
+                                tokens.Add(strToken + strFormat, String.Format(locProvider, "{0" + strFormat + "}", IoC.Resolve<ISettingManager>().StoreName));
                             }
                             break;
                         case "product.pictureurl":
@@ -237,7 +237,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                                 var pictures = productVariant.Product.ProductPictures;
                                 if (pictures.Count > 0)
                                 {
-                                    tokens.Add(strToken + strFormat, String.Format(locProvider, "{0" + strFormat + "}", IoCFactory.Resolve<IPictureService>().GetPictureUrl(pictures[0].PictureId)));
+                                    tokens.Add(strToken + strFormat, String.Format(locProvider, "{0" + strFormat + "}", IoC.Resolve<IPictureService>().GetPictureUrl(pictures[0].PictureId)));
                                 }
                                 else
                                 {

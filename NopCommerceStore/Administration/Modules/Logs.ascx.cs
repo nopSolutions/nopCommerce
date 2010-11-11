@@ -25,7 +25,7 @@ using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.Audit;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Common;
@@ -68,7 +68,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             string message = txtMessage.Text.Trim();
 
             int logTypeId = int.Parse(this.ddlLogType.SelectedItem.Value);
-            var result = IoCFactory.Resolve<ILogService>().GetAllLogs(startDate, endDate,
+            var result = IoC.Resolve<ILogService>().GetAllLogs(startDate, endDate,
                 message, logTypeId, 0, int.MaxValue);
 
             return result;
@@ -108,7 +108,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                IoCFactory.Resolve<ILogService>().ClearLog();
+                IoC.Resolve<ILogService>().ClearLog();
                 BindGrid();
             }
             catch (Exception exc)
@@ -120,7 +120,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         protected string GetCustomerInfo(int customerId)
         {
             string customerInfo = string.Empty;
-            Customer customer = IoCFactory.Resolve<ICustomerService>().GetCustomerById(customerId);
+            Customer customer = IoC.Resolve<ICustomerService>().GetCustomerById(customerId);
             if (customer != null)
             {
                 if (customer.IsGuest)
@@ -139,7 +139,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             if (e.CommandName == "DeleteLog")
             {
-                IoCFactory.Resolve<ILogService>().DeleteLog(Convert.ToInt32(e.CommandArgument));
+                IoC.Resolve<ILogService>().DeleteLog(Convert.ToInt32(e.CommandArgument));
                 BindGrid();
             }
         }

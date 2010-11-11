@@ -6,7 +6,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Data;
 using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Messages.SMS
 {
@@ -227,7 +227,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages.SMS
             {
                 if (SendSMS(String.Format("New order(#{0}) has been placed.", order.OrderId)) > 0)
                 {
-                    IoCFactory.Resolve<IOrderService>().InsertOrderNote(order.OrderId, "\"Order placed\" SMS alert (to store owner) has been sent", false, DateTime.UtcNow);
+                    IoC.Resolve<IOrderService>().InsertOrderNote(order.OrderId, "\"Order placed\" SMS alert (to store owner) has been sent", false, DateTime.UtcNow);
                 }
             }
         }
@@ -242,7 +242,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages.SMS
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.SMSManager.CacheEnabled");
+                return IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.SMSManager.CacheEnabled");
             }
         }
         #endregion

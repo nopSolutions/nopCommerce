@@ -30,7 +30,7 @@ using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.ExportImport;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -41,13 +41,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             if (!Page.IsPostBack)
             {
                 SetDefaultValues();
-                phUsername.Visible = IoCFactory.Resolve<ICustomerService>().UsernamesEnabled;
-                phDateOfBirth.Visible = IoCFactory.Resolve<ICustomerService>().FormFieldDateOfBirthEnabled;
-                gvCustomers.Columns[2].Visible = IoCFactory.Resolve<ICustomerService>().UsernamesEnabled;
+                phUsername.Visible = IoC.Resolve<ICustomerService>().UsernamesEnabled;
+                phDateOfBirth.Visible = IoC.Resolve<ICustomerService>().FormFieldDateOfBirthEnabled;
+                gvCustomers.Columns[2].Visible = IoC.Resolve<ICustomerService>().UsernamesEnabled;
 
                 //buttons
-                btnExportXLS.Visible = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Features.SupportExcel");
-                btnImportXLS.Visible = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Features.SupportExcel");
+                btnExportXLS.Visible = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Features.SupportExcel");
+                btnImportXLS.Visible = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Features.SupportExcel");
             }
         }
 
@@ -79,7 +79,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             int dateOfBirthDay = int.Parse(this.ddlDateOfBirthDay.SelectedValue);
             int dateOfBirthMonth = int.Parse(this.ddlDateOfBirthMonth.SelectedValue);
             int totalRecords = 0;
-            var customers = IoCFactory.Resolve<ICustomerService>().GetAllCustomers(startDate,
+            var customers = IoC.Resolve<ICustomerService>().GetAllCustomers(startDate,
                 endDate, email, username, dontLoadGuestCustomers,
                 dateOfBirthMonth, dateOfBirthDay, int.MaxValue, 0, out totalRecords);
             return customers;

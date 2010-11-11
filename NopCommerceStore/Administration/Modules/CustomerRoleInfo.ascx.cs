@@ -26,7 +26,7 @@ using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
  
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -34,7 +34,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            CustomerRole customerRole = IoCFactory.Resolve<ICustomerService>().GetCustomerRoleById(this.CustomerRoleId);
+            CustomerRole customerRole = IoC.Resolve<ICustomerService>().GetCustomerRoleById(this.CustomerRoleId);
             if (customerRole != null)
             {
                 this.txtName.Text = customerRole.Name;
@@ -54,7 +54,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public CustomerRole SaveInfo()
         {
-            CustomerRole customerRole = IoCFactory.Resolve<ICustomerService>().GetCustomerRoleById(this.CustomerRoleId);
+            CustomerRole customerRole = IoC.Resolve<ICustomerService>().GetCustomerRoleById(this.CustomerRoleId);
 
             if (customerRole != null)
             {
@@ -62,7 +62,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 customerRole.FreeShipping = cbFreeShipping.Checked;
                 customerRole.TaxExempt = cbTaxExempt.Checked;
                 customerRole.Active = cbActive.Checked;
-                IoCFactory.Resolve<ICustomerService>().UpdateCustomerRole(customerRole);
+                IoC.Resolve<ICustomerService>().UpdateCustomerRole(customerRole);
             }
             else
             {
@@ -73,7 +73,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     TaxExempt = cbTaxExempt.Checked,
                     Active = cbActive.Checked
                 };
-                IoCFactory.Resolve<ICustomerService>().InsertCustomerRole(customerRole);
+                IoC.Resolve<ICustomerService>().InsertCustomerRole(customerRole);
             }
             return customerRole;
         }

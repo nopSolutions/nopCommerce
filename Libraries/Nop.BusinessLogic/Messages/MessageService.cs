@@ -46,7 +46,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Utils;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Common.Utils.Html;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Messages
 {
@@ -87,7 +87,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
 
         private string Replace(string original, string pattern, string replacement)
         {
-            if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("MessageTemplates.CaseInvariantReplacement"))
+            if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("MessageTemplates.CaseInvariantReplacement"))
             {
                 int count, position0, position1;
                 count = position0 = position1 = 0;
@@ -124,20 +124,20 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         {
             string result = string.Empty;
             
-            var language = IoCFactory.Resolve<ILanguageService>().GetLanguageById(languageId);
+            var language = IoC.Resolve<ILanguageService>().GetLanguageById(languageId);
             if (language == null)
             {
                 language = NopContext.Current.WorkingLanguage;
                 languageId = language.LanguageId;
             }
 
-            var localizationManager = IoCFactory.Resolve<ILocalizationManager>();
+            var localizationManager = IoC.Resolve<ILocalizationManager>();
 
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("<table border=\"0\" style=\"width:100%;\">");
-            string color1 = IoCFactory.Resolve<ISettingManager>().GetSettingValue("MessageTemplate.Color1", "#b9babe");
-            string color2 = IoCFactory.Resolve<ISettingManager>().GetSettingValue("MessageTemplate.Color2", "#ebecee");
-            string color3 = IoCFactory.Resolve<ISettingManager>().GetSettingValue("MessageTemplate.Color3", "#dde2e6");
+            string color1 = IoC.Resolve<ISettingManager>().GetSettingValue("MessageTemplate.Color1", "#b9babe");
+            string color2 = IoC.Resolve<ISettingManager>().GetSettingValue("MessageTemplate.Color2", "#ebecee");
+            string color3 = IoC.Resolve<ISettingManager>().GetSettingValue("MessageTemplate.Color3", "#dde2e6");
            
             #region Products
             sb.AppendLine(string.Format("<tr style=\"background-color:{0};text-align:center;\">", color1));
@@ -159,9 +159,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
                 //product name
                 sb.AppendLine("<td style=\"padding: 0.6em 0.4em;text-align: left;\">" + HttpUtility.HtmlEncode(productVariant.GetLocalizedFullProductName(languageId)));
                 //download link
-                if (IoCFactory.Resolve<IOrderService>().IsDownloadAllowed(opv))
+                if (IoC.Resolve<IOrderService>().IsDownloadAllowed(opv))
                 {
-                    string downloadUrl = string.Format("<a class=\"link\" href=\"{0}\" >{1}</a>", IoCFactory.Resolve<IDownloadService>().GetDownloadUrl(opv), localizationManager.GetLocaleResourceString("Order.Download", languageId));
+                    string downloadUrl = string.Format("<a class=\"link\" href=\"{0}\" >{1}</a>", IoC.Resolve<IDownloadService>().GetDownloadUrl(opv), localizationManager.GetLocaleResourceString("Order.Download", languageId));
                     sb.AppendLine("&nbsp;&nbsp;(");
                     sb.AppendLine(downloadUrl);
                     sb.AppendLine(")");
@@ -173,7 +173,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
                     sb.AppendLine(opv.AttributeDescription);
                 }
                 //sku
-                if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Display.Products.ShowSKU"))
+                if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Display.Products.ShowSKU"))
                 {
                     if (!String.IsNullOrEmpty(opv.ProductVariant.SKU))
                     {
@@ -286,14 +286,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             //tax
             bool displayTax = true;
             bool displayTaxRates = true;
-            if (IoCFactory.Resolve<ITaxService>().HideTaxInOrderSummary && order.CustomerTaxDisplayType == TaxDisplayTypeEnum.IncludingTax)
+            if (IoC.Resolve<ITaxService>().HideTaxInOrderSummary && order.CustomerTaxDisplayType == TaxDisplayTypeEnum.IncludingTax)
             {
                 displayTax = false;
                 displayTaxRates = false;
             }
             else
             {
-                if (order.OrderTax == 0 && IoCFactory.Resolve<ITaxService>().HideZeroTax)
+                if (order.OrderTax == 0 && IoC.Resolve<ITaxService>().HideZeroTax)
                 {
                     displayTax = false;
                     displayTaxRates = false;
@@ -302,7 +302,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
                 {
                     taxRates = order.TaxRatesDictionaryInCustomerCurrency;
                    
-                    displayTaxRates = IoCFactory.Resolve<ITaxService>().DisplayTaxRates && taxRates.Count > 0;
+                    displayTaxRates = IoC.Resolve<ITaxService>().DisplayTaxRates && taxRates.Count > 0;
                     displayTax = !displayTaxRates;
 
                     string taxStr = PriceHelper.FormatPrice(order.OrderTaxInCustomerCurrency, true, order.CustomerCurrencyCode, false);
@@ -369,7 +369,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             }
             
             //gift cards
-            var gcuhC = IoCFactory.Resolve<IOrderService>().GetAllGiftCardUsageHistoryEntries(null, null, order.OrderId);
+            var gcuhC = IoC.Resolve<IOrderService>().GetAllGiftCardUsageHistoryEntries(null, null, order.OrderId);
             foreach (var giftCardUsageHistory in gcuhC)
             {
                 string giftCardText = String.Format(localizationManager.GetLocaleResourceString("Order.GiftCardInfo", languageId), HttpUtility.HtmlEncode(giftCardUsageHistory.GiftCard.GiftCardCouponCode));
@@ -405,8 +405,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             string template, int languageId)
         {
             var tokens = new NameValueCollection();
-            tokens.Add("Store.Name", IoCFactory.Resolve<ISettingManager>().StoreName);
-            tokens.Add("Store.URL", IoCFactory.Resolve<ISettingManager>().StoreUrl);
+            tokens.Add("Store.Name", IoC.Resolve<ISettingManager>().StoreName);
+            tokens.Add("Store.URL", IoC.Resolve<ISettingManager>().StoreUrl);
             tokens.Add("Store.Email", this.DefaultEmailAccount.Email);
 
             tokens.Add("Order.OrderNumber", order.OrderId.ToString());
@@ -448,7 +448,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
 
             tokens.Add("Order.Product(s)", ProductListToHtmlTable(order, languageId));
 
-            var language = IoCFactory.Resolve<ILanguageService>().GetLanguageById(languageId);
+            var language = IoC.Resolve<ILanguageService>().GetLanguageById(languageId);
             if (language != null && !String.IsNullOrEmpty(language.LanguageCulture))
             {
                 DateTime createdOn = DateTimeHelper.ConvertToUserTime(order.CreatedOn, TimeZoneInfo.Utc, DateTimeHelper.GetCustomerTimeZone(order.Customer));
@@ -458,7 +458,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             {
                 tokens.Add("Order.CreatedOn", order.CreatedOn.ToString("D"));
             }
-            tokens.Add("Order.OrderURLForCustomer", string.Format("{0}orderdetails.aspx?orderid={1}", IoCFactory.Resolve<ISettingManager>().StoreUrl, order.OrderId));
+            tokens.Add("Order.OrderURLForCustomer", string.Format("{0}orderdetails.aspx?orderid={1}", IoC.Resolve<ISettingManager>().StoreUrl, order.OrderId));
 
             foreach (string token in tokens.Keys)
             {
@@ -491,8 +491,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             string template, NameValueCollection additinalKeys)
         {
             var tokens = new NameValueCollection();
-            tokens.Add("Store.Name", IoCFactory.Resolve<ISettingManager>().StoreName);
-            tokens.Add("Store.URL", IoCFactory.Resolve<ISettingManager>().StoreUrl);
+            tokens.Add("Store.Name", IoC.Resolve<ISettingManager>().StoreName);
+            tokens.Add("Store.URL", IoC.Resolve<ISettingManager>().StoreUrl);
             tokens.Add("Store.Email", this.DefaultEmailAccount.Email);
 
             tokens.Add("Customer.Email", HttpUtility.HtmlEncode(customer.Email));
@@ -502,11 +502,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             tokens.Add("Customer.VatNumberStatus", HttpUtility.HtmlEncode(customer.VatNumberStatus.ToString()));
 
             string passwordRecoveryUrl = string.Empty;
-            passwordRecoveryUrl = string.Format("{0}passwordrecovery.aspx?prt={1}&email={2}", IoCFactory.Resolve<ISettingManager>().StoreUrl, customer.PasswordRecoveryToken, customer.Email);
+            passwordRecoveryUrl = string.Format("{0}passwordrecovery.aspx?prt={1}&email={2}", IoC.Resolve<ISettingManager>().StoreUrl, customer.PasswordRecoveryToken, customer.Email);
             tokens.Add("Customer.PasswordRecoveryURL", passwordRecoveryUrl);
 
             string accountActivationUrl = string.Empty;
-            accountActivationUrl = string.Format("{0}accountactivation.aspx?act={1}&email={2}", IoCFactory.Resolve<ISettingManager>().StoreUrl, customer.AccountActivationToken, customer.Email);
+            accountActivationUrl = string.Format("{0}accountactivation.aspx?act={1}&email={2}", IoC.Resolve<ISettingManager>().StoreUrl, customer.AccountActivationToken, customer.Email);
             tokens.Add("Customer.AccountActivationURL", accountActivationUrl);
 
             foreach (string token in tokens.Keys)
@@ -537,8 +537,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             string template, NameValueCollection additinalKeys)
         {
             var tokens = new NameValueCollection();
-            tokens.Add("Store.Name", IoCFactory.Resolve<ISettingManager>().StoreName);
-            tokens.Add("Store.URL", IoCFactory.Resolve<ISettingManager>().StoreUrl);
+            tokens.Add("Store.Name", IoC.Resolve<ISettingManager>().StoreName);
+            tokens.Add("Store.URL", IoC.Resolve<ISettingManager>().StoreUrl);
             tokens.Add("Store.Email", this.DefaultEmailAccount.Email);
 
             tokens.Add("Customer.Email", HttpUtility.HtmlEncode(customer.Email));
@@ -579,8 +579,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             ShoppingCart cart, string template, NameValueCollection additinalKeys)
         {
             var tokens = new NameValueCollection();
-            tokens.Add("Store.Name", IoCFactory.Resolve<ISettingManager>().StoreName);
-            tokens.Add("Store.URL", IoCFactory.Resolve<ISettingManager>().StoreUrl);
+            tokens.Add("Store.Name", IoC.Resolve<ISettingManager>().StoreName);
+            tokens.Add("Store.URL", IoC.Resolve<ISettingManager>().StoreUrl);
             tokens.Add("Store.Email", this.DefaultEmailAccount.Email);
 
             tokens.Add("Customer.Email", HttpUtility.HtmlEncode(customer.Email));
@@ -621,8 +621,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             ForumPost forumPost, ForumTopic forumTopic, Forum forum, string template)
         {
             var tokens = new NameValueCollection();
-            tokens.Add("Store.Name", IoCFactory.Resolve<ISettingManager>().StoreName);
-            tokens.Add("Store.URL", IoCFactory.Resolve<ISettingManager>().StoreUrl);
+            tokens.Add("Store.Name", IoC.Resolve<ISettingManager>().StoreName);
+            tokens.Add("Store.URL", IoC.Resolve<ISettingManager>().StoreUrl);
             tokens.Add("Store.Email", this.DefaultEmailAccount.Email);
 
             tokens.Add("Customer.Email", HttpUtility.HtmlEncode(customer.Email));
@@ -665,8 +665,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             string template, int languageId)
         {
             var tokens = new NameValueCollection();
-            tokens.Add("Store.Name", IoCFactory.Resolve<ISettingManager>().StoreName);
-            tokens.Add("Store.URL", IoCFactory.Resolve<ISettingManager>().StoreUrl);
+            tokens.Add("Store.Name", IoC.Resolve<ISettingManager>().StoreName);
+            tokens.Add("Store.URL", IoC.Resolve<ISettingManager>().StoreUrl);
             tokens.Add("Store.Email", this.DefaultEmailAccount.Email);
 
             tokens.Add("ProductVariant.ID", productVariant.ProductVariantId.ToString());
@@ -691,8 +691,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             string template)
         {
             var tokens = new NameValueCollection();
-            tokens.Add("Store.Name", IoCFactory.Resolve<ISettingManager>().StoreName);
-            tokens.Add("Store.URL", IoCFactory.Resolve<ISettingManager>().StoreUrl);
+            tokens.Add("Store.Name", IoC.Resolve<ISettingManager>().StoreName);
+            tokens.Add("Store.URL", IoC.Resolve<ISettingManager>().StoreUrl);
             tokens.Add("Store.Email", this.DefaultEmailAccount.Email);
 
             tokens.Add("NewsComment.NewsTitle", HttpUtility.HtmlEncode(newsComment.News.Title));
@@ -715,8 +715,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             string template)
         {
             var tokens = new NameValueCollection();
-            tokens.Add("Store.Name", IoCFactory.Resolve<ISettingManager>().StoreName);
-            tokens.Add("Store.URL", IoCFactory.Resolve<ISettingManager>().StoreUrl);
+            tokens.Add("Store.Name", IoC.Resolve<ISettingManager>().StoreName);
+            tokens.Add("Store.URL", IoC.Resolve<ISettingManager>().StoreUrl);
             tokens.Add("Store.Email", this.DefaultEmailAccount.Email);
 
             tokens.Add("BlogComment.BlogPostTitle", HttpUtility.HtmlEncode(blogComment.BlogPost.BlogPostTitle));
@@ -739,8 +739,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             string template)
         {
             var tokens = new NameValueCollection();
-            tokens.Add("Store.Name", IoCFactory.Resolve<ISettingManager>().StoreName);
-            tokens.Add("Store.URL", IoCFactory.Resolve<ISettingManager>().StoreUrl);
+            tokens.Add("Store.Name", IoC.Resolve<ISettingManager>().StoreName);
+            tokens.Add("Store.URL", IoC.Resolve<ISettingManager>().StoreUrl);
             tokens.Add("Store.Email", this.DefaultEmailAccount.Email);
 
             tokens.Add("ProductReview.ProductName", HttpUtility.HtmlEncode(productReview.Product.Name));
@@ -763,8 +763,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             string template)
         {
             var tokens = new NameValueCollection();
-            tokens.Add("Store.Name", IoCFactory.Resolve<ISettingManager>().StoreName);
-            tokens.Add("Store.URL", IoCFactory.Resolve<ISettingManager>().StoreUrl);
+            tokens.Add("Store.Name", IoC.Resolve<ISettingManager>().StoreName);
+            tokens.Add("Store.URL", IoC.Resolve<ISettingManager>().StoreUrl);
             tokens.Add("Store.Email", this.DefaultEmailAccount.Email);
 
             tokens.Add("PrivateMessage.Subject", HttpUtility.HtmlEncode(privateMessage.Subject));
@@ -788,8 +788,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             string template)
         {
             var tokens = new NameValueCollection();
-            tokens.Add("Store.Name", IoCFactory.Resolve<ISettingManager>().StoreName);
-            tokens.Add("Store.URL", IoCFactory.Resolve<ISettingManager>().StoreUrl);
+            tokens.Add("Store.Name", IoC.Resolve<ISettingManager>().StoreName);
+            tokens.Add("Store.URL", IoC.Resolve<ISettingManager>().StoreUrl);
             tokens.Add("Store.Email", this.DefaultEmailAccount.Email);
 
             tokens.Add("GiftCard.SenderName", HttpUtility.HtmlEncode(giftCard.SenderName));
@@ -818,8 +818,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             string template)
         {
             var tokens = new NameValueCollection();
-            tokens.Add("Store.Name", IoCFactory.Resolve<ISettingManager>().StoreName);
-            tokens.Add("Store.URL", IoCFactory.Resolve<ISettingManager>().StoreUrl);
+            tokens.Add("Store.Name", IoC.Resolve<ISettingManager>().StoreName);
+            tokens.Add("Store.URL", IoC.Resolve<ISettingManager>().StoreUrl);
             tokens.Add("Store.Email", this.DefaultEmailAccount.Email);
 
             tokens.Add("Customer.Email", HttpUtility.HtmlEncode(returnRequest.Customer.Email));
@@ -2350,12 +2350,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         {
             var tokens = new NameValueCollection();
 
-            tokens.Add("Store.Name", IoCFactory.Resolve<ISettingManager>().StoreName);
-            tokens.Add("Store.URL", IoCFactory.Resolve<ISettingManager>().StoreUrl);
+            tokens.Add("Store.Name", IoC.Resolve<ISettingManager>().StoreName);
+            tokens.Add("Store.URL", IoC.Resolve<ISettingManager>().StoreUrl);
             tokens.Add("Store.Email", this.DefaultEmailAccount.Email);
             tokens.Add("NewsLetterSubscription.Email", HttpUtility.HtmlEncode(subscription.Email));
-            tokens.Add("NewsLetterSubscription.ActivationUrl", String.Format("{0}newslettersubscriptionactivation.aspx?t={1}&active=1", IoCFactory.Resolve<ISettingManager>().StoreUrl, subscription.NewsLetterSubscriptionGuid));
-            tokens.Add("NewsLetterSubscription.DeactivationUrl", String.Format("{0}newslettersubscriptionactivation.aspx?t={1}&active=0", IoCFactory.Resolve<ISettingManager>().StoreUrl, subscription.NewsLetterSubscriptionGuid));
+            tokens.Add("NewsLetterSubscription.ActivationUrl", String.Format("{0}newslettersubscriptionactivation.aspx?t={1}&active=1", IoC.Resolve<ISettingManager>().StoreUrl, subscription.NewsLetterSubscriptionGuid));
+            tokens.Add("NewsLetterSubscription.DeactivationUrl", String.Format("{0}newslettersubscriptionactivation.aspx?t={1}&active=0", IoC.Resolve<ISettingManager>().StoreUrl, subscription.NewsLetterSubscriptionGuid));
 
             var customer = subscription.Customer;
             if(customer != null)
@@ -2468,7 +2468,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         {
             get
             {
-                int defaultEmailAccountId = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("EmailAccount.DefaultEmailAccountId");
+                int defaultEmailAccountId = IoC.Resolve<ISettingManager>().GetSettingValueInteger("EmailAccount.DefaultEmailAccountId");
                 var emailAccount = GetEmailAccountById(defaultEmailAccountId);
                 if (emailAccount == null)
                     emailAccount = GetAllEmailAccounts().FirstOrDefault();
@@ -2478,7 +2478,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
             set
             {
                 if (value != null)
-                    IoCFactory.Resolve<ISettingManager>().SetParam("EmailAccount.DefaultEmailAccountId", value.EmailAccountId.ToString());
+                    IoC.Resolve<ISettingManager>().SetParam("EmailAccount.DefaultEmailAccountId", value.EmailAccountId.ToString());
             }
         }
 

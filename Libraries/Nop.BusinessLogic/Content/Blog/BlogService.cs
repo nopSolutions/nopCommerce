@@ -25,7 +25,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Caching;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Data;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 using NopSolutions.NopCommerce.BusinessLogic.Localization;
 using NopSolutions.NopCommerce.BusinessLogic.Messages;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
@@ -371,7 +371,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
             int customerId, string commentText, DateTime createdOn)
         {
             return InsertBlogComment(blogPostId, customerId, commentText,
-                createdOn, IoCFactory.Resolve<IBlogService>().NotifyAboutNewBlogComments);
+                createdOn, IoC.Resolve<IBlogService>().NotifyAboutNewBlogComments);
         }
 
         /// <summary>
@@ -421,7 +421,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
 
             if (notify)
             {
-                IoCFactory.Resolve<IMessageService>().SendBlogCommentNotificationMessage(blogComment, IoCFactory.Resolve<ILocalizationManager>().DefaultAdminLanguage.LanguageId);
+                IoC.Resolve<IMessageService>().SendBlogCommentNotificationMessage(blogComment, IoC.Resolve<ILocalizationManager>().DefaultAdminLanguage.LanguageId);
             }
 
             return blogComment;
@@ -457,7 +457,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.BlogManager.CacheEnabled");
+                return IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.BlogManager.CacheEnabled");
             }
         }
 
@@ -468,11 +468,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Common.EnableBlog");
+                return IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Common.EnableBlog");
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Common.EnableBlog", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Common.EnableBlog", value.ToString());
             }
         }
 
@@ -483,11 +483,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Blog.PostsPageSize", 10);
+                return IoC.Resolve<ISettingManager>().GetSettingValueInteger("Blog.PostsPageSize", 10);
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Blog.PostsPageSize", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Blog.PostsPageSize", value.ToString());
             }
         }
 
@@ -498,11 +498,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Blog.AllowNotRegisteredUsersToLeaveComments");
+                return IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Blog.AllowNotRegisteredUsersToLeaveComments");
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Blog.AllowNotRegisteredUsersToLeaveComments", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Blog.AllowNotRegisteredUsersToLeaveComments", value.ToString());
             }
         }
 
@@ -513,11 +513,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Blog.NotifyAboutNewBlogComments");
+                return IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Blog.NotifyAboutNewBlogComments");
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Blog.NotifyAboutNewBlogComments", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("Blog.NotifyAboutNewBlogComments", value.ToString());
             }
         }
         #endregion

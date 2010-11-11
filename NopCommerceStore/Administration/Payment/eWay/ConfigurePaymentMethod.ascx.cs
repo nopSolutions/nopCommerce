@@ -26,7 +26,7 @@ using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Web.Templates.Payment;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Payment.eWay
 {
@@ -40,18 +40,18 @@ namespace NopSolutions.NopCommerce.Web.Administration.Payment.eWay
 
         private void BindData()
         {
-            cbUseSandbox.Checked = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.eWay.UseSandbox");
-            txtTestCustomerId.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.eWay.TestCustomerId");
-            txtLiveCustomerId.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.eWay.LiveCustomerId");
-            txtAdditionalFee.Value = IoCFactory.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.eWay.AdditionalFee");
+            cbUseSandbox.Checked = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.eWay.UseSandbox");
+            txtTestCustomerId.Text = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.eWay.TestCustomerId");
+            txtLiveCustomerId.Text = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.eWay.LiveCustomerId");
+            txtAdditionalFee.Value = IoC.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.eWay.AdditionalFee");
         }
 
         public void Save()
         {
-            IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.eWay.UseSandbox", cbUseSandbox.Checked.ToString());
-            IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.eWay.TestCustomerId", txtTestCustomerId.Text);
-            IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.eWay.LiveCustomerId", txtLiveCustomerId.Text);
-            IoCFactory.Resolve<ISettingManager>().SetParamNative("PaymentMethod.eWay.AdditionalFee", txtAdditionalFee.Value);
+            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.eWay.UseSandbox", cbUseSandbox.Checked.ToString());
+            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.eWay.TestCustomerId", txtTestCustomerId.Text);
+            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.eWay.LiveCustomerId", txtLiveCustomerId.Text);
+            IoC.Resolve<ISettingManager>().SetParamNative("PaymentMethod.eWay.AdditionalFee", txtAdditionalFee.Value);
         }
     }
 }

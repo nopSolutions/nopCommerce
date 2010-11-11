@@ -25,7 +25,7 @@ using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.BusinessLogic.Templates;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -33,7 +33,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            ProductTemplate productTemplate = IoCFactory.Resolve<ITemplateService>().GetProductTemplateById(this.ProductTemplateId);
+            ProductTemplate productTemplate = IoC.Resolve<ITemplateService>().GetProductTemplateById(this.ProductTemplateId);
             if (productTemplate != null)
             {
                 this.txtName.Text = productTemplate.Name;
@@ -61,7 +61,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public ProductTemplate SaveInfo()
         {
-            ProductTemplate productTemplate = IoCFactory.Resolve<ITemplateService>().GetProductTemplateById(this.ProductTemplateId);
+            ProductTemplate productTemplate = IoC.Resolve<ITemplateService>().GetProductTemplateById(this.ProductTemplateId);
 
             if (productTemplate != null)
             {
@@ -69,7 +69,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 productTemplate.TemplatePath =  txtTemplatePath.Text;
                 productTemplate.DisplayOrder = txtDisplayOrder.Value;
                 productTemplate.UpdatedOn = DateTime.UtcNow;
-                IoCFactory.Resolve<ITemplateService>().UpdateProductTemplate(productTemplate);
+                IoC.Resolve<ITemplateService>().UpdateProductTemplate(productTemplate);
             }
             else
             {
@@ -82,7 +82,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     CreatedOn = now,
                     UpdatedOn = now
                 };
-                IoCFactory.Resolve<ITemplateService>().InsertProductTemplate(productTemplate);
+                IoC.Resolve<ITemplateService>().InsertProductTemplate(productTemplate);
 
             }
 

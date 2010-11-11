@@ -15,7 +15,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 
 
@@ -72,7 +72,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Measures
         {
             get
             {
-                MeasureDimension primaryMeasureDimension = IoCFactory.Resolve<IMeasureService>().BaseDimensionIn;
+                MeasureDimension primaryMeasureDimension = IoC.Resolve<IMeasureService>().BaseDimensionIn;
                 return ((primaryMeasureDimension != null && primaryMeasureDimension.MeasureDimensionId == this.MeasureDimensionId));
             }
         }

@@ -28,7 +28,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Payment;
 using NopSolutions.NopCommerce.BusinessLogic.Utils;
 using NopSolutions.NopCommerce.Payment.Methods.PayPal.PayPalSvc;
 using NopSolutions.NopCommerce.Common;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 
 namespace NopSolutions.NopCommerce.Payment.Methods.PayPal
@@ -65,7 +65,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.PayPal
         private TransactMode GetCurrentTransactionMode()
         {
             TransactMode transactionModeEnum = TransactMode.Authorize;
-            string transactionMode = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.PaypalExpress.TransactionMode");
+            string transactionMode = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.PaypalExpress.TransactionMode");
             if (!String.IsNullOrEmpty(transactionMode))
                 transactionModeEnum = (TransactMode)Enum.Parse(typeof(TransactMode), transactionMode);
             return transactionModeEnum;
@@ -76,10 +76,10 @@ namespace NopSolutions.NopCommerce.Payment.Methods.PayPal
         /// </summary>
         private void InitSettings()
         {
-            useSandBox = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.PaypalExpress.UseSandbox");
-            APIAccountName = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.PaypalExpress.APIAccountName");
-            APIAccountPassword = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.PaypalExpress.APIAccountPassword");
-            Signature = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.PaypalExpress.Signature");
+            useSandBox = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.PaypalExpress.UseSandbox");
+            APIAccountName = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.PaypalExpress.APIAccountName");
+            APIAccountPassword = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.PaypalExpress.APIAccountPassword");
+            Signature = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.PaypalExpress.Signature");
 
             if (string.IsNullOrEmpty(APIAccountName))
                 throw new NopException("Paypal Express API Account Name is empty");
@@ -165,7 +165,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.PayPal
             req.DoCaptureRequest.AuthorizationID = authorizationID;
             req.DoCaptureRequest.Amount = new BasicAmountType();
             req.DoCaptureRequest.Amount.Value = order.OrderTotal.ToString("N", new CultureInfo("en-us"));
-            req.DoCaptureRequest.Amount.currencyID = PaypalHelper.GetPaypalCurrency(IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency);
+            req.DoCaptureRequest.Amount.currencyID = PaypalHelper.GetPaypalCurrency(IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency);
             req.DoCaptureRequest.CompleteType = CompleteCodeType.Complete;
             DoCaptureResponseType response = service2.DoCapture(req);
 
@@ -208,7 +208,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.PayPal
             details.PaymentActionSpecified = true;
             details.OrderTotal = new BasicAmountType();
             details.OrderTotal.Value = OrderTotal.ToString("N", new CultureInfo("en-us"));
-            details.OrderTotal.currencyID = PaypalHelper.GetPaypalCurrency(IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency);
+            details.OrderTotal.currencyID = PaypalHelper.GetPaypalCurrency(IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency);
             details.ReturnURL = ReturnURL;
             details.CancelURL = CancelURL;
             SetExpressCheckoutResponseType response = service2.SetExpressCheckout(req);
@@ -288,7 +288,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.PayPal
             details.PaymentDetails[0] = paymentDetails1;
             paymentDetails1.OrderTotal = new BasicAmountType();
             paymentDetails1.OrderTotal.Value = paymentInfo.OrderTotal.ToString("N", new CultureInfo("en-us"));
-            paymentDetails1.OrderTotal.currencyID = PaypalHelper.GetPaypalCurrency(IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency);
+            paymentDetails1.OrderTotal.currencyID = PaypalHelper.GetPaypalCurrency(IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency);
             paymentDetails1.Custom = orderGuid.ToString();
             paymentDetails1.ButtonSource = "nopCommerceCart";
             

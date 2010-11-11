@@ -33,7 +33,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.BusinessLogic.Shipping;
 using NopSolutions.NopCommerce.BusinessLogic.Utils;
 using NopSolutions.NopCommerce.Common;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Shipping.Methods.CanadaPost
 {
@@ -57,8 +57,8 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.CanadaPost
             using (Socket socCanadaPost = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp))
             {
                 socCanadaPost.ReceiveTimeout = 12000;
-                string url = IoCFactory.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.CanadaPost.URL");
-                int port = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("ShippingRateComputationMethod.CanadaPost.Port");
+                string url = IoC.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.CanadaPost.URL");
+                int port = IoC.Resolve<ISettingManager>().GetSettingValueInteger("ShippingRateComputationMethod.CanadaPost.Port");
                 IPEndPoint remoteEndPoint = new IPEndPoint(Dns.GetHostAddresses(url)[0], port);
 
                 socCanadaPost.Connect(remoteEndPoint);
@@ -216,11 +216,11 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.CanadaPost
         {
             var  result = new List<Item>();
 
-            var usedMeasureWeight = IoCFactory.Resolve<IMeasureService>().GetMeasureWeightBySystemKeyword("kg");
+            var usedMeasureWeight = IoC.Resolve<IMeasureService>().GetMeasureWeightBySystemKeyword("kg");
             if (usedMeasureWeight == null)
                 throw new NopException("CanadaPost shipping service. Could not load \"kg\" measure weight");
 
-            var usedMeasureDimension = IoCFactory.Resolve<IMeasureService>().GetMeasureDimensionBySystemKeyword("meters");
+            var usedMeasureDimension = IoC.Resolve<IMeasureService>().GetMeasureDimensionBySystemKeyword("meters");
             if (usedMeasureDimension == null)
                 throw new NopException("CanadaPost shipping service. Could not load \"meter(s)\" measure dimension");
 
@@ -232,19 +232,19 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.CanadaPost
                 item.Quantity = sci.Quantity;
                 //Canada Post uses kg(s)
                 decimal unitWeight = sci.TotalWeight / sci.Quantity;
-                item.Weight = IoCFactory.Resolve<IMeasureService>().ConvertWeight(unitWeight, IoCFactory.Resolve<IMeasureService>().BaseWeightIn, usedMeasureWeight);
+                item.Weight = IoC.Resolve<IMeasureService>().ConvertWeight(unitWeight, IoC.Resolve<IMeasureService>().BaseWeightIn, usedMeasureWeight);
                 item.Weight = Math.Round(item.Weight, 2);
                 if (item.Weight == decimal.Zero)
                     item.Weight = 0.01M;
                 
                 //Canada Post uses centimeters                
-                item.Length = Convert.ToInt32(Math.Ceiling(IoCFactory.Resolve<IMeasureService>().ConvertDimension(pv.Length, IoCFactory.Resolve<IMeasureService>().BaseDimensionIn, usedMeasureDimension) * 100));
+                item.Length = Convert.ToInt32(Math.Ceiling(IoC.Resolve<IMeasureService>().ConvertDimension(pv.Length, IoC.Resolve<IMeasureService>().BaseDimensionIn, usedMeasureDimension) * 100));
                 if (item.Length == decimal.Zero)
                     item.Length = 1;
-                item.Width = Convert.ToInt32(Math.Ceiling(IoCFactory.Resolve<IMeasureService>().ConvertDimension(pv.Width, IoCFactory.Resolve<IMeasureService>().BaseDimensionIn, usedMeasureDimension) * 100));
+                item.Width = Convert.ToInt32(Math.Ceiling(IoC.Resolve<IMeasureService>().ConvertDimension(pv.Width, IoC.Resolve<IMeasureService>().BaseDimensionIn, usedMeasureDimension) * 100));
                 if (item.Width == decimal.Zero)
                     item.Width = 1;
-                item.Height = Convert.ToInt32(Math.Ceiling(IoCFactory.Resolve<IMeasureService>().ConvertDimension(pv.Height, IoCFactory.Resolve<IMeasureService>().BaseDimensionIn, usedMeasureDimension) * 100));
+                item.Height = Convert.ToInt32(Math.Ceiling(IoC.Resolve<IMeasureService>().ConvertDimension(pv.Height, IoC.Resolve<IMeasureService>().BaseDimensionIn, usedMeasureDimension) * 100));
                 if (item.Height == decimal.Zero)
                     item.Height = 1;
                 result.Add(item);
@@ -288,7 +288,7 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.CanadaPost
             {
                 var profile = new Profile();
                 //use "CPC_DEMO_XML" merchant ID for testing
-                profile.MerchantId = IoCFactory.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.CanadaPost.CustomerID");
+                profile.MerchantId = IoC.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.CanadaPost.CustomerID");
 
                 var destination = new Destination();
                 destination.City = shipmentPackage.ShippingAddress.City;

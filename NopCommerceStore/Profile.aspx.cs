@@ -31,7 +31,7 @@ using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Payment;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web
 {
@@ -44,13 +44,13 @@ namespace NopSolutions.NopCommerce.Web
         {
             if (!Page.IsPostBack)
             {
-                Customer customer = IoCFactory.Resolve<ICustomerService>().GetCustomerById(this.CustomerId);
+                Customer customer = IoC.Resolve<ICustomerService>().GetCustomerById(this.CustomerId);
                 if (customer == null || customer.IsGuest)
                 {
                     Response.Redirect(CommonHelper.GetStoreLocation());
                 }
 
-                if (!IoCFactory.Resolve<ICustomerService>().AllowViewingProfiles)
+                if (!IoC.Resolve<ICustomerService>().AllowViewingProfiles)
                 {
                     Response.Redirect(CommonHelper.GetStoreLocation());
                 }

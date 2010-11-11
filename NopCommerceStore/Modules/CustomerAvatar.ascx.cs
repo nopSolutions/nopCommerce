@@ -33,7 +33,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Payment;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -59,16 +59,16 @@ namespace NopSolutions.NopCommerce.Web.Modules
             pnlCustomerAvatarError.Visible = false;
 
             var customerAvatar = NopContext.Current.User.Avatar;
-            int avatarSize = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.Customer.AvatarSize", 85);
+            int avatarSize = IoC.Resolve<ISettingManager>().GetSettingValueInteger("Media.Customer.AvatarSize", 85);
             string pictureUrl = string.Empty;
             if (customerAvatar != null)
             {
-                pictureUrl = IoCFactory.Resolve<IPictureService>().GetPictureUrl(customerAvatar, avatarSize, false);
+                pictureUrl = IoC.Resolve<IPictureService>().GetPictureUrl(customerAvatar, avatarSize, false);
                 this.btnRemoveAvatar.Visible = true;
             }
             else
             {
-                pictureUrl = IoCFactory.Resolve<IPictureService>().GetDefaultPictureUrl(PictureTypeEnum.Avatar, avatarSize);
+                pictureUrl = IoC.Resolve<IPictureService>().GetDefaultPictureUrl(PictureTypeEnum.Avatar, avatarSize);
                 this.btnRemoveAvatar.Visible = false;
             }
             this.iAvatar.ImageUrl = pictureUrl;
@@ -78,10 +78,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
         {
             try
             {
-                IoCFactory.Resolve<IPictureService>().DeletePicture(NopContext.Current.User.AvatarId);
+                IoC.Resolve<IPictureService>().DeletePicture(NopContext.Current.User.AvatarId);
 
                 NopContext.Current.User.AvatarId = 0;
-                IoCFactory.Resolve<ICustomerService>().UpdateCustomer(NopContext.Current.User);
+                IoC.Resolve<ICustomerService>().UpdateCustomer(NopContext.Current.User);
                 BindData();
             }
             catch (Exception exc)
@@ -97,7 +97,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             {
                 if (Page.IsValid)
                 {
-                    if (!IoCFactory.Resolve<ICustomerService>().AllowCustomersToUploadAvatars)
+                    if (!IoC.Resolve<ICustomerService>().AllowCustomersToUploadAvatars)
                         throw new NopException("Uploading avatars is not allowed");
 
                     var customerAvatar = NopContext.Current.User.Avatar;
@@ -105,22 +105,22 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     
                     if ((customerPictureFile != null) && (!String.IsNullOrEmpty(customerPictureFile.FileName)))
                     {
-                        int avatarMaxSize = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.Customer.AvatarMaxSizeBytes", 20000);
+                        int avatarMaxSize = IoC.Resolve<ISettingManager>().GetSettingValueInteger("Media.Customer.AvatarMaxSizeBytes", 20000);
                         if (customerPictureFile.ContentLength > avatarMaxSize)
                             throw new NopException(string.Format("Maximum avatar size is {0} bytes", avatarMaxSize));
 
                         byte[] customerPictureBinary = customerPictureFile.GetPictureBits();
                         if (customerAvatar != null)
-                            customerAvatar = IoCFactory.Resolve<IPictureService>().UpdatePicture(customerAvatar.PictureId, customerPictureBinary, customerPictureFile.ContentType, true);
+                            customerAvatar = IoC.Resolve<IPictureService>().UpdatePicture(customerAvatar.PictureId, customerPictureBinary, customerPictureFile.ContentType, true);
                         else
-                            customerAvatar = IoCFactory.Resolve<IPictureService>().InsertPicture(customerPictureBinary, customerPictureFile.ContentType, true);
+                            customerAvatar = IoC.Resolve<IPictureService>().InsertPicture(customerPictureBinary, customerPictureFile.ContentType, true);
                     }
                     int customerAvatarId = 0;
                     if (customerAvatar != null)
                         customerAvatarId = customerAvatar.PictureId;
 
                     NopContext.Current.User.AvatarId = customerAvatarId;
-                    IoCFactory.Resolve<ICustomerService>().UpdateCustomer(NopContext.Current.User);
+                    IoC.Resolve<ICustomerService>().UpdateCustomer(NopContext.Current.User);
 
                     BindData();
                 }

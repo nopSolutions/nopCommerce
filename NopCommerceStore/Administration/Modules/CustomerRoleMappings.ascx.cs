@@ -29,7 +29,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.BusinessLogic.Promo.Affiliates;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -39,7 +39,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             List<int> _customerRoleIds = new List<int>();
 
-            Customer customer = IoCFactory.Resolve<ICustomerService>().GetCustomerById(this.CustomerId);
+            Customer customer = IoC.Resolve<ICustomerService>().GetCustomerById(this.CustomerId);
             if (customer != null)
             {
                 var customerRoles = customer.CustomerRoles;
@@ -66,28 +66,28 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public void SaveInfo(int cusId)
         {
-            Customer customer = IoCFactory.Resolve<ICustomerService>().GetCustomerById(cusId);
+            Customer customer = IoC.Resolve<ICustomerService>().GetCustomerById(cusId);
 
             if (customer != null)
             {
                 List<int> selectedCustomerRoleIds = this.CustomerRoleMappingControl.SelectedCustomerRoleIds;
                 var existingCustomerRoles = customer.CustomerRoles;
 
-                var allCustomerRoles = IoCFactory.Resolve<ICustomerService>().GetAllCustomerRoles();
+                var allCustomerRoles = IoC.Resolve<ICustomerService>().GetAllCustomerRoles();
                 foreach (CustomerRole customerRole in allCustomerRoles)
                 {
                     if (selectedCustomerRoleIds.Contains(customerRole.CustomerRoleId))
                     {
                         if (existingCustomerRoles.Find(cr => cr.CustomerRoleId == customerRole.CustomerRoleId) == null)
                         {
-                            IoCFactory.Resolve<ICustomerService>().AddCustomerToRole(customer.CustomerId, customerRole.CustomerRoleId);
+                            IoC.Resolve<ICustomerService>().AddCustomerToRole(customer.CustomerId, customerRole.CustomerRoleId);
                         }
                     }
                     else
                     {
                         if (existingCustomerRoles.Find(cr => cr.CustomerRoleId == customerRole.CustomerRoleId) != null)
                         {
-                            IoCFactory.Resolve<ICustomerService>().RemoveCustomerFromRole(customer.CustomerId, customerRole.CustomerRoleId);
+                            IoC.Resolve<ICustomerService>().RemoveCustomerFromRole(customer.CustomerId, customerRole.CustomerRoleId);
                         }
                     }
                 }

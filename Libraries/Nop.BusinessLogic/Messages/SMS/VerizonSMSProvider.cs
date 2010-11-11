@@ -5,7 +5,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Clickatell;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Messages.SMS
 {
@@ -24,19 +24,19 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages.SMS
         {
             try
             {
-                var emailAccount = IoCFactory.Resolve<IMessageService>().DefaultEmailAccount;
+                var emailAccount = IoC.Resolve<IMessageService>().DefaultEmailAccount;
 
                 var from = new MailAddress(emailAccount.Email, emailAccount.DisplayName);
                 var to = new MailAddress(VerizonEmail);
 
-                IoCFactory.Resolve<IMessageService>().InsertQueuedEmail(5, from, to,
-                    string.Empty, string.Empty, IoCFactory.Resolve<ISettingManager>().StoreName, text, 
+                IoC.Resolve<IMessageService>().InsertQueuedEmail(5, from, to,
+                    string.Empty, string.Empty, IoC.Resolve<ISettingManager>().StoreName, text, 
                     DateTime.UtcNow, 0, null, emailAccount.EmailAccountId);
                 return true;
             }
             catch (Exception ex)
             {
-                IoCFactory.Resolve<ILogService>().InsertLog(LogTypeEnum.Unknown, ex.Message, ex);
+                IoC.Resolve<ILogService>().InsertLog(LogTypeEnum.Unknown, ex.Message, ex);
                 return false;
             }
         }
@@ -50,11 +50,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages.SMS
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValue("Mobile.SMS.Verizon.Email");
+                return IoC.Resolve<ISettingManager>().GetSettingValue("Mobile.SMS.Verizon.Email");
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Mobile.SMS.Verizon.Email", value);
+                IoC.Resolve<ISettingManager>().SetParam("Mobile.SMS.Verizon.Email", value);
             }
         }
         #endregion

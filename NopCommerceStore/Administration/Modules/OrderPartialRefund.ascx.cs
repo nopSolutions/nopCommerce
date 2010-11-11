@@ -30,7 +30,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Media;
 using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -46,22 +46,22 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected void BindData()
         {
-            var order = IoCFactory.Resolve<IOrderService>().GetOrderById(this.OrderId);
+            var order = IoC.Resolve<IOrderService>().GetOrderById(this.OrderId);
             if (order != null || order.Deleted)
             {
                 try
                 {
                     lOrderInfo.Text = string.Format(GetLocaleResourceString("Admin.OrderPartialRefund.OrderInfo"), order.OrderId);
                     decimal maxAmountToRefund = order.OrderTotal - order.RefundedAmount;
-                    lblMaxAmountToRefund.Text = string.Format(GetLocaleResourceString("Admin.OrderPartialRefund.MaxRefund"), maxAmountToRefund.ToString("G29"), IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode);
+                    lblMaxAmountToRefund.Text = string.Format(GetLocaleResourceString("Admin.OrderPartialRefund.MaxRefund"), maxAmountToRefund.ToString("G29"), IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode);
                     if (this.Online)
                     {
-                        if (!IoCFactory.Resolve<IOrderService>().CanPartiallyRefund(order, decimal.Zero))
+                        if (!IoC.Resolve<IOrderService>().CanPartiallyRefund(order, decimal.Zero))
                             throw new NopException("Can not do partial refund for this order");
                     }
                     else
                     {
-                        if (!IoCFactory.Resolve<IOrderService>().CanPartiallyRefundOffline(order, decimal.Zero))
+                        if (!IoC.Resolve<IOrderService>().CanPartiallyRefundOffline(order, decimal.Zero))
                             throw new NopException("Can not do partial refund for this order");
                     }
                 }
@@ -81,7 +81,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                var order = IoCFactory.Resolve<IOrderService>().GetOrderById(this.OrderId);
+                var order = IoC.Resolve<IOrderService>().GetOrderById(this.OrderId);
                 if (order != null)
                 {
                     string error = string.Empty;
@@ -91,7 +91,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                     if (this.Online)
                     {
-                        order = IoCFactory.Resolve<IOrderService>().PartiallyRefund(this.OrderId, amountToRefund, ref error);
+                        order = IoC.Resolve<IOrderService>().PartiallyRefund(this.OrderId, amountToRefund, ref error);
                         if (!String.IsNullOrEmpty(error))
                         {
                             throw new NopException(error);
@@ -99,7 +99,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     }
                     else
                     {
-                        order = IoCFactory.Resolve<IOrderService>().PartiallyRefundOffline(this.OrderId, amountToRefund);
+                        order = IoC.Resolve<IOrderService>().PartiallyRefundOffline(this.OrderId, amountToRefund);
                     }
                 }
                 else

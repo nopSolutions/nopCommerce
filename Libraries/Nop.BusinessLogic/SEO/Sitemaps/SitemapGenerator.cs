@@ -34,7 +34,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Content.Blog;
 using NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Content.Topics;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 using NopSolutions.NopCommerce.BusinessLogic.Manufacturers;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.BusinessLogic.Utils;
@@ -56,10 +56,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO.Sitemaps
         /// </summary>
         protected override void GenerateUrlNodes()
         {
-            bool IncludeCategories = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("SEO.Sitemaps.IncludeCategories", true);
-            bool IncludeManufacturers = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("SEO.Sitemaps.IncludeManufacturers", false);
-            bool IncludeProducts = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("SEO.Sitemaps.IncludeProducts", false);
-            string OtherPages = IoCFactory.Resolve<ISettingManager>().GetSettingValue("SEO.Sitemaps.OtherPages").ToLowerInvariant();
+            bool IncludeCategories = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("SEO.Sitemaps.IncludeCategories", true);
+            bool IncludeManufacturers = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("SEO.Sitemaps.IncludeManufacturers", false);
+            bool IncludeProducts = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("SEO.Sitemaps.IncludeProducts", false);
+            string OtherPages = IoC.Resolve<ISettingManager>().GetSettingValue("SEO.Sitemaps.OtherPages").ToLowerInvariant();
             
             if (IncludeCategories)
             {
@@ -83,7 +83,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO.Sitemaps
 
         private void WriteCategories(int parentCategoryId)
         {
-            var categories = IoCFactory.Resolve<ICategoryService>().GetAllCategoriesByParentCategoryId(parentCategoryId, false);
+            var categories = IoC.Resolve<ICategoryService>().GetAllCategoriesByParentCategoryId(parentCategoryId, false);
             foreach (var category in categories)
             {
                 var url = SEOHelper.GetCategoryUrl(category);
@@ -97,7 +97,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO.Sitemaps
 
         private void WriteManufacturers()
         {
-            var manufacturers = IoCFactory.Resolve<IManufacturerService>().GetAllManufacturers(false);
+            var manufacturers = IoC.Resolve<IManufacturerService>().GetAllManufacturers(false);
             foreach (var manufacturer in manufacturers)
             {
                 var url = SEOHelper.GetManufacturerUrl(manufacturer);
@@ -109,7 +109,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO.Sitemaps
 
         private void WriteProducts()
         {
-            var products = IoCFactory.Resolve<IProductService>().GetAllProducts(false);
+            var products = IoC.Resolve<IProductService>().GetAllProducts(false);
             foreach (var product in products)
             {
                 var url = SEOHelper.GetProductUrl(product);
@@ -121,11 +121,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.SEO.Sitemaps
 
         private void WriteTopics()
         {
-            var topics = IoCFactory.Resolve<ITopicService>().GetAllTopics();
+            var topics = IoC.Resolve<ITopicService>().GetAllTopics();
             topics = topics.FindAll(t => t.IncludeInSitemap);
             foreach (Topic topic in topics)
             {
-                var localizedTopics = IoCFactory.Resolve<ITopicService>().GetAllLocalizedTopics(topic.Name);
+                var localizedTopics = IoC.Resolve<ITopicService>().GetAllLocalizedTopics(topic.Name);
                 if (localizedTopics.Count > 0)
                 {
                     //UNDONE add topic of one language only (they have the same URL now)

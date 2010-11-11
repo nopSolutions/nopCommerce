@@ -17,7 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 using NopSolutions.NopCommerce.BusinessLogic.Utils.Html;
 using NopSolutions.NopCommerce.Common.Utils.Html;
 
@@ -41,7 +41,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
             if (String.IsNullOrEmpty(text))
                 return string.Empty;
 
-            switch (IoCFactory.Resolve<IForumService>().ForumEditor)
+            switch (IoC.Resolve<IForumService>().ForumEditor)
             {
                 case EditorTypeEnum.SimpleTextBox:
                     {
@@ -106,7 +106,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
             string subject = forumTopic.Subject;
             if (String.IsNullOrEmpty(subject))
                 return subject;
-            int strippedTopicMaxLength = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Forums.StrippedTopicMaxLength", 45);
+            int strippedTopicMaxLength = IoC.Resolve<ISettingManager>().GetSettingValueInteger("Forums.StrippedTopicMaxLength", 45);
             if (strippedTopicMaxLength > 0)
             {
                 if (subject.Length > strippedTopicMaxLength)

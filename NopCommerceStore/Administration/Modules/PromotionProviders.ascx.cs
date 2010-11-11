@@ -33,7 +33,7 @@ using NopSolutions.NopCommerce.Froogle;
 using NopSolutions.NopCommerce.PriceGrabber;
 using NopSolutions.NopCommerce.Become;
 using System.Net;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
@@ -53,26 +53,26 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         private void BindData()
         {
             //froogle
-            cbAllowPublicFroogleAccess.Checked = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Froogle.AllowPublicFroogleAccess");
-            txtFroogleProductThumbSize.Value = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("PromotionProvider.Froogle.ProductThumbnailImageSize");
-            txtFroogleFTPHostname.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue("Froogle.FTPHostname");
-            txtFroogleFTPFilename.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue("Froogle.FTPFilename");
-            txtFroogleFTPUsername.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue("Froogle.FTPUsername");
-            txtFroogleFTPPassword.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue("Froogle.FTPPassword");
+            cbAllowPublicFroogleAccess.Checked = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Froogle.AllowPublicFroogleAccess");
+            txtFroogleProductThumbSize.Value = IoC.Resolve<ISettingManager>().GetSettingValueInteger("PromotionProvider.Froogle.ProductThumbnailImageSize");
+            txtFroogleFTPHostname.Text = IoC.Resolve<ISettingManager>().GetSettingValue("Froogle.FTPHostname");
+            txtFroogleFTPFilename.Text = IoC.Resolve<ISettingManager>().GetSettingValue("Froogle.FTPFilename");
+            txtFroogleFTPUsername.Text = IoC.Resolve<ISettingManager>().GetSettingValue("Froogle.FTPUsername");
+            txtFroogleFTPPassword.Text = IoC.Resolve<ISettingManager>().GetSettingValue("Froogle.FTPPassword");
             CommonHelper.SelectListItem(this.ddlFroogleCurrency, FroogleService.UsedCurrency.CurrencyId);
 
             //price grabber
-            txtPriceGrabberProductThumbSize.Value = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("PromotionProvider.PriceGrabber.ProductThumbnailImageSize");
+            txtPriceGrabberProductThumbSize.Value = IoC.Resolve<ISettingManager>().GetSettingValueInteger("PromotionProvider.PriceGrabber.ProductThumbnailImageSize");
             CommonHelper.SelectListItem(this.ddlPriceGrabberCurrency, PriceGrabberService.UsedCurrency.CurrencyId);
 
             //become.com
-            txtBecomeProductThumbSize.Value = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("PromotionProvider.BecomeCom.ProductThumbnailImageSize");
+            txtBecomeProductThumbSize.Value = IoC.Resolve<ISettingManager>().GetSettingValueInteger("PromotionProvider.BecomeCom.ProductThumbnailImageSize");
             CommonHelper.SelectListItem(this.ddlBecomeCurrency, BecomeService.UsedCurrency.CurrencyId);
         }
 
         private void FillDropDowns()
         {
-            var currencies = IoCFactory.Resolve<ICurrencyService>().GetAllCurrencies(false);
+            var currencies = IoC.Resolve<ICurrencyService>().GetAllCurrencies(false);
 
             //Froogle
             this.ddlFroogleCurrency.Items.Clear();
@@ -113,24 +113,24 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 try
                 {
                     //froogle
-                    IoCFactory.Resolve<ISettingManager>().SetParam("Froogle.AllowPublicFroogleAccess", cbAllowPublicFroogleAccess.Checked.ToString());
-                    IoCFactory.Resolve<ISettingManager>().SetParam("PromotionProvider.Froogle.ProductThumbnailImageSize", txtFroogleProductThumbSize.Value.ToString());
-                    IoCFactory.Resolve<ISettingManager>().SetParam("Froogle.FTPHostname", txtFroogleFTPHostname.Text);
-                    IoCFactory.Resolve<ISettingManager>().SetParam("Froogle.FTPFilename", txtFroogleFTPFilename.Text);
-                    IoCFactory.Resolve<ISettingManager>().SetParam("Froogle.FTPUsername", txtFroogleFTPUsername.Text);
-                    IoCFactory.Resolve<ISettingManager>().SetParam("Froogle.FTPPassword", txtFroogleFTPPassword.Text);
-                    FroogleService.UsedCurrency = IoCFactory.Resolve<ICurrencyService>().GetCurrencyById(int.Parse(this.ddlFroogleCurrency.SelectedItem.Value));
+                    IoC.Resolve<ISettingManager>().SetParam("Froogle.AllowPublicFroogleAccess", cbAllowPublicFroogleAccess.Checked.ToString());
+                    IoC.Resolve<ISettingManager>().SetParam("PromotionProvider.Froogle.ProductThumbnailImageSize", txtFroogleProductThumbSize.Value.ToString());
+                    IoC.Resolve<ISettingManager>().SetParam("Froogle.FTPHostname", txtFroogleFTPHostname.Text);
+                    IoC.Resolve<ISettingManager>().SetParam("Froogle.FTPFilename", txtFroogleFTPFilename.Text);
+                    IoC.Resolve<ISettingManager>().SetParam("Froogle.FTPUsername", txtFroogleFTPUsername.Text);
+                    IoC.Resolve<ISettingManager>().SetParam("Froogle.FTPPassword", txtFroogleFTPPassword.Text);
+                    FroogleService.UsedCurrency = IoC.Resolve<ICurrencyService>().GetCurrencyById(int.Parse(this.ddlFroogleCurrency.SelectedItem.Value));
 
                     //price grabber
-                    IoCFactory.Resolve<ISettingManager>().SetParam("PromotionProvider.PriceGrabber.ProductThumbnailImageSize", txtPriceGrabberProductThumbSize.Value.ToString());
-                    PriceGrabberService.UsedCurrency = IoCFactory.Resolve<ICurrencyService>().GetCurrencyById(int.Parse(this.ddlPriceGrabberCurrency.SelectedItem.Value));
+                    IoC.Resolve<ISettingManager>().SetParam("PromotionProvider.PriceGrabber.ProductThumbnailImageSize", txtPriceGrabberProductThumbSize.Value.ToString());
+                    PriceGrabberService.UsedCurrency = IoC.Resolve<ICurrencyService>().GetCurrencyById(int.Parse(this.ddlPriceGrabberCurrency.SelectedItem.Value));
 
                     //become.com
-                    IoCFactory.Resolve<ISettingManager>().SetParam("PromotionProvider.BecomeCom.ProductThumbnailImageSize", txtBecomeProductThumbSize.Value.ToString());
-                    BecomeService.UsedCurrency = IoCFactory.Resolve<ICurrencyService>().GetCurrencyById(int.Parse(this.ddlBecomeCurrency.SelectedItem.Value));
+                    IoC.Resolve<ISettingManager>().SetParam("PromotionProvider.BecomeCom.ProductThumbnailImageSize", txtBecomeProductThumbSize.Value.ToString());
+                    BecomeService.UsedCurrency = IoC.Resolve<ICurrencyService>().GetCurrencyById(int.Parse(this.ddlBecomeCurrency.SelectedItem.Value));
 
                     //activity log
-                    IoCFactory.Resolve<ICustomerActivityService>().InsertActivity("EditPromotionProviders", GetLocaleResourceString("ActivityLog.EditPromotionProviders"));
+                    IoC.Resolve<ICustomerActivityService>().InsertActivity("EditPromotionProviders", GetLocaleResourceString("ActivityLog.EditPromotionProviders"));
 
                     //redirect
                     Response.Redirect(string.Format("PromotionProviders.aspx?TabID={0}", GetActiveTabId(PromotionProvidersTabs)));
@@ -209,16 +209,16 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("Froogle.FTPHostname", txtFroogleFTPHostname.Text);
-                IoCFactory.Resolve<ISettingManager>().SetParam("Froogle.FTPFilename", txtFroogleFTPFilename.Text);
-                IoCFactory.Resolve<ISettingManager>().SetParam("Froogle.FTPUsername", txtFroogleFTPUsername.Text);
-                IoCFactory.Resolve<ISettingManager>().SetParam("Froogle.FTPPassword", txtFroogleFTPPassword.Text);
+                IoC.Resolve<ISettingManager>().SetParam("Froogle.FTPHostname", txtFroogleFTPHostname.Text);
+                IoC.Resolve<ISettingManager>().SetParam("Froogle.FTPFilename", txtFroogleFTPFilename.Text);
+                IoC.Resolve<ISettingManager>().SetParam("Froogle.FTPUsername", txtFroogleFTPUsername.Text);
+                IoC.Resolve<ISettingManager>().SetParam("Froogle.FTPPassword", txtFroogleFTPPassword.Text);
 
-                string hostname = IoCFactory.Resolve<ISettingManager>().GetSettingValue("Froogle.FTPHostname");
-                string filename = IoCFactory.Resolve<ISettingManager>().GetSettingValue("Froogle.FTPFilename");
+                string hostname = IoC.Resolve<ISettingManager>().GetSettingValue("Froogle.FTPHostname");
+                string filename = IoC.Resolve<ISettingManager>().GetSettingValue("Froogle.FTPFilename");
                 string uri = String.Format("{0}/{1}", hostname, filename);
-                string username = IoCFactory.Resolve<ISettingManager>().GetSettingValue("Froogle.FTPUsername");
-                string password = IoCFactory.Resolve<ISettingManager>().GetSettingValue("Froogle.FTPPassword");
+                string username = IoC.Resolve<ISettingManager>().GetSettingValue("Froogle.FTPUsername");
+                string password = IoC.Resolve<ISettingManager>().GetSettingValue("Froogle.FTPPassword");
 
 
                 FtpWebRequest req = WebRequest.Create(uri) as FtpWebRequest;

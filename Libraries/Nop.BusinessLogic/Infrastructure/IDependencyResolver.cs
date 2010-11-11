@@ -24,7 +24,7 @@ using System.Web;
 using System.Web.Compilation;
 using System.Xml;
 
-namespace NopSolutions.NopCommerce.BusinessLogic.IoC
+namespace NopSolutions.NopCommerce.BusinessLogic.Infrastructure
 {
     /// <summary>
     /// Dependency resolver

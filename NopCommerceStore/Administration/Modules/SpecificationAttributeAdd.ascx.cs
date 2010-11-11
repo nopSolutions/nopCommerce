@@ -25,7 +25,7 @@ using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.Products.Specs;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.Audit;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
     public partial class SpecificationAttributeAddControl : BaseNopAdministrationUserControl
@@ -35,7 +35,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             SpecificationAttribute specificationAttribute = ctrlSpecificationAttributeInfo.SaveInfo();
             ctrlSpecificationAttributeOptions.SaveInfo();
 
-            IoCFactory.Resolve<ICustomerActivityService>().InsertActivity(
+            IoC.Resolve<ICustomerActivityService>().InsertActivity(
                 "AddNewSpecAttribute",
                 GetLocaleResourceString("ActivityLog.AddNewSpecAttribute"),
                 specificationAttribute.Name);

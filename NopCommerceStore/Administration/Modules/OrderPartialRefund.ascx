@@ -25,7 +25,7 @@
                 Value="0" RequiredErrorMessage="<% $NopResources:Admin.OrderPartialRefund.AmountToRefund.RequiredErrorMessage%>"
                 MinimumValue="0" MaximumValue="100000000" RangeErrorMessage="<% $NopResources:Admin.OrderPartialRefund.AmountToRefund.RangeErrorMessage %>"
                 Width="100px"></nopCommerce:DecimalTextBox>
-            [<%=IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode%>] &nbsp;&nbsp;&nbsp; <span
+            [<%=IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode%>] &nbsp;&nbsp;&nbsp; <span
                 style="white-space: nowrap">
                 <asp:Label runat="server" ID="lblMaxAmountToRefund" /></span>
         </td>

@@ -27,7 +27,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Audit;
 using NopSolutions.NopCommerce.BusinessLogic.Content.Forums;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.BusinessLogic.Promo.Affiliates;
@@ -41,7 +41,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             if (!Page.IsPostBack)
             {
-                Customer customer = IoCFactory.Resolve<ICustomerService>().GetCustomerById(this.CustomerId);
+                Customer customer = IoC.Resolve<ICustomerService>().GetCustomerById(this.CustomerId);
                 if (customer != null)
                 {
                     lblTitle.Text = Server.HtmlEncode(customer.Email);
@@ -49,14 +49,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                 this.SelectTab(this.CustomerTabs, this.TabId);
 
-                pnlCustomerAvatar.Visible = IoCFactory.Resolve<ICustomerService>().AllowCustomersToUploadAvatars;
-                pnlCustomerForumSubscriptions.Visible = IoCFactory.Resolve<IForumService>().AllowCustomersToManageSubscriptions;
+                pnlCustomerAvatar.Visible = IoC.Resolve<ICustomerService>().AllowCustomersToUploadAvatars;
+                pnlCustomerForumSubscriptions.Visible = IoC.Resolve<IForumService>().AllowCustomersToManageSubscriptions;
             }
         }
 
         protected Customer Save()
         {
-            Customer customer = IoCFactory.Resolve<ICustomerService>().GetCustomerById(this.CustomerId);
+            Customer customer = IoC.Resolve<ICustomerService>().GetCustomerById(this.CustomerId);
 
             customer = ctrlCustomerInfo.SaveInfo();
             ctrlCustomerBillingAddresses.SaveInfo();
@@ -68,7 +68,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             ctrlCustomerRewardPoints.SaveInfo();
             ctrlCustomerForumSubscriptions.SaveInfo();
 
-            IoCFactory.Resolve<ICustomerActivityService>().InsertActivity(
+            IoC.Resolve<ICustomerActivityService>().InsertActivity(
                 "EditCustomer",
                 GetLocaleResourceString("ActivityLog.EditCustomer"),
                 customer.CustomerId);
@@ -112,9 +112,9 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                IoCFactory.Resolve<ICustomerService>().MarkCustomerAsDeleted(this.CustomerId);
+                IoC.Resolve<ICustomerService>().MarkCustomerAsDeleted(this.CustomerId);
 
-                IoCFactory.Resolve<ICustomerActivityService>().InsertActivity(
+                IoC.Resolve<ICustomerActivityService>().InsertActivity(
                     "DeleteCustomer",
                     GetLocaleResourceString("ActivityLog.DeleteCustomer"),
                     this.CustomerId);

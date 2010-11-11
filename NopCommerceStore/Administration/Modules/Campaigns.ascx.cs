@@ -29,7 +29,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Messages;
 using NopSolutions.NopCommerce.BusinessLogic.Promo.Campaigns;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -45,7 +45,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected void BindData()
         {
-            var campaignCollection = IoCFactory.Resolve<ICampaignService>().GetAllCampaigns();
+            var campaignCollection = IoC.Resolve<ICampaignService>().GetAllCampaigns();
             gvCampaigns.DataSource = campaignCollection;
             gvCampaigns.DataBind();
         }

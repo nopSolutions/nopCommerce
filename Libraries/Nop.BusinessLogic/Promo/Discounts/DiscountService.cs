@@ -27,7 +27,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
@@ -247,7 +247,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         /// <param name="discountId">Discount identifier</param>
         public void AddDiscountToProductVariant(int productVariantId, int discountId)
         {
-            var productVariant = IoCFactory.Resolve<IProductService>().GetProductVariantById(productVariantId);
+            var productVariant = IoC.Resolve<IProductService>().GetProductVariantById(productVariantId);
             if (productVariant == null)
                 return;
 
@@ -281,7 +281,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         /// <param name="discountId">Discount identifier</param>
         public void RemoveDiscountFromProductVariant(int productVariantId, int discountId)
         {
-            var productVariant = IoCFactory.Resolve<IProductService>().GetProductVariantById(productVariantId);
+            var productVariant = IoC.Resolve<IProductService>().GetProductVariantById(productVariantId);
             if (productVariant == null)
                 return;
 
@@ -343,7 +343,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         /// <param name="discountId">Discount identifier</param>
         public void AddDiscountToCategory(int categoryId, int discountId)
         {
-            var category = IoCFactory.Resolve<ICategoryService>().GetCategoryById(categoryId);
+            var category = IoC.Resolve<ICategoryService>().GetCategoryById(categoryId);
             if (category == null)
                 return;
 
@@ -377,7 +377,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         /// <param name="discountId">Discount identifier</param>
         public void RemoveDiscountFromCategory(int categoryId, int discountId)
         {
-            var category = IoCFactory.Resolve<ICategoryService>().GetCategoryById(categoryId);
+            var category = IoC.Resolve<ICategoryService>().GetCategoryById(categoryId);
             if (category == null)
                 return;
 
@@ -443,7 +443,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         /// <param name="discountId">Discount identifier</param>
         public void AddDiscountRestriction(int productVariantId, int discountId)
         {
-            var productVariant = IoCFactory.Resolve<IProductService>().GetProductVariantById(productVariantId);
+            var productVariant = IoC.Resolve<IProductService>().GetProductVariantById(productVariantId);
             if (productVariant == null)
                 return;
 
@@ -472,7 +472,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         /// <param name="discountId">Discount identifier</param>
         public void RemoveDiscountRestriction(int productVariantId, int discountId)
         {
-            var productVariant = IoCFactory.Resolve<IProductService>().GetProductVariantById(productVariantId);
+            var productVariant = IoC.Resolve<IProductService>().GetProductVariantById(productVariantId);
             if (productVariant == null)
                 return;
 
@@ -594,7 +594,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.DiscountManager.CacheEnabled");
+                return IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.DiscountManager.CacheEnabled");
             }
         }
 

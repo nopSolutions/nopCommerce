@@ -28,7 +28,7 @@ using NopSolutions.NopCommerce.BusinessLogic;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Content.Polls;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
  
  
 namespace NopSolutions.NopCommerce.Web.Modules
@@ -45,7 +45,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void BindData()
         {
-            var polls = IoCFactory.Resolve<IPollService>().GetPolls(NopContext.Current.WorkingLanguage.LanguageId, Int32.MaxValue, true);
+            var polls = IoC.Resolve<IPollService>().GetPolls(NopContext.Current.WorkingLanguage.LanguageId, Int32.MaxValue, true);
             if (polls.Count > 0)
             {
                 rptPollBlocks.DataSource = polls;

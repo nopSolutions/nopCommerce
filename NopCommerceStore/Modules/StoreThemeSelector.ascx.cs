@@ -28,7 +28,7 @@ using System.Xml.Linq;
 using NopSolutions.NopCommerce.BusinessLogic;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -36,12 +36,12 @@ namespace NopSolutions.NopCommerce.Web.Modules
     {
         private void BindThemes()
         {
-            if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Display.AllowCustomerSelectTheme"))
+            if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Display.AllowCustomerSelectTheme"))
             {
                 this.Visible = true;
                 this.ddlTheme.Items.Clear();
 
-                string[] systemThemes = IoCFactory.Resolve<ISettingManager>().GetSettingValue("Display.SystemThemes").Split(',');
+                string[] systemThemes = IoC.Resolve<ISettingManager>().GetSettingValue("Display.SystemThemes").Split(',');
 
                 var themes = from f in Directory.GetDirectories(Server.MapPath("~/App_Themes"))
                              where (!systemThemes.Contains(Path.GetFileName(f).ToLower()))

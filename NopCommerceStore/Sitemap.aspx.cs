@@ -14,7 +14,7 @@ using NopSolutions.NopCommerce.BusinessLogic;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Audit;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web
 {
@@ -33,11 +33,11 @@ namespace NopSolutions.NopCommerce.Web
         {
             //topics
             var sitemapTopics = new List<SitemapTopic>();
-            var topics = IoCFactory.Resolve<ITopicService>().GetAllTopics();
+            var topics = IoC.Resolve<ITopicService>().GetAllTopics();
             topics = topics.FindAll(t => t.IncludeInSitemap);
             foreach (var topic in topics)
             {
-                LocalizedTopic localizedTopic = IoCFactory.Resolve<ITopicService>().GetLocalizedTopic(topic.TopicId, NopContext.Current.WorkingLanguage.LanguageId);
+                LocalizedTopic localizedTopic = IoC.Resolve<ITopicService>().GetLocalizedTopic(topic.TopicId, NopContext.Current.WorkingLanguage.LanguageId);
                 if (localizedTopic != null && !String.IsNullOrEmpty(localizedTopic.Title))
                 {
                     string topicURL = SEOHelper.GetTopicUrl(localizedTopic.TopicId, localizedTopic.Title);
@@ -48,7 +48,7 @@ namespace NopSolutions.NopCommerce.Web
             }
 
             //other pages
-            string otherPages = IoCFactory.Resolve<ISettingManager>().GetSettingValue("Sitemap.OtherPages");
+            string otherPages = IoC.Resolve<ISettingManager>().GetSettingValue("Sitemap.OtherPages");
             if (!String.IsNullOrEmpty(otherPages))
             {
                 string[] pages = otherPages.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
@@ -68,10 +68,10 @@ namespace NopSolutions.NopCommerce.Web
             }
 
             //categories
-            if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Sitemap.IncludeCategories", true))
+            if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Sitemap.IncludeCategories", true))
             {
                 //root categories only here
-                var categories = IoCFactory.Resolve<ICategoryService>().GetAllCategoriesByParentCategoryId(0);
+                var categories = IoC.Resolve<ICategoryService>().GetAllCategoriesByParentCategoryId(0);
                 if (categories.Count > 0)
                 {
                     dlCategories.DataSource = categories;
@@ -88,12 +88,12 @@ namespace NopSolutions.NopCommerce.Web
             }
 
             //manufacturers
-            if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Sitemap.IncludeManufacturers", true))
+            if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Sitemap.IncludeManufacturers", true))
             {
-                var manufacturers = IoCFactory.Resolve<IManufacturerService>().GetAllManufacturers();
+                var manufacturers = IoC.Resolve<IManufacturerService>().GetAllManufacturers();
                 if (manufacturers.Count > 0)
                 {
-                    dlManufacturers.DataSource = IoCFactory.Resolve<IManufacturerService>().GetAllManufacturers();
+                    dlManufacturers.DataSource = IoC.Resolve<IManufacturerService>().GetAllManufacturers();
                     dlManufacturers.DataBind();
                 }
                 else
@@ -107,9 +107,9 @@ namespace NopSolutions.NopCommerce.Web
             }
 
             //products
-            if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Sitemap.IncludeProducts", true))
+            if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Sitemap.IncludeProducts", true))
             {
-                var products = IoCFactory.Resolve<IProductService>().GetAllProducts();
+                var products = IoC.Resolve<IProductService>().GetAllProducts();
                 if (products.Count > 0)
                 {
                     dlProducts.DataSource = products;

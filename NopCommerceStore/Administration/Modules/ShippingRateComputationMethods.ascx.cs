@@ -31,7 +31,7 @@ using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.BusinessLogic.Shipping;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -47,7 +47,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         private void BindGrid()
         {
-            var shippingRateComputationMethods = IoCFactory.Resolve<IShippingService>().GetAllShippingRateComputationMethods();
+            var shippingRateComputationMethods = IoC.Resolve<IShippingService>().GetAllShippingRateComputationMethods();
             gvShippingRateComputationMethods.DataSource = shippingRateComputationMethods;
             gvShippingRateComputationMethods.DataBind();
         }

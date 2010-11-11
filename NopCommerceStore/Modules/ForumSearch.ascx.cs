@@ -32,7 +32,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Localization;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Common;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -74,7 +74,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     if (String.IsNullOrEmpty(keywords))
                         throw new NopException(GetLocaleResourceString("Forum.SearchTermCouldNotBeEmpty"));
 
-                    int searchTermMinimumLength = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Search.ForumSearchTermMinimumLength", 3);
+                    int searchTermMinimumLength = IoC.Resolve<ISettingManager>().GetSettingValueInteger("Search.ForumSearchTermMinimumLength", 3);
                     if (keywords.Length < searchTermMinimumLength)
                         throw new NopException(string.Format(GetLocaleResourceString("Forum.SearchTermMinimumLengthIsNCharacters"), searchTermMinimumLength));
 
@@ -91,12 +91,12 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
                     int totalRecords = 0;
                     int pageSize = 10;
-                    if (IoCFactory.Resolve<IForumService>().SearchResultsPageSize > 0)
+                    if (IoC.Resolve<IForumService>().SearchResultsPageSize > 0)
                     {
-                        pageSize = IoCFactory.Resolve<IForumService>().SearchResultsPageSize;
+                        pageSize = IoC.Resolve<IForumService>().SearchResultsPageSize;
                     }
 
-                    var forumTopics = IoCFactory.Resolve<IForumService>().GetAllTopics(forumId, 0, keywords, searchWithin,
+                    var forumTopics = IoC.Resolve<IForumService>().GetAllTopics(forumId, 0, keywords, searchWithin,
                         limitResultsToPrevious, pageSize, this.CurrentPageIndex, out totalRecords);
                     if (forumTopics.Count > 0)
                     {
@@ -192,7 +192,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 var hlTopicStarter = e.Item.FindControl("hlTopicStarter") as HyperLink;
                 if (hlTopicStarter != null)
                 {
-                    if (customer != null && IoCFactory.Resolve<ICustomerService>().AllowViewingProfiles && !customer.IsGuest)
+                    if (customer != null && IoC.Resolve<ICustomerService>().AllowViewingProfiles && !customer.IsGuest)
                     {
                         hlTopicStarter.Text = Server.HtmlEncode(customer.FormatUserName(true));
                         hlTopicStarter.NavigateUrl = SEOHelper.GetUserProfileUrl(customer.CustomerId);
@@ -206,7 +206,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 var lblTopicStarter = e.Item.FindControl("lblTopicStarter") as Label;
                 if (lblTopicStarter != null)
                 {
-                    if (customer != null && (!IoCFactory.Resolve<ICustomerService>().AllowViewingProfiles || customer.IsGuest))
+                    if (customer != null && (!IoC.Resolve<ICustomerService>().AllowViewingProfiles || customer.IsGuest))
                     {
                         lblTopicStarter.Text = Server.HtmlEncode(customer.FormatUserName(true));
                     }

@@ -33,7 +33,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Content.Polls;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web
 {
@@ -49,7 +49,7 @@ namespace NopSolutions.NopCommerce.Web
 
         protected void BindData()
         {
-            bool showWelcomeMessageOnMainPage = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Display.ShowWelcomeMessageOnMainPage");
+            bool showWelcomeMessageOnMainPage = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Display.ShowWelcomeMessageOnMainPage");
             if (!showWelcomeMessageOnMainPage)
             {
                 topicHomePageText.Visible = false;

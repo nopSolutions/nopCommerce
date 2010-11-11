@@ -21,7 +21,7 @@ using System.Web;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Data;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 using System.Data.Objects;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.BusinessLogic.Caching;
@@ -209,13 +209,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
             switch (defaultPictureType)
             {
                 case PictureTypeEnum.Entity:
-                    defaultImageName = IoCFactory.Resolve<ISettingManager>().GetSettingValue("Media.DefaultImageName");
+                    defaultImageName = IoC.Resolve<ISettingManager>().GetSettingValue("Media.DefaultImageName");
                     break;
                 case PictureTypeEnum.Avatar:
-                    defaultImageName = IoCFactory.Resolve<ISettingManager>().GetSettingValue("Media.Customer.DefaultAvatarImageName");
+                    defaultImageName = IoC.Resolve<ISettingManager>().GetSettingValue("Media.Customer.DefaultAvatarImageName");
                     break;
                 default:
-                    defaultImageName = IoCFactory.Resolve<ISettingManager>().GetSettingValue("Media.DefaultImageName");
+                    defaultImageName = IoC.Resolve<ISettingManager>().GetSettingValue("Media.DefaultImageName");
                     break;
             }
 
@@ -572,7 +572,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
             using (MemoryStream stream = new MemoryStream(pictureBinary))
             {
                 var b = new Bitmap(stream);
-                int maxSize = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.MaximumImageSize", 1280);
+                int maxSize = IoC.Resolve<ISettingManager>().GetSettingValueInteger("Media.MaximumImageSize", 1280);
 
                 if ((b.Height > maxSize) || (b.Width > maxSize))
                 {
@@ -779,7 +779,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Media.Images.StoreInDB", true);
+                return IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Media.Images.StoreInDB", true);
             }
             set
             {
@@ -787,7 +787,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
                 if (this.StoreInDB != value)
                 {
                     //save the nwe setting value
-                    IoCFactory.Resolve<ISettingManager>().SetParam("Media.Images.StoreInDB", value.ToString());
+                    IoC.Resolve<ISettingManager>().SetParam("Media.Images.StoreInDB", value.ToString());
 
                     //update all picture objects
                     int totalRecords = 0;

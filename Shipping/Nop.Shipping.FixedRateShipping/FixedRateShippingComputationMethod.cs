@@ -20,7 +20,7 @@ using NopSolutions.NopCommerce.BusinessLogic;
 using NopSolutions.NopCommerce.BusinessLogic.Shipping;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.Common;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
  
 
 namespace NopSolutions.NopCommerce.Shipping.Methods.FisedRateShippingCM
@@ -33,7 +33,7 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.FisedRateShippingCM
         #region Utilities
         protected decimal GetRate(int shippingMethodId)
         {
-            decimal rate = IoCFactory.Resolve<ISettingManager>().GetSettingValueDecimalNative(string.Format("ShippingRateComputationMethod.FixedRate.Rate.ShippingMethodId{0}", shippingMethodId));
+            decimal rate = IoC.Resolve<ISettingManager>().GetSettingValueDecimalNative(string.Format("ShippingRateComputationMethod.FixedRate.Rate.ShippingMethodId{0}", shippingMethodId));
             return rate;
         }
         #endregion
@@ -65,7 +65,7 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.FisedRateShippingCM
                 return shippingOptions;
             }
 
-            var shippingMethods = IoCFactory.Resolve<IShippingService>().GetAllShippingMethods(shipmentPackage.ShippingAddress.CountryId);
+            var shippingMethods = IoC.Resolve<IShippingService>().GetAllShippingMethods(shipmentPackage.ShippingAddress.CountryId);
             foreach (var shippingMethod in shippingMethods)
             {
                 var shippingOption = new ShippingOption();
@@ -95,7 +95,7 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.FisedRateShippingCM
                 return null;
 
 
-            var shippingMethods = IoCFactory.Resolve<IShippingService>().GetAllShippingMethods(shipmentPackage.ShippingAddress.CountryId);
+            var shippingMethods = IoC.Resolve<IShippingService>().GetAllShippingMethods(shipmentPackage.ShippingAddress.CountryId);
             List<decimal> rates = new List<decimal>();
             foreach (var shippingMethod in shippingMethods)
             {

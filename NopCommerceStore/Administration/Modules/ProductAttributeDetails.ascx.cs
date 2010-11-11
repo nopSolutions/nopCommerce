@@ -25,7 +25,7 @@ using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.Audit;
 using NopSolutions.NopCommerce.BusinessLogic.Products.Attributes;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -35,7 +35,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             ProductAttribute productAttribute = ctrlProductAttributeInfo.SaveInfo();
 
-            IoCFactory.Resolve<ICustomerActivityService>().InsertActivity(
+            IoC.Resolve<ICustomerActivityService>().InsertActivity(
                 "EditProductAttribute",
                 GetLocaleResourceString("ActivityLog.EditProductAttribute"),
                 productAttribute.Name);
@@ -81,12 +81,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                ProductAttribute productAttribute = IoCFactory.Resolve<IProductAttributeService>().GetProductAttributeById(this.ProductAttributeId);
+                ProductAttribute productAttribute = IoC.Resolve<IProductAttributeService>().GetProductAttributeById(this.ProductAttributeId);
                 if (productAttribute != null)
                 {
-                    IoCFactory.Resolve<IProductAttributeService>().DeleteProductAttribute(productAttribute.ProductAttributeId);
+                    IoC.Resolve<IProductAttributeService>().DeleteProductAttribute(productAttribute.ProductAttributeId);
 
-                    IoCFactory.Resolve<ICustomerActivityService>().InsertActivity(
+                    IoC.Resolve<ICustomerActivityService>().InsertActivity(
                         "DeleteProductAttribute",
                         GetLocaleResourceString("ActivityLog.DeleteProductAttribute"),
                         productAttribute.Name);

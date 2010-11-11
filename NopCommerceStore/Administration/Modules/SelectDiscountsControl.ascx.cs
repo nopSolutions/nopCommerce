@@ -25,7 +25,7 @@ using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts;
 using NopSolutions.NopCommerce.Web;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
  
  
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
@@ -36,7 +36,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public void BindData(DiscountTypeEnum? DiscountType)
         {
-            var discounts = IoCFactory.Resolve<IDiscountService>().GetAllDiscounts(DiscountType);
+            var discounts = IoC.Resolve<IDiscountService>().GetAllDiscounts(DiscountType);
             foreach (Discount discount in discounts)
             {
                 ListItem item = new ListItem(discount.Name, discount.DiscountId.ToString());

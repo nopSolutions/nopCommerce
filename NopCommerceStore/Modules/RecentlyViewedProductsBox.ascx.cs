@@ -29,7 +29,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 
 namespace NopSolutions.NopCommerce.Web.Modules
@@ -44,9 +44,9 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         private void BindData()
         {
-            int number = IoCFactory.Resolve<IProductService>().RecentlyViewedProductsNumber;
-            var products = IoCFactory.Resolve<IProductService>().GetRecentlyViewedProducts(number);
-            if (IoCFactory.Resolve<IProductService>().RecentlyViewedProductsEnabled && products.Count > 0)
+            int number = IoC.Resolve<IProductService>().RecentlyViewedProductsNumber;
+            var products = IoC.Resolve<IProductService>().GetRecentlyViewedProducts(number);
+            if (IoC.Resolve<IProductService>().RecentlyViewedProductsEnabled && products.Count > 0)
             {
                 lvRecentlyViewedProducts.DataSource = products;
                 lvRecentlyViewedProducts.DataBind();

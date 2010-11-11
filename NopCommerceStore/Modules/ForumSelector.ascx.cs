@@ -16,7 +16,7 @@ using System;
 using System.ComponentModel;
 using System.Web.UI.WebControls;
 using NopSolutions.NopCommerce.BusinessLogic.Content.Forums;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
  
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -34,7 +34,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 var itemRoot = new ListItem(this.RootItemText, "0");
                 this.ddlForums.Items.Add(itemRoot);
             }
-            var forumGroups = IoCFactory.Resolve<IForumService>().GetAllForumGroups();
+            var forumGroups = IoC.Resolve<IForumService>().GetAllForumGroups();
             foreach (var forumGroup in forumGroups)
             {
                 var forumGroupItem = new ListItem(forumGroup.Name, "0");

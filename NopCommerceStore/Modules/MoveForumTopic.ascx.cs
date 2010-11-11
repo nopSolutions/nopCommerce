@@ -33,7 +33,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Profile;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.Utils.Html;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -51,14 +51,14 @@ namespace NopSolutions.NopCommerce.Web.Modules
         {
             pnlError.Visible = false;
 
-            var forumTopic = IoCFactory.Resolve<IForumService>().GetTopicById(this.ForumTopicId);
+            var forumTopic = IoC.Resolve<IForumService>().GetTopicById(this.ForumTopicId);
 
             if (forumTopic == null)
             {
                 Response.Redirect(SEOHelper.GetForumMainUrl());
             }
 
-            if (!IoCFactory.Resolve<IForumService>().IsUserAllowedToMoveTopic(NopContext.Current.User, forumTopic))
+            if (!IoC.Resolve<IForumService>().IsUserAllowedToMoveTopic(NopContext.Current.User, forumTopic))
             {
                 string loginURL = SEOHelper.GetLoginPageUrl(true);
                 Response.Redirect(loginURL);
@@ -75,13 +75,13 @@ namespace NopSolutions.NopCommerce.Web.Modules
         {
             try
             {
-                var forumTopic = IoCFactory.Resolve<IForumService>().GetTopicById(this.ForumTopicId);
+                var forumTopic = IoC.Resolve<IForumService>().GetTopicById(this.ForumTopicId);
                 if (forumTopic == null)
                 {
                     Response.Redirect(SEOHelper.GetForumMainUrl());
                 }
 
-                IoCFactory.Resolve<IForumService>().MoveTopic(forumTopic.ForumTopicId, ctrlForumSelector.SelectedForumId);
+                IoC.Resolve<IForumService>().MoveTopic(forumTopic.ForumTopicId, ctrlForumSelector.SelectedForumId);
                 string topicURL = SEOHelper.GetForumTopicUrl(forumTopic);
                 Response.Redirect(topicURL);
             }
@@ -96,7 +96,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
         {
             try
             {
-                var forumTopic = IoCFactory.Resolve<IForumService>().GetTopicById(this.ForumTopicId);
+                var forumTopic = IoC.Resolve<IForumService>().GetTopicById(this.ForumTopicId);
                 if (forumTopic != null)
                 {
                     string topicUrl = SEOHelper.GetForumTopicUrl(forumTopic);

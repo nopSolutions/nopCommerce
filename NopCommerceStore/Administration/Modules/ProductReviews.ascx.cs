@@ -26,7 +26,7 @@ using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -37,11 +37,11 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             if (e.CommandName == "UpdateItem")
             {
                 int productReviewId = Convert.ToInt32(e.CommandArgument);
-                ProductReview productReview = IoCFactory.Resolve<IProductService>().GetProductReviewById(productReviewId);
+                ProductReview productReview = IoC.Resolve<IProductService>().GetProductReviewById(productReviewId);
                 if (productReview != null)
                 {
                     productReview.IsApproved = !productReview.IsApproved;
-                    IoCFactory.Resolve<IProductService>().UpdateProductReview(productReview);
+                    IoC.Resolve<IProductService>().UpdateProductReview(productReview);
                 }
                 BindData();
             }
@@ -61,7 +61,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             if (e.CommandName == "DeleteItem")
             {
                 int productReviewId = Convert.ToInt32(e.CommandArgument);
-                IoCFactory.Resolve<IProductService>().DeleteProductReview(productReviewId);
+                IoC.Resolve<IProductService>().DeleteProductReview(productReviewId);
                 BindData();
             }
         }
@@ -80,7 +80,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected string GetCustomerInfo(int customerId)
         {
-            Customer customer = IoCFactory.Resolve<ICustomerService>().GetCustomerById(customerId);
+            Customer customer = IoC.Resolve<ICustomerService>().GetCustomerById(customerId);
             if (customer != null)
             {
                 string customerInfo = string.Format("<a href=\"CustomerDetails.aspx?CustomerID={0}\">{1}</a>", customer.CustomerId, Server.HtmlEncode(customer.Email));
@@ -94,9 +94,9 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             List<ProductReview> productReviews = null;
             if (this.ProductId > 0)
-                productReviews = IoCFactory.Resolve<IProductService>().GetProductReviewByProductId(ProductId);
+                productReviews = IoC.Resolve<IProductService>().GetProductReviewByProductId(ProductId);
             else
-                productReviews = IoCFactory.Resolve<IProductService>().GetAllProductReviews();
+                productReviews = IoC.Resolve<IProductService>().GetAllProductReviews();
 
             gvProductReviews.DataSource = productReviews;
             gvProductReviews.DataBind();

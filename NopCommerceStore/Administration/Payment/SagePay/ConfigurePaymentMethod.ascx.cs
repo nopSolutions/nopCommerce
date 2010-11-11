@@ -27,7 +27,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Payment;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Payment.Methods.Manual;
 using NopSolutions.NopCommerce.Web.Templates.Payment;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Payment.SagePay
 {
@@ -43,30 +43,30 @@ namespace NopSolutions.NopCommerce.Web.Administration.Payment.SagePay
 
         private void BindData()
         {
-            cbUseSandbox.Checked = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.SagePay.UseSandbox", false);
-            txtPartnerId.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.SagePay.PartnerId");
-            txtVendorName.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.SagePay.VendorName");
-            txtVendorDescription.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.SagePay.VendorDescription");
-            cbSendEmails.Checked = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.SagePay.SendEmails", false);
-            txtThanksMessage.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.SagePay.EmailThanksMessage");
-            cbApplyCVS.Checked = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.SagePay.ApplyCVS", true);
-            cbApply3DS.Checked = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.SagePay.Apply3DS", true);
-            txtEncyptionPassword.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.SagePay.EncryptionPassword");
-            txtProtocolNumber.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.SagePay.ProtocolNumber", "2.23");
+            cbUseSandbox.Checked = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.SagePay.UseSandbox", false);
+            txtPartnerId.Text = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.SagePay.PartnerId");
+            txtVendorName.Text = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.SagePay.VendorName");
+            txtVendorDescription.Text = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.SagePay.VendorDescription");
+            cbSendEmails.Checked = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.SagePay.SendEmails", false);
+            txtThanksMessage.Text = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.SagePay.EmailThanksMessage");
+            cbApplyCVS.Checked = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.SagePay.ApplyCVS", true);
+            cbApply3DS.Checked = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.SagePay.Apply3DS", true);
+            txtEncyptionPassword.Text = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.SagePay.EncryptionPassword");
+            txtProtocolNumber.Text = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.SagePay.ProtocolNumber", "2.23");
         }
 
         public void Save()
         {
-            IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.SagePay.UseSandbox", cbUseSandbox.Checked.ToString());
-            IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.SagePay.PartnerId", txtPartnerId.Text);
-            IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.SagePay.VendorName", txtVendorName.Text);
-            IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.SagePay.VendorDescription", txtVendorDescription.Text);
-            IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.SagePay.SendEmails", cbSendEmails.Checked.ToString());
-            IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.SagePay.EmailThanksMessage", txtThanksMessage.Text);
-            IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.SagePay.ApplyCVS", cbApplyCVS.Checked.ToString());
-            IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.SagePay.Apply3DS", cbApply3DS.Checked.ToString());
-            IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.SagePay.EncryptionPassword", txtEncyptionPassword.Text);
-            IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.SagePay.ProtocolNumber", txtProtocolNumber.Text);
+            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.SagePay.UseSandbox", cbUseSandbox.Checked.ToString());
+            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.SagePay.PartnerId", txtPartnerId.Text);
+            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.SagePay.VendorName", txtVendorName.Text);
+            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.SagePay.VendorDescription", txtVendorDescription.Text);
+            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.SagePay.SendEmails", cbSendEmails.Checked.ToString());
+            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.SagePay.EmailThanksMessage", txtThanksMessage.Text);
+            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.SagePay.ApplyCVS", cbApplyCVS.Checked.ToString());
+            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.SagePay.Apply3DS", cbApply3DS.Checked.ToString());
+            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.SagePay.EncryptionPassword", txtEncyptionPassword.Text);
+            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.SagePay.ProtocolNumber", txtProtocolNumber.Text);
         }
     }
 }

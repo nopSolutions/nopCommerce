@@ -35,7 +35,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Tax;
 using NopSolutions.NopCommerce.Common.Utils;
 using System.Globalization;
 using NopSolutions.NopCommerce.Controls;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -48,7 +48,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         public void CreateAttributeControls()
         {
-            var productVariant = IoCFactory.Resolve<IProductService>().GetProductVariantById(this.ProductVariantId);
+            var productVariant = IoC.Resolve<IProductService>().GetProductVariantById(this.ProductVariantId);
             if (productVariant != null)
             {
                 this.phAttributes.Controls.Clear();
@@ -113,7 +113,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                                     ddlAttributes.Items.Clear();
                                     
                                     //dynamic price update
-                                    if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("ProductAttribute.EnableDynamicPriceUpdate"))
+                                    if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("ProductAttribute.EnableDynamicPriceUpdate"))
                                     {
                                         adjustmentTableScripts.AppendFormat("{0}['{1}'] = new Array(", AdjustmentTableName, ddlAttributes.ClientID);
                                         attributeScripts.AppendFormat("$('#{0}').change(function(){{{1}();}});\n", ddlAttributes.ClientID, AdjustmentFuncName);
@@ -125,7 +125,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                                         ddlAttributes.Items.Add(new ListItem("---", "0"));
 
                                         //dynamic price update
-                                        if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("ProductAttribute.EnableDynamicPriceUpdate"))
+                                        if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("ProductAttribute.EnableDynamicPriceUpdate"))
                                         {
                                             adjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "{0},", decimal.Zero);
                                             numberOfJsArrayItems++;
@@ -141,13 +141,13 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
                                         //display price if allowed
                                         if (!this.HidePrices &&
-                                            (!IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Common.HidePricesForNonRegistered") ||
+                                            (!IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Common.HidePricesForNonRegistered") ||
                                             (NopContext.Current.User != null &&
                                             !NopContext.Current.User.IsGuest)))
                                         {
                                             decimal taxRate = decimal.Zero;
-                                            decimal priceAdjustmentBase = IoCFactory.Resolve<ITaxService>().GetPrice(productVariant, pvaValue.PriceAdjustment, out taxRate);
-                                            decimal priceAdjustment = IoCFactory.Resolve<ICurrencyService>().ConvertCurrency(priceAdjustmentBase, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                                            decimal priceAdjustmentBase = IoC.Resolve<ITaxService>().GetPrice(productVariant, pvaValue.PriceAdjustment, out taxRate);
+                                            decimal priceAdjustment = IoC.Resolve<ICurrencyService>().ConvertCurrency(priceAdjustmentBase, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
                                             if (priceAdjustmentBase > decimal.Zero)
                                             {
                                                 pvaValueName += string.Format(" [+{0}]", PriceHelper.FormatPrice(priceAdjustment, false, false));
@@ -158,7 +158,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                                             }
 
                                             //dynamic price update
-                                            if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("ProductAttribute.EnableDynamicPriceUpdate"))
+                                            if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("ProductAttribute.EnableDynamicPriceUpdate"))
                                             {
                                                 adjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "{0},", (float)priceAdjustment);
                                                 numberOfJsArrayItems++;
@@ -175,7 +175,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                                     }
                                     
                                     //dynamic price update
-                                    if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("ProductAttribute.EnableDynamicPriceUpdate"))
+                                    if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("ProductAttribute.EnableDynamicPriceUpdate"))
                                     {
                                         //If you create an array with a single numeric parameter, that number is used for specifying the number of elements in this array.
                                         //so have a little hack here (we need at least two elements)
@@ -186,7 +186,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                                     }
 
                                     //dynamic price update
-                                    if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("ProductAttribute.EnableDynamicPriceUpdate"))
+                                    if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("ProductAttribute.EnableDynamicPriceUpdate"))
                                     {
                                         adjustmentTableScripts.Length -= 1;
                                         adjustmentTableScripts.Append(");\n");
@@ -208,13 +208,13 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
                                         //display price if allowed
                                         if (!this.HidePrices &&
-                                            (!IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Common.HidePricesForNonRegistered") ||
+                                            (!IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Common.HidePricesForNonRegistered") ||
                                             (NopContext.Current.User != null &&
                                             !NopContext.Current.User.IsGuest)))
                                         {
                                             decimal taxRate = decimal.Zero;
-                                            decimal priceAdjustmentBase = IoCFactory.Resolve<ITaxService>().GetPrice(productVariant, pvaValue.PriceAdjustment, out taxRate);
-                                            decimal priceAdjustment = IoCFactory.Resolve<ICurrencyService>().ConvertCurrency(priceAdjustmentBase, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                                            decimal priceAdjustmentBase = IoC.Resolve<ITaxService>().GetPrice(productVariant, pvaValue.PriceAdjustment, out taxRate);
+                                            decimal priceAdjustment = IoC.Resolve<ICurrencyService>().ConvertCurrency(priceAdjustmentBase, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
                                             if (priceAdjustmentBase > decimal.Zero)
                                             {
                                                 pvaValueName += string.Format(" [+{0}]",PriceHelper.FormatPrice(priceAdjustment, false, false));
@@ -225,7 +225,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                                             }
 
                                             //dynamic price update
-                                            if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("ProductAttribute.EnableDynamicPriceUpdate"))
+                                            if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("ProductAttribute.EnableDynamicPriceUpdate"))
                                             {
                                                 adjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "{0}['{1}_{2}'] = {3};\n", AdjustmentTableName, rblAttributes.ClientID, rblAttributes.Items.Count, (float)priceAdjustment);
                                                 attributeScripts.AppendFormat("$('#{0}_{1}').click(function(){{{2}();}});\n", rblAttributes.ClientID, rblAttributes.Items.Count, AdjustmentFuncName);
@@ -257,13 +257,13 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
                                         //display price if allowed
                                         if (!this.HidePrices &&
-                                            (!IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Common.HidePricesForNonRegistered") ||
+                                            (!IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Common.HidePricesForNonRegistered") ||
                                             (NopContext.Current.User != null &&
                                             !NopContext.Current.User.IsGuest)))
                                         {
                                             decimal taxRate = decimal.Zero;
-                                            decimal priceAdjustmentBase = IoCFactory.Resolve<ITaxService>().GetPrice(productVariant, pvaValue.PriceAdjustment, out taxRate);
-                                            decimal priceAdjustment = IoCFactory.Resolve<ICurrencyService>().ConvertCurrency(priceAdjustmentBase, IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                                            decimal priceAdjustmentBase = IoC.Resolve<ITaxService>().GetPrice(productVariant, pvaValue.PriceAdjustment, out taxRate);
+                                            decimal priceAdjustment = IoC.Resolve<ICurrencyService>().ConvertCurrency(priceAdjustmentBase, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
                                             if (priceAdjustmentBase > decimal.Zero)
                                             {
                                                 pvaValueName += string.Format(" [+{0}]", PriceHelper.FormatPrice(priceAdjustment, false, false));
@@ -274,7 +274,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                                             }
 
                                             //dynamic price update
-                                            if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("ProductAttribute.EnableDynamicPriceUpdate"))
+                                            if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("ProductAttribute.EnableDynamicPriceUpdate"))
                                             {
                                                 adjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "{0}['{1}_{2}'] = {3};\n", AdjustmentTableName, cblAttributes.ClientID, cblAttributes.Items.Count, (float)priceAdjustment);
                                                 attributeScripts.AppendFormat("$('#{0}_{1}').click(function(){{{2}();}});\n", cblAttributes.ClientID, cblAttributes.Items.Count, AdjustmentFuncName);
@@ -290,7 +290,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                             case AttributeControlTypeEnum.TextBox:
                                 {
                                     var txtAttribute = new TextBox();
-                                    txtAttribute.Width = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("ProductAttribute.Textbox.Width", 300);
+                                    txtAttribute.Width = IoC.Resolve<ISettingManager>().GetSettingValueInteger("ProductAttribute.Textbox.Width", 300);
                                     txtAttribute.ID = controlId;
                                     divAttribute.Controls.Add(txtAttribute);
                                 }
@@ -300,8 +300,8 @@ namespace NopSolutions.NopCommerce.Web.Modules
                                     var txtAttribute = new TextBox();
                                     txtAttribute.ID = controlId;
                                     txtAttribute.TextMode = TextBoxMode.MultiLine;
-                                    txtAttribute.Width = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("ProductAttribute.MultiTextbox.Width", 300);
-                                    txtAttribute.Height = IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("ProductAttribute.MultiTextbox.Height", 150);
+                                    txtAttribute.Width = IoC.Resolve<ISettingManager>().GetSettingValueInteger("ProductAttribute.MultiTextbox.Width", 300);
+                                    txtAttribute.Height = IoC.Resolve<ISettingManager>().GetSettingValueInteger("ProductAttribute.MultiTextbox.Height", 150);
                                     divAttribute.Controls.Add(txtAttribute);
                                 }
                                 break;
@@ -324,12 +324,12 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
                     //display price if allowed
                     if (!this.HidePrices &&
-                        (!IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Common.HidePricesForNonRegistered") ||
+                        (!IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Common.HidePricesForNonRegistered") ||
                         (NopContext.Current.User != null &&
                         !NopContext.Current.User.IsGuest)))
                     {
                         //dynamic price update
-                        if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("ProductAttribute.EnableDynamicPriceUpdate"))
+                        if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("ProductAttribute.EnableDynamicPriceUpdate"))
                         {
                             lblAdjustmentTableScripts.Text = adjustmentTableScripts.ToString();
                             lblAttributeScripts.Text = attributeScripts.ToString();
@@ -361,7 +361,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             get
             {
                 string selectedAttributes = string.Empty;
-                var productVariantAttributes = IoCFactory.Resolve<IProductAttributeService>().GetProductVariantAttributesByProductVariantId(this.ProductVariantId);
+                var productVariantAttributes = IoC.Resolve<IProductAttributeService>().GetProductVariantAttributesByProductVariantId(this.ProductVariantId);
                 foreach (ProductVariantAttribute attribute in productVariantAttributes)
                 {
                     string controlId = string.Format("{0}_{1}", attribute.ProductAttribute.ProductAttributeId, attribute.ProductVariantAttributeId);

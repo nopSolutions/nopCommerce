@@ -24,7 +24,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Payment;
 using NopSolutions.NopCommerce.BusinessLogic.Shipping;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
 using System.ComponentModel;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -34,7 +34,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             int days = Convert.ToInt32(ddlDays.SelectedValue.ToString());
 
-            lblCustomers.Text = IoCFactory.Resolve<ICustomerService>().GetRegisteredCustomersReport(days).ToString();
+            lblCustomers.Text = IoC.Resolve<ICustomerService>().GetRegisteredCustomersReport(days).ToString();
             lnkViewCustomers.NavigateUrl = "~/Administration/Customers.aspx?ShowDays=" + days;
         }
 

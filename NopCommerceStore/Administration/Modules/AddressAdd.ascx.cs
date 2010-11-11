@@ -19,7 +19,7 @@ using System.Web.UI.WebControls;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -27,7 +27,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         protected void BindData()
         {
-            Customer customer = IoCFactory.Resolve<ICustomerService>().GetCustomerById(this.CustomerId);
+            Customer customer = IoC.Resolve<ICustomerService>().GetCustomerById(this.CustomerId);
             if (customer != null)
             {
                 this.lblCustomer.Text = Server.HtmlEncode(customer.Email);
@@ -42,9 +42,9 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             this.ddlCountry.Items.Clear();
             List<Country> countryCollection = null;
             if (IsBillingAddress)
-                countryCollection = IoCFactory.Resolve<ICountryService>().GetAllCountriesForBilling();
+                countryCollection = IoC.Resolve<ICountryService>().GetAllCountriesForBilling();
             else
-                countryCollection = IoCFactory.Resolve<ICountryService>().GetAllCountriesForShipping();
+                countryCollection = IoC.Resolve<ICountryService>().GetAllCountriesForShipping();
             foreach (Country country in countryCollection)
             {
                 ListItem ddlCountryItem2 = new ListItem(country.Name, country.CountryId.ToString());
@@ -57,7 +57,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             this.ddlStateProvince.Items.Clear();
             int countryId = int.Parse(this.ddlCountry.SelectedItem.Value);
 
-            var stateProvinceCollection = IoCFactory.Resolve<IStateProvinceService>().GetStateProvincesByCountryId(countryId);
+            var stateProvinceCollection = IoC.Resolve<IStateProvinceService>().GetStateProvincesByCountryId(countryId);
             foreach (StateProvince stateProvince in stateProvinceCollection)
             {
                 ListItem ddlStateProviceItem2 = new ListItem(stateProvince.Name, stateProvince.StateProvinceId.ToString());
@@ -101,7 +101,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 CreatedOn = DateTime.UtcNow,
                 UpdatedOn = DateTime.UtcNow
             };
-            IoCFactory.Resolve<ICustomerService>().InsertAddress(address);
+            IoC.Resolve<ICustomerService>().InsertAddress(address);
 
             return address;
         }

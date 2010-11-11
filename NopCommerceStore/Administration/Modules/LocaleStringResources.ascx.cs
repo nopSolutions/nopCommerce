@@ -28,7 +28,7 @@ using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.BusinessLogic.Localization;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
@@ -38,7 +38,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         private void FillDropDowns()
         {
             this.ddlLanguage.Items.Clear();
-            var languageCollection = IoCFactory.Resolve<ILanguageService>().GetAllLanguages();
+            var languageCollection = IoC.Resolve<ILanguageService>().GetAllLanguages();
             foreach (Language language in languageCollection)
             {
                 ListItem ddlLanguageItem2 = new ListItem(language.Name, language.LanguageId.ToString());
@@ -62,10 +62,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             if (this.ddlLanguage.SelectedItem == null)
                 return;
 
-            Language language = IoCFactory.Resolve<ILanguageService>().GetLanguageById(int.Parse(this.ddlLanguage.SelectedItem.Value));
+            Language language = IoC.Resolve<ILanguageService>().GetLanguageById(int.Parse(this.ddlLanguage.SelectedItem.Value));
             if (language != null)
             {
-                var allResources = IoCFactory.Resolve<ILocalizationManager>().GetAllResourcesByLanguageId(language.LanguageId);
+                var allResources = IoC.Resolve<ILocalizationManager>().GetAllResourcesByLanguageId(language.LanguageId);
                 var filteredResources = new List<LocaleStringResource>();
 
                 string filterByResourceName = txtResourceName.Text.Trim();
@@ -116,7 +116,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     }
                     else
                     {
-                        languageId = IoCFactory.Resolve<ILanguageService>().GetAllLanguages().FirstOrDefault().LanguageId;
+                        languageId = IoC.Resolve<ILanguageService>().GetAllLanguages().FirstOrDefault().LanguageId;
                     }
                     Response.Redirect("LocaleStringResourceAdd.aspx?LanguageID=" + languageId);
                 }

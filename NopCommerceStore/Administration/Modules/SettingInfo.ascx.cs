@@ -24,7 +24,7 @@ using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -32,7 +32,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            Setting setting = IoCFactory.Resolve<ISettingManager>().GetSettingById(this.SettingId);
+            Setting setting = IoC.Resolve<ISettingManager>().GetSettingById(this.SettingId);
             if (setting != null)
             {
                 this.txtName.Text = setting.Name;
@@ -51,15 +51,15 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public Setting SaveInfo()
         {
-            Setting setting = IoCFactory.Resolve<ISettingManager>().GetSettingById(this.SettingId);
+            Setting setting = IoC.Resolve<ISettingManager>().GetSettingById(this.SettingId);
             if (setting != null)
             {
-                setting = IoCFactory.Resolve<ISettingManager>().UpdateSetting(setting.SettingId,
+                setting = IoC.Resolve<ISettingManager>().UpdateSetting(setting.SettingId,
                    txtName.Text, txtValue.Text, txtDescription.Text);
             }
             else
             {
-                setting = IoCFactory.Resolve<ISettingManager>().AddSetting(txtName.Text,
+                setting = IoC.Resolve<ISettingManager>().AddSetting(txtName.Text,
                     txtValue.Text, txtDescription.Text);
             }
             return setting;

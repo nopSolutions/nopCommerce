@@ -19,7 +19,7 @@ using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.Common.Utils;
 using System.Collections.Generic;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -27,7 +27,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         protected void BindData()
         {
-            Address address = IoCFactory.Resolve<ICustomerService>().GetAddressById(this.AddressId);
+            Address address = IoC.Resolve<ICustomerService>().GetAddressById(this.AddressId);
             if (address != null)
             {
                 Customer customer = address.Customer;
@@ -64,9 +64,9 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             this.ddlCountry.Items.Clear();
             List<Country> countryCollection = null;
             if (address.IsBillingAddress)
-                countryCollection = IoCFactory.Resolve<ICountryService>().GetAllCountriesForBilling();
+                countryCollection = IoC.Resolve<ICountryService>().GetAllCountriesForBilling();
             else
-                countryCollection = IoCFactory.Resolve<ICountryService>().GetAllCountriesForShipping();
+                countryCollection = IoC.Resolve<ICountryService>().GetAllCountriesForShipping();
             foreach (Country country in countryCollection)
             {
                 ListItem ddlCountryItem2 = new ListItem(country.Name, country.CountryId.ToString());
@@ -79,7 +79,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             this.ddlStateProvince.Items.Clear();
             int countryId = int.Parse(this.ddlCountry.SelectedItem.Value);
 
-            var stateProvinceCollection = IoCFactory.Resolve<IStateProvinceService>().GetStateProvincesByCountryId(countryId);
+            var stateProvinceCollection = IoC.Resolve<IStateProvinceService>().GetStateProvincesByCountryId(countryId);
             foreach (StateProvince stateProvince in stateProvinceCollection)
             {
                 ListItem ddlStateProviceItem2 = new ListItem(stateProvince.Name, stateProvince.StateProvinceId.ToString());
@@ -102,7 +102,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected Address Save()
         {
-            var address = IoCFactory.Resolve<ICustomerService>().GetAddressById(this.AddressId);
+            var address = IoC.Resolve<ICustomerService>().GetAddressById(this.AddressId);
 
             address.FirstName = txtFirstName.Text;
             address.LastName = txtLastName.Text;
@@ -117,7 +117,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             address.ZipPostalCode = txtZipPostalCode.Text;
             address.CountryId = int.Parse(this.ddlCountry.SelectedItem.Value);
             address.UpdatedOn = DateTime.UtcNow;
-            IoCFactory.Resolve<ICustomerService>().UpdateAddress(address);
+            IoC.Resolve<ICustomerService>().UpdateAddress(address);
 
             return address;
         }
@@ -158,8 +158,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                Address address = IoCFactory.Resolve<ICustomerService>().GetAddressById(this.AddressId);
-                IoCFactory.Resolve<ICustomerService>().DeleteAddress(this.AddressId);
+                Address address = IoC.Resolve<ICustomerService>().GetAddressById(this.AddressId);
+                IoC.Resolve<ICustomerService>().DeleteAddress(this.AddressId);
                 if (address != null)
                     Response.Redirect("CustomerDetails.aspx?CustomerID=" + address.CustomerId.ToString());
                 else

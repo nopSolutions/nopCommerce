@@ -13,7 +13,7 @@
 //------------------------------------------------------------------------------
 
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Payment.Methods.Svea
 {
@@ -29,11 +29,11 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Svea
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Svea.Username");
+                return IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Svea.Username");
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.Svea.Username", value);
+                IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.Svea.Username", value);
             }
         }
 
@@ -44,11 +44,11 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Svea
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Svea.Password");
+                return IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Svea.Password");
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.Svea.Password", value);
+                IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.Svea.Password", value);
             }
         }
     }

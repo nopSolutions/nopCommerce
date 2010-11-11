@@ -63,7 +63,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Tax;
 using NopSolutions.NopCommerce.BusinessLogic.Templates;
 using NopSolutions.NopCommerce.BusinessLogic.Warehouses;
 
-namespace NopSolutions.NopCommerce.BusinessLogic.IoC
+namespace NopSolutions.NopCommerce.BusinessLogic.Infrastructure
 {
     public class UnityDependencyResolver : IDependencyResolver
     {

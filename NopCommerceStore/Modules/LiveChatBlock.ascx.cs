@@ -27,7 +27,7 @@ using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -40,14 +40,14 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         private void BindData()
         {
-            if (!IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("LiveChat.Enabled", false))
+            if (!IoC.Resolve<ISettingManager>().GetSettingValueBoolean("LiveChat.Enabled", false))
             {
                 Visible = false;
             }
             else
             {
-                lblLiveChatBtn.Text = IoCFactory.Resolve<ISettingManager>().GetSettingValue("LiveChat.BtnCode");
-                Page.ClientScript.RegisterClientScriptBlock(GetType(), "LiveChatMonCode", IoCFactory.Resolve<ISettingManager>().GetSettingValue("LiveChat.MonCode"));
+                lblLiveChatBtn.Text = IoC.Resolve<ISettingManager>().GetSettingValue("LiveChat.BtnCode");
+                Page.ClientScript.RegisterClientScriptBlock(GetType(), "LiveChatMonCode", IoC.Resolve<ISettingManager>().GetSettingValue("LiveChat.MonCode"));
             }
         }
 
@@ -55,7 +55,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValue("LiveChat.SiteId");
+                return IoC.Resolve<ISettingManager>().GetSettingValue("LiveChat.SiteId");
             }
         }
     }

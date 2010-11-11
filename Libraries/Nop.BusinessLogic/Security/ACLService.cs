@@ -28,7 +28,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Data;
 using NopSolutions.NopCommerce.BusinessLogic.Utils;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Security
@@ -396,11 +396,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("ACL.Enabled");
+                return IoC.Resolve<ISettingManager>().GetSettingValueBoolean("ACL.Enabled");
             }
             set
             {
-                IoCFactory.Resolve<ISettingManager>().SetParam("ACL.Enabled", value.ToString());
+                IoC.Resolve<ISettingManager>().SetParam("ACL.Enabled", value.ToString());
             }
         }
 
@@ -411,7 +411,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Security
         {
             get
             {
-                return IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.ACLManager.CacheEnabled");
+                return IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Cache.ACLManager.CacheEnabled");
             }
         }
 

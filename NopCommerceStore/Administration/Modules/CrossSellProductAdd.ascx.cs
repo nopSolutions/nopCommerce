@@ -30,7 +30,7 @@ using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.Media;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using System.Collections.Generic;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -52,7 +52,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             this.ddlManufacturer.Items.Clear();
             ListItem itemEmptyManufacturer = new ListItem(GetLocaleResourceString("Admin.Common.All"), "0");
             this.ddlManufacturer.Items.Add(itemEmptyManufacturer);
-            var manufacturers = IoCFactory.Resolve<IManufacturerService>().GetAllManufacturers();
+            var manufacturers = IoC.Resolve<IManufacturerService>().GetAllManufacturers();
             foreach (Manufacturer manufacturer in manufacturers)
             {
                 ListItem item2 = new ListItem(manufacturer.Name, manufacturer.ManufacturerId.ToString());
@@ -67,7 +67,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             int manufacturerId = int.Parse(this.ddlManufacturer.SelectedItem.Value);
 
             int totalRecords = 0;
-            var products = IoCFactory.Resolve<IProductService>().GetAllProducts(categoryId, 
+            var products = IoC.Resolve<IProductService>().GetAllProducts(categoryId, 
                 manufacturerId, 0, null,
                 null, null, productName, false, 1000, 0, null, out totalRecords);
             return products;
@@ -78,11 +78,11 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             var picture = product.DefaultPicture;
             if (picture != null)
             {
-                return IoCFactory.Resolve<IPictureService>().GetPictureUrl(picture, IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.ShoppingCart.ThumbnailImageSize", 80));
+                return IoC.Resolve<IPictureService>().GetPictureUrl(picture, IoC.Resolve<ISettingManager>().GetSettingValueInteger("Media.ShoppingCart.ThumbnailImageSize", 80));
             }
             else
             {
-                return IoCFactory.Resolve<IPictureService>().GetDefaultPictureUrl(IoCFactory.Resolve<ISettingManager>().GetSettingValueInteger("Media.ShoppingCart.ThumbnailImageSize", 80));
+                return IoC.Resolve<IPictureService>().GetDefaultPictureUrl(IoC.Resolve<ISettingManager>().GetSettingValueInteger("Media.ShoppingCart.ThumbnailImageSize", 80));
             }
         }
 
@@ -94,7 +94,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 this.gvProducts.Visible = true;
                 this.btnSave.Visible = true;
                 this.lblNoProductsFound.Visible = false;
-                this.gvProducts.Columns[2].Visible = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("Display.ShowAdminProductImages");
+                this.gvProducts.Columns[2].Visible = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Display.ShowAdminProductImages");
 
                 this.gvProducts.DataSource = products;
                 this.gvProducts.DataBind();
@@ -124,7 +124,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected void btnSave_Click(object sender, EventArgs e)
         {
-            Product product = IoCFactory.Resolve<IProductService>().GetProductById(this.ProductId);
+            Product product = IoC.Resolve<IProductService>().GetProductById(this.ProductId);
             if (product != null)
             {
                 var existingCrossSellProducts = product.CrossSellProducts;
@@ -140,7 +140,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         {
                             if (existingCrossSellProducts.FindCrossSellProduct(this.ProductId, productId) == null)
                             {
-                                IoCFactory.Resolve<IProductService>().InsertCrossSellProduct(
+                                IoC.Resolve<IProductService>().InsertCrossSellProduct(
                                     new CrossSellProduct()
                                     {
                                         ProductId1 = this.ProductId,

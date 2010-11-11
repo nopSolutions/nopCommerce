@@ -32,7 +32,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts;
 using NopSolutions.NopCommerce.BusinessLogic.Shipping;
 using NopSolutions.NopCommerce.BusinessLogic.Utils;
 using NopSolutions.NopCommerce.Common;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Shipping.Methods.FedEx
 {
@@ -58,12 +58,12 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.FedEx
             
             request.WebAuthenticationDetail = new WebAuthenticationDetail();
             request.WebAuthenticationDetail.UserCredential = new WebAuthenticationCredential();
-            request.WebAuthenticationDetail.UserCredential.Key = IoCFactory.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.FedEx.Key"); // Replace "XXX" with the Key
-            request.WebAuthenticationDetail.UserCredential.Password = IoCFactory.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.FedEx.Password"); // Replace "XXX" with the Password
+            request.WebAuthenticationDetail.UserCredential.Key = IoC.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.FedEx.Key"); // Replace "XXX" with the Key
+            request.WebAuthenticationDetail.UserCredential.Password = IoC.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.FedEx.Password"); // Replace "XXX" with the Password
             
             request.ClientDetail = new ClientDetail();
-            request.ClientDetail.AccountNumber = IoCFactory.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.FedEx.AccountNumber"); // Replace "XXX" with client's account number
-            request.ClientDetail.MeterNumber = IoCFactory.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.FedEx.MeterNumber"); // Replace "XXX" with client's meter number
+            request.ClientDetail.AccountNumber = IoC.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.FedEx.AccountNumber"); // Replace "XXX" with client's account number
+            request.ClientDetail.MeterNumber = IoC.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.FedEx.MeterNumber"); // Replace "XXX" with client's meter number
             
             request.TransactionDetail = new TransactionDetail();
             request.TransactionDetail.CustomerTransactionId = "***Rate Available Services v7 Request - nopCommerce***"; // This is a reference field for the customer.  Any value can be used and will be provided in the response.
@@ -82,7 +82,7 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.FedEx
             Discount orderSubTotalAppliedDiscount = null;
             decimal subTotalWithoutDiscountBase = decimal.Zero;
             decimal subTotalWithDiscountBase = decimal.Zero;
-            IoCFactory.Resolve<IShoppingCartService>().GetShoppingCartSubTotal(ShipmentPackage.Items,
+            IoC.Resolve<IShoppingCartService>().GetShoppingCartSubTotal(ShipmentPackage.Items,
                 ShipmentPackage.Customer, out orderSubTotalDiscountAmount, out orderSubTotalAppliedDiscount,
                 out subTotalWithoutDiscountBase, out subTotalWithDiscountBase);
             subtotalBase = subTotalWithDiscountBase;
@@ -101,7 +101,7 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.FedEx
             request.RequestedShipment.DropoffType = DropoffType.REGULAR_PICKUP; //Drop off types are BUSINESS_SERVICE_CENTER, DROP_BOX, REGULAR_PICKUP, REQUEST_COURIER, STATION
             request.RequestedShipment.TotalInsuredValue = new Money();
             request.RequestedShipment.TotalInsuredValue.Amount = orderSubTotal;
-            request.RequestedShipment.TotalInsuredValue.Currency = IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode.ToString();
+            request.RequestedShipment.TotalInsuredValue.Currency = IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode.ToString();
             request.RequestedShipment.ShipTimestamp = DateTime.Now; // Shipping date and time
             request.RequestedShipment.ShipTimestampSpecified = true;
             request.RequestedShipment.RateRequestTypes = new RateRequestType[2];
@@ -117,14 +117,14 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.FedEx
             request.RequestedShipment.ShippingChargesPayment.PaymentType = PaymentType.SENDER; // Payment options are RECIPIENT, SENDER, THIRD_PARTY
             request.RequestedShipment.ShippingChargesPayment.PaymentTypeSpecified = true;
             request.RequestedShipment.ShippingChargesPayment.Payor = new Payor();
-            request.RequestedShipment.ShippingChargesPayment.Payor.AccountNumber = IoCFactory.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.FedEx.AccountNumber"); // Replace "XXX" with client's account number
+            request.RequestedShipment.ShippingChargesPayment.Payor.AccountNumber = IoC.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.FedEx.AccountNumber"); // Replace "XXX" with client's account number
         }
 
         private void SetDestination(RateRequest request, ShipmentPackage ShipmentPackage)
         {
             request.RequestedShipment.Recipient = new Party();
             request.RequestedShipment.Recipient.Address = new Address();
-            if (IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("ShippingRateComputationMethod.FedEx.UseResidentialRates", false))
+            if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("ShippingRateComputationMethod.FedEx.UseResidentialRates", false))
             {
                 request.RequestedShipment.Recipient.Address.Residential = true;
                 request.RequestedShipment.Recipient.Address.ResidentialSpecified = true;
@@ -147,11 +147,11 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.FedEx
         {
             request.RequestedShipment.Shipper = new Party();
             request.RequestedShipment.Shipper.Address = new Address();
-            request.RequestedShipment.Shipper.Address.StreetLines = new string[1] { IoCFactory.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.FedEx.ShippingOrigin.Street") };
-            request.RequestedShipment.Shipper.Address.City = IoCFactory.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.FedEx.ShippingOrigin.City");
-            request.RequestedShipment.Shipper.Address.StateOrProvinceCode = IoCFactory.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.FedEx.ShippingOrigin.StateOrProvinceCode");
-            request.RequestedShipment.Shipper.Address.PostalCode = IoCFactory.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.FedEx.ShippingOrigin.PostalCode");
-            request.RequestedShipment.Shipper.Address.CountryCode = IoCFactory.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.FedEx.ShippingOrigin.CountryCode");
+            request.RequestedShipment.Shipper.Address.StreetLines = new string[1] { IoC.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.FedEx.ShippingOrigin.Street") };
+            request.RequestedShipment.Shipper.Address.City = IoC.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.FedEx.ShippingOrigin.City");
+            request.RequestedShipment.Shipper.Address.StateOrProvinceCode = IoC.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.FedEx.ShippingOrigin.StateOrProvinceCode");
+            request.RequestedShipment.Shipper.Address.PostalCode = IoC.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.FedEx.ShippingOrigin.PostalCode");
+            request.RequestedShipment.Shipper.Address.CountryCode = IoC.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.FedEx.ShippingOrigin.CountryCode");
         }
 
         private void SetIndividualPackageLineItems(RateRequest request, ShipmentPackage ShipmentPackage, decimal orderSubTotal)
@@ -160,18 +160,18 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.FedEx
             // Passing individual pieces rate request
             // ------------------------------------------
 
-            var usedMeasureWeight = IoCFactory.Resolve<IMeasureService>().GetMeasureWeightBySystemKeyword(MEASUREWEIGHTSYSTEMKEYWORD);
+            var usedMeasureWeight = IoC.Resolve<IMeasureService>().GetMeasureWeightBySystemKeyword(MEASUREWEIGHTSYSTEMKEYWORD);
             if (usedMeasureWeight == null)
                 throw new NopException(string.Format("FedEx shipping service. Could not load \"{0}\" measure weight", MEASUREWEIGHTSYSTEMKEYWORD));
 
-            var usedMeasureDimension = IoCFactory.Resolve<IMeasureService>().GetMeasureDimensionBySystemKeyword(MEASUREDIMENSIONSYSTEMKEYWORD);
+            var usedMeasureDimension = IoC.Resolve<IMeasureService>().GetMeasureDimensionBySystemKeyword(MEASUREDIMENSIONSYSTEMKEYWORD);
             if (usedMeasureDimension == null)
                 throw new NopException(string.Format("FedEx shipping service. Could not load \"{0}\" measure dimension", MEASUREDIMENSIONSYSTEMKEYWORD));
 
-            int length = Convert.ToInt32(Math.Ceiling(IoCFactory.Resolve<IMeasureService>().ConvertDimension(ShipmentPackage.GetTotalLength(), IoCFactory.Resolve<IMeasureService>().BaseDimensionIn, usedMeasureDimension)));
-            int height = Convert.ToInt32(Math.Ceiling(IoCFactory.Resolve<IMeasureService>().ConvertDimension(ShipmentPackage.GetTotalHeight(), IoCFactory.Resolve<IMeasureService>().BaseDimensionIn, usedMeasureDimension)));
-            int width = Convert.ToInt32(Math.Ceiling(IoCFactory.Resolve<IMeasureService>().ConvertDimension(ShipmentPackage.GetTotalWidth(), IoCFactory.Resolve<IMeasureService>().BaseDimensionIn, usedMeasureDimension)));
-            int weight = Convert.ToInt32(Math.Ceiling(IoCFactory.Resolve<IMeasureService>().ConvertWeight(IoCFactory.Resolve<IShippingService>().GetShoppingCartTotalWeight(ShipmentPackage.Items, ShipmentPackage.Customer), IoCFactory.Resolve<IMeasureService>().BaseWeightIn, usedMeasureWeight)));
+            int length = Convert.ToInt32(Math.Ceiling(IoC.Resolve<IMeasureService>().ConvertDimension(ShipmentPackage.GetTotalLength(), IoC.Resolve<IMeasureService>().BaseDimensionIn, usedMeasureDimension)));
+            int height = Convert.ToInt32(Math.Ceiling(IoC.Resolve<IMeasureService>().ConvertDimension(ShipmentPackage.GetTotalHeight(), IoC.Resolve<IMeasureService>().BaseDimensionIn, usedMeasureDimension)));
+            int width = Convert.ToInt32(Math.Ceiling(IoC.Resolve<IMeasureService>().ConvertDimension(ShipmentPackage.GetTotalWidth(), IoC.Resolve<IMeasureService>().BaseDimensionIn, usedMeasureDimension)));
+            int weight = Convert.ToInt32(Math.Ceiling(IoC.Resolve<IMeasureService>().ConvertWeight(IoC.Resolve<IShippingService>().GetShoppingCartTotalWeight(ShipmentPackage.Items, ShipmentPackage.Customer), IoC.Resolve<IMeasureService>().BaseWeightIn, usedMeasureWeight)));
             if (length < 1)
                 length = 1;
             if (height < 1)
@@ -200,7 +200,7 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.FedEx
                 request.RequestedShipment.RequestedPackageLineItems[0].Dimensions.Units = LinearUnits.IN;
                 request.RequestedShipment.RequestedPackageLineItems[0].InsuredValue = new Money(); // insured value
                 request.RequestedShipment.RequestedPackageLineItems[0].InsuredValue.Amount = orderSubTotal;
-                request.RequestedShipment.RequestedPackageLineItems[0].InsuredValue.Currency = IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode.ToString();
+                request.RequestedShipment.RequestedPackageLineItems[0].InsuredValue.Currency = IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode.ToString();
 
             }
             else
@@ -254,16 +254,16 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.FedEx
                     request.RequestedShipment.RequestedPackageLineItems[i].Dimensions.Units = LinearUnits.IN;
                     request.RequestedShipment.RequestedPackageLineItems[i].InsuredValue = new Money(); // insured value
                     request.RequestedShipment.RequestedPackageLineItems[i].InsuredValue.Amount = orderSubTotal2;
-                    request.RequestedShipment.RequestedPackageLineItems[i].InsuredValue.Currency = IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode.ToString();
+                    request.RequestedShipment.RequestedPackageLineItems[i].InsuredValue.Currency = IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode.ToString();
                 }
             }
         }
 
         private List<ShippingOption> ParseResponse(RateReply reply)
         {
-            var additionalFee = IoCFactory.Resolve<ISettingManager>().GetSettingValueDecimalNative("ShippingRateComputationMethod.FedEx.AdditionalFee", 0);
-            string carrierServicesOffered = IoCFactory.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.FedEx.CarrierServicesOffered");
-            bool applyDiscount = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("ShippingRateComputationMethod.FedEx.ApplyDiscounts", false);
+            var additionalFee = IoC.Resolve<ISettingManager>().GetSettingValueDecimalNative("ShippingRateComputationMethod.FedEx.AdditionalFee", 0);
+            string carrierServicesOffered = IoC.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.FedEx.CarrierServicesOffered");
+            bool applyDiscount = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("ShippingRateComputationMethod.FedEx.ApplyDiscounts", false);
 
             var result = new List<ShippingOption>();
 
@@ -373,7 +373,7 @@ namespace NopSolutions.NopCommerce.Shipping.Methods.FedEx
 
             RateRequest request = CreateRateRequest(shipmentPackage);
             RateService service = new RateService(); // Initialize the service
-            service.Url = IoCFactory.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.FedEx.URL");
+            service.Url = IoC.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.FedEx.URL");
             try
             {
                 // This is the call to the web service passing in a RateRequest and returning a RateReply

@@ -1255,7 +1255,7 @@
                                             <table class="order-edit">
                                                 <tr>
                                                     <td colspan="2">
-                                                        <%= string.Format(GetLocaleResourceString("Admin.OrderDetails.Products.Edit.PrimaryStoreCurrency"), IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode)%>
+                                                        <%= string.Format(GetLocaleResourceString("Admin.OrderDetails.Products.Edit.PrimaryStoreCurrency"), IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode)%>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -1333,7 +1333,7 @@
                                             <table class="order-edit">
                                                 <tr>
                                                     <td colspan="2">
-                                                        <%= string.Format(GetLocaleResourceString("Admin.OrderDetails.Products.Edit.PrimaryStoreCurrency"), IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode)%>
+                                                        <%= string.Format(GetLocaleResourceString("Admin.OrderDetails.Products.Edit.PrimaryStoreCurrency"), IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode)%>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -1368,7 +1368,7 @@
                                             <table class="order-edit">
                                                 <tr>
                                                     <td colspan="2">
-                                                        <%= string.Format(GetLocaleResourceString("Admin.OrderDetails.Products.Edit.PrimaryStoreCurrency"), IoCFactory.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode)%>
+                                                        <%= string.Format(GetLocaleResourceString("Admin.OrderDetails.Products.Edit.PrimaryStoreCurrency"), IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode)%>
                                                     </td>
                                                 </tr>
                                                 <tr>

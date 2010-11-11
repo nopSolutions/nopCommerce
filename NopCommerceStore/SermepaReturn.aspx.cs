@@ -14,7 +14,7 @@ using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Payment.Methods.PayPoint;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web
 {
@@ -27,7 +27,7 @@ namespace NopSolutions.NopCommerce.Web
             if (!Page.IsPostBack)
             {
                 string HostName = Request.UserHostName;
-                IoCFactory.Resolve<ILogService>().InsertLog(LogTypeEnum.OrderError, "TPV SERMEPA: Host " + HostName, "Host: " + HostName);
+                IoC.Resolve<ILogService>().InsertLog(LogTypeEnum.OrderError, "TPV SERMEPA: Host " + HostName, "Host: " + HostName);
 
                 //ID de Pedido
                 string orderId = Request["Ds_Order"];
@@ -42,10 +42,10 @@ namespace NopSolutions.NopCommerce.Web
                 int Ds_Response = Convert.ToInt32(Request["Ds_Response"]);
 
                 //Clave
-                bool pruebas = IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.Sermepa.Pruebas");
+                bool pruebas = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.Sermepa.Pruebas");
                 string clave = "";
-                if (pruebas) { clave = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Sermepa.ClavePruebas"); }
-                else { clave = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Sermepa.ClaveReal"); };
+                if (pruebas) { clave = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Sermepa.ClavePruebas"); }
+                else { clave = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Sermepa.ClaveReal"); };
 
                 //Calculo de la firma
                 string SHA = string.Format("{0}{1}{2}{3}{4}{5}",
@@ -69,12 +69,12 @@ namespace NopSolutions.NopCommerce.Web
                 //LogManager.InsertLog(LogTypeEnum.OrderError, "TPV SERMEPA: Clave obtenida", "CLAVE OBTENIDA: " + signature);
                 if (!signature.Equals(SHAresultStr))
                 {
-                    IoCFactory.Resolve<ILogService>().InsertLog(LogTypeEnum.OrderError, "TPV SERMEPA: Clave incorrecta", "Las claves enviada y generada no coinciden: " + SHAresultStr + " != " + signature);
+                    IoC.Resolve<ILogService>().InsertLog(LogTypeEnum.OrderError, "TPV SERMEPA: Clave incorrecta", "Las claves enviada y generada no coinciden: " + SHAresultStr + " != " + signature);
                     return;
                 }
 
                 //Pedido
-                Order order = IoCFactory.Resolve<IOrderService>().GetOrderById(Convert.ToInt32(orderId));
+                Order order = IoC.Resolve<IOrderService>().GetOrderById(Convert.ToInt32(orderId));
                 if (order == null)
                     throw new NopException(string.Format("El pedido de ID {0} no existe", orderId));
 
@@ -82,16 +82,16 @@ namespace NopSolutions.NopCommerce.Web
                 if (Ds_Response > -1 && Ds_Response < 100)
                 {
                     //Lo marcamos como pagado
-                    if (IoCFactory.Resolve<IOrderService>().CanMarkOrderAsPaid(order))
+                    if (IoC.Resolve<IOrderService>().CanMarkOrderAsPaid(order))
                     {
-                        IoCFactory.Resolve<IOrderService>().MarkOrderAsPaid(order.OrderId);
+                        IoC.Resolve<IOrderService>().MarkOrderAsPaid(order.OrderId);
                     }
-                    //IoCFactory.Resolve<IOrderService>().InsertOrderNote(order.OrderId, "Información del pago: " + Request.Form.ToString(), DateTime.UtcNow);
+                    //IoC.Resolve<IOrderService>().InsertOrderNote(order.OrderId, "Información del pago: " + Request.Form.ToString(), DateTime.UtcNow);
                 }
                 else
                 {
-                    IoCFactory.Resolve<ILogService>().InsertLog(LogTypeEnum.OrderError, "TPV SERMEPA: Pago no autorizado", "Pago no autorizado con ERROR: " + Ds_Response);
-                    //IoCFactory.Resolve<IOrderService>().InsertOrderNote(order.OrderId, "!!! PAGO DENEGADO !!! " + Request.Form.ToString(), DateTime.UtcNow);
+                    IoC.Resolve<ILogService>().InsertLog(LogTypeEnum.OrderError, "TPV SERMEPA: Pago no autorizado", "Pago no autorizado con ERROR: " + Ds_Response);
+                    //IoC.Resolve<IOrderService>().InsertOrderNote(order.OrderId, "!!! PAGO DENEGADO !!! " + Request.Form.ToString(), DateTime.UtcNow);
                 }
 
             }

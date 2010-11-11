@@ -28,7 +28,7 @@ using NopSolutions.NopCommerce.BusinessLogic;
 using NopSolutions.NopCommerce.BusinessLogic.Content.NewsManagement;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.SEO;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -47,9 +47,9 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void BindData()
         {
-            if (IoCFactory.Resolve<INewsService>().NewsEnabled && IoCFactory.Resolve<INewsService>().ShowNewsOnMainPage)
+            if (IoC.Resolve<INewsService>().NewsEnabled && IoC.Resolve<INewsService>().ShowNewsOnMainPage)
             {
-                var newsCollection = IoCFactory.Resolve<INewsService>().GetAllNews(NopContext.Current.WorkingLanguage.LanguageId, IoCFactory.Resolve<INewsService>().MainPageNewsCount);
+                var newsCollection = IoC.Resolve<INewsService>().GetAllNews(NopContext.Current.WorkingLanguage.LanguageId, IoC.Resolve<INewsService>().MainPageNewsCount);
                 if (newsCollection.Count > 0)
                 {
                     rptrNews.DataSource = newsCollection;

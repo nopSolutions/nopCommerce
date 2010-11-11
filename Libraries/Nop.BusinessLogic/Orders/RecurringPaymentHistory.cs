@@ -15,7 +15,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Orders
 {
@@ -65,7 +65,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         {
             get
             {
-                return IoCFactory.Resolve<IOrderService>().GetOrderById(this.OrderId);
+                return IoC.Resolve<IOrderService>().GetOrderById(this.OrderId);
             }
         }
 

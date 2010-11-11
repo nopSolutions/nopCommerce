@@ -29,7 +29,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.BusinessLogic.Localization;
 using NopSolutions.NopCommerce.BusinessLogic.Tax;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
@@ -37,7 +37,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
     {
         private void BindTaxDisplayTypes()
         {
-            if (IoCFactory.Resolve<ITaxService>().AllowCustomersToSelectTaxDisplayType)
+            if (IoC.Resolve<ITaxService>().AllowCustomersToSelectTaxDisplayType)
             {
                 this.Visible = true;
                 this.ddlTaxDisplayType.Items.Clear();

@@ -33,7 +33,7 @@ using NopSolutions.NopCommerce.BusinessLogic.ExportImport;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Common.Xml;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -54,7 +54,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         private void BindGrid()
         {
-            var categories = IoCFactory.Resolve<ICategoryService>().GetAllCategories();
+            var categories = IoC.Resolve<ICategoryService>().GetAllCategories();
             gvCategories.DataSource = categories;
             gvCategories.DataBind();
         }

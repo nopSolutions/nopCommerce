@@ -14,7 +14,7 @@
 
 using System;
 using System.Collections.Generic;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
 {
@@ -75,7 +75,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
             {
                 SpecificationAttributeOption sao = this.SpecificationAttributeOption;
                 if (sao != null)
-                    return IoCFactory.Resolve<ISpecificationAttributeService>().GetSpecificationAttributeById(sao.SpecificationAttributeId);
+                    return IoC.Resolve<ISpecificationAttributeService>().GetSpecificationAttributeById(sao.SpecificationAttributeId);
                 else
                     return null;
             }
@@ -88,7 +88,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
         {
             get
             {
-                return IoCFactory.Resolve<ISpecificationAttributeService>().GetSpecificationAttributeOptionById(this.SpecificationAttributeOptionId);
+                return IoC.Resolve<ISpecificationAttributeService>().GetSpecificationAttributeOptionById(this.SpecificationAttributeOptionId);
             }
         }
 
@@ -99,7 +99,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Specs
         {
             get
             {
-                return IoCFactory.Resolve<IProductService>().GetProductById(this.ProductId);
+                return IoC.Resolve<IProductService>().GetProductById(this.ProductId);
             }
         }
 

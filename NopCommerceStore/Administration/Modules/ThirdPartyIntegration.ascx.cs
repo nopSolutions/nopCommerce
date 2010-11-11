@@ -18,7 +18,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Audit;
 using NopSolutions.NopCommerce.BusinessLogic.QuickBooks;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.Orders;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Modules
 {
@@ -36,13 +36,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         private void BindData()
         {
-            cbQuickBooksEnabled.Checked = IoCFactory.Resolve<IQBService>().QBIsEnabled;
-            txtQuickBooksUsername.Text = IoCFactory.Resolve<IQBService>().QBUsername;
-            txtQuickBooksPassword.Text = IoCFactory.Resolve<IQBService>().QBPassword;
-            txtQuickBooksItemRef.Text = IoCFactory.Resolve<IQBService>().QBItemRef;
-            txtQuickBooksDiscountAccountRef.Text = IoCFactory.Resolve<IQBService>().QBDiscountAccountRef;
-            txtQuickBooksShippingAccountRef.Text = IoCFactory.Resolve<IQBService>().QBShippingAccountRef;
-            txtQuickBooksSalesTaxAccountRef.Text = IoCFactory.Resolve<IQBService>().QBSalesTaxAccountRef;
+            cbQuickBooksEnabled.Checked = IoC.Resolve<IQBService>().QBIsEnabled;
+            txtQuickBooksUsername.Text = IoC.Resolve<IQBService>().QBUsername;
+            txtQuickBooksPassword.Text = IoC.Resolve<IQBService>().QBPassword;
+            txtQuickBooksItemRef.Text = IoC.Resolve<IQBService>().QBItemRef;
+            txtQuickBooksDiscountAccountRef.Text = IoC.Resolve<IQBService>().QBDiscountAccountRef;
+            txtQuickBooksShippingAccountRef.Text = IoC.Resolve<IQBService>().QBShippingAccountRef;
+            txtQuickBooksSalesTaxAccountRef.Text = IoC.Resolve<IQBService>().QBSalesTaxAccountRef;
         }
 
         private void FillDropDowns()
@@ -64,15 +64,15 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 try
                 {
-                    IoCFactory.Resolve<IQBService>().QBIsEnabled = cbQuickBooksEnabled.Checked;
-                    IoCFactory.Resolve<IQBService>().QBUsername = txtQuickBooksUsername.Text;
-                    IoCFactory.Resolve<IQBService>().QBPassword = txtQuickBooksPassword.Text;
-                    IoCFactory.Resolve<IQBService>().QBItemRef = txtQuickBooksItemRef.Text;
-                    IoCFactory.Resolve<IQBService>().QBDiscountAccountRef = txtQuickBooksDiscountAccountRef.Text;
-                    IoCFactory.Resolve<IQBService>().QBShippingAccountRef = txtQuickBooksShippingAccountRef.Text;
-                    IoCFactory.Resolve<IQBService>().QBSalesTaxAccountRef = txtQuickBooksSalesTaxAccountRef.Text;
+                    IoC.Resolve<IQBService>().QBIsEnabled = cbQuickBooksEnabled.Checked;
+                    IoC.Resolve<IQBService>().QBUsername = txtQuickBooksUsername.Text;
+                    IoC.Resolve<IQBService>().QBPassword = txtQuickBooksPassword.Text;
+                    IoC.Resolve<IQBService>().QBItemRef = txtQuickBooksItemRef.Text;
+                    IoC.Resolve<IQBService>().QBDiscountAccountRef = txtQuickBooksDiscountAccountRef.Text;
+                    IoC.Resolve<IQBService>().QBShippingAccountRef = txtQuickBooksShippingAccountRef.Text;
+                    IoC.Resolve<IQBService>().QBSalesTaxAccountRef = txtQuickBooksSalesTaxAccountRef.Text;
 
-                    IoCFactory.Resolve<ICustomerActivityService>().InsertActivity("EditThirdPartyIntegration", GetLocaleResourceString("ActivityLog.EditThirdPartyIntegration"));
+                    IoC.Resolve<ICustomerActivityService>().InsertActivity("EditThirdPartyIntegration", GetLocaleResourceString("ActivityLog.EditThirdPartyIntegration"));
 
                     Response.Redirect(string.Format("ThirdPartyIntegration.aspx?TabID={0}", GetActiveTabId(ThirdPartyIntegrationTabs)));
                 }
@@ -87,9 +87,9 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                foreach (Order order in IoCFactory.Resolve<IOrderService>().LoadAllOrders())
+                foreach (Order order in IoC.Resolve<IOrderService>().LoadAllOrders())
                 {
-                    IoCFactory.Resolve<IQBService>().RequestSynchronization(order);
+                    IoC.Resolve<IQBService>().RequestSynchronization(order);
                 }
                 ShowMessage(GetLocaleResourceString("Admin.ThirdPartyIntegration.QuickBooks.SynchronizationSuccess"));
             }

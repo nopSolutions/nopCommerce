@@ -27,7 +27,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.Payment;
 using NopSolutions.NopCommerce.BusinessLogic.Products;
 using NopSolutions.NopCommerce.Common.Utils;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Payment.Methods.Alipay
 {
@@ -59,17 +59,17 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Alipay
             //string gateway = "https://www.alipay.com/cooperate/gateway.do?";
             string service = "create_direct_pay_by_user";
 
-            string seller_email = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Alipay.SellerEmail");
+            string seller_email = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Alipay.SellerEmail");
             string sign_type = "MD5";
-            string key = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Alipay.Key");
-            string partner = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Alipay.Partner");
+            string key = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Alipay.Key");
+            string partner = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Alipay.Partner");
             string input_charset = "utf-8";
 
             string show_url = "http://www.alipay.com/";
 
             string out_trade_no = order.OrderId.ToString();
-            string subject = IoCFactory.Resolve<ISettingManager>().StoreName;
-            string body = "Order from " + IoCFactory.Resolve<ISettingManager>().StoreName;
+            string subject = IoC.Resolve<ISettingManager>().StoreName;
+            string body = "Order from " + IoC.Resolve<ISettingManager>().StoreName;
             string total_fee = order.OrderTotal.ToString("0.00", CultureInfo.InvariantCulture);
 
             string notify_url = CommonHelper.GetStoreLocation() + "Alipay_Notify.aspx";
@@ -124,7 +124,7 @@ namespace NopSolutions.NopCommerce.Payment.Methods.Alipay
         /// <returns>Additional handling fee</returns>
         public decimal GetAdditionalHandlingFee()
         {
-            return IoCFactory.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.Alipay.AdditionalFee");
+            return IoC.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.Alipay.AdditionalFee");
         }
 
         /// <summary>

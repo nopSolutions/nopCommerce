@@ -31,7 +31,7 @@ using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.BusinessLogic.Templates;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Common;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 namespace NopSolutions.NopCommerce.Web
 {
     public partial class ProductPage : BaseNopPage
@@ -40,7 +40,7 @@ namespace NopSolutions.NopCommerce.Web
 
         private void CreateChildControlsTree()
         {
-            product = IoCFactory.Resolve<IProductService>().GetProductById(this.ProductId);
+            product = IoC.Resolve<IProductService>().GetProductById(this.ProductId);
             if (product != null)
             {
                 Control child = null;
@@ -77,7 +77,7 @@ namespace NopSolutions.NopCommerce.Web
 
             //canonical URL
             if (SEOHelper.EnableUrlRewriting &&
-                IoCFactory.Resolve<ISettingManager>().GetSettingValueBoolean("SEO.CanonicalURLs.Products.Enabled"))
+                IoC.Resolve<ISettingManager>().GetSettingValueBoolean("SEO.CanonicalURLs.Products.Enabled"))
             {
                 if (!this.SEName.Equals(SEOHelper.GetProductSEName(product)))
                 {
@@ -89,7 +89,7 @@ namespace NopSolutions.NopCommerce.Web
 
             if (!Page.IsPostBack)
             {
-                IoCFactory.Resolve<IProductService>().AddProductToRecentlyViewedList(product.ProductId);
+                IoC.Resolve<IProductService>().AddProductToRecentlyViewedList(product.ProductId);
             }
         }
 

@@ -22,7 +22,7 @@ using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Orders;
 using NopSolutions.NopCommerce.BusinessLogic.Tax;
 using NopSolutions.NopCommerce.Tax.TaxDataBasic;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Tax
 {
@@ -62,8 +62,8 @@ namespace NopSolutions.NopCommerce.Tax
             // UserID/Password combination or a License Key.  If you wish to use a License Key, 
             // assign this value to the UserID field and set the Password field to null.
             //**************************************************************************************************************
-            string userID = IoCFactory.Resolve<ISettingManager>().GetSettingValue("Tax.TaxProvider.StrikeIron.UserID");
-            string password = IoCFactory.Resolve<ISettingManager>().GetSettingValue("Tax.TaxProvider.StrikeIron.Password");
+            string userID = IoC.Resolve<ISettingManager>().GetSettingValue("Tax.TaxProvider.StrikeIron.UserID");
+            string password = IoC.Resolve<ISettingManager>().GetSettingValue("Tax.TaxProvider.StrikeIron.Password");
             //if (Password == " " || !String.IsNullOrEmpty(Password))
             //    Password = String.Empty;
             //**************************************************************************************************************

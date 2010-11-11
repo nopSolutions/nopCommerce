@@ -26,7 +26,7 @@ using System.Web.UI.WebControls.WebParts;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Web.Templates.Payment;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Administration.Payment.CashOnDelivery
 {
@@ -40,14 +40,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Payment.CashOnDelivery
 
         private void BindData()
         {
-            txtInfo.Value = IoCFactory.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.CashOnDelivery.Info");
-            txtAdditionalFee.Value = IoCFactory.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.CashOnDelivery.AdditionalFee");
+            txtInfo.Value = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.CashOnDelivery.Info");
+            txtAdditionalFee.Value = IoC.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.CashOnDelivery.AdditionalFee");
         }
 
         public void Save()
         {
-            IoCFactory.Resolve<ISettingManager>().SetParam("PaymentMethod.CashOnDelivery.Info", txtInfo.Value);
-            IoCFactory.Resolve<ISettingManager>().SetParamNative("PaymentMethod.CashOnDelivery.AdditionalFee", txtAdditionalFee.Value);
+            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.CashOnDelivery.Info", txtInfo.Value);
+            IoC.Resolve<ISettingManager>().SetParamNative("PaymentMethod.CashOnDelivery.AdditionalFee", txtAdditionalFee.Value);
         }
     }
 }

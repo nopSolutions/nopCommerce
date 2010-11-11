@@ -37,7 +37,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Shipping;
 using NopSolutions.NopCommerce.BusinessLogic.Utils;
 using System.Globalization;
 using NopSolutions.NopCommerce.BusinessLogic.Localization;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
 {
@@ -50,7 +50,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
 
         private static void WriteCategories(XmlWriter xmlWriter, int parentCategoryId)
         {
-            var categories = IoCFactory.Resolve<ICategoryService>().GetAllCategoriesByParentCategoryId(parentCategoryId);
+            var categories = IoC.Resolve<ICategoryService>().GetAllCategoriesByParentCategoryId(parentCategoryId);
             if (categories.Count > 0)
             {
                 foreach (var category in categories)
@@ -116,7 +116,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
             XmlWriter xmlWriter = new XmlTextWriter(stringWriter);
             xmlWriter.WriteStartDocument();
             xmlWriter.WriteStartElement("Customers");
-            xmlWriter.WriteAttributeString("Version", IoCFactory.Resolve<ISettingManager>().CurrentVersion);
+            xmlWriter.WriteAttributeString("Version", IoC.Resolve<ISettingManager>().CurrentVersion);
 
             foreach (var customer in customers)
             {
@@ -159,11 +159,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                 xmlWriter.WriteElementString("FaxNumber", null, customer.FaxNumber);
 
                 xmlWriter.WriteElementString("CountryId", null, customer.CountryId.ToString());
-                var country = IoCFactory.Resolve<ICountryService>().GetCountryById(customer.CountryId);
+                var country = IoC.Resolve<ICountryService>().GetCountryById(customer.CountryId);
                 xmlWriter.WriteElementString("Country", null, (country == null) ? string.Empty : country.Name);
 
                 xmlWriter.WriteElementString("StateProvinceId", null, customer.StateProvinceId.ToString());
-                var stateProvince = IoCFactory.Resolve<IStateProvinceService>().GetStateProvinceById(customer.StateProvinceId);
+                var stateProvince = IoC.Resolve<IStateProvinceService>().GetStateProvinceById(customer.StateProvinceId);
                 xmlWriter.WriteElementString("StateProvince", null, (stateProvince == null) ? string.Empty : stateProvince.Name);
                 xmlWriter.WriteElementString("ReceiveNewsletter", null, customer.ReceiveNewsletter.ToString());
 
@@ -347,7 +347,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
             XmlWriter xmlWriter = new XmlTextWriter(stringWriter);
             xmlWriter.WriteStartDocument();
             xmlWriter.WriteStartElement("Manufacturers");
-            xmlWriter.WriteAttributeString("Version", IoCFactory.Resolve<ISettingManager>().CurrentVersion);
+            xmlWriter.WriteAttributeString("Version", IoC.Resolve<ISettingManager>().CurrentVersion);
 
             foreach (var manufacturer in manufacturers)
             {
@@ -406,7 +406,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
             XmlWriter xmlWriter = new XmlTextWriter(stringWriter);
             xmlWriter.WriteStartDocument();
             xmlWriter.WriteStartElement("Categories");
-            xmlWriter.WriteAttributeString("Version", IoCFactory.Resolve<ISettingManager>().CurrentVersion);
+            xmlWriter.WriteAttributeString("Version", IoC.Resolve<ISettingManager>().CurrentVersion);
             WriteCategories(xmlWriter, 0);
             xmlWriter.WriteEndElement();
             xmlWriter.WriteEndDocument();
@@ -426,7 +426,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
             XmlWriter xmlWriter = new XmlTextWriter(stringWriter);
             xmlWriter.WriteStartDocument();
             xmlWriter.WriteStartElement("Products");
-            xmlWriter.WriteAttributeString("Version", IoCFactory.Resolve<ISettingManager>().CurrentVersion);
+            xmlWriter.WriteAttributeString("Version", IoC.Resolve<ISettingManager>().CurrentVersion);
 
             foreach (var product in products)
             {
@@ -452,7 +452,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                 xmlWriter.WriteElementString("UpdatedOn", null, product.UpdatedOn.ToString());
 
                 xmlWriter.WriteStartElement("ProductVariants");
-                var productVariants = IoCFactory.Resolve<IProductService>().GetProductVariantsByProductId(product.ProductId, true);
+                var productVariants = IoC.Resolve<IProductService>().GetProductVariantsByProductId(product.ProductId, true);
                 foreach (var productVariant in productVariants)
                 {
                     xmlWriter.WriteStartElement("ProductVariant");
@@ -551,7 +551,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
 
 
                         xmlWriter.WriteStartElement("ProductVariantAttributeValues");
-                        var productVariantAttributeValues = IoCFactory.Resolve<IProductAttributeService>().GetProductVariantAttributeValues(productVariantAttribute.ProductVariantAttributeId);
+                        var productVariantAttributeValues = IoC.Resolve<IProductAttributeService>().GetProductVariantAttributeValues(productVariantAttribute.ProductVariantAttributeId);
                         foreach (var productVariantAttributeValue in productVariantAttributeValues)
                         {
                             xmlWriter.WriteElementString("ProductVariantAttributeValueId", null, productVariantAttributeValue.ProductVariantAttributeValueId.ToString());
@@ -626,7 +626,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
                 xmlWriter.WriteEndElement();
 
                 xmlWriter.WriteStartElement("ProductSpecificationAttributes");
-                var productSpecificationAttributes = IoCFactory.Resolve<ISpecificationAttributeService>().GetProductSpecificationAttributesByProductId(product.ProductId);
+                var productSpecificationAttributes = IoC.Resolve<ISpecificationAttributeService>().GetProductSpecificationAttributesByProductId(product.ProductId);
                 foreach (var productSpecificationAttribute in productSpecificationAttributes)
                 {
                     xmlWriter.WriteStartElement("ProductSpecificationAttribute");
@@ -725,7 +725,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
 
                 foreach (var p in products)
                 {
-                    var productVariants = IoCFactory.Resolve<IProductService>().GetProductVariantsByProductId(p.ProductId, true);
+                    var productVariants = IoC.Resolve<IProductService>().GetProductVariantsByProductId(p.ProductId, true);
 
                     foreach (var pv in productVariants)
                     {
@@ -807,7 +807,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
             XmlWriter xmlWriter = new XmlTextWriter(stringWriter);
             xmlWriter.WriteStartDocument();
             xmlWriter.WriteStartElement("Orders");
-            xmlWriter.WriteAttributeString("Version", IoCFactory.Resolve<ISettingManager>().CurrentVersion);
+            xmlWriter.WriteAttributeString("Version", IoC.Resolve<ISettingManager>().CurrentVersion);
 
             foreach (var order in orders)
             {
@@ -1118,7 +1118,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
             XmlWriter xmlWriter = new XmlTextWriter(stringWriter);
             xmlWriter.WriteStartDocument();
             xmlWriter.WriteStartElement("Tokens");
-            string[] allowedTokens = IoCFactory.Resolve<IMessageService>().GetListOfAllowedTokens();
+            string[] allowedTokens = IoC.Resolve<IMessageService>().GetListOfAllowedTokens();
             for (int i = 0; i < allowedTokens.Length; i++)
             {
                 string token = allowedTokens[i];

@@ -16,7 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
@@ -120,7 +120,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         {
             get
             {
-                return IoCFactory.Resolve<IForumService>().GetForumById(this.ForumId);
+                return IoC.Resolve<IForumService>().GetForumById(this.ForumId);
             }
         }
 
@@ -131,7 +131,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         {
             get
             {
-                return IoCFactory.Resolve<ICustomerService>().GetCustomerById(this.UserId);
+                return IoC.Resolve<ICustomerService>().GetCustomerById(this.UserId);
             }
         }
 
@@ -154,7 +154,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
             get
             {
                 int totalPostRecords =0;
-                var forumPosts = IoCFactory.Resolve<IForumService>().GetAllPosts(this.ForumTopicId, 0, string.Empty, 1, 0, out totalPostRecords);
+                var forumPosts = IoC.Resolve<IForumService>().GetAllPosts(this.ForumTopicId, 0, string.Empty, 1, 0, out totalPostRecords);
                 if (forumPosts.Count > 0)
                 {
                     return forumPosts[0];
@@ -171,7 +171,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         {
             get
             {
-                return IoCFactory.Resolve<IForumService>().GetPostById(this.LastPostId);
+                return IoC.Resolve<IForumService>().GetPostById(this.LastPostId);
             }
         }
 
@@ -182,7 +182,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         {
             get
             {
-                return IoCFactory.Resolve<ICustomerService>().GetCustomerById(this.LastPostUserId);
+                return IoC.Resolve<ICustomerService>().GetCustomerById(this.LastPostUserId);
             }
         }
 

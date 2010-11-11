@@ -15,7 +15,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using NopSolutions.NopCommerce.BusinessLogic.IoC;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Messages
@@ -107,7 +107,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         {
             get
             {
-                var defaultEmailAccount = IoCFactory.Resolve<IMessageService>().DefaultEmailAccount;
+                var defaultEmailAccount = IoC.Resolve<IMessageService>().DefaultEmailAccount;
                 return ((defaultEmailAccount != null && defaultEmailAccount.EmailAccountId == this.EmailAccountId));
             }
         }
