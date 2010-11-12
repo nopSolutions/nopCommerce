@@ -543,9 +543,28 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         public List<DiscountUsageHistory> GetAllDiscountUsageHistoryEntries(int? discountId,
             int? customerId, int? orderId)
         {
+            var query1 = from duh in _context.DiscountUsageHistory
+                         from d in _context.Discounts
+                         .Where(d => d.DiscountId == duh.DiscountId)
+                         .DefaultIfEmpty()
+                         from c in _context.Customers
+                         .Where(c => c.CustomerId == duh.CustomerId)
+                         .DefaultIfEmpty()
+                         from o in _context.Orders
+                         .Where(o => o.OrderId == duh.OrderId)
+                         .DefaultIfEmpty()
+                         where 
+                         (!d.Deleted && !c.Deleted && !o.Deleted) &&
+                         (!discountId.HasValue || discountId.Value ==0 || duh.DiscountId == discountId.Value) &&
+                         (!customerId.HasValue || customerId.Value ==0 || duh.CustomerId == customerId.Value) &&
+                         (!orderId.HasValue || orderId.Value ==0 || duh.OrderId == orderId.Value)
+                         select duh.DiscountUsageHistoryId;
+
+            var query2 = from duh in _context.DiscountUsageHistory
+                         where query1.Contains(duh.DiscountUsageHistoryId)
+                         select duh;
             
-            var discountUsageHistoryEntries = _context.Sp_DiscountUsageHistoryLoadAll(discountId,
-                customerId, orderId).ToList();
+            var discountUsageHistoryEntries = query2.ToList();
 
             return discountUsageHistoryEntries;
         }
