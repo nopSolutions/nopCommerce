@@ -253,8 +253,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
 
             while (category != null && //category is not null
                 !category.Deleted && //category is not deleted
-                category.Published && //category is published
-                (showHidden || !IsCategoryAccessDenied(category))) //access is allowed (in public store)
+                category.Published) //category is published
             {
                 breadCrumb.Add(category);
                 category = category.ParentCategory;
