@@ -27,7 +27,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 namespace NopSolutions.NopCommerce.Tax
 {
     /// <summary>
-    /// Strike Iron tax provider
+    /// StrikeIron tax provider
     /// </summary>
     public class StrikeIronTaxProvider : ITaxProvider
     {

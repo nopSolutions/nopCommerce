@@ -22,7 +22,7 @@ GO
 SET IDENTITY_INSERT [dbo].[Nop_TaxProvider] ON
 INSERT [dbo].[Nop_TaxProvider] ([TaxProviderID], [Name], [Description], [ConfigureTemplatePath], [ClassName], [DisplayOrder]) VALUES (3, N'No tax', N'', N'', N'NopSolutions.NopCommerce.Tax.FreeTaxProvider, Nop.Tax.FreeTaxProvider', 1)
 INSERT [dbo].[Nop_TaxProvider] ([TaxProviderID], [Name], [Description], [ConfigureTemplatePath], [ClassName], [DisplayOrder]) VALUES (6, N'Tax By Country & State', N'', N'Tax\General\ConfigureTax.ascx', N'NopSolutions.NopCommerce.Tax.GeneralTaxProvider, Nop.Tax.GeneralTaxProvider', 2)
-INSERT [dbo].[Nop_TaxProvider] ([TaxProviderID], [Name], [Description], [ConfigureTemplatePath], [ClassName], [DisplayOrder]) VALUES (7, N'Strike Iron Basic (US and CA Only)', N'', N'Tax\StrikeIron\ConfigureTax.ascx', N'NopSolutions.NopCommerce.Tax.StrikeIronTaxProvider, Nop.Tax.StrikeIron', 2)
+INSERT [dbo].[Nop_TaxProvider] ([TaxProviderID], [Name], [Description], [ConfigureTemplatePath], [ClassName], [DisplayOrder]) VALUES (7, N'StrikeIron Basic (US and CA Only)', N'', N'Tax\StrikeIron\ConfigureTax.ascx', N'NopSolutions.NopCommerce.Tax.StrikeIronTaxProvider, Nop.Tax.StrikeIron', 2)
 INSERT [dbo].[Nop_TaxProvider] ([TaxProviderID], [Name], [Description], [ConfigureTemplatePath], [ClassName], [DisplayOrder]) VALUES (8, N'Fixed Rate Tax', N'', N'Tax\FixedRate\ConfigureTax.ascx', N'NopSolutions.NopCommerce.Tax.FixedRateTaxProvider, Nop.Tax.FixedRateTaxProvider', 10)
 SET IDENTITY_INSERT [dbo].[Nop_TaxProvider] OFF
 GO
