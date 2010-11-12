@@ -164,25 +164,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        /// <param name="olderThan">No Metadata Documentation available.</param>
-        public int Sp_CustomerSessionDeleteExpired(Nullable<global::System.DateTime> olderThan)
-        {
-            ObjectParameter olderThanParameter;
-            if (olderThan.HasValue)
-            {
-                olderThanParameter = new ObjectParameter("OlderThan", olderThan);
-            }
-            else
-            {
-                olderThanParameter = new ObjectParameter("OlderThan", typeof(global::System.DateTime));
-            }
-    
-            return base.ExecuteFunction("Sp_CustomerSessionDeleteExpired", olderThanParameter);
-        }
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
         /// <param name="discountID">No Metadata Documentation available.</param>
         /// <param name="customerID">No Metadata Documentation available.</param>
         /// <param name="orderID">No Metadata Documentation available.</param>

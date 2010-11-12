@@ -3714,9 +3714,6 @@
           <Parameter Name="CustomerAttributeKey" Type="nvarchar" Mode="In" />
         </Function>
         <Function Name="Nop_CustomerReportByLanguage" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
-        <Function Name="Nop_CustomerSessionDeleteExpired" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="OlderThan" Type="datetime" Mode="In" />
-        </Function>
         <Function Name="Nop_DiscountUsageHistoryLoadAll" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="DiscountID" Type="int" Mode="In" />
           <Parameter Name="CustomerID" Type="int" Mode="In" />
@@ -4457,9 +4454,6 @@
           <Parameter Name="CustomerAttributeKey" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="Sp_CustomerReportByLanguage" ReturnType="Collection(NopSolutions.NopCommerce.BusinessLogic.Data.CustomerReportByLanguageLine)" />
-          <FunctionImport Name="Sp_CustomerSessionDeleteExpired">
-          <Parameter Name="OlderThan" Mode="In" Type="DateTime" />
-          </FunctionImport>
           <FunctionImport Name="Sp_DiscountUsageHistoryLoadAll" EntitySet="DiscountUsageHistory" ReturnType="Collection(NopSolutions.NopCommerce.BusinessLogic.Data.DiscountUsageHistory)">
             <Parameter Name="DiscountID" Mode="In" Type="Int32" />
             <Parameter Name="CustomerID" Mode="In" Type="Int32" />
@@ -9197,7 +9191,6 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="Sp_CustomerSessionDeleteExpired" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_CustomerSessionDeleteExpired" />
           <FunctionImportMapping FunctionImportName="Sp_DiscountUsageHistoryLoadAll" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_DiscountUsageHistoryLoadAll" />
           <FunctionImportMapping FunctionImportName="Sp_GiftCardLoadAll" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_GiftCardLoadAll" />
           <FunctionImportMapping FunctionImportName="Sp_GiftCardUsageHistoryLoadAll" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_GiftCardUsageHistoryLoadAll" />

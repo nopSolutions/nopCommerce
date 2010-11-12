@@ -2076,8 +2076,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             var customerSession = GetCustomerSessionByGuid(customerSessionGuid);
             if (customerSession == null)
                 return;
-
-            
+                        
             if (!_context.IsAttached(customerSession))
                 _context.CustomerSessions.Attach(customerSession);
             _context.DeleteObject(customerSession);
@@ -2104,8 +2103,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// <returns>Customer session collection</returns>
         public List<CustomerSession> GetAllCustomerSessionsWithNonEmptyShoppingCart()
         {
-            
-            
             var sciQuery = from sci in _context.ShoppingCartItems
                            where sci.ShoppingCartTypeId == (int)ShoppingCartTypeEnum.ShoppingCart
                            select sci.CustomerSessionGuid;
@@ -2123,8 +2120,20 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// <param name="olderThan">Older than date and time</param>
         public void DeleteExpiredCustomerSessions(DateTime olderThan)
         {
-            
-            _context.Sp_CustomerSessionDeleteExpired(olderThan);
+            var sciQuery = from sci in _context.ShoppingCartItems
+                           select sci.CustomerSessionGuid;
+
+            var scQuery = from sc in _context.CustomerSessions
+                          where !sciQuery.Contains(sc.CustomerSessionGuid) &&
+                          sc.LastAccessed < olderThan
+                          select sc;
+
+            var customerSessions = scQuery.ToList();
+            foreach (var customerSession in customerSessions)
+            {
+                _context.DeleteObject(customerSession);
+            }
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -2751,5 +2760,5 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         }
 
         #endregion
-    } 
+    }
 }
