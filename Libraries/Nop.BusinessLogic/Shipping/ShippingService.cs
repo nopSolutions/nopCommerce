@@ -15,6 +15,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NopSolutions.NopCommerce.BusinessLogic.Audit;
 using NopSolutions.NopCommerce.BusinessLogic.Caching;
 using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
@@ -890,6 +891,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
                 throw new NopException("Shipping rate computation method could not be loaded");
 
             //get shipping options
+            string error2 = string.Empty;
             foreach (var srcm in shippingRateComputationMethods)
             {
                 if (allowedShippingRateComputationMethodId.HasValue &&
@@ -899,7 +901,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
 
                 var iShippingRateComputationMethod = Activator.CreateInstance(Type.GetType(srcm.ClassName)) as IShippingRateComputationMethod;
 
-                var shippingOptions2 = iShippingRateComputationMethod.GetShippingOptions(shipmentPackage, ref error);
+                string errorSrcm = string.Empty;
+                var shippingOptions2 = iShippingRateComputationMethod.GetShippingOptions(shipmentPackage, ref errorSrcm);
                 if (shippingOptions2 != null)
                 {
                     foreach (var so2 in shippingOptions2)
@@ -908,12 +911,27 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Shipping
                         shippingOptions.Add(so2);
                     }
                 }
+                //log error
+                if (!String.IsNullOrEmpty(errorSrcm))
+                {
+                    error2 = errorSrcm;
+                    IoC.Resolve<ILogService>().InsertLog(LogTypeEnum.ShippingError,
+                        string.Format("{0}. {1}", srcm.Name, errorSrcm),
+                            errorSrcm.ToString());
+                }
             }
 
             //no shipping options loaded
-            if (shippingOptions.Count == 0 && String.IsNullOrEmpty(error))
+            if (shippingOptions.Count == 0)
             {
-                error = "Shipping options could not be loaded";
+                if (!String.IsNullOrEmpty(error2))
+                {
+                    error = error2;
+                }
+                else
+                {
+                    error = "Shipping options could not be loaded";
+                }
             }
 
             //additional shipping charges
