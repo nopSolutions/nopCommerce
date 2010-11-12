@@ -6738,10 +6738,7 @@ GO
 
 SET IDENTITY_INSERT [dbo].[Nop_TopicLocalized] ON
 INSERT [dbo].[Nop_TopicLocalized] ([TopicLocalizedID], [TopicID], [LanguageID], [Title], [Body], [CreatedOn], [UpdatedOn], [MetaTitle], [MetaKeywords], [MetaDescription]) VALUES (1, 1, 7, N'', N'Put your contact information here. You can edit this in the admin site.', CAST(0x00009C6A00DE79DA AS DateTime), CAST(0x00009C6A00DE79DF AS DateTime), N'', N'', N'')
-INSERT [dbo].[Nop_TopicLocalized] ([TopicLocalizedID], [TopicID], [LanguageID], [Title], [Body], [CreatedOn], [UpdatedOn], [MetaTitle], [MetaKeywords], [MetaDescription]) VALUES (2, 2, 7, N'Welcome to our store', N'Online shopping is the process consumers go through to purchase products or services
-        over the Internet. An online shop, eshop, e-store, internet shop, webshop, webstore,
-        online store, or virtual store evokes the physical analogy of buying products or
-        services at a bricks-and-mortar retailer or in a shopping mall. You can edit this in the admin site.', CAST(0x00009C6A00DE79DA AS DateTime), CAST(0x00009C6A00DE79DF AS DateTime), N'', N'', N'')
+INSERT [dbo].[Nop_TopicLocalized] ([TopicLocalizedID], [TopicID], [LanguageID], [Title], [Body], [CreatedOn], [UpdatedOn], [MetaTitle], [MetaKeywords], [MetaDescription]) VALUES (2, 2, 7, N'Welcome to our store', N'<p>Online shopping is the process consumers go through to purchase products or services over the Internet. You can edit this in the admin site.</p><p>You can sign in using admin@admin.com and the password admin. If you have questions, see the <a href="http://www.nopcommerce.com/documentation.aspx">Documentation</a>, or post in the <a href="http://www.nopcommerce.com/boards/">Forums</a> at <a href="http://www.nopcommerce.com">nopCommerce.com</a></p>', CAST(0x00009C6A00DE79DA AS DateTime), CAST(0x00009C6A00DE79DF AS DateTime), N'', N'', N'')
 INSERT [dbo].[Nop_TopicLocalized] ([TopicLocalizedID], [TopicID], [LanguageID], [Title], [Body], [CreatedOn], [UpdatedOn], [MetaTitle], [MetaKeywords], [MetaDescription]) VALUES (3, 3, 7, N'Conditions of use', N'<p>
                 Put your conditions of use information here. You can edit this in the admin site.
             </p>', CAST(0x00009C6A00DE79DA AS DateTime), CAST(0x00009C6A00DE79DF AS DateTime), N'', N'', N'')
