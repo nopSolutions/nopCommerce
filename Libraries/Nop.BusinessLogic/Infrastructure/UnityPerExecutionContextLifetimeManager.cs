@@ -41,17 +41,28 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Infrastructure
         {
             #region Members
 
+            /// <summary>
+            /// Value
+            /// </summary>
             public object Value { get; set; }
 
             #endregion
 
             #region IExtension<OperationContext> Members
 
+            /// <summary>
+            /// Attach
+            /// </summary>
+            /// <param name="owner">Operation context</param>
             public void Attach(OperationContext owner)
             {
 
             }
 
+            /// <summary>
+            /// Detach
+            /// </summary>
+            /// <param name="owner">Operation context</param>
             public void Detach(OperationContext owner)
             {
 

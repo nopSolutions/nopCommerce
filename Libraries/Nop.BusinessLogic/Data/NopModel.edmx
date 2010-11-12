@@ -3710,18 +3710,6 @@
           <Parameter Name="ShippingStatusID" Type="int" Mode="In" />
           <Parameter Name="OrderBy" Type="int" Mode="In" />
         </Function>
-        <Function Name="Nop_CustomerLoadAll" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="StartTime" Type="datetime" Mode="In" />
-          <Parameter Name="EndTime" Type="datetime" Mode="In" />
-          <Parameter Name="Email" Type="nvarchar" Mode="In" />
-          <Parameter Name="Username" Type="nvarchar" Mode="In" />
-          <Parameter Name="DontLoadGuestCustomers" Type="bit" Mode="In" />
-          <Parameter Name="DateOfBirthMonth" Type="int" Mode="In" />
-          <Parameter Name="DateOfBirthDay" Type="int" Mode="In" />
-          <Parameter Name="PageSize" Type="int" Mode="In" />
-          <Parameter Name="PageIndex" Type="int" Mode="In" />
-          <Parameter Name="TotalRecords" Type="int" Mode="InOut" />
-        </Function>
         <Function Name="Nop_CustomerReportByAttributeKey" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="CustomerAttributeKey" Type="nvarchar" Mode="In" />
         </Function>
@@ -4464,18 +4452,6 @@
             <Parameter Name="PaymentStatusID" Mode="In" Type="Int32" />
             <Parameter Name="ShippingStatusID" Mode="In" Type="Int32" />
             <Parameter Name="OrderBy" Mode="In" Type="Int32" />
-          </FunctionImport>
-          <FunctionImport Name="Sp_CustomerLoadAll" EntitySet="Customers" ReturnType="Collection(NopSolutions.NopCommerce.BusinessLogic.Data.Customer)">
-            <Parameter Name="StartTime" Mode="In" Type="DateTime" />
-            <Parameter Name="EndTime" Mode="In" Type="DateTime" />
-            <Parameter Name="Email" Mode="In" Type="String" />
-            <Parameter Name="Username" Mode="In" Type="String" />
-            <Parameter Name="DontLoadGuestCustomers" Mode="In" Type="Boolean" />
-            <Parameter Name="DateOfBirthMonth" Mode="In" Type="Int32" />
-            <Parameter Name="DateOfBirthDay" Mode="In" Type="Int32" />
-            <Parameter Name="PageSize" Mode="In" Type="Int32" />
-            <Parameter Name="PageIndex" Mode="In" Type="Int32" />
-            <Parameter Name="TotalRecords" Mode="InOut" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="Sp_CustomerReportByAttributeKey" ReturnType="Collection(NopSolutions.NopCommerce.BusinessLogic.Data.CustomerReportByAttributeKeyLine)">
           <Parameter Name="CustomerAttributeKey" Mode="In" Type="String" />
@@ -9205,7 +9181,6 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="Sp_CustomerLoadAll" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_CustomerLoadAll" />
           <FunctionImportMapping FunctionImportName="Sp_CustomerReportByAttributeKey" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_CustomerReportByAttributeKey">
             <ResultMapping>
               <ComplexTypeMapping TypeName="NopSolutions.NopCommerce.BusinessLogic.Data.CustomerReportByAttributeKeyLine">

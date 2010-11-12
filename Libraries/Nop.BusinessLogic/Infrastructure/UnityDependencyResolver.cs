@@ -182,6 +182,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Infrastructure
 
         #region Methods
 
+        /// <summary>
+        /// Register instance
+        /// </summary>
+        /// <typeparam name="T">Type</typeparam>
+        /// <param name="instance">Instance</param>
         public void Register<T>(T instance)
         {
             if (instance == null)
@@ -190,6 +195,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Infrastructure
             _container.RegisterInstance(instance);
         }
 
+        /// <summary>
+        /// Inject
+        /// </summary>
+        /// <typeparam name="T">Type</typeparam>
+        /// <param name="existing">Type</param>
         public void Inject<T>(T existing)
         {
             if (existing == null)
@@ -198,6 +208,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Infrastructure
             _container.BuildUp(existing);
         }
 
+        /// <summary>
+        /// Resolve
+        /// </summary>
+        /// <typeparam name="T">Type</typeparam>
+        /// <param name="type">Type</param>
+        /// <returns>Result</returns>
         public T Resolve<T>(Type type)
         {
             if (type == null)
@@ -206,6 +222,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Infrastructure
             return (T)_container.Resolve(type);
         }
 
+        /// <summary>
+        /// Resolve
+        /// </summary>
+        /// <typeparam name="T">Type</typeparam>
+        /// <param name="type">Type</param>
+        /// <param name="name">Name</param>
+        /// <returns>Result</returns>
         public T Resolve<T>(Type type, string name)
         {
             if (type == null)
@@ -216,11 +239,22 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Infrastructure
             return (T)_container.Resolve(type, name);
         }
 
+        /// <summary>
+        /// Resolve
+        /// </summary>
+        /// <typeparam name="T">Type</typeparam>
+        /// <returns>Result</returns>
         public T Resolve<T>()
         {
             return _container.Resolve<T>();
         }
 
+        /// <summary>
+        /// Resolve
+        /// </summary>
+        /// <typeparam name="T">Type</typeparam>
+        /// <param name="name">Name</param>
+        /// <returns>Result</returns>
         public T Resolve<T>(string name)
         {
             if (String.IsNullOrEmpty(name))
@@ -229,6 +263,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Infrastructure
             return _container.Resolve<T>(name);
         }
 
+        /// <summary>
+        /// Resolve all
+        /// </summary>
+        /// <typeparam name="T">Type</typeparam>
+        /// <returns>Result</returns>
         public IEnumerable<T> ResolveAll<T>()
         {
             IEnumerable<T> namedInstances = _container.ResolveAll<T>();

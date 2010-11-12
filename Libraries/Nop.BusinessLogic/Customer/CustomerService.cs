@@ -701,11 +701,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// Gets all customers
         /// </summary>
         /// <returns>Customer collection</returns>
-        public List<Customer> GetAllCustomers()
+        public PagedList<Customer> GetAllCustomers()
         {
-            int totalRecords = 0;
             return GetAllCustomers(null, null, null, string.Empty, false,
-                int.MaxValue, 0, out totalRecords);
+                int.MaxValue, 0);
         }
 
         /// <summary>
@@ -718,15 +717,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// <param name="dontLoadGuestCustomers">A value indicating whether to don't load guest customers</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="pageIndex">Page index</param>
-        /// <param name="totalRecords">Total records</param>
         /// <returns>Customer collection</returns>
-        public List<Customer> GetAllCustomers(DateTime? registrationFrom,
+        public PagedList<Customer> GetAllCustomers(DateTime? registrationFrom,
             DateTime? registrationTo, string email, string username,
-            bool dontLoadGuestCustomers, int pageSize, int pageIndex, out int totalRecords)
+            bool dontLoadGuestCustomers, int pageSize, int pageIndex)
         {
             return GetAllCustomers(registrationFrom, registrationTo,
                 email, username, dontLoadGuestCustomers, 0, 0,
-                pageSize, pageIndex, out totalRecords);
+                pageSize, pageIndex);
         }
         
         /// <summary>
@@ -741,12 +739,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// <param name="dateOfBirthDay">Filter by date of birth (day); 0 to load all customers;</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="pageIndex">Page index</param>
-        /// <param name="totalRecords">Total records</param>
         /// <returns>Customer collection</returns>
-        public List<Customer> GetAllCustomers(DateTime? registrationFrom,
+        public PagedList<Customer> GetAllCustomers(DateTime? registrationFrom,
             DateTime? registrationTo, string email, string username,
             bool dontLoadGuestCustomers, int dateOfBirthMonth, int dateOfBirthDay, 
-            int pageSize, int pageIndex, out int totalRecords)
+            int pageSize, int pageIndex)
         {
             if (pageSize <= 0)
                 pageSize = 10;
@@ -764,13 +761,19 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             if (username == null)
                 username = string.Empty;
 
-            
-            ObjectParameter totalRecordsParameter = new ObjectParameter("TotalRecords", typeof(int));
-            var customers = _context.Sp_CustomerLoadAll(registrationFrom,
-                registrationTo, email, username, dontLoadGuestCustomers,
-                dateOfBirthMonth, dateOfBirthDay,
-                pageSize, pageIndex, totalRecordsParameter).ToList();
-            totalRecords = Convert.ToInt32(totalRecordsParameter.Value);
+            var query = from c in _context.Customers
+                        where
+                        (!registrationFrom.HasValue || registrationFrom.Value <= c.RegistrationDate) &&
+                        (!registrationTo.HasValue || registrationTo.Value >= c.RegistrationDate) &&
+                        (String.IsNullOrEmpty(email) || c.Email.Contains(email)) &&
+                        (String.IsNullOrEmpty(username) || c.Username.Contains(username)) &&
+                        (!dontLoadGuestCustomers || !c.IsGuest) &&
+                        (dateOfBirthMonth == 0 || (c.DateOfBirth.HasValue && c.DateOfBirth.Value.Month == dateOfBirthMonth)) &&
+                        (dateOfBirthDay == 0 || (c.DateOfBirth.HasValue && c.DateOfBirth.Value.Day == dateOfBirthDay)) &&
+                        (!c.Deleted)
+                        orderby c.RegistrationDate descending
+                        select c;
+            var customers = new PagedList<Customer>(query, pageIndex, pageSize);
 
             return customers;
         }

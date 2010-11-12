@@ -1152,3 +1152,11 @@ UPDATE dbo.Nop_Log
 SET LogTypeId=20
 WHERE LogTypeId=0
 GO
+
+
+IF EXISTS (
+		SELECT *
+		FROM dbo.sysobjects
+		WHERE id = OBJECT_ID(N'[dbo].[Nop_CustomerLoadAll]') AND OBJECTPROPERTY(id,N'IsProcedure') = 1)
+DROP PROCEDURE [dbo].[Nop_CustomerLoadAll]
+GO

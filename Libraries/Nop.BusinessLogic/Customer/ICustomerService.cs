@@ -177,7 +177,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// Gets all customers
         /// </summary>
         /// <returns>Customer collection</returns>
-        List<Customer> GetAllCustomers();
+        PagedList<Customer> GetAllCustomers();
 
         /// <summary>
         /// Gets all customers
@@ -189,11 +189,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// <param name="dontLoadGuestCustomers">A value indicating whether to don't load guest customers</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="pageIndex">Page index</param>
-        /// <param name="totalRecords">Total records</param>
         /// <returns>Customer collection</returns>
-        List<Customer> GetAllCustomers(DateTime? registrationFrom,
+        PagedList<Customer> GetAllCustomers(DateTime? registrationFrom,
             DateTime? registrationTo, string email, string username,
-            bool dontLoadGuestCustomers, int pageSize, int pageIndex, out int totalRecords);
+            bool dontLoadGuestCustomers, int pageSize, int pageIndex);
 
         /// <summary>
         /// Gets all customers
@@ -207,12 +206,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// <param name="dateOfBirthDay">Filter by date of birth (day); 0 to load all customers;</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="pageIndex">Page index</param>
-        /// <param name="totalRecords">Total records</param>
         /// <returns>Customer collection</returns>
-        List<Customer> GetAllCustomers(DateTime? registrationFrom,
+        PagedList<Customer> GetAllCustomers(DateTime? registrationFrom,
             DateTime? registrationTo, string email, string username,
             bool dontLoadGuestCustomers, int dateOfBirthMonth, int dateOfBirthDay,
-            int pageSize, int pageIndex, out int totalRecords);
+            int pageSize, int pageIndex);
 
         /// <summary>
         /// Gets all customers by affiliate identifier

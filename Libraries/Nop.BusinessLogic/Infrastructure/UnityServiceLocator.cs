@@ -26,6 +26,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Infrastructure
     {
         readonly IUnityContainer unityContainer;
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="unityContainer">Unity container</param>
         public UnityServiceLocator(IUnityContainer unityContainer)
         {
             this.unityContainer = unityContainer;

@@ -78,10 +78,9 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             bool dontLoadGuestCustomers = cbDontLoadGuestCustomers.Checked;
             int dateOfBirthDay = int.Parse(this.ddlDateOfBirthDay.SelectedValue);
             int dateOfBirthMonth = int.Parse(this.ddlDateOfBirthMonth.SelectedValue);
-            int totalRecords = 0;
             var customers = IoC.Resolve<ICustomerService>().GetAllCustomers(startDate,
                 endDate, email, username, dontLoadGuestCustomers,
-                dateOfBirthMonth, dateOfBirthDay, int.MaxValue, 0, out totalRecords);
+                dateOfBirthMonth, dateOfBirthDay, int.MaxValue, 0);
             return customers;
         }
 
