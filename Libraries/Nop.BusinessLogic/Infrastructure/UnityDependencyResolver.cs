@@ -41,6 +41,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Content.Topics;
 using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Data;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
+using NopSolutions.NopCommerce.BusinessLogic.ExportImport;
 using NopSolutions.NopCommerce.BusinessLogic.Localization;
 using NopSolutions.NopCommerce.BusinessLogic.Maintenance;
 using NopSolutions.NopCommerce.BusinessLogic.Manufacturers;
@@ -99,7 +100,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Infrastructure
         /// Configure root container.Register types and life time managers for unity builder process
         /// </summary>
         /// <param name="container">Container to configure</param>
-        private void ConfigureContainer(IUnityContainer container)
+        protected virtual void ConfigureContainer(IUnityContainer container)
         {
             //Take into account that Types and Mappings registration could be also done using the UNITY XML configuration
             //But we prefer doing it here (C# code) because we'll catch errors at compiling time instead execution time, if any type has been written wrong.
@@ -127,6 +128,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Infrastructure
             container.RegisterType<ICurrencyService, CurrencyService>(new UnityPerExecutionContextLifetimeManager());
             container.RegisterType<ILanguageService, LanguageService>(new UnityPerExecutionContextLifetimeManager());
             container.RegisterType<IStateProvinceService, StateProvinceService>(new UnityPerExecutionContextLifetimeManager());
+            container.RegisterType<IExportManager, ExportManager>(new UnityPerExecutionContextLifetimeManager());
+            container.RegisterType<IImportManager, ImportManager>(new UnityPerExecutionContextLifetimeManager());
             container.RegisterType<ILocalizationManager, LocalizationManager>(new UnityPerExecutionContextLifetimeManager());
             container.RegisterType<IMaintenanceService, MaintenanceService>(new UnityPerExecutionContextLifetimeManager());
             container.RegisterType<IManufacturerService, ManufacturerService>(new UnityPerExecutionContextLifetimeManager());

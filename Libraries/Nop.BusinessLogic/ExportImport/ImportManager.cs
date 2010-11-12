@@ -37,15 +37,25 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
     /// <summary>
     /// Import manager
     /// </summary>
-    public partial class ImportManager
+    public partial class ImportManager : IImportManager
     {
+        #region Ctor
+
+        /// <summary>
+        ///Ctor
+        /// </summary>
+        public ImportManager()
+        {
+        }
+
+        #endregion
         #region Methods
 
         /// <summary>
         /// Import customer list from XLS file
         /// </summary>
         /// <param name="filePath">Excel file path</param>
-        public static void ImportCustomersFromXls(string filePath)
+        public void ImportCustomersFromXls(string filePath)
         {
             using (ExcelHelper excelHelper = new ExcelHelper(filePath))
             {
@@ -226,7 +236,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
         /// Import products from XLS file
         /// </summary>
         /// <param name="filePath">Excel file path</param>
-        public static void ImportProductsFromXls(string filePath)
+        public void ImportProductsFromXls(string filePath)
         {
             using (ExcelHelper excelHelper = new ExcelHelper(filePath))
             {

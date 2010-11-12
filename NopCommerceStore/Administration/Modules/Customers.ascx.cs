@@ -139,7 +139,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     string fileName = string.Format("customers_{0}.xml", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"));
 
                     var customers = GetCustomers();
-                    string xml = ExportManager.ExportCustomersToXml(customers);
+                    string xml = IoC.Resolve<ExportManager>().ExportCustomersToXml(customers);
                     CommonHelper.WriteResponseXml(xml, fileName);
                 }
                 catch (Exception exc)
@@ -159,7 +159,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     string filePath = string.Format("{0}files\\ExportImport\\{1}", HttpContext.Current.Request.PhysicalApplicationPath, fileName);
                     var customers = GetCustomers();
 
-                    ExportManager.ExportCustomersToXls(filePath, customers);
+                    IoC.Resolve<ExportManager>().ExportCustomersToXls(filePath, customers);
                     CommonHelper.WriteResponseXls(filePath, fileName);
                 }
                 catch (Exception exc)
@@ -184,7 +184,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     string filePath = string.Format("{0}files\\ExportImport\\{1}", HttpContext.Current.Request.PhysicalApplicationPath, fileName);
 
                     File.WriteAllBytes(filePath, fileBytes);
-                    ImportManager.ImportCustomersFromXls(filePath);
+                    IoC.Resolve<ImportManager>().ImportCustomersFromXls(filePath);
 
                     BindGrid();
                 }

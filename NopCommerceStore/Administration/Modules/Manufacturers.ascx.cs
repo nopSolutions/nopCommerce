@@ -62,7 +62,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 try
                 {
                     var manufacturers = IoC.Resolve<IManufacturerService>().GetAllManufacturers();
-                    string xml = ExportManager.ExportManufacturersToXml(manufacturers);
+                    string xml = IoC.Resolve<ExportManager>().ExportManufacturersToXml(manufacturers);
                     string fileName = string.Format("manufacturers_{0}.xml", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"));
                     CommonHelper.WriteResponseXml(xml, fileName);
                 }

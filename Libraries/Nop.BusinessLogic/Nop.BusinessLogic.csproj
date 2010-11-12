@@ -206,6 +206,8 @@
     <Compile Include="Caching\ClearCacheTask.cs" />
     <Compile Include="Customer\Extensions.cs" />
     <Compile Include="Data\Extensions.cs" />
+    <Compile Include="ExportImport\IExportManager.cs" />
+    <Compile Include="ExportImport\IImportManager.cs" />
     <Compile Include="ExportImport\ExcelHelper.cs" />
     <Compile Include="ExportImport\ExcelHelperReadTableMode.cs" />
     <Compile Include="Installation\NopSqlDataHelper.cs" />

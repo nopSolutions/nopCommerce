@@ -92,12 +92,9 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 this.txtPriceAdjustment.Value = pricelist.PriceAdjustment;
                 this.ddlFormatLocalization.SelectedValue = pricelist.FormatLocalization;
 
-                var productVariants = new List<ProductVariant>();
-                var products = IoC.Resolve<IProductService>().GetAllProducts();
-                foreach (Product product in products)
-                {
-                    productVariants.AddRange(product.ProductVariants);
-                }
+                int totalRecords = 0;
+                var productVariants = IoC.Resolve<IProductService>().GetAllProductVariants(0, 0, 
+                    string.Empty, int.MaxValue, 0, out totalRecords);
                 if (productVariants.Count > 0)
                 {
                     gvProductVariants.DataSource = productVariants;
@@ -108,12 +105,9 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 ddlFormatLocalization.SelectedValue = System.Globalization.CultureInfo.CurrentCulture.IetfLanguageTag;
 
-                var productVariants = new List<ProductVariant>();
-                var products = IoC.Resolve<IProductService>().GetAllProducts();
-                foreach (Product product in products)
-                {
-                    productVariants.AddRange(product.ProductVariants);
-                }
+                int totalRecords = 0;
+                var productVariants = IoC.Resolve<IProductService>().GetAllProductVariants(0, 0, 
+                    string.Empty, int.MaxValue, 0, out totalRecords);
                 if (productVariants.Count > 0)
                 {
                     gvProductVariants.DataSource = productVariants;

@@ -44,11 +44,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
     /// <summary>
     /// Export manager
     /// </summary>
-    public partial class ExportManager
+    public partial class ExportManager : IExportManager
     {
         #region Utilities
 
-        private static void WriteCategories(XmlWriter xmlWriter, int parentCategoryId)
+        private void WriteCategories(XmlWriter xmlWriter, int parentCategoryId)
         {
             var categories = IoC.Resolve<ICategoryService>().GetAllCategoriesByParentCategoryId(parentCategoryId);
             if (categories.Count > 0)
@@ -100,6 +100,17 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
             }
         }
 
+        #region Ctor
+
+        /// <summary>
+        ///Ctor
+        /// </summary>
+        public ExportManager()
+        {
+        }
+
+        #endregion
+
         #endregion
 
         #region Methods
@@ -109,7 +120,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
         /// </summary>
         /// <param name="customers">Customers</param>
         /// <returns>Result in XML format</returns>
-        public static string ExportCustomersToXml(List<Customer> customers)
+        public string ExportCustomersToXml(List<Customer> customers)
         {
             StringBuilder sb = new StringBuilder();
             StringWriter stringWriter = new StringWriter(sb);
@@ -237,7 +248,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
         /// </summary>
         /// <param name="filePath">File path to use</param>
         /// <param name="customers">Customers</param>
-        public static void ExportCustomersToXls(string filePath, List<Customer> customers)
+        public void ExportCustomersToXls(string filePath, List<Customer> customers)
         {
             using (ExcelHelper excelHelper = new ExcelHelper(filePath))
             {
@@ -340,7 +351,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
         /// </summary>
         /// <param name="manufacturers">Manufacturers</param>
         /// <returns>Result in XML format</returns>
-        public static string ExportManufacturersToXml(List<Manufacturer> manufacturers)
+        public string ExportManufacturersToXml(List<Manufacturer> manufacturers)
         {
             StringBuilder sb = new StringBuilder();
             StringWriter stringWriter = new StringWriter(sb);
@@ -399,7 +410,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
         /// Export category list to xml
         /// </summary>
         /// <returns>Result in XML format</returns>
-        public static string ExportCategoriesToXml()
+        public string ExportCategoriesToXml()
         {
             StringBuilder sb = new StringBuilder();
             StringWriter stringWriter = new StringWriter(sb);
@@ -419,7 +430,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
         /// </summary>
         /// <param name="products">Products</param>
         /// <returns>Result in XML format</returns>
-        public static string ExportProductsToXml(List<Product> products)
+        public string ExportProductsToXml(List<Product> products)
         {
             StringBuilder sb = new StringBuilder();
             StringWriter stringWriter = new StringWriter(sb);
@@ -656,7 +667,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
         /// </summary>
         /// <param name="filePath">File path to use</param>
         /// <param name="products">Products</param>
-        public static void ExportProductsToXls(string filePath, List<Product> products)
+        public void ExportProductsToXls(string filePath, List<Product> products)
         {
             using (ExcelHelper excelHelper = new ExcelHelper(filePath))
             {
@@ -800,7 +811,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
         /// </summary>
         /// <param name="orders">Orders</param>
         /// <returns>Result in XML format</returns>
-        public static string ExportOrdersToXml(List<Order> orders)
+        public string ExportOrdersToXml(List<Order> orders)
         {
             StringBuilder sb = new StringBuilder();
             StringWriter stringWriter = new StringWriter(sb);
@@ -953,7 +964,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
         /// </summary>
         /// <param name="filePath">File path to use</param>
         /// <param name="orders">Orders</param>
-        public static void ExportOrdersToXls(string filePath, List<Order> orders)
+        public void ExportOrdersToXls(string filePath, List<Order> orders)
         {
             using (ExcelHelper excelHelper = new ExcelHelper(filePath))
             {
@@ -1111,7 +1122,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.ExportImport
         /// Export message tokens to xml
         /// </summary>
         /// <returns>Result in XML format</returns>
-        public static string ExportMessageTokensToXml()
+        public string ExportMessageTokensToXml()
         {
             StringBuilder sb = new StringBuilder();
             StringWriter stringWriter = new StringWriter(sb);
