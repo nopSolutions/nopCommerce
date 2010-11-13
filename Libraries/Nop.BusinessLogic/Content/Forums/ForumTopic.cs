@@ -153,8 +153,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         {
             get
             {
-                int totalPostRecords =0;
-                var forumPosts = IoC.Resolve<IForumService>().GetAllPosts(this.ForumTopicId, 0, string.Empty, 1, 0, out totalPostRecords);
+                var forumPosts = IoC.Resolve<IForumService>().GetAllPosts(this.ForumTopicId, 
+                    0, string.Empty, 0, 1);
                 if (forumPosts.Count > 0)
                 {
                     return forumPosts[0];

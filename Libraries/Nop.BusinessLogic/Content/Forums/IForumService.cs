@@ -198,12 +198,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// <param name="forumTopicId">The forum topic identifier</param>
         /// <param name="userId">The user identifier</param>
         /// <param name="keywords">Keywords</param>
-        /// <param name="pageSize">Page size</param>
         /// <param name="pageIndex">Page index</param>
-        /// <param name="totalRecords">Total records</param>
+        /// <param name="pageSize">Page size</param>
         /// <returns>Posts</returns>
-        List<ForumPost> GetAllPosts(int forumTopicId,
-            int userId, string keywords, int pageSize, int pageIndex, out int totalRecords);
+        PagedList<ForumPost> GetAllPosts(int forumTopicId,
+            int userId, string keywords, int pageIndex, int pageSize);
 
         /// <summary>
         /// Gets all posts
@@ -212,12 +211,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// <param name="userId">The user identifier</param>
         /// <param name="keywords">Keywords</param>
         /// <param name="ascSort">Sort order</param>
-        /// <param name="pageSize">Page size</param>
         /// <param name="pageIndex">Page index</param>
-        /// <param name="totalRecords">Total records</param>
+        /// <param name="pageSize">Page size</param>
         /// <returns>Posts</returns>
-        List<ForumPost> GetAllPosts(int forumTopicId, int userId,
-            string keywords, bool ascSort, int pageSize, int pageIndex, out int totalRecords);
+        PagedList<ForumPost> GetAllPosts(int forumTopicId, int userId,
+            string keywords, bool ascSort,  int pageIndex, int pageSize);
 
         /// <summary>
         /// Inserts a post

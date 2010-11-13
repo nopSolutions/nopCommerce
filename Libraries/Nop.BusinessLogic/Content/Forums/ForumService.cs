@@ -662,15 +662,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// <param name="forumTopicId">The forum topic identifier</param>
         /// <param name="userId">The user identifier</param>
         /// <param name="keywords">Keywords</param>
-        /// <param name="pageSize">Page size</param>
         /// <param name="pageIndex">Page index</param>
-        /// <param name="totalRecords">Total records</param>
+        /// <param name="pageSize">Page size</param>
         /// <returns>Posts</returns>
-        public List<ForumPost> GetAllPosts(int forumTopicId,
-            int userId, string keywords, int pageSize, int pageIndex, out int totalRecords)
+        public PagedList<ForumPost> GetAllPosts(int forumTopicId,
+            int userId, string keywords, int pageIndex, int pageSize)
         {
             return GetAllPosts(forumTopicId, userId, keywords, true,
-                pageSize, pageIndex, out totalRecords);
+                pageIndex, pageSize);
         }
 
         /// <summary>
@@ -680,28 +679,37 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// <param name="userId">The user identifier</param>
         /// <param name="keywords">Keywords</param>
         /// <param name="ascSort">Sort order</param>
-        /// <param name="pageSize">Page size</param>
         /// <param name="pageIndex">Page index</param>
-        /// <param name="totalRecords">Total records</param>
+        /// <param name="pageSize">Page size</param>
         /// <returns>Posts</returns>
-        public List<ForumPost> GetAllPosts(int forumTopicId, int userId,
-            string keywords, bool ascSort, int pageSize, int pageIndex, out int totalRecords)
+        public PagedList<ForumPost> GetAllPosts(int forumTopicId, int userId,
+            string keywords, bool ascSort, int pageIndex, int pageSize)
         {
-            if (pageSize <= 0)
-                pageSize = 10;
-            if (pageSize == int.MaxValue)
-                pageSize = int.MaxValue - 1;
-
             if (pageIndex < 0)
                 pageIndex = 0;
             if (pageIndex == int.MaxValue)
                 pageIndex = int.MaxValue - 1;
 
-            
-            ObjectParameter totalRecordsParameter = new ObjectParameter("TotalRecords", typeof(int));
-            var forumPosts = _context.Sp_Forums_PostLoadAll(forumTopicId,
-                userId, keywords, ascSort, pageIndex, pageSize, totalRecordsParameter).ToList();
-            totalRecords = Convert.ToInt32(totalRecordsParameter.Value);
+            if (pageSize <= 0)
+                pageSize = 10;
+            if (pageSize == int.MaxValue)
+                pageSize = int.MaxValue - 1;
+
+
+            var query = (IQueryable<ForumPost>)_context.ForumPosts;
+            if (forumTopicId > 0)
+                query = query.Where(fp => forumTopicId == fp.TopicId);
+            if (userId > 0)
+                query = query.Where(fp => userId == fp.UserId);
+            if (!String.IsNullOrEmpty(keywords))
+                query = query.Where(fp => fp.Text.Contains(keywords));
+            if (ascSort)
+                query = query.OrderBy(fp => fp.CreatedOn).ThenBy(fp => fp.ForumPostId);
+            else
+                query = query.OrderByDescending(fp => fp.CreatedOn).ThenBy(fp => fp.ForumPostId);
+
+            var forumPosts = new PagedList<ForumPost>(query, pageIndex, pageSize);
+
             return forumPosts;
         }
 
@@ -1317,11 +1325,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         public int CalculateTopicPageIndex(int forumTopicId, int pageSize, int postId)
         {
             int pageIndex = 0;
-            int totalRecords = 0;
             var forumPosts = GetAllPosts(forumTopicId, 0, 
-                string.Empty, true, int.MaxValue, 0, out totalRecords);
+                string.Empty, true, 0, int.MaxValue);
 
-            for (int i = 0; i < totalRecords; i++)
+            for (int i = 0; i < forumPosts.TotalCount; i++)
             {
                 if (forumPosts[i].ForumPostId == postId)
                 {

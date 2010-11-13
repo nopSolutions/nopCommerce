@@ -63,7 +63,6 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 
                 lblTopicSubject.Text = Server.HtmlEncode(forumTopic.Subject);
 
-                int totalRecords = 0;
                 int pageSize = 10;
                 if (IoC.Resolve<IForumService>().PostsPageSize > 0)
                 {
@@ -71,15 +70,15 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 }
 
                 var forumPosts = IoC.Resolve<IForumService>().GetAllPosts(forumTopic.ForumTopicId, 0, string.Empty,
-                    pageSize, this.CurrentPageIndex, out totalRecords);
+                     this.CurrentPageIndex, pageSize);
                 if (forumPosts.Count > 0)
                 {
                     this.postsPager1.PageSize = pageSize;
-                    this.postsPager1.TotalRecords = totalRecords;
+                    this.postsPager1.TotalRecords = forumPosts.TotalCount;
                     this.postsPager1.PageIndex = this.CurrentPageIndex;
 
                     this.postsPager2.PageSize = pageSize;
-                    this.postsPager2.TotalRecords = totalRecords;
+                    this.postsPager2.TotalRecords = forumPosts.TotalCount;
                     this.postsPager2.PageIndex = this.CurrentPageIndex;
 
                     rptrPosts.DataSource = forumPosts;

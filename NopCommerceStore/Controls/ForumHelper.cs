@@ -171,7 +171,8 @@ namespace NopSolutions.NopCommerce.Web
                 return new List<ForumPost>();
 
             var result = IoC.Resolve<IForumService>().GetAllPosts(0,
-                    user.CustomerId, string.Empty, false, PageSize, PageIndex, out totalRecords);
+                    user.CustomerId, string.Empty, false, PageIndex, PageSize);
+            totalRecords = result.TotalCount;
             return result;
         }
 
