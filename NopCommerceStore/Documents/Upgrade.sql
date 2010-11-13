@@ -1161,14 +1161,12 @@ IF EXISTS (
 DROP PROCEDURE [dbo].[Nop_CustomerLoadAll]
 GO
 
-
 IF EXISTS (
 		SELECT *
 		FROM dbo.sysobjects
 		WHERE id = OBJECT_ID(N'[dbo].[Nop_CustomerSessionDeleteExpired]') AND OBJECTPROPERTY(id,N'IsProcedure') = 1)
 DROP PROCEDURE [dbo].[Nop_CustomerSessionDeleteExpired]
 GO
-
 
 IF EXISTS (
 		SELECT *
@@ -1184,11 +1182,16 @@ IF EXISTS (
 DROP PROCEDURE [dbo].[Nop_Forums_PostLoadAll]
 GO
 
-
-
 IF EXISTS (
 		SELECT *
 		FROM dbo.sysobjects
 		WHERE id = OBJECT_ID(N'[dbo].[Nop_Forums_SubscriptionLoadAll]') AND OBJECTPROPERTY(id,N'IsProcedure') = 1)
 DROP PROCEDURE [dbo].[Nop_Forums_SubscriptionLoadAll]
+GO
+
+IF EXISTS (
+		SELECT *
+		FROM dbo.sysobjects
+		WHERE id = OBJECT_ID(N'[dbo].[Nop_GiftCardLoadAll]') AND OBJECTPROPERTY(id,N'IsProcedure') = 1)
+DROP PROCEDURE [dbo].[Nop_GiftCardLoadAll]
 GO

@@ -1417,10 +1417,29 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             if (giftCardCouponCode != null)
                 giftCardCouponCode = giftCardCouponCode.Trim();
 
-            
-            var giftCards = _context.Sp_GiftCardLoadAll(orderId,
-                customerId, startTime, endTime, orderStatusId, paymentStatusId, shippingStatusId,
-                isGiftCardActivated, giftCardCouponCode).ToList();
+            giftCardCouponCode = CommonHelper.EnsureNotNull(giftCardCouponCode);
+
+            var gcQuery = from gc in _context.GiftCards
+                          join opv in _context.OrderProductVariants on gc.PurchasedOrderProductVariantId equals opv.OrderProductVariantId
+                          join o in _context.Orders on opv.OrderId equals o.OrderId
+                          where
+                          (!orderId.HasValue || orderId.Value == 0 || o.OrderId == orderId.Value) &&
+                          (!customerId.HasValue || customerId.Value == 0 || o.CustomerId == customerId.Value) &&
+                          (!startTime.HasValue || startTime.Value <= gc.CreatedOn) &&
+                          (!endTime.HasValue || endTime.Value >= gc.CreatedOn) &&
+                          (!orderStatusId.HasValue || orderStatusId.Value == 0 || o.OrderStatusId == orderStatusId.Value) &&
+                          (!paymentStatusId.HasValue || paymentStatusId.Value == 0 || o.PaymentStatusId == paymentStatusId.Value) &&
+                          (!shippingStatusId.HasValue || shippingStatusId.Value == 0 || o.ShippingStatusId == shippingStatusId.Value) &&
+                          (!isGiftCardActivated.HasValue || gc.IsGiftCardActivated == isGiftCardActivated.Value) &&
+                          (string.IsNullOrEmpty(giftCardCouponCode) || gc.GiftCardCouponCode == giftCardCouponCode)
+                          select gc.GiftCardId;
+
+            var query = from gc in _context.GiftCards
+                        where gcQuery.Contains(gc.GiftCardId)
+                        orderby gc.CreatedOn descending, gc.GiftCardId
+                        select gc;
+
+            var giftCards = query.ToList();
             return giftCards;
         }
 

@@ -3784,17 +3784,6 @@
           <Parameter Name="CreatedOn" Type="datetime" Mode="In" />
           <Parameter Name="UpdatedOn" Type="datetime" Mode="In" />
         </Function>
-        <Function Name="Nop_GiftCardLoadAll" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="OrderID" Type="int" Mode="In" />
-          <Parameter Name="CustomerID" Type="int" Mode="In" />
-          <Parameter Name="StartTime" Type="datetime" Mode="In" />
-          <Parameter Name="EndTime" Type="datetime" Mode="In" />
-          <Parameter Name="OrderStatusID" Type="int" Mode="In" />
-          <Parameter Name="PaymentStatusID" Type="int" Mode="In" />
-          <Parameter Name="ShippingStatusID" Type="int" Mode="In" />
-          <Parameter Name="IsGiftCardActivated" Type="bit" Mode="In" />
-          <Parameter Name="GiftCardCouponCode" Type="nvarchar" Mode="In" />
-        </Function>
         <Function Name="Nop_GiftCardUsageHistoryLoadAll" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="GiftCardID" Type="int" Mode="In" />
           <Parameter Name="CustomerID" Type="int" Mode="In" />
@@ -4432,17 +4421,6 @@
           <Parameter Name="CustomerAttributeKey" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="Sp_CustomerReportByLanguage" ReturnType="Collection(NopSolutions.NopCommerce.BusinessLogic.Data.CustomerReportByLanguageLine)" />
-          <FunctionImport Name="Sp_GiftCardLoadAll" EntitySet="GiftCards" ReturnType="Collection(NopSolutions.NopCommerce.BusinessLogic.Data.GiftCard)">
-            <Parameter Name="OrderID" Mode="In" Type="Int32" />
-            <Parameter Name="CustomerID" Mode="In" Type="Int32" />
-            <Parameter Name="StartTime" Mode="In" Type="DateTime" />
-            <Parameter Name="EndTime" Mode="In" Type="DateTime" />
-            <Parameter Name="OrderStatusID" Mode="In" Type="Int32" />
-            <Parameter Name="PaymentStatusID" Mode="In" Type="Int32" />
-            <Parameter Name="ShippingStatusID" Mode="In" Type="Int32" />
-            <Parameter Name="IsGiftCardActivated" Mode="In" Type="Boolean" />
-            <Parameter Name="GiftCardCouponCode" Mode="In" Type="String" />
-          </FunctionImport>
           <FunctionImport Name="Sp_GiftCardUsageHistoryLoadAll" EntitySet="GiftCardUsageHistory" ReturnType="Collection(NopSolutions.NopCommerce.BusinessLogic.Data.GiftCardUsageHistory)">
             <Parameter Name="GiftCardID" Mode="In" Type="Int32" />
             <Parameter Name="CustomerID" Mode="In" Type="Int32" />
@@ -9147,7 +9125,6 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="Sp_GiftCardLoadAll" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_GiftCardLoadAll" />
           <FunctionImportMapping FunctionImportName="Sp_GiftCardUsageHistoryLoadAll" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_GiftCardUsageHistoryLoadAll" />
           <FunctionImportMapping FunctionImportName="Sp_LanguagePackExport" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_LanguagePackExport" />
           <FunctionImportMapping FunctionImportName="Sp_LanguagePackImport" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_LanguagePackImport" />
