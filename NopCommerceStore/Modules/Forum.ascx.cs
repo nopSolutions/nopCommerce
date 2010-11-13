@@ -93,7 +93,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 if (IoC.Resolve<IForumService>().IsUserAllowedToSubscribe(NopContext.Current.User))
                 {
                     var forumSubscription = IoC.Resolve<IForumService>().GetAllSubscriptions(NopContext.Current.User.CustomerId,
-                        forum.ForumId, 0, 1, 0).FirstOrDefault();
+                        forum.ForumId, 0, 0, 1).FirstOrDefault();
 
                     if (forumSubscription == null)
                     {
@@ -128,7 +128,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             }
 
             var forumSubscription = IoC.Resolve<IForumService>().GetAllSubscriptions(NopContext.Current.User.CustomerId,
-                   forum.ForumId, 0, 1, 0).FirstOrDefault();
+                   forum.ForumId, 0, 0, 1).FirstOrDefault();
 
             if (forumSubscription == null)
             {

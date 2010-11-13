@@ -290,24 +290,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// <param name="userId">The user identifier</param>
         /// <param name="forumId">The forum identifier</param>
         /// <param name="topicId">The topic identifier</param>
-        /// <param name="pageSize">Page size</param>
         /// <param name="pageIndex">Page index</param>
-        /// <returns>Forum subscriptions</returns>
-        List<ForumSubscription> GetAllSubscriptions(int userId,
-            int forumId, int topicId, int pageSize, int pageIndex);
-
-        /// <summary>
-        /// Gets forum subscriptions
-        /// </summary>
-        /// <param name="userId">The user identifier</param>
-        /// <param name="forumId">The forum identifier</param>
-        /// <param name="topicId">The topic identifier</param>
         /// <param name="pageSize">Page size</param>
-        /// <param name="pageIndex">Page index</param>
-        /// <param name="totalRecords">Total records</param>
         /// <returns>Forum subscriptions</returns>
-        List<ForumSubscription> GetAllSubscriptions(int userId, int forumId,
-            int topicId, int pageSize, int pageIndex, out int totalRecords);
+        PagedList<ForumSubscription> GetAllSubscriptions(int userId, int forumId,
+            int topicId, int pageIndex, int pageSize);
 
         /// <summary>
         /// Inserts a forum subscription

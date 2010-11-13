@@ -50,7 +50,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         public void BindData()
         {
-            gvForumSubscriptions.DataSource = IoC.Resolve<IForumService>().GetAllSubscriptions(CustomerId, 0, 0, int.MaxValue, 0);
+            gvForumSubscriptions.DataSource = IoC.Resolve<IForumService>().GetAllSubscriptions(this.CustomerId, 0, 0, 0, int.MaxValue);
             gvForumSubscriptions.DataBind();
         }
 

@@ -512,7 +512,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
             if (sendNotifications)
             {
                 var forum = forumTopic.Forum;
-                var subscriptions = GetAllSubscriptions(0, forum.ForumId, 0, int.MaxValue, 0);
+                var subscriptions = GetAllSubscriptions(0, forum.ForumId, 0, 0, int.MaxValue);
 
                 foreach (var subscription in subscriptions)
                 {
@@ -753,8 +753,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
             {
                 var forumTopic = forumPost.Topic;
                 var forum = forumTopic.Forum;
-                var subscriptions = GetAllSubscriptions(0, 0, 
-                    forumTopic.ForumTopicId, int.MaxValue, 0);
+                var subscriptions = GetAllSubscriptions(0, 0,
+                    forumTopic.ForumTopicId, 0, int.MaxValue);
                 
                 foreach (ForumSubscription subscription in subscriptions)
                 {
@@ -1021,46 +1021,38 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// <param name="userId">The user identifier</param>
         /// <param name="forumId">The forum identifier</param>
         /// <param name="topicId">The topic identifier</param>
-        /// <param name="pageSize">Page size</param>
         /// <param name="pageIndex">Page index</param>
-        /// <returns>Forum subscriptions</returns>
-        public List<ForumSubscription> GetAllSubscriptions(int userId, 
-            int forumId, int topicId, int pageSize, int pageIndex)
-        {
-            int totalRecords = 0;
-            return GetAllSubscriptions(userId, forumId, topicId, pageSize, 
-                pageIndex, out totalRecords);
-        }
-
-        /// <summary>
-        /// Gets forum subscriptions
-        /// </summary>
-        /// <param name="userId">The user identifier</param>
-        /// <param name="forumId">The forum identifier</param>
-        /// <param name="topicId">The topic identifier</param>
         /// <param name="pageSize">Page size</param>
-        /// <param name="pageIndex">Page index</param>
-        /// <param name="totalRecords">Total records</param>
         /// <returns>Forum subscriptions</returns>
-        public List<ForumSubscription> GetAllSubscriptions(int userId, int forumId,
-            int topicId, int pageSize, int pageIndex, out int totalRecords)
+        public PagedList<ForumSubscription> GetAllSubscriptions(int userId, int forumId,
+            int topicId, int pageIndex, int pageSize)
         {
-            if (pageSize <= 0)
-                pageSize = 10;
-            if (pageSize == int.MaxValue)
-                pageSize = int.MaxValue - 1;
-
             if (pageIndex < 0)
                 pageIndex = 0;
             if (pageIndex == int.MaxValue)
                 pageIndex = int.MaxValue - 1;
 
-            
-            ObjectParameter totalRecordsParameter = new ObjectParameter("TotalRecords", typeof(int));
-            var forumSubscriptions = _context.Sp_Forums_SubscriptionLoadAll(userId,
-                forumId, topicId, pageIndex, pageSize, totalRecordsParameter).ToList();
-            totalRecords = Convert.ToInt32(totalRecordsParameter.Value);
+            if (pageSize <= 0)
+                pageSize = 10;
+            if (pageSize == int.MaxValue)
+                pageSize = int.MaxValue - 1;
 
+
+            var fsQuery = from fs in _context.ForumSubscriptions
+                          join c in _context.Customers on fs.UserId equals c.CustomerId
+                          where
+                          (userId == 0 || fs.UserId == userId) &&
+                          (forumId == 0 || fs.ForumId == forumId) &&
+                          (topicId == 0 || fs.TopicId == topicId) &&
+                          (c.Active && !c.Deleted)
+                          select fs.SubscriptionGuid;
+
+            var query = from fs in _context.ForumSubscriptions
+                        where fsQuery.Contains(fs.SubscriptionGuid)
+                        orderby fs.CreatedOn descending, fs.SubscriptionGuid descending
+                        select fs;
+
+            var forumSubscriptions = new PagedList<ForumSubscription>(query, pageIndex, pageSize);
             return forumSubscriptions;
         }
 

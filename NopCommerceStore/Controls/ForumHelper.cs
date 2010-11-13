@@ -134,7 +134,8 @@ namespace NopSolutions.NopCommerce.Web
             if (NopContext.Current.User == null)
                 return new List<ForumSubscription>();
 
-            var result = IoC.Resolve<IForumService>().GetAllSubscriptions(NopContext.Current.User.CustomerId, 0, 0, PageSize, PageIndex, out totalRecords);
+            var result = IoC.Resolve<IForumService>().GetAllSubscriptions(NopContext.Current.User.CustomerId, 0, 0, PageIndex, PageSize);
+            totalRecords = result.TotalCount;
             return result;
         }
         

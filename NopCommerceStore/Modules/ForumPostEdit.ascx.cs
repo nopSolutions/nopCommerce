@@ -210,7 +210,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 {
                     phSubscribe.Visible = true;
                     var forumSubscription = IoC.Resolve<IForumService>().GetAllSubscriptions(NopContext.Current.User.CustomerId,
-                        0, forumTopic.ForumTopicId, 1, 0).FirstOrDefault();
+                        0, forumTopic.ForumTopicId, 0, 1).FirstOrDefault();
                     cbSubscribe.Checked = forumSubscription != null;
                 }
                 else
@@ -274,7 +274,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 {
                     phSubscribe.Visible = true;
                     var forumSubscription = IoC.Resolve<IForumService>().GetAllSubscriptions(NopContext.Current.User.CustomerId,
-                        0, forumTopic.ForumTopicId, 1, 0).FirstOrDefault();
+                        0, forumTopic.ForumTopicId, 0, 1).FirstOrDefault();
                     cbSubscribe.Checked = forumSubscription != null;
                 }
                 else
@@ -345,7 +345,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 {
                     phSubscribe.Visible = true;
                     var forumSubscription = IoC.Resolve<IForumService>().GetAllSubscriptions(NopContext.Current.User.CustomerId,
-                        0, forumTopic.ForumTopicId, 1, 0).FirstOrDefault();
+                        0, forumTopic.ForumTopicId, 0, 1).FirstOrDefault();
                     cbSubscribe.Checked = forumSubscription != null;
                 }
                 else
@@ -528,7 +528,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     if (IoC.Resolve<IForumService>().IsUserAllowedToSubscribe(NopContext.Current.User))
                     {
                         var forumSubscription = IoC.Resolve<IForumService>().GetAllSubscriptions(NopContext.Current.User.CustomerId,
-                            0, forumTopic.ForumTopicId, 1, 0).FirstOrDefault();
+                            0, forumTopic.ForumTopicId, 0, 1).FirstOrDefault();
                         if (subscribe)
                         {
                             if (forumSubscription == null)
@@ -588,7 +588,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     if (IoC.Resolve<IForumService>().IsUserAllowedToSubscribe(NopContext.Current.User))
                     {
                         var forumSubscription = IoC.Resolve<IForumService>().GetAllSubscriptions(NopContext.Current.User.CustomerId,
-                            0, forumPost.TopicId, 1, 0).FirstOrDefault();
+                            0, forumPost.TopicId, 0, 1).FirstOrDefault();
                         if (subscribe)
                         {
                             if (forumSubscription == null)
@@ -647,7 +647,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     if (IoC.Resolve<IForumService>().IsUserAllowedToSubscribe(NopContext.Current.User))
                     {
                         var forumSubscription = IoC.Resolve<IForumService>().GetAllSubscriptions(NopContext.Current.User.CustomerId,
-                            0, forumPost.TopicId, 1, 0).FirstOrDefault();
+                            0, forumPost.TopicId, 0, 1).FirstOrDefault();
                         if (subscribe)
                         {
                             if (forumSubscription == null)

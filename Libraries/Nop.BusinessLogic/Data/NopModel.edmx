@@ -3740,14 +3740,6 @@
           <Parameter Name="CreatedOn" Type="datetime" Mode="In" />
           <Parameter Name="UpdatedOn" Type="datetime" Mode="In" />
         </Function>
-        <Function Name="Nop_Forums_SubscriptionLoadAll" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="UserID" Type="int" Mode="In" />
-          <Parameter Name="ForumID" Type="int" Mode="In" />
-          <Parameter Name="TopicID" Type="int" Mode="In" />
-          <Parameter Name="PageIndex" Type="int" Mode="In" />
-          <Parameter Name="PageSize" Type="int" Mode="In" />
-          <Parameter Name="TotalRecords" Type="int" Mode="InOut" />
-        </Function>
         <Function Name="Nop_Forums_TopicDelete" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="TopicID" Type="int" Mode="In" />
         </Function>
@@ -4569,14 +4561,6 @@
           </FunctionImport>
           <FunctionImport Name="Sp_Forums_ForumUpdateCounts">
           <Parameter Name="ForumID" Mode="In" Type="Int32" />
-          </FunctionImport>
-          <FunctionImport Name="Sp_Forums_SubscriptionLoadAll" EntitySet="ForumSubscriptions" ReturnType="Collection(NopSolutions.NopCommerce.BusinessLogic.Data.ForumSubscription)">
-            <Parameter Name="UserID" Mode="In" Type="Int32" />
-            <Parameter Name="ForumID" Mode="In" Type="Int32" />
-            <Parameter Name="TopicID" Mode="In" Type="Int32" />
-            <Parameter Name="PageIndex" Mode="In" Type="Int32" />
-            <Parameter Name="PageSize" Mode="In" Type="Int32" />
-            <Parameter Name="TotalRecords" Mode="InOut" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="Sp_Forums_TopicLoadAll" EntitySet="ForumTopics" ReturnType="Collection(NopSolutions.NopCommerce.BusinessLogic.Data.ForumTopic)">
             <Parameter Name="ForumID" Mode="In" Type="Int32" />
@@ -9235,7 +9219,6 @@
           <FunctionImportMapping FunctionImportName="Sp_TaxRateLoadAll" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_TaxRateLoadAll" />
           <FunctionImportMapping FunctionImportName="Sp_Forums_ForumDelete" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_Forums_ForumDelete" />
           <FunctionImportMapping FunctionImportName="Sp_Forums_ForumUpdateCounts" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_Forums_ForumUpdateCounts" />
-          <FunctionImportMapping FunctionImportName="Sp_Forums_SubscriptionLoadAll" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_Forums_SubscriptionLoadAll" />
           <FunctionImportMapping FunctionImportName="Sp_Forums_TopicLoadAll" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_Forums_TopicLoadAll" />
           <FunctionImportMapping FunctionImportName="Sp_Forums_TopicLoadActive" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_Forums_TopicLoadActive" />
           <EntitySetMapping Name="QBEntities">
