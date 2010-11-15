@@ -66,7 +66,6 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
                 hlNewTopic.NavigateUrl = SEOHelper.GetNewForumTopicUrl(forum.ForumId);
 
-                int totalRecords = 0;
                 int pageSize = 10;
                 if (IoC.Resolve<IForumService>().TopicsPageSize > 0)
                 {
@@ -74,15 +73,15 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 }
 
                 var forumTopics = IoC.Resolve<IForumService>().GetAllTopics(forum.ForumId, 0, string.Empty,
-                     ForumSearchTypeEnum.All, 0, pageSize, this.CurrentPageIndex, out totalRecords);
+                     ForumSearchTypeEnum.All, 0, this.CurrentPageIndex, pageSize);
                 if (forumTopics.Count > 0)
                 {
                     this.topicsPager1.PageSize = pageSize;
-                    this.topicsPager1.TotalRecords = totalRecords;
+                    this.topicsPager1.TotalRecords = forumTopics.TotalCount;
                     this.topicsPager1.PageIndex = this.CurrentPageIndex;
 
                     this.topicsPager2.PageSize = pageSize;
-                    this.topicsPager2.TotalRecords = totalRecords;
+                    this.topicsPager2.TotalRecords = forumTopics.TotalCount;
                     this.topicsPager2.PageIndex = this.CurrentPageIndex;
 
                     rptrTopics.DataSource = forumTopics;

@@ -427,14 +427,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// <param name="keywords">Keywords</param>
         /// <param name="searchType">Search type</param>
         /// <param name="limitDays">Limit by the last number days; 0 to load all topics</param>
-        /// <param name="pageSize">Page size</param>
         /// <param name="pageIndex">Page index</param>
-        /// <param name="totalRecords">Total records</param>
+        /// <param name="pageSize">Page size</param>
         /// <returns>Topics</returns>
-        public List<ForumTopic> GetAllTopics(int forumId,
+        public PagedList<ForumTopic> GetAllTopics(int forumId,
             int userId, string keywords, ForumSearchTypeEnum searchType,
-            int limitDays, int pageSize,
-            int pageIndex, out int totalRecords)
+            int limitDays, int pageIndex, int pageSize)
         {
             if (pageSize <= 0)
                 pageSize = 10;
@@ -452,12 +450,24 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
                 limitDate = DateTime.UtcNow.AddDays(-limitDays);
             }
 
-            
-            ObjectParameter totalRecordsParameter = new ObjectParameter("TotalRecords", typeof(int));
-            var forumTopics = _context.Sp_Forums_TopicLoadAll(forumId,
-                userId, keywords, (int)searchType, limitDate,
-                pageIndex, pageSize, totalRecordsParameter).ToList();
-            totalRecords = Convert.ToInt32(totalRecordsParameter.Value);
+            var query1 = from ft in _context.ForumTopics
+                         from fp in _context.ForumPosts.
+                         Where(fp => fp.TopicId == ft.ForumTopicId).DefaultIfEmpty()
+                         where
+                         (forumId == 0 || ft.ForumId == forumId) &&
+                         (userId == 0 || ft.UserId == userId) &&
+                         (String.IsNullOrEmpty(keywords) ||
+                         ((searchType == ForumSearchTypeEnum.All || searchType == ForumSearchTypeEnum.TopicTitlesOnly) && ft.Subject.Contains(keywords)) ||
+                         ((searchType == ForumSearchTypeEnum.All || searchType == ForumSearchTypeEnum.PostTextOnly) && fp.Text.Contains(keywords))) &&
+                         (!limitDate.HasValue || limitDate.Value <= ft.LastPostTime)
+                         select ft.ForumTopicId;
+
+            var query2 = from ft in _context.ForumTopics
+                         where query1.Contains(ft.ForumTopicId)
+                         orderby ft.TopicTypeId descending, ft.LastPostTime descending, ft.ForumTopicId descending
+                         select ft;
+
+            var forumTopics = new PagedList<ForumTopic>(query2, pageIndex, pageSize);
             return forumTopics;
         }
         
@@ -465,12 +475,22 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// Gets active topics
         /// </summary>
         /// <param name="forumId">The forum group identifier</param>
-        /// <param name="topicCount">Topic count. 0 if you want to get all topics</param>
+        /// <param name="topicCount">Topic count</param>
         /// <returns>Topics</returns>
         public List<ForumTopic> GetActiveTopics(int forumId, int topicCount)
         {
-            
-            var forumTopics = _context.Sp_Forums_TopicLoadActive(forumId, topicCount).ToList();
+            var query1 = from ft in _context.ForumTopics
+                         where
+                         (forumId == 0 || ft.ForumId == forumId) &&
+                         (ft.LastPostTime.HasValue)
+                         select ft.ForumTopicId;
+
+            var query2 = from ft in _context.ForumTopics
+                         where query1.Contains(ft.ForumTopicId)
+                         orderby ft.LastPostTime descending
+                         select ft;
+
+            var forumTopics = query2.Take(topicCount).ToList();
             return forumTopics;
         }
         

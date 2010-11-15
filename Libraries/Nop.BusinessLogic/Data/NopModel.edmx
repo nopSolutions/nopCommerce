@@ -3755,20 +3755,6 @@
           <Parameter Name="CreatedOn" Type="datetime" Mode="In" />
           <Parameter Name="UpdatedOn" Type="datetime" Mode="In" />
         </Function>
-        <Function Name="Nop_Forums_TopicLoadActive" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="ForumID" Type="int" Mode="In" />
-          <Parameter Name="TopicCount" Type="int" Mode="In" />
-        </Function>
-        <Function Name="Nop_Forums_TopicLoadAll" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="ForumID" Type="int" Mode="In" />
-          <Parameter Name="UserID" Type="int" Mode="In" />
-          <Parameter Name="Keywords" Type="nvarchar(max)" Mode="In" />
-          <Parameter Name="SearchType" Type="int" Mode="In" />
-          <Parameter Name="LimitDate" Type="datetime" Mode="In" />
-          <Parameter Name="PageIndex" Type="int" Mode="In" />
-          <Parameter Name="PageSize" Type="int" Mode="In" />
-          <Parameter Name="TotalRecords" Type="int" Mode="InOut" />
-        </Function>
         <Function Name="Nop_Forums_TopicUpdate" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="TopicID" Type="int" Mode="In" />
           <Parameter Name="ForumID" Type="int" Mode="In" />
@@ -4436,20 +4422,6 @@
           </FunctionImport>
           <FunctionImport Name="Sp_Forums_ForumUpdateCounts">
           <Parameter Name="ForumID" Mode="In" Type="Int32" />
-          </FunctionImport>
-          <FunctionImport Name="Sp_Forums_TopicLoadAll" EntitySet="ForumTopics" ReturnType="Collection(NopSolutions.NopCommerce.BusinessLogic.Data.ForumTopic)">
-            <Parameter Name="ForumID" Mode="In" Type="Int32" />
-            <Parameter Name="UserID" Mode="In" Type="Int32" />
-            <Parameter Name="Keywords" Mode="In" Type="String" />
-            <Parameter Name="SearchType" Mode="In" Type="Int32" />
-            <Parameter Name="LimitDate" Mode="In" Type="DateTime" />
-            <Parameter Name="PageIndex" Mode="In" Type="Int32" />
-            <Parameter Name="PageSize" Mode="In" Type="Int32" />
-            <Parameter Name="TotalRecords" Mode="InOut" Type="Int32" />
-          </FunctionImport>
-          <FunctionImport Name="Sp_Forums_TopicLoadActive" EntitySet="ForumTopics" ReturnType="Collection(NopSolutions.NopCommerce.BusinessLogic.Data.ForumTopic)">
-            <Parameter Name="ForumID" Mode="In" Type="Int32" />
-            <Parameter Name="TopicCount" Mode="In" Type="Int32" />
           </FunctionImport>
           <EntitySet Name="QBEntities" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.QBEntity" />
           <EntitySet Name="SMSProviders" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.SMSProvider" />
@@ -9034,8 +9006,6 @@
           <FunctionImportMapping FunctionImportName="Sp_TaxRateLoadAll" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_TaxRateLoadAll" />
           <FunctionImportMapping FunctionImportName="Sp_Forums_ForumDelete" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_Forums_ForumDelete" />
           <FunctionImportMapping FunctionImportName="Sp_Forums_ForumUpdateCounts" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_Forums_ForumUpdateCounts" />
-          <FunctionImportMapping FunctionImportName="Sp_Forums_TopicLoadAll" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_Forums_TopicLoadAll" />
-          <FunctionImportMapping FunctionImportName="Sp_Forums_TopicLoadActive" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_Forums_TopicLoadActive" />
           <EntitySetMapping Name="QBEntities">
             <EntityTypeMapping TypeName="NopSolutions.NopCommerce.BusinessLogic.Data.QBEntity">
               <MappingFragment StoreEntitySet="Nop_QBEntity">

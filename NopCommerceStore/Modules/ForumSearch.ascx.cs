@@ -89,7 +89,6 @@ namespace NopSolutions.NopCommerce.Web.Modules
                         limitResultsToPrevious = Convert.ToInt32(ddlLimitResultsToPrevious.SelectedValue);
                     }
 
-                    int totalRecords = 0;
                     int pageSize = 10;
                     if (IoC.Resolve<IForumService>().SearchResultsPageSize > 0)
                     {
@@ -97,15 +96,15 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     }
 
                     var forumTopics = IoC.Resolve<IForumService>().GetAllTopics(forumId, 0, keywords, searchWithin,
-                        limitResultsToPrevious, pageSize, this.CurrentPageIndex, out totalRecords);
+                        limitResultsToPrevious, this.CurrentPageIndex, pageSize);
                     if (forumTopics.Count > 0)
                     {
                         this.searchPager1.PageSize = pageSize;
-                        this.searchPager1.TotalRecords = totalRecords;
+                        this.searchPager1.TotalRecords = forumTopics.TotalCount;
                         this.searchPager1.PageIndex = this.CurrentPageIndex;
 
                         this.searchPager2.PageSize = pageSize;
-                        this.searchPager2.TotalRecords = totalRecords;
+                        this.searchPager2.TotalRecords = forumTopics.TotalCount;
                         this.searchPager2.PageIndex = this.CurrentPageIndex;
 
                         rptrSearchResults.DataSource = forumTopics;
