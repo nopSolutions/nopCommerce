@@ -3793,10 +3793,6 @@
           <Parameter Name="XmlPackage" Type="xml" Mode="In" />
         </Function>
         <Function Name="Nop_Maintenance_ReindexTables" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
-        <Function Name="Nop_NewsLetterSubscriptionLoadAll" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="Email" Type="nvarchar" Mode="In" />
-          <Parameter Name="ShowHidden" Type="bit" Mode="In" />
-        </Function>
         <Function Name="Nop_OrderAverageReport" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="StartTime" Type="datetime" Mode="In" />
           <Parameter Name="EndTime" Type="datetime" Mode="In" />
@@ -3813,10 +3809,6 @@
           <Parameter Name="OrderStatusID" Type="int" Mode="In" />
           <Parameter Name="PaymentStatusID" Type="int" Mode="In" />
           <Parameter Name="BillingCountryID" Type="int" Mode="In" />
-        </Function>
-        <Function Name="Nop_PaymentMethodLoadAll" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="ShowHidden" Type="bit" Mode="In" />
-          <Parameter Name="FilterByCountryID" Type="int" Mode="In" />
         </Function>
         <Function Name="Nop_ProductAlsoPurchasedLoadByProductID" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="ProductID" Type="int" Mode="In" />
@@ -3883,9 +3875,6 @@
           <Parameter Name="StartTime" Type="datetime" Mode="In" />
           <Parameter Name="EndTime" Type="datetime" Mode="In" />
           <Parameter Name="Count" Type="int" Mode="In" />
-        </Function>
-        <Function Name="Nop_ShippingMethodLoadAll" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="FilterByCountryID" Type="int" Mode="In" />
         </Function>
         <Function Name="Nop_ShoppingCartItemDeleteExpired" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="OlderThan" Type="datetime" Mode="In" />
@@ -4425,10 +4414,6 @@
             <Parameter Name="XmlPackage" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="Sp_Maintenance_ReindexTables" />
-          <FunctionImport Name="Sp_NewsLetterSubscriptionLoadAll" EntitySet="NewsLetterSubscriptions" ReturnType="Collection(NopSolutions.NopCommerce.BusinessLogic.Data.NewsLetterSubscription)">
-            <Parameter Name="Email" Mode="In" Type="String" />
-            <Parameter Name="ShowHidden" Mode="In" Type="Boolean" />
-          </FunctionImport>
           <FunctionImport Name="Sp_OrderAverageReport" ReturnType="Collection(NopSolutions.NopCommerce.BusinessLogic.Data.OrderAverageReportLine)">
             <Parameter Name="StartTime" Mode="In" Type="DateTime" />
             <Parameter Name="EndTime" Mode="In" Type="DateTime" />
@@ -4445,10 +4430,6 @@
             <Parameter Name="OrderStatusID" Mode="In" Type="Int32" />
             <Parameter Name="PaymentStatusID" Mode="In" Type="Int32" />
             <Parameter Name="BillingCountryID" Mode="In" Type="Int32" />
-          </FunctionImport>
-          <FunctionImport Name="Sp_PaymentMethodLoadAll" EntitySet="PaymentMethods" ReturnType="Collection(NopSolutions.NopCommerce.BusinessLogic.Data.PaymentMethod)">
-            <Parameter Name="ShowHidden" Mode="In" Type="Boolean" />
-            <Parameter Name="FilterByCountryID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="Sp_ProductAlsoPurchasedLoadByProductID" EntitySet="Products" ReturnType="Collection(NopSolutions.NopCommerce.BusinessLogic.Data.Product)">
             <Parameter Name="ProductID" Mode="In" Type="Int32" />
@@ -4515,9 +4496,6 @@
             <Parameter Name="StartTime" Mode="In" Type="DateTime" />
             <Parameter Name="EndTime" Mode="In" Type="DateTime" />
             <Parameter Name="Count" Mode="In" Type="Int32" />
-          </FunctionImport>
-          <FunctionImport Name="Sp_ShippingMethodLoadAll" EntitySet="ShippingMethods" ReturnType="Collection(NopSolutions.NopCommerce.BusinessLogic.Data.ShippingMethod)">
-          <Parameter Name="FilterByCountryID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="Sp_SpecificationAttributeOptionFilter_LoadByFilter" ReturnType="Collection(NopSolutions.NopCommerce.BusinessLogic.Data.SpecificationAttributeOptionFilter)">
             <Parameter Name="CategoryID" Mode="In" Type="Int32" />
@@ -9118,7 +9096,6 @@
           <FunctionImportMapping FunctionImportName="Sp_LanguagePackExport" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_LanguagePackExport" />
           <FunctionImportMapping FunctionImportName="Sp_LanguagePackImport" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_LanguagePackImport" />
           <FunctionImportMapping FunctionImportName="Sp_Maintenance_ReindexTables" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_Maintenance_ReindexTables" />
-          <FunctionImportMapping FunctionImportName="Sp_NewsLetterSubscriptionLoadAll" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_NewsLetterSubscriptionLoadAll" />
           <FunctionImportMapping FunctionImportName="Sp_OrderAverageReport" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_OrderAverageReport">
             <ResultMapping>
               <ComplexTypeMapping TypeName="NopSolutions.NopCommerce.BusinessLogic.Data.OrderAverageReportLine">
@@ -9144,7 +9121,6 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="Sp_PaymentMethodLoadAll" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_PaymentMethodLoadAll" />
           <FunctionImportMapping FunctionImportName="Sp_ProductAlsoPurchasedLoadByProductID" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_ProductAlsoPurchasedLoadByProductID" />
           <FunctionImportMapping FunctionImportName="Sp_ProductLoadAllPaged" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_ProductLoadAllPaged" />
           <FunctionImportMapping FunctionImportName="Sp_ProductTag_Product_MappingDelete" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_ProductTag_Product_MappingDelete" />
@@ -9170,7 +9146,6 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="Sp_ShippingMethodLoadAll" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_ShippingMethodLoadAll" />
           <FunctionImportMapping FunctionImportName="Sp_SpecificationAttributeOptionFilter_LoadByFilter" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_SpecificationAttributeOptionFilter_LoadByFilter">
             <ResultMapping>
               <ComplexTypeMapping TypeName="NopSolutions.NopCommerce.BusinessLogic.Data.SpecificationAttributeOptionFilter">

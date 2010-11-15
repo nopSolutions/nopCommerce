@@ -222,66 +222,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        /// <param name="email">No Metadata Documentation available.</param>
-        /// <param name="showHidden">No Metadata Documentation available.</param>
-        public ObjectResult<NewsLetterSubscription> Sp_NewsLetterSubscriptionLoadAll(global::System.String email, Nullable<global::System.Boolean> showHidden)
-        {
-            ObjectParameter emailParameter;
-            if (email != null)
-            {
-                emailParameter = new ObjectParameter("Email", email);
-            }
-            else
-            {
-                emailParameter = new ObjectParameter("Email", typeof(global::System.String));
-            }
-    
-            ObjectParameter showHiddenParameter;
-            if (showHidden.HasValue)
-            {
-                showHiddenParameter = new ObjectParameter("ShowHidden", showHidden);
-            }
-            else
-            {
-                showHiddenParameter = new ObjectParameter("ShowHidden", typeof(global::System.Boolean));
-            }
-    
-            return base.ExecuteFunction<NewsLetterSubscription>("Sp_NewsLetterSubscriptionLoadAll", emailParameter, showHiddenParameter);
-        }
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        /// <param name="mergeOption"></param>
-        /// <param name="email">No Metadata Documentation available.</param>
-        /// <param name="showHidden">No Metadata Documentation available.</param>
-        public ObjectResult<NewsLetterSubscription> Sp_NewsLetterSubscriptionLoadAll(global::System.String email, Nullable<global::System.Boolean> showHidden, MergeOption mergeOption)
-        {
-            ObjectParameter emailParameter;
-            if (email != null)
-            {
-                emailParameter = new ObjectParameter("Email", email);
-            }
-            else
-            {
-                emailParameter = new ObjectParameter("Email", typeof(global::System.String));
-            }
-    
-            ObjectParameter showHiddenParameter;
-            if (showHidden.HasValue)
-            {
-                showHiddenParameter = new ObjectParameter("ShowHidden", showHidden);
-            }
-            else
-            {
-                showHiddenParameter = new ObjectParameter("ShowHidden", typeof(global::System.Boolean));
-            }
-    
-            return base.ExecuteFunction<NewsLetterSubscription>("Sp_NewsLetterSubscriptionLoadAll", mergeOption, emailParameter, showHiddenParameter);
-        }
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
         /// <param name="startTime">No Metadata Documentation available.</param>
         /// <param name="endTime">No Metadata Documentation available.</param>
         /// <param name="orderStatusID">No Metadata Documentation available.</param>

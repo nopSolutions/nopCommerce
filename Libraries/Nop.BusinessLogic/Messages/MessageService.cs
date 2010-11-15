@@ -1300,9 +1300,23 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
         /// <returns>NewsLetterSubscription entity collection</returns>
         public List<NewsLetterSubscription> GetAllNewsLetterSubscriptions(string email, bool showHidden)
         {
-            
-            var newsletterSubscriptions = _context.Sp_NewsLetterSubscriptionLoadAll(email, showHidden).ToList();
 
+            var query1 = from nls in _context.NewsLetterSubscriptions
+                         from c in _context.Customers
+                         .Where(c => c.Email == nls.Email)
+                         .DefaultIfEmpty()
+                         where
+                         (showHidden || nls.Active) &&
+                         (c == null || c.CustomerId == 0 || (c.Active && !c.Deleted)) &&
+                         (String.IsNullOrEmpty(email) || nls.Email.Contains(email))
+                         select nls.NewsLetterSubscriptionId;
+
+            var query2 = from nls in _context.NewsLetterSubscriptions
+                         where query1.Contains(nls.NewsLetterSubscriptionId)
+                         orderby nls.Email
+                         select nls;
+
+            var newsletterSubscriptions = query2.ToList();
             return newsletterSubscriptions;
         }
 

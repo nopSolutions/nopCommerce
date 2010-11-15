@@ -304,9 +304,32 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
         /// <returns>Payment method collection</returns>
         public List<PaymentMethod> GetAllPaymentMethods(int? filterByCountryId, bool showHidden)
         {
+            if (filterByCountryId.HasValue && filterByCountryId.Value > 0)
+            {
+                var query1 = from pm in _context.PaymentMethods
+                             where
+                             pm.NpRestrictedCountries.Select(c => c.CountryId).Contains(filterByCountryId.Value)
+                             select pm.PaymentMethodId;
 
-            var paymentMethods = _context.Sp_PaymentMethodLoadAll(showHidden, filterByCountryId).ToList();
-            return paymentMethods;
+                var query2 = from pm in _context.PaymentMethods
+                             where (!query1.Contains(pm.PaymentMethodId)) &&
+                             (showHidden || pm.IsActive)
+                             orderby pm.DisplayOrder
+                             select pm;
+
+                var paymentMethods = query2.ToList();
+                return paymentMethods;
+            }
+            else
+            {
+                var query = from pm in _context.PaymentMethods
+                            where (showHidden || pm.IsActive)
+                            orderby pm.DisplayOrder
+                            select pm;
+
+                var paymentMethods = query.ToList();
+                return paymentMethods;
+            }
         }
 
         /// <summary>
@@ -417,8 +440,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
         /// <returns>True if mapping exist, otherwise false</returns>
         public bool DoesPaymentMethodCountryMappingExist(int paymentMethodId, int countryId)
         {
-
-
             var paymentMethod = GetPaymentMethodById(paymentMethodId);
             if (paymentMethod == null)
                 return false;

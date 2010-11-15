@@ -254,10 +254,6 @@ namespace NopSolutions.NopCommerce.Web.Modules
                             //PayPal Express is placed here as button
                             if (pm.SystemKeyword == "PayPalExpress")
                             {
-                                //bind PayPal Express button
-                                btnPaypalExpressButton.BindData();
-                                if (btnPaypalExpressButton.Visible)
-                                    hasButtonMethods = true;
                             }
                         }
                         break;
@@ -265,6 +261,11 @@ namespace NopSolutions.NopCommerce.Web.Modules
                         break;
                 }
             }
+
+            //bind PayPal Express button
+            btnPaypalExpressButton.BindData();
+            if (btnPaypalExpressButton.Visible)
+                hasButtonMethods = true;
 
             if (boundPaymentMethods.Count == 0)
             {
