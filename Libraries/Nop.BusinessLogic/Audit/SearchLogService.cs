@@ -102,7 +102,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
         /// <returns>Search log collection</returns>
         public List<SearchLog> GetAllSearchLogs()
         {
-            
             var query = from s in _context.SearchLog
                         orderby s.CreatedOn descending
                         select s;
@@ -120,8 +119,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
         {
             if (searchLogId == 0)
                 return null;
-
-            
+                        
             var query = from s in _context.SearchLog
                         where s.SearchLogId == searchLogId
                         select s;

@@ -1272,3 +1272,10 @@ IF EXISTS (
 		WHERE id = OBJECT_ID(N'[dbo].[Nop_SearchTermReport]') AND OBJECTPROPERTY(id,N'IsProcedure') = 1)
 DROP PROCEDURE [dbo].[Nop_SearchTermReport]
 GO
+
+IF EXISTS (
+		SELECT *
+		FROM dbo.sysobjects
+		WHERE id = OBJECT_ID(N'[dbo].[Nop_CustomerReportByLanguage]') AND OBJECTPROPERTY(id,N'IsProcedure') = 1)
+DROP PROCEDURE [dbo].[Nop_CustomerReportByLanguage]
+GO

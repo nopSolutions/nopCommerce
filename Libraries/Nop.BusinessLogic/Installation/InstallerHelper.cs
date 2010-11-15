@@ -230,6 +230,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Installation
                 builder.Password = password;
             }
             builder.PersistSecurityInfo = false;
+            builder.MultipleActiveResultSets = true;
             builder.ConnectTimeout = timeout;
             return builder.ConnectionString;
         }

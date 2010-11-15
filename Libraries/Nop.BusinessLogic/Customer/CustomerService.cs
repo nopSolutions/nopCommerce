@@ -84,8 +84,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
 
         #endregion
 
-        #region Methods
-
         #region Utilities
         
         /// <summary>
@@ -149,6 +147,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         }
 
         #endregion
+
+        #region Methods
 
         /// <summary>
         /// Deletes an address by address identifier 
@@ -1597,9 +1597,25 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// <returns>Report</returns>
         public List<CustomerReportByLanguageLine> GetCustomerReportByLanguage()
         {
-            
-            var report = _context.Sp_CustomerReportByLanguage().ToList();
-
+            var query = from c in _context.Customers
+                        where !c.Deleted
+                        group c by c.LanguageId into grp
+                        orderby grp.Count() descending
+                        select new
+                        {
+                            LanguageId = grp.Key,
+                            CustomerCount = grp.Count()
+                        };
+            var tmp1 = query.ToList();
+            List<CustomerReportByLanguageLine> report = new List<CustomerReportByLanguageLine>();
+            foreach (var r1 in tmp1)
+            {
+                report.Add(new CustomerReportByLanguageLine()
+                {
+                    LanguageId = r1.LanguageId,
+                    CustomerCount = r1.CustomerCount,
+                });
+            }
             return report;
         }
 
