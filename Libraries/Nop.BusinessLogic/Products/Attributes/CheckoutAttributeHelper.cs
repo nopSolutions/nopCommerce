@@ -56,8 +56,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                 {
                     if (node1.Attributes != null && node1.Attributes["ID"] != null)
                     {
-                        int id = Convert.ToInt32(node1.Attributes["ID"].InnerText.Trim());
-                        Ids.Add(id);
+                        string str1 = node1.Attributes["ID"].InnerText.Trim();
+                        int id = 0;
+                        if (int.TryParse(str1, out id))
+                        {
+                            Ids.Add(id);
+                        }
                     }
                 }
             }
@@ -139,14 +143,18 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                 {
                     if (node1.Attributes != null && node1.Attributes["ID"] != null)
                     {
-                        int id = Convert.ToInt32(node1.Attributes["ID"].InnerText.Trim());
-                        if (id == checkoutAttributeId)
+                        string str1 = node1.Attributes["ID"].InnerText.Trim();
+                        int id = 0;
+                        if (int.TryParse(str1, out id))
                         {
-                            XmlNodeList nodeList2 = node1.SelectNodes(@"CheckoutAttributeValue/Value");
-                            foreach (XmlNode node2 in nodeList2)
+                            if (id == checkoutAttributeId)
                             {
-                                string value = node2.InnerText.Trim();
-                                selectedCheckoutAttributeValues.Add(value);
+                                XmlNodeList nodeList2 = node1.SelectNodes(@"CheckoutAttributeValue/Value");
+                                foreach (XmlNode node2 in nodeList2)
+                                {
+                                    string value = node2.InnerText.Trim();
+                                    selectedCheckoutAttributeValues.Add(value);
+                                }
                             }
                         }
                     }
@@ -190,11 +198,15 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                 {
                     if (node1.Attributes != null && node1.Attributes["ID"] != null)
                     {
-                        int id = Convert.ToInt32(node1.Attributes["ID"].InnerText.Trim());
-                        if (id == ca.CheckoutAttributeId)
+                        string str1 = node1.Attributes["ID"].InnerText.Trim();
+                        int id = 0;
+                        if (int.TryParse(str1, out id))
                         {
-                            caElement = (XmlElement)node1;
-                            break;
+                            if (id == ca.CheckoutAttributeId)
+                            {
+                                caElement = (XmlElement)node1;
+                                break;
+                            }
                         }
                     }
                 }
@@ -300,18 +312,22 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                     }
                     else
                     {
-                        var caValue = IoC.Resolve<ICheckoutAttributeService>().GetCheckoutAttributeValueById(Convert.ToInt32(valueStr));
-                        if (caValue != null)
+                        int caId = 0;
+                        if (int.TryParse(valueStr, out caId))
                         {
-                            caAttribute = string.Format("{0}: {1}", ca.LocalizedName, caValue.LocalizedName);
-                            if (renderPrices)
+                            var caValue = IoC.Resolve<ICheckoutAttributeService>().GetCheckoutAttributeValueById(caId);
+                            if (caValue != null)
                             {
-                                decimal priceAdjustmentBase = IoC.Resolve<ITaxService>().GetCheckoutAttributePrice(caValue, customer);
-                                decimal priceAdjustment = IoC.Resolve<ICurrencyService>().ConvertCurrency(priceAdjustmentBase, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
-                                if (priceAdjustmentBase > 0)
+                                caAttribute = string.Format("{0}: {1}", ca.LocalizedName, caValue.LocalizedName);
+                                if (renderPrices)
                                 {
-                                    string priceAdjustmentStr = PriceHelper.FormatPrice(priceAdjustment);
-                                    caAttribute += string.Format(" [+{0}]", priceAdjustmentStr);
+                                    decimal priceAdjustmentBase = IoC.Resolve<ITaxService>().GetCheckoutAttributePrice(caValue, customer);
+                                    decimal priceAdjustment = IoC.Resolve<ICurrencyService>().ConvertCurrency(priceAdjustmentBase, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                                    if (priceAdjustmentBase > 0)
+                                    {
+                                        string priceAdjustmentStr = PriceHelper.FormatPrice(priceAdjustment);
+                                        caAttribute += string.Format(" [+{0}]", priceAdjustmentStr);
+                                    }
                                 }
                             }
                         }

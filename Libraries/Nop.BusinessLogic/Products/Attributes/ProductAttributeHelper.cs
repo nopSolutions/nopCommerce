@@ -55,8 +55,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                 {
                     if (node1.Attributes != null && node1.Attributes["ID"] != null)
                     {
-                        int id = Convert.ToInt32(node1.Attributes["ID"].InnerText.Trim());
-                        Ids.Add(id);
+                        string str1 = node1.Attributes["ID"].InnerText.Trim();
+                        int id = 0;
+                        if (int.TryParse(str1, out id))
+                        {
+                            Ids.Add(id);
+                        }
                     }
                 }
             }
@@ -138,14 +142,18 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                 {
                     if (node1.Attributes != null && node1.Attributes["ID"] != null)
                     {
-                        int id = Convert.ToInt32(node1.Attributes["ID"].InnerText.Trim());
-                        if (id == productVariantAttributeId)
+                        string str1 =node1.Attributes["ID"].InnerText.Trim();
+                        int id = 0;
+                        if (int.TryParse(str1, out id))
                         {
-                            XmlNodeList nodeList2 = node1.SelectNodes(@"ProductVariantAttributeValue/Value");
-                            foreach (XmlNode node2 in nodeList2)
+                            if (id == productVariantAttributeId)
                             {
-                                string value = node2.InnerText.Trim();
-                                selectedProductVariantAttributeValues.Add(value);
+                                XmlNodeList nodeList2 = node1.SelectNodes(@"ProductVariantAttributeValue/Value");
+                                foreach (XmlNode node2 in nodeList2)
+                                {
+                                    string value = node2.InnerText.Trim();
+                                    selectedProductVariantAttributeValues.Add(value);
+                                }
                             }
                         }
                     }
@@ -189,11 +197,15 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                 {
                     if (node1.Attributes != null && node1.Attributes["ID"] != null)
                     {
-                        int id = Convert.ToInt32(node1.Attributes["ID"].InnerText.Trim());
-                        if (id == pva.ProductVariantAttributeId)
+                        string str1 =node1.Attributes["ID"].InnerText.Trim();
+                        int id = 0;
+                        if (int.TryParse(str1, out id))
                         {
-                            pvaElement = (XmlElement)node1;
-                            break;
+                            if (id == pva.ProductVariantAttributeId)
+                            {
+                                pvaElement = (XmlElement)node1;
+                                break;
+                            }
                         }
                     }
                 }
@@ -506,24 +518,28 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products.Attributes
                         }
                         else
                         {
-                            var pvaValue = IoC.Resolve<IProductAttributeService>().GetProductVariantAttributeValueById(Convert.ToInt32(valueStr));
-                            if (pvaValue != null)
+                            int pvaId = 0;
+                            if (int.TryParse(valueStr, out pvaId))
                             {
-                                pvaAttribute = string.Format("{0}: {1}", pva.ProductAttribute.LocalizedName, pvaValue.LocalizedName);
-                                if (renderPrices)
+                                var pvaValue = IoC.Resolve<IProductAttributeService>().GetProductVariantAttributeValueById(pvaId);
+                                if (pvaValue != null)
                                 {
-                                    decimal taxRate = decimal.Zero;
-                                    decimal priceAdjustmentBase = IoC.Resolve<ITaxService>().GetPrice(productVariant, pvaValue.PriceAdjustment, customer, out taxRate);
-                                    decimal priceAdjustment = IoC.Resolve<ICurrencyService>().ConvertCurrency(priceAdjustmentBase, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
-                                    if (priceAdjustmentBase > 0)
+                                    pvaAttribute = string.Format("{0}: {1}", pva.ProductAttribute.LocalizedName, pvaValue.LocalizedName);
+                                    if (renderPrices)
                                     {
-                                        string priceAdjustmentStr = PriceHelper.FormatPrice(priceAdjustment, false, false);
-                                        pvaAttribute += string.Format(" [+{0}]", priceAdjustmentStr);
-                                    }
-                                    else if (priceAdjustmentBase < decimal.Zero)
-                                    {
-                                        string priceAdjustmentStr = PriceHelper.FormatPrice(-priceAdjustment, false, false);
-                                        pvaAttribute += string.Format(" [-{0}]", priceAdjustmentStr);
+                                        decimal taxRate = decimal.Zero;
+                                        decimal priceAdjustmentBase = IoC.Resolve<ITaxService>().GetPrice(productVariant, pvaValue.PriceAdjustment, customer, out taxRate);
+                                        decimal priceAdjustment = IoC.Resolve<ICurrencyService>().ConvertCurrency(priceAdjustmentBase, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                                        if (priceAdjustmentBase > 0)
+                                        {
+                                            string priceAdjustmentStr = PriceHelper.FormatPrice(priceAdjustment, false, false);
+                                            pvaAttribute += string.Format(" [+{0}]", priceAdjustmentStr);
+                                        }
+                                        else if (priceAdjustmentBase < decimal.Zero)
+                                        {
+                                            string priceAdjustmentStr = PriceHelper.FormatPrice(-priceAdjustment, false, false);
+                                            pvaAttribute += string.Format(" [-{0}]", priceAdjustmentStr);
+                                        }
                                     }
                                 }
                             }
