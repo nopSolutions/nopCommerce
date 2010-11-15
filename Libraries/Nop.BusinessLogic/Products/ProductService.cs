@@ -738,7 +738,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             var ratedOn = DateTime.UtcNow;
 
             //delete previous helpfulness
-            
+
             var oldPr = (from pr in _context.ProductRatings
                          where pr.ProductId == productId &&
                          pr.CustomerId == NopContext.Current.User.CustomerId
@@ -759,9 +759,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             _context.SaveChanges();
 
             //new totals
-            int ratingSum = (from pr in _context.ProductRatings
-                             where pr.ProductId == productId
-                             select pr).Sum(p => p.Rating);
+            int ratingSum = Convert.ToInt32((from pr in _context.ProductRatings
+                                             where pr.ProductId == productId
+                                             select pr).Sum(p => (int?)p.Rating));
             int totalRatingVotes = (from pr in _context.ProductRatings
                                     where pr.ProductId == productId
                                     select pr).Count();

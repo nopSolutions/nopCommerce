@@ -225,88 +225,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         /// <param name="startTime">No Metadata Documentation available.</param>
         /// <param name="endTime">No Metadata Documentation available.</param>
         /// <param name="orderStatusID">No Metadata Documentation available.</param>
-        public ObjectResult<OrderAverageReportLine> Sp_OrderAverageReport(Nullable<global::System.DateTime> startTime, Nullable<global::System.DateTime> endTime, Nullable<global::System.Int32> orderStatusID)
-        {
-            ObjectParameter startTimeParameter;
-            if (startTime.HasValue)
-            {
-                startTimeParameter = new ObjectParameter("StartTime", startTime);
-            }
-            else
-            {
-                startTimeParameter = new ObjectParameter("StartTime", typeof(global::System.DateTime));
-            }
-    
-            ObjectParameter endTimeParameter;
-            if (endTime.HasValue)
-            {
-                endTimeParameter = new ObjectParameter("EndTime", endTime);
-            }
-            else
-            {
-                endTimeParameter = new ObjectParameter("EndTime", typeof(global::System.DateTime));
-            }
-    
-            ObjectParameter orderStatusIDParameter;
-            if (orderStatusID.HasValue)
-            {
-                orderStatusIDParameter = new ObjectParameter("OrderStatusID", orderStatusID);
-            }
-            else
-            {
-                orderStatusIDParameter = new ObjectParameter("OrderStatusID", typeof(global::System.Int32));
-            }
-    
-            return base.ExecuteFunction<OrderAverageReportLine>("Sp_OrderAverageReport", startTimeParameter, endTimeParameter, orderStatusIDParameter);
-        }
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        /// <param name="orderStatusID">No Metadata Documentation available.</param>
-        /// <param name="paymentStatusID">No Metadata Documentation available.</param>
-        /// <param name="shippingStatusID">No Metadata Documentation available.</param>
-        public ObjectResult<OrderIncompleteReportLine> Sp_OrderIncompleteReport(Nullable<global::System.Int32> orderStatusID, Nullable<global::System.Int32> paymentStatusID, Nullable<global::System.Int32> shippingStatusID)
-        {
-            ObjectParameter orderStatusIDParameter;
-            if (orderStatusID.HasValue)
-            {
-                orderStatusIDParameter = new ObjectParameter("OrderStatusID", orderStatusID);
-            }
-            else
-            {
-                orderStatusIDParameter = new ObjectParameter("OrderStatusID", typeof(global::System.Int32));
-            }
-    
-            ObjectParameter paymentStatusIDParameter;
-            if (paymentStatusID.HasValue)
-            {
-                paymentStatusIDParameter = new ObjectParameter("PaymentStatusID", paymentStatusID);
-            }
-            else
-            {
-                paymentStatusIDParameter = new ObjectParameter("PaymentStatusID", typeof(global::System.Int32));
-            }
-    
-            ObjectParameter shippingStatusIDParameter;
-            if (shippingStatusID.HasValue)
-            {
-                shippingStatusIDParameter = new ObjectParameter("ShippingStatusID", shippingStatusID);
-            }
-            else
-            {
-                shippingStatusIDParameter = new ObjectParameter("ShippingStatusID", typeof(global::System.Int32));
-            }
-    
-            return base.ExecuteFunction<OrderIncompleteReportLine>("Sp_OrderIncompleteReport", orderStatusIDParameter, paymentStatusIDParameter, shippingStatusIDParameter);
-        }
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        /// <param name="startTime">No Metadata Documentation available.</param>
-        /// <param name="endTime">No Metadata Documentation available.</param>
-        /// <param name="orderStatusID">No Metadata Documentation available.</param>
         /// <param name="paymentStatusID">No Metadata Documentation available.</param>
         /// <param name="billingCountryID">No Metadata Documentation available.</param>
         public ObjectResult<OrderProductVariantReportLine> Sp_OrderProductVariantReport(Nullable<global::System.DateTime> startTime, Nullable<global::System.DateTime> endTime, Nullable<global::System.Int32> orderStatusID, Nullable<global::System.Int32> paymentStatusID, Nullable<global::System.Int32> billingCountryID)
@@ -1067,47 +985,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
             }
     
             return base.ExecuteFunction<BestSellersReportLine>("Sp_SalesBestSellersReport", lastDaysParameter, recordsToReturnParameter, orderByParameter);
-        }
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        /// <param name="startTime">No Metadata Documentation available.</param>
-        /// <param name="endTime">No Metadata Documentation available.</param>
-        /// <param name="count">No Metadata Documentation available.</param>
-        public ObjectResult<SearchTermReportLine> Sp_SearchTermReport(Nullable<global::System.DateTime> startTime, Nullable<global::System.DateTime> endTime, Nullable<global::System.Int32> count)
-        {
-            ObjectParameter startTimeParameter;
-            if (startTime.HasValue)
-            {
-                startTimeParameter = new ObjectParameter("StartTime", startTime);
-            }
-            else
-            {
-                startTimeParameter = new ObjectParameter("StartTime", typeof(global::System.DateTime));
-            }
-    
-            ObjectParameter endTimeParameter;
-            if (endTime.HasValue)
-            {
-                endTimeParameter = new ObjectParameter("EndTime", endTime);
-            }
-            else
-            {
-                endTimeParameter = new ObjectParameter("EndTime", typeof(global::System.DateTime));
-            }
-    
-            ObjectParameter countParameter;
-            if (count.HasValue)
-            {
-                countParameter = new ObjectParameter("Count", count);
-            }
-            else
-            {
-                countParameter = new ObjectParameter("Count", typeof(global::System.Int32));
-            }
-    
-            return base.ExecuteFunction<SearchTermReportLine>("Sp_SearchTermReport", startTimeParameter, endTimeParameter, countParameter);
         }
     
         /// <summary>

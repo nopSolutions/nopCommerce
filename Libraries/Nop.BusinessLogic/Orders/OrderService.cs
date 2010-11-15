@@ -1059,13 +1059,21 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="startTime">Start date</param>
         /// <param name="endTime">End date</param>
         /// <returns>Result</returns>
-        public OrderAverageReportLine GetOrderAverageReportLine(OrderStatusEnum os, 
+        public OrderAverageReportLine GetOrderAverageReportLine(OrderStatusEnum os,
             DateTime? startTime, DateTime? endTime)
         {
             int orderStatusId = (int)os;
 
-            
-            var item = _context.Sp_OrderAverageReport(startTime, endTime, orderStatusId).FirstOrDefault();
+            var query = from o in _context.Orders
+                        where (!o.Deleted) &&
+                        (o.OrderStatusId == orderStatusId) &&
+                        (!startTime.HasValue || startTime.Value <= o.CreatedOn) &&
+                        (!endTime.HasValue || endTime.Value >= o.CreatedOn)
+                        select o;
+
+            var item = new OrderAverageReportLine();
+            item.SumOrders = Convert.ToDecimal(query.Sum(o => (decimal?)o.OrderTotal));
+            item.CountOrders = query.Count();
             return item;
         }
         
@@ -1141,7 +1149,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="ps">Order payment status; null to load all orders</param>
         /// <param name="ss">Order shippment status; null to load all orders</param>
         /// <returns>IdataReader</returns>
-        public OrderIncompleteReportLine GetOrderReport(OrderStatusEnum? os, 
+        public OrderIncompleteReportLine GetOrderReport(OrderStatusEnum? os,
             PaymentStatusEnum? ps, ShippingStatusEnum? ss)
         {
             int? orderStatusId = null;
@@ -1152,15 +1160,23 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             if (ps.HasValue)
                 paymentStatusId = (int)ps.Value;
 
-            int? shippmentStatusId = null;
+            int? shippingStatusId = null;
             if (ss.HasValue)
-                shippmentStatusId = (int)ss.Value;
+                shippingStatusId = (int)ss.Value;
 
-            
-            var item = _context.Sp_OrderIncompleteReport(orderStatusId, paymentStatusId, shippmentStatusId).FirstOrDefault();
+            var query = from o in _context.Orders
+                        where (!o.Deleted) &&
+                        (!orderStatusId.HasValue || orderStatusId.Value == 0 || o.OrderStatusId == orderStatusId.Value) &&
+                        (!paymentStatusId.HasValue || paymentStatusId.Value == 0 || o.PaymentStatusId == paymentStatusId.Value) &&
+                        (!shippingStatusId.HasValue || shippingStatusId.Value == 0 || o.ShippingStatusId == shippingStatusId.Value)
+                        select o;
+
+            var item = new OrderIncompleteReportLine();
+            item.Total = Convert.ToDecimal(query.Sum(o => (decimal?)o.OrderTotal));
+            item.Count = query.Count();
             return item;
         }
-       
+
         #endregion
 
         #region Recurring payments

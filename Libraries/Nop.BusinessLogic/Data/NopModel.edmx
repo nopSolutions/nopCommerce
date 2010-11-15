@@ -3713,7 +3713,6 @@
         <Function Name="Nop_CustomerReportByAttributeKey" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="CustomerAttributeKey" Type="nvarchar" Mode="In" />
         </Function>
-        <Function Name="Nop_CustomerReportByLanguage" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="Nop_Forums_ForumDelete" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="ForumID" Type="int" Mode="In" />
         </Function>
@@ -3793,16 +3792,6 @@
           <Parameter Name="XmlPackage" Type="xml" Mode="In" />
         </Function>
         <Function Name="Nop_Maintenance_ReindexTables" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
-        <Function Name="Nop_OrderAverageReport" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="StartTime" Type="datetime" Mode="In" />
-          <Parameter Name="EndTime" Type="datetime" Mode="In" />
-          <Parameter Name="OrderStatusID" Type="int" Mode="In" />
-        </Function>
-        <Function Name="Nop_OrderIncompleteReport" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="OrderStatusID" Type="int" Mode="In" />
-          <Parameter Name="PaymentStatusID" Type="int" Mode="In" />
-          <Parameter Name="ShippingStatusID" Type="int" Mode="In" />
-        </Function>
         <Function Name="Nop_OrderProductVariantReport" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="StartTime" Type="datetime" Mode="In" />
           <Parameter Name="EndTime" Type="datetime" Mode="In" />
@@ -4388,16 +4377,6 @@
             <Parameter Name="XmlPackage" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="Sp_Maintenance_ReindexTables" />
-          <FunctionImport Name="Sp_OrderAverageReport" ReturnType="Collection(NopSolutions.NopCommerce.BusinessLogic.Data.OrderAverageReportLine)">
-            <Parameter Name="StartTime" Mode="In" Type="DateTime" />
-            <Parameter Name="EndTime" Mode="In" Type="DateTime" />
-            <Parameter Name="OrderStatusID" Mode="In" Type="Int32" />
-          </FunctionImport>
-          <FunctionImport Name="Sp_OrderIncompleteReport" ReturnType="Collection(NopSolutions.NopCommerce.BusinessLogic.Data.OrderIncompleteReportLine)">
-            <Parameter Name="OrderStatusID" Mode="In" Type="Int32" />
-            <Parameter Name="PaymentStatusID" Mode="In" Type="Int32" />
-            <Parameter Name="ShippingStatusID" Mode="In" Type="Int32" />
-          </FunctionImport>
           <FunctionImport Name="Sp_OrderProductVariantReport" ReturnType="Collection(NopSolutions.NopCommerce.BusinessLogic.Data.OrderProductVariantReportLine)">
             <Parameter Name="StartTime" Mode="In" Type="DateTime" />
             <Parameter Name="EndTime" Mode="In" Type="DateTime" />
@@ -7203,14 +7182,6 @@
           <Property Type="Int32" Name="LanguageId" Nullable="false" />
           <Property Type="Int32" Name="CustomerCount" Nullable="true" />
         </ComplexType>
-        <ComplexType Name="OrderAverageReportLine">
-          <Property Type="Decimal" Name="SumOrders" Nullable="true" Precision="19" />
-          <Property Type="Int32" Name="CountOrders" Nullable="true" />
-        </ComplexType>
-        <ComplexType Name="OrderIncompleteReportLine">
-          <Property Type="Decimal" Name="Total" Nullable="false" Precision="19" />
-          <Property Type="Int32" Name="Count" Nullable="true" />
-        </ComplexType>
         <ComplexType Name="OrderProductVariantReportLine">
           <Property Type="Int32" Name="ProductVariantId" Nullable="false" />
           <Property Type="Decimal" Name="PriceExclTax" Nullable="true" Precision="19" />
@@ -9029,33 +9000,9 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="Sp_CustomerReportByLanguage" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_CustomerReportByLanguage">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="NopSolutions.NopCommerce.BusinessLogic.Data.CustomerReportByLanguageLine">
-                <ScalarProperty Name="LanguageId" ColumnName="LanguageId" />
-                <ScalarProperty Name="CustomerCount" ColumnName="CustomerCount" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="Sp_LanguagePackExport" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_LanguagePackExport" />
           <FunctionImportMapping FunctionImportName="Sp_LanguagePackImport" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_LanguagePackImport" />
           <FunctionImportMapping FunctionImportName="Sp_Maintenance_ReindexTables" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_Maintenance_ReindexTables" />
-          <FunctionImportMapping FunctionImportName="Sp_OrderAverageReport" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_OrderAverageReport">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="NopSolutions.NopCommerce.BusinessLogic.Data.OrderAverageReportLine">
-                <ScalarProperty Name="SumOrders" ColumnName="SumOrders" />
-                <ScalarProperty Name="CountOrders" ColumnName="CountOrders" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="Sp_OrderIncompleteReport" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_OrderIncompleteReport">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="NopSolutions.NopCommerce.BusinessLogic.Data.OrderIncompleteReportLine">
-                <ScalarProperty Name="Total" ColumnName="Total" />
-                <ScalarProperty Name="Count" ColumnName="Count" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="Sp_OrderProductVariantReport" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_OrderProductVariantReport">
             <ResultMapping>
               <ComplexTypeMapping TypeName="NopSolutions.NopCommerce.BusinessLogic.Data.OrderProductVariantReportLine">
