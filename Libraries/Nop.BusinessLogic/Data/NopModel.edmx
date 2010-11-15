@@ -4367,7 +4367,6 @@
           <FunctionImport Name="Sp_CustomerReportByAttributeKey" ReturnType="Collection(NopSolutions.NopCommerce.BusinessLogic.Data.CustomerReportByAttributeKeyLine)">
           <Parameter Name="CustomerAttributeKey" Mode="In" Type="String" />
           </FunctionImport>
-          <FunctionImport Name="Sp_CustomerReportByLanguage" ReturnType="Collection(NopSolutions.NopCommerce.BusinessLogic.Data.CustomerReportByLanguageLine)" />
           <FunctionImport Name="Sp_LanguagePackExport">
             <Parameter Name="LanguageID" Mode="In" Type="Int32" />
             <Parameter Name="XmlPackage" Mode="InOut" Type="String" />
@@ -7176,10 +7175,6 @@
         </ComplexType>
         <ComplexType Name="CustomerReportByAttributeKeyLine">
           <Property Type="String" Name="AttributeKey" Nullable="true" MaxLength="1000" />
-          <Property Type="Int32" Name="CustomerCount" Nullable="true" />
-        </ComplexType>
-        <ComplexType Name="CustomerReportByLanguageLine">
-          <Property Type="Int32" Name="LanguageId" Nullable="false" />
           <Property Type="Int32" Name="CustomerCount" Nullable="true" />
         </ComplexType>
         <ComplexType Name="OrderProductVariantReportLine">

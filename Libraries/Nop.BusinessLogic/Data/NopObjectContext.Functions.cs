@@ -156,14 +156,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        public ObjectResult<CustomerReportByLanguageLine> Sp_CustomerReportByLanguage()
-        {
-            return base.ExecuteFunction<CustomerReportByLanguageLine>("Sp_CustomerReportByLanguage");
-        }
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
         /// <param name="languageID">No Metadata Documentation available.</param>
         /// <param name="xmlPackage">No Metadata Documentation available.</param>
         public int Sp_LanguagePackExport(Nullable<global::System.Int32> languageID, ObjectParameter xmlPackage)
