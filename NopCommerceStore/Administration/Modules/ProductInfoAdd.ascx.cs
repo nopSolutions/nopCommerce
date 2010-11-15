@@ -376,13 +376,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             SaveLocalizableContent(product);
 
             //product tags
-            var productTags1 = IoC.Resolve<IProductService>().GetAllProductTags(product.ProductId, string.Empty);
-            foreach (var productTag in productTags1)
-            {
-                IoC.Resolve<IProductService>().RemoveProductTagMapping(product.ProductId, productTag.ProductTagId);
-            }
-            string[] productTagNames = ParseProductTags(txtProductTags.Text);
-            foreach (string productTagName in productTagNames)
+            string[] newProductTags = ParseProductTags(txtProductTags.Text);
+            foreach (string productTagName in newProductTags)
             {
                 ProductTag productTag = null;
                 var productTags2 = IoC.Resolve<IProductService>().GetAllProductTags(0,

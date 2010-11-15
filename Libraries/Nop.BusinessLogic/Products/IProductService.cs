@@ -935,6 +935,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         void AddProductTagMapping(int productId, int productTagId);
 
         /// <summary>
+        /// Checking whether the product tag mapping exists
+        /// </summary>
+        /// <param name="productId">The product identifier</param>
+        /// <param name="productTagId">The product tag identifier</param>
+        /// <returns>True if mapping exist, otherwise false</returns>
+        bool DoesProductTagMappingExist(int productId, int productTagId);
+
+        /// <summary>
         /// Removes a discount tag mapping
         /// </summary>
         /// <param name="productId">Product identifier</param>

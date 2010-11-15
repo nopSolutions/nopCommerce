@@ -157,13 +157,30 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 SaveLocalizableContent(product);
 
                 //product tags
-                var productTags1 = IoC.Resolve<IProductService>().GetAllProductTags(product.ProductId, string.Empty);
-                foreach (var productTag in productTags1)
+                var existingProductTags = IoC.Resolve<IProductService>().GetAllProductTags(product.ProductId, string.Empty);
+                string[] newProductTags = ParseProductTags(txtProductTags.Text);
+                var productTagsToDelete = new List<ProductTag>();
+                foreach (var existingProductTag in existingProductTags)
+                {
+                    bool found = false;
+                    foreach (string newProductTag in newProductTags)
+                    {
+                        if (existingProductTag.Name.Equals(newProductTag, StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found)
+                    {
+                        productTagsToDelete.Add(existingProductTag);
+                    }
+                }
+                foreach (var productTag in productTagsToDelete)
                 {
                     IoC.Resolve<IProductService>().RemoveProductTagMapping(product.ProductId, productTag.ProductTagId);
                 }
-                string[] productTagNames = ParseProductTags(txtProductTags.Text);
-                foreach (string productTagName in productTagNames)
+                foreach (string productTagName in newProductTags)
                 {
                     ProductTag productTag = null;
                     var productTags2 = IoC.Resolve<IProductService>().GetAllProductTags(0,
@@ -181,7 +198,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     {
                         productTag = productTags2[0];
                     }
-                    IoC.Resolve<IProductService>().AddProductTagMapping(product.ProductId, productTag.ProductTagId);
+                    if (!IoC.Resolve<IProductService>().DoesProductTagMappingExist(product.ProductId, productTag.ProductTagId))
+                    {
+                        IoC.Resolve<IProductService>().AddProductTagMapping(product.ProductId, productTag.ProductTagId);
+                    }
                 }
             }
 

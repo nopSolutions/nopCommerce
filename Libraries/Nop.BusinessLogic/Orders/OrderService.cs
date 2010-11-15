@@ -1257,11 +1257,25 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
             int? initialOrderStatusId = null;
             if (initialOrderStatus.HasValue)
                 initialOrderStatusId = (int)initialOrderStatus.Value;
-            
-            
 
-            var recurringPayments = _context.Sp_RecurringPaymentLoadAll(showHidden,
-                customerId, initialOrderId, initialOrderStatusId).ToList();
+            var query1 = from rp in _context.RecurringPayments
+                         join o in _context.Orders on rp.InitialOrderId equals o.OrderId
+                         join c in _context.Customers on o.CustomerId equals c.CustomerId
+                         where
+                         (!rp.Deleted && !o.Deleted && !c.Deleted) &&
+                         (showHidden || rp.IsActive) &&
+                         (customerId == 0 || o.CustomerId == customerId) &&
+                         (initialOrderId == 0 || rp.InitialOrderId == initialOrderId) &&
+                         (!initialOrderStatusId.HasValue || initialOrderStatusId.Value == 0 || o.OrderStatusId == initialOrderStatusId.Value)
+                         select rp.RecurringPaymentId;
+
+            var query2 = from rp in _context.RecurringPayments
+                         where query1.Contains(rp.RecurringPaymentId)
+                         orderby rp.StartDate, rp.RecurringPaymentId
+                         select rp;
+
+
+            var recurringPayments = query2.ToList();
             return recurringPayments;
         }
 
@@ -1340,8 +1354,25 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         public List<RecurringPaymentHistory> SearchRecurringPaymentHistory(int recurringPaymentId, 
             int orderId)
         {
-            
-            var recurringPaymentHistory = _context.Sp_RecurringPaymentHistoryLoadAll(recurringPaymentId, orderId).ToList();
+            var query1 = from rph in _context.RecurringPaymentHistory
+                         from rp in _context.RecurringPayments
+                         .Where(rp => rp.RecurringPaymentId == rph.RecurringPaymentId)
+                         .DefaultIfEmpty()
+                         from o in _context.Orders
+                         .Where(o => o.OrderId == rph.OrderId)
+                         .DefaultIfEmpty()
+                         where
+                         (!rp.Deleted && !o.Deleted) &&
+                         (recurringPaymentId == 0 || rph.RecurringPaymentId == recurringPaymentId) &&
+                         (orderId == 0 || rph.OrderId == orderId)
+                         select rph.RecurringPaymentHistoryId;
+
+            var query2 = from rph in _context.RecurringPaymentHistory
+                         where query1.Contains(rph.RecurringPaymentHistoryId)
+                         orderby rph.CreatedOn, rph.RecurringPaymentHistoryId
+                         select rph;
+
+            var recurringPaymentHistory = query2.ToList();
             return recurringPaymentHistory;
         }
 

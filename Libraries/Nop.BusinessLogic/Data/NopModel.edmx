@@ -3835,14 +3835,6 @@
           <Parameter Name="OrderBy" Type="int" Mode="In" />
           <Parameter Name="TotalRecords" Type="int" Mode="InOut" />
         </Function>
-        <Function Name="Nop_ProductTag_Product_MappingDelete" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="ProductTagID" Type="int" Mode="In" />
-          <Parameter Name="ProductID" Type="int" Mode="In" />
-        </Function>
-        <Function Name="Nop_ProductTag_Product_MappingInsert" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="ProductTagID" Type="int" Mode="In" />
-          <Parameter Name="ProductID" Type="int" Mode="In" />
-        </Function>
         <Function Name="Nop_ProductTagLoadAll" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="ProductID" Type="int" Mode="In" />
           <Parameter Name="Name" Type="nvarchar" Mode="In" />
@@ -3856,28 +3848,10 @@
           <Parameter Name="PageSize" Type="int" Mode="In" />
           <Parameter Name="TotalRecords" Type="int" Mode="InOut" />
         </Function>
-        <Function Name="Nop_RecurringPaymentHistoryLoadAll" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="RecurringPaymentID" Type="int" Mode="In" />
-          <Parameter Name="OrderID" Type="int" Mode="In" />
-        </Function>
-        <Function Name="Nop_RecurringPaymentLoadAll" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="ShowHidden" Type="bit" Mode="In" />
-          <Parameter Name="CustomerID" Type="int" Mode="In" />
-          <Parameter Name="InitialOrderID" Type="int" Mode="In" />
-          <Parameter Name="InitialOrderStatusID" Type="int" Mode="In" />
-        </Function>
         <Function Name="Nop_SalesBestSellersReport" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="LastDays" Type="int" Mode="In" />
           <Parameter Name="RecordsToReturn" Type="int" Mode="In" />
           <Parameter Name="OrderBy" Type="int" Mode="In" />
-        </Function>
-        <Function Name="Nop_SearchTermReport" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="StartTime" Type="datetime" Mode="In" />
-          <Parameter Name="EndTime" Type="datetime" Mode="In" />
-          <Parameter Name="Count" Type="int" Mode="In" />
-        </Function>
-        <Function Name="Nop_ShoppingCartItemDeleteExpired" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="OlderThan" Type="datetime" Mode="In" />
         </Function>
         <Function Name="Nop_SpecificationAttributeOptionFilter_LoadByFilter" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="CategoryID" Type="int" Mode="In" />
@@ -4456,14 +4430,6 @@
             <Parameter Name="OrderBy" Mode="In" Type="Int32" />
             <Parameter Name="TotalRecords" Mode="InOut" Type="Int32" />
           </FunctionImport>
-          <FunctionImport Name="Sp_ProductTag_Product_MappingDelete">
-            <Parameter Name="ProductTagID" Mode="In" Type="Int32" />
-            <Parameter Name="ProductID" Mode="In" Type="Int32" />
-          </FunctionImport>
-          <FunctionImport Name="Sp_ProductTag_Product_MappingInsert">
-            <Parameter Name="ProductTagID" Mode="In" Type="Int32" />
-            <Parameter Name="ProductID" Mode="In" Type="Int32" />
-          </FunctionImport>
           <FunctionImport Name="Sp_ProductTagLoadAll" EntitySet="ProductTags" ReturnType="Collection(NopSolutions.NopCommerce.BusinessLogic.Data.ProductTag)">
             <Parameter Name="ProductID" Mode="In" Type="Int32" />
             <Parameter Name="Name" Mode="In" Type="String" />
@@ -4477,25 +4443,10 @@
             <Parameter Name="PageSize" Mode="In" Type="Int32" />
             <Parameter Name="TotalRecords" Mode="InOut" Type="Int32" />
           </FunctionImport>
-          <FunctionImport Name="Sp_RecurringPaymentHistoryLoadAll" EntitySet="RecurringPaymentHistory" ReturnType="Collection(NopSolutions.NopCommerce.BusinessLogic.Data.RecurringPaymentHistory)">
-            <Parameter Name="RecurringPaymentID" Mode="In" Type="Int32" />
-            <Parameter Name="OrderID" Mode="In" Type="Int32" />
-          </FunctionImport>
-          <FunctionImport Name="Sp_RecurringPaymentLoadAll" EntitySet="RecurringPayments" ReturnType="Collection(NopSolutions.NopCommerce.BusinessLogic.Data.RecurringPayment)">
-            <Parameter Name="ShowHidden" Mode="In" Type="Boolean" />
-            <Parameter Name="CustomerID" Mode="In" Type="Int32" />
-            <Parameter Name="InitialOrderID" Mode="In" Type="Int32" />
-            <Parameter Name="InitialOrderStatusID" Mode="In" Type="Int32" />
-          </FunctionImport>
           <FunctionImport Name="Sp_SalesBestSellersReport" ReturnType="Collection(NopSolutions.NopCommerce.BusinessLogic.Data.BestSellersReportLine)">
             <Parameter Name="LastDays" Mode="In" Type="Int32" />
             <Parameter Name="RecordsToReturn" Mode="In" Type="Int32" />
             <Parameter Name="OrderBy" Mode="In" Type="Int32" />
-          </FunctionImport>
-          <FunctionImport Name="Sp_SearchTermReport" ReturnType="Collection(NopSolutions.NopCommerce.BusinessLogic.Data.SearchTermReportLine)">
-            <Parameter Name="StartTime" Mode="In" Type="DateTime" />
-            <Parameter Name="EndTime" Mode="In" Type="DateTime" />
-            <Parameter Name="Count" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="Sp_SpecificationAttributeOptionFilter_LoadByFilter" ReturnType="Collection(NopSolutions.NopCommerce.BusinessLogic.Data.SpecificationAttributeOptionFilter)">
             <Parameter Name="CategoryID" Mode="In" Type="Int32" />
@@ -4523,9 +4474,6 @@
             <Parameter Name="TopicCount" Mode="In" Type="Int32" />
           </FunctionImport>
           <EntitySet Name="QBEntities" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.QBEntity" />
-          <FunctionImport Name="Sp_ShoppingCartItemDeleteExpired">
-          <Parameter Name="OlderThan" Mode="In" Type="DateTime" />
-          </FunctionImport>
           <EntitySet Name="SMSProviders" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.SMSProvider" />
           <EntitySet Name="ReturnRequests" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.ReturnRequest" />
           <AssociationSet Name="FK_Nop_ReturnRequest_Nop_Customer" Association="NopSolutions.NopCommerce.BusinessLogic.Data.FK_Nop_ReturnRequest_Nop_Customer">
@@ -7273,10 +7221,6 @@
           <Property Type="Int32" Name="SalesTotalCount" Nullable="false" />
           <Property Type="Decimal" Name="SalesTotalAmount" Nullable="false" Precision="19" />
         </ComplexType>
-        <ComplexType Name="SearchTermReportLine">
-          <Property Type="String" Name="SearchTerm" Nullable="false" MaxLength="100" />
-          <Property Type="Int32" Name="SearchCount" Nullable="true" />
-        </ComplexType>
         <ComplexType Name="SpecificationAttributeOptionFilter">
           <Property Type="Int32" Name="SpecificationAttributeId" Nullable="false" />
           <Property Type="String" Name="SpecificationAttributeName" Nullable="true" />
@@ -9123,26 +9067,14 @@
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="Sp_ProductAlsoPurchasedLoadByProductID" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_ProductAlsoPurchasedLoadByProductID" />
           <FunctionImportMapping FunctionImportName="Sp_ProductLoadAllPaged" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_ProductLoadAllPaged" />
-          <FunctionImportMapping FunctionImportName="Sp_ProductTag_Product_MappingDelete" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_ProductTag_Product_MappingDelete" />
-          <FunctionImportMapping FunctionImportName="Sp_ProductTag_Product_MappingInsert" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_ProductTag_Product_MappingInsert" />
           <FunctionImportMapping FunctionImportName="Sp_ProductTagLoadAll" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_ProductTagLoadAll" />
           <FunctionImportMapping FunctionImportName="Sp_ProductVariantLoadAll" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_ProductVariantLoadAll" />
-          <FunctionImportMapping FunctionImportName="Sp_RecurringPaymentHistoryLoadAll" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_RecurringPaymentHistoryLoadAll" />
-          <FunctionImportMapping FunctionImportName="Sp_RecurringPaymentLoadAll" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_RecurringPaymentLoadAll" />
           <FunctionImportMapping FunctionImportName="Sp_SalesBestSellersReport" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_SalesBestSellersReport">
             <ResultMapping>
               <ComplexTypeMapping TypeName="NopSolutions.NopCommerce.BusinessLogic.Data.BestSellersReportLine">
                 <ScalarProperty Name="ProductVariantId" ColumnName="ProductVariantId" />
                 <ScalarProperty Name="SalesTotalCount" ColumnName="SalesTotalCount" />
                 <ScalarProperty Name="SalesTotalAmount" ColumnName="SalesTotalAmount" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="Sp_SearchTermReport" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_SearchTermReport">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="NopSolutions.NopCommerce.BusinessLogic.Data.SearchTermReportLine">
-                <ScalarProperty Name="SearchTerm" ColumnName="SearchTerm" />
-                <ScalarProperty Name="SearchCount" ColumnName="SearchCount" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
@@ -9176,7 +9108,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="Sp_ShoppingCartItemDeleteExpired" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_ShoppingCartItemDeleteExpired" />
           <EntitySetMapping Name="SMSProviders">
             <EntityTypeMapping TypeName="NopSolutions.NopCommerce.BusinessLogic.Data.SMSProvider">
               <MappingFragment StoreEntitySet="Nop_SMSProvider">

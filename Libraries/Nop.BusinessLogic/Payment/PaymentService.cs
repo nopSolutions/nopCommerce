@@ -417,8 +417,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
             var country = IoC.Resolve<ICountryService>().GetCountryById(countryId);
             if (country == null)
                 return;
-
-
+            
             if (!_context.IsAttached(paymentMethod))
                 _context.PaymentMethods.Attach(paymentMethod);
             if (!_context.IsAttached(country))
@@ -450,15 +449,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Payment
 
             bool result = paymentMethod.NpRestrictedCountries.ToList().Find(c => c.CountryId == countryId) != null;
             return result;
-
-            //var query = from pm in _context.PaymentMethods
-            //            from c in pm.NpRestrictedCountries
-            //            where pm.PaymentMethodId == paymentMethodId &&
-            //            c.CountryId == countryId
-            //            select pm;
-
-            //bool result = query.Count() > 0;
-            //return result;
         }
 
         /// <summary>

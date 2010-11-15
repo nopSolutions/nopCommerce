@@ -2257,8 +2257,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
             if (productReview == null)
                 return;
 
-            //delete previous helpfulness
-            
+            //delete previous helpfulness            
             var oldPrh = (from prh in _context.ProductReviewHelpfulness
                          where prh.ProductReviewId == productReviewId &&
                          prh.CustomerId == NopContext.Current.User.CustomerId
@@ -3017,7 +3016,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
                 name = string.Empty;
             name = name.Trim();
 
-            
             var productTags = _context.Sp_ProductTagLoadAll(productId, name).ToList();
             return productTags;
         }
@@ -3069,8 +3067,59 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         /// <param name="productTagId">Product tag identifier</param>
         public void AddProductTagMapping(int productId, int productTagId)
         {
+            Product product = GetProductById(productId);
+            if (product == null)
+                return;
+
+            ProductTag productTag = GetProductTagById(productTagId);
+            if (productTag == null)
+                return;
+
+            if (!_context.IsAttached(product))
+                _context.Products.Attach(product);
+            if (!_context.IsAttached(productTag))
+                _context.ProductTags.Attach(productTag);
+
+            //ensure that navigation property is loaded
+            if (product.NpProductTags == null)
+                _context.LoadProperty(product, p => p.NpProductTags);
+
+            product.NpProductTags.Add(productTag);
+            _context.SaveChanges();
             
-            _context.Sp_ProductTag_Product_MappingInsert(productTagId, productId);
+            //new totals                        
+            if (productTag.NpProducts == null) //ensure that navigation property is loaded
+                _context.LoadProperty(productTag, pt => pt.NpProducts);
+            int newTotal = productTag.NpProducts.Count();
+            if (newTotal > 0)
+            {
+                productTag.ProductCount = newTotal;
+                UpdateProductTag(productTag);
+            }
+            else
+            {
+                DeleteProductTag(productTagId);
+            }
+        }
+
+        /// <summary>
+        /// Checking whether the product tag mapping exists
+        /// </summary>
+        /// <param name="productId">The product identifier</param>
+        /// <param name="productTagId">The product tag identifier</param>
+        /// <returns>True if mapping exist, otherwise false</returns>
+        public bool DoesProductTagMappingExist(int productId, int productTagId)
+        {
+            ProductTag productTag = GetProductTagById(productTagId);
+            if (productTag == null)
+                return false;
+
+            //ensure that navigation property is loaded
+            if (productTag.NpProducts == null)
+                _context.LoadProperty(productTag, pt => pt.NpProducts);
+
+            bool result = productTag.NpProducts.ToList().Find(p => p.ProductId == productId) != null;
+            return result;
         }
 
         /// <summary>
@@ -3080,8 +3129,39 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         /// <param name="productTagId">Product tag identifier</param>
         public void RemoveProductTagMapping(int productId, int productTagId)
         {
-            
-            _context.Sp_ProductTag_Product_MappingDelete(productTagId, productId);
+            Product product = GetProductById(productId);
+            if (product == null)
+                return;
+
+            ProductTag productTag = GetProductTagById(productTagId);
+            if (productTag == null)
+                return;
+
+            if (!_context.IsAttached(product))
+                _context.Products.Attach(product);
+            if (!_context.IsAttached(productTag))
+                _context.ProductTags.Attach(productTag);
+
+            //ensure that navigation property is loaded
+            if (product.NpProductTags == null)
+                _context.LoadProperty(product, p => p.NpProductTags);
+
+            product.NpProductTags.Remove(productTag);
+            _context.SaveChanges();
+
+            //new totals                        
+            if (productTag.NpProducts == null) //ensure that navigation property is loaded
+                _context.LoadProperty(productTag, pt => pt.NpProducts);
+            int newTotal = productTag.NpProducts.Count();
+            if (newTotal > 0)
+            {
+                productTag.ProductCount = newTotal;
+                UpdateProductTag(productTag);
+            }
+            else
+            {
+                DeleteProductTag(productTagId);
+            }
         }
 
         #endregion

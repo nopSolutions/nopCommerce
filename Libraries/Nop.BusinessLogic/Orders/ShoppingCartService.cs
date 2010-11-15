@@ -83,8 +83,16 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="olderThan">Older than date and time</param>
         public void DeleteExpiredShoppingCartItems(DateTime olderThan)
         {
-            
-            _context.Sp_ShoppingCartItemDeleteExpired(olderThan);
+            var query = from sci in _context.ShoppingCartItems
+                           where sci.UpdatedOn < olderThan
+                           select sci;
+
+            var cartItems = query.ToList();
+            foreach (var cartItem in cartItems)
+            {
+                _context.DeleteObject(cartItem);
+            }
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -130,7 +138,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         public ShoppingCart GetShoppingCartByCustomerSessionGuid(ShoppingCartTypeEnum shoppingCartType, 
             Guid customerSessionGuid)
         {
-            
             var query = from sci in _context.ShoppingCartItems
                         orderby sci.CreatedOn
                         where sci.ShoppingCartTypeId == (int)shoppingCartType && sci.CustomerSessionGuid == customerSessionGuid

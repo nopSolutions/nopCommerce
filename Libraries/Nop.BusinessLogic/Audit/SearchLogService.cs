@@ -68,11 +68,31 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
         /// <param name="endTime">End time; null to load all</param>
         /// <param name="count">Item count. 0 if you want to get all items</param>
         /// <returns>Result</returns>
-        public List<SearchTermReportLine> SearchTermReport(DateTime? startTime, 
+        public List<SearchTermReportLine> SearchTermReport(DateTime? startTime,
             DateTime? endTime, int count)
         {
-            
-            var report = _context.Sp_SearchTermReport(startTime, endTime, count).ToList();
+            var query = from st in _context.SearchLog
+                        where (!startTime.HasValue || startTime.Value <= st.CreatedOn) &&
+                        (!endTime.HasValue || endTime.Value >= st.CreatedOn)
+                        group st by st.SearchTerm into grp
+                        orderby grp.Count() descending
+                        select new
+                        {
+                            SearchTerm = grp.Key,
+                            SearchCount = grp.Count()
+                        };
+            if (count > 0)
+                query = query.Take(count);
+            var tmp1 = query.ToList();
+            List<SearchTermReportLine> report = new List<SearchTermReportLine>();
+            foreach (var r1 in tmp1)
+            {
+                report.Add(new SearchTermReportLine()
+                    {
+                        SearchTerm = r1.SearchTerm,
+                        SearchCount = r1.SearchCount,
+                    });
+            }
             return report;
         }
 
