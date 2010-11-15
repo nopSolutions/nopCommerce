@@ -3784,11 +3784,6 @@
           <Parameter Name="CreatedOn" Type="datetime" Mode="In" />
           <Parameter Name="UpdatedOn" Type="datetime" Mode="In" />
         </Function>
-        <Function Name="Nop_GiftCardUsageHistoryLoadAll" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="GiftCardID" Type="int" Mode="In" />
-          <Parameter Name="CustomerID" Type="int" Mode="In" />
-          <Parameter Name="OrderID" Type="int" Mode="In" />
-        </Function>
         <Function Name="Nop_LanguagePackExport" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="LanguageID" Type="int" Mode="In" />
           <Parameter Name="XmlPackage" Type="xml" Mode="InOut" />
@@ -4421,11 +4416,6 @@
           <Parameter Name="CustomerAttributeKey" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="Sp_CustomerReportByLanguage" ReturnType="Collection(NopSolutions.NopCommerce.BusinessLogic.Data.CustomerReportByLanguageLine)" />
-          <FunctionImport Name="Sp_GiftCardUsageHistoryLoadAll" EntitySet="GiftCardUsageHistory" ReturnType="Collection(NopSolutions.NopCommerce.BusinessLogic.Data.GiftCardUsageHistory)">
-            <Parameter Name="GiftCardID" Mode="In" Type="Int32" />
-            <Parameter Name="CustomerID" Mode="In" Type="Int32" />
-            <Parameter Name="OrderID" Mode="In" Type="Int32" />
-          </FunctionImport>
           <FunctionImport Name="Sp_LanguagePackExport">
             <Parameter Name="LanguageID" Mode="In" Type="Int32" />
             <Parameter Name="XmlPackage" Mode="InOut" Type="String" />
@@ -9125,7 +9115,6 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="Sp_GiftCardUsageHistoryLoadAll" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_GiftCardUsageHistoryLoadAll" />
           <FunctionImportMapping FunctionImportName="Sp_LanguagePackExport" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_LanguagePackExport" />
           <FunctionImportMapping FunctionImportName="Sp_LanguagePackImport" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_LanguagePackImport" />
           <FunctionImportMapping FunctionImportName="Sp_Maintenance_ReindexTables" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_Maintenance_ReindexTables" />

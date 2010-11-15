@@ -1544,9 +1544,28 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         public List<GiftCardUsageHistory> GetAllGiftCardUsageHistoryEntries(int? giftCardId,
             int? customerId, int? orderId)
         {
-            
-            var giftCardUsageHistoryEntries = _context.Sp_GiftCardUsageHistoryLoadAll(giftCardId,
-                customerId, orderId).ToList();
+            var query1 = from gcuh in _context.GiftCardUsageHistory
+                         from gc in _context.GiftCards
+                         .Where(gc => gc.GiftCardId == gcuh.GiftCardId)
+                         .DefaultIfEmpty()
+                         from opv in _context.OrderProductVariants
+                         .Where(opv => opv.OrderProductVariantId == gc.PurchasedOrderProductVariantId)
+                         .DefaultIfEmpty()
+                         from o in _context.Orders
+                         .Where(o => o.OrderId == gcuh.OrderId)
+                         .DefaultIfEmpty()
+                         where
+                         (!o.Deleted) &&
+                         (!giftCardId.HasValue || giftCardId.Value == 0 || gcuh.GiftCardId == giftCardId.Value) &&
+                         (!customerId.HasValue || customerId.Value == 0 || gcuh.CustomerId == customerId.Value) &&
+                         (!orderId.HasValue || orderId.Value == 0 || gcuh.OrderId == orderId.Value)
+                         select gcuh.GiftCardUsageHistoryId;
+
+            var query2 = from gcuh in _context.GiftCardUsageHistory
+                         where query1.Contains(gcuh.GiftCardUsageHistoryId)
+                         select gcuh;
+
+            var giftCardUsageHistoryEntries = query2.ToList();
             return giftCardUsageHistoryEntries;
         }
 

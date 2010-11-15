@@ -565,7 +565,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
                          select duh;
             
             var discountUsageHistoryEntries = query2.ToList();
-
             return discountUsageHistoryEntries;
         }
 
