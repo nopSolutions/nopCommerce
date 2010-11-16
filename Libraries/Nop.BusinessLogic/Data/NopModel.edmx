@@ -3713,62 +3713,6 @@
         <Function Name="Nop_CustomerReportByAttributeKey" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="CustomerAttributeKey" Type="nvarchar" Mode="In" />
         </Function>
-        <Function Name="Nop_Forums_ForumDelete" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="ForumID" Type="int" Mode="In" />
-        </Function>
-        <Function Name="Nop_Forums_ForumUpdateCounts" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="ForumID" Type="int" Mode="In" />
-        </Function>
-        <Function Name="Nop_Forums_PostDelete" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="PostID" Type="int" Mode="In" />
-        </Function>
-        <Function Name="Nop_Forums_PostInsert" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="TopicID" Type="int" Mode="In" />
-          <Parameter Name="UserID" Type="int" Mode="In" />
-          <Parameter Name="Text" Type="nvarchar(max)" Mode="In" />
-          <Parameter Name="IPAddress" Type="nvarchar" Mode="In" />
-          <Parameter Name="CreatedOn" Type="datetime" Mode="In" />
-          <Parameter Name="UpdatedOn" Type="datetime" Mode="In" />
-        </Function>
-        <Function Name="Nop_Forums_PostUpdate" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="PostID" Type="int" Mode="In" />
-          <Parameter Name="TopicID" Type="int" Mode="In" />
-          <Parameter Name="UserID" Type="int" Mode="In" />
-          <Parameter Name="Text" Type="nvarchar(max)" Mode="In" />
-          <Parameter Name="IPAddress" Type="nvarchar" Mode="In" />
-          <Parameter Name="CreatedOn" Type="datetime" Mode="In" />
-          <Parameter Name="UpdatedOn" Type="datetime" Mode="In" />
-        </Function>
-        <Function Name="Nop_Forums_TopicDelete" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="TopicID" Type="int" Mode="In" />
-        </Function>
-        <Function Name="Nop_Forums_TopicInsert" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="ForumID" Type="int" Mode="In" />
-          <Parameter Name="UserID" Type="int" Mode="In" />
-          <Parameter Name="TopicTypeID" Type="int" Mode="In" />
-          <Parameter Name="Subject" Type="nvarchar" Mode="In" />
-          <Parameter Name="NumPosts" Type="int" Mode="In" />
-          <Parameter Name="Views" Type="int" Mode="In" />
-          <Parameter Name="LastPostID" Type="int" Mode="In" />
-          <Parameter Name="LastPostUserID" Type="int" Mode="In" />
-          <Parameter Name="LastPostTime" Type="datetime" Mode="In" />
-          <Parameter Name="CreatedOn" Type="datetime" Mode="In" />
-          <Parameter Name="UpdatedOn" Type="datetime" Mode="In" />
-        </Function>
-        <Function Name="Nop_Forums_TopicUpdate" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="TopicID" Type="int" Mode="In" />
-          <Parameter Name="ForumID" Type="int" Mode="In" />
-          <Parameter Name="UserID" Type="int" Mode="In" />
-          <Parameter Name="TopicTypeID" Type="int" Mode="In" />
-          <Parameter Name="Subject" Type="nvarchar" Mode="In" />
-          <Parameter Name="NumPosts" Type="int" Mode="In" />
-          <Parameter Name="Views" Type="int" Mode="In" />
-          <Parameter Name="LastPostID" Type="int" Mode="In" />
-          <Parameter Name="LastPostUserID" Type="int" Mode="In" />
-          <Parameter Name="LastPostTime" Type="datetime" Mode="In" />
-          <Parameter Name="CreatedOn" Type="datetime" Mode="In" />
-          <Parameter Name="UpdatedOn" Type="datetime" Mode="In" />
-        </Function>
         <Function Name="Nop_LanguagePackExport" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="LanguageID" Type="int" Mode="In" />
           <Parameter Name="XmlPackage" Type="xml" Mode="InOut" />
@@ -4417,12 +4361,6 @@
             <Parameter Name="LanguageID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="Sp_TaxRateLoadAll" EntitySet="TaxRates" ReturnType="Collection(NopSolutions.NopCommerce.BusinessLogic.Data.TaxRate)" />
-          <FunctionImport Name="Sp_Forums_ForumDelete">
-          <Parameter Name="ForumID" Mode="In" Type="Int32" />
-          </FunctionImport>
-          <FunctionImport Name="Sp_Forums_ForumUpdateCounts">
-          <Parameter Name="ForumID" Mode="In" Type="Int32" />
-          </FunctionImport>
           <EntitySet Name="QBEntities" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.QBEntity" />
           <EntitySet Name="SMSProviders" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.SMSProvider" />
           <EntitySet Name="ReturnRequests" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.ReturnRequest" />
@@ -5394,7 +5332,9 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Nop_Forums_Forum_Nop_Forums_Group">
-          <End Type="NopSolutions.NopCommerce.BusinessLogic.Data.ForumGroup" Role="Nop_Forums_Group" Multiplicity="1" />
+          <End Type="NopSolutions.NopCommerce.BusinessLogic.Data.ForumGroup" Role="Nop_Forums_Group" Multiplicity="1" >
+            <OnDelete Action="Cascade" />
+          </End>
           <End Type="NopSolutions.NopCommerce.BusinessLogic.Data.Forum" Role="Nop_Forums_Forum" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Nop_Forums_Group">
@@ -5406,7 +5346,9 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Nop_Forums_Topic_Nop_Forums_Forum">
-          <End Type="NopSolutions.NopCommerce.BusinessLogic.Data.Forum" Role="Nop_Forums_Forum" Multiplicity="1" />
+          <End Type="NopSolutions.NopCommerce.BusinessLogic.Data.Forum" Role="Nop_Forums_Forum" Multiplicity="1" >
+            <OnDelete Action="Cascade" />
+          </End>
           <End Type="NopSolutions.NopCommerce.BusinessLogic.Data.ForumTopic" Role="Nop_Forums_Topic" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Nop_Forums_Forum">
@@ -5418,7 +5360,9 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Nop_Forums_Post_Nop_Forums_Topic">
-          <End Type="NopSolutions.NopCommerce.BusinessLogic.Data.ForumTopic" Role="Nop_Forums_Topic" Multiplicity="1" />
+          <End Type="NopSolutions.NopCommerce.BusinessLogic.Data.ForumTopic" Role="Nop_Forums_Topic" Multiplicity="1" >
+            <OnDelete Action="Cascade" />
+          </End>
           <End Type="NopSolutions.NopCommerce.BusinessLogic.Data.ForumPost" Role="Nop_Forums_Post" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Nop_Forums_Topic">
@@ -7926,31 +7870,6 @@
                 <ScalarProperty Name="ForumPostId" ColumnName="PostID" />
               </MappingFragment>
             </EntityTypeMapping>
-            <EntityTypeMapping TypeName="NopSolutions.NopCommerce.BusinessLogic.Data.ForumPost">
-              <ModificationFunctionMapping>
-                <InsertFunction FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_Forums_PostInsert">
-                  <ScalarProperty Name="UserId" ParameterName="UserID" />
-                  <ScalarProperty Name="TopicId" ParameterName="TopicID" />
-                  <ScalarProperty Name="UpdatedOn" ParameterName="UpdatedOn" />
-                  <ScalarProperty Name="CreatedOn" ParameterName="CreatedOn" />
-                  <ScalarProperty Name="IPAddress" ParameterName="IPAddress" />
-                  <ScalarProperty Name="Text" ParameterName="Text" />
-                  <ResultBinding Name="ForumPostId" ColumnName="PostID" />
-                </InsertFunction>
-                <UpdateFunction FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_Forums_PostUpdate">
-                  <ScalarProperty Name="UserId" ParameterName="UserID" Version="Current" />
-                  <ScalarProperty Name="TopicId" ParameterName="TopicID" Version="Current" />
-                  <ScalarProperty Name="ForumPostId" ParameterName="PostID" Version="Current" />
-                  <ScalarProperty Name="UpdatedOn" ParameterName="UpdatedOn" Version="Current" />
-                  <ScalarProperty Name="CreatedOn" ParameterName="CreatedOn" Version="Current" />
-                  <ScalarProperty Name="IPAddress" ParameterName="IPAddress" Version="Current" />
-                  <ScalarProperty Name="Text" ParameterName="Text" Version="Current" />
-                </UpdateFunction>
-                <DeleteFunction FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_Forums_PostDelete" >
-                  <ScalarProperty Name="ForumPostId" ParameterName="PostID" />
-                </DeleteFunction>
-              </ModificationFunctionMapping>
-            </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="PrivateMessages">
             <EntityTypeMapping TypeName="NopSolutions.NopCommerce.BusinessLogic.Data.PrivateMessage">
@@ -7995,41 +7914,6 @@
                 <ScalarProperty Name="ForumId" ColumnName="ForumID" />
                 <ScalarProperty Name="ForumTopicId" ColumnName="TopicID" />
               </MappingFragment>
-            </EntityTypeMapping>
-            <EntityTypeMapping TypeName="NopSolutions.NopCommerce.BusinessLogic.Data.ForumTopic">
-              <ModificationFunctionMapping>
-                <UpdateFunction FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_Forums_TopicUpdate">
-                  <ScalarProperty Name="LastPostUserId" ParameterName="LastPostUserID" Version="Current" />
-                  <ScalarProperty Name="LastPostId" ParameterName="LastPostID" Version="Current" />
-                  <ScalarProperty Name="TopicTypeId" ParameterName="TopicTypeID" Version="Current" />
-                  <ScalarProperty Name="UserId" ParameterName="UserID" Version="Current" />
-                  <ScalarProperty Name="ForumId" ParameterName="ForumID" Version="Current" />
-                  <ScalarProperty Name="ForumTopicId" ParameterName="TopicID" Version="Current" />
-                  <ScalarProperty Name="UpdatedOn" ParameterName="UpdatedOn" Version="Current" />
-                  <ScalarProperty Name="CreatedOn" ParameterName="CreatedOn" Version="Current" />
-                  <ScalarProperty Name="LastPostTime" ParameterName="LastPostTime" Version="Current" />
-                  <ScalarProperty Name="Views" ParameterName="Views" Version="Current" />
-                  <ScalarProperty Name="NumPosts" ParameterName="NumPosts" Version="Current" />
-                  <ScalarProperty Name="Subject" ParameterName="Subject" Version="Current" />
-                </UpdateFunction>
-                <DeleteFunction FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_Forums_TopicDelete" >
-                  <ScalarProperty Name="ForumTopicId" ParameterName="TopicID" />
-                </DeleteFunction>
-                <InsertFunction FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_Forums_TopicInsert">
-                  <ScalarProperty Name="LastPostUserId" ParameterName="LastPostUserID" />
-                  <ScalarProperty Name="LastPostId" ParameterName="LastPostID" />
-                  <ScalarProperty Name="TopicTypeId" ParameterName="TopicTypeID" />
-                  <ScalarProperty Name="UserId" ParameterName="UserID" />
-                  <ScalarProperty Name="ForumId" ParameterName="ForumID" />
-                  <ScalarProperty Name="UpdatedOn" ParameterName="UpdatedOn" />
-                  <ScalarProperty Name="CreatedOn" ParameterName="CreatedOn" />
-                  <ScalarProperty Name="LastPostTime" ParameterName="LastPostTime" />
-                  <ScalarProperty Name="Views" ParameterName="Views" />
-                  <ScalarProperty Name="NumPosts" ParameterName="NumPosts" />
-                  <ScalarProperty Name="Subject" ParameterName="Subject" />
-                  <ResultBinding Name="ForumTopicId" ColumnName="TopicID" />
-                </InsertFunction>
-              </ModificationFunctionMapping>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="News">
@@ -9004,8 +8888,6 @@
             </ResultMapping>
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="Sp_TaxRateLoadAll" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_TaxRateLoadAll" />
-          <FunctionImportMapping FunctionImportName="Sp_Forums_ForumDelete" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_Forums_ForumDelete" />
-          <FunctionImportMapping FunctionImportName="Sp_Forums_ForumUpdateCounts" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_Forums_ForumUpdateCounts" />
           <EntitySetMapping Name="QBEntities">
             <EntityTypeMapping TypeName="NopSolutions.NopCommerce.BusinessLogic.Data.QBEntity">
               <MappingFragment StoreEntitySet="Nop_QBEntity">

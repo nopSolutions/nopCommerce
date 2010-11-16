@@ -79,6 +79,138 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
 
         #endregion
 
+        #region Utilities
+
+        /// <summary>
+        /// Update forum stats
+        /// </summary>
+        /// <param name="forumId">The forum identifier</param>
+        public void UpdateForumStats(int forumId)
+        {
+            if (forumId == 0)
+                return;
+            var forum = GetForumById(forumId);
+            if (forum == null)
+                return;
+
+            //number of topics
+            var queryNumTopics = from ft in _context.ForumTopics
+                                 where ft.ForumId == forumId
+                                 select ft.ForumTopicId;
+            int numTopics = queryNumTopics.Count();
+
+            //number of posts
+            var queryNumPosts = from ft in _context.ForumTopics
+                                join fp in _context.ForumPosts on ft.ForumTopicId equals fp.TopicId
+                                where ft.ForumId == forumId
+                                select fp.ForumPostId;
+            int numPosts = queryNumPosts.Count();
+
+            //last values
+            int lastTopicId = 0;
+            int lastPostId = 0;
+            int lastPostUserId = 0;
+            DateTime? lastPostTime = null;
+            var queryLastValues = from ft in _context.ForumTopics
+                                  join fp in _context.ForumPosts on ft.ForumTopicId equals fp.TopicId
+                                  where ft.ForumId == forumId
+                                  orderby fp.CreatedOn descending, ft.CreatedOn descending
+                                  select new
+                                  {
+                                      LastTopicId = ft.ForumTopicId,
+                                      LastPostId = fp.ForumPostId,
+                                      LastPostUserId = fp.UserId,
+                                      LastPostTime = fp.CreatedOn
+                                  };
+            var lastValues = queryLastValues.FirstOrDefault();
+            if (lastValues != null)
+            {
+                lastTopicId = lastValues.LastTopicId;
+                lastPostId = lastValues.LastPostId;
+                lastPostUserId = lastValues.LastPostUserId;
+                lastPostTime = lastValues.LastPostTime;
+            }
+
+            //update forum
+            forum.NumTopics = numTopics;
+            forum.NumPosts = numPosts;
+            forum.LastTopicId = lastTopicId;
+            forum.LastPostId = lastPostId;
+            forum.LastPostUserId = lastPostUserId;
+            forum.LastPostTime = lastPostTime;
+            UpdateForum(forum);
+        }
+        
+        /// <summary>
+        /// Update forum topic stats
+        /// </summary>
+        /// <param name="forumTopicId">The forum topic identifier</param>
+        public void UpdateForumTopicStats(int forumTopicId)
+        {
+            if (forumTopicId == 0)
+                return;
+            var forumTopic = GetTopicById(forumTopicId);
+            if (forumTopic == null)
+                return;
+
+            //number of posts
+            var queryNumPosts = from fp in _context.ForumPosts
+                                where fp.TopicId == forumTopicId
+                                select fp.ForumPostId;
+            int numPosts = queryNumPosts.Count();
+
+            //last values
+            int lastPostId = 0;
+            int lastPostUserId = 0;
+            DateTime? lastPostTime = null;
+            var queryLastValues = from fp in _context.ForumPosts
+                                  where fp.TopicId == forumTopicId
+                                  orderby fp.CreatedOn descending
+                                  select new
+                                  {
+                                      LastPostId = fp.ForumPostId,
+                                      LastPostUserId = fp.UserId,
+                                      LastPostTime = fp.CreatedOn
+                                  };
+            var lastValues = queryLastValues.FirstOrDefault();
+            if (lastValues != null)
+            {
+                lastPostId = lastValues.LastPostId;
+                lastPostUserId = lastValues.LastPostUserId;
+                lastPostTime = lastValues.LastPostTime;
+            }
+
+            //update topic
+            forumTopic.NumPosts = numPosts;
+            forumTopic.LastPostId = lastPostId;
+            forumTopic.LastPostUserId = lastPostUserId;
+            forumTopic.LastPostTime = lastPostTime;
+            UpdateTopic(forumTopic);
+        }
+
+        /// <summary>
+        /// Update user stats
+        /// </summary>
+        /// <param name="customerId">The customer identifier</param>
+        public void UpdateUserStats(int customerId)
+        {
+            if (customerId == 0)
+                return;
+            var customer = IoC.Resolve<ICustomerService>().GetCustomerById(customerId);
+            if (customer == null)
+                return;
+
+            var query = from fp in _context.ForumPosts
+                        where fp.UserId == customerId
+                        select fp.ForumPostId;
+            int numPosts = query.Count();
+
+            customer.TotalForumPosts = numPosts;
+            IoC.Resolve<ICustomerService>().UpdateCustomer(customer);
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -91,7 +223,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
             if (forumGroup == null)
                 return;
 
-            
             if (!_context.IsAttached(forumGroup))
                 _context.ForumGroups.Attach(forumGroup);
             _context.DeleteObject(forumGroup);
@@ -220,8 +351,32 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
             if (forumId == 0)
                 return;
 
-            
-            _context.Sp_Forums_ForumDelete(forumId);
+            //delete forum subscriptions (topics)
+            var queryFs1 = from fs in _context.ForumSubscriptions
+                           where (from ft in _context.ForumTopics
+                                  where ft.ForumId == forumId
+                                  select ft.ForumTopicId).Contains(fs.TopicId)
+                           select fs;
+            var forumSubscriptions1 = queryFs1.ToList();
+            foreach (var fs1 in forumSubscriptions1)
+                _context.DeleteObject(fs1);
+            _context.SaveChanges();
+
+            //delete forum subscriptions (forum)
+            var queryFs2 = from fs in _context.ForumSubscriptions
+                           where fs.ForumId == forumId
+                           select fs;
+            var forumSubscriptions2 = queryFs2.ToList();
+            foreach (var fs2 in forumSubscriptions2)
+                _context.DeleteObject(fs2);
+            _context.SaveChanges();
+
+            //delete forum
+            var forum = GetForumById(forumId);
+            if (!_context.IsAttached(forum))
+                _context.Forums.Attach(forum);
+            _context.DeleteObject(forum);
+            _context.SaveChanges();
 
             if (this.CacheEnabled)
             {
@@ -339,26 +494,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         }
 
         /// <summary>
-        /// Update forum stats
-        /// </summary>
-        /// <param name="forumId">The forum identifier</param>
-        /// <returns>Forum</returns>
-        public void UpdateForumStats(int forumId)
-        {
-            if (forumId == 0)
-                return;
-            
-            
-            _context.Sp_Forums_ForumUpdateCounts(forumId);
-
-            if (this.CacheEnabled)
-            {
-                _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
-                _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
-            }
-        }
-
-        /// <summary>
         /// Deletes a topic
         /// </summary>
         /// <param name="forumTopicId">The topic identifier</param>
@@ -368,12 +503,29 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
             if (forumTopic == null)
                 return;
 
-            
+            int userId = forumTopic.UserId;
+            int forumId = forumTopic.ForumId;
+
+            //delete topic
             if (!_context.IsAttached(forumTopic))
                 _context.ForumTopics.Attach(forumTopic);
             _context.DeleteObject(forumTopic);
             _context.SaveChanges();
 
+            //delete forum subscriptions
+            var queryFs = from ft in _context.ForumSubscriptions
+                          where ft.TopicId == forumTopicId
+                          select ft;
+            var forumSubscriptions = queryFs.ToList();
+            foreach (var fs in forumSubscriptions)
+                _context.DeleteObject(fs);
+            _context.SaveChanges();
+            
+            //update stats
+            UpdateForumStats(forumId);
+            UpdateUserStats(userId);
+            
+            //clear cache
             if (this.CacheEnabled)
             {
                 _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
@@ -504,9 +656,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
             if (forumTopic == null)
                 throw new ArgumentNullException("forumTopic");
 
+            //validation
             forumTopic.Subject = CommonHelper.EnsureNotNull(forumTopic.Subject);
             forumTopic.Subject = forumTopic.Subject.Trim();
-
             if (String.IsNullOrEmpty(forumTopic.Subject))
                 throw new NopException("Topic subject cannot be empty");
 
@@ -518,17 +670,21 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
 
             forumTopic.Subject = CommonHelper.EnsureMaximumLength(forumTopic.Subject, 450);
 
-            
-            
+            //insert forum topic
             _context.ForumTopics.AddObject(forumTopic);
             _context.SaveChanges();
 
+            //update stats
+            UpdateForumStats(forumTopic.ForumId);
+
+            //cache
             if (this.CacheEnabled)
             {
                 _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
                 _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
             }
 
+            //send notifications
             if (sendNotifications)
             {
                 var forum = forumTopic.Forum;
@@ -626,10 +782,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
                 return;
 
             int forumTopicId = forumPost.TopicId;
-             
+            int userId = forumPost.UserId;
+            var forumTopic = this.GetTopicById(forumTopicId);
+            int forumId = forumTopic.ForumId;
+            
             //delete topic if it was the first post
             bool deleteTopic = false;
-            var forumTopic = this.GetTopicById(forumTopicId);
             if (forumTopic != null)
             {
                 ForumPost firstPost = forumTopic.FirstPost;
@@ -638,18 +796,26 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
                     deleteTopic = true;
                 }
             }
-
             
+            //delete forum post
             if (!_context.IsAttached(forumPost))
                 _context.ForumPosts.Attach(forumPost);
             _context.DeleteObject(forumPost);
             _context.SaveChanges();
-
+            
+            //delete topic
             if (deleteTopic)
             {
                 DeleteTopic(forumTopicId);
             }
 
+            //update stats
+            if (!deleteTopic)
+                UpdateForumTopicStats(forumTopicId);
+            UpdateForumStats(forumId);
+            UpdateUserStats(userId);
+
+            //clear cache
             if (this.CacheEnabled)
             {
                 _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
@@ -743,9 +909,9 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
             if (forumPost == null)
                 throw new ArgumentNullException("forumPost");
 
+            //validation logic
             forumPost.Text = CommonHelper.EnsureNotNull(forumPost.Text);
             forumPost.Text = forumPost.Text.Trim();
-
             if (String.IsNullOrEmpty(forumPost.Text))
                 throw new NopException("Text cannot be empty");
 
@@ -757,21 +923,29 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
 
             forumPost.IPAddress = CommonHelper.EnsureNotNull(forumPost.IPAddress);
             forumPost.IPAddress = CommonHelper.EnsureMaximumLength(forumPost.IPAddress, 100);
-
             
-
+            //insert forum post
             _context.ForumPosts.AddObject(forumPost);
             _context.SaveChanges();
 
+            //update stats
+            int userId = forumPost.UserId;
+            var forumTopic = this.GetTopicById(forumPost.TopicId);
+            int forumId = forumTopic.ForumId;
+            UpdateForumTopicStats(forumPost.TopicId);
+            UpdateForumStats(forumId);
+            UpdateUserStats(userId);
+
+            //clear cache
             if (this.CacheEnabled)
             {
                 _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
                 _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
             }
 
+            //notifications
             if (sendNotifications)
             {
-                var forumTopic = forumPost.Topic;
                 var forum = forumTopic.Forum;
                 var subscriptions = GetAllSubscriptions(0, 0,
                     forumTopic.ForumTopicId, 0, int.MaxValue);
@@ -794,12 +968,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         /// <param name="forumPost">The forum post</param>
         public void UpdatePost(ForumPost forumPost)
         {
+            //validation
             if (forumPost == null)
                 throw new ArgumentNullException("forumPost");
             
             forumPost.Text = CommonHelper.EnsureNotNull(forumPost.Text);
             forumPost.Text = forumPost.Text.Trim();
-
             if (String.IsNullOrEmpty(forumPost.Text))
                 throw new NopException("Text cannot be empty");
 
@@ -812,12 +986,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
             forumPost.IPAddress = CommonHelper.EnsureNotNull(forumPost.IPAddress);
             forumPost.IPAddress = CommonHelper.EnsureMaximumLength(forumPost.IPAddress, 100);            
 
-            
+            //update post
             if (!_context.IsAttached(forumPost))
                 _context.ForumPosts.Attach(forumPost);
-
             _context.SaveChanges();
 
+            //clear cache
             if (this.CacheEnabled)
             {
                 _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);

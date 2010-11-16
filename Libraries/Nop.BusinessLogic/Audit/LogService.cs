@@ -86,7 +86,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
         /// </summary>
         public void ClearLog()
         {
-            
             var log = _context.Log.ToList();
             foreach (var logItem in log)
                 _context.DeleteObject(logItem);

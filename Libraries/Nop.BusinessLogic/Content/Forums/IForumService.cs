@@ -106,13 +106,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         void UpdateForum(Forum forum);
 
         /// <summary>
-        /// Update forum stats
-        /// </summary>
-        /// <param name="forumId">The forum identifier</param>
-        /// <returns>Forum</returns>
-        void UpdateForumStats(int forumId);
-
-        /// <summary>
         /// Deletes a topic
         /// </summary>
         /// <param name="forumTopicId">The topic identifier</param>

@@ -1024,44 +1024,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         {
             return base.ExecuteFunction<TaxRate>("Sp_TaxRateLoadAll", mergeOption);
         }
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        /// <param name="forumID">No Metadata Documentation available.</param>
-        public int Sp_Forums_ForumDelete(Nullable<global::System.Int32> forumID)
-        {
-            ObjectParameter forumIDParameter;
-            if (forumID.HasValue)
-            {
-                forumIDParameter = new ObjectParameter("ForumID", forumID);
-            }
-            else
-            {
-                forumIDParameter = new ObjectParameter("ForumID", typeof(global::System.Int32));
-            }
-    
-            return base.ExecuteFunction("Sp_Forums_ForumDelete", forumIDParameter);
-        }
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        /// <param name="forumID">No Metadata Documentation available.</param>
-        public int Sp_Forums_ForumUpdateCounts(Nullable<global::System.Int32> forumID)
-        {
-            ObjectParameter forumIDParameter;
-            if (forumID.HasValue)
-            {
-                forumIDParameter = new ObjectParameter("ForumID", forumID);
-            }
-            else
-            {
-                forumIDParameter = new ObjectParameter("ForumID", typeof(global::System.Int32));
-            }
-    
-            return base.ExecuteFunction("Sp_Forums_ForumUpdateCounts", forumIDParameter);
-        }
 
         #endregion
     }
