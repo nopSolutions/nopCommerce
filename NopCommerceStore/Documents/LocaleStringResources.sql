@@ -941,6 +941,12 @@ set @resources='
   <LocaleResource Name="ShoppingCart.UpdateCart">
     <Value>Update shopping cart</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.nopCommerceNews.HideAdv">
+    <Value>Hide advertisements</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.nopCommerceNews.DisplayAdv">
+    <Value>Display advertisements</Value>
+  </LocaleResource>
 </Language>
 '
 

@@ -148,7 +148,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
         /// <param name="pageIndex">Current page</param>
         /// <param name="pageSize">Items on each page</param>
         /// <returns>Paged list of pictures</returns>
-        PagedList<Picture> GetPictures(int pageSize, int pageIndexs);
+        PagedList<Picture> GetPictures(int pageSize, int pageIndex);
         
         /// <summary>
         /// Gets pictures by product identifier

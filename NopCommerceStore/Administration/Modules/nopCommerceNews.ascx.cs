@@ -55,14 +55,23 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                dsNopCommerceNews.Url = string.Format("http://www.nopCommerce.com/NewsRSS.aspx?Version={0}&Localhost={1}&HideAdvertisements={2}&StoreURL={3}", IoC.Resolve<ISettingManager>().CurrentVersion, HttpContext.Current.Request.Url.IsLoopback, IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Common.HideAdvertisementsOnAdminArea"), IoC.Resolve<ISettingManager>().StoreUrl);
+                bool hideAdv = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Common.HideAdvertisementsOnAdminArea");
+                dsNopCommerceNews.Url = string.Format("http://www.nopCommerce.com/NewsRSS.aspx?Version={0}&Localhost={1}&HideAdvertisements={2}&StoreURL={3}", IoC.Resolve<ISettingManager>().CurrentVersion, HttpContext.Current.Request.Url.IsLoopback, hideAdv, IoC.Resolve<ISettingManager>().StoreUrl);
                 lvNopCommerceNews.DataBind();
+                btnHideAds.Text = hideAdv ? GetLocaleResourceString("Admin.nopCommerceNews.DisplayAdv") : GetLocaleResourceString("Admin.nopCommerceNews.HideAdv");
             }
             catch (Exception)
             {
                 //ShowError("No internet connection. nopCommerce news could not be loaded", exc.Message);
                 this.Visible = false;
             }
+        }
+
+        protected void btnHideAds_Click(object sender, EventArgs e)
+        {
+            bool newValue = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Common.HideAdvertisementsOnAdminArea");
+            IoC.Resolve<ISettingManager>().SetParam("Common.HideAdvertisementsOnAdminArea", (!newValue).ToString());
+            BindData();
         }
     }
 }

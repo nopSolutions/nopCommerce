@@ -886,22 +886,22 @@ table.stats td.searchterms
 	margin-bottom: 5px;
 }
 
-.dashboard .newsitem
+.nop-news .newsitem
 {
 	
 }
 
-.dashboard .newsitem .newstitle
+.nop-news .newsitem .newstitle
 {
 	
 }
 
-.dashboard .newsitem .newstitle a:hover
+.nop-news .newsitem .newstitle a:hover
 {
 	text-decoration: none;
 }
 
-.dashboard .newsitem .newsdate
+.nop-news .newsitem .newsdate
 {
 	font-size: 0.8em;
 	color: #555;
@@ -910,11 +910,24 @@ table.stats td.searchterms
 	margin-bottom: 5px;
 }
 
-.dashboard .newsitem .newsdetails
+.nop-news .newsitem .newsdetails
 {
 	color: #333;
 	margin-bottom: 10px;
 }
+
+.nop-news .adv
+{
+    border-top: solid 3px #dfdfdf;
+    padding: 1px 0px 1px 0px;
+    text-align: right;
+}
+
+.nop-news .adv a
+{
+    color: #D16400;
+}
+
 
 .sf-menu, .sf-menu * 
 {
