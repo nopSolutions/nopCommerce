@@ -55,6 +55,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected override void OnPreRender(EventArgs e)
         {
+            //terms of service
             if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Checkout.TermsOfServiceEnabled"))
             {
                 string onclickTerms = string.Format("return accepttermsofservice(\"{0}\") && " + Page.ClientScript.GetPostBackEventReference(this.btnCheckout, ""), GetLocaleResourceString("Checkout.PleaseAcceptTermsOfService"));
@@ -62,6 +63,12 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
                 string termsLink = string.Format("{0}conditionsinfopopup.aspx", CommonHelper.GetStoreLocation());
                 this.lTermsOfService.Text = string.Format(GetLocaleResourceString("Checkout.IAcceptTermsOfService"), string.Format("<span class=\"read\" onclick=\"javascript:OpenWindow('{0}', 450, 500, true)\">{1}</span>", termsLink, GetLocaleResourceString("Checkout.AcceptTermsOfService.Read")));
+            }
+
+            //Google Checkout button
+            if (this.IsShoppingCart)
+            {
+                btnGoogleCheckoutButton.BindData();
             }
 
             base.OnPreRender(e);

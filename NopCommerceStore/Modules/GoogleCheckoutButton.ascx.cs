@@ -51,31 +51,45 @@ namespace NopSolutions.NopCommerce.Web.Modules
 {
     public partial class GoogleCheckoutButton : BaseNopUserControl
     {
-        protected override void OnPreRender(EventArgs e)
+        public void BindData()
         {
+            bool displayButton = true;
+
             var gcPaymentMethod = IoC.Resolve<IPaymentService>().GetPaymentMethodBySystemKeyword("GoogleCheckout");
             if (gcPaymentMethod == null || !gcPaymentMethod.IsActive)
             {
-                this.Visible = false;
-                return;
+                displayButton = false;
             }
 
-            var cart = IoC.Resolve<IShoppingCartService>().GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
-            if (cart.Count == 0)
+            NopSolutions.NopCommerce.BusinessLogic.Orders.ShoppingCart cart = null;
+            if (displayButton)
             {
-                this.Visible = false;
-                return;
+                cart = IoC.Resolve<IShoppingCartService>().GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
+                if (cart.Count == 0)
+                {
+                    displayButton = false;
+                }
             }
 
-            if (cart.IsRecurring && IoC.Resolve<IPaymentService>().SupportRecurringPayments(gcPaymentMethod.PaymentMethodId) == RecurringPaymentTypeEnum.NotSupported)
+            if (displayButton)
             {
-                this.Visible = false;
-                return;
+                bool minOrderSubtotalAmountOK = IoC.Resolve<IOrderService>().ValidateMinOrderSubtotalAmount(cart, NopContext.Current.User);
+                if (!minOrderSubtotalAmountOK)
+                {
+                    displayButton = false;
+                }
             }
+
+            if (displayButton)
+            {
+                if (cart.IsRecurring && IoC.Resolve<IPaymentService>().SupportRecurringPayments(gcPaymentMethod.PaymentMethodId) == RecurringPaymentTypeEnum.NotSupported)
+                {
+                    displayButton = false;
+                }
+            }
+            this.Visible = displayButton;
 
             GCheckoutButton1.UseHttps = CommonHelper.IsCurrentConnectionSecured();
-
-            base.OnPreRender(e);
         }
 
         protected void PostCartToGoogle(object sender, ImageClickEventArgs e)
