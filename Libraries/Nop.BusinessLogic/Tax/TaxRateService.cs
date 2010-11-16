@@ -132,15 +132,30 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Tax
                 return (List<TaxRate>)obj2;
             }
 
-            
-            var collection = _context.Sp_TaxRateLoadAll().ToList();
+            //var query = from tr in _context.TaxRates
+            //            from c in _context.Countries
+            //            .Where(c => c.CountryId == tr.CountryId).DefaultIfEmpty()
+            //            from sp in _context.StateProvinces
+            //            .Where(sp => sp.StateProvinceId == tr.StateProvinceId).DefaultIfEmpty()
+            //            orderby c.DisplayOrder, c.Name, sp.DisplayOrder, sp.Name, sp.StateProvinceId, tr.Zip, tr.TaxCategoryId
+            //            select tr;
+
+            var query = from tr in _context.TaxRates
+                        join c1 in _context.Countries on tr.CountryId equals c1.CountryId into c2
+                        from c in c2.DefaultIfEmpty()
+                        join sp1 in _context.StateProvinces on tr.StateProvinceId equals sp1.StateProvinceId into sp2
+                        from sp in sp2.DefaultIfEmpty()
+                        orderby c.DisplayOrder, c.Name, sp.DisplayOrder, sp.Name, sp.StateProvinceId, tr.Zip, tr.TaxCategoryId
+                        select tr;
+
+            var taxRates = query.ToList();
 
             if (this.CacheEnabled)
             {
-                _cacheManager.Add(key, collection);
-            } 
-            
-            return collection;
+                _cacheManager.Add(key, taxRates);
+            }
+
+            return taxRates;
         }
 
         /// <summary>

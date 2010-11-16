@@ -1008,22 +1008,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
     
             return base.ExecuteFunction<SpecificationAttributeOptionFilter>("Sp_SpecificationAttributeOptionFilter_LoadByFilter", categoryIDParameter, languageIDParameter);
         }
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        public ObjectResult<TaxRate> Sp_TaxRateLoadAll()
-        {
-            return base.ExecuteFunction<TaxRate>("Sp_TaxRateLoadAll");
-        }
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        /// <param name="mergeOption"></param>
-        public ObjectResult<TaxRate> Sp_TaxRateLoadAll(MergeOption mergeOption)
-        {
-            return base.ExecuteFunction<TaxRate>("Sp_TaxRateLoadAll", mergeOption);
-        }
 
         #endregion
     }

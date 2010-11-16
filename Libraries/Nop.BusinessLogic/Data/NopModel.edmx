@@ -3776,7 +3776,6 @@
           <Parameter Name="CategoryID" Type="int" Mode="In" />
           <Parameter Name="LanguageID" Type="int" Mode="In" />
         </Function>
-        <Function Name="Nop_TaxRateLoadAll" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
@@ -4360,7 +4359,6 @@
             <Parameter Name="CategoryID" Mode="In" Type="Int32" />
             <Parameter Name="LanguageID" Mode="In" Type="Int32" />
           </FunctionImport>
-          <FunctionImport Name="Sp_TaxRateLoadAll" EntitySet="TaxRates" ReturnType="Collection(NopSolutions.NopCommerce.BusinessLogic.Data.TaxRate)" />
           <EntitySet Name="QBEntities" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.QBEntity" />
           <EntitySet Name="SMSProviders" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.SMSProvider" />
           <EntitySet Name="ReturnRequests" EntityType="NopSolutions.NopCommerce.BusinessLogic.Data.ReturnRequest" />
@@ -8887,7 +8885,6 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="Sp_TaxRateLoadAll" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_TaxRateLoadAll" />
           <EntitySetMapping Name="QBEntities">
             <EntityTypeMapping TypeName="NopSolutions.NopCommerce.BusinessLogic.Data.QBEntity">
               <MappingFragment StoreEntitySet="Nop_QBEntity">
