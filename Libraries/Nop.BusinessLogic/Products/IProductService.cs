@@ -908,12 +908,24 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         ProductTag GetProductTagById(int productTagId);
 
         /// <summary>
-        /// Gets all product tags
+        /// Gets product tags by product identifier
         /// </summary>
         /// <param name="productId">Product identifier</param>
-        /// <param name="name">Product tag name or empty string to load all records</param>
         /// <returns>Product tag collection</returns>
-        List<ProductTag> GetAllProductTags(int productId, string name);
+        List<ProductTag> GetProductTagsByProductId(int productId);
+
+        /// <summary>
+        /// Gets product tag by name
+        /// </summary>
+        /// <param name="name">Product tag name</param>
+        /// <returns>Product tag</returns>
+        ProductTag GetProductTagByName(string name);
+
+        /// <summary>
+        /// Gets all product tags
+        /// </summary>
+        /// <returns>Product tag collection</returns>
+        List<ProductTag> GetAllProductTags();
 
         /// <summary>
         /// Inserts a product tag

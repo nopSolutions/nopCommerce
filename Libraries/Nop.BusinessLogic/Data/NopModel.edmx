@@ -3754,10 +3754,6 @@
           <Parameter Name="OrderBy" Type="int" Mode="In" />
           <Parameter Name="TotalRecords" Type="int" Mode="InOut" />
         </Function>
-        <Function Name="Nop_ProductTagLoadAll" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="ProductID" Type="int" Mode="In" />
-          <Parameter Name="Name" Type="nvarchar" Mode="In" />
-        </Function>
         <Function Name="Nop_ProductVariantLoadAll" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="CategoryID" Type="int" Mode="In" />
           <Parameter Name="ManufacturerID" Type="int" Mode="In" />
@@ -4336,10 +4332,6 @@
             <Parameter Name="LanguageID" Mode="In" Type="Int32" />
             <Parameter Name="OrderBy" Mode="In" Type="Int32" />
             <Parameter Name="TotalRecords" Mode="InOut" Type="Int32" />
-          </FunctionImport>
-          <FunctionImport Name="Sp_ProductTagLoadAll" EntitySet="ProductTags" ReturnType="Collection(NopSolutions.NopCommerce.BusinessLogic.Data.ProductTag)">
-            <Parameter Name="ProductID" Mode="In" Type="Int32" />
-            <Parameter Name="Name" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="Sp_ProductVariantLoadAll" EntitySet="ProductVariants" ReturnType="Collection(NopSolutions.NopCommerce.BusinessLogic.Data.ProductVariant)">
             <Parameter Name="CategoryID" Mode="In" Type="Int32" />
@@ -8863,7 +8855,6 @@
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="Sp_ProductAlsoPurchasedLoadByProductID" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_ProductAlsoPurchasedLoadByProductID" />
           <FunctionImportMapping FunctionImportName="Sp_ProductLoadAllPaged" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_ProductLoadAllPaged" />
-          <FunctionImportMapping FunctionImportName="Sp_ProductTagLoadAll" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_ProductTagLoadAll" />
           <FunctionImportMapping FunctionImportName="Sp_ProductVariantLoadAll" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_ProductVariantLoadAll" />
           <FunctionImportMapping FunctionImportName="Sp_SalesBestSellersReport" FunctionName="NopSolutions.NopCommerce.BusinessLogic.Data.Store.Nop_SalesBestSellersReport">
             <ResultMapping>

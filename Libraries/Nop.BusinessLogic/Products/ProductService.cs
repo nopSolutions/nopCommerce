@@ -3004,19 +3004,55 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Products
         }
 
         /// <summary>
-        /// Gets all product tags
+        /// Gets product tags by product identifier
         /// </summary>
         /// <param name="productId">Product identifier</param>
-        /// <param name="name">Product tag name or empty string to load all records</param>
         /// <returns>Product tag collection</returns>
-        public List<ProductTag> GetAllProductTags(int productId,
-            string name)
+        public List<ProductTag> GetProductTagsByProductId(int productId)
+        {
+            if (productId == 0)
+                return new List<ProductTag>();
+
+            var query = from pt in _context.ProductTags
+                        from p in pt.NpProducts
+                        where p.ProductId == productId
+                        orderby pt.ProductCount descending
+                        select pt;
+
+            var productTags = query.ToList();
+            return productTags;
+        }
+
+        /// <summary>
+        /// Gets product tag by name
+        /// </summary>
+        /// <param name="name">Product tag name</param>
+        /// <returns>Product tag</returns>
+        public ProductTag GetProductTagByName(string name)
         {
             if (name == null)
                 name = string.Empty;
             name = name.Trim();
 
-            var productTags = _context.Sp_ProductTagLoadAll(productId, name).ToList();
+            var query = from pt in _context.ProductTags
+                        where pt.Name == name
+                        select pt;
+
+            var productTag = query.FirstOrDefault();
+            return productTag;
+        }
+
+        /// <summary>
+        /// Gets all product tags
+        /// </summary>
+        /// <returns>Product tag collection</returns>
+        public List<ProductTag> GetAllProductTags()
+        {
+            var query = from pt in _context.ProductTags
+                        orderby pt.ProductCount descending
+                        select pt;
+
+            var productTags = query.ToList();
             return productTags;
         }
 

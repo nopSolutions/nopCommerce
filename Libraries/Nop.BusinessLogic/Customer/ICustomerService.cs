@@ -47,6 +47,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
     /// </summary>
     public partial interface ICustomerService
     {
+        #region Addresses
+
         /// <summary>
         /// Deletes an address by address identifier 
         /// </summary>
@@ -93,6 +95,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// <param name="address">Address to validate</param>
         /// <returns>Result</returns>
         bool CanUseAddressAsShippingAddress(Address address);
+
+        #endregion
+
+        #region Customers
 
         /// <summary>
         /// Reset data required for checkout
@@ -447,7 +453,11 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// Logout customer
         /// </summary>
         void Logout();
-        
+
+        #endregion
+
+        #region Reports
+
         /// <summary>
         /// Get best customers
         /// </summary>
@@ -482,6 +492,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// <returns>Report</returns>
         List<CustomerReportByAttributeKeyLine> GetCustomerReportByAttributeKey(string customerAttributeKey);
 
+        #endregion
+
+        #region Customer attributes
+
         /// <summary>
         /// Deletes a customer attribute
         /// </summary>
@@ -513,6 +527,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// </summary>
         /// <param name="customerAttribute">Customer attribute</param>
         void UpdateCustomerAttribute(CustomerAttribute customerAttribute);
+
+        #endregion
+
+        #region Customer roles
 
         /// <summary>
         /// Marks customer role as deleted
@@ -574,6 +592,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// <param name="customerRoleId">Customer role identifier</param>
         void RemoveCustomerFromRole(int customerId, int customerRoleId);
 
+        #endregion
+
+        #region Customer discount
+
         /// <summary>
         /// Adds a discount to a customer role
         /// </summary>
@@ -594,6 +616,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// <param name="discountId">Discount identifier</param>
         /// <returns>Customer roles</returns>
         List<CustomerRole> GetCustomerRolesByDiscountId(int discountId);
+
+        #endregion
+
+        #region Customer sessions
 
         /// <summary>
         /// Gets a customer session
@@ -644,175 +670,179 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         CustomerSession SaveCustomerSession(Guid customerSessionGuid,
             int customerId, DateTime lastAccessed, bool isExpired);
 
+        #endregion
+
+        #region Properties
+
         /// <summary>
         /// Gets or sets a value indicating whether anonymous checkout allowed
         /// </summary>
-        bool AnonymousCheckoutAllowed {get;set;}
+        bool AnonymousCheckoutAllowed { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether usernames are used instead of emails
         /// </summary>
-        bool UsernamesEnabled {get;set;}
+        bool UsernamesEnabled { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether customers are allowed to change their usernames
         /// </summary>
-        bool AllowCustomersToChangeUsernames {get;set;}
+        bool AllowCustomersToChangeUsernames { get; set; }
 
         /// <summary>
         /// Customer name formatting
         /// </summary>
-        CustomerNameFormatEnum CustomerNameFormatting {get;set;}
+        CustomerNameFormatEnum CustomerNameFormatting { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether customers are allowed to upload avatars.
         /// </summary>
-        bool AllowCustomersToUploadAvatars {get;set;}
+        bool AllowCustomersToUploadAvatars { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to display default user avatar.
         /// </summary>
-        bool DefaultAvatarEnabled {get;set;}
+        bool DefaultAvatarEnabled { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether customers location is shown
         /// </summary>
-        bool ShowCustomersLocation {get;set;}
+        bool ShowCustomersLocation { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to show customers join date
         /// </summary>
-        bool ShowCustomersJoinDate {get;set;}
+        bool ShowCustomersJoinDate { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether customers are allowed to view profiles of other customers
         /// </summary>
-        bool AllowViewingProfiles {get;set;}
+        bool AllowViewingProfiles { get; set; }
 
         /// <summary>
         /// Tax display type
         /// </summary>
-        CustomerRegistrationTypeEnum CustomerRegistrationType {get;set;}
+        CustomerRegistrationTypeEnum CustomerRegistrationType { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to allow navigation only for registered users.
         /// </summary>
-        bool AllowNavigationOnlyRegisteredCustomers {get;set;}
+        bool AllowNavigationOnlyRegisteredCustomers { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether product reviews must be approved by administrator.
         /// </summary>
-        bool ProductReviewsMustBeApproved {get;set;}
+        bool ProductReviewsMustBeApproved { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to allow anonymous users write product reviews.
         /// </summary>
-        bool AllowAnonymousUsersToReviewProduct {get;set;}
+        bool AllowAnonymousUsersToReviewProduct { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to allow anonymous users to email a friend.
         /// </summary>
-        bool AllowAnonymousUsersToEmailAFriend {get;set;}
+        bool AllowAnonymousUsersToEmailAFriend { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to allow anonymous users to set product ratings.
         /// </summary>
-        bool AllowAnonymousUsersToSetProductRatings {get;set;}
+        bool AllowAnonymousUsersToSetProductRatings { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether 'New customer' notification message should be sent to a store owner
         /// </summary>
-        bool NotifyNewCustomerRegistration {get;set;}
+        bool NotifyNewCustomerRegistration { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether 'Gender' is enabled
         /// </summary>
-        bool FormFieldGenderEnabled {get;set;}
+        bool FormFieldGenderEnabled { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether 'Date of Birth' is enabled
         /// </summary>
-        bool FormFieldDateOfBirthEnabled {get;set;}
+        bool FormFieldDateOfBirthEnabled { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether 'Company' is enabled
         /// </summary>
-        bool FormFieldCompanyEnabled {get;set;}
+        bool FormFieldCompanyEnabled { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether 'Company' is required
         /// </summary>
-        bool FormFieldCompanyRequired {get;set;}
+        bool FormFieldCompanyRequired { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether 'Street Address' is enabled
         /// </summary>
-        bool FormFieldStreetAddressEnabled {get;set;}
+        bool FormFieldStreetAddressEnabled { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether 'Street Address' is required
         /// </summary>
-        bool FormFieldStreetAddressRequired {get;set;}
+        bool FormFieldStreetAddressRequired { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether 'Street Address 2' is enabled
         /// </summary>
-        bool FormFieldStreetAddress2Enabled {get;set;}
+        bool FormFieldStreetAddress2Enabled { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether 'Street Address 2' is required
         /// </summary>
-        bool FormFieldStreetAddress2Required {get;set;}
+        bool FormFieldStreetAddress2Required { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether 'Post Code' is enabled
         /// </summary>
-        bool FormFieldPostCodeEnabled {get;set;}
+        bool FormFieldPostCodeEnabled { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether 'Post Code' is required
         /// </summary>
-        bool FormFieldPostCodeRequired {get;set;}
+        bool FormFieldPostCodeRequired { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether 'City' is enabled
         /// </summary>
-        bool FormFieldCityEnabled {get;set;}
+        bool FormFieldCityEnabled { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether 'City' is required
         /// </summary>
-        bool FormFieldCityRequired {get;set;}
+        bool FormFieldCityRequired { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether 'Country' is enabled
         /// </summary>
-        bool FormFieldCountryEnabled {get;set;}
+        bool FormFieldCountryEnabled { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether 'State' is enabled
         /// </summary>
-        bool FormFieldStateEnabled {get;set;}
+        bool FormFieldStateEnabled { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether 'Phone' is enabled
         /// </summary>
-        bool FormFieldPhoneEnabled {get;set;}
+        bool FormFieldPhoneEnabled { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether 'Phone' is required
         /// </summary>
-        bool FormFieldPhoneRequired {get;set;}
+        bool FormFieldPhoneRequired { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether 'Fax' is enabled
         /// </summary>
-        bool FormFieldFaxEnabled {get;set;}
+        bool FormFieldFaxEnabled { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether 'Fax' is required
         /// </summary>
-        bool FormFieldFaxRequired {get;set;}
+        bool FormFieldFaxRequired { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether 'Newsletter' is enabled
@@ -823,5 +853,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         /// Gets or sets a value indicating whether 'Time Zone' is enabled
         /// </summary>
         bool FormFieldTimeZoneEnabled { get; set; }
+
+        #endregion
     }
 }

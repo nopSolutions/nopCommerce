@@ -75,7 +75,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 else
                     hlViewReviews.Visible = false;
 
-                this.txtProductTags.Text = GenerateListOfProductTagss(IoC.Resolve<IProductService>().GetAllProductTags(product.ProductId, string.Empty));
+                this.txtProductTags.Text = GenerateListOfProductTagss(IoC.Resolve<IProductService>().GetProductTagsByProductId(product.ProductId));
             }
         }
 
@@ -157,7 +157,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 SaveLocalizableContent(product);
 
                 //product tags
-                var existingProductTags = IoC.Resolve<IProductService>().GetAllProductTags(product.ProductId, string.Empty);
+                var existingProductTags = IoC.Resolve<IProductService>().GetProductTagsByProductId(product.ProductId);
                 string[] newProductTags = ParseProductTags(txtProductTags.Text);
                 var productTagsToDelete = new List<ProductTag>();
                 foreach (var existingProductTag in existingProductTags)
@@ -183,10 +183,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 foreach (string productTagName in newProductTags)
                 {
                     ProductTag productTag = null;
-                    var productTags2 = IoC.Resolve<IProductService>().GetAllProductTags(0,
-                        productTagName);
-                    if (productTags2.Count == 0)
+                    var productTag2 = IoC.Resolve<IProductService>().GetProductTagByName(productTagName);
+                    if (productTag2 == null)
                     {
+                        //add new product tag
                         productTag = new ProductTag()
                         {
                             Name = productTagName,
@@ -196,7 +196,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     }
                     else
                     {
-                        productTag = productTags2[0];
+                        productTag = productTag2;
                     }
                     if (!IoC.Resolve<IProductService>().DoesProductTagMappingExist(product.ProductId, productTag.ProductTagId))
                     {

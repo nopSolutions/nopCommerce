@@ -380,10 +380,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             foreach (string productTagName in newProductTags)
             {
                 ProductTag productTag = null;
-                var productTags2 = IoC.Resolve<IProductService>().GetAllProductTags(0,
-                    productTagName);
-                if (productTags2.Count == 0)
+                var productTag2 = IoC.Resolve<IProductService>().GetProductTagByName(productTagName);
+                if (productTag2 == null)
                 {
+                    //add new product tag
                     productTag = new ProductTag()
                     {
                         Name = productTagName,
@@ -393,7 +393,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 }
                 else
                 {
-                    productTag = productTags2[0];
+                    productTag = productTag2;
                 }
                 IoC.Resolve<IProductService>().AddProductTagMapping(product.ProductId, productTag.ProductTagId);
             }

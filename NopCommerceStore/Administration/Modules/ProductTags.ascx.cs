@@ -63,7 +63,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected List<ProductTag> GetProductTags()
         {
-            var productTags = IoC.Resolve<IProductService>().GetAllProductTags(0, string.Empty);
+            var productTags = IoC.Resolve<IProductService>().GetAllProductTags();
             return productTags;
         }
 

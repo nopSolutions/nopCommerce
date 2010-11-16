@@ -731,66 +731,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Data
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        /// <param name="productID">No Metadata Documentation available.</param>
-        /// <param name="name">No Metadata Documentation available.</param>
-        public ObjectResult<ProductTag> Sp_ProductTagLoadAll(Nullable<global::System.Int32> productID, global::System.String name)
-        {
-            ObjectParameter productIDParameter;
-            if (productID.HasValue)
-            {
-                productIDParameter = new ObjectParameter("ProductID", productID);
-            }
-            else
-            {
-                productIDParameter = new ObjectParameter("ProductID", typeof(global::System.Int32));
-            }
-    
-            ObjectParameter nameParameter;
-            if (name != null)
-            {
-                nameParameter = new ObjectParameter("Name", name);
-            }
-            else
-            {
-                nameParameter = new ObjectParameter("Name", typeof(global::System.String));
-            }
-    
-            return base.ExecuteFunction<ProductTag>("Sp_ProductTagLoadAll", productIDParameter, nameParameter);
-        }
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        /// <param name="mergeOption"></param>
-        /// <param name="productID">No Metadata Documentation available.</param>
-        /// <param name="name">No Metadata Documentation available.</param>
-        public ObjectResult<ProductTag> Sp_ProductTagLoadAll(Nullable<global::System.Int32> productID, global::System.String name, MergeOption mergeOption)
-        {
-            ObjectParameter productIDParameter;
-            if (productID.HasValue)
-            {
-                productIDParameter = new ObjectParameter("ProductID", productID);
-            }
-            else
-            {
-                productIDParameter = new ObjectParameter("ProductID", typeof(global::System.Int32));
-            }
-    
-            ObjectParameter nameParameter;
-            if (name != null)
-            {
-                nameParameter = new ObjectParameter("Name", name);
-            }
-            else
-            {
-                nameParameter = new ObjectParameter("Name", typeof(global::System.String));
-            }
-    
-            return base.ExecuteFunction<ProductTag>("Sp_ProductTagLoadAll", mergeOption, productIDParameter, nameParameter);
-        }
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
         /// <param name="categoryID">No Metadata Documentation available.</param>
         /// <param name="manufacturerID">No Metadata Documentation available.</param>
         /// <param name="keywords">No Metadata Documentation available.</param>

@@ -44,7 +44,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void BindData()
         {
-            var productTags = IoC.Resolve<IProductService>().GetAllProductTags(this.ProductId, string.Empty);
+            var productTags = IoC.Resolve<IProductService>().GetProductTagsByProductId(this.ProductId);
             if (productTags.Count > 0)
             {
                 rptrProductTags.DataSource = productTags;

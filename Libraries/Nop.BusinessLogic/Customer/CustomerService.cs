@@ -150,6 +150,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
 
         #region Methods
 
+        #region Addresses
+
         /// <summary>
         /// Deletes an address by address identifier 
         /// </summary>
@@ -433,6 +435,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
 
             return true;
         }
+
+        #endregion 
+        
+        #region Customers
 
         /// <summary>
         /// Reset data required for checkout
@@ -1536,6 +1542,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             FormsAuthentication.SignOut();
         }
 
+        #endregion
+
+        #region Reports
+
         /// <summary>
         /// Get best customers
         /// </summary>
@@ -1634,6 +1644,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
 
             return report;
         }
+        
+        #endregion
+
+        #region Customer attributes
 
         /// <summary>
         /// Deletes a customer attribute
@@ -1736,6 +1750,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             _context.SaveChanges();
         }
 
+        #endregion
+
+        #region Customer roles
+
         /// <summary>
         /// Marks customer role as deleted
         /// </summary>
@@ -1834,8 +1852,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
         {
             if (customerId == 0)
                 return new List<CustomerRole>();
-
-            
 
             var query = from cr in _context.CustomerRoles
                         from c in cr.NpCustomers
@@ -1955,6 +1971,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             _context.SaveChanges();
         }
 
+        #endregion
+
+        #region Customer discount
+
         /// <summary>
         /// Adds a discount to a customer role
         /// </summary>
@@ -2044,6 +2064,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             }
             return customerRoles;
         }
+        
+        #endregion
+
+        #region Customer sessions
 
         /// <summary>
         /// Gets a customer session
@@ -2185,6 +2209,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             }
             return customerSession;
         }
+
+        #endregion
 
         #endregion
 
