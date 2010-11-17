@@ -271,17 +271,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
             DateTime? createdOnTo, string email, string username, int activityLogTypeId,
             int pageIndex, int pageSize)
         {
-            if (pageSize <= 0)
-                pageSize = 10;
-            if (pageSize == int.MaxValue)
-                pageSize = int.MaxValue - 1;
-
-            if (pageIndex < 0)
-                pageIndex = 0;
-            if (pageIndex == int.MaxValue)
-                pageIndex = int.MaxValue - 1;
-
-            
             var query = from al in _context.ActivityLog
                         where (!createdOnFrom.HasValue || createdOnFrom.Value <= al.CreatedOn) &&
                         (!createdOnTo.HasValue || createdOnTo.Value >= al.CreatedOn) &&

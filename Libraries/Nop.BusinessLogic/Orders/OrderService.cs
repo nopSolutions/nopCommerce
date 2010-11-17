@@ -1697,18 +1697,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         public PagedList<RewardPointsHistory> GetAllRewardPointsHistoryEntries(int? customerId,
             int? orderId, int pageIndex, int pageSize)
         {
-            if (pageIndex < 0)
-                pageIndex = 0;
-            if (pageIndex == int.MaxValue)
-                pageIndex = int.MaxValue - 1;
-
-            if (pageSize <= 0)
-                pageSize = 10;
-            if (pageSize == int.MaxValue)
-                pageSize = int.MaxValue - 1;
-            
-            
-
             var query = from rph in _context.RewardPointsHistory
                         where
                         (!customerId.HasValue || customerId.Value == 0 || customerId.Value == rph.CustomerId) &&

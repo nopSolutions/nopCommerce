@@ -105,16 +105,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit
         public PagedList<Log> GetAllLogs(DateTime? createdOnFrom,
            DateTime? createdOnTo, string message, int logTypeId, int pageIndex, int pageSize)
         {
-            if (pageSize <= 0)
-                pageSize = 10;
-            if (pageSize == int.MaxValue)
-                pageSize = int.MaxValue - 1;
-
-            if (pageIndex < 0)
-                pageIndex = 0;
-            if (pageIndex == int.MaxValue)
-                pageIndex = int.MaxValue - 1;
-
             var query = from l in _context.Log
                         where (!createdOnFrom.HasValue || createdOnFrom.Value <= l.CreatedOn) &&
                         (!createdOnTo.HasValue || createdOnTo.Value >= l.CreatedOn) &&

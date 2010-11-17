@@ -613,18 +613,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
         /// <returns>Paged list of pictures</returns>
         public PagedList<Picture> GetPictures(int pageSize, int pageIndex)
         {
-            if (pageSize <= 0)
-                pageSize = 10;
-            if (pageSize == int.MaxValue)
-                pageSize = int.MaxValue - 1;
-
-            if (pageIndex < 0)
-                pageIndex = 0;
-            if (pageIndex == int.MaxValue)
-                pageIndex = int.MaxValue - 1;
-
-
-            
             var query = from p in _context.Pictures
                        orderby p.PictureId descending
                        select p;

@@ -162,16 +162,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Blog
         public PagedList<BlogPost> GetAllBlogPosts(int languageId,
             DateTime? dateFrom, DateTime? dateTo, int pageIndex, int pageSize)
         {
-            if (pageIndex < 0)
-                pageIndex = 0;
-            if (pageIndex == Int32.MaxValue)
-                pageIndex = Int32.MaxValue - 1;
-            if (pageSize <= 0)
-                pageSize = 10;
-            if (pageSize == Int32.MaxValue)
-                pageSize = Int32.MaxValue - 1;
-
-            
             var query = from bp in _context.BlogPosts
                         where (!dateFrom.HasValue || dateFrom.Value <= bp.CreatedOn) &&
                         (!dateTo.HasValue || dateTo.Value >= bp.CreatedOn) &&

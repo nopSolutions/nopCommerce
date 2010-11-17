@@ -751,16 +751,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.CustomerManagement
             bool dontLoadGuestCustomers, int dateOfBirthMonth, int dateOfBirthDay, 
             int pageSize, int pageIndex)
         {
-            if (pageSize <= 0)
-                pageSize = 10;
-            if (pageSize == int.MaxValue)
-                pageSize = int.MaxValue - 1;
-
-            if (pageIndex < 0)
-                pageIndex = 0;
-            if (pageIndex == int.MaxValue)
-                pageIndex = int.MaxValue - 1;
-
             if (email == null)
                 email = string.Empty;
 

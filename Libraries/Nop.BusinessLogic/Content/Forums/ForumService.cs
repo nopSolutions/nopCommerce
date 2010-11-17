@@ -586,16 +586,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
             int userId, string keywords, ForumSearchTypeEnum searchType,
             int limitDays, int pageIndex, int pageSize)
         {
-            if (pageSize <= 0)
-                pageSize = 10;
-            if (pageSize == int.MaxValue)
-                pageSize = int.MaxValue - 1;
-
-            if (pageIndex < 0)
-                pageIndex = 0;
-            if (pageIndex == int.MaxValue)
-                pageIndex = int.MaxValue - 1;
-
             DateTime? limitDate = null;
             if (limitDays > 0)
             {
@@ -871,17 +861,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         public PagedList<ForumPost> GetAllPosts(int forumTopicId, int userId,
             string keywords, bool ascSort, int pageIndex, int pageSize)
         {
-            if (pageIndex < 0)
-                pageIndex = 0;
-            if (pageIndex == int.MaxValue)
-                pageIndex = int.MaxValue - 1;
-
-            if (pageSize <= 0)
-                pageSize = 10;
-            if (pageSize == int.MaxValue)
-                pageSize = int.MaxValue - 1;
-
-
             var query = (IQueryable<ForumPost>)_context.ForumPosts;
             if (forumTopicId > 0)
                 query = query.Where(fp => forumTopicId == fp.TopicId);
@@ -1051,17 +1030,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
             int toUserId, bool? isRead, bool? isDeletedByAuthor, bool? isDeletedByRecipient,
             string keywords, int pageIndex, int pageSize)
         {
-            if (pageIndex < 0)
-                pageIndex = 0;
-            if (pageIndex == int.MaxValue)
-                pageIndex = int.MaxValue - 1;
-
-            if (pageSize <= 0)
-                pageSize = 10;
-            if (pageSize == int.MaxValue)
-                pageSize = int.MaxValue - 1;
-
-            
             var query = from pm in _context.PrivateMessages
                         where
                         (fromUserId == 0 || fromUserId == pm.FromUserId) &&
@@ -1221,17 +1189,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Content.Forums
         public PagedList<ForumSubscription> GetAllSubscriptions(int userId, int forumId,
             int topicId, int pageIndex, int pageSize)
         {
-            if (pageIndex < 0)
-                pageIndex = 0;
-            if (pageIndex == int.MaxValue)
-                pageIndex = int.MaxValue - 1;
-
-            if (pageSize <= 0)
-                pageSize = 10;
-            if (pageSize == int.MaxValue)
-                pageSize = int.MaxValue - 1;
-
-
             var fsQuery = from fs in _context.ForumSubscriptions
                           join c in _context.Customers on fs.UserId equals c.CustomerId
                           where

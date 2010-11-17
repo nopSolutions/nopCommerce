@@ -49,11 +49,6 @@ namespace NopSolutions.NopCommerce.Web
 
         public static List<PrivateMessage> GetCurrentUserSentPrivateMessages(int StartIndex, int PageSize, out int totalRecords)
         {
-            if (PageSize <= 0)
-                PageSize = 10;
-            if (PageSize == int.MaxValue)
-                PageSize = int.MaxValue - 1;
-
             int PageIndex = StartIndex / PageSize;
 
             totalRecords = 0;
@@ -86,11 +81,6 @@ namespace NopSolutions.NopCommerce.Web
 
         public static List<PrivateMessage> GetCurrentUserInboxPrivateMessages(int StartIndex, int PageSize, out int totalRecords)
         {
-            if (PageSize <= 0)
-                PageSize = 10;
-            if (PageSize == int.MaxValue)
-                PageSize = int.MaxValue - 1;
-
             int PageIndex = StartIndex / PageSize;
 
             totalRecords = 0;
@@ -122,11 +112,6 @@ namespace NopSolutions.NopCommerce.Web
 
         public static List<ForumSubscription> GetCurrentUserForumSubscriptions(int StartIndex, int PageSize, out int totalRecords)
         {
-            if (PageSize <= 0)
-                PageSize = 10;
-            if (PageSize == int.MaxValue)
-                PageSize = int.MaxValue - 1;
-
             int PageIndex = StartIndex / PageSize;
 
             totalRecords = 0;
@@ -157,11 +142,6 @@ namespace NopSolutions.NopCommerce.Web
 
         public static List<ForumPost> GetUserLatestPosts(int StartIndex, int PageSize, out int totalRecords)
         {
-            if (PageSize <= 0)
-                PageSize = 10;
-            if (PageSize == int.MaxValue)
-                PageSize = int.MaxValue - 1;
-
             int PageIndex = StartIndex / PageSize;
 
             totalRecords = 0;
