@@ -227,7 +227,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Categories
             var category = query.SingleOrDefault();
             
             //filter by access control list (public store)
-            if (!showHidden && IsCategoryAccessDenied(category))
+            if (category != null && !showHidden && IsCategoryAccessDenied(category))
             {
                 category = null;
             }

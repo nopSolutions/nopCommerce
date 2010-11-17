@@ -70,8 +70,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit.UsersOnline
         }
 
         #endregion
-
-
+        
         #region Utilities
 
         private Dictionary<Guid, OnlineUserInfo> GetAnonymousUserList()
