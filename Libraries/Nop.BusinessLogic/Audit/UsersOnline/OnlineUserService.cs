@@ -48,12 +48,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit.UsersOnline
         /// <summary>
         /// Object context
         /// </summary>
-        protected NopObjectContext _context;
+        protected readonly NopObjectContext _context;
 
         /// <summary>
         /// Cache manager
         /// </summary>
-        protected ICacheManager _cacheManager;
+        protected readonly ICacheManager _cacheManager;
 
         #endregion
         
@@ -65,8 +65,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Audit.UsersOnline
         /// <param name="context">Object context</param>
         public OnlineUserService(NopObjectContext context)
         {
-            _context = context;
-            _cacheManager = new NopStaticCache();
+            this._context = context;
+            this._cacheManager = new NopStaticCache();
         }
 
         #endregion

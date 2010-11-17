@@ -50,12 +50,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         /// <summary>
         /// Object context
         /// </summary>
-        protected NopObjectContext _context;
+        protected readonly NopObjectContext _context;
 
         /// <summary>
         /// Cache manager
         /// </summary>
-        protected ICacheManager _cacheManager;
+        protected readonly ICacheManager _cacheManager;
 
         #endregion
 
@@ -67,8 +67,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Promo.Discounts
         /// <param name="context">Object context</param>
         public DiscountService(NopObjectContext context)
         {
-            _context = context;
-            _cacheManager = new NopRequestCache();
+            this._context = context;
+            this._cacheManager = new NopRequestCache();
         }
 
         #endregion

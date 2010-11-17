@@ -58,12 +58,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <summary>
         /// Object context
         /// </summary>
-        protected NopObjectContext _context;
+        protected readonly NopObjectContext _context;
 
         /// <summary>
         /// Cache service
         /// </summary>
-        protected ICacheManager _cacheManager;
+        protected readonly ICacheManager _cacheManager;
 
         #endregion
 
@@ -75,8 +75,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         /// <param name="context">Object context</param>
         public OrderService(NopObjectContext context)
         {
-            _context = context;
-            _cacheManager = new NopRequestCache();
+            this._context = context;
+            this._cacheManager = new NopRequestCache();
         }
 
         #endregion

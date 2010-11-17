@@ -41,12 +41,12 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings
         /// <summary>
         /// Object context
         /// </summary>
-        protected NopObjectContext _context;
+        protected readonly NopObjectContext _context;
 
         /// <summary>
         /// Cache manager
         /// </summary>
-        protected ICacheManager _cacheManager;
+        protected readonly ICacheManager _cacheManager;
 
         #endregion
 
@@ -58,8 +58,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings
         /// <param name="context">Object context</param>
         public SettingManager(NopObjectContext context)
         {
-            _context = context;
-            _cacheManager = new NopStaticCache();
+            this._context = context;
+            this._cacheManager = new NopStaticCache();
         }
 
         #endregion
