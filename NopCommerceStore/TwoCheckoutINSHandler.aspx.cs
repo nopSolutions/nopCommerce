@@ -149,6 +149,7 @@ namespace NopSolutions.NopCommerce.Web
                             break;
                         case PaymentStatusEnum.Refunded:
                             {
+                                //TODO add partial refund support 
                                 if (IoC.Resolve<IOrderService>().CanRefundOffline(order))
                                 {
                                     IoC.Resolve<IOrderService>().RefundOffline(order.OrderId);

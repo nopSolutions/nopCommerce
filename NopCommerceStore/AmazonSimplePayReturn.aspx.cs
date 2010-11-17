@@ -10,6 +10,7 @@ using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.Payment.Methods.Amazon;
 using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
+using System.Text;
 
 namespace NopSolutions.NopCommerce.Web
 {
@@ -17,7 +18,7 @@ namespace NopSolutions.NopCommerce.Web
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if(NopContext.Current.User == null)
+            if (NopContext.Current.User == null)
             {
                 string loginURL = SEOHelper.GetLoginPageUrl(true);
                 Response.Redirect(loginURL);
@@ -25,24 +26,34 @@ namespace NopSolutions.NopCommerce.Web
 
             CommonHelper.SetResponseNoCache(Response);
 
-            if(!Page.IsPostBack)
+            if (!Page.IsPostBack)
             {
-                if(!AmazonHelper.ValidateRequest(Request.QueryString, String.Format("{0}AmazonSimplePayReturn.aspx", CommonHelper.GetStoreLocation()), "GET"))
+                if (!AmazonHelper.ValidateRequest(Request.QueryString, String.Format("{0}AmazonSimplePayReturn.aspx", CommonHelper.GetStoreLocation()), "GET"))
                 {
                     Response.Redirect(CommonHelper.GetStoreLocation());
                 }
 
+                //load order
                 int orderId = Convert.ToInt32(CommonHelper.QueryStringInt("referenceId"));
                 Order order = IoC.Resolve<IOrderService>().GetOrderById(orderId);
-                if(order == null)
+                if (order == null)
                 {
                     Response.Redirect(CommonHelper.GetStoreLocation());
                 }
-                if(NopContext.Current.User.CustomerId != order.CustomerId)
+                //validate order
+                if (NopContext.Current.User.CustomerId != order.CustomerId)
                 {
                     Response.Redirect(CommonHelper.GetStoreLocation());
                 }
 
+                //note
+                string recipientEmail = CommonHelper.QueryString("recipientEmail");
+                StringBuilder sb = new StringBuilder();
+                sb.AppendLine("Amazon Simple Pay return page:");
+                sb.AppendLine("recipientEmail: " + recipientEmail);
+                IoC.Resolve<IOrderService>().InsertOrderNote(order.OrderId, recipientEmail, false, DateTime.UtcNow);
+
+                //paymnent
                 if (SimplePaySettings.SettleImmediately)
                 {
                     if (IoC.Resolve<IOrderService>().CanMarkOrderAsPaid(order))
