@@ -39,17 +39,8 @@ using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web
 {
-    public partial class BaseNopAdministrationPage : Page
+    public partial class BaseNopAdministrationPage : BaseNopPage
     {
-        #region Ctor
-
-        public BaseNopAdministrationPage()
-        {
-
-        }
-
-        #endregion
-
         #region Methods
 
         protected void SelectTab(TabContainer tabContainer, string tabId)

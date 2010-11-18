@@ -39,7 +39,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
-    public partial class WishlistEmailAFriendControl : BaseNopUserControl
+    public partial class WishlistEmailAFriendControl: BaseNopFrontendUserControl
     {
         protected void Page_Load(object sender, EventArgs e)
         {

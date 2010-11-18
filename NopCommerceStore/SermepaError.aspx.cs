@@ -15,7 +15,7 @@ using NopSolutions.NopCommerce.Payment.Methods.PayPoint;
 
 namespace NopSolutions.NopCommerce.Web
 {
-    public partial class SermepaErrorPage : BaseNopPage
+    public partial class SermepaErrorPage : BaseNopFrontendPage
     {
         protected void Page_Load(object sender, EventArgs e)
         {

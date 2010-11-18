@@ -31,7 +31,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
-    public partial class CurrencySelectorControl : BaseNopUserControl
+    public partial class CurrencySelectorControl: BaseNopFrontendUserControl
     {
         private void BindCurrencies()
         {

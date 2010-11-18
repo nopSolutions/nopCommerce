@@ -34,7 +34,7 @@ using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 namespace NopSolutions.NopCommerce.Web
 {
-    public partial class ProductTagPage : BaseNopPage
+    public partial class ProductTagPage : BaseNopFrontendPage
     {
         protected void Page_Load(object sender, EventArgs e)
         {

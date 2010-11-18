@@ -35,7 +35,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web
 {
-    public partial class CheckoutPaymentMethodPage : BaseNopPage
+    public partial class CheckoutPaymentMethodPage : BaseNopFrontendPage
     {
         protected void Page_Load(object sender, EventArgs e)
         {

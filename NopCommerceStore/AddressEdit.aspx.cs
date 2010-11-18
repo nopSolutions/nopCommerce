@@ -32,7 +32,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web
 {
-    public partial class AddressEditPage : BaseNopPage
+    public partial class AddressEditPage : BaseNopFrontendPage
     {
         private void BindData()
         {

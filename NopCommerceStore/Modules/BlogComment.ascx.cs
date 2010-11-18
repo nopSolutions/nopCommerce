@@ -38,7 +38,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
-    public partial class BlogCommentControl : BaseNopUserControl
+    public partial class BlogCommentControl : BaseNopFrontendUserControl
     {
         BlogComment blogComment = null;
         

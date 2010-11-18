@@ -34,7 +34,7 @@ using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 namespace NopSolutions.NopCommerce.Web
 {
-    public partial class ProductPage : BaseNopPage
+    public partial class ProductPage : BaseNopFrontendPage
     {
         Product product = null;
 

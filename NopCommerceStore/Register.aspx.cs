@@ -29,7 +29,7 @@ using NopSolutions.NopCommerce.Common.Utils;
 
 namespace NopSolutions.NopCommerce.Web
 {
-    public partial class RegisterPage : BaseNopPage
+    public partial class RegisterPage : BaseNopFrontendPage
     {
         protected void Page_Load(object sender, EventArgs e)
         {

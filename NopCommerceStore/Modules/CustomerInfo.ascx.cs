@@ -40,7 +40,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
-    public partial class CustomerInfoControl : BaseNopUserControl
+    public partial class CustomerInfoControl: BaseNopFrontendUserControl
     {
         protected override void OnInit(EventArgs e)
         {

@@ -18,7 +18,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web
 {
-    public partial class SermepaReturnPage : BaseNopPage
+    public partial class SermepaReturnPage : BaseNopFrontendPage
     {
         protected void Page_Load(object sender, EventArgs e)
         {

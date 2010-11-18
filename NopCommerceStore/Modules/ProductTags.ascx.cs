@@ -32,7 +32,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
-    public partial class ProductTagsControl : BaseNopUserControl
+    public partial class ProductTagsControl: BaseNopFrontendUserControl
     {
         protected void Page_Load(object sender, EventArgs e)
         {

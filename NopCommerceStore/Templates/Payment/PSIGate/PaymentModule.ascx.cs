@@ -27,7 +27,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Payment;
 
 namespace NopSolutions.NopCommerce.Web.Templates.Payment.PSIGate
 {
-    public partial class PaymentModule : BaseNopUserControl, IPaymentMethodModule
+    public partial class PaymentModule: BaseNopFrontendUserControl, IPaymentMethodModule
     {
         protected override void OnInit(EventArgs e)
         {

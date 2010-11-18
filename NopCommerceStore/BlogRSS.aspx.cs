@@ -32,7 +32,7 @@ using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 namespace NopSolutions.NopCommerce.Web
 {
-    public partial class BlogRSSPage : BaseNopPage
+    public partial class BlogRSSPage : BaseNopFrontendPage
     {
         protected void Page_Load(object sender, EventArgs e)
         {

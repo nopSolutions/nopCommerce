@@ -13,7 +13,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web
 {
-    public partial class MonerisHostedPaymentReturn : BaseNopPage
+    public partial class MonerisHostedPaymentReturn : BaseNopFrontendPage
     {
         protected void Page_Load(object sender, EventArgs e)
         {

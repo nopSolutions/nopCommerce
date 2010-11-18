@@ -36,7 +36,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 namespace NopSolutions.NopCommerce.Web
 {
-    public partial class PaypalPDTHandlerPage : BaseNopPage
+    public partial class PaypalPDTHandlerPage : BaseNopFrontendPage
     {
         protected void Page_Load(object sender, EventArgs e)
         {

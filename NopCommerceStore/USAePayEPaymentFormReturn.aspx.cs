@@ -13,7 +13,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web
 {
-    public partial class USAePayEPaymentFormReturn : BaseNopPage
+    public partial class USAePayEPaymentFormReturn : BaseNopFrontendPage
     {
         protected void Page_Load(object sender, EventArgs e)
         {

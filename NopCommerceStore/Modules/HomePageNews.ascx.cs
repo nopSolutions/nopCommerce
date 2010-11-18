@@ -32,7 +32,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
-    public partial class HomePageNewsControl : BaseNopUserControl
+    public partial class HomePageNewsControl: BaseNopFrontendUserControl
     {
         protected override void OnPreRender(EventArgs e)
         {

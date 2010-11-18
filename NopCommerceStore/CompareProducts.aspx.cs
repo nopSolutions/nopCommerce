@@ -35,7 +35,7 @@ using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 namespace NopSolutions.NopCommerce.Web
 {
-    public partial class CompareProductsPage : BaseNopPage
+    public partial class CompareProductsPage : BaseNopFrontendPage
     {
         protected void Page_Load(object sender, EventArgs e)
         {

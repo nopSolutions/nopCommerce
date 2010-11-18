@@ -35,7 +35,7 @@ namespace NopSolutions.NopCommerce.Web
     /// <summary>
     /// SendPMPage handler.
     /// </summary>
-    public partial class SendPMPage : BaseNopPage
+    public partial class SendPMPage : BaseNopFrontendPage
     {
         protected void Page_Load(object sender, EventArgs e)
         {

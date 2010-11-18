@@ -30,7 +30,7 @@ using NopSolutions.NopCommerce.Common.Utils;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
-    public partial class InfoBlockControl : BaseNopUserControl
+    public partial class InfoBlockControl: BaseNopFrontendUserControl
     {
         protected void Page_Load(object sender, EventArgs e)
         {

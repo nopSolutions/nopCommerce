@@ -27,7 +27,7 @@ using System.Xml.Linq;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
-    public partial class SimpleTextBox : BaseNopUserControl
+    public partial class SimpleTextBox: BaseNopFrontendUserControl
     {
         public string Text
         {

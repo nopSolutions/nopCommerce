@@ -33,7 +33,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web
 {
-    public partial class WishlistPage : BaseNopPage
+    public partial class WishlistPage : BaseNopFrontendPage
     {
         protected void Page_Load(object sender, EventArgs e)
         {

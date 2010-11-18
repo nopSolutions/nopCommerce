@@ -10,7 +10,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web
 {
-    public partial class SveaHostedPaymentReturn : BaseNopPage
+    public partial class SveaHostedPaymentReturn : BaseNopFrontendPage
     {
         protected void Page_Load(object sender, EventArgs e)
         {

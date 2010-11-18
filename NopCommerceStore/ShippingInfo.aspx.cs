@@ -31,7 +31,7 @@ using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
 namespace NopSolutions.NopCommerce.Web
 {
-    public partial class ShippingInfoPage : BaseNopPage
+    public partial class ShippingInfoPage : BaseNopFrontendPage
     {
         protected void Page_Load(object sender, EventArgs e)
         {

@@ -34,7 +34,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
-    public partial class ProductCategoryBreadcrumb : BaseNopUserControl
+    public partial class ProductCategoryBreadcrumb: BaseNopFrontendUserControl
     {
         protected void Page_Load(object sender, EventArgs e)
         {

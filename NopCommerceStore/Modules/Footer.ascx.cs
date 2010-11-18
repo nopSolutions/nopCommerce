@@ -29,7 +29,7 @@ using NopSolutions.NopCommerce.Common.Utils;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
-    public partial class FooterControl : BaseNopUserControl
+    public partial class FooterControl: BaseNopFrontendUserControl
     {
     }
 }

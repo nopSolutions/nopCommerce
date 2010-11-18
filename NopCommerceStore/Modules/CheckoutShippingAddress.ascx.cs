@@ -37,7 +37,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
-    public partial class CheckoutShippingAddressControl : BaseNopUserControl
+    public partial class CheckoutShippingAddressControl: BaseNopFrontendUserControl
     {
         protected CheckoutStepChangedEventHandler handler;
         protected ShoppingCart cart = null;

@@ -27,7 +27,7 @@ using System.Xml.Linq;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
-    public partial class NumericTextBox : BaseNopUserControl
+    public partial class NumericTextBox: BaseNopFrontendUserControl
     {
         public int Value
         {

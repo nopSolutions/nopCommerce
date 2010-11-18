@@ -13,7 +13,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web
 {
-    public partial class CyberSourceIPNHandler : BaseNopPage
+    public partial class CyberSourceIPNHandler : BaseNopFrontendPage
     {
         protected void Page_Load(object sender, EventArgs e)
         {

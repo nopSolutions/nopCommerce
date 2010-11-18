@@ -40,7 +40,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
-    public partial class CheckoutOnePageControl : BaseNopUserControl
+    public partial class CheckoutOnePageControl: BaseNopFrontendUserControl
     {
         protected ShoppingCart _cart = null;
 

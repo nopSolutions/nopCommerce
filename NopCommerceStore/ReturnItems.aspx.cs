@@ -30,7 +30,7 @@ using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
 namespace NopSolutions.NopCommerce.Web
 {
-    public partial class ReturnItemsPage : BaseNopPage
+    public partial class ReturnItemsPage : BaseNopFrontendPage
     {
         protected void Page_Load(object sender, EventArgs e)
         {

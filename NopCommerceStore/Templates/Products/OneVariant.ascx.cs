@@ -21,7 +21,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Templates.Products
 {
-    public partial class OneVariant : BaseNopUserControl
+    public partial class OneVariant: BaseNopFrontendUserControl
     {
         protected void Page_Load(object sender, EventArgs e)
         {

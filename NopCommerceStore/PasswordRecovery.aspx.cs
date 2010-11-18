@@ -32,7 +32,7 @@ using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
 namespace NopSolutions.NopCommerce.Web
 {
-    public partial class PasswordRecoveryPage : BaseNopPage
+    public partial class PasswordRecoveryPage : BaseNopFrontendPage
     {
         protected void Page_Load(object sender, EventArgs e)
         {

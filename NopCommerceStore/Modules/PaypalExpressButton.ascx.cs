@@ -47,7 +47,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
-    public partial class PaypalExpressButton : BaseNopUserControl
+    public partial class PaypalExpressButton: BaseNopFrontendUserControl
     {
         protected override void OnPreRender(EventArgs e)
         {

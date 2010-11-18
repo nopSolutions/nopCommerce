@@ -30,7 +30,7 @@ using NopSolutions.NopCommerce.BusinessLogic;
 using NopSolutions.NopCommerce.Common.Utils;
 namespace NopSolutions.NopCommerce.Web
 {
-    public partial class PaypalCancelPage : BaseNopPage
+    public partial class PaypalCancelPage : BaseNopFrontendPage
     {
         protected void Page_Load(object sender, EventArgs e)
         {

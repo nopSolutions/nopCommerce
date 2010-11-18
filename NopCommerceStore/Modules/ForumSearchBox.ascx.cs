@@ -28,7 +28,7 @@ using NopSolutions.NopCommerce.BusinessLogic.SEO;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
-    public partial class ForumSearchBoxControl : BaseNopUserControl
+    public partial class ForumSearchBoxControl: BaseNopFrontendUserControl
     {
         protected void btnSearch_Click(object sender, EventArgs e)
         {

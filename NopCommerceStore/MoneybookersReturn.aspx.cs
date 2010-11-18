@@ -33,7 +33,7 @@ using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 namespace NopSolutions.NopCommerce.Web
 {
-    public partial class MoneybookersReturnPage : BaseNopPage
+    public partial class MoneybookersReturnPage : BaseNopFrontendPage
     {
         protected void Page_Load(object sender, EventArgs e)
         {

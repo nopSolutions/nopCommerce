@@ -38,7 +38,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web
 {
-    public partial class PaypalExpressReturnPage : BaseNopPage
+    public partial class PaypalExpressReturnPage : BaseNopFrontendPage
     {
         protected void btnNextStep_Click(object sender, EventArgs e)
         {

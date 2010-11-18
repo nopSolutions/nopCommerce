@@ -3916,9 +3916,6 @@
     <Compile Include="ContactUs.aspx.designer.cs">
       <DependentUpon>ContactUs.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Controls\BaseNopNestedMasterPage.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
     <Compile Include="AccountActivation.aspx.cs">
       <DependentUpon>AccountActivation.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -3929,6 +3926,15 @@
     <Compile Include="Controls\CheckoutStepEventArgs.cs">
     </Compile>
     <Compile Include="Controls\CheckoutStepChangedEventHandler.cs" />
+    <Compile Include="Controls\BaseNopFrontendUserControl.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\BaseNopFrontendMasterPage.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\BaseNopFrontendPage.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="Controls\PageSslProtectionEnum.cs">
     </Compile>
     <Compile Include="Controls\ForumHelper.cs" />
@@ -3990,56 +3996,48 @@
     </Compile>
     <Compile Include="Modules\BlogMonths.ascx.cs">
       <DependentUpon>BlogMonths.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\BlogMonths.ascx.designer.cs">
       <DependentUpon>BlogMonths.ascx</DependentUpon>
     </Compile>
     <Compile Include="Modules\BlogPopularTags.ascx.cs">
       <DependentUpon>BlogPopularTags.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\BlogPopularTags.ascx.designer.cs">
       <DependentUpon>BlogPopularTags.ascx</DependentUpon>
     </Compile>
     <Compile Include="Modules\WishlistEmailAFriend.ascx.cs">
       <DependentUpon>WishlistEmailAFriend.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\WishlistEmailAFriend.ascx.designer.cs">
       <DependentUpon>WishlistEmailAFriend.ascx</DependentUpon>
     </Compile>
     <Compile Include="Modules\PollBlock.ascx.cs">
       <DependentUpon>PollBlock.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\PollBlock.ascx.designer.cs">
       <DependentUpon>PollBlock.ascx</DependentUpon>
     </Compile>
     <Compile Include="Modules\StoreThemeSelector.ascx.cs">
       <DependentUpon>StoreThemeSelector.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\StoreThemeSelector.ascx.designer.cs">
       <DependentUpon>StoreThemeSelector.ascx</DependentUpon>
     </Compile>
     <Compile Include="Modules\DecimalTextBox.ascx.cs">
       <DependentUpon>DecimalTextBox.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\DecimalTextBox.ascx.designer.cs">
       <DependentUpon>DecimalTextBox.ascx</DependentUpon>
     </Compile>
     <Compile Include="Modules\EstimateShipping.ascx.cs">
       <DependentUpon>EstimateShipping.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\EstimateShipping.ascx.designer.cs">
       <DependentUpon>EstimateShipping.ascx</DependentUpon>
     </Compile>
     <Compile Include="Modules\CustomerReturnRequests.ascx.cs">
       <DependentUpon>CustomerReturnRequests.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\CustomerReturnRequests.ascx.designer.cs">
       <DependentUpon>CustomerReturnRequests.ascx</DependentUpon>
@@ -4053,49 +4051,42 @@
     </Compile>
     <Compile Include="Modules\ReturnItems.ascx.cs">
       <DependentUpon>ReturnItems.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\ReturnItems.ascx.designer.cs">
       <DependentUpon>ReturnItems.ascx</DependentUpon>
     </Compile>
     <Compile Include="Modules\ForumSubscriptions.ascx.cs">
       <DependentUpon>ForumSubscriptions.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\ForumSubscriptions.ascx.designer.cs">
       <DependentUpon>ForumSubscriptions.ascx</DependentUpon>
     </Compile>
     <Compile Include="Modules\GiftCardAttributes.ascx.cs">
       <DependentUpon>GiftCardAttributes.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\GiftCardAttributes.ascx.designer.cs">
       <DependentUpon>GiftCardAttributes.ascx</DependentUpon>
     </Compile>
     <Compile Include="Modules\ProductPrice2.ascx.cs">
       <DependentUpon>ProductPrice2.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\ProductPrice2.ascx.designer.cs">
       <DependentUpon>ProductPrice2.ascx</DependentUpon>
     </Compile>
     <Compile Include="Modules\GoogleAdsense.ascx.cs">
       <DependentUpon>GoogleAdsense.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\GoogleAdsense.ascx.designer.cs">
       <DependentUpon>GoogleAdsense.ascx</DependentUpon>
     </Compile>
     <Compile Include="Modules\ProductShareButton.ascx.cs">
       <DependentUpon>ProductShareButton.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\ProductShareButton.ascx.designer.cs">
       <DependentUpon>ProductShareButton.ascx</DependentUpon>
     </Compile>
     <Compile Include="Modules\PopularTags.ascx.cs">
       <DependentUpon>PopularTags.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\PopularTags.ascx.designer.cs">
       <DependentUpon>PopularTags.ascx</DependentUpon>
@@ -4109,21 +4100,18 @@
     </Compile>
     <Compile Include="Modules\ProductsByTag.ascx.cs">
       <DependentUpon>ProductsByTag.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\ProductsByTag.ascx.designer.cs">
       <DependentUpon>ProductsByTag.ascx</DependentUpon>
     </Compile>
     <Compile Include="Modules\ProductTags.ascx.cs">
       <DependentUpon>ProductTags.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\ProductTags.ascx.designer.cs">
       <DependentUpon>ProductTags.ascx</DependentUpon>
     </Compile>
     <Compile Include="Modules\NewsArchive.ascx.cs">
       <DependentUpon>NewsArchive.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\NewsArchive.ascx.designer.cs">
       <DependentUpon>NewsArchive.ascx</DependentUpon>
@@ -4137,14 +4125,12 @@
     </Compile>
     <Compile Include="Modules\CheckoutAttributes.ascx.cs">
       <DependentUpon>CheckoutAttributes.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\CheckoutAttributes.ascx.designer.cs">
       <DependentUpon>CheckoutAttributes.ascx</DependentUpon>
     </Compile>
     <Compile Include="Modules\CustomerRewardPoints.ascx.cs">
       <DependentUpon>CustomerRewardPoints.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\CustomerRewardPoints.ascx.designer.cs">
       <DependentUpon>CustomerRewardPoints.ascx</DependentUpon>
@@ -4221,21 +4207,18 @@
     </Compile>
     <Compile Include="Modules\CheckoutOnePage.ascx.cs">
       <DependentUpon>CheckoutOnePage.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\CheckoutOnePage.ascx.designer.cs">
       <DependentUpon>CheckoutOnePage.ascx</DependentUpon>
     </Compile>
     <Compile Include="Modules\LiveChatBlock.ascx.cs">
       <DependentUpon>LiveChatBlock.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\LiveChatBlock.ascx.designer.cs">
       <DependentUpon>LiveChatBlock.ascx</DependentUpon>
     </Compile>
     <Compile Include="Modules\CustomerDownloadableProducts.ascx.cs">
       <DependentUpon>CustomerDownloadableProducts.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\CustomerDownloadableProducts.ascx.designer.cs">
       <DependentUpon>CustomerDownloadableProducts.ascx</DependentUpon>
@@ -4249,98 +4232,84 @@
     </Compile>
     <Compile Include="Templates\Payment\Assist\HostedPayment.ascx.cs">
       <DependentUpon>HostedPayment.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Templates\Payment\Assist\HostedPayment.ascx.designer.cs">
       <DependentUpon>HostedPayment.ascx</DependentUpon>
     </Compile>
     <Compile Include="Templates\Payment\Beanstream\HostedPayment.ascx.cs">
       <DependentUpon>HostedPayment.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Templates\Payment\Beanstream\HostedPayment.ascx.designer.cs">
       <DependentUpon>HostedPayment.ascx</DependentUpon>
     </Compile>
     <Compile Include="Templates\Payment\ChronoPay\HostedPayment.ascx.cs">
       <DependentUpon>HostedPayment.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Templates\Payment\ChronoPay\HostedPayment.ascx.designer.cs">
       <DependentUpon>HostedPayment.ascx</DependentUpon>
     </Compile>
     <Compile Include="Templates\Payment\Alipay\HostedPayment.ascx.cs">
       <DependentUpon>HostedPayment.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Templates\Payment\Alipay\HostedPayment.ascx.designer.cs">
       <DependentUpon>HostedPayment.ascx</DependentUpon>
     </Compile>
     <Compile Include="Templates\Payment\CCAvenue\PaymentModule.ascx.cs">
       <DependentUpon>PaymentModule.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Templates\Payment\CCAvenue\PaymentModule.ascx.designer.cs">
       <DependentUpon>PaymentModule.ascx</DependentUpon>
     </Compile>
     <Compile Include="Templates\Payment\QuickPay\PaymentModule.ascx.cs">
       <DependentUpon>PaymentModule.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Templates\Payment\QuickPay\PaymentModule.ascx.designer.cs">
       <DependentUpon>PaymentModule.ascx</DependentUpon>
     </Compile>
     <Compile Include="Templates\Payment\SagePay\PaymentModule.ascx.cs">
       <DependentUpon>PaymentModule.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Templates\Payment\SagePay\PaymentModule.ascx.designer.cs">
       <DependentUpon>PaymentModule.ascx</DependentUpon>
     </Compile>
     <Compile Include="Templates\Payment\Sermepa\PaymentModule.ascx.cs">
       <DependentUpon>PaymentModule.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Templates\Payment\Sermepa\PaymentModule.ascx.designer.cs">
       <DependentUpon>PaymentModule.ascx</DependentUpon>
     </Compile>
     <Compile Include="Templates\Payment\iDeal\PaymentModule.ascx.cs">
       <DependentUpon>PaymentModule.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Templates\Payment\iDeal\PaymentModule.ascx.designer.cs">
       <DependentUpon>PaymentModule.ascx</DependentUpon>
     </Compile>
     <Compile Include="Templates\Payment\CyberSource\HostedPayment.ascx.cs">
       <DependentUpon>HostedPayment.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Templates\Payment\CyberSource\HostedPayment.ascx.designer.cs">
       <DependentUpon>HostedPayment.ascx</DependentUpon>
     </Compile>
     <Compile Include="Templates\Payment\Moneris\HostedPayment.ascx.cs">
       <DependentUpon>HostedPayment.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Templates\Payment\Moneris\HostedPayment.ascx.designer.cs">
       <DependentUpon>HostedPayment.ascx</DependentUpon>
     </Compile>
     <Compile Include="Templates\Payment\SecurePay\XmlPayment.ascx.cs">
       <DependentUpon>XmlPayment.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Templates\Payment\SecurePay\XmlPayment.ascx.designer.cs">
       <DependentUpon>XmlPayment.ascx</DependentUpon>
     </Compile>
     <Compile Include="Templates\Payment\USAePayIntegrated\PaymentModule.ascx.cs">
       <DependentUpon>PaymentModule.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Templates\Payment\USAePayIntegrated\PaymentModule.ascx.designer.cs">
       <DependentUpon>PaymentModule.ascx</DependentUpon>
     </Compile>
     <Compile Include="Templates\Payment\USAePay\EPaymentFormPayment.ascx.cs">
       <DependentUpon>EPaymentFormPayment.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Templates\Payment\USAePay\EPaymentFormPayment.ascx.designer.cs">
       <DependentUpon>EPaymentFormPayment.ascx</DependentUpon>
@@ -4368,28 +4337,24 @@
     </Compile>
     <Compile Include="Modules\MiniShoppingCartBox.ascx.cs">
       <DependentUpon>MiniShoppingCartBox.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\MiniShoppingCartBox.ascx.designer.cs">
       <DependentUpon>MiniShoppingCartBox.ascx</DependentUpon>
     </Compile>
     <Compile Include="Modules\NewsLetterSubscriptionActivationControl.ascx.cs">
       <DependentUpon>NewsLetterSubscriptionActivationControl.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\NewsLetterSubscriptionActivationControl.ascx.designer.cs">
       <DependentUpon>NewsLetterSubscriptionActivationControl.ascx</DependentUpon>
     </Compile>
     <Compile Include="Modules\NewsLetterSubscriptionBoxControl.ascx.cs">
       <DependentUpon>NewsLetterSubscriptionBoxControl.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\NewsLetterSubscriptionBoxControl.ascx.designer.cs">
       <DependentUpon>NewsLetterSubscriptionBoxControl.ascx</DependentUpon>
     </Compile>
     <Compile Include="Modules\UserAgreementControl.ascx.cs">
       <DependentUpon>UserAgreementControl.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\UserAgreementControl.ascx.designer.cs">
       <DependentUpon>UserAgreementControl.ascx</DependentUpon>
@@ -4417,28 +4382,24 @@
     </Compile>
     <Compile Include="Templates\Payment\Amazon\SimplePayPayment.ascx.cs">
       <DependentUpon>SimplePayPayment.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Templates\Payment\Amazon\SimplePayPayment.ascx.designer.cs">
       <DependentUpon>SimplePayPayment.ascx</DependentUpon>
     </Compile>
     <Compile Include="Templates\Payment\PayInStore\PaymentModule.ascx.cs">
       <DependentUpon>PaymentModule.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Templates\Payment\PayInStore\PaymentModule.ascx.designer.cs">
       <DependentUpon>PaymentModule.ascx</DependentUpon>
     </Compile>
     <Compile Include="Templates\Payment\PayPoint\HostedPayment.ascx.cs">
       <DependentUpon>HostedPayment.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Templates\Payment\PayPoint\HostedPayment.ascx.designer.cs">
       <DependentUpon>HostedPayment.ascx</DependentUpon>
     </Compile>
     <Compile Include="Templates\Products\OneVariant.ascx.cs">
       <DependentUpon>OneVariant.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Templates\Products\OneVariant.ascx.designer.cs">
       <DependentUpon>OneVariant.ascx</DependentUpon>
@@ -4466,21 +4427,18 @@
     </Compile>
     <Compile Include="Modules\ProductSpecificationFilter.ascx.cs">
       <DependentUpon>ProductSpecificationFilter.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\ProductSpecificationFilter.ascx.designer.cs">
       <DependentUpon>ProductSpecificationFilter.ascx</DependentUpon>
     </Compile>
     <Compile Include="Modules\PrivateMessageSendButton.ascx.cs">
       <DependentUpon>PrivateMessageSendButton.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\PrivateMessageSendButton.ascx.designer.cs">
       <DependentUpon>PrivateMessageSendButton.ascx</DependentUpon>
     </Compile>
     <Compile Include="Modules\PrivateMessagesView.ascx.cs">
       <DependentUpon>PrivateMessagesView.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\PrivateMessagesView.ascx.designer.cs">
       <DependentUpon>PrivateMessagesView.ascx</DependentUpon>
@@ -4494,28 +4452,24 @@
     </Compile>
     <Compile Include="Templates\Payment\Dibs\FlexWinPayment.ascx.cs">
       <DependentUpon>FlexWinPayment.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Templates\Payment\Dibs\FlexWinPayment.ascx.designer.cs">
       <DependentUpon>FlexWinPayment.ascx</DependentUpon>
     </Compile>
     <Compile Include="Templates\Payment\eWayUK\PaymentModule.ascx.cs">
       <DependentUpon>PaymentModule.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Templates\Payment\eWayUK\PaymentModule.ascx.designer.cs">
       <DependentUpon>PaymentModule.ascx</DependentUpon>
     </Compile>
     <Compile Include="Templates\Payment\PayJunction\PaymentModule.ascx.cs">
       <DependentUpon>PaymentModule.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Templates\Payment\PayJunction\PaymentModule.ascx.designer.cs">
       <DependentUpon>PaymentModule.ascx</DependentUpon>
     </Compile>
     <Compile Include="Templates\Payment\Svea\HostedPayment.ascx.cs">
       <DependentUpon>HostedPayment.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Templates\Payment\Svea\HostedPayment.ascx.designer.cs">
       <DependentUpon>HostedPayment.ascx</DependentUpon>
@@ -4536,7 +4490,6 @@
     </Compile>
     <Compile Include="Modules\PrivateMessagesSend.ascx.cs">
       <DependentUpon>PrivateMessagesSend.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\PrivateMessagesSend.ascx.designer.cs">
       <DependentUpon>PrivateMessagesSend.ascx</DependentUpon>
@@ -4550,14 +4503,12 @@
     </Compile>
     <Compile Include="Modules\PrivateMessagesSentItems.ascx.cs">
       <DependentUpon>PrivateMessagesSentItems.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\PrivateMessagesSentItems.ascx.designer.cs">
       <DependentUpon>PrivateMessagesSentItems.ascx</DependentUpon>
     </Compile>
     <Compile Include="Modules\PrivateMessagesInbox.ascx.cs">
       <DependentUpon>PrivateMessagesInbox.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\PrivateMessagesInbox.ascx.designer.cs">
       <DependentUpon>PrivateMessagesInbox.ascx</DependentUpon>
@@ -4585,70 +4536,60 @@
     </Compile>
     <Compile Include="Modules\BlogComment.ascx.cs">
       <DependentUpon>BlogComment.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\BlogComment.ascx.designer.cs">
       <DependentUpon>BlogComment.ascx</DependentUpon>
     </Compile>
     <Compile Include="Modules\OrderTotals.ascx.cs">
       <DependentUpon>OrderTotals.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\OrderTotals.ascx.designer.cs">
       <DependentUpon>OrderTotals.ascx</DependentUpon>
     </Compile>
     <Compile Include="Modules\ForumActiveDiscussions.ascx.cs">
       <DependentUpon>ForumActiveDiscussions.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\ForumActiveDiscussions.ascx.designer.cs">
       <DependentUpon>ForumActiveDiscussions.ascx</DependentUpon>
     </Compile>
     <Compile Include="Modules\ProductsAlsoPurchased.ascx.cs">
       <DependentUpon>ProductsAlsoPurchased.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\ProductsAlsoPurchased.ascx.designer.cs">
       <DependentUpon>ProductsAlsoPurchased.ascx</DependentUpon>
     </Compile>
     <Compile Include="Modules\MoveForumTopic.ascx.cs">
       <DependentUpon>MoveForumTopic.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\MoveForumTopic.ascx.designer.cs">
       <DependentUpon>MoveForumTopic.ascx</DependentUpon>
     </Compile>
     <Compile Include="Modules\ForumSelector.ascx.cs">
       <DependentUpon>ForumSelector.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\ForumSelector.ascx.designer.cs">
       <DependentUpon>ForumSelector.ascx</DependentUpon>
     </Compile>
     <Compile Include="Modules\NewsComment.ascx.cs">
       <DependentUpon>NewsComment.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\NewsComment.ascx.designer.cs">
       <DependentUpon>NewsComment.ascx</DependentUpon>
     </Compile>
     <Compile Include="Modules\ForumSearchBox.ascx.cs">
       <DependentUpon>ForumSearchBox.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\ForumSearchBox.ascx.designer.cs">
       <DependentUpon>ForumSearchBox.ascx</DependentUpon>
     </Compile>
     <Compile Include="Modules\ForumSearch.ascx.cs">
       <DependentUpon>ForumSearch.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\ForumSearch.ascx.designer.cs">
       <DependentUpon>ForumSearch.ascx</DependentUpon>
     </Compile>
     <Compile Include="Modules\ProfileInfo.ascx.cs">
       <DependentUpon>ProfileInfo.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\ProfileInfo.ascx.designer.cs">
       <DependentUpon>ProfileInfo.ascx</DependentUpon>
@@ -4662,7 +4603,6 @@
     </Compile>
     <Compile Include="Modules\CustomerAvatar.ascx.cs">
       <DependentUpon>CustomerAvatar.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\CustomerAvatar.ascx.designer.cs">
       <DependentUpon>CustomerAvatar.ascx</DependentUpon>
@@ -4763,35 +4703,30 @@
     </Compile>
     <Compile Include="Modules\TopicPage.ascx.cs">
       <DependentUpon>TopicPage.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\TopicPage.ascx.designer.cs">
       <DependentUpon>TopicPage.ascx</DependentUpon>
     </Compile>
     <Compile Include="Modules\ForumBreadcrumb.ascx.cs">
       <DependentUpon>ForumBreadcrumb.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\ForumBreadcrumb.ascx.designer.cs">
       <DependentUpon>ForumBreadcrumb.ascx</DependentUpon>
     </Compile>
     <Compile Include="Modules\ForumPostEdit.ascx.cs">
       <DependentUpon>ForumPostEdit.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\ForumPostEdit.ascx.designer.cs">
       <DependentUpon>ForumPostEdit.ascx</DependentUpon>
     </Compile>
     <Compile Include="Modules\ForumTopic.ascx.cs">
       <DependentUpon>ForumTopic.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\ForumTopic.ascx.designer.cs">
       <DependentUpon>ForumTopic.ascx</DependentUpon>
     </Compile>
     <Compile Include="Modules\ForumPost.ascx.cs">
       <DependentUpon>ForumPost.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\ForumPost.ascx.designer.cs">
       <DependentUpon>ForumPost.ascx</DependentUpon>
@@ -4805,56 +4740,48 @@
     </Compile>
     <Compile Include="Modules\ForumGroups.ascx.cs">
       <DependentUpon>ForumGroups.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\ForumGroups.ascx.designer.cs">
       <DependentUpon>ForumGroups.ascx</DependentUpon>
     </Compile>
     <Compile Include="Modules\ForumLastPost.ascx.cs">
       <DependentUpon>ForumLastPost.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\ForumLastPost.ascx.designer.cs">
       <DependentUpon>ForumLastPost.ascx</DependentUpon>
     </Compile>
     <Compile Include="Modules\ForumGroup.ascx.cs">
       <DependentUpon>ForumGroup.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\ForumGroup.ascx.designer.cs">
       <DependentUpon>ForumGroup.ascx</DependentUpon>
     </Compile>
     <Compile Include="Modules\OrderProgress.ascx.cs">
       <DependentUpon>OrderProgress.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\OrderProgress.ascx.designer.cs">
       <DependentUpon>OrderProgress.ascx</DependentUpon>
     </Compile>
     <Compile Include="Modules\CustomerAccountActivation.ascx.cs">
       <DependentUpon>CustomerAccountActivation.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\CustomerAccountActivation.ascx.designer.cs">
       <DependentUpon>CustomerAccountActivation.ascx</DependentUpon>
     </Compile>
     <Compile Include="Modules\Topic.ascx.cs">
       <DependentUpon>Topic.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\Topic.ascx.designer.cs">
       <DependentUpon>Topic.ascx</DependentUpon>
     </Compile>
     <Compile Include="Modules\TierPrices.ascx.cs">
       <DependentUpon>TierPrices.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\TierPrices.ascx.designer.cs">
       <DependentUpon>TierPrices.ascx</DependentUpon>
     </Compile>
     <Compile Include="Modules\TaxDisplayTypeSelector.ascx.cs">
       <DependentUpon>TaxDisplayTypeSelector.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\TaxDisplayTypeSelector.ascx.designer.cs">
       <DependentUpon>TaxDisplayTypeSelector.ascx</DependentUpon>
@@ -5130,263 +5057,198 @@
     </Compile>
     <Compile Include="Modules\AddressDisplay.ascx.cs">
       <DependentUpon>AddressDisplay.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\AddressEdit.ascx.cs">
       <DependentUpon>AddressEdit.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\Blog.ascx.cs">
       <DependentUpon>Blog.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\BlogPost.ascx.cs">
       <DependentUpon>BlogPost.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\Captcha.ascx.cs">
       <DependentUpon>Captcha.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\CategoryNavigation.ascx.cs">
       <DependentUpon>CategoryNavigation.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\CheckoutBillingAddress.ascx.cs">
       <DependentUpon>CheckoutBillingAddress.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\CheckoutCompleted.ascx.cs">
       <DependentUpon>CheckoutCompleted.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\CheckoutConfirm.ascx.cs">
       <DependentUpon>CheckoutConfirm.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\CheckoutPaymentInfo.ascx.cs">
       <DependentUpon>CheckoutPaymentInfo.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\CheckoutPaymentMethod.ascx.cs">
       <DependentUpon>CheckoutPaymentMethod.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\CheckoutShippingAddress.ascx.cs">
       <DependentUpon>CheckoutShippingAddress.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\CheckoutShippingMethod.ascx.cs">
       <DependentUpon>CheckoutShippingMethod.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\CompareProducts.ascx.cs">
       <DependentUpon>CompareProducts.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\ContactUs.ascx.cs">
       <DependentUpon>ContactUs.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\CurrencySelector.ascx.cs">
       <DependentUpon>CurrencySelector.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\CustomerAddresses.ascx.cs">
       <DependentUpon>CustomerAddresses.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\CustomerChangePassword.ascx.cs">
       <DependentUpon>CustomerChangePassword.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\CustomerInfo.ascx.cs">
       <DependentUpon>CustomerInfo.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\CustomerLogin.ascx.cs">
       <DependentUpon>CustomerLogin.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\CustomerOrders.ascx.cs">
       <DependentUpon>CustomerOrders.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\CustomerPasswordRecovery.ascx.cs">
       <DependentUpon>CustomerPasswordRecovery.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\CustomerRegister.ascx.cs">
       <DependentUpon>CustomerRegister.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\EmailTextBox.ascx.cs">
       <DependentUpon>EmailTextBox.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\Footer.ascx.cs">
       <DependentUpon>Footer.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\GoogleCheckoutButton.ascx.cs">
       <DependentUpon>GoogleCheckoutButton.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\Header.ascx.cs">
       <DependentUpon>Header.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\HeaderMenu.ascx.cs">
       <DependentUpon>HeaderMenu.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\HomePageCategories.ascx.cs">
       <DependentUpon>HomePageCategories.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\HomePageProducts.ascx.cs">
       <DependentUpon>HomePageProducts.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\InfoBlock.ascx.cs">
       <DependentUpon>InfoBlock.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\LanguageSelector.ascx.cs">
       <DependentUpon>LanguageSelector.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\ManufacturerNavigation.ascx.cs">
       <DependentUpon>ManufacturerNavigation.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\NewsItem.ascx.cs">
       <DependentUpon>NewsItem.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\HomePageNews.ascx.cs">
       <DependentUpon>HomePageNews.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\NumericTextBox.ascx.cs">
       <DependentUpon>NumericTextBox.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\OrderDetails.ascx.cs">
       <DependentUpon>OrderDetails.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\OrderSummary.ascx.cs">
       <DependentUpon>OrderSummary.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\PaypalExpressButton.ascx.cs">
       <DependentUpon>PaypalExpressButton.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\Poll.ascx.cs">
       <DependentUpon>Poll.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\PriceRangeFilter.ascx.cs">
       <DependentUpon>PriceRangeFilter.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\ProductAddToCompareList.ascx.cs">
       <DependentUpon>ProductAddToCompareList.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\ProductAttributes.ascx.cs">
       <DependentUpon>ProductAttributes.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\ProductBox1.ascx.cs">
       <DependentUpon>ProductBox1.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\ProductBox2.ascx.cs">
       <DependentUpon>ProductBox2.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\ProductCategoryBreadcrumb.ascx.cs">
       <DependentUpon>ProductCategoryBreadcrumb.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\ProductEmailAFriend.ascx.cs">
       <DependentUpon>ProductEmailAFriend.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\ProductEmailAFriendButton.ascx.cs">
       <DependentUpon>ProductEmailAFriendButton.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\ProductInfo.ascx.cs">
       <DependentUpon>ProductInfo.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\ProductPrice1.ascx.cs">
       <DependentUpon>ProductPrice1.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\ProductRating.ascx.cs">
       <DependentUpon>ProductRating.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\ProductReviewHelpfulness.ascx.cs">
       <DependentUpon>ProductReviewHelpfulness.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\ProductReviews.ascx.cs">
       <DependentUpon>ProductReviews.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\ProductSpecifications.ascx.cs">
       <DependentUpon>ProductSpecifications.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\ProductVariantsInGrid.ascx.cs">
       <DependentUpon>ProductVariantsInGrid.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\ProductWriteReview.ascx.cs">
       <DependentUpon>ProductWriteReview.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\RecentlyAddedProducts.ascx.cs">
       <DependentUpon>RecentlyAddedProducts.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\RecentlyViewedProducts.ascx.cs">
       <DependentUpon>RecentlyViewedProducts.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\RecentlyViewedProductsBox.ascx.cs">
       <DependentUpon>RecentlyViewedProductsBox.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\RelatedProducts.ascx.cs">
       <DependentUpon>RelatedProducts.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\Search.ascx.cs">
       <DependentUpon>Search.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\SearchBox.ascx.cs">
       <DependentUpon>SearchBox.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\SimpleTextBox.ascx.cs">
       <DependentUpon>SimpleTextBox.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\HomePagePoll.ascx.cs">
       <DependentUpon>HomePagePoll.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\Wishlist.ascx.cs">
       <DependentUpon>Wishlist.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="MoneybookersReturn.aspx.cs">
       <DependentUpon>MoneybookersReturn.aspx</DependentUpon>
@@ -5529,126 +5391,108 @@
     </Compile>
     <Compile Include="Templates\Categories\ProductsInGrid.ascx.cs">
       <DependentUpon>ProductsInGrid.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Templates\Categories\ProductsInGrid.ascx.designer.cs">
       <DependentUpon>ProductsInGrid.ascx</DependentUpon>
     </Compile>
     <Compile Include="Templates\Categories\ProductsInLines1.ascx.cs">
       <DependentUpon>ProductsInLines1.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Templates\Categories\ProductsInLines1.ascx.designer.cs">
       <DependentUpon>ProductsInLines1.ascx</DependentUpon>
     </Compile>
     <Compile Include="Templates\Categories\ProductsInLines2.ascx.cs">
       <DependentUpon>ProductsInLines2.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Templates\Categories\ProductsInLines2.ascx.designer.cs">
       <DependentUpon>ProductsInLines2.ascx</DependentUpon>
     </Compile>
     <Compile Include="Templates\Manufacturers\ProductsInGrid.ascx.cs">
       <DependentUpon>ProductsInGrid.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Templates\Manufacturers\ProductsInGrid.ascx.designer.cs">
       <DependentUpon>ProductsInGrid.ascx</DependentUpon>
     </Compile>
     <Compile Include="Templates\Payment\AuthorizeNET\PaymentModule.ascx.cs">
       <DependentUpon>PaymentModule.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Templates\Payment\AuthorizeNET\PaymentModule.ascx.designer.cs">
       <DependentUpon>PaymentModule.ascx</DependentUpon>
     </Compile>
     <Compile Include="Templates\Payment\CashOnDelivery\PaymentModule.ascx.cs">
       <DependentUpon>PaymentModule.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Templates\Payment\CashOnDelivery\PaymentModule.ascx.designer.cs">
       <DependentUpon>PaymentModule.ascx</DependentUpon>
     </Compile>
     <Compile Include="Templates\Payment\CDGcommerce\PaymentModule.ascx.cs">
       <DependentUpon>PaymentModule.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Templates\Payment\CDGcommerce\PaymentModule.ascx.designer.cs">
       <DependentUpon>PaymentModule.ascx</DependentUpon>
     </Compile>
     <Compile Include="Templates\Payment\Check\PaymentModule.ascx.cs">
       <DependentUpon>PaymentModule.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Templates\Payment\Check\PaymentModule.ascx.designer.cs">
       <DependentUpon>PaymentModule.ascx</DependentUpon>
     </Compile>
     <Compile Include="Templates\Payment\eWay\PaymentModule.ascx.cs">
       <DependentUpon>PaymentModule.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Templates\Payment\eWay\PaymentModule.ascx.designer.cs">
       <DependentUpon>PaymentModule.ascx</DependentUpon>
     </Compile>
     <Compile Include="Templates\Payment\Manual\PaymentModule.ascx.cs">
       <DependentUpon>PaymentModule.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Templates\Payment\Manual\PaymentModule.ascx.designer.cs">
       <DependentUpon>PaymentModule.ascx</DependentUpon>
     </Compile>
     <Compile Include="Templates\Payment\Moneybookers\PaymentModule.ascx.cs">
       <DependentUpon>PaymentModule.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Templates\Payment\Moneybookers\PaymentModule.ascx.designer.cs">
       <DependentUpon>PaymentModule.ascx</DependentUpon>
     </Compile>
     <Compile Include="Templates\Payment\PayFlowPro\PaymentModule.ascx.cs">
       <DependentUpon>PaymentModule.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Templates\Payment\PayFlowPro\PaymentModule.ascx.designer.cs">
       <DependentUpon>PaymentModule.ascx</DependentUpon>
     </Compile>
     <Compile Include="Templates\Payment\PayPalDirect\PaymentModule.ascx.cs">
       <DependentUpon>PaymentModule.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Templates\Payment\PayPalDirect\PaymentModule.ascx.designer.cs">
       <DependentUpon>PaymentModule.ascx</DependentUpon>
     </Compile>
     <Compile Include="Templates\Payment\PayPalStandard\PaymentModule.ascx.cs">
       <DependentUpon>PaymentModule.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Templates\Payment\PayPalStandard\PaymentModule.ascx.designer.cs">
       <DependentUpon>PaymentModule.ascx</DependentUpon>
     </Compile>
     <Compile Include="Templates\Payment\PSIGate\PaymentModule.ascx.cs">
       <DependentUpon>PaymentModule.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Templates\Payment\PSIGate\PaymentModule.ascx.designer.cs">
       <DependentUpon>PaymentModule.ascx</DependentUpon>
     </Compile>
     <Compile Include="Templates\Payment\PurchaseOrder\PaymentModule.ascx.cs">
       <DependentUpon>PaymentModule.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Templates\Payment\PurchaseOrder\PaymentModule.ascx.designer.cs">
       <DependentUpon>PaymentModule.ascx</DependentUpon>
     </Compile>
     <Compile Include="Templates\Payment\TwoCheckout\PaymentModule.ascx.cs">
       <DependentUpon>PaymentModule.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Templates\Payment\TwoCheckout\PaymentModule.ascx.designer.cs">
       <DependentUpon>PaymentModule.ascx</DependentUpon>
     </Compile>
     <Compile Include="Templates\Payment\Worldpay\PaymentModule.ascx.cs">
       <DependentUpon>PaymentModule.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Templates\Payment\Worldpay\PaymentModule.ascx.designer.cs">
       <DependentUpon>PaymentModule.ascx</DependentUpon>

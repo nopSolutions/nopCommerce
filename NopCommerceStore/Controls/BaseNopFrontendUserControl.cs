@@ -15,8 +15,8 @@
 using System;
 using System.Configuration;
 using System.Data;
-using System.IO;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Security;
 using System.Web.UI;
@@ -25,20 +25,29 @@ using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using System.Xml.Linq;
 using NopSolutions.NopCommerce.BusinessLogic;
-using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
-using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 using NopSolutions.NopCommerce.BusinessLogic.Directory;
 using NopSolutions.NopCommerce.BusinessLogic.Localization;
-using NopSolutions.NopCommerce.BusinessLogic.Promo.Affiliates;
-using NopSolutions.NopCommerce.BusinessLogic.SEO;
 using NopSolutions.NopCommerce.Common.Utils;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web
 {
-    public partial class BaseNopNestedMasterPage : MasterPage
+    public partial class BaseNopFrontendUserControl: BaseNopUserControl
     {
-        public BaseNopNestedMasterPage() : base()
+        protected void DisplayAlertMessage(string message)
         {
+            if (String.IsNullOrEmpty(message))
+                return;
+
+            this.BindJQuery();
+            StringBuilder alertJsStart = new StringBuilder();
+            alertJsStart.AppendLine("<script type=\"text/javascript\">");
+            alertJsStart.AppendLine("$(document).ready(function() {");
+            alertJsStart.AppendLine(string.Format("alert('{0}');", message.Trim()));
+            alertJsStart.AppendLine("});");
+            alertJsStart.AppendLine("</script>");
+            string js = alertJsStart.ToString();
+            Page.ClientScript.RegisterClientScriptBlock(GetType(), "alertScriptKey", js);
         }
     }
 }

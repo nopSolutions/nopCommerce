@@ -43,7 +43,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
-    public partial class ReturnItemsControl : BaseNopUserControl
+    public partial class ReturnItemsControl: BaseNopFrontendUserControl
     {
         #region Fields
         private Order order = null;

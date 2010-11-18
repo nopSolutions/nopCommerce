@@ -33,7 +33,7 @@ using NopSolutions.NopCommerce.BusinessLogic.CustomerManagement;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
-    public partial class ProductRatingControl : BaseNopUserControl
+    public partial class ProductRatingControl: BaseNopFrontendUserControl
     {
         protected void Page_Load(object sender, EventArgs e)
         {

@@ -34,7 +34,7 @@ using NopSolutions.NopCommerce.Common;
 using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 namespace NopSolutions.NopCommerce.Web
 {
-    public partial class ManufacturerPage : BaseNopPage
+    public partial class ManufacturerPage : BaseNopFrontendPage
     {
         Manufacturer manufacturer = null;
 

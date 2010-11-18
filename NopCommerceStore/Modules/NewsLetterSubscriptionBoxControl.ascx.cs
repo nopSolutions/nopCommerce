@@ -11,7 +11,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
-    public partial class NewsLetterSubscriptionBoxControl : BaseNopUserControl
+    public partial class NewsLetterSubscriptionBoxControl: BaseNopFrontendUserControl
     {
         protected override void OnInit(EventArgs e)
         {

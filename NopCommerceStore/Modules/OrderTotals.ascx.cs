@@ -45,7 +45,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
-    public partial class OrderTotalsControl : BaseNopUserControl
+    public partial class OrderTotalsControl: BaseNopFrontendUserControl
     {
         public void BindData(bool isShoppingCart)
         {

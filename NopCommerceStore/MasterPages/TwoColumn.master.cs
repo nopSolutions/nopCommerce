@@ -8,7 +8,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Configuration.Settings;
 
 namespace NopSolutions.NopCommerce.Web.MasterPages
 {
-    public partial class TwoColumn : BaseNopNestedMasterPage
+    public partial class TwoColumn : BaseNopFrontendMasterPage
     {
     }
 }

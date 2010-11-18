@@ -37,7 +37,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
-    public partial class PrivateMessageSendButtonControl : BaseNopUserControl
+    public partial class PrivateMessageSendButtonControl: BaseNopFrontendUserControl
     {
         protected override void OnPreRender(EventArgs e)
         {

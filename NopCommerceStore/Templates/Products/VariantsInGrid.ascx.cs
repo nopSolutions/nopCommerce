@@ -33,7 +33,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Templates.Products
 {
-    public partial class VariantsInGrid : BaseNopUserControl
+    public partial class VariantsInGrid: BaseNopFrontendUserControl
     {
         protected void Page_Load(object sender, EventArgs e)
         {

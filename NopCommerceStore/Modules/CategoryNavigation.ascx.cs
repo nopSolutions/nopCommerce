@@ -34,7 +34,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
-    public partial class CategoryNavigation : BaseNopUserControl
+    public partial class CategoryNavigation: BaseNopFrontendUserControl
     {
         #region Classes
         public class NopCommerceLi : WebControl, INamingContainer

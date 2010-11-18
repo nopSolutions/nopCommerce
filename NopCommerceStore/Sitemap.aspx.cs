@@ -18,7 +18,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web
 {
-    public partial class Sitemap : BaseNopPage
+    public partial class Sitemap : BaseNopFrontendPage
     {
         protected override void OnPreRender(EventArgs e)
         {

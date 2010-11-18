@@ -32,7 +32,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
-    public partial class StoreThemeSelectorControl : BaseNopUserControl
+    public partial class StoreThemeSelectorControl: BaseNopFrontendUserControl
     {
         private void BindThemes()
         {

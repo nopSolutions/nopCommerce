@@ -27,7 +27,7 @@ using System.Xml.Linq;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
-    public partial class SearchBoxControl : BaseNopUserControl
+    public partial class SearchBoxControl: BaseNopFrontendUserControl
     {
         protected void btnSearch_Click(object sender, EventArgs e)
         {

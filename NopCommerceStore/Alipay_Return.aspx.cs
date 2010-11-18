@@ -17,7 +17,7 @@ using NopSolutions.NopCommerce.Payment.Methods.Alipay;
 
 namespace NopSolutions.NopCommerce.Web
 {
-    public partial class Alipay_ReturnPage : BaseNopPage
+    public partial class Alipay_ReturnPage : BaseNopFrontendPage
     {
         protected void Page_Load(object sender, EventArgs e)
         {

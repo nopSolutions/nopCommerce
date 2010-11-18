@@ -38,7 +38,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
-    public partial class PrivateMessagesSentItemsControl : BaseNopUserControl
+    public partial class PrivateMessagesSentItemsControl: BaseNopFrontendUserControl
     {
         protected void Page_Load(object sender, EventArgs e)
         {

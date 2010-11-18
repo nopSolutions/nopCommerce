@@ -33,7 +33,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
-    public partial class TaxDisplayTypeSelectorControl : BaseNopUserControl
+    public partial class TaxDisplayTypeSelectorControl: BaseNopFrontendUserControl
     {
         private void BindTaxDisplayTypes()
         {

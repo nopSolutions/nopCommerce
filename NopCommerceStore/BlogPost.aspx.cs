@@ -31,7 +31,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
  
 namespace NopSolutions.NopCommerce.Web
 {
-    public partial class BlogPostPage : BaseNopPage
+    public partial class BlogPostPage : BaseNopFrontendPage
     {
         protected void Page_Load(object sender, EventArgs e)
         {

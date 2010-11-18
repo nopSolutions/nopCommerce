@@ -19,7 +19,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web
 {
-    public partial class SagePaySuccessPage : BaseNopPage
+    public partial class SagePaySuccessPage : BaseNopFrontendPage
     {
         protected void Page_Load(object sender, EventArgs e)
         {

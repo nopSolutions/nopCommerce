@@ -30,7 +30,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
  
 namespace NopSolutions.NopCommerce.Web
 {
-    public partial class LogoutPage : BaseNopPage
+    public partial class LogoutPage : BaseNopFrontendPage
     {
         protected void Page_Load(object sender, EventArgs e)
         {

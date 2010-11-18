@@ -7,7 +7,7 @@ using System.Web.UI.WebControls;
 
 namespace NopSolutions.NopCommerce.Web
 {
-    public partial class NewsLetterSubscriptionActivationPage : BaseNopPage
+    public partial class NewsLetterSubscriptionActivationPage : BaseNopFrontendPage
     {
         public override bool AllowGuestNavigation
         {

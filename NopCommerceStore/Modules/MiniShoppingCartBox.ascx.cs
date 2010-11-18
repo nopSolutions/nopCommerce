@@ -17,7 +17,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
-    public partial class MiniShoppingCartBoxControl : BaseNopUserControl
+    public partial class MiniShoppingCartBoxControl: BaseNopFrontendUserControl
     {
         protected void lvCart_ItemDataBound(object sender, ListViewItemEventArgs e)
         {

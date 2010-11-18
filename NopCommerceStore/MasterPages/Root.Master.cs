@@ -9,7 +9,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.MasterPages
 {
-    public partial class root : BaseNopMasterPage
+    public partial class root : BaseNopFrontendMasterPage
     {
         protected void RenderAnalyticsScript()
         {

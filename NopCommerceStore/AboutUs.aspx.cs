@@ -33,7 +33,7 @@ using NopSolutions.NopCommerce.Common.Utils;
 
 namespace NopSolutions.NopCommerce.Web
 {
-    public partial class AboutUsPage : BaseNopPage
+    public partial class AboutUsPage : BaseNopFrontendPage
     {
         protected void Page_Load(object sender, EventArgs e)
         {

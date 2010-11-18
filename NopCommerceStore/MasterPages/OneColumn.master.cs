@@ -7,7 +7,7 @@ using System.Web.UI.WebControls;
 
 namespace NopSolutions.NopCommerce.Web.MasterPages
 {
-    public partial class OneColumn : BaseNopNestedMasterPage
+    public partial class OneColumn : BaseNopFrontendMasterPage
     {
     }
 }

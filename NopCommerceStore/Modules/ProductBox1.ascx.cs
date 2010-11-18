@@ -40,7 +40,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
-    public partial class ProductBox1Control : BaseNopUserControl
+    public partial class ProductBox1Control: BaseNopFrontendUserControl
     {
         Product product = null;
 

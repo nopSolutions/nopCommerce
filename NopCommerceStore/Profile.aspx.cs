@@ -38,7 +38,7 @@ namespace NopSolutions.NopCommerce.Web
     /// <summary>
     /// ProfilePage page handler.
     /// </summary>
-    public partial class ProfilePage : BaseNopPage
+    public partial class ProfilePage : BaseNopFrontendPage
     {
         protected void Page_Load(object sender, EventArgs e)
         {

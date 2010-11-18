@@ -8,7 +8,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Payment;
 
 namespace NopSolutions.NopCommerce.Web.Templates.Payment.SecurePay
 {
-    public partial class XmlPayment : BaseNopUserControl, IPaymentMethodModule
+    public partial class XmlPayment: BaseNopFrontendUserControl, IPaymentMethodModule
     {
         protected override void OnInit(EventArgs e)
         {

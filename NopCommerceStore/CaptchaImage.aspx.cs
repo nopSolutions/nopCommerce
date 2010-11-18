@@ -19,7 +19,7 @@ using NopSolutions.NopCommerce.Controls;
 
 namespace NopSolutions.NopCommerce.Web
 {
-    public partial class CaptchaImagePage : BaseNopPage
+    public partial class CaptchaImagePage : BaseNopFrontendPage
     {
         protected void Page_Load(object sender, EventArgs e)
         {

@@ -26,7 +26,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Payment;
 
 namespace NopSolutions.NopCommerce.Web.Templates.Payment.eWayUK
 {
-    public partial class PaymentModule : BaseNopUserControl, IPaymentMethodModule
+    public partial class PaymentModule: BaseNopFrontendUserControl, IPaymentMethodModule
     {
         public bool ValidateForm()
         {

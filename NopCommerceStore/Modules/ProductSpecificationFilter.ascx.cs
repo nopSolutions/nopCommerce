@@ -43,7 +43,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
-    public partial class ProductSpecificationFilterControl : BaseNopUserControl
+    public partial class ProductSpecificationFilterControl: BaseNopFrontendUserControl
     {
         #region Utilities
         protected void BindData()

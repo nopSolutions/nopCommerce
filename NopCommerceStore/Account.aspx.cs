@@ -38,7 +38,7 @@ namespace NopSolutions.NopCommerce.Web
     /// <summary>
     /// AccountPage page handler.
     /// </summary>
-    public partial class AccountPage : BaseNopPage
+    public partial class AccountPage : BaseNopFrontendPage
     {
         protected void Page_Load(object sender, EventArgs e)
         {

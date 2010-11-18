@@ -34,7 +34,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
-    public partial class PopularTagsControl : BaseNopUserControl
+    public partial class PopularTagsControl: BaseNopFrontendUserControl
     {
         double _mean;
         double _stdDev;

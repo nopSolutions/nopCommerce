@@ -40,7 +40,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
-    public partial class CustomerDownloadableProductsControl : BaseNopUserControl
+    public partial class CustomerDownloadableProductsControl: BaseNopFrontendUserControl
     {
         #region Utilities
 

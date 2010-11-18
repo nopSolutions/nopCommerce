@@ -33,7 +33,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
-    public partial class ProductShareButtonControl : BaseNopUserControl
+    public partial class ProductShareButtonControl: BaseNopFrontendUserControl
     {
         protected override void OnPreRender(EventArgs e)
         {

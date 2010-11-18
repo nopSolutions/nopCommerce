@@ -20,7 +20,7 @@ using NopSolutions.NopCommerce.Common.Utils;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
-    public partial class CaptchaControl : BaseNopUserControl
+    public partial class CaptchaControl: BaseNopFrontendUserControl
     {
         protected void Page_Load(object sender, EventArgs e)
         {

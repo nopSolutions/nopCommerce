@@ -15,7 +15,7 @@ using NopSolutions.NopCommerce.Payment.Methods.PayPoint;
 
 namespace NopSolutions.NopCommerce.Web
 {
-    public partial class QuickPayCancelPage : BaseNopPage
+    public partial class QuickPayCancelPage : BaseNopFrontendPage
     {
         protected void Page_Load(object sender, EventArgs e)
         {

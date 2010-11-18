@@ -19,7 +19,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web
 {
-    public partial class QuickPayReturnPage : BaseNopPage
+    public partial class QuickPayReturnPage : BaseNopFrontendPage
     {
         protected void Page_Load(object sender, EventArgs e)
         {

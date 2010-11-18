@@ -49,7 +49,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
-    public partial class GoogleCheckoutButton : BaseNopUserControl
+    public partial class GoogleCheckoutButton: BaseNopFrontendUserControl
     {
         public void BindData()
         {

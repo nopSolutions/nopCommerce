@@ -28,7 +28,7 @@ using NopSolutions.NopCommerce.BusinessLogic;
 using NopSolutions.NopCommerce.Common.Utils;
 namespace NopSolutions.NopCommerce.Web
 {
-    public partial class TopicPage : BaseNopPage
+    public partial class TopicPage : BaseNopFrontendPage
     {
         protected void Page_Load(object sender, EventArgs e)
         {

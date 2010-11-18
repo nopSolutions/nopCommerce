@@ -36,24 +36,8 @@ using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web
 {
-    public partial class BaseNopAdministrationUserControl : UserControl
+    public partial class BaseNopAdministrationUserControl: BaseNopUserControl
     {
-        public BaseNopAdministrationUserControl()
-        {
-
-        }
-
-        protected virtual void BindJQuery()
-        {
-            CommonHelper.BindJQuery(this.Page);
-        }
-
-        protected virtual void BindJQueryIdTabs()
-        {
-            string jqueryTabs = CommonHelper.GetStoreLocation() + "Scripts/jquery.idTabs.min.js";
-            Page.ClientScript.RegisterClientScriptInclude(jqueryTabs, jqueryTabs);
-        }
-
         protected void SelectTab(TabContainer tabContainer, string tabId)
         {
             if (tabContainer == null)
@@ -134,12 +118,6 @@ namespace NopSolutions.NopCommerce.Web
                 nopAdministrationMasterPage.ShowError(message, completeMessage);
         }
 
-        protected string GetLocaleResourceString(string resourceName)
-        {
-            Language language = NopContext.Current.WorkingLanguage;
-            return this.LocalizationManager.GetLocaleResourceString(resourceName, language.LanguageId);
-        }
-
         protected virtual List<Language> GetLocalizableLanguagesSupported()
         {
             return IoC.Resolve<ILanguageService>().GetAllLanguages(true);
@@ -151,19 +129,6 @@ namespace NopSolutions.NopCommerce.Web
             {
                 var languages = GetLocalizableLanguagesSupported();
                 return languages.Count > 1;
-            }
-        }
-
-        private ILocalizationManager _localizationManager;
-        public ILocalizationManager LocalizationManager
-        {
-            get
-            {
-                if (_localizationManager == null)
-                {
-                    _localizationManager = IoC.Resolve<ILocalizationManager>();
-                }
-                return _localizationManager;
             }
         }
     }

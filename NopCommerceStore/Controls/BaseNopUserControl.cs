@@ -34,14 +34,15 @@ namespace NopSolutions.NopCommerce.Web
 {
     public partial class BaseNopUserControl : UserControl
     {
-        public BaseNopUserControl()
-        {
-
-        }
-
         protected virtual void BindJQuery()
         {
             CommonHelper.BindJQuery(this.Page);
+        }
+
+        protected virtual void BindJQueryIdTabs()
+        {
+            string jqueryTabs = CommonHelper.GetStoreLocation() + "Scripts/jquery.idTabs.min.js";
+            Page.ClientScript.RegisterClientScriptInclude(jqueryTabs, jqueryTabs);
         }
 
         protected void DisplayAlertMessage(string message)
@@ -60,17 +61,17 @@ namespace NopSolutions.NopCommerce.Web
             Page.ClientScript.RegisterClientScriptBlock(GetType(), "alertScriptKey", js);
         }
 
-        protected string GetLocaleResourceString(string ResourceName)
+        protected string GetLocaleResourceString(string resourceName)
         {
             Language language = NopContext.Current.WorkingLanguage;
-            return this.LocalizationManager.GetLocaleResourceString(ResourceName, language.LanguageId);
+            return this.LocalizationManager.GetLocaleResourceString(resourceName, language.LanguageId);
         }
 
-        protected string GetLocaleResourceString(string ResourceName, params object[] args)
+        protected string GetLocaleResourceString(string resourceName, params object[] args)
         {
             Language language = NopContext.Current.WorkingLanguage;
             return string.Format(
-                this.LocalizationManager.GetLocaleResourceString(ResourceName, language.LanguageId),
+                this.LocalizationManager.GetLocaleResourceString(resourceName, language.LanguageId),
                 args);
         }
 

@@ -15,7 +15,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web
 {
-    public partial class DibsFlexWinReturn : BaseNopPage
+    public partial class DibsFlexWinReturn : BaseNopFrontendPage
     {
         protected void Page_Load(object sender, EventArgs e)
         {

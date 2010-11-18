@@ -33,7 +33,7 @@ using NopSolutions.NopCommerce.Common.Utils;
 using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 namespace NopSolutions.NopCommerce.Web
 {
-    public partial class RecentlyViewedProductsPage : BaseNopPage
+    public partial class RecentlyViewedProductsPage : BaseNopFrontendPage
     {
         protected void Page_Load(object sender, EventArgs e)
         {

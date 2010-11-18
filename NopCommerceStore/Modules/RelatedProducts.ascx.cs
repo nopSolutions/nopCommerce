@@ -36,7 +36,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Modules 
 {
-    public partial class RelatedProductsControl : BaseNopUserControl
+    public partial class RelatedProductsControl: BaseNopFrontendUserControl
     {
         protected void Page_Load(object sender, EventArgs e)
         {

@@ -13,7 +13,7 @@ using NopSolutions.NopCommerce.Common.Xml;
 
 namespace NopSolutions.NopCommerce.Web
 {
-    public partial class SitemapSEOPage : BaseNopPage
+    public partial class SitemapSEOPage : BaseNopFrontendPage
     {
         protected void Page_Load(object sender, EventArgs e)
         {

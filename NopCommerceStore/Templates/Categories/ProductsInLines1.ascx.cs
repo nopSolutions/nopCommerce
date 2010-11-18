@@ -39,7 +39,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Templates.Categories
 {
-    public partial class ProductsInLines1 : BaseNopUserControl
+    public partial class ProductsInLines1: BaseNopFrontendUserControl
     {
         protected void Page_Load(object sender, EventArgs e)
         {

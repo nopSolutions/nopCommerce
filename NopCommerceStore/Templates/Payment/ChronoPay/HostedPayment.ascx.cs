@@ -8,7 +8,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Payment;
 
 namespace NopSolutions.NopCommerce.Web.Templates.Payment.ChronoPay
 {
-    public partial class HostedPayment : BaseNopUserControl, IPaymentMethodModule
+    public partial class HostedPayment: BaseNopFrontendUserControl, IPaymentMethodModule
     {
         #region Methods
         public PaymentInfo GetPaymentInfo()

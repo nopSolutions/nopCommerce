@@ -35,7 +35,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
  
 namespace NopSolutions.NopCommerce.Web
 {
-    public partial class CategoryPage : BaseNopPage
+    public partial class CategoryPage : BaseNopFrontendPage
     {
         Category category = null;
 

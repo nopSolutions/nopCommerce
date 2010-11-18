@@ -34,7 +34,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Templates.Manufacturers
 {
-    public partial class ProductsInGrid : BaseNopUserControl
+    public partial class ProductsInGrid: BaseNopFrontendUserControl
     {
         protected void Page_Load(object sender, EventArgs e)
         {

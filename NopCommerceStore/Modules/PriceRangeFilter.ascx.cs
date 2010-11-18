@@ -38,7 +38,7 @@ using NopSolutions.NopCommerce.Common.Utils;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
-    public partial class PriceRangeFilterControl : BaseNopUserControl
+    public partial class PriceRangeFilterControl: BaseNopFrontendUserControl
     {
         private const string PRICE_CSSCLASSNAME = "PriceRange";
 

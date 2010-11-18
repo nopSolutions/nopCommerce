@@ -31,7 +31,7 @@ using NopSolutions.NopCommerce.Common.Utils;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
-    public partial class CustomerAddressesControl : BaseNopUserControl
+    public partial class CustomerAddressesControl: BaseNopFrontendUserControl
     {
         protected void Page_Load(object sender, EventArgs e)
         {

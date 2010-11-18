@@ -13,7 +13,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web
 {
-    public partial class BeanstreamHostedPaymentReturn : BaseNopPage
+    public partial class BeanstreamHostedPaymentReturn : BaseNopFrontendPage
     {
         protected void Page_Load(object sender, EventArgs e)
         {

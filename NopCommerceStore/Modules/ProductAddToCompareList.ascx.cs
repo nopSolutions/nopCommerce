@@ -32,7 +32,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
-    public partial class ProductAddToCompareList : BaseNopUserControl
+    public partial class ProductAddToCompareList: BaseNopFrontendUserControl
     {
         protected void Page_Load(object sender, EventArgs e)
         {

@@ -33,7 +33,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
-    public partial class LanguageSelectorControl : BaseNopUserControl
+    public partial class LanguageSelectorControl: BaseNopFrontendUserControl
     {
         private void BindLanguages()
         {

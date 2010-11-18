@@ -40,7 +40,7 @@ using NopSolutions.NopCommerce.Controls;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
-    public partial class CustomerRegisterControl : BaseNopUserControl
+    public partial class CustomerRegisterControl: BaseNopFrontendUserControl
     {
         private void ApplyLocalization()
         {

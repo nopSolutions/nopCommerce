@@ -43,7 +43,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
-    public partial class EstimateShippingControl : BaseNopUserControl
+    public partial class EstimateShippingControl: BaseNopFrontendUserControl
     {
         protected ShoppingCart cart = null;
 

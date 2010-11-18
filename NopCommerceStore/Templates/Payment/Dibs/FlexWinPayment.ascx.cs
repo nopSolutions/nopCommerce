@@ -2,7 +2,7 @@
 
 namespace NopSolutions.NopCommerce.Web.Templates.Payment.Dibs
 {
-    public partial class FlexWinPayment : BaseNopUserControl, IPaymentMethodModule
+    public partial class FlexWinPayment: BaseNopFrontendUserControl, IPaymentMethodModule
     {
         #region Methods
         public PaymentInfo GetPaymentInfo()

@@ -8,7 +8,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Payment;
 
 namespace NopSolutions.NopCommerce.Web.Templates.Payment.USAePay
 {
-    public partial class EPaymentFormPayment : BaseNopUserControl, IPaymentMethodModule
+    public partial class EPaymentFormPayment: BaseNopFrontendUserControl, IPaymentMethodModule
     {
         #region Methods
         public PaymentInfo GetPaymentInfo()

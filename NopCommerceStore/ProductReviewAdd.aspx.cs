@@ -30,7 +30,7 @@ using NopSolutions.NopCommerce.Common.Utils;
 
 namespace NopSolutions.NopCommerce.Web
 {
-    public partial class ProductReviewAddPage : BaseNopPage
+    public partial class ProductReviewAddPage : BaseNopFrontendPage
     {
         protected void Page_Load(object sender, EventArgs e)
         {

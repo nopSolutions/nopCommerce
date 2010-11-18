@@ -18,7 +18,7 @@ using System.Web.UI.WebControls;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
-    public partial class DecimalTextBox : BaseNopUserControl
+    public partial class DecimalTextBox: BaseNopFrontendUserControl
     {
         protected override void OnInit(EventArgs e)
         {

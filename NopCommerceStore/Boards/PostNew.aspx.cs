@@ -32,7 +32,7 @@ using NopSolutions.NopCommerce.Common.Utils;
 
 namespace NopSolutions.NopCommerce.Web.Boards
 {
-    public partial class PostNewPage : BaseNopPage
+    public partial class PostNewPage : BaseNopFrontendPage
     {
         protected void Page_Load(object sender, EventArgs e)
         {

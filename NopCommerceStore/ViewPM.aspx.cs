@@ -35,7 +35,7 @@ namespace NopSolutions.NopCommerce.Web
     /// <summary>
     /// ViewPM page handler.
     /// </summary>
-    public partial class ViewPMPage : BaseNopPage
+    public partial class ViewPMPage : BaseNopFrontendPage
     {
         protected void Page_Load(object sender, EventArgs e)
         {

@@ -27,7 +27,7 @@ using System.Web.UI.WebControls.WebParts;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
-    public partial class HeaderMenuControl : BaseNopUserControl
+    public partial class HeaderMenuControl: BaseNopFrontendUserControl
     {
         protected void Page_Load(object sender, EventArgs e)
         {

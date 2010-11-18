@@ -3,7 +3,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Payment;
 
 namespace NopSolutions.NopCommerce.Web.Templates.Payment.Svea
 {
-    public partial class HostedPayment : BaseNopUserControl, IPaymentMethodModule
+    public partial class HostedPayment: BaseNopFrontendUserControl, IPaymentMethodModule
     {
         public PaymentInfo GetPaymentInfo()
         {

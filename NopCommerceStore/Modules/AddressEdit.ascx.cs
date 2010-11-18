@@ -33,7 +33,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
-    public partial class AddressEdit : BaseNopUserControl
+    public partial class AddressEdit : BaseNopFrontendUserControl
     {
         protected void Page_Load(object sender, EventArgs e)
         {

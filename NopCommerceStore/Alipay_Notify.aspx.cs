@@ -18,7 +18,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web
 {
-    public partial class Alipay_NotifyPage : BaseNopPage
+    public partial class Alipay_NotifyPage : BaseNopFrontendPage
     {
         protected void Page_Load(object sender, EventArgs e)
         {

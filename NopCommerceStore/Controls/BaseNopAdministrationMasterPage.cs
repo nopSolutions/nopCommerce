@@ -30,14 +30,8 @@ using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web
 {
-    public partial class BaseNopAdministrationMasterPage : MasterPage
+    public partial class BaseNopAdministrationMasterPage : BaseNopMasterPage
     {
-        public BaseNopAdministrationMasterPage() :
-            base()
-        {
-
-        }
-
         public virtual void ShowMessage(string message)
         {
 
@@ -46,25 +40,6 @@ namespace NopSolutions.NopCommerce.Web
         public virtual void ShowError(string message, string completeMessage)
         {
 
-        }
-
-        protected string GetLocaleResourceString(string resourceName)
-        {
-            Language language = NopContext.Current.WorkingLanguage;
-            return this.LocalizationManager.GetLocaleResourceString(resourceName, language.LanguageId);
-        }
-        
-        private ILocalizationManager _localizationManager;
-        public ILocalizationManager LocalizationManager
-        {
-            get
-            {
-                if (_localizationManager == null)
-                {
-                    _localizationManager = IoC.Resolve<ILocalizationManager>();
-                }
-                return _localizationManager;
-            }
         }
     }
 }

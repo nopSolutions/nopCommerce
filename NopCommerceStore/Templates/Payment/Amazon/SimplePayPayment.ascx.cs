@@ -8,7 +8,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Payment;
 
 namespace NopSolutions.NopCommerce.Web.Templates.Payment.Amazon
 {
-    public partial class SimplePayPayment : BaseNopUserControl, IPaymentMethodModule
+    public partial class SimplePayPayment: BaseNopFrontendUserControl, IPaymentMethodModule
     {
         #region Methods
         public PaymentInfo GetPaymentInfo()

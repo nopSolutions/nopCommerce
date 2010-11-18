@@ -38,7 +38,7 @@ using NopSolutions.NopCommerce.Payment.Methods.PayPal;
 using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 namespace NopSolutions.NopCommerce.Web
 {
-    public partial class CCAvenueReturnPage : BaseNopPage
+    public partial class CCAvenueReturnPage : BaseNopFrontendPage
     {
         protected void Page_Load(object sender, EventArgs e)
         {

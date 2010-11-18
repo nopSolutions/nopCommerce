@@ -39,70 +39,10 @@ namespace NopSolutions.NopCommerce.Web
 {
     public partial class BaseNopMasterPage : MasterPage
     {
-        public BaseNopMasterPage() :
-            base()
-        {
-
-        }
-
         protected override void OnInit(EventArgs e)
         {
             base.OnInit(e);
             SetFavIcon();
-        }
-
-        protected void Page_Load(object sender, EventArgs e)
-        {
-            if (!Page.IsPostBack)
-            {
-                CheckAffiliate();
-            }
-
-            string defaulSEOTitle = IoC.Resolve<ISettingManager>().GetSettingValue("SEO.DefaultTitle");
-            string defaulSEODescription = IoC.Resolve<ISettingManager>().GetSettingValue("SEO.DefaultMetaDescription");
-            string defaulSEOKeywords = IoC.Resolve<ISettingManager>().GetSettingValue("SEO.DefaultMetaKeywords");
-            SEOHelper.RenderTitle(this.Page, defaulSEOTitle, false, false);
-            SEOHelper.RenderMetaTag(this.Page, "description", defaulSEODescription, false);
-            SEOHelper.RenderMetaTag(this.Page, "keywords", defaulSEOKeywords, false);
-
-            if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Display.ShowNewsHeaderRssURL"))
-            {
-                SEOHelper.RenderHeaderRssLink(this.Page, defaulSEOTitle + ": News", SEOHelper.GetNewsRssUrl());
-            }
-            if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Display.ShowBlogHeaderRssURL"))
-            {
-                SEOHelper.RenderHeaderRssLink(this.Page, defaulSEOTitle + ": Blog", SEOHelper.GetBlogRssUrl());
-            }
-        }
-
-        protected override void OnPreRender(EventArgs e)
-        {
-            base.OnPreRender(e);
-
-            AddPoweredBy();
-        }
-
-        protected void CheckAffiliate()
-        {
-            Affiliate affiliate = IoC.Resolve<IAffiliateService>().GetAffiliateById(CommonHelper.QueryStringInt("AffiliateId"));
-            if (affiliate != null && affiliate.Active)
-            {
-                if (NopContext.Current.User == null)
-                {
-                    HttpCookie affiliateCookie = HttpContext.Current.Request.Cookies.Get("NopCommerce.AffiliateId");
-                    if (affiliateCookie == null)
-                        affiliateCookie = new HttpCookie("NopCommerce.AffiliateId");
-
-                    affiliateCookie.Value = affiliate.AffiliateId.ToString();
-                    affiliateCookie.Expires = DateTime.Now.AddDays(10.0);
-                    HttpContext.Current.Response.Cookies.Set(affiliateCookie);
-                }
-                else if (NopContext.Current.User.AffiliateId != affiliate.AffiliateId)
-                {
-                    NopContext.Current.User.AffiliateId = affiliate.AffiliateId;
-                    IoC.Resolve<ICustomerService>().UpdateCustomer(NopContext.Current.User);
-                }
-            }
         }
 
         protected void SetFavIcon()
@@ -123,17 +63,6 @@ namespace NopSolutions.NopCommerce.Web
                 Page.Header.Controls.Add(htmlLink1);
                 Page.Header.Controls.Add(htmlLink2);
             }
-        }
-        
-        protected void AddPoweredBy()
-        {
-            StringBuilder poweredBy = new StringBuilder();
-            poweredBy.Append(Environment.NewLine);
-            poweredBy.Append("<!--Powered by nopCommerce - http://www.nopCommerce.com-->");
-            poweredBy.Append(Environment.NewLine);
-            poweredBy.Append("<!--Copyright (c) 2008-2010-->");
-            poweredBy.Append(Environment.NewLine);
-            Page.Header.Controls.AddAt(Page.Header.Controls.Count, new LiteralControl(poweredBy.ToString()));
         }
 
         protected string GetLocaleResourceString(string ResourceName)

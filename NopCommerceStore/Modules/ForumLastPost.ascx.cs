@@ -36,7 +36,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
-    public partial class ForumLastPostControl : BaseNopUserControl
+    public partial class ForumLastPostControl: BaseNopFrontendUserControl
     {
         ForumPost forumPost = null;
 

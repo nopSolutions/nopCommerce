@@ -37,7 +37,7 @@ using NopSolutions.NopCommerce.Payment.Methods.TwoCheckout;
 using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 namespace NopSolutions.NopCommerce.Web
 {
-    public partial class TwoCheckoutINSHandlerPage : BaseNopPage
+    public partial class TwoCheckoutINSHandlerPage : BaseNopFrontendPage
     {
         protected void Page_Load(object sender, EventArgs e)
         {

@@ -34,7 +34,7 @@ using NopSolutions.NopCommerce.Common.Utils;
 
 namespace NopSolutions.NopCommerce.Web.Boards
 {
-    public partial class SearchPage : BaseNopPage
+    public partial class SearchPage : BaseNopFrontendPage
     {
         protected void Page_Load(object sender, EventArgs e)
         {

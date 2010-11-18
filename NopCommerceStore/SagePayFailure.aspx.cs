@@ -17,7 +17,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web
 {
-    public partial class SagePayFailurePage : BaseNopPage
+    public partial class SagePayFailurePage : BaseNopFrontendPage
     {
         protected void Page_Load(object sender, EventArgs e)
         {

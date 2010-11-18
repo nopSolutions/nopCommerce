@@ -33,7 +33,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Templates.Payment.Manual
 {
-    public partial class PaymentModule : BaseNopUserControl, IPaymentMethodModule
+    public partial class PaymentModule: BaseNopFrontendUserControl, IPaymentMethodModule
     {
         protected override void OnInit(EventArgs e)
         {

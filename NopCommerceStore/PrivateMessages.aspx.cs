@@ -36,7 +36,7 @@ namespace NopSolutions.NopCommerce.Web
     /// <summary>
     /// PrivateMessagesPage handler.
     /// </summary>
-    public partial class PrivateMessagesPage : BaseNopPage
+    public partial class PrivateMessagesPage : BaseNopFrontendPage
     {
         protected void Page_Load(object sender, EventArgs e)
         {

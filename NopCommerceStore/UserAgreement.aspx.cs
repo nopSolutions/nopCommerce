@@ -7,7 +7,7 @@ using System.Web.UI.WebControls;
 
 namespace NopSolutions.NopCommerce.Web
 {
-    public partial class UserAgreementPage : BaseNopPage
+    public partial class UserAgreementPage : BaseNopFrontendPage
     {
         protected void Page_Load(object sender, EventArgs e)
         {

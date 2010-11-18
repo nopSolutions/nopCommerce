@@ -39,7 +39,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web
 {
-    public partial class eWayMerchantReturnPage : BaseNopPage
+    public partial class eWayMerchantReturnPage : BaseNopFrontendPage
     {
         public string _AuthCode = string.Empty;
         public string _ResponseCode = string.Empty;

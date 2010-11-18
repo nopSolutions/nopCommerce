@@ -20,7 +20,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
  
 namespace NopSolutions.NopCommerce.Web.Modules
 {
-    public partial class ForumSelectorControl : BaseNopUserControl
+    public partial class ForumSelectorControl: BaseNopFrontendUserControl
     {
         private int selectedForumId;
 

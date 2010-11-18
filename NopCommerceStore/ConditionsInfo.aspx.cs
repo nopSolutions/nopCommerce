@@ -32,7 +32,7 @@ using NopSolutions.NopCommerce.Common.Utils;
 
 namespace NopSolutions.NopCommerce.Web
 {
-    public partial class ConditionsInfoPage : BaseNopPage
+    public partial class ConditionsInfoPage : BaseNopFrontendPage
     {
         protected void Page_Load(object sender, EventArgs e)
         {

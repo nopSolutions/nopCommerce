@@ -16,7 +16,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web
 {
-    public partial class IdealNotify : BaseNopPage
+    public partial class IdealNotify : BaseNopFrontendPage
     {
         protected void Page_Load(object sender, EventArgs e)
         {

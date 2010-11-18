@@ -30,7 +30,7 @@ using NopSolutions.NopCommerce.Common.Utils;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
-    public partial class AddressDisplay : BaseNopUserControl
+    public partial class AddressDisplay : BaseNopFrontendUserControl
     {
         public Address Address
         {

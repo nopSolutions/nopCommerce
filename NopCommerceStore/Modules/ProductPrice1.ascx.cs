@@ -40,7 +40,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
-    public partial class ProductPrice1Control : BaseNopUserControl
+    public partial class ProductPrice1Control: BaseNopFrontendUserControl
     {
         protected void Page_Load(object sender, EventArgs e)
         {

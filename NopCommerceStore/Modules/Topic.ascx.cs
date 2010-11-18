@@ -35,7 +35,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web.Modules
 {
-    public partial class TopicControl : BaseNopUserControl
+    public partial class TopicControl: BaseNopFrontendUserControl
     {
         private bool ValidatePassword()
         {

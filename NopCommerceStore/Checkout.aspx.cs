@@ -38,7 +38,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web
 {
-    public partial class CheckoutPage : BaseNopPage
+    public partial class CheckoutPage : BaseNopFrontendPage
     {
         protected ShoppingCart cart = null;
 

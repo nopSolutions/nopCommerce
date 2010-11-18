@@ -12,7 +12,7 @@ using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 namespace NopSolutions.NopCommerce.Web
 {
-    public partial class ManufacturersPage : BaseNopPage
+    public partial class ManufacturersPage : BaseNopFrontendPage
     {
         protected void Page_Load(object sender, EventArgs e)
         {

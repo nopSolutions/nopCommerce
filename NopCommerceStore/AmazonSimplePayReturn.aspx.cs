@@ -14,7 +14,7 @@ using System.Text;
 
 namespace NopSolutions.NopCommerce.Web
 {
-    public partial class AmazonSimplePayReturn : BaseNopPage
+    public partial class AmazonSimplePayReturn : BaseNopFrontendPage
     {
         protected void Page_Load(object sender, EventArgs e)
         {
