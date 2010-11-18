@@ -94,6 +94,7 @@ namespace NopSolutions.NopCommerce.Web
 
             base.OnPreRender(e);
         }
+
         #region Services, managers
 
         public IOnlineUserService OnlineUserService

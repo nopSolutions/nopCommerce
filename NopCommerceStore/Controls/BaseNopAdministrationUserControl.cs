@@ -71,10 +71,10 @@ namespace NopSolutions.NopCommerce.Web
 
         protected void ProcessException(Exception exc, bool showError)
         {
-            IoC.Resolve<ILogService>().InsertLog(LogTypeEnum.AdministrationArea, exc.Message, exc);
+            this.LogService.InsertLog(LogTypeEnum.AdministrationArea, exc.Message, exc);
             if (showError)
             {
-                if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Display.AdminArea.ShowFullErrors"))
+                if (this.SettingManager.GetSettingValueBoolean("Display.AdminArea.ShowFullErrors"))
                 {
                     ShowError(exc.Message, exc.ToString());
                 }
@@ -120,7 +120,7 @@ namespace NopSolutions.NopCommerce.Web
 
         protected virtual List<Language> GetLocalizableLanguagesSupported()
         {
-            return IoC.Resolve<ILanguageService>().GetAllLanguages(true);
+            return this.LanguageService.GetAllLanguages(true);
         }
 
         protected virtual bool HasLocalizableContent

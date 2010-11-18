@@ -91,7 +91,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 try
                 {
                     string fileName = string.Format("categories_{0}.xml", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"));
-                    string xml = IoC.Resolve<ExportManager>().ExportCategoriesToXml();
+                    string xml = this.ExportManager.ExportCategoriesToXml();
                     CommonHelper.WriteResponseXml(xml, fileName);
                 }
                 catch (Exception exc)

@@ -226,7 +226,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     string fileName = String.Format("products_{0}.xml", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"));
                     
                     var products = GetProducts();
-                    string xml = IoC.Resolve<ExportManager>().ExportProductsToXml(products);
+                    string xml = this.ExportManager.ExportProductsToXml(products);
                     CommonHelper.WriteResponseXml(xml, fileName);
                 }
                 catch (Exception exc)
@@ -246,7 +246,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     string filePath = string.Format("{0}files\\ExportImport\\{1}", HttpContext.Current.Request.PhysicalApplicationPath, fileName);
                     var products = GetProducts();
 
-                    IoC.Resolve<ExportManager>().ExportProductsToXls(filePath, products);
+                    this.ExportManager.ExportProductsToXls(filePath, products);
                     CommonHelper.WriteResponseXls(filePath, fileName);
                 }
                 catch (Exception exc)

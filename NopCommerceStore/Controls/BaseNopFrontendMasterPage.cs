@@ -46,18 +46,18 @@ namespace NopSolutions.NopCommerce.Web
                 CheckAffiliate();
             }
 
-            string defaulSEOTitle = IoC.Resolve<ISettingManager>().GetSettingValue("SEO.DefaultTitle");
-            string defaulSEODescription = IoC.Resolve<ISettingManager>().GetSettingValue("SEO.DefaultMetaDescription");
-            string defaulSEOKeywords = IoC.Resolve<ISettingManager>().GetSettingValue("SEO.DefaultMetaKeywords");
+            string defaulSEOTitle = this.SettingManager.GetSettingValue("SEO.DefaultTitle");
+            string defaulSEODescription = this.SettingManager.GetSettingValue("SEO.DefaultMetaDescription");
+            string defaulSEOKeywords = this.SettingManager.GetSettingValue("SEO.DefaultMetaKeywords");
             SEOHelper.RenderTitle(this.Page, defaulSEOTitle, false, false);
             SEOHelper.RenderMetaTag(this.Page, "description", defaulSEODescription, false);
             SEOHelper.RenderMetaTag(this.Page, "keywords", defaulSEOKeywords, false);
 
-            if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Display.ShowNewsHeaderRssURL"))
+            if (this.SettingManager.GetSettingValueBoolean("Display.ShowNewsHeaderRssURL"))
             {
                 SEOHelper.RenderHeaderRssLink(this.Page, defaulSEOTitle + ": News", SEOHelper.GetNewsRssUrl());
             }
-            if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Display.ShowBlogHeaderRssURL"))
+            if (this.SettingManager.GetSettingValueBoolean("Display.ShowBlogHeaderRssURL"))
             {
                 SEOHelper.RenderHeaderRssLink(this.Page, defaulSEOTitle + ": Blog", SEOHelper.GetBlogRssUrl());
             }
@@ -72,7 +72,7 @@ namespace NopSolutions.NopCommerce.Web
 
         protected void CheckAffiliate()
         {
-            Affiliate affiliate = IoC.Resolve<IAffiliateService>().GetAffiliateById(CommonHelper.QueryStringInt("AffiliateId"));
+            Affiliate affiliate = this.AffiliateService.GetAffiliateById(CommonHelper.QueryStringInt("AffiliateId"));
             if (affiliate != null && affiliate.Active)
             {
                 if (NopContext.Current.User == null)
@@ -88,7 +88,7 @@ namespace NopSolutions.NopCommerce.Web
                 else if (NopContext.Current.User.AffiliateId != affiliate.AffiliateId)
                 {
                     NopContext.Current.User.AffiliateId = affiliate.AffiliateId;
-                    IoC.Resolve<ICustomerService>().UpdateCustomer(NopContext.Current.User);
+                    this.CustomerService.UpdateCustomer(NopContext.Current.User);
                 }
             }
         }

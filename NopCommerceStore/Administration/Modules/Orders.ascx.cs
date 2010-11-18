@@ -129,7 +129,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     string fileName = string.Format("orders_{0}.xml", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"));
 
                     var orders = GetOrders();
-                    string xml = IoC.Resolve<ExportManager>().ExportOrdersToXml(orders);
+                    string xml = this.ExportManager.ExportOrdersToXml(orders);
                     CommonHelper.WriteResponseXml(xml, fileName);
                 }
                 catch (Exception exc)
@@ -149,7 +149,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     string filePath = string.Format("{0}files\\ExportImport\\{1}", HttpContext.Current.Request.PhysicalApplicationPath, fileName);
                     var orders = GetOrders();
 
-                    IoC.Resolve<ExportManager>().ExportOrdersToXls(filePath, orders);
+                    this.ExportManager.ExportOrdersToXls(filePath, orders);
                     CommonHelper.WriteResponseXls(filePath, fileName);
                 }
                 catch (Exception exc)
