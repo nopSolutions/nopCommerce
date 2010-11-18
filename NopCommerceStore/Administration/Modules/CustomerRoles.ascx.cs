@@ -39,7 +39,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         void BindGrid()
         {
-            var customerRoleCollection = IoC.Resolve<ICustomerService>().GetAllCustomerRoles();
+            var customerRoleCollection = this.CustomerService.GetAllCustomerRoles();
             gvCustomerRoles.DataSource = customerRoleCollection;
             gvCustomerRoles.DataBind();
         }

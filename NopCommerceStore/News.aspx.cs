@@ -35,7 +35,7 @@ namespace NopSolutions.NopCommerce.Web
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!IoC.Resolve<INewsService>().NewsEnabled)
+            if (!this.NewsService.NewsEnabled)
             {
                 Response.Redirect(CommonHelper.GetStoreLocation());
             }

@@ -50,7 +50,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         public void BindData()
         {
-            gvForumSubscriptions.DataSource = IoC.Resolve<IForumService>().GetAllSubscriptions(this.CustomerId, 0, 0, 0, int.MaxValue);
+            gvForumSubscriptions.DataSource = this.ForumService.GetAllSubscriptions(this.CustomerId, 0, 0, 0, int.MaxValue);
             gvForumSubscriptions.DataBind();
         }
 
@@ -80,7 +80,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     int forumSubscriptionId = int.Parse(hfForumSubscriptionId.Value);
                     if (selected)
                     {
-                        IoC.Resolve<IForumService>().DeleteSubscription(forumSubscriptionId);
+                        this.ForumService.DeleteSubscription(forumSubscriptionId);
                     }
                 }
             }

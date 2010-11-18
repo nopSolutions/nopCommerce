@@ -40,7 +40,7 @@ namespace NopSolutions.NopCommerce.Web
 
         private void CreateChildControlsTree()
         {
-            product = IoC.Resolve<IProductService>().GetProductById(this.ProductId);
+            product = this.ProductService.GetProductById(this.ProductId);
             if (product != null)
             {
                 Control child = null;
@@ -77,7 +77,7 @@ namespace NopSolutions.NopCommerce.Web
 
             //canonical URL
             if (SEOHelper.EnableUrlRewriting &&
-                IoC.Resolve<ISettingManager>().GetSettingValueBoolean("SEO.CanonicalURLs.Products.Enabled"))
+                this.SettingManager.GetSettingValueBoolean("SEO.CanonicalURLs.Products.Enabled"))
             {
                 if (!this.SEName.Equals(SEOHelper.GetProductSEName(product)))
                 {
@@ -89,7 +89,7 @@ namespace NopSolutions.NopCommerce.Web
 
             if (!Page.IsPostBack)
             {
-                IoC.Resolve<IProductService>().AddProductToRecentlyViewedList(product.ProductId);
+                this.ProductService.AddProductToRecentlyViewedList(product.ProductId);
             }
         }
 

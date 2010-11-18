@@ -14,7 +14,7 @@
 <%@ Register TagPrefix="nopCommerce" TagName="ProductShareButton" Src="~/Modules/ProductShareButton.ascx" %>
 <ajaxToolkit:ToolkitScriptManager runat="Server" EnableScriptGlobalization="true"
     EnableScriptLocalization="true" ID="sm1" ScriptMode="Release" CompositeScript-ScriptMode="Release" />
-<% if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Media.CategoryBreadcrumbEnabled"))
+<% if (this.SettingManager.GetSettingValueBoolean("Media.CategoryBreadcrumbEnabled"))
    { %>
 <nopCommerce:ProductCategoryBreadcrumb ID="ctrlProductCategoryBreadcrumb" runat="server">
 </nopCommerce:ProductCategoryBreadcrumb>

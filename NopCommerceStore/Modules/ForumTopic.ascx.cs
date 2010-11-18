@@ -53,23 +53,23 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         private void BindData()
         {
-            var forumTopic = IoC.Resolve<IForumService>().GetTopicById(this.TopicId, true);
+            var forumTopic = this.ForumService.GetTopicById(this.TopicId, true);
             if (forumTopic != null)
             {
-                btnEdit.Visible = IoC.Resolve<IForumService>().IsUserAllowedToEditTopic(NopContext.Current.User, forumTopic);
-                btnDelete.Visible = IoC.Resolve<IForumService>().IsUserAllowedToDeleteTopic(NopContext.Current.User, forumTopic);
+                btnEdit.Visible = this.ForumService.IsUserAllowedToEditTopic(NopContext.Current.User, forumTopic);
+                btnDelete.Visible = this.ForumService.IsUserAllowedToDeleteTopic(NopContext.Current.User, forumTopic);
                 btnDelete.OnClientClick = string.Format("return confirm('{0}')", GetLocaleResourceString("Common.AreYouSure"));
-                btnMoveTopic.Visible = IoC.Resolve<IForumService>().IsUserAllowedToMoveTopic(NopContext.Current.User, forumTopic);
+                btnMoveTopic.Visible = this.ForumService.IsUserAllowedToMoveTopic(NopContext.Current.User, forumTopic);
                 
                 lblTopicSubject.Text = Server.HtmlEncode(forumTopic.Subject);
 
                 int pageSize = 10;
-                if (IoC.Resolve<IForumService>().PostsPageSize > 0)
+                if (this.ForumService.PostsPageSize > 0)
                 {
-                    pageSize = IoC.Resolve<IForumService>().PostsPageSize;
+                    pageSize = this.ForumService.PostsPageSize;
                 }
 
-                var forumPosts = IoC.Resolve<IForumService>().GetAllPosts(forumTopic.ForumTopicId, 0, string.Empty,
+                var forumPosts = this.ForumService.GetAllPosts(forumTopic.ForumTopicId, 0, string.Empty,
                      this.CurrentPageIndex, pageSize);
                 if (forumPosts.Count > 0)
                 {
@@ -86,9 +86,9 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 }
 
                 //subsciption
-                if (IoC.Resolve<IForumService>().IsUserAllowedToSubscribe(NopContext.Current.User))
+                if (this.ForumService.IsUserAllowedToSubscribe(NopContext.Current.User))
                 {
-                    var forumSubscription = IoC.Resolve<IForumService>().GetAllSubscriptions(NopContext.Current.User.CustomerId,
+                    var forumSubscription = this.ForumService.GetAllSubscriptions(NopContext.Current.User.CustomerId,
                         0, forumTopic.ForumTopicId, 0, 1).FirstOrDefault();
 
                     if (forumSubscription == null)
@@ -116,17 +116,17 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void btnWatchTopic_Click(object sender, EventArgs e)
         {
-            var forumTopic = IoC.Resolve<IForumService>().GetTopicById(this.TopicId);
+            var forumTopic = this.ForumService.GetTopicById(this.TopicId);
             if (forumTopic == null)
                 return;
 
-            if (!IoC.Resolve<IForumService>().IsUserAllowedToSubscribe(NopContext.Current.User))
+            if (!this.ForumService.IsUserAllowedToSubscribe(NopContext.Current.User))
             {
                 string loginURL = SEOHelper.GetLoginPageUrl(true);
                 Response.Redirect(loginURL);
             }
 
-            var forumSubscription = IoC.Resolve<IForumService>().GetAllSubscriptions(NopContext.Current.User.CustomerId,
+            var forumSubscription = this.ForumService.GetAllSubscriptions(NopContext.Current.User.CustomerId,
                    0, forumTopic.ForumTopicId, 0, 1).FirstOrDefault();
 
             if (forumSubscription == null)
@@ -138,11 +138,11 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     TopicId = forumTopic.ForumTopicId,
                     CreatedOn = DateTime.UtcNow
                 };
-                IoC.Resolve<IForumService>().InsertSubscription(forumSubscription);
+                this.ForumService.InsertSubscription(forumSubscription);
             }
             else
             {
-                IoC.Resolve<IForumService>().DeleteSubscription(forumSubscription.ForumSubscriptionId);
+                this.ForumService.DeleteSubscription(forumSubscription.ForumSubscriptionId);
             }
 
             CommonHelper.ReloadCurrentPage();
@@ -150,10 +150,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void btnEdit_Click(object sender, EventArgs e)
         {
-            var forumTopic = IoC.Resolve<IForumService>().GetTopicById(this.TopicId);
+            var forumTopic = this.ForumService.GetTopicById(this.TopicId);
             if (forumTopic != null)
             {
-                if (!IoC.Resolve<IForumService>().IsUserAllowedToEditTopic(NopContext.Current.User, forumTopic))
+                if (!this.ForumService.IsUserAllowedToEditTopic(NopContext.Current.User, forumTopic))
                 {
                     string loginURL = SEOHelper.GetLoginPageUrl(true);
                     Response.Redirect(loginURL);
@@ -166,16 +166,16 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void btnDelete_Click(object sender, EventArgs e)
         {
-            var forumTopic = IoC.Resolve<IForumService>().GetTopicById(this.TopicId);
+            var forumTopic = this.ForumService.GetTopicById(this.TopicId);
             if (forumTopic != null)
             {
-                if (!IoC.Resolve<IForumService>().IsUserAllowedToDeleteTopic(NopContext.Current.User, forumTopic))
+                if (!this.ForumService.IsUserAllowedToDeleteTopic(NopContext.Current.User, forumTopic))
                 {
                     string loginURL = SEOHelper.GetLoginPageUrl(true);
                     Response.Redirect(loginURL);
                 }
 
-                IoC.Resolve<IForumService>().DeleteTopic(forumTopic.ForumTopicId);
+                this.ForumService.DeleteTopic(forumTopic.ForumTopicId);
 
                 string forumURL = SEOHelper.GetForumUrl(forumTopic.ForumId);
                 Response.Redirect(forumURL);
@@ -184,10 +184,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void btnMoveTopic_Click(object sender, EventArgs e)
         {
-            var forumTopic = IoC.Resolve<IForumService>().GetTopicById(this.TopicId);
+            var forumTopic = this.ForumService.GetTopicById(this.TopicId);
             if (forumTopic != null)
             {
-                if (!IoC.Resolve<IForumService>().IsUserAllowedToMoveTopic(NopContext.Current.User, forumTopic))
+                if (!this.ForumService.IsUserAllowedToMoveTopic(NopContext.Current.User, forumTopic))
                 {
                     string loginURL = SEOHelper.GetLoginPageUrl(true);
                     Response.Redirect(loginURL);
@@ -200,15 +200,15 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void btnReply_Click(object sender, EventArgs e)
         {
-            var forumTopic = IoC.Resolve<IForumService>().GetTopicById(this.TopicId);
+            var forumTopic = this.ForumService.GetTopicById(this.TopicId);
             if (forumTopic != null)
             {
-                if(NopContext.Current.User == null && IoC.Resolve<IForumService>().AllowGuestsToCreatePosts)
+                if(NopContext.Current.User == null && this.ForumService.AllowGuestsToCreatePosts)
                 {
-                    IoC.Resolve<ICustomerService>().CreateAnonymousUser();
+                    this.CustomerService.CreateAnonymousUser();
                 }
 
-                if (!IoC.Resolve<IForumService>().IsUserAllowedToCreatePost(NopContext.Current.User, forumTopic))
+                if (!this.ForumService.IsUserAllowedToCreatePost(NopContext.Current.User, forumTopic))
                 {
                     string loginURL = SEOHelper.GetLoginPageUrl(true);
                     Response.Redirect(loginURL);

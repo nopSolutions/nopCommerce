@@ -49,7 +49,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         private void BindData()
         {
-            var pm = IoC.Resolve<IForumService>().GetPrivateMessageById(this.PrivateMessageId);
+            var pm = this.ForumService.GetPrivateMessageById(this.PrivateMessageId);
             if (pm != null)
             {
                 if (pm.ToUserId != NopContext.Current.User.CustomerId && pm.FromUserId != NopContext.Current.User.CustomerId)
@@ -60,7 +60,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 if (!pm.IsRead && pm.ToUserId == NopContext.Current.User.CustomerId)
                 {
                     pm.IsRead = true;
-                    IoC.Resolve<IForumService>().UpdatePrivateMessage(pm);
+                    this.ForumService.UpdatePrivateMessage(pm);
                 }
             }
             else
@@ -76,7 +76,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void btnReply_Click(object sender, EventArgs e)
         {
-            var pm = IoC.Resolve<IForumService>().GetPrivateMessageById(this.PrivateMessageId);
+            var pm = this.ForumService.GetPrivateMessageById(this.PrivateMessageId);
             if (pm != null)
             {
                 string replyURL = string.Format("{0}sendpm.aspx?r={1}", CommonHelper.GetStoreLocation(), pm.PrivateMessageId);
@@ -90,13 +90,13 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void btnDelete_Click(object sender, EventArgs e)
         {
-            var pm = IoC.Resolve<IForumService>().GetPrivateMessageById(this.PrivateMessageId);
+            var pm = this.ForumService.GetPrivateMessageById(this.PrivateMessageId);
             if (pm != null)
             {
                 if (pm.FromUserId == NopContext.Current.User.CustomerId)
                 {
                     pm.IsDeletedByAuthor = true;
-                    IoC.Resolve<IForumService>().UpdatePrivateMessage(pm);
+                    this.ForumService.UpdatePrivateMessage(pm);
                 }
 
                 if (pm != null)
@@ -104,7 +104,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     if (pm.ToUserId == NopContext.Current.User.CustomerId)
                     {
                         pm.IsDeletedByRecipient = true;
-                        IoC.Resolve<IForumService>().UpdatePrivateMessage(pm);
+                        this.ForumService.UpdatePrivateMessage(pm);
                     }
                 }
             }

@@ -34,7 +34,7 @@ namespace NopSolutions.NopCommerce.Web.Administration
     {
         protected override bool ValidatePageSecurity()
         {
-            return IoC.Resolve<IACLService>().IsActionAllowed("ManageCustomerRoles");
+            return this.ACLService.IsActionAllowed("ManageCustomerRoles");
         }
     }
 }

@@ -39,7 +39,7 @@ namespace NopSolutions.NopCommerce.Web.Boards
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            ForumGroup forumGroup = IoC.Resolve<IForumService>().GetForumGroupById(this.ForumGroupId);
+            ForumGroup forumGroup = this.ForumService.GetForumGroupById(this.ForumGroupId);
             if (forumGroup != null)
             {
                 string title = forumGroup.Name;

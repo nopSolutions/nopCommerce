@@ -41,7 +41,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void BindData()
         {
-            var manufacturers = IoC.Resolve<IManufacturerService>().GetAllManufacturers();
+            var manufacturers = this.ManufacturerService.GetAllManufacturers();
             if (manufacturers.Count > 0)
             {
                 rptrManufacturers.DataSource = manufacturers;

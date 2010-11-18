@@ -58,8 +58,8 @@ namespace NopSolutions.NopCommerce.Web.Modules
             this.lblOrderId.Text = order.OrderId.ToString();
             this.lblCreatedOn.Text = DateTimeHelper.ConvertToUserTime(order.CreatedOn, DateTimeKind.Utc).ToString("D");
             this.lblOrderStatus.Text = order.OrderStatus.GetOrderStatusName();
-            this.btnReOrder.Visible = IoC.Resolve<IOrderService>().IsReOrderAllowed;
-            this.phReturnRequest.Visible = IoC.Resolve<IOrderService>().IsReturnRequestAllowed(order);
+            this.btnReOrder.Visible = this.OrderService.IsReOrderAllowed;
+            this.phReturnRequest.Visible = this.OrderService.IsReturnRequestAllowed(order);
 
             //shipping info
             if (order.ShippingStatus != ShippingStatusEnum.ShippingNotRequired)
@@ -88,7 +88,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     pnlShippingCountry.Visible = false;
 
                 this.lblShippingMethod.Text = Server.HtmlEncode(order.ShippingMethod);
-                this.lblOrderWeight.Text = string.Format("{0:F2} [{1}]", order.OrderWeight, IoC.Resolve<IMeasureService>().BaseWeightIn.Name);
+                this.lblOrderWeight.Text = string.Format("{0:F2} [{1}]", order.OrderWeight, this.MeasureService.BaseWeightIn.Name);
 
                 if (order.ShippedDate.HasValue)
                     this.lblShippedDate.Text = DateTimeHelper.ConvertToUserTime(order.ShippedDate.Value, DateTimeKind.Utc).ToString("D");
@@ -146,7 +146,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 phVatNumber.Visible = false;
 
             //payment method
-            var paymentMethod = IoC.Resolve<IPaymentService>().GetPaymentMethodById(order.PaymentMethodId);
+            var paymentMethod = this.PaymentService.GetPaymentMethodById(order.PaymentMethodId);
             if (paymentMethod != null)
                 this.lPaymentMethod.Text = paymentMethod.VisibleName;
             else
@@ -209,14 +209,14 @@ namespace NopSolutions.NopCommerce.Web.Modules
             //tax
             bool displayTax = true;
             bool displayTaxRates = true;
-            if (IoC.Resolve<ITaxService>().HideTaxInOrderSummary && order.CustomerTaxDisplayType == TaxDisplayTypeEnum.IncludingTax)
+            if (this.TaxService.HideTaxInOrderSummary && order.CustomerTaxDisplayType == TaxDisplayTypeEnum.IncludingTax)
             {
                 displayTax = false;
                 displayTaxRates = false;
             }
             else
             {
-                if (order.OrderTax == 0 && IoC.Resolve<ITaxService>().HideZeroTax)
+                if (order.OrderTax == 0 && this.TaxService.HideZeroTax)
                 {
                     displayTax = false;
                     displayTaxRates = false;
@@ -225,7 +225,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 {
                     SortedDictionary<decimal, decimal> taxRates = order.TaxRatesDictionaryInCustomerCurrency;
 
-                    displayTaxRates = IoC.Resolve<ITaxService>().DisplayTaxRates && taxRates.Count > 0;
+                    displayTaxRates = this.TaxService.DisplayTaxRates && taxRates.Count > 0;
                     displayTax = !displayTaxRates;
 
                     string taxStr = PriceHelper.FormatPrice(order.OrderTaxInCustomerCurrency, true, order.CustomerCurrencyCode, false);
@@ -250,7 +250,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             }
 
             //gift cards
-            var gcuhC = IoC.Resolve<IOrderService>().GetAllGiftCardUsageHistoryEntries(null, null, order.OrderId);
+            var gcuhC = this.OrderService.GetAllGiftCardUsageHistoryEntries(null, null, order.OrderId);
             if (gcuhC.Count > 0)
             {
                 rptrGiftCards.Visible = true;
@@ -293,7 +293,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             }
 
             //sku column
-            gvOrderProductVariants.Columns[0].Visible = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Display.Products.ShowSKU");
+            gvOrderProductVariants.Columns[0].Visible = this.SettingManager.GetSettingValueBoolean("Display.Products.ShowSKU");
             //downloads column
             gvOrderProductVariants.Columns[2].Visible = hasDownloadableItems && !this.IsInvoice;
 
@@ -327,7 +327,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 string loginURL = SEOHelper.GetLoginPageUrl(true);
                 Response.Redirect(loginURL);
             }
-            order = IoC.Resolve<IOrderService>().GetOrderById(this.OrderId);
+            order = this.OrderService.GetOrderById(this.OrderId);
             if (order == null || order.Deleted || NopContext.Current.User.CustomerId != order.CustomerId)
             {
                 string loginURL = SEOHelper.GetLoginPageUrl(true);
@@ -340,14 +340,14 @@ namespace NopSolutions.NopCommerce.Web.Modules
             }
 
             //buttons
-            lbPDFInvoice.Visible = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Features.SupportPDF");
+            lbPDFInvoice.Visible = this.SettingManager.GetSettingValueBoolean("Features.SupportPDF");
         }
 
         protected void BtnReOrder_OnClick(object sender, EventArgs e)
         {
             try
             {
-                IoC.Resolve<IOrderService>().ReOrder(this.OrderId);
+                this.OrderService.ReOrder(this.OrderId);
                 Response.Redirect(SEOHelper.GetShoppingCartUrl());
             }
             catch(Exception)
@@ -372,7 +372,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             }
             catch(Exception ex)
             {
-                IoC.Resolve<ILogService>().InsertLog(LogTypeEnum.CustomerError, "Error generating PDF", ex);
+                this.LogService.InsertLog(LogTypeEnum.CustomerError, "Error generating PDF", ex);
             }
         }
 
@@ -409,7 +409,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
         #region Methods
         public string GetProductVariantName(int productVariantId)
         {
-            var productVariant = IoC.Resolve<IProductService>().GetProductVariantById(productVariantId);
+            var productVariant = this.ProductService.GetProductVariantById(productVariantId);
             if (productVariant != null)
                 return productVariant.LocalizedFullProductName;
             return "Not available. ID=" + productVariantId.ToString();
@@ -425,7 +425,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         public string GetProductUrl(int productVariantId)
         {
-            var productVariant = IoC.Resolve<IProductService>().GetProductVariantById(productVariantId);
+            var productVariant = this.ProductService.GetProductVariantById(productVariantId);
             if (productVariant != null)
                 return SEOHelper.GetProductUrl(productVariant.ProductId);
             return string.Empty;
@@ -434,9 +434,9 @@ namespace NopSolutions.NopCommerce.Web.Modules
         public string GetDownloadUrl(OrderProductVariant orderProductVariant)
         {
             string result = string.Empty;
-            if (IoC.Resolve<IOrderService>().IsDownloadAllowed(orderProductVariant))
+            if (this.OrderService.IsDownloadAllowed(orderProductVariant))
             {
-                result = string.Format("<a class=\"link\" href=\"{0}\" >{1}</a>", IoC.Resolve<IDownloadService>().GetDownloadUrl(orderProductVariant), GetLocaleResourceString("Order.Download"));
+                result = string.Format("<a class=\"link\" href=\"{0}\" >{1}</a>", this.DownloadService.GetDownloadUrl(orderProductVariant), GetLocaleResourceString("Order.Download"));
             }
             else
             {
@@ -448,9 +448,9 @@ namespace NopSolutions.NopCommerce.Web.Modules
         public string GetLicenseDownloadUrl(OrderProductVariant orderProductVariant)
         {
             string result = string.Empty;
-            if (IoC.Resolve<IOrderService>().IsLicenseDownloadAllowed(orderProductVariant))
+            if (this.OrderService.IsLicenseDownloadAllowed(orderProductVariant))
             {
-                result = string.Format("<a class=\"link\" href=\"{0}\" >{1}</a>", IoC.Resolve<IDownloadService>().GetLicenseDownloadUrl(orderProductVariant), GetLocaleResourceString("Order.DownloadLicense"));
+                result = string.Format("<a class=\"link\" href=\"{0}\" >{1}</a>", this.DownloadService.GetLicenseDownloadUrl(orderProductVariant), GetLocaleResourceString("Order.DownloadLicense"));
             }
             return result;
         }

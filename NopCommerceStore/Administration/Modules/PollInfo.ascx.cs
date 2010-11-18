@@ -35,7 +35,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         private void FillDropDowns()
         {
             this.ddlLanguage.Items.Clear();
-            var languages = IoC.Resolve<ILanguageService>().GetAllLanguages();
+            var languages = this.LanguageService.GetAllLanguages();
             foreach (Language language in languages)
             {
                 ListItem item2 = new ListItem(language.Name, language.LanguageId.ToString());
@@ -45,7 +45,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         private void BindData()
         {
-            Poll poll = IoC.Resolve<IPollService>().GetPollById(this.PollId);
+            Poll poll = this.PollService.GetPollById(this.PollId);
             if (poll != null)
             {
                 CommonHelper.SelectListItem(this.ddlLanguage, poll.LanguageId);
@@ -93,7 +93,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     Name = txtPollAnswerName.Text,
                     DisplayOrder = txtPollAnswerDisplayOrder.Value
                 };
-                IoC.Resolve<IPollService>().InsertPollAnswer(pollAnswer);
+                this.PollService.InsertPollAnswer(pollAnswer);
 
                 BindData();
             }
@@ -115,13 +115,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 NumericTextBox txtDisplayOrder = row.FindControl("txtDisplayOrder") as NumericTextBox;
 
                 int pollAnswerId = int.Parse(hfPollAnswerId.Value);
-                PollAnswer pollAnswer = IoC.Resolve<IPollService>().GetPollAnswerById(pollAnswerId);
+                PollAnswer pollAnswer = this.PollService.GetPollAnswerById(pollAnswerId);
 
                 if (pollAnswer != null)
                 {
                     pollAnswer.Name = txtName.Text;
                     pollAnswer.DisplayOrder = txtDisplayOrder.Value;
-                    IoC.Resolve<IPollService>().UpdatePollAnswer(pollAnswer);
+                    this.PollService.UpdatePollAnswer(pollAnswer);
                 }
 
                 BindData();
@@ -143,10 +143,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         protected void gvPollAnswers_RowDeleting(object sender, GridViewDeleteEventArgs e)
         {
             int pollAnswerId = (int)gvPollAnswers.DataKeys[e.RowIndex]["PollAnswerId"];
-            PollAnswer pollAnswer = IoC.Resolve<IPollService>().GetPollAnswerById(pollAnswerId);
+            PollAnswer pollAnswer = this.PollService.GetPollAnswerById(pollAnswerId);
             if (pollAnswer != null)
             {
-                IoC.Resolve<IPollService>().DeletePollAnswer(pollAnswer.PollAnswerId);
+                this.PollService.DeletePollAnswer(pollAnswer.PollAnswerId);
                 BindData();
             }
         }
@@ -160,7 +160,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public Poll SaveInfo()
         {
-            Poll poll = IoC.Resolve<IPollService>().GetPollById(this.PollId);
+            Poll poll = this.PollService.GetPollById(this.PollId);
             DateTime? startDate = ctrlStartDate.SelectedDate;
             DateTime? endDate = ctrlEndDate.SelectedDate;
             if (startDate.HasValue)
@@ -182,7 +182,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 poll.DisplayOrder = txtDisplayOrder.Value;
                 poll.StartDate = startDate;
                 poll.EndDate = endDate;
-                IoC.Resolve<IPollService>().UpdatePoll(poll);
+                this.PollService.UpdatePoll(poll);
             }
             else
             {
@@ -198,7 +198,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     EndDate = endDate
                 };
 
-                IoC.Resolve<IPollService>().InsertPoll(poll);
+                this.PollService.InsertPoll(poll);
             }
             return poll;
         }

@@ -74,7 +74,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     if (String.IsNullOrEmpty(keywords))
                         throw new NopException(GetLocaleResourceString("Forum.SearchTermCouldNotBeEmpty"));
 
-                    int searchTermMinimumLength = IoC.Resolve<ISettingManager>().GetSettingValueInteger("Search.ForumSearchTermMinimumLength", 3);
+                    int searchTermMinimumLength = this.SettingManager.GetSettingValueInteger("Search.ForumSearchTermMinimumLength", 3);
                     if (keywords.Length < searchTermMinimumLength)
                         throw new NopException(string.Format(GetLocaleResourceString("Forum.SearchTermMinimumLengthIsNCharacters"), searchTermMinimumLength));
 
@@ -90,12 +90,12 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     }
 
                     int pageSize = 10;
-                    if (IoC.Resolve<IForumService>().SearchResultsPageSize > 0)
+                    if (this.ForumService.SearchResultsPageSize > 0)
                     {
-                        pageSize = IoC.Resolve<IForumService>().SearchResultsPageSize;
+                        pageSize = this.ForumService.SearchResultsPageSize;
                     }
 
-                    var forumTopics = IoC.Resolve<IForumService>().GetAllTopics(forumId, 0, keywords, searchWithin,
+                    var forumTopics = this.ForumService.GetAllTopics(forumId, 0, keywords, searchWithin,
                         limitResultsToPrevious, this.CurrentPageIndex, pageSize);
                     if (forumTopics.Count > 0)
                     {
@@ -191,7 +191,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 var hlTopicStarter = e.Item.FindControl("hlTopicStarter") as HyperLink;
                 if (hlTopicStarter != null)
                 {
-                    if (customer != null && IoC.Resolve<ICustomerService>().AllowViewingProfiles && !customer.IsGuest)
+                    if (customer != null && this.CustomerService.AllowViewingProfiles && !customer.IsGuest)
                     {
                         hlTopicStarter.Text = Server.HtmlEncode(customer.FormatUserName(true));
                         hlTopicStarter.NavigateUrl = SEOHelper.GetUserProfileUrl(customer.CustomerId);
@@ -205,7 +205,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 var lblTopicStarter = e.Item.FindControl("lblTopicStarter") as Label;
                 if (lblTopicStarter != null)
                 {
-                    if (customer != null && (!IoC.Resolve<ICustomerService>().AllowViewingProfiles || customer.IsGuest))
+                    if (customer != null && (!this.CustomerService.AllowViewingProfiles || customer.IsGuest))
                     {
                         lblTopicStarter.Text = Server.HtmlEncode(customer.FormatUserName(true));
                     }

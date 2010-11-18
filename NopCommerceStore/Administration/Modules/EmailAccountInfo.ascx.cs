@@ -35,7 +35,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            var emailAccount = IoC.Resolve<IMessageService>().GetEmailAccountById(this.EmailAccountId);
+            var emailAccount = this.MessageService.GetEmailAccountById(this.EmailAccountId);
             if (emailAccount != null)
             {
                 this.txtEmailAddress.Text = emailAccount.Email;
@@ -76,7 +76,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             bool enableSSL = cbEnableSsl.Checked;
             bool useDefaultCredentials = cbUseDefaultCredentials.Checked;
 
-            var emailAccount = IoC.Resolve<IMessageService>().GetEmailAccountById(this.EmailAccountId);
+            var emailAccount = this.MessageService.GetEmailAccountById(this.EmailAccountId);
             if (emailAccount != null)
             {
                 emailAccount.Email = email;
@@ -88,7 +88,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 emailAccount.EnableSSL = enableSSL;
                 emailAccount.UseDefaultCredentials = useDefaultCredentials;
 
-                IoC.Resolve<IMessageService>().UpdateEmailAccount(emailAccount);
+                this.MessageService.UpdateEmailAccount(emailAccount);
             }
             else
             {
@@ -103,7 +103,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     EnableSSL = enableSSL,
                     UseDefaultCredentials = useDefaultCredentials
                 };
-                IoC.Resolve<IMessageService>().InsertEmailAccount(emailAccount);
+                this.MessageService.InsertEmailAccount(emailAccount);
             }
 
             return emailAccount;
@@ -115,15 +115,15 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 try
                 {
-                    var emailAccount = IoC.Resolve<IMessageService>().GetEmailAccountById(this.EmailAccountId);
+                    var emailAccount = this.MessageService.GetEmailAccountById(this.EmailAccountId);
                     if (emailAccount == null)
                         throw new NopException("Email account could not be loaded");
 
                     MailAddress from = new MailAddress(emailAccount.Email, emailAccount.DisplayName);
                     MailAddress to = new MailAddress(txtSendEmailTo.Text);
-                    string subject = IoC.Resolve<ISettingManager>().StoreName + ". Testing email functionaly.";
+                    string subject = this.SettingManager.StoreName + ". Testing email functionaly.";
                     string body = "Email works fine.";
-                    IoC.Resolve<IMessageService>().SendEmail(subject, body, from, to, emailAccount);
+                    this.MessageService.SendEmail(subject, body, from, to, emailAccount);
                     lblSendTestEmailResult.Text = GetLocaleResourceString("Admin.EmailAccountInfo.SendTestEmailSuccess");
                 }
                 catch (Exception exc)

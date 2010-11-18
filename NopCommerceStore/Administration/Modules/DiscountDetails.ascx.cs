@@ -38,7 +38,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             Discount discount = ctrlDiscountInfo.SaveInfo();
 
-            IoC.Resolve<ICustomerActivityService>().InsertActivity(
+            this.CustomerActivityService.InsertActivity(
                 "EditDiscount",
                 GetLocaleResourceString("ActivityLog.EditDiscount"),
                 discount.Name);
@@ -82,12 +82,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                Discount discount = IoC.Resolve<IDiscountService>().GetDiscountById(this.DiscountId);
+                Discount discount = this.DiscountService.GetDiscountById(this.DiscountId);
                 if (discount != null)
                 {
-                    IoC.Resolve<IDiscountService>().MarkDiscountAsDeleted(discount.DiscountId);
+                    this.DiscountService.MarkDiscountAsDeleted(discount.DiscountId);
 
-                    IoC.Resolve<ICustomerActivityService>().InsertActivity(
+                    this.CustomerActivityService.InsertActivity(
                         "DeleteDiscount",
                         GetLocaleResourceString("ActivityLog.DeleteDiscount"),
                         discount.Name);

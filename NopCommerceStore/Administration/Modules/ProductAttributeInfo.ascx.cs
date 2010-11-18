@@ -32,7 +32,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            ProductAttribute productAttribute = IoC.Resolve<IProductAttributeService>().GetProductAttributeById(this.ProductAttributeId);
+            ProductAttribute productAttribute = this.ProductAttributeService.GetProductAttributeById(this.ProductAttributeId);
 
             if (this.HasLocalizableContent)
             {
@@ -68,13 +68,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public ProductAttribute SaveInfo()
         {
-            ProductAttribute productAttribute = IoC.Resolve<IProductAttributeService>().GetProductAttributeById(this.ProductAttributeId);
+            ProductAttribute productAttribute = this.ProductAttributeService.GetProductAttributeById(this.ProductAttributeId);
 
             if (productAttribute != null)
             {
                 productAttribute.Name = txtName.Text;
                 productAttribute.Description = txtDescription.Text;
-                IoC.Resolve<IProductAttributeService>().UpdateProductAttribute(productAttribute);
+                this.ProductAttributeService.UpdateProductAttribute(productAttribute);
             }
             else
             {
@@ -83,7 +83,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     Name = txtName.Text,
                     Description = txtDescription.Text
                 };
-                IoC.Resolve<IProductAttributeService>().InsertProductAttribute(productAttribute);
+                this.ProductAttributeService.InsertProductAttribute(productAttribute);
             }
 
             SaveLocalizableContent(productAttribute);
@@ -113,7 +113,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                     bool allFieldsAreEmpty = (string.IsNullOrEmpty(name) && string.IsNullOrEmpty(description));
 
-                    var content = IoC.Resolve<IProductAttributeService>().GetProductAttributeLocalizedByProductAttributeIdAndLanguageId(productAttribute.ProductAttributeId, languageId);
+                    var content = this.ProductAttributeService.GetProductAttributeLocalizedByProductAttributeIdAndLanguageId(productAttribute.ProductAttributeId, languageId);
                     if (content == null)
                     {
                         if (!allFieldsAreEmpty && languageId > 0)
@@ -126,7 +126,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                                 Name = name,
                                 Description = description
                             };
-                            IoC.Resolve<IProductAttributeService>().InsertProductAttributeLocalized(content);
+                            this.ProductAttributeService.InsertProductAttributeLocalized(content);
                         }
                     }
                     else
@@ -136,7 +136,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                             content.LanguageId = languageId;
                             content.Name = name;
                             content.Description = description;
-                            IoC.Resolve<IProductAttributeService>().UpdateProductAttributeLocalized(content);
+                            this.ProductAttributeService.UpdateProductAttributeLocalized(content);
                         }
                     }
                 }
@@ -153,7 +153,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                 int languageId = int.Parse(lblLanguageId.Text);
 
-                var content = IoC.Resolve<IProductAttributeService>().GetProductAttributeLocalizedByProductAttributeIdAndLanguageId(this.ProductAttributeId, languageId);
+                var content = this.ProductAttributeService.GetProductAttributeLocalizedByProductAttributeIdAndLanguageId(this.ProductAttributeId, languageId);
 
                 if (content != null)
                 {

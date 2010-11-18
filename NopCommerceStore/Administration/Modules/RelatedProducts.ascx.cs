@@ -40,7 +40,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            Product product = IoC.Resolve<IProductService>().GetProductById(this.ProductId);
+            Product product = this.ProductService.GetProductById(this.ProductId);
             if (product != null)
             {
                 pnlData.Visible = true;
@@ -48,7 +48,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                 var existingRelatedProductCollection = product.RelatedProducts;
                 List<RelatedProductHelperClass> relatedProducts = GetRelatedProducts(existingRelatedProductCollection);
-                gvRelatedProducts.Columns[1].Visible = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Display.ShowAdminProductImages");
+                gvRelatedProducts.Columns[1].Visible = this.SettingManager.GetSettingValueBoolean("Display.ShowAdminProductImages");
                 gvRelatedProducts.DataSource = relatedProducts;
                 gvRelatedProducts.DataBind();
             }
@@ -71,7 +71,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     rphc.RelatedProductId = relatedProduct.RelatedProductId;
                     rphc.ProductId2 = product.ProductId;
                     rphc.ProductInfo2 = product.Name;
-                    if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Display.ShowAdminProductImages"))
+                    if (this.SettingManager.GetSettingValueBoolean("Display.ShowAdminProductImages"))
                     {
                         rphc.ProductImage = GetProductImageUrl(product);
                     }
@@ -89,11 +89,11 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             var picture = product.DefaultPicture;
             if (picture != null)
             {
-                return IoC.Resolve<IPictureService>().GetPictureUrl(picture, IoC.Resolve<ISettingManager>().GetSettingValueInteger("Media.ShoppingCart.ThumbnailImageSize", 80));
+                return this.PictureService.GetPictureUrl(picture, this.SettingManager.GetSettingValueInteger("Media.ShoppingCart.ThumbnailImageSize", 80));
             }
             else
             {
-                return IoC.Resolve<IPictureService>().GetDefaultPictureUrl(IoC.Resolve<ISettingManager>().GetSettingValueInteger("Media.ShoppingCart.ThumbnailImageSize", 80));
+                return this.PictureService.GetDefaultPictureUrl(this.SettingManager.GetSettingValueInteger("Media.ShoppingCart.ThumbnailImageSize", 80));
             }
         }
 
@@ -110,7 +110,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public void SaveInfo()
         {
-            Product product = IoC.Resolve<IProductService>().GetProductById(this.ProductId);
+            Product product = this.ProductService.GetProductById(this.ProductId);
             if (product != null)
             {
                 foreach (GridViewRow row in gvRelatedProducts.Rows)
@@ -124,16 +124,16 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     int displayOrder = txtRowDisplayOrder.Value;
 
                     if (relatedProductId > 0 && !cbProductInfo2.Checked)
-                        IoC.Resolve<IProductService>().DeleteRelatedProduct(relatedProductId);
+                        this.ProductService.DeleteRelatedProduct(relatedProductId);
                     if (relatedProductId > 0 && cbProductInfo2.Checked)
                     {
-                        var rp = IoC.Resolve<IProductService>().GetRelatedProductById(relatedProductId);
+                        var rp = this.ProductService.GetRelatedProductById(relatedProductId);
                         if (rp!=null)
                         {
                             rp.ProductId1 = product.ProductId;
                             rp.ProductId2 = productId2;
                             rp.DisplayOrder = displayOrder;
-                            IoC.Resolve<IProductService>().UpdateRelatedProduct(rp);
+                            this.ProductService.UpdateRelatedProduct(rp);
                         }
                     }
                 }

@@ -51,7 +51,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected void BindData()
         {
-            lblNopVersion.Text = Server.HtmlEncode(IoC.Resolve<ISettingManager>().CurrentVersion);
+            lblNopVersion.Text = Server.HtmlEncode(this.SettingManager.CurrentVersion);
             try
             {
                 lblOperatingSystem.Text = Server.HtmlEncode(Environment.OSVersion.VersionString);

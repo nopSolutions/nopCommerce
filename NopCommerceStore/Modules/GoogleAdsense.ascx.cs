@@ -37,13 +37,13 @@ namespace NopSolutions.NopCommerce.Web.Modules
         {
             if(!IsPostBack)
             {
-                if(!IoC.Resolve<ISettingManager>().GetSettingValueBoolean("GoogleAdsense.Enabled", false))
+                if(!this.SettingManager.GetSettingValueBoolean("GoogleAdsense.Enabled", false))
                 {
                     Visible = false;
                 }
                 else
                 {
-                    lblGoogleAdsenseCode.Text = IoC.Resolve<ISettingManager>().GetSettingValue("GoogleAdsense.Code");
+                    lblGoogleAdsenseCode.Text = this.SettingManager.GetSettingValue("GoogleAdsense.Code");
                 }
             }
         }

@@ -100,14 +100,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         private void BindGrid()
         {
-            var pictures = IoC.Resolve<IPictureService>().GetPictures(int.MaxValue, 0);
+            var pictures = this.PictureService.GetPictures(int.MaxValue, 0);
             gvPictures.DataSource = pictures;
             gvPictures.DataBind();
         }
 
         private void BindSizeRepeater(int pictureID)
         {
-            List<String> urls = IoC.Resolve<IPictureService>().GetPictureUrls(pictureID);
+            List<String> urls = this.PictureService.GetPictureUrls(pictureID);
             repeaterPictureSizes.DataSource = urls;
             repeaterPictureSizes.DataBind();
         }
@@ -126,7 +126,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 Image imagePicture = e.Row.FindControl("imagePicture") as Image;
                 if (imagePicture != null)
-                    imagePicture.ImageUrl = IoC.Resolve<IPictureService>().GetPictureUrl(picture, 100);
+                    imagePicture.ImageUrl = this.PictureService.GetPictureUrl(picture, 100);
 
             }
         }
@@ -146,7 +146,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             
             if (width > 10 && PictureID > 0)
             {
-                IoC.Resolve<IPictureService>().GetPictureUrl(PictureID, width);
+                this.PictureService.GetPictureUrl(PictureID, width);
                 BindSizeRepeater(PictureID);
 
             }
@@ -160,7 +160,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 byte[] categoryPictureBinary = categoryPictureFile.GetPictureBits();
 
-                Picture picture = IoC.Resolve<IPictureService>().InsertPicture(categoryPictureBinary,
+                Picture picture = this.PictureService.InsertPicture(categoryPictureBinary,
                     categoryPictureFile.ContentType, true);
 
                 if (picture != null)

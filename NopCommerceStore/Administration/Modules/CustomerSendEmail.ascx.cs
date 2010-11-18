@@ -53,18 +53,18 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 try
                 {
-                    var customer = IoC.Resolve<ICustomerService>().GetCustomerById(this.CustomerId);
+                    var customer = this.CustomerService.GetCustomerById(this.CustomerId);
 
                     if (customer != null)
                     {
-                        var emailAccount = IoC.Resolve<IMessageService>().DefaultEmailAccount;
+                        var emailAccount = this.MessageService.DefaultEmailAccount;
 
                         var from = new MailAddress(emailAccount.Email, emailAccount.DisplayName);
                         var to = new MailAddress(customer.Email, customer.FullName);
                         var subject = txtSubject.Text;
                         var body = txtBody.Value;
 
-                        var email = IoC.Resolve<IMessageService>().InsertQueuedEmail(5, from, to, string.Empty,
+                        var email = this.MessageService.InsertQueuedEmail(5, from, to, string.Empty,
                             string.Empty, subject, body, DateTime.UtcNow, 0, null, emailAccount.EmailAccountId);
                     }
                 }

@@ -39,7 +39,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         void BindGrid()
         {
-            var discounts = IoC.Resolve<IDiscountService>().GetAllDiscounts(null);
+            var discounts = this.DiscountService.GetAllDiscounts(null);
             gvDiscounts.DataSource = discounts;
             gvDiscounts.DataBind();
         }

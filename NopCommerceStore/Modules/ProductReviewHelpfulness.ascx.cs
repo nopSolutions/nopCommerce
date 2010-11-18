@@ -43,7 +43,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void BindData()
         {
-            var productReview = IoC.Resolve<IProductService>().GetProductReviewById(this.ProductReviewId);
+            var productReview = this.ProductService.GetProductReviewById(this.ProductReviewId);
             if (productReview != null)
             {
                 lblHelpfulYesTotal.Text = productReview.HelpfulYesTotal.ToString();
@@ -55,19 +55,19 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         private void SetHelpful(bool WasHelpful)
         {
-            var productReview = IoC.Resolve<IProductService>().GetProductReviewById(this.ProductReviewId);
+            var productReview = this.ProductService.GetProductReviewById(this.ProductReviewId);
             if (productReview != null)
             {
-                if (NopContext.Current.User == null && IoC.Resolve<ICustomerService>().AllowAnonymousUsersToReviewProduct)
-                    IoC.Resolve<ICustomerService>().CreateAnonymousUser();
+                if (NopContext.Current.User == null && this.CustomerService.AllowAnonymousUsersToReviewProduct)
+                    this.CustomerService.CreateAnonymousUser();
 
-                if (NopContext.Current.User == null || (NopContext.Current.User.IsGuest && !IoC.Resolve<ICustomerService>().AllowAnonymousUsersToReviewProduct))
+                if (NopContext.Current.User == null || (NopContext.Current.User.IsGuest && !this.CustomerService.AllowAnonymousUsersToReviewProduct))
                 {
                     string loginURL = SEOHelper.GetLoginPageUrl(true);
                     Response.Redirect(loginURL);
                 }
                 
-                IoC.Resolve<IProductService>().SetProductRatingHelpfulness(productReview.ProductReviewId, WasHelpful);
+                this.ProductService.SetProductRatingHelpfulness(productReview.ProductReviewId, WasHelpful);
                 BindData();
             }
             else

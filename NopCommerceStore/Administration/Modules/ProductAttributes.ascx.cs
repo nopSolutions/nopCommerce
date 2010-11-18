@@ -39,7 +39,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         void BindGrid()
         {
-            var productAttributes = IoC.Resolve<IProductAttributeService>().GetAllProductAttributes();
+            var productAttributes = this.ProductAttributeService.GetAllProductAttributes();
             gvProductAttributes.DataSource = productAttributes;
             gvProductAttributes.DataBind();
         }

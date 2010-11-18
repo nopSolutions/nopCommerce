@@ -74,7 +74,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                IoC.Resolve<INewsService>().DeleteNews(this.NewsId);
+                this.NewsService.DeleteNews(this.NewsId);
                 Response.Redirect("News.aspx");
             }
             catch (Exception exc)

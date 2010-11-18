@@ -33,10 +33,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            var localeStringResource = IoC.Resolve<ILocalizationManager>().GetLocaleStringResourceById(this.LocaleStringResourceId);
+            var localeStringResource = this.LocalizationManager.GetLocaleStringResourceById(this.LocaleStringResourceId);
             if (localeStringResource != null)
             {
-                Language language = IoC.Resolve<ILanguageService>().GetLanguageById(localeStringResource.LanguageId);
+                Language language = this.LanguageService.GetLanguageById(localeStringResource.LanguageId);
                 if (language != null)
                 {
                     hlBackToResources.NavigateUrl = CommonHelper.GetStoreAdminLocation() + "LocaleStringResources.aspx?LanguageID=" + localeStringResource.LanguageId.ToString();
@@ -96,8 +96,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                IoC.Resolve<ILocalizationManager>().DeleteLocaleStringResource(this.LocaleStringResourceId);
-                LocaleStringResource localeStringResource = IoC.Resolve<ILocalizationManager>().GetLocaleStringResourceById(this.LocaleStringResourceId);
+                this.LocalizationManager.DeleteLocaleStringResource(this.LocaleStringResourceId);
+                LocaleStringResource localeStringResource = this.LocalizationManager.GetLocaleStringResourceById(this.LocaleStringResourceId);
                 if (localeStringResource != null)
                     Response.Redirect("LocaleStringResources.aspx?LanguageID=" + localeStringResource.LanguageId.ToString());
                 else

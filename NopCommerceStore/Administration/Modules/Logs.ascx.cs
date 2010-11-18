@@ -68,7 +68,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             string message = txtMessage.Text.Trim();
 
             int logTypeId = int.Parse(this.ddlLogType.SelectedItem.Value);
-            var result = IoC.Resolve<ILogService>().GetAllLogs(startDate, endDate,
+            var result = this.LogService.GetAllLogs(startDate, endDate,
                 message, logTypeId, 0, int.MaxValue);
 
             return result;
@@ -108,7 +108,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                IoC.Resolve<ILogService>().ClearLog();
+                this.LogService.ClearLog();
                 BindGrid();
             }
             catch (Exception exc)
@@ -120,7 +120,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         protected string GetCustomerInfo(int customerId)
         {
             string customerInfo = string.Empty;
-            Customer customer = IoC.Resolve<ICustomerService>().GetCustomerById(customerId);
+            Customer customer = this.CustomerService.GetCustomerById(customerId);
             if (customer != null)
             {
                 if (customer.IsGuest)
@@ -139,7 +139,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             if (e.CommandName == "DeleteLog")
             {
-                IoC.Resolve<ILogService>().DeleteLog(Convert.ToInt32(e.CommandArgument));
+                this.LogService.DeleteLog(Convert.ToInt32(e.CommandArgument));
                 BindGrid();
             }
         }

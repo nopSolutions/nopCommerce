@@ -94,12 +94,12 @@ namespace NopSolutions.NopCommerce.Web
 
 
                     int orderId = Convert.ToInt32(_MerchnatOption1);
-                    Order order = IoC.Resolve<IOrderService>().GetOrderById(orderId);
+                    Order order = this.OrderService.GetOrderById(orderId);
                     if (String.IsNullOrEmpty(_ErrorMessage) && order != null)
                     {
-                        if (IoC.Resolve<IOrderService>().CanMarkOrderAsPaid(order))
+                        if (this.OrderService.CanMarkOrderAsPaid(order))
                         {
-                            IoC.Resolve<IOrderService>().MarkOrderAsPaid(order.OrderId);
+                            this.OrderService.MarkOrderAsPaid(order.OrderId);
                         }
                         Response.Redirect("~/checkoutcompleted.aspx");
                     }
@@ -127,11 +127,11 @@ namespace NopSolutions.NopCommerce.Web
         protected bool CheckAccessCode(string AccessPaymentCode)
         {
             //POST to Payment gateway the access code returned
-            string strPost = "CustomerID=" + IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.eWayUK.CustomerId");
+            string strPost = "CustomerID=" + this.SettingManager.GetSettingValue("PaymentMethod.eWayUK.CustomerId");
             strPost += Format("AccessPaymentCode", AccessPaymentCode);
-            strPost += Format("UserName", IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.eWayUK.Username"));
+            strPost += Format("UserName", this.SettingManager.GetSettingValue("PaymentMethod.eWayUK.Username"));
 
-            string url = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.eWayUK.PaymentPage") + "Result?" + strPost;
+            string url = this.SettingManager.GetSettingValue("PaymentMethod.eWayUK.PaymentPage") + "Result?" + strPost;
 
             HttpWebRequest objRequest = (HttpWebRequest)WebRequest.Create(url);
             objRequest.Method = WebRequestMethods.Http.Get;

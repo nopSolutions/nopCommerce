@@ -44,7 +44,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void BindData()
         {
-            var product = IoC.Resolve<IProductService>().GetProductById(this.ProductId);
+            var product = this.ProductService.GetProductById(this.ProductId);
             if (product != null)
             {
                 hlProduct.NavigateUrl = SEOHelper.GetProductUrl(product);
@@ -55,7 +55,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     var category = productCategories[0].Category;
                     if (category != null)
                     {
-                        var breadCrumb = IoC.Resolve<ICategoryService>().GetBreadCrumb(category.CategoryId);
+                        var breadCrumb = this.CategoryService.GetBreadCrumb(category.CategoryId);
                         if (breadCrumb.Count > 0)
                         {
                             rptrCategoryBreadcrumb.DataSource = breadCrumb;

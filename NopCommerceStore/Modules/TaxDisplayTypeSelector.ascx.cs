@@ -37,7 +37,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
     {
         private void BindTaxDisplayTypes()
         {
-            if (IoC.Resolve<ITaxService>().AllowCustomersToSelectTaxDisplayType)
+            if (this.TaxService.AllowCustomersToSelectTaxDisplayType)
             {
                 this.Visible = true;
                 this.ddlTaxDisplayType.Items.Clear();

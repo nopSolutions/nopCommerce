@@ -43,7 +43,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         void BindGrid()
         {
-            var settingDictionary = IoC.Resolve<ISettingManager>().GetAllSettings();
+            var settingDictionary = this.SettingManager.GetAllSettings();
             List<Setting> settings = new List<Setting>();
             foreach (KeyValuePair<string, Setting> kvp in settingDictionary)
             {

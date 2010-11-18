@@ -23,13 +23,13 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     Response.Redirect(CommonHelper.GetStoreLocation());
                 }
 
-                var opv = IoC.Resolve<IOrderService>().GetOrderProductVariantByGuid(this.OrderProductVariantGuid.Value);
+                var opv = this.OrderService.GetOrderProductVariantByGuid(this.OrderProductVariantGuid.Value);
                 if (opv == null)
                 {
                     Response.Redirect(CommonHelper.GetStoreLocation());
                 }
 
-                var productVariant = IoC.Resolve<IProductService>().GetProductVariantById(opv.ProductVariantId);
+                var productVariant = this.ProductService.GetProductVariantById(opv.ProductVariantId);
                 if (productVariant == null || !productVariant.HasUserAgreement)
                 {
                     Response.Redirect(CommonHelper.GetStoreLocation());
@@ -55,10 +55,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     Response.Redirect(CommonHelper.GetStoreLocation());
                 }
 
-                var opv = IoC.Resolve<IOrderService>().GetOrderProductVariantByGuid(this.OrderProductVariantGuid.Value);
+                var opv = this.OrderService.GetOrderProductVariantByGuid(this.OrderProductVariantGuid.Value);
                 if (opv != null)
                 {
-                    string url = IoC.Resolve<IDownloadService>().GetDownloadUrl(opv);
+                    string url = this.DownloadService.GetDownloadUrl(opv);
                     url = CommonHelper.ModifyQueryString(url, "Agree=true", null);
                     Response.Redirect(url);
                 }

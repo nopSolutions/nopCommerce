@@ -46,7 +46,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected void BindGrid()
         {
-            var emailAccounts = IoC.Resolve<IMessageService>().GetAllEmailAccounts();
+            var emailAccounts = this.MessageService.GetAllEmailAccounts();
             gvEmailAccounts.DataSource = emailAccounts;
             gvEmailAccounts.DataBind();
         }
@@ -63,7 +63,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                     RadioButton rdbIsDefault = (RadioButton)row.FindControl("rdbIsDefault");
                     if (rdbIsDefault.Checked)
-                        IoC.Resolve<IMessageService>().DefaultEmailAccount = IoC.Resolve<IMessageService>().GetEmailAccountById(emailAccountId);
+                        this.MessageService.DefaultEmailAccount = this.MessageService.GetEmailAccountById(emailAccountId);
                 }
 
                 BindGrid();

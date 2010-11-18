@@ -39,7 +39,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            Product product = IoC.Resolve<IProductService>().GetProductById(this.ProductId);
+            Product product = this.ProductService.GetProductById(this.ProductId);
             if (product != null)
             {
                 var productVariants = product.ProductVariants;

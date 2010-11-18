@@ -53,7 +53,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         private void BindRecurringPayments()
         {
-            var recurringPayments = IoC.Resolve<IOrderService>().SearchRecurringPayments(NopContext.Current.User.CustomerId,
+            var recurringPayments = this.OrderService.SearchRecurringPayments(NopContext.Current.User.CustomerId,
                 0, null);
             if (recurringPayments.Count > 0)
             {
@@ -133,10 +133,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 var hfRecurringPaymentId = row.FindControl("hfRecurringPaymentId") as HiddenField;
 
                 int recurringPaymentId = int.Parse(hfRecurringPaymentId.Value);
-                var rp = IoC.Resolve<IOrderService>().GetRecurringPaymentById(recurringPaymentId);
-                if (IoC.Resolve<IOrderService>().CanCancelRecurringPayment(NopContext.Current.User, rp))
+                var rp = this.OrderService.GetRecurringPaymentById(recurringPaymentId);
+                if (this.OrderService.CanCancelRecurringPayment(NopContext.Current.User, rp))
                 {
-                    rp = IoC.Resolve<IOrderService>().CancelRecurringPayment(rp.RecurringPaymentId);
+                    rp = this.OrderService.CancelRecurringPayment(rp.RecurringPaymentId);
                 }
                 BindRecurringPayments();
             }
@@ -152,7 +152,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 if (btnCancelRecurringPayment != null)
                 {
                     btnCancelRecurringPayment.CommandArgument = e.Row.RowIndex.ToString();
-                    btnCancelRecurringPayment.Visible = IoC.Resolve<IOrderService>().CanCancelRecurringPayment(NopContext.Current.User, rp);
+                    btnCancelRecurringPayment.Visible = this.OrderService.CanCancelRecurringPayment(NopContext.Current.User, rp);
                 }
             }
         }
@@ -165,7 +165,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 var phReturnRequest = (PlaceHolder)e.Item.FindControl("phReturnRequest");
                 if (phReturnRequest != null)
                 {
-                    phReturnRequest.Visible = IoC.Resolve<IOrderService>().IsReturnRequestAllowed(order);
+                    phReturnRequest.Visible = this.OrderService.IsReturnRequestAllowed(order);
                 }
             }
         }

@@ -64,7 +64,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.UPSConfigure
             }
 
             this.ddlShippedFromCountry.Items.Clear();
-            var countries = IoC.Resolve<ICountryService>().GetAllCountries();
+            var countries = this.CountryService.GetAllCountries();
             foreach (Country country in countries)
             {
                 ListItem ddlItem1 = new ListItem(country.Name, country.CountryId.ToString());
@@ -74,39 +74,39 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.UPSConfigure
 
         private void BindData()
         {
-            txtURL.Text = IoC.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.UPS.URL");
-            txtAccessKey.Text = IoC.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.UPS.AccessKey");
-            txtUsername.Text = IoC.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.UPS.Username");
-            txtPassword.Text = IoC.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.UPS.Password");
-            txtAdditionalHandlingCharge.Value = IoC.Resolve<ISettingManager>().GetSettingValueDecimalNative("ShippingRateComputationMethod.UPS.AdditionalHandlingCharge");
+            txtURL.Text = this.SettingManager.GetSettingValue("ShippingRateComputationMethod.UPS.URL");
+            txtAccessKey.Text = this.SettingManager.GetSettingValue("ShippingRateComputationMethod.UPS.AccessKey");
+            txtUsername.Text = this.SettingManager.GetSettingValue("ShippingRateComputationMethod.UPS.Username");
+            txtPassword.Text = this.SettingManager.GetSettingValue("ShippingRateComputationMethod.UPS.Password");
+            txtAdditionalHandlingCharge.Value = this.SettingManager.GetSettingValueDecimalNative("ShippingRateComputationMethod.UPS.AdditionalHandlingCharge");
 
-            int defaultShippedFromCountryId = IoC.Resolve<ISettingManager>().GetSettingValueInteger("ShippingRateComputationMethod.UPS.DefaultShippedFromCountryId");
+            int defaultShippedFromCountryId = this.SettingManager.GetSettingValueInteger("ShippingRateComputationMethod.UPS.DefaultShippedFromCountryId");
             CommonHelper.SelectListItem(ddlShippedFromCountry, defaultShippedFromCountryId);
-            txtShippedFromZipPostalCode.Text = IoC.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.UPS.DefaultShippedFromZipPostalCode");
+            txtShippedFromZipPostalCode.Text = this.SettingManager.GetSettingValue("ShippingRateComputationMethod.UPS.DefaultShippedFromZipPostalCode");
 
 
-            string customerClassificationStr = IoC.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.UPS.CustomerClassification");
+            string customerClassificationStr = this.SettingManager.GetSettingValue("ShippingRateComputationMethod.UPS.CustomerClassification");
             if (!String.IsNullOrEmpty(customerClassificationStr))
             {
                 UPSCustomerClassification customerClassification = (UPSCustomerClassification)Enum.Parse(typeof(UPSCustomerClassification), customerClassificationStr);
                 CommonHelper.SelectListItem(ddlUPSCustomerClassification, customerClassification.ToString());
             }
 
-            string pickupTypeStr = IoC.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.UPS.PickupType");
+            string pickupTypeStr = this.SettingManager.GetSettingValue("ShippingRateComputationMethod.UPS.PickupType");
             if (!String.IsNullOrEmpty(pickupTypeStr))
             {
                 UPSPickupType pickupType = (UPSPickupType)Enum.Parse(typeof(UPSPickupType), pickupTypeStr);
                 CommonHelper.SelectListItem(ddlUPSPickupType, pickupType.ToString());
             }
 
-            string packagingTypeStr = IoC.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.UPS.PackagingType");
+            string packagingTypeStr = this.SettingManager.GetSettingValue("ShippingRateComputationMethod.UPS.PackagingType");
             if (!String.IsNullOrEmpty(packagingTypeStr))
             {
                 UPSPackagingType packagingType = (UPSPackagingType)Enum.Parse(typeof(UPSPackagingType), packagingTypeStr);
                 CommonHelper.SelectListItem(ddlUPSPackagingType, packagingType.ToString());
             }
             
-            string carrierServicesOffered = IoC.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.UPS.CarrierServicesOffered", string.Empty);
+            string carrierServicesOffered = this.SettingManager.GetSettingValue("ShippingRateComputationMethod.UPS.CarrierServicesOffered", string.Empty);
             var services = new UPSServices();
             // Load all service names
             if (carrierServicesOffered.Length == 0)
@@ -144,18 +144,18 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.UPSConfigure
             UPSPickupType pickupType = (UPSPickupType)Enum.Parse(typeof(UPSPickupType), ddlUPSPickupType.SelectedItem.Value);
             UPSPackagingType packagingType = (UPSPackagingType)Enum.Parse(typeof(UPSPackagingType), ddlUPSPackagingType.SelectedItem.Value);
 
-            IoC.Resolve<ISettingManager>().SetParam("ShippingRateComputationMethod.UPS.URL", txtURL.Text);
-            IoC.Resolve<ISettingManager>().SetParam("ShippingRateComputationMethod.UPS.AccessKey", txtAccessKey.Text);
-            IoC.Resolve<ISettingManager>().SetParam("ShippingRateComputationMethod.UPS.Username", txtUsername.Text);
-            IoC.Resolve<ISettingManager>().SetParam("ShippingRateComputationMethod.UPS.Password", txtPassword.Text);
-            IoC.Resolve<ISettingManager>().SetParamNative("ShippingRateComputationMethod.UPS.AdditionalHandlingCharge", txtAdditionalHandlingCharge.Value);
+            this.SettingManager.SetParam("ShippingRateComputationMethod.UPS.URL", txtURL.Text);
+            this.SettingManager.SetParam("ShippingRateComputationMethod.UPS.AccessKey", txtAccessKey.Text);
+            this.SettingManager.SetParam("ShippingRateComputationMethod.UPS.Username", txtUsername.Text);
+            this.SettingManager.SetParam("ShippingRateComputationMethod.UPS.Password", txtPassword.Text);
+            this.SettingManager.SetParamNative("ShippingRateComputationMethod.UPS.AdditionalHandlingCharge", txtAdditionalHandlingCharge.Value);
             int defaultShippedFromCountryId = int.Parse(this.ddlShippedFromCountry.SelectedItem.Value);
-            IoC.Resolve<ISettingManager>().SetParam("ShippingRateComputationMethod.UPS.DefaultShippedFromCountryId", defaultShippedFromCountryId.ToString());
-            IoC.Resolve<ISettingManager>().SetParam("ShippingRateComputationMethod.UPS.DefaultShippedFromZipPostalCode", txtShippedFromZipPostalCode.Text);
+            this.SettingManager.SetParam("ShippingRateComputationMethod.UPS.DefaultShippedFromCountryId", defaultShippedFromCountryId.ToString());
+            this.SettingManager.SetParam("ShippingRateComputationMethod.UPS.DefaultShippedFromZipPostalCode", txtShippedFromZipPostalCode.Text);
 
-            IoC.Resolve<ISettingManager>().SetParam("ShippingRateComputationMethod.UPS.CustomerClassification", customerClassification.ToString());
-            IoC.Resolve<ISettingManager>().SetParam("ShippingRateComputationMethod.UPS.PickupType", pickupType.ToString());
-            IoC.Resolve<ISettingManager>().SetParam("ShippingRateComputationMethod.UPS.PackagingType", packagingType.ToString());
+            this.SettingManager.SetParam("ShippingRateComputationMethod.UPS.CustomerClassification", customerClassification.ToString());
+            this.SettingManager.SetParam("ShippingRateComputationMethod.UPS.PickupType", pickupType.ToString());
+            this.SettingManager.SetParam("ShippingRateComputationMethod.UPS.PackagingType", packagingType.ToString());
 
 
             var carrierServicesOffered = new StringBuilder();
@@ -176,11 +176,11 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.UPSConfigure
             // Add default options if no services were selected (Ground, 3 Day Select, Standard, and Worldwide Expedited)
             if (carrierServicesCount == 0)
             {
-                IoC.Resolve<ISettingManager>().SetParam("ShippingRateComputationMethod.UPS.CarrierServicesOffered", "[03]:[12]:[11]:[08]:");
+                this.SettingManager.SetParam("ShippingRateComputationMethod.UPS.CarrierServicesOffered", "[03]:[12]:[11]:[08]:");
             }
             else
             {
-                IoC.Resolve<ISettingManager>().SetParam("ShippingRateComputationMethod.UPS.CarrierServicesOffered", carrierServicesOffered.ToString());
+                this.SettingManager.SetParam("ShippingRateComputationMethod.UPS.CarrierServicesOffered", carrierServicesOffered.ToString());
             }
         }
     }

@@ -76,7 +76,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                IoC.Resolve<ICampaignService>().DeleteCampaign(this.CampaignId);
+                this.CampaignService.DeleteCampaign(this.CampaignId);
                 Response.Redirect("Campaigns.aspx");
             }
             catch (Exception exc)

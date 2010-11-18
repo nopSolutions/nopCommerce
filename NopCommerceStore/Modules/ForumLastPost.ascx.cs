@@ -56,7 +56,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             {
                 //post date
                 string dateStr = string.Empty;
-                if (IoC.Resolve<IForumService>().RelativeDateTimeFormattingEnabled)
+                if (this.ForumService.RelativeDateTimeFormattingEnabled)
                     dateStr = forumPost.CreatedOn.RelativeFormat(true, "f");
                 else
                     dateStr = DateTimeHelper.ConvertToUserTime(forumPost.CreatedOn, DateTimeKind.Utc).ToString("f");
@@ -76,7 +76,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 var customer = forumPost.User;
                 if(customer != null)
                 {
-                    if(IoC.Resolve<ICustomerService>().AllowViewingProfiles && !customer.IsGuest)
+                    if(this.CustomerService.AllowViewingProfiles && !customer.IsGuest)
                     {
                         hlUser.Text = Server.HtmlEncode(customer.FormatUserName(true));
                         hlUser.NavigateUrl = SEOHelper.GetUserProfileUrl(customer.CustomerId);

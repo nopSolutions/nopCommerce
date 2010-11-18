@@ -39,7 +39,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            Product product = IoC.Resolve<IProductService>().GetProductById(this.ProductId);
+            Product product = this.ProductService.GetProductById(this.ProductId);
 
             if (this.HasLocalizableContent)
             {
@@ -82,7 +82,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public void SaveInfo(int prodId)
         {
-            Product product = IoC.Resolve<IProductService>().GetProductById(prodId);
+            Product product = this.ProductService.GetProductById(prodId);
             if (product != null)
             {
                 product.MetaKeywords = txtMetaKeywords.Text;
@@ -90,7 +90,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 product.MetaTitle = txtMetaTitle.Text;
                 product.SEName = txtSEName.Text;
                 product.UpdatedOn = DateTime.UtcNow;
-                IoC.Resolve<IProductService>().UpdateProduct(product);
+                this.ProductService.UpdateProduct(product);
             }
 
             SaveLocalizableContent(product);
@@ -125,7 +125,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         string.IsNullOrEmpty(metaTitle) &&
                         string.IsNullOrEmpty(seName));
 
-                    var content = IoC.Resolve<IProductService>().GetProductLocalizedByProductIdAndLanguageId(product.ProductId, languageId);
+                    var content = this.ProductService.GetProductLocalizedByProductIdAndLanguageId(product.ProductId, languageId);
                     if (content == null)
                     {
                         if (!allFieldsAreEmpty && languageId > 0)
@@ -138,7 +138,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                             content.MetaDescription = metaDescription;
                             content.MetaTitle = metaTitle;
                             content.SEName = seName;
-                            IoC.Resolve<IProductService>().InsertProductLocalized(content);
+                            this.ProductService.InsertProductLocalized(content);
                         }
                     }
                     else
@@ -150,7 +150,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                             content.MetaDescription = metaDescription;
                             content.MetaTitle = metaTitle;
                             content.SEName = seName;
-                            IoC.Resolve<IProductService>().UpdateProductLocalized(content);
+                            this.ProductService.UpdateProductLocalized(content);
                         }
                     }
                 }
@@ -169,7 +169,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                 int languageId = int.Parse(lblLanguageId.Text);
 
-                var content = IoC.Resolve<IProductService>().GetProductLocalizedByProductIdAndLanguageId(this.ProductId, languageId);
+                var content = this.ProductService.GetProductLocalizedByProductIdAndLanguageId(this.ProductId, languageId);
                 if (content != null)
                 {
                     txtLocalizedMetaKeywords.Text = content.MetaKeywords;

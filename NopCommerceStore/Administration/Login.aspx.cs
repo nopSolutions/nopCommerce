@@ -19,7 +19,7 @@ namespace NopSolutions.NopCommerce.Web.Administration
             Literal lUsernameOrEmail = LoginForm.FindControl("lUsernameOrEmail") as Literal;
             if (lUsernameOrEmail != null)
             {
-                if (IoC.Resolve<ICustomerService>().UsernamesEnabled)
+                if (this.CustomerService.UsernamesEnabled)
                 {
                     lUsernameOrEmail.Text = GetLocaleResourceString("Login.Username");
                 }
@@ -31,7 +31,7 @@ namespace NopSolutions.NopCommerce.Web.Administration
             RequiredFieldValidator UserNameOrEmailRequired = LoginForm.FindControl("UserNameOrEmailRequired") as RequiredFieldValidator;
             if (UserNameOrEmailRequired != null)
             {
-                if (IoC.Resolve<ICustomerService>().UsernamesEnabled)
+                if (this.CustomerService.UsernamesEnabled)
                 {
                     UserNameOrEmailRequired.ErrorMessage = GetLocaleResourceString("Login.UserNameRequired");
                     UserNameOrEmailRequired.ToolTip = GetLocaleResourceString("Login.UserNameRequired");

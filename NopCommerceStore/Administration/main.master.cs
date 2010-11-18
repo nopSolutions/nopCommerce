@@ -43,7 +43,7 @@ namespace NopSolutions.NopCommerce.Web.Administration
 
         protected void BindData()
         {
-            string headerText = string.Format("nopCommerce {0}", IoC.Resolve<ISettingManager>().CurrentVersion);
+            string headerText = string.Format("nopCommerce {0}", this.SettingManager.CurrentVersion);
             lblHeader.Text = headerText;
         }
 

@@ -39,7 +39,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             List<int> _customerRoleIds = new List<int>();
 
-            Customer customer = IoC.Resolve<ICustomerService>().GetCustomerById(this.CustomerId);
+            Customer customer = this.CustomerService.GetCustomerById(this.CustomerId);
             if (customer != null)
             {
                 var customerRoles = customer.CustomerRoles;
@@ -66,28 +66,28 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public void SaveInfo(int cusId)
         {
-            Customer customer = IoC.Resolve<ICustomerService>().GetCustomerById(cusId);
+            Customer customer = this.CustomerService.GetCustomerById(cusId);
 
             if (customer != null)
             {
                 List<int> selectedCustomerRoleIds = this.CustomerRoleMappingControl.SelectedCustomerRoleIds;
                 var existingCustomerRoles = customer.CustomerRoles;
 
-                var allCustomerRoles = IoC.Resolve<ICustomerService>().GetAllCustomerRoles();
+                var allCustomerRoles = this.CustomerService.GetAllCustomerRoles();
                 foreach (CustomerRole customerRole in allCustomerRoles)
                 {
                     if (selectedCustomerRoleIds.Contains(customerRole.CustomerRoleId))
                     {
                         if (existingCustomerRoles.Find(cr => cr.CustomerRoleId == customerRole.CustomerRoleId) == null)
                         {
-                            IoC.Resolve<ICustomerService>().AddCustomerToRole(customer.CustomerId, customerRole.CustomerRoleId);
+                            this.CustomerService.AddCustomerToRole(customer.CustomerId, customerRole.CustomerRoleId);
                         }
                     }
                     else
                     {
                         if (existingCustomerRoles.Find(cr => cr.CustomerRoleId == customerRole.CustomerRoleId) != null)
                         {
-                            IoC.Resolve<ICustomerService>().RemoveCustomerFromRole(customer.CustomerId, customerRole.CustomerRoleId);
+                            this.CustomerService.RemoveCustomerFromRole(customer.CustomerId, customerRole.CustomerRoleId);
                         }
                     }
                 }

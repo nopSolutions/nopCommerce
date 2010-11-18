@@ -34,7 +34,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            CustomerRole customerRole = IoC.Resolve<ICustomerService>().GetCustomerRoleById(this.CustomerRoleId);
+            CustomerRole customerRole = this.CustomerService.GetCustomerRoleById(this.CustomerRoleId);
             if (customerRole != null)
             {
                 var customers = customerRole.Customers;

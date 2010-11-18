@@ -48,7 +48,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
         {
             //get all tags
             int maxItems = 15;
-            var productTags = IoC.Resolve<IProductService>().GetAllProductTags();
+            var productTags = this.ProductService.GetAllProductTags();
             List<ProductTag> cloudItems = new List<ProductTag>();
             for (int i = 0; i < productTags.Count; i++)
             {

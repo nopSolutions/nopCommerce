@@ -44,7 +44,7 @@ namespace NopSolutions.NopCommerce.Web.Templates.Payment.Manual
         private void BindData()
         {
             this.ddlCreditCardType.Items.Clear();
-            var creditCardTypeCollection = IoC.Resolve<IPaymentService>().GetAllCreditCardTypes();
+            var creditCardTypeCollection = this.PaymentService.GetAllCreditCardTypes();
             foreach (CreditCardType creditCardType in creditCardTypeCollection)
             {
                 ListItem ddlCreditCardTypeItem2 = new ListItem(creditCardType.Name, creditCardType.CreditCardTypeId.ToString());
@@ -77,7 +77,7 @@ namespace NopSolutions.NopCommerce.Web.Templates.Payment.Manual
         {
             PaymentInfo paymentInfo = new PaymentInfo();
             int creditCardTypeId = int.Parse(this.ddlCreditCardType.SelectedItem.Value);
-            CreditCardType creditCardType = IoC.Resolve<IPaymentService>().GetCreditCardTypeById(creditCardTypeId);
+            CreditCardType creditCardType = this.PaymentService.GetCreditCardTypeById(creditCardTypeId);
             if (creditCardType == null)
                 throw new NopException("Couldn't load credit card type");
             paymentInfo.CreditCardType = creditCardType.SystemKeyword;

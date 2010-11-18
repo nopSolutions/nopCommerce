@@ -40,14 +40,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Payment.Check
 
         private void BindData()
         {
-            txtInfo.Value = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Check.Info");
-            txtAdditionalFee.Value = IoC.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.Check.AdditionalFee");
+            txtInfo.Value = this.SettingManager.GetSettingValue("PaymentMethod.Check.Info");
+            txtAdditionalFee.Value = this.SettingManager.GetSettingValueDecimalNative("PaymentMethod.Check.AdditionalFee");
         }
 
         public void Save()
         {
-            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.Check.Info", txtInfo.Value);
-            IoC.Resolve<ISettingManager>().SetParamNative("PaymentMethod.Check.AdditionalFee", txtAdditionalFee.Value);
+            this.SettingManager.SetParam("PaymentMethod.Check.Info", txtInfo.Value);
+            this.SettingManager.SetParamNative("PaymentMethod.Check.AdditionalFee", txtAdditionalFee.Value);
         }
     }
 }

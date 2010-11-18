@@ -72,7 +72,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                IoC.Resolve<IForumService>().DeleteForumGroup(this.ForumGroupId);
+                this.ForumService.DeleteForumGroup(this.ForumGroupId);
                 Response.Redirect("Forums.aspx");
             }
             catch (Exception exc)

@@ -50,7 +50,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         private void BindData()
         {
-            var dataSource = IoC.Resolve<ICustomerActivityService>().GetAllActivityTypes();
+            var dataSource = this.CustomerActivityService.GetAllActivityTypes();
             gvActivityTypes.DataSource = dataSource;
             gvActivityTypes.DataBind();
         }
@@ -69,11 +69,11 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         int activityLogTypeId = Int32.Parse(hfActivityLogTypeId.Value);
                         bool enable = cbEnabled.Checked;
 
-                        var activityLogType = IoC.Resolve<ICustomerActivityService>().GetActivityTypeById(activityLogTypeId);
+                        var activityLogType = this.CustomerActivityService.GetActivityTypeById(activityLogTypeId);
                         if (activityLogType != null && activityLogType.Enabled != enable)
                         {
                             activityLogType.Enabled = enable;
-                            IoC.Resolve<ICustomerActivityService>().UpdateActivityType(activityLogType);
+                            this.CustomerActivityService.UpdateActivityType(activityLogType);
                         }
                     }
                 }

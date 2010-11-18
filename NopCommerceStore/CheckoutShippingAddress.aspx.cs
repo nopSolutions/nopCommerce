@@ -43,7 +43,7 @@ namespace NopSolutions.NopCommerce.Web
         {
             CommonHelper.SetResponseNoCache(Response);
 
-            if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Checkout.UseOnePageCheckout"))
+            if (this.SettingManager.GetSettingValueBoolean("Checkout.UseOnePageCheckout"))
             {
                 Response.Redirect("~/checkout.aspx");
             }
@@ -51,7 +51,7 @@ namespace NopSolutions.NopCommerce.Web
             string title = GetLocaleResourceString("PageTitle.CheckoutShippingAddress");
             SEOHelper.RenderTitle(this, title, true);
 
-            if ((NopContext.Current.User == null) || (NopContext.Current.User.IsGuest && !IoC.Resolve<ICustomerService>().AnonymousCheckoutAllowed))
+            if ((NopContext.Current.User == null) || (NopContext.Current.User.IsGuest && !this.CustomerService.AnonymousCheckoutAllowed))
             {
                 string loginURL = SEOHelper.GetLoginPageUrl(true);
                 Response.Redirect(loginURL);

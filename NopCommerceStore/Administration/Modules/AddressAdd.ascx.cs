@@ -27,7 +27,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         protected void BindData()
         {
-            Customer customer = IoC.Resolve<ICustomerService>().GetCustomerById(this.CustomerId);
+            Customer customer = this.CustomerService.GetCustomerById(this.CustomerId);
             if (customer != null)
             {
                 this.lblCustomer.Text = Server.HtmlEncode(customer.Email);
@@ -42,9 +42,9 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             this.ddlCountry.Items.Clear();
             List<Country> countryCollection = null;
             if (IsBillingAddress)
-                countryCollection = IoC.Resolve<ICountryService>().GetAllCountriesForBilling();
+                countryCollection = this.CountryService.GetAllCountriesForBilling();
             else
-                countryCollection = IoC.Resolve<ICountryService>().GetAllCountriesForShipping();
+                countryCollection = this.CountryService.GetAllCountriesForShipping();
             foreach (Country country in countryCollection)
             {
                 ListItem ddlCountryItem2 = new ListItem(country.Name, country.CountryId.ToString());
@@ -57,7 +57,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             this.ddlStateProvince.Items.Clear();
             int countryId = int.Parse(this.ddlCountry.SelectedItem.Value);
 
-            var stateProvinceCollection = IoC.Resolve<IStateProvinceService>().GetStateProvincesByCountryId(countryId);
+            var stateProvinceCollection = this.StateProvinceService.GetStateProvincesByCountryId(countryId);
             foreach (StateProvince stateProvince in stateProvinceCollection)
             {
                 ListItem ddlStateProviceItem2 = new ListItem(stateProvince.Name, stateProvince.StateProvinceId.ToString());
@@ -101,7 +101,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 CreatedOn = DateTime.UtcNow,
                 UpdatedOn = DateTime.UtcNow
             };
-            IoC.Resolve<ICustomerService>().InsertAddress(address);
+            this.CustomerService.InsertAddress(address);
 
             return address;
         }

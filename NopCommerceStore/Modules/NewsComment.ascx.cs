@@ -60,7 +60,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 var customer = newsComment.Customer;
                 if (customer != null)
                 {
-                    if (IoC.Resolve<ICustomerService>().AllowViewingProfiles)
+                    if (this.CustomerService.AllowViewingProfiles)
                     {
                         hlUser.Text = Server.HtmlEncode(customer.FormatUserName(true));
                         hlUser.NavigateUrl = SEOHelper.GetUserProfileUrl(customer.CustomerId);
@@ -72,20 +72,20 @@ namespace NopSolutions.NopCommerce.Web.Modules
                         hlUser.Visible = false;
                     }
 
-                    if (IoC.Resolve<ICustomerService>().AllowCustomersToUploadAvatars)
+                    if (this.CustomerService.AllowCustomersToUploadAvatars)
                     {
                         var customerAvatar = customer.Avatar;
-                        int avatarSize = IoC.Resolve<ISettingManager>().GetSettingValueInteger("Media.Customer.AvatarSize", 85);
+                        int avatarSize = this.SettingManager.GetSettingValueInteger("Media.Customer.AvatarSize", 85);
                         if (customerAvatar != null)
                         {
-                            string pictureUrl = IoC.Resolve<IPictureService>().GetPictureUrl(customerAvatar, avatarSize, false);
+                            string pictureUrl = this.PictureService.GetPictureUrl(customerAvatar, avatarSize, false);
                             this.imgAvatar.ImageUrl = pictureUrl;
                         }
                         else
                         {
-                            if (IoC.Resolve<ICustomerService>().DefaultAvatarEnabled)
+                            if (this.CustomerService.DefaultAvatarEnabled)
                             {
-                                string pictureUrl = IoC.Resolve<IPictureService>().GetDefaultPictureUrl(PictureTypeEnum.Avatar, avatarSize);
+                                string pictureUrl = this.PictureService.GetDefaultPictureUrl(PictureTypeEnum.Avatar, avatarSize);
                                 this.imgAvatar.ImageUrl = pictureUrl;
                             }
                             else
@@ -103,10 +103,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 {
                     lblUser.Text = GetLocaleResourceString("Customer.NotRegistered");
                     hlUser.Visible = false;
-                    if (IoC.Resolve<ICustomerService>().AllowCustomersToUploadAvatars && IoC.Resolve<ICustomerService>().DefaultAvatarEnabled)
+                    if (this.CustomerService.AllowCustomersToUploadAvatars && this.CustomerService.DefaultAvatarEnabled)
                     {
-                        int avatarSize = IoC.Resolve<ISettingManager>().GetSettingValueInteger("Media.Customer.AvatarSize", 85);
-                        string pictureUrl = IoC.Resolve<IPictureService>().GetDefaultPictureUrl(PictureTypeEnum.Avatar, avatarSize);
+                        int avatarSize = this.SettingManager.GetSettingValueInteger("Media.Customer.AvatarSize", 85);
+                        string pictureUrl = this.PictureService.GetDefaultPictureUrl(PictureTypeEnum.Avatar, avatarSize);
                         this.imgAvatar.ImageUrl = pictureUrl;
                     }
                     else

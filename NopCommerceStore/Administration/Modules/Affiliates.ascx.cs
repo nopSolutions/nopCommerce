@@ -44,7 +44,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         void BindGrid()
         {
-            var affiliateCollection = IoC.Resolve<IAffiliateService>().GetAllAffiliates();
+            var affiliateCollection = this.AffiliateService.GetAllAffiliates();
             gvAffiliates.DataSource = affiliateCollection;
             gvAffiliates.DataBind();
         }

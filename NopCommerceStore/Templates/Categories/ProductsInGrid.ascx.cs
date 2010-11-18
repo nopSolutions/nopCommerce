@@ -51,7 +51,7 @@ namespace NopSolutions.NopCommerce.Web.Templates.Categories
 
         protected void FillDropDowns()
         {
-            if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Common.AllowProductSorting"))
+            if (this.SettingManager.GetSettingValueBoolean("Common.AllowProductSorting"))
             {
                 ddlSorting.Items.Clear();
 
@@ -73,16 +73,16 @@ namespace NopSolutions.NopCommerce.Web.Templates.Categories
 
         protected void BindData()
         {
-            var category = IoC.Resolve<ICategoryService>().GetCategoryById(this.CategoryId);
+            var category = this.CategoryService.GetCategoryById(this.CategoryId);
 
             //breadcrumb
-            rptrCategoryBreadcrumb.DataSource = IoC.Resolve<ICategoryService>().GetBreadCrumb(this.CategoryId);
+            rptrCategoryBreadcrumb.DataSource = this.CategoryService.GetBreadCrumb(this.CategoryId);
             rptrCategoryBreadcrumb.DataBind();
 
             lDescription.Text = category.LocalizedDescription;
 
             //subcategories
-            var subCategories = IoC.Resolve<ICategoryService>().GetAllCategoriesByParentCategoryId(category.CategoryId);
+            var subCategories = this.CategoryService.GetAllCategoriesByParentCategoryId(category.CategoryId);
             if (subCategories.Count > 0)
             {
                 dlSubCategories.DataSource = subCategories;
@@ -124,13 +124,13 @@ namespace NopSolutions.NopCommerce.Web.Templates.Categories
                 minPrice = ctrlPriceRangeFilter.SelectedPriceRange.From;
                 if (minPrice.HasValue)
                 {
-                    minPriceConverted = IoC.Resolve<ICurrencyService>().ConvertCurrency(minPrice.Value, NopContext.Current.WorkingCurrency, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency);
+                    minPriceConverted = this.CurrencyService.ConvertCurrency(minPrice.Value, NopContext.Current.WorkingCurrency, this.CurrencyService.PrimaryStoreCurrency);
                 }
 
                 maxPrice = ctrlPriceRangeFilter.SelectedPriceRange.To;
                 if (maxPrice.HasValue)
                 {
-                    maxPriceConverted = IoC.Resolve<ICurrencyService>().ConvertCurrency(maxPrice.Value, NopContext.Current.WorkingCurrency, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency);
+                    maxPriceConverted = this.CurrencyService.ConvertCurrency(maxPrice.Value, NopContext.Current.WorkingCurrency, this.CurrencyService.PrimaryStoreCurrency);
                 }
             }
 
@@ -139,13 +139,13 @@ namespace NopSolutions.NopCommerce.Web.Templates.Categories
 
             //sorting
             ProductSortingEnum orderBy = ProductSortingEnum.Position;
-            if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Common.AllowProductSorting"))
+            if (this.SettingManager.GetSettingValueBoolean("Common.AllowProductSorting"))
             {
                 CommonHelper.SelectListItem(this.ddlSorting, CommonHelper.QueryStringInt("orderby"));            
                 orderBy = (ProductSortingEnum)Enum.ToObject(typeof(ProductSortingEnum), int.Parse(ddlSorting.SelectedItem.Value));
             }
 
-            var productCollection = IoC.Resolve<IProductService>().GetAllProducts(this.CategoryId,
+            var productCollection = this.ProductService.GetAllProducts(this.CategoryId,
                 0, 0, false, minPriceConverted, maxPriceConverted,
                 string.Empty, false, pageSize, this.CurrentPageIndex, 
                 psoFilterOption, orderBy, out totalRecords);
@@ -205,7 +205,7 @@ namespace NopSolutions.NopCommerce.Web.Templates.Categories
                 var hlImageLink = e.Item.FindControl("hlImageLink") as HyperLink;
                 if (hlImageLink != null)
                 {
-                    hlImageLink.ImageUrl = IoC.Resolve<IPictureService>().GetPictureUrl(category.PictureId, IoC.Resolve<ISettingManager>().GetSettingValueInteger("Media.Category.ThumbnailImageSize", 125), true);
+                    hlImageLink.ImageUrl = this.PictureService.GetPictureUrl(category.PictureId, this.SettingManager.GetSettingValueInteger("Media.Category.ThumbnailImageSize", 125), true);
                     hlImageLink.NavigateUrl = categoryURL;
                     hlImageLink.ToolTip = String.Format(GetLocaleResourceString("Media.Category.ImageLinkTitleFormat"), category.LocalizedName);
                     hlImageLink.Text = String.Format(GetLocaleResourceString("Media.Category.ImageAlternateTextFormat"), category.LocalizedName);

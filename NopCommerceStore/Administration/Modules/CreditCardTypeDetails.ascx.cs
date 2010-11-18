@@ -72,7 +72,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                IoC.Resolve<IPaymentService>().MarkCreditCardTypeAsDeleted(this.CreditCardTypeId);
+                this.PaymentService.MarkCreditCardTypeAsDeleted(this.CreditCardTypeId);
                 Response.Redirect("CreditCardTypes.aspx");
             }
             catch (Exception exc)

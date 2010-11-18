@@ -41,7 +41,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected void BindGrid()
         {
-            var topics = IoC.Resolve<ITopicService>().GetAllTopics();
+            var topics = this.TopicService.GetAllTopics();
             gvTopics.DataSource = topics;
             gvTopics.DataBind();
         }

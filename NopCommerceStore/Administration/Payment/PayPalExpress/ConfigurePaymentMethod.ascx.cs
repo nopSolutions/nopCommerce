@@ -33,10 +33,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Payment.PayPalExpress
 {
     public partial class ConfigurePaymentMethod : BaseNopAdministrationUserControl, IConfigurePaymentMethodModule
     {
-        public static TransactMode GetCurrentTransactionMode()
+        public TransactMode GetCurrentTransactionMode()
         {
             TransactMode transactionModeEnum = TransactMode.Authorize;
-            string transactionMode = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.PaypalExpress.TransactionMode");
+            string transactionMode = this.SettingManager.GetSettingValue("PaymentMethod.PaypalExpress.TransactionMode");
             if (!String.IsNullOrEmpty(transactionMode))
             {
                 transactionModeEnum = (TransactMode)Enum.Parse(typeof(TransactMode), transactionMode);
@@ -45,9 +45,9 @@ namespace NopSolutions.NopCommerce.Web.Administration.Payment.PayPalExpress
             return transactionModeEnum;
         }
 
-        public static void SetTransactionMode(TransactMode transactionMode)
+        public void SetTransactionMode(TransactMode transactionMode)
         {
-            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.PaypalExpress.TransactionMode", transactionMode.ToString());
+            this.SettingManager.SetParam("PaymentMethod.PaypalExpress.TransactionMode", transactionMode.ToString());
         }
 
         protected void Page_Load(object sender, EventArgs e)
@@ -71,10 +71,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Payment.PayPalExpress
                     break;
             }
 
-            cbUseSandbox.Checked = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.PaypalExpress.UseSandbox");
-            txtAPIAccountName.Text = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.PaypalExpress.APIAccountName");
-            txtAPIAccountPassword.Text = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.PaypalExpress.APIAccountPassword");
-            txtSignature.Text = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.PaypalExpress.Signature");
+            cbUseSandbox.Checked = this.SettingManager.GetSettingValueBoolean("PaymentMethod.PaypalExpress.UseSandbox");
+            txtAPIAccountName.Text = this.SettingManager.GetSettingValue("PaymentMethod.PaypalExpress.APIAccountName");
+            txtAPIAccountPassword.Text = this.SettingManager.GetSettingValue("PaymentMethod.PaypalExpress.APIAccountPassword");
+            txtSignature.Text = this.SettingManager.GetSettingValue("PaymentMethod.PaypalExpress.Signature");
         }
 
         public void Save()
@@ -90,10 +90,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Payment.PayPalExpress
             }
             SetTransactionMode(transactionMode);
 
-            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.PaypalExpress.UseSandbox", cbUseSandbox.Checked.ToString());
-            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.PaypalExpress.APIAccountName", txtAPIAccountName.Text);
-            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.PaypalExpress.APIAccountPassword", txtAPIAccountPassword.Text);
-            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.PaypalExpress.Signature", txtSignature.Text);
+            this.SettingManager.SetParam("PaymentMethod.PaypalExpress.UseSandbox", cbUseSandbox.Checked.ToString());
+            this.SettingManager.SetParam("PaymentMethod.PaypalExpress.APIAccountName", txtAPIAccountName.Text);
+            this.SettingManager.SetParam("PaymentMethod.PaypalExpress.APIAccountPassword", txtAPIAccountPassword.Text);
+            this.SettingManager.SetParam("PaymentMethod.PaypalExpress.Signature", txtSignature.Text);
         }
     }
 }

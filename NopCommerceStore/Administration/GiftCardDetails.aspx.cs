@@ -36,7 +36,7 @@ namespace NopSolutions.NopCommerce.Web.Administration
     {
         protected override bool ValidatePageSecurity()
         {
-            return IoC.Resolve<IACLService>().IsActionAllowed("ManageGiftCards");
+            return this.ACLService.IsActionAllowed("ManageGiftCards");
         }
     }
 }

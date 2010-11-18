@@ -47,9 +47,9 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void BindData()
         {
-            int pageSize = IoC.Resolve<INewsService>().NewsArchivePageSize;
+            int pageSize = this.NewsService.NewsArchivePageSize;
 
-            var newsCollection = IoC.Resolve<INewsService>().GetAllNews(NopContext.Current.WorkingLanguage.LanguageId, CurrentPageIndex, pageSize);
+            var newsCollection = this.NewsService.GetAllNews(NopContext.Current.WorkingLanguage.LanguageId, CurrentPageIndex, pageSize);
             if(newsCollection.Count > 0)
             {
                 newsPager.PageSize = pageSize;

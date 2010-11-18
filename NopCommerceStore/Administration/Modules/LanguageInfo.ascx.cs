@@ -80,7 +80,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         private void BindData()
         {
-            Language language = IoC.Resolve<ILanguageService>().GetLanguageById(this.LanguageId);
+            Language language = this.LanguageService.GetLanguageById(this.LanguageId);
 
             if (language != null)
             {
@@ -113,7 +113,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public Language SaveInfo()
         {
-            Language language = IoC.Resolve<ILanguageService>().GetLanguageById(this.LanguageId);
+            Language language = this.LanguageService.GetLanguageById(this.LanguageId);
 
             string name = txtName.Text;
             string languageCulture = ddlLanguageCulture.SelectedItem.Value;
@@ -128,7 +128,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 language.FlagImageFileName = flagImageFileName;
                 language.Published = published;
                 language.DisplayOrder = displayOrder;
-                IoC.Resolve<ILanguageService>().UpdateLanguage(language);
+                this.LanguageService.UpdateLanguage(language);
             }
             else
             {
@@ -140,7 +140,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     Published = published,
                     DisplayOrder = displayOrder
                 };
-                IoC.Resolve<ILanguageService>().InsertLanguage(language);
+                this.LanguageService.InsertLanguage(language);
 
             }
 
@@ -153,7 +153,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 try
                 {
-                    Language language = IoC.Resolve<ILanguageService>().GetLanguageById(this.LanguageId);
+                    Language language = this.LanguageService.GetLanguageById(this.LanguageId);
 
                     if (language != null)
                     {
@@ -163,7 +163,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                             using (StreamReader sr = new StreamReader(importResourcesFile.InputStream, Encoding.UTF8))
                             {
                                 string content = sr.ReadToEnd();
-                                IoC.Resolve<ILocalizationManager>().LanguagePackImport(this.LanguageId, content);
+                                this.LocalizationManager.LanguagePackImport(this.LanguageId, content);
                                 ShowMessage(GetLocaleResourceString("Admin.LanguageInfo.ResourcesImported"));
                             }
                         }

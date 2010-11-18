@@ -56,7 +56,7 @@ namespace NopSolutions.NopCommerce.Web
                 Response.End();
             }
 
-            if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.GoogleCheckout.DebugModeEnabled"))
+            if (this.SettingManager.GetSettingValueBoolean("PaymentMethod.GoogleCheckout.DebugModeEnabled"))
             {
                 if (CommonHelper.QueryStringInt("nopCommerceTestNewOrder1") > 0)
                 {

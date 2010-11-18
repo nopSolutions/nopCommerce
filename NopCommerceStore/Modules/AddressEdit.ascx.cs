@@ -65,7 +65,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
         private void FillCountryDropDownsForShipping()
         {
             this.ddlCountry.Items.Clear();
-            var countryCollection = IoC.Resolve<ICountryService>().GetAllCountriesForShipping();
+            var countryCollection = this.CountryService.GetAllCountriesForShipping();
             foreach (var country in countryCollection)
             {
                 var ddlCountryItem2 = new ListItem(country.Name, country.CountryId.ToString());
@@ -76,7 +76,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
         private void FillCountryDropDownsForBilling()
         {
             this.ddlCountry.Items.Clear();
-            var countryCollection = IoC.Resolve<ICountryService>().GetAllCountriesForBilling();
+            var countryCollection = this.CountryService.GetAllCountriesForBilling();
             foreach (var country in countryCollection)
             {
                 var ddlCountryItem2 = new ListItem(country.Name, country.CountryId.ToString());
@@ -91,7 +91,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             if (this.ddlCountry.SelectedItem != null)
                 countryId = int.Parse(this.ddlCountry.SelectedItem.Value);
 
-            var stateProvinceCollection = IoC.Resolve<IStateProvinceService>().GetStateProvincesByCountryId(countryId);
+            var stateProvinceCollection = this.StateProvinceService.GetStateProvincesByCountryId(countryId);
             foreach (var stateProvince in stateProvinceCollection)
             {
                 var ddlStateProviceItem2 = new ListItem(stateProvince.Name, stateProvince.StateProvinceId.ToString());
@@ -132,7 +132,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
                 if (this.ddlStateProvince.SelectedItem == null)
                     throw new NopException("State/Provinces are not populated");
-                var stateProvince = IoC.Resolve<IStateProvinceService>().GetStateProvinceById(int.Parse(this.ddlStateProvince.SelectedItem.Value));
+                var stateProvince = this.StateProvinceService.GetStateProvinceById(int.Parse(this.ddlStateProvince.SelectedItem.Value));
                 if (stateProvince != null && stateProvince.CountryId == address.CountryId)
                     address.StateProvinceId = stateProvince.StateProvinceId;
 

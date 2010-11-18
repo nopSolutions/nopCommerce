@@ -39,7 +39,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             if (this.MessageTemplate != null)
             {
                 StringBuilder allowedTokensString = new StringBuilder();
-                string[] allowedTokens = IoC.Resolve<IMessageService>().GetListOfAllowedTokens();
+                string[] allowedTokens = this.MessageService.GetListOfAllowedTokens();
                 for (int i = 0; i < allowedTokens.Length; i++)
                 {
                     string token = allowedTokens[i];
@@ -90,7 +90,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 
                 int languageId = int.Parse(lblLanguageId.Text);
 
-                var emailAccounts= IoC.Resolve<IMessageService>().GetAllEmailAccounts();
+                var emailAccounts= this.MessageService.GetAllEmailAccounts();
                 ddlEmailAccount.Items.Clear();
                 foreach(var emailAccount in emailAccounts)
                 {
@@ -98,7 +98,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     ddlEmailAccount.Items.Add(item);
                 }
 
-                var content = IoC.Resolve<IMessageService>().GetLocalizedMessageTemplate(this.MessageTemplate.Name, languageId);
+                var content = this.MessageService.GetLocalizedMessageTemplate(this.MessageTemplate.Name, languageId);
                 if (content != null)
                 {
                     CommonHelper.SelectListItem(ddlEmailAccount, content.EmailAccount.EmailAccountId);
@@ -109,14 +109,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 }
                 else
                 {
-                    CommonHelper.SelectListItem(ddlEmailAccount, IoC.Resolve<IMessageService>().DefaultEmailAccount.EmailAccountId);
+                    CommonHelper.SelectListItem(ddlEmailAccount, this.MessageService.DefaultEmailAccount.EmailAccountId);
                 }
             }
         }
 
         protected MessageTemplate Save()
         {
-            MessageTemplate messageTemplate = IoC.Resolve<IMessageService>().GetMessageTemplateById(this.MessageTemplateId);
+            MessageTemplate messageTemplate = this.MessageService.GetMessageTemplateById(this.MessageTemplateId);
 
             foreach (RepeaterItem item in rptrLanguageDivs.Items)
             {
@@ -136,7 +136,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     string body = txtBody.Value;
                     bool active = cbActive.Checked;
 
-                    var content = IoC.Resolve<IMessageService>().GetLocalizedMessageTemplate(this.MessageTemplate.Name, languageId);
+                    var content = this.MessageService.GetLocalizedMessageTemplate(this.MessageTemplate.Name, languageId);
                     if (content == null)
                     {
                         content = new LocalizedMessageTemplate()
@@ -149,7 +149,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                             Body = body,
                             IsActive = active
                         };
-                        IoC.Resolve<IMessageService>().InsertLocalizedMessageTemplate(content);
+                        this.MessageService.InsertLocalizedMessageTemplate(content);
                     }
                     else
                     {
@@ -158,7 +158,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         content.Subject = subject;
                         content.Body = body;
                         content.IsActive = active;
-                        IoC.Resolve<IMessageService>().UpdateLocalizedMessageTemplate(content);
+                        this.MessageService.UpdateLocalizedMessageTemplate(content);
                     }
                 }
             }
@@ -205,7 +205,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 if (_messageTemplate == null)
                 {
-                    _messageTemplate = IoC.Resolve<IMessageService>().GetMessageTemplateById(this.MessageTemplateId);
+                    _messageTemplate = this.MessageService.GetMessageTemplateById(this.MessageTemplateId);
                 }
                 return _messageTemplate;
             }

@@ -87,7 +87,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                IoC.Resolve<IAffiliateService>().MarkAffiliateAsDeleted(this.AffiliateId);
+                this.AffiliateService.MarkAffiliateAsDeleted(this.AffiliateId);
                 Response.Redirect("Affiliates.aspx");
             }
             catch (Exception exc)

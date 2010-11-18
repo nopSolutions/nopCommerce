@@ -37,7 +37,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            this.Visible = IoC.Resolve<IForumService>().ForumsEnabled;
+            this.Visible = this.ForumService.ForumsEnabled;
 
             if (!Page.IsPostBack)
             {
@@ -47,7 +47,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         private void BindData()
         {
-            var forumGroups = IoC.Resolve<IForumService>().GetAllForumGroups();
+            var forumGroups = this.ForumService.GetAllForumGroups();
             rptrForumGroups.DataSource = forumGroups;
             rptrForumGroups.DataBind();
         }

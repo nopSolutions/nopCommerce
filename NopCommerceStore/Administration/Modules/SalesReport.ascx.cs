@@ -75,7 +75,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             ddlBillingCountry.Items.Clear();
             ListItem itemBillingCountry = new ListItem(GetLocaleResourceString("Admin.Common.All"), "0");
             this.ddlBillingCountry.Items.Add(itemBillingCountry);
-            var countries = IoC.Resolve<ICountryService>().GetAllCountriesForBilling();
+            var countries = this.CountryService.GetAllCountriesForBilling();
             foreach (var country in countries)
             {
                 ListItem ddlCountryItem2 = new ListItem(country.Name, country.CountryId.ToString());
@@ -107,7 +107,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 paymentStatus = (PaymentStatusEnum)Enum.ToObject(typeof(PaymentStatusEnum), paymentStatusId);
             int billingCountryID = int.Parse(ddlBillingCountry.SelectedItem.Value);
 
-            var report = IoC.Resolve<IOrderService>().OrderProductVariantReport(startDate, endDate, orderStatus, paymentStatus, billingCountryID);
+            var report = this.OrderService.OrderProductVariantReport(startDate, endDate, orderStatus, paymentStatus, billingCountryID);
             if (report.Count == 0)
             {
                 chartOrders.Visible = false;
@@ -149,7 +149,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         public string GetProductVariantUrl(int productVariantId)
         {
             string result = string.Empty;
-            ProductVariant productVariant = IoC.Resolve<IProductService>().GetProductVariantById(productVariantId);
+            ProductVariant productVariant = this.ProductService.GetProductVariantById(productVariantId);
             if (productVariant != null)
                 result = "ProductVariantDetails.aspx?ProductVariantID=" + productVariant.ProductVariantId.ToString();
             else
@@ -159,7 +159,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public string GetProductVariantName(int productVariantId)
         {
-            ProductVariant productVariant = IoC.Resolve<IProductService>().GetProductVariantById(productVariantId);
+            ProductVariant productVariant = this.ProductService.GetProductVariantById(productVariantId);
             if (productVariant != null)
                 return productVariant.FullProductName;
             return "Not available. ID=" + productVariantId.ToString();

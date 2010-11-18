@@ -33,10 +33,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Payment.Manual
 {
     public partial class ConfigurePaymentMethod : BaseNopAdministrationUserControl, IConfigurePaymentMethodModule
     {
-        public static TransactMode GetCurrentTransactionMode()
+        public TransactMode GetCurrentTransactionMode()
         {
             TransactMode transactionModeEnum = TransactMode.Authorize;
-            string transactionMode = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Manual.TransactionMode");
+            string transactionMode = this.SettingManager.GetSettingValue("PaymentMethod.Manual.TransactionMode");
             if (!String.IsNullOrEmpty(transactionMode))
             {
                 transactionModeEnum = (TransactMode)Enum.Parse(typeof(TransactMode), transactionMode);
@@ -45,9 +45,9 @@ namespace NopSolutions.NopCommerce.Web.Administration.Payment.Manual
             return transactionModeEnum;
         }
 
-        public static void SetTransactionMode(TransactMode transactionMode)
+        public void SetTransactionMode(TransactMode transactionMode)
         {
-            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.Manual.TransactionMode", transactionMode.ToString());
+            this.SettingManager.SetParam("PaymentMethod.Manual.TransactionMode", transactionMode.ToString());
         }
 
         protected void Page_Load(object sender, EventArgs e)
@@ -75,7 +75,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Payment.Manual
                 default:
                     break;
             }
-            txtAdditionalFee.Value = IoC.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.Manual.AdditionalFee");
+            txtAdditionalFee.Value = this.SettingManager.GetSettingValueDecimalNative("PaymentMethod.Manual.AdditionalFee");
         }
 
         public void Save()
@@ -94,7 +94,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Payment.Manual
                 transactionMode = TransactMode.AuthorizeAndCapture;
             }
             SetTransactionMode(transactionMode);
-            IoC.Resolve<ISettingManager>().SetParamNative("PaymentMethod.Manual.AdditionalFee", txtAdditionalFee.Value);
+            this.SettingManager.SetParamNative("PaymentMethod.Manual.AdditionalFee", txtAdditionalFee.Value);
         }
     }
 }

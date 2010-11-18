@@ -33,7 +33,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            ManufacturerTemplate manufacturerTemplate = IoC.Resolve<ITemplateService>().GetManufacturerTemplateById(this.ManufacturerTemplateId);
+            ManufacturerTemplate manufacturerTemplate = this.TemplateService.GetManufacturerTemplateById(this.ManufacturerTemplateId);
             if (manufacturerTemplate != null)
             {
                 this.txtName.Text = manufacturerTemplate.Name;
@@ -61,7 +61,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public ManufacturerTemplate SaveInfo()
         {
-            ManufacturerTemplate manufacturerTemplate = IoC.Resolve<ITemplateService>().GetManufacturerTemplateById(this.ManufacturerTemplateId);
+            ManufacturerTemplate manufacturerTemplate = this.TemplateService.GetManufacturerTemplateById(this.ManufacturerTemplateId);
             if (manufacturerTemplate != null)
             {
                 manufacturerTemplate.Name = txtName.Text;
@@ -69,7 +69,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 manufacturerTemplate.DisplayOrder =  txtDisplayOrder.Value;
                 manufacturerTemplate.UpdatedOn = DateTime.UtcNow;
 
-                IoC.Resolve<ITemplateService>().UpdateManufacturerTemplate(manufacturerTemplate);
+                this.TemplateService.UpdateManufacturerTemplate(manufacturerTemplate);
             }
             else
             {
@@ -82,7 +82,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     CreatedOn = now,
                     UpdatedOn = now
                 };
-                IoC.Resolve<ITemplateService>().InsertManufacturerTemplate(manufacturerTemplate);
+                this.TemplateService.InsertManufacturerTemplate(manufacturerTemplate);
             }
 
             return manufacturerTemplate;

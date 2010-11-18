@@ -31,7 +31,7 @@ namespace NopSolutions.NopCommerce.Web.Administration
     {
         protected override bool ValidatePageSecurity()
         {
-            return IoC.Resolve<IACLService>().IsActionAllowed("ManageForums");
+            return this.ACLService.IsActionAllowed("ManageForums");
         } 
     }
 }

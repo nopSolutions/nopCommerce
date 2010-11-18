@@ -72,7 +72,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                IoC.Resolve<IShippingService>().DeleteShippingMethod(this.ShippingMethodId);
+                this.ShippingService.DeleteShippingMethod(this.ShippingMethodId);
                 Response.Redirect("ShippingMethods.aspx");
             }
             catch (Exception exc)

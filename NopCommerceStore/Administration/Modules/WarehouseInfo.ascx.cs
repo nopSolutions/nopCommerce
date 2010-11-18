@@ -34,7 +34,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            Warehouse warehouse = IoC.Resolve<IWarehouseService>().GetWarehouseById(this.WarehouseId);
+            Warehouse warehouse = this.WarehouseService.GetWarehouseById(this.WarehouseId);
             if (warehouse != null)
             {
                 this.txtName.Text = warehouse.Name;
@@ -62,7 +62,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         private void FillDropDowns()
         {
             this.ddlCountry.Items.Clear();
-            var countryCollection = IoC.Resolve<ICountryService>().GetAllCountries();
+            var countryCollection = this.CountryService.GetAllCountries();
             foreach (Country country in countryCollection)
             {
                 ListItem ddlCountryItem2 = new ListItem(country.Name, country.CountryId.ToString());
@@ -81,7 +81,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public Warehouse SaveInfo()
         {
-            Warehouse warehouse = IoC.Resolve<IWarehouseService>().GetWarehouseById(this.WarehouseId);
+            Warehouse warehouse = this.WarehouseService.GetWarehouseById(this.WarehouseId);
 
             if (warehouse != null)
             {
@@ -97,7 +97,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 warehouse.CountryId = int.Parse(this.ddlCountry.SelectedItem.Value);
                 warehouse.UpdatedOn = DateTime.UtcNow;
 
-                IoC.Resolve<IWarehouseService>().UpdateWarehouse(warehouse);
+                this.WarehouseService.UpdateWarehouse(warehouse);
 
             }
             else
@@ -118,7 +118,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     CreatedOn = now,
                     UpdatedOn = now
                 };
-                IoC.Resolve<IWarehouseService>().InsertWarehouse(warehouse);
+                this.WarehouseService.InsertWarehouse(warehouse);
             }
 
             return warehouse;

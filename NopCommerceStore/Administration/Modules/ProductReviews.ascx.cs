@@ -37,11 +37,11 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             if (e.CommandName == "UpdateItem")
             {
                 int productReviewId = Convert.ToInt32(e.CommandArgument);
-                ProductReview productReview = IoC.Resolve<IProductService>().GetProductReviewById(productReviewId);
+                ProductReview productReview = this.ProductService.GetProductReviewById(productReviewId);
                 if (productReview != null)
                 {
                     productReview.IsApproved = !productReview.IsApproved;
-                    IoC.Resolve<IProductService>().UpdateProductReview(productReview);
+                    this.ProductService.UpdateProductReview(productReview);
                 }
                 BindData();
             }
@@ -61,7 +61,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             if (e.CommandName == "DeleteItem")
             {
                 int productReviewId = Convert.ToInt32(e.CommandArgument);
-                IoC.Resolve<IProductService>().DeleteProductReview(productReviewId);
+                this.ProductService.DeleteProductReview(productReviewId);
                 BindData();
             }
         }
@@ -80,7 +80,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected string GetCustomerInfo(int customerId)
         {
-            Customer customer = IoC.Resolve<ICustomerService>().GetCustomerById(customerId);
+            Customer customer = this.CustomerService.GetCustomerById(customerId);
             if (customer != null)
             {
                 string customerInfo = string.Format("<a href=\"CustomerDetails.aspx?CustomerID={0}\">{1}</a>", customer.CustomerId, Server.HtmlEncode(customer.Email));
@@ -94,9 +94,9 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             List<ProductReview> productReviews = null;
             if (this.ProductId > 0)
-                productReviews = IoC.Resolve<IProductService>().GetProductReviewByProductId(ProductId);
+                productReviews = this.ProductService.GetProductReviewByProductId(ProductId);
             else
-                productReviews = IoC.Resolve<IProductService>().GetAllProductReviews();
+                productReviews = this.ProductService.GetAllProductReviews();
 
             gvProductReviews.DataSource = productReviews;
             gvProductReviews.DataBind();

@@ -36,10 +36,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            Affiliate affiliate = IoC.Resolve<IAffiliateService>().GetAffiliateById(this.AffiliateId);
+            Affiliate affiliate = this.AffiliateService.GetAffiliateById(this.AffiliateId);
             if (affiliate != null)
             {
-                gvAffiliateOrders.DataSource = IoC.Resolve<IOrderService>().GetOrdersByAffiliateId(this.AffiliateId);
+                gvAffiliateOrders.DataSource = this.OrderService.GetOrdersByAffiliateId(this.AffiliateId);
                 gvAffiliateOrders.DataBind();
             }
             else
@@ -57,7 +57,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         protected string GetCustomerInfo(int customerId)
         {
             string customerInfo = string.Empty;
-            Customer customer = IoC.Resolve<ICustomerService>().GetCustomerById(customerId);
+            Customer customer = this.CustomerService.GetCustomerById(customerId);
             if (customer != null)
             {
                 if (customer.IsGuest)

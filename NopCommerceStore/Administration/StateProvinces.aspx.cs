@@ -32,7 +32,7 @@ namespace NopSolutions.NopCommerce.Web.Administration
     {
         protected override bool ValidatePageSecurity()
         {
-            return IoC.Resolve<IACLService>().IsActionAllowed("ManageCountriesStates");
+            return this.ACLService.IsActionAllowed("ManageCountriesStates");
         }
     }
 }

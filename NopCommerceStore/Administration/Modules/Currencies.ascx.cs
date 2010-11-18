@@ -47,19 +47,19 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected void BindSettings()
         {
-            cbCurrencyRateAutoUpdateEnabled.Checked = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("ExchangeRateProvider.AutoUpdateEnabled", false);
+            cbCurrencyRateAutoUpdateEnabled.Checked = this.SettingManager.GetSettingValueBoolean("ExchangeRateProvider.AutoUpdateEnabled", false);
         }
 
         protected void BindCurrencyGrid()
         {
-            var currencyCollection = IoC.Resolve<ICurrencyService>().GetAllCurrencies();
+            var currencyCollection = this.CurrencyService.GetAllCurrencies();
             gvCurrencies.DataSource = currencyCollection;
             gvCurrencies.DataBind();
         }
 
         protected void BindLiveRateGrid()
         {
-            var exchangeRates = IoC.Resolve<ICurrencyService>().GetCurrencyLiveRates(IoC.Resolve<ICurrencyService>().PrimaryExchangeRateCurrency.CurrencyCode);
+            var exchangeRates = this.CurrencyService.GetCurrencyLiveRates(this.CurrencyService.PrimaryExchangeRateCurrency.CurrencyCode);
             gvLiveRates.DataSource = exchangeRates;
             gvLiveRates.DataBind();
         }
@@ -69,8 +69,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             try
             {
                 //save exchange rate provider settings
-                IoC.Resolve<ISettingManager>().SetParam("ExchangeRateProvider.Current", ddlExchangeRateProviders.SelectedProvider);
-                IoC.Resolve<ISettingManager>().SetParam("ExchangeRateProvider.AutoUpdateEnabled", cbCurrencyRateAutoUpdateEnabled.Checked.ToString());
+                this.SettingManager.SetParam("ExchangeRateProvider.Current", ddlExchangeRateProviders.SelectedProvider);
+                this.SettingManager.SetParam("ExchangeRateProvider.AutoUpdateEnabled", cbCurrencyRateAutoUpdateEnabled.Checked.ToString());
 
                 //save currencies
                 foreach (GridViewRow row in gvCurrencies.Rows)
@@ -81,9 +81,9 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     RadioButton rdbIsPrimaryExchangeRateCurrency = (RadioButton)row.FindControl("rdbIsPrimaryExchangeRateCurrency");
                     RadioButton rdbIsPrimaryStoreCurrency = (RadioButton)row.FindControl("rdbIsPrimaryStoreCurrency");
                     if (rdbIsPrimaryExchangeRateCurrency.Checked)
-                        IoC.Resolve<ICurrencyService>().PrimaryExchangeRateCurrency = IoC.Resolve<ICurrencyService>().GetCurrencyById(currencyId);
+                        this.CurrencyService.PrimaryExchangeRateCurrency = this.CurrencyService.GetCurrencyById(currencyId);
                     if (rdbIsPrimaryStoreCurrency.Checked)
-                        IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency = IoC.Resolve<ICurrencyService>().GetCurrencyById(currencyId);
+                        this.CurrencyService.PrimaryStoreCurrency = this.CurrencyService.GetCurrencyById(currencyId);
                 }
 
                 BindCurrencyGrid();
@@ -119,13 +119,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 Label lblCurrencyCode = row.FindControl("lblCurrencyCode") as Label;
                 DecimalTextBox txtRate = row.FindControl("txtRate") as DecimalTextBox;
 
-                Currency currency = IoC.Resolve<ICurrencyService>().GetCurrencyByCode(lblCurrencyCode.Text);
+                Currency currency = this.CurrencyService.GetCurrencyByCode(lblCurrencyCode.Text);
                 if (currency != null)
                 {
                     currency.Rate = txtRate.Value;
                     currency.UpdatedOn = DateTime.UtcNow;
 
-                    IoC.Resolve<ICurrencyService>().UpdateCurrency(currency);
+                    this.CurrencyService.UpdateCurrency(currency);
                     BindCurrencyGrid();
                 }
             }

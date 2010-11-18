@@ -36,7 +36,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            MeasureWeight measureWeight = IoC.Resolve<IMeasureService>().GetMeasureWeightById(this.MeasureWeightId);
+            MeasureWeight measureWeight = this.MeasureService.GetMeasureWeightById(this.MeasureWeightId);
             if (measureWeight != null)
             {
                 this.txtName.Text = measureWeight.Name;
@@ -61,14 +61,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             decimal ratio = txtRatio.Value;
             int displayOrder = txtDisplayOrder.Value;
 
-            MeasureWeight measureWeight = IoC.Resolve<IMeasureService>().GetMeasureWeightById(this.MeasureWeightId);
+            MeasureWeight measureWeight = this.MeasureService.GetMeasureWeightById(this.MeasureWeightId);
             if (measureWeight != null)
             {
                 measureWeight.Name = name;
                 measureWeight.SystemKeyword = systemKeyword;
                 measureWeight.Ratio = ratio;
                 measureWeight.DisplayOrder = displayOrder;
-                IoC.Resolve<IMeasureService>().UpdateMeasureWeight(measureWeight);
+                this.MeasureService.UpdateMeasureWeight(measureWeight);
             }
             else
             {
@@ -79,7 +79,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     Ratio = ratio,
                     DisplayOrder = displayOrder
                 };
-                IoC.Resolve<IMeasureService>().InsertMeasureWeight(measureWeight);
+                this.MeasureService.InsertMeasureWeight(measureWeight);
             }
 
             return measureWeight;

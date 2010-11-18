@@ -56,11 +56,11 @@ namespace NopSolutions.NopCommerce.Web
 
         protected void Page_PreRender(object sender, EventArgs e)
         {
-            pnlAvatar.Visible = IoC.Resolve<ICustomerService>().AllowCustomersToUploadAvatars;
-            pnlRewardPoints.Visible = IoC.Resolve<IOrderService>().RewardPointsEnabled;
-            pnlForumSubscriptions.Visible = IoC.Resolve<IForumService>().AllowCustomersToManageSubscriptions && IoC.Resolve<IForumService>().ForumsEnabled;
-            pnlReturnRequests.Visible = ctrlReturnRequests.Visible && IoC.Resolve<ISettingManager>().GetSettingValueBoolean("ReturnRequests.Enable");
-            pnlDP.Visible = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Display.DownloadableProductsTab");
+            pnlAvatar.Visible = this.CustomerService.AllowCustomersToUploadAvatars;
+            pnlRewardPoints.Visible = this.OrderService.RewardPointsEnabled;
+            pnlForumSubscriptions.Visible = this.ForumService.AllowCustomersToManageSubscriptions && this.ForumService.ForumsEnabled;
+            pnlReturnRequests.Visible = ctrlReturnRequests.Visible && this.SettingManager.GetSettingValueBoolean("ReturnRequests.Enable");
+            pnlDP.Visible = this.SettingManager.GetSettingValueBoolean("Display.DownloadableProductsTab");
         }
 
         public override PageSslProtectionEnum SslProtected

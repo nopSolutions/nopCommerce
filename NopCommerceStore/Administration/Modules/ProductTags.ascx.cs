@@ -63,7 +63,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected List<ProductTag> GetProductTags()
         {
-            var productTags = IoC.Resolve<IProductService>().GetAllProductTags();
+            var productTags = this.ProductService.GetAllProductTags();
             return productTags;
         }
 
@@ -97,7 +97,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     int productTagId = int.Parse(hfProductTagId.Value);
                     if (isChecked)
                     {
-                        IoC.Resolve<IProductService>().DeleteProductTag(productTagId);
+                        this.ProductService.DeleteProductTag(productTagId);
                     }
                 }
 

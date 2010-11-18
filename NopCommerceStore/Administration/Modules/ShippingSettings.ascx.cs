@@ -61,7 +61,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             this.ddlShippingOriginCountry.Items.Clear();
             ListItem selectCountryItem = new ListItem(GetLocaleResourceString("Admin.ShippingSettings.OriginCountry.SelectCountry"), "0");
             this.ddlShippingOriginCountry.Items.Add(selectCountryItem);
-            var countryCollection = IoC.Resolve<ICountryService>().GetAllCountries();
+            var countryCollection = this.CountryService.GetAllCountries();
             foreach (Country country in countryCollection)
             {
                 ListItem ddlCountryItem2 = new ListItem(country.Name, country.CountryId.ToString());
@@ -74,7 +74,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             this.ddlShippingOriginStateProvince.Items.Clear();
             int countryId = int.Parse(this.ddlShippingOriginCountry.SelectedItem.Value);
 
-            var stateProvinceCollection = IoC.Resolve<IStateProvinceService>().GetStateProvincesByCountryId(countryId);
+            var stateProvinceCollection = this.StateProvinceService.GetStateProvincesByCountryId(countryId);
             foreach (StateProvince stateProvince in stateProvinceCollection)
             {
                 ListItem ddlStateProviceItem2 = new ListItem(stateProvince.Name, stateProvince.StateProvinceId.ToString());
@@ -89,11 +89,11 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         private void BindData()
         {
-            cbEstimateShippingEnabled.Checked = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Shipping.EstimateShipping.Enabled");
-            cbFreeShippingOverX.Checked = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Shipping.FreeShippingOverX.Enabled");
-            txtFreeShippingOverX.Value = IoC.Resolve<ISettingManager>().GetSettingValueDecimalNative("Shipping.FreeShippingOverX.Value");
+            cbEstimateShippingEnabled.Checked = this.SettingManager.GetSettingValueBoolean("Shipping.EstimateShipping.Enabled");
+            cbFreeShippingOverX.Checked = this.SettingManager.GetSettingValueBoolean("Shipping.FreeShippingOverX.Enabled");
+            txtFreeShippingOverX.Value = this.SettingManager.GetSettingValueDecimalNative("Shipping.FreeShippingOverX.Value");
 
-            Address shippingOriginAddress = IoC.Resolve<IShippingService>().ShippingOrigin;
+            Address shippingOriginAddress = this.ShippingService.ShippingOrigin;
             this.FillCountryDropDowns();
             CommonHelper.SelectListItem(this.ddlShippingOriginCountry, shippingOriginAddress.CountryId);
             this.FillStateProvinceDropDowns();
@@ -112,17 +112,17 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 try
                 {
-                    IoC.Resolve<ISettingManager>().SetParam("Shipping.EstimateShipping.Enabled", cbEstimateShippingEnabled.Checked.ToString());
-                    IoC.Resolve<ISettingManager>().SetParam("Shipping.FreeShippingOverX.Enabled", cbFreeShippingOverX.Checked.ToString());
-                    IoC.Resolve<ISettingManager>().SetParamNative("Shipping.FreeShippingOverX.Value", txtFreeShippingOverX.Value);
+                    this.SettingManager.SetParam("Shipping.EstimateShipping.Enabled", cbEstimateShippingEnabled.Checked.ToString());
+                    this.SettingManager.SetParam("Shipping.FreeShippingOverX.Enabled", cbFreeShippingOverX.Checked.ToString());
+                    this.SettingManager.SetParamNative("Shipping.FreeShippingOverX.Value", txtFreeShippingOverX.Value);
 
                     Address shippingOriginAddress = new Address();
                     shippingOriginAddress.CountryId = int.Parse(this.ddlShippingOriginCountry.SelectedItem.Value);
                     shippingOriginAddress.StateProvinceId = int.Parse(this.ddlShippingOriginStateProvince.SelectedItem.Value);
                     shippingOriginAddress.ZipPostalCode = txtShippingOriginZipPostalCode.Text;
-                    IoC.Resolve<IShippingService>().ShippingOrigin = shippingOriginAddress;
+                    this.ShippingService.ShippingOrigin = shippingOriginAddress;
 
-                    IoC.Resolve<ICustomerActivityService>().InsertActivity(
+                    this.CustomerActivityService.InsertActivity(
                         "EditShippingSettings",
                         GetLocaleResourceString("ActivityLog.EditShippingSettings"));
 

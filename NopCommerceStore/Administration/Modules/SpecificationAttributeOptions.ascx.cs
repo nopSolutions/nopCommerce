@@ -25,7 +25,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            var specificationAttribute = IoC.Resolve<ISpecificationAttributeService>().GetSpecificationAttributeById(this.SpecificationAttributeId);
+            var specificationAttribute = this.SpecificationAttributeService.GetSpecificationAttributeById(this.SpecificationAttributeId);
             if (specificationAttribute != null)
             {
                 pnlData.Visible = true;
@@ -40,7 +40,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     rptrLanguageDivs.DataBind();
                 }
 
-                var saoCol = IoC.Resolve<ISpecificationAttributeService>().GetSpecificationAttributeOptionsBySpecificationAttribute(SpecificationAttributeId);
+                var saoCol = this.SpecificationAttributeService.GetSpecificationAttributeOptionsBySpecificationAttribute(SpecificationAttributeId);
                 if (saoCol.Count > 0)
                 {
                     grdSpecificationAttributeOptions.Visible = true;
@@ -84,7 +84,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                var specificationAttribute = IoC.Resolve<ISpecificationAttributeService>().GetSpecificationAttributeById(this.SpecificationAttributeId);
+                var specificationAttribute = this.SpecificationAttributeService.GetSpecificationAttributeById(this.SpecificationAttributeId);
                 if (specificationAttribute != null)
                 {
                     var sao = new SpecificationAttributeOption()
@@ -93,7 +93,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         Name= txtNewOptionName.Text,
                         DisplayOrder= txtNewOptionDisplayOrder.Value
                     };
-                    IoC.Resolve<ISpecificationAttributeService>().InsertSpecificationAttributeOption(sao);
+                    this.SpecificationAttributeService.InsertSpecificationAttributeOption(sao);
 
                     SaveLocalizableContent(sao);
 
@@ -127,7 +127,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                     bool allFieldsAreEmpty = string.IsNullOrEmpty(name);
 
-                    var content = IoC.Resolve<ISpecificationAttributeService>().GetSpecificationAttributeOptionLocalizedBySpecificationAttributeOptionIdAndLanguageId(sao.SpecificationAttributeOptionId, languageId);
+                    var content = this.SpecificationAttributeService.GetSpecificationAttributeOptionLocalizedBySpecificationAttributeOptionIdAndLanguageId(sao.SpecificationAttributeOptionId, languageId);
                     if (content == null)
                     {
                         if (!allFieldsAreEmpty && languageId > 0)
@@ -139,7 +139,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                                 LanguageId = languageId,
                                 Name = name
                             };
-                            IoC.Resolve<ISpecificationAttributeService>().InsertSpecificationAttributeOptionLocalized(content);
+                            this.SpecificationAttributeService.InsertSpecificationAttributeOptionLocalized(content);
                         }
                     }
                     else
@@ -148,7 +148,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         {
                             content.LanguageId = languageId;
                             content.Name= name;
-                            IoC.Resolve<ISpecificationAttributeService>().UpdateSpecificationAttributeOptionLocalized(content);
+                            this.SpecificationAttributeService.UpdateSpecificationAttributeOptionLocalized(content);
                         }
                     }
                 }
@@ -184,7 +184,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                                 bool allFieldsAreEmpty = string.IsNullOrEmpty(name);
 
-                                var content = IoC.Resolve<ISpecificationAttributeService>().GetSpecificationAttributeOptionLocalizedBySpecificationAttributeOptionIdAndLanguageId(sao.SpecificationAttributeOptionId, languageId);
+                                var content = this.SpecificationAttributeService.GetSpecificationAttributeOptionLocalizedBySpecificationAttributeOptionIdAndLanguageId(sao.SpecificationAttributeOptionId, languageId);
                                 if (content == null)
                                 {
                                     if (!allFieldsAreEmpty && languageId > 0)
@@ -196,7 +196,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                                             LanguageId = languageId,
                                             Name = name
                                         };
-                                        IoC.Resolve<ISpecificationAttributeService>().InsertSpecificationAttributeOptionLocalized(content);
+                                        this.SpecificationAttributeService.InsertSpecificationAttributeOptionLocalized(content);
                                     }
                                 }
                                 else
@@ -205,7 +205,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                                     {
                                         content.LanguageId = languageId;
                                         content.Name = name;
-                                        IoC.Resolve<ISpecificationAttributeService>().UpdateSpecificationAttributeOptionLocalized(content);
+                                        this.SpecificationAttributeService.UpdateSpecificationAttributeOptionLocalized(content);
                                     }
                                 }
                             }
@@ -230,10 +230,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                 int languageId = int.Parse(lblLanguageId.Text);
                 int saoId = Convert.ToInt32(hfSpecificationAttributeOptionId.Value);
-                SpecificationAttributeOption sao = IoC.Resolve<ISpecificationAttributeService>().GetSpecificationAttributeOptionById(saoId);
+                SpecificationAttributeOption sao = this.SpecificationAttributeService.GetSpecificationAttributeOptionById(saoId);
                 if (sao != null)
                 {
-                    var content = IoC.Resolve<ISpecificationAttributeService>().GetSpecificationAttributeOptionLocalizedBySpecificationAttributeOptionIdAndLanguageId(saoId, languageId);
+                    var content = this.SpecificationAttributeService.GetSpecificationAttributeOptionLocalizedBySpecificationAttributeOptionIdAndLanguageId(saoId, languageId);
                     if (content != null)
                     {
                         txtLocalizedOptionName.Text = content.Name;
@@ -256,12 +256,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 int displayOrder = txtDisplayOrder.Value;
                 int saoId = int.Parse(hfSpecificationAttributeOptionId.Value);
 
-                var sao = IoC.Resolve<ISpecificationAttributeService>().GetSpecificationAttributeOptionById(saoId);
+                var sao = this.SpecificationAttributeService.GetSpecificationAttributeOptionById(saoId);
                 if (sao != null)
                 {
                     sao.Name = name;
                     sao.DisplayOrder = displayOrder;
-                    IoC.Resolve<ISpecificationAttributeService>().UpdateSpecificationAttributeOptions(sao);
+                    this.SpecificationAttributeService.UpdateSpecificationAttributeOptions(sao);
                     SaveLocalizableContentGrid(sao);
                 }
 
@@ -272,7 +272,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         protected void OnSpecificationAttributeOptionsDeleting(object sender, GridViewDeleteEventArgs e)
         {
             int saoId = (int)grdSpecificationAttributeOptions.DataKeys[e.RowIndex]["SpecificationAttributeOptionId"];
-            IoC.Resolve<ISpecificationAttributeService>().DeleteSpecificationAttributeOption(saoId);
+            this.SpecificationAttributeService.DeleteSpecificationAttributeOption(saoId);
             BindData();
         }
 

@@ -39,14 +39,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Payment.Moneybookers
 
         private void BindData()
         {
-            txtEmail.Text = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Moneybookers.PayToEmail");
-            txtAdditionalFee.Value = IoC.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.Moneybookers.AdditionalFee");
+            txtEmail.Text = this.SettingManager.GetSettingValue("PaymentMethod.Moneybookers.PayToEmail");
+            txtAdditionalFee.Value = this.SettingManager.GetSettingValueDecimalNative("PaymentMethod.Moneybookers.AdditionalFee");
         }
 
         public void Save()
         {
-            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.Moneybookers.PayToEmail", txtEmail.Text);
-            IoC.Resolve<ISettingManager>().SetParamNative("PaymentMethod.Moneybookers.AdditionalFee", txtAdditionalFee.Value);
+            this.SettingManager.SetParam("PaymentMethod.Moneybookers.PayToEmail", txtEmail.Text);
+            this.SettingManager.SetParamNative("PaymentMethod.Moneybookers.AdditionalFee", txtAdditionalFee.Value);
         }
     }
 }

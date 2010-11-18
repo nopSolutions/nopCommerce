@@ -35,12 +35,12 @@ namespace NopSolutions.NopCommerce.Web.Administration
     {
         protected override bool ValidatePageSecurity()
         {
-            return IoC.Resolve<IACLService>().IsActionAllowed("ManageShippingSettings");
+            return this.ACLService.IsActionAllowed("ManageShippingSettings");
         }
 
         private void BindData()
         {
-            ShippingRateComputationMethod shippingRateComputationMethod = IoC.Resolve<IShippingService>().GetShippingRateComputationMethodById(this.ShippingRateComputationMethodId);
+            ShippingRateComputationMethod shippingRateComputationMethod = this.ShippingService.GetShippingRateComputationMethodById(this.ShippingRateComputationMethodId);
             if (shippingRateComputationMethod != null)
             {
                 this.txtName.Text = shippingRateComputationMethod.Name;
@@ -56,7 +56,7 @@ namespace NopSolutions.NopCommerce.Web.Administration
         
         private void CreateChildControlsTree()
         {
-            ShippingRateComputationMethod shippingRateComputationMethod = IoC.Resolve<IShippingService>().GetShippingRateComputationMethodById(this.ShippingRateComputationMethodId);
+            ShippingRateComputationMethod shippingRateComputationMethod = this.ShippingService.GetShippingRateComputationMethodById(this.ShippingRateComputationMethodId);
             if (shippingRateComputationMethod != null)
             {
                 Control child = null;
@@ -97,7 +97,7 @@ namespace NopSolutions.NopCommerce.Web.Administration
 
         protected ShippingRateComputationMethod Save()
         {
-            var shippingRateComputationMethod = IoC.Resolve<IShippingService>().GetShippingRateComputationMethodById(this.ShippingRateComputationMethodId);
+            var shippingRateComputationMethod = this.ShippingService.GetShippingRateComputationMethodById(this.ShippingRateComputationMethodId);
 
             shippingRateComputationMethod.Name = txtName.Text;
             shippingRateComputationMethod.Description = txtDescription.Text;
@@ -105,13 +105,13 @@ namespace NopSolutions.NopCommerce.Web.Administration
             shippingRateComputationMethod.ClassName = txtClassName.Text;
             shippingRateComputationMethod.IsActive = cbActive.Checked;
             shippingRateComputationMethod.DisplayOrder = txtDisplayOrder.Value;
-            IoC.Resolve<IShippingService>().UpdateShippingRateComputationMethod(shippingRateComputationMethod);
+            this.ShippingService.UpdateShippingRateComputationMethod(shippingRateComputationMethod);
 
             var configureModule = GetConfigureModule();
             if (configureModule != null)
                 configureModule.Save();
 
-            IoC.Resolve<ICustomerActivityService>().InsertActivity(
+            this.CustomerActivityService.InsertActivity(
                 "EditShippingProvider",
                 GetLocaleResourceString("ActivityLog.EditShippingProvider"),
                 shippingRateComputationMethod.Name);
@@ -155,7 +155,7 @@ namespace NopSolutions.NopCommerce.Web.Administration
         {
             try
             {
-                IoC.Resolve<IShippingService>().DeleteShippingRateComputationMethod(this.ShippingRateComputationMethodId);
+                this.ShippingService.DeleteShippingRateComputationMethod(this.ShippingRateComputationMethodId);
                 Response.Redirect("ShippingRateComputationMethods.aspx");
             }
             catch (Exception exc)

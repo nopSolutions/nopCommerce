@@ -36,14 +36,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         private void BindDimensions()
         {
-            var dimensions = IoC.Resolve<IMeasureService>().GetAllMeasureDimensions();
+            var dimensions = this.MeasureService.GetAllMeasureDimensions();
             gvDimensions.DataSource = dimensions;
             gvDimensions.DataBind();
         }
 
         private void BindWeights()
         {
-            var weights = IoC.Resolve<IMeasureService>().GetAllMeasureWeights();
+            var weights = this.MeasureService.GetAllMeasureWeights();
             gvWeights.DataSource = weights;
             gvWeights.DataBind();
         }
@@ -69,7 +69,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     HiddenField hfMeasureDimensionId = (HiddenField)row.FindControl("hfMeasureDimensionId");
                     int measureDimensionId = int.Parse(hfMeasureDimensionId.Value);
                     if (rdbIsPrimaryDimension.Checked)
-                        IoC.Resolve<IMeasureService>().BaseDimensionIn = IoC.Resolve<IMeasureService>().GetMeasureDimensionById(measureDimensionId);
+                        this.MeasureService.BaseDimensionIn = this.MeasureService.GetMeasureDimensionById(measureDimensionId);
                 }
 
                 //weights
@@ -79,7 +79,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     HiddenField hfMeasureWeightId = (HiddenField)row.FindControl("hfMeasureWeightId");
                     int measureWeightId = int.Parse(hfMeasureWeightId.Value);
                     if (rdbIsPrimaryWeight.Checked)
-                        IoC.Resolve<IMeasureService>().BaseWeightIn = IoC.Resolve<IMeasureService>().GetMeasureWeightById(measureWeightId);
+                        this.MeasureService.BaseWeightIn = this.MeasureService.GetMeasureWeightById(measureWeightId);
                 }
 
                 BindDimensions();

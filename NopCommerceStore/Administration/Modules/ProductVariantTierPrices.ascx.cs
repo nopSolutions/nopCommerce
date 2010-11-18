@@ -37,7 +37,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            ProductVariant productVariant = IoC.Resolve<IProductService>().GetProductVariantById(this.ProductVariantId);
+            ProductVariant productVariant = this.ProductService.GetProductVariantById(this.ProductVariantId);
             if (productVariant != null)
             {
                 pnlData.Visible = true;
@@ -64,7 +64,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             if (!Page.IsPostBack)
             {
-                gvTierPrices.Columns[1].HeaderText = string.Format("{0} [{1}]", GetLocaleResourceString("Admin.ProductVariantTierPrices.Price"), IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode);
+                gvTierPrices.Columns[1].HeaderText = string.Format("{0} [{1}]", GetLocaleResourceString("Admin.ProductVariantTierPrices.Price"), this.CurrencyService.PrimaryStoreCurrency.CurrencyCode);
                 this.BindData();
             }
         }
@@ -78,7 +78,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                ProductVariant productVariant = IoC.Resolve<IProductService>().GetProductVariantById(this.ProductVariantId);
+                ProductVariant productVariant = this.ProductService.GetProductVariantById(this.ProductVariantId);
                 if (productVariant != null)
                 {
                     decimal price = txtNewPrice.Value;
@@ -89,7 +89,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         Quantity = quantity,
                         Price = price
                     };
-                    IoC.Resolve<IProductService>().InsertTierPrice(tierPrice);
+                    this.ProductService.InsertTierPrice(tierPrice);
 
                     BindData();
                 }
@@ -115,13 +115,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 decimal price = txtPrice.Value;
                 int quantity = txtQuantity.Value;
 
-                TierPrice tierPrice = IoC.Resolve<IProductService>().GetTierPriceById(tierPriceId);
+                TierPrice tierPrice = this.ProductService.GetTierPriceById(tierPriceId);
 
                 if (tierPrice != null)
                 {
                     tierPrice.Quantity = quantity;
                     tierPrice.Price = price;
-                    IoC.Resolve<IProductService>().UpdateTierPrice(tierPrice);
+                    this.ProductService.UpdateTierPrice(tierPrice);
                 }
 
                 BindData();
@@ -143,7 +143,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         protected void gvTierPrices_RowDeleting(object sender, GridViewDeleteEventArgs e)
         {
             int tierPriceId = (int)gvTierPrices.DataKeys[e.RowIndex]["TierPriceId"];
-            IoC.Resolve<IProductService>().DeleteTierPrice(tierPriceId);
+            this.ProductService.DeleteTierPrice(tierPriceId);
             BindData();
         }
 

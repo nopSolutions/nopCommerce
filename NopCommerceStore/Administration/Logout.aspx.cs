@@ -36,7 +36,7 @@ namespace NopSolutions.NopCommerce.Web.Administration
         {
             CommonHelper.SetResponseNoCache(Response);
 
-            IoC.Resolve<ICustomerService>().Logout();
+            this.CustomerService.Logout();
 
             string url = SEOHelper.GetAdminAreaLoginPageUrl();
             Response.Redirect(url);

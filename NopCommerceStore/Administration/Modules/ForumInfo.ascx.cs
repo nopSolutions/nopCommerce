@@ -33,7 +33,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            Forum forum = IoC.Resolve<IForumService>().GetForumById(this.ForumId);
+            Forum forum = this.ForumService.GetForumById(this.ForumId);
             if (forum != null)
             {
                 CommonHelper.SelectListItem(this.ddlForumGroup, forum.ForumGroupId);
@@ -58,7 +58,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         private void FillDropDowns()
         {
             this.ddlForumGroup.Items.Clear();
-            var forumGroups = IoC.Resolve<IForumService>().GetAllForumGroups();
+            var forumGroups = this.ForumService.GetAllForumGroups();
             foreach (ForumGroup forumGroup in forumGroups)
             {
                 ListItem item2 = new ListItem(forumGroup.Name, forumGroup.ForumGroupId.ToString());
@@ -77,7 +77,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public Forum SaveInfo()
         {
-            Forum forum = IoC.Resolve<IForumService>().GetForumById(this.ForumId);
+            Forum forum = this.ForumService.GetForumById(this.ForumId);
             DateTime nowDT = DateTime.UtcNow;
 
             if (forum != null)
@@ -88,7 +88,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 forum.DisplayOrder = txtDisplayOrder.Value;
                 forum.UpdatedOn = nowDT;
 
-                IoC.Resolve<IForumService>().UpdateForum(forum);
+                this.ForumService.UpdateForum(forum);
             }
             else
             {
@@ -102,7 +102,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     UpdatedOn = nowDT
                 };
 
-                IoC.Resolve<IForumService>().InsertForum(forum);
+                this.ForumService.InsertForum(forum);
             }
 
             return forum;
@@ -112,7 +112,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                IoC.Resolve<IForumService>().DeleteForum(this.ForumId);
+                this.ForumService.DeleteForum(this.ForumId);
                 Response.Redirect("Forums.aspx");
             }
             catch (Exception exc)

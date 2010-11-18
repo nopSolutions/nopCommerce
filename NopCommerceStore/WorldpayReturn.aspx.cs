@@ -117,12 +117,12 @@ namespace NopSolutions.NopCommerce.Web
                 string returnedcallbackPW = CommonHelper.GetFormString("callbackPW");
                 string orderId = CommonHelper.GetFormString("cartId");
                 string returnedInstanceId = CommonHelper.GetFormString("instId");
-                string callbackPassword = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Worldpay.CallbackPassword");
+                string callbackPassword = this.SettingManager.GetSettingValue("PaymentMethod.Worldpay.CallbackPassword");
                 string transId = CommonHelper.GetFormString("transId");
                 string transResult = CommonHelper.QueryString("msg");
-                string instanceId = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Worldpay.InstanceId");
+                string instanceId = this.SettingManager.GetSettingValue("PaymentMethod.Worldpay.InstanceId");
 
-                Order order = IoC.Resolve<IOrderService>().GetOrderById(Convert.ToInt32(orderId));
+                Order order = this.OrderService.GetOrderById(Convert.ToInt32(orderId));
                 if (order == null)
                     throw new NopException(string.Format("The order ID {0} doesn't exists", orderId));
 
@@ -142,9 +142,9 @@ namespace NopSolutions.NopCommerce.Web
                 if (returnedcallbackPW.Trim() != callbackPassword.Trim())
                     throw new NopException(string.Format("The callback password ({0}) received within the Worldpay Callback for the order {1} does not match that stored in your database.", returnedcallbackPW, orderId));
 
-                if (IoC.Resolve<IOrderService>().CanMarkOrderAsPaid(order))
+                if (this.OrderService.CanMarkOrderAsPaid(order))
                 {
-                    IoC.Resolve<IOrderService>().MarkOrderAsPaid(order.OrderId);
+                    this.OrderService.MarkOrderAsPaid(order.OrderId);
                 }
 
                 string retURL = CommonHelper.GetStoreLocation() + "checkoutcompleted.aspx";

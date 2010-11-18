@@ -38,7 +38,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         private void FillDropDowns()
         {
             this.ddlLanguage.Items.Clear();
-            var languageCollection = IoC.Resolve<ILanguageService>().GetAllLanguages();
+            var languageCollection = this.LanguageService.GetAllLanguages();
             foreach (Language language in languageCollection)
             {
                 ListItem ddlLanguageItem2 = new ListItem(language.Name, language.LanguageId.ToString());
@@ -62,10 +62,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             if (this.ddlLanguage.SelectedItem == null)
                 return;
 
-            Language language = IoC.Resolve<ILanguageService>().GetLanguageById(int.Parse(this.ddlLanguage.SelectedItem.Value));
+            Language language = this.LanguageService.GetLanguageById(int.Parse(this.ddlLanguage.SelectedItem.Value));
             if (language != null)
             {
-                var allResources = IoC.Resolve<ILocalizationManager>().GetAllResourcesByLanguageId(language.LanguageId);
+                var allResources = this.LocalizationManager.GetAllResourcesByLanguageId(language.LanguageId);
                 var filteredResources = new List<LocaleStringResource>();
 
                 string filterByResourceName = txtResourceName.Text.Trim();
@@ -116,7 +116,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     }
                     else
                     {
-                        languageId = IoC.Resolve<ILanguageService>().GetAllLanguages().FirstOrDefault().LanguageId;
+                        languageId = this.LanguageService.GetAllLanguages().FirstOrDefault().LanguageId;
                     }
                     Response.Redirect("LocaleStringResourceAdd.aspx?LanguageID=" + languageId);
                 }

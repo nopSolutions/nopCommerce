@@ -34,7 +34,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             int days = Convert.ToInt32(ddlDays.SelectedValue.ToString());
 
-            lblCustomers.Text = IoC.Resolve<ICustomerService>().GetRegisteredCustomersReport(days).ToString();
+            lblCustomers.Text = this.CustomerService.GetRegisteredCustomersReport(days).ToString();
             lnkViewCustomers.NavigateUrl = "~/Administration/Customers.aspx?ShowDays=" + days;
         }
 

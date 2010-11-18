@@ -35,7 +35,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            QueuedEmail queuedEmail = IoC.Resolve<IMessageService>().GetQueuedEmailById(this.QueuedEmailId);
+            QueuedEmail queuedEmail = this.MessageService.GetQueuedEmailById(this.QueuedEmailId);
             if (queuedEmail != null)
             {
                 this.txtPriority.Value = queuedEmail.Priority;
@@ -70,10 +70,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 try
                 {
-                    QueuedEmail queuedEmail = IoC.Resolve<IMessageService>().GetQueuedEmailById(this.QueuedEmailId);
+                    QueuedEmail queuedEmail = this.MessageService.GetQueuedEmailById(this.QueuedEmailId);
                     if (queuedEmail != null)
                     {
-                        QueuedEmail requeuedEmail = IoC.Resolve<IMessageService>().InsertQueuedEmail(txtPriority.Value, 
+                        QueuedEmail requeuedEmail = this.MessageService.InsertQueuedEmail(txtPriority.Value, 
                             txtFrom.Text, txtFromName.Text,
                             txtTo.Text, txtToName.Text, txtCc.Text, txtBcc.Text,
                             txtSubject.Text, txtBody.Value, DateTime.UtcNow,
@@ -92,7 +92,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected QueuedEmail Save()
         {
-            QueuedEmail queuedEmail = IoC.Resolve<IMessageService>().GetQueuedEmailById(this.QueuedEmailId);
+            QueuedEmail queuedEmail = this.MessageService.GetQueuedEmailById(this.QueuedEmailId);
 
             queuedEmail.Priority = txtPriority.Value;
             queuedEmail.From = txtFrom.Text;
@@ -105,7 +105,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             queuedEmail.Body = txtBody.Value;
             queuedEmail.SendTries = txtSendTries.Value;
 
-            IoC.Resolve<IMessageService>().UpdateQueuedEmail(queuedEmail);
+            this.MessageService.UpdateQueuedEmail(queuedEmail);
             return queuedEmail;
         }
 
@@ -145,7 +145,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                IoC.Resolve<IMessageService>().DeleteQueuedEmail(this.QueuedEmailId);
+                this.MessageService.DeleteQueuedEmail(this.QueuedEmailId);
                 Response.Redirect("MessageQueue.aspx");
             }
             catch (Exception exc)

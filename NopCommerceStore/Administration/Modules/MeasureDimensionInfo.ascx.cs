@@ -36,7 +36,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            MeasureDimension measureDimension = IoC.Resolve<IMeasureService>().GetMeasureDimensionById(this.MeasureDimensionId);
+            MeasureDimension measureDimension = this.MeasureService.GetMeasureDimensionById(this.MeasureDimensionId);
             if (measureDimension != null)
             {
                 this.txtName.Text = measureDimension.Name;
@@ -61,14 +61,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             decimal ratio = txtRatio.Value;
             int displayOrder = txtDisplayOrder.Value;
 
-            MeasureDimension measureDimension = IoC.Resolve<IMeasureService>().GetMeasureDimensionById(this.MeasureDimensionId);
+            MeasureDimension measureDimension = this.MeasureService.GetMeasureDimensionById(this.MeasureDimensionId);
             if (measureDimension != null)
             {
                 measureDimension.Name = name;
                 measureDimension.SystemKeyword =systemKeyword;
                 measureDimension.Ratio =ratio;
                 measureDimension.DisplayOrder =displayOrder;
-                IoC.Resolve<IMeasureService>().UpdateMeasureDimension(measureDimension);
+                this.MeasureService.UpdateMeasureDimension(measureDimension);
             }
             else
             {
@@ -79,7 +79,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     Ratio = ratio,
                     DisplayOrder = displayOrder
                 };
-                IoC.Resolve<IMeasureService>().InsertMeasureDimension(measureDimension);
+                this.MeasureService.InsertMeasureDimension(measureDimension);
             }
 
             return measureDimension;

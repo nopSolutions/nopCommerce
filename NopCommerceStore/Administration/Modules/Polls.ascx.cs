@@ -48,7 +48,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         void BindGrid()
         {
-            var pollCollection = IoC.Resolve<IPollService>().GetAllPolls(0);
+            var pollCollection = this.PollService.GetAllPolls(0);
             gvPolls.DataSource = pollCollection;
             gvPolls.DataBind();
         }

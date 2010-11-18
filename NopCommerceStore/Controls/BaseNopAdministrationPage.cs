@@ -119,7 +119,7 @@ namespace NopSolutions.NopCommerce.Web
 
         protected virtual bool ValidateIP()
         {
-            string ipList = IoC.Resolve<ISettingManager>().GetSettingValue("Security.AdminAreaAllowedIP").Trim();
+            string ipList = this.SettingManager.GetSettingValue("Security.AdminAreaAllowedIP").Trim();
             if(String.IsNullOrEmpty(ipList))
             {
                 return true;
@@ -146,12 +146,6 @@ namespace NopSolutions.NopCommerce.Web
             string adminJS = CommonHelper.GetStoreLocation() + "Scripts/admin.js";
             Page.ClientScript.RegisterClientScriptInclude(adminJS, adminJS);
 
-            //online user tracking
-            if (this.TrackedByOnlineCustomersModule)
-            {
-                IoC.Resolve<IOnlineUserService>().TrackCurrentUser();
-            }
-
             base.OnPreRender(e);
         }
        
@@ -162,10 +156,10 @@ namespace NopSolutions.NopCommerce.Web
 
         protected void ProcessException(Exception exc, bool showError)
         {
-            IoC.Resolve<ILogService>().InsertLog(LogTypeEnum.AdministrationArea, exc.Message, exc);
+            this.LogService.InsertLog(LogTypeEnum.AdministrationArea, exc.Message, exc);
             if (showError)
             {
-                if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Display.AdminArea.ShowFullErrors"))
+                if (this.SettingManager.GetSettingValueBoolean("Display.AdminArea.ShowFullErrors"))
                 {
                     ShowError(exc.Message, exc.ToString());
                 }
@@ -229,29 +223,6 @@ namespace NopSolutions.NopCommerce.Web
             }
         }
 
-        /// <summary>
-        /// Gets a value indicating whether this page is tracked by 'Online Customers' module
-        /// </summary>
-        public virtual bool TrackedByOnlineCustomersModule
-        {
-            get
-            {
-                return true;
-            }
-        }
-        
-        private ILocalizationManager _localizationManager;
-        public ILocalizationManager LocalizationManager
-        {
-            get
-            {
-                if (_localizationManager == null)
-                {
-                    _localizationManager = IoC.Resolve<ILocalizationManager>();
-                }
-                return _localizationManager;
-            }
-        }
         #endregion
     }
 }

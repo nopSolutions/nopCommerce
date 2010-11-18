@@ -36,7 +36,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                IoC.Resolve<IProductService>().DeletePricelist(this.PricelistId);
+                this.ProductService.DeletePricelist(this.PricelistId);
                 Response.Redirect(string.Format("Pricelist.aspx"));
             }
             catch (Exception exc)

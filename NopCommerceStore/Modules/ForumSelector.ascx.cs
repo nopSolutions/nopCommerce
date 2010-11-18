@@ -34,7 +34,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 var itemRoot = new ListItem(this.RootItemText, "0");
                 this.ddlForums.Items.Add(itemRoot);
             }
-            var forumGroups = IoC.Resolve<IForumService>().GetAllForumGroups();
+            var forumGroups = this.ForumService.GetAllForumGroups();
             foreach (var forumGroup in forumGroups)
             {
                 var forumGroupItem = new ListItem(forumGroup.Name, "0");

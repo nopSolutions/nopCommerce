@@ -44,53 +44,53 @@ namespace NopSolutions.NopCommerce.Web.Modules
     {
         protected override void OnInit(EventArgs e)
         {
-            phUsername.Visible = IoC.Resolve<ICustomerService>().UsernamesEnabled &&
-                IoC.Resolve<ICustomerService>().AllowCustomersToChangeUsernames;
+            phUsername.Visible = this.CustomerService.UsernamesEnabled &&
+                this.CustomerService.AllowCustomersToChangeUsernames;
 
-            phGender.Visible = IoC.Resolve<ICustomerService>().FormFieldGenderEnabled;
-            phDateOfBirth.Visible = IoC.Resolve<ICustomerService>().FormFieldDateOfBirthEnabled;
+            phGender.Visible = this.CustomerService.FormFieldGenderEnabled;
+            phDateOfBirth.Visible = this.CustomerService.FormFieldDateOfBirthEnabled;
 
-            phCompanyName.Visible = IoC.Resolve<ICustomerService>().FormFieldCompanyEnabled;
-            rfvCompany.Enabled = IoC.Resolve<ICustomerService>().FormFieldCompanyEnabled &&
-                IoC.Resolve<ICustomerService>().FormFieldCompanyRequired;
-            phVatNumber.Visible = IoC.Resolve<ITaxService>().EUVatEnabled;
-            phCompanyDetails.Visible = IoC.Resolve<ICustomerService>().FormFieldCompanyEnabled ||
-                IoC.Resolve<ITaxService>().EUVatEnabled;
+            phCompanyName.Visible = this.CustomerService.FormFieldCompanyEnabled;
+            rfvCompany.Enabled = this.CustomerService.FormFieldCompanyEnabled &&
+                this.CustomerService.FormFieldCompanyRequired;
+            phVatNumber.Visible = this.TaxService.EUVatEnabled;
+            phCompanyDetails.Visible = this.CustomerService.FormFieldCompanyEnabled ||
+                this.TaxService.EUVatEnabled;
 
-            phStreetAddress.Visible = IoC.Resolve<ICustomerService>().FormFieldStreetAddressEnabled;
-            rfvStreetAddress.Enabled = IoC.Resolve<ICustomerService>().FormFieldStreetAddressEnabled &&
-                IoC.Resolve<ICustomerService>().FormFieldStreetAddressRequired;
-            phStreetAddress2.Visible = IoC.Resolve<ICustomerService>().FormFieldStreetAddress2Enabled;
-            rfvStreetAddress2.Enabled = IoC.Resolve<ICustomerService>().FormFieldStreetAddress2Enabled &&
-                IoC.Resolve<ICustomerService>().FormFieldStreetAddress2Required;
-            phPostCode.Visible = IoC.Resolve<ICustomerService>().FormFieldPostCodeEnabled;
-            rfvZipPostalCode.Enabled = IoC.Resolve<ICustomerService>().FormFieldPostCodeEnabled &&
-                IoC.Resolve<ICustomerService>().FormFieldPostCodeRequired;
-            phCity.Visible = IoC.Resolve<ICustomerService>().FormFieldCityEnabled;
-            rfvCity.Enabled = IoC.Resolve<ICustomerService>().FormFieldCityEnabled &&
-                IoC.Resolve<ICustomerService>().FormFieldCityRequired;
-            phCountry.Visible = IoC.Resolve<ICustomerService>().FormFieldCountryEnabled;
-            phStateProvince.Visible = IoC.Resolve<ICustomerService>().FormFieldCountryEnabled &&
-                IoC.Resolve<ICustomerService>().FormFieldStateEnabled;
-            phYourAddress.Visible = IoC.Resolve<ICustomerService>().FormFieldStreetAddressEnabled ||
-                IoC.Resolve<ICustomerService>().FormFieldStreetAddress2Enabled ||
-                IoC.Resolve<ICustomerService>().FormFieldPostCodeEnabled ||
-                IoC.Resolve<ICustomerService>().FormFieldCityEnabled ||
-                IoC.Resolve<ICustomerService>().FormFieldCountryEnabled;
+            phStreetAddress.Visible = this.CustomerService.FormFieldStreetAddressEnabled;
+            rfvStreetAddress.Enabled = this.CustomerService.FormFieldStreetAddressEnabled &&
+                this.CustomerService.FormFieldStreetAddressRequired;
+            phStreetAddress2.Visible = this.CustomerService.FormFieldStreetAddress2Enabled;
+            rfvStreetAddress2.Enabled = this.CustomerService.FormFieldStreetAddress2Enabled &&
+                this.CustomerService.FormFieldStreetAddress2Required;
+            phPostCode.Visible = this.CustomerService.FormFieldPostCodeEnabled;
+            rfvZipPostalCode.Enabled = this.CustomerService.FormFieldPostCodeEnabled &&
+                this.CustomerService.FormFieldPostCodeRequired;
+            phCity.Visible = this.CustomerService.FormFieldCityEnabled;
+            rfvCity.Enabled = this.CustomerService.FormFieldCityEnabled &&
+                this.CustomerService.FormFieldCityRequired;
+            phCountry.Visible = this.CustomerService.FormFieldCountryEnabled;
+            phStateProvince.Visible = this.CustomerService.FormFieldCountryEnabled &&
+                this.CustomerService.FormFieldStateEnabled;
+            phYourAddress.Visible = this.CustomerService.FormFieldStreetAddressEnabled ||
+                this.CustomerService.FormFieldStreetAddress2Enabled ||
+                this.CustomerService.FormFieldPostCodeEnabled ||
+                this.CustomerService.FormFieldCityEnabled ||
+                this.CustomerService.FormFieldCountryEnabled;
 
-            phTelephoneNumber.Visible = IoC.Resolve<ICustomerService>().FormFieldPhoneEnabled;
-            rfvPhoneNumber.Enabled = IoC.Resolve<ICustomerService>().FormFieldPhoneEnabled &&
-                IoC.Resolve<ICustomerService>().FormFieldPhoneRequired;
-            phFaxNumber.Visible = IoC.Resolve<ICustomerService>().FormFieldFaxEnabled;
-            rfvFaxNumber.Enabled = IoC.Resolve<ICustomerService>().FormFieldFaxEnabled &&
-                IoC.Resolve<ICustomerService>().FormFieldFaxRequired;
-            phYourContactInformation.Visible = IoC.Resolve<ICustomerService>().FormFieldPhoneEnabled ||
-                IoC.Resolve<ICustomerService>().FormFieldFaxEnabled;
+            phTelephoneNumber.Visible = this.CustomerService.FormFieldPhoneEnabled;
+            rfvPhoneNumber.Enabled = this.CustomerService.FormFieldPhoneEnabled &&
+                this.CustomerService.FormFieldPhoneRequired;
+            phFaxNumber.Visible = this.CustomerService.FormFieldFaxEnabled;
+            rfvFaxNumber.Enabled = this.CustomerService.FormFieldFaxEnabled &&
+                this.CustomerService.FormFieldFaxRequired;
+            phYourContactInformation.Visible = this.CustomerService.FormFieldPhoneEnabled ||
+                this.CustomerService.FormFieldFaxEnabled;
 
-            phNewsletter.Visible = IoC.Resolve<ICustomerService>().FormFieldNewsletterEnabled;
+            phNewsletter.Visible = this.CustomerService.FormFieldNewsletterEnabled;
 
             trTimeZone.Visible = DateTimeHelper.AllowCustomersToSetTimeZone;
-            trSignature.Visible = IoC.Resolve<IForumService>().ForumsEnabled && IoC.Resolve<IForumService>().SignaturesEnabled;
+            trSignature.Visible = this.ForumService.ForumsEnabled && this.ForumService.SignaturesEnabled;
             divPreferences.Visible = trTimeZone.Visible || trSignature.Visible;
 
             base.OnInit(e);
@@ -136,7 +136,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             if (customer.VatNumberStatus != VatNumberStatusEnum.Empty)
             {
                 lblVatNumberStatus.Visible = true;
-                lblVatNumberStatus.Text = string.Format(GetLocaleResourceString("Account.VATNumberStatus"), IoC.Resolve<ITaxService>().GetVatNumberStatusName(customer.VatNumberStatus));
+                lblVatNumberStatus.Text = string.Format(GetLocaleResourceString("Account.VATNumberStatus"), this.TaxService.GetVatNumberStatusName(customer.VatNumberStatus));
             }
             else
             {
@@ -161,7 +161,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 CommonHelper.SelectListItem(this.ddlTimeZone, DateTimeHelper.CurrentTimeZone.Id);
             }
 
-            if (IoC.Resolve<IForumService>().ForumsEnabled && IoC.Resolve<IForumService>().SignaturesEnabled)
+            if (this.ForumService.ForumsEnabled && this.ForumService.SignaturesEnabled)
             {
                 txtSignature.Text = customer.Signature;
             }
@@ -178,21 +178,21 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     //email
                     if (customer.Email.ToLowerInvariant() != txtEmail.Text.ToLowerInvariant().Trim())
                     {
-                        customer = IoC.Resolve<ICustomerService>().SetEmail(customer.CustomerId, txtEmail.Text.Trim());
+                        customer = this.CustomerService.SetEmail(customer.CustomerId, txtEmail.Text.Trim());
                     }
 
                     //username
-                    if (IoC.Resolve<ICustomerService>().UsernamesEnabled &&
-                       IoC.Resolve<ICustomerService>().AllowCustomersToChangeUsernames)
+                    if (this.CustomerService.UsernamesEnabled &&
+                       this.CustomerService.AllowCustomersToChangeUsernames)
                     {
                         if (customer.Username.ToLowerInvariant() != txtUsername.Text.ToLowerInvariant().Trim())
                         {
-                            customer = IoC.Resolve<ICustomerService>().ChangeCustomerUsername(customer.CustomerId, txtUsername.Text.Trim());
+                            customer = this.CustomerService.ChangeCustomerUsername(customer.CustomerId, txtUsername.Text.Trim());
                         }
                     }
 
                     //form fields
-                    if (IoC.Resolve<ICustomerService>().FormFieldGenderEnabled)
+                    if (this.CustomerService.FormFieldGenderEnabled)
                     {
                         if (rbGenderM.Checked)
                             customer.Gender = "M";
@@ -201,55 +201,55 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     }
                     customer.FirstName = txtFirstName.Text;
                     customer.LastName = txtLastName.Text;
-                    if (IoC.Resolve<ICustomerService>().FormFieldDateOfBirthEnabled)
+                    if (this.CustomerService.FormFieldDateOfBirthEnabled)
                     {
                         customer.DateOfBirth = dtDateOfBirth.SelectedDate;
-                        IoC.Resolve<ICustomerService>().UpdateCustomer(customer);
+                        this.CustomerService.UpdateCustomer(customer);
                     }
-                    if (IoC.Resolve<ICustomerService>().FormFieldCompanyEnabled)
+                    if (this.CustomerService.FormFieldCompanyEnabled)
                     {
                         customer.Company = txtCompany.Text;
                     }
-                    if (IoC.Resolve<ICustomerService>().FormFieldStreetAddressEnabled)
+                    if (this.CustomerService.FormFieldStreetAddressEnabled)
                     {
                         customer.StreetAddress = txtStreetAddress.Text;
                     }
-                    if (IoC.Resolve<ICustomerService>().FormFieldStreetAddress2Enabled)
+                    if (this.CustomerService.FormFieldStreetAddress2Enabled)
                     {
                         customer.StreetAddress2 = txtStreetAddress2.Text;
                     }
-                    if (IoC.Resolve<ICustomerService>().FormFieldPostCodeEnabled)
+                    if (this.CustomerService.FormFieldPostCodeEnabled)
                     {
                         customer.ZipPostalCode = txtZipPostalCode.Text;
                     }
-                    if (IoC.Resolve<ICustomerService>().FormFieldCityEnabled)
+                    if (this.CustomerService.FormFieldCityEnabled)
                     {
                         customer.City = txtCity.Text;
                     }
-                    if (IoC.Resolve<ICustomerService>().FormFieldCountryEnabled)
+                    if (this.CustomerService.FormFieldCountryEnabled)
                     {
                         customer.CountryId = int.Parse(ddlCountry.SelectedItem.Value);
                     }
-                    if (IoC.Resolve<ICustomerService>().FormFieldCountryEnabled &&
-                        IoC.Resolve<ICustomerService>().FormFieldStateEnabled)
+                    if (this.CustomerService.FormFieldCountryEnabled &&
+                        this.CustomerService.FormFieldStateEnabled)
                     {
                         customer.StateProvinceId = int.Parse(ddlStateProvince.SelectedItem.Value);
                     }
-                    if (IoC.Resolve<ICustomerService>().FormFieldPhoneEnabled)
+                    if (this.CustomerService.FormFieldPhoneEnabled)
                     {
                         customer.PhoneNumber = txtPhoneNumber.Text;
                     }
-                    if (IoC.Resolve<ICustomerService>().FormFieldFaxEnabled)
+                    if (this.CustomerService.FormFieldFaxEnabled)
                     {
                         customer.FaxNumber = txtFaxNumber.Text;
                     }
-                    if (IoC.Resolve<ICustomerService>().FormFieldNewsletterEnabled)
+                    if (this.CustomerService.FormFieldNewsletterEnabled)
                     {
                         customer.ReceiveNewsletter = cbNewsletter.Checked;
                     }
 
                     //set VAT number after country is saved
-                    if (IoC.Resolve<ITaxService>().EUVatEnabled)
+                    if (this.TaxService.EUVatEnabled)
                     {
                         string prevVatNumber = customer.VatNumber;
                         customer.VatNumber = txtVatNumber.Text;
@@ -258,14 +258,14 @@ namespace NopSolutions.NopCommerce.Web.Modules
                         {
                             string vatName = string.Empty;
                             string vatAddress = string.Empty;
-                            customer.VatNumberStatus = IoC.Resolve<ITaxService>().GetVatNumberStatus(IoC.Resolve<ICountryService>().GetCountryById(customer.CountryId), 
+                            customer.VatNumberStatus = this.TaxService.GetVatNumberStatus(this.CountryService.GetCountryById(customer.CountryId), 
                                 customer.VatNumber, out vatName, out vatAddress);
 
                             //admin notification
-                            if (!String.IsNullOrEmpty(customer.VatNumber) && IoC.Resolve<ITaxService>().EUVatEmailAdminWhenNewVATSubmitted)
+                            if (!String.IsNullOrEmpty(customer.VatNumber) && this.TaxService.EUVatEmailAdminWhenNewVATSubmitted)
                             {
-                                IoC.Resolve<IMessageService>().SendNewVATSubmittedStoreOwnerNotification(customer,
-                                    vatName, vatAddress, IoC.Resolve<ILocalizationManager>().DefaultAdminLanguage.LanguageId);
+                                this.MessageService.SendNewVATSubmittedStoreOwnerNotification(customer,
+                                    vatName, vatAddress, this.LocalizationManager.DefaultAdminLanguage.LanguageId);
                             }
                         }
                     }
@@ -279,9 +279,9 @@ namespace NopSolutions.NopCommerce.Web.Modules
                         }
                     }
 
-                    if (IoC.Resolve<IForumService>().ForumsEnabled && IoC.Resolve<IForumService>().SignaturesEnabled)
+                    if (this.ForumService.ForumsEnabled && this.ForumService.SignaturesEnabled)
                     {
-                        customer = IoC.Resolve<ICustomerService>().SetCustomerSignature(customer.CustomerId, txtSignature.Text);
+                        customer = this.CustomerService.SetCustomerSignature(customer.CustomerId, txtSignature.Text);
                     }
 
                     //bind data
@@ -297,7 +297,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
         private void FillCountryDropDowns()
         {
             ddlCountry.Items.Clear();
-            var countryCollection = IoC.Resolve<ICountryService>().GetAllCountriesForRegistration();
+            var countryCollection = this.CountryService.GetAllCountriesForRegistration();
             foreach (var country in countryCollection)
             {
                 var ddlCountryItem2 = new ListItem(country.Name, country.CountryId.ToString());
@@ -312,7 +312,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             if (ddlCountry.SelectedItem != null)
                 countryId = int.Parse(ddlCountry.SelectedItem.Value);
 
-            var stateProvinceCollection = IoC.Resolve<IStateProvinceService>().GetStateProvincesByCountryId(countryId);
+            var stateProvinceCollection = this.StateProvinceService.GetStateProvincesByCountryId(countryId);
             foreach (var stateProvince in stateProvinceCollection)
             {
                 var ddlStateProviceItem2 = new ListItem(stateProvince.Name, stateProvince.StateProvinceId.ToString());

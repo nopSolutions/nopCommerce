@@ -37,7 +37,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            Customer customer = IoC.Resolve<ICustomerService>().GetCustomerById(this.CustomerId);
+            Customer customer = this.CustomerService.GetCustomerById(this.CustomerId);
             if (customer != null)
             {
                

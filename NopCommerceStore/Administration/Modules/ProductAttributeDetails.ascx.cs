@@ -35,7 +35,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             ProductAttribute productAttribute = ctrlProductAttributeInfo.SaveInfo();
 
-            IoC.Resolve<ICustomerActivityService>().InsertActivity(
+            this.CustomerActivityService.InsertActivity(
                 "EditProductAttribute",
                 GetLocaleResourceString("ActivityLog.EditProductAttribute"),
                 productAttribute.Name);
@@ -81,12 +81,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                ProductAttribute productAttribute = IoC.Resolve<IProductAttributeService>().GetProductAttributeById(this.ProductAttributeId);
+                ProductAttribute productAttribute = this.ProductAttributeService.GetProductAttributeById(this.ProductAttributeId);
                 if (productAttribute != null)
                 {
-                    IoC.Resolve<IProductAttributeService>().DeleteProductAttribute(productAttribute.ProductAttributeId);
+                    this.ProductAttributeService.DeleteProductAttribute(productAttribute.ProductAttributeId);
 
-                    IoC.Resolve<ICustomerActivityService>().InsertActivity(
+                    this.CustomerActivityService.InsertActivity(
                         "DeleteProductAttribute",
                         GetLocaleResourceString("ActivityLog.DeleteProductAttribute"),
                         productAttribute.Name);

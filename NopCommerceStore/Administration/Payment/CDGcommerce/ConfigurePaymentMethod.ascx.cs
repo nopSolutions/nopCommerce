@@ -41,16 +41,16 @@ namespace NopSolutions.NopCommerce.Web.Administration.Payment.CDGcommerce
 
         private void BindData()
         {
-            txtRestrictKey.Text = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.CDGcommerce.RestrictKey");
-            txtLoginId.Text = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.CDGcommerce.LoginId");
-            txtAdditionalFee.Value = IoC.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.CDGcommerce.AdditionalFee");
+            txtRestrictKey.Text = this.SettingManager.GetSettingValue("PaymentMethod.CDGcommerce.RestrictKey");
+            txtLoginId.Text = this.SettingManager.GetSettingValue("PaymentMethod.CDGcommerce.LoginId");
+            txtAdditionalFee.Value = this.SettingManager.GetSettingValueDecimalNative("PaymentMethod.CDGcommerce.AdditionalFee");
         }
 
         public void Save()
         {
-            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.CDGcommerce.RestrictKey", txtRestrictKey.Text);
-            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.CDGcommerce.LoginId", txtLoginId.Text);
-            IoC.Resolve<ISettingManager>().SetParamNative("PaymentMethod.CDGcommerce.AdditionalFee", txtAdditionalFee.Value);
+            this.SettingManager.SetParam("PaymentMethod.CDGcommerce.RestrictKey", txtRestrictKey.Text);
+            this.SettingManager.SetParam("PaymentMethod.CDGcommerce.LoginId", txtLoginId.Text);
+            this.SettingManager.SetParamNative("PaymentMethod.CDGcommerce.AdditionalFee", txtAdditionalFee.Value);
         }
     }
 }

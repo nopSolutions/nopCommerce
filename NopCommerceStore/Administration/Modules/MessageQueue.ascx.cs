@@ -64,7 +64,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             bool loadNotSentItemsOnly = cbLoadNotSentItemsOnly.Checked;
             int maxSendTries = txtMaxSendTries.Value;
 
-            var queuedEmails = IoC.Resolve<IMessageService>().GetAllQueuedEmails(fromEmail, toEmail,
+            var queuedEmails = this.MessageService.GetAllQueuedEmails(fromEmail, toEmail,
                 startDate, endDate, 0, loadNotSentItemsOnly, maxSendTries);
             if (queuedEmails.Count > 0)
             {
@@ -121,7 +121,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     int queuedEmailId = int.Parse(hfQueuedEmailId.Value);
                     if (isChecked)
                     {
-                        IoC.Resolve<IMessageService>().DeleteQueuedEmail(queuedEmailId);
+                        this.MessageService.DeleteQueuedEmail(queuedEmailId);
                     }
                 }
 

@@ -48,7 +48,7 @@ namespace NopSolutions.NopCommerce.Web
                 Response.Redirect(loginURL);
             }
 
-            if (!IoC.Resolve<IForumService>().AllowPrivateMessages)
+            if (!this.ForumService.AllowPrivateMessages)
             {
                 Response.Redirect(CommonHelper.GetStoreLocation());
             }

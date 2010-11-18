@@ -55,7 +55,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 try
                 {
-                    IoC.Resolve<IOnlineUserService>().Enabled = cbEnabled.Checked;
+                    this.OnlineUserService.Enabled = cbEnabled.Checked;
                     Response.Redirect("OnlineCustomers.aspx");
                 }
                 catch (Exception exc)
@@ -67,22 +67,22 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected void BindData()
         {
-            cbEnabled.Checked = IoC.Resolve<IOnlineUserService>().Enabled;
+            cbEnabled.Checked = this.OnlineUserService.Enabled;
         }
 
         protected void BindGrid()
         {
-            if (IoC.Resolve<IOnlineUserService>().Enabled)
+            if (this.OnlineUserService.Enabled)
             {
                 phOnlineStats.Visible = true;
 
-                var registeredUsers = IoC.Resolve<IOnlineUserService>().GetRegisteredUsersOnline();
-                var guests = IoC.Resolve<IOnlineUserService>().GetGuestList();
-                var allUsers = IoC.Resolve<IOnlineUserService>().GetAllUserList();
+                var registeredUsers = this.OnlineUserService.GetRegisteredUsersOnline();
+                var guests = this.OnlineUserService.GetGuestList();
+                var allUsers = this.OnlineUserService.GetAllUserList();
 
                 lblGuests.Text = guests.Count.ToString();
                 lblRegistered.Text = registeredUsers.Count.ToString();
-                lblTotal.Text = string.Format(GetLocaleResourceString("Admin.OnlineCustomers.Total.Value"), allUsers.Count.ToString(), IoC.Resolve<IOnlineUserService>().MaximumOnlineCustomers);
+                lblTotal.Text = string.Format(GetLocaleResourceString("Admin.OnlineCustomers.Total.Value"), allUsers.Count.ToString(), this.OnlineUserService.MaximumOnlineCustomers);
                 gvCustomers.DataSource = allUsers;
                 gvCustomers.DataBind();
             }
@@ -97,7 +97,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             string customerInfo = string.Empty;
             if (oui.AssociatedCustomerId.HasValue)
             {
-                var customer = IoC.Resolve<ICustomerService>().GetCustomerById(oui.AssociatedCustomerId.Value);
+                var customer = this.CustomerService.GetCustomerById(oui.AssociatedCustomerId.Value);
                 if (customer != null)
                 {
                     customerInfo = string.Format("{0} (<a href=\"CustomerDetails.aspx?CustomerID={1}\">{2}</a>)", Server.HtmlEncode(customer.FullName), customer.CustomerId, Server.HtmlEncode(customer.Email));

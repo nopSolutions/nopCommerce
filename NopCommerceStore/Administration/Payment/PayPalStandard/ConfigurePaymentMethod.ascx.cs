@@ -39,20 +39,20 @@ namespace NopSolutions.NopCommerce.Web.Administration.Payment.PayPalStandard
 
         private void BindData()
         {
-            cbUseSandbox.Checked = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.PaypalStandard.UseSandbox");
-            txtBusinessEmail.Text = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.PaypalStandard.BusinessEmail");
-            txtPTIIdentityToken.Text = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.PaypalStandard.PTIIdentityToken");
-            cbPassProductNamesAndTotals.Checked = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.PaypalStandard.PassProductNamesAndTotals");
-            txtAdditionalFee.Value = IoC.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.PaypalStandard.AdditionalFee");
+            cbUseSandbox.Checked = this.SettingManager.GetSettingValueBoolean("PaymentMethod.PaypalStandard.UseSandbox");
+            txtBusinessEmail.Text = this.SettingManager.GetSettingValue("PaymentMethod.PaypalStandard.BusinessEmail");
+            txtPTIIdentityToken.Text = this.SettingManager.GetSettingValue("PaymentMethod.PaypalStandard.PTIIdentityToken");
+            cbPassProductNamesAndTotals.Checked = this.SettingManager.GetSettingValueBoolean("PaymentMethod.PaypalStandard.PassProductNamesAndTotals");
+            txtAdditionalFee.Value = this.SettingManager.GetSettingValueDecimalNative("PaymentMethod.PaypalStandard.AdditionalFee");
         }
 
         public void Save()
         {
-            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.PaypalStandard.UseSandbox", cbUseSandbox.Checked.ToString());
-            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.PaypalStandard.BusinessEmail", txtBusinessEmail.Text);
-            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.PaypalStandard.PTIIdentityToken", txtPTIIdentityToken.Text);
-            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.PaypalStandard.PassProductNamesAndTotals", cbPassProductNamesAndTotals.Checked.ToString());
-            IoC.Resolve<ISettingManager>().SetParamNative("PaymentMethod.PaypalStandard.AdditionalFee", txtAdditionalFee.Value);
+            this.SettingManager.SetParam("PaymentMethod.PaypalStandard.UseSandbox", cbUseSandbox.Checked.ToString());
+            this.SettingManager.SetParam("PaymentMethod.PaypalStandard.BusinessEmail", txtBusinessEmail.Text);
+            this.SettingManager.SetParam("PaymentMethod.PaypalStandard.PTIIdentityToken", txtPTIIdentityToken.Text);
+            this.SettingManager.SetParam("PaymentMethod.PaypalStandard.PassProductNamesAndTotals", cbPassProductNamesAndTotals.Checked.ToString());
+            this.SettingManager.SetParamNative("PaymentMethod.PaypalStandard.AdditionalFee", txtAdditionalFee.Value);
         }
     }
 }

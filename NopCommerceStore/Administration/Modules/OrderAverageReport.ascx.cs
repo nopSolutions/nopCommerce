@@ -47,10 +47,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         protected void BindData()
         {
             var report = new List<OrderAverageReportLineSummary>();
-            report.Add(IoC.Resolve<IOrderService>().OrderAverageReport(OrderStatusEnum.Pending));
-            report.Add(IoC.Resolve<IOrderService>().OrderAverageReport(OrderStatusEnum.Processing));
-            report.Add(IoC.Resolve<IOrderService>().OrderAverageReport(OrderStatusEnum.Complete));
-            report.Add(IoC.Resolve<IOrderService>().OrderAverageReport(OrderStatusEnum.Cancelled));
+            report.Add(this.OrderService.OrderAverageReport(OrderStatusEnum.Pending));
+            report.Add(this.OrderService.OrderAverageReport(OrderStatusEnum.Processing));
+            report.Add(this.OrderService.OrderAverageReport(OrderStatusEnum.Complete));
+            report.Add(this.OrderService.OrderAverageReport(OrderStatusEnum.Cancelled));
             gvOrders.DataSource = report;
             gvOrders.DataBind();
         }

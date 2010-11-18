@@ -74,7 +74,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                IoC.Resolve<IOrderService>().DeleteRecurringPayment(this.RecurringPaymentId);
+                this.OrderService.DeleteRecurringPayment(this.RecurringPaymentId);
                 Response.Redirect("RecurringPayments.aspx");
             }
             catch (Exception exc)

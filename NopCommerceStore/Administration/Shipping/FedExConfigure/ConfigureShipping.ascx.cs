@@ -40,23 +40,23 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.FedexConfigure
 
         private void BindData()
         {
-            txtURL.Text = IoC.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.FedEx.URL");
-            txtKey.Text = IoC.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.FedEx.Key");
-            txtPassword.Text = IoC.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.FedEx.Password");
-            txtAccountNumber.Text = IoC.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.FedEx.AccountNumber");
-            txtMeterNumber.Text = IoC.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.FedEx.MeterNumber");
-            cbUseResidentialRates.Checked = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("ShippingRateComputationMethod.FedEx.UseResidentialRates", false);
-            cbApplyDiscounts.Checked = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("ShippingRateComputationMethod.FedEx.ApplyDiscounts", false);
-            txtAdditionalFee.Value = IoC.Resolve<ISettingManager>().GetSettingValueDecimalNative("ShippingRateComputationMethod.FedEx.AdditionalFee");
-            txtShippingOriginStreet.Text = IoC.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.FedEx.ShippingOrigin.Street");
-            txtShippingOriginCity.Text = IoC.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.FedEx.ShippingOrigin.City");
-            txtShippingOriginStateOrProvinceCode.Text = IoC.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.FedEx.ShippingOrigin.StateOrProvinceCode");
-            txtShippingOriginPostalCode.Text = IoC.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.FedEx.ShippingOrigin.PostalCode");
-            txtShippingOriginCountryCode.Text = IoC.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.FedEx.ShippingOrigin.CountryCode");
+            txtURL.Text = this.SettingManager.GetSettingValue("ShippingRateComputationMethod.FedEx.URL");
+            txtKey.Text = this.SettingManager.GetSettingValue("ShippingRateComputationMethod.FedEx.Key");
+            txtPassword.Text = this.SettingManager.GetSettingValue("ShippingRateComputationMethod.FedEx.Password");
+            txtAccountNumber.Text = this.SettingManager.GetSettingValue("ShippingRateComputationMethod.FedEx.AccountNumber");
+            txtMeterNumber.Text = this.SettingManager.GetSettingValue("ShippingRateComputationMethod.FedEx.MeterNumber");
+            cbUseResidentialRates.Checked = this.SettingManager.GetSettingValueBoolean("ShippingRateComputationMethod.FedEx.UseResidentialRates", false);
+            cbApplyDiscounts.Checked = this.SettingManager.GetSettingValueBoolean("ShippingRateComputationMethod.FedEx.ApplyDiscounts", false);
+            txtAdditionalFee.Value = this.SettingManager.GetSettingValueDecimalNative("ShippingRateComputationMethod.FedEx.AdditionalFee");
+            txtShippingOriginStreet.Text = this.SettingManager.GetSettingValue("ShippingRateComputationMethod.FedEx.ShippingOrigin.Street");
+            txtShippingOriginCity.Text = this.SettingManager.GetSettingValue("ShippingRateComputationMethod.FedEx.ShippingOrigin.City");
+            txtShippingOriginStateOrProvinceCode.Text = this.SettingManager.GetSettingValue("ShippingRateComputationMethod.FedEx.ShippingOrigin.StateOrProvinceCode");
+            txtShippingOriginPostalCode.Text = this.SettingManager.GetSettingValue("ShippingRateComputationMethod.FedEx.ShippingOrigin.PostalCode");
+            txtShippingOriginCountryCode.Text = this.SettingManager.GetSettingValue("ShippingRateComputationMethod.FedEx.ShippingOrigin.CountryCode");
 
 
             // Get the selected offered services from the database
-            string carrierServicesOffered = IoC.Resolve<ISettingManager>().GetSettingValue("ShippingRateComputationMethod.FedEx.CarrierServicesOffered");
+            string carrierServicesOffered = this.SettingManager.GetSettingValue("ShippingRateComputationMethod.FedEx.CarrierServicesOffered");
             var services = new FedExServices();
             // Load default options
             if (carrierServicesOffered.Length == 0)
@@ -88,19 +88,19 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.FedexConfigure
 
         public void Save()
         {
-            IoC.Resolve<ISettingManager>().SetParam("ShippingRateComputationMethod.FedEx.URL", txtURL.Text);
-            IoC.Resolve<ISettingManager>().SetParam("ShippingRateComputationMethod.FedEx.Key", txtKey.Text);
-            IoC.Resolve<ISettingManager>().SetParam("ShippingRateComputationMethod.FedEx.Password", txtPassword.Text);
-            IoC.Resolve<ISettingManager>().SetParam("ShippingRateComputationMethod.FedEx.AccountNumber", txtAccountNumber.Text);
-            IoC.Resolve<ISettingManager>().SetParam("ShippingRateComputationMethod.FedEx.MeterNumber", txtMeterNumber.Text);
-            IoC.Resolve<ISettingManager>().SetParam("ShippingRateComputationMethod.FedEx.UseResidentialRates", cbUseResidentialRates.Checked.ToString());
-            IoC.Resolve<ISettingManager>().SetParam("ShippingRateComputationMethod.FedEx.ApplyDiscounts", cbApplyDiscounts.Checked.ToString());
-            IoC.Resolve<ISettingManager>().SetParam("ShippingRateComputationMethod.FedEx.AdditionalFee", txtAdditionalFee.Value.ToString());
-            IoC.Resolve<ISettingManager>().SetParam("ShippingRateComputationMethod.FedEx.ShippingOrigin.Street", txtShippingOriginStreet.Text);
-            IoC.Resolve<ISettingManager>().SetParam("ShippingRateComputationMethod.FedEx.ShippingOrigin.City", txtShippingOriginCity.Text);
-            IoC.Resolve<ISettingManager>().SetParam("ShippingRateComputationMethod.FedEx.ShippingOrigin.StateOrProvinceCode", txtShippingOriginStateOrProvinceCode.Text);
-            IoC.Resolve<ISettingManager>().SetParam("ShippingRateComputationMethod.FedEx.ShippingOrigin.PostalCode", txtShippingOriginPostalCode.Text);
-            IoC.Resolve<ISettingManager>().SetParam("ShippingRateComputationMethod.FedEx.ShippingOrigin.CountryCode", txtShippingOriginCountryCode.Text);
+            this.SettingManager.SetParam("ShippingRateComputationMethod.FedEx.URL", txtURL.Text);
+            this.SettingManager.SetParam("ShippingRateComputationMethod.FedEx.Key", txtKey.Text);
+            this.SettingManager.SetParam("ShippingRateComputationMethod.FedEx.Password", txtPassword.Text);
+            this.SettingManager.SetParam("ShippingRateComputationMethod.FedEx.AccountNumber", txtAccountNumber.Text);
+            this.SettingManager.SetParam("ShippingRateComputationMethod.FedEx.MeterNumber", txtMeterNumber.Text);
+            this.SettingManager.SetParam("ShippingRateComputationMethod.FedEx.UseResidentialRates", cbUseResidentialRates.Checked.ToString());
+            this.SettingManager.SetParam("ShippingRateComputationMethod.FedEx.ApplyDiscounts", cbApplyDiscounts.Checked.ToString());
+            this.SettingManager.SetParam("ShippingRateComputationMethod.FedEx.AdditionalFee", txtAdditionalFee.Value.ToString());
+            this.SettingManager.SetParam("ShippingRateComputationMethod.FedEx.ShippingOrigin.Street", txtShippingOriginStreet.Text);
+            this.SettingManager.SetParam("ShippingRateComputationMethod.FedEx.ShippingOrigin.City", txtShippingOriginCity.Text);
+            this.SettingManager.SetParam("ShippingRateComputationMethod.FedEx.ShippingOrigin.StateOrProvinceCode", txtShippingOriginStateOrProvinceCode.Text);
+            this.SettingManager.SetParam("ShippingRateComputationMethod.FedEx.ShippingOrigin.PostalCode", txtShippingOriginPostalCode.Text);
+            this.SettingManager.SetParam("ShippingRateComputationMethod.FedEx.ShippingOrigin.CountryCode", txtShippingOriginCountryCode.Text);
 
             var carrierServicesOffered = new StringBuilder();
             int carrierServicesSelectedCount = 0;
@@ -120,11 +120,11 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.FedexConfigure
             // Add default options if no services were selected
             if (carrierServicesSelectedCount == 0)
             {
-                IoC.Resolve<ISettingManager>().SetParam("ShippingRateComputationMethod.FedEx.CarrierServicesOffered", "FEDEX_2_DAY:PRIORITY_OVERNIGHT:FEDEX_GROUND:GROUND_HOME_DELIVERY:INTERNATIONAL_ECONOMY");
+                this.SettingManager.SetParam("ShippingRateComputationMethod.FedEx.CarrierServicesOffered", "FEDEX_2_DAY:PRIORITY_OVERNIGHT:FEDEX_GROUND:GROUND_HOME_DELIVERY:INTERNATIONAL_ECONOMY");
             }
             else
             {
-                IoC.Resolve<ISettingManager>().SetParam("ShippingRateComputationMethod.FedEx.CarrierServicesOffered", carrierServicesOffered.ToString());
+                this.SettingManager.SetParam("ShippingRateComputationMethod.FedEx.CarrierServicesOffered", carrierServicesOffered.ToString());
             }
         }
     }

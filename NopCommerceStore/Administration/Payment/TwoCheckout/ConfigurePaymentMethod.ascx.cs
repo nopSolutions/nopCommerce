@@ -39,20 +39,20 @@ namespace NopSolutions.NopCommerce.Web.Administration.Payment.TwoCheckout
 
         private void BindData()
         {
-            cbUseSandbox.Checked = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.TwoCheckout.UseSandbox");
-            txtVendorId.Text = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.TwoCheckout.VendorId");
-            cbUseMD5Hashing.Checked = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.TwoCheckout.UseMD5Hashing");
-            txtSecretWord.Text = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.TwoCheckout.SecretWord");
-            txtAdditionalFee.Value = IoC.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.TwoCheckout.AdditionalFee");
+            cbUseSandbox.Checked = this.SettingManager.GetSettingValueBoolean("PaymentMethod.TwoCheckout.UseSandbox");
+            txtVendorId.Text = this.SettingManager.GetSettingValue("PaymentMethod.TwoCheckout.VendorId");
+            cbUseMD5Hashing.Checked = this.SettingManager.GetSettingValueBoolean("PaymentMethod.TwoCheckout.UseMD5Hashing");
+            txtSecretWord.Text = this.SettingManager.GetSettingValue("PaymentMethod.TwoCheckout.SecretWord");
+            txtAdditionalFee.Value = this.SettingManager.GetSettingValueDecimalNative("PaymentMethod.TwoCheckout.AdditionalFee");
         }
 
         public void Save()
         {
-            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.TwoCheckout.UseSandbox", cbUseSandbox.Checked.ToString());
-            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.TwoCheckout.VendorId", txtVendorId.Text);
-            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.TwoCheckout.UseMD5Hashing", cbUseMD5Hashing.Checked.ToString());
-            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.TwoCheckout.SecretWord", txtSecretWord.Text);
-            IoC.Resolve<ISettingManager>().SetParamNative("PaymentMethod.TwoCheckout.AdditionalFee", txtAdditionalFee.Value);
+            this.SettingManager.SetParam("PaymentMethod.TwoCheckout.UseSandbox", cbUseSandbox.Checked.ToString());
+            this.SettingManager.SetParam("PaymentMethod.TwoCheckout.VendorId", txtVendorId.Text);
+            this.SettingManager.SetParam("PaymentMethod.TwoCheckout.UseMD5Hashing", cbUseMD5Hashing.Checked.ToString());
+            this.SettingManager.SetParam("PaymentMethod.TwoCheckout.SecretWord", txtSecretWord.Text);
+            this.SettingManager.SetParamNative("PaymentMethod.TwoCheckout.AdditionalFee", txtAdditionalFee.Value);
         }
     }
 }

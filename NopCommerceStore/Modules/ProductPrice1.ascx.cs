@@ -52,10 +52,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         private void BindData()
         {
-            var productVariant = IoC.Resolve<IProductService>().GetProductVariantById(this.ProductVariantId);
+            var productVariant = this.ProductService.GetProductVariantById(this.ProductVariantId);
             if (productVariant != null)
             {
-                if (!IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Common.HidePricesForNonRegistered") ||
+                if (!this.SettingManager.GetSettingValueBoolean("Common.HidePricesForNonRegistered") ||
                         (NopContext.Current.User != null &&
                         !NopContext.Current.User.IsGuest))
                 {
@@ -80,13 +80,13 @@ namespace NopSolutions.NopCommerce.Web.Modules
                         else
                         {
                             decimal taxRate = decimal.Zero;
-                            decimal oldPriceBase = IoC.Resolve<ITaxService>().GetPrice(productVariant, productVariant.OldPrice, out taxRate);
-                            decimal finalPriceWithoutDiscountBase = IoC.Resolve<ITaxService>().GetPrice(productVariant, PriceHelper.GetFinalPrice(productVariant, false), out taxRate);
-                            decimal finalPriceWithDiscountBase = IoC.Resolve<ITaxService>().GetPrice(productVariant, PriceHelper.GetFinalPrice(productVariant, true), out taxRate);
+                            decimal oldPriceBase = this.TaxService.GetPrice(productVariant, productVariant.OldPrice, out taxRate);
+                            decimal finalPriceWithoutDiscountBase = this.TaxService.GetPrice(productVariant, PriceHelper.GetFinalPrice(productVariant, false), out taxRate);
+                            decimal finalPriceWithDiscountBase = this.TaxService.GetPrice(productVariant, PriceHelper.GetFinalPrice(productVariant, true), out taxRate);
 
-                            decimal oldPrice = IoC.Resolve<ICurrencyService>().ConvertCurrency(oldPriceBase, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
-                            decimal finalPriceWithoutDiscount = IoC.Resolve<ICurrencyService>().ConvertCurrency(finalPriceWithoutDiscountBase, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
-                            decimal finalPriceWithDiscount = IoC.Resolve<ICurrencyService>().ConvertCurrency(finalPriceWithDiscountBase, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                            decimal oldPrice = this.CurrencyService.ConvertCurrency(oldPriceBase, this.CurrencyService.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                            decimal finalPriceWithoutDiscount = this.CurrencyService.ConvertCurrency(finalPriceWithoutDiscountBase, this.CurrencyService.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                            decimal finalPriceWithDiscount = this.CurrencyService.ConvertCurrency(finalPriceWithDiscountBase, this.CurrencyService.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
 
                             if (finalPriceWithoutDiscountBase != oldPriceBase && oldPriceBase > decimal.Zero)
                             {
@@ -123,9 +123,9 @@ namespace NopSolutions.NopCommerce.Web.Modules
                             {
                                 lblPrice.Text = GetLocaleResourceString("Products.FinalPriceWithoutDiscount");
                             }
-                            if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("ProductAttribute.EnableDynamicPriceUpdate"))
+                            if (this.SettingManager.GetSettingValueBoolean("ProductAttribute.EnableDynamicPriceUpdate"))
                             {
-                                string pattern = IoC.Resolve<ISettingManager>().GetSettingValue("ProductAttribute.PricePattern", "(?<val>(\\d+[\\s\\,\\.]?)+)");
+                                string pattern = this.SettingManager.GetSettingValue("ProductAttribute.PricePattern", "(?<val>(\\d+[\\s\\,\\.]?)+)");
                                 string replacement = String.Format("<span class=\"price-val-for-dyn-upd-{0}\">${{val}}</span> ", productVariant.ProductVariantId);
 
                                 if (finalPriceWithoutDiscountBase != finalPriceWithDiscountBase)
@@ -153,17 +153,17 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected override void OnPreRender(EventArgs e)
         {
-            if(IoC.Resolve<ISettingManager>().GetSettingValueBoolean("ProductAttribute.EnableDynamicPriceUpdate"))
+            if(this.SettingManager.GetSettingValueBoolean("ProductAttribute.EnableDynamicPriceUpdate"))
             {
-                var productVariant = IoC.Resolve<IProductService>().GetProductVariantById(this.ProductVariantId);
+                var productVariant = this.ProductService.GetProductVariantById(this.ProductVariantId);
                 if(productVariant != null && !productVariant.CallForPrice)
                 {
                     decimal taxRate = decimal.Zero;
-                    decimal finalPriceWithoutDiscountBase = IoC.Resolve<ITaxService>().GetPrice(productVariant, PriceHelper.GetFinalPrice(productVariant, false), out taxRate);
-                    decimal finalPriceWithoutDiscount = IoC.Resolve<ICurrencyService>().ConvertCurrency(finalPriceWithoutDiscountBase, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                    decimal finalPriceWithoutDiscountBase = this.TaxService.GetPrice(productVariant, PriceHelper.GetFinalPrice(productVariant, false), out taxRate);
+                    decimal finalPriceWithoutDiscount = this.CurrencyService.ConvertCurrency(finalPriceWithoutDiscountBase, this.CurrencyService.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
 
-                    decimal finalPriceWithDiscountBase = IoC.Resolve<ITaxService>().GetPrice(productVariant, PriceHelper.GetFinalPrice(productVariant, true), out taxRate);
-                    decimal finalPriceWithDiscount = IoC.Resolve<ICurrencyService>().ConvertCurrency(finalPriceWithDiscountBase, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                    decimal finalPriceWithDiscountBase = this.TaxService.GetPrice(productVariant, PriceHelper.GetFinalPrice(productVariant, true), out taxRate);
+                    decimal finalPriceWithDiscount = this.CurrencyService.ConvertCurrency(finalPriceWithDiscountBase, this.CurrencyService.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
 
                     float val = (float)(finalPriceWithoutDiscountBase != finalPriceWithDiscountBase ? finalPriceWithDiscount : finalPriceWithoutDiscount);
                     string key = String.Format("PriceValForDynUpd_{0}", productVariant.ProductVariantId);

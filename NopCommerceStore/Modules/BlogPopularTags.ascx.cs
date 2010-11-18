@@ -49,7 +49,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
         {
             //get all tags
             int maxItems = 15;
-            var blogPostTags = IoC.Resolve<IBlogService>().GetAllBlogPostTags(NopContext.Current.WorkingLanguage.LanguageId);
+            var blogPostTags = this.BlogService.GetAllBlogPostTags(NopContext.Current.WorkingLanguage.LanguageId);
             List<BlogPostTag> cloudItems = new List<BlogPostTag>();
             for (int i = 0; i < blogPostTags.Count; i++)
             {

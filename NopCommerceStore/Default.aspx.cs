@@ -49,7 +49,7 @@ namespace NopSolutions.NopCommerce.Web
 
         protected void BindData()
         {
-            bool showWelcomeMessageOnMainPage = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Display.ShowWelcomeMessageOnMainPage");
+            bool showWelcomeMessageOnMainPage = this.SettingManager.GetSettingValueBoolean("Display.ShowWelcomeMessageOnMainPage");
             if (!showWelcomeMessageOnMainPage)
             {
                 topicHomePageText.Visible = false;

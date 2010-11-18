@@ -39,7 +39,7 @@ namespace NopSolutions.NopCommerce.Web
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!IoC.Resolve<IProductService>().CompareProductsEnabled)
+            if (!this.ProductService.CompareProductsEnabled)
             {
                 Response.Redirect(CommonHelper.GetStoreLocation());
             }

@@ -46,7 +46,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected void BindData()
         {
-            gvSearchTermStat.DataSource = IoC.Resolve<ISearchLogService>().SearchTermReport(null, null, 5);
+            gvSearchTermStat.DataSource = this.SearchLogService.SearchTermReport(null, null, 5);
             gvSearchTermStat.DataBind();
         }
 
@@ -54,7 +54,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                IoC.Resolve<ISearchLogService>().ClearSearchLog();
+                this.SearchLogService.ClearSearchLog();
                 BindData();
             }
             catch (Exception exc)

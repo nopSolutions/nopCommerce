@@ -41,7 +41,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             if (!Page.IsPostBack)
             {
-                Customer customer = IoC.Resolve<ICustomerService>().GetCustomerById(this.CustomerId);
+                Customer customer = this.CustomerService.GetCustomerById(this.CustomerId);
                 if (customer != null)
                 {
                     lblTitle.Text = Server.HtmlEncode(customer.Email);
@@ -49,14 +49,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                 this.SelectTab(this.CustomerTabs, this.TabId);
 
-                pnlCustomerAvatar.Visible = IoC.Resolve<ICustomerService>().AllowCustomersToUploadAvatars;
-                pnlCustomerForumSubscriptions.Visible = IoC.Resolve<IForumService>().AllowCustomersToManageSubscriptions;
+                pnlCustomerAvatar.Visible = this.CustomerService.AllowCustomersToUploadAvatars;
+                pnlCustomerForumSubscriptions.Visible = this.ForumService.AllowCustomersToManageSubscriptions;
             }
         }
 
         protected Customer Save()
         {
-            Customer customer = IoC.Resolve<ICustomerService>().GetCustomerById(this.CustomerId);
+            Customer customer = this.CustomerService.GetCustomerById(this.CustomerId);
 
             customer = ctrlCustomerInfo.SaveInfo();
             ctrlCustomerBillingAddresses.SaveInfo();
@@ -68,7 +68,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             ctrlCustomerRewardPoints.SaveInfo();
             ctrlCustomerForumSubscriptions.SaveInfo();
 
-            IoC.Resolve<ICustomerActivityService>().InsertActivity(
+            this.CustomerActivityService.InsertActivity(
                 "EditCustomer",
                 GetLocaleResourceString("ActivityLog.EditCustomer"),
                 customer.CustomerId);
@@ -112,9 +112,9 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                IoC.Resolve<ICustomerService>().MarkCustomerAsDeleted(this.CustomerId);
+                this.CustomerService.MarkCustomerAsDeleted(this.CustomerId);
 
-                IoC.Resolve<ICustomerActivityService>().InsertActivity(
+                this.CustomerActivityService.InsertActivity(
                     "DeleteCustomer",
                     GetLocaleResourceString("ActivityLog.DeleteCustomer"),
                     this.CustomerId);

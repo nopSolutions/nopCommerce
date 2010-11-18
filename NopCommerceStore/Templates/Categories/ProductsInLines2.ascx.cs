@@ -48,7 +48,7 @@ namespace NopSolutions.NopCommerce.Web.Templates.Categories
 
         protected void FillDropDowns()
         {
-            if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Common.AllowProductSorting"))
+            if (this.SettingManager.GetSettingValueBoolean("Common.AllowProductSorting"))
             {
                 ddlSorting.Items.Clear();
 
@@ -70,13 +70,13 @@ namespace NopSolutions.NopCommerce.Web.Templates.Categories
 
         protected void BindData()
         {
-            var category = IoC.Resolve<ICategoryService>().GetCategoryById(this.CategoryId);
+            var category = this.CategoryService.GetCategoryById(this.CategoryId);
 
             lName.Text = Server.HtmlEncode(category.LocalizedName);
             lDescription.Text = category.LocalizedDescription;
 
             //subcategories
-            var subCategories = IoC.Resolve<ICategoryService>().GetAllCategoriesByParentCategoryId(this.CategoryId);
+            var subCategories = this.CategoryService.GetAllCategoriesByParentCategoryId(this.CategoryId);
             if (subCategories.Count > 0)
             {
                 rptrSubCategories.DataSource = subCategories;
@@ -106,13 +106,13 @@ namespace NopSolutions.NopCommerce.Web.Templates.Categories
                 minPrice = ctrlPriceRangeFilter.SelectedPriceRange.From;
                 if (minPrice.HasValue)
                 {
-                    minPriceConverted = IoC.Resolve<ICurrencyService>().ConvertCurrency(minPrice.Value, NopContext.Current.WorkingCurrency, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency);
+                    minPriceConverted = this.CurrencyService.ConvertCurrency(minPrice.Value, NopContext.Current.WorkingCurrency, this.CurrencyService.PrimaryStoreCurrency);
                 }
 
                 maxPrice = ctrlPriceRangeFilter.SelectedPriceRange.To;
                 if (maxPrice.HasValue)
                 {
-                    maxPriceConverted = IoC.Resolve<ICurrencyService>().ConvertCurrency(maxPrice.Value, NopContext.Current.WorkingCurrency, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency);
+                    maxPriceConverted = this.CurrencyService.ConvertCurrency(maxPrice.Value, NopContext.Current.WorkingCurrency, this.CurrencyService.PrimaryStoreCurrency);
                 }
             }
 
@@ -121,7 +121,7 @@ namespace NopSolutions.NopCommerce.Web.Templates.Categories
 
             //sorting
             ProductSortingEnum orderBy = ProductSortingEnum.Position;
-            if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Common.AllowProductSorting"))
+            if (this.SettingManager.GetSettingValueBoolean("Common.AllowProductSorting"))
             {
                 CommonHelper.SelectListItem(this.ddlSorting, CommonHelper.QueryStringInt("orderby"));
                 orderBy = (ProductSortingEnum)Enum.ToObject(typeof(ProductSortingEnum), int.Parse(ddlSorting.SelectedItem.Value));
@@ -129,7 +129,7 @@ namespace NopSolutions.NopCommerce.Web.Templates.Categories
 
             //featured products are not supported by this template
             //that's hwhy we load all featured and non-featured products
-            var productCollection = IoC.Resolve<IProductService>().GetAllProducts(this.CategoryId,
+            var productCollection = this.ProductService.GetAllProducts(this.CategoryId,
                 0, 0, null, minPriceConverted, maxPriceConverted,
                 string.Empty, false, pageSize, this.CurrentPageIndex,
                 psoFilterOption, orderBy, out totalRecords);

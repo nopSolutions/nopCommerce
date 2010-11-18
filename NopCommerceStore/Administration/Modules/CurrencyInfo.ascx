@@ -30,7 +30,7 @@
         <td class="adminTitle">
             <nopCommerce:ToolTipLabel runat="server" ID="lblRate" Text="<% $NopResources:Admin.CurrencyInfo.Rate %>"
                 ToolTip="<% $NopResources:Admin.CurrencyInfo.Rate.Tooltip %>" ToolTipImage="~/Administration/Common/ico-help.gif" />
-            [<%=IoC.Resolve<ICurrencyService>().PrimaryExchangeRateCurrency.CurrencyCode%>]:
+            [<%=this.CurrencyService.PrimaryExchangeRateCurrency.CurrencyCode%>]:
         </td>
         <td class="adminData">
             <nopCommerce:DecimalTextBox runat="server" ID="txtRate" CssClass="adminInput" RequiredErrorMessage="<% $NopResources:Admin.CurrencyInfo.Rate.RequiredErrorMessage %>"

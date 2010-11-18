@@ -36,7 +36,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            Affiliate affiliate = IoC.Resolve<IAffiliateService>().GetAffiliateById(this.AffiliateId);
+            Affiliate affiliate = this.AffiliateService.GetAffiliateById(this.AffiliateId);
 
             if (affiliate != null)
             {
@@ -69,7 +69,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         private void FillDropDowns()
         {
             this.ddlCountry.Items.Clear();
-            List<Country> countryCollection = IoC.Resolve<ICountryService>().GetAllCountriesForRegistration();
+            List<Country> countryCollection = this.CountryService.GetAllCountriesForRegistration();
             foreach (Country country in countryCollection)
             {
                 ListItem ddlCountryItem2 = new ListItem(country.Name, country.CountryId.ToString());
@@ -88,7 +88,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public Affiliate SaveInfo()
         {
-            Affiliate affiliate = IoC.Resolve<IAffiliateService>().GetAffiliateById(this.AffiliateId);
+            Affiliate affiliate = this.AffiliateService.GetAffiliateById(this.AffiliateId);
 
             if (affiliate != null)
             {
@@ -106,7 +106,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 affiliate.ZipPostalCode =  txtZipPostalCode.Text;
                 affiliate.CountryId = int.Parse(this.ddlCountry.SelectedItem.Value);
                 affiliate.Active = cbActive.Checked;
-                IoC.Resolve<IAffiliateService>().UpdateAffiliate(affiliate);
+                this.AffiliateService.UpdateAffiliate(affiliate);
             }
             else
             {
@@ -127,7 +127,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     CountryId = int.Parse(this.ddlCountry.SelectedItem.Value),
                     Active = cbActive.Checked
                 };
-                IoC.Resolve<IAffiliateService>().InsertAffiliate(affiliate);
+                this.AffiliateService.InsertAffiliate(affiliate);
             }
 
             return affiliate;

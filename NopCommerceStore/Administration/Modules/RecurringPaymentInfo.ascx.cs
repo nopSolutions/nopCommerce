@@ -44,7 +44,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         private void BindData()
         {
-            RecurringPayment recurringPayment = IoC.Resolve<IOrderService>().GetRecurringPaymentById(this.RecurringPaymentId);
+            RecurringPayment recurringPayment = this.OrderService.GetRecurringPaymentById(this.RecurringPaymentId);
             if (recurringPayment != null)
             {
                 Order initialOrder = recurringPayment.InitialOrder;
@@ -83,7 +83,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         private void BindHistory()
         {
-            RecurringPayment recurringPayment = IoC.Resolve<IOrderService>().GetRecurringPaymentById(this.RecurringPaymentId);
+            RecurringPayment recurringPayment = this.OrderService.GetRecurringPaymentById(this.RecurringPaymentId);
             if (recurringPayment != null)
             {
                 DateTime? nextPaymentDate = recurringPayment.NextPaymentDate;
@@ -99,9 +99,9 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     btnProcessNextPayment.Visible = false;
                 }
 
-                btnCancelPayment.Visible = IoC.Resolve<IOrderService>().CanCancelRecurringPayment(NopContext.Current.User, recurringPayment);
+                btnCancelPayment.Visible = this.OrderService.CanCancelRecurringPayment(NopContext.Current.User, recurringPayment);
 
-                var recurringPaymentHistoryCollection = IoC.Resolve<IOrderService>().SearchRecurringPaymentHistory(recurringPayment.RecurringPaymentId, 0);
+                var recurringPaymentHistoryCollection = this.OrderService.SearchRecurringPaymentHistory(recurringPayment.RecurringPaymentId, 0);
                 gvRecurringPaymentHistory.DataSource = recurringPaymentHistoryCollection;
                 gvRecurringPaymentHistory.DataBind();
             }
@@ -121,7 +121,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                IoC.Resolve<IOrderService>().ProcessNextRecurringPayment(this.RecurringPaymentId);
+                this.OrderService.ProcessNextRecurringPayment(this.RecurringPaymentId);
                 this.BindData();
                 this.BindHistory();
             }
@@ -135,10 +135,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                RecurringPayment rp = IoC.Resolve<IOrderService>().GetRecurringPaymentById(this.RecurringPaymentId);
-                if (IoC.Resolve<IOrderService>().CanCancelRecurringPayment(NopContext.Current.User, rp))
+                RecurringPayment rp = this.OrderService.GetRecurringPaymentById(this.RecurringPaymentId);
+                if (this.OrderService.CanCancelRecurringPayment(NopContext.Current.User, rp))
                 {
-                    rp = IoC.Resolve<IOrderService>().CancelRecurringPayment(rp.RecurringPaymentId);
+                    rp = this.OrderService.CancelRecurringPayment(rp.RecurringPaymentId);
                 }
                 this.BindData();
                 this.BindHistory();
@@ -156,14 +156,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             int totalCycles = txtTotalCycles.Value;
             bool isActive = cbIsActive.Checked;
 
-            RecurringPayment recurringPayment = IoC.Resolve<IOrderService>().GetRecurringPaymentById(this.RecurringPaymentId);
+            RecurringPayment recurringPayment = this.OrderService.GetRecurringPaymentById(this.RecurringPaymentId);
             if (recurringPayment != null)
             {
                 recurringPayment.CycleLength = cycleLength;
                 recurringPayment.CyclePeriod = (int)cyclePeriod;
                 recurringPayment.TotalCycles = totalCycles;
                 recurringPayment.IsActive = isActive;
-                IoC.Resolve<IOrderService>().UpdateRecurringPayment(recurringPayment);
+                this.OrderService.UpdateRecurringPayment(recurringPayment);
             }
             else
             {

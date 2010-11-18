@@ -88,7 +88,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             //coupon code filter
             string giftCardCouponCode = txtGiftCardCouponCode.Text;
 
-            var giftCards = IoC.Resolve<IOrderService>().GetAllGiftCards(null,
+            var giftCards = this.OrderService.GetAllGiftCards(null,
                 null, startDate, endDate, orderStatus, null, null, isGiftCardActivated, giftCardCouponCode);
             return giftCards;
         }

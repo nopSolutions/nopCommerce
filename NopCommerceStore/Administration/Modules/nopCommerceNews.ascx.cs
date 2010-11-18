@@ -55,8 +55,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                bool hideAdv = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Common.HideAdvertisementsOnAdminArea");
-                dsNopCommerceNews.Url = string.Format("http://www.nopCommerce.com/NewsRSS.aspx?Version={0}&Localhost={1}&HideAdvertisements={2}&StoreURL={3}", IoC.Resolve<ISettingManager>().CurrentVersion, HttpContext.Current.Request.Url.IsLoopback, hideAdv, IoC.Resolve<ISettingManager>().StoreUrl);
+                bool hideAdv = this.SettingManager.GetSettingValueBoolean("Common.HideAdvertisementsOnAdminArea");
+                dsNopCommerceNews.Url = string.Format("http://www.nopCommerce.com/NewsRSS.aspx?Version={0}&Localhost={1}&HideAdvertisements={2}&StoreURL={3}", this.SettingManager.CurrentVersion, HttpContext.Current.Request.Url.IsLoopback, hideAdv, this.SettingManager.StoreUrl);
                 lvNopCommerceNews.DataBind();
                 btnHideAds.Text = hideAdv ? GetLocaleResourceString("Admin.nopCommerceNews.DisplayAdv") : GetLocaleResourceString("Admin.nopCommerceNews.HideAdv");
             }
@@ -69,8 +69,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected void btnHideAds_Click(object sender, EventArgs e)
         {
-            bool newValue = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Common.HideAdvertisementsOnAdminArea");
-            IoC.Resolve<ISettingManager>().SetParam("Common.HideAdvertisementsOnAdminArea", (!newValue).ToString());
+            bool newValue = this.SettingManager.GetSettingValueBoolean("Common.HideAdvertisementsOnAdminArea");
+            this.SettingManager.SetParam("Common.HideAdvertisementsOnAdminArea", (!newValue).ToString());
             BindData();
         }
     }

@@ -45,16 +45,16 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             if (!Page.IsPostBack)
             {
                 FillDropDowns();
-                if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Admin.LoadAllProducts"))
+                if (this.SettingManager.GetSettingValueBoolean("Admin.LoadAllProducts"))
                 {
                     BindGrid();
                 }
             }
 
             //buttons
-            btnPDFExport.Visible = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Features.SupportPDF");
-            btnExportXLS.Visible = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Features.SupportExcel");
-            btnImportXLS.Visible = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Features.SupportExcel");
+            btnPDFExport.Visible = this.SettingManager.GetSettingValueBoolean("Features.SupportPDF");
+            btnExportXLS.Visible = this.SettingManager.GetSettingValueBoolean("Features.SupportExcel");
+            btnImportXLS.Visible = this.SettingManager.GetSettingValueBoolean("Features.SupportExcel");
         }
 
         protected void gvProducts_PageIndexChanging(object sender, GridViewPageEventArgs e)
@@ -71,7 +71,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                 Image imgProduct = e.Row.FindControl("imgProduct") as Image;
                 if (imgProduct != null &&
-                    IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Display.ShowAdminProductImages"))
+                    this.SettingManager.GetSettingValueBoolean("Display.ShowAdminProductImages"))
                 {
                     imgProduct.ImageUrl = GetProductImageUrl(product);
                 }
@@ -118,7 +118,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             this.ddlManufacturer.Items.Clear();
             ListItem itemEmptyManufacturer = new ListItem(GetLocaleResourceString("Admin.Common.All"), "0");
             this.ddlManufacturer.Items.Add(itemEmptyManufacturer);
-            var manufacturers = IoC.Resolve<IManufacturerService>().GetAllManufacturers();
+            var manufacturers = this.ManufacturerService.GetAllManufacturers();
             foreach (Manufacturer manufacturer in manufacturers)
             {
                 ListItem item2 = new ListItem(manufacturer.Name, manufacturer.ManufacturerId.ToString());
@@ -133,7 +133,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             int manufacturerId = int.Parse(this.ddlManufacturer.SelectedItem.Value);
 
             int totalRecords = 0;
-            var products = IoC.Resolve<IProductService>().GetAllProducts(categoryId, 
+            var products = this.ProductService.GetAllProducts(categoryId, 
                 manufacturerId, 0, null, null, null, productName, 
                 false, int.MaxValue, 0, null, 
                 ProductSortingEnum.Position, out totalRecords);
@@ -205,7 +205,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         int productId = int.Parse(hfProductId.Value);
                         if (isChecked)
                         {
-                            IoC.Resolve<IProductService>().MarkProductAsDeleted(productId);
+                            this.ProductService.MarkProductAsDeleted(productId);
                         }
                     }
 
@@ -271,7 +271,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     string filePath = string.Format("{0}files\\ExportImport\\{1}", HttpContext.Current.Request.PhysicalApplicationPath, fileName);
 
                     File.WriteAllBytes(filePath, fileBytes);
-                    IoC.Resolve<ImportManager>().ImportProductsFromXls(filePath);
+                    this.ImportManager.ImportProductsFromXls(filePath);
 
                     BindGrid();
                 }
@@ -287,11 +287,11 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             var picture = product.DefaultPicture;
             if (picture != null)
             {
-                return IoC.Resolve<IPictureService>().GetPictureUrl(picture, IoC.Resolve<ISettingManager>().GetSettingValueInteger("Media.ShoppingCart.ThumbnailImageSize", 80));
+                return this.PictureService.GetPictureUrl(picture, this.SettingManager.GetSettingValueInteger("Media.ShoppingCart.ThumbnailImageSize", 80));
             }
             else
             {
-                return IoC.Resolve<IPictureService>().GetDefaultPictureUrl(IoC.Resolve<ISettingManager>().GetSettingValueInteger("Media.ShoppingCart.ThumbnailImageSize", 80));
+                return this.PictureService.GetDefaultPictureUrl(this.SettingManager.GetSettingValueInteger("Media.ShoppingCart.ThumbnailImageSize", 80));
             }
         }
 
@@ -302,7 +302,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 try
                 {
                     string sku = txtSKU.Text.Trim();
-                    var pv = IoC.Resolve<IProductService>().GetProductVariantBySKU(sku);
+                    var pv = this.ProductService.GetProductVariantBySKU(sku);
                     if (pv != null)
                     {
                         string url = string.Format("{0}ProductVariantDetails.aspx?ProductVariantId={1}", CommonHelper.GetStoreAdminLocation(), pv.ProductVariantId);

@@ -59,16 +59,16 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         private void BindData()
         {
-            if (!IoC.Resolve<IOrderService>().RewardPointsEnabled)
+            if (!this.OrderService.RewardPointsEnabled)
             {
                 this.Visible = false;
                 return;
             }
             int rewardPointsBalance = NopContext.Current.User.RewardPointsBalance;
-            decimal rewardPointsAmountBase = IoC.Resolve<IOrderService>().ConvertRewardPointsToAmount(rewardPointsBalance);
-            decimal rewardPointsAmount = IoC.Resolve<ICurrencyService>().ConvertCurrency(rewardPointsAmountBase, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+            decimal rewardPointsAmountBase = this.OrderService.ConvertRewardPointsToAmount(rewardPointsBalance);
+            decimal rewardPointsAmount = this.CurrencyService.ConvertCurrency(rewardPointsAmountBase, this.CurrencyService.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
             lblBalance.Text = GetLocaleResourceString("Customer.RewardPoints.CurrentBalance", rewardPointsBalance, PriceHelper.FormatPrice(rewardPointsAmount, true, false));
-            //lblRate.Text = GetLocaleResourceString("Customer.RewardPoints.CurrentRate", PriceHelper.FormatPrice(IoC.Resolve<ICurrencyService>().ConvertCurrency(IoC.Resolve<IOrderService>().RewardPointsForPurchases_Amount, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency), true, false), IoC.Resolve<IOrderService>().RewardPointsForPurchases_Points);
+            //lblRate.Text = GetLocaleResourceString("Customer.RewardPoints.CurrentRate", PriceHelper.FormatPrice(this.CurrencyService.ConvertCurrency(this.OrderService.RewardPointsForPurchases_Amount, this.CurrencyService.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency), true, false), this.OrderService.RewardPointsForPurchases_Points);
             lblRate.Visible = false;
 
             var rphc = NopContext.Current.User.RewardPointsHistory;

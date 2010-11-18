@@ -58,7 +58,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
         private void BindData()
         {
             Customer toCustomer = null;
-            var replyToPM = IoC.Resolve<IForumService>().GetPrivateMessageById(this.ReplyToMessageId);
+            var replyToPM = this.ForumService.GetPrivateMessageById(this.ReplyToMessageId);
             if (replyToPM != null)
             {
                 if (replyToPM.ToUserId == NopContext.Current.User.CustomerId || replyToPM.FromUserId == NopContext.Current.User.CustomerId)
@@ -73,7 +73,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             }
             else
             {
-                toCustomer = IoC.Resolve<ICustomerService>().GetCustomerById(this.ToCustomerId);
+                toCustomer = this.CustomerService.GetCustomerById(this.ToCustomerId);
             }
 
             if (toCustomer == null || toCustomer.IsGuest)
@@ -98,7 +98,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     throw new NopException(GetLocaleResourceString("PrivateMessages.MessageCannotBeEmpty"));
 
                 Customer toCustomer = null;
-                var replyToPM = IoC.Resolve<IForumService>().GetPrivateMessageById(this.ReplyToMessageId);
+                var replyToPM = this.ForumService.GetPrivateMessageById(this.ReplyToMessageId);
                 if (replyToPM != null)
                 {
                     if (replyToPM.ToUserId == NopContext.Current.User.CustomerId || replyToPM.FromUserId == NopContext.Current.User.CustomerId)
@@ -112,7 +112,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 }
                 else
                 {
-                    toCustomer = IoC.Resolve<ICustomerService>().GetCustomerById(this.ToCustomerId);
+                    toCustomer = this.CustomerService.GetCustomerById(this.ToCustomerId);
                 }
 
                 if (toCustomer == null || toCustomer.IsGuest)
@@ -128,7 +128,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     Text = message,
                     CreatedOn = DateTime.UtcNow
                 };
-                IoC.Resolve<IForumService>().InsertPrivateMessage(pm);
+                this.ForumService.InsertPrivateMessage(pm);
 
                 Response.Redirect(CommonHelper.GetStoreLocation() + "privatemessages.aspx?tab=sent");
             }

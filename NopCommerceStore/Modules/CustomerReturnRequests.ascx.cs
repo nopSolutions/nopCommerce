@@ -62,7 +62,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 var phComments = (PlaceHolder)e.Item.FindControl("phComments");
                 var lComments = (Literal)e.Item.FindControl("lComments");
 
-                lRequestTitle.Text = string.Format(GetLocaleResourceString("CustomerReturnRequests.RequestTitle"), returnRequest.ReturnRequestId, IoC.Resolve<IOrderService>().GetReturnRequestStatusName(returnRequest.ReturnStatus));
+                lRequestTitle.Text = string.Format(GetLocaleResourceString("CustomerReturnRequests.RequestTitle"), returnRequest.ReturnRequestId, this.OrderService.GetReturnRequestStatusName(returnRequest.ReturnStatus));
                 string prodLink = string.Format("<a href=\"{0}\">{1}</a>", SEOHelper.GetProductUrl(returnRequest.OrderProductVariant.ProductVariant.Product), returnRequest.OrderProductVariant.ProductVariant.LocalizedFullProductName);
                 lItem.Text = string.Format(GetLocaleResourceString("CustomerReturnRequests.Item"), returnRequest.Quantity, prodLink);
                 lReason.Text = string.Format(GetLocaleResourceString("CustomerReturnRequests.Reason"), Server.HtmlEncode(returnRequest.ReasonForReturn));
@@ -82,9 +82,9 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         private void BindData()
         {
-            if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("ReturnRequests.Enable"))
+            if (this.SettingManager.GetSettingValueBoolean("ReturnRequests.Enable"))
             {
-                var returnRequests = IoC.Resolve<IOrderService>().SearchReturnRequests(NopContext.Current.User.CustomerId, 0, null);
+                var returnRequests = this.OrderService.SearchReturnRequests(NopContext.Current.User.CustomerId, 0, null);
                 if (returnRequests.Count > 0)
                 {
                     rptrRequests.DataSource = returnRequests;

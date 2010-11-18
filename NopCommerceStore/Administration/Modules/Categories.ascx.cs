@@ -54,7 +54,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         private void BindGrid()
         {
-            var categories = IoC.Resolve<ICategoryService>().GetAllCategories();
+            var categories = this.CategoryService.GetAllCategories();
             gvCategories.DataSource = categories;
             gvCategories.DataBind();
         }

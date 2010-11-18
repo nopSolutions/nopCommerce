@@ -78,7 +78,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                IoC.Resolve<ILanguageService>().DeleteLanguage(this.LanguageId);
+                this.LanguageService.DeleteLanguage(this.LanguageId);
                 Response.Redirect("Languages.aspx");
             }
             catch (Exception exc)
@@ -99,7 +99,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                string pack = IoC.Resolve<ILocalizationManager>().LanguagePackExport(this.LanguageId);
+                string pack = this.LocalizationManager.LanguagePackExport(this.LanguageId);
                 string fileName = String.Format("language_{0}.xml", LanguageId);
                 CommonHelper.WriteResponseXml(pack, fileName);
             }

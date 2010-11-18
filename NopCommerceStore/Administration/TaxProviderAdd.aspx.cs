@@ -33,7 +33,7 @@ namespace NopSolutions.NopCommerce.Web.Administration
     {
         protected override bool ValidatePageSecurity()
         {
-            return IoC.Resolve<IACLService>().IsActionAllowed("ManageTaxSettings");
+            return this.ACLService.IsActionAllowed("ManageTaxSettings");
         }
 
         protected TaxProvider Save()
@@ -46,7 +46,7 @@ namespace NopSolutions.NopCommerce.Web.Administration
                 ClassName = txtClassName.Text,
                 DisplayOrder = txtDisplayOrder.Value
             };
-            IoC.Resolve<ITaxProviderService>().InsertTaxProvider(taxProvider);
+            this.TaxProviderService.InsertTaxProvider(taxProvider);
 
             return taxProvider;
         }

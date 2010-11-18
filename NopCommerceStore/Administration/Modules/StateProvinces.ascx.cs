@@ -32,7 +32,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         private void FillDropDowns()
         {
             this.ddlCountry.Items.Clear();
-            var countryCollection = IoC.Resolve<ICountryService>().GetAllCountries();
+            var countryCollection = this.CountryService.GetAllCountries();
             foreach (Country country in countryCollection)
             {
                 ListItem ddlCountryItem2 = new ListItem(country.Name, country.CountryId.ToString());
@@ -52,7 +52,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         void BindGrid()
         {
             int countryId = int.Parse(this.ddlCountry.SelectedItem.Value);
-            var stateProvinceCollection = IoC.Resolve<IStateProvinceService>().GetStateProvincesByCountryId(countryId);
+            var stateProvinceCollection = this.StateProvinceService.GetStateProvincesByCountryId(countryId);
             gvStateProvinces.DataSource = stateProvinceCollection;
             gvStateProvinces.DataBind();
         }

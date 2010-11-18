@@ -39,7 +39,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
     {
         private void BindData()
         {
-            var blogPosts = IoC.Resolve<IBlogService>().GetAllBlogPosts(NopContext.Current.WorkingLanguage.LanguageId);
+            var blogPosts = this.BlogService.GetAllBlogPosts(NopContext.Current.WorkingLanguage.LanguageId);
             if (blogPosts.Count > 0)
             {
                 var months = new SortedDictionary<DateTime, int>();

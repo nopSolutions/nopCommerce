@@ -49,7 +49,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 var address = ctrlShippingAddress.Address;
                 if (address.AddressId != 0 && NopContext.Current.User != null)
                 {
-                    var prevAddress = IoC.Resolve<ICustomerService>().GetAddressById(address.AddressId);
+                    var prevAddress = this.CustomerService.GetAddressById(address.AddressId);
                     if (prevAddress.CustomerId != NopContext.Current.User.CustomerId)
                         return null;
                     address.CustomerId = prevAddress.CustomerId;
@@ -70,7 +70,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             {
                 //set default shipping address
                 NopContext.Current.User.ShippingAddressId = 0;
-                IoC.Resolve<ICustomerService>().UpdateCustomer(NopContext.Current.User);
+                this.CustomerService.UpdateCustomer(NopContext.Current.User);
 
                 var args1 = new CheckoutStepEventArgs() { ShippingAddressSelected = true };
                 OnCheckoutStepChanged(args1);
@@ -100,13 +100,13 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     shippingAddress.CreatedOn = DateTime.UtcNow;
                     shippingAddress.UpdatedOn = DateTime.UtcNow;
 
-                    IoC.Resolve<ICustomerService>().InsertAddress(shippingAddress);
+                    this.CustomerService.InsertAddress(shippingAddress);
                 }
             }
 
             //set default shipping address
             NopContext.Current.User.ShippingAddressId = shippingAddress.AddressId;
-            IoC.Resolve<ICustomerService>().UpdateCustomer(NopContext.Current.User);
+            this.CustomerService.UpdateCustomer(NopContext.Current.User);
             
             var args2 = new CheckoutStepEventArgs() { ShippingAddressSelected = true };
             OnCheckoutStepChanged(args2);
@@ -142,7 +142,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         public void BindData()
         {
-            bool shoppingCartRequiresShipping = IoC.Resolve<IShippingService>().ShoppingCartRequiresShipping(Cart);
+            bool shoppingCartRequiresShipping = this.ShippingService.ShoppingCartRequiresShipping(Cart);
             if (!shoppingCartRequiresShipping)
             {
                 SelectAddress(null);
@@ -169,10 +169,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
             if (Page.IsValid)
             {
                 int addressId = int.Parse(e.CommandArgument.ToString());
-                var shippingAddress = IoC.Resolve<ICustomerService>().GetAddressById(addressId);
+                var shippingAddress = this.CustomerService.GetAddressById(addressId);
                 if (shippingAddress != null && NopContext.Current.User != null)
                 {
-                    var prevAddress = IoC.Resolve<ICustomerService>().GetAddressById(shippingAddress.AddressId);
+                    var prevAddress = this.CustomerService.GetAddressById(shippingAddress.AddressId);
                     if (prevAddress.CustomerId != NopContext.Current.User.CustomerId)
                         return;
                 }
@@ -192,7 +192,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if ((NopContext.Current.User == null) || (NopContext.Current.User.IsGuest && !IoC.Resolve<ICustomerService>().AnonymousCheckoutAllowed))
+            if ((NopContext.Current.User == null) || (NopContext.Current.User.IsGuest && !this.CustomerService.AnonymousCheckoutAllowed))
             {
                 string loginURL = SEOHelper.GetLoginPageUrl(true);
                 Response.Redirect(loginURL);
@@ -220,7 +220,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             {
                 if (cart == null)
                 {
-                    cart = IoC.Resolve<IShoppingCartService>().GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
+                    cart = this.ShoppingCartService.GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
                 }
                 return cart;
             }

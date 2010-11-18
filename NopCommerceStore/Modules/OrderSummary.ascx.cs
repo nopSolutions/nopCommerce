@@ -56,7 +56,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
         protected override void OnPreRender(EventArgs e)
         {
             //terms of service
-            if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Checkout.TermsOfServiceEnabled"))
+            if (this.SettingManager.GetSettingValueBoolean("Checkout.TermsOfServiceEnabled"))
             {
                 string onclickTerms = string.Format("return accepttermsofservice(\"{0}\") && " + Page.ClientScript.GetPostBackEventReference(this.btnCheckout, ""), GetLocaleResourceString("Checkout.PleaseAcceptTermsOfService"));
                 this.btnCheckout.Attributes.Add("onclick", onclickTerms);
@@ -76,7 +76,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         public void BindData()
         {
-            var cart = IoC.Resolve<IShoppingCartService>().GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
+            var cart = this.ShoppingCartService.GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
 
             if (cart.Count > 0)
             {
@@ -88,7 +88,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 rptShoppingCart.DataBind();
 
                 //minimum order subtotal
-                bool minOrderSubtotalAmountOK = IoC.Resolve<IOrderService>().ValidateMinOrderSubtotalAmount(cart, NopContext.Current.User);
+                bool minOrderSubtotalAmountOK = this.OrderService.ValidateMinOrderSubtotalAmount(cart, NopContext.Current.User);
                 if (minOrderSubtotalAmountOK)
                 {
                     phMinOrderSubtotalAmount.Visible = false;
@@ -97,7 +97,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 }
                 else
                 {
-                    decimal minOrderSubtotalAmount = IoC.Resolve<ICurrencyService>().ConvertCurrency(IoC.Resolve<IOrderService>().MinOrderSubtotalAmount, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                    decimal minOrderSubtotalAmount = this.CurrencyService.ConvertCurrency(this.OrderService.MinOrderSubtotalAmount, this.CurrencyService.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
                     lMinOrderSubtotalAmount.Text = string.Format(GetLocaleResourceString("Checkout.MinOrderSubtotalAmount"), PriceHelper.FormatPrice(minOrderSubtotalAmount, true, false));
                     phMinOrderSubtotalAmount.Visible = true;
                     lMinOrderSubtotalAmount.Visible = true;
@@ -105,7 +105,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 }
 
                 //cross-sells
-                var crossSells = IoC.Resolve<IProductService>().GetCrosssellProductsByShoppingCart(cart);
+                var crossSells = this.ProductService.GetCrosssellProductsByShoppingCart(cart);
                 if (crossSells.Count > 0)
                 {
                     dlCrossSells.DataSource = crossSells;
@@ -138,9 +138,9 @@ namespace NopSolutions.NopCommerce.Web.Modules
             bool hasErrors = false;
 
             //shopping cart
-            var cart = IoC.Resolve<IShoppingCartService>().GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
+            var cart = this.ShoppingCartService.GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
 
-            var warnings = IoC.Resolve<IShoppingCartService>().GetShoppingCartWarnings(cart, string.Empty, false);
+            var warnings = this.ShoppingCartService.GetShoppingCartWarnings(cart, string.Empty, false);
             if (warnings.Count > 0)
             {
                 hasErrors = true;
@@ -194,9 +194,9 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     if (!cbRemoveFromCart.Checked)
                     {
                         int.TryParse(txtQuantity.Text, out quantity);
-                        var sci = IoC.Resolve<IShoppingCartService>().GetShoppingCartItemById(shoppingCartItemId);
+                        var sci = this.ShoppingCartService.GetShoppingCartItemById(shoppingCartItemId);
 
-                        var warnings = IoC.Resolve<IShoppingCartService>().GetShoppingCartItemWarnings(
+                        var warnings = this.ShoppingCartService.GetShoppingCartItemWarnings(
                             sci.ShoppingCartType,
                             sci.ProductVariantId,
                             sci.AttributesXml,
@@ -252,12 +252,12 @@ namespace NopSolutions.NopCommerce.Web.Modules
                         int.TryParse(lblShoppingCartItemId.Text, out shoppingCartItemId);
                         if (cbRemoveFromCart.Checked)
                         {
-                            IoC.Resolve<IShoppingCartService>().DeleteShoppingCartItem(shoppingCartItemId, true);
+                            this.ShoppingCartService.DeleteShoppingCartItem(shoppingCartItemId, true);
                         }
                         else
                         {
                             int.TryParse(txtQuantity.Text, out quantity);
-                            List<string> addToCartWarning = IoC.Resolve<IShoppingCartService>().UpdateCart(shoppingCartItemId, quantity, true);
+                            List<string> addToCartWarning = this.ShoppingCartService.UpdateCart(shoppingCartItemId, quantity, true);
                         }
                     }
                 }
@@ -280,7 +280,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             ApplyCheckoutAttributes();
             if (NopContext.Current.User == null || NopContext.Current.User.IsGuest)
             {
-                string loginURL = SEOHelper.GetLoginPageUrl(true, IoC.Resolve<ICustomerService>().AnonymousCheckoutAllowed);
+                string loginURL = SEOHelper.GetLoginPageUrl(true, this.CustomerService.AnonymousCheckoutAllowed);
                 Response.Redirect(loginURL);
             }
             else
@@ -295,7 +295,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             if (String.IsNullOrEmpty(couponCode))
                 return;
 
-            var discounts = IoC.Resolve<IDiscountService>().GetAllDiscounts(null);
+            var discounts = this.DiscountService.GetAllDiscounts(null);
             var discount = discounts.FindByCouponCode(couponCode);
             bool isDiscountValid = discount != null;
             if (isDiscountValid)
@@ -303,7 +303,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 pnlDiscountWarnings.Visible = false;
                 lblDiscountWarning.Visible = false;
 
-                IoC.Resolve<ICustomerService>().ApplyDiscountCouponCode(couponCode);
+                this.CustomerService.ApplyDiscountCouponCode(couponCode);
                 this.BindData();
             }
             else
@@ -320,7 +320,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             if (String.IsNullOrEmpty(couponCode))
                 return;
 
-            var cart = IoC.Resolve<IShoppingCartService>().GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
+            var cart = this.ShoppingCartService.GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
             if (!cart.IsRecurring)
             {
                 bool isGiftCardValid = GiftCardHelper.IsGiftCardValid(couponCode);
@@ -333,7 +333,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     if (NopContext.Current.User != null)
                         couponCodesXML = NopContext.Current.User.GiftCardCouponCodes;
                     couponCodesXML = GiftCardHelper.AddCouponCode(couponCodesXML, couponCode);
-                    IoC.Resolve<ICustomerService>().ApplyGiftCardCouponCode(couponCodesXML);
+                    this.CustomerService.ApplyGiftCardCouponCode(couponCodesXML);
                     this.BindData();
                 }
                 else
@@ -356,7 +356,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             if (ctrlCheckoutAttributes.HasAttributes)
             {
                 string checkoutAttributes = ctrlCheckoutAttributes.SelectedAttributes;
-                IoC.Resolve<ICustomerService>().ApplyCheckoutAttributes(checkoutAttributes);
+                this.CustomerService.ApplyCheckoutAttributes(checkoutAttributes);
             }
         }
         
@@ -375,18 +375,18 @@ namespace NopSolutions.NopCommerce.Web.Modules
             if (productVariant != null)
             {
                 var productVariantPicture = productVariant.Picture;
-                pictureUrl = IoC.Resolve<IPictureService>().GetPictureUrl(productVariantPicture, IoC.Resolve<ISettingManager>().GetSettingValueInteger("Media.ShoppingCart.ThumbnailImageSize", 80), false);
+                pictureUrl = this.PictureService.GetPictureUrl(productVariantPicture, this.SettingManager.GetSettingValueInteger("Media.ShoppingCart.ThumbnailImageSize", 80), false);
                 if (String.IsNullOrEmpty(pictureUrl))
                 {
                     var product = productVariant.Product;
                     var picture = product.DefaultPicture;
                     if (picture != null)
                     {
-                        pictureUrl = IoC.Resolve<IPictureService>().GetPictureUrl(picture, IoC.Resolve<ISettingManager>().GetSettingValueInteger("Media.ShoppingCart.ThumbnailImageSize", 80));
+                        pictureUrl = this.PictureService.GetPictureUrl(picture, this.SettingManager.GetSettingValueInteger("Media.ShoppingCart.ThumbnailImageSize", 80));
                     }
                     else
                     {
-                        pictureUrl = IoC.Resolve<IPictureService>().GetDefaultPictureUrl(IoC.Resolve<ISettingManager>().GetSettingValueInteger("Media.ShoppingCart.ThumbnailImageSize", 80));
+                        pictureUrl = this.PictureService.GetDefaultPictureUrl(this.SettingManager.GetSettingValueInteger("Media.ShoppingCart.ThumbnailImageSize", 80));
                     }
                 }
             }
@@ -433,8 +433,8 @@ namespace NopSolutions.NopCommerce.Web.Modules
             else
             {
                 decimal taxRate = decimal.Zero;
-                decimal shoppingCartUnitPriceWithDiscountBase = IoC.Resolve<ITaxService>().GetPrice(shoppingCartItem.ProductVariant, PriceHelper.GetUnitPrice(shoppingCartItem, true), out taxRate);
-                decimal shoppingCartUnitPriceWithDiscount = IoC.Resolve<ICurrencyService>().ConvertCurrency(shoppingCartUnitPriceWithDiscountBase, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                decimal shoppingCartUnitPriceWithDiscountBase = this.TaxService.GetPrice(shoppingCartItem.ProductVariant, PriceHelper.GetUnitPrice(shoppingCartItem, true), out taxRate);
+                decimal shoppingCartUnitPriceWithDiscount = this.CurrencyService.ConvertCurrency(shoppingCartUnitPriceWithDiscountBase, this.CurrencyService.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
                 string unitPriceString = PriceHelper.FormatPrice(shoppingCartUnitPriceWithDiscount);
                 sb.Append("<span class=\"productPrice\">");
                 sb.Append(unitPriceString);
@@ -456,8 +456,8 @@ namespace NopSolutions.NopCommerce.Web.Modules
             {
                 //sub total
                 decimal taxRate = decimal.Zero;
-                decimal shoppingCartItemSubTotalWithDiscountBase = IoC.Resolve<ITaxService>().GetPrice(shoppingCartItem.ProductVariant, PriceHelper.GetSubTotal(shoppingCartItem, true), out taxRate);
-                decimal shoppingCartItemSubTotalWithDiscount = IoC.Resolve<ICurrencyService>().ConvertCurrency(shoppingCartItemSubTotalWithDiscountBase, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                decimal shoppingCartItemSubTotalWithDiscountBase = this.TaxService.GetPrice(shoppingCartItem.ProductVariant, PriceHelper.GetSubTotal(shoppingCartItem, true), out taxRate);
+                decimal shoppingCartItemSubTotalWithDiscount = this.CurrencyService.ConvertCurrency(shoppingCartItemSubTotalWithDiscountBase, this.CurrencyService.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
                 string subTotalString = PriceHelper.FormatPrice(shoppingCartItemSubTotalWithDiscount);
 
                 sb.Append("<span class=\"productPrice\">");
@@ -465,11 +465,11 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 sb.Append("</span>");
 
                 //display an applied discount amount
-                decimal shoppingCartItemSubTotalWithoutDiscountBase = IoC.Resolve<ITaxService>().GetPrice(shoppingCartItem.ProductVariant, PriceHelper.GetSubTotal(shoppingCartItem, false), out taxRate);
+                decimal shoppingCartItemSubTotalWithoutDiscountBase = this.TaxService.GetPrice(shoppingCartItem.ProductVariant, PriceHelper.GetSubTotal(shoppingCartItem, false), out taxRate);
                 decimal shoppingCartItemDiscountBase = shoppingCartItemSubTotalWithoutDiscountBase - shoppingCartItemSubTotalWithDiscountBase;
                 if (shoppingCartItemDiscountBase > decimal.Zero)
                 {
-                    decimal shoppingCartItemDiscount = IoC.Resolve<ICurrencyService>().ConvertCurrency(shoppingCartItemDiscountBase, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                    decimal shoppingCartItemDiscount = this.CurrencyService.ConvertCurrency(shoppingCartItemDiscountBase, this.CurrencyService.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
                     string discountString = PriceHelper.FormatPrice(shoppingCartItemDiscount);
 
                     sb.Append("<br />");

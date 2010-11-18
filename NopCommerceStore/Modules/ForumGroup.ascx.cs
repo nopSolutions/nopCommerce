@@ -38,7 +38,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            this.Visible = IoC.Resolve<IForumService>().ForumsEnabled;
+            this.Visible = this.ForumService.ForumsEnabled;
 
             if (!Page.IsPostBack)
             {
@@ -48,7 +48,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         private void BindData()
         {
-            var forumGroup = IoC.Resolve<IForumService>().GetForumGroupById(this.ForumGroupId);
+            var forumGroup = this.ForumService.GetForumGroupById(this.ForumGroupId);
             if (forumGroup != null)
             {
                 hlForumGroup.NavigateUrl = SEOHelper.GetForumGroupUrl(forumGroup);

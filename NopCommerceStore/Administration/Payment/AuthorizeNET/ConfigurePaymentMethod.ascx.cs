@@ -33,10 +33,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Payment.AuthorizeNET
 {
     public partial class ConfigurePaymentMethod : BaseNopAdministrationUserControl, IConfigurePaymentMethodModule
     {
-        public static TransactMode GetCurrentTransactionMode()
+        public TransactMode GetCurrentTransactionMode()
         {
             TransactMode transactionModeEnum = TransactMode.Authorize;
-            string transactionMode = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.AuthorizeNET.TransactionMode");
+            string transactionMode = this.SettingManager.GetSettingValue("PaymentMethod.AuthorizeNET.TransactionMode");
             if (!String.IsNullOrEmpty(transactionMode))
             {
                 transactionModeEnum = (TransactMode)Enum.Parse(typeof(TransactMode), transactionMode);
@@ -45,9 +45,9 @@ namespace NopSolutions.NopCommerce.Web.Administration.Payment.AuthorizeNET
             return transactionModeEnum;
         }
 
-        public static void SetTransactionMode(TransactMode transactionMode)
+        public void SetTransactionMode(TransactMode transactionMode)
         {
-            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.AuthorizeNET.TransactionMode", transactionMode.ToString());
+            this.SettingManager.SetParam("PaymentMethod.AuthorizeNET.TransactionMode", transactionMode.ToString());
         }
 
         protected void Page_Load(object sender, EventArgs e)
@@ -71,11 +71,11 @@ namespace NopSolutions.NopCommerce.Web.Administration.Payment.AuthorizeNET
                     break;
             }
 
-            cbUseSandbox.Checked = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.AuthorizeNET.UseSandbox");
-            txtTransactionKey.Text = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.AuthorizeNET.TransactionKey");
-            txtLoginId.Text = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.AuthorizeNET.LoginId");
+            cbUseSandbox.Checked = this.SettingManager.GetSettingValueBoolean("PaymentMethod.AuthorizeNET.UseSandbox");
+            txtTransactionKey.Text = this.SettingManager.GetSettingValue("PaymentMethod.AuthorizeNET.TransactionKey");
+            txtLoginId.Text = this.SettingManager.GetSettingValue("PaymentMethod.AuthorizeNET.LoginId");
 
-            txtAdditionalFee.Value = IoC.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.AuthorizeNET.AdditionalFee");
+            txtAdditionalFee.Value = this.SettingManager.GetSettingValueDecimalNative("PaymentMethod.AuthorizeNET.AdditionalFee");
         }
 
         public void Save()
@@ -91,11 +91,11 @@ namespace NopSolutions.NopCommerce.Web.Administration.Payment.AuthorizeNET
             }
             SetTransactionMode(transactionMode);
 
-            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.AuthorizeNET.UseSandbox", cbUseSandbox.Checked.ToString());
-            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.AuthorizeNET.TransactionKey", txtTransactionKey.Text);
-            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.AuthorizeNET.LoginId", txtLoginId.Text);
+            this.SettingManager.SetParam("PaymentMethod.AuthorizeNET.UseSandbox", cbUseSandbox.Checked.ToString());
+            this.SettingManager.SetParam("PaymentMethod.AuthorizeNET.TransactionKey", txtTransactionKey.Text);
+            this.SettingManager.SetParam("PaymentMethod.AuthorizeNET.LoginId", txtLoginId.Text);
 
-            IoC.Resolve<ISettingManager>().SetParamNative("PaymentMethod.AuthorizeNET.AdditionalFee", txtAdditionalFee.Value);
+            this.SettingManager.SetParamNative("PaymentMethod.AuthorizeNET.AdditionalFee", txtAdditionalFee.Value);
         }
     }
 }

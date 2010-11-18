@@ -38,7 +38,7 @@ namespace NopSolutions.NopCommerce.Web.Templates.Payment.Check
 
         private void BindData()
         {
-            lblInfo.Text = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Check.Info");
+            lblInfo.Text = this.SettingManager.GetSettingValue("PaymentMethod.Check.Info");
         }
 
         public bool ValidateForm()

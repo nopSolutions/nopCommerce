@@ -35,7 +35,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            BlogComment blogComment = IoC.Resolve<IBlogService>().GetBlogCommentById(this.BlogCommentId);
+            BlogComment blogComment = this.BlogService.GetBlogCommentById(this.BlogCommentId);
             if (blogComment != null)
             {
                 this.lblCustomer.Text = GetCustomerInfo(blogComment.CustomerId);
@@ -52,7 +52,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         protected string GetCustomerInfo(int customerId)
         {
             string customerInfo = string.Empty;
-            Customer customer = IoC.Resolve<ICustomerService>().GetCustomerById(customerId);
+            Customer customer = this.CustomerService.GetCustomerById(customerId);
             if (customer != null)
             {
                 if (customer.IsGuest)
@@ -69,7 +69,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected string GetBlogPostInfo(int blogPostId)
         {
-            BlogPost blogPost = IoC.Resolve<IBlogService>().GetBlogPostById(blogPostId);
+            BlogPost blogPost = this.BlogService.GetBlogPostById(blogPostId);
             if (blogPost != null)
             {
                 string blogPostInfo = string.Format("<a href=\"BlogPostDetails.aspx?BlogPostID={0}\">{1}</a>", blogPost.BlogPostId, Server.HtmlEncode(blogPost.BlogPostTitle));
@@ -93,11 +93,11 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 try
                 {
-                    BlogComment blogComment = IoC.Resolve<IBlogService>().GetBlogCommentById(this.BlogCommentId);
+                    BlogComment blogComment = this.BlogService.GetBlogCommentById(this.BlogCommentId);
                     if (blogComment != null)
                     {
                         blogComment.CommentText = txtComment.Text;
-                        IoC.Resolve<IBlogService>().UpdateBlogComment(blogComment);
+                        this.BlogService.UpdateBlogComment(blogComment);
                         Response.Redirect("BlogCommentDetails.aspx?BlogCommentID=" + blogComment.BlogCommentId.ToString());
                     }
                     else
@@ -112,7 +112,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected void DeleteButton_Click(object sender, EventArgs e)
         {
-            IoC.Resolve<IBlogService>().DeleteBlogComment(this.BlogCommentId);
+            this.BlogService.DeleteBlogComment(this.BlogCommentId);
             Response.Redirect("BlogComments.aspx");
         }
 

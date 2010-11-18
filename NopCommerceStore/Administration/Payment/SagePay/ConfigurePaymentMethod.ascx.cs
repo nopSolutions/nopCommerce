@@ -43,30 +43,30 @@ namespace NopSolutions.NopCommerce.Web.Administration.Payment.SagePay
 
         private void BindData()
         {
-            cbUseSandbox.Checked = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.SagePay.UseSandbox", false);
-            txtPartnerId.Text = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.SagePay.PartnerId");
-            txtVendorName.Text = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.SagePay.VendorName");
-            txtVendorDescription.Text = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.SagePay.VendorDescription");
-            cbSendEmails.Checked = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.SagePay.SendEmails", false);
-            txtThanksMessage.Text = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.SagePay.EmailThanksMessage");
-            cbApplyCVS.Checked = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.SagePay.ApplyCVS", true);
-            cbApply3DS.Checked = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.SagePay.Apply3DS", true);
-            txtEncyptionPassword.Text = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.SagePay.EncryptionPassword");
-            txtProtocolNumber.Text = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.SagePay.ProtocolNumber", "2.23");
+            cbUseSandbox.Checked = this.SettingManager.GetSettingValueBoolean("PaymentMethod.SagePay.UseSandbox", false);
+            txtPartnerId.Text = this.SettingManager.GetSettingValue("PaymentMethod.SagePay.PartnerId");
+            txtVendorName.Text = this.SettingManager.GetSettingValue("PaymentMethod.SagePay.VendorName");
+            txtVendorDescription.Text = this.SettingManager.GetSettingValue("PaymentMethod.SagePay.VendorDescription");
+            cbSendEmails.Checked = this.SettingManager.GetSettingValueBoolean("PaymentMethod.SagePay.SendEmails", false);
+            txtThanksMessage.Text = this.SettingManager.GetSettingValue("PaymentMethod.SagePay.EmailThanksMessage");
+            cbApplyCVS.Checked = this.SettingManager.GetSettingValueBoolean("PaymentMethod.SagePay.ApplyCVS", true);
+            cbApply3DS.Checked = this.SettingManager.GetSettingValueBoolean("PaymentMethod.SagePay.Apply3DS", true);
+            txtEncyptionPassword.Text = this.SettingManager.GetSettingValue("PaymentMethod.SagePay.EncryptionPassword");
+            txtProtocolNumber.Text = this.SettingManager.GetSettingValue("PaymentMethod.SagePay.ProtocolNumber", "2.23");
         }
 
         public void Save()
         {
-            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.SagePay.UseSandbox", cbUseSandbox.Checked.ToString());
-            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.SagePay.PartnerId", txtPartnerId.Text);
-            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.SagePay.VendorName", txtVendorName.Text);
-            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.SagePay.VendorDescription", txtVendorDescription.Text);
-            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.SagePay.SendEmails", cbSendEmails.Checked.ToString());
-            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.SagePay.EmailThanksMessage", txtThanksMessage.Text);
-            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.SagePay.ApplyCVS", cbApplyCVS.Checked.ToString());
-            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.SagePay.Apply3DS", cbApply3DS.Checked.ToString());
-            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.SagePay.EncryptionPassword", txtEncyptionPassword.Text);
-            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.SagePay.ProtocolNumber", txtProtocolNumber.Text);
+            this.SettingManager.SetParam("PaymentMethod.SagePay.UseSandbox", cbUseSandbox.Checked.ToString());
+            this.SettingManager.SetParam("PaymentMethod.SagePay.PartnerId", txtPartnerId.Text);
+            this.SettingManager.SetParam("PaymentMethod.SagePay.VendorName", txtVendorName.Text);
+            this.SettingManager.SetParam("PaymentMethod.SagePay.VendorDescription", txtVendorDescription.Text);
+            this.SettingManager.SetParam("PaymentMethod.SagePay.SendEmails", cbSendEmails.Checked.ToString());
+            this.SettingManager.SetParam("PaymentMethod.SagePay.EmailThanksMessage", txtThanksMessage.Text);
+            this.SettingManager.SetParam("PaymentMethod.SagePay.ApplyCVS", cbApplyCVS.Checked.ToString());
+            this.SettingManager.SetParam("PaymentMethod.SagePay.Apply3DS", cbApply3DS.Checked.ToString());
+            this.SettingManager.SetParam("PaymentMethod.SagePay.EncryptionPassword", txtEncyptionPassword.Text);
+            this.SettingManager.SetParam("PaymentMethod.SagePay.ProtocolNumber", txtProtocolNumber.Text);
         }
     }
 }

@@ -31,7 +31,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         void BindGrid()
         {
-            var specificationAttributes = IoC.Resolve<ISpecificationAttributeService>().GetSpecificationAttributes();
+            var specificationAttributes = this.SpecificationAttributeService.GetSpecificationAttributes();
             gvSpecificationAttributes.DataSource = specificationAttributes;
             gvSpecificationAttributes.DataBind();
         }

@@ -72,7 +72,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                IoC.Resolve<ICurrencyService>().DeleteCurrency(this.CurrencyId);
+                this.CurrencyService.DeleteCurrency(this.CurrencyId);
                 Response.Redirect("Currencies.aspx");
             }
             catch (Exception exc)

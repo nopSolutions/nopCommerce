@@ -50,7 +50,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
         private void FillCountryDropDownsForShipping()
         {
             this.ddlCountry.Items.Clear();
-            var countryCollection = IoC.Resolve<ICountryService>().GetAllCountriesForShipping();
+            var countryCollection = this.CountryService.GetAllCountriesForShipping();
             foreach (var country in countryCollection)
             {
                 var ddlCountryItem2 = new ListItem(country.Name, country.CountryId.ToString());
@@ -65,7 +65,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             if (this.ddlCountry.SelectedItem != null)
                 countryId = int.Parse(this.ddlCountry.SelectedItem.Value);
 
-            var stateProvinceCollection = IoC.Resolve<IStateProvinceService>().GetStateProvincesByCountryId(countryId);
+            var stateProvinceCollection = this.StateProvinceService.GetStateProvincesByCountryId(countryId);
             foreach (var stateProvince in stateProvinceCollection)
             {
                 var ddlStateProviceItem2 = new ListItem(stateProvince.Name, stateProvince.StateProvinceId.ToString());
@@ -88,15 +88,15 @@ namespace NopSolutions.NopCommerce.Web.Modules
             //calculate discounted and taxed rate
             Discount appliedDiscount = null;
             decimal shippingTotalWithoutDiscount = shippingOption.Rate;
-            decimal discountAmount = IoC.Resolve<IShippingService>().GetShippingDiscount(NopContext.Current.User, 
+            decimal discountAmount = this.ShippingService.GetShippingDiscount(NopContext.Current.User, 
                 shippingTotalWithoutDiscount, out appliedDiscount);
             decimal shippingTotalWithDiscount = shippingTotalWithoutDiscount - discountAmount;
             if (shippingTotalWithDiscount < decimal.Zero)
                 shippingTotalWithDiscount = decimal.Zero;
             shippingTotalWithDiscount = Math.Round(shippingTotalWithDiscount, 2);
 
-            decimal rateBase = IoC.Resolve<ITaxService>().GetShippingPrice(shippingTotalWithDiscount, NopContext.Current.User);
-            decimal rate = IoC.Resolve<ICurrencyService>().ConvertCurrency(rateBase, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+            decimal rateBase = this.TaxService.GetShippingPrice(shippingTotalWithDiscount, NopContext.Current.User);
+            decimal rate = this.CurrencyService.ConvertCurrency(rateBase, this.CurrencyService.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
             string rateStr = PriceHelper.FormatShippingPrice(rate, true);
             return string.Format("({0})", rateStr);
         }
@@ -110,7 +110,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
             if (this.ddlStateProvince.SelectedItem == null)
                 throw new NopException("State/Provinces are not populated");
-            var stateProvince = IoC.Resolve<IStateProvinceService>().GetStateProvinceById(int.Parse(this.ddlStateProvince.SelectedItem.Value));
+            var stateProvince = this.StateProvinceService.GetStateProvinceById(int.Parse(this.ddlStateProvince.SelectedItem.Value));
             if (stateProvince != null && stateProvince.CountryId == address.CountryId)
                 address.StateProvinceId = stateProvince.StateProvinceId;
 
@@ -121,10 +121,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void BindData()
         {
-            bool shoppingCartRequiresShipping = IoC.Resolve<IShippingService>().ShoppingCartRequiresShipping(Cart);
+            bool shoppingCartRequiresShipping = this.ShippingService.ShoppingCartRequiresShipping(Cart);
             if (!shoppingCartRequiresShipping || 
                 this.Cart.Count == 0 ||
-                !IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Shipping.EstimateShipping.Enabled"))
+                !this.SettingManager.GetSettingValueBoolean("Shipping.EstimateShipping.Enabled"))
             {
                 this.Visible = false;
             }
@@ -137,15 +137,15 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void BindMethods()
         {
-            bool shoppingCartRequiresShipping = IoC.Resolve<IShippingService>().ShoppingCartRequiresShipping(Cart);
+            bool shoppingCartRequiresShipping = this.ShippingService.ShoppingCartRequiresShipping(Cart);
             if (shoppingCartRequiresShipping)
             {
                 string error = string.Empty;
                 Address address = GetEnteredAddress();
-                var shippingOptions = IoC.Resolve<IShippingService>().GetShippingOptions(Cart, NopContext.Current.User, address, ref error);
+                var shippingOptions = this.ShippingService.GetShippingOptions(Cart, NopContext.Current.User, address, ref error);
                 if (!String.IsNullOrEmpty(error))
                 {
-                    IoC.Resolve<ILogService>().InsertLog(LogTypeEnum.ShippingError, error, error);
+                    this.LogService.InsertLog(LogTypeEnum.ShippingError, error, error);
                     phShippingMethods.Visible = false;
 
                     pnlWarnings.Visible = true;
@@ -197,7 +197,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             {
                 if (cart == null)
                 {
-                    cart = IoC.Resolve<IShoppingCartService>().GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
+                    cart = this.ShoppingCartService.GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
                 }
                 return cart;
             }

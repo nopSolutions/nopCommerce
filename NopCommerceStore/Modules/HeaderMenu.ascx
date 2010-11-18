@@ -9,7 +9,7 @@
     <ul class="topmenu">
         <li><a href="<%=CommonHelper.GetStoreLocation()%>">
             <%=GetLocaleResourceString("Content.HomePage")%></a> </li>
-        <% if (IoC.Resolve<IProductService>().RecentlyAddedProductsEnabled)
+        <% if (this.ProductService.RecentlyAddedProductsEnabled)
            { %>
         <li><a href="<%=Page.ResolveUrl("~/recentlyaddedproducts.aspx")%>">
             <%=GetLocaleResourceString("Products.NewProducts")%></a> </li>
@@ -18,12 +18,12 @@
             <%=GetLocaleResourceString("Search.Search")%></a> </li>
         <li><a href="<%= SEOHelper.GetMyAccountUrl()%>">
             <%=GetLocaleResourceString("Account.MyAccount")%></a> </li>
-        <% if (IoC.Resolve<IBlogService>().BlogEnabled)
+        <% if (this.BlogService.BlogEnabled)
            { %>
         <li><a href="<%= SEOHelper.GetBlogUrl()%>">
             <%=GetLocaleResourceString("Blog.Blog")%></a> </li>
         <%} %>
-        <% if (IoC.Resolve<IForumService>().ForumsEnabled)
+        <% if (this.ForumService.ForumsEnabled)
            { %>
         <li><a href="<%= SEOHelper.GetForumMainUrl()%>">
             <%=GetLocaleResourceString("Forum.Forums")%></a></li>

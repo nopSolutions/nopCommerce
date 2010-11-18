@@ -35,7 +35,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             Setting setting = ctrlSettingInfo.SaveInfo();
 
-            IoC.Resolve<ICustomerActivityService>().InsertActivity(
+            this.CustomerActivityService.InsertActivity(
                 "EditSetting",
                 GetLocaleResourceString("ActivityLog.EditSetting"),
                 setting.Name);
@@ -79,12 +79,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                Setting setting = IoC.Resolve<ISettingManager>().GetSettingById(this.SettingId);
+                Setting setting = this.SettingManager.GetSettingById(this.SettingId);
                 if (setting != null)
                 {
-                    IoC.Resolve<ISettingManager>().DeleteSetting(setting.SettingId);
+                    this.SettingManager.DeleteSetting(setting.SettingId);
 
-                    IoC.Resolve<ICustomerActivityService>().InsertActivity(
+                    this.CustomerActivityService.InsertActivity(
                         "DeleteSetting",
                         GetLocaleResourceString("ActivityLog.DeleteSetting"),
                         setting.Name);

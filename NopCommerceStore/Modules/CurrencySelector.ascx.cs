@@ -35,7 +35,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
     {
         private void BindCurrencies()
         {
-            var currencies = IoC.Resolve<ICurrencyService>().GetAllCurrencies();
+            var currencies = this.CurrencyService.GetAllCurrencies();
             if (currencies.Count > 1)
             {
                 this.Visible = true;
@@ -62,7 +62,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
         protected void ddlCurrencies_OnSelectedIndexChanged(object sender, EventArgs e)
         {
             int currencyId = int.Parse(this.ddlCurrencies.SelectedItem.Value);
-            var currency = IoC.Resolve<ICurrencyService>().GetCurrencyById(currencyId);
+            var currency = this.CurrencyService.GetCurrencyById(currencyId);
             if (currency != null && currency.Published)
             {
                 NopContext.Current.WorkingCurrency = currency;

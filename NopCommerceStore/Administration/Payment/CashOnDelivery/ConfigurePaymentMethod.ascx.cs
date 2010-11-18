@@ -40,14 +40,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Payment.CashOnDelivery
 
         private void BindData()
         {
-            txtInfo.Value = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.CashOnDelivery.Info");
-            txtAdditionalFee.Value = IoC.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.CashOnDelivery.AdditionalFee");
+            txtInfo.Value = this.SettingManager.GetSettingValue("PaymentMethod.CashOnDelivery.Info");
+            txtAdditionalFee.Value = this.SettingManager.GetSettingValueDecimalNative("PaymentMethod.CashOnDelivery.AdditionalFee");
         }
 
         public void Save()
         {
-            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.CashOnDelivery.Info", txtInfo.Value);
-            IoC.Resolve<ISettingManager>().SetParamNative("PaymentMethod.CashOnDelivery.AdditionalFee", txtAdditionalFee.Value);
+            this.SettingManager.SetParam("PaymentMethod.CashOnDelivery.Info", txtInfo.Value);
+            this.SettingManager.SetParamNative("PaymentMethod.CashOnDelivery.AdditionalFee", txtAdditionalFee.Value);
         }
     }
 }

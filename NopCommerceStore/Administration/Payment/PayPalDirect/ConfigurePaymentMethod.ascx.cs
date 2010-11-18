@@ -33,10 +33,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Payment.PayPalDirect
 {
     public partial class ConfigurePaymentMethod : BaseNopAdministrationUserControl, IConfigurePaymentMethodModule
     {
-        public static TransactMode GetCurrentTransactionMode()
+        public TransactMode GetCurrentTransactionMode()
         {
             TransactMode transactionModeEnum = TransactMode.Authorize;
-            string transactionMode = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.PaypalDirect.TransactionMode");
+            string transactionMode = this.SettingManager.GetSettingValue("PaymentMethod.PaypalDirect.TransactionMode");
             if (!String.IsNullOrEmpty(transactionMode))
             {
                 transactionModeEnum = (TransactMode)Enum.Parse(typeof(TransactMode), transactionMode);
@@ -45,9 +45,9 @@ namespace NopSolutions.NopCommerce.Web.Administration.Payment.PayPalDirect
             return transactionModeEnum;
         }
 
-        public static void SetTransactionMode(TransactMode transactionMode)
+        public void SetTransactionMode(TransactMode transactionMode)
         {
-            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.PaypalDirect.TransactionMode", transactionMode.ToString());
+            this.SettingManager.SetParam("PaymentMethod.PaypalDirect.TransactionMode", transactionMode.ToString());
         }
 
         protected void Page_Load(object sender, EventArgs e)
@@ -71,12 +71,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Payment.PayPalDirect
                     break;
             }
 
-            cbUseSandbox.Checked = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.PaypalDirect.UseSandbox");
-            txtAPIAccountName.Text = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.PaypalDirect.APIAccountName");
-            txtAPIAccountPassword.Text = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.PaypalDirect.APIAccountPassword");
-            txtSignature.Text = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.PaypalDirect.Signature");
+            cbUseSandbox.Checked = this.SettingManager.GetSettingValueBoolean("PaymentMethod.PaypalDirect.UseSandbox");
+            txtAPIAccountName.Text = this.SettingManager.GetSettingValue("PaymentMethod.PaypalDirect.APIAccountName");
+            txtAPIAccountPassword.Text = this.SettingManager.GetSettingValue("PaymentMethod.PaypalDirect.APIAccountPassword");
+            txtSignature.Text = this.SettingManager.GetSettingValue("PaymentMethod.PaypalDirect.Signature");
 
-            txtAdditionalFee.Value = IoC.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.PaypalDirect.AdditionalFee");
+            txtAdditionalFee.Value = this.SettingManager.GetSettingValueDecimalNative("PaymentMethod.PaypalDirect.AdditionalFee");
         }
 
         public void Save()
@@ -92,12 +92,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Payment.PayPalDirect
             }
             SetTransactionMode(transactionMode);
 
-            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.PaypalDirect.UseSandbox", cbUseSandbox.Checked.ToString());
-            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.PaypalDirect.APIAccountName", txtAPIAccountName.Text);
-            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.PaypalDirect.APIAccountPassword", txtAPIAccountPassword.Text);
-            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.PaypalDirect.Signature", txtSignature.Text);
+            this.SettingManager.SetParam("PaymentMethod.PaypalDirect.UseSandbox", cbUseSandbox.Checked.ToString());
+            this.SettingManager.SetParam("PaymentMethod.PaypalDirect.APIAccountName", txtAPIAccountName.Text);
+            this.SettingManager.SetParam("PaymentMethod.PaypalDirect.APIAccountPassword", txtAPIAccountPassword.Text);
+            this.SettingManager.SetParam("PaymentMethod.PaypalDirect.Signature", txtSignature.Text);
 
-            IoC.Resolve<ISettingManager>().SetParamNative("PaymentMethod.PaypalDirect.AdditionalFee", txtAdditionalFee.Value);
+            this.SettingManager.SetParamNative("PaymentMethod.PaypalDirect.AdditionalFee", txtAdditionalFee.Value);
         }
     }
 }

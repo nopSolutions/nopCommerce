@@ -50,7 +50,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
         {
             pnlError.Visible = false;
 
-            var blogPost = IoC.Resolve<IBlogService>().GetBlogPostById(this.BlogPostId);
+            var blogPost = this.BlogService.GetBlogPostById(this.BlogPostId);
             if (blogPost != null)
             {
                 this.lBlogPostTitle.Text = Server.HtmlEncode(blogPost.BlogPostTitle);
@@ -60,7 +60,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
                 if (blogPost.BlogPostAllowComments)
                 {
-                    if (!IoC.Resolve<IBlogService>().AllowNotRegisteredUsersToLeaveComments
+                    if (!this.BlogService.AllowNotRegisteredUsersToLeaveComments
                         && (NopContext.Current.User == null || NopContext.Current.User.IsGuest))
                     {
                         lblLeaveYourComment.Text = GetLocaleResourceString("Blog.OnlyRegisteredUsersCanLeaveComments");
@@ -119,10 +119,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
             {
                 if (Page.IsValid)
                 {
-                    var blogPost = IoC.Resolve<IBlogService>().GetBlogPostById(this.BlogPostId);
+                    var blogPost = this.BlogService.GetBlogPostById(this.BlogPostId);
                     if (blogPost != null && blogPost.BlogPostAllowComments)
                     {
-                        if (!IoC.Resolve<IBlogService>().AllowNotRegisteredUsersToLeaveComments
+                        if (!this.BlogService.AllowNotRegisteredUsersToLeaveComments
                             && (NopContext.Current.User == null || NopContext.Current.User.IsGuest))
                         {
                             lblLeaveYourComment.Text = GetLocaleResourceString("Blog.OnlyRegisteredUsersCanLeaveComments");
@@ -138,7 +138,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                         if (NopContext.Current.User != null && !NopContext.Current.User.IsGuest)
                             customerId = NopContext.Current.User.CustomerId;
 
-                        IoC.Resolve<IBlogService>().InsertBlogComment(blogPost.BlogPostId, customerId, comment, DateTime.UtcNow);
+                        this.BlogService.InsertBlogComment(blogPost.BlogPostId, customerId, comment, DateTime.UtcNow);
                         txtComment.Text = string.Empty;
                         BindData();
                     }

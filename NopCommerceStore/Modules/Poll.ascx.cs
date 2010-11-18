@@ -63,7 +63,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 bool showResults = false;
                 if (customer != null)
                 {
-                    showResults = IoC.Resolve<IPollService>().PollVotingRecordExists(poll.PollId, customer.CustomerId);
+                    showResults = this.PollService.PollVotingRecordExists(poll.PollId, customer.CustomerId);
                 }
 
                 //bind info (answers or results)
@@ -97,12 +97,12 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 return;
 
             //create anonymous user if required
-            if (NopContext.Current.User == null && IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Common.AllowAnonymousUsersToVotePolls"))
+            if (NopContext.Current.User == null && this.SettingManager.GetSettingValueBoolean("Common.AllowAnonymousUsersToVotePolls"))
             {
-                IoC.Resolve<ICustomerService>().CreateAnonymousUser();
+                this.CustomerService.CreateAnonymousUser();
             }
 
-            if (NopContext.Current.User == null || (NopContext.Current.User.IsGuest && !IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Common.AllowAnonymousUsersToVotePolls")))
+            if (NopContext.Current.User == null || (NopContext.Current.User.IsGuest && !this.SettingManager.GetSettingValueBoolean("Common.AllowAnonymousUsersToVotePolls")))
             {
                 string loginURL = SEOHelper.GetLoginPageUrl(true);
                 Response.Redirect(loginURL);
@@ -111,10 +111,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
             var poll = GetPoll();
             if (poll != null && poll.Published)
             {
-                if (!IoC.Resolve<IPollService>().PollVotingRecordExists(poll.PollId, NopContext.Current.User.CustomerId))
+                if (!this.PollService.PollVotingRecordExists(poll.PollId, NopContext.Current.User.CustomerId))
                 {
                     int pollAnswerId = Convert.ToInt32(rblPollAnswers.SelectedItem.Value);
-                    IoC.Resolve<IPollService>().CreatePollVotingRecord(pollAnswerId, NopContext.Current.User.CustomerId);
+                    this.PollService.CreatePollVotingRecord(pollAnswerId, NopContext.Current.User.CustomerId);
                 }
             }
             BindData();
@@ -149,9 +149,9 @@ namespace NopSolutions.NopCommerce.Web.Modules
         {
             if (_pollCached == null)
             {
-                _pollCached = IoC.Resolve<IPollService>().GetPollById(this.PollId);
+                _pollCached = this.PollService.GetPollById(this.PollId);
                 if (_pollCached == null && !String.IsNullOrEmpty(this.SystemKeyword))
-                    _pollCached = IoC.Resolve<IPollService>().GetPollBySystemKeyword(this.SystemKeyword);
+                    _pollCached = this.PollService.GetPollBySystemKeyword(this.SystemKeyword);
             }
             return _pollCached;
         }

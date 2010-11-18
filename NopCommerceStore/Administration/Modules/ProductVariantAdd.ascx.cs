@@ -39,7 +39,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            Product product = IoC.Resolve<IProductService>().GetProductById(this.ProductId);
+            Product product = this.ProductService.GetProductById(this.ProductId);
             if (product == null)
                 Response.Redirect("Products.aspx");
             lblProductName.Text = Server.HtmlEncode(product.Name);
@@ -59,7 +59,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             ProductVariant productVariant = ctrlProductVariantInfo.SaveInfo();
             ctrlProductVariantDiscounts.SaveInfo(productVariant.ProductVariantId);
 
-            IoC.Resolve<ICustomerActivityService>().InsertActivity(
+            this.CustomerActivityService.InsertActivity(
                 "AddNewProductVariant",
                 GetLocaleResourceString("ActivityLog.AddNewProductVariant"),
                 productVariant.FullProductName);

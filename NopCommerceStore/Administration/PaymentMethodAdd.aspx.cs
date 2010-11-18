@@ -33,7 +33,7 @@ namespace NopSolutions.NopCommerce.Web.Administration
     {
         protected override bool ValidatePageSecurity()
         {
-            return IoC.Resolve<IACLService>().IsActionAllowed("ManagePaymentSettings");
+            return this.ACLService.IsActionAllowed("ManagePaymentSettings");
         }
         
         protected PaymentMethod Save()
@@ -50,7 +50,7 @@ namespace NopSolutions.NopCommerce.Web.Administration
                 IsActive = cbActive.Checked,
                 DisplayOrder = txtDisplayOrder.Value
             };
-            IoC.Resolve<IPaymentService>().InsertPaymentMethod(paymentMethod);
+            this.PaymentService.InsertPaymentMethod(paymentMethod);
 
             return paymentMethod;
         }

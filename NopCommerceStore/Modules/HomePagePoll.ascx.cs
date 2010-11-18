@@ -45,7 +45,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void BindData()
         {
-            var polls = IoC.Resolve<IPollService>().GetPolls(NopContext.Current.WorkingLanguage.LanguageId, Int32.MaxValue, true);
+            var polls = this.PollService.GetPolls(NopContext.Current.WorkingLanguage.LanguageId, Int32.MaxValue, true);
             if (polls.Count > 0)
             {
                 rptPollBlocks.DataSource = polls;

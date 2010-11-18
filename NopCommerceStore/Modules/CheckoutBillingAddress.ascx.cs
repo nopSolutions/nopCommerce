@@ -50,7 +50,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 var address = ctrlBillingAddress.Address;
                 if (address.AddressId != 0 && NopContext.Current.User != null)
                 {
-                    var prevAddress = IoC.Resolve<ICustomerService>().GetAddressById(address.AddressId);
+                    var prevAddress = this.CustomerService.GetAddressById(address.AddressId);
                     if (prevAddress.CustomerId != NopContext.Current.User.CustomerId)
                         return null;
                     address.CustomerId = prevAddress.CustomerId;
@@ -71,7 +71,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             {
                 //set default billing address
                 NopContext.Current.User.BillingAddressId = 0;
-                IoC.Resolve<ICustomerService>().UpdateCustomer(NopContext.Current.User);
+                this.CustomerService.UpdateCustomer(NopContext.Current.User);
                 var args1 = new CheckoutStepEventArgs() { BillingAddressSelected = true };
                 OnCheckoutStepChanged(args1);
                 if (!this.OnePageCheckout) 
@@ -100,12 +100,12 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     billingAddress.CreatedOn = DateTime.UtcNow;
                     billingAddress.UpdatedOn = DateTime.UtcNow;
 
-                    IoC.Resolve<ICustomerService>().InsertAddress(billingAddress);
+                    this.CustomerService.InsertAddress(billingAddress);
                 }
             }
             //set default billing address
             NopContext.Current.User.BillingAddressId = billingAddress.AddressId;
-            IoC.Resolve<ICustomerService>().UpdateCustomer(NopContext.Current.User);
+            this.CustomerService.UpdateCustomer(NopContext.Current.User);
             var args2 = new CheckoutStepEventArgs() { BillingAddressSelected = true };
             OnCheckoutStepChanged(args2);
             if (!this.OnePageCheckout)
@@ -140,11 +140,11 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         public void BindData()
         {
-            bool shoppingCartRequiresShipping = IoC.Resolve<IShippingService>().ShoppingCartRequiresShipping(Cart);
+            bool shoppingCartRequiresShipping = this.ShippingService.ShoppingCartRequiresShipping(Cart);
             if (shoppingCartRequiresShipping)
             {
                 var shippingAddress = NopContext.Current.User.ShippingAddress;
-                pnlTheSameAsShippingAddress.Visible = IoC.Resolve<ICustomerService>().CanUseAddressAsBillingAddress(shippingAddress);
+                pnlTheSameAsShippingAddress.Visible = this.CustomerService.CanUseAddressAsBillingAddress(shippingAddress);
             }
             else
             {
@@ -172,10 +172,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
             if (Page.IsValid)
             {
                 int addressId = int.Parse(e.CommandArgument.ToString());
-                var billingAddress = IoC.Resolve<ICustomerService>().GetAddressById(addressId);
+                var billingAddress = this.CustomerService.GetAddressById(addressId);
                 if (billingAddress != null && NopContext.Current.User != null)
                 {
-                    var prevAddress = IoC.Resolve<ICustomerService>().GetAddressById(billingAddress.AddressId);
+                    var prevAddress = this.CustomerService.GetAddressById(billingAddress.AddressId);
                     if (prevAddress.CustomerId != NopContext.Current.User.CustomerId)
                         return;
                 }
@@ -194,7 +194,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if ((NopContext.Current.User == null) || (NopContext.Current.User.IsGuest && !IoC.Resolve<ICustomerService>().AnonymousCheckoutAllowed))
+            if ((NopContext.Current.User == null) || (NopContext.Current.User.IsGuest && !this.CustomerService.AnonymousCheckoutAllowed))
             {
                 string loginURL = SEOHelper.GetLoginPageUrl(true);
                 Response.Redirect(loginURL);
@@ -207,7 +207,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
         protected void btnTheSameAsShippingAddress_Click(object sender, EventArgs e)
         {
             var shippingAddress = NopContext.Current.User.ShippingAddress;
-            if (shippingAddress != null && IoC.Resolve<ICustomerService>().CanUseAddressAsBillingAddress(shippingAddress))
+            if (shippingAddress != null && this.CustomerService.CanUseAddressAsBillingAddress(shippingAddress))
             {
                 var billingAddress = new Address();
                 billingAddress.AddressId = 0;
@@ -257,7 +257,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             {
                 if (cart == null)
                 {
-                    cart = IoC.Resolve<IShoppingCartService>().GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
+                    cart = this.ShoppingCartService.GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
                 }
                 return cart;
             }

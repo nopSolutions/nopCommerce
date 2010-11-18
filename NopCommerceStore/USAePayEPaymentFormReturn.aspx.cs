@@ -41,7 +41,7 @@ namespace NopSolutions.NopCommerce.Web
                 {
                     Response.Redirect(CommonHelper.GetStoreLocation());
                 }
-                Order order = IoC.Resolve<IOrderService>().GetOrderById(orderId);
+                Order order = this.OrderService.GetOrderById(orderId);
                 if(order == null || NopContext.Current.User.CustomerId != order.CustomerId)
                 {
                     Response.Redirect(CommonHelper.GetStoreLocation());
@@ -53,22 +53,22 @@ namespace NopSolutions.NopCommerce.Web
                 {
                     //set AuthorizationTransactionID
                     order.AuthorizationTransactionId = transactionId;
-                    IoC.Resolve<IOrderService>().UpdateOrder(order);
+                    this.OrderService.UpdateOrder(order);
 
-                    if(IoC.Resolve<IOrderService>().CanMarkOrderAsAuthorized(order))
+                    if(this.OrderService.CanMarkOrderAsAuthorized(order))
                     {
-                        IoC.Resolve<IOrderService>().MarkAsAuthorized(order.OrderId);
+                        this.OrderService.MarkAsAuthorized(order.OrderId);
                     }
                 }
                 else
                 {
                     //set CaptureTransactionID
                     order.CaptureTransactionId = transactionId;
-                    IoC.Resolve<IOrderService>().UpdateOrder(order);
+                    this.OrderService.UpdateOrder(order);
 
-                    if(IoC.Resolve<IOrderService>().CanMarkOrderAsPaid(order))
+                    if(this.OrderService.CanMarkOrderAsPaid(order))
                     {
-                        IoC.Resolve<IOrderService>().MarkOrderAsPaid(order.OrderId);
+                        this.OrderService.MarkOrderAsPaid(order.OrderId);
                     }
                 }
 

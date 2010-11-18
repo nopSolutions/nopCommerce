@@ -39,7 +39,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            var product = IoC.Resolve<IProductService>().GetProductById(this.ProductId);
+            var product = this.ProductService.GetProductById(this.ProductId);
             if (product != null)
             {
                 pnlData.Visible = true;
@@ -78,12 +78,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                var product = IoC.Resolve<IProductService>().GetProductById(this.ProductId);
+                var product = this.ProductService.GetProductById(this.ProductId);
                 if(product != null)
                 {
                     if(fuProductPicture1.HasFile)
                     {
-                        Picture picture = IoC.Resolve<IPictureService>().InsertPicture(fuProductPicture1.FileBytes, fuProductPicture1.PostedFile.ContentType, true);
+                        Picture picture = this.PictureService.InsertPicture(fuProductPicture1.FileBytes, fuProductPicture1.PostedFile.ContentType, true);
                         if (picture != null)
                         {
                             var productPicture = new ProductPicture()
@@ -92,12 +92,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                                 PictureId = picture.PictureId,
                                 DisplayOrder = txtProductPictureDisplayOrder1.Value
                             };
-                            IoC.Resolve<IProductService>().InsertProductPicture(productPicture);
+                            this.ProductService.InsertProductPicture(productPicture);
                         }
                     }
                     if(fuProductPicture2.HasFile)
                     {
-                        Picture picture = IoC.Resolve<IPictureService>().InsertPicture(fuProductPicture2.FileBytes, fuProductPicture2.PostedFile.ContentType, true);
+                        Picture picture = this.PictureService.InsertPicture(fuProductPicture2.FileBytes, fuProductPicture2.PostedFile.ContentType, true);
                         if(picture != null)
                         {
                             var productPicture = new ProductPicture()
@@ -106,12 +106,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                                 PictureId = picture.PictureId,
                                 DisplayOrder = txtProductPictureDisplayOrder2.Value
                             };
-                            IoC.Resolve<IProductService>().InsertProductPicture(productPicture);
+                            this.ProductService.InsertProductPicture(productPicture);
                         }
                     }
                     if(fuProductPicture3.HasFile)
                     {
-                        Picture picture = IoC.Resolve<IPictureService>().InsertPicture(fuProductPicture3.FileBytes, fuProductPicture3.PostedFile.ContentType, true);
+                        Picture picture = this.PictureService.InsertPicture(fuProductPicture3.FileBytes, fuProductPicture3.PostedFile.ContentType, true);
                         if(picture != null)
                         {
                             var productPicture = new ProductPicture()
@@ -120,7 +120,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                                 PictureId = picture.PictureId,
                                 DisplayOrder = txtProductPictureDisplayOrder3.Value
                             };
-                            IoC.Resolve<IProductService>().InsertProductPicture(productPicture);
+                            this.ProductService.InsertProductPicture(productPicture);
                         }
                     }
                     BindData();
@@ -143,12 +143,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                 int displayOrder = txtProductPictureDisplayOrder.Value;
                 int productPictureId = int.Parse(hfProductPictureId.Value);
-                ProductPicture productPicture = IoC.Resolve<IProductService>().GetProductPictureById(productPictureId);
+                ProductPicture productPicture = this.ProductService.GetProductPictureById(productPictureId);
 
                 if (productPicture != null)
                 {
                     productPicture.DisplayOrder = displayOrder;
-                    IoC.Resolve<IProductService>().UpdateProductPicture(productPicture);
+                    this.ProductService.UpdateProductPicture(productPicture);
                 }
 
                 BindData();
@@ -162,7 +162,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 ProductPicture productPicture = (ProductPicture)e.Row.DataItem;
                 Image iProductPicture = e.Row.FindControl("iProductPicture") as Image;
                 if (iProductPicture != null)
-                    iProductPicture.ImageUrl = IoC.Resolve<IPictureService>().GetPictureUrl(productPicture.PictureId);
+                    iProductPicture.ImageUrl = this.PictureService.GetPictureUrl(productPicture.PictureId);
 
                 Button btnUpdate = e.Row.FindControl("btnUpdate") as Button;
                 if (btnUpdate != null)
@@ -173,11 +173,11 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         protected void gvwImages_RowDeleting(object sender, GridViewDeleteEventArgs e)
         {
             int productPictureId = (int)gvwImages.DataKeys[e.RowIndex]["ProductPictureId"];
-            ProductPicture productPicture = IoC.Resolve<IProductService>().GetProductPictureById(productPictureId);
+            ProductPicture productPicture = this.ProductService.GetProductPictureById(productPictureId);
             if (productPicture != null)
             {
-                IoC.Resolve<IProductService>().DeleteProductPicture(productPicture.ProductPictureId);
-                IoC.Resolve<IPictureService>().DeletePicture(productPicture.PictureId);
+                this.ProductService.DeleteProductPicture(productPicture.ProductPictureId);
+                this.PictureService.DeletePicture(productPicture.PictureId);
                 BindData();
             }
         }

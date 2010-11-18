@@ -72,7 +72,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                IoC.Resolve<ITemplateService>().DeleteManufacturerTemplate(this.ManufacturerTemplateId);
+                this.TemplateService.DeleteManufacturerTemplate(this.ManufacturerTemplateId);
                 Response.Redirect("ManufacturerTemplates.aspx");
             }
             catch (Exception exc)

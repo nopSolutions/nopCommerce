@@ -43,7 +43,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void BindData()
         {
-            var product = IoC.Resolve<IProductService>().GetProductById(this.ProductId);
+            var product = this.ProductService.GetProductById(this.ProductId);
             if (product != null)
             {
                 decimal currentRating = 0;
@@ -62,17 +62,17 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void productRating_Changed(object sender, RatingEventArgs e)
         {
-            if (NopContext.Current.User == null && IoC.Resolve<ICustomerService>().AllowAnonymousUsersToSetProductRatings)
-                IoC.Resolve<ICustomerService>().CreateAnonymousUser();
+            if (NopContext.Current.User == null && this.CustomerService.AllowAnonymousUsersToSetProductRatings)
+                this.CustomerService.CreateAnonymousUser();
 
-            if (NopContext.Current.User == null || (NopContext.Current.User.IsGuest && !IoC.Resolve<ICustomerService>().AllowAnonymousUsersToSetProductRatings))
+            if (NopContext.Current.User == null || (NopContext.Current.User.IsGuest && !this.CustomerService.AllowAnonymousUsersToSetProductRatings))
             {
                 lblProductRatingResult.Text = GetLocaleResourceString("Products.OnlyRegisteredUsersCanRating");
                 e.CallbackResult = GetLocaleResourceString("Products.OnlyRegisteredUsersCanRating");
             }
             else
             {
-                IoC.Resolve<IProductService>().SetProductRating(this.ProductId, int.Parse(e.Value));
+                this.ProductService.SetProductRating(this.ProductId, int.Parse(e.Value));
                 lblProductRatingResult.Text = GetLocaleResourceString("Products.RatingWillBeUpdatedVerySoon");
                 e.CallbackResult = "Update done. Value = " + e.Value;
             }

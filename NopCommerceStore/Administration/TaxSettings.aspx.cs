@@ -36,7 +36,7 @@ namespace NopSolutions.NopCommerce.Web.Administration
     {
         protected override bool ValidatePageSecurity()
         {
-            return IoC.Resolve<IACLService>().IsActionAllowed("ManageTaxSettings");
+            return this.ACLService.IsActionAllowed("ManageTaxSettings");
         }
     }
 }

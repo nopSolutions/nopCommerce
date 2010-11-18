@@ -47,7 +47,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         private void BindGrid()
         {
-            var taxProviders = IoC.Resolve<ITaxProviderService>().GetAllTaxProviders();
+            var taxProviders = this.TaxProviderService.GetAllTaxProviders();
             gvTaxProviders.DataSource = taxProviders;
             gvTaxProviders.DataBind();
         }
@@ -62,7 +62,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     HiddenField hfTaxProviderId = (HiddenField)row.FindControl("hfTaxProviderId");
                     int taxProviderId = int.Parse(hfTaxProviderId.Value);
                     if (rdbIsDefault.Checked)
-                        IoC.Resolve<ITaxService>().ActiveTaxProvider = IoC.Resolve<ITaxProviderService>().GetTaxProviderById(taxProviderId);
+                        this.TaxService.ActiveTaxProvider = this.TaxProviderService.GetTaxProviderById(taxProviderId);
                 }
                 BindGrid();
             }

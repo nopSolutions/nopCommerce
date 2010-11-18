@@ -45,7 +45,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         void BindData()
         {
-            var forumGroups = IoC.Resolve<IForumService>().GetAllForumGroups();
+            var forumGroups = this.ForumService.GetAllForumGroups();
             btnAddNewForum.Visible = forumGroups.Count > 0;
 
             rptrForumGroups.DataSource = forumGroups;

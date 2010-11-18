@@ -48,7 +48,7 @@ namespace NopSolutions.NopCommerce.Web
                 {
                     Response.Redirect(CommonHelper.GetStoreLocation());
                 }
-                Order order = IoC.Resolve<IOrderService>().GetOrderByGuid(guid.Value);
+                Order order = this.OrderService.GetOrderByGuid(guid.Value);
                 if(order == null)
                 {
                     Response.Redirect(CommonHelper.GetStoreLocation());
@@ -60,14 +60,14 @@ namespace NopSolutions.NopCommerce.Web
 
                 if(HostedPaymentSettings.AuthorizeOnly)
                 {
-                    if(IoC.Resolve<IOrderService>().CanMarkOrderAsAuthorized(order))
+                    if(this.OrderService.CanMarkOrderAsAuthorized(order))
                     {
-                        IoC.Resolve<IOrderService>().MarkAsAuthorized(order.OrderId);
+                        this.OrderService.MarkAsAuthorized(order.OrderId);
                     }
                 }
-                else if(IoC.Resolve<IOrderService>().CanMarkOrderAsPaid(order))
+                else if(this.OrderService.CanMarkOrderAsPaid(order))
                 {
-                    IoC.Resolve<IOrderService>().MarkOrderAsPaid(order.OrderId);
+                    this.OrderService.MarkOrderAsPaid(order.OrderId);
                 }
                 Response.Redirect("~/checkoutcompleted.aspx");
             }

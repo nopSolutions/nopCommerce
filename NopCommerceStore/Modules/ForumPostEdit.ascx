@@ -46,7 +46,7 @@
                 </td>
                 <td>
                     <asp:TextBox ID="txtTopicBodySimple" runat="server" Width="100%" Height="300px" TextMode="MultiLine"></asp:TextBox>
-                    <%if (IoC.Resolve<IForumService>().ForumEditor == EditorTypeEnum.BBCodeEditor)
+                    <%if (this.ForumService.ForumEditor == EditorTypeEnum.BBCodeEditor)
                       {%>
 
                     <script language="javascript" type="text/javascript">
@@ -60,7 +60,7 @@
                     <asp:RequiredFieldValidator ID="rfvTopicBody" runat="server" ControlToValidate="txtTopicBodySimple"
                         ErrorMessage="<% $NopResources:Forum.TextCannotBeEmpty %>" ToolTip="<% $NopResources:Forum.TextCannotBeEmpty %>"
                         ValidationGroup="Submit">*</asp:RequiredFieldValidator>
-                    <%if (IoC.Resolve<IForumService>().ForumEditor == EditorTypeEnum.HtmlEditor)
+                    <%if (this.ForumService.ForumEditor == EditorTypeEnum.HtmlEditor)
                       {%>
                     <FCKeditorV2:FCKeditor ID="txtTopicBodyHtml" runat="server" AutoDetectLanguage="false"
                         Height="300" Visible="false" />

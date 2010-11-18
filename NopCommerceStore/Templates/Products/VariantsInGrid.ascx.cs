@@ -45,7 +45,7 @@ namespace NopSolutions.NopCommerce.Web.Templates.Products
 
         protected void BindData()
         {
-            Product product = IoC.Resolve<IProductService>().GetProductById(this.ProductId);
+            Product product = this.ProductService.GetProductById(this.ProductId);
             if (product != null)
             {
                 ctrlProductRating.Visible = product.AllowCustomerRatings;

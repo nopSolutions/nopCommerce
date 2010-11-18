@@ -41,7 +41,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             ReturnRequest rr = ctrlReturnRequestInfo.SaveInfo();
 
-            IoC.Resolve<ICustomerActivityService>().InsertActivity(
+            this.CustomerActivityService.InsertActivity(
                 "EditReturnRequest",
                 GetLocaleResourceString("ActivityLog.EditReturnRequest"),
                 rr.ReturnRequestId);
@@ -85,12 +85,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                ReturnRequest rr = IoC.Resolve<IOrderService>().GetReturnRequestById(this.ReturnRequestId);
+                ReturnRequest rr = this.OrderService.GetReturnRequestById(this.ReturnRequestId);
                 if (rr != null)
                 {
-                    IoC.Resolve<IOrderService>().DeleteReturnRequest(rr.ReturnRequestId);
+                    this.OrderService.DeleteReturnRequest(rr.ReturnRequestId);
 
-                    IoC.Resolve<ICustomerActivityService>().InsertActivity(
+                    this.CustomerActivityService.InsertActivity(
                         "DeleteReturnRequest",
                         GetLocaleResourceString("ActivityLog.DeleteReturnRequest"),
                         rr.ReturnRequestId);
@@ -110,10 +110,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 try
                 {
-                    ReturnRequest rr = IoC.Resolve<IOrderService>().GetReturnRequestById(this.ReturnRequestId);
+                    ReturnRequest rr = this.OrderService.GetReturnRequestById(this.ReturnRequestId);
                     if (rr != null)
                     {
-                        IoC.Resolve<IMessageService>().SendReturnRequestStatusChangedCustomerNotification(rr, IoC.Resolve<ILocalizationManager>().DefaultAdminLanguage.LanguageId);
+                        this.MessageService.SendReturnRequestStatusChangedCustomerNotification(rr, this.LocalizationManager.DefaultAdminLanguage.LanguageId);
                     }
                 }
                 catch (Exception exc)

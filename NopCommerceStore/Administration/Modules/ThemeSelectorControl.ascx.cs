@@ -23,7 +23,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         private void BindData()
         {
-            string[] systemThemes = IoC.Resolve<ISettingManager>().GetSettingValue("Display.SystemThemes").Split(',');
+            string[] systemThemes = this.SettingManager.GetSettingValue("Display.SystemThemes").Split(',');
       
             var themes = from f in Directory.GetDirectories(Server.MapPath("~/App_Themes"))
                          where  (!systemThemes.Contains(Path.GetFileName(f).ToLower()))
@@ -32,7 +32,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             ddlThemes.DataSource = themes;
             ddlThemes.DataBind();
 
-            CommonHelper.SelectListItem(this.ddlThemes, IoC.Resolve<ISettingManager>().GetSettingValue("Display.PublicStoreTheme"));
+            CommonHelper.SelectListItem(this.ddlThemes, this.SettingManager.GetSettingValue("Display.PublicStoreTheme"));
         }
         
         public string SelectedTheme

@@ -35,12 +35,12 @@ namespace NopSolutions.NopCommerce.Web.Administration
     {
         protected override bool ValidatePageSecurity()
         {
-            return IoC.Resolve<IACLService>().IsActionAllowed("ManageTaxSettings");
+            return this.ACLService.IsActionAllowed("ManageTaxSettings");
         }
 
         private void BindData()
         {
-            TaxProvider taxProvider = IoC.Resolve<ITaxProviderService>().GetTaxProviderById(this.TaxProviderId);
+            TaxProvider taxProvider = this.TaxProviderService.GetTaxProviderById(this.TaxProviderId);
             if (taxProvider != null)
             {
                 this.txtName.Text = taxProvider.Name;
@@ -55,7 +55,7 @@ namespace NopSolutions.NopCommerce.Web.Administration
         
         private void CreateChildControlsTree()
         {
-            TaxProvider taxProvider = IoC.Resolve<ITaxProviderService>().GetTaxProviderById(this.TaxProviderId);
+            TaxProvider taxProvider = this.TaxProviderService.GetTaxProviderById(this.TaxProviderId);
             if (taxProvider != null)
             {
                 Control child = null;
@@ -96,7 +96,7 @@ namespace NopSolutions.NopCommerce.Web.Administration
 
         protected TaxProvider Save()
         {
-            TaxProvider taxProvider = IoC.Resolve<ITaxProviderService>().GetTaxProviderById(this.TaxProviderId);
+            TaxProvider taxProvider = this.TaxProviderService.GetTaxProviderById(this.TaxProviderId);
 
             taxProvider.Name = txtName.Text;
             taxProvider.Description = txtDescription.Text;
@@ -104,13 +104,13 @@ namespace NopSolutions.NopCommerce.Web.Administration
             taxProvider.ClassName = txtClassName.Text;
             taxProvider.DisplayOrder = txtDisplayOrder.Value;
 
-            IoC.Resolve<ITaxProviderService>().UpdateTaxProvider(taxProvider);
+            this.TaxProviderService.UpdateTaxProvider(taxProvider);
 
             var configureModule = GetConfigureModule();
             if (configureModule != null)
                 configureModule.Save();
 
-            IoC.Resolve<ICustomerActivityService>().InsertActivity(
+            this.CustomerActivityService.InsertActivity(
                 "EditTaxProvider",
                 GetLocaleResourceString("ActivityLog.EditTaxProvider"),
                 taxProvider.Name);
@@ -154,7 +154,7 @@ namespace NopSolutions.NopCommerce.Web.Administration
         {
             try
             {
-                IoC.Resolve<ITaxProviderService>().DeleteTaxProvider(this.TaxProviderId);
+                this.TaxProviderService.DeleteTaxProvider(this.TaxProviderId);
                 Response.Redirect("TaxProviders.aspx");
             }
             catch (Exception exc)

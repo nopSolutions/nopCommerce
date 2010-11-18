@@ -46,7 +46,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             if (e.CommandName == "DeleteItem")
             {
                 int newsCommentId = Convert.ToInt32(e.CommandArgument);
-                IoC.Resolve<INewsService>().DeleteNewsComment(newsCommentId);
+                this.NewsService.DeleteNewsComment(newsCommentId);
                 BindData();
             }
         }
@@ -66,7 +66,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         protected string GetCustomerInfo(int customerId)
         {
             string customerInfo = string.Empty;
-            Customer customer = IoC.Resolve<ICustomerService>().GetCustomerById(customerId);
+            Customer customer = this.CustomerService.GetCustomerById(customerId);
             if (customer != null)
             {
                 if (customer.IsGuest)
@@ -85,9 +85,9 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             List<NewsComment> newsComments = null;
             if (this.NewsId > 0)
-                newsComments = IoC.Resolve<INewsService>().GetNewsCommentsByNewsId(this.NewsId);
+                newsComments = this.NewsService.GetNewsCommentsByNewsId(this.NewsId);
             else
-                newsComments = IoC.Resolve<INewsService>().GetAllNewsComments();
+                newsComments = this.NewsService.GetAllNewsComments();
             gvNewsComments.DataSource = newsComments;
             gvNewsComments.DataBind();
         }

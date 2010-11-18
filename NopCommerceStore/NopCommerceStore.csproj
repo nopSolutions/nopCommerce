@@ -4125,6 +4125,7 @@
     </Compile>
     <Compile Include="Modules\CheckoutAttributes.ascx.cs">
       <DependentUpon>CheckoutAttributes.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\CheckoutAttributes.ascx.designer.cs">
       <DependentUpon>CheckoutAttributes.ascx</DependentUpon>
@@ -5066,6 +5067,7 @@
     </Compile>
     <Compile Include="Modules\BlogPost.ascx.cs">
       <DependentUpon>BlogPost.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Modules\Captcha.ascx.cs">
       <DependentUpon>Captcha.ascx</DependentUpon>

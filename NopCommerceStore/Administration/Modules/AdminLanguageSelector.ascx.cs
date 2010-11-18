@@ -27,7 +27,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindLanguages()
         {
-            var languages = IoC.Resolve<ILanguageService>().GetAllLanguages(false);
+            var languages = this.LanguageService.GetAllLanguages(false);
             if (languages.Count > 1)
             {
                 this.Visible = true;
@@ -56,7 +56,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         protected void ddlLanguages_OnSelectedIndexChanged(object sender, EventArgs e)
         {
             int languagesId = int.Parse(this.ddlLanguages.SelectedItem.Value);
-            Language language = IoC.Resolve<ILanguageService>().GetLanguageById(languagesId);
+            Language language = this.LanguageService.GetLanguageById(languagesId);
             if (language != null && language.Published)
             {
                 NopContext.Current.WorkingLanguage = language;

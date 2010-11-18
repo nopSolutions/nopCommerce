@@ -44,14 +44,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected void BindData()
         {
-            gvBestSellers.DataSource = IoC.Resolve<IOrderService>().BestSellersReport(720, 5, 1);
+            gvBestSellers.DataSource = this.OrderService.BestSellersReport(720, 5, 1);
             gvBestSellers.DataBind();
         }
 
         public string GetProductVariantUrl(int productVariantId)
         {
             string result = string.Empty;
-            ProductVariant productVariant = IoC.Resolve<IProductService>().GetProductVariantById(productVariantId);
+            ProductVariant productVariant = this.ProductService.GetProductVariantById(productVariantId);
             if (productVariant != null)
                 result = "ProductVariantDetails.aspx?ProductVariantID=" + productVariant.ProductVariantId.ToString();
             else
@@ -61,7 +61,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public string GetProductVariantName(int productVariantId)
         {
-            ProductVariant productVariant = IoC.Resolve<IProductService>().GetProductVariantById(productVariantId);
+            ProductVariant productVariant = this.ProductService.GetProductVariantById(productVariantId);
             if (productVariant != null)
                 return productVariant.FullProductName;
             return "Not available. ID=" + productVariantId.ToString();

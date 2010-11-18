@@ -36,7 +36,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.FixedRateConfigur
 
         private void BindData()
         {
-            var shippingMethods = IoC.Resolve<IShippingService>().GetAllShippingMethods();
+            var shippingMethods = this.ShippingService.GetAllShippingMethods();
             gvShippingMethods.DataSource = shippingMethods;
             gvShippingMethods.DataBind();
         }
@@ -50,7 +50,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.FixedRateConfigur
                 DecimalTextBox txtRate = e.Row.FindControl("txtRate") as DecimalTextBox;
                 if (txtRate != null)
                 {
-                    txtRate.Value = IoC.Resolve<ISettingManager>().GetSettingValueDecimalNative(string.Format("ShippingRateComputationMethod.FixedRate.Rate.ShippingMethodId{0}", shippingMethod.ShippingMethodId));
+                    txtRate.Value = this.SettingManager.GetSettingValueDecimalNative(string.Format("ShippingRateComputationMethod.FixedRate.Rate.ShippingMethodId{0}", shippingMethod.ShippingMethodId));
                 }
             }
         }
@@ -65,7 +65,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Shipping.FixedRateConfigur
                 int shippingMethodId = int.Parse(hfShippingMethodId.Value);
                 decimal rate = txtRate.Value;
 
-                IoC.Resolve<ISettingManager>().SetParamNative(string.Format("ShippingRateComputationMethod.FixedRate.Rate.ShippingMethodId{0}", shippingMethodId), rate);
+                this.SettingManager.SetParamNative(string.Format("ShippingRateComputationMethod.FixedRate.Rate.ShippingMethodId{0}", shippingMethodId), rate);
             }
         }
     }

@@ -54,12 +54,12 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void BindData()
         {
-            if (IoC.Resolve<IProductService>().ProductsAlsoPurchasedEnabled)
+            if (this.ProductService.ProductsAlsoPurchasedEnabled)
             {
-                var product = IoC.Resolve<IProductService>().GetProductById(this.ProductId);
+                var product = this.ProductService.GetProductById(this.ProductId);
                 if (product != null)
                 {
-                    var productsAlsoPurchased = IoC.Resolve<IProductService>().GetProductsAlsoPurchasedById(product.ProductId);
+                    var productsAlsoPurchased = this.ProductService.GetProductsAlsoPurchasedById(product.ProductId);
                     if (productsAlsoPurchased.Count > 0)
                     {
                         this.Visible = true;
@@ -97,9 +97,9 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     {
                         var picture = product.DefaultPicture;
                         if (picture != null)
-                            hlImageLink.ImageUrl = IoC.Resolve<IPictureService>().GetPictureUrl(picture, IoC.Resolve<ISettingManager>().GetSettingValueInteger("Media.Product.ThumbnailImageSize", 125), true);
+                            hlImageLink.ImageUrl = this.PictureService.GetPictureUrl(picture, this.SettingManager.GetSettingValueInteger("Media.Product.ThumbnailImageSize", 125), true);
                         else
-                            hlImageLink.ImageUrl = IoC.Resolve<IPictureService>().GetDefaultPictureUrl(IoC.Resolve<ISettingManager>().GetSettingValueInteger("Media.Product.ThumbnailImageSize", 125));
+                            hlImageLink.ImageUrl = this.PictureService.GetDefaultPictureUrl(this.SettingManager.GetSettingValueInteger("Media.Product.ThumbnailImageSize", 125));
                         hlImageLink.NavigateUrl = productURL;
                         hlImageLink.ToolTip = String.Format(GetLocaleResourceString("Media.Product.ImageLinkTitleFormat"), product.LocalizedName);
                         hlImageLink.Text = String.Format(GetLocaleResourceString("Media.Product.ImageAlternateTextFormat"), product.LocalizedName);

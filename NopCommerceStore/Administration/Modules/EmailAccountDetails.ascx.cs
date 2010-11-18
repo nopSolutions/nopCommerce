@@ -72,7 +72,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                IoC.Resolve<IMessageService>().DeleteEmailAccount(this.EmailAccountId);
+                this.MessageService.DeleteEmailAccount(this.EmailAccountId);
                 Response.Redirect("EmailAccounts.aspx");
             }
             catch (Exception exc)

@@ -32,7 +32,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            ShippingMethod shippingMethod = IoC.Resolve<IShippingService>().GetShippingMethodById(this.ShippingMethodId);
+            ShippingMethod shippingMethod = this.ShippingService.GetShippingMethodById(this.ShippingMethodId);
             if (shippingMethod != null)
             {
                 this.txtName.Text = shippingMethod.Name;
@@ -51,14 +51,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public ShippingMethod SaveInfo()
         {
-            ShippingMethod shippingMethod = IoC.Resolve<IShippingService>().GetShippingMethodById(this.ShippingMethodId);
+            ShippingMethod shippingMethod = this.ShippingService.GetShippingMethodById(this.ShippingMethodId);
 
             if (shippingMethod != null)
             {
                 shippingMethod.Name = txtName.Text;
                 shippingMethod.Description =  txtDescription.Text;
                 shippingMethod.DisplayOrder = txtDisplayOrder.Value;
-                IoC.Resolve<IShippingService>().UpdateShippingMethod(shippingMethod);
+                this.ShippingService.UpdateShippingMethod(shippingMethod);
             }
             else
             {
@@ -68,7 +68,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     Description = txtDescription.Text,
                     DisplayOrder = txtDisplayOrder.Value
                 };
-                IoC.Resolve<IShippingService>().InsertShippingMethod(shippingMethod);
+                this.ShippingService.InsertShippingMethod(shippingMethod);
             }
 
             return shippingMethod;
@@ -78,7 +78,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                IoC.Resolve<IShippingService>().DeleteShippingMethod(this.ShippingMethodId);
+                this.ShippingService.DeleteShippingMethod(this.ShippingMethodId);
                 Response.Redirect("ShippingMethods.aspx");
             }
             catch (Exception exc)

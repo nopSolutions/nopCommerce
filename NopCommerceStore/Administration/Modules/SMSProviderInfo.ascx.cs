@@ -34,7 +34,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            SMSProvider smsProvider = IoC.Resolve<ISMSService>().GetSMSProviderBySystemKeyword(SMSProviderSystemKeyword);
+            SMSProvider smsProvider = this.SMSService.GetSMSProviderBySystemKeyword(SMSProviderSystemKeyword);
             if (smsProvider != null)
             {
                 txtName.Text = smsProvider.Name;
@@ -54,7 +54,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public SMSProvider SaveInfo()
         {
-            SMSProvider smsProvider = IoC.Resolve<ISMSService>().GetSMSProviderBySystemKeyword(SMSProviderSystemKeyword);
+            SMSProvider smsProvider = this.SMSService.GetSMSProviderBySystemKeyword(SMSProviderSystemKeyword);
 
             if (smsProvider != null)
             {
@@ -62,7 +62,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 smsProvider.ClassName = txtClassName.Text;
                 smsProvider.SystemKeyword = txtSystemKeyword.Text;
                 smsProvider.IsActive = cbActive.Checked;
-                IoC.Resolve<ISMSService>().UpdateSMSProvider(smsProvider);
+                this.SMSService.UpdateSMSProvider(smsProvider);
             }
             else
             {
@@ -73,7 +73,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     SystemKeyword = txtSystemKeyword.Text,
                     IsActive = cbActive.Checked
                 };
-                IoC.Resolve<ISMSService>().InsertSMSProvider(smsProvider);
+                this.SMSService.InsertSMSProvider(smsProvider);
             }
 
             return smsProvider;

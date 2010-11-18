@@ -25,10 +25,10 @@ namespace NopSolutions.NopCommerce.Web
             CommonHelper.SetResponseNoCache(Response);
 
             string alipayNotifyURL = "https://www.alipay.com/cooperate/gateway.do?service=notify_verify";
-            string partner = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Alipay.Partner");
+            string partner = this.SettingManager.GetSettingValue("PaymentMethod.Alipay.Partner");
             if (string.IsNullOrEmpty(partner))
                 throw new Exception("Partner is not set");
-            string key = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Alipay.Key");
+            string key = this.SettingManager.GetSettingValue("PaymentMethod.Alipay.Key");
             if (string.IsNullOrEmpty(key))
                 throw new Exception("Partner is not set");
             string _input_charset = "utf-8";
@@ -80,10 +80,10 @@ namespace NopSolutions.NopCommerce.Web
                     int orderId = 0;
                     if (Int32.TryParse(strOrderNO, out orderId))
                     {
-                        Order order = IoC.Resolve<IOrderService>().GetOrderById(orderId);
-                        if (order != null && IoC.Resolve<IOrderService>().CanMarkOrderAsPaid(order))
+                        Order order = this.OrderService.GetOrderById(orderId);
+                        if (order != null && this.OrderService.CanMarkOrderAsPaid(order))
                         {
-                            IoC.Resolve<IOrderService>().MarkOrderAsPaid(order.OrderId);
+                            this.OrderService.MarkOrderAsPaid(order.OrderId);
                         }
                     }
                 }
@@ -97,7 +97,7 @@ namespace NopSolutions.NopCommerce.Web
             {
                 Response.Write("fail");
                 string logStr = "MD5:mysign=" + mysign + ",sign=" + sign + ",responseTxt=" + responseTxt;
-                IoC.Resolve<ILogService>().InsertLog(LogTypeEnum.OrderError, logStr, logStr);
+                this.LogService.InsertLog(LogTypeEnum.OrderError, logStr, logStr);
             }
         }
 

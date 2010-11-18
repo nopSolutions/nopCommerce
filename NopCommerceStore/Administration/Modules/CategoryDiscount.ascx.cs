@@ -42,7 +42,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             List<int> _discountIds = new List<int>();
 
-            var category = IoC.Resolve<ICategoryService>().GetCategoryById(this.CategoryId);
+            var category = this.CategoryService.GetCategoryById(this.CategoryId);
             if (category != null)
             {
                 var discounts = category.Discounts;                
@@ -69,28 +69,28 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public void SaveInfo(int catId)
         {
-            var category = IoC.Resolve<ICategoryService>().GetCategoryById(catId);
+            var category = this.CategoryService.GetCategoryById(catId);
 
             if (category != null)
             {
                 List<int> selectedDiscountIds = this.DiscountMappingControl.SelectedDiscountIds;
-                var existingDiscounts = IoC.Resolve<IDiscountService>().GetDiscountsByCategoryId(category.CategoryId);
+                var existingDiscounts = this.DiscountService.GetDiscountsByCategoryId(category.CategoryId);
 
-                var allDiscounts = IoC.Resolve<IDiscountService>().GetAllDiscounts(DiscountTypeEnum.AssignedToCategories);
+                var allDiscounts = this.DiscountService.GetAllDiscounts(DiscountTypeEnum.AssignedToCategories);
                 foreach (Discount discount in allDiscounts)
                 {
                     if (selectedDiscountIds.Contains(discount.DiscountId))
                     {
                         if (existingDiscounts.Find(d => d.DiscountId == discount.DiscountId) == null)
                         {
-                            IoC.Resolve<IDiscountService>().AddDiscountToCategory(category.CategoryId, discount.DiscountId);
+                            this.DiscountService.AddDiscountToCategory(category.CategoryId, discount.DiscountId);
                         }
                     }
                     else
                     {
                         if (existingDiscounts.Find(d => d.DiscountId == discount.DiscountId) != null)
                         {
-                            IoC.Resolve<IDiscountService>().RemoveDiscountFromCategory(category.CategoryId, discount.DiscountId);
+                            this.DiscountService.RemoveDiscountFromCategory(category.CategoryId, discount.DiscountId);
                         }
                     }
                 }

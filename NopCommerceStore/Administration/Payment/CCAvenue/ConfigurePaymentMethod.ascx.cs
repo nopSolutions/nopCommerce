@@ -40,20 +40,20 @@ namespace NopSolutions.NopCommerce.Web.Administration.Payment.CCAvenue
 
         private void BindData()
         {
-            txtCCAvenueMerchantID.Text = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.CCAvenue.MerchantID");
-            txtCCAvenueWorkingKey.Text = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.CCAvenue.Key");
-            txtCCAvenueMerchantParam.Text = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.CCAvenue.MerchantParam");
-            txtCCAvenuePayURI.Text = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.CCAvenue.PayURI");
-            txtAdditionalFee.Value = IoC.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.CCAvenue.AdditionalFee");
+            txtCCAvenueMerchantID.Text = this.SettingManager.GetSettingValue("PaymentMethod.CCAvenue.MerchantID");
+            txtCCAvenueWorkingKey.Text = this.SettingManager.GetSettingValue("PaymentMethod.CCAvenue.Key");
+            txtCCAvenueMerchantParam.Text = this.SettingManager.GetSettingValue("PaymentMethod.CCAvenue.MerchantParam");
+            txtCCAvenuePayURI.Text = this.SettingManager.GetSettingValue("PaymentMethod.CCAvenue.PayURI");
+            txtAdditionalFee.Value = this.SettingManager.GetSettingValueDecimalNative("PaymentMethod.CCAvenue.AdditionalFee");
         }
 
         public void Save()
         {
-            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.CCAvenue.MerchantID", txtCCAvenueMerchantID.Text);
-            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.CCAvenue.Key", txtCCAvenueWorkingKey.Text);
-            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.CCAvenue.MerchantParam", txtCCAvenueMerchantParam.Text);
-            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.CCAvenue.PayURI", txtCCAvenuePayURI.Text);
-            IoC.Resolve<ISettingManager>().SetParamNative("PaymentMethod.CCAvenue.AdditionalFee", txtAdditionalFee.Value);
+            this.SettingManager.SetParam("PaymentMethod.CCAvenue.MerchantID", txtCCAvenueMerchantID.Text);
+            this.SettingManager.SetParam("PaymentMethod.CCAvenue.Key", txtCCAvenueWorkingKey.Text);
+            this.SettingManager.SetParam("PaymentMethod.CCAvenue.MerchantParam", txtCCAvenueMerchantParam.Text);
+            this.SettingManager.SetParam("PaymentMethod.CCAvenue.PayURI", txtCCAvenuePayURI.Text);
+            this.SettingManager.SetParamNative("PaymentMethod.CCAvenue.AdditionalFee", txtAdditionalFee.Value);
         }
     }
 }

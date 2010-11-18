@@ -7,15 +7,15 @@
     <HeaderTemplate>
         <rss version="2.0">
          <channel>
-            <title><![CDATA[<%# IoC.Resolve<ISettingManager>().StoreName%>: News]]></title>
+            <title><![CDATA[<%# this.SettingManager.StoreName%>: News]]></title>
             <link><%# CommonHelper.GetStoreLocation(false)%></link>
-            <description><%# IoC.Resolve<ISettingManager>().StoreName%></description>
-            <copyright>Copyright <%= DateTime.Now.Year.ToString()%> by <%# IoC.Resolve<ISettingManager>().StoreName%></copyright>
+            <description><%# this.SettingManager.StoreName%></description>
+            <copyright>Copyright <%= DateTime.Now.Year.ToString()%> by <%# this.SettingManager.StoreName%></copyright>
     </HeaderTemplate>
     <ItemTemplate>
         <item>
          <title><![CDATA[<%# Eval("Title") %>]]></title>
-         <author><![CDATA[<%# IoC.Resolve<ISettingManager>().StoreName%>]]></author>
+         <author><![CDATA[<%# this.SettingManager.StoreName%>]]></author>
          <description><![CDATA[<%# Eval("Short") %>]]></description>
          <link><![CDATA[<%# SEOHelper.GetNewsUrl(Convert.ToInt32(Eval("NewsId"))) %>]]></link>
          <pubDate><%# string.Format("{0:R}", DateTimeHelper.ConvertToUserTime((DateTime)Eval("CreatedOn"), DateTimeKind.Utc))%></pubDate>

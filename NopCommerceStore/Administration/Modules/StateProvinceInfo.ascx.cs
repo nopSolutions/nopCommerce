@@ -32,7 +32,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            StateProvince stateProvince = IoC.Resolve<IStateProvinceService>().GetStateProvinceById(this.StateProvinceId);
+            StateProvince stateProvince = this.StateProvinceService.GetStateProvinceById(this.StateProvinceId);
             if (stateProvince != null)
             {
                 CommonHelper.SelectListItem(this.ddlCountry, stateProvince.CountryId);
@@ -45,7 +45,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         private void FillDropDowns()
         {
             this.ddlCountry.Items.Clear();
-            var countryCollection = IoC.Resolve<ICountryService>().GetAllCountries();
+            var countryCollection = this.CountryService.GetAllCountries();
             foreach (Country country in countryCollection)
             {
                 ListItem ddlCountryItem2 = new ListItem(country.Name, country.CountryId.ToString());
@@ -64,14 +64,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public StateProvince SaveInfo()
         {
-            StateProvince stateProvince = IoC.Resolve<IStateProvinceService>().GetStateProvinceById(this.StateProvinceId);
+            StateProvince stateProvince = this.StateProvinceService.GetStateProvinceById(this.StateProvinceId);
             if (stateProvince != null)
             {
                 stateProvince.CountryId = int.Parse(this.ddlCountry.SelectedItem.Value);
                 stateProvince.Name = txtName.Text;
                 stateProvince.Abbreviation = txtAbbreviation.Text;
                 stateProvince.DisplayOrder = txtDisplayOrder.Value;
-                IoC.Resolve<IStateProvinceService>().UpdateStateProvince(stateProvince);
+                this.StateProvinceService.UpdateStateProvince(stateProvince);
             }
             else
             {
@@ -82,7 +82,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     Abbreviation = txtAbbreviation.Text,
                     DisplayOrder = txtDisplayOrder.Value
                 };
-                IoC.Resolve<IStateProvinceService>().InsertStateProvince(stateProvince);
+                this.StateProvinceService.InsertStateProvince(stateProvince);
             }
             return stateProvince;
         }

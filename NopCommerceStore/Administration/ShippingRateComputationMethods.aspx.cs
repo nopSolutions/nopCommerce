@@ -37,7 +37,7 @@ namespace NopSolutions.NopCommerce.Web.Administration
     {
         protected override bool ValidatePageSecurity()
         {
-            return IoC.Resolve<IACLService>().IsActionAllowed("ManageShippingSettings");
+            return this.ACLService.IsActionAllowed("ManageShippingSettings");
         }
     }
 }

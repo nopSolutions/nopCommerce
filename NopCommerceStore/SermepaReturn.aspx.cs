@@ -27,7 +27,7 @@ namespace NopSolutions.NopCommerce.Web
             if (!Page.IsPostBack)
             {
                 string HostName = Request.UserHostName;
-                IoC.Resolve<ILogService>().InsertLog(LogTypeEnum.OrderError, "TPV SERMEPA: Host " + HostName, "Host: " + HostName);
+                this.LogService.InsertLog(LogTypeEnum.OrderError, "TPV SERMEPA: Host " + HostName, "Host: " + HostName);
 
                 //ID de Pedido
                 string orderId = Request["Ds_Order"];
@@ -42,10 +42,10 @@ namespace NopSolutions.NopCommerce.Web
                 int Ds_Response = Convert.ToInt32(Request["Ds_Response"]);
 
                 //Clave
-                bool pruebas = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.Sermepa.Pruebas");
+                bool pruebas = this.SettingManager.GetSettingValueBoolean("PaymentMethod.Sermepa.Pruebas");
                 string clave = "";
-                if (pruebas) { clave = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Sermepa.ClavePruebas"); }
-                else { clave = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.Sermepa.ClaveReal"); };
+                if (pruebas) { clave = this.SettingManager.GetSettingValue("PaymentMethod.Sermepa.ClavePruebas"); }
+                else { clave = this.SettingManager.GetSettingValue("PaymentMethod.Sermepa.ClaveReal"); };
 
                 //Calculo de la firma
                 string SHA = string.Format("{0}{1}{2}{3}{4}{5}",
@@ -69,12 +69,12 @@ namespace NopSolutions.NopCommerce.Web
                 //LogManager.InsertLog(LogTypeEnum.OrderError, "TPV SERMEPA: Clave obtenida", "CLAVE OBTENIDA: " + signature);
                 if (!signature.Equals(SHAresultStr))
                 {
-                    IoC.Resolve<ILogService>().InsertLog(LogTypeEnum.OrderError, "TPV SERMEPA: Clave incorrecta", "Las claves enviada y generada no coinciden: " + SHAresultStr + " != " + signature);
+                    this.LogService.InsertLog(LogTypeEnum.OrderError, "TPV SERMEPA: Clave incorrecta", "Las claves enviada y generada no coinciden: " + SHAresultStr + " != " + signature);
                     return;
                 }
 
                 //Pedido
-                Order order = IoC.Resolve<IOrderService>().GetOrderById(Convert.ToInt32(orderId));
+                Order order = this.OrderService.GetOrderById(Convert.ToInt32(orderId));
                 if (order == null)
                     throw new NopException(string.Format("El pedido de ID {0} no existe", orderId));
 
@@ -82,16 +82,16 @@ namespace NopSolutions.NopCommerce.Web
                 if (Ds_Response > -1 && Ds_Response < 100)
                 {
                     //Lo marcamos como pagado
-                    if (IoC.Resolve<IOrderService>().CanMarkOrderAsPaid(order))
+                    if (this.OrderService.CanMarkOrderAsPaid(order))
                     {
-                        IoC.Resolve<IOrderService>().MarkOrderAsPaid(order.OrderId);
+                        this.OrderService.MarkOrderAsPaid(order.OrderId);
                     }
-                    //IoC.Resolve<IOrderService>().InsertOrderNote(order.OrderId, "Información del pago: " + Request.Form.ToString(), DateTime.UtcNow);
+                    //this.OrderService.InsertOrderNote(order.OrderId, "Información del pago: " + Request.Form.ToString(), DateTime.UtcNow);
                 }
                 else
                 {
-                    IoC.Resolve<ILogService>().InsertLog(LogTypeEnum.OrderError, "TPV SERMEPA: Pago no autorizado", "Pago no autorizado con ERROR: " + Ds_Response);
-                    //IoC.Resolve<IOrderService>().InsertOrderNote(order.OrderId, "!!! PAGO DENEGADO !!! " + Request.Form.ToString(), DateTime.UtcNow);
+                    this.LogService.InsertLog(LogTypeEnum.OrderError, "TPV SERMEPA: Pago no autorizado", "Pago no autorizado con ERROR: " + Ds_Response);
+                    //this.OrderService.InsertOrderNote(order.OrderId, "!!! PAGO DENEGADO !!! " + Request.Form.ToString(), DateTime.UtcNow);
                 }
 
             }

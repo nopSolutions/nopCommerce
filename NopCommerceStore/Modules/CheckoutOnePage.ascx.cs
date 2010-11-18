@@ -81,7 +81,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             switch(step)
             {
                 case CheckoutStepEnum.ShippingAddress:
-                    if(IoC.Resolve<IShippingService>().ShoppingCartRequiresShipping(Cart))
+                    if(this.ShippingService.ShoppingCartRequiresShipping(Cart))
                     {
                         cpeShippingAddress.Collapsed = false;
                         cpeShippingAddress.ClientState = "false";
@@ -103,7 +103,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     break;
 
                 case CheckoutStepEnum.ShippingMethod:
-                    if(IoC.Resolve<IShippingService>().ShoppingCartRequiresShipping(Cart))
+                    if(this.ShippingService.ShoppingCartRequiresShipping(Cart))
                     {
 
                         btnModifyShippingAddress.Enabled = true;
@@ -182,7 +182,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             //check whether order total equals zero
             if (NopContext.Current.User != null)
             {
-                decimal? shoppingCartTotalBase = IoC.Resolve<IShoppingCartService>().GetShoppingCartTotal(this.Cart,
+                decimal? shoppingCartTotalBase = this.ShoppingCartService.GetShoppingCartTotal(this.Cart,
                 NopContext.Current.User.LastPaymentMethodId, NopContext.Current.User);
 
                 if (shoppingCartTotalBase.HasValue && shoppingCartTotalBase.Value == decimal.Zero)
@@ -195,7 +195,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if((NopContext.Current.User == null) || (NopContext.Current.User.IsGuest && !IoC.Resolve<ICustomerService>().AnonymousCheckoutAllowed))
+            if((NopContext.Current.User == null) || (NopContext.Current.User.IsGuest && !this.CustomerService.AnonymousCheckoutAllowed))
             {
                 string loginURL = SEOHelper.GetLoginPageUrl(true);
                 Response.Redirect(loginURL);
@@ -207,7 +207,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             }
 
             //validation
-            var scWarnings = IoC.Resolve<IShoppingCartService>().GetShoppingCartWarnings(Cart, NopContext.Current.User.CheckoutAttributes, true);
+            var scWarnings = this.ShoppingCartService.GetShoppingCartWarnings(Cart, NopContext.Current.User.CheckoutAttributes, true);
             if (scWarnings.Count > 0)
             {
                 Response.Redirect(SEOHelper.GetShoppingCartUrl());
@@ -216,7 +216,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             {
                 foreach (ShoppingCartItem sci in this.Cart)
                 {
-                    List<String> sciWarnings = IoC.Resolve<IShoppingCartService>().GetShoppingCartItemWarnings(
+                    List<String> sciWarnings = this.ShoppingCartService.GetShoppingCartItemWarnings(
                         sci.ShoppingCartType, 
                         sci.ProductVariantId, 
                         sci.AttributesXml, 
@@ -231,7 +231,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
             if(!Page.IsPostBack)
             {
-                if(!IoC.Resolve<IShippingService>().ShoppingCartRequiresShipping(Cart))
+                if(!this.ShippingService.ShoppingCartRequiresShipping(Cart))
                 {
                     pnlShippingAddress.Visible = false;
                     pnlShippingMethods.Visible = false;
@@ -324,7 +324,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             {
                 if(_cart == null)
                 {
-                    _cart = IoC.Resolve<IShoppingCartService>().GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
+                    _cart = this.ShoppingCartService.GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
                 }
                 return _cart;
             }

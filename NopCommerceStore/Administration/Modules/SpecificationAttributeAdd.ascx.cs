@@ -35,7 +35,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             SpecificationAttribute specificationAttribute = ctrlSpecificationAttributeInfo.SaveInfo();
             ctrlSpecificationAttributeOptions.SaveInfo();
 
-            IoC.Resolve<ICustomerActivityService>().InsertActivity(
+            this.CustomerActivityService.InsertActivity(
                 "AddNewSpecAttribute",
                 GetLocaleResourceString("ActivityLog.AddNewSpecAttribute"),
                 specificationAttribute.Name);

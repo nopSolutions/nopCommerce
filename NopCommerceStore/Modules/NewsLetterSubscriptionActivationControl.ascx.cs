@@ -18,14 +18,14 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     Response.Redirect(CommonHelper.GetStoreLocation());
                 }
 
-                var subscription = IoC.Resolve<IMessageService>().GetNewsLetterSubscriptionByGuid(NewsLetterSubscriptionGuid.Value);
+                var subscription = this.MessageService.GetNewsLetterSubscriptionByGuid(NewsLetterSubscriptionGuid.Value);
                 if(subscription == null)
                 {
                     Response.Redirect(CommonHelper.GetStoreLocation());
                 }
 
                 subscription.Active = IsActive;
-               IoC.Resolve<IMessageService>().UpdateNewsLetterSubscription(subscription);
+               this.MessageService.UpdateNewsLetterSubscription(subscription);
 
                 if(subscription.Active)
                 {

@@ -38,7 +38,7 @@ namespace NopSolutions.NopCommerce.Web.Templates.Payment.CashOnDelivery
 
         private void BindData()
         {
-            lInfo.Text = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.CashOnDelivery.Info");
+            lInfo.Text = this.SettingManager.GetSettingValue("PaymentMethod.CashOnDelivery.Info");
         }
 
         public bool ValidateForm()

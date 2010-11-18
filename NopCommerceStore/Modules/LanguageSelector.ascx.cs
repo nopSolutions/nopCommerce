@@ -37,13 +37,13 @@ namespace NopSolutions.NopCommerce.Web.Modules
     {
         private void BindLanguages()
         {
-            var languages = IoC.Resolve<ILanguageService>().GetAllLanguages();
+            var languages = this.LanguageService.GetAllLanguages();
             if(languages.Count > 1)
             {
                 var customerLanguage = NopContext.Current.WorkingLanguage;
                 Visible = true;
 
-                if(IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Common.UseImagesForLanguageSelection", false))
+                if(this.SettingManager.GetSettingValueBoolean("Common.UseImagesForLanguageSelection", false))
                 {
                     rptLanguages.Visible = true;
                     ddlLanguages.Visible = false;
@@ -95,7 +95,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
         protected void ddlLanguages_OnSelectedIndexChanged(object sender, EventArgs e)
         {
             int languagesId = int.Parse(this.ddlLanguages.SelectedItem.Value);
-            var language = IoC.Resolve<ILanguageService>().GetLanguageById(languagesId);
+            var language = this.LanguageService.GetLanguageById(languagesId);
             if (language != null && language.Published)
             {
                 NopContext.Current.WorkingLanguage = language;
@@ -108,7 +108,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             if(e.CommandName.Equals("SelectLanguage"))
             {
                 int languageId = Int32.Parse(e.CommandArgument.ToString());
-                var language = IoC.Resolve<ILanguageService>().GetLanguageById(languageId);
+                var language = this.LanguageService.GetLanguageById(languageId);
                 if(language != null && language.Published)
                 {
                     NopContext.Current.WorkingLanguage = language;

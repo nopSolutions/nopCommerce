@@ -38,7 +38,7 @@ namespace NopSolutions.NopCommerce.Web.Administration
     {
         protected override bool ValidatePageSecurity()
         {
-            return IoC.Resolve<IACLService>().IsActionAllowed("ManageGlobalSettings");
+            return this.ACLService.IsActionAllowed("ManageGlobalSettings");
         } 
     }
 }

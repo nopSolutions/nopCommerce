@@ -38,7 +38,7 @@ namespace NopSolutions.NopCommerce.Web.Templates.Payment.PayInStore
 
         private void BindData()
         {
-            lInfo.Text = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.PayInStore.Info");
+            lInfo.Text = this.SettingManager.GetSettingValue("PaymentMethod.PayInStore.Info");
         }
 
         public bool ValidateForm()

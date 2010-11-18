@@ -21,7 +21,7 @@ namespace NopSolutions.NopCommerce.Web.Administration
     {
         protected override bool ValidatePageSecurity()
         {
-            return IoC.Resolve<IACLService>().IsActionAllowed("ManageThirdPartyIntegration");
+            return this.ACLService.IsActionAllowed("ManageThirdPartyIntegration");
         } 
     }
 }

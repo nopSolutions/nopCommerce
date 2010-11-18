@@ -44,20 +44,20 @@ namespace NopSolutions.NopCommerce.Web.Administration.Payment.QuickPay
 
         private void BindData()
         {
-            cbUseSandbox.Checked = IoC.Resolve<ISettingManager>().GetSettingValueBoolean(QuickPayConstants.SETTING_USE_SANDBOX, true);
-            txtMD5Secret.Text = IoC.Resolve<ISettingManager>().GetSettingValue(QuickPayConstants.SETTING_MD5SECRET);
-            txtCreditCard.Text = IoC.Resolve<ISettingManager>().GetSettingValue(QuickPayConstants.SETTING_CREDITCARD_CODE_PROPERTY, "dankort");
-            txtMerchantId.Text = IoC.Resolve<ISettingManager>().GetSettingValue(QuickPayConstants.SETTING_MERCHANTID);
-            txtAdditionalFee.Value = IoC.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.QuickPay.AdditionalFee", decimal.Zero);
+            cbUseSandbox.Checked = this.SettingManager.GetSettingValueBoolean(QuickPayConstants.SETTING_USE_SANDBOX, true);
+            txtMD5Secret.Text = this.SettingManager.GetSettingValue(QuickPayConstants.SETTING_MD5SECRET);
+            txtCreditCard.Text = this.SettingManager.GetSettingValue(QuickPayConstants.SETTING_CREDITCARD_CODE_PROPERTY, "dankort");
+            txtMerchantId.Text = this.SettingManager.GetSettingValue(QuickPayConstants.SETTING_MERCHANTID);
+            txtAdditionalFee.Value = this.SettingManager.GetSettingValueDecimalNative("PaymentMethod.QuickPay.AdditionalFee", decimal.Zero);
         }
 
         public void Save()
         {
-            IoC.Resolve<ISettingManager>().SetParam(QuickPayConstants.SETTING_USE_SANDBOX, cbUseSandbox.Checked.ToString());
-            IoC.Resolve<ISettingManager>().SetParam(QuickPayConstants.SETTING_MD5SECRET, txtMD5Secret.Text);
-            IoC.Resolve<ISettingManager>().SetParam(QuickPayConstants.SETTING_MERCHANTID, txtMerchantId.Text);
-            IoC.Resolve<ISettingManager>().SetParam(QuickPayConstants.SETTING_CREDITCARD_CODE_PROPERTY, txtCreditCard.Text);
-            IoC.Resolve<ISettingManager>().SetParamNative("PaymentMethod.QuickPay.AdditionalFee", txtAdditionalFee.Value);
+            this.SettingManager.SetParam(QuickPayConstants.SETTING_USE_SANDBOX, cbUseSandbox.Checked.ToString());
+            this.SettingManager.SetParam(QuickPayConstants.SETTING_MD5SECRET, txtMD5Secret.Text);
+            this.SettingManager.SetParam(QuickPayConstants.SETTING_MERCHANTID, txtMerchantId.Text);
+            this.SettingManager.SetParam(QuickPayConstants.SETTING_CREDITCARD_CODE_PROPERTY, txtCreditCard.Text);
+            this.SettingManager.SetParamNative("PaymentMethod.QuickPay.AdditionalFee", txtAdditionalFee.Value);
         }
     }
 }

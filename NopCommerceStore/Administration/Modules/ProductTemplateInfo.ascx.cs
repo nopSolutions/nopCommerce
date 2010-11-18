@@ -33,7 +33,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            ProductTemplate productTemplate = IoC.Resolve<ITemplateService>().GetProductTemplateById(this.ProductTemplateId);
+            ProductTemplate productTemplate = this.TemplateService.GetProductTemplateById(this.ProductTemplateId);
             if (productTemplate != null)
             {
                 this.txtName.Text = productTemplate.Name;
@@ -61,7 +61,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public ProductTemplate SaveInfo()
         {
-            ProductTemplate productTemplate = IoC.Resolve<ITemplateService>().GetProductTemplateById(this.ProductTemplateId);
+            ProductTemplate productTemplate = this.TemplateService.GetProductTemplateById(this.ProductTemplateId);
 
             if (productTemplate != null)
             {
@@ -69,7 +69,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 productTemplate.TemplatePath =  txtTemplatePath.Text;
                 productTemplate.DisplayOrder = txtDisplayOrder.Value;
                 productTemplate.UpdatedOn = DateTime.UtcNow;
-                IoC.Resolve<ITemplateService>().UpdateProductTemplate(productTemplate);
+                this.TemplateService.UpdateProductTemplate(productTemplate);
             }
             else
             {
@@ -82,7 +82,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     CreatedOn = now,
                     UpdatedOn = now
                 };
-                IoC.Resolve<ITemplateService>().InsertProductTemplate(productTemplate);
+                this.TemplateService.InsertProductTemplate(productTemplate);
 
             }
 

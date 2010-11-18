@@ -38,7 +38,7 @@ namespace NopSolutions.NopCommerce.Web
                 }
 
                 int orderId = CommonHelper.QueryStringInt("trans_id");
-                Order order = IoC.Resolve<IOrderService>().GetOrderById(orderId);
+                Order order = this.OrderService.GetOrderById(orderId);
                 if(order == null)
                 {
                     Response.Redirect(CommonHelper.GetStoreLocation());
@@ -48,9 +48,9 @@ namespace NopSolutions.NopCommerce.Web
                     Response.Redirect(CommonHelper.GetStoreLocation());
                 }
 
-                if (IoC.Resolve<IOrderService>().CanMarkOrderAsPaid(order))
+                if (this.OrderService.CanMarkOrderAsPaid(order))
                 {
-                    IoC.Resolve<IOrderService>().MarkOrderAsPaid(order.OrderId);
+                    this.OrderService.MarkOrderAsPaid(order.OrderId);
                 }
                 Response.Redirect("~/checkoutcompleted.aspx");
             }

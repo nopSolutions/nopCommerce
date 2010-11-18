@@ -48,9 +48,9 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected override void OnPreRender(EventArgs e)
         {
-            if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Common.ShowMiniShoppingCart"))
+            if (this.SettingManager.GetSettingValueBoolean("Common.ShowMiniShoppingCart"))
             {
-                var shoppingCart = IoC.Resolve<IShoppingCartService>().GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
+                var shoppingCart = this.ShoppingCartService.GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
                 if (shoppingCart.TotalProducts == 0)
                 {
                     phCheckoutInfo.Visible = false;
@@ -72,7 +72,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
                     lblOrderSubtotal.Text = GetLocaleResourceString("MiniShoppingCartBox.OrderSubtotal", GetOrderSubtotal(shoppingCart));
 
-                    if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Display.ItemsInMiniShoppingCart", false))
+                    if (this.SettingManager.GetSettingValueBoolean("Display.ItemsInMiniShoppingCart", false))
                     {
                         lvCart.Visible = true;
                         lvCart.DataSource = shoppingCart;
@@ -104,13 +104,13 @@ namespace NopSolutions.NopCommerce.Web.Modules
             Discount orderSubTotalAppliedDiscount = null;
             decimal subTotalWithoutDiscountBase = decimal.Zero;
             decimal subTotalWithDiscountBase = decimal.Zero;
-            string SubTotalError = IoC.Resolve<IShoppingCartService>().GetShoppingCartSubTotal(shoppingCart,
+            string SubTotalError = this.ShoppingCartService.GetShoppingCartSubTotal(shoppingCart,
                 NopContext.Current.User, out orderSubTotalDiscountAmount, out orderSubTotalAppliedDiscount,
                 out subTotalWithoutDiscountBase, out subTotalWithDiscountBase);
             subtotalBase = subTotalWithoutDiscountBase;
             if (String.IsNullOrEmpty(SubTotalError))
             {
-                decimal subTotal = IoC.Resolve<ICurrencyService>().ConvertCurrency(subtotalBase, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                decimal subTotal = this.CurrencyService.ConvertCurrency(subtotalBase, this.CurrencyService.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
                 return PriceHelper.FormatPrice(subTotal);
             }
             else

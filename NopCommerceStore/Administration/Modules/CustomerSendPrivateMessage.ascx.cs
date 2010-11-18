@@ -58,7 +58,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         private void BindData()
         {
-            if (IoC.Resolve<IForumService>().AllowPrivateMessages)
+            if (this.ForumService.AllowPrivateMessages)
             {
                 pnlSendPriveteMessage.Visible = true;
                 pnlNotAllowed.Visible = false;
@@ -77,7 +77,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 string subject = txtSubject.Text.Trim();
                 string message = txtMessageBBCode.Text.Trim();
 
-                var customer = IoC.Resolve<ICustomerService>().GetCustomerById(this.CustomerId);
+                var customer = this.CustomerService.GetCustomerById(this.CustomerId);
                 if (customer != null)
                 {
                     var pm = new PrivateMessage()
@@ -88,7 +88,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         Text = message,
                         CreatedOn = DateTime.UtcNow
                     };
-                    IoC.Resolve<IForumService>().InsertPrivateMessage(pm);
+                    this.ForumService.InsertPrivateMessage(pm);
                 }
             }
             catch (Exception exc)

@@ -37,7 +37,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         private void FillDropDowns()
         {
             this.ddlLanguage.Items.Clear();
-            var languages = IoC.Resolve<ILanguageService>().GetAllLanguages();
+            var languages = this.LanguageService.GetAllLanguages();
             foreach (Language language in languages)
             {
                 ListItem item2 = new ListItem(language.Name, language.LanguageId.ToString());
@@ -47,7 +47,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         private void BindData()
         {
-            BlogPost blogPost = IoC.Resolve<IBlogService>().GetBlogPostById(this.BlogPostId);
+            BlogPost blogPost = this.BlogService.GetBlogPostById(this.BlogPostId);
             if (blogPost != null)
             {
                 CommonHelper.SelectListItem(this.ddlLanguage, blogPost.LanguageId);
@@ -87,7 +87,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public BlogPost SaveInfo()
         {
-            BlogPost blogPost = IoC.Resolve<IBlogService>().GetBlogPostById(this.BlogPostId);
+            BlogPost blogPost = this.BlogService.GetBlogPostById(this.BlogPostId);
             if (blogPost != null)
             {
                 blogPost.LanguageId = int.Parse(this.ddlLanguage.SelectedItem.Value);
@@ -96,7 +96,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 blogPost.BlogPostAllowComments = cbBlogPostAllowComments.Checked;
                 blogPost.Tags = txtTags.Text.Trim();
 
-                IoC.Resolve<IBlogService>().UpdateBlogPost(blogPost);
+                this.BlogService.UpdateBlogPost(blogPost);
             }
             else
             {
@@ -110,7 +110,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     CreatedById = NopContext.Current.User.CustomerId,
                     CreatedOn = DateTime.UtcNow
                 };
-                IoC.Resolve<IBlogService>().InsertBlogPost(blogPost);
+                this.BlogService.InsertBlogPost(blogPost);
             }
             return blogPost;
         }

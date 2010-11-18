@@ -55,7 +55,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
         {
             bool displayButton = true;
 
-            var gcPaymentMethod = IoC.Resolve<IPaymentService>().GetPaymentMethodBySystemKeyword("GoogleCheckout");
+            var gcPaymentMethod = this.PaymentService.GetPaymentMethodBySystemKeyword("GoogleCheckout");
             if (gcPaymentMethod == null || !gcPaymentMethod.IsActive)
             {
                 displayButton = false;
@@ -64,7 +64,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             NopSolutions.NopCommerce.BusinessLogic.Orders.ShoppingCart cart = null;
             if (displayButton)
             {
-                cart = IoC.Resolve<IShoppingCartService>().GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
+                cart = this.ShoppingCartService.GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
                 if (cart.Count == 0)
                 {
                     displayButton = false;
@@ -73,7 +73,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
             if (displayButton)
             {
-                bool minOrderSubtotalAmountOK = IoC.Resolve<IOrderService>().ValidateMinOrderSubtotalAmount(cart, NopContext.Current.User);
+                bool minOrderSubtotalAmountOK = this.OrderService.ValidateMinOrderSubtotalAmount(cart, NopContext.Current.User);
                 if (!minOrderSubtotalAmountOK)
                 {
                     displayButton = false;
@@ -82,7 +82,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
             if (displayButton)
             {
-                if (cart.IsRecurring && IoC.Resolve<IPaymentService>().SupportRecurringPayments(gcPaymentMethod.PaymentMethodId) == RecurringPaymentTypeEnum.NotSupported)
+                if (cart.IsRecurring && this.PaymentService.SupportRecurringPayments(gcPaymentMethod.PaymentMethodId) == RecurringPaymentTypeEnum.NotSupported)
                 {
                     displayButton = false;
                 }
@@ -95,24 +95,24 @@ namespace NopSolutions.NopCommerce.Web.Modules
         protected void PostCartToGoogle(object sender, ImageClickEventArgs e)
         { 
             //user validation
-            if (NopContext.Current.User == null && IoC.Resolve<ICustomerService>().AnonymousCheckoutAllowed)
+            if (NopContext.Current.User == null && this.CustomerService.AnonymousCheckoutAllowed)
             {
                 //create anonymous record
-                IoC.Resolve<ICustomerService>().CreateAnonymousUser();
+                this.CustomerService.CreateAnonymousUser();
             }
 
-            if ((NopContext.Current.User == null) || (NopContext.Current.User.IsGuest && !IoC.Resolve<ICustomerService>().AnonymousCheckoutAllowed))
+            if ((NopContext.Current.User == null) || (NopContext.Current.User.IsGuest && !this.CustomerService.AnonymousCheckoutAllowed))
             {
                 string loginURL = SEOHelper.GetLoginPageUrl(true);
                 Response.Redirect(loginURL);
             }
 
             //USD for US dollars, GBP for British pounds, SEK for Swedish krona, EUR for Euro etc
-            GCheckoutButton1.Currency = IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency.CurrencyCode;
+            GCheckoutButton1.Currency = this.CurrencyService.PrimaryStoreCurrency.CurrencyCode;
             var Req = GCheckoutButton1.CreateRequest();
             var googleCheckoutPaymentProcessor = new GoogleCheckoutPaymentProcessor();
 
-            NopSolutions.NopCommerce.BusinessLogic.Orders.ShoppingCart cart = IoC.Resolve<IShoppingCartService>().GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
+            NopSolutions.NopCommerce.BusinessLogic.Orders.ShoppingCart cart = this.ShoppingCartService.GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
             var Resp = googleCheckoutPaymentProcessor.PostCartToGoogle(Req, cart);
             if (Resp.IsGood)
             {

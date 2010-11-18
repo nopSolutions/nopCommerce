@@ -144,7 +144,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             {
                 if (localizedTopic == null)
                 {
-                    localizedTopic = IoC.Resolve<ITopicService>().GetLocalizedTopic(this.TopicName, NopContext.Current.WorkingLanguage.LanguageId);
+                    localizedTopic = this.TopicService.GetLocalizedTopic(this.TopicName, NopContext.Current.WorkingLanguage.LanguageId);
                 }
                 return localizedTopic;
             }

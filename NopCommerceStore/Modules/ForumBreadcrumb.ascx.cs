@@ -48,7 +48,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             hlForumsHome.NavigateUrl = SEOHelper.GetForumMainUrl();
 
             //topic
-            var forumTopic = IoC.Resolve<IForumService>().GetTopicById(this.ForumTopicId);
+            var forumTopic = this.ForumService.GetTopicById(this.ForumTopicId);
             if (forumTopic != null)
             {
                 hlForumTopic.NavigateUrl = SEOHelper.GetForumTopicUrl(forumTopic);
@@ -63,11 +63,11 @@ namespace NopSolutions.NopCommerce.Web.Modules
             Forum forum = null;
             if (forumTopic != null)
             {
-                forum = IoC.Resolve<IForumService>().GetForumById(forumTopic.ForumId);
+                forum = this.ForumService.GetForumById(forumTopic.ForumId);
             }
             else
             {
-                forum = IoC.Resolve<IForumService>().GetForumById(this.ForumId);
+                forum = this.ForumService.GetForumById(this.ForumId);
             }
 
             if (forum != null)
@@ -84,11 +84,11 @@ namespace NopSolutions.NopCommerce.Web.Modules
             ForumGroup forumGroup = null;
             if (forum != null)
             {
-                forumGroup = IoC.Resolve<IForumService>().GetForumGroupById(forum.ForumGroupId);
+                forumGroup = this.ForumService.GetForumGroupById(forum.ForumGroupId);
             }
             else
             {
-                forumGroup = IoC.Resolve<IForumService>().GetForumGroupById(this.ForumGroupId);
+                forumGroup = this.ForumService.GetForumGroupById(this.ForumGroupId);
             }
 
             if (forumGroup != null)

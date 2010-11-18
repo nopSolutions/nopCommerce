@@ -65,10 +65,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
         protected string GetToInfo(int customerId)
         {
             string customerInfo = string.Empty;
-            var customer = IoC.Resolve<ICustomerService>().GetCustomerById(customerId);
+            var customer = this.CustomerService.GetCustomerById(customerId);
             if (customer != null && !customer.IsGuest)
             {
-                if (IoC.Resolve<ICustomerService>().AllowViewingProfiles)
+                if (this.CustomerService.AllowViewingProfiles)
                 {
                     customerInfo = string.Format("<a href=\"{0}\">{1}</a>", SEOHelper.GetUserProfileUrl(customer.CustomerId), Server.HtmlEncode(customer.FormatUserName()));
                 }
@@ -104,13 +104,13 @@ namespace NopSolutions.NopCommerce.Web.Modules
                             int pmId = int.Parse(hfPrivateMessageId.Value);
                             if (selected)
                             {
-                                var pm = IoC.Resolve<IForumService>().GetPrivateMessageById(pmId);
+                                var pm = this.ForumService.GetPrivateMessageById(pmId);
                                 if (pm != null)
                                 {
                                     if (pm.FromUserId == NopContext.Current.User.CustomerId)
                                     {
                                         pm.IsDeletedByAuthor = true;
-                                        IoC.Resolve<IForumService>().UpdatePrivateMessage(pm);
+                                        this.ForumService.UpdatePrivateMessage(pm);
                                     }
                                 }
                             }
@@ -121,7 +121,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 }
                 catch (Exception exc)
                 {
-                    IoC.Resolve<ILogService>().InsertLog(LogTypeEnum.CustomerError, exc.Message, exc);
+                    this.LogService.InsertLog(LogTypeEnum.CustomerError, exc.Message, exc);
                 }
             }
         }

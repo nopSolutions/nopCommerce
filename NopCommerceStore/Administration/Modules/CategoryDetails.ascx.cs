@@ -45,7 +45,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             if (!Page.IsPostBack)
             {
-                var category = IoC.Resolve<ICategoryService>().GetCategoryById(this.CategoryId);
+                var category = this.CategoryService.GetCategoryById(this.CategoryId);
                 if (category != null)
                 {
                     lblTitle.Text = Server.HtmlEncode(category.Name);
@@ -63,7 +63,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             ctrlCategoryDiscount.SaveInfo();
             ctrlCategoryACL.SaveInfo();
 
-            IoC.Resolve<ICustomerActivityService>().InsertActivity(
+            this.CustomerActivityService.InsertActivity(
                 "EditCategory",
                 GetLocaleResourceString("ActivityLog.EditCategory"),
                 category.Name);
@@ -107,12 +107,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                var category = IoC.Resolve<ICategoryService>().GetCategoryById(this.CategoryId);
+                var category = this.CategoryService.GetCategoryById(this.CategoryId);
                 if (category != null)
                 {
-                    IoC.Resolve<ICategoryService>().MarkCategoryAsDeleted(category.CategoryId);
+                    this.CategoryService.MarkCategoryAsDeleted(category.CategoryId);
 
-                    IoC.Resolve<ICustomerActivityService>().InsertActivity(
+                    this.CustomerActivityService.InsertActivity(
                         "DeleteCategory",
                         GetLocaleResourceString("ActivityLog.DeleteCategory"),
                         category.Name);
@@ -127,7 +127,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected override void OnLoad(EventArgs e)
         {
-            var category = IoC.Resolve<ICategoryService>().GetCategoryById(this.CategoryId);
+            var category = this.CategoryService.GetCategoryById(this.CategoryId);
             if (category != null)
             {
                 PreviewButton.OnClientClick = string.Format("javascript:OpenWindow('{0}', 800, 600, true); return false;", SEOHelper.GetCategoryUrl(category.CategoryId));

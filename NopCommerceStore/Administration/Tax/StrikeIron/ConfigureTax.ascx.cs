@@ -41,8 +41,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Tax.StrikeIron
 
         private void BindData()
         {
-            txtUserId.Text = IoC.Resolve<ISettingManager>().GetSettingValue("Tax.TaxProvider.StrikeIron.UserId");
-            txtPassword.Text = IoC.Resolve<ISettingManager>().GetSettingValue("Tax.TaxProvider.StrikeIron.Password");
+            txtUserId.Text = this.SettingManager.GetSettingValue("Tax.TaxProvider.StrikeIron.UserId");
+            txtPassword.Text = this.SettingManager.GetSettingValue("Tax.TaxProvider.StrikeIron.Password");
         }
 
         protected void btnTestUS_Click(object sender, EventArgs e)
@@ -98,8 +98,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Tax.StrikeIron
 
         public void Save()
         {
-            IoC.Resolve<ISettingManager>().SetParam("Tax.TaxProvider.StrikeIron.UserId", txtUserId.Text);
-            IoC.Resolve<ISettingManager>().SetParam("Tax.TaxProvider.StrikeIron.Password", txtPassword.Text);
+            this.SettingManager.SetParam("Tax.TaxProvider.StrikeIron.UserId", txtUserId.Text);
+            this.SettingManager.SetParam("Tax.TaxProvider.StrikeIron.Password", txtPassword.Text);
         }
     }
 }

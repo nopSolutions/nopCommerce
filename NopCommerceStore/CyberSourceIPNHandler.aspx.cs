@@ -29,10 +29,10 @@ namespace NopSolutions.NopCommerce.Web
                         int orderId = 0;
                         if(Int32.TryParse(Request.Form["orderNumber"], out orderId))
                         {
-                            Order order = IoC.Resolve<IOrderService>().GetOrderById(orderId);
-                            if(order != null && IoC.Resolve<IOrderService>().CanMarkOrderAsAuthorized(order))
+                            Order order = this.OrderService.GetOrderById(orderId);
+                            if(order != null && this.OrderService.CanMarkOrderAsAuthorized(order))
                             {
-                                IoC.Resolve<IOrderService>().MarkAsAuthorized(order.OrderId);
+                                this.OrderService.MarkAsAuthorized(order.OrderId);
                             }
                         }
                     }

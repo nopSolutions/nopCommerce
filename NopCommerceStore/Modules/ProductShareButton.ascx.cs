@@ -37,9 +37,9 @@ namespace NopSolutions.NopCommerce.Web.Modules
     {
         protected override void OnPreRender(EventArgs e)
         {
-            if (IoC.Resolve<IProductService>().ShowShareButton)
+            if (this.ProductService.ShowShareButton)
             {
-                string shareCode = IoC.Resolve<ISettingManager>().GetSettingValue("Products.AddThisSharing.Code");
+                string shareCode = this.SettingManager.GetSettingValue("Products.AddThisSharing.Code");
                 if (CommonHelper.IsCurrentConnectionSecured())
                 {
                     //need to change the addthis link to be https linked when the page is, so that the page doesnt ask about mixed mode when viewed in https...

@@ -35,7 +35,7 @@ namespace NopSolutions.NopCommerce.Web
 
                 //load order
                 int orderId = Convert.ToInt32(CommonHelper.QueryStringInt("referenceId"));
-                Order order = IoC.Resolve<IOrderService>().GetOrderById(orderId);
+                Order order = this.OrderService.GetOrderById(orderId);
                 if (order == null)
                 {
                     Response.Redirect(CommonHelper.GetStoreLocation());
@@ -51,21 +51,21 @@ namespace NopSolutions.NopCommerce.Web
                 StringBuilder sb = new StringBuilder();
                 sb.AppendLine("Amazon Simple Pay return page:");
                 sb.AppendLine("recipientEmail: " + recipientEmail);
-                IoC.Resolve<IOrderService>().InsertOrderNote(order.OrderId, recipientEmail, false, DateTime.UtcNow);
+                this.OrderService.InsertOrderNote(order.OrderId, recipientEmail, false, DateTime.UtcNow);
 
                 //paymnent
                 if (SimplePaySettings.SettleImmediately)
                 {
-                    if (IoC.Resolve<IOrderService>().CanMarkOrderAsPaid(order))
+                    if (this.OrderService.CanMarkOrderAsPaid(order))
                     {
-                        IoC.Resolve<IOrderService>().MarkOrderAsPaid(order.OrderId);
+                        this.OrderService.MarkOrderAsPaid(order.OrderId);
                     }
                 }
                 else
                 {
-                    if (IoC.Resolve<IOrderService>().CanMarkOrderAsAuthorized(order))
+                    if (this.OrderService.CanMarkOrderAsAuthorized(order))
                     {
-                        IoC.Resolve<IOrderService>().MarkAsAuthorized(order.OrderId);
+                        this.OrderService.MarkAsAuthorized(order.OrderId);
                     }
                 }
 

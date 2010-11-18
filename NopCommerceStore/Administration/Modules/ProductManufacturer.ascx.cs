@@ -40,7 +40,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             List<ProductManufacturerMappingHelperClass> productManufacturerMappings = null;
 
-            Product product = IoC.Resolve<IProductService>().GetProductById(this.ProductId);
+            Product product = this.ProductService.GetProductById(this.ProductId);
             if (product != null)
             {
                 var existingProductManufacturerCollection = product.ProductManufacturers;
@@ -74,23 +74,23 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public void SaveInfo(int prodId)
         {
-            Product product = IoC.Resolve<IProductService>().GetProductById(prodId);
+            Product product = this.ProductService.GetProductById(prodId);
             if (product != null)
             {
                 foreach (var item in this.GridState.Values)
                 {
                     if (item.ProductManufacturerId > 0 && !item.IsMapped)
-                        IoC.Resolve<IManufacturerService>().DeleteProductManufacturer(item.ProductManufacturerId);
+                        this.ManufacturerService.DeleteProductManufacturer(item.ProductManufacturerId);
                     if (item.ProductManufacturerId > 0 && item.IsMapped)
                     {
-                        ProductManufacturer pm = IoC.Resolve<IManufacturerService>().GetProductManufacturerById(item.ProductManufacturerId);
+                        ProductManufacturer pm = this.ManufacturerService.GetProductManufacturerById(item.ProductManufacturerId);
                         if (pm != null)
                         {
                             pm.ProductId = product.ProductId;
                             pm.ManufacturerId = item.ManufacturerId;
                             pm.IsFeaturedProduct = item.IsFeatured;
                             pm.DisplayOrder = item.DisplayOrder;
-                            IoC.Resolve<IManufacturerService>().UpdateProductManufacturer(pm);
+                            this.ManufacturerService.UpdateProductManufacturer(pm);
                         }
                     }
                     if (item.ProductManufacturerId == 0 && item.IsMapped)
@@ -102,7 +102,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                             IsFeaturedProduct = item.IsFeatured,
                             DisplayOrder = item.DisplayOrder
                         };
-                        IoC.Resolve<IManufacturerService>().InsertProductManufacturer(pm);
+                        this.ManufacturerService.InsertProductManufacturer(pm);
                     }
                 }
             }
@@ -116,7 +116,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         private List<ProductManufacturerMappingHelperClass> GetProductManufacturerMappings(List<ProductManufacturer> ExistingProductManufacturerCollection)
         {
-            var manufacturerCollection = IoC.Resolve<IManufacturerService>().GetAllManufacturers();
+            var manufacturerCollection = this.ManufacturerService.GetAllManufacturers();
             List<ProductManufacturerMappingHelperClass> result = new List<ProductManufacturerMappingHelperClass>();
             for (int i = 0; i < manufacturerCollection.Count; i++)
             {

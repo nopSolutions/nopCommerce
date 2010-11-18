@@ -52,7 +52,7 @@ namespace NopSolutions.NopCommerce.Web
 
         public BaseNopFrontendPage()
         {
-            showExecutionTimer = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Display.PageExecutionTimeInfoEnabled");
+            showExecutionTimer = this.SettingManager.GetSettingValueBoolean("Display.PageExecutionTimeInfoEnabled");
             if (showExecutionTimer)
             {
                 executionTimer = new Stopwatch();
@@ -66,11 +66,11 @@ namespace NopSolutions.NopCommerce.Web
         protected override void OnPreInit(EventArgs e)
         {
             //store is closed
-            if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Common.StoreClosed"))
+            if (this.SettingManager.GetSettingValueBoolean("Common.StoreClosed"))
             {
                 if (NopContext.Current.User != null &&
                     NopContext.Current.User.IsAdmin &&
-                    IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Common.StoreClosed.AllowAdminAccess"))
+                    this.SettingManager.GetSettingValueBoolean("Common.StoreClosed.AllowAdminAccess"))
                 {
                     //do nothing - allow admin access
                 }
@@ -101,7 +101,7 @@ namespace NopSolutions.NopCommerce.Web
             }
 
             //allow navigation only for registered customers
-            if (IoC.Resolve<ICustomerService>().AllowNavigationOnlyRegisteredCustomers)
+            if (this.CustomerService.AllowNavigationOnlyRegisteredCustomers)
             {
                 if (NopContext.Current.User == null || NopContext.Current.User.IsGuest)
                 {
@@ -189,12 +189,6 @@ namespace NopSolutions.NopCommerce.Web
             string publicJS = CommonHelper.GetStoreLocation() + "Scripts/public.js";
             Page.ClientScript.RegisterClientScriptInclude(publicJS, publicJS);
 
-            //online user tracking
-            if (this.TrackedByOnlineCustomersModule)
-            {
-                IoC.Resolve<IOnlineUserService>().TrackCurrentUser();
-            }
-
             base.OnPreRender(e);
         }
         #endregion
@@ -236,17 +230,6 @@ namespace NopSolutions.NopCommerce.Web
             get
             {
                 return false;
-            }
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether this page is tracked by 'Online Customers' module
-        /// </summary>
-        public virtual bool TrackedByOnlineCustomersModule
-        {
-            get
-            {
-                return true;
             }
         }
         #endregion

@@ -40,7 +40,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            Product product = IoC.Resolve<IProductService>().GetProductById(this.ProductId);
+            Product product = this.ProductService.GetProductById(this.ProductId);
             if (product != null)
             {
                 pnlData.Visible = true;
@@ -48,7 +48,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                 var existingCrossSellProductCollection = product.CrossSellProducts;
                 List<CrossSellProductHelperClass> crossSellProducts = GetCrossSellProducts(existingCrossSellProductCollection);
-                gvCrossSellProducts.Columns[1].Visible = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Display.ShowAdminProductImages");
+                gvCrossSellProducts.Columns[1].Visible = this.SettingManager.GetSettingValueBoolean("Display.ShowAdminProductImages");
                 gvCrossSellProducts.DataSource = crossSellProducts;
                 gvCrossSellProducts.DataBind();
             }
@@ -71,7 +71,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     rphc.CrossSellProductId = crossSellProduct.CrossSellProductId;
                     rphc.ProductId2 = product.ProductId;
                     rphc.ProductInfo2 = product.Name;
-                    if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Display.ShowAdminProductImages"))
+                    if (this.SettingManager.GetSettingValueBoolean("Display.ShowAdminProductImages"))
                     {
                         rphc.ProductImage = GetProductImageUrl(product);
                     }
@@ -88,11 +88,11 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             var picture = product.DefaultPicture;
             if (picture != null)
             {
-                return IoC.Resolve<IPictureService>().GetPictureUrl(picture, IoC.Resolve<ISettingManager>().GetSettingValueInteger("Media.ShoppingCart.ThumbnailImageSize", 80));
+                return this.PictureService.GetPictureUrl(picture, this.SettingManager.GetSettingValueInteger("Media.ShoppingCart.ThumbnailImageSize", 80));
             }
             else
             {
-                return IoC.Resolve<IPictureService>().GetDefaultPictureUrl(IoC.Resolve<ISettingManager>().GetSettingValueInteger("Media.ShoppingCart.ThumbnailImageSize", 80));
+                return this.PictureService.GetDefaultPictureUrl(this.SettingManager.GetSettingValueInteger("Media.ShoppingCart.ThumbnailImageSize", 80));
             }
         }
 
@@ -108,7 +108,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public void SaveInfo()
         {
-            Product product = IoC.Resolve<IProductService>().GetProductById(this.ProductId);
+            Product product = this.ProductService.GetProductById(this.ProductId);
             if (product != null)
             {
                 foreach (GridViewRow row in gvCrossSellProducts.Rows)
@@ -120,15 +120,15 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     int productId2 = int.Parse(hfProductId2.Value);
                     
                     if (crossSellProductId > 0 && !cbProductInfo2.Checked)
-                        IoC.Resolve<IProductService>().DeleteCrossSellProduct(crossSellProductId);
+                        this.ProductService.DeleteCrossSellProduct(crossSellProductId);
                     if (crossSellProductId > 0 && cbProductInfo2.Checked)
                     {
-                        var csp = IoC.Resolve<IProductService>().GetCrossSellProductById(crossSellProductId);
+                        var csp = this.ProductService.GetCrossSellProductById(crossSellProductId);
                         if (csp != null)
                         {
                             csp.ProductId1 = product.ProductId;
                             csp.ProductId2 = productId2;
-                            IoC.Resolve<IProductService>().UpdateCrossSellProduct(csp);
+                            this.ProductService.UpdateCrossSellProduct(csp);
                         }
                     }
                 }

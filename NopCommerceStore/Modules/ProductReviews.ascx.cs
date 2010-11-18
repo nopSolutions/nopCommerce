@@ -44,7 +44,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void BindData()
         {
-            var product = IoC.Resolve<IProductService>().GetProductById(this.ProductId);
+            var product = this.ProductService.GetProductById(this.ProductId);
             if (product != null && product.AllowCustomerReviews)
             {
                 pnlReviews.Visible = true;
@@ -71,7 +71,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
         protected string GetCustomerInfo(int customerId)
         {
             string customerInfo = string.Empty;
-            var customer = IoC.Resolve<ICustomerService>().GetCustomerById(customerId);
+            var customer = this.CustomerService.GetCustomerById(customerId);
             if (customer != null)
             {
                 customerInfo = customer.FormatUserName();

@@ -39,7 +39,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         void BindGrid()
         {
-            var languageCollection = IoC.Resolve<ILanguageService>().GetAllLanguages();
+            var languageCollection = this.LanguageService.GetAllLanguages();
             gvLanguages.DataSource = languageCollection;
             gvLanguages.DataBind();
         }

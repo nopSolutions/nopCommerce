@@ -25,7 +25,7 @@ namespace NopSolutions.NopCommerce.Web
             if (Request.QueryString["s"] != null && Int32.TryParse(Request.QueryString["s"], out failure) &&
                 Request.QueryString["o"] != null && Int32.TryParse(Request.QueryString["o"], out orderid))
             {
-                Order o = IoC.Resolve<IOrderService>().GetOrderById(orderid);
+                Order o = this.OrderService.GetOrderById(orderid);
                 if (o != null)
                 {
                     switch (failure)
@@ -34,9 +34,9 @@ namespace NopSolutions.NopCommerce.Web
                         case 1:
                             //this.plCancel.Visible = true;
                             //this.plError.Visible = false;
-                            if (IoC.Resolve<IOrderService>().CanCancelOrder(o))
+                            if (this.OrderService.CanCancelOrder(o))
                             {
-                                IoC.Resolve<IOrderService>().CancelOrder(orderid, false);
+                                this.OrderService.CancelOrder(orderid, false);
                             }
                             return;
                         //Ideal error

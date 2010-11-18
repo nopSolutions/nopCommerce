@@ -66,10 +66,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
         protected string GetUnreadPrivateMessages()
         {
             string result = string.Empty;
-            if (IoC.Resolve<IForumService>().AllowPrivateMessages &&
+            if (this.ForumService.AllowPrivateMessages &&
                 NopContext.Current.User != null && !NopContext.Current.User.IsGuest)
             {
-                var privateMessages = IoC.Resolve<IForumService>().GetAllPrivateMessages(0,
+                var privateMessages = this.ForumService.GetAllPrivateMessages(0,
                     NopContext.Current.User.CustomerId, false, null, false, string.Empty, 0, 1);
 
                 if (privateMessages.TotalCount > 0)
@@ -77,7 +77,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     result = string.Format(GetLocaleResourceString("PrivateMessages.TotalUnread"), privateMessages.TotalCount);
 
                     //notifications here
-                    if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Common.ShowAlertForPM") &&
+                    if (this.SettingManager.GetSettingValueBoolean("Common.ShowAlertForPM") &&
                         !NopContext.Current.User.NotifiedAboutNewPrivateMessages)
                     {
                         this.DisplayAlertMessage(string.Format(GetLocaleResourceString("PrivateMessages.YouHaveUnreadPM", privateMessages.TotalCount)));

@@ -33,7 +33,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            var checkoutAttribute = IoC.Resolve<ICheckoutAttributeService>().GetCheckoutAttributeById(this.CheckoutAttributeId);
+            var checkoutAttribute = this.CheckoutAttributeService.GetCheckoutAttributeById(this.CheckoutAttributeId);
 
             if (this.HasLocalizableContent)
             {
@@ -62,7 +62,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             this.ddlTaxCategory.Items.Clear();
             ListItem itemTaxCategory = new ListItem("---", "0");
             this.ddlTaxCategory.Items.Add(itemTaxCategory);
-            var taxCategoryCollection = IoC.Resolve<ITaxCategoryService>().GetAllTaxCategories();
+            var taxCategoryCollection = this.TaxCategoryService.GetAllTaxCategories();
             foreach (TaxCategory taxCategory in taxCategoryCollection)
             {
                 ListItem item2 = new ListItem(taxCategory.Name, taxCategory.TaxCategoryId.ToString());
@@ -100,7 +100,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             int attributeControlTypeId = int.Parse(this.ddlAttributeControlType.SelectedItem.Value);
             int displayOrder = txtDisplayOrder.Value;
 
-            var checkoutAttribute = IoC.Resolve<ICheckoutAttributeService>().GetCheckoutAttributeById(this.CheckoutAttributeId);
+            var checkoutAttribute = this.CheckoutAttributeService.GetCheckoutAttributeById(this.CheckoutAttributeId);
             if (checkoutAttribute != null)
             {
                 checkoutAttribute.Name = name;
@@ -112,7 +112,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 checkoutAttribute.AttributeControlTypeId = attributeControlTypeId;
                 checkoutAttribute.DisplayOrder = displayOrder;
 
-                IoC.Resolve<ICheckoutAttributeService>().UpdateCheckoutAttribute(checkoutAttribute);
+                this.CheckoutAttributeService.UpdateCheckoutAttribute(checkoutAttribute);
             }
             else
             {
@@ -127,7 +127,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     AttributeControlTypeId = attributeControlTypeId,
                     DisplayOrder = displayOrder
                 };
-                IoC.Resolve<ICheckoutAttributeService>().InsertCheckoutAttribute(checkoutAttribute);
+                this.CheckoutAttributeService.InsertCheckoutAttribute(checkoutAttribute);
             }
 
             SaveLocalizableContent(checkoutAttribute);
@@ -157,7 +157,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                     bool allFieldsAreEmpty = (string.IsNullOrEmpty(name) && string.IsNullOrEmpty(textPrompt));
 
-                    var content = IoC.Resolve<ICheckoutAttributeService>().GetCheckoutAttributeLocalizedByCheckoutAttributeIdAndLanguageId(checkoutAttribute.CheckoutAttributeId, languageId);
+                    var content = this.CheckoutAttributeService.GetCheckoutAttributeLocalizedByCheckoutAttributeIdAndLanguageId(checkoutAttribute.CheckoutAttributeId, languageId);
                     if (content == null)
                     {
                         if (!allFieldsAreEmpty && languageId > 0)
@@ -170,7 +170,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                                 Name = name,
                                 TextPrompt = textPrompt
                             };
-                            IoC.Resolve<ICheckoutAttributeService>().InsertCheckoutAttributeLocalized(content);
+                            this.CheckoutAttributeService.InsertCheckoutAttributeLocalized(content);
                         }
                     }
                     else
@@ -180,7 +180,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                             content.LanguageId=  languageId;
                             content.Name=  name;
                             content.TextPrompt=  textPrompt;
-                            IoC.Resolve<ICheckoutAttributeService>().UpdateCheckoutAttributeLocalized(content);
+                            this.CheckoutAttributeService.UpdateCheckoutAttributeLocalized(content);
                         }
                     }
                 }
@@ -197,7 +197,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                 int languageId = int.Parse(lblLanguageId.Text);
 
-                var content = IoC.Resolve<ICheckoutAttributeService>().GetCheckoutAttributeLocalizedByCheckoutAttributeIdAndLanguageId(this.CheckoutAttributeId, languageId);
+                var content = this.CheckoutAttributeService.GetCheckoutAttributeLocalizedByCheckoutAttributeIdAndLanguageId(this.CheckoutAttributeId, languageId);
 
                 if (content != null)
                 {

@@ -41,7 +41,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             CheckoutAttribute attribute = ctrlCheckoutAttributeInfo.SaveInfo();
             ctrlCheckoutAttributeValues.SaveInfo();
 
-            IoC.Resolve<ICustomerActivityService>().InsertActivity(
+            this.CustomerActivityService.InsertActivity(
                 "AddNewCheckoutAttribute",
                 GetLocaleResourceString("ActivityLog.AddNewCheckoutAttribute"),
                 attribute.Name);

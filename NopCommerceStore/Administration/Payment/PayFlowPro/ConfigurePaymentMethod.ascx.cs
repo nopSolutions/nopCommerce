@@ -32,10 +32,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Payment.PayFlowPro
 {
     public partial class ConfigurePaymentMethod : BaseNopAdministrationUserControl, IConfigurePaymentMethodModule
     {
-        public static TransactMode GetCurrentTransactionMode()
+        public TransactMode GetCurrentTransactionMode()
         {
             TransactMode transactionModeEnum = TransactMode.Authorize;
-            string transactionMode = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.PayFlowPro.TransactionMode");
+            string transactionMode = this.SettingManager.GetSettingValue("PaymentMethod.PayFlowPro.TransactionMode");
             if (!String.IsNullOrEmpty(transactionMode))
             {
                 transactionModeEnum = (TransactMode)Enum.Parse(typeof(TransactMode), transactionMode);
@@ -44,9 +44,9 @@ namespace NopSolutions.NopCommerce.Web.Administration.Payment.PayFlowPro
             return transactionModeEnum;
         }
 
-        public static void SetTransactionMode(TransactMode transactionMode)
+        public void SetTransactionMode(TransactMode transactionMode)
         {
-            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.PayFlowPro.TransactionMode", transactionMode.ToString());
+            this.SettingManager.SetParam("PaymentMethod.PayFlowPro.TransactionMode", transactionMode.ToString());
         }
 
         protected void Page_Load(object sender, EventArgs e)
@@ -70,12 +70,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Payment.PayFlowPro
                     break;
             }
 
-            cbUseSandbox.Checked = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.PayFlowPro.UseSandbox");
-            txtUser.Text = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.PayFlowPro.User");
-            txtVendor.Text = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.PayFlowPro.Vendor");
-            txtPartner.Text = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.PayFlowPro.Partner");
-            txtPassword.Text = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.PayFlowPro.Password");
-            txtAdditionalFee.Value = IoC.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.PayFlowPro.AdditionalFee");
+            cbUseSandbox.Checked = this.SettingManager.GetSettingValueBoolean("PaymentMethod.PayFlowPro.UseSandbox");
+            txtUser.Text = this.SettingManager.GetSettingValue("PaymentMethod.PayFlowPro.User");
+            txtVendor.Text = this.SettingManager.GetSettingValue("PaymentMethod.PayFlowPro.Vendor");
+            txtPartner.Text = this.SettingManager.GetSettingValue("PaymentMethod.PayFlowPro.Partner");
+            txtPassword.Text = this.SettingManager.GetSettingValue("PaymentMethod.PayFlowPro.Password");
+            txtAdditionalFee.Value = this.SettingManager.GetSettingValueDecimalNative("PaymentMethod.PayFlowPro.AdditionalFee");
         }
 
         public void Save()
@@ -91,12 +91,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Payment.PayFlowPro
             }
             SetTransactionMode(transactionMode);
 
-            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.PayFlowPro.UseSandbox", cbUseSandbox.Checked.ToString());
-            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.PayFlowPro.User", txtUser.Text);
-            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.PayFlowPro.Vendor", txtVendor.Text);
-            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.PayFlowPro.Partner", txtPartner.Text);
-            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.PayFlowPro.Password", txtPassword.Text);
-            IoC.Resolve<ISettingManager>().SetParamNative("PaymentMethod.PayFlowPro.AdditionalFee", txtAdditionalFee.Value);
+            this.SettingManager.SetParam("PaymentMethod.PayFlowPro.UseSandbox", cbUseSandbox.Checked.ToString());
+            this.SettingManager.SetParam("PaymentMethod.PayFlowPro.User", txtUser.Text);
+            this.SettingManager.SetParam("PaymentMethod.PayFlowPro.Vendor", txtVendor.Text);
+            this.SettingManager.SetParam("PaymentMethod.PayFlowPro.Partner", txtPartner.Text);
+            this.SettingManager.SetParam("PaymentMethod.PayFlowPro.Password", txtPassword.Text);
+            this.SettingManager.SetParamNative("PaymentMethod.PayFlowPro.AdditionalFee", txtAdditionalFee.Value);
         }
     }
 }

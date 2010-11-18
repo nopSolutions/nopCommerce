@@ -74,9 +74,9 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     paymentInfo.CustomerCurrency = NopContext.Current.WorkingCurrency;
 
                     int orderId = 0;
-                    string result = IoC.Resolve<IOrderService>().PlaceOrder(paymentInfo, NopContext.Current.User, out orderId);
+                    string result = this.OrderService.PlaceOrder(paymentInfo, NopContext.Current.User, out orderId);
                     this.PaymentInfo = null;
-                    var order = IoC.Resolve<IOrderService>().GetOrderById(orderId);
+                    var order = this.OrderService.GetOrderById(orderId);
                     if (!String.IsNullOrEmpty(result))
                     {
                         lConfirmOrderError.Text = Server.HtmlEncode(result);
@@ -84,7 +84,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     }
                     else
                     {
-                        IoC.Resolve<IPaymentService>().PostProcessPayment(order);
+                        this.PaymentService.PostProcessPayment(order);
                     }
                     var args2 = new CheckoutStepEventArgs() { OrderConfirmed = true };
                     OnCheckoutStepChanged(args2);
@@ -93,7 +93,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 }
                 catch (Exception exc)
                 {
-                    IoC.Resolve<ILogService>().InsertLog(LogTypeEnum.OrderError, exc.Message, exc);
+                    this.LogService.InsertLog(LogTypeEnum.OrderError, exc.Message, exc);
                     lConfirmOrderError.Text = Server.HtmlEncode(exc.ToString());
                 }
             }
@@ -101,7 +101,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if ((NopContext.Current.User == null) || (NopContext.Current.User.IsGuest && !IoC.Resolve<ICustomerService>().AnonymousCheckoutAllowed))
+            if ((NopContext.Current.User == null) || (NopContext.Current.User.IsGuest && !this.CustomerService.AnonymousCheckoutAllowed))
             {
                 string loginURL = SEOHelper.GetLoginPageUrl(true);
                 Response.Redirect(loginURL);
@@ -117,7 +117,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
             //use postback if we're on one-page checkout page
             //we need it to properly process redirects (hosted payment methods)
-            if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Checkout.UseOnePageCheckout"))
+            if (this.SettingManager.GetSettingValueBoolean("Checkout.UseOnePageCheckout"))
             {
                 var sm = ScriptManager.GetCurrent(this.Page);
                 if (sm != null)
@@ -140,7 +140,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
         public void BindData()
         {
             //min order amount validation
-            bool minOrderTotalAmountOK = IoC.Resolve<IOrderService>().ValidateMinOrderTotalAmount(this.Cart, NopContext.Current.User);
+            bool minOrderTotalAmountOK = this.OrderService.ValidateMinOrderTotalAmount(this.Cart, NopContext.Current.User);
             if (minOrderTotalAmountOK)
             {
                 lMinOrderTotalAmount.Visible = false;
@@ -148,7 +148,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             }
             else
             {
-                decimal minOrderTotalAmount = IoC.Resolve<ICurrencyService>().ConvertCurrency(IoC.Resolve<IOrderService>().MinOrderTotalAmount, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+                decimal minOrderTotalAmount = this.CurrencyService.ConvertCurrency(this.OrderService.MinOrderTotalAmount, this.CurrencyService.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
                 lMinOrderTotalAmount.Text = string.Format(GetLocaleResourceString("Checkout.MinOrderTotalAmount"), PriceHelper.FormatPrice(minOrderTotalAmount, true, false));
                 lMinOrderTotalAmount.Visible = true;
                 btnNextStep.Visible = false;
@@ -187,7 +187,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             {
                 if (cart == null)
                 {
-                    cart = IoC.Resolve<IShoppingCartService>().GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
+                    cart = this.ShoppingCartService.GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
                 }
                 return cart;
             }

@@ -45,7 +45,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             if (!Page.IsPostBack)
             {
                 FillDropDowns();
-                if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Admin.LoadAllProducts"))
+                if (this.SettingManager.GetSettingValueBoolean("Admin.LoadAllProducts"))
                 {
                     BindGrid();
                 }
@@ -73,7 +73,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             this.ddlManufacturer.Items.Clear();
             ListItem itemEmptyManufacturer = new ListItem(GetLocaleResourceString("Admin.Common.All"), "0");
             this.ddlManufacturer.Items.Add(itemEmptyManufacturer);
-            var manufacturers = IoC.Resolve<IManufacturerService>().GetAllManufacturers();
+            var manufacturers = this.ManufacturerService.GetAllManufacturers();
             foreach (Manufacturer manufacturer in manufacturers)
             {
                 ListItem item2 = new ListItem(manufacturer.Name, manufacturer.ManufacturerId.ToString());
@@ -89,7 +89,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             int manufacturerId = int.Parse(this.ddlManufacturer.SelectedItem.Value);
 
             int totalRecords = 0;
-            var productVariants = IoC.Resolve<IProductService>().GetAllProductVariants(categoryId, 
+            var productVariants = this.ProductService.GetAllProductVariants(categoryId, 
                 manufacturerId, productName, int.MaxValue, 0, out totalRecords);
             return productVariants;
         }
@@ -144,13 +144,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         decimal price = txtPrice.Value;
                         decimal oldPrice = txtOldPrice.Value;
                         bool published = cbPublished.Checked;
-                        var productVariant = IoC.Resolve<IProductService>().GetProductVariantById(pvId);
+                        var productVariant = this.ProductService.GetProductVariantById(pvId);
                         if (productVariant != null)
                         {
                             productVariant.Price = price;
                             productVariant.OldPrice = oldPrice;
                             productVariant.Published = published;
-                            IoC.Resolve<IProductService>().UpdateProductVariant(productVariant);
+                            this.ProductService.UpdateProductVariant(productVariant);
                         }
                     }
                 }

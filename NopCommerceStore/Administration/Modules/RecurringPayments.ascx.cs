@@ -56,7 +56,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected void BindGrid()
         {
-            var recurringPayments = IoC.Resolve<IOrderService>().SearchRecurringPayments(0, 0, null);
+            var recurringPayments = this.OrderService.SearchRecurringPayments(0, 0, null);
             if (recurringPayments.Count > 0)
             {
                 this.gvRecurringPayments.Visible = true;

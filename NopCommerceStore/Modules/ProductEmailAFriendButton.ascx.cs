@@ -43,9 +43,9 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void BindData()
         {
-            var product = IoC.Resolve<IProductService>().GetProductById(this.ProductId);
+            var product = this.ProductService.GetProductById(this.ProductId);
             if (product != null)
-                this.Visible = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Common.EnableEmailAFirend");
+                this.Visible = this.SettingManager.GetSettingValueBoolean("Common.EnableEmailAFirend");
             else
                 this.Visible = false;
         }

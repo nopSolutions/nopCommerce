@@ -43,8 +43,8 @@ namespace NopSolutions.NopCommerce.Web.Modules
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Common.EnableWishlist") || 
-                !IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Common.EmailWishlist"))
+            if (!this.SettingManager.GetSettingValueBoolean("Common.EnableWishlist") || 
+                !this.SettingManager.GetSettingValueBoolean("Common.EmailWishlist"))
                 Response.Redirect(CommonHelper.GetStoreLocation());
 
             if (!Page.IsPostBack)
@@ -58,7 +58,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             {
                 Response.Redirect(CommonHelper.GetStoreLocation());
             }
-            var cart = IoC.Resolve<IShoppingCartService>().GetShoppingCartByCustomerSessionGuid(ShoppingCartTypeEnum.Wishlist, NopContext.Current.Session.CustomerSessionGuid);
+            var cart = this.ShoppingCartService.GetShoppingCartByCustomerSessionGuid(ShoppingCartTypeEnum.Wishlist, NopContext.Current.Session.CustomerSessionGuid);
             if (cart.Count > 0)
             {
                 lblDescription.Text = string.Format(GetLocaleResourceString("EmailWishlist.Description"), cart.TotalProducts);
@@ -96,7 +96,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     {
                         Response.Redirect(CommonHelper.GetStoreLocation());
                     }
-                    var cart = IoC.Resolve<IShoppingCartService>().GetShoppingCartByCustomerSessionGuid(ShoppingCartTypeEnum.Wishlist, NopContext.Current.Session.CustomerSessionGuid);
+                    var cart = this.ShoppingCartService.GetShoppingCartByCustomerSessionGuid(ShoppingCartTypeEnum.Wishlist, NopContext.Current.Session.CustomerSessionGuid);
                     if (cart.Count == 0)
                     {
                         Response.Redirect(CommonHelper.GetStoreLocation());
@@ -113,7 +113,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     string personalMessage = txtPersonalMessage.Text.Trim();
                     personalMessage = personalMessage.FormatEmailAFriendText();
 
-                    IoC.Resolve<IMessageService>().SendWishlistEmailAFriendMessage(NopContext.Current.User,
+                    this.MessageService.SendWishlistEmailAFriendMessage(NopContext.Current.User,
                         cart, NopContext.Current.WorkingLanguage.LanguageId,
                         friendsEmail, personalMessage);
 

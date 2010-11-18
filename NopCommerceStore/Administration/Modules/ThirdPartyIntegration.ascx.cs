@@ -36,13 +36,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         private void BindData()
         {
-            cbQuickBooksEnabled.Checked = IoC.Resolve<IQBService>().QBIsEnabled;
-            txtQuickBooksUsername.Text = IoC.Resolve<IQBService>().QBUsername;
-            txtQuickBooksPassword.Text = IoC.Resolve<IQBService>().QBPassword;
-            txtQuickBooksItemRef.Text = IoC.Resolve<IQBService>().QBItemRef;
-            txtQuickBooksDiscountAccountRef.Text = IoC.Resolve<IQBService>().QBDiscountAccountRef;
-            txtQuickBooksShippingAccountRef.Text = IoC.Resolve<IQBService>().QBShippingAccountRef;
-            txtQuickBooksSalesTaxAccountRef.Text = IoC.Resolve<IQBService>().QBSalesTaxAccountRef;
+            cbQuickBooksEnabled.Checked = this.QBService.QBIsEnabled;
+            txtQuickBooksUsername.Text = this.QBService.QBUsername;
+            txtQuickBooksPassword.Text = this.QBService.QBPassword;
+            txtQuickBooksItemRef.Text = this.QBService.QBItemRef;
+            txtQuickBooksDiscountAccountRef.Text = this.QBService.QBDiscountAccountRef;
+            txtQuickBooksShippingAccountRef.Text = this.QBService.QBShippingAccountRef;
+            txtQuickBooksSalesTaxAccountRef.Text = this.QBService.QBSalesTaxAccountRef;
         }
 
         private void FillDropDowns()
@@ -64,15 +64,15 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 try
                 {
-                    IoC.Resolve<IQBService>().QBIsEnabled = cbQuickBooksEnabled.Checked;
-                    IoC.Resolve<IQBService>().QBUsername = txtQuickBooksUsername.Text;
-                    IoC.Resolve<IQBService>().QBPassword = txtQuickBooksPassword.Text;
-                    IoC.Resolve<IQBService>().QBItemRef = txtQuickBooksItemRef.Text;
-                    IoC.Resolve<IQBService>().QBDiscountAccountRef = txtQuickBooksDiscountAccountRef.Text;
-                    IoC.Resolve<IQBService>().QBShippingAccountRef = txtQuickBooksShippingAccountRef.Text;
-                    IoC.Resolve<IQBService>().QBSalesTaxAccountRef = txtQuickBooksSalesTaxAccountRef.Text;
+                    this.QBService.QBIsEnabled = cbQuickBooksEnabled.Checked;
+                    this.QBService.QBUsername = txtQuickBooksUsername.Text;
+                    this.QBService.QBPassword = txtQuickBooksPassword.Text;
+                    this.QBService.QBItemRef = txtQuickBooksItemRef.Text;
+                    this.QBService.QBDiscountAccountRef = txtQuickBooksDiscountAccountRef.Text;
+                    this.QBService.QBShippingAccountRef = txtQuickBooksShippingAccountRef.Text;
+                    this.QBService.QBSalesTaxAccountRef = txtQuickBooksSalesTaxAccountRef.Text;
 
-                    IoC.Resolve<ICustomerActivityService>().InsertActivity("EditThirdPartyIntegration", GetLocaleResourceString("ActivityLog.EditThirdPartyIntegration"));
+                    this.CustomerActivityService.InsertActivity("EditThirdPartyIntegration", GetLocaleResourceString("ActivityLog.EditThirdPartyIntegration"));
 
                     Response.Redirect(string.Format("ThirdPartyIntegration.aspx?TabID={0}", GetActiveTabId(ThirdPartyIntegrationTabs)));
                 }
@@ -87,9 +87,9 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                foreach (Order order in IoC.Resolve<IOrderService>().LoadAllOrders())
+                foreach (Order order in this.OrderService.LoadAllOrders())
                 {
-                    IoC.Resolve<IQBService>().RequestSynchronization(order);
+                    this.QBService.RequestSynchronization(order);
                 }
                 ShowMessage(GetLocaleResourceString("Admin.ThirdPartyIntegration.QuickBooks.SynchronizationSuccess"));
             }

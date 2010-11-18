@@ -44,7 +44,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         private void BindData()
         {
-            var products = IoC.Resolve<IProductService>().GetAllProductsDisplayedOnHomePage();
+            var products = this.ProductService.GetAllProductsDisplayedOnHomePage();
             if (products.Count > 0)
             {
                 dlCatalog.DataSource = products;
@@ -70,9 +70,9 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     {
                         var picture = product.DefaultPicture;
                         if (picture != null)
-                            hlImageLink.ImageUrl = IoC.Resolve<IPictureService>().GetPictureUrl(picture, IoC.Resolve<ISettingManager>().GetSettingValueInteger("Media.Product.ThumbnailImageSize", 125), true);
+                            hlImageLink.ImageUrl = this.PictureService.GetPictureUrl(picture, this.SettingManager.GetSettingValueInteger("Media.Product.ThumbnailImageSize", 125), true);
                         else
-                            hlImageLink.ImageUrl = IoC.Resolve<IPictureService>().GetDefaultPictureUrl(IoC.Resolve<ISettingManager>().GetSettingValueInteger("Media.Product.ThumbnailImageSize", 125));
+                            hlImageLink.ImageUrl = this.PictureService.GetDefaultPictureUrl(this.SettingManager.GetSettingValueInteger("Media.Product.ThumbnailImageSize", 125));
 
                         hlImageLink.NavigateUrl = productURL;
                         hlImageLink.ToolTip = String.Format(GetLocaleResourceString("Media.Product.ImageLinkTitleFormat"), product.LocalizedName);

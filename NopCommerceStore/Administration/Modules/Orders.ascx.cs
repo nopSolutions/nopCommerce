@@ -40,8 +40,8 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 SetDefaultValues();
 
                 //buttons
-                btnPrintPdfPackagingSlips.Visible = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Features.SupportPDF");
-                btnExportXLS.Visible = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Features.SupportExcel");
+                btnPrintPdfPackagingSlips.Visible = this.SettingManager.GetSettingValueBoolean("Features.SupportPDF");
+                btnExportXLS.Visible = this.SettingManager.GetSettingValueBoolean("Features.SupportExcel");
             }
         }
 
@@ -79,7 +79,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
             string orderGuid = txtOrderGuid.Text.Trim();
 
-            var orders = IoC.Resolve<IOrderService>().SearchOrders(startDate, endDate,
+            var orders = this.OrderService.SearchOrders(startDate, endDate,
                 txtCustomerEmail.Text, orderStatus, paymentStatus, shippingStatus, orderGuid);
             return orders;
         }
@@ -196,7 +196,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         protected string GetCustomerInfo(int customerId)
         {
             string customerInfo = string.Empty;
-            Customer customer = IoC.Resolve<ICustomerService>().GetCustomerById(customerId);
+            Customer customer = this.CustomerService.GetCustomerById(customerId);
             if (customer != null)
             {
                 if (customer.IsGuest)

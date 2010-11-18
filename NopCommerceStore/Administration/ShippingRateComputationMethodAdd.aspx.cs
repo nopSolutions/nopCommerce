@@ -33,7 +33,7 @@ namespace NopSolutions.NopCommerce.Web.Administration
     {
         protected override bool ValidatePageSecurity()
         {
-            return IoC.Resolve<IACLService>().IsActionAllowed("ManageShippingSettings");
+            return this.ACLService.IsActionAllowed("ManageShippingSettings");
         }
 
         protected ShippingRateComputationMethod Save()
@@ -47,7 +47,7 @@ namespace NopSolutions.NopCommerce.Web.Administration
                 IsActive = cbActive.Checked,
                 DisplayOrder = txtDisplayOrder.Value
             };
-            IoC.Resolve<IShippingService>().InsertShippingRateComputationMethod(shippingRateComputationMethod);
+            this.ShippingService.InsertShippingRateComputationMethod(shippingRateComputationMethod);
 
             return shippingRateComputationMethod;
         }

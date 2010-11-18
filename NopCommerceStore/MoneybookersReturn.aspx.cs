@@ -57,10 +57,10 @@ namespace NopSolutions.NopCommerce.Web
 
                 if (status == "2")
                 {
-                    Order order = IoC.Resolve<IOrderService>().GetOrderById(Convert.ToInt32(mb_transaction_id));
-                    if (IoC.Resolve<IOrderService>().CanMarkOrderAsPaid(order))
+                    Order order = this.OrderService.GetOrderById(Convert.ToInt32(mb_transaction_id));
+                    if (this.OrderService.CanMarkOrderAsPaid(order))
                     {
-                        IoC.Resolve<IOrderService>().MarkOrderAsPaid(order.OrderId);
+                        this.OrderService.MarkOrderAsPaid(order.OrderId);
                     }
                     Response.Redirect("~/checkoutcompleted.aspx");
                 }

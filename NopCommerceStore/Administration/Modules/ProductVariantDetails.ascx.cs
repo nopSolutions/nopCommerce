@@ -42,7 +42,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            ProductVariant productVariant = IoC.Resolve<IProductService>().GetProductVariantById(this.ProductVariantId);
+            ProductVariant productVariant = this.ProductService.GetProductVariantById(this.ProductVariantId);
             if (productVariant != null)
             {
                 Product product = productVariant.Product;
@@ -72,7 +72,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             ctrlProductVariantAttributes.SaveInfo();
             ctrlProductVariantDiscounts.SaveInfo();
 
-            IoC.Resolve<ICustomerActivityService>().InsertActivity(
+            this.CustomerActivityService.InsertActivity(
                 "EditProductVariant",
                 GetLocaleResourceString("ActivityLog.EditProductVariant"),
                 productVariant.FullProductName);
@@ -118,12 +118,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                ProductVariant productVariant = IoC.Resolve<IProductService>().GetProductVariantById(this.ProductVariantId);
+                ProductVariant productVariant = this.ProductService.GetProductVariantById(this.ProductVariantId);
                 if (productVariant != null)
                 {
-                    IoC.Resolve<IProductService>().MarkProductVariantAsDeleted(productVariant.ProductVariantId);
+                    this.ProductService.MarkProductVariantAsDeleted(productVariant.ProductVariantId);
 
-                    IoC.Resolve<ICustomerActivityService>().InsertActivity(
+                    this.CustomerActivityService.InsertActivity(
                         "DeleteProductVariant",
                         GetLocaleResourceString("ActivityLog.DeleteProductVariant"),
                         productVariant.FullProductName);
@@ -144,7 +144,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         
         protected override void OnPreRender(EventArgs e)
         {
-            ProductVariant productVariant = IoC.Resolve<IProductService>().GetProductVariantById(this.ProductVariantId);
+            ProductVariant productVariant = this.ProductService.GetProductVariantById(this.ProductVariantId);
             if (productVariant != null)
             {
                 PreviewButton.OnClientClick = string.Format("javascript:OpenWindow('{0}', 800, 600, true); return false;", SEOHelper.GetProductUrl(productVariant.ProductId));

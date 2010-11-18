@@ -31,7 +31,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void BindData()
         {
-            var pv = IoC.Resolve<IProductService>().GetProductVariantById(this.ProductVariantId);
+            var pv = this.ProductService.GetProductVariantById(this.ProductVariantId);
             if (pv == null || !pv.IsGiftCard)
             {
                 this.Visible = false;

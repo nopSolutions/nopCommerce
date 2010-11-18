@@ -51,14 +51,14 @@ namespace NopSolutions.NopCommerce.Web.Modules
         {
             pnlError.Visible = false;
 
-            var forumTopic = IoC.Resolve<IForumService>().GetTopicById(this.ForumTopicId);
+            var forumTopic = this.ForumService.GetTopicById(this.ForumTopicId);
 
             if (forumTopic == null)
             {
                 Response.Redirect(SEOHelper.GetForumMainUrl());
             }
 
-            if (!IoC.Resolve<IForumService>().IsUserAllowedToMoveTopic(NopContext.Current.User, forumTopic))
+            if (!this.ForumService.IsUserAllowedToMoveTopic(NopContext.Current.User, forumTopic))
             {
                 string loginURL = SEOHelper.GetLoginPageUrl(true);
                 Response.Redirect(loginURL);
@@ -75,13 +75,13 @@ namespace NopSolutions.NopCommerce.Web.Modules
         {
             try
             {
-                var forumTopic = IoC.Resolve<IForumService>().GetTopicById(this.ForumTopicId);
+                var forumTopic = this.ForumService.GetTopicById(this.ForumTopicId);
                 if (forumTopic == null)
                 {
                     Response.Redirect(SEOHelper.GetForumMainUrl());
                 }
 
-                IoC.Resolve<IForumService>().MoveTopic(forumTopic.ForumTopicId, ctrlForumSelector.SelectedForumId);
+                this.ForumService.MoveTopic(forumTopic.ForumTopicId, ctrlForumSelector.SelectedForumId);
                 string topicURL = SEOHelper.GetForumTopicUrl(forumTopic);
                 Response.Redirect(topicURL);
             }
@@ -96,7 +96,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
         {
             try
             {
-                var forumTopic = IoC.Resolve<IForumService>().GetTopicById(this.ForumTopicId);
+                var forumTopic = this.ForumService.GetTopicById(this.ForumTopicId);
                 if (forumTopic != null)
                 {
                     string topicUrl = SEOHelper.GetForumTopicUrl(forumTopic);

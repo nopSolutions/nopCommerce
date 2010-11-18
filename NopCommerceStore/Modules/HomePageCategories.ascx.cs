@@ -43,7 +43,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void BindData()
         {
-            var subCategoryCollection = IoC.Resolve<ICategoryService>().GetAllCategoriesDisplayedOnHomePage();
+            var subCategoryCollection = this.CategoryService.GetAllCategoriesDisplayedOnHomePage();
             if (subCategoryCollection.Count > 0)
             {
                 dlCategories.DataSource = subCategoryCollection;
@@ -62,7 +62,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                 string categoryURL = SEOHelper.GetCategoryUrl(category);
                 if (hlImageLink != null)
                 {
-                    hlImageLink.ImageUrl = IoC.Resolve<IPictureService>().GetPictureUrl(category.PictureId, IoC.Resolve<ISettingManager>().GetSettingValueInteger("Media.Category.ThumbnailImageSize", 125), true);
+                    hlImageLink.ImageUrl = this.PictureService.GetPictureUrl(category.PictureId, this.SettingManager.GetSettingValueInteger("Media.Category.ThumbnailImageSize", 125), true);
                     hlImageLink.NavigateUrl = categoryURL;
                     hlImageLink.ToolTip = String.Format(GetLocaleResourceString("Media.Category.ImageLinkTitleFormat"), category.LocalizedName);
                     hlImageLink.Text = String.Format(GetLocaleResourceString("Media.Category.ImageAlternateTextFormat"), category.LocalizedName);

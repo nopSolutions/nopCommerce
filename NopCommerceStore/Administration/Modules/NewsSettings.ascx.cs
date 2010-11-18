@@ -48,12 +48,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected void BindData()
         {
-            cbNewsEnabled.Checked = IoC.Resolve<INewsService>().NewsEnabled;
-            cbAllowNotRegisteredUsersToLeaveComments.Checked = IoC.Resolve<INewsService>().AllowNotRegisteredUsersToLeaveComments;
-            cbNotifyAboutNewNewsComments.Checked = IoC.Resolve<INewsService>().NotifyAboutNewNewsComments;
-            cbShowNewsOnMainPage.Checked = IoC.Resolve<INewsService>().ShowNewsOnMainPage;
-            txtMainPageNewsCount.Value = IoC.Resolve<INewsService>().MainPageNewsCount;
-            txtNewsArchivePageSize.Value = IoC.Resolve<INewsService>().NewsArchivePageSize;
+            cbNewsEnabled.Checked = this.NewsService.NewsEnabled;
+            cbAllowNotRegisteredUsersToLeaveComments.Checked = this.NewsService.AllowNotRegisteredUsersToLeaveComments;
+            cbNotifyAboutNewNewsComments.Checked = this.NewsService.NotifyAboutNewNewsComments;
+            cbShowNewsOnMainPage.Checked = this.NewsService.ShowNewsOnMainPage;
+            txtMainPageNewsCount.Value = this.NewsService.MainPageNewsCount;
+            txtNewsArchivePageSize.Value = this.NewsService.NewsArchivePageSize;
         }
 
         protected void btnSave_Click(object sender, EventArgs e)
@@ -62,12 +62,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             {
                 try
                 {
-                    IoC.Resolve<INewsService>().NewsEnabled = cbNewsEnabled.Checked;
-                    IoC.Resolve<INewsService>().AllowNotRegisteredUsersToLeaveComments = cbAllowNotRegisteredUsersToLeaveComments.Checked;
-                    IoC.Resolve<INewsService>().NotifyAboutNewNewsComments = cbNotifyAboutNewNewsComments.Checked;
-                    IoC.Resolve<INewsService>().ShowNewsOnMainPage = cbShowNewsOnMainPage.Checked;
-                    IoC.Resolve<INewsService>().MainPageNewsCount = txtMainPageNewsCount.Value;
-                    IoC.Resolve<INewsService>().NewsArchivePageSize = txtNewsArchivePageSize.Value;
+                    this.NewsService.NewsEnabled = cbNewsEnabled.Checked;
+                    this.NewsService.AllowNotRegisteredUsersToLeaveComments = cbAllowNotRegisteredUsersToLeaveComments.Checked;
+                    this.NewsService.NotifyAboutNewNewsComments = cbNotifyAboutNewNewsComments.Checked;
+                    this.NewsService.ShowNewsOnMainPage = cbShowNewsOnMainPage.Checked;
+                    this.NewsService.MainPageNewsCount = txtMainPageNewsCount.Value;
+                    this.NewsService.NewsArchivePageSize = txtNewsArchivePageSize.Value;
 
                     Response.Redirect("NewsSettings.aspx");
                 }

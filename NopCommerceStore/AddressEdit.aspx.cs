@@ -39,7 +39,7 @@ namespace NopSolutions.NopCommerce.Web
             AddressEditControl.IsBillingAddress = this.IsBillingAddress;
             if (this.AddressId > 0)
             {
-                var address = IoC.Resolve<ICustomerService>().GetAddressById(this.AddressId);
+                var address = this.CustomerService.GetAddressById(this.AddressId);
                 if (address != null)
                 {
                     lHeaderTitle.Text = GetLocaleResourceString("Address.UpdateAddressTitle");
@@ -74,7 +74,7 @@ namespace NopSolutions.NopCommerce.Web
                 string loginURL = SEOHelper.GetLoginPageUrl(true);
                 Response.Redirect(loginURL);
             }
-            var address = IoC.Resolve<ICustomerService>().GetAddressById(this.AddressId);
+            var address = this.CustomerService.GetAddressById(this.AddressId);
             if (address != null)
             {
                 var addressCustomer = address.Customer;
@@ -86,7 +86,7 @@ namespace NopSolutions.NopCommerce.Web
 
                 if (DeleteAddress)
                 {
-                    IoC.Resolve<ICustomerService>().DeleteAddress(address.AddressId);
+                    this.CustomerService.DeleteAddress(address.AddressId);
                     Response.Redirect(SEOHelper.GetMyAccountUrl());
                 }
             }
@@ -101,7 +101,7 @@ namespace NopSolutions.NopCommerce.Web
         {
             if (Page.IsValid)
             {
-                var oldAddress = IoC.Resolve<ICustomerService>().GetAddressById(this.AddressId);
+                var oldAddress = this.CustomerService.GetAddressById(this.AddressId);
                 var inputedAddress = AddressEditControl.Address;
                 if (oldAddress != null)
                 {
@@ -119,7 +119,7 @@ namespace NopSolutions.NopCommerce.Web
                     oldAddress.CountryId = inputedAddress.CountryId;
                     oldAddress.UpdatedOn = DateTime.UtcNow;
 
-                    IoC.Resolve<ICustomerService>().UpdateAddress(oldAddress);
+                    this.CustomerService.UpdateAddress(oldAddress);
                 }
                 else
                 {
@@ -127,7 +127,7 @@ namespace NopSolutions.NopCommerce.Web
                     inputedAddress.IsBillingAddress = this.IsBillingAddress;
                     inputedAddress.CreatedOn = DateTime.UtcNow;
                     inputedAddress.UpdatedOn = DateTime.UtcNow;
-                    IoC.Resolve<ICustomerService>().InsertAddress(inputedAddress);
+                    this.CustomerService.InsertAddress(inputedAddress);
                 }
                 Response.Redirect(SEOHelper.GetMyAccountUrl());
             }
@@ -135,7 +135,7 @@ namespace NopSolutions.NopCommerce.Web
 
         protected void btnDelete_Click(object sender, EventArgs e)
         {
-            IoC.Resolve<ICustomerService>().DeleteAddress(this.AddressId);
+            this.CustomerService.DeleteAddress(this.AddressId);
             Response.Redirect(SEOHelper.GetMyAccountUrl());
         }
 

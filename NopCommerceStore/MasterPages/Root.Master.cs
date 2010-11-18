@@ -13,14 +13,14 @@ namespace NopSolutions.NopCommerce.Web.MasterPages
     {
         protected void RenderAnalyticsScript()
         {
-            if (IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Analytics.GoogleEnabled"))
+            if (this.SettingManager.GetSettingValueBoolean("Analytics.GoogleEnabled"))
             {
-                string googleJS = IoC.Resolve<ISettingManager>().GetSettingValue("Analytics.GoogleJS");
-                //string googleId = IoC.Resolve<ISettingManager>().GetSettingValue("Analytics.GoogleId");
+                string googleJS = this.SettingManager.GetSettingValue("Analytics.GoogleJS");
+                //string googleId = this.SettingManager.GetSettingValue("Analytics.GoogleId");
                 //string analyticsString = string.Format(googleJS, googleId);
 
                 Literal script = new Literal() { Text = googleJS };
-                string placement = IoC.Resolve<ISettingManager>().GetSettingValue("Analytics.GooglePlacement").ToLowerInvariant();
+                string placement = this.SettingManager.GetSettingValue("Analytics.GooglePlacement").ToLowerInvariant();
                 switch (placement)
                 {
                     case "head":

@@ -104,7 +104,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             {
                 int id = 0;
                 int.TryParse(Request.QueryString[qsp], out id);
-                var sao = IoC.Resolve<ISpecificationAttributeService>().GetSpecificationAttributeOptionById(id);
+                var sao = this.SpecificationAttributeService.GetSpecificationAttributeOptionById(id);
                 if (sao != null)
                 {
                     var sa = sao.SpecificationAttribute;
@@ -128,7 +128,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
         protected List<SpecificationAttributeOptionFilter> getNotFilteredSpecs()
         {
             //get all
-            var result = IoC.Resolve<ISpecificationAttributeService>().GetSpecificationAttributeOptionFilter(this.CategoryId);
+            var result = this.SpecificationAttributeService.GetSpecificationAttributeOptionFilter(this.CategoryId);
            
             //remove already filtered
             var alreadyFilteredOptions = getAlreadyFilteredSpecs();

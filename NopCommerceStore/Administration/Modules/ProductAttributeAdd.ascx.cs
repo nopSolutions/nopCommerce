@@ -35,7 +35,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             ProductAttribute productAttribute = ctrlProductAttributeInfo.SaveInfo();
 
-            IoC.Resolve<ICustomerActivityService>().InsertActivity(
+            this.CustomerActivityService.InsertActivity(
                 "AddNewProductAttribute",
                 GetLocaleResourceString("ActivityLog.AddNewProductAttribute"),
                 productAttribute.Name);

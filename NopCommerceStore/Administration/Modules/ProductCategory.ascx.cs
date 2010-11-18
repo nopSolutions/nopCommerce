@@ -41,7 +41,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             List<ProductCategoryMappingHelperClass> productCategoryMappings = null;
 
-            Product product = IoC.Resolve<IProductService>().GetProductById(this.ProductId);
+            Product product = this.ProductService.GetProductById(this.ProductId);
             if (product != null)
             {
                 var existingProductCategoryCollection = product.ProductCategories;
@@ -75,16 +75,16 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public void SaveInfo(int prodId)
         {
-            Product product = IoC.Resolve<IProductService>().GetProductById(prodId);
+            Product product = this.ProductService.GetProductById(prodId);
             if (product != null)
             {
                 foreach (var item in this.GridState.Values)
                 {
                     if (item.ProductCategoryId > 0 && !item.IsMapped)
-                        IoC.Resolve<ICategoryService>().DeleteProductCategory(item.ProductCategoryId);
+                        this.CategoryService.DeleteProductCategory(item.ProductCategoryId);
                     if (item.ProductCategoryId > 0 && item.IsMapped)
                     {
-                        var productCategory = IoC.Resolve<ICategoryService>().GetProductCategoryById(item.ProductCategoryId);
+                        var productCategory = this.CategoryService.GetProductCategoryById(item.ProductCategoryId);
                         if (productCategory != null)
                         {
                             productCategory.ProductId = product.ProductId;
@@ -92,7 +92,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                             productCategory.IsFeaturedProduct = item.IsFeatured;
                             productCategory.DisplayOrder = item.DisplayOrder;
 
-                            IoC.Resolve<ICategoryService>().UpdateProductCategory(productCategory);
+                            this.CategoryService.UpdateProductCategory(productCategory);
                         }
                     }
                     if (item.ProductCategoryId == 0 && item.IsMapped)
@@ -105,7 +105,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                             DisplayOrder = item.DisplayOrder
                         };
 
-                        IoC.Resolve<ICategoryService>().InsertProductCategory(productCategory);
+                        this.CategoryService.InsertProductCategory(productCategory);
                     }
                 }
             }
@@ -119,7 +119,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
        
         private List<ProductCategoryMappingHelperClass> GetProductCategoryMappings(List<ProductCategory> existingProductCategoryCollection)
         {
-            var categories = IoC.Resolve<ICategoryService>().GetAllCategories();
+            var categories = this.CategoryService.GetAllCategories();
             List<ProductCategoryMappingHelperClass> result = new List<ProductCategoryMappingHelperClass>();
             for (int i = 0; i < categories.Count; i++)
             {

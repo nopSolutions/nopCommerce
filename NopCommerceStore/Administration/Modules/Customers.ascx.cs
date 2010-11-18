@@ -41,13 +41,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             if (!Page.IsPostBack)
             {
                 SetDefaultValues();
-                phUsername.Visible = IoC.Resolve<ICustomerService>().UsernamesEnabled;
-                phDateOfBirth.Visible = IoC.Resolve<ICustomerService>().FormFieldDateOfBirthEnabled;
-                gvCustomers.Columns[2].Visible = IoC.Resolve<ICustomerService>().UsernamesEnabled;
+                phUsername.Visible = this.CustomerService.UsernamesEnabled;
+                phDateOfBirth.Visible = this.CustomerService.FormFieldDateOfBirthEnabled;
+                gvCustomers.Columns[2].Visible = this.CustomerService.UsernamesEnabled;
 
                 //buttons
-                btnExportXLS.Visible = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Features.SupportExcel");
-                btnImportXLS.Visible = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("Features.SupportExcel");
+                btnExportXLS.Visible = this.SettingManager.GetSettingValueBoolean("Features.SupportExcel");
+                btnImportXLS.Visible = this.SettingManager.GetSettingValueBoolean("Features.SupportExcel");
             }
         }
 
@@ -78,7 +78,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             bool dontLoadGuestCustomers = cbDontLoadGuestCustomers.Checked;
             int dateOfBirthDay = int.Parse(this.ddlDateOfBirthDay.SelectedValue);
             int dateOfBirthMonth = int.Parse(this.ddlDateOfBirthMonth.SelectedValue);
-            var customers = IoC.Resolve<ICustomerService>().GetAllCustomers(startDate,
+            var customers = this.CustomerService.GetAllCustomers(startDate,
                 endDate, email, username, dontLoadGuestCustomers,
                 dateOfBirthMonth, dateOfBirthDay, int.MaxValue, 0);
             return customers;
@@ -183,7 +183,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     string filePath = string.Format("{0}files\\ExportImport\\{1}", HttpContext.Current.Request.PhysicalApplicationPath, fileName);
 
                     File.WriteAllBytes(filePath, fileBytes);
-                    IoC.Resolve<ImportManager>().ImportCustomersFromXls(filePath);
+                    this.ImportManager.ImportCustomersFromXls(filePath);
 
                     BindGrid();
                 }

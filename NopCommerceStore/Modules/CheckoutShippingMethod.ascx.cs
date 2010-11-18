@@ -51,15 +51,15 @@ namespace NopSolutions.NopCommerce.Web.Modules
             //calculate discounted and taxed rate
             Discount appliedDiscount = null;
             decimal shippingTotalWithoutDiscount = shippingOption.Rate;
-            decimal discountAmount = IoC.Resolve<IShippingService>().GetShippingDiscount(NopContext.Current.User, 
+            decimal discountAmount = this.ShippingService.GetShippingDiscount(NopContext.Current.User, 
                 shippingTotalWithoutDiscount, out appliedDiscount);
             decimal shippingTotalWithDiscount = shippingTotalWithoutDiscount - discountAmount;
             if (shippingTotalWithDiscount < decimal.Zero)
                 shippingTotalWithDiscount = decimal.Zero;
             shippingTotalWithDiscount = Math.Round(shippingTotalWithDiscount, 2);
 
-            decimal rateBase = IoC.Resolve<ITaxService>().GetShippingPrice(shippingTotalWithDiscount, NopContext.Current.User);
-            decimal rate = IoC.Resolve<ICurrencyService>().ConvertCurrency(rateBase, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
+            decimal rateBase = this.TaxService.GetShippingPrice(shippingTotalWithDiscount, NopContext.Current.User);
+            decimal rate = this.CurrencyService.ConvertCurrency(rateBase, this.CurrencyService.PrimaryStoreCurrency, NopContext.Current.WorkingCurrency);
             string rateStr = PriceHelper.FormatShippingPrice(rate, true);
             return string.Format("({0})", rateStr);
         }
@@ -81,7 +81,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
                         string name = hfName.Value;
 
                         string error = string.Empty;
-                        var shippingOptions = IoC.Resolve<IShippingService>().GetShippingOptions(Cart, NopContext.Current.User, NopContext.Current.User.ShippingAddress, shippingRateComputationMethodId, ref error);
+                        var shippingOptions = this.ShippingService.GetShippingOptions(Cart, NopContext.Current.User, NopContext.Current.User.ShippingAddress, shippingRateComputationMethodId, ref error);
                         shippingOption = shippingOptions.Find((so) => so.Name == name);
                         break;
                     }
@@ -122,7 +122,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         public void BindData()
         {
-            bool shoppingCartRequiresShipping = IoC.Resolve<IShippingService>().ShoppingCartRequiresShipping(Cart);
+            bool shoppingCartRequiresShipping = this.ShippingService.ShoppingCartRequiresShipping(Cart);
             if (!shoppingCartRequiresShipping)
             {
                 NopContext.Current.User.LastShippingOption = null;
@@ -135,10 +135,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
             {
                 string error = string.Empty;
                 Address address = NopContext.Current.User.ShippingAddress;
-                var shippingOptions = IoC.Resolve<IShippingService>().GetShippingOptions(Cart, NopContext.Current.User, address, ref error);
+                var shippingOptions = this.ShippingService.GetShippingOptions(Cart, NopContext.Current.User, address, ref error);
                 if (!String.IsNullOrEmpty(error))
                 {
-                    IoC.Resolve<ILogService>().InsertLog(LogTypeEnum.ShippingError, error, error);
+                    this.LogService.InsertLog(LogTypeEnum.ShippingError, error, error);
                     phSelectShippingMethod.Visible = false;
                     lShippingMethodsError.Text = Server.HtmlEncode(error);
                 }
@@ -198,7 +198,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if ((NopContext.Current.User == null) || (NopContext.Current.User.IsGuest && !IoC.Resolve<ICustomerService>().AnonymousCheckoutAllowed))
+            if ((NopContext.Current.User == null) || (NopContext.Current.User.IsGuest && !this.CustomerService.AnonymousCheckoutAllowed))
             {
                 string loginURL = SEOHelper.GetLoginPageUrl(true);
                 Response.Redirect(loginURL);
@@ -226,7 +226,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             {
                 if (cart == null)
                 {
-                    cart = IoC.Resolve<IShoppingCartService>().GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
+                    cart = this.ShoppingCartService.GetCurrentShoppingCart(ShoppingCartTypeEnum.ShoppingCart);
                 }
                 return cart;
             }

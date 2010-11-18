@@ -38,7 +38,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             Discount discount = ctrlDiscountInfo.SaveInfo();
 
-            IoC.Resolve<ICustomerActivityService>().InsertActivity(
+            this.CustomerActivityService.InsertActivity(
                 "AddNewDiscount",
                 GetLocaleResourceString("ActivityLog.AddNewDiscount"),
                 discount.Name);

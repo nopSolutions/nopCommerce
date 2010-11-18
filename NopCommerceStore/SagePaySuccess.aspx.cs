@@ -40,7 +40,7 @@ namespace NopSolutions.NopCommerce.Web
                 {
                     // this is a very serious error - it means that the SagePay message is corrupt
                     string message = "Error in response from SagePay - status is " + status;
-                    IoC.Resolve<ILogService>().InsertLog(LogTypeEnum.OrderError, message, decrypted);
+                    this.LogService.InsertLog(LogTypeEnum.OrderError, message, decrypted);
                     throw new NopException("Response Incorrect");
                 }
 
@@ -56,7 +56,7 @@ namespace NopSolutions.NopCommerce.Web
                 {
                     // this is a very serious error - it means that the SagePay message is corrupt :(
                     string message = "Error in TXAuthNo response from SagePay - status is " + status;
-                    IoC.Resolve<ILogService>().InsertLog(LogTypeEnum.OrderError, message, decrypted);
+                    this.LogService.InsertLog(LogTypeEnum.OrderError, message, decrypted);
                     throw new NopException("Response Incorrect");
                 }
 
@@ -64,21 +64,21 @@ namespace NopSolutions.NopCommerce.Web
                 {
                     // this is a very serious error - it means that the SagePay message is corrupt :(
                     string message = "Error in VendorTxCode response from SagePay - status is " + status;
-                    IoC.Resolve<ILogService>().InsertLog(LogTypeEnum.OrderError, message, decrypted);
+                    this.LogService.InsertLog(LogTypeEnum.OrderError, message, decrypted);
                     throw new NopException("Response Incorrect");
                 }
 
                 // we've got here and we have a valid VendorTxCode and a valid order id
-                Order order = IoC.Resolve<IOrderService>().GetOrderById((int)Convert.ToDouble(VendorTxCode));
+                Order order = this.OrderService.GetOrderById((int)Convert.ToDouble(VendorTxCode));
                 if (order == null)
                     throw new NopException(string.Format("The order ID {0} doesn't exists", VendorTxCode));
 
                 // would like to add more secure code here - this flow doesn't feel entirely safe/secure!
                 // would like to store the TxAuthNo returned.
 
-                if (IoC.Resolve<IOrderService>().CanMarkOrderAsPaid(order))
+                if (this.OrderService.CanMarkOrderAsPaid(order))
                 {
-                    IoC.Resolve<IOrderService>().MarkOrderAsPaid(order.OrderId);
+                    this.OrderService.MarkOrderAsPaid(order.OrderId);
                 }
                 Response.Redirect("~/checkoutcompleted.aspx");
             }

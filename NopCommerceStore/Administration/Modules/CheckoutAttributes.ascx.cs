@@ -39,7 +39,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         void BindGrid()
         {
-            var checkoutAttributes = IoC.Resolve<ICheckoutAttributeService>().GetAllCheckoutAttributes(false);
+            var checkoutAttributes = this.CheckoutAttributeService.GetAllCheckoutAttributes(false);
             gvCheckoutAttributes.DataSource = checkoutAttributes;
             gvCheckoutAttributes.DataBind();
         }

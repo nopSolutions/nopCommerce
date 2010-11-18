@@ -43,7 +43,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         protected void BindAttributes()
         {
-            ProductVariant productVariant = IoC.Resolve<IProductService>().GetProductVariantById(this.ProductVariantId);
+            ProductVariant productVariant = this.ProductService.GetProductVariantById(this.ProductVariantId);
             if (productVariant != null)
             {
                 pnlData.Visible = true;
@@ -70,14 +70,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected void BindCombinations()
         {
-            ProductVariant productVariant = IoC.Resolve<IProductService>().GetProductVariantById(this.ProductVariantId);
+            ProductVariant productVariant = this.ProductService.GetProductVariantById(this.ProductVariantId);
             if (productVariant != null)
             {
                 var productVariantAttributes = productVariant.ProductVariantAttributes;
                 if (productVariantAttributes.Count > 0)
                 {
                     pnlCombinations.Visible = true;
-                    var combinations = IoC.Resolve<IProductAttributeService>().GetAllProductVariantAttributeCombinations(this.ProductVariantId);
+                    var combinations = this.ProductAttributeService.GetAllProductVariantAttributeCombinations(this.ProductVariantId);
                     if (combinations.Count > 0)
                     {
                         gvCombinations.Visible = true;
@@ -104,7 +104,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         private void FillDropDowns()
         {
             this.ddlNewProductAttributes.Items.Clear();
-            var productAttributes = IoC.Resolve<IProductAttributeService>().GetAllProductAttributes();
+            var productAttributes = this.ProductAttributeService.GetAllProductAttributes();
             foreach (ProductAttribute pa in productAttributes)
             {
                 ListItem item2 = new ListItem(pa.Name, pa.ProductAttributeId.ToString());
@@ -139,7 +139,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                ProductVariant productVariant = IoC.Resolve<IProductService>().GetProductVariantById(this.ProductVariantId);
+                ProductVariant productVariant = this.ProductService.GetProductVariantById(this.ProductVariantId);
                 if (productVariant != null)
                 {
                     if (ddlNewProductAttributes.SelectedItem == null)
@@ -158,7 +158,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         AttributeControlTypeId = (int)attributeControlType,
                         DisplayOrder = txtNewProductVariantAttributeDisplayOrder.Value
                     };
-                    IoC.Resolve<IProductAttributeService>().InsertProductVariantAttribute(productVariantAttribute);
+                    this.ProductAttributeService.InsertProductVariantAttribute(productVariantAttribute);
 
                     BindAttributes();
                     BindCombinations();
@@ -194,7 +194,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 AttributeControlTypeEnum attributeControlType = (AttributeControlTypeEnum)Enum.ToObject(typeof(AttributeControlTypeEnum), int.Parse(ddlAttributeControlType.SelectedItem.Value));
                 int displayOrder = txtDisplayOrder.Value;
 
-                ProductVariantAttribute productVariantAttribute = IoC.Resolve<IProductAttributeService>().GetProductVariantAttributeById(productVariantAttributeId);
+                ProductVariantAttribute productVariantAttribute = this.ProductAttributeService.GetProductVariantAttributeById(productVariantAttributeId);
 
                 if (productVariantAttribute != null)
                 {
@@ -203,7 +203,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     productVariantAttribute.IsRequired = isRequired;
                     productVariantAttribute.AttributeControlTypeId = (int)attributeControlType;
                     productVariantAttribute.DisplayOrder = displayOrder;
-                    IoC.Resolve<IProductAttributeService>().UpdateProductVariantAttribute(productVariantAttribute);
+                    this.ProductAttributeService.UpdateProductVariantAttribute(productVariantAttribute);
                 }
 
                 BindAttributes();
@@ -226,7 +226,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 if (ddlProductAttribute != null)
                 {
                     ddlProductAttribute.Items.Clear();
-                    var productAttributes = IoC.Resolve<IProductAttributeService>().GetAllProductAttributes();
+                    var productAttributes = this.ProductAttributeService.GetAllProductAttributes();
                     foreach (ProductAttribute productAttribute in productAttributes)
                     {
                         ListItem item = new ListItem(productAttribute.Name,
@@ -266,7 +266,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         protected void gvProductVariantAttributes_RowDeleting(object sender, GridViewDeleteEventArgs e)
         {
             int productVariantAttributeId = (int)gvProductVariantAttributes.DataKeys[e.RowIndex]["ProductVariantAttributeId"];
-            IoC.Resolve<IProductAttributeService>().DeleteProductVariantAttribute(productVariantAttributeId);
+            this.ProductAttributeService.DeleteProductVariantAttribute(productVariantAttributeId);
             
             BindAttributes();
             BindCombinations();
@@ -277,14 +277,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                ProductVariant productVariant = IoC.Resolve<IProductService>().GetProductVariantById(this.ProductVariantId);
+                ProductVariant productVariant = this.ProductService.GetProductVariantById(this.ProductVariantId);
                 if (productVariant != null)
                 {
                     string attributes = ctrlSelectProductAttributes.SelectedAttributes;
                     int stockQuantity = txtStockQuantity.Value;
                     bool allowOutOfStockOrders = cbAllowOutOfStockOrders.Checked;
 
-                    List<string> warnings = IoC.Resolve<IShoppingCartService>().GetShoppingCartItemAttributeWarnings(ShoppingCartTypeEnum.ShoppingCart,
+                    List<string> warnings = this.ShoppingCartService.GetShoppingCartItemAttributeWarnings(ShoppingCartTypeEnum.ShoppingCart,
                             productVariant.ProductVariantId, attributes, 1, false);
                     if (warnings.Count > 0)
                     {
@@ -310,7 +310,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                             StockQuantity = stockQuantity,
                             AllowOutOfStockOrders = allowOutOfStockOrders
                         };
-                        IoC.Resolve<IProductAttributeService>().InsertProductVariantAttributeCombination(combination);
+                        this.ProductAttributeService.InsertProductVariantAttributeCombination(combination);
                     }
                     BindCombinations();
                 }
@@ -338,14 +338,14 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 int stockQuantity = txtStockQuantity.Value;            
                 bool allowOutOfStockOrders = cbAllowOutOfStockOrders.Checked;
 
-                var combination = IoC.Resolve<IProductAttributeService>().GetProductVariantAttributeCombinationById(productVariantAttributeCombinationId);
+                var combination = this.ProductAttributeService.GetProductVariantAttributeCombinationById(productVariantAttributeCombinationId);
 
                 if (combination != null)
                 {
                     combination.StockQuantity = stockQuantity;
                     combination.AllowOutOfStockOrders = allowOutOfStockOrders;
 
-                    IoC.Resolve<IProductAttributeService>().UpdateProductVariantAttributeCombination(combination);
+                    this.ProductAttributeService.UpdateProductVariantAttributeCombination(combination);
                 }
 
                 BindCombinations();
@@ -362,7 +362,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                 if (btnUpdate != null)
                     btnUpdate.CommandArgument = e.Row.RowIndex.ToString();
 
-                ProductVariant productVariant = IoC.Resolve<IProductService>().GetProductVariantById(this.ProductVariantId);
+                ProductVariant productVariant = this.ProductService.GetProductVariantById(this.ProductVariantId);
                 if (productVariant == null)
                     return;
 
@@ -372,7 +372,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     true, false, true, false);
 
                 Label lblWarnings = e.Row.FindControl("lblWarnings") as Label;
-                List<string> warnings = IoC.Resolve<IShoppingCartService>().GetShoppingCartItemAttributeWarnings(ShoppingCartTypeEnum.ShoppingCart,
+                List<string> warnings = this.ShoppingCartService.GetShoppingCartItemAttributeWarnings(ShoppingCartTypeEnum.ShoppingCart,
                             productVariant.ProductVariantId, productVariantAttribute.AttributesXml, 1, false);
                 if (warnings.Count > 0)
                 {
@@ -399,7 +399,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         protected void gvCombinations_RowDeleting(object sender, GridViewDeleteEventArgs e)
         {
             int productVariantAttributeCombinationId = (int)gvCombinations.DataKeys[e.RowIndex]["ProductVariantAttributeCombinationId"];
-            IoC.Resolve<IProductAttributeService>().DeleteProductVariantAttributeCombination(productVariantAttributeCombinationId);
+            this.ProductAttributeService.DeleteProductVariantAttributeCombination(productVariantAttributeCombinationId);
 
             BindCombinations();
         }

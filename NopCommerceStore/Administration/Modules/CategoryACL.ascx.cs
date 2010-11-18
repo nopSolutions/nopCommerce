@@ -40,10 +40,10 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             List<int> _customerRoleIds = new List<int>();
 
-            var category = IoC.Resolve<ICategoryService>().GetCategoryById(this.CategoryId);
+            var category = this.CategoryService.GetCategoryById(this.CategoryId);
             if (category != null)
             {
-                var aclRules = IoC.Resolve<IACLService>().GetAllAclPerObject(this.CategoryId, (int)ObjectTypeEnum.Category, 0, true);
+                var aclRules = this.ACLService.GetAllAclPerObject(this.CategoryId, (int)ObjectTypeEnum.Category, 0, true);
                 foreach (var aclPerObject in aclRules)
                     _customerRoleIds.Add(aclPerObject.CustomerRoleId);
             }
@@ -67,21 +67,21 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public void SaveInfo(int catId)
         {
-            var category = IoC.Resolve<ICategoryService>().GetCategoryById(catId);
+            var category = this.CategoryService.GetCategoryById(catId);
 
             if (category != null)
             {
                 List<int> selectedCustomerRoleIds = this.ctrlRoles.SelectedCustomerRoleIds;
-                var existingAclRules = IoC.Resolve<IACLService>().GetAllAclPerObject(catId, (int)ObjectTypeEnum.Category, 0, true);
+                var existingAclRules = this.ACLService.GetAllAclPerObject(catId, (int)ObjectTypeEnum.Category, 0, true);
 
-                var allCustomerRoles = IoC.Resolve<ICustomerService>().GetAllCustomerRoles();
+                var allCustomerRoles = this.CustomerService.GetAllCustomerRoles();
                 foreach (var cr in allCustomerRoles)
                 {
                     if (selectedCustomerRoleIds.Contains(cr.CustomerRoleId))
                     {
                         if (existingAclRules.Find(a => a.CustomerRoleId == cr.CustomerRoleId) == null)
                         {
-                            IoC.Resolve<IACLService>().InsertAclPerObject(
+                            this.ACLService.InsertAclPerObject(
                                 new ACLPerObject()
                                 {
                                     ObjectId = category.CategoryId,
@@ -96,7 +96,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         var aclToDelete = existingAclRules.Find(a => a.CustomerRoleId == cr.CustomerRoleId);
                         if (aclToDelete != null)
                         {
-                            IoC.Resolve<IACLService>().DeleteAclPerObject(aclToDelete.ACLPerObjectId);
+                            this.ACLService.DeleteAclPerObject(aclToDelete.ACLPerObjectId);
                         }
                     }
                 }

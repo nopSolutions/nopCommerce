@@ -29,7 +29,7 @@ namespace NopSolutions.NopCommerce.Web
                 XmlDocument doc = new XmlDocument();
                 doc.Load(Request.InputStream);
                 //// Try to find the order the notification is posted about
-                Order o = IoC.Resolve<IOrderService>().GetOrderById(Convert.ToInt32(doc.ChildNodes[1]["purchaseID"].InnerText));
+                Order o = this.OrderService.GetOrderById(Convert.ToInt32(doc.ChildNodes[1]["purchaseID"].InnerText));
                 if (o == null)
                 {
                     throw new NullReferenceException("No order");
@@ -39,17 +39,17 @@ namespace NopSolutions.NopCommerce.Web
                 switch (status.ToLower())
                 {
                     case "success":
-                        if (IoC.Resolve<IOrderService>().CanMarkOrderAsPaid(o))
+                        if (this.OrderService.CanMarkOrderAsPaid(o))
                         {
-                            IoC.Resolve<IOrderService>().MarkOrderAsPaid(o.OrderId);
+                            this.OrderService.MarkOrderAsPaid(o.OrderId);
                         }
                         break;
                     case "Expired":
                     case "Cancelled":
                     case "Failure":
-                        if (IoC.Resolve<IOrderService>().CanCancelOrder(o))
+                        if (this.OrderService.CanCancelOrder(o))
                         {
-                            IoC.Resolve<IOrderService>().CancelOrder(o.OrderId, true);
+                            this.OrderService.CancelOrder(o.OrderId, true);
                         }
                         break;
                     default:
@@ -58,7 +58,7 @@ namespace NopSolutions.NopCommerce.Web
             }
             catch (Exception exc)
             {
-                IoC.Resolve<ILogService>().InsertLog(LogTypeEnum.OrderError, "iDeal payment error" + exc.Message, exc);
+                this.LogService.InsertLog(LogTypeEnum.OrderError, "iDeal payment error" + exc.Message, exc);
             }
         }
 

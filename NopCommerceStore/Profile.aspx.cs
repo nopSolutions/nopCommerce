@@ -44,13 +44,13 @@ namespace NopSolutions.NopCommerce.Web
         {
             if (!Page.IsPostBack)
             {
-                Customer customer = IoC.Resolve<ICustomerService>().GetCustomerById(this.CustomerId);
+                Customer customer = this.CustomerService.GetCustomerById(this.CustomerId);
                 if (customer == null || customer.IsGuest)
                 {
                     Response.Redirect(CommonHelper.GetStoreLocation());
                 }
 
-                if (!IoC.Resolve<ICustomerService>().AllowViewingProfiles)
+                if (!this.CustomerService.AllowViewingProfiles)
                 {
                     Response.Redirect(CommonHelper.GetStoreLocation());
                 }

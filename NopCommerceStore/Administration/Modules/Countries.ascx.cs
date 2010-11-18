@@ -40,7 +40,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         void BindGrid()
         {
-            List<Country> countryCollection = IoC.Resolve<ICountryService>().GetAllCountries();
+            List<Country> countryCollection = this.CountryService.GetAllCountries();
             gvCountries.DataSource = countryCollection;
             gvCountries.DataBind();
         }

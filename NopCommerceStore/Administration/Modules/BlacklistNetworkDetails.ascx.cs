@@ -68,7 +68,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                IoC.Resolve<IBlacklistService>().DeleteBannedIpNetwork(this.BannedIpNetworkId);
+                this.BlacklistService.DeleteBannedIpNetwork(this.BannedIpNetworkId);
                 Response.Redirect("Blacklist.aspx");
             }
             catch (Exception exc)

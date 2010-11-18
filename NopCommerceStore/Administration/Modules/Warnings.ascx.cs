@@ -109,19 +109,19 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         private void TestStoreUrl()
         {
-            if (IoC.Resolve<ISettingManager>().StoreUrl.Equals(CommonHelper.GetStoreLocation(false), StringComparison.InvariantCultureIgnoreCase))
+            if (this.SettingManager.StoreUrl.Equals(CommonHelper.GetStoreLocation(false), StringComparison.InvariantCultureIgnoreCase))
             {
                 MarkAsPass(lblStoreUrl);
             }
             else
             {
-                MarkAsWarning(lblStoreUrl, string.Format("Specified store URL ({0}) doesn't match this store URL ({1})", IoC.Resolve<ISettingManager>().StoreUrl, CommonHelper.GetStoreLocation(false)));
+                MarkAsWarning(lblStoreUrl, string.Format("Specified store URL ({0}) doesn't match this store URL ({1})", this.SettingManager.StoreUrl, CommonHelper.GetStoreLocation(false)));
             }
         }
 
         private void TestPrimaryExchangeRateCurrency()
         {
-            if (IoC.Resolve<ICurrencyService>().PrimaryExchangeRateCurrency != null)
+            if (this.CurrencyService.PrimaryExchangeRateCurrency != null)
             {
                 MarkAsPass(lblPrimaryExchangeRateCurrency);
             }
@@ -133,7 +133,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         private void TestPrimaryStoreCurrency()
         {
-            if (IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency != null)
+            if (this.CurrencyService.PrimaryStoreCurrency != null)
             {
                 MarkAsPass(lblPrimaryStoreCurrency);
             }
@@ -145,7 +145,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         private void TestBaseWeight()
         {
-            if (IoC.Resolve<IMeasureService>().BaseWeightIn != null)
+            if (this.MeasureService.BaseWeightIn != null)
             {
                 MarkAsPass(lblDefaultWeight);
             }
@@ -157,7 +157,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         private void TestBaseDimension()
         {
-            if (IoC.Resolve<IMeasureService>().BaseDimensionIn != null)
+            if (this.MeasureService.BaseDimensionIn != null)
             {
                 MarkAsPass(lblDefaultDimension);
             }
@@ -170,12 +170,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         private void TestMessageTemplates()
         {
             StringBuilder warningResult = new StringBuilder();
-            var publishedLanguages = IoC.Resolve<ILanguageService>().GetAllLanguages(false);
-            foreach (var messageTemplate in IoC.Resolve<IMessageService>().GetAllMessageTemplates())
+            var publishedLanguages = this.LanguageService.GetAllLanguages(false);
+            foreach (var messageTemplate in this.MessageService.GetAllMessageTemplates())
             {
                 foreach (var language in publishedLanguages)
                 {
-                    var localizedMessageTemplate = IoC.Resolve<IMessageService>().GetLocalizedMessageTemplate(messageTemplate.Name, language.LanguageId);
+                    var localizedMessageTemplate = this.MessageService.GetLocalizedMessageTemplate(messageTemplate.Name, language.LanguageId);
                     if (localizedMessageTemplate == null)
                     {
                         warningResult.AppendFormat("You don't have localized version of \"{0}\" message template for {1}.", messageTemplate.Name, language.Name);
@@ -199,7 +199,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         private void TestShippingMethods()
         {
             StringBuilder warningResult = new StringBuilder();
-            var srcmList = IoC.Resolve<IShippingService>().GetAllShippingRateComputationMethods(false);
+            var srcmList = this.ShippingService.GetAllShippingRateComputationMethods(false);
             int offlineSrcmCount = 0;
             foreach (var srcm in srcmList)
             {

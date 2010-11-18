@@ -59,16 +59,16 @@ namespace NopSolutions.NopCommerce.Web.Modules
             pnlCustomerAvatarError.Visible = false;
 
             var customerAvatar = NopContext.Current.User.Avatar;
-            int avatarSize = IoC.Resolve<ISettingManager>().GetSettingValueInteger("Media.Customer.AvatarSize", 85);
+            int avatarSize = this.SettingManager.GetSettingValueInteger("Media.Customer.AvatarSize", 85);
             string pictureUrl = string.Empty;
             if (customerAvatar != null)
             {
-                pictureUrl = IoC.Resolve<IPictureService>().GetPictureUrl(customerAvatar, avatarSize, false);
+                pictureUrl = this.PictureService.GetPictureUrl(customerAvatar, avatarSize, false);
                 this.btnRemoveAvatar.Visible = true;
             }
             else
             {
-                pictureUrl = IoC.Resolve<IPictureService>().GetDefaultPictureUrl(PictureTypeEnum.Avatar, avatarSize);
+                pictureUrl = this.PictureService.GetDefaultPictureUrl(PictureTypeEnum.Avatar, avatarSize);
                 this.btnRemoveAvatar.Visible = false;
             }
             this.iAvatar.ImageUrl = pictureUrl;
@@ -78,10 +78,10 @@ namespace NopSolutions.NopCommerce.Web.Modules
         {
             try
             {
-                IoC.Resolve<IPictureService>().DeletePicture(NopContext.Current.User.AvatarId);
+                this.PictureService.DeletePicture(NopContext.Current.User.AvatarId);
 
                 NopContext.Current.User.AvatarId = 0;
-                IoC.Resolve<ICustomerService>().UpdateCustomer(NopContext.Current.User);
+                this.CustomerService.UpdateCustomer(NopContext.Current.User);
                 BindData();
             }
             catch (Exception exc)
@@ -97,7 +97,7 @@ namespace NopSolutions.NopCommerce.Web.Modules
             {
                 if (Page.IsValid)
                 {
-                    if (!IoC.Resolve<ICustomerService>().AllowCustomersToUploadAvatars)
+                    if (!this.CustomerService.AllowCustomersToUploadAvatars)
                         throw new NopException("Uploading avatars is not allowed");
 
                     var customerAvatar = NopContext.Current.User.Avatar;
@@ -105,22 +105,22 @@ namespace NopSolutions.NopCommerce.Web.Modules
                     
                     if ((customerPictureFile != null) && (!String.IsNullOrEmpty(customerPictureFile.FileName)))
                     {
-                        int avatarMaxSize = IoC.Resolve<ISettingManager>().GetSettingValueInteger("Media.Customer.AvatarMaxSizeBytes", 20000);
+                        int avatarMaxSize = this.SettingManager.GetSettingValueInteger("Media.Customer.AvatarMaxSizeBytes", 20000);
                         if (customerPictureFile.ContentLength > avatarMaxSize)
                             throw new NopException(string.Format("Maximum avatar size is {0} bytes", avatarMaxSize));
 
                         byte[] customerPictureBinary = customerPictureFile.GetPictureBits();
                         if (customerAvatar != null)
-                            customerAvatar = IoC.Resolve<IPictureService>().UpdatePicture(customerAvatar.PictureId, customerPictureBinary, customerPictureFile.ContentType, true);
+                            customerAvatar = this.PictureService.UpdatePicture(customerAvatar.PictureId, customerPictureBinary, customerPictureFile.ContentType, true);
                         else
-                            customerAvatar = IoC.Resolve<IPictureService>().InsertPicture(customerPictureBinary, customerPictureFile.ContentType, true);
+                            customerAvatar = this.PictureService.InsertPicture(customerPictureBinary, customerPictureFile.ContentType, true);
                     }
                     int customerAvatarId = 0;
                     if (customerAvatar != null)
                         customerAvatarId = customerAvatar.PictureId;
 
                     NopContext.Current.User.AvatarId = customerAvatarId;
-                    IoC.Resolve<ICustomerService>().UpdateCustomer(NopContext.Current.User);
+                    this.CustomerService.UpdateCustomer(NopContext.Current.User);
 
                     BindData();
                 }

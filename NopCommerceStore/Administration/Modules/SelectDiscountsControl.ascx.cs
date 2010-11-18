@@ -36,7 +36,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public void BindData(DiscountTypeEnum? DiscountType)
         {
-            var discounts = IoC.Resolve<IDiscountService>().GetAllDiscounts(DiscountType);
+            var discounts = this.DiscountService.GetAllDiscounts(DiscountType);
             foreach (Discount discount in discounts)
             {
                 ListItem item = new ListItem(discount.Name, discount.DiscountId.ToString());

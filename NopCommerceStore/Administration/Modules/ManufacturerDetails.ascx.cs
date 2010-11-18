@@ -43,7 +43,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             if (!Page.IsPostBack)
             {
-                Manufacturer manufacturer = IoC.Resolve<IManufacturerService>().GetManufacturerById(this.ManufacturerId);
+                Manufacturer manufacturer = this.ManufacturerService.GetManufacturerById(this.ManufacturerId);
                 if (manufacturer != null)
                 {
                     lblTitle.Text = Server.HtmlEncode(manufacturer.Name);
@@ -58,7 +58,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
             ctrlManufacturerSEO.SaveInfo();
             ctrlManufacturerProducts.SaveInfo();
 
-            IoC.Resolve<ICustomerActivityService>().InsertActivity(
+            this.CustomerActivityService.InsertActivity(
                 "EditManufacturer",
                 GetLocaleResourceString("ActivityLog.EditManufacturer"),
                 manufacturer.Name);
@@ -102,12 +102,12 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
         {
             try
             {
-                Manufacturer manufacturer = IoC.Resolve<IManufacturerService>().GetManufacturerById(this.ManufacturerId);
+                Manufacturer manufacturer = this.ManufacturerService.GetManufacturerById(this.ManufacturerId);
                 if (manufacturer != null)
                 {
-                    IoC.Resolve<IManufacturerService>().MarkManufacturerAsDeleted(manufacturer.ManufacturerId);
+                    this.ManufacturerService.MarkManufacturerAsDeleted(manufacturer.ManufacturerId);
 
-                    IoC.Resolve<ICustomerActivityService>().InsertActivity(
+                    this.CustomerActivityService.InsertActivity(
                         "DeleteManufacturer",
                         GetLocaleResourceString("ActivityLog.DeleteManufacturer"),
                         manufacturer.Name);
@@ -122,7 +122,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         protected override void OnPreRender(EventArgs e)
         {
-            Manufacturer manufacturer = IoC.Resolve<IManufacturerService>().GetManufacturerById(this.ManufacturerId);
+            Manufacturer manufacturer = this.ManufacturerService.GetManufacturerById(this.ManufacturerId);
             if (manufacturer != null)
             {
                 PreviewButton.OnClientClick = string.Format("javascript:OpenWindow('{0}', 800, 600, true); return false;", SEOHelper.GetManufacturerUrl(manufacturer.ManufacturerId));

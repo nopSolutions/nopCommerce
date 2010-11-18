@@ -25,7 +25,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
     {
         private void BindData()
         {
-            var specificationAttribute = IoC.Resolve<ISpecificationAttributeService>().GetSpecificationAttributeById(this.SpecificationAttributeId);
+            var specificationAttribute = this.SpecificationAttributeService.GetSpecificationAttributeById(this.SpecificationAttributeId);
 
             if (this.HasLocalizableContent)
             {
@@ -61,13 +61,13 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
         public SpecificationAttribute SaveInfo()
         {
-            SpecificationAttribute specificationAttribute = IoC.Resolve<ISpecificationAttributeService>().GetSpecificationAttributeById(this.SpecificationAttributeId);
+            SpecificationAttribute specificationAttribute = this.SpecificationAttributeService.GetSpecificationAttributeById(this.SpecificationAttributeId);
 
             if (specificationAttribute != null)
             {
                 specificationAttribute.Name = txtName.Text;
                 specificationAttribute.DisplayOrder =  txtDisplayOrder.Value;
-                IoC.Resolve<ISpecificationAttributeService>().UpdateSpecificationAttribute(specificationAttribute);
+                this.SpecificationAttributeService.UpdateSpecificationAttribute(specificationAttribute);
             }
             else
             {
@@ -76,7 +76,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                     Name = txtName.Text,
                     DisplayOrder = txtDisplayOrder.Value
                 };
-                IoC.Resolve<ISpecificationAttributeService>().InsertSpecificationAttribute(specificationAttribute);
+                this.SpecificationAttributeService.InsertSpecificationAttribute(specificationAttribute);
             }
 
             SaveLocalizableContent(specificationAttribute);
@@ -104,7 +104,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                     bool allFieldsAreEmpty = string.IsNullOrEmpty(name);
 
-                    var content = IoC.Resolve<ISpecificationAttributeService>().GetSpecificationAttributeLocalizedBySpecificationAttributeIdAndLanguageId(specificationAttribute.SpecificationAttributeId, languageId);
+                    var content = this.SpecificationAttributeService.GetSpecificationAttributeLocalizedBySpecificationAttributeIdAndLanguageId(specificationAttribute.SpecificationAttributeId, languageId);
                     if (content == null)
                     {
                         if (!allFieldsAreEmpty && languageId > 0)
@@ -116,7 +116,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                                 LanguageId = languageId,
                                 Name = name
                             };
-                            IoC.Resolve<ISpecificationAttributeService>().InsertSpecificationAttributeLocalized(content);
+                            this.SpecificationAttributeService.InsertSpecificationAttributeLocalized(content);
                         }
                     }
                     else
@@ -125,7 +125,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
                         {
                             content.LanguageId = languageId;
                             content.Name = name;
-                            IoC.Resolve<ISpecificationAttributeService>().UpdateSpecificationAttributeLocalized(content);
+                            this.SpecificationAttributeService.UpdateSpecificationAttributeLocalized(content);
                         }
                     }
                 }
@@ -141,7 +141,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Modules
 
                 int languageId = int.Parse(lblLanguageId.Text);
 
-                var content = IoC.Resolve<ISpecificationAttributeService>().GetSpecificationAttributeLocalizedBySpecificationAttributeIdAndLanguageId(this.SpecificationAttributeId, languageId);
+                var content = this.SpecificationAttributeService.GetSpecificationAttributeLocalizedBySpecificationAttributeIdAndLanguageId(this.SpecificationAttributeId, languageId);
 
                 if (content != null)
                 {

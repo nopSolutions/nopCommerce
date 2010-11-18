@@ -42,7 +42,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Tax.FixedRate
 
         private void BindData()
         {
-            var taxCategories = IoC.Resolve<ITaxCategoryService>().GetAllTaxCategories();
+            var taxCategories = this.TaxCategoryService.GetAllTaxCategories();
             gvTaxCategories.DataSource = taxCategories;
             gvTaxCategories.DataBind();
         }
@@ -56,7 +56,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Tax.FixedRate
                 DecimalTextBox txtRate = e.Row.FindControl("txtRate") as DecimalTextBox;
                 if (txtRate != null)
                 {
-                   txtRate.Value = IoC.Resolve<ISettingManager>().GetSettingValueDecimalNative(string.Format("Tax.TaxProvider.FixedRate.TaxCategoryId{0}", taxCategory.TaxCategoryId));
+                   txtRate.Value = this.SettingManager.GetSettingValueDecimalNative(string.Format("Tax.TaxProvider.FixedRate.TaxCategoryId{0}", taxCategory.TaxCategoryId));
                 }
             }
         }
@@ -71,7 +71,7 @@ namespace NopSolutions.NopCommerce.Web.Administration.Tax.FixedRate
                 int taxCategoryId = int.Parse(hfTaxCategoryId.Value);
                 decimal rate = txtRate.Value;
 
-                IoC.Resolve<ISettingManager>().SetParamNative(string.Format("Tax.TaxProvider.FixedRate.TaxCategoryId{0}", taxCategoryId), rate);
+                this.SettingManager.SetParamNative(string.Format("Tax.TaxProvider.FixedRate.TaxCategoryId{0}", taxCategoryId), rate);
             }
         }
     }

@@ -40,18 +40,18 @@ namespace NopSolutions.NopCommerce.Web.Administration.Payment.eWay
 
         private void BindData()
         {
-            cbUseSandbox.Checked = IoC.Resolve<ISettingManager>().GetSettingValueBoolean("PaymentMethod.eWay.UseSandbox");
-            txtTestCustomerId.Text = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.eWay.TestCustomerId");
-            txtLiveCustomerId.Text = IoC.Resolve<ISettingManager>().GetSettingValue("PaymentMethod.eWay.LiveCustomerId");
-            txtAdditionalFee.Value = IoC.Resolve<ISettingManager>().GetSettingValueDecimalNative("PaymentMethod.eWay.AdditionalFee");
+            cbUseSandbox.Checked = this.SettingManager.GetSettingValueBoolean("PaymentMethod.eWay.UseSandbox");
+            txtTestCustomerId.Text = this.SettingManager.GetSettingValue("PaymentMethod.eWay.TestCustomerId");
+            txtLiveCustomerId.Text = this.SettingManager.GetSettingValue("PaymentMethod.eWay.LiveCustomerId");
+            txtAdditionalFee.Value = this.SettingManager.GetSettingValueDecimalNative("PaymentMethod.eWay.AdditionalFee");
         }
 
         public void Save()
         {
-            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.eWay.UseSandbox", cbUseSandbox.Checked.ToString());
-            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.eWay.TestCustomerId", txtTestCustomerId.Text);
-            IoC.Resolve<ISettingManager>().SetParam("PaymentMethod.eWay.LiveCustomerId", txtLiveCustomerId.Text);
-            IoC.Resolve<ISettingManager>().SetParamNative("PaymentMethod.eWay.AdditionalFee", txtAdditionalFee.Value);
+            this.SettingManager.SetParam("PaymentMethod.eWay.UseSandbox", cbUseSandbox.Checked.ToString());
+            this.SettingManager.SetParam("PaymentMethod.eWay.TestCustomerId", txtTestCustomerId.Text);
+            this.SettingManager.SetParam("PaymentMethod.eWay.LiveCustomerId", txtLiveCustomerId.Text);
+            this.SettingManager.SetParamNative("PaymentMethod.eWay.AdditionalFee", txtAdditionalFee.Value);
         }
     }
 }
