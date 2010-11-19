@@ -59,38 +59,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
 
         #endregion
 
-        #region Methods properties
-
-        /// <summary>
-        /// Gets the loaded picture binary depending on picture storage settings
-        /// </summary>
-        /// <param name="fromDB">Load from database; otherwise, from file system</param>
-        /// <returns>Picture binary</returns>
-        public byte[] LoadPictureBinary(bool fromDB)
-        {
-            byte[] result = null;
-            if (fromDB)
-            {
-                result = this.PictureBinary;
-            }
-            else
-            {
-                result = IoC.Resolve<IPictureService>().LoadPictureFromFile(this.PictureId, this.MimeType);
-            }
-            return result;
-        }
-
-        /// <summary>
-        /// Gets the loaded picture binary depending on picture storage settings
-        /// </summary>
-        /// <returns>Picture binary</returns>
-        public byte[] LoadPictureBinary()
-        {
-            return LoadPictureBinary(IoC.Resolve<IPictureService>().StoreInDB);
-        }
-
-        #endregion
-
         #region Navigation Properties
 
         /// <summary>

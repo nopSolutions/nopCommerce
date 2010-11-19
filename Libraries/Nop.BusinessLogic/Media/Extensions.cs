@@ -18,6 +18,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Web;
+using NopSolutions.NopCommerce.BusinessLogic.Infrastructure;
 
 
 namespace NopSolutions.NopCommerce.BusinessLogic.Media
@@ -27,7 +28,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
     /// </summary>
     public static class Extensions
     {
-
         /// <summary>
         /// Gets the download binary array
         /// </summary>
@@ -54,6 +54,36 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Media
             byte[] img = new byte[size];
             fs.Read(img, 0, size);
             return img;
+        }
+
+        /// <summary>
+        /// Gets the loaded picture binary depending on picture storage settings
+        /// </summary>
+        /// <param name="picture">Picture</param>
+        /// <param name="fromDB">Load from database; otherwise, from file system</param>
+        /// <returns>Picture binary</returns>
+        public static byte[] LoadPictureBinary(this Picture picture, bool fromDB)
+        {
+            byte[] result = null;
+            if (fromDB)
+            {
+                result = picture.PictureBinary;
+            }
+            else
+            {
+                result = IoC.Resolve<IPictureService>().LoadPictureFromFile(picture.PictureId, picture.MimeType);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Gets the loaded picture binary depending on picture storage settings
+        /// </summary>
+        /// <param name="picture">Picture</param>
+        /// <returns>Picture binary</returns>
+        public static byte[] LoadPictureBinary(this Picture picture)
+        {
+            return LoadPictureBinary(picture, IoC.Resolve<IPictureService>().StoreInDB);
         }
     }
 }

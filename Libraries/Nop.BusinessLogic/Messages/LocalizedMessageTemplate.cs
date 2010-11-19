@@ -106,9 +106,6 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Messages
                 return IoC.Resolve<IMessageService>().GetMessageTemplateById(this.MessageTemplateId);
             }
         }
-        #endregion
-
-        #region Custom Properties
 
         /// <summary>
         /// Gets the used email account
