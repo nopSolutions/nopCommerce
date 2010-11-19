@@ -2078,12 +2078,27 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
         {
             orderId = 0;
             var processPaymentResult = new ProcessPaymentResult();
+
+            var customerService = IoC.Resolve<ICustomerService>();
+            var shoppingCartService = IoC.Resolve<IShoppingCartService>();
+            var taxService = IoC.Resolve<ITaxService>();
+            var currencyService = IoC.Resolve<ICurrencyService>();
+            var shippingService= IoC.Resolve<IShippingService>();
+            var paymentService = IoC.Resolve<IPaymentService>();
+            var productService = IoC.Resolve<IProductService>();
+            var discountService = IoC.Resolve<IDiscountService>();
+            var localizationManager = IoC.Resolve<ILocalizationManager>();
+            var messageService = IoC.Resolve<IMessageService>();
+            var customerActivityService = IoC.Resolve<ICustomerActivityService>();
+            var smsService = IoC.Resolve<ISMSService>();
+            var logService = IoC.Resolve<ILogService>();
+
             try
             {
                 if (customer == null)
                     throw new ArgumentNullException("customer");
 
-                if (customer.IsGuest && !IoC.Resolve<ICustomerService>().AnonymousCheckoutAllowed)
+                if (customer.IsGuest && !customerService.AnonymousCheckoutAllowed)
                     throw new NopException("Anonymous checkout is not allowed");
 
                 if (!CommonHelper.IsValidEmail(customer.Email))
@@ -2134,10 +2149,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 ShoppingCart cart = null;
                 if (!paymentInfo.IsRecurringPayment)
                 {
-                    cart = IoC.Resolve<IShoppingCartService>().GetCustomerShoppingCart(customer.CustomerId, ShoppingCartTypeEnum.ShoppingCart);
+                    cart = shoppingCartService.GetCustomerShoppingCart(customer.CustomerId, ShoppingCartTypeEnum.ShoppingCart);
 
                     //validate cart
-                    var warnings = IoC.Resolve<IShoppingCartService>().GetShoppingCartWarnings(cart, customer.CheckoutAttributes, true);
+                    var warnings = shoppingCartService.GetShoppingCartWarnings(cart, customer.CheckoutAttributes, true);
                     if (warnings.Count > 0)
                     {
                         StringBuilder warningsSb = new StringBuilder();
@@ -2152,7 +2167,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                     //validate individual cart items
                     foreach (var sci in cart)
                     {
-                        var sciWarnings = IoC.Resolve<IShoppingCartService>().GetShoppingCartItemWarnings(sci.ShoppingCartType,
+                        var sciWarnings = shoppingCartService.GetShoppingCartItemWarnings(sci.ShoppingCartType,
                             sci.ProductVariantId, sci.AttributesXml, 
                             sci.CustomerEnteredPrice, sci.Quantity);
 
@@ -2173,10 +2188,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 var customerTaxDisplayType = TaxDisplayTypeEnum.IncludingTax;
                 if (!paymentInfo.IsRecurringPayment)
                 {
-                    if (IoC.Resolve<ITaxService>().AllowCustomersToSelectTaxDisplayType)
+                    if (taxService.AllowCustomersToSelectTaxDisplayType)
                         customerTaxDisplayType = customer.TaxDisplayType;
                     else
-                        customerTaxDisplayType = IoC.Resolve<ITaxService>().TaxDisplayType;
+                        customerTaxDisplayType = taxService.TaxDisplayType;
                 }
                 else
                 {
@@ -2216,7 +2231,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                     Discount orderSubTotalAppliedDiscount1 = null;
                     decimal subTotalWithoutDiscountBase1 = decimal.Zero;
                     decimal subTotalWithDiscountBase1 = decimal.Zero;
-                    string subTotalError1 = IoC.Resolve<IShoppingCartService>().GetShoppingCartSubTotal(cart, customer,
+                    string subTotalError1 = shoppingCartService.GetShoppingCartSubTotal(cart, customer,
                         true, out orderSubTotalDiscountAmount1, out orderSubTotalAppliedDiscount1,
                         out subTotalWithoutDiscountBase1, out subTotalWithDiscountBase1);
                     orderSubTotalInclTax = subTotalWithoutDiscountBase1;
@@ -2231,7 +2246,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                     Discount orderSubTotalAppliedDiscount2 = null;
                     decimal subTotalWithoutDiscountBase2 = decimal.Zero;
                     decimal subTotalWithDiscountBase2 = decimal.Zero;
-                    string subTotalError2 = IoC.Resolve<IShoppingCartService>().GetShoppingCartSubTotal(cart, customer,
+                    string subTotalError2 = shoppingCartService.GetShoppingCartSubTotal(cart, customer,
                         false, out orderSubTotalDiscountAmount2, out orderSubTotalAppliedDiscount2,
                         out subTotalWithoutDiscountBase2, out subTotalWithDiscountBase2);
                     orderSubTotalExclTax = subTotalWithoutDiscountBase2;
@@ -2241,10 +2256,10 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                         throw new NopException("Sub total couldn't be calculated");
                     
                     //in customer currency
-                    orderSubtotalInclTaxInCustomerCurrency = IoC.Resolve<ICurrencyService>().ConvertCurrency(orderSubTotalInclTax, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
-                    orderSubtotalExclTaxInCustomerCurrency = IoC.Resolve<ICurrencyService>().ConvertCurrency(orderSubTotalExclTax, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
-                    orderSubTotalDiscountInclTaxInCustomerCurrency = IoC.Resolve<ICurrencyService>().ConvertCurrency(orderSubTotalDiscountInclTax, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
-                    orderSubTotalDiscountExclTaxInCustomerCurrency = IoC.Resolve<ICurrencyService>().ConvertCurrency(orderSubTotalDiscountExclTax, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
+                    orderSubtotalInclTaxInCustomerCurrency = currencyService.ConvertCurrency(orderSubTotalInclTax, currencyService.PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
+                    orderSubtotalExclTaxInCustomerCurrency = currencyService.ConvertCurrency(orderSubTotalExclTax, currencyService.PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
+                    orderSubTotalDiscountInclTaxInCustomerCurrency = currencyService.ConvertCurrency(orderSubTotalDiscountInclTax, currencyService.PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
+                    orderSubTotalDiscountExclTaxInCustomerCurrency = currencyService.ConvertCurrency(orderSubTotalDiscountExclTax, currencyService.PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
                 }
                 else
                 {
@@ -2261,8 +2276,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 bool shoppingCartRequiresShipping = false;
                 if (!paymentInfo.IsRecurringPayment)
                 {
-                    orderWeight = IoC.Resolve<IShippingService>().GetShoppingCartTotalWeight(cart, customer);
-                    shoppingCartRequiresShipping = IoC.Resolve<IShippingService>().ShoppingCartRequiresShipping(cart);
+                    orderWeight = shippingService.GetShoppingCartTotalWeight(cart, customer);
+                    shoppingCartRequiresShipping = shippingService.ShoppingCartRequiresShipping(cart);
                     if (shoppingCartRequiresShipping)
                     {
                         if (paymentInfo.ShippingAddress == null)
@@ -2293,16 +2308,16 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                     string shippingTotalError1 = string.Empty;
                     string shippingTotalError2 = string.Empty;
                     Discount shippingTotalDiscount = null;
-                    orderShippingTotalInclTax = IoC.Resolve<IShippingService>().GetShoppingCartShippingTotal(cart, customer, true, out taxRate, out shippingTotalDiscount, ref shippingTotalError1);
-                    orderShippingTotalExclTax = IoC.Resolve<IShippingService>().GetShoppingCartShippingTotal(cart, customer, false, ref shippingTotalError2);
+                    orderShippingTotalInclTax = shippingService.GetShoppingCartShippingTotal(cart, customer, true, out taxRate, out shippingTotalDiscount, ref shippingTotalError1);
+                    orderShippingTotalExclTax = shippingService.GetShoppingCartShippingTotal(cart, customer, false, ref shippingTotalError2);
                     if (!orderShippingTotalInclTax.HasValue || !orderShippingTotalExclTax.HasValue)
                         throw new NopException("Shipping total couldn't be calculated");
                     if (shippingTotalDiscount != null && !appliedDiscounts.ContainsDiscount(shippingTotalDiscount.Name))
                         appliedDiscounts.Add(shippingTotalDiscount);
 
                     //in customer currency
-                    orderShippingInclTaxInCustomerCurrency = IoC.Resolve<ICurrencyService>().ConvertCurrency(orderShippingTotalInclTax.Value, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
-                    orderShippingExclTaxInCustomerCurrency = IoC.Resolve<ICurrencyService>().ConvertCurrency(orderShippingTotalExclTax.Value, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
+                    orderShippingInclTaxInCustomerCurrency = currencyService.ConvertCurrency(orderShippingTotalInclTax.Value, currencyService.PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
+                    orderShippingExclTaxInCustomerCurrency = currencyService.ConvertCurrency(orderShippingTotalExclTax.Value, currencyService.PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
 
                 }
                 else
@@ -2323,17 +2338,17 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 {
                     string paymentAdditionalFeeError1 = string.Empty;
                     string paymentAdditionalFeeError2 = string.Empty;
-                    decimal paymentAdditionalFee = IoC.Resolve<IPaymentService>().GetAdditionalHandlingFee(paymentInfo.PaymentMethodId);
-                    paymentAdditionalFeeInclTax = IoC.Resolve<ITaxService>().GetPaymentMethodAdditionalFee(paymentAdditionalFee, true, customer, ref paymentAdditionalFeeError1);
-                    paymentAdditionalFeeExclTax = IoC.Resolve<ITaxService>().GetPaymentMethodAdditionalFee(paymentAdditionalFee, false, customer, ref paymentAdditionalFeeError2);
+                    decimal paymentAdditionalFee = paymentService.GetAdditionalHandlingFee(paymentInfo.PaymentMethodId);
+                    paymentAdditionalFeeInclTax = taxService.GetPaymentMethodAdditionalFee(paymentAdditionalFee, true, customer, ref paymentAdditionalFeeError1);
+                    paymentAdditionalFeeExclTax = taxService.GetPaymentMethodAdditionalFee(paymentAdditionalFee, false, customer, ref paymentAdditionalFeeError2);
                     if (!String.IsNullOrEmpty(paymentAdditionalFeeError1))
                         throw new NopException("Payment method fee couldn't be calculated");
                     if (!String.IsNullOrEmpty(paymentAdditionalFeeError2))
                         throw new NopException("Payment method fee couldn't be calculated");
 
                     //in customer currency
-                    paymentAdditionalFeeInclTaxInCustomerCurrency = IoC.Resolve<ICurrencyService>().ConvertCurrency(paymentAdditionalFeeInclTax, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
-                    paymentAdditionalFeeExclTaxInCustomerCurrency = IoC.Resolve<ICurrencyService>().ConvertCurrency(paymentAdditionalFeeExclTax, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
+                    paymentAdditionalFeeInclTaxInCustomerCurrency = currencyService.ConvertCurrency(paymentAdditionalFeeInclTax, currencyService.PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
+                    paymentAdditionalFeeExclTaxInCustomerCurrency = currencyService.ConvertCurrency(paymentAdditionalFeeExclTax, currencyService.PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
                 }
                 else
                 {
@@ -2355,16 +2370,16 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                     //tax amount
                     SortedDictionary<decimal, decimal> taxRatesDictionary = null;
                     string taxError = string.Empty;
-                    orderTaxTotal = IoC.Resolve<ITaxService>().GetTaxTotal(cart,
+                    orderTaxTotal = taxService.GetTaxTotal(cart,
                         paymentInfo.PaymentMethodId, customer, out taxRatesDictionary, ref taxError);
                     if (!String.IsNullOrEmpty(taxError))
                         throw new NopException("Tax total couldn't be calculated");
 
                     //in customer currency
-                    orderTaxInCustomerCurrency = IoC.Resolve<ICurrencyService>().ConvertCurrency(orderTaxTotal, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
+                    orderTaxInCustomerCurrency = currencyService.ConvertCurrency(orderTaxTotal, currencyService.PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
 
                     //VAT number
-                    if (IoC.Resolve<ITaxService>().EUVatEnabled && customer.VatNumberStatus == VatNumberStatusEnum.Valid)
+                    if (taxService.EUVatEnabled && customer.VatNumberStatus == VatNumberStatusEnum.Valid)
                     {
                         vatNumber = customer.VatNumber;
                     }
@@ -2375,7 +2390,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                         var taxRate = kvp.Key;
                         var taxValue = kvp.Value;
 
-                        var taxValueInCustomerCurrency = IoC.Resolve<ICurrencyService>().ConvertCurrency(taxValue, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
+                        var taxValueInCustomerCurrency = currencyService.ConvertCurrency(taxValue, currencyService.PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
 
                         taxRates += string.Format("{0}:{1};   ", taxRate.ToString(new CultureInfo("en-US")), taxValue.ToString(new CultureInfo("en-US")));
                         taxRatesInCustomerCurrency += string.Format("{0}:{1};   ", taxRate.ToString(new CultureInfo("en-US")), taxValueInCustomerCurrency.ToString(new CultureInfo("en-US")));
@@ -2406,7 +2421,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
 
                     bool useRewardPoints = customer.UseRewardPointsDuringCheckout;
 
-                    orderTotal = IoC.Resolve<IShoppingCartService>().GetShoppingCartTotal(cart,
+                    orderTotal = shoppingCartService.GetShoppingCartTotal(cart,
                         paymentInfo.PaymentMethodId, customer,
                         out orderDiscountAmount, out orderAppliedDiscount, 
                         out appliedGiftCards, useRewardPoints,
@@ -2419,10 +2434,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                         appliedDiscounts.Add(orderAppliedDiscount);
 
                     //in customer currency
-                    orderDiscountInCustomerCurrency = IoC.Resolve<ICurrencyService>().ConvertCurrency(orderDiscountAmount,
-                        IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
-                    orderTotalInCustomerCurrency = IoC.Resolve<ICurrencyService>().ConvertCurrency(orderTotal.Value, 
-                        IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
+                    orderDiscountInCustomerCurrency = currencyService.ConvertCurrency(orderDiscountAmount, currencyService.PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
+                    orderTotalInCustomerCurrency = currencyService.ConvertCurrency(orderTotal.Value, currencyService.PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
                 }
                 else
                 {
@@ -2444,7 +2457,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                 string paymentMethodName = string.Empty;
                 if (!skipPaymentWorkflow)
                 {
-                    paymentMethod = IoC.Resolve<IPaymentService>().GetPaymentMethodById(paymentInfo.PaymentMethodId);
+                    paymentMethod = paymentService.GetPaymentMethodById(paymentInfo.PaymentMethodId);
                     if (paymentMethod == null)
                         throw new NopException("Payment method couldn't be loaded");
 
@@ -2630,7 +2643,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                     isRecurringShoppingCart = cart.IsRecurring;
                     if (isRecurringShoppingCart)
                     {
-                        string recurringCyclesError = IoC.Resolve<IShoppingCartService>().GetReccuringCycleInfo(cart, out recurringCycleLength, out recurringCyclePeriod, out recurringTotalCycles);
+                        string recurringCyclesError = shoppingCartService.GetReccuringCycleInfo(cart, out recurringCycleLength, out recurringCyclePeriod, out recurringTotalCycles);
                         if (!string.IsNullOrEmpty(recurringCyclesError))
                         {
                             throw new NopException(recurringCyclesError);
@@ -2653,14 +2666,14 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                         if (isRecurringShoppingCart)
                         {
                             //recurring cart
-                            var recurringPaymentType = IoC.Resolve<IPaymentService>().SupportRecurringPayments(paymentInfo.PaymentMethodId);
+                            var recurringPaymentType = paymentService.SupportRecurringPayments(paymentInfo.PaymentMethodId);
                             switch (recurringPaymentType)
                             {
                                 case RecurringPaymentTypeEnum.NotSupported:
                                     throw new NopException("Recurring payments are not supported by selected payment method");
                                 case RecurringPaymentTypeEnum.Manual:
                                 case RecurringPaymentTypeEnum.Automatic:
-                                    IoC.Resolve<IPaymentService>().ProcessRecurringPayment(paymentInfo, customer, orderGuid, ref processPaymentResult);
+                                    paymentService.ProcessRecurringPayment(paymentInfo, customer, orderGuid, ref processPaymentResult);
                                     break;
                                 default:
                                     throw new NopException("Not supported recurring payment type");
@@ -2669,20 +2682,20 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                         else
                         {
                             //standard cart
-                            IoC.Resolve<IPaymentService>().ProcessPayment(paymentInfo, customer, orderGuid, ref processPaymentResult);
+                            paymentService.ProcessPayment(paymentInfo, customer, orderGuid, ref processPaymentResult);
                         }
                     }
                     else
                     {
                         if (isRecurringShoppingCart)
                         {
-                            var recurringPaymentType = IoC.Resolve<IPaymentService>().SupportRecurringPayments(paymentInfo.PaymentMethodId);
+                            var recurringPaymentType = paymentService.SupportRecurringPayments(paymentInfo.PaymentMethodId);
                             switch (recurringPaymentType)
                             {
                                 case RecurringPaymentTypeEnum.NotSupported:
                                     throw new NopException("Recurring payments are not supported by selected payment method");
                                 case RecurringPaymentTypeEnum.Manual:
-                                    IoC.Resolve<IPaymentService>().ProcessRecurringPayment(paymentInfo, customer, orderGuid, ref processPaymentResult);
+                                    paymentService.ProcessRecurringPayment(paymentInfo, customer, orderGuid, ref processPaymentResult);
                                     break;
                                 case RecurringPaymentTypeEnum.Automatic:
                                     //payment is processed on payment gateway site
@@ -2755,7 +2768,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                             CardType = processPaymentResult.AllowStoringCreditCardNumber ? SecurityHelper.Encrypt(paymentInfo.CreditCardType) : string.Empty,
                             CardName = processPaymentResult.AllowStoringCreditCardNumber ? SecurityHelper.Encrypt(paymentInfo.CreditCardName) : string.Empty,
                             CardNumber = processPaymentResult.AllowStoringCreditCardNumber ? SecurityHelper.Encrypt(paymentInfo.CreditCardNumber) : string.Empty,
-                            MaskedCreditCardNumber = SecurityHelper.Encrypt(IoC.Resolve<IPaymentService>().GetMaskedCreditCardNumber(paymentInfo.CreditCardNumber)),
+                            MaskedCreditCardNumber = SecurityHelper.Encrypt(paymentService.GetMaskedCreditCardNumber(paymentInfo.CreditCardNumber)),
                             CardCvv2 = processPaymentResult.AllowStoringCreditCardNumber ? SecurityHelper.Encrypt(paymentInfo.CreditCardCvv2) : string.Empty,
                             CardExpirationMonth = processPaymentResult.AllowStoringCreditCardNumber ? SecurityHelper.Encrypt(paymentInfo.CreditCardExpireMonth.ToString()) : string.Empty,
                             CardExpirationYear = processPaymentResult.AllowStoringCreditCardNumber ? SecurityHelper.Encrypt(paymentInfo.CreditCardExpireYear.ToString()) : string.Empty,
@@ -2821,20 +2834,20 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                                 decimal taxRate = decimal.Zero;
                                 decimal scUnitPrice = PriceHelper.GetUnitPrice(sc, customer, true);
                                 decimal scSubTotal = PriceHelper.GetSubTotal(sc, customer, true);
-                                decimal scUnitPriceInclTax = IoC.Resolve<ITaxService>().GetPrice(sc.ProductVariant, scUnitPrice, true, customer, out taxRate);
-                                decimal scUnitPriceExclTax = IoC.Resolve<ITaxService>().GetPrice(sc.ProductVariant, scUnitPrice, false, customer, out taxRate);
-                                decimal scSubTotalInclTax = IoC.Resolve<ITaxService>().GetPrice(sc.ProductVariant, scSubTotal, true, customer, out taxRate);
-                                decimal scSubTotalExclTax = IoC.Resolve<ITaxService>().GetPrice(sc.ProductVariant, scSubTotal, false, customer, out taxRate);
-                                decimal scUnitPriceInclTaxInCustomerCurrency = IoC.Resolve<ICurrencyService>().ConvertCurrency(scUnitPriceInclTax, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
-                                decimal scUnitPriceExclTaxInCustomerCurrency = IoC.Resolve<ICurrencyService>().ConvertCurrency(scUnitPriceExclTax, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
-                                decimal scSubTotalInclTaxInCustomerCurrency = IoC.Resolve<ICurrencyService>().ConvertCurrency(scSubTotalInclTax, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
-                                decimal scSubTotalExclTaxInCustomerCurrency = IoC.Resolve<ICurrencyService>().ConvertCurrency(scSubTotalExclTax, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
+                                decimal scUnitPriceInclTax = taxService.GetPrice(sc.ProductVariant, scUnitPrice, true, customer, out taxRate);
+                                decimal scUnitPriceExclTax = taxService.GetPrice(sc.ProductVariant, scUnitPrice, false, customer, out taxRate);
+                                decimal scSubTotalInclTax = taxService.GetPrice(sc.ProductVariant, scSubTotal, true, customer, out taxRate);
+                                decimal scSubTotalExclTax = taxService.GetPrice(sc.ProductVariant, scSubTotal, false, customer, out taxRate);
+                                decimal scUnitPriceInclTaxInCustomerCurrency = currencyService.ConvertCurrency(scUnitPriceInclTax, currencyService.PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
+                                decimal scUnitPriceExclTaxInCustomerCurrency = currencyService.ConvertCurrency(scUnitPriceExclTax, currencyService.PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
+                                decimal scSubTotalInclTaxInCustomerCurrency = currencyService.ConvertCurrency(scSubTotalInclTax, currencyService.PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
+                                decimal scSubTotalExclTaxInCustomerCurrency = currencyService.ConvertCurrency(scSubTotalExclTax, currencyService.PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
 
                                 //discounts
                                 Discount scDiscount = null;
                                 decimal discountAmount = PriceHelper.GetDiscountAmount(sc, customer, out scDiscount);
-                                decimal discountAmountInclTax = IoC.Resolve<ITaxService>().GetPrice(sc.ProductVariant, discountAmount, true, customer, out taxRate);
-                                decimal discountAmountExclTax = IoC.Resolve<ITaxService>().GetPrice(sc.ProductVariant, discountAmount, false, customer, out taxRate);
+                                decimal discountAmountInclTax = taxService.GetPrice(sc.ProductVariant, discountAmount, true, customer, out taxRate);
+                                decimal discountAmountExclTax = taxService.GetPrice(sc.ProductVariant, discountAmount, false, customer, out taxRate);
                                 if (scDiscount != null && !appliedDiscounts.ContainsDiscount(scDiscount.Name))
                                     appliedDiscounts.Add(scDiscount);
 
@@ -2899,13 +2912,13 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                                 }
 
                                 //inventory
-                                IoC.Resolve<IProductService>().AdjustInventory(sc.ProductVariantId, true, sc.Quantity, sc.AttributesXml);
+                                productService.AdjustInventory(sc.ProductVariantId, true, sc.Quantity, sc.AttributesXml);
                             }
 
                             //clear shopping cart
                             foreach (var sc in cart)
                             {
-                                IoC.Resolve<IShoppingCartService>().DeleteShoppingCartItem(sc.ShoppingCartItemId, false);
+                                shoppingCartService.DeleteShoppingCartItem(sc.ShoppingCartItemId, false);
                             }
                         }
                         else
@@ -2972,7 +2985,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                                 }
 
                                 //inventory
-                                IoC.Resolve<IProductService>().AdjustInventory(opv.ProductVariantId, true, opv.Quantity, opv.AttributesXml);
+                                productService.AdjustInventory(opv.ProductVariantId, true, opv.Quantity, opv.AttributesXml);
                             }
                         }
 
@@ -2988,7 +3001,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                                     OrderId = order.OrderId,
                                     CreatedOn = DateTime.UtcNow
                                 };
-                                IoC.Resolve<IDiscountService>().InsertDiscountUsageHistory(duh);
+                                discountService.InsertDiscountUsageHistory(duh);
                             }
                         }
 
@@ -3000,7 +3013,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                                 foreach (var agc in appliedGiftCards)
                                 {
                                     decimal amountUsed = agc.AmountCanBeUsed;
-                                    decimal amountUsedInCustomerCurrency = IoC.Resolve<ICurrencyService>().ConvertCurrency(amountUsed, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
+                                    decimal amountUsedInCustomerCurrency = currencyService.ConvertCurrency(amountUsed, currencyService.PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
                                     var gcuh = new GiftCardUsageHistory()
                                     {
                                         GiftCardId = agc.GiftCardId,
@@ -3018,8 +3031,8 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                         //reward points history
                         if (redeemedRewardPointsAmount > decimal.Zero)
                         {
-                            decimal redeemedRewardPointsAmountInCustomerCurrency = IoC.Resolve<ICurrencyService>().ConvertCurrency(redeemedRewardPointsAmount, IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
-                            string message = string.Format(IoC.Resolve<ILocalizationManager>().GetLocaleResourceString("RewardPoints.Message.RedeemedForOrder", order.CustomerLanguageId), order.OrderId);
+                            decimal redeemedRewardPointsAmountInCustomerCurrency = currencyService.ConvertCurrency(redeemedRewardPointsAmount, currencyService.PrimaryStoreCurrency, paymentInfo.CustomerCurrency);
+                            string message = string.Format(localizationManager.GetLocaleResourceString("RewardPoints.Message.RedeemedForOrder", order.CustomerLanguageId), order.OrderId);
 
                             RewardPointsHistory rph = this.InsertRewardPointsHistory(customer.CustomerId,
                                 order.OrderId, -redeemedRewardPoints,
@@ -3050,7 +3063,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                                 InsertRecurringPayment(rp);
 
 
-                                var recurringPaymentType = IoC.Resolve<IPaymentService>().SupportRecurringPayments(paymentInfo.PaymentMethodId);
+                                var recurringPaymentType = paymentService.SupportRecurringPayments(paymentInfo.PaymentMethodId);
                                 switch (recurringPaymentType)
                                 {
                                     case RecurringPaymentTypeEnum.NotSupported:
@@ -3085,19 +3098,19 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                         //notes, messages
                         InsertOrderNote(order.OrderId, string.Format("Order placed"), false, DateTime.UtcNow);
 
-                        int orderPlacedStoreOwnerNotificationQueuedEmailId = IoC.Resolve<IMessageService>().SendOrderPlacedStoreOwnerNotification(order, IoC.Resolve<ILocalizationManager>().DefaultAdminLanguage.LanguageId);
+                        int orderPlacedStoreOwnerNotificationQueuedEmailId = messageService.SendOrderPlacedStoreOwnerNotification(order, localizationManager.DefaultAdminLanguage.LanguageId);
                         if (orderPlacedStoreOwnerNotificationQueuedEmailId > 0)
                         {
                             InsertOrderNote(order.OrderId, string.Format("\"Order placed\" email (to store owner) has been queued. Queued email identifier: {0}.", orderPlacedStoreOwnerNotificationQueuedEmailId), false, DateTime.UtcNow);
                         }
 
-                        int orderPlacedCustomerNotificationQueuedEmailId = IoC.Resolve<IMessageService>().SendOrderPlacedCustomerNotification(order, order.CustomerLanguageId);
+                        int orderPlacedCustomerNotificationQueuedEmailId = messageService.SendOrderPlacedCustomerNotification(order, order.CustomerLanguageId);
                         if (orderPlacedCustomerNotificationQueuedEmailId > 0)
                         {
                             InsertOrderNote(order.OrderId, string.Format("\"Order placed\" email (to customer) has been queued. Queued email identifier: {0}.", orderPlacedCustomerNotificationQueuedEmailId), false, DateTime.UtcNow);
                         }
 
-                        IoC.Resolve<ISMSService>().SendOrderPlacedNotification(order);
+                        smsService.SendOrderPlacedNotification(order);
 
                         //order status
                         order = CheckOrderStatus(order.OrderId);
@@ -3105,15 +3118,15 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
                         //reset checkout data
                         if (!paymentInfo.IsRecurringPayment)
                         {
-                            IoC.Resolve<ICustomerService>().ResetCheckoutData(customer.CustomerId, true);
+                            customerService.ResetCheckoutData(customer.CustomerId, true);
                         }
 
                         //log
                         if (!paymentInfo.IsRecurringPayment)
                         {
-                            IoC.Resolve<ICustomerActivityService>().InsertActivity(
+                            customerActivityService.InsertActivity(
                                 "PlaceOrder",
-                                IoC.Resolve<ILocalizationManager>().GetLocaleResourceString("ActivityLog.PlaceOrder"),
+                                localizationManager.GetLocaleResourceString("ActivityLog.PlaceOrder"),
                                 order.OrderId);
                         }
 
@@ -3142,7 +3155,7 @@ namespace NopSolutions.NopCommerce.BusinessLogic.Orders
 
             if (!String.IsNullOrEmpty(processPaymentResult.Error))
             {
-                IoC.Resolve<ILogService>().InsertLog(LogTypeEnum.OrderError, string.Format("Error while placing order. {0}", processPaymentResult.Error), processPaymentResult.FullError);
+                logService.InsertLog(LogTypeEnum.OrderError, string.Format("Error while placing order. {0}", processPaymentResult.Error), processPaymentResult.FullError);
             }
             return processPaymentResult.Error;
         }
