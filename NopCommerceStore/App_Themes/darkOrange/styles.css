@@ -550,6 +550,11 @@ td.fieldname
 	line-height: 0;
 }
 
+.nobr 
+{
+    white-space:nowrap !important;
+}
+
 .linkButton
 {
 	color: #3664A5;

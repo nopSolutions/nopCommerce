@@ -21,12 +21,12 @@
         <%} %>
         <%if (this.SettingManager.GetSettingValueBoolean("Display.ShowProductImagesOnWishList"))
                   {%>
-        <col width="1" class="picture" />
+        <col width="1" />
         <%} %>
         <col />
         <col width="1" />
         <col width="1" />
-        <col width="1" class="end" />
+        <col width="1" />
         <thead>
             <tr class="cart-header-row">
                 <%if (IsEditable)
@@ -36,7 +36,9 @@
                 </th>
                 <%} %>
                 <th>
-                    <%=GetLocaleResourceString("Wishlist.AddToCart")%>
+                    <span class="nobr">
+                        <%=GetLocaleResourceString("Wishlist.AddToCart")%>
+                    </span>
                 </th>
                 <%if (this.SettingManager.GetSettingValueBoolean("Display.Products.ShowSKU"))
                   {%>
